@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /rudn-platform/v1/submissions/{uid}/{studentKey}/{activitySlug}/{fileName} {
+      allow read: if request.auth != null && (request.auth.uid == uid || request.auth.token.email == 'omnistat@yandex.ru');
+      allow create: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.size < 12 * 1024 * 1024
+                    && request.resource.metadata.ownerUid == request.auth.uid
+                    && request.resource.metadata.studentKey == studentKey
+                    && request.resource.metadata.activitySlug == activitySlug;
+      allow update, delete: if request.auth != null && (request.auth.uid == uid || request.auth.token.email == 'omnistat@yandex.ru');
+    }
+  }
+}

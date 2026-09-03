@@ -1,0 +1,9 @@
+generated_at_utc=2026-08-31T08:40:32+00:00
+source_sha256=24132f30835b2d6f4c2fb1c891890393be9252c9f1c253f1304a1624a0b9cb86
+archive_sha256=2a686e5535eb065ba7d8e0de4a2a77136353752ddce5f4f433e1c180381abbdb
+subjects=89
+features=2381
+source_coordinate_pairs=6909025
+output_coordinate_pairs=711057
+output_bytes=17148847
+invalid_geometries_repaired=239

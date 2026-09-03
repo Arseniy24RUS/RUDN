@@ -1,0 +1,16 @@
+{
+  "version": "1.0.1-pages-publish-ready",
+  "files_in_project": 336,
+  "site_bytes": 215445439,
+  "questions": 195,
+  "municipal_maps": 89,
+  "seminar1_photos": 50,
+  "seminar1_symbols": 42,
+  "workflow": ".github/workflows/deploy-pages.yml",
+  "repository": "Arseniy24RUS/RUDN",
+  "publisher": "publish_to_github.bat / publish_to_github.ps1",
+  "firebase_helper": "configure_firebase.bat / configure_firebase.ps1",
+  "pages_enablement": "automatic with authenticated GitHub CLI; otherwise Settings -> Pages -> GitHub Actions",
+  "qa": "passed: static/link/syntax audit, ZIP integrity, Playwright inline browser bundle",
+  "archive_integrity": "see RUDN-GitHub-Pages-ready.zip.sha256 next to the distribution archive"
+}

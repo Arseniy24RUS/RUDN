@@ -1,0 +1,10 @@
+# Local and secret files
+.env
+.env.*
+!.env.example
+firebase-debug.log
+.firebaserc
+node_modules/
+.DS_Store
+Thumbs.db
+*.log

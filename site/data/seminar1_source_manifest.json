@@ -1,0 +1,1452 @@
+[
+  {
+    "order": 1,
+    "question_id": "29ae02be-3bda-5b48-81e6-b8565fabf760",
+    "source_form_question_id": "answer_choices_59276905",
+    "institution_ru": "Государственная Дума Федерального Собрания Российской Федерации",
+    "institution_en": "State Duma of the Federal Assembly of the Russian Federation",
+    "institution_zh": "俄罗斯联邦会议国家杜马",
+    "slug": "state_duma",
+    "classification": {
+      "level": "federal",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/state_duma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/f4ad2b0603ebf039b529b2673b8c4a81/360x"
+    },
+    "photo_sha256": "0a56ff49c813ab5f8c4010fa9d0c467c76026dfa9fd130f04b7cbf8d1adc3e79",
+    "separate_symbol": "/static/course/quiz_media/branches_levels/symbols/state_duma.png",
+    "classification_reference": null
+  },
+  {
+    "order": 2,
+    "question_id": "1feebc7f-6872-56be-a958-7f090218591d",
+    "source_form_question_id": "id-question-89571940",
+    "institution_ru": "Верховный Суд Российской Федерации",
+    "institution_en": "Supreme Court of the Russian Federation",
+    "institution_zh": "俄罗斯联邦最高法院",
+    "slug": "supreme_court_rf",
+    "classification": {
+      "level": "federal",
+      "branch": "judicial",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/supreme_court_rf.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1524509/6cf020f515840502e9e936cee7fa07ae/360x"
+    },
+    "photo_sha256": "36cde3fb6998502dc048c8ff06cbe52a5041f5cfb5be7677c7082cb277d37b7a",
+    "separate_symbol": "/static/course/quiz_media/branches_levels/symbols/supreme_court_rf.png",
+    "classification_reference": null
+  },
+  {
+    "order": 3,
+    "question_id": "f59842c3-91da-5740-8b11-322bb5e1a9a7",
+    "source_form_question_id": "id-question-89571843",
+    "institution_ru": "Правительство Москвы",
+    "institution_en": "Government of Moscow",
+    "institution_zh": "莫斯科市政府",
+    "slug": "moscow_government",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/moscow_government.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1534616/f5ac0296ca99dd84c72a03ddd6307196/360x"
+    },
+    "photo_sha256": "aa5c4f9af43d5e14f868e565cf0094bcc6f78b7f9c6eae98334de7b2993859c6",
+    "separate_symbol": "/static/course/quiz_media/branches_levels/symbols/moscow_government.png",
+    "classification_reference": null
+  },
+  {
+    "order": 4,
+    "question_id": "cac3af1c-a4b5-533a-b3b7-a986bea3a9a7",
+    "source_form_question_id": "id-question-89572038",
+    "institution_ru": "Министерство иностранных дел Российской Федерации (МИД России)",
+    "institution_en": "Ministry of Foreign Affairs of the Russian Federation (MFA of Russia)",
+    "institution_zh": "俄罗斯联邦外交部（俄罗斯外交部）",
+    "slug": "mfa_russia",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/mfa_russia.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/040f48c8f8b4a34171795fb3f711e7ec/360x"
+    },
+    "photo_sha256": "c364de915fd71bbb62d22185c51e1f3f82eaf0b2d65c1d5081195d77cb21da5f",
+    "separate_symbol": "/static/course/quiz_media/branches_levels/symbols/mfa_russia.png",
+    "classification_reference": null
+  },
+  {
+    "order": 5,
+    "question_id": "7fd17bff-0bef-5896-8c6a-2b99018549da",
+    "source_form_question_id": "id-question-89572109",
+    "institution_ru": "Верховный Суд Республики Татарстан",
+    "institution_en": "Supreme Court of the Republic of Tatarstan",
+    "institution_zh": "鞑靼斯坦共和国最高法院",
+    "slug": "supreme_court_tatarstan",
+    "classification": {
+      "level": "regional",
+      "branch": "judicial",
+      "nuance": "regional_court"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/supreme_court_tatarstan.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/13598442/fd3a83d3779e6fd87eff1841bcfb4fce/360x"
+    },
+    "photo_sha256": "1d482b876886ef2272b700aab18cdbe823284ee4f33fe41e39da68202754df51",
+    "separate_symbol": "/static/course/quiz_media/branches_levels/symbols/tatarstan.png",
+    "classification_reference": null
+  },
+  {
+    "order": 6,
+    "question_id": "5cb5d92f-96ed-5738-9638-0df59e55c831",
+    "source_form_question_id": "id-question-89576292",
+    "institution_ru": "Екатеринбургская городская Дума",
+    "institution_en": "Yekaterinburg City Duma",
+    "institution_zh": "叶卡捷琳堡市杜马",
+    "slug": "yekaterinburg_city_duma",
+    "classification": {
+      "level": "municipal",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/yekaterinburg_city_duma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6197807/0a8cba30b0e53c11c224bce6332267b3/360x"
+    },
+    "photo_sha256": "c9030384b7be44f2816e1a4221e470df18296928118dc8807e556d60d529eadb",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 7,
+    "question_id": "35acaa20-e43b-57ee-b393-0f6e3fe56084",
+    "source_form_question_id": "id-question-89577679",
+    "institution_ru": "Правительство Российской Федерации",
+    "institution_en": "Government of the Russian Federation",
+    "institution_zh": "俄罗斯联邦政府",
+    "slug": "russian_government",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/russian_government.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/13598442/94f56fe1baeb3084b43b8ef64f7f3f72/360x"
+    },
+    "photo_sha256": "33043924098c4d6e397f7f19e8d0bfb1c2592c3213fd60f6b59d50651a63d90b",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 8,
+    "question_id": "a8bb2e41-bda0-5dad-9bcf-9850f9eec586",
+    "source_form_question_id": "id-question-89577821",
+    "institution_ru": "Свердловский областной суд",
+    "institution_en": "Sverdlovsk Regional Court",
+    "institution_zh": "斯维尔德洛夫斯克州法院",
+    "slug": "sverdlovsk_regional_court",
+    "classification": {
+      "level": "regional",
+      "branch": "judicial",
+      "nuance": "regional_court"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/sverdlovsk_regional_court.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/3ea226112c49cccf0ab0c54c901215ed/360x"
+    },
+    "photo_sha256": "609fb9a399fd2de31e7c0f08ea1bed7c37357e731b304e40caacb02ca9229b02",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 9,
+    "question_id": "17ff2b54-40b9-5f26-b8cc-dff2f5dbd5b4",
+    "source_form_question_id": "id-question-89577819",
+    "institution_ru": "Мэрия города Новосибирска",
+    "institution_en": "Novosibirsk City Hall",
+    "institution_zh": "新西伯利亚市政府",
+    "slug": "novosibirsk_city_hall",
+    "classification": {
+      "level": "municipal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/novosibirsk_city_hall.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/13598442/b6e87577507e505affdbbc5e0cb7d809/360x"
+    },
+    "photo_sha256": "dba7a22a7a0e54f6efbf6921b6f271285a3040455f3bd5c8467943768165ae31",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 10,
+    "question_id": "ed25d13c-b04b-5536-9df9-41eb6bf24850",
+    "source_form_question_id": "id-question-89578190",
+    "institution_ru": "Законодательное Собрание Омской области",
+    "institution_en": "Legislative Assembly of Omsk Region",
+    "institution_zh": "鄂木斯克州立法会议",
+    "slug": "omsk_legislative_assembly",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/omsk_legislative_assembly.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6201457/07ebbb8ae73d43569204a1f7ab2b893c/360x"
+    },
+    "photo_sha256": "29099382e9ecb2c4cc3844a919e1256ae4e610da6168a146256e146e96d30e3e",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 11,
+    "question_id": "c2a00680-0e5b-5053-803c-31cf6d55d444",
+    "source_form_question_id": "id-question-89578302",
+    "institution_ru": "Министерство финансов Российской Федерации",
+    "institution_en": "Ministry of Finance of the Russian Federation",
+    "institution_zh": "俄罗斯联邦财政部",
+    "slug": "russian_minfin",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/russian_minfin.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1524509/ff761c6479b215dd37ff6661542ad8d7/360x"
+    },
+    "photo_sha256": "482cda7b0075e10e4a3eb4ec71830df3789e5ae4765ac3d8f000250758726513",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 12,
+    "question_id": "17d66f99-0371-5c52-8ad1-42126e97a369",
+    "source_form_question_id": "id-question-89578404",
+    "institution_ru": "Московский городской суд",
+    "institution_en": "Moscow City Court",
+    "institution_zh": "莫斯科市法院",
+    "slug": "moscow_city_court",
+    "classification": {
+      "level": "regional",
+      "branch": "judicial",
+      "nuance": "regional_court"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/moscow_city_court.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1520179/0b6776e637eb6de3f8ce04b737c9bfdb/360x"
+    },
+    "photo_sha256": "3df509b65731e0d15f33362ee43e883f3fca4b7994023d17ba98ed62409b98f2",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 13,
+    "question_id": "d6e527cd-535d-522b-93b6-1c20fbc9adb9",
+    "source_form_question_id": "id-question-89578518",
+    "institution_ru": "Городская Дума города Нижнего Новгорода",
+    "institution_en": "Nizhny Novgorod City Duma",
+    "institution_zh": "下诺夫哥罗德市杜马",
+    "slug": "nizhny_novgorod_city_duma",
+    "classification": {
+      "level": "municipal",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/nizhny_novgorod_city_duma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6444861/765707b2ee90bd2f9edba58a1a25c110/360x"
+    },
+    "photo_sha256": "7dd5bbf9d0305a994588eea85462e63971e908a2589ae48ecf42bb2bd1c41565",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 14,
+    "question_id": "0eeaa049-aed8-500c-a282-1d95f6dcab52",
+    "source_form_question_id": "id-question-89578563",
+    "institution_ru": "Федеральная налоговая служба",
+    "institution_en": "Federal Tax Service",
+    "institution_zh": "俄罗斯联邦税务局",
+    "slug": "federal_tax_service",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/federal_tax_service.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/0cbc0aea59991255a1c069e199a7e157/360x"
+    },
+    "photo_sha256": "feef421c87b2be6bbc529b394d98a4628c960e97b6c1e9653ac239ec3915bdab",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 15,
+    "question_id": "1da1543b-cb21-5e40-a80a-c926888dbdfe",
+    "source_form_question_id": "id-question-89578591",
+    "institution_ru": "Департамент финансов Курганской области",
+    "institution_en": "Finance Department of Kurgan Region",
+    "institution_zh": "库尔干州财政厅",
+    "slug": "kurgan_finance_department",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/kurgan_finance_department.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6444861/491a60757fca876c1c24f206796ca755/360x"
+    },
+    "photo_sha256": "5746fa48b944924182d92698974ebc54ede0c664718eb17c24c22f8d4ff073fa",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 16,
+    "question_id": "d242392b-e07c-58b2-bb87-9bb30c0b6a02",
+    "source_form_question_id": "id-question-89578621",
+    "institution_ru": "Правительство Челябинской области",
+    "institution_en": "Government of Chelyabinsk Region",
+    "institution_zh": "车里雅宾斯克州政府",
+    "slug": "chelyabinsk_region_government",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/chelyabinsk_region_government.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/b41d7da81a0db86934eea7446e046f98/360x"
+    },
+    "photo_sha256": "3e003869029540b7c1f3d5bad98a0508bb64769778a38cf3711d1575b8bf9fd4",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 17,
+    "question_id": "2d680a03-d09a-51be-961d-41e04d0accfb",
+    "source_form_question_id": "id-question-89578649",
+    "institution_ru": "Конституционный Суд Российской Федерации",
+    "institution_en": "Constitutional Court of the Russian Federation",
+    "institution_zh": "俄罗斯联邦宪法法院",
+    "slug": "constitutional_court_rf",
+    "classification": {
+      "level": "federal",
+      "branch": "judicial",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/constitutional_court_rf.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1524509/5b79a013a8cf938ab9c8e5131357673e/360x"
+    },
+    "photo_sha256": "8b942cbf6d0277381d640ca63612a6b82fd46bea6b49280dd39c4cc968742f83",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 18,
+    "question_id": "086fc020-cad0-52d7-920f-1e0c9d4d68f8",
+    "source_form_question_id": "id-question-89578949",
+    "institution_ru": "Администрация города Екатеринбурга",
+    "institution_en": "Yekaterinburg City Administration",
+    "institution_zh": "叶卡捷琳堡市行政机关",
+    "slug": "yekaterinburg_administration",
+    "classification": {
+      "level": "municipal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/yekaterinburg_administration.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/c1453e9251458c7472354b33f9e51423/360x"
+    },
+    "photo_sha256": "63b00e238d89b00f5e5e7b1d021697bf23f4919046579b390700450e2d9fdd06",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 19,
+    "question_id": "e26175d0-15ad-5ccc-8068-05ece9407b28",
+    "source_form_question_id": "id-question-89578985",
+    "institution_ru": "Совет Федерации Федерального Собрания Российской Федерации",
+    "institution_en": "Federation Council of the Federal Assembly of the Russian Federation",
+    "institution_zh": "俄罗斯联邦会议联邦委员会",
+    "slug": "federation_council",
+    "classification": {
+      "level": "federal",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/federation_council.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/50a9f03983f21f5fb5057ff70c75f6d2/360x"
+    },
+    "photo_sha256": "964ee8cde8ff27709766d20f9672a3989e2f1db79f3ef670365bcade37cf609f",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 20,
+    "question_id": "6824625e-1e77-512f-9c05-7b4ac30ed05d",
+    "source_form_question_id": "id-question-89579052",
+    "institution_ru": "Кабинет Министров Республики Татарстан",
+    "institution_en": "Cabinet of Ministers of the Republic of Tatarstan",
+    "institution_zh": "鞑靼斯坦共和国部长内阁",
+    "slug": "tatarstan_cabinet",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/tatarstan_cabinet.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/aa5cd60a444995197c265d8a74635c4c/360x"
+    },
+    "photo_sha256": "6e25253256136b101465caeaf38f333b16233e11253e53f1cacfdc9a69d85802",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 21,
+    "question_id": "65de7fa2-1db9-54c2-8680-16f8fe7947f0",
+    "source_form_question_id": "id-question-89579082",
+    "institution_ru": "Министерство внутренних дел Российской Федерации (МВД России)",
+    "institution_en": "Ministry of Internal Affairs of the Russian Federation (MVD of Russia)",
+    "institution_zh": "俄罗斯联邦内务部（俄罗斯内务部）",
+    "slug": "russian_mvd",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/russian_mvd.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/5b4f50ca304c1655880f2b3defa45603/360x"
+    },
+    "photo_sha256": "85e4463cc573a3108eb4b0dc6c0009af5f0281b399081af820ac95dff3f5b945",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 22,
+    "question_id": "fcc0de2b-1b7d-545b-b6b7-6cba80996bfa",
+    "source_form_question_id": "id-question-89579116",
+    "institution_ru": "Управление МВД России по Тюменской области",
+    "institution_en": "Directorate of the Ministry of Internal Affairs of Russia for Tyumen Region",
+    "institution_zh": "俄罗斯内务部秋明州总局",
+    "slug": "tyumen_mvd",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "territorial_federal"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/tyumen_mvd.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/01f9bff2644f776ab6a376922c6211b6/360x"
+    },
+    "photo_sha256": "b9b87bec119a73943646bb11e5a0e5be534fbded030bfd9a5ceabe54b115b0c8",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/"
+  },
+  {
+    "order": 23,
+    "question_id": "87946257-ece5-56f6-820b-7829ecc8891a",
+    "source_form_question_id": "id-question-89579169",
+    "institution_ru": "Московская городская Дума",
+    "institution_en": "Moscow City Duma",
+    "institution_zh": "莫斯科市杜马",
+    "slug": "moscow_city_duma",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/moscow_city_duma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1520179/c488e165f3c3035163cbb0c3f5438f2d/360x"
+    },
+    "photo_sha256": "8a182197564e40660e94d46b89667d9cf7aa1d08c71384c16311022ce719c7fe",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 24,
+    "question_id": "527079bf-8831-53da-994d-0d796e66751a",
+    "source_form_question_id": "id-question-89579236",
+    "institution_ru": "Новосибирский областной суд",
+    "institution_en": "Novosibirsk Regional Court",
+    "institution_zh": "新西伯利亚州法院",
+    "slug": "novosibirsk_regional_court",
+    "classification": {
+      "level": "regional",
+      "branch": "judicial",
+      "nuance": "regional_court"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/novosibirsk_regional_court.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6444861/be0a6e872d7b6304d5b846b40ba1c80c/360x"
+    },
+    "photo_sha256": "5fa1e87c9dc2d71429d8d3d2b970f7079f816b69f0c0a1fc3461c97514bdd646",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 25,
+    "question_id": "a3cec546-c6da-5bba-bfbe-c88d08f3b718",
+    "source_form_question_id": "id-question-89579258",
+    "institution_ru": "Министерство здравоохранения Российской Федерации",
+    "institution_en": "Ministry of Health of the Russian Federation",
+    "institution_zh": "俄罗斯联邦卫生部",
+    "slug": "russian_health_ministry",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/russian_health_ministry.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/e3c51505df4434c1b244a9b01a7e5e49/360x"
+    },
+    "photo_sha256": "415df89efd4a2579d1e54d7c4c3c2916e772238c84684108a35ea1471fe60293",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 26,
+    "question_id": "549db907-5d75-5f94-87ed-b973b7bb8ade",
+    "source_form_question_id": "id-question-89579277",
+    "institution_ru": "Администрация города Краснодара",
+    "institution_en": "Krasnodar City Administration",
+    "institution_zh": "克拉斯诺达尔市行政机关",
+    "slug": "krasnodar_administration",
+    "classification": {
+      "level": "municipal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/krasnodar_administration.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1534616/a4df0ff36a0a7d08a1eae1ef80826ff8/360x"
+    },
+    "photo_sha256": "3f6a9eb2e383fe26cce0f76e894c1e3f241dead0403cd2d9542faaf987b2f6d1",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 27,
+    "question_id": "c1d2a6c7-afe7-5fe1-8703-7f9855561399",
+    "source_form_question_id": "id-question-89579331",
+    "institution_ru": "Аппарат Государственной Думы Федерального Собрания Российской Федерации",
+    "institution_en": "Staff of the State Duma of the Federal Assembly of the Russian Federation",
+    "institution_zh": "俄罗斯联邦会议国家杜马办公厅",
+    "slug": "state_duma_staff",
+    "classification": {
+      "level": "federal",
+      "branch": "legislative",
+      "nuance": "legislative_staff"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/state_duma_staff.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/360x"
+    },
+    "photo_sha256": "7292477e1c695c0473b80a6515f228944a31aeeb85365fd8abb174518dff0e99",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 28,
+    "question_id": "df0a56ed-b75f-5270-967e-99aeb13ac3e2",
+    "source_form_question_id": "id-question-89579427",
+    "institution_ru": "Правительство Пермского края",
+    "institution_en": "Government of Perm Krai",
+    "institution_zh": "彼尔姆边疆区政府",
+    "slug": "perm_krai_government",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/perm_krai_government.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6201457/7839c86672aeb578c9a72e749f1b48c0/360x"
+    },
+    "photo_sha256": "2d3aa41472b5b4f1a8eb5a7342eec9edf4c7db528ba801f227434e715133ff51",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 29,
+    "question_id": "8ab07bb7-92a2-5077-b648-48fd07427592",
+    "source_form_question_id": "id-question-89579490",
+    "institution_ru": "Министерство науки и высшего образования Российской Федерации",
+    "institution_en": "Ministry of Science and Higher Education of the Russian Federation",
+    "institution_zh": "俄罗斯联邦科学与高等教育部",
+    "slug": "russian_minobrnauki",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/russian_minobrnauki.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/58d02c66dc2ea6be2c8053524b58c627/360x"
+    },
+    "photo_sha256": "f0cd970c1614f40e12f0dc287f89479878a59a9e7f2dfa3f1ebbda4fc118adcf",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 30,
+    "question_id": "d9406182-7dfe-5ce9-aa5c-46c7070bdbd6",
+    "source_form_question_id": "id-question-89579514",
+    "institution_ru": "Челябинская городская Дума",
+    "institution_en": "Chelyabinsk City Duma",
+    "institution_zh": "车里雅宾斯克市杜马",
+    "slug": "chelyabinsk_city_duma",
+    "classification": {
+      "level": "municipal",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/chelyabinsk_city_duma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/74f23faffee3e42b90f83fe2981a6aca/360x"
+    },
+    "photo_sha256": "6298ed1b0d3ecccb666767d68d7de282d0eb4102f518986e59da7926fb19ec31",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 31,
+    "question_id": "b0c07c2d-f26f-5772-97b0-0a65ae8b4b02",
+    "source_form_question_id": "id-question-89579785",
+    "institution_ru": "Судебный департамент при Верховном Суде Российской Федерации",
+    "institution_en": "Judicial Department at the Supreme Court of the Russian Federation",
+    "institution_zh": "俄罗斯联邦最高法院司法行政局",
+    "slug": "judicial_department_rf",
+    "classification": {
+      "level": "federal",
+      "branch": "judicial",
+      "nuance": "judicial_department"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/judicial_department_rf.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/8edd3bd7bfb8053613d8866fd61e8655/360x"
+    },
+    "photo_sha256": "c37afcb3fe8c12b3eda2732781db59ebe42acc7cf25e94053ddde9152a6de029",
+    "separate_symbol": null,
+    "classification_reference": "https://sd.gov.ru/about/department/history/"
+  },
+  {
+    "order": 32,
+    "question_id": "1681c02c-e256-5b3c-91e9-bddba45df596",
+    "source_form_question_id": "id-question-89579836",
+    "institution_ru": "Федеральная антимонопольная служба (ФАС России)",
+    "institution_en": "Federal Antimonopoly Service (FAS Russia)",
+    "institution_zh": "俄罗斯联邦反垄断局（俄罗斯反垄断局）",
+    "slug": "fas_russia",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/fas_russia.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/da3f209380bb74657cecc73d8bf28f29/360x"
+    },
+    "photo_sha256": "7c99f6124bdff227f1f4e0dc89f1f9e6e13f44b32e95a23f8827dfc119b06cef",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 33,
+    "question_id": "d237ed43-8432-5617-a7b7-b1754bb7c932",
+    "source_form_question_id": "id-question-89579849",
+    "institution_ru": "Межрегиональное управление Федеральной антимонопольной службы по Ярославской области и Костромской области",
+    "institution_en": "Interregional Directorate of the Federal Antimonopoly Service for Yaroslavl and Kostroma Regions",
+    "institution_zh": "俄罗斯联邦反垄断局雅罗斯拉夫尔州和科斯特罗马州跨区域管理局",
+    "slug": "fas_yaroslavl_kostroma",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "territorial_federal"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/fas_yaroslavl_kostroma.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/246dd53f68da43991343c29fc1e41744/360x"
+    },
+    "photo_sha256": "1fd085bc158eb0a061163cd3f518be0b32edee044333df99fc36f223141f36ef",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/"
+  },
+  {
+    "order": 34,
+    "question_id": "9642cf5a-8364-5f54-9660-39e7edd2c50f",
+    "source_form_question_id": "id-question-89579912",
+    "institution_ru": "Федеральное казначейство",
+    "institution_en": "Federal Treasury",
+    "institution_zh": "俄罗斯联邦国库",
+    "slug": "federal_treasury",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/federal_treasury.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6329688/2ffd08ae8bd9e140303f1c0da59e8521/360x"
+    },
+    "photo_sha256": "4865ae849a3b86f6d7d7f1fdb12e7a8f05c18b2822e9c2838928ab57960ad30f",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 35,
+    "question_id": "6ccb2ef0-9824-5fbb-8dd5-66c665459055",
+    "source_form_question_id": "id-question-89579975",
+    "institution_ru": "Краснодарский краевой суд",
+    "institution_en": "Krasnodar Krai Court",
+    "institution_zh": "克拉斯诺达尔边疆区法院",
+    "slug": "krasnodar_krai_court",
+    "classification": {
+      "level": "regional",
+      "branch": "judicial",
+      "nuance": "regional_court"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/krasnodar_krai_court.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6329688/274a6d3798d4a3aef1add8fac40501dd/360x"
+    },
+    "photo_sha256": "5d40aa979424f382f74636f9abd22d3779b6aa019b89a76e44f9f28f77d02c90",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 36,
+    "question_id": "28706418-d30e-585b-9e1c-84d21bb9df89",
+    "source_form_question_id": "id-question-89580005",
+    "institution_ru": "Федеральная служба государственной статистики (Росстат)",
+    "institution_en": "Federal State Statistics Service (Rosstat)",
+    "institution_zh": "俄罗斯联邦国家统计局（俄罗斯统计局）",
+    "slug": "rosstat",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/rosstat.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/3a4d850f92c772c75244b2753d839f7b/360x"
+    },
+    "photo_sha256": "920e41b48b96746a615df3e7bf3f3a25cd26b41e8da2a3201830fb8f5ef9117f",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 37,
+    "question_id": "8f13ada4-e4f5-588e-b2ae-abe2ee5373c2",
+    "source_form_question_id": "id-question-89580060",
+    "institution_ru": "Министерство промышленности и торговли Донецкой Народной Республики",
+    "institution_en": "Ministry of Industry and Trade of the Donetsk People’s Republic",
+    "institution_zh": "顿涅茨克人民共和国工业和贸易部",
+    "slug": "dpr_industry_trade_ministry",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/dpr_industry_trade_ministry.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6329688/384e8bbc56901318a60a627fdb123fa3/360x"
+    },
+    "photo_sha256": "7cae721fc4cdbd51656918bd39a578c4d1c27c02c4e973035dc22ec14eeadc33",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 38,
+    "question_id": "0f46bb6d-885d-5778-9443-2eda1b8d4e27",
+    "source_form_question_id": "id-question-89580093",
+    "institution_ru": "Законодательное Собрание Санкт-Петербурга",
+    "institution_en": "Legislative Assembly of Saint Petersburg",
+    "institution_zh": "圣彼得堡立法会议",
+    "slug": "saint_petersburg_legislative_assembly",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/saint_petersburg_legislative_assembly.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/031747f40453bfa82e2f8d55e5a2a496/360x"
+    },
+    "photo_sha256": "7eb18254a0830eaa8eec9d4552585594b0a0a6d6dd285749a7761b7c35f3286e",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 39,
+    "question_id": "a2dcb0e4-f4e8-5fbf-986a-332d3ce950b9",
+    "source_form_question_id": "id-question-89580111",
+    "institution_ru": "Аппарат Уполномоченного по правам ребёнка в Свердловской области",
+    "institution_en": "Office of the Commissioner for Children’s Rights in Sverdlovsk Region",
+    "institution_zh": "斯维尔德洛夫斯克州儿童权利专员办公室",
+    "slug": "sverdlovsk_children_ombudsman_office",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": "ombudsman"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/sverdlovsk_children_ombudsman_office.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/360x"
+    },
+    "photo_sha256": "df7e138dd4ba4b3aa09d2e4aa060c8e725e505cd500e8c2bf971a9b70f5ec5ea",
+    "separate_symbol": null,
+    "classification_reference": "https://docs.cntd.ru/document/453104028"
+  },
+  {
+    "order": 40,
+    "question_id": "bd52fb65-3d0b-58b6-8fc4-bc1c0bb9e52d",
+    "source_form_question_id": "id-question-89580179",
+    "institution_ru": "Межрайонная инспекция Федеральной налоговой службы по Воронежской области",
+    "institution_en": "Interdistrict Inspectorate of the Federal Tax Service for Voronezh Region",
+    "institution_zh": "俄罗斯联邦税务局沃罗涅日州跨区税务监察局",
+    "slug": "voronezh_fns_inspectorate",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "territorial_federal"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/voronezh_fns_inspectorate.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6197807/3abbd8fe35b531e8598ae66f7ae229e1/360x"
+    },
+    "photo_sha256": "d3bfaab23ca23d5c35da44fc47200a13a4bd625c3817c97540029c2d8c908be0",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/"
+  },
+  {
+    "order": 41,
+    "question_id": "ef765ad5-8398-5b71-b841-f7eb83d5e284",
+    "source_form_question_id": "id-question-89580250",
+    "institution_ru": "Аппарат Законодательного собрания Ростовской области",
+    "institution_en": "Staff of the Legislative Assembly of Rostov Region",
+    "institution_zh": "罗斯托夫州立法会议办公厅",
+    "slug": "rostov_legislative_assembly_staff",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": "legislative_staff"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/rostov_legislative_assembly_staff.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/360x"
+    },
+    "photo_sha256": "c19db44f715785b04594fab3ab82e5b9d90b70504d7fe56a42678d2cecbc50b9",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 42,
+    "question_id": "60fc3f3d-9f59-55ac-ab24-70950832ba1f",
+    "source_form_question_id": "id-question-89580356",
+    "institution_ru": "Управление социальной политики по городу Асбесту (территориальный орган Минсоцполитики Свердловской области)",
+    "institution_en": "Social Policy Directorate for the City of Asbest (territorial body of the Ministry of Social Policy of Sverdlovsk Region)",
+    "institution_zh": "阿斯别斯特市社会政策管理局（斯维尔德洛夫斯克州社会政策部属地机构）",
+    "slug": "asbest_social_policy_directorate",
+    "classification": {
+      "level": "regional",
+      "branch": "executive",
+      "nuance": "regional_territorial"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/asbest_social_policy_directorate.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/5ce3e86143a3e086857e625714087fb3/360x"
+    },
+    "photo_sha256": "fe34c5a2628d307c0a00fca5dd71bc0f1d94706a5cde29a1e046d0e911c4dd04",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 43,
+    "question_id": "5b035eb7-7d0c-572b-a938-38594cb09320",
+    "source_form_question_id": "id-question-89580457",
+    "institution_ru": "Управление МВД России по городу Тольятти",
+    "institution_en": "Directorate of the Ministry of Internal Affairs of Russia for the City of Tolyatti",
+    "institution_zh": "俄罗斯内务部陶里亚蒂市局",
+    "slug": "tolyatti_mvd",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "territorial_federal"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/tolyatti_mvd.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/94da0b193ac9472da24c7c54aa8228e1/360x"
+    },
+    "photo_sha256": "02da02d36835c8fd3a3acb3316ccb9f2d4dfd54269984c78e7a05620ac40d5bb",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/"
+  },
+  {
+    "order": 44,
+    "question_id": "8e25646a-466b-5c4e-8a3d-aa3b6e4dda17",
+    "source_form_question_id": "id-question-89580509",
+    "institution_ru": "Администрация городского округа Первоуральск",
+    "institution_en": "Administration of Pervouralsk Urban Okrug",
+    "institution_zh": "第一乌拉尔斯克城市区行政机关",
+    "slug": "pervouralsk_administration",
+    "classification": {
+      "level": "municipal",
+      "branch": "executive",
+      "nuance": null
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/pervouralsk_administration.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1540164/b4653d545a24f77f6793d50f36edd292/360x"
+    },
+    "photo_sha256": "58e4bf1dc6fc1a56f2f4fe1106b9523df16f30f85e59b85c4ffc97cf7ea8bb7f",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 45,
+    "question_id": "89ca18ac-f3db-5287-9daf-85615bf90a1c",
+    "source_form_question_id": "id-question-89580562",
+    "institution_ru": "Аппарат Совета Депутатов городского округа Троицк",
+    "institution_en": "Staff of the Council of Deputies of Troitsk Urban Okrug",
+    "institution_zh": "特罗伊茨克城市区代表委员会办公厅",
+    "slug": "troitsk_council_staff",
+    "classification": {
+      "level": "municipal",
+      "branch": "legislative",
+      "nuance": "legislative_staff"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/troitsk_council_staff.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/360x"
+    },
+    "photo_sha256": "79ae1a7055b4c9c9b362626ee4d91975bc211f9fbefcbe03f68d62458b8f1b7f",
+    "separate_symbol": null,
+    "classification_reference": null
+  },
+  {
+    "order": 46,
+    "question_id": "6c92d357-00fa-53a9-923a-84c87d376c0a",
+    "source_form_question_id": "id-question-89580598",
+    "institution_ru": "Избирательная комиссия городского округа Самара",
+    "institution_en": "Election Commission of Samara Urban Okrug",
+    "institution_zh": "萨马拉城市区选举委员会",
+    "slug": "samara_election_commission",
+    "classification": {
+      "level": "municipal",
+      "branch": "legislative",
+      "nuance": "municipal_election_commission"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/samara_election_commission.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/360x"
+    },
+    "photo_sha256": "927a9b6539c50d428d175a953baf1f2c58d77d959f6a7e395821dee9baa03934",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_37119/fe85e7a344de6a5f670d6f03d2e275ba986daf2d/"
+  },
+  {
+    "order": 47,
+    "question_id": "7e0716da-40f8-524a-a111-ca28c7c0fddc",
+    "source_form_question_id": "id-question-89580715",
+    "institution_ru": "Управление Федеральной службы по ветеринарному и фитосанитарному надзору по Брянской области (Россельхознадзор)",
+    "institution_en": "Directorate of the Federal Service for Veterinary and Phytosanitary Supervision for Bryansk Region (Rosselkhoznadzor)",
+    "institution_zh": "俄罗斯联邦兽医和植物检疫监督局布良斯克州管理局（俄罗斯农业监督局）",
+    "slug": "bryansk_rosselkhoznadzor",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "territorial_federal"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/bryansk_rosselkhoznadzor.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/314c8d69e391cb3815c8e50714b0f81c/360x"
+    },
+    "photo_sha256": "8d5fc3cdb6e30cc9d6412df11a3e9f0feef2098564440b90cdcdc570d7579492",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/"
+  },
+  {
+    "order": 48,
+    "question_id": "241e62c4-635b-518b-9ed0-cc18c426ae2e",
+    "source_form_question_id": "id-question-89580733",
+    "institution_ru": "Контрольно-счетная палата Иркутской области",
+    "institution_en": "Chamber of Control and Accounts of Irkutsk Region",
+    "institution_zh": "伊尔库茨克州审计监督院",
+    "slug": "irkutsk_audit_chamber",
+    "classification": {
+      "level": "regional",
+      "branch": "legislative",
+      "nuance": "audit_chamber"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/irkutsk_audit_chamber.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/360x"
+    },
+    "photo_sha256": "186188dd7ae9811d8ff5f07914a6486f06db43a7dcbaf0ac10421f6792ebe3f0",
+    "separate_symbol": null,
+    "classification_reference": "https://www.consultant.ru/document/cons_doc_LAW_116725/9ca4a9ea339e6f38973664283e2ed27612a841da/"
+  },
+  {
+    "order": 49,
+    "question_id": "b0f83b11-6b89-5d18-a8aa-4fa655339400",
+    "source_form_question_id": "id-question-89581082",
+    "institution_ru": "Администрация федеральной территории «Сириус»",
+    "institution_en": "Administration of the Sirius Federal Territory",
+    "institution_zh": "“天狼星”联邦领地行政机关",
+    "slug": "sirius_administration",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "sirius"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/sirius_administration.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/6211551/1de31730a2b3e60cd378531d9934471b/360x"
+    },
+    "photo_sha256": "4b4ae108581cd560e0f97d953cc5b94a81a60a8c4b42f32c6b6836fcf5c10db2",
+    "separate_symbol": null,
+    "classification_reference": "https://npalib.ru/2020/12/22/zakon-437-fz-id151401/p18/"
+  },
+  {
+    "order": 50,
+    "question_id": "16578147-16a3-537a-b66e-2cbf638f4d1c",
+    "source_form_question_id": "id-question-89580884",
+    "institution_ru": "Администрация Президента Российской Федерации",
+    "institution_en": "Presidential Executive Office of the Russian Federation",
+    "institution_zh": "俄罗斯联邦总统办公厅",
+    "slug": "presidential_executive_office",
+    "classification": {
+      "level": "federal",
+      "branch": "executive",
+      "nuance": "presidential_administration"
+    },
+    "local_photo": "/static/course/quiz_media/branches_levels/photos/presidential_executive_office.webp",
+    "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/2560x",
+    "source_photo_links": {
+      "720x": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/720x",
+      "1280x": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/1280x",
+      "2560x": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/2560x",
+      "200x256": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/200x256",
+      "324x180": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/324x180",
+      "400x512": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/400x512",
+      "56x40": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/56x40",
+      "360x": "https://avatars.mds.yandex.net/get-forms/1667975/30bdff6ca4840707adc6fe9e951c4329/360x"
+    },
+    "photo_sha256": "4d273d9db34324268fd66c18362160284b3cc41036575cc6ebf472d01849047f",
+    "separate_symbol": null,
+    "classification_reference": "https://special.kremlin.ru/structure/administration/history"
+  }
+]

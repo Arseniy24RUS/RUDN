@@ -1,0 +1,68 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "results": {
+      ".read": true,
+      "$id": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['fio','group','difficulty','time_ms','placed','total','timestamp','user_agent']) && newData.child('fio').isString() && newData.child('fio').val().length <= 100 && newData.child('group').isString() && newData.child('group').val().length <= 50 && (newData.child('difficulty').val() === 'easy' || newData.child('difficulty').val() === 'medium' || newData.child('difficulty').val() === 'hard') && newData.child('time_ms').isNumber() && newData.child('time_ms').val() >= 0 && newData.child('time_ms').val() <= 3599000 && newData.child('placed').isNumber() && newData.child('placed').val() === 89 && newData.child('total').isNumber() && newData.child('total').val() === 89 && newData.child('timestamp').isNumber() && newData.child('user_agent').isString() && newData.child('user_agent').val().length <= 200"
+      },
+      ".indexOn": ["timestamp"]
+    },
+    "rudn-platform": {
+      "v1": {
+        "profiles": {
+          ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+          "$studentKey": {
+            ".read": "auth != null && (data.child('ownerUid').val() === auth.uid || auth.token.email === 'omnistat@yandex.ru')",
+            ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || (!data.exists() && newData.child('ownerUid').val() === auth.uid) || (data.exists() && data.child('ownerUid').val() === auth.uid && newData.child('ownerUid').val() === auth.uid) || (data.exists() && newData.child('ownerUid').val() === auth.uid && newData.child('recoveryHash').val() === data.child('recoveryHash').val()))",
+            ".validate": "newData.hasChildren(['studentKey','ticket','email','fullName','group','ownerUid','recoveryHash']) && newData.child('studentKey').val() === $studentKey && newData.child('fullName').isString() && newData.child('fullName').val().length <= 200 && newData.child('group').isString() && newData.child('group').val().length <= 80"
+          }
+        },
+        "attempts": {
+          ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+          "$studentKey": {
+            ".read": "auth != null && (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || auth.token.email === 'omnistat@yandex.ru')",
+            "$attemptId": {
+              ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid && newData.child('ownerUid').val() === auth.uid && newData.child('studentKey').val() === $studentKey))",
+              ".validate": "newData.hasChildren(['id','studentKey','createdAt','ownerUid']) && newData.child('id').val() === $attemptId"
+            }
+          }
+        },
+        "grades": {
+          ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+          "$studentKey": {
+            ".read": "auth != null && (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || auth.token.email === 'omnistat@yandex.ru')",
+            "$activitySlug": {
+              ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid && newData.child('ownerUid').val() === auth.uid && newData.child('sourceAttemptId').isString() && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('ownerUid').val() === auth.uid && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('activitySlug').val() === $activitySlug && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('points').val() === newData.child('points').val()))",
+              ".validate": "newData.child('points').isNumber() && newData.child('points').val() >= 0 && (($activitySlug === 'exam' && newData.child('points').val() <= 20) || ($activitySlug !== 'exam' && newData.child('points').val() <= 5))"
+            }
+          }
+        },
+        "live": {
+          "current": {
+            ".read": "auth != null",
+            ".write": "auth != null && auth.token.email === 'omnistat@yandex.ru'"
+          },
+          "sessions": {
+            "$sessionId": {
+              ".read": "auth != null",
+              ".write": "auth != null && auth.token.email === 'omnistat@yandex.ru'"
+            }
+          },
+          "responses": {
+            "$sessionId": {
+              ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+              "$questionId": {
+                "$studentKey": {
+                  ".write": "auth != null && root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid && newData.child('ownerUid').val() === auth.uid && newData.child('studentKey').val() === $studentKey"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

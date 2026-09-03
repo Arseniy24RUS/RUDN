@@ -1,0 +1,107 @@
+[
+  {
+    "iso": "AUS",
+    "features": 9,
+    "source_size": 4802393,
+    "size": 761369,
+    "tolerance": 0.01758752183703506
+  },
+  {
+    "iso": "BRA",
+    "features": 27,
+    "source_size": 1483651,
+    "size": 328692,
+    "tolerance": 0.007909423963082519
+  },
+  {
+    "iso": "CAN",
+    "features": 13,
+    "source_size": 26022306,
+    "size": 7137406,
+    "tolerance": 0.021697011275877472
+  },
+  {
+    "iso": "CHN",
+    "features": 34,
+    "source_size": 263343,
+    "size": 196923,
+    "tolerance": 0.010091912180857681
+  },
+  {
+    "iso": "DEU",
+    "features": 16,
+    "source_size": 1209873,
+    "size": 776589,
+    "tolerance": 0.0017192473259141096
+  },
+  {
+    "iso": "ESP",
+    "features": 19,
+    "source_size": 974041,
+    "size": 266763,
+    "tolerance": 0.003955561009610341
+  },
+  {
+    "iso": "FRA",
+    "features": 13,
+    "source_size": 1674230,
+    "size": 726668,
+    "tolerance": 0.002520496120202371
+  },
+  {
+    "iso": "GBR",
+    "features": 4,
+    "source_size": 192120,
+    "size": 167767,
+    "tolerance": 0.0021583143830962073
+  },
+  {
+    "iso": "IND",
+    "features": 36,
+    "source_size": 5103747,
+    "size": 1106947,
+    "tolerance": 0.006025520839583946
+  },
+  {
+    "iso": "ITA",
+    "features": 5,
+    "source_size": 857401,
+    "size": 359877,
+    "tolerance": 0.0023732907990547288
+  },
+  {
+    "iso": "JPN",
+    "features": 47,
+    "source_size": 2235621,
+    "size": 381949,
+    "tolerance": 0.005393775435095079
+  },
+  {
+    "iso": "KAZ",
+    "features": 16,
+    "source_size": 475485,
+    "size": 152400,
+    "tolerance": 0.006208808945283637
+  },
+  {
+    "iso": "MEX",
+    "features": 32,
+    "source_size": 4003247,
+    "size": 1041608,
+    "tolerance": 0.005215216377004169
+  },
+  {
+    "iso": "TUR",
+    "features": 81,
+    "source_size": 1559408,
+    "size": 634032,
+    "tolerance": 0.0028801256653733227
+  },
+  {
+    "iso": "ZAF",
+    "features": 9,
+    "source_size": 723491,
+    "size": 315220,
+    "tolerance": 0.002974525808720212
+  }
+]

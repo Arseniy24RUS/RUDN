@@ -1,19 +1,80 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0079c1">
-  <meta name="description" content="Образовательная платформа РУДН по курсу «Введение в специальность: государственное и муниципальное управление»">
-  <title>РУДН — Введение в специальность</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Образовательная платформа курса «Введение в специальность: государственное и муниципальное управление» РУДН.">
+  <title>Введение в специальность · РУДН</title>
+  <link rel="icon" href="assets/img/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-  <div id="app"><div class="boot">Загрузка образовательной платформы…</div></div>
-  <noscript>Для работы платформы необходимо включить JavaScript.</noscript>
-  <script src="./config.js"></script>
-  <script type="module" src="./assets/app.js"></script>
+  <div class="app-shell" id="appShell">
+    <header class="topbar">
+      <a class="brand" href="#dashboard" aria-label="Главная страница курса">
+        <img src="assets/img/rudn-logo.png" alt="РУДН">
+        <span class="brand-copy"><strong data-i18n="courseShort">Введение в специальность</strong><small data-i18n="programmeShort">Государственное и муниципальное управление</small></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="sync-chip" id="syncChip"><span class="sync-dot"></span><span data-i18n="localMode">Локальный режим</span></span>
+        <div class="language-menu">
+          <button class="icon-button language-button" id="languageButton" type="button" aria-haspopup="menu" aria-expanded="false" title="Язык"><span id="languageFlag">🇷🇺</span></button>
+          <div class="language-popover" id="languagePopover" role="menu" hidden>
+            <button type="button" data-lang="ru" role="menuitem">🇷🇺 <span>Русский</span></button>
+            <button type="button" data-lang="en" role="menuitem">🇬🇧 <span>English</span></button>
+            <button type="button" data-lang="zh" role="menuitem">🇨🇳 <span>中文</span></button>
+          </div>
+        </div>
+        <button class="profile-button" id="profileButton" type="button"><span class="avatar" id="topAvatar">?</span><span class="profile-compact"><strong id="topName" data-i18n="signIn">Войти</strong><small id="topGroup"></small></span></button>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar" aria-label="Навигация">
+      <nav>
+        <a href="#dashboard" data-route="dashboard"><span>⌂</span><b data-i18n="navDashboard">Курс</b></a>
+        <a href="#gradebook" data-route="gradebook"><span>▦</span><b data-i18n="navGradebook">Журнал</b></a>
+        <a href="#live" data-route="live"><span>◉</span><b data-i18n="navLive">Live-квиз</b></a>
+        <a href="#puzzle" data-route="puzzle"><span>⌖</span><b data-i18n="navPuzzle">Карты</b></a>
+        <a href="#materials" data-route="materials"><span>▤</span><b data-i18n="navMaterials">Материалы</b></a>
+        <a href="#profile" data-route="profile"><span>◎</span><b data-i18n="navProfile">Профиль</b></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="#admin" data-route="admin"><span>⚙</span><b data-i18n="navTeacher">Преподавателю</b></a>
+        <small>RUDN Learning Platform<br><span id="versionLabel">Pages 1.0</span></small>
+      </div>
+    </aside>
+
+    <main class="main" id="app" tabindex="-1">
+      <div class="initial-loader"><div class="spinner"></div><p data-i18n="loading">Загрузка платформы…</p></div>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Мобильная навигация">
+      <a href="#dashboard" data-route="dashboard"><span>⌂</span><small data-i18n="navDashboard">Курс</small></a>
+      <a href="#gradebook" data-route="gradebook"><span>▦</span><small data-i18n="navGradebook">Журнал</small></a>
+      <a href="#live" data-route="live"><span>◉</span><small data-i18n="navLive">Live</small></a>
+      <a href="#puzzle" data-route="puzzle"><span>⌖</span><small data-i18n="navPuzzle">Карты</small></a>
+      <a href="#profile" data-route="profile"><span>◎</span><small data-i18n="navProfile">Профиль</small></a>
+    </nav>
+  </div>
+
+  <dialog class="modal" id="authDialog">
+    <form method="dialog" class="modal-card" id="authForm">
+      <button class="modal-close" value="cancel" aria-label="Закрыть">×</button>
+      <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН"><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Список группы заранее не требуется</span></div></div>
+      <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru"></label>
+      <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" required></label>
+      <label><span data-i18n="groupLabel">Учебная группа</span><input id="authGroup" required placeholder="ГГУбд-01-26"></label>
+      <label class="pin-row"><span data-i18n="recoveryPinLabel">Код восстановления (только при входе с нового устройства)</span><input id="authRecovery" inputmode="numeric" maxlength="8" placeholder="необязательно"></label>
+      <p class="form-hint" data-i18n="authHint">При первом входе платформа создаст профиль. Пароль и одноразовый код не используются.</p>
+      <button class="btn btn-primary btn-wide" type="submit" value="default" data-i18n="continue">Продолжить</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="confirmDialog"><form method="dialog" class="modal-card compact"><h2 id="confirmTitle">Подтверждение</h2><p id="confirmText"></p><div class="dialog-actions"><button class="btn btn-neutral" value="cancel" data-i18n="cancel">Отмена</button><button class="btn btn-primary" value="ok" data-i18n="confirm">Подтвердить</button></div></form></dialog>
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,175 @@
+[
+  {
+    "slug": "final",
+    "id": "6942211eeb614611ffe23a2f",
+    "title": "Итоговый тест",
+    "publicUrl": "https://forms.yandex.ru/cloud/6942211eeb614611ffe23a2f/",
+    "ok": true,
+    "surveyName": "Итоговый тест по \"Введению в специальность Государственное и муниципальное управление\" (2025)",
+    "pages": 1,
+    "items": 39,
+    "itemTypes": {
+      "comment:": 2,
+      "enum:radio": 31,
+      "string:": 3,
+      "enum:checkbox": 3
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "seminar1_full",
+    "id": "68c075f9e010db424bd32329",
+    "title": "Семинар 1 полный квиз",
+    "publicUrl": "https://forms.yandex.ru/cloud/68c075f9e010db424bd32329/",
+    "ok": true,
+    "surveyName": "Семинар 1 - Квиз. Ветви и уровни власти",
+    "pages": 51,
+    "items": 157,
+    "itemTypes": {
+      "enum:radio": 57,
+      "enum:onerow": 100
+    },
+    "uniqueMedia": 50,
+    "downloadedMedia": 50
+  },
+  {
+    "slug": "seminar1_short",
+    "id": "68c02222d04688cf22bd64b2",
+    "title": "Семинар 1 короткий тест",
+    "publicUrl": "https://forms.yandex.ru/cloud/68c02222d04688cf22bd64b2/",
+    "ok": true,
+    "surveyName": "Семинар 1 - Тест. Определите ветви и уровни власти",
+    "pages": 1,
+    "items": 12,
+    "itemTypes": {
+      "enum:radio": 12
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "seminar4",
+    "id": "68f77ecf6d2d7306fb5dffeb",
+    "title": "Семинар 4 НПА",
+    "publicUrl": "https://forms.yandex.ru/cloud/68f77ecf6d2d7306fb5dffeb/",
+    "ok": true,
+    "surveyName": "Семинар 4 - Квиз. Нормативные правовые акты",
+    "pages": 16,
+    "items": 103,
+    "itemTypes": {
+      "comment:": 1,
+      "enum:radio": 23,
+      "enum:onerow": 71,
+      "enum:checkbox": 8
+    },
+    "uniqueMedia": 15,
+    "downloadedMedia": 15
+  },
+  {
+    "slug": "seminar5",
+    "id": "690a364949af472a6ee7642c",
+    "title": "Семинар 5 обращения",
+    "publicUrl": "https://forms.yandex.ru/cloud/690a364949af472a6ee7642c/",
+    "ok": true,
+    "surveyName": "Семинар 5 - Обращения граждан",
+    "pages": 33,
+    "items": 444,
+    "itemTypes": {
+      "comment:": 33,
+      "enum:radio": 8,
+      "enum:onerow": 124,
+      "enum:checkbox": 31,
+      "date:": 31,
+      "enum:dropdown": 31,
+      "string:": 186
+    },
+    "uniqueMedia": 2,
+    "downloadedMedia": 2
+  },
+  {
+    "slug": "lecture1",
+    "id": "68c06d9ef47e7342d327d326",
+    "title": "Лекция 1",
+    "publicUrl": "https://forms.yandex.ru/cloud/68c06d9ef47e7342d327d326/",
+    "ok": true,
+    "surveyName": "Тест по Лекции 1 - Институциональные основы ГМУ (2025)",
+    "pages": 1,
+    "items": 13,
+    "itemTypes": {
+      "comment:": 1,
+      "enum:radio": 11,
+      "enum:checkbox": 1
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "lecture2",
+    "id": "68e78afe90fa7b71d6fd67af",
+    "title": "Лекция 2",
+    "publicUrl": "https://forms.yandex.ru/cloud/68e78afe90fa7b71d6fd67af/",
+    "ok": true,
+    "surveyName": "Тест по Лекции 2 - Административно-территориальное деление России (2025)",
+    "pages": 1,
+    "items": 13,
+    "itemTypes": {
+      "comment:": 1,
+      "enum:radio": 8,
+      "enum:checkbox": 3,
+      "string:": 1
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "lecture3",
+    "id": "68e78d6c5056908215e08c66",
+    "title": "Лекция 3",
+    "publicUrl": "https://forms.yandex.ru/cloud/68e78d6c5056908215e08c66/",
+    "ok": true,
+    "surveyName": "Тест по Лекции 3 - Система расселения России (2025)",
+    "pages": 1,
+    "items": 13,
+    "itemTypes": {
+      "comment:": 1,
+      "enum:radio": 12
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "lecture4",
+    "id": "68e78f3502848fa2f6ec2755",
+    "title": "Лекция 4",
+    "publicUrl": "https://forms.yandex.ru/cloud/68e78f3502848fa2f6ec2755/",
+    "ok": true,
+    "surveyName": "Тест по Лекции 4 - Нормативные правовые акты (2025)",
+    "pages": 1,
+    "items": 14,
+    "itemTypes": {
+      "comment:": 2,
+      "enum:radio": 12
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  },
+  {
+    "slug": "lecture5",
+    "id": "691f1d9595add564a410cc25",
+    "title": "Лекция 5",
+    "publicUrl": "https://forms.yandex.ru/cloud/691f1d9595add564a410cc25/",
+    "ok": true,
+    "surveyName": "Тест по Лекции 5 - Документооборот и делопроизводство (2025)",
+    "pages": 1,
+    "items": 13,
+    "itemTypes": {
+      "comment:": 1,
+      "enum:radio": 10,
+      "string:": 1,
+      "enum:checkbox": 1
+    },
+    "uniqueMedia": 0,
+    "downloadedMedia": 0
+  }
+]

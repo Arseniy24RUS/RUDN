@@ -1,0 +1,502 @@
+{
+  "state_duma": {
+    "question_id": "29ae02be-3bda-5b48-81e6-b8565fabf760",
+    "institution_key": "state_duma",
+    "symbol_key": "state_duma",
+    "kind": "official_emblem",
+    "title": "Государственная Дума",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_gosduma.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/state_duma.webp"
+  },
+  "supreme_court_rf": {
+    "question_id": "1feebc7f-6872-56be-a958-7f090218591d",
+    "institution_key": "supreme_court_rf",
+    "symbol_key": "supreme_court_rf",
+    "kind": "official_emblem",
+    "title": "Верховный Суд РФ",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Supreme_Court_of_Russia.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/supreme_court_rf.webp"
+  },
+  "moscow_government": {
+    "question_id": "f59842c3-91da-5740-8b11-322bb5e1a9a7",
+    "institution_key": "moscow_government",
+    "symbol_key": "moscow_government",
+    "kind": "official_logo",
+    "title": "Правительство Москвы / Mos.ru",
+    "source": "https://commons.wikimedia.org/wiki/File:Mos.ru_logo.png",
+    "license": "CC BY 4.0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/moscow_government.webp"
+  },
+  "mfa_russia": {
+    "question_id": "cac3af1c-a4b5-533a-b3b7-a986bea3a9a7",
+    "institution_key": "mfa_russia",
+    "symbol_key": "mfa_russia",
+    "kind": "official_emblem",
+    "title": "МИД России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Foreign_Affairs_of_Russia.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/mfa_russia.webp"
+  },
+  "supreme_court_tatarstan": {
+    "question_id": "7fd17bff-0bef-5896-8c6a-2b99018549da",
+    "institution_key": "supreme_court_tatarstan",
+    "symbol_key": "tatarstan",
+    "kind": "jurisdiction_coat",
+    "title": "Республика Татарстан",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tatarstan.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/tatarstan.webp"
+  },
+  "yekaterinburg_city_duma": {
+    "question_id": "5cb5d92f-96ed-5738-9638-0df59e55c831",
+    "institution_key": "yekaterinburg_city_duma",
+    "symbol_key": "yekaterinburg",
+    "kind": "jurisdiction_coat",
+    "title": "Екатеринбург",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Yekaterinburg_(Sverdlovsk_oblast).svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/yekaterinburg.webp"
+  },
+  "russian_government": {
+    "question_id": "35acaa20-e43b-57ee-b393-0f6e3fe56084",
+    "institution_key": "russian_government",
+    "symbol_key": "government_rf",
+    "kind": "official_logo",
+    "title": "Правительство РФ",
+    "source": "https://commons.wikimedia.org/wiki/File:Government.ru_logo.svg",
+    "license": "CC BY 4.0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/government_rf.webp"
+  },
+  "sverdlovsk_regional_court": {
+    "question_id": "a8bb2e41-bda0-5dad-9bcf-9850f9eec586",
+    "institution_key": "sverdlovsk_regional_court",
+    "symbol_key": "sverdlovsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Свердловская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Sverdlovsk_oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/sverdlovsk_oblast.webp"
+  },
+  "novosibirsk_city_hall": {
+    "question_id": "17ff2b54-40b9-5f26-b8cc-dff2f5dbd5b4",
+    "institution_key": "novosibirsk_city_hall",
+    "symbol_key": "novosibirsk_city",
+    "kind": "jurisdiction_coat",
+    "title": "Новосибирск",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Novosibirsk.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/novosibirsk_city.webp"
+  },
+  "omsk_legislative_assembly": {
+    "question_id": "ed25d13c-b04b-5536-9df9-41eb6bf24850",
+    "institution_key": "omsk_legislative_assembly",
+    "symbol_key": "omsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Герб Омской области с 2020 года",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Omsk_Oblast.svg",
+    "license": "Public domain / PD-RU-exempt",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/omsk_oblast.webp"
+  },
+  "russian_minfin": {
+    "question_id": "c2a00680-0e5b-5053-803c-31cf6d55d444",
+    "institution_key": "russian_minfin",
+    "symbol_key": "minfin_rf",
+    "kind": "official_emblem",
+    "title": "Минфин России",
+    "source": "https://commons.wikimedia.org/wiki/File:Digital_emblem_of_the_Ministry_of_Finance_(Russia).svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/minfin_rf.webp"
+  },
+  "moscow_city_court": {
+    "question_id": "17d66f99-0371-5c52-8ad1-42126e97a369",
+    "institution_key": "moscow_city_court",
+    "symbol_key": "moscow_government",
+    "kind": "official_logo",
+    "title": "Правительство Москвы / Mos.ru",
+    "source": "https://commons.wikimedia.org/wiki/File:Mos.ru_logo.png",
+    "license": "CC BY 4.0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/moscow_government.webp"
+  },
+  "nizhny_novgorod_city_duma": {
+    "question_id": "d6e527cd-535d-522b-93b6-1c20fbc9adb9",
+    "institution_key": "nizhny_novgorod_city_duma",
+    "symbol_key": "nizhny_novgorod",
+    "kind": "jurisdiction_coat",
+    "title": "Нижний Новгород",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Nizhny_Novgorod.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/nizhny_novgorod.webp"
+  },
+  "federal_tax_service": {
+    "question_id": "0eeaa049-aed8-500c-a282-1d95f6dcab52",
+    "institution_key": "federal_tax_service",
+    "symbol_key": "fns_rf",
+    "kind": "official_emblem",
+    "title": "ФНС России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Tax_Service.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/fns_rf.webp"
+  },
+  "kurgan_finance_department": {
+    "question_id": "1da1543b-cb21-5e40-a80a-c926888dbdfe",
+    "institution_key": "kurgan_finance_department",
+    "symbol_key": "kurgan_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Курганская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kurgan_Oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/kurgan_oblast.webp"
+  },
+  "chelyabinsk_region_government": {
+    "question_id": "d242392b-e07c-58b2-bb87-9bb30c0b6a02",
+    "institution_key": "chelyabinsk_region_government",
+    "symbol_key": "chelyabinsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Челябинская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Chelyabinsk_Oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/chelyabinsk_oblast.webp"
+  },
+  "constitutional_court_rf": {
+    "question_id": "2d680a03-d09a-51be-961d-41e04d0accfb",
+    "institution_key": "constitutional_court_rf",
+    "symbol_key": "constitutional_court_rf",
+    "kind": "official_emblem",
+    "title": "Конституционный Суд РФ",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Russian_Soviet_Federative_Socialist_Republic_(1978%E2%80%931991),_Emblem_of_the_Russian_Federation_(1991%E2%80%931992).svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/constitutional_court_rf.webp"
+  },
+  "yekaterinburg_administration": {
+    "question_id": "086fc020-cad0-52d7-920f-1e0c9d4d68f8",
+    "institution_key": "yekaterinburg_administration",
+    "symbol_key": "yekaterinburg",
+    "kind": "jurisdiction_coat",
+    "title": "Екатеринбург",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Yekaterinburg_(Sverdlovsk_oblast).svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/yekaterinburg.webp"
+  },
+  "federation_council": {
+    "question_id": "e26175d0-15ad-5ccc-8068-05ece9407b28",
+    "institution_key": "federation_council",
+    "symbol_key": "federation_council",
+    "kind": "official_emblem",
+    "title": "Совет Федерации",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federation_Council_of_Russia_(simple).svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/federation_council.webp"
+  },
+  "tatarstan_cabinet": {
+    "question_id": "6824625e-1e77-512f-9c05-7b4ac30ed05d",
+    "institution_key": "tatarstan_cabinet",
+    "symbol_key": "tatarstan",
+    "kind": "jurisdiction_coat",
+    "title": "Республика Татарстан",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tatarstan.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/tatarstan.webp"
+  },
+  "russian_mvd": {
+    "question_id": "65de7fa2-1db9-54c2-8680-16f8fe7947f0",
+    "institution_key": "russian_mvd",
+    "symbol_key": "mvd_rf",
+    "kind": "official_emblem",
+    "title": "МВД России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Internal_Affairs.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/mvd_rf.webp"
+  },
+  "tyumen_mvd": {
+    "question_id": "fcc0de2b-1b7d-545b-b6b7-6cba80996bfa",
+    "institution_key": "tyumen_mvd",
+    "symbol_key": "mvd_rf",
+    "kind": "official_emblem",
+    "title": "МВД России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Internal_Affairs.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/mvd_rf.webp"
+  },
+  "moscow_city_duma": {
+    "question_id": "87946257-ece5-56f6-820b-7829ecc8891a",
+    "institution_key": "moscow_city_duma",
+    "symbol_key": "moscow_city_duma",
+    "kind": "official_emblem",
+    "title": "Московская городская Дума",
+    "source": "https://commons.wikimedia.org/wiki/File:Moscow_City_Duma_Logo.png",
+    "license": "CC0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/moscow_city_duma.webp"
+  },
+  "novosibirsk_regional_court": {
+    "question_id": "527079bf-8831-53da-994d-0d796e66751a",
+    "institution_key": "novosibirsk_regional_court",
+    "symbol_key": "novosibirsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Новосибирская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Novosibirsk_oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/novosibirsk_oblast.webp"
+  },
+  "russian_health_ministry": {
+    "question_id": "a3cec546-c6da-5bba-bfbe-c88d08f3b718",
+    "institution_key": "russian_health_ministry",
+    "symbol_key": "minhealth_rf",
+    "kind": "official_emblem",
+    "title": "Минздрав России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Health_of_Russia.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/minhealth_rf.webp"
+  },
+  "krasnodar_administration": {
+    "question_id": "549db907-5d75-5f94-87ed-b973b7bb8ade",
+    "institution_key": "krasnodar_administration",
+    "symbol_key": "krasnodar_city",
+    "kind": "jurisdiction_coat",
+    "title": "Герб города Краснодара",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Krasnodar.png",
+    "license": "Public domain / PD-RU-exempt",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/krasnodar_city.webp"
+  },
+  "state_duma_staff": {
+    "question_id": "c1d2a6c7-afe7-5fe1-8703-7f9855561399",
+    "institution_key": "state_duma_staff",
+    "symbol_key": "state_duma",
+    "kind": "official_emblem",
+    "title": "Государственная Дума",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_gosduma.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/state_duma.webp"
+  },
+  "perm_krai_government": {
+    "question_id": "df0a56ed-b75f-5270-967e-99aeb13ac3e2",
+    "institution_key": "perm_krai_government",
+    "symbol_key": "perm_krai",
+    "kind": "jurisdiction_coat",
+    "title": "Пермский край",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Perm_Krai.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/perm_krai.webp"
+  },
+  "russian_minobrnauki": {
+    "question_id": "8ab07bb7-92a2-5077-b648-48fd07427592",
+    "institution_key": "russian_minobrnauki",
+    "symbol_key": "minobrnauki_rf",
+    "kind": "official_emblem",
+    "title": "Минобрнауки России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Science_and_Higher_Education.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/minobrnauki_rf.webp"
+  },
+  "chelyabinsk_city_duma": {
+    "question_id": "d9406182-7dfe-5ce9-aa5c-46c7070bdbd6",
+    "institution_key": "chelyabinsk_city_duma",
+    "symbol_key": "chelyabinsk_city",
+    "kind": "jurisdiction_coat",
+    "title": "Челябинск",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Chelyabinsk.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/chelyabinsk_city.webp"
+  },
+  "judicial_department_rf": {
+    "question_id": "b0c07c2d-f26f-5772-97b0-0a65ae8b4b02",
+    "institution_key": "judicial_department_rf",
+    "symbol_key": "judicial_department",
+    "kind": "official_emblem",
+    "title": "Судебный департамент",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Judicial_Department.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/judicial_department.webp"
+  },
+  "fas_russia": {
+    "question_id": "1681c02c-e256-5b3c-91e9-bddba45df596",
+    "institution_key": "fas_russia",
+    "symbol_key": "fas_rf",
+    "kind": "official_emblem",
+    "title": "ФАС России",
+    "source": "https://commons.wikimedia.org/wiki/File:Embllem_of_the_Federal_Antimonopoly_Service.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/fas_rf.webp"
+  },
+  "fas_yaroslavl_kostroma": {
+    "question_id": "d237ed43-8432-5617-a7b7-b1754bb7c932",
+    "institution_key": "fas_yaroslavl_kostroma",
+    "symbol_key": "fas_rf",
+    "kind": "official_emblem",
+    "title": "ФАС России",
+    "source": "https://commons.wikimedia.org/wiki/File:Embllem_of_the_Federal_Antimonopoly_Service.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/fas_rf.webp"
+  },
+  "federal_treasury": {
+    "question_id": "9642cf5a-8364-5f54-9660-39e7edd2c50f",
+    "institution_key": "federal_treasury",
+    "symbol_key": "treasury_rf",
+    "kind": "official_emblem",
+    "title": "Федеральное казначейство",
+    "source": "https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%B4%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BD%D0%B0%D0%BA-%D1%8D%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BA%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B0.png",
+    "license": "CC0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/treasury_rf.webp"
+  },
+  "krasnodar_krai_court": {
+    "question_id": "6ccb2ef0-9824-5fbb-8dd5-66c665459055",
+    "institution_key": "krasnodar_krai_court",
+    "symbol_key": "krasnodar_krai",
+    "kind": "jurisdiction_coat",
+    "title": "Краснодарский край",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Krasnodar_Krai.svg",
+    "license": "CC BY 4.0",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/krasnodar_krai.webp"
+  },
+  "rosstat": {
+    "question_id": "28706418-d30e-585b-9e1c-84d21bb9df89",
+    "institution_key": "rosstat",
+    "symbol_key": "rosstat",
+    "kind": "official_logo",
+    "title": "Росстат",
+    "source": "https://commons.wikimedia.org/wiki/File:%D0%92%D1%81%D0%B5%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D0%BF%D0%B5%D1%80%D0%B5%D0%BF%D0%B8%D1%81%D1%8C_%D0%BD%D0%B0%D1%81%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_2020.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/rosstat.webp"
+  },
+  "dpr_industry_trade_ministry": {
+    "question_id": "8f13ada4-e4f5-588e-b2ae-abe2ee5373c2",
+    "institution_key": "dpr_industry_trade_ministry",
+    "symbol_key": "dpr",
+    "kind": "jurisdiction_coat",
+    "title": "Донецкая Народная Республика",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_the_Donetsk_People%27s_Republic.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/dpr.webp"
+  },
+  "saint_petersburg_legislative_assembly": {
+    "question_id": "0f46bb6d-885d-5778-9443-2eda1b8d4e27",
+    "institution_key": "saint_petersburg_legislative_assembly",
+    "symbol_key": "saint_petersburg",
+    "kind": "jurisdiction_coat",
+    "title": "Санкт-Петербург",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Saint_Petersburg.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/saint_petersburg.webp"
+  },
+  "sverdlovsk_children_ombudsman_office": {
+    "question_id": "a2dcb0e4-f4e8-5fbf-986a-332d3ce950b9",
+    "institution_key": "sverdlovsk_children_ombudsman_office",
+    "symbol_key": "sverdlovsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Свердловская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Sverdlovsk_oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/sverdlovsk_oblast.webp"
+  },
+  "voronezh_fns_inspectorate": {
+    "question_id": "bd52fb65-3d0b-58b6-8fc4-bc1c0bb9e52d",
+    "institution_key": "voronezh_fns_inspectorate",
+    "symbol_key": "fns_rf",
+    "kind": "official_emblem",
+    "title": "ФНС России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Tax_Service.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/fns_rf.webp"
+  },
+  "rostov_legislative_assembly_staff": {
+    "question_id": "ef765ad5-8398-5b71-b841-f7eb83d5e284",
+    "institution_key": "rostov_legislative_assembly_staff",
+    "symbol_key": "rostov_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Ростовская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Rostov_Oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/rostov_oblast.webp"
+  },
+  "asbest_social_policy_directorate": {
+    "question_id": "60fc3f3d-9f59-55ac-ab24-70950832ba1f",
+    "institution_key": "asbest_social_policy_directorate",
+    "symbol_key": "sverdlovsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Свердловская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Sverdlovsk_oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/sverdlovsk_oblast.webp"
+  },
+  "tolyatti_mvd": {
+    "question_id": "5b035eb7-7d0c-572b-a938-38594cb09320",
+    "institution_key": "tolyatti_mvd",
+    "symbol_key": "mvd_rf",
+    "kind": "official_emblem",
+    "title": "МВД России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Internal_Affairs.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/mvd_rf.webp"
+  },
+  "pervouralsk_administration": {
+    "question_id": "8e25646a-466b-5c4e-8a3d-aa3b6e4dda17",
+    "institution_key": "pervouralsk_administration",
+    "symbol_key": "pervouralsk",
+    "kind": "jurisdiction_coat",
+    "title": "Первоуральск",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Pervouralsk_(Sverdlovsk_oblast).png",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/pervouralsk.webp"
+  },
+  "troitsk_council_staff": {
+    "question_id": "89ca18ac-f3db-5287-9daf-85615bf90a1c",
+    "institution_key": "troitsk_council_staff",
+    "symbol_key": "troitsk_moscow",
+    "kind": "jurisdiction_coat",
+    "title": "Герб внутригородского муниципального образования — городского округа Троицк в городе Москве",
+    "source": "https://xn--h1aekhj1a.xn--p1ai/",
+    "license": "Official municipal symbol / PD-RU-exempt",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/troitsk_moscow.webp"
+  },
+  "samara_election_commission": {
+    "question_id": "6c92d357-00fa-53a9-923a-84c87d376c0a",
+    "institution_key": "samara_election_commission",
+    "symbol_key": "samara_city",
+    "kind": "jurisdiction_coat",
+    "title": "Герб города Самары",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Samara_(Samara_oblast).svg",
+    "license": "Public domain / PD-RU-exempt",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/samara_city.webp"
+  },
+  "bryansk_rosselkhoznadzor": {
+    "question_id": "7e0716da-40f8-524a-a111-ca28c7c0fddc",
+    "institution_key": "bryansk_rosselkhoznadzor",
+    "symbol_key": "rosselkhoznadzor",
+    "kind": "official_emblem",
+    "title": "Эмблема Россельхознадзора",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Veterinary_and_Phytosanitary_Supervision.svg",
+    "license": "Public domain / PD-RU-exempt",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/rosselkhoznadzor.webp"
+  },
+  "irkutsk_audit_chamber": {
+    "question_id": "241e62c4-635b-518b-9ed0-cc18c426ae2e",
+    "institution_key": "irkutsk_audit_chamber",
+    "symbol_key": "irkutsk_oblast",
+    "kind": "jurisdiction_coat",
+    "title": "Иркутская область",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Irkutsk_Oblast.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/irkutsk_oblast.webp"
+  },
+  "sirius_administration": {
+    "question_id": "b0f83b11-6b89-5d18-a8aa-4fa655339400",
+    "institution_key": "sirius_administration",
+    "symbol_key": "sirius",
+    "kind": "official_logo",
+    "title": "Официальный логотип федеральной территории «Сириус»",
+    "source": "https://www.sirius.gov.ru/",
+    "license": "Official-site visual identity; educational identification use",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/sirius.webp"
+  },
+  "presidential_executive_office": {
+    "question_id": "16578147-16a3-537a-b66e-2cbf638f4d1c",
+    "institution_key": "presidential_executive_office",
+    "symbol_key": "president_rf",
+    "kind": "official_emblem",
+    "title": "Президент России",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_the_President_of_Russia.svg",
+    "license": "Public domain",
+    "local_file": "assets/course/quiz_media/branches_levels/symbols-v071/president_rf.webp"
+  }
+}
