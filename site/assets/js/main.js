@@ -452,7 +452,7 @@ authForm.addEventListener('submit',async event=>{
   try{const p=await backend.saveProfile({identifier:document.getElementById('authIdentifier').value,fullName:document.getElementById('authFullName').value,group:document.getElementById('authGroup').value,recoveryPin:document.getElementById('authRecovery').value});authDialog.close();toast(`${ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated')} ${p.recoveryPin}`,'success',9000);render()}catch(error){toast(String(error.message||error),'error')}
 });
 languageButton.addEventListener('click',()=>{const open=languagePopover.hidden;languagePopover.hidden=!open;languageButton.setAttribute('aria-expanded',String(open))});
-languagePopover.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);languagePopover.hidden=true;languageButton.setAttribute('aria-expanded','false');render()}));
+languagePopover.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);languagePopover.hidden=true;languageButton.setAttribute('aria-expanded','false');updateSync(backend.status());render()}));
 document.addEventListener('click',event=>{if(!event.target.closest('.language-menu')){languagePopover.hidden=true;languageButton.setAttribute('aria-expanded','false')}});
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{if(route().name==='gradebook'||route().name==='dashboard')render()});
 
