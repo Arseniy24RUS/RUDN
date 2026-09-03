@@ -20,13 +20,16 @@
       </a>
       <div class="topbar-actions">
         <span class="sync-chip" id="syncChip"><span class="sync-dot"></span><span data-i18n="localMode">Локальный режим</span></span>
-        <div class="language-menu">
-          <button class="icon-button language-button" id="languageButton" type="button" aria-haspopup="menu" aria-expanded="false" title="Язык"><span id="languageFlag">🇷🇺</span></button>
-          <div class="language-popover" id="languagePopover" role="menu" hidden>
-            <button type="button" data-lang="ru" role="menuitem">🇷🇺 <span>Русский</span></button>
-            <button type="button" data-lang="en" role="menuitem">🇬🇧 <span>English</span></button>
-            <button type="button" data-lang="zh" role="menuitem">🇨🇳 <span>中文</span></button>
-          </div>
+        <div class="language-switcher" role="group" aria-label="Выбор языка интерфейса">
+          <button class="language-option" type="button" data-lang="ru" aria-label="Русский" title="Русский">
+            <svg class="country-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><rect y="6.667" width="30" height="6.667" fill="#0039a6"/><rect y="13.333" width="30" height="6.667" fill="#d52b1e"/></svg>
+          </button>
+          <button class="language-option" type="button" data-lang="en" aria-label="English" title="English">
+            <svg class="country-flag" viewBox="0 0 60 36" aria-hidden="true"><rect width="60" height="36" fill="#012169"/><path d="M0 0 60 36M60 0 0 36" stroke="#fff" stroke-width="8"/><path d="M0 0 60 36M60 0 0 36" stroke="#c8102e" stroke-width="4"/><path d="M30 0v36M0 18h60" stroke="#fff" stroke-width="12"/><path d="M30 0v36M0 18h60" stroke="#c8102e" stroke-width="7"/></svg>
+          </button>
+          <button class="language-option" type="button" data-lang="zh" aria-label="中文" title="中文">
+            <svg class="country-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#de2910"/><path d="m6 2 .9 2.7h2.8L7.4 6.4l.9 2.7L6 7.4 3.7 9.1l.9-2.7-2.3-1.7h2.8z" fill="#ffde00"/><circle cx="12" cy="3" r="1" fill="#ffde00"/><circle cx="14" cy="6" r="1" fill="#ffde00"/><circle cx="13.5" cy="10" r="1" fill="#ffde00"/><circle cx="10.5" cy="12" r="1" fill="#ffde00"/></svg>
+          </button>
         </div>
         <button class="profile-button" id="profileButton" type="button"><span class="avatar" id="topAvatar">?</span><span class="profile-compact"><strong id="topName" data-i18n="signIn">Войти</strong><small id="topGroup"></small></span></button>
       </div>

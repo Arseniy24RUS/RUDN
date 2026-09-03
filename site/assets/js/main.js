@@ -1,14 +1,13 @@
 import {CONFIG} from './config.js';
 import {backend} from './backend.js';
 import {buildQuiz, renderQuiz, questionText} from './quiz.js';
-import {getLocale, localized, setLocale, t, translateDocument, flag} from './i18n.js';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
 const authForm = document.getElementById('authForm');
 const profileButton = document.getElementById('profileButton');
-const languageButton = document.getElementById('languageButton');
-const languagePopover = document.getElementById('languagePopover');
+const languageOptions = [...document.querySelectorAll('[data-lang]')];
 const syncChip = document.getElementById('syncChip');
 const versionLabel = document.getElementById('versionLabel');
 const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
@@ -428,8 +427,9 @@ function renderStudentGrades(studentKey,all){
 }
 function renderLiveAdmin(session){
   const panel=app.querySelector('#liveAdminPanel');if(!panel)return;const qid=session.questionIds?.[session.currentIndex],q=data.questions.find(x=>x.id===qid);
-  let responseData={};const unsub=backend.subscribeLiveResponses(session.sessionId,value=>{responseData=value;updateLiveAdminStats()});
+  let responseData={};
   const updateLiveAdminStats=()=>{const stat=panel.querySelector('#liveResponseCount');if(stat&&qid)stat.textContent=Object.keys(responseData?.[qid]||{}).length};
+  const unsub=backend.subscribeLiveResponses(session.sessionId,value=>{responseData=value;updateLiveAdminStats()});
   panel.innerHTML=`<h2>${ui('activeSession')}</h2><div class="live-code">${esc(session.code)}</div><p><span class="badge">${esc(session.state)}</span> · <strong>${session.currentIndex+1}/${session.questionIds.length}</strong> · <span id="liveResponseCount">0</span> ${ui('responses')}</p>${q?`<div class="live-admin-question"><strong>${esc(questionText(q))}</strong>${session.state==='reveal'?liveDistribution(q,responseData?.[qid]||{}):''}</div>`:`<p class="muted">${ui('adminQuizInstruction')}</p>`}<div class="page-actions" style="margin-top:14px"><button class="btn btn-primary" id="liveOpen">${session.currentIndex<0?ui('showQuestion'):ui('nextQuestion')}</button><button class="btn btn-neutral" id="liveLock" ${session.currentIndex<0?'disabled':''}>${ui('lockQuestion')}</button><button class="btn btn-secondary" id="liveReveal" ${session.currentIndex<0?'disabled':''}>${ui('revealAnswer')}</button><button class="btn btn-danger" id="liveClose">${ui('closeSession')}</button></div>`;
   updateLiveAdminStats();
   panel.querySelector('#liveOpen').onclick=async()=>{session.currentIndex=Math.min(session.questionIds.length-1,session.currentIndex+1);session.state='open';await backend.updateLiveSession(session)};
@@ -451,13 +451,12 @@ authForm.addEventListener('submit',async event=>{
   event.preventDefault();
   try{const p=await backend.saveProfile({identifier:document.getElementById('authIdentifier').value,fullName:document.getElementById('authFullName').value,group:document.getElementById('authGroup').value,recoveryPin:document.getElementById('authRecovery').value});authDialog.close();toast(`${ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated')} ${p.recoveryPin}`,'success',9000);render()}catch(error){toast(String(error.message||error),'error')}
 });
-languageButton.addEventListener('click',()=>{const open=languagePopover.hidden;languagePopover.hidden=!open;languageButton.setAttribute('aria-expanded',String(open))});
-languagePopover.querySelectorAll('[data-lang]').forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);languagePopover.hidden=true;languageButton.setAttribute('aria-expanded','false');updateSync(backend.status());render()}));
-document.addEventListener('click',event=>{if(!event.target.closest('.language-menu')){languagePopover.hidden=true;languageButton.setAttribute('aria-expanded','false')}});
+function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
+languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateSync(backend.status());render()}));
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{if(route().name==='gradebook'||route().name==='dashboard')render()});
 
 async function bootstrap(){
-  translateDocument();document.getElementById('languageFlag').textContent=flag();versionLabel.textContent=CONFIG.version;
+  translateDocument();updateLanguageSwitcher();versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
   await Promise.all([loadData(),backend.init()]);
   updateTopProfile();await render();

@@ -1,5 +1,5 @@
 export const CONFIG = {
-  version: '1.0.5-pages',
+  version: '1.0.6-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
   adminEmails: ['omnistat@yandex.ru'],
