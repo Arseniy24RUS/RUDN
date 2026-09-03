@@ -461,6 +461,6 @@ async function bootstrap(){
   backend.onStatus(updateSync);
   await Promise.all([loadData(),backend.init()]);
   updateTopProfile();await render();
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').catch(error=>console.warn('Service worker',error))}
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>console.warn('Service worker',error))}
 }
 bootstrap().catch(error=>{console.error(error);app.innerHTML=`<div class="notice danger">${esc(error.stack||error)}</div>`});
