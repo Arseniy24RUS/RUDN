@@ -1,0 +1,110 @@
+name: Deploy RUDN learning platform to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout platform
+        uses: actions/checkout@v4
+
+      - name: Prepare Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install build dependency
+        run: npm install --no-save playwright-core@1.55.0
+
+      - name: Integrate existing interactive applications
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site/apps
+          mkdir -p site/apps site/materials
+          git clone --depth 1 https://github.com/Arseniy24RUS/Russian-regions-puzzle.git site/apps/puzzle
+          git clone --depth 1 https://github.com/Arseniy24RUS/government-budget-simulator.git site/apps/governor
+          git clone --depth 1 https://github.com/Arseniy24RUS/career-guidance-for-civil-servants.git site/apps/career
+          find site/apps -type d -name .git -prune -exec rm -rf {} +
+          find site/apps -type d -name .github -prune -exec rm -rf {} +
+          find site/apps -type f \( -name CNAME -o -name .nojekyll \) -delete
+
+      - name: Recover public Yandex Forms question banks and media
+        run: node scripts/fetch-yandex-forms.mjs
+
+      - name: Recover public teaching files from the personal website repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/Arseniy24RUS/personal-website.git /tmp/personal-website
+          python - <<'PY'
+          from pathlib import Path
+          import json, re, shutil
+          src=Path('/tmp/personal-website')
+          dst=Path('site/materials'); dst.mkdir(parents=True,exist_ok=True)
+          rows=[]
+          for p in src.rglob('*'):
+              if not p.is_file() or p.suffix.lower() not in {'.pdf','.ppt','.pptx','.doc','.docx'}:
+                  continue
+              name=p.name.lower()
+              if not re.search(r'(lecture|лекц|введен|special|гму|gmu|government|municip)',name):
+                  continue
+              target=dst/re.sub(r'[^A-Za-zА-Яа-я0-9._()-]+','_',p.name)
+              if target.exists():
+                  target=dst/(target.stem+'_'+str(len(rows)+1)+target.suffix)
+              shutil.copy2(p,target)
+              rows.append({'name':target.name,'path':'./materials/'+target.name,'size':target.stat().st_size})
+          Path('site/data/materials.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+      - name: Validate Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f site/index.html
+          test -f site/assets/app.js
+          test -f site/data/course.json
+          test -f site/data/questions.json
+          python -m json.tool site/data/course.json >/dev/null
+          python -m json.tool site/data/questions.json >/dev/null
+          python - <<'PY'
+          import json
+          c=json.load(open('site/data/course.json',encoding='utf-8'))
+          q=json.load(open('site/data/questions.json',encoding='utf-8'))
+          assert len(c['lectures'])==8
+          assert len(c['seminars'])==8
+          assert c['grading']['total']==100
+          assert isinstance(q,list)
+          print({'questions':len(q),'lectures':8,'seminars':8,'total':100})
+          PY
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
