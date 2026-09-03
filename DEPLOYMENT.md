@@ -60,7 +60,7 @@ Anonymous
 Email/Password
 ```
 
-Правила из `firebase/database.rules.json` и `firebase/storage.rules` опубликованы, а Storage-бакет создан в регионе `US-EAST1`. Создайте преподавательскую учётную запись:
+Правила из `firebase/database.rules.json` и `firebase/storage.rules` опубликованы, Storage-бакет создан в регионе `US-EAST1`, а преподавательская учётная запись зарегистрирована:
 
 ```text
 omnistat@yandex.ru

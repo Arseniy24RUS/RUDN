@@ -31,6 +31,7 @@
 В действующем проекте `russian-regions-puzzle` подтверждены:
 
 - анонимная Firebase Authentication;
+- наличие Email/Password-учётной записи преподавателя `omnistat@yandex.ru`;
 - синхронизация профиля, попытки и лучшей оценки с Realtime Database;
 - защищённая загрузка изображения в Cloud Storage;
 - сохранение URL подтверждения в попытке;

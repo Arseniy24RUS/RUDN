@@ -32,7 +32,7 @@
 - Storage-бакет `russian-regions-puzzle.firebasestorage.app` создан в `US-EAST1`;
 - загрузка подтверждений до 12 МБ проверена из клиентского приложения.
 
-Для преподавательской панели остаётся создать Firebase Authentication-пользователя `omnistat@yandex.ru` с известным преподавателю паролем. Ограничение Firebase API key и App Check рекомендуется настроить перед массовой эксплуатацией.
+Firebase Authentication-пользователь преподавателя `omnistat@yandex.ru` создан; пароль известен только преподавателю и не хранится в репозитории. Ограничение Firebase API key и App Check рекомендуется настроить перед массовой эксплуатацией.
 
 Для развёртывания правил на Windows добавлен `configure_firebase.bat`. Подробности: [DEPLOYMENT.md](DEPLOYMENT.md) и [SECURITY.md](SECURITY.md).
 
