@@ -1,0 +1,30 @@
+{
+  "version": "0.8.0-pages",
+  "title": {
+    "ru": "Введение в специальность: государственное и муниципальное управление",
+    "en": "Introduction to the Profession: State and Municipal Administration",
+    "zh": "专业导论：国家与市政管理"
+  },
+  "grading": {"lectures": 40, "seminars": 40, "exam": 20, "total": 100},
+  "lectures": [
+    {"number":1,"slug":"lecture-1","maxPoints":5,"title":{"ru":"Институциональные основы государственного и муниципального управления","en":"Institutional Foundations of State and Municipal Administration","zh":"国家与市政管理的制度基础"},"video":"https://disk.yandex.ru/i/jnGoXTTtoiSTYA"},
+    {"number":2,"slug":"lecture-2","maxPoints":5,"title":{"ru":"Административно-территориальное устройство Российской Федерации","en":"Administrative-Territorial Structure of the Russian Federation","zh":"俄罗斯联邦的行政区划体系"},"video":"https://disk.yandex.ru/i/mE7Uiz2eyLuyQw"},
+    {"number":3,"slug":"lecture-3","maxPoints":5,"title":{"ru":"Система расселения России","en":"Russia’s Settlement System","zh":"俄罗斯居民点体系"},"video":"https://disk.yandex.ru/i/mE7Uiz2eyLuyQw"},
+    {"number":4,"slug":"lecture-4","maxPoints":5,"title":{"ru":"Нормативные правовые акты и распорядительные документы","en":"Regulatory Legal Acts and Administrative Documents","zh":"规范性法律文件与行政文件"},"video":"https://disk.yandex.ru/i/4DyyC8ypkfTVPg"},
+    {"number":5,"slug":"lecture-5","maxPoints":5,"title":{"ru":"Государственная и муниципальная служба","en":"State and Municipal Service","zh":"国家公务与市政公务"},"video":"https://disk.yandex.ru/i/XChLPcfEZF0YzA"},
+    {"number":6,"slug":"lecture-6","maxPoints":5,"title":{"ru":"Документооборот и делопроизводство","en":"Document Workflow and Records Management","zh":"文件流转与档案管理"},"video":"https://disk.yandex.ru/i/u1nMyoHVyjnVqA"},
+    {"number":7,"slug":"lecture-7","maxPoints":5,"title":{"ru":"Стратегическое управление и бюджетный процесс","en":"Strategic Management and the Budget Process","zh":"战略管理与预算过程"},"video":"https://disk.yandex.ru/i/u1nMyoHVyjnVqA"},
+    {"number":8,"slug":"lecture-8","maxPoints":5,"title":{"ru":"Профессиональная стратегия успеха на государственной и муниципальной службе","en":"Professional Success Strategy in State and Municipal Service","zh":"国家与市政公务职业成功战略"},"video":"https://disk.yandex.ru/i/xoqDIiDHeoepAA","app":"./apps/career/index.html"}
+  ],
+  "seminars": [
+    {"number":1,"slug":"seminar-1","maxPoints":5,"title":{"ru":"Квиз: ветви и уровни власти","en":"Quiz: Branches and Levels of Government","zh":"测验：政府权力分支与层级"}},
+    {"number":2,"slug":"seminar-2","maxPoints":5,"title":{"ru":"Онлайн-пазл: карта регионов России","en":"Online Puzzle: Map of Russian Regions","zh":"在线拼图：俄罗斯联邦主体地图"},"app":"./apps/puzzle/index.html"},
+    {"number":3,"slug":"seminar-3","maxPoints":5,"title":{"ru":"Дашборд системы расселения России","en":"Dashboard of Russia’s Settlement System","zh":"俄罗斯居民点体系仪表板"},"url":"https://datalens.yandex/kqam1c0gzr265"},
+    {"number":4,"slug":"seminar-4","maxPoints":5,"title":{"ru":"Квиз: нормативные правовые акты","en":"Quiz: Regulatory Legal Acts","zh":"测验：规范性法律文件"}},
+    {"number":5,"slug":"seminar-5","maxPoints":5,"title":{"ru":"Обращения граждан","en":"Citizens’ Appeals","zh":"公民来信来访"}},
+    {"number":6,"slug":"seminar-6","maxPoints":5,"title":{"ru":"Государственная служба","en":"Civil Service","zh":"国家公务"},"url":"https://edu.gossluzhba.gov.ru/test"},
+    {"number":7,"slug":"seminar-7","maxPoints":5,"title":{"ru":"Симулятор губернатора","en":"Governor Simulator","zh":"州长模拟器"},"app":"./apps/governor/index.html"},
+    {"number":8,"slug":"seminar-8","maxPoints":5,"title":{"ru":"Итоговый тест","en":"Final Course Test","zh":"课程总结测试"}}
+  ],
+  "exam":{"slug":"exam","maxPoints":20,"title":{"ru":"Экзамен","en":"Examination","zh":"考试"}}
+}
