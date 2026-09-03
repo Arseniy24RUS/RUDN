@@ -1,5 +1,5 @@
-const CACHE='rudn-gmu-pages-v1.0.6';
-const SHELL=['./','./index.html','./assets/css/site.css','./assets/js/main.js','./assets/js/backend.js','./assets/js/config.js','./assets/js/i18n.js','./assets/js/quiz.js','./assets/img/rudn-logo.png','./manifest.webmanifest'];
+const CACHE='rudn-gmu-pages-v1.0.7';
+const SHELL=['./','./index.html','./assets/css/site.css?v=1.0.7','./assets/js/main.js?v=1.0.7','./assets/js/backend.js?v=1.0.7','./assets/js/config.js?v=1.0.7','./assets/js/i18n.js?v=1.0.7','./assets/js/quiz.js?v=1.0.7','./assets/img/rudn-logo.png','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{

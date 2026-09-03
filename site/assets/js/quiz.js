@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js';
-import {backend} from './backend.js';
+import {getLocale,localized,t} from './i18n.js?v=1.0.7';
+import {backend} from './backend.js?v=1.0.7';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const shuffle=(array,seed=Date.now())=>{const copy=[...array];let state=seed>>>0;const rand=()=>{state+=0x6D2B79F5;let x=state;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296};for(let i=copy.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy};

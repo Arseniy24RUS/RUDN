@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js';
+import {CONFIG} from './config.js?v=1.0.7';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';

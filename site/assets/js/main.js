@@ -1,7 +1,7 @@
-import {CONFIG} from './config.js';
-import {backend} from './backend.js';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js';
+import {CONFIG} from './config.js?v=1.0.7';
+import {backend} from './backend.js?v=1.0.7';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.0.7';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.0.7';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');

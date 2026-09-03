@@ -141,7 +141,7 @@ def main() -> int:
     for script in (SITE / "assets/js").glob("*.js"):
         source = script.read_text(encoding="utf-8")
         for _quote, specifier in import_pattern.findall(source):
-            target = (script.parent / specifier).resolve()
+            target = (script.parent / unquote(urlsplit(specifier).path)).resolve()
             if not target.is_file():
                 module_errors.append(
                     f"Missing module imported by {script.relative_to(ROOT)}: {specifier}"
