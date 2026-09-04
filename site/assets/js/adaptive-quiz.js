@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.3';
-import {backend,groupOptions} from './backend.js?v=1.1.3';
+import {CONFIG} from './config.js?v=1.1.4';
+import {backend,groupOptions} from './backend.js?v=1.1.4';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -10,8 +10,8 @@ import {
   renderMatrixButtons,
   renderQuestionMedia,
   renderQuiz
-} from './quiz.js?v=1.1.3';
-import {getLocale} from './i18n.js?v=1.1.3';
+} from './quiz.js?v=1.1.4';
+import {getLocale} from './i18n.js?v=1.1.4';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'

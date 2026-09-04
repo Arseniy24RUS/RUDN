@@ -1,8 +1,8 @@
-import {CONFIG} from './config.js?v=1.1.3';
-import {backend,groupOptions} from './backend.js?v=1.1.3';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.3';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.3';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.3';
+import {CONFIG} from './config.js?v=1.1.4';
+import {backend,groupOptions} from './backend.js?v=1.1.4';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.4';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.4';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.4';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -159,6 +159,12 @@ function setActiveNav(name){
   document.querySelectorAll('[data-route]').forEach(link=>link.classList.toggle('active',link.dataset.route===normal));
 }
 function updateTopProfile(){
+  if(backend.isAdmin()){
+    document.getElementById('topAvatar').textContent='A';
+    document.getElementById('topName').textContent=backend.user.email;
+    document.getElementById('topGroup').textContent=ui('teacherTitle');
+    return;
+  }
   const profile=backend.getProfile();
   document.getElementById('topAvatar').textContent=profile?.fullName?.trim()?.[0]||'?';
   document.getElementById('topName').textContent=profile?.fullName||t('signIn');
@@ -170,7 +176,7 @@ function updateSync(status){
 }
 function requireProfile({open=true}={}){
   if(backend.getProfile())return true;
-  if(open)authDialog.showModal();
+  if(open)openAuthDialog();
   toast(ui('profileRequired'),'error');return false;
 }
 function contentPage(title,lead,body,actions=''){
@@ -214,7 +220,7 @@ async function renderDashboard(){
     return `<article class="topic-card"><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong><span>${esc(ui('learningPath'))}</span></div><div class="topic-copy"><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair"><div class="activity-mini"><div><span class="kind">${ui('lectureWord')}</span><strong>${esc(loc(lecture,'title',lecture.title))}</strong></div><footer><span class="grade">${lg?`${number(lg.points)}/5`:'—/5'}</span><a class="btn btn-secondary btn-small" href="#activity/${lecture.slug}">${ui('openActivity')}</a></footer></div><div class="activity-mini"><div><span class="kind">${ui('seminarWord')}</span><strong>${esc(loc(seminar,'title',seminar.title))}</strong></div><footer><span class="grade">${sg?`${number(sg.points)}/5`:'—/5'}</span><a class="btn btn-secondary btn-small" href="#activity/${seminar.slug}">${ui('openActivity')}</a></footer></div></div></article>`;
   }).join('');
   app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${esc(data.course.academic_year)}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${ui('dashboardLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
-  app.querySelector('#heroLogin')?.addEventListener('click',()=>authDialog.showModal());
+  app.querySelector('#heroLogin')?.addEventListener('click',openAuthDialog);
 }
 
 const gradeItems=()=>[
@@ -231,7 +237,7 @@ async function renderGradebook(){
   const attemptRows=attempts.slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
-  app.querySelector('#gradeLogin')?.addEventListener('click',()=>authDialog.showModal());
+  app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
   app.querySelector('#refreshGrades')?.addEventListener('click',render);
   app.querySelector('#exportPersonal')?.addEventListener('click',()=>downloadCsv(`gradebook-${profile.ticket}.csv`,[
     ['student_id','full_name','email','group',...items.map(x=>x.slug),'total'],
@@ -416,64 +422,124 @@ function renderStudentGrades(studentKey,all){
 function exportAdminCsv(profiles,grades,items){const rows=[['student_id','full_name','email','group',...items.map(x=>x.slug),'total']];for(const p of profiles){const g=grades[p.studentKey]||{},values=items.map(x=>number(g[x.slug]?.points)),total=values.reduce((a,b)=>a+b,0);rows.push([p.ticket,p.fullName||'',p.email,p.group,...values,total])}downloadCsv('rudn-gradebook.csv',rows)}
 function downloadCsv(filename,rows){const text='\ufeff'+rows.map(row=>row.map(cell=>`"${String(cell??'').replaceAll('"','""')}"`).join(';')).join('\r\n');const blob=new Blob([text],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 
-function populateGroupSelect(){
-  const select=document.getElementById('authGroup');const values=groupOptions();const current=backend.getProfile()?.group;
-  select.innerHTML=values.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join('');
-  select.value=values.includes(current)?current:values[0];
+const authStudentDetails=document.getElementById('authStudentDetails');
+const authPasswordField=document.getElementById('authPasswordField');
+const authSubmit=document.getElementById('authSubmit');
+const authIdentifier=document.getElementById('authIdentifier');
+const authFullName=document.getElementById('authFullName');
+const authGroup=document.getElementById('authGroup');
+const authPassword=document.getElementById('authPassword');
+const rosterStatus=document.getElementById('rosterStatus');
+const authKey=(value)=>String(value||'').trim().toLowerCase();
+const isAdminIdentifier=(value)=>CONFIG.adminEmails.some(email=>email.toLowerCase()===authKey(value));
+
+function selectAuthGroup(value=''){
+  const selected=groupOptions().includes(value)?value:'';
+  authGroup.value=selected;
+  document.querySelectorAll('.auth-group-option').forEach(button=>{
+    const active=button.dataset.group===selected;
+    button.classList.toggle('selected',active);
+    button.setAttribute('aria-checked',String(active));
+    button.setAttribute('aria-pressed',String(active));
+  });
+}
+function populateGroupButtons(){
+  const mount=document.getElementById('authGroupOptions');
+  mount.innerHTML=groupOptions().map(value=>`<button class="auth-group-option" type="button" role="radio" aria-checked="false" aria-pressed="false" data-group="${esc(value)}">${esc(value)}</button>`).join('');
+  mount.querySelectorAll('.auth-group-option').forEach(button=>button.addEventListener('click',()=>selectAuthGroup(button.dataset.group)));
+  selectAuthGroup(backend.getProfile()?.group||'');
+}
+function setAuthStage(stage,source=''){
+  authForm.dataset.stage=stage;
+  authForm.dataset.source=source;
+  authStudentDetails.hidden=stage!=='student';
+  authPasswordField.hidden=stage!=='admin';
+  authPassword.required=stage==='admin';
+  authFullName.required=stage==='student';
+  authSubmit.textContent=stage==='admin'?t('teacherLogin'):stage==='student'?t('signIn'):t('continue');
 }
 let rosterLookupTimer=null;
 let rosterLookupRequest=0;
-let rosterAutofilledFor='';
-let fullNameTouched=false;
-let groupTouched=false;
-async function autofillRoster(){
-  const identifier=document.getElementById('authIdentifier').value.trim();
-  const status=document.getElementById('rosterStatus');
+let resolvedIdentifier='';
+async function resolveIdentifier(){
+  const identifier=authIdentifier.value.trim();
+  const key=authKey(identifier);
   const request=++rosterLookupRequest;
-  if(!identifier){status.textContent=t('authHint');return}
-  if(identifier===rosterAutofilledFor)return;
-  status.textContent=t('rosterChecking');
+  if(!identifier){setAuthStage('identifier');rosterStatus.textContent=t('authHint');return false}
+  if(key===resolvedIdentifier)return true;
+  if(isAdminIdentifier(identifier)){
+    resolvedIdentifier=key;
+    setAuthStage('admin','admin');
+    rosterStatus.textContent=t('adminPasswordHint');
+    authPassword.focus();
+    return true;
+  }
+  setAuthStage('identifier');
+  rosterStatus.textContent=t('rosterChecking');
   try{
-    const match=await backend.lookupRoster(identifier);
-    if(request!==rosterLookupRequest)return;
-    if(!match){status.textContent=t('rosterMissing');return}
-    if(!fullNameTouched)document.getElementById('authFullName').value=match.fullName;
-    if(!groupTouched)document.getElementById('authGroup').value=match.group;
-    rosterAutofilledFor=identifier;
-    status.textContent=t('rosterFound');
+    const match=await backend.lookupStudent(identifier);
+    if(request!==rosterLookupRequest)return false;
+    authFullName.value=match.fullName||'';
+    selectAuthGroup(match.group||'');
+    resolvedIdentifier=key;
+    setAuthStage('student',match.source);
+    rosterStatus.textContent=t(match.source==='profile'?'profileFound':match.source==='roster'?'rosterFound':'rosterMissing');
+    if(!match.fullName)authFullName.focus();
+    return true;
   }catch(error){
-    if(request===rosterLookupRequest)status.textContent=t('rosterMissing');
+    if(request===rosterLookupRequest){
+      resolvedIdentifier='';
+      setAuthStage('identifier');
+      rosterStatus.textContent=String(error.message||error);
+    }
+    return false;
   }
 }
 function openAuthDialog(){
-  const p=backend.getProfile();populateGroupSelect();
-  document.getElementById('authIdentifier').value=p?.email||p?.ticket||'';
-  document.getElementById('authFullName').value=p?.fullName||'';
-  document.getElementById('rosterStatus').textContent=t('authHint');
-  rosterAutofilledFor=p?(p.email||p.ticket||''):'';
-  fullNameTouched=Boolean(p);
-  groupTouched=Boolean(p);
+  const p=backend.isAdmin()?null:backend.getProfile();
+  authIdentifier.value=backend.isAdmin()?backend.user.email:(p?.email||p?.ticket||'');
+  authFullName.value=p?.fullName||'';
+  authPassword.value='';
+  resolvedIdentifier=p?authKey(authIdentifier.value):'';
+  if(backend.isAdmin()){
+    resolvedIdentifier=authKey(authIdentifier.value);setAuthStage('admin','admin');rosterStatus.textContent=t('adminPasswordHint');
+  }else if(p){
+    selectAuthGroup(p.group);setAuthStage('student','profile');rosterStatus.textContent=t('profileFound');
+  }else{
+    selectAuthGroup('');setAuthStage('identifier');rosterStatus.textContent=t('authHint');
+  }
   authDialog.showModal();
+  if(!p&&!backend.isAdmin())authIdentifier.focus();
 }
-document.getElementById('authIdentifier').addEventListener('input',()=>{
-  rosterAutofilledFor='';
+authIdentifier.addEventListener('input',()=>{
+  resolvedIdentifier='';
+  authFullName.value='';authPassword.value='';selectAuthGroup('');setAuthStage('identifier');
+  rosterStatus.textContent=t('authHint');
   clearTimeout(rosterLookupTimer);
-  rosterLookupTimer=setTimeout(autofillRoster,350);
+  rosterLookupTimer=setTimeout(resolveIdentifier,450);
 });
-document.getElementById('authIdentifier').addEventListener('blur',()=>{clearTimeout(rosterLookupTimer);if(!rosterAutofilledFor)autofillRoster()});
-document.getElementById('authFullName').addEventListener('input',()=>{fullNameTouched=true});
-document.getElementById('authGroup').addEventListener('change',()=>{groupTouched=true});
+authIdentifier.addEventListener('blur',()=>{clearTimeout(rosterLookupTimer);if(!resolvedIdentifier)resolveIdentifier()});
+document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
 profileButton.addEventListener('click',openAuthDialog);
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
-  try{const p=await backend.saveProfile({identifier:document.getElementById('authIdentifier').value,fullName:document.getElementById('authFullName').value,group:document.getElementById('authGroup').value});authDialog.close();toast(ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated'),'success');render()}catch(error){toast(String(error.message||error),'error')}
+  const identifier=authIdentifier.value.trim();
+  if(resolvedIdentifier!==authKey(identifier)){await resolveIdentifier();return}
+  try{
+    if(isAdminIdentifier(identifier)){
+      await backend.adminSignIn(identifier,authPassword.value);
+      authDialog.close();toast(ui('profileReady'),'success');location.hash='admin';await render();return;
+    }
+    const p=await backend.saveProfile({identifier,fullName:authFullName.value,group:authGroup.value});
+    authDialog.close();toast(ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated'),'success');render();
+  }catch(error){toast(String(error.message||error),'error')}
 });
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateSync(backend.status());render()}));
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{if(route().name==='gradebook'||route().name==='dashboard')render()});
 
 async function bootstrap(){
-  translateDocument();updateLanguageSwitcher();populateGroupSelect();versionLabel.textContent=CONFIG.version;
+  translateDocument();updateLanguageSwitcher();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
   await Promise.all([loadData(),backend.init()]);
   updateTopProfile();await render();

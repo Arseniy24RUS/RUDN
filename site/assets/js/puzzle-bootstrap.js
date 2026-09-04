@@ -1,5 +1,5 @@
-import {backend} from './backend.js?v=1.1.3';
-import {getLocale} from './i18n.js?v=1.1.3';
+import {backend} from './backend.js?v=1.1.4';
+import {getLocale} from './i18n.js?v=1.1.4';
 
 const locale=getLocale();
 const base='../assets/puzzle/data';

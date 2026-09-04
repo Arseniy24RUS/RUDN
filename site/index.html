@@ -9,7 +9,7 @@
   <title>Введение в специальность · РУДН</title>
   <link rel="icon" href="assets/img/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/site.css?v=1.1.3">
+  <link rel="stylesheet" href="assets/css/site.css?v=1.1.4">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -65,18 +65,25 @@
 
   <dialog class="modal" id="authDialog">
     <form method="dialog" class="modal-card" id="authForm">
-      <button class="modal-close" value="cancel" aria-label="Закрыть">×</button>
+      <button class="modal-close" type="button" value="cancel" aria-label="Закрыть">×</button>
       <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН"><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Данные профиля можно изменить</span></div></div>
       <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru"></label>
-      <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" maxlength="150" required></label>
-      <label><span data-i18n="groupLabel">Учебная группа</span><select id="authGroup" required></select></label>
-      <p class="form-hint" id="rosterStatus" data-i18n="authHint" aria-live="polite">После ввода билета ФИО и группа заполнятся автоматически, если студент есть в списке. Все поля можно изменить.</p>
-      <button class="btn btn-primary btn-wide" type="submit" value="default" data-i18n="continue">Продолжить</button>
+      <div class="auth-details" id="authStudentDetails" hidden>
+        <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" maxlength="150"></label>
+        <fieldset class="auth-group-fieldset">
+          <legend data-i18n="groupLabel">Учебная группа</legend>
+          <div class="auth-group-options" id="authGroupOptions" role="radiogroup" aria-label="Учебная группа"></div>
+          <input id="authGroup" type="hidden">
+        </fieldset>
+      </div>
+      <label id="authPasswordField" hidden><span data-i18n="password">Пароль</span><input id="authPassword" type="password" autocomplete="current-password"></label>
+      <p class="form-hint" id="rosterStatus" data-i18n="authHint" aria-live="polite">Введите номер студенческого билета или email.</p>
+      <button class="btn btn-primary btn-wide" id="authSubmit" type="submit" value="default" data-i18n="continue">Продолжить</button>
     </form>
   </dialog>
 
   <dialog class="modal" id="confirmDialog"><form method="dialog" class="modal-card compact"><h2 id="confirmTitle">Подтверждение</h2><p id="confirmText"></p><div class="dialog-actions"><button class="btn btn-neutral" value="cancel" data-i18n="cancel">Отмена</button><button class="btn btn-primary" value="ok" data-i18n="confirm">Подтвердить</button></div></form></dialog>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-  <script type="module" src="assets/js/main.js?v=1.1.3"></script>
+  <script type="module" src="assets/js/main.js?v=1.1.4"></script>
 </body>
 </html>

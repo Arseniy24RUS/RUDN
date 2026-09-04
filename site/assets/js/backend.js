@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.3';
+import {CONFIG} from './config.js?v=1.1.4';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -105,20 +105,50 @@ class Backend{
     if(!record||typeof record.fullName!=='string'||typeof record.group!=='string')return null;
     return {...identity,fullName:normalizeFullName(record.fullName),group:normalizeGroup(record.group)};
   }
+  async lookupStudent(identifier){
+    const identity=normalizeIdentifier(identifier);
+    if(this.mode==='cloud'&&this.db&&this.database){
+      const profileRef=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${identity.studentKey}`);
+      const snapshot=await this.db.get(profileRef);
+      const record=snapshot.val();
+      if(record&&typeof record.fullName==='string'&&typeof record.group==='string'){
+        return {
+          ...identity,
+          fullName:normalizeFullName(record.fullName),
+          group:normalizeGroup(record.group),
+          createdAt:record.createdAt||null,
+          updatedAt:record.updatedAt||null,
+          source:'profile'
+        };
+      }
+    }
+    const roster=await this.lookupRoster(identity.ticket);
+    return roster?{...roster,source:'roster'}:{...identity,fullName:'',group:'',source:'new'};
+  }
+  ownedProfile(profile,remote={}){
+    const ownerUids={...(remote?.ownerUids||{})};
+    if(remote?.ownerUid)ownerUids[remote.ownerUid]=true;
+    ownerUids[this.user.uid]=true;
+    return {...remote,...profile,ownerUid:this.user.uid,ownerUids};
+  }
   async saveProfile(input){
     const identity=normalizeIdentifier(input.identifier||input.ticket||input.email);
     const fullName=normalizeFullName(input.fullName);
     const group=normalizeGroup(input.group);
     const existing=this.profile&&this.profile.studentKey===identity.studentKey?this.profile:null;
     const timestamp=now();
-    const profile={
+    let profile={
       studentKey:identity.studentKey,ticket:identity.ticket,email:identity.email,group,
       displayName:fullName,fullName,
       schemaVersion:2,updatedAt:timestamp,createdAt:existing?.createdAt||timestamp
     };
     if(this.mode==='cloud'){
       const ref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${profile.studentKey}`);
-      try{await this.db.set(ref,{...profile,ownerUid:this.user.uid})}
+      try{
+        const snapshot=await this.db.get(ref);const remote=snapshot.val()||{};
+        profile={...profile,createdAt:existing?.createdAt||remote.createdAt||timestamp};
+        await this.db.set(ref,this.ownedProfile(profile,remote));
+      }
       catch(error){
         const message=String(error?.message||error);
         if(/permission|denied/i.test(message))throw new Error('Не удалось сохранить профиль. Примените обновлённые правила Firebase из патча.');
@@ -146,15 +176,17 @@ class Backend{
     writeLocal(GRADES_KEY,grades);
     if(this.mode==='cloud'&&this.profile){
       const ref=this.db.ref(this.database,`${CONFIG.rootPath}/grades/${this.profile.studentKey}/${activitySlug}`);
-      const snap=await this.db.get(ref);const current=snap.val();
-      if(!current||bounded>Number(current.points||0))await this.db.set(ref,{points:bounded,max,updatedAt:now(),sourceAttemptId,ownerUid:this.user.uid});
+      const candidate={points:bounded,max,updatedAt:now(),sourceAttemptId,ownerUid:this.user.uid};
+      await this.db.runTransaction(ref,current=>!current||bounded>Number(current.points||0)?candidate:current,{applyLocally:false});
     }
     return grades[activitySlug];
   }
   async setManualGrade(studentKey,activitySlug,points,note=''){
     if(!this.isAdmin())throw new Error('Требуются права преподавателя');
     const max=CONFIG.activityMax[activitySlug]??5;const bounded=Math.max(0,Math.min(max,Number(points)||0));
-    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}/${activitySlug}`),{points:bounded,max,note,manual:true,updatedAt:now(),teacherUid:this.user.uid});
+    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}/${activitySlug}`);
+    const candidate={points:bounded,max,note,manual:true,updatedAt:now(),teacherUid:this.user.uid};
+    await this.db.runTransaction(ref,current=>!current||bounded>Number(current.points||0)?candidate:current,{applyLocally:false});
   }
   async getAttempts(studentKey=this.profile?.studentKey){
     let items=this.localAttempts().filter(x=>!studentKey||x.studentKey===studentKey);
@@ -178,7 +210,23 @@ class Backend{
     if(this.mode!=='cloud'||!this.profile)return;
     try{
       const pref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${this.profile.studentKey}`);
-      await this.db.set(pref,{...this.profile,ownerUid:this.user.uid});
+      const profileSnapshot=await this.db.get(pref);const remoteProfile=profileSnapshot.val()||null;
+      if(remoteProfile&&String(remoteProfile.updatedAt||'')>String(this.profile.updatedAt||'')){
+        this.profile={
+          ...this.profile,
+          studentKey:remoteProfile.studentKey,
+          ticket:remoteProfile.ticket,
+          email:remoteProfile.email,
+          fullName:remoteProfile.fullName,
+          displayName:remoteProfile.fullName,
+          group:remoteProfile.group,
+          createdAt:remoteProfile.createdAt||this.profile.createdAt,
+          updatedAt:remoteProfile.updatedAt||this.profile.updatedAt,
+          schemaVersion:2
+        };
+        writeLocal(PROFILE_KEY,this.profile);
+      }
+      await this.db.set(pref,this.ownedProfile(this.profile,remoteProfile||{}));
       for(const attempt of this.localAttempts().filter(x=>x.studentKey===this.profile.studentKey)){
         const record={...attempt,ownerUid:this.user.uid};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`);const snap=await this.db.get(ref);if(!snap.exists())await this.db.set(ref,record);
       }
