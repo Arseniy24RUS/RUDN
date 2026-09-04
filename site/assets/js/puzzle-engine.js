@@ -153,7 +153,9 @@
     collection: null,
     features: [],
     paths: [],
+    pathsHi: [],
     strokePaths: [],
+    strokePathsHi: [],
     bounds: [],
     anchors: [],
     pieces: [],
@@ -817,8 +819,9 @@
     return { x0, y0, x1, y1, width: Math.max(1, x1 - x0), height: Math.max(1, y1 - y0), cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
   }
 
-  function appendRing(path, ring) {
+  function appendRing(path, ring, toleranceOverride = null) {
     if (state.mode === "russia-subjects") {
+      const tolerance = toleranceOverride ?? 0.8;
       let previous = null;
       let subpathStart = null;
       ring.forEach((coordinate) => {
@@ -836,7 +839,7 @@
           path.moveTo(projected[0], projected[1]);
           subpathStart = projected;
           previous = projected;
-        } else if (distance > 0.8) {
+        } else if (distance > tolerance) {
           path.lineTo(projected[0], projected[1]);
           previous = projected;
         }
@@ -867,19 +870,20 @@
     if (active) path.closePath();
   }
 
-  function buildPath(feature) {
+  function buildPath(feature, toleranceOverride = null) {
     const path = new Path2D();
     const geometry = feature.geometry || {};
     if (geometry.type === "Polygon") {
-      (geometry.coordinates || []).forEach((ring) => appendRing(path, ring));
+      (geometry.coordinates || []).forEach((ring) => appendRing(path, ring, toleranceOverride));
     } else if (geometry.type === "MultiPolygon") {
-      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendRing(path, ring)));
+      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendRing(path, ring, toleranceOverride)));
     }
     return path;
   }
 
-  function appendStrokeRing(path, ring) {
+  function appendStrokeRing(path, ring, toleranceOverride = null) {
     if (state.mode === "russia-subjects") {
+      const tolerance = toleranceOverride ?? 0.8;
       let previousCoordinate = null;
       let previousProjected = null;
       let subpathStart = null;
@@ -909,7 +913,7 @@
           previousProjected = projected;
           subpathStart = projected;
           meridianInterrupted = true;
-        } else if (distance > 0.8) {
+        } else if (distance > tolerance) {
           path.lineTo(projected[0], projected[1]);
           previousCoordinate = coordinate;
           previousProjected = projected;
@@ -949,23 +953,31 @@
     if (active && !interrupted) path.closePath();
   }
 
-  function buildStrokePath(feature) {
+  function buildStrokePath(feature, toleranceOverride = null) {
     const path = new Path2D();
     const geometry = feature.geometry || {};
     if (geometry.type === "Polygon") {
-      (geometry.coordinates || []).forEach((ring) => appendStrokeRing(path, ring));
+      (geometry.coordinates || []).forEach((ring) => appendStrokeRing(path, ring, toleranceOverride));
     } else if (geometry.type === "MultiPolygon") {
-      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendStrokeRing(path, ring)));
+      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendStrokeRing(path, ring, toleranceOverride)));
     }
     return path;
+  }
+
+  function highResolutionPaths(index) {
+    if (!state.pathsHi[index]) state.pathsHi[index] = buildPath(state.features[index], 0);
+    if (!state.strokePathsHi[index]) state.strokePathsHi[index] = buildStrokePath(state.features[index], 0);
+    return { path: state.pathsHi[index], strokePath: state.strokePathsHi[index] };
   }
 
   function rebuildGeometry() {
     if (!state.collection) return;
     state.projection = buildProjection();
     const geoPath = window.d3.geoPath(state.projection);
-    state.paths = state.features.map(buildPath);
-    state.strokePaths = state.features.map(buildStrokePath);
+    state.paths = state.features.map((feature) => buildPath(feature));
+    state.pathsHi = new Array(state.features.length);
+    state.strokePaths = state.features.map((feature) => buildStrokePath(feature));
+    state.strokePathsHi = new Array(state.features.length);
     state.bounds = state.features.map((feature) => {
       if (state.mode !== "world-countries") return manualFeatureBounds(feature);
       const value = geoPath.bounds(feature);
@@ -1069,7 +1081,9 @@
     setScene(context);
     context.fillStyle = "#e7f1f7";
     context.strokeStyle = "#91b2c6";
-    context.lineWidth = Math.max(0.7, 1 / state.view.k);
+    context.lineWidth = state.mode === "russia-subjects"
+      ? Math.max(1 / state.view.k, 0.6)
+      : Math.max(0.7, 1 / state.view.k);
     state.paths.forEach((path, index) => {
       context.fill(path, fillRule);
       context.stroke(state.strokePaths[index]);
@@ -1098,7 +1112,9 @@
     setScene(context);
     context.fillStyle = "#0079c1";
     context.strokeStyle = "#004f80";
-    context.lineWidth = Math.max(0.8, 1.1 / state.view.k);
+    context.lineWidth = state.mode === "russia-subjects"
+      ? Math.max(1 / state.view.k, 0.6)
+      : Math.max(0.8, 1.1 / state.view.k);
     state.pieces.forEach((piece) => {
       if (!piece.locked) return;
       context.fill(state.paths[piece.index], fillRule);
@@ -1115,8 +1131,13 @@
     const bounds = state.bounds[piece.index];
     if (piece.inTray) {
       const tray = trayRect();
-      const scale = Math.min((tray.width * 0.54) / bounds.width, (tray.height * 0.52) / bounds.height, 2.4);
+      const scale = state.mode === "russia-subjects"
+        ? Math.min((tray.width * 0.8) / bounds.width, (tray.height * 0.8) / bounds.height)
+        : Math.min((tray.width * 0.54) / bounds.width, (tray.height * 0.52) / bounds.height, 2.4);
       const center = trayCenter();
+      const trayPaths = state.mode === "russia-subjects"
+        ? highResolutionPaths(piece.index)
+        : { path, strokePath };
       ctx.save();
       resetContext(ctx);
       ctx.translate(center.x, center.y + 4);
@@ -1124,9 +1145,9 @@
       ctx.translate(-bounds.cx, -bounds.cy);
       ctx.fillStyle = "#dc3f45";
       ctx.strokeStyle = "#8e2028";
-      ctx.lineWidth = Math.max(0.7, 1.3 / scale);
-      ctx.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
-      ctx.stroke(strokePath);
+      ctx.lineWidth = state.mode === "russia-subjects" ? 1.2 / scale : Math.max(0.7, 1.3 / scale);
+      ctx.fill(trayPaths.path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
+      ctx.stroke(trayPaths.strokePath);
       ctx.restore();
       return;
     }
@@ -1135,7 +1156,9 @@
     ctx.translate(piece.dx, piece.dy);
     ctx.fillStyle = "#dc3f45";
     ctx.strokeStyle = "#8e2028";
-    ctx.lineWidth = Math.max(0.9, 1.3 / state.view.k);
+    ctx.lineWidth = state.mode === "russia-subjects"
+      ? Math.max(1 / state.view.k, 0.6)
+      : Math.max(0.9, 1.3 / state.view.k);
     ctx.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
     ctx.stroke(strokePath);
     ctx.restore();
@@ -1257,13 +1280,29 @@
     return x >= tray.x && x <= tray.x + tray.width && y >= tray.y && y <= tray.y + tray.height;
   }
 
-  function pointOnCurrentPiece(x, y) {
+  function pointOnCurrentPiece(x, y, pointerType = "mouse") {
     const piece = currentPiece();
     if (!piece || piece.locked || piece.inTray) return false;
     const world = screenToWorld(x, y);
+    const hitPath = state.mode === "russia-subjects"
+      ? highResolutionPaths(piece.index).path
+      : state.paths[piece.index];
+    const localX = world.x - piece.dx;
+    const localY = world.y - piece.dy;
     try {
-      return hitCtx.isPointInPath(state.paths[piece.index], world.x - piece.dx, world.y - piece.dy, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
+      if (hitCtx.isPointInPath(hitPath, localX, localY, state.mode === "russia-subjects" ? "nonzero" : "evenodd")) return true;
+      // Keep tiny territories easy to reacquire after they shrink to map scale.
+      // The invisible stroke produces a comfortable pointer target without
+      // changing the visible geography or the snapping precision.
+      hitCtx.save();
+      hitCtx.lineWidth = (pointerType === "touch" ? 48 : 36) / state.view.k;
+      hitCtx.lineJoin = "round";
+      hitCtx.lineCap = "round";
+      const withinExpandedTarget = hitCtx.isPointInStroke(hitPath, localX, localY);
+      hitCtx.restore();
+      return withinExpandedTarget;
     } catch (_) {
+      try { hitCtx.restore(); } catch (_) { /* no-op */ }
       return false;
     }
   }
@@ -1322,7 +1361,7 @@
       startTimerIfNeeded();
       return;
     }
-    if (pointOnCurrentPiece(point.x, point.y)) {
+    if (pointOnCurrentPiece(point.x, point.y, event.pointerType)) {
       state.draggingPiece = true;
       state.draggingFromTray = false;
       const world = screenToWorld(point.x, point.y);
@@ -1405,7 +1444,6 @@
     } else {
       state.errors += 1;
       updateUi();
-      toast(tr("Деталь пока не совпала с контуром. Попробуйте точнее или измените масштаб."), "error", 2300);
       drawAll();
     }
   }

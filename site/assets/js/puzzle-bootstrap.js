@@ -1,6 +1,6 @@
-import {backend} from './backend.js?v=1.1.12';
-import {getLocale} from './i18n.js?v=1.1.12';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.12';
+import {backend} from './backend.js?v=1.1.13';
+import {getLocale} from './i18n.js?v=1.1.13';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.13';
 
 const locale=getLocale();
 const context=new URLSearchParams(location.search).get('context')==='seminar'?'seminar':'free';
@@ -27,14 +27,16 @@ const engineTranslations={
   zh:{'Свободная игра':'自由游戏','свободная игра':'自由游戏','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'难度决定拼合精度，不会更改课程成绩册。'}
 };
 async function loadLegacy(){
-  try{
-    const response=await nativeFetch(`../data/legacy-${locale}.json`);
-    if(response.ok){
-      const bundle=await response.json();
-      Object.assign(sourceTranslations,bundle.exact||bundle);
-      sourcePatterns=(bundle.patterns||[]).flatMap(rule=>{try{return[{pattern:new RegExp(rule.source,rule.flags||'u'),target:String(rule.target||'').replace(/\\(\d+)/g,(_,index)=>`$${index}`)}]}catch{return[]}});
-    }
-  }catch{}
+  if(locale!=='ru'){
+    try{
+      const response=await nativeFetch(`../data/legacy-${locale}.json`);
+      if(response.ok){
+        const bundle=await response.json();
+        Object.assign(sourceTranslations,bundle.exact||bundle);
+        sourcePatterns=(bundle.patterns||[]).flatMap(rule=>{try{return[{pattern:new RegExp(rule.source,rule.flags||'u'),target:String(rule.target||'').replace(/\\(\d+)/g,(_,index)=>`$${index}`)}]}catch{return[]}});
+      }
+    }catch{}
+  }
   Object.assign(sourceTranslations,engineTranslations[locale]||{});
   window.RUDNI18N={locale,ready:Promise.resolve(),t(source,params={}){let value=sourceTranslations[source];if(value===undefined){value=source;for(const rule of sourcePatterns){if(rule.pattern.test(source)){value=source.replace(rule.pattern,rule.target);break}}}for(const [k,v] of Object.entries(params))value=value.replaceAll(`{${k}}`,String(v));return value}};
   document.querySelectorAll('[data-static-i18n]').forEach(el=>{const value=staticTranslations[locale]?.[el.dataset.staticI18n]??staticTranslations.ru[el.dataset.staticI18n];if(value!==undefined)el.innerHTML=value});

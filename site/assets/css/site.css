@@ -54,7 +54,7 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 @media(max-width:900px){.external-card{align-items:flex-start;flex-direction:column}.grade-edit-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.profile-dl{grid-template-columns:1fr}.profile-dl dt{margin-top:7px}.app-frame,.puzzle-frame{height:calc(100vh - 140px);min-height:650px}.grade-edit-grid{grid-template-columns:1fr}.external-card .btn{width:100%}}
 
-/* Adaptive Seminar 1 quiz and automatic classroom board · v1.1.12 */
+/* Adaptive Seminar 1 quiz and automatic classroom board · v1.1.13 */
 .matrix-option-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -155,7 +155,7 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 
 .matrix-option strong{overflow-wrap:break-word;hyphens:auto}
 
-/* Seminar 1 quiz refinements · v1.1.12 */
+/* Seminar 1 quiz refinements · v1.1.13 */
 .question-media.single{grid-template-columns:1fr}
 .institution-heading{display:flex;align-items:center;gap:11px;font-size:23px;margin:9px 0 20px}
 .institution-heading h1,.institution-heading h2{font-size:inherit;line-height:1.38;margin:0}
