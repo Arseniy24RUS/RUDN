@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.6';
+import {CONFIG} from './config.js?v=1.1.7';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -55,6 +55,7 @@ class Backend{
   constructor(){
     this.mode='local';this.error=null;this.firebase=null;this.auth=null;this.db=null;this.storage=null;this.user=null;
     this.profile=this.migrateProfile(readLocal(PROFILE_KEY,null));this.listeners=[];
+    this.accessOverrides={};this.serverTimeOffset=0;this.accessUnsubscribe=null;this.timeUnsubscribe=null;
   }
   migrateProfile(profile){
     if(!profile)return null;
@@ -84,6 +85,7 @@ class Backend{
       this.user=this.authClient.currentUser;
       if(!this.user){const credential=await authMod.signInAnonymously(this.authClient);this.user=credential.user}
       this.mode='cloud';this.error=null;
+      try{await this.startAccessSync()}catch(accessError){console.warn('Access schedule sync failed',accessError)}
       await this.syncLocalToCloud();
     }catch(error){this.mode='local';this.error=error;console.warn('Firebase unavailable; local mode enabled.',error)}
     this.emitStatus();return this.status();
@@ -92,6 +94,39 @@ class Backend{
   onStatus(listener){this.listeners.push(listener);listener(this.status());return()=>{this.listeners=this.listeners.filter(x=>x!==listener)}}
   emitStatus(){for(const fn of this.listeners)fn(this.status())}
   isAdmin(){return Boolean(this.user?.email&&CONFIG.adminEmails.map(x=>x.toLowerCase()).includes(this.user.email.toLowerCase()))}
+  async startAccessSync(){
+    try{this.accessUnsubscribe?.()}catch{};try{this.timeUnsubscribe?.()}catch{}
+    const accessRef=this.db.ref(this.database,`${CONFIG.rootPath}/access/overrides`);
+    const timeRef=this.db.ref(this.database,'.info/serverTimeOffset');
+    const accessSnapshot=await this.db.get(accessRef);
+    this.accessOverrides=accessSnapshot.val()||{};
+    this.accessUnsubscribe=this.db.onValue(accessRef,snapshot=>{
+      const next=snapshot.val()||{};const changed=JSON.stringify(next)!==JSON.stringify(this.accessOverrides);
+      this.accessOverrides=next;if(changed)window.dispatchEvent(new CustomEvent('rudn:accesschange'));
+    });
+    this.timeUnsubscribe=this.db.onValue(timeRef,snapshot=>{
+      const next=Number(snapshot.val()||0),changed=Math.abs(next-this.serverTimeOffset)>1000;
+      this.serverTimeOffset=next;if(changed)window.dispatchEvent(new CustomEvent('rudn:accesschange'));
+    });
+  }
+  globalNow(){return Date.now()+Number(this.serverTimeOffset||0)}
+  getAccessOverrides(startYear){return {...(this.accessOverrides?.[String(startYear)]||{})}}
+  async setAccessOverride(startYear,key,state='auto'){
+    if(!this.isAdmin())throw new Error('Требуются права преподавателя');
+    const year=String(Number(startYear));const gateKey=String(key||'');
+    if(!/^20\d{2}$/.test(year)||!(/^(topic-[1-8]|lecture-[1-7]-test)$/).test(gateKey))throw new Error('Некорректный блок курса');
+    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/access/overrides/${year}/${gateKey}`);
+    if(state==='auto')await this.db.remove(ref);
+    else{
+      if(state!=='open'&&state!=='closed')throw new Error('Некорректный режим доступа');
+      await this.db.set(ref,{state,updatedAt:this.db.serverTimestamp(),teacherUid:this.user.uid});
+    }
+    const next={...this.accessOverrides};const yearOverrides={...(next[year]||{})};
+    if(state==='auto')delete yearOverrides[gateKey];
+    else yearOverrides[gateKey]={state,updatedAt:Date.now(),teacherUid:this.user.uid};
+    if(Object.keys(yearOverrides).length)next[year]=yearOverrides;else delete next[year];
+    this.accessOverrides=next;
+  }
   async adminSignIn(email,password){
     if(!this.authClient)throw new Error('Firebase недоступен');
     const credential=await this.auth.signInWithEmailAndPassword(this.authClient,email,password);this.user=credential.user;this.mode='cloud';this.emitStatus();return this.user;

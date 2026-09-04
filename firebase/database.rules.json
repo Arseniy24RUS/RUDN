@@ -12,6 +12,17 @@
     },
     "rudn-platform": {
       "v1": {
+        "access": {
+          ".read": "auth != null",
+          "overrides": {
+            "$academicYear": {
+              "$gateKey": {
+                ".write": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+                ".validate": "newData.hasChildren(['state','updatedAt','teacherUid']) && (newData.child('state').val() === 'open' || newData.child('state').val() === 'closed') && newData.child('updatedAt').isNumber() && newData.child('teacherUid').val() === auth.uid"
+              }
+            }
+          }
+        },
         "profiles": {
           ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
           "$studentKey": {

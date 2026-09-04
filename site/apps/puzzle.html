@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#0079c1">
   <title>Географический конструктор · РУДН</title>
   <link rel="icon" href="../assets/img/icon-192.png">
-  <link rel="stylesheet" href="../assets/css/site.css?v=1.1.6">
-  <link rel="stylesheet" href="../assets/css/puzzle.css?v=1.1.6">
+  <link rel="stylesheet" href="../assets/css/site.css?v=1.1.7">
+  <link rel="stylesheet" href="../assets/css/puzzle.css?v=1.1.7">
   <style>
-    body{background:#eef4f8}.puzzle-pages-header{height:62px;background:#fff;border-bottom:1px solid #dbe5ef;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:40}.puzzle-pages-header img{width:105px}.puzzle-pages-header a{font-size:12px}.puzzle-page-main{max-width:1580px;margin:0 auto;padding:22px}.puzzle-profile-chip[hidden]{display:none}.puzzle-profile-warning{max-width:900px;margin:20px auto;background:#fff1f3;border-left:4px solid #cc3851;padding:16px;border-radius:0 12px 12px 0}.puzzle-history-table td{font-size:12px}@media(max-width:760px){.puzzle-page-main{padding:10px}.puzzle-pages-header{padding:0 10px;height:54px}.puzzle-pages-header img{width:82px}}
+    body{background:#eef4f8}.puzzle-pages-header{height:62px;background:#fff;border-bottom:1px solid #dbe5ef;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:40}.puzzle-pages-header img{width:105px}.puzzle-pages-header a{font-size:12px}.puzzle-page-main{max-width:1580px;margin:0 auto;padding:22px}.puzzle-shell[data-access-pending="true"]{visibility:hidden;pointer-events:none}.puzzle-profile-chip[hidden]{display:none}.puzzle-profile-warning{max-width:900px;margin:20px auto;background:#fff1f3;border-left:4px solid #cc3851;padding:16px;border-radius:0 12px 12px 0}.puzzle-history-table td{font-size:12px}@media(max-width:760px){.puzzle-page-main{padding:10px}.puzzle-pages-header{padding:0 10px;height:54px}.puzzle-pages-header img{width:82px}}
   </style>
   <script>
     (()=>{const supported=['ru','en','zh'];const stored=localStorage.getItem('rudn.locale');const nav=(navigator.languages||[navigator.language||'en']).join(',').toLowerCase();const locale=supported.includes(stored)?stored:nav.includes('zh')?'zh':nav.includes('ru')?'ru':'en';document.documentElement.lang=locale==='zh'?'zh-Hans':locale;document.documentElement.dataset.locale=locale;let resolve;const ready=new Promise(r=>resolve=r);window.__resolvePuzzleI18n=resolve;window.RUDNI18N={locale,ready,t:(s)=>s};})();
@@ -19,7 +19,7 @@
   <header class="puzzle-pages-header"><a href="../index.html#dashboard" aria-label="К курсу"><img src="../assets/img/rudn-logo.png" alt="РУДН"></a><a class="btn btn-neutral btn-small" href="../index.html#activity/seminar-2">← <span data-static-i18n="back">К семинару</span></a></header>
   <main class="puzzle-page-main">
     <div class="puzzle-profile-warning" id="puzzleProfileWarning" hidden><strong data-static-i18n="profileRequired">Сначала войдите в профиль на главной странице курса.</strong> <a class="btn btn-primary btn-small" href="../index.html#profile" target="_top" data-static-i18n="profile">Профиль</a></div>
-    <div class="puzzle-shell" id="geoPuzzleApp" data-csrf="pages" data-activity-slug="seminar-2" data-current-grade="0" data-user-name="" data-group="">
+    <div class="puzzle-shell" id="geoPuzzleApp" data-csrf="pages" data-activity-slug="seminar-2" data-current-grade="0" data-user-name="" data-group="" data-access-pending="true">
       <section class="puzzle-intro">
         <div class="puzzle-intro-copy">
           <div class="puzzle-eyebrow" data-static-i18n="eyebrow">Интерактивная география публичного управления</div>
@@ -61,9 +61,9 @@
   </main>
   <div class="puzzle-toast" id="puzzleToast" role="status"></div>
   <dialog class="puzzle-dialog" id="puzzleResultDialog"><div class="puzzle-dialog-body"><div class="puzzle-dialog-mark">✓</div><h2 data-static-i18n="complete">Карта собрана</h2><p class="lead" id="puzzleResultText">—</p><div class="puzzle-result-grid"><div class="puzzle-result-metric"><span id="puzzleResultPointsLabel">Баллы</span><strong id="puzzleResultPoints">0/5</strong></div><div class="puzzle-result-metric"><span data-static-i18n="pieces">Территории</span><strong id="puzzleResultCount">0</strong></div><div class="puzzle-result-metric"><span data-static-i18n="time">Время</span><strong id="puzzleResultTime">00:00</strong></div><div class="puzzle-result-metric"><span data-static-i18n="errors">Ошибки</span><strong id="puzzleResultErrors">0</strong></div></div><div class="puzzle-dialog-actions"><a class="btn btn-neutral" href="../index.html#activity/seminar-2" target="_top" data-static-i18n="back">Вернуться к семинару</a><button class="btn btn-secondary" id="puzzlePlayAgain" type="button" data-static-i18n="playAgain">Собрать ещё раз</button><button class="btn btn-primary" id="puzzleCloseResult" type="button" data-static-i18n="continueCourse">Продолжить курс</button></div></div></dialog>
-  <script type="module" src="../assets/js/puzzle-bootstrap.js?v=1.1.6"></script>
+  <script type="module" src="../assets/js/puzzle-bootstrap.js?v=1.1.7"></script>
   <script src="../assets/puzzle/vendor/d3.v7.9.0.min.js" defer></script>
   <script src="../assets/puzzle/vendor/topojson-client.v3.1.0.min.js" defer></script>
-  <script src="../assets/js/puzzle-engine.js?v=1.1.6" defer></script>
+  <script src="../assets/js/puzzle-engine.js?v=1.1.7" defer></script>
 </body>
 </html>

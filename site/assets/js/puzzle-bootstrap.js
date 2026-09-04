@@ -1,5 +1,6 @@
-import {backend} from './backend.js?v=1.1.6';
-import {getLocale} from './i18n.js?v=1.1.6';
+import {backend} from './backend.js?v=1.1.7';
+import {getLocale} from './i18n.js?v=1.1.7';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.7';
 
 const locale=getLocale();
 const base='../assets/puzzle/data';
@@ -52,5 +53,14 @@ function renderHistory(){const body=document.getElementById('puzzleHistoryBody')
 
 await backend.init();
 const profile=backend.getProfile();const root=document.getElementById('geoPuzzleApp');
-if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;const grades=await backend.getGrades();root.dataset.currentGrade=String(grades['seminar-2']?.points||0)}else{document.getElementById('puzzleProfileWarning').hidden=false;root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog'))el.disabled=true})}
-renderHistory();await loadLegacy();
+const accessNow=backend.globalNow(),accessContext=academicContext(accessNow),accessGate=topicGate(2,backend.getAccessOverrides(accessContext.startYear),accessNow);
+if(!backend.isAdmin()&&!accessGate.open){
+  const copy=locale==='zh'?{title:'该章节尚未开放',manual:'教师暂时关闭了该章节。',until:'开放日期'}:locale==='en'?{title:'This section is not open yet',manual:'The instructor has temporarily closed this section.',until:'Opens on'}:{title:'Раздел пока закрыт',manual:'Преподаватель временно закрыл этот раздел.',until:'Откроется'};
+  const detail=accessGate.override==='closed'?copy.manual:`${copy.until}: ${formatAccessDate(accessGate.opensAt,locale)}`;
+  root.hidden=true;root.insertAdjacentHTML('beforebegin',`<section class="panel access-lock-panel"><div class="access-lock-icon">⌛</div><h2>${copy.title}</h2><p>${detail}</p><a class="btn btn-neutral" href="../index.html#dashboard" target="_top">← ${staticTranslations[locale]?.back||staticTranslations.ru.back}</a></section>`);
+}else{
+  root.hidden=false;root.removeAttribute('data-access-pending');
+  if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;const grades=await backend.getGrades();root.dataset.currentGrade=String(grades['seminar-2']?.points||0)}else{document.getElementById('puzzleProfileWarning').hidden=false;root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog'))el.disabled=true})}
+  renderHistory();
+}
+await loadLegacy();
