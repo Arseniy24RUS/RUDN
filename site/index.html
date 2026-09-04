@@ -9,7 +9,7 @@
   <title>Введение в специальность · РУДН</title>
   <link rel="icon" href="assets/img/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/site.css?v=1.1.7">
+  <link rel="stylesheet" href="assets/css/site.css?v=1.1.9">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -38,9 +38,8 @@
       <nav>
         <a href="#dashboard" data-route="dashboard"><span>⌂</span><b data-i18n="navDashboard">Курс</b></a>
         <a href="#gradebook" data-route="gradebook"><span>▦</span><b data-i18n="navGradebook">Журнал</b></a>
-        <a href="#live" data-route="live"><span>◉</span><b data-i18n="navLive">Общая доска</b></a>
-        <a href="#puzzle" data-route="puzzle"><span>⌖</span><b data-i18n="navPuzzle">Карты</b></a>
         <a href="#materials" data-route="materials"><span>▤</span><b data-i18n="navMaterials">Материалы</b></a>
+        <a href="#puzzle" data-route="puzzle"><span>⌖</span><b data-i18n="navPuzzle">Карты</b></a>
         <a href="#profile" data-route="profile"><span>◎</span><b data-i18n="navProfile">Профиль</b></a>
       </nav>
       <div class="sidebar-bottom">
@@ -56,7 +55,7 @@
     <nav class="mobile-nav" aria-label="Мобильная навигация">
       <a href="#dashboard" data-route="dashboard"><span>⌂</span><small data-i18n="navDashboard">Курс</small></a>
       <a href="#gradebook" data-route="gradebook"><span>▦</span><small data-i18n="navGradebook">Журнал</small></a>
-      <a href="#live" data-route="live"><span>◉</span><small data-i18n="navLive">Доска</small></a>
+      <a href="#materials" data-route="materials"><span>▤</span><small data-i18n="navMaterials">Материалы</small></a>
       <a href="#puzzle" data-route="puzzle"><span>⌖</span><small data-i18n="navPuzzle">Карты</small></a>
       <a href="#profile" data-route="profile"><span>◎</span><small data-i18n="navProfile">Профиль</small></a>
     </nav>
@@ -83,6 +82,6 @@
 
   <dialog class="modal" id="confirmDialog"><form method="dialog" class="modal-card compact"><h2 id="confirmTitle">Подтверждение</h2><p id="confirmText"></p><div class="dialog-actions"><button class="btn btn-neutral" value="cancel" data-i18n="cancel">Отмена</button><button class="btn btn-primary" value="ok" data-i18n="confirm">Подтвердить</button></div></form></dialog>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-  <script type="module" src="assets/js/main.js?v=1.1.7"></script>
+  <script type="module" src="assets/js/main.js?v=1.1.9"></script>
 </body>
 </html>

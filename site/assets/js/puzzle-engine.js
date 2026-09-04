@@ -112,9 +112,12 @@
   };
 
   const csrf = root.dataset.csrf;
+  const seminarContext = root.dataset.context === "seminar";
   const ctx = els.canvas.getContext("2d", { alpha: true });
   const hitCanvas = document.createElement("canvas");
   const hitCtx = hitCanvas.getContext("2d");
+  const staticCanvas = document.createElement("canvas");
+  const staticCtx = staticCanvas.getContext("2d", { alpha: true });
 
   const DIFFICULTY = {
     easy: { label: tr("Учебная"), points: 3, snap: 60, hintAlways: true },
@@ -183,6 +186,8 @@
     adm1CatalogLoaded: false,
     subjectCatalogLoaded: false,
     animationFrame: 0,
+    drawFrame: 0,
+    staticDirty: true,
     resizeTimer: 0,
   };
 
@@ -209,6 +214,7 @@
   }
 
   function updateDependentFields() {
+    if (seminarContext) els.mode.value = "russia-subjects";
     const mode = els.mode.value;
     els.subjectField.hidden = mode !== "russia-municipalities";
     els.countryField.hidden = mode !== "country-regions";
@@ -219,14 +225,14 @@
       card.setAttribute("aria-pressed", active ? "true" : "false");
     });
     if (els.modeBadge) {
-      const graded = mode === "russia-subjects";
-      els.modeBadge.textContent = graded ? tr("Зачётный режим") : tr("Тренировочный режим");
+      const graded = seminarContext && mode === "russia-subjects";
+      els.modeBadge.textContent = graded ? tr("Зачётный режим") : seminarContext ? tr("Тренировочный режим") : tr("Свободная игра");
       els.modeBadge.classList.toggle("training", !graded);
     }
     if (els.difficultyHint) {
-      els.difficultyHint.textContent = mode === "russia-subjects"
+      els.difficultyHint.textContent = seminarContext && mode === "russia-subjects"
         ? tr("За карту субъектов России: 3 / 4 / 5 баллов.")
-        : tr("Сложность влияет на совмещение; тренировочный результат не изменяет журнал.");
+        : tr("Сложность влияет на точность совмещения и не изменяет учебный журнал.");
     }
     if (els.contextValue) {
       const labels = {
@@ -555,7 +561,7 @@
     if (state.loading) return;
     if (state.started && !state.finished && state.placed > 0 && !window.confirm(tr("Текущая попытка будет прервана. Начать заново?"))) return;
 
-    const mode = els.mode.value;
+    const mode = seminarContext ? "russia-subjects" : els.mode.value;
     const difficulty = els.difficulty.value;
     setLoading(true, "Подготавливаем карту", mode === "russia-municipalities" ? "Муниципальный слой крупнее обычного; первая загрузка может занять некоторое время." : "Геометрия проверяется и подготавливается для сенсорного управления.");
     els.empty.hidden = true;
@@ -612,7 +618,7 @@
       els.difficulty.disabled = true;
       els.start.textContent = tr("Загрузить другую карту");
       setLoading(false);
-      drawAll();
+      drawAll(true);
       els.canvas.focus({ preventScroll: true });
     } catch (error) {
       setLoading(false);
@@ -638,14 +644,14 @@
     els.datasetTitle.textContent = title;
     if (els.sourceTitle) els.sourceTitle.textContent = title || tr("Набор геоданных");
     if (els.modeBadge) {
-      const graded = state.mode === "russia-subjects";
-      els.modeBadge.textContent = graded ? tr("Зачётный режим") : tr("Тренировочный режим");
+      const graded = seminarContext && state.mode === "russia-subjects";
+      els.modeBadge.textContent = graded ? tr("Зачётный режим") : seminarContext ? tr("Тренировочный режим") : tr("Свободная игра");
       els.modeBadge.classList.toggle("training", !graded);
     }
     const count = state.features.length;
     const detail = [
       territoryCount(count),
-      state.mode === "russia-subjects" ? tr("зачётный режим") : tr("тренировочный режим"),
+      seminarContext && state.mode === "russia-subjects" ? tr("зачётный режим") : tr("свободная игра"),
       year ? `${tr("данные")}: ${year}` : null,
     ].filter(Boolean).join(" · ");
     els.datasetSubtitle.textContent = detail;
@@ -692,8 +698,12 @@
     els.canvas.height = Math.floor(state.cssHeight * state.dpr);
     hitCanvas.width = els.canvas.width;
     hitCanvas.height = els.canvas.height;
+    staticCanvas.width = els.canvas.width;
+    staticCanvas.height = els.canvas.height;
     ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     hitCtx.setTransform(1, 0, 0, 1, 0, 0);
+    staticCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+    state.staticDirty = true;
     state.trayHeight = Math.min(150, Math.max(116, state.cssHeight * 0.19));
     state.mapBottom = state.cssHeight - state.trayHeight - 14;
   }
@@ -913,17 +923,17 @@
     ctx.clearRect(0, 0, state.cssWidth, state.cssHeight);
   }
 
-  function drawMap() {
-    ctx.save();
-    setScene(ctx);
-    ctx.fillStyle = "#e7f1f7";
-    ctx.strokeStyle = "#91b2c6";
-    ctx.lineWidth = Math.max(0.7, 1 / state.view.k);
+  function drawMap(context = ctx) {
+    context.save();
+    setScene(context);
+    context.fillStyle = "#e7f1f7";
+    context.strokeStyle = "#91b2c6";
+    context.lineWidth = Math.max(0.7, 1 / state.view.k);
     state.paths.forEach((path) => {
-      ctx.fill(path, "evenodd");
-      ctx.stroke(path);
+      context.fill(path, "evenodd");
+      context.stroke(path);
     });
-    ctx.restore();
+    context.restore();
   }
 
   function drawHint() {
@@ -941,18 +951,18 @@
     ctx.restore();
   }
 
-  function drawLockedPieces() {
-    ctx.save();
-    setScene(ctx);
-    ctx.fillStyle = "#0079c1";
-    ctx.strokeStyle = "#004f80";
-    ctx.lineWidth = Math.max(0.8, 1.1 / state.view.k);
+  function drawLockedPieces(context = ctx) {
+    context.save();
+    setScene(context);
+    context.fillStyle = "#0079c1";
+    context.strokeStyle = "#004f80";
+    context.lineWidth = Math.max(0.8, 1.1 / state.view.k);
     state.pieces.forEach((piece) => {
       if (!piece.locked) return;
-      ctx.fill(state.paths[piece.index], "evenodd");
-      ctx.stroke(state.paths[piece.index]);
+      context.fill(state.paths[piece.index], "evenodd");
+      context.stroke(state.paths[piece.index]);
     });
-    ctx.restore();
+    context.restore();
   }
 
   function drawCurrentPiece() {
@@ -983,8 +993,6 @@
     ctx.fillStyle = "#dc3f45";
     ctx.strokeStyle = "#8e2028";
     ctx.lineWidth = Math.max(0.9, 1.3 / state.view.k);
-    ctx.shadowColor = "rgba(75, 14, 21, .22)";
-    ctx.shadowBlur = 7 / state.view.k;
     ctx.fill(path, "evenodd");
     ctx.stroke(path);
     ctx.restore();
@@ -1033,14 +1041,33 @@
     context.fillText(`${value}…`, x, y);
   }
 
-  function drawAll() {
+  function rebuildStaticLayer() {
+    staticCtx.setTransform(1, 0, 0, 1, 0, 0);
+    staticCtx.clearRect(0, 0, staticCanvas.width, staticCanvas.height);
+    drawMap(staticCtx);
+    drawLockedPieces(staticCtx);
+    state.staticDirty = false;
+  }
+
+  function drawAll(rebuildStatic = false) {
     if (!state.ready) return;
+    if (rebuildStatic) state.staticDirty = true;
+    if (state.staticDirty) rebuildStaticLayer();
     clearCanvas();
-    drawMap();
+    resetContext(ctx);
+    ctx.drawImage(staticCanvas, 0, 0, staticCanvas.width, staticCanvas.height, 0, 0, state.cssWidth, state.cssHeight);
     drawHint();
-    drawLockedPieces();
     drawCurrentPiece();
     drawTray();
+  }
+
+  function requestDraw(rebuildStatic = false) {
+    if (rebuildStatic) state.staticDirty = true;
+    if (state.drawFrame) return;
+    state.drawFrame = requestAnimationFrame(() => {
+      state.drawFrame = 0;
+      drawAll();
+    });
   }
 
   function updateUi() {
@@ -1078,7 +1105,7 @@
 
   function tick() {
     if (state.started && !state.finished) els.time.textContent = formatTime(elapsedMs());
-    if (state.ready && Date.now() <= state.hintUntil) drawAll();
+    if (state.ready && Date.now() <= state.hintUntil) requestDraw();
     state.animationFrame = requestAnimationFrame(tick);
   }
 
@@ -1128,7 +1155,7 @@
     state.view.k = k;
     state.view.x = state.pinch.center.x - state.pinch.world.x * k;
     state.view.y = state.pinch.center.y - state.pinch.world.y * k;
-    drawAll();
+    requestDraw(true);
   }
 
   function pointerDown(event) {
@@ -1193,11 +1220,11 @@
         piece.dx = world.x - anchor[0] - state.dragOffset.x;
         piece.dy = world.y - anchor[1] - state.dragOffset.y;
       }
-      drawAll();
+      requestDraw();
     } else if (state.draggingPan) {
       state.view.x = point.x - state.panOffset.x;
       state.view.y = point.y - state.panOffset.y;
-      drawAll();
+      requestDraw(true);
     }
   }
 
@@ -1224,7 +1251,7 @@
       piece.inTray = false;
       state.placed += 1;
       updateUi();
-      drawAll();
+      drawAll(true);
       if (state.placed >= state.features.length) {
         void completeGame();
       } else {
@@ -1245,7 +1272,7 @@
     state.elapsedBeforeStart = elapsedMs();
     state.current = -1;
     updateUi();
-    drawAll();
+    drawAll(true);
     setControlsEnabled(false);
     els.reset.disabled = false;
     // The server rejects zero-duration synthetic completions.  On very small
@@ -1271,7 +1298,7 @@
       points: state.mode === "russia-subjects" ? DIFFICULTY[state.difficulty].points : 0,
       practice_points: DIFFICULTY[state.difficulty].points,
       best_points: Number(root.dataset.currentGrade || 0),
-      grade_eligible: state.mode === "russia-subjects",
+      grade_eligible: seminarContext && state.mode === "russia-subjects",
     };
     try {
       result = await fetchJson(`/api/puzzle/complete?lang=${encodeURIComponent(locale)}`, {
@@ -1311,14 +1338,14 @@
     state.view.k = k;
     state.view.x = x - world.x * k;
     state.view.y = y - world.y * k;
-    drawAll();
+    drawAll(true);
   }
 
   function centerView() {
     state.view = { x: 0, y: 0, k: 1 };
     const piece = currentPiece();
     if (piece && piece.inTray) placePieceInTray(piece.index);
-    drawAll();
+    drawAll(true);
   }
 
   function clamp(value, min, max) {
@@ -1375,7 +1402,7 @@
         if (event.key === "ArrowUp") piece.dy -= step / state.view.k;
         if (event.key === "ArrowDown") piece.dy += step / state.view.k;
       }
-      drawAll();
+      drawAll(event.altKey || !piece || piece.inTray);
     } else if (event.key === "Enter") {
       event.preventDefault();
       if (piece && piece.inTray) {
@@ -1418,7 +1445,7 @@
   }
 
   function unlockSelectors() {
-    els.mode.disabled = false;
+    els.mode.disabled = seminarContext;
     els.subject.disabled = false;
     els.country.disabled = false;
     els.difficulty.disabled = false;
@@ -1427,6 +1454,7 @@
   els.mode.addEventListener("change", updateDependentFields);
   els.modeCards.forEach((card) => {
     card.addEventListener("click", () => {
+      if (seminarContext) return;
       if (state.started && !state.finished && state.placed > 0) {
         const proceed = window.confirm(tr("Текущая попытка будет прервана при загрузке другой карты. Продолжить?"));
         if (!proceed) return;
@@ -1459,7 +1487,7 @@
     unlockSelectors();
     void startGame({ reuseDataset: true });
   });
-  els.closeResult.addEventListener("click", () => { window.location.href = "../index.html#dashboard"; });
+  els.closeResult.addEventListener("click", () => { window.location.href = seminarContext ? "../index.html#activity/seminar-2" : "../index.html#puzzle"; });
   window.addEventListener("resize", handleResize);
   document.addEventListener("fullscreenchange", handleResize);
 

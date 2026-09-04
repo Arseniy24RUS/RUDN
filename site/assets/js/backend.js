@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.7';
+import {CONFIG} from './config.js?v=1.1.9';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -278,6 +278,37 @@ class Backend{
       this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/grades`))
     ]);
     return {profiles:p.val()||{},attempts:a.val()||{},grades:g.val()||{}};
+  }
+
+  async savePuzzleLeaderboardResult({difficulty,timeMs,placed,total}){
+    if(!this.profile||this.mode!=='cloud'||!this.db||!this.database)return null;
+    const level=['easy','medium','hard'].includes(difficulty)?difficulty:'medium';
+    const record={
+      fio:String(this.profile.fullName||'').slice(0,100),
+      group:String(this.profile.group||'').slice(0,50),
+      difficulty:level,
+      time_ms:Math.max(0,Math.min(3599000,Math.round(Number(timeMs)||0))),
+      placed:Number(placed),total:Number(total),
+      timestamp:this.db.serverTimestamp(),
+      user_agent:String(navigator.userAgent||'browser').slice(0,200)
+    };
+    if(record.placed!==89||record.total!==89)return null;
+    const resultRef=this.db.push(this.db.ref(this.database,'results'));
+    await this.db.set(resultRef,record);
+    return {...record,id:resultRef.key,timestamp:Date.now()};
+  }
+  async getPuzzleLeaderboard(){
+    try{
+      if(this.mode==='cloud'&&this.db&&this.database){
+        const snapshot=await this.db.get(this.db.ref(this.database,'results'));
+        return Object.entries(snapshot.val()||{}).map(([id,value])=>({id,...value}));
+      }
+      const url=`${String(CONFIG.firebase.databaseURL).replace(/\/$/,'')}/results.json`;
+      const response=await fetch(url,{cache:'no-store'});
+      if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      const value=await response.json();
+      return Object.entries(value||{}).map(([id,row])=>({id,...row}));
+    }catch(error){console.warn('Leaderboard unavailable',error);return []}
   }
 
   automaticRoomKey(group,date=new Date()){return automaticRoomKey(group,date)}

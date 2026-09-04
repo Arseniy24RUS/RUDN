@@ -222,6 +222,19 @@
   font-size: 13px;
 }
 
+.puzzle-shell[data-context="seminar"] .puzzle-mode-grid,
+.puzzle-shell[data-context="seminar"] .puzzle-toolbar-context,
+.puzzle-shell[data-context="seminar"] .puzzle-toolbar-summary {
+  display: none;
+}
+.puzzle-shell[data-context="seminar"] .puzzle-toolbar {
+  grid-template-columns: minmax(240px, 1fr) auto;
+  max-width: 720px;
+}
+.puzzle-shell[data-context="seminar"] .puzzle-setup-head p { max-width: 720px; }
+.puzzle-shell[data-context="free"] .puzzle-score-badge,
+.puzzle-shell[data-context="free"] .puzzle-assessment-card { display: none; }
+
 .puzzle-workspace {
   min-width: 0;
   display: grid;
@@ -411,6 +424,15 @@
 .puzzle-history-table tbody tr:last-child td { border-bottom: 0; }
 .puzzle-history-table td:first-child { max-width: 330px; }
 .puzzle-history-points { color: var(--rudn-blue-deep); font-size: 16px; font-weight: 850; }
+.puzzle-leaderboard-tools { display: flex; align-items: end; gap: 9px; }
+.puzzle-leaderboard-tools label { display: grid; gap: 5px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .055em; text-transform: uppercase; }
+.puzzle-leaderboard-tools input { width: 210px; min-height: 38px; }
+.puzzle-leaderboard-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.puzzle-leaderboard-grid > section { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; }
+.puzzle-leaderboard-grid h3 { margin: 0; padding: 12px 14px; color: var(--rudn-blue-deep); background: var(--rudn-sky); font-size: 15px; }
+.puzzle-leaderboard .puzzle-history-table { min-width: 590px; }
+.puzzle-leaderboard .puzzle-history-table th,
+.puzzle-leaderboard .puzzle-history-table td { padding: 9px 10px; }
 
 .puzzle-toast {
   position: fixed;
@@ -450,6 +472,7 @@
   .puzzle-toolbar-actions { grid-column: 1 / -1; justify-content: flex-end; }
   .puzzle-workspace { grid-template-columns: 1fr; }
   .puzzle-side { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .puzzle-leaderboard-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 940px) {
@@ -484,6 +507,9 @@
   .puzzle-dialog-body { padding: 22px; }
   .puzzle-result-grid { grid-template-columns: 1fr 1fr; }
   .puzzle-history-head { display: grid; }
+  .puzzle-leaderboard-tools { align-items: stretch; flex-direction: column; }
+  .puzzle-leaderboard-tools input { width: 100%; }
+  .puzzle-shell[data-context="seminar"] .puzzle-toolbar { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 420px) {

@@ -1,8 +1,9 @@
-import {backend} from './backend.js?v=1.1.7';
-import {getLocale} from './i18n.js?v=1.1.7';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.7';
+import {backend} from './backend.js?v=1.1.9';
+import {getLocale} from './i18n.js?v=1.1.9';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.9';
 
 const locale=getLocale();
+const context=new URLSearchParams(location.search).get('context')==='seminar'?'seminar':'free';
 const base='../assets/puzzle/data';
 const nativeFetch=window.fetch.bind(window);
 const activeAttempts=new Map();
@@ -15,10 +16,18 @@ const staticTranslations={
   en:{back:'Back to seminar',profileRequired:'Sign in on the main course page first.',profile:'Profile',eyebrow:'Interactive geography of public administration',hero:'Assemble a territory —<br>from municipalities to the world',lead:'The polished drag-and-drop, zoom, touch and precise matching engine is preserved. Every completed map is linked to your profile.',choose:'Choose a map',assessmentLead:'The 89 federal subjects of Russia remain the graded mode. Other maps are recorded as practice.',credit:'Graded',russiaSubjects:'Federal subjects of Russia',graded89:'89 pieces · graded',municipalities:'Municipalities of a federal subject',practiceSelect:'Choose a territory · practice',world:'Countries of the world',worldPractice:'Political map · practice',foreignRegions:'Regions of another country',countrySelect:'Choose a country · practice',dataset:'Dataset',authorMap:'Author-created map from the polished project.',federalSubject:'Federal subject of Russia',country:'Country',difficulty:'Difficulty',loadMap:'Load map',restart:'Restart',placed:'Placed',errors:'Errors',time:'Time',prepare:'Preparing the map',prepareHelp:'Choose a mode and load the map.',returnPiece:'Return piece',center:'Centre map',hint:'Hint',fullscreen:'Full screen',current:'Current territory',dataSource:'Geographic dataset',assessment:'Assessment',expert5:'Expert — 5',otherScores:'Standard — 4 · Learning — 3',bestSaved:'The best graded result is saved in the gradebook.',how:'How to play',how1:'Drag the red territory to its correct location.',how2:'Zoom with the wheel, buttons or a two-finger gesture.',how3:'Use return-piece and hint controls when necessary.',how4:'Placing the final piece completes and saves the attempt.',history:'My map history',historyLead:'Graded and practice attempts are stored in your profile.',map:'Map',mode:'Mode',pieces:'Pieces',points:'Points',date:'Date',complete:'Map completed',playAgain:'Play again',continueCourse:'Continue course'},
   zh:{back:'返回研讨课',profileRequired:'请先在课程主页登录个人资料。',profile:'个人资料',eyebrow:'公共管理互动地理',hero:'拼合行政区域——<br>从市政单位到世界地图',lead:'保留成熟的拖放、缩放、触控和精确拼合引擎。完成的地图会自动关联到学生资料。',choose:'选择地图',assessmentLead:'俄罗斯89个联邦主体为计分模式，其他地图记录为练习。',credit:'计分',russiaSubjects:'俄罗斯联邦主体',graded89:'89块 · 计分',municipalities:'联邦主体的市政单位',practiceSelect:'选择地区 · 练习',world:'世界各国',worldPractice:'政治地图 · 练习',foreignRegions:'其他国家的一级行政区',countrySelect:'选择国家 · 练习',dataset:'数据集',authorMap:'成熟项目中的作者地图。',federalSubject:'俄罗斯联邦主体',country:'国家',difficulty:'难度',loadMap:'加载地图',restart:'重新开始',placed:'已放置',errors:'错误',time:'用时',prepare:'准备地图',prepareHelp:'选择模式并加载地图。',returnPiece:'退回拼块',center:'居中',hint:'提示',fullscreen:'全屏',current:'当前地区',dataSource:'地理数据集',assessment:'评分',expert5:'专家 — 5分',otherScores:'标准 — 4分 · 学习 — 3分',bestSaved:'成绩册保留最佳计分结果。',how:'玩法',how1:'将红色地区拖到正确位置。',how2:'使用滚轮、按钮或双指手势缩放。',how3:'必要时可退回拼块或使用提示。',how4:'放置最后一块后自动完成并保存。',history:'我的地图记录',historyLead:'计分和练习记录均保存在个人资料中。',map:'地图',mode:'模式',pieces:'拼块',points:'分数',date:'日期',complete:'地图已完成',playAgain:'再玩一次',continueCourse:'继续课程'}
 };
+Object.assign(staticTranslations.ru,{backMaps:'К картам',lead:'Выберите любой режим и играйте без ограничений. После входа результаты карты России попадут в таблицу лидеров.',assessmentLead:'Все режимы доступны постоянно и не зависят от расписания курса.',graded89:'89 деталей',practiceSelect:'Выбор территории',worldPractice:'Политическая карта',countrySelect:'Выбор государства',profileOptional:'Можно играть без входа. Войдите, чтобы результат появился в таблице лидеров.',profileRequired:'Для зачётного прохождения сначала войдите в профиль.',seminarHero:'Соберите карту России<br>из 89 субъектов',seminarLead:'Выберите сложность, соберите все субъекты и сохраните лучший результат в электронном журнале.',seminarChoose:'Карта субъектов России',seminarAssessmentLead:'В семинаре доступен один зачётный режим. Сложность определяет точность совмещения и оценку.',leaderboard:'Таблица лидеров',leaderboardLead:'Для каждого студента учитывается лучшее время в пределах выбранной сложности.',groupFilter:'Фильтр по группе',exportCsv:'Скачать CSV',easy:'Учебная',medium:'Стандартная',hard:'Экспертная',fullName:'ФИО',group:'Группа'});
+Object.assign(staticTranslations.en,{backMaps:'Back to maps',lead:'Choose any mode and play without course restrictions. Sign in to add Russia-map results to the leaderboard.',assessmentLead:'Every mode is always available and independent of the course schedule.',graded89:'89 pieces',practiceSelect:'Choose a territory',worldPractice:'Political map',countrySelect:'Choose a country',profileOptional:'You can play without signing in. Sign in to appear on the leaderboard.',profileRequired:'Sign in before starting the graded attempt.',seminarHero:'Assemble the map of Russia<br>from 89 federal subjects',seminarLead:'Choose a difficulty, place all federal subjects and keep your best result in the electronic gradebook.',seminarChoose:'Map of the federal subjects of Russia',seminarAssessmentLead:'The seminar uses one graded mode. Difficulty controls placement precision and the mark.',leaderboard:'Leaderboard',leaderboardLead:'Each student’s best time is retained within each difficulty.',groupFilter:'Filter by group',exportCsv:'Download CSV',easy:'Learning',medium:'Standard',hard:'Expert',fullName:'Full name',group:'Group'});
+Object.assign(staticTranslations.zh,{backMaps:'返回地图',lead:'可自由选择任一模式，不受课程进度限制。登录后，俄罗斯地图成绩会进入排行榜。',assessmentLead:'所有模式始终开放，不受课程时间表限制。',graded89:'89块',practiceSelect:'选择地区',worldPractice:'政治地图',countrySelect:'选择国家',profileOptional:'无需登录即可游戏。登录后成绩会显示在排行榜中。',profileRequired:'开始计分前请先登录个人资料。',seminarHero:'拼合俄罗斯地图<br>共89个联邦主体',seminarLead:'选择难度，完成全部联邦主体，并将最佳成绩保存到电子成绩册。',seminarChoose:'俄罗斯联邦主体地图',seminarAssessmentLead:'研讨课仅使用一个计分模式。难度决定拼合精度和得分。',leaderboard:'排行榜',leaderboardLead:'每位学生在每个难度中只保留最佳用时。',groupFilter:'按班级筛选',exportCsv:'下载CSV',easy:'学习',medium:'标准',hard:'专家',fullName:'姓名',group:'班级'});
 
 const sourceTranslations={};
+const engineTranslations={
+  en:{'Свободная игра':'Free play','свободная игра':'free play','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'Difficulty controls placement precision and does not change the course gradebook.'},
+  zh:{'Свободная игра':'自由游戏','свободная игра':'自由游戏','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'难度决定拼合精度，不会更改课程成绩册。'}
+};
 async function loadLegacy(){
   try{const response=await nativeFetch(`../data/legacy-${locale}.json`);if(response.ok)Object.assign(sourceTranslations,await response.json())}catch{}
+  Object.assign(sourceTranslations,engineTranslations[locale]||{});
   window.RUDNI18N={locale,ready:Promise.resolve(),t(source,params={}){let value=sourceTranslations[source]??source;for(const [k,v] of Object.entries(params))value=value.replaceAll(`{${k}}`,String(v));return value}};
   document.querySelectorAll('[data-static-i18n]').forEach(el=>{const value=staticTranslations[locale]?.[el.dataset.staticI18n]??staticTranslations.ru[el.dataset.staticI18n];if(value!==undefined)el.innerHTML=value});
   window.__resolvePuzzleI18n?.();
@@ -44,23 +53,65 @@ window.fetch=async(input,options={})=>{
     const municipal=pathname.match(/\/data\/russia-municipalities\/([^/]+)$/);if(municipal){const id=decodeURIComponent(municipal[1]);const cat=await getMunicipalCatalog();const item=cat.subjects.find(x=>String(x.id)===String(id));if(!item)return jsonResponse({detail:'Subject not found'},404);return jsonResponse(wrapper({id:`russia-municipal-${id}-course-2025-v1`,title:`${item.name}: муниципальные районы и округа`,title_en:`${item.name_en||item.name}: Municipal Districts and Okrugs`,title_zh:`${item.name_zh||item.name_en||item.name}：市政区和专区`,source:item.source,source_en:item.source_en||item.source,source_zh:item.source_zh||item.source,license:item.license,license_en:item.license_en||item.license,license_zh:item.license_zh||item.license,geometry_url:`${base}/municipal/subject-${id}.geojson`,feature_count:item.units,year:'2025'}))}
     const adm=pathname.match(/\/data\/country-adm1\/([A-Za-z]{3})$/);if(adm){const iso=adm[1].toUpperCase();if(iso==='USA')return jsonResponse(wrapper({id:'usa-adm1-local',title:'Соединённые Штаты Америки: штаты и округ Колумбия',title_en:'United States of America: States and the District of Columbia',title_zh:'美国：各州和哥伦比亚特区',source:'Public-domain US boundary data',source_en:'Public-domain US boundary data',source_zh:'美国公共领域边界数据',license:'Public domain',license_en:'Public domain',license_zh:'公共领域',geometry_url:`${base}/usa_states.geojson`,feature_count:51}));const local=(await getAdmManifest()).find(x=>x.iso===iso);if(local)return jsonResponse(wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${iso}: ADM1`,title_en:`${iso}: first-level administrative units`,title_zh:`${iso}：一级行政区`,source:'geoBoundaries gbOpen',source_en:'geoBoundaries gbOpen',source_zh:'geoBoundaries gbOpen',license:'CC BY 4.0',license_en:'CC BY 4.0',license_zh:'CC BY 4.0',geometry_url:`${base}/adm1/${iso}.geojson`,feature_count:local.features}));return jsonResponse(await remoteAdm1(iso))}
     if(pathname.endsWith('/start')){const body=JSON.parse(options.body||'{}');const id=crypto.randomUUID();const seed=Math.floor(Math.random()*0xffffffff);activeAttempts.set(id,{...body,id,seed,startedAt:Date.now()});return jsonResponse({attempt_id:id,seed})}
-    if(pathname.endsWith('/complete')){const body=JSON.parse(options.body||'{}');const started=activeAttempts.get(body.attempt_id)||{};const gradeEligible=body.mode==='russia-subjects';const points=gradeEligible?({easy:3,medium:4,hard:5}[body.difficulty]||0):0;const practicePoints=({easy:3,medium:4,hard:5}[body.difficulty]||0);const title=started.dataset_title||body.dataset_id||body.mode;await backend.saveAttempt({id:body.attempt_id,type:'map-puzzle',activitySlug:'seminar-2',title,points,maxPoints:5,practicePoints,gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id});const best=(await backend.getGrades())['seminar-2']?.points||0;renderHistory();return jsonResponse({points,practice_points:practicePoints,best_points:best,grade_eligible:gradeEligible,message:gradeEligible?(locale==='zh'?'成绩已写入电子成绩册。':locale==='en'?'The result was saved to the electronic gradebook.':'Результат сохранён в электронном журнале.'):(locale==='zh'?'练习结果已保存。':locale==='en'?'Practice result saved.':'Тренировочный результат сохранён.')})}
+    if(pathname.endsWith('/complete')){
+      const body=JSON.parse(options.body||'{}');const started=activeAttempts.get(body.attempt_id)||{};
+      const signedIn=Boolean(backend.getProfile());const russian89=body.mode==='russia-subjects'&&Number(body.placed)===89&&Number(body.total)===89;
+      const gradeEligible=context==='seminar'&&russian89;const points=gradeEligible?({easy:3,medium:4,hard:5}[body.difficulty]||0):0;const practicePoints=({easy:3,medium:4,hard:5}[body.difficulty]||0);const title=started.dataset_title||body.dataset_id||body.mode;
+      if(signedIn){
+        const record={id:body.attempt_id,type:'map-puzzle',activitySlug:gradeEligible?'seminar-2':'maps-freeplay',title,practicePoints,gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
+        if(gradeEligible)Object.assign(record,{points,maxPoints:5});
+        await backend.saveAttempt(record);
+        if(russian89){try{await backend.savePuzzleLeaderboardResult({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total})}catch(error){console.warn('Leaderboard write failed',error)}}
+      }
+      const best=gradeEligible?(await backend.getGrades())['seminar-2']?.points||0:0;void renderLeaderboard();
+      const message=!signedIn?(locale==='zh'?'地图已完成。登录后可保存成绩。':locale==='en'?'Map completed. Sign in to save results.':'Карта собрана. Войдите, чтобы сохранять результаты.'):gradeEligible?(locale==='zh'?'成绩已写入电子成绩册。':locale==='en'?'The result was saved to the electronic gradebook.':'Результат сохранён в электронном журнале.'):(locale==='zh'?'自由游戏结果已保存。':locale==='en'?'Free-play result saved.':'Результат свободной игры сохранён.');
+      return jsonResponse({points,practice_points:practicePoints,best_points:best,grade_eligible:gradeEligible,message})
+    }
     return jsonResponse({detail:'Not found'},404);
   }catch(error){console.error(error);return jsonResponse({detail:String(error.message||error)},500)}
 };
 
-function renderHistory(){const body=document.getElementById('puzzleHistoryBody');if(!body)return;backend.getAttempts().then(items=>{const maps=items.filter(x=>x.type==='map-puzzle').slice(0,20);body.innerHTML=maps.length?maps.map(x=>`<tr><td><strong>${String(x.title||x.datasetId||x.mode)}</strong></td><td>${x.gradeEligible?'✓':'practice'}</td><td>${x.difficulty||'—'}</td><td>${x.total||0}</td><td>${x.errors||0}</td><td>${Math.floor((x.durationMs||0)/60000)}:${String(Math.floor(((x.durationMs||0)%60000)/1000)).padStart(2,'0')}</td><td>${x.gradeEligible?`${x.points}/5`:'—'}</td><td>${new Date(x.createdAt).toLocaleDateString()}</td></tr>`).join(''):`<tr><td colspan="8" class="muted">—</td></tr>`}).catch(()=>{});}
+const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const formatLeaderboardTime=value=>{const seconds=Math.max(0,Math.floor(Number(value||0)/1000));return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
+let leaderboardRows=[];
+function bestLeaderboardRows(items){
+  const best=new Map();
+  for(const row of items){if(!['easy','medium','hard'].includes(row?.difficulty)||Number(row?.total)!==89||Number(row?.placed)!==89)continue;const key=`${String(row.fio||'').trim().toLowerCase()}|${String(row.group||'').trim().toLowerCase()}|${row.difficulty}`;const prior=best.get(key);if(!prior||Number(row.time_ms)<Number(prior.time_ms))best.set(key,row)}
+  return [...best.values()].sort((a,b)=>Number(a.time_ms)-Number(b.time_ms)||Number(a.timestamp)-Number(b.timestamp));
+}
+async function renderLeaderboard(){
+  leaderboardRows=bestLeaderboardRows(await backend.getPuzzleLeaderboard());
+  const query=String(document.getElementById('puzzleLeaderboardFilter')?.value||'').trim().toLowerCase();
+  for(const difficulty of ['easy','medium','hard']){
+    const body=document.querySelector(`#leader_${difficulty} tbody`);if(!body)continue;
+    const rows=leaderboardRows.filter(row=>row.difficulty===difficulty&&(!query||String(row.group||'').toLowerCase().includes(query))).slice(0,100);
+    body.innerHTML=rows.length?rows.map((row,index)=>`<tr><td>${index+1}</td><td><strong>${escapeHtml(row.fio)}</strong></td><td>${escapeHtml(row.group)}</td><td>${formatLeaderboardTime(row.time_ms)}</td><td>${new Date(Number(row.timestamp)||Date.now()).toLocaleDateString(locale==='zh'?'zh-CN':locale==='en'?'en-GB':'ru-RU')}</td></tr>`).join(''):`<tr><td colspan="5" class="muted">—</td></tr>`;
+  }
+}
+function exportLeaderboard(){
+  const header=['fio','group','difficulty','time_ms','timestamp'];const csv=[header.join(';'),...leaderboardRows.map(row=>header.map(key=>`"${String(row[key]??'').replaceAll('"','""')}"`).join(';'))].join('\r\n');
+  const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));link.download='rudn-map-leaderboard.csv';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+}
 
+const root=document.getElementById('geoPuzzleApp');
+root.dataset.context=context;root.dataset.activitySlug=context==='seminar'?'seminar-2':'maps-freeplay';
+if(context==='seminar'){
+  document.getElementById('puzzleBackLink').href='../index.html#activity/seminar-2';document.querySelector('#puzzleBackLink span').dataset.staticI18n='back';
+  document.getElementById('puzzleHero').dataset.staticI18n='seminarHero';document.getElementById('puzzleHeroLead').dataset.staticI18n='seminarLead';document.getElementById('puzzleSetupTitle').dataset.staticI18n='seminarChoose';document.querySelector('.puzzle-setup-head p').dataset.staticI18n='seminarAssessmentLead';
+  document.getElementById('puzzleMode').value='russia-subjects';
+}
 await backend.init();
-const profile=backend.getProfile();const root=document.getElementById('geoPuzzleApp');
+const profile=backend.getProfile();
 const accessNow=backend.globalNow(),accessContext=academicContext(accessNow),accessGate=topicGate(2,backend.getAccessOverrides(accessContext.startYear),accessNow);
-if(!backend.isAdmin()&&!accessGate.open){
+if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
   const copy=locale==='zh'?{title:'该章节尚未开放',manual:'教师暂时关闭了该章节。',until:'开放日期'}:locale==='en'?{title:'This section is not open yet',manual:'The instructor has temporarily closed this section.',until:'Opens on'}:{title:'Раздел пока закрыт',manual:'Преподаватель временно закрыл этот раздел.',until:'Откроется'};
   const detail=accessGate.override==='closed'?copy.manual:`${copy.until}: ${formatAccessDate(accessGate.opensAt,locale)}`;
   root.hidden=true;root.insertAdjacentHTML('beforebegin',`<section class="panel access-lock-panel"><div class="access-lock-icon">⌛</div><h2>${copy.title}</h2><p>${detail}</p><a class="btn btn-neutral" href="../index.html#dashboard" target="_top">← ${staticTranslations[locale]?.back||staticTranslations.ru.back}</a></section>`);
 }else{
   root.hidden=false;root.removeAttribute('data-access-pending');
-  if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;const grades=await backend.getGrades();root.dataset.currentGrade=String(grades['seminar-2']?.points||0)}else{document.getElementById('puzzleProfileWarning').hidden=false;root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog'))el.disabled=true})}
-  renderHistory();
+  if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;const grades=await backend.getGrades();root.dataset.currentGrade=String(grades['seminar-2']?.points||0)}else{const warning=document.getElementById('puzzleProfileWarning');warning.hidden=false;if(context==='seminar'){document.getElementById('puzzleProfileWarningText').dataset.staticI18n='profileRequired';root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog')&&!el.closest('.puzzle-leaderboard'))el.disabled=true})}}
+  document.getElementById('puzzleLeaderboardFilter')?.addEventListener('input',()=>void renderLeaderboard());
+  document.getElementById('puzzleLeaderboardExport')?.addEventListener('click',exportLeaderboard);
+  void renderLeaderboard();
 }
 await loadLegacy();

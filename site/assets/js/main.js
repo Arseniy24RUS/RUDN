@@ -1,9 +1,9 @@
-import {CONFIG} from './config.js?v=1.1.7';
-import {backend,groupOptions} from './backend.js?v=1.1.7';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.7';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.7';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.7';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.7';
+import {CONFIG} from './config.js?v=1.1.9';
+import {backend,groupOptions} from './backend.js?v=1.1.9';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.9';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.9';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.9';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.9';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -29,7 +29,7 @@ const UI = {
     lectureMaterials:'Материалы лекции', videoLecture:'Видеолекция', presentation:'Презентация', lectureTest:'Тест по лекции', startTest:'Начать тест', noLectureTest:'Для этой лекции отдельный тест не предусмотрен.',
     reflectionTitle:'Профессиональная рефлексия', reflectionLead:'Пройдите профориентационный тест, затем зафиксируйте свой результат и выводы.', careerResult:'Полученный профиль / направление', reflection:'Краткий вывод: какие роли в государственном управлении вам подходят и почему?', externalTest:'Открыть профориентационный тест',
     seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Судебная».', seminar1ClassroomTitle:'Аудиторный квиз · 50 вопросов', seminar1ClassroomLead:'Все 50 органов из исходного аудиторного квиза. Результат не выставляется в журнал.', launchQuiz:'Начать квиз', seminar1AssessmentTitle:'Самостоятельная работа · 5 вопросов', seminar1AssessmentLead:'Пять заданий из исходного теста. Итоговая оценка — от 0 до 5 баллов.', launchAssessment:'Начать работу', joinLive:'Открыть общую доску',
-    seminar2Lead:'Соберите субъекты России, муниципальные образования, страны мира или регионы выбранного государства.', openPuzzle:'Открыть географический конструктор',
+    seminar2Lead:'Соберите карту России из 89 субъектов. Выберите сложность; лучший результат сохранится в журнале.', openPuzzle:'Открыть географический конструктор',
     seminar3Lead:'Исследуйте систему расселения по интерактивному дашборду и подготовьте аналитический вывод.', openDashboard:'Открыть дашборд', territory:'Выбранная агломерация / территория', indicator:'Ключевые показатели', dynamics:'Основная динамика и пространственные различия', conclusion:'Управленческий вывод', attachment:'Презентация или тезисы (необязательно)',
     seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.',
     seminar5Lead:'Система закрепляет за студентом один из 30 вариантов обращения. Заполните служебную карточку и подготовьте официальный ответ гражданину.', yourVariant:'Ваш вариант', appealType:'Тип обращения', completeness:'Полнота обязательных сведений', registration:'Регистрация и первоначальное действие', deadline:'Срок рассмотрения', competentBody:'Компетентный орган', addresseeDetails:'Реквизиты адресата', officialReply:'Проект официального ответа гражданину', rubric:'Автоматическая предварительная оценка проверяет полноту карточки, сроки, компетенцию и структуру ответа. Преподаватель может уточнить итог.',
@@ -38,7 +38,7 @@ const UI = {
     finalLead:'Итоговый тест проверяет освоение всех тем курса.',
     saved:'Результат сохранён', fillRequired:'Заполните обязательные поля', profileRequired:'Для сохранения результата сначала войдите в профиль.',
     gradebookTitle:'Электронный журнал', gradebookLead:'По каждой активности учитывается лучший результат. Максимум за курс — 100 баллов.', exportCsv:'Скачать CSV', attempts:'История попыток', date:'Дата', type:'Тип', duration:'Время',
-    puzzleTitle:'Географический конструктор', puzzleLead:'Конструктор встроен в платформу и использует тот же профиль студента.',
+    puzzleTitle:'Карты · свободная игра', puzzleLead:'Все режимы доступны постоянно и не зависят от расписания курса.',
     liveTitle:'Общая доска квиза', liveLead:'', sessionCode:'Код сессии', connect:'Подключиться', waiting:'Ожидаем ответы студентов…', answerSaved:'Ответ сохранён', wrongCode:'Сессия не найдена.', liveCloudOnly:'Общая доска требует доступной облачной базы Firebase.',
     teacherTitle:'Панель преподавателя', teacherLead:'Контингент, электронный журнал и общая доска аудиторного квиза.', email:'Email', password:'Пароль', teacherLogin:'Войти', teacherLogout:'Выйти', firebaseRequired:'Административный режим требует Firebase Authentication и правил доступа из каталога firebase.',
     students:'Студенты', createSession:'Открыть общую доску', activeSession:'Общая доска', noSession:'Выберите группу на общей доске', sessionLobby:'Лобби', showQuestion:'Показать вопрос', lockQuestion:'Закрыть приём', revealAnswer:'Показать ответ', nextQuestion:'Следующий вопрос', closeSession:'Завершить и выставить баллы', responses:'ответов',
@@ -62,7 +62,7 @@ const UI = {
     lectureMaterials:'Lecture materials', videoLecture:'Video lecture', presentation:'Presentation', lectureTest:'Lecture test', startTest:'Start test', noLectureTest:'No separate test is assigned to this lecture.',
     reflectionTitle:'Professional reflection', reflectionLead:'Complete the career-guidance test and record your result and conclusions.', careerResult:'Profile / career direction obtained', reflection:'Brief conclusion: which public-administration roles suit you and why?', externalTest:'Open career-guidance test',
     seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Judicial.', seminar1ClassroomTitle:'Classroom quiz · 50 questions', seminar1ClassroomLead:'All 50 public bodies from the original classroom quiz. This result is not recorded in the gradebook.', launchQuiz:'Start quiz', seminar1AssessmentTitle:'Independent work · 5 questions', seminar1AssessmentLead:'Five tasks from the original assessment. The final mark ranges from 0 to 5 points.', launchAssessment:'Start assessment', joinLive:'Open shared board',
-    seminar2Lead:'Assemble Russian federal subjects, municipalities, countries of the world, or regions of a selected state.', openPuzzle:'Open Geographic Constructor',
+    seminar2Lead:'Assemble the map of Russia from 89 federal subjects. Choose a difficulty; your best result is saved to the gradebook.', openPuzzle:'Open Geographic Constructor',
     seminar3Lead:'Explore the settlement system using the interactive dashboard and formulate a management-oriented conclusion.', openDashboard:'Open dashboard', territory:'Selected agglomeration / territory', indicator:'Key indicators', dynamics:'Main dynamics and spatial differences', conclusion:'Management conclusion', attachment:'Presentation or notes (optional)',
     seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.',
     seminar5Lead:'The platform assigns one of 30 petition cases to each student. Complete the processing card and draft an official reply.', yourVariant:'Your case', appealType:'Type of petition', completeness:'Completeness of mandatory information', registration:'Registration and initial action', deadline:'Review deadline', competentBody:'Competent authority', addresseeDetails:'Addressee details', officialReply:'Draft official reply to the citizen', rubric:'The preliminary automated mark checks completeness, deadlines, competence and reply structure. The instructor may adjust it.',
@@ -71,7 +71,7 @@ const UI = {
     finalLead:'The final course test covers all course themes.',
     saved:'Result saved', fillRequired:'Complete all required fields', profileRequired:'Sign in before saving a result.',
     gradebookTitle:'Electronic gradebook', gradebookLead:'The best result is retained for each activity. The course maximum is 100 points.', exportCsv:'Download CSV', attempts:'Attempt history', date:'Date', type:'Type', duration:'Time',
-    puzzleTitle:'Geographic Constructor', puzzleLead:'The constructor is integrated into the platform and uses the same student profile.',
+    puzzleTitle:'Maps · free play', puzzleLead:'Every map mode is always available and independent of the course schedule.',
     liveTitle:'Shared quiz board', liveLead:'', sessionCode:'Session code', connect:'Connect', waiting:'Waiting for student responses…', answerSaved:'Response saved', wrongCode:'Session not found.', liveCloudOnly:'The shared board requires an available Firebase cloud database.',
     teacherTitle:'Instructor panel', teacherLead:'Enrolment, the gradebook and the shared classroom quiz board.', email:'Email', password:'Password', teacherLogin:'Sign in', teacherLogout:'Sign out', firebaseRequired:'Administrative mode requires Firebase Authentication and the access rules supplied in the firebase directory.',
     students:'Students', createSession:'Open shared board', activeSession:'Shared board', noSession:'Select a group on the shared board', sessionLobby:'Lobby', showQuestion:'Show question', lockQuestion:'Lock responses', revealAnswer:'Reveal answer', nextQuestion:'Next question', closeSession:'Close and assign marks', responses:'responses',
@@ -95,7 +95,7 @@ const UI = {
     lectureMaterials:'讲座资料', videoLecture:'视频讲座', presentation:'演示文稿', lectureTest:'讲座测验', startTest:'开始测验', noLectureTest:'本讲座不设单独测验。',
     reflectionTitle:'职业反思', reflectionLead:'完成职业指导测试，并记录结果与个人结论。', careerResult:'获得的职业类型 / 方向', reflection:'简要说明：哪些公共管理岗位更适合你，为什么？', externalTest:'打开职业指导测试',
     seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和司法三类。', seminar1ClassroomTitle:'课堂测验 · 50题', seminar1ClassroomLead:'包含原课堂测验中的全部50个机关，不计入成绩册。', launchQuiz:'开始测验', seminar1AssessmentTitle:'自主作业 · 5题', seminar1AssessmentLead:'包含原考核中的5道题，最终成绩为0至5分。', launchAssessment:'开始作业', joinLive:'打开共享大屏',
-    seminar2Lead:'拼合俄罗斯联邦主体、市政单位、世界各国或所选国家的一级行政区。', openPuzzle:'打开地理拼图构造器',
+    seminar2Lead:'用89个联邦主体拼合俄罗斯地图。选择难度，最佳成绩将保存到成绩册。', openPuzzle:'打开地理拼图构造器',
     seminar3Lead:'使用互动数据看板研究居民点体系，并提出管理结论。', openDashboard:'打开数据看板', territory:'所选城市群 / 地区', indicator:'关键指标', dynamics:'主要变化与空间差异', conclusion:'管理结论', attachment:'演示文稿或提纲（可选）',
     seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。',
     seminar5Lead:'系统为每位学生固定分配30个公民来信案例之一。请填写办理卡并起草正式答复。', yourVariant:'你的案例', appealType:'来信类型', completeness:'必备信息完整性', registration:'登记与初始处理', deadline:'办理期限', competentBody:'主管机关', addresseeDetails:'收件人信息', officialReply:'致公民的正式答复草案', rubric:'自动初评检查资料完整性、期限、职权归属和答复结构；教师可调整最终成绩。',
@@ -104,7 +104,7 @@ const UI = {
     finalLead:'课程期末测验覆盖全部主题。',
     saved:'结果已保存', fillRequired:'请填写必填项', profileRequired:'保存结果前请先登录。',
     gradebookTitle:'电子成绩册', gradebookLead:'每项活动保留最佳成绩，课程总分上限为100分。', exportCsv:'下载CSV', attempts:'作答记录', date:'日期', type:'类型', duration:'用时',
-    puzzleTitle:'地理拼图构造器', puzzleLead:'拼图构造器已嵌入平台，并使用同一学生资料。',
+    puzzleTitle:'地图 · 自由游戏', puzzleLead:'所有地图模式始终开放，不受课程时间表限制。',
     liveTitle:'测验共享大屏', liveLead:'', sessionCode:'会话代码', connect:'连接', waiting:'正在等待学生作答……', answerSaved:'答案已保存', wrongCode:'未找到会话。', liveCloudOnly:'共享大屏需要可用的Firebase云数据库。',
     teacherTitle:'教师控制台', teacherLead:'学生信息、电子成绩册与课堂测验共享大屏。', email:'邮箱', password:'密码', teacherLogin:'登录', teacherLogout:'退出', firebaseRequired:'管理模式需要启用Firebase Authentication，并应用firebase目录中的访问规则。',
     students:'学生', createSession:'打开共享大屏', activeSession:'共享大屏', noSession:'请在共享大屏选择班级', sessionLobby:'等候室', showQuestion:'显示题目', lockQuestion:'停止作答', revealAnswer:'揭晓答案', nextQuestion:'下一题', closeSession:'结束并计分', responses:'份回答',
@@ -303,10 +303,7 @@ function renderMaterials(){
   const access=accessSnapshot();const gate=(number)=>topicGate(number,access.overrides,access.now);
   const cards=[
     {title:ui('syllabus'),text:data.course.programme,url:data.course.documents.rpd,kind:'PDF'},
-    {title:ui('examQuestions'),text:loc(data.course,'title',data.course.title),url:data.course.documents.exam_questions,kind:'DOCX'},
-    {title:ui('seminar3'),text:loc(data.course.topics[2].seminar,'title'),url:'assets/course/docs/seminar_03_assignment.docx',kind:'DOCX',gate:gate(3)},
-    {title:ui('seminar5Variants'),text:'30',url:'assets/course/docs/seminar_05_variants.docx',kind:'DOCX',gate:gate(5)},
-    {title:ui('seminar5Template'),text:loc(data.course.topics[4].seminar,'title'),url:'assets/course/docs/seminar_05_template.docx',kind:'DOCX',gate:gate(5)}
+    {title:ui('examQuestions'),text:loc(data.course,'title',data.course.title),url:data.course.documents.exam_questions,kind:'DOCX'}
   ];
   const docs=cards.map(card=>{const allowed=!card.gate||accessAllowed(card.gate);return`<article class="material-card ${allowed?'':'access-locked'}"><div class="body"><span class="badge">${card.kind}</span>${card.gate?`<span class="access-status ${card.gate.open?'open':'closed'}">${esc(gateStatus(card.gate))}</span>`:''}<h3>${esc(card.title)}</h3><p>${esc(card.text||'')}</p><div class="material-actions">${allowed?`<a class="btn btn-secondary btn-small" href="${esc(card.url)}" target="_blank">${ui('download')}</a>`:`<span class="btn btn-neutral btn-small access-disabled">${accessText('locked')}</span>`}</div></div></article>`}).join('');
   const presentations=data.course.topics.map(topic=>{const itemGate=gate(topic.number),allowed=accessAllowed(itemGate);return`<article class="material-card ${allowed?'':'access-locked'}"><img src="${esc(topic.lecture.preview)}" alt=""><div class="body"><span class="badge">${ui('lectureWord')} ${topic.number}</span><span class="access-status ${itemGate.open?'open':'closed'}">${esc(gateStatus(itemGate))}</span><h3>${esc(loc(topic,'title',topic.title))}</h3><div class="material-actions">${allowed?`<a class="btn btn-secondary btn-small" href="${esc(presentationPdf(topic.lecture))}" target="_blank">${ui('browserPdf')}</a><a class="btn btn-neutral btn-small" href="${esc(topic.lecture.presentation_pptx)}">${ui('originalPptx')}</a>`:`<span class="btn btn-neutral btn-small access-disabled">${accessText('locked')}</span>`}</div></div></article>`}).join('');
@@ -447,10 +444,13 @@ function renderSeminar7(topic){
   };
 }
 function renderPuzzleRoute(asSeminar=false){
-  const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);
-  if(!accessAllowed(gate)){lockedAccessPage(ui('puzzleTitle'),gate);return}
-  const frame=`<div class="panel puzzle-embed-panel"><iframe class="app-frame puzzle-frame" src="apps/puzzle.html" title="${ui('puzzleTitle')}" allow="fullscreen"></iframe></div>`;
-  if(asSeminar){const topic=data.course.topics[1];app.innerHTML=seminarShell(topic,`<p class="notice">${ui('seminar2Lead')}</p>${frame}`)}else app.innerHTML=contentPage(ui('puzzleTitle'),ui('puzzleLead'),frame,`<a class="btn btn-primary" href="apps/puzzle.html" target="_blank">${ui('openNewTab')} ↗</a>`);
+  if(asSeminar){
+    const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);
+    if(!accessAllowed(gate)){lockedAccessPage(ui('puzzleTitle'),gate);return}
+  }
+  const context=asSeminar?'seminar':'free';
+  const frame=`<div class="panel puzzle-embed-panel"><iframe class="app-frame puzzle-frame" src="apps/puzzle.html?context=${context}" title="${ui('puzzleTitle')}" allow="fullscreen"></iframe></div>`;
+  if(asSeminar){const topic=data.course.topics[1];app.innerHTML=seminarShell(topic,`<p class="notice">${ui('seminar2Lead')}</p>${frame}`)}else app.innerHTML=contentPage(ui('puzzleTitle'),ui('puzzleLead'),frame,`<a class="btn btn-primary" href="apps/puzzle.html?context=free" target="_blank">${ui('openNewTab')} ↗</a>`);
 }
 
 async function renderLive(){
