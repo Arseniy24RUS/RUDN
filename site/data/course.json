@@ -334,7 +334,7 @@
     "career_guidance": "https://arseniy24rus.github.io/career-guidance-for-civil-servants/"
   },
   "firebase": {
-    "puzzle_results": "https://russian-regions-puzzle-default-rtdb.firebaseio.com/results.json",
+    "puzzle_results": "https://rudn-gmu-learning-platform-default-rtdb.europe-west1.firebasedatabase.app/results.json",
     "simulator_results": "https://government-budget-simulator-default-rtdb.europe-west1.firebasedatabase.app/results.json"
   },
   "title_en": "Introduction to the Profession: State and Municipal Administration",

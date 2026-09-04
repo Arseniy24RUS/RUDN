@@ -1,8 +1,8 @@
-import {CONFIG} from './config.js?v=1.1.4';
-import {backend,groupOptions} from './backend.js?v=1.1.4';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.4';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.4';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.4';
+import {CONFIG} from './config.js?v=1.1.5';
+import {backend,groupOptions} from './backend.js?v=1.1.5';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.5';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.5';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.5';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');

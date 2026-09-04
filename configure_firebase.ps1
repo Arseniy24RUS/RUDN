@@ -1,5 +1,5 @@
 $ErrorActionPreference = "Stop"
-$Project = "russian-regions-puzzle"
+$Project = "rudn-gmu-learning-platform"
 Set-Location $PSScriptRoot
 
 function Write-Step([string]$Message) { Write-Host "`n==> $Message" -ForegroundColor Cyan }

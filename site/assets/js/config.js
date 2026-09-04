@@ -1,17 +1,16 @@
 export const CONFIG = {
-  version: '1.1.4-pages',
+  version: '1.1.5-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
   adminEmails: ['omnistat@yandex.ru'],
   firebase: {
-    apiKey: 'AIzaSyCsHMYznP5Li-wNNYjxPRKiWjd1jo5UQ54',
-    authDomain: 'russian-regions-puzzle.firebaseapp.com',
-    projectId: 'russian-regions-puzzle',
-    storageBucket: 'russian-regions-puzzle.firebasestorage.app',
-    messagingSenderId: '352890491256',
-    appId: '1:352890491256:web:db8388a1fc4810cdcaf88d',
-    measurementId: 'G-60BX1RW10B',
-    databaseURL: 'https://russian-regions-puzzle-default-rtdb.firebaseio.com/'
+    apiKey: 'AIzaSyBH5MD8tpcV2DSFiE7K4FLzfUIYPNfHYHQ',
+    authDomain: 'rudn-gmu-learning-platform.firebaseapp.com',
+    projectId: 'rudn-gmu-learning-platform',
+    storageBucket: 'rudn-gmu-learning-platform.firebasestorage.app',
+    messagingSenderId: '921604605680',
+    appId: '1:921604605680:web:4e859d51e628cb925f6435',
+    databaseURL: 'https://rudn-gmu-learning-platform-default-rtdb.europe-west1.firebasedatabase.app/'
   },
   rootPath: 'rudn-platform/v1',
   groupPrefix: 'ГГУбд',

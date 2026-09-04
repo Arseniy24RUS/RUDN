@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.4';
+import {CONFIG} from './config.js?v=1.1.5';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -21,8 +21,10 @@ export function groupOptions(date=new Date()){
 export function normalizeGroup(value,date=new Date()){
   const group=String(value||'').trim();
   const valid=groupOptions(date);
-  if(!valid.includes(group))throw new Error(`Выберите учебную группу ${valid[0]}–${valid[valid.length-1]}`);
-  return group;
+  if(valid.includes(group))return group;
+  const legacy=group.match(/^ГГУбд-(0[1-6])-\d{2}$/i);
+  if(legacy)return valid[Number(legacy[1])-1];
+  throw new Error(`Выберите учебную группу ${valid[0]}–${valid[valid.length-1]}`);
 }
 
 export function normalizeIdentifier(value){
@@ -60,7 +62,7 @@ class Backend{
       const identity=normalizeIdentifier(profile.email||profile.ticket||profile.studentKey);
       let group=String(profile.group||'').trim();
       const legacy=group.match(/^ГГУбд-(0[1-6])-\d{2}$/);
-      if(legacy&&!groupOptions().includes(group))group=`${CONFIG.groupPrefix||'ГГУбд'}-${legacy[1]}-${twoDigitYear()}`;
+      if(legacy&&!groupOptions().includes(group))group=groupOptions()[Number(legacy[1])-1];
       const fullName=String(profile.fullName||profile.displayName||identity.ticket).trim();
       const migrated={...profile,studentKey:identity.studentKey,ticket:identity.ticket,email:identity.email,displayName:fullName,fullName,group,schemaVersion:2};
       delete migrated.recoveryPin;delete migrated.recoveryHash;
@@ -219,7 +221,7 @@ class Backend{
           email:remoteProfile.email,
           fullName:remoteProfile.fullName,
           displayName:remoteProfile.fullName,
-          group:remoteProfile.group,
+          group:normalizeGroup(remoteProfile.group),
           createdAt:remoteProfile.createdAt||this.profile.createdAt,
           updatedAt:remoteProfile.updatedAt||this.profile.updatedAt,
           schemaVersion:2
