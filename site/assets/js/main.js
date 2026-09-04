@@ -1,9 +1,9 @@
-import {CONFIG} from './config.js?v=1.1.9';
-import {backend,groupOptions} from './backend.js?v=1.1.9';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.9';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.9';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.9';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.9';
+import {CONFIG} from './config.js?v=1.1.11';
+import {backend,groupOptions} from './backend.js?v=1.1.11';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.11';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.11';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.11';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.11';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -613,12 +613,13 @@ authForm.addEventListener('submit',async event=>{
   }catch(error){toast(String(error.message||error),'error')}
 });
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
-languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateSync(backend.status());render()}));
+function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
+languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>render());
 
 async function bootstrap(){
-  translateDocument();updateLanguageSwitcher();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
+  translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
   await Promise.all([loadData(),backend.init()]);
   updateTopProfile();await render();

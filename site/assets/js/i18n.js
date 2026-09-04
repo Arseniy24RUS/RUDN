@@ -93,6 +93,7 @@ export function translateDocument(root=document){
   const flagEl=document.getElementById('languageFlag'); if(flagEl) flagEl.textContent=flag();
 }
 
+const inheritedReady = window.RUDNI18N?.ready;
 window.RUDNI18N = {
   get locale(){ return locale; },
   t(source, params={}){
@@ -100,5 +101,5 @@ window.RUDNI18N = {
     for(const [key,value] of Object.entries(params)) result = result.replaceAll(`{${key}}`,String(value));
     return result;
   },
-  ready: Promise.resolve(),
+  ready: inheritedReady || Promise.resolve(),
 };

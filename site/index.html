@@ -9,13 +9,13 @@
   <title>Введение в специальность · РУДН</title>
   <link rel="icon" href="assets/img/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/site.css?v=1.1.9">
+  <link rel="stylesheet" href="assets/css/site.css?v=1.1.11">
 </head>
 <body>
   <div class="app-shell" id="appShell">
     <header class="topbar">
       <a class="brand" href="#dashboard" aria-label="Главная страница курса">
-        <img src="assets/img/rudn-logo.png" alt="РУДН">
+        <img src="assets/img/rudn-logo.png" alt="РУДН" data-rudn-logo>
         <span class="brand-copy"><strong data-i18n="courseShort">Введение в специальность</strong><small data-i18n="programmeShort">Государственное и муниципальное управление</small></span>
       </a>
       <div class="topbar-actions">
@@ -64,7 +64,7 @@
   <dialog class="modal" id="authDialog">
     <form method="dialog" class="modal-card" id="authForm">
       <button class="modal-close" type="button" value="cancel" aria-label="Закрыть">×</button>
-      <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН"><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Данные профиля можно изменить</span></div></div>
+      <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН" data-rudn-logo><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Данные профиля можно изменить</span></div></div>
       <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru"></label>
       <div class="auth-details" id="authStudentDetails" hidden>
         <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" maxlength="150"></label>
@@ -82,6 +82,6 @@
 
   <dialog class="modal" id="confirmDialog"><form method="dialog" class="modal-card compact"><h2 id="confirmTitle">Подтверждение</h2><p id="confirmText"></p><div class="dialog-actions"><button class="btn btn-neutral" value="cancel" data-i18n="cancel">Отмена</button><button class="btn btn-primary" value="ok" data-i18n="confirm">Подтвердить</button></div></form></dialog>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-  <script type="module" src="assets/js/main.js?v=1.1.9"></script>
+  <script type="module" src="assets/js/main.js?v=1.1.11"></script>
 </body>
 </html>

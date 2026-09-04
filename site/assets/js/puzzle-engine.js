@@ -153,6 +153,7 @@
     collection: null,
     features: [],
     paths: [],
+    strokePaths: [],
     bounds: [],
     anchors: [],
     pieces: [],
@@ -812,18 +813,20 @@
   function appendRing(path, ring) {
     let active = false;
     let previous = null;
-    const seamLimit = state.cssWidth * 0.72;
+    const seamLimit = state.mode === "russia-subjects" ? 80 : state.cssWidth * 0.72;
+    const tolerance = state.mode === "russia-subjects" ? 0.8 : 0;
     ring.forEach((coordinate) => {
       const projected = state.projection(coordinate);
       if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
-      if (previous && Math.abs(projected[0] - previous[0]) > seamLimit) {
+      const distance = previous ? Math.hypot(projected[0] - previous[0], projected[1] - previous[1]) : 0;
+      if (previous && distance > seamLimit) {
         if (active) path.closePath();
         active = false;
       }
       if (!active) {
         path.moveTo(projected[0], projected[1]);
         active = true;
-      } else {
+      } else if (distance > tolerance) {
         path.lineTo(projected[0], projected[1]);
       }
       previous = projected;
@@ -842,11 +845,55 @@
     return path;
   }
 
+  function appendStrokeRing(path, ring) {
+    let active = false;
+    let previousCoordinate = null;
+    let previousProjected = null;
+    let interrupted = false;
+    const seamLimit = state.mode === "russia-subjects" ? 80 : state.cssWidth * 0.72;
+    const tolerance = state.mode === "russia-subjects" ? 0.8 : 0;
+    const onAntimeridian = (coordinate) => Math.abs(Math.abs(Number(coordinate?.[0])) - 180) < 1e-6;
+    ring.forEach((coordinate) => {
+      const projected = state.projection(coordinate);
+      if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
+      const distance = previousProjected ? Math.hypot(projected[0] - previousProjected[0], projected[1] - previousProjected[1]) : 0;
+      const meridianSegment = state.mode === "russia-subjects"
+        && previousCoordinate
+        && onAntimeridian(previousCoordinate)
+        && onAntimeridian(coordinate);
+      if (previousProjected && (distance > seamLimit || meridianSegment)) {
+        path.moveTo(projected[0], projected[1]);
+        active = true;
+        interrupted = true;
+      } else if (!active) {
+        path.moveTo(projected[0], projected[1]);
+        active = true;
+      } else if (distance > tolerance) {
+        path.lineTo(projected[0], projected[1]);
+      }
+      previousCoordinate = coordinate;
+      previousProjected = projected;
+    });
+    if (active && !interrupted) path.closePath();
+  }
+
+  function buildStrokePath(feature) {
+    const path = new Path2D();
+    const geometry = feature.geometry || {};
+    if (geometry.type === "Polygon") {
+      (geometry.coordinates || []).forEach((ring) => appendStrokeRing(path, ring));
+    } else if (geometry.type === "MultiPolygon") {
+      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendStrokeRing(path, ring)));
+    }
+    return path;
+  }
+
   function rebuildGeometry() {
     if (!state.collection) return;
     state.projection = buildProjection();
     const geoPath = window.d3.geoPath(state.projection);
     state.paths = state.features.map(buildPath);
+    state.strokePaths = state.features.map(buildStrokePath);
     state.bounds = state.features.map((feature) => {
       if (state.mode !== "world-countries") return manualFeatureBounds(feature);
       const value = geoPath.bounds(feature);
@@ -929,9 +976,9 @@
     context.fillStyle = "#e7f1f7";
     context.strokeStyle = "#91b2c6";
     context.lineWidth = Math.max(0.7, 1 / state.view.k);
-    state.paths.forEach((path) => {
+    state.paths.forEach((path, index) => {
       context.fill(path, "evenodd");
-      context.stroke(path);
+      context.stroke(state.strokePaths[index]);
     });
     context.restore();
   }
@@ -947,7 +994,7 @@
     ctx.strokeStyle = "#b97900";
     ctx.lineWidth = Math.max(1.4, 2.2 / state.view.k);
     ctx.fill(state.paths[piece.index], "evenodd");
-    ctx.stroke(state.paths[piece.index]);
+    ctx.stroke(state.strokePaths[piece.index]);
     ctx.restore();
   }
 
@@ -960,7 +1007,7 @@
     state.pieces.forEach((piece) => {
       if (!piece.locked) return;
       context.fill(state.paths[piece.index], "evenodd");
-      context.stroke(state.paths[piece.index]);
+      context.stroke(state.strokePaths[piece.index]);
     });
     context.restore();
   }
@@ -969,6 +1016,7 @@
     const piece = currentPiece();
     if (!piece || piece.locked) return;
     const path = state.paths[piece.index];
+    const strokePath = state.strokePaths[piece.index];
     const bounds = state.bounds[piece.index];
     if (piece.inTray) {
       const tray = trayRect();
@@ -983,7 +1031,7 @@
       ctx.strokeStyle = "#8e2028";
       ctx.lineWidth = Math.max(0.7, 1.3 / scale);
       ctx.fill(path, "evenodd");
-      ctx.stroke(path);
+      ctx.stroke(strokePath);
       ctx.restore();
       return;
     }
@@ -994,7 +1042,7 @@
     ctx.strokeStyle = "#8e2028";
     ctx.lineWidth = Math.max(0.9, 1.3 / state.view.k);
     ctx.fill(path, "evenodd");
-    ctx.stroke(path);
+    ctx.stroke(strokePath);
     ctx.restore();
   }
 

@@ -1,15 +1,15 @@
-const CACHE='rudn-gmu-pages-v1.1.9';
+const CACHE='rudn-gmu-pages-v1.1.11';
 const SHELL=[
   './','./index.html',
-  './assets/css/site.css?v=1.1.9',
-  './assets/js/main.js?v=1.1.9',
-  './assets/js/backend.js?v=1.1.9',
-  './assets/js/config.js?v=1.1.9',
-  './assets/js/i18n.js?v=1.1.9',
-  './assets/js/quiz.js?v=1.1.9',
-  './assets/js/adaptive-quiz.js?v=1.1.9',
-  './assets/js/access.js?v=1.1.9',
-  './assets/img/rudn-logo.png','./manifest.webmanifest'
+  './assets/css/site.css?v=1.1.11',
+  './assets/js/main.js?v=1.1.11',
+  './assets/js/backend.js?v=1.1.11',
+  './assets/js/config.js?v=1.1.11',
+  './assets/js/i18n.js?v=1.1.11',
+  './assets/js/quiz.js?v=1.1.11',
+  './assets/js/adaptive-quiz.js?v=1.1.11',
+  './assets/js/access.js?v=1.1.11',
+  './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png','./manifest.webmanifest'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
