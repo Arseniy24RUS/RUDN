@@ -1,13 +1,13 @@
-const CACHE='rudn-gmu-pages-v1.1.1';
+const CACHE='rudn-gmu-pages-v1.1.2';
 const SHELL=[
   './','./index.html',
-  './assets/css/site.css?v=1.1.1',
-  './assets/js/main.js?v=1.1.1',
-  './assets/js/backend.js?v=1.1.1',
-  './assets/js/config.js?v=1.1.1',
-  './assets/js/i18n.js?v=1.1.1',
-  './assets/js/quiz.js?v=1.1.1',
-  './assets/js/adaptive-quiz.js?v=1.1.1',
+  './assets/css/site.css?v=1.1.2',
+  './assets/js/main.js?v=1.1.2',
+  './assets/js/backend.js?v=1.1.2',
+  './assets/js/config.js?v=1.1.2',
+  './assets/js/i18n.js?v=1.1.2',
+  './assets/js/quiz.js?v=1.1.2',
+  './assets/js/adaptive-quiz.js?v=1.1.2',
   './assets/img/rudn-logo.png','./manifest.webmanifest'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});

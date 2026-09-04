@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.1';
-import {backend,groupOptions} from './backend.js?v=1.1.1';
+import {CONFIG} from './config.js?v=1.1.2';
+import {backend,groupOptions} from './backend.js?v=1.1.2';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -10,8 +10,8 @@ import {
   renderMatrixButtons,
   renderQuestionMedia,
   renderQuiz
-} from './quiz.js?v=1.1.1';
-import {getLocale} from './i18n.js?v=1.1.1';
+} from './quiz.js?v=1.1.2';
+import {getLocale} from './i18n.js?v=1.1.2';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -21,28 +21,22 @@ const COPY={
   ru:{
     group:'Учебная группа',online:'Сейчас в квизе',participants:'участников',unique:'ответили хотя бы раз',
     waiting:'Ожидаем ответы студентов…',answered:'Ответили на этот вопрос',
-    hidden:'Распределение ответов пока скрыто, чтобы не подсказывать остальным.',
     revealed:'Результаты открыты автоматически',accuracy:'Точность группы',commonError:'Частая ошибка',
-    individual:'При одном участнике тот же квиз работает как обычная индивидуальная отработка.',
-    cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase. Индивидуальное прохождение продолжает работать.',
+    cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase.',
     question:'Вопрос'
   },
   en:{
     group:'Study group',online:'Currently in the quiz',participants:'participants',unique:'answered at least once',
     waiting:'Waiting for student responses…',answered:'Responses to this question',
-    hidden:'The response distribution is hidden for now so that it does not influence other students.',
     revealed:'Results revealed automatically',accuracy:'Class accuracy',commonError:'Most common misconception',
-    individual:'With one participant, the same quiz works as an individual make-up activity.',
-    cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached. Individual completion still works.',
+    cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached.',
     question:'Question'
   },
   zh:{
     group:'班级',online:'当前参加测验',participants:'名学生',unique:'至少回答过一次',
     waiting:'正在等待学生作答……',answered:'本题已作答',
-    hidden:'为避免影响其他学生，答案分布暂时隐藏。',
     revealed:'结果已自动显示',accuracy:'班级正确率',commonError:'最常见误区',
-    individual:'只有一名学生时，同一测验自动作为个人补做任务运行。',
-    cloudRequired:'因无法连接 Firebase，共享大屏暂不可用；个人作答仍可继续。',
+    cloudRequired:'因无法连接 Firebase，共享大屏暂不可用。',
     question:'题目'
   }
 };
@@ -116,10 +110,7 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
 }
 
 function boardInsight({reveal,active,accuracy,wrong,question}){
-  if(!reveal){
-    const individual=active<=1?`<span>${escapeHtml(c('individual'))}</span>`:'';
-    return `<div class="board-insight waiting"><strong>${escapeHtml(c('hidden'))}</strong>${individual}</div>`;
-  }
+  if(!reveal)return '';
   const common=wrong
     ?`<span>${escapeHtml(c('commonError'))}: ${escapeHtml(matrixChoiceLabel(wrong[0]))} (${wrong[1]})</span>`
     :'';

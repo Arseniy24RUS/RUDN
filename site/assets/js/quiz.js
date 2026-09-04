@@ -1,11 +1,18 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.1';
-import {backend} from './backend.js?v=1.1.1';
+import {getLocale,localized,t} from './i18n.js?v=1.1.2';
+import {backend} from './backend.js?v=1.1.2';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const shuffle=(array,seed=Date.now())=>{const copy=[...array];let state=seed>>>0;const rand=()=>{state+=0x6D2B79F5;let x=state;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296};for(let i=copy.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy};
 const hash=(s)=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const norm=(s)=>String(s??'').toLowerCase().replace(/ё/g,'е').replace(/[«»“”"'.,;:!?()\[\]{}]/g,' ').replace(/\s+/g,' ').trim();
+const SEMINAR1_ASSESSMENT_IDS=[
+  '29ae02be-3bda-5b48-81e6-b8565fabf760',
+  '1feebc7f-6872-56be-a958-7f090218591d',
+  'f59842c3-91da-5740-8b11-322bb5e1a9a7',
+  'cac3af1c-a4b5-533a-b3b7-a986bea3a9a7',
+  '7fd17bff-0bef-5896-8c6a-2b99018549da'
+];
 
 const MATRIX_COPY={
   ru:{
@@ -63,15 +70,20 @@ export function feedbackText(q){return localized(q,'general_feedback',q.general_
 export function categoryText(q){return localized(q,'category',q.category||'')}
 
 export function buildQuiz(questions,activitySlug,profile,options={}){
-  let pool=[];let title='';let pointsMax=5;
+  let pool=[];let title='';let pointsMax=5;let recordAttempt=true;
   const byCategory=(name)=>questions.filter(q=>q.category===name);
   if(/^lecture-[1-7]$/.test(activitySlug)){
     const n=Number(activitySlug.split('-')[1]);pool=byCategory(`Тест по лекции ${n}`);title=`${t('test')} · ${t('lecture')} ${n}`;
   }else if(activitySlug==='seminar-1'){
     const all=byCategory('Семинар 1. Ветви и уровни власти');
-    if(Array.isArray(options.questionIds)&&options.questionIds.length){const byId=new Map(all.map(q=>[q.id,q]));pool=options.questionIds.map(id=>byId.get(id)).filter(Boolean)}
-    else pool=shuffle(all,hash(options.seedKey||profile?.studentKey||Date.now())).slice(0,10);
-    title=getLocale()==='en'?'Quiz “Branches and Levels of Public Authority”':getLocale()==='zh'?'“公共权力分支与层级”测验':'Квиз «Ветви и уровни власти»';
+    const byId=new Map(all.map(q=>[q.id,q]));const assessment=options.mode==='assessment';
+    if(Array.isArray(options.questionIds)&&options.questionIds.length)pool=options.questionIds.map(id=>byId.get(id)).filter(Boolean);
+    else if(assessment)pool=SEMINAR1_ASSESSMENT_IDS.map(id=>byId.get(id)).filter(Boolean);
+    else pool=shuffle(all,hash(options.seedKey||profile?.studentKey||Date.now()));
+    pointsMax=assessment?5:pool.length;recordAttempt=assessment;
+    title=assessment
+      ?getLocale()==='en'?'Independent work · Branches and Levels of Public Authority':getLocale()==='zh'?'自主作业 · 公共权力分支与层级':'Самостоятельная работа · Ветви и уровни власти'
+      :getLocale()==='en'?'Classroom quiz · Branches and Levels of Public Authority':getLocale()==='zh'?'课堂测验 · 公共权力分支与层级':'Аудиторный квиз · Ветви и уровни власти';
   }else if(activitySlug==='seminar-4'){
     const all=byCategory('Семинар 4. Нормативные правовые акты');const blocks=[...new Set(all.map(q=>q.block_title).filter(Boolean))];const block=blocks[hash(options.seedKey||profile?.studentKey||Date.now())%blocks.length];pool=all.filter(q=>q.block_title===block);title=localized(pool[0]||{},'block_title',block)||block;
   }else if(activitySlug==='seminar-8'){
@@ -79,7 +91,7 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
   }else if(activitySlug==='exam'){
     pool=byCategory('Итоговый тест по дисциплине');title=getLocale()==='en'?'Examination test':getLocale()==='zh'?'考试测验':'Экзаменационный тест';pointsMax=20;
   }
-  return {id:uuid(),activitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),buildOptions:{...options}};
+  return {id:uuid(),activitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt,buildOptions:{...options}};
 }
 
 export function renderQuestionMedia(q){
@@ -141,7 +153,10 @@ export async function finishQuiz(container,session,options={}){
   const {onExit,onFinish}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
   const raw=results.reduce((s,r)=>s+r.fraction,0);const ratio=results.length?raw/results.length:0;const points=Math.round(ratio*session.pointsMax*100)/100;
   const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points,maxPoints:session.pointsMax,ratio,answers:session.answers,questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt};
-  await backend.saveAttempt(attempt);await Promise.resolve(onFinish?.({attempt,results,session}));
+  if(session.recordAttempt!==false){
+    await backend.saveAttempt(attempt);
+  }
+  await Promise.resolve(onFinish?.({attempt,results,session}));
   container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1><p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p><div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div><div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map((r,i)=>`<div class="review-item ${r.fraction>=.999?'correct':'incorrect'}"><strong>${i+1}. ${escapeHtml(r.q.type==='matrix_single'?institutionText(r.q):questionText(r.q))}</strong><p>${r.fraction>=.999?t('correct'):t('incorrect')} · ${Math.round(r.fraction*100)}%</p>${r.fraction<.999?`<small class="muted">${escapeHtml(r.expected||'')}</small>`:''}${feedbackText(r.q)?`<p class="muted">${escapeHtml(feedbackText(r.q))}</p>`:''}</div>`).join('')}</div></div></div>`;
   container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),session.buildOptions||{});renderQuiz(container,next,options)};
   container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');window.dispatchEvent(new CustomEvent('rudn:gradechange'));

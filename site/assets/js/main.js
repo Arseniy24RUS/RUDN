@@ -1,8 +1,8 @@
-import {CONFIG} from './config.js?v=1.1.1';
-import {backend,groupOptions} from './backend.js?v=1.1.1';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.1';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.1';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.1';
+import {CONFIG} from './config.js?v=1.1.2';
+import {backend,groupOptions} from './backend.js?v=1.1.2';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.2';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.2';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.2';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -28,7 +28,7 @@ const UI = {
     save:'Сохранить', submit:'Отправить', cancel:'Отмена', cloud:'Облачная синхронизация', local:'Локальное сохранение',
     lectureMaterials:'Материалы лекции', videoLecture:'Видеолекция', presentation:'Презентация', lectureTest:'Тест по лекции', startTest:'Начать тест', noLectureTest:'Для этой лекции отдельный тест не предусмотрен.',
     reflectionTitle:'Профессиональная рефлексия', reflectionLead:'Пройдите профориентационный тест, затем зафиксируйте свой результат и выводы.', careerResult:'Полученный профиль / направление', reflection:'Краткий вывод: какие роли в государственном управлении вам подходят и почему?', externalTest:'Открыть профориентационный тест',
-    seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Судебная».', launchQuiz:'Начать квиз', joinLive:'Открыть общую доску',
+    seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Судебная».', seminar1ClassroomTitle:'Аудиторный квиз · 50 вопросов', seminar1ClassroomLead:'Все 50 органов из исходного аудиторного квиза. Результат не выставляется в журнал.', launchQuiz:'Начать квиз', seminar1AssessmentTitle:'Самостоятельная работа · 5 вопросов', seminar1AssessmentLead:'Пять заданий из исходного теста. Итоговая оценка — от 0 до 5 баллов.', launchAssessment:'Начать работу', joinLive:'Открыть общую доску',
     seminar2Lead:'Соберите субъекты России, муниципальные образования, страны мира или регионы выбранного государства.', openPuzzle:'Открыть географический конструктор',
     seminar3Lead:'Исследуйте систему расселения по интерактивному дашборду и подготовьте аналитический вывод.', openDashboard:'Открыть дашборд', territory:'Выбранная агломерация / территория', indicator:'Ключевые показатели', dynamics:'Основная динамика и пространственные различия', conclusion:'Управленческий вывод', attachment:'Презентация или тезисы (необязательно)',
     seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.',
@@ -39,7 +39,7 @@ const UI = {
     saved:'Результат сохранён', fillRequired:'Заполните обязательные поля', profileRequired:'Для сохранения результата сначала войдите в профиль.',
     gradebookTitle:'Электронный журнал', gradebookLead:'По каждой активности учитывается лучший результат. Максимум за курс — 100 баллов.', exportCsv:'Скачать CSV', attempts:'История попыток', date:'Дата', type:'Тип', duration:'Время',
     puzzleTitle:'Географический конструктор', puzzleLead:'Конструктор встроен в платформу и использует тот же профиль студента.',
-    liveTitle:'Общая доска квиза', liveLead:'Код и пароль не нужны. Участники автоматически объединяются по группе; при одном студенте тот же квиз работает как индивидуальная отработка.', sessionCode:'Код сессии', connect:'Подключиться', waiting:'Ожидаем ответы студентов…', answerSaved:'Ответ сохранён', wrongCode:'Сессия не найдена.', liveCloudOnly:'Общая доска требует доступной облачной базы Firebase.',
+    liveTitle:'Общая доска квиза', liveLead:'', sessionCode:'Код сессии', connect:'Подключиться', waiting:'Ожидаем ответы студентов…', answerSaved:'Ответ сохранён', wrongCode:'Сессия не найдена.', liveCloudOnly:'Общая доска требует доступной облачной базы Firebase.',
     teacherTitle:'Панель преподавателя', teacherLead:'Контингент, электронный журнал и общая доска аудиторного квиза.', email:'Email', password:'Пароль', teacherLogin:'Войти', teacherLogout:'Выйти', firebaseRequired:'Административный режим требует Firebase Authentication и правил доступа из каталога firebase.',
     students:'Студенты', createSession:'Открыть общую доску', activeSession:'Общая доска', noSession:'Выберите группу на общей доске', sessionLobby:'Лобби', showQuestion:'Показать вопрос', lockQuestion:'Закрыть приём', revealAnswer:'Показать ответ', nextQuestion:'Следующий вопрос', closeSession:'Завершить и выставить баллы', responses:'ответов',
     filter:'Поиск по ФИО, студенческому билету, email или группе', totalScore:'Итог', actions:'Действия', editGrades:'Оценки', manualGrade:'Ручная оценка', note:'Комментарий',
@@ -61,7 +61,7 @@ const UI = {
     save:'Save', submit:'Submit', cancel:'Cancel', cloud:'Cloud synchronization', local:'Local storage',
     lectureMaterials:'Lecture materials', videoLecture:'Video lecture', presentation:'Presentation', lectureTest:'Lecture test', startTest:'Start test', noLectureTest:'No separate test is assigned to this lecture.',
     reflectionTitle:'Professional reflection', reflectionLead:'Complete the career-guidance test and record your result and conclusions.', careerResult:'Profile / career direction obtained', reflection:'Brief conclusion: which public-administration roles suit you and why?', externalTest:'Open career-guidance test',
-    seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Judicial.', launchQuiz:'Start quiz', joinLive:'Open shared board',
+    seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Judicial.', seminar1ClassroomTitle:'Classroom quiz · 50 questions', seminar1ClassroomLead:'All 50 public bodies from the original classroom quiz. This result is not recorded in the gradebook.', launchQuiz:'Start quiz', seminar1AssessmentTitle:'Independent work · 5 questions', seminar1AssessmentLead:'Five tasks from the original assessment. The final mark ranges from 0 to 5 points.', launchAssessment:'Start assessment', joinLive:'Open shared board',
     seminar2Lead:'Assemble Russian federal subjects, municipalities, countries of the world, or regions of a selected state.', openPuzzle:'Open Geographic Constructor',
     seminar3Lead:'Explore the settlement system using the interactive dashboard and formulate a management-oriented conclusion.', openDashboard:'Open dashboard', territory:'Selected agglomeration / territory', indicator:'Key indicators', dynamics:'Main dynamics and spatial differences', conclusion:'Management conclusion', attachment:'Presentation or notes (optional)',
     seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.',
@@ -72,7 +72,7 @@ const UI = {
     saved:'Result saved', fillRequired:'Complete all required fields', profileRequired:'Sign in before saving a result.',
     gradebookTitle:'Electronic gradebook', gradebookLead:'The best result is retained for each activity. The course maximum is 100 points.', exportCsv:'Download CSV', attempts:'Attempt history', date:'Date', type:'Type', duration:'Time',
     puzzleTitle:'Geographic Constructor', puzzleLead:'The constructor is integrated into the platform and uses the same student profile.',
-    liveTitle:'Shared quiz board', liveLead:'No code or password is required. Participants are grouped automatically; with one student, the same quiz works as an individual make-up.', sessionCode:'Session code', connect:'Connect', waiting:'Waiting for student responses…', answerSaved:'Response saved', wrongCode:'Session not found.', liveCloudOnly:'The shared board requires an available Firebase cloud database.',
+    liveTitle:'Shared quiz board', liveLead:'', sessionCode:'Session code', connect:'Connect', waiting:'Waiting for student responses…', answerSaved:'Response saved', wrongCode:'Session not found.', liveCloudOnly:'The shared board requires an available Firebase cloud database.',
     teacherTitle:'Instructor panel', teacherLead:'Enrolment, the gradebook and the shared classroom quiz board.', email:'Email', password:'Password', teacherLogin:'Sign in', teacherLogout:'Sign out', firebaseRequired:'Administrative mode requires Firebase Authentication and the access rules supplied in the firebase directory.',
     students:'Students', createSession:'Open shared board', activeSession:'Shared board', noSession:'Select a group on the shared board', sessionLobby:'Lobby', showQuestion:'Show question', lockQuestion:'Lock responses', revealAnswer:'Reveal answer', nextQuestion:'Next question', closeSession:'Close and assign marks', responses:'responses',
     filter:'Search by name, student ID, email or group', totalScore:'Total', actions:'Actions', editGrades:'Grades', manualGrade:'Manual grade', note:'Comment',
@@ -94,7 +94,7 @@ const UI = {
     save:'保存', submit:'提交', cancel:'取消', cloud:'云端同步', local:'本地保存',
     lectureMaterials:'讲座资料', videoLecture:'视频讲座', presentation:'演示文稿', lectureTest:'讲座测验', startTest:'开始测验', noLectureTest:'本讲座不设单独测验。',
     reflectionTitle:'职业反思', reflectionLead:'完成职业指导测试，并记录结果与个人结论。', careerResult:'获得的职业类型 / 方向', reflection:'简要说明：哪些公共管理岗位更适合你，为什么？', externalTest:'打开职业指导测试',
-    seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和司法三类。', launchQuiz:'开始测验', joinLive:'打开共享大屏',
+    seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和司法三类。', seminar1ClassroomTitle:'课堂测验 · 50题', seminar1ClassroomLead:'包含原课堂测验中的全部50个机关，不计入成绩册。', launchQuiz:'开始测验', seminar1AssessmentTitle:'自主作业 · 5题', seminar1AssessmentLead:'包含原考核中的5道题，最终成绩为0至5分。', launchAssessment:'开始作业', joinLive:'打开共享大屏',
     seminar2Lead:'拼合俄罗斯联邦主体、市政单位、世界各国或所选国家的一级行政区。', openPuzzle:'打开地理拼图构造器',
     seminar3Lead:'使用互动数据看板研究居民点体系，并提出管理结论。', openDashboard:'打开数据看板', territory:'所选城市群 / 地区', indicator:'关键指标', dynamics:'主要变化与空间差异', conclusion:'管理结论', attachment:'演示文稿或提纲（可选）',
     seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。',
@@ -105,7 +105,7 @@ const UI = {
     saved:'结果已保存', fillRequired:'请填写必填项', profileRequired:'保存结果前请先登录。',
     gradebookTitle:'电子成绩册', gradebookLead:'每项活动保留最佳成绩，课程总分上限为100分。', exportCsv:'下载CSV', attempts:'作答记录', date:'日期', type:'类型', duration:'用时',
     puzzleTitle:'地理拼图构造器', puzzleLead:'拼图构造器已嵌入平台，并使用同一学生资料。',
-    liveTitle:'测验共享大屏', liveLead:'无需代码或密码。系统按班级自动合并参与者；只有一名学生时，同一测验自动作为个人补做任务。', sessionCode:'会话代码', connect:'连接', waiting:'正在等待学生作答……', answerSaved:'答案已保存', wrongCode:'未找到会话。', liveCloudOnly:'共享大屏需要可用的Firebase云数据库。',
+    liveTitle:'测验共享大屏', liveLead:'', sessionCode:'会话代码', connect:'连接', waiting:'正在等待学生作答……', answerSaved:'答案已保存', wrongCode:'未找到会话。', liveCloudOnly:'共享大屏需要可用的Firebase云数据库。',
     teacherTitle:'教师控制台', teacherLead:'学生信息、电子成绩册与课堂测验共享大屏。', email:'邮箱', password:'密码', teacherLogin:'登录', teacherLogout:'退出', firebaseRequired:'管理模式需要启用Firebase Authentication，并应用firebase目录中的访问规则。',
     students:'学生', createSession:'打开共享大屏', activeSession:'共享大屏', noSession:'请在共享大屏选择班级', sessionLobby:'等候室', showQuestion:'显示题目', lockQuestion:'停止作答', revealAnswer:'揭晓答案', nextQuestion:'下一题', closeSession:'结束并计分', responses:'份回答',
     filter:'按姓名、学生证号、邮箱或班级搜索', totalScore:'总分', actions:'操作', editGrades:'成绩', manualGrade:'手动评分', note:'备注',
@@ -119,6 +119,7 @@ const UI = {
 
 function ui(key){ return UI[getLocale()]?.[key] ?? UI.ru[key] ?? key; }
 function loc(obj,key,fallback=''){ return localized(obj,key,fallback); }
+function presentationPdf(lecture){const locale=getLocale();return lecture?.[`presentation_pdf_${locale}`]||lecture?.presentation_pdf||''}
 function route(){
   const raw=(location.hash||'#dashboard').slice(1);
   const [name,...parts]=raw.split('/');
@@ -173,7 +174,7 @@ function requireProfile({open=true}={}){
   toast(ui('profileRequired'),'error');return false;
 }
 function contentPage(title,lead,body,actions=''){
-  return `<section class="page"><header class="page-head"><div><h1>${esc(title)}</h1><p>${esc(lead||'')}</p></div>${actions?`<div class="page-actions">${actions}</div>`:''}</header>${body}</section>`;
+  return `<section class="page"><header class="page-head"><div><h1>${esc(title)}</h1>${lead?`<p>${esc(lead)}</p>`:''}</div>${actions?`<div class="page-actions">${actions}</div>`:''}</header>${body}</section>`;
 }
 function activityHeader(item,kind,preview){
   const grade=backend.localGrades()[item.slug];
@@ -247,7 +248,7 @@ function renderMaterials(){
     {title:ui('seminar5Template'),text:loc(data.course.topics[4].seminar,'title'),url:'assets/course/docs/seminar_05_template.docx',kind:'DOCX'}
   ];
   const docs=cards.map(card=>`<article class="material-card"><div class="body"><span class="badge">${card.kind}</span><h3>${esc(card.title)}</h3><p>${esc(card.text||'')}</p><div class="material-actions"><a class="btn btn-secondary btn-small" href="${esc(card.url)}" target="_blank">${ui('download')}</a></div></div></article>`).join('');
-  const presentations=data.course.topics.map(topic=>`<article class="material-card"><img src="${esc(topic.lecture.preview)}" alt=""><div class="body"><span class="badge">${ui('lectureWord')} ${topic.number}</span><h3>${esc(loc(topic,'title',topic.title))}</h3><div class="material-actions"><a class="btn btn-secondary btn-small" href="${esc(topic.lecture.presentation_pdf)}" target="_blank">${ui('browserPdf')}</a><a class="btn btn-neutral btn-small" href="${esc(topic.lecture.presentation_pptx)}">${ui('originalPptx')}</a></div></div></article>`).join('');
+  const presentations=data.course.topics.map(topic=>`<article class="material-card"><img src="${esc(topic.lecture.preview)}" alt=""><div class="body"><span class="badge">${ui('lectureWord')} ${topic.number}</span><h3>${esc(loc(topic,'title',topic.title))}</h3><div class="material-actions"><a class="btn btn-secondary btn-small" href="${esc(presentationPdf(topic.lecture))}" target="_blank">${ui('browserPdf')}</a><a class="btn btn-neutral btn-small" href="${esc(topic.lecture.presentation_pptx)}">${ui('originalPptx')}</a></div></div></article>`).join('');
   app.innerHTML=contentPage(ui('materialsTitle'),t('materialsLead'),`<div class="material-grid">${docs}</div><header class="page-head subsection"><div><h1>${ui('presentations')}</h1></div></header><div class="material-grid">${presentations}</div>`);
 }
 
@@ -266,16 +267,16 @@ async function renderActivity(slug){
   else await renderSeminar(topic);
 }
 function renderLecture(topic){
-  const lecture=topic.lecture;const n=topic.number;
+  const lecture=topic.lecture;const n=topic.number;const currentPresentation=presentationPdf(lecture);
   const testAvailable=n<=7;
   const testPanel=testAvailable?`<div class="panel"><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p><button class="btn btn-primary" id="launchLectureTest">${ui('startTest')}</button></div>`:`<div class="panel"><h2>${ui('reflectionTitle')}</h2><p class="muted">${ui('reflectionLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.career_guidance)}" target="_blank" rel="noopener">${ui('externalTest')} ↗</a></div><form id="reflectionForm" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('careerResult')}</span><input name="result" required></label><label class="full"><span>${ui('reflection')}</span><textarea name="reflection" required minlength="120"></textarea></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`;
-  app.innerHTML=`<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(lecture,`${ui('lectureWord')} ${n}`,lecture.preview)}<div class="panel"><div class="tabs" role="tablist"><button class="tab active" data-video-platform="youtube">YouTube</button><button class="tab" data-video-platform="vk">VK Видео</button><button class="tab" data-video-platform="presentation">${ui('presentation')}</button></div><div id="lectureContent"><iframe class="video-frame" src="${esc(lecture.youtube_embed)}" title="${esc(loc(lecture,'title',lecture.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div class="page-actions" style="margin-top:14px"><a class="btn btn-neutral btn-small" href="${esc(lecture.youtube_link)}" target="_blank">YouTube ↗</a><a class="btn btn-neutral btn-small" href="${esc(lecture.vk_link)}" target="_blank">VK ↗</a><a class="btn btn-secondary btn-small" href="${esc(lecture.presentation_pdf)}" target="_blank">PDF</a><a class="btn btn-neutral btn-small" href="${esc(lecture.presentation_pptx)}">PPTX</a></div></div>${testPanel}</section>`;
+  app.innerHTML=`<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(lecture,`${ui('lectureWord')} ${n}`,lecture.preview)}<div class="panel"><div class="tabs" role="tablist"><button class="tab active" data-video-platform="youtube">YouTube</button><button class="tab" data-video-platform="vk">VK Видео</button><button class="tab" data-video-platform="presentation">${ui('presentation')}</button></div><div id="lectureContent"><iframe class="video-frame" src="${esc(lecture.youtube_embed)}" title="${esc(loc(lecture,'title',lecture.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div class="page-actions" style="margin-top:14px"><a class="btn btn-neutral btn-small" href="${esc(lecture.youtube_link)}" target="_blank">YouTube ↗</a><a class="btn btn-neutral btn-small" href="${esc(lecture.vk_link)}" target="_blank">VK ↗</a><a class="btn btn-secondary btn-small" href="${esc(currentPresentation)}" target="_blank">PDF</a><a class="btn btn-neutral btn-small" href="${esc(lecture.presentation_pptx)}">PPTX</a></div></div>${testPanel}</section>`;
   app.querySelectorAll('[data-video-platform]').forEach(btn=>btn.addEventListener('click',()=>{
     app.querySelectorAll('[data-video-platform]').forEach(x=>x.classList.toggle('active',x===btn));
     const kind=btn.dataset.videoPlatform;const container=app.querySelector('#lectureContent');
     if(kind==='youtube')container.innerHTML=`<iframe class="video-frame" src="${esc(lecture.youtube_embed)}" title="YouTube" allowfullscreen></iframe>`;
     else if(kind==='vk')container.innerHTML=`<iframe class="video-frame" src="${esc(lecture.vk_embed)}" title="VK Видео" allowfullscreen></iframe>`;
-    else container.innerHTML=`<iframe class="doc-frame" src="${esc(lecture.presentation_pdf)}" title="${ui('presentation')}"></iframe>`;
+    else container.innerHTML=`<iframe class="doc-frame" src="${esc(currentPresentation)}" title="${ui('presentation')}"></iframe>`;
   }));
   app.querySelector('#launchLectureTest')?.addEventListener('click',()=>startQuiz(lecture.slug));
   app.querySelector('#reflectionForm')?.addEventListener('submit',async event=>{
@@ -299,8 +300,9 @@ async function renderSeminar(topic){
 }
 function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
 function renderSeminar1(topic){
-  app.innerHTML=seminarShell(topic,`<div class="split"><div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('seminar1Lead')}</p><button class="btn btn-primary" id="seminar1Quiz">${ui('launchQuiz')}</button></div><div class="panel"><h2>${ui('liveTitle')}</h2><p class="muted">${ui('liveLead')}</p><a class="btn btn-secondary" href="#live">${ui('joinLive')}</a></div></div>`);
-  app.querySelector('#seminar1Quiz').onclick=()=>startQuiz('seminar-1');
+  app.innerHTML=seminarShell(topic,`<div class="seminar1-actions-grid"><div class="panel"><h2>${ui('seminar1ClassroomTitle')}</h2><p class="muted">${ui('seminar1ClassroomLead')}</p><p class="muted">${ui('seminar1Lead')}</p><button class="btn btn-primary" id="seminar1Quiz">${ui('launchQuiz')}</button></div><div class="panel"><h2>${ui('seminar1AssessmentTitle')}</h2><p class="muted">${ui('seminar1AssessmentLead')}</p><button class="btn btn-primary" id="seminar1Assessment">${ui('launchAssessment')}</button></div><div class="panel"><h2>${ui('liveTitle')}</h2><a class="btn btn-secondary" href="#live">${ui('joinLive')}</a></div></div>`);
+  app.querySelector('#seminar1Quiz').onclick=()=>startQuiz('seminar-1-classroom');
+  app.querySelector('#seminar1Assessment').onclick=()=>startQuiz('seminar-1-assessment');
 }
 function renderSeminar4(topic){
   app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('seminar4Lead')}</p><button class="btn btn-primary" id="seminar4Quiz">${ui('launchQuiz')}</button></div>`);
@@ -314,12 +316,13 @@ async function startQuiz(activitySlug){
   if(!requireProfile())return;
   app.innerHTML=`<section class="page"><div id="quizMount"></div></section>`;
   const mount=app.querySelector('#quizMount');
-  if(activitySlug==='seminar-1'){
+  if(activitySlug==='seminar-1-classroom'){
     currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>{location.hash='activity/seminar-1'}});
     return;
   }
-  const session=buildQuiz(data.questions,activitySlug,backend.getProfile());
-  renderQuiz(mount,session,{onExit:()=>{location.hash=`activity/${activitySlug}`}});
+  const assessment=activitySlug==='seminar-1-assessment';
+  const session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
+  renderQuiz(mount,session,{onExit:()=>{location.hash=assessment?'activity/seminar-1':`activity/${activitySlug}`}});
 }
 function renderSeminar3(topic){
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openDashboard'),ui('seminar3Lead'),data.course.external_apps.settlement_dashboard,ui('openDashboard'))}<div class="panel"><h2>${ui('seminarAssignment')}</h2><form id="settlementForm" class="form-grid"><label><span>${ui('territory')}</span><input name="territory" required></label><label><span>${ui('indicator')}</span><input name="indicators" required></label><label class="full"><span>${ui('dynamics')}</span><textarea name="dynamics" required minlength="180"></textarea></label><label class="full"><span>${ui('conclusion')}</span><textarea name="conclusion" required minlength="180"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
