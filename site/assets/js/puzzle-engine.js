@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const mountRudnPuzzle = () => {
   const initialisePuzzle = () => {
   const root = document.getElementById("geoPuzzleApp");
   if (!root) return;
@@ -107,6 +108,7 @@
     resultCount: byId("puzzleResultCount"),
     resultTime: byId("puzzleResultTime"),
     resultErrors: byId("puzzleResultErrors"),
+    resultBack: byId("puzzleResultBack"),
     playAgain: byId("puzzlePlayAgain"),
     closeResult: byId("puzzleCloseResult"),
   };
@@ -1677,18 +1679,45 @@
     unlockSelectors();
     void startGame({ reuseDataset: true });
   });
-  els.closeResult.addEventListener("click", () => { window.location.href = seminarContext ? "../index.html#activity/seminar-2" : "../index.html#puzzle"; });
+  els.resultBack.addEventListener("click", (event) => {
+    if (root.dataset.native !== "true") return;
+    event.preventDefault();
+    els.resultDialog.close();
+  });
+  els.closeResult.addEventListener("click", () => {
+    els.resultDialog.close();
+    if (root.dataset.native === "true") window.location.hash = "dashboard";
+    else window.top.location.href = "../index.html#dashboard";
+  });
   window.addEventListener("resize", handleResize);
   document.addEventListener("fullscreenchange", handleResize);
 
   updateDependentFields();
   updateUi();
   state.animationFrame = requestAnimationFrame(tick);
+  return () => {
+    cancelAnimationFrame(state.animationFrame);
+    cancelAnimationFrame(state.drawFrame);
+    window.clearTimeout(state.resizeTimer);
+    window.clearTimeout(toast.timer);
+    window.removeEventListener("resize", handleResize);
+    document.removeEventListener("fullscreenchange", handleResize);
+    if (document.fullscreenElement?.closest?.(".puzzle-stage-card")) void document.exitFullscreen().catch(() => {});
+  };
   };
 
+  let cleanup=null;
+  let destroyed=false;
+  const initialise=()=>{if(!destroyed)cleanup=initialisePuzzle()};
   if (window.RUDNI18N?.ready) {
-    window.RUDNI18N.ready.then(initialisePuzzle).catch(initialisePuzzle);
+    window.RUDNI18N.ready.then(initialise).catch(initialise);
   } else {
-    initialisePuzzle();
+    initialise();
   }
+  return ()=>{destroyed=true;cleanup?.()};
+  };
+
+  window.mountRudnPuzzle=mountRudnPuzzle;
+  const standaloneRoot=document.getElementById("geoPuzzleApp");
+  if(standaloneRoot&&standaloneRoot.dataset.native!=="true")mountRudnPuzzle();
 })();

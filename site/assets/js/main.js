@@ -1,9 +1,10 @@
-import {CONFIG} from './config.js?v=1.1.14';
-import {backend,groupOptions} from './backend.js?v=1.1.14';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.14';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.14';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.14';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.14';
+import {CONFIG} from './config.js?v=1.1.15';
+import {backend,groupOptions} from './backend.js?v=1.1.15';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.15';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.15';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.15';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.15';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.15';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -251,7 +252,7 @@ async function render(){
     else if(r.name==='materials') renderMaterials();
     else if(r.name==='profile') renderProfile();
     else if(r.name==='live') await renderLive();
-    else if(r.name==='puzzle') renderPuzzleRoute();
+    else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='admin') await renderAdmin();
     else if(r.name==='activity') await renderActivity(r.parts[0]);
     else location.hash='dashboard';
@@ -443,14 +444,31 @@ function renderSeminar7(topic){
     event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const kpi=number(fd.get('kpi'));if(kpi<0||kpi>100){toast(ui('fillRequired'),'error');return}let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-7',file)}catch(error){toast(error.message,'error')}}const points=simulatorPoints(kpi);await backend.saveAttempt({type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,fileUrl,source:'manual',reviewStatus:'pending'});toast(`${ui('saved')}: ${points}/5`,'success');render();
   };
 }
-function renderPuzzleRoute(asSeminar=false){
+let puzzleFragmentPromise=null;
+async function getPuzzleFragment(){
+  if(!puzzleFragmentPromise)puzzleFragmentPromise=fetch('apps/puzzle.html',{cache:'no-store'}).then(async response=>{
+    if(!response.ok)throw new Error(`apps/puzzle.html: HTTP ${response.status}`);
+    const documentCopy=new DOMParser().parseFromString(await response.text(),'text/html');
+    const main=documentCopy.querySelector('.puzzle-page-main');
+    const toastNode=documentCopy.getElementById('puzzleToast');
+    const resultDialog=documentCopy.getElementById('puzzleResultDialog');
+    if(!main||!toastNode||!resultDialog)throw new Error('Puzzle component markup is incomplete.');
+    return `${main.innerHTML}${toastNode.outerHTML}${resultDialog.outerHTML}`;
+  });
+  return puzzleFragmentPromise;
+}
+async function renderPuzzleRoute(asSeminar=false){
   if(asSeminar){
     const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);
     if(!accessAllowed(gate)){lockedAccessPage(ui('puzzleTitle'),gate);return}
   }
   const context=asSeminar?'seminar':'free';
-  const frame=`<div class="panel puzzle-embed-panel"><iframe class="app-frame puzzle-frame" src="apps/puzzle.html?context=${context}" title="${ui('puzzleTitle')}" allow="fullscreen"></iframe></div>`;
-  if(asSeminar){const topic=data.course.topics[1];app.innerHTML=seminarShell(topic,`<p class="notice">${ui('seminar2Lead')}</p>${frame}`)}else app.innerHTML=contentPage(ui('puzzleTitle'),ui('puzzleLead'),frame,`<a class="btn btn-primary" href="apps/puzzle.html?context=free" target="_blank">${ui('openNewTab')} ↗</a>`);
+  app.innerHTML=`<section class="page puzzle-native-page" data-puzzle-route="${context}">${await getPuzzleFragment()}</section>`;
+  app.querySelector('.puzzle-profile-warning a')?.setAttribute('href','#profile');
+  app.querySelector('#puzzleResultBack')?.setAttribute('href',asSeminar?'#activity/seminar-2':'#puzzle');
+  const root=app.querySelector('#geoPuzzleApp');
+  root.dataset.native='true';
+  currentCleanup=await mountPuzzlePage({context,base:'assets/puzzle/data',legacyBase:'data'});
 }
 
 async function renderLive(){

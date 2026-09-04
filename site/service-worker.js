@@ -1,14 +1,19 @@
-const CACHE='rudn-gmu-pages-v1.1.14';
+const CACHE='rudn-gmu-pages-v1.1.15';
 const SHELL=[
-  './','./index.html',
-  './assets/css/site.css?v=1.1.14',
-  './assets/js/main.js?v=1.1.14',
-  './assets/js/backend.js?v=1.1.14',
-  './assets/js/config.js?v=1.1.14',
-  './assets/js/i18n.js?v=1.1.14',
-  './assets/js/quiz.js?v=1.1.14',
-  './assets/js/adaptive-quiz.js?v=1.1.14',
-  './assets/js/access.js?v=1.1.14',
+  './','./index.html','./apps/puzzle.html',
+  './assets/css/site.css?v=1.1.15',
+  './assets/css/puzzle.css?v=1.1.15',
+  './assets/js/main.js?v=1.1.15',
+  './assets/js/backend.js?v=1.1.15',
+  './assets/js/config.js?v=1.1.15',
+  './assets/js/i18n.js?v=1.1.15',
+  './assets/js/quiz.js?v=1.1.15',
+  './assets/js/adaptive-quiz.js?v=1.1.15',
+  './assets/js/access.js?v=1.1.15',
+  './assets/js/puzzle-bootstrap.js?v=1.1.15',
+  './assets/js/puzzle-engine.js?v=1.1.15',
+  './assets/puzzle/vendor/d3.v7.9.0.min.js',
+  './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png','./manifest.webmanifest'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
