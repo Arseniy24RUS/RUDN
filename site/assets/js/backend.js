@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.18';
+import {CONFIG} from './config.js?v=1.1.19';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -93,6 +93,7 @@ class Backend{
       this.auth=authMod;this.db=dbMod;this.storageMod=storageMod;this.firebase=app;
       this.authClient=authMod.getAuth(app);this.database=dbMod.getDatabase(app);this.storage=storageMod.getStorage(app);
       await authMod.setPersistence(this.authClient,authMod.browserLocalPersistence);
+      if(typeof this.authClient.authStateReady==='function')await this.authClient.authStateReady();
       this.user=this.authClient.currentUser;
       if(!this.user){const credential=await authMod.signInAnonymously(this.authClient);this.user=credential.user}
       this.mode='cloud';this.error=null;
