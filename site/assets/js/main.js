@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.1.16';
-import {backend,groupOptions} from './backend.js?v=1.1.16';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.16';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.16';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.16';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.16';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.16';
+import {CONFIG} from './config.js?v=1.1.17';
+import {backend,groupOptions} from './backend.js?v=1.1.17';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.17';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.17';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.17';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.17';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.17';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -380,13 +380,14 @@ async function startQuiz(activitySlug){
   if(!requireProfile())return;
   app.innerHTML=`<section class="page"><div id="quizMount"></div></section>`;
   const mount=app.querySelector('#quizMount');
+  const returnTo=(target)=>{const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
   if(activitySlug==='seminar-1-classroom'){
-    currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>{location.hash='activity/seminar-1'}});
+    currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>returnTo('activity/seminar-1')});
     return;
   }
   const assessment=activitySlug==='seminar-1-assessment';
   const session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
-  renderQuiz(mount,session,{onExit:()=>{location.hash=assessment?'activity/seminar-1':`activity/${activitySlug}`}});
+  renderQuiz(mount,session,{onExit:()=>returnTo(assessment?'activity/seminar-1':`activity/${activitySlug}`)});
 }
 function renderSeminar3(topic){
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openDashboard'),ui('seminar3Lead'),data.course.external_apps.settlement_dashboard,ui('openDashboard'))}<div class="panel"><h2>${ui('seminarAssignment')}</h2><form id="settlementForm" class="form-grid"><label><span>${ui('territory')}</span><input name="territory" required></label><label><span>${ui('indicator')}</span><input name="indicators" required></label><label class="full"><span>${ui('dynamics')}</span><textarea name="dynamics" required minlength="180"></textarea></label><label class="full"><span>${ui('conclusion')}</span><textarea name="conclusion" required minlength="180"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);

@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.16';
-import {backend} from './backend.js?v=1.1.16';
+import {getLocale,localized,t} from './i18n.js?v=1.1.17';
+import {backend} from './backend.js?v=1.1.17';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -18,20 +18,25 @@ const MATRIX_COPY={
     federal:'Федеральный уровень',regional:'Региональный уровень',municipal:'Муниципальный уровень',
     federal_legislative:'Законо­дательная',federal_executive:'Исполни­тельная',federal_judicial:'Судебная',
     regional_legislative:'Законо­дательная',regional_executive:'Исполни­тельная',regional_judicial:'Судебная',
-    municipal_representative:'Представительная',municipal_administration:'Исполнительная',municipal_other:'Судебная'
+    municipal_representative:'Представительная',municipal_administration:'Исполнительная',municipal_other:'Иные органы'
   },
   en:{
     federal:'Federal level',regional:'Regional level',municipal:'Municipal level',
     federal_legislative:'Legislative',federal_executive:'Executive',federal_judicial:'Judicial',
     regional_legislative:'Legislative',regional_executive:'Executive',regional_judicial:'Judicial',
-    municipal_representative:'Representative',municipal_administration:'Executive',municipal_other:'Judicial'
+    municipal_representative:'Representative',municipal_administration:'Executive',municipal_other:'Other bodies'
   },
   zh:{
     federal:'联邦层级',regional:'地区层级',municipal:'市政层级',
     federal_legislative:'立法',federal_executive:'行政',federal_judicial:'司法',
     regional_legislative:'立法',regional_executive:'行政',regional_judicial:'司法',
-    municipal_representative:'代表',municipal_administration:'行政',municipal_other:'司法'
+    municipal_representative:'代表',municipal_administration:'行政',municipal_other:'其他机关'
   }
+};
+const REVIEW_COPY={
+  ru:{yourAnswer:'Ваш ответ',correctAnswer:'Правильный ответ',acceptedAnswers:'Засчитываются ответы',unanswered:'Ответ не выбран',explanation:'Пояснение'},
+  en:{yourAnswer:'Your answer',correctAnswer:'Correct answer',acceptedAnswers:'Accepted answers',unanswered:'No answer selected',explanation:'Explanation'},
+  zh:{yourAnswer:'您的答案',correctAnswer:'正确答案',acceptedAnswers:'可接受的答案',unanswered:'未选择答案',explanation:'说明'}
 };
 const MATRIX_SCHEMA=[
   ['federal','legislative'],['federal','executive'],['federal','judicial'],
@@ -49,9 +54,14 @@ export function canonicalMatrixValue(value){
   return LEGACY_MATRIX_ALIASES[raw]||raw;
 }
 export function correctMatrixValue(question){
-  const explicit=question?.classification_correct;
-  if(explicit)return canonicalMatrixValue(explicit);
-  return canonicalMatrixValue(`${question?.matrix?.correct?.row||''}|${question?.matrix?.correct?.column||''}`);
+  return correctMatrixValues(question)[0]||'';
+}
+export function correctMatrixValues(question){
+  const accepted=Array.isArray(question?.classification_accepted)?question.classification_accepted:[];
+  const fallback=question?.classification_correct
+    ?[question.classification_correct]
+    :[`${question?.matrix?.correct?.row||''}|${question?.matrix?.correct?.column||''}`];
+  return [...new Set((accepted.length?accepted:fallback).map(canonicalMatrixValue).filter(value=>value.includes('|')))];
 }
 export function matrixChoiceMeta(value){
   const canonical=canonicalMatrixValue(value);
@@ -66,6 +76,7 @@ export function questionText(q){return localized(q,'prompt',q.prompt||q.name||''
 export function institutionText(q){return questionText(q).replace(/^\s*\d+\s*[.)．、:–—-]\s*/u,'')}
 export function answerText(a){return localized(a,'text',a.text||'')}
 export function feedbackText(q){return localized(q,'general_feedback',q.general_feedback||'')}
+export function reviewNoteText(q){return localized(q,'review_note',q.review_note||'')}
 export function categoryText(q){return localized(q,'category',q.category||'')}
 
 export function buildQuiz(questions,activitySlug,profile,options={}){
@@ -119,11 +130,11 @@ export function renderMatrixButtons(q,selected='',options={}){
     normalizedCounts[canonical]=(normalizedCounts[canonical]||0)+Number(count||0);
   }
   const selectedValueCanonical=canonicalMatrixValue(selected);
-  const reveal=Boolean(options.reveal);const showDistribution=Boolean(options.showDistribution);const total=Number(options.total||0);const correct=correctMatrixValue(q);
+  const reveal=Boolean(options.reveal);const showDistribution=Boolean(options.showDistribution);const total=Number(options.total||0);const correct=new Set(correctMatrixValues(q));
   return `<div class="matrix-option-grid" role="radiogroup" aria-label="${escapeHtml(t('selectAnswer'))}">${matrixChoices().map(choice=>{
     const count=Number(normalizedCounts[choice.value]||0);const percent=total?Math.round(count/total*100):0;
-    const state=[selectedValueCanonical===choice.value?'selected':'',showDistribution?'live-distribution':'',reveal&&choice.value===correct?'correct':'',reveal&&count&&choice.value!==correct?'has-wrong':''].filter(Boolean).join(' ');
-    const authorityIcon=['legislative','representative'].includes(choice.column)?'legislative':['executive','administration'].includes(choice.column)?'executive':'judicial';
+    const state=[selectedValueCanonical===choice.value?'selected':'',showDistribution?'live-distribution':'',reveal&&correct.has(choice.value)?'correct':'',reveal&&count&&!correct.has(choice.value)?'has-wrong':''].filter(Boolean).join(' ');
+    const authorityIcon=['legislative','representative'].includes(choice.column)?'legislative':['executive','administration'].includes(choice.column)?'executive':choice.column==='other'?'other':'judicial';
     const fullLabel=`${choice.level}: ${choice.authority}`;
     const accessibleLabel=showDistribution?`${fullLabel} · ${percent}%`:fullLabel;
     return `<button type="button" class="matrix-option ${state}" style="--answer-share:${percent}%" data-level="${choice.row}" data-authority="${authorityIcon}" data-matrix="${choice.value}" aria-label="${escapeHtml(accessibleLabel)}" title="${escapeHtml(fullLabel)}" aria-pressed="${selectedValueCanonical===choice.value}" aria-keyshortcuts="${choice.index}" ${options.disabled?'disabled':''}><span class="matrix-option-symbol" aria-hidden="true"></span><span class="matrix-option-level">${escapeHtml(choice.level)}</span><strong>${escapeHtml(choice.authority)}</strong>${reveal||(showDistribution&&count>0)?`<span class="matrix-option-result"><b>${count}</b><small>${percent}%</small></span>`:''}</button>`;
@@ -177,10 +188,26 @@ export function renderQuiz(container,session,options={}){
 function hasAnswer(q,value){if(q.type==='multichoice'&&!q.single)return Array.isArray(value)&&value.length>0;return value!==undefined&&value!==null&&String(value).trim()!==''}
 
 export function gradeQuestion(q,value){
-  if(q.type==='matrix_single'){const expected=correctMatrixValue(q);return {fraction:canonicalMatrixValue(value)===expected?1:0,expected:matrixChoiceLabel(expected)}}
-  if(q.type==='shortanswer'){const correct=q.answers.filter(a=>Number(a.fraction)>0).map(a=>norm(a.text));const given=norm(value);return {fraction:correct.some(x=>x===given)?1:0,expected:correct.join(' / ')}}
+  const copy=REVIEW_COPY[getLocale()]||REVIEW_COPY.ru;
+  if(q.type==='matrix_single'){
+    const accepted=correctMatrixValues(q);const given=canonicalMatrixValue(value);const expectedValues=accepted.map(matrixChoiceLabel);
+    return {fraction:accepted.includes(given)?1:0,expected:expectedValues.join(' / '),expectedValues,givenLabel:given.includes('|')?matrixChoiceLabel(given):copy.unanswered};
+  }
+  if(q.type==='shortanswer'){
+    const correct=q.answers.filter(a=>Number(a.fraction)>0);const normalized=correct.map(a=>norm(a.text));const given=norm(value);
+    return {fraction:normalized.some(x=>x===given)?1:0,expected:correct.map(answerText).join(' / '),expectedValues:correct.map(answerText),givenLabel:String(value||'').trim()||copy.unanswered};
+  }
   const selected=new Set(Array.isArray(value)?value:[value]);let fraction=0;for(const a of q.answers)if(selected.has(a.id))fraction+=Number(a.fraction||0);
-  fraction=Math.max(0,Math.min(1,fraction));const expected=q.answers.filter(a=>Number(a.fraction)>0).map(answerText).join('; ');return {fraction,expected};
+  fraction=Math.max(0,Math.min(1,fraction));const correct=q.answers.filter(a=>Number(a.fraction)>0).map(answerText);const given=q.answers.filter(a=>selected.has(a.id)).map(answerText);
+  return {fraction,expected:correct.join('; '),expectedValues:correct,givenLabel:given.join('; ')||copy.unanswered};
+}
+
+function renderReviewItem(result,index){
+  const copy=REVIEW_COPY[getLocale()]||REVIEW_COPY.ru;const correct=result.fraction>=.999;
+  const expectedValues=result.expectedValues?.length?result.expectedValues:[result.expected].filter(Boolean);
+  const expectedLabel=expectedValues.length>1?copy.acceptedAnswers:copy.correctAnswer;
+  const note=result.q.type==='matrix_single'?reviewNoteText(result.q):feedbackText(result.q);
+  return `<div class="review-item ${correct?'correct':'incorrect'}"><strong class="review-question">${index+1}. ${escapeHtml(result.q.type==='matrix_single'?institutionText(result.q):questionText(result.q))}</strong><p class="review-status">${correct?t('correct'):t('incorrect')} · ${Math.round(result.fraction*100)}%</p><dl class="review-answers"><div class="review-answer-row given"><dt>${escapeHtml(copy.yourAnswer)}</dt><dd>${escapeHtml(result.givenLabel||copy.unanswered)}</dd></div><div class="review-answer-row expected"><dt>${escapeHtml(expectedLabel)}</dt><dd>${expectedValues.map(value=>`<span>${escapeHtml(value)}</span>`).join('')}</dd></div></dl>${note?`<div class="review-explanation"><strong>${escapeHtml(copy.explanation)}</strong><p>${escapeHtml(note)}</p></div>`:''}</div>`;
 }
 
 export async function finishQuiz(container,session,options={}){
@@ -191,7 +218,7 @@ export async function finishQuiz(container,session,options={}){
     await backend.saveAttempt(attempt);
   }
   await Promise.resolve(onFinish?.({attempt,results,session}));
-  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1><p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p><div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div><div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map((r,i)=>`<div class="review-item ${r.fraction>=.999?'correct':'incorrect'}"><strong>${i+1}. ${escapeHtml(r.q.type==='matrix_single'?institutionText(r.q):questionText(r.q))}</strong><p>${r.fraction>=.999?t('correct'):t('incorrect')} · ${Math.round(r.fraction*100)}%</p>${r.fraction<.999?`<small class="muted">${escapeHtml(r.expected||'')}</small>`:''}${feedbackText(r.q)?`<p class="muted">${escapeHtml(feedbackText(r.q))}</p>`:''}</div>`).join('')}</div></div></div>`;
+  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1><p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p><div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div><div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map(renderReviewItem).join('')}</div></div></div>`;
   container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),session.buildOptions||{});renderQuiz(container,next,options)};
   container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');window.dispatchEvent(new CustomEvent('rudn:gradechange'));
 }

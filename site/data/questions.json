@@ -5835,7 +5835,10 @@
     },
     "source_form_question_id": "id-question-89579116",
     "classification_source": "https://www.consultant.ru/document/cons_doc_LAW_28399/1a2af424072b73f2adfb5243cf1849820d9bc7f4/",
-    "classification_correct": "federal|executive"
+    "classification_correct": "federal|executive",
+    "review_note": "Территориальное управление входит в систему федерального МВД России, поэтому сохраняет федеральный уровень.",
+    "review_note_en": "The territorial directorate is part of the federal Ministry of Internal Affairs system, so it remains at the federal level.",
+    "review_note_zh": "该地区管理局属于俄罗斯联邦内务部体系，因此仍归入联邦层级。"
   },
   {
     "id": "87946257-ece5-56f6-820b-7829ecc8891a",
@@ -6588,7 +6591,7 @@
       {
         "id": "cb42ed31-0266-511a-9541-922f6c20602c",
         "text": "Исполнительная власть / Федеральный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Executive authority / Federal level",
         "text_zh": "行政权 / 联邦层级"
@@ -6750,7 +6753,14 @@
     },
     "source_form_question_id": "id-question-89579331",
     "classification_source": null,
-    "classification_correct": "federal|legislative"
+    "classification_correct": "federal|legislative",
+    "classification_accepted": [
+      "federal|legislative",
+      "federal|executive"
+    ],
+    "review_note": "Аппарат обеспечивает деятельность Государственной Думы. Основной ответ — законодательная власть; исполнительная также принимается как функциональная трактовка работы аппарата.",
+    "review_note_en": "The Staff supports the work of the State Duma. Legislative authority is the primary answer; executive authority is also accepted as a functional interpretation of the staff's work.",
+    "review_note_zh": "该办公厅保障国家杜马的工作。主要答案为立法权；将办公厅职能理解为行政职能时，行政权也予以认可。"
   },
   {
     "id": "df0a56ed-b75f-5270-967e-99aeb13ac3e2",
@@ -8808,7 +8818,7 @@
       {
         "id": "4d846f88-28f1-56f3-9aba-98a4e947ef52",
         "text": "Исполнительная власть / Региональный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Executive authority / Regional level",
         "text_zh": "行政权 / 地区层级"
@@ -8946,7 +8956,14 @@
     },
     "source_form_question_id": "id-question-89580111",
     "classification_source": "https://docs.cntd.ru/document/453104028",
-    "classification_correct": "regional|legislative"
+    "classification_correct": "regional|legislative",
+    "classification_accepted": [
+      "regional|legislative",
+      "regional|executive"
+    ],
+    "review_note": "Институт уполномоченного не относится однозначно к одной ветви власти. В учебной матрице принимаются законодательная и исполнительная трактовки регионального уровня.",
+    "review_note_en": "The ombudsman institution does not fit unambiguously into one branch. This teaching matrix accepts both regional legislative and executive interpretations.",
+    "review_note_zh": "儿童权利专员机构不能明确归入单一权力分支。本教学矩阵同时接受地区层级的立法和行政两种解释。"
   },
   {
     "id": "bd52fb65-3d0b-58b6-8fc4-bc1c0bb9e52d",
@@ -9174,7 +9191,7 @@
       {
         "id": "383850c3-c91c-5afe-9d10-5aa09d746718",
         "text": "Исполнительная власть / Региональный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Executive authority / Regional level",
         "text_zh": "行政权 / 地区层级"
@@ -9312,7 +9329,14 @@
     },
     "source_form_question_id": "id-question-89580250",
     "classification_source": null,
-    "classification_correct": "regional|legislative"
+    "classification_correct": "regional|legislative",
+    "classification_accepted": [
+      "regional|legislative",
+      "regional|executive"
+    ],
+    "review_note": "Аппарат обеспечивает деятельность Законодательного Собрания. Основной ответ — законодательная власть; исполнительная также принимается как функциональная трактовка работы аппарата.",
+    "review_note_en": "The Staff supports the work of the Legislative Assembly. Legislative authority is the primary answer; executive authority is also accepted as a functional interpretation of the staff's work.",
+    "review_note_zh": "该办公厅保障立法会议的工作。主要答案为立法权；将办公厅职能理解为行政职能时，行政权也予以认可。"
   },
   {
     "id": "60fc3f3d-9f59-55ac-ab24-70950832ba1f",
@@ -9922,7 +9946,7 @@
       {
         "id": "7a80aa9f-944d-58ee-b664-687f754b57cb",
         "text": "Представительный орган / Муниципальный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Representative body / Municipal level",
         "text_zh": "代表机关 / 市政层级"
@@ -9930,7 +9954,7 @@
       {
         "id": "3ba40017-61e2-5f5d-b50a-fab59e5aaf29",
         "text": "Исполнительно-распорядительный орган / Муниципальный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Executive-administrative body / Municipal level",
         "text_zh": "执行与行政机关 / 市政层级"
@@ -9938,7 +9962,7 @@
       {
         "id": "36ed4cbb-70d3-52f4-a03b-21b95261757d",
         "text": "Иной муниципальный орган или обеспечивающая структура / Муниципальный уровень",
-        "fraction": 1.0,
+        "fraction": 0.0,
         "feedback": "",
         "text_en": "Other municipal body or support structure / Municipal level",
         "text_zh": "其他市政机关或保障机构 / 市政层级"
@@ -9994,7 +10018,7 @@
       ],
       "correct": {
         "row": "municipal",
-        "column": "judicial"
+        "column": "representative"
       }
     },
     "category_en": "Seminar 1. Branches and levels of public authority",
@@ -10044,7 +10068,14 @@
     },
     "source_form_question_id": "id-question-89580562",
     "classification_source": null,
-    "classification_correct": "municipal|other"
+    "classification_correct": "municipal|representative",
+    "classification_accepted": [
+      "municipal|representative",
+      "municipal|administration"
+    ],
+    "review_note": "Аппарат обеспечивает работу Совета депутатов и выполняет отдельные исполнительно-административные полномочия. В квизе принимаются обе категории.",
+    "review_note_en": "The Staff supports the Council of Deputies and performs certain executive-administrative functions. Both categories are accepted in the quiz.",
+    "review_note_zh": "该机关既保障代表委员会的工作，也履行部分执行和行政职能。本测验接受这两类答案。"
   },
   {
     "id": "6c92d357-00fa-53a9-923a-84c87d376c0a",
@@ -10227,7 +10258,13 @@
     },
     "source_form_question_id": "id-question-89580598",
     "classification_source": "https://www.consultant.ru/document/cons_doc_LAW_37119/fe85e7a344de6a5f670d6f03d2e275ba986daf2d/",
-    "classification_correct": "municipal|other"
+    "classification_correct": "municipal|other",
+    "classification_accepted": [
+      "municipal|other"
+    ],
+    "review_note": "Избирательная комиссия является самостоятельным муниципальным органом и не относится ни к представительным, ни к исполнительно-распорядительным органам.",
+    "review_note_en": "The election commission is an independent municipal body and belongs to neither the representative nor the executive-administrative authorities.",
+    "review_note_zh": "选举委员会是独立的市政机关，既不属于代表机关，也不属于执行与行政机关。"
   },
   {
     "id": "7e0716da-40f8-524a-a111-ca28c7c0fddc",
@@ -10593,7 +10630,13 @@
     },
     "source_form_question_id": "id-question-89580733",
     "classification_source": "https://www.consultant.ru/document/cons_doc_LAW_116725/9ca4a9ea339e6f38973664283e2ed27612a841da/",
-    "classification_correct": "regional|legislative"
+    "classification_correct": "regional|legislative",
+    "classification_accepted": [
+      "regional|legislative"
+    ],
+    "review_note": "Контрольно-счётная палата — орган внешнего государственного финансового контроля, образуемый Законодательным Собранием и подотчётный ему. К исполнительной власти она не относится.",
+    "review_note_en": "The Audit Chamber is an external public financial-control body formed by and accountable to the Legislative Assembly. It is not an executive authority.",
+    "review_note_zh": "审计机关是由立法会议设立并向其负责的外部国家财政监督机关，不属于行政权机关。"
   },
   {
     "id": "b0f83b11-6b89-5d18-a8aa-4fa655339400",

@@ -766,6 +766,10 @@
       "branch": "legislative",
       "nuance": "legislative_staff"
     },
+    "accepted_classifications": [
+      "federal|legislative",
+      "federal|executive"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/state_duma_staff.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1534616/6569a5fec2a190731dfec0ea2536f7ab/2560x",
     "source_photo_links": {
@@ -1114,6 +1118,10 @@
       "branch": "legislative",
       "nuance": "ombudsman"
     },
+    "accepted_classifications": [
+      "regional|legislative",
+      "regional|executive"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/sverdlovsk_children_ombudsman_office.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6463766/c16ce5486790b5918d137fcaa54f426f/2560x",
     "source_photo_links": {
@@ -1172,6 +1180,10 @@
       "branch": "legislative",
       "nuance": "legislative_staff"
     },
+    "accepted_classifications": [
+      "regional|legislative",
+      "regional|executive"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/rostov_legislative_assembly_staff.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6444861/80d2d12e74f9ccc1e6be338d5e7b1e07/2560x",
     "source_photo_links": {
@@ -1288,6 +1300,10 @@
       "branch": "legislative",
       "nuance": "legislative_staff"
     },
+    "accepted_classifications": [
+      "municipal|representative",
+      "municipal|administration"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/troitsk_council_staff.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/1524509/08bef8e2cad4f69e687ae2214cb75ee7/2560x",
     "source_photo_links": {
@@ -1314,9 +1330,12 @@
     "slug": "samara_election_commission",
     "classification": {
       "level": "municipal",
-      "branch": "legislative",
+      "branch": "other",
       "nuance": "municipal_election_commission"
     },
+    "accepted_classifications": [
+      "municipal|other"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/samara_election_commission.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6463766/6b46b04f39574f1a03a8255060597612/2560x",
     "source_photo_links": {
@@ -1375,6 +1394,9 @@
       "branch": "legislative",
       "nuance": "audit_chamber"
     },
+    "accepted_classifications": [
+      "regional|legislative"
+    ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/irkutsk_audit_chamber.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/2560x",
     "source_photo_links": {

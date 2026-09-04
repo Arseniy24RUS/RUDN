@@ -1,17 +1,18 @@
-import {CONFIG} from './config.js?v=1.1.16';
-import {backend,groupOptions} from './backend.js?v=1.1.16';
+import {CONFIG} from './config.js?v=1.1.17';
+import {backend,groupOptions} from './backend.js?v=1.1.17';
 import {
   buildQuiz,
   canonicalMatrixValue,
-  correctMatrixValue,
+  correctMatrixValues,
   feedbackText,
   matrixChoiceLabel,
   renderInstitutionHeading,
   renderMatrixButtons,
   renderQuestionMedia,
-  renderQuiz
-} from './quiz.js?v=1.1.16';
-import {getLocale} from './i18n.js?v=1.1.16';
+  renderQuiz,
+  reviewNoteText
+} from './quiz.js?v=1.1.17';
+import {getLocale} from './i18n.js?v=1.1.17';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -166,7 +167,8 @@ function boardInsight({reveal,active,accuracy,wrong,question}){
   const common=wrong
     ?`<span>${escapeHtml(c('commonError'))}: ${escapeHtml(matrixChoiceLabel(wrong[0]))} (${wrong[1]})</span>`
     :'';
-  const feedback=feedbackText(question)?`<p>${escapeHtml(feedbackText(question))}</p>`:'';
+  const explanation=reviewNoteText(question)||feedbackText(question);
+  const feedback=explanation?`<p>${escapeHtml(explanation)}</p>`:'';
   return `<div class="board-insight revealed"><strong>${escapeHtml(c('revealed'))}</strong><span>${escapeHtml(c('accuracy'))}: ${accuracy}%</span>${common}${feedback}</div>`;
 }
 
@@ -227,11 +229,11 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
     const records=recordsFor(responses,question.id,activeIds);
     const counts=answerCounts(records);
     const reveal=revealState(records,active);
-    const correct=correctMatrixValue(question);
-    const right=records.filter((record)=>canonicalMatrixValue(record.answer)===correct).length;
+    const correctValues=correctMatrixValues(question);const correct=new Set(correctValues);
+    const right=records.filter((record)=>correct.has(canonicalMatrixValue(record.answer))).length;
     const accuracy=records.length?Math.round(right/records.length*100):0;
     const wrong=Object.entries(counts)
-      .filter(([value])=>value!==correct)
+      .filter(([value])=>!correct.has(value))
       .sort((a,b)=>b[1]-a[1])[0];
     const tabs=questions.map((item,index)=>{
       const answered=recordsFor(responses,item.id,activeIds).length;
