@@ -772,6 +772,13 @@
       projection = window.d3.geoNaturalEarth1().rotate([-11, 0]);
     } else if (state.mode === "russia-subjects") {
       projection = window.d3.geoMercator().rotate([-105, 0]);
+      projection.fitSize(
+        [Math.max(40, state.cssWidth - padding * 2), Math.max(40, state.mapBottom - padding * 2)],
+        state.collection,
+      );
+      const translated = projection.translate();
+      projection.translate([translated[0] + padding, translated[1] + padding]);
+      return projection;
     } else {
       projection = window.d3.geoMercator().rotate([-collectionCentralLongitude(), 0]);
     }
@@ -811,10 +818,36 @@
   }
 
   function appendRing(path, ring) {
+    if (state.mode === "russia-subjects") {
+      let previous = null;
+      let subpathStart = null;
+      ring.forEach((coordinate) => {
+        const projected = state.projection(coordinate);
+        if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
+        if (!previous) {
+          path.moveTo(projected[0], projected[1]);
+          previous = projected;
+          subpathStart = projected;
+          return;
+        }
+        const distance = Math.hypot(projected[0] - previous[0], projected[1] - previous[1]);
+        if (distance > 80) {
+          if (subpathStart) path.closePath();
+          path.moveTo(projected[0], projected[1]);
+          subpathStart = projected;
+          previous = projected;
+        } else if (distance > 0.8) {
+          path.lineTo(projected[0], projected[1]);
+          previous = projected;
+        }
+      });
+      if (subpathStart) path.closePath();
+      return;
+    }
     let active = false;
     let previous = null;
-    const seamLimit = state.mode === "russia-subjects" ? 80 : state.cssWidth * 0.72;
-    const tolerance = state.mode === "russia-subjects" ? 0.8 : 0;
+    const seamLimit = state.cssWidth * 0.72;
+    const tolerance = 0;
     ring.forEach((coordinate) => {
       const projected = state.projection(coordinate);
       if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
@@ -846,6 +879,45 @@
   }
 
   function appendStrokeRing(path, ring) {
+    if (state.mode === "russia-subjects") {
+      let previousCoordinate = null;
+      let previousProjected = null;
+      let subpathStart = null;
+      let meridianInterrupted = false;
+      const onAntimeridian = (coordinate) => Math.abs(Math.abs(Number(coordinate?.[0])) - 180) < 1e-6;
+      ring.forEach((coordinate) => {
+        const projected = state.projection(coordinate);
+        if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
+        if (!previousProjected) {
+          path.moveTo(projected[0], projected[1]);
+          previousCoordinate = coordinate;
+          previousProjected = projected;
+          subpathStart = projected;
+          return;
+        }
+        const distance = Math.hypot(projected[0] - previousProjected[0], projected[1] - previousProjected[1]);
+        const meridianSegment = onAntimeridian(previousCoordinate) && onAntimeridian(coordinate);
+        if (distance > 80) {
+          if (subpathStart) path.closePath();
+          path.moveTo(projected[0], projected[1]);
+          previousCoordinate = coordinate;
+          previousProjected = projected;
+          subpathStart = projected;
+        } else if (meridianSegment) {
+          path.moveTo(projected[0], projected[1]);
+          previousCoordinate = coordinate;
+          previousProjected = projected;
+          subpathStart = projected;
+          meridianInterrupted = true;
+        } else if (distance > 0.8) {
+          path.lineTo(projected[0], projected[1]);
+          previousCoordinate = coordinate;
+          previousProjected = projected;
+        }
+      });
+      if (subpathStart && !meridianInterrupted) path.closePath();
+      return;
+    }
     let active = false;
     let previousCoordinate = null;
     let previousProjected = null;
@@ -908,7 +980,28 @@
       const value = geoPath.centroid(feature);
       return Number.isFinite(value[0]) && Number.isFinite(value[1]) ? value : [state.bounds[index].cx, state.bounds[index].cy];
     });
+    if (state.mode === "russia-subjects") fitRussiaView();
     if (state.current >= 0 && state.pieces[state.current] && state.pieces[state.current].inTray) placePieceInTray(state.current);
+  }
+
+  function fitRussiaView() {
+    if (!state.bounds.length) {
+      state.view = { x: 0, y: 0, k: 1 };
+      return;
+    }
+    const x0 = Math.min(...state.bounds.map((bounds) => bounds.x0));
+    const y0 = Math.min(...state.bounds.map((bounds) => bounds.y0));
+    const x1 = Math.max(...state.bounds.map((bounds) => bounds.x1));
+    const y1 = Math.max(...state.bounds.map((bounds) => bounds.y1));
+    const width = Math.max(1, x1 - x0);
+    const height = Math.max(1, y1 - y0);
+    const padding = 12;
+    const scale = Math.min((state.cssWidth - padding * 2) / width, (state.mapBottom - padding * 2) / height);
+    state.view = {
+      k: scale,
+      x: state.cssWidth / 2 - scale * (x0 + x1) / 2,
+      y: state.mapBottom - padding - scale * y1,
+    };
   }
 
   function trayRect() {
@@ -971,13 +1064,14 @@
   }
 
   function drawMap(context = ctx) {
+    const fillRule = state.mode === "russia-subjects" ? "nonzero" : "evenodd";
     context.save();
     setScene(context);
     context.fillStyle = "#e7f1f7";
     context.strokeStyle = "#91b2c6";
     context.lineWidth = Math.max(0.7, 1 / state.view.k);
     state.paths.forEach((path, index) => {
-      context.fill(path, "evenodd");
+      context.fill(path, fillRule);
       context.stroke(state.strokePaths[index]);
     });
     context.restore();
@@ -993,12 +1087,13 @@
     ctx.fillStyle = "rgba(255, 213, 74, .44)";
     ctx.strokeStyle = "#b97900";
     ctx.lineWidth = Math.max(1.4, 2.2 / state.view.k);
-    ctx.fill(state.paths[piece.index], "evenodd");
+    ctx.fill(state.paths[piece.index], state.mode === "russia-subjects" ? "nonzero" : "evenodd");
     ctx.stroke(state.strokePaths[piece.index]);
     ctx.restore();
   }
 
   function drawLockedPieces(context = ctx) {
+    const fillRule = state.mode === "russia-subjects" ? "nonzero" : "evenodd";
     context.save();
     setScene(context);
     context.fillStyle = "#0079c1";
@@ -1006,7 +1101,7 @@
     context.lineWidth = Math.max(0.8, 1.1 / state.view.k);
     state.pieces.forEach((piece) => {
       if (!piece.locked) return;
-      context.fill(state.paths[piece.index], "evenodd");
+      context.fill(state.paths[piece.index], fillRule);
       context.stroke(state.strokePaths[piece.index]);
     });
     context.restore();
@@ -1030,7 +1125,7 @@
       ctx.fillStyle = "#dc3f45";
       ctx.strokeStyle = "#8e2028";
       ctx.lineWidth = Math.max(0.7, 1.3 / scale);
-      ctx.fill(path, "evenodd");
+      ctx.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
       ctx.stroke(strokePath);
       ctx.restore();
       return;
@@ -1041,7 +1136,7 @@
     ctx.fillStyle = "#dc3f45";
     ctx.strokeStyle = "#8e2028";
     ctx.lineWidth = Math.max(0.9, 1.3 / state.view.k);
-    ctx.fill(path, "evenodd");
+    ctx.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
     ctx.stroke(strokePath);
     ctx.restore();
   }
@@ -1167,7 +1262,7 @@
     if (!piece || piece.locked || piece.inTray) return false;
     const world = screenToWorld(x, y);
     try {
-      return hitCtx.isPointInPath(state.paths[piece.index], world.x - piece.dx, world.y - piece.dy, "evenodd");
+      return hitCtx.isPointInPath(state.paths[piece.index], world.x - piece.dx, world.y - piece.dy, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
     } catch (_) {
       return false;
     }
@@ -1390,7 +1485,8 @@
   }
 
   function centerView() {
-    state.view = { x: 0, y: 0, k: 1 };
+    if (state.mode === "russia-subjects") fitRussiaView();
+    else state.view = { x: 0, y: 0, k: 1 };
     const piece = currentPiece();
     if (piece && piece.inTray) placePieceInTray(piece.index);
     drawAll(true);

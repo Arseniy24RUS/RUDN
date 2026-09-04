@@ -1,6 +1,6 @@
-import {backend} from './backend.js?v=1.1.11';
-import {getLocale} from './i18n.js?v=1.1.11';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.11';
+import {backend} from './backend.js?v=1.1.12';
+import {getLocale} from './i18n.js?v=1.1.12';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.12';
 
 const locale=getLocale();
 const context=new URLSearchParams(location.search).get('context')==='seminar'?'seminar':'free';

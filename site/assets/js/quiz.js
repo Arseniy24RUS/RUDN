@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.11';
-import {backend} from './backend.js?v=1.1.11';
+import {getLocale,localized,t} from './i18n.js?v=1.1.12';
+import {backend} from './backend.js?v=1.1.12';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
