@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.1.17';
-import {backend,groupOptions} from './backend.js?v=1.1.17';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.17';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.17';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.17';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.17';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.17';
+import {CONFIG} from './config.js?v=1.1.18';
+import {backend,groupOptions} from './backend.js?v=1.1.18';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.18';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.18';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.18';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.18';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.18';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -20,7 +20,7 @@ const UI = {
   ru: {
     dashboardTitle:'Курс и учебная траектория', currentGroup:'Текущая группа', materialsTitle:'Материалы курса', seminarAssignment:'Практическое задание', download:'Скачать', noResults:'Результатов пока нет', dashboardLead:'Восемь лекций, восемь семинаров, интерактивные задания и единый электронный журнал.',
     signInToContinue:'Войдите по номеру студенческого билета, чтобы результаты сохранялись в журнале.', login:'Войти', profileReady:'Профиль подключён',
-    lectureWord:'Лекция', seminarWord:'Семинар', openActivity:'Открыть', pointsOf:'баллов из', completedCount:'выполнено',
+    lectureWord:'Лекция', seminarWord:'Семинар', quizWord:'Квиз', independentWork:'Самостоятельная работа', openActivity:'Открыть', pointsOf:'баллов из', completedCount:'выполнено', perfectResult:'Максимальный результат', platinumTopic:'Все задания раздела выполнены на максимум',
     currentScore:'Текущий результат', learningPath:'Учебный маршрут', bestResult:'Лучший результат', notPassed:'не пройдено',
     continuous:'Текущий контроль', examination:'Экзамен', total:'Итого', activity:'Активность', result:'Результат', max:'Максимум', status:'Статус',
     materials:'Материалы курса', syllabus:'Рабочая программа дисциплины', examQuestions:'Вопросы к экзамену', seminar3:'Задание к семинару 3', seminar5Variants:'Варианты обращений граждан', seminar5Template:'Шаблон ответа',
@@ -29,7 +29,7 @@ const UI = {
     save:'Сохранить', submit:'Отправить', cancel:'Отмена', cloud:'Облачная синхронизация', local:'Локальное сохранение',
     lectureMaterials:'Материалы лекции', videoLecture:'Видеолекция', presentation:'Презентация', lectureTest:'Тест по лекции', startTest:'Начать тест', noLectureTest:'Для этой лекции отдельный тест не предусмотрен.',
     reflectionTitle:'Профессиональная рефлексия', reflectionLead:'Пройдите профориентационный тест, затем зафиксируйте свой результат и выводы.', careerResult:'Полученный профиль / направление', reflection:'Краткий вывод: какие роли в государственном управлении вам подходят и почему?', externalTest:'Открыть профориентационный тест',
-    seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Судебная».', seminar1ClassroomTitle:'Аудиторный квиз · 50 вопросов', seminar1ClassroomLead:'Все 50 органов из исходного аудиторного квиза. Результат не выставляется в журнал.', launchQuiz:'Начать квиз', seminar1AssessmentTitle:'Самостоятельная работа · 5 вопросов', seminar1AssessmentLead:'Пять заданий из исходного теста. Итоговая оценка — от 0 до 5 баллов.', launchAssessment:'Начать работу', joinLive:'Открыть общую доску',
+    seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Иные органы».', seminar1ClassroomTitle:'Квиз · 50 вопросов', seminar1ClassroomLead:'Все 50 органов из исходного аудиторного квиза. Результат не выставляется в журнал.', launchQuiz:'Начать квиз', seminar1AssessmentTitle:'Самостоятельная работа · 5 вопросов', seminar1AssessmentLead:'Пять заданий из исходного теста. Итоговая оценка — от 0 до 5 баллов.', launchAssessment:'Начать работу', joinLive:'Открыть общую доску',
     seminar2Lead:'Соберите карту России из 89 субъектов. Выберите сложность; лучший результат сохранится в журнале.', openPuzzle:'Открыть географический конструктор',
     seminar3Lead:'Исследуйте систему расселения по интерактивному дашборду и подготовьте аналитический вывод.', openDashboard:'Открыть дашборд', territory:'Выбранная агломерация / территория', indicator:'Ключевые показатели', dynamics:'Основная динамика и пространственные различия', conclusion:'Управленческий вывод', attachment:'Презентация или тезисы (необязательно)',
     seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.',
@@ -48,12 +48,12 @@ const UI = {
     pagesLimitation:'GitHub Pages публикует статическое приложение. Оценивание выполняется в браузере, а журнал хранится в Firebase; для официального экзамена потребуется отдельный серверный контур.',
     practiceAuto:'Предварительный автоматический балл', manualReview:'подлежит проверке преподавателем', fileCloudOnly:'Файл можно загрузить только при активной облачной синхронизации.', chooseFile:'Выберите файл', successful:'выполнено', failed:'не выполнено',
     externalResource:'Внешний ресурс', openNewTab:'Открыть в новой вкладке', back:'Назад к курсу', noProfile:'Профиль не создан', refresh:'Обновить',
-    adminQuizInstruction:'На проектор можно вывести эту же страницу в отдельном окне; персональные ответы студентов не показываются до раскрытия.',
+    adminQuizInstruction:'На проектор можно вывести общую доску в отдельном окне. В режиме прохождения преподаватель отвечает вместе со студентами выбранной группы.', quizBoardMode:'Общая доска', takeQuizMode:'Пройти квиз', teacherQuizGroup:'Группа прохождения',
   },
   en: {
     dashboardTitle:'Course and learning pathway', currentGroup:'Current group', materialsTitle:'Course materials', seminarAssignment:'Practical assignment', download:'Download', noResults:'No results yet', dashboardLead:'Eight lectures, eight seminars, interactive assignments and a unified electronic gradebook.',
     signInToContinue:'Sign in with your student ID so that results can be linked to your gradebook.', login:'Sign in', profileReady:'Profile connected',
-    lectureWord:'Lecture', seminarWord:'Seminar', openActivity:'Open', pointsOf:'points out of', completedCount:'completed',
+    lectureWord:'Lecture', seminarWord:'Seminar', quizWord:'Quiz', independentWork:'Independent work', openActivity:'Open', pointsOf:'points out of', completedCount:'completed', perfectResult:'Maximum result', platinumTopic:'Every activity in this section is completed with the maximum result',
     currentScore:'Current score', learningPath:'Learning pathway', bestResult:'Best result', notPassed:'not completed',
     continuous:'Continuous assessment', examination:'Examination', total:'Total', activity:'Activity', result:'Result', max:'Maximum', status:'Status',
     materials:'Course materials', syllabus:'Course syllabus', examQuestions:'Examination questions', seminar3:'Seminar 3 assignment', seminar5Variants:'Citizens’ petition cases', seminar5Template:'Response template',
@@ -62,7 +62,7 @@ const UI = {
     save:'Save', submit:'Submit', cancel:'Cancel', cloud:'Cloud synchronization', local:'Local storage',
     lectureMaterials:'Lecture materials', videoLecture:'Video lecture', presentation:'Presentation', lectureTest:'Lecture test', startTest:'Start test', noLectureTest:'No separate test is assigned to this lecture.',
     reflectionTitle:'Professional reflection', reflectionLead:'Complete the career-guidance test and record your result and conclusions.', careerResult:'Profile / career direction obtained', reflection:'Brief conclusion: which public-administration roles suit you and why?', externalTest:'Open career-guidance test',
-    seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Judicial.', seminar1ClassroomTitle:'Classroom quiz · 50 questions', seminar1ClassroomLead:'All 50 public bodies from the original classroom quiz. This result is not recorded in the gradebook.', launchQuiz:'Start quiz', seminar1AssessmentTitle:'Independent work · 5 questions', seminar1AssessmentLead:'Five tasks from the original assessment. The final mark ranges from 0 to 5 points.', launchAssessment:'Start assessment', joinLive:'Open shared board',
+    seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Other bodies.', seminar1ClassroomTitle:'Quiz · 50 questions', seminar1ClassroomLead:'All 50 public bodies from the original classroom quiz. This result is not recorded in the gradebook.', launchQuiz:'Start quiz', seminar1AssessmentTitle:'Independent work · 5 questions', seminar1AssessmentLead:'Five tasks from the original assessment. The final mark ranges from 0 to 5 points.', launchAssessment:'Start assessment', joinLive:'Open shared board',
     seminar2Lead:'Assemble the map of Russia from 89 federal subjects. Choose a difficulty; your best result is saved to the gradebook.', openPuzzle:'Open Geographic Constructor',
     seminar3Lead:'Explore the settlement system using the interactive dashboard and formulate a management-oriented conclusion.', openDashboard:'Open dashboard', territory:'Selected agglomeration / territory', indicator:'Key indicators', dynamics:'Main dynamics and spatial differences', conclusion:'Management conclusion', attachment:'Presentation or notes (optional)',
     seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.',
@@ -81,12 +81,12 @@ const UI = {
     pagesLimitation:'GitHub Pages publishes a static application. Scoring runs in the browser and the gradebook is stored in Firebase; an official high-stakes examination would require a separate server-side layer.',
     practiceAuto:'Preliminary automated mark', manualReview:'subject to instructor review', fileCloudOnly:'File upload requires active cloud synchronization.', chooseFile:'Choose a file', successful:'completed', failed:'not completed',
     externalResource:'External resource', openNewTab:'Open in new tab', back:'Back to course', noProfile:'No profile created', refresh:'Refresh',
-    adminQuizInstruction:'This page may be shown on the projector in a separate window; personal responses remain hidden until reveal.',
+    adminQuizInstruction:'The shared board may be shown on the projector in a separate window. In play mode, the instructor answers together with the selected group.', quizBoardMode:'Shared board', takeQuizMode:'Take the quiz', teacherQuizGroup:'Quiz group',
   },
   zh: {
     dashboardTitle:'课程与学习路径', currentGroup:'当前班级', materialsTitle:'课程资料', seminarAssignment:'实践任务', download:'下载', noResults:'暂无成绩', dashboardLead:'八次讲座、八次研讨课、互动任务和统一电子成绩册。',
     signInToContinue:'请使用学生证号登录，以便将学习成果写入成绩册。', login:'登录', profileReady:'个人资料已连接',
-    lectureWord:'讲座', seminarWord:'研讨课', openActivity:'打开', pointsOf:'分（满分', completedCount:'已完成',
+    lectureWord:'讲座', seminarWord:'研讨课', quizWord:'测验', independentWork:'自主作业', openActivity:'打开', pointsOf:'分（满分', completedCount:'已完成', perfectResult:'最高成绩', platinumTopic:'本章节所有活动均以最高成绩完成',
     currentScore:'当前成绩', learningPath:'学习路径', bestResult:'最佳成绩', notPassed:'未完成',
     continuous:'过程性考核', examination:'考试', total:'总分', activity:'学习活动', result:'成绩', max:'满分', status:'状态',
     materials:'课程资料', syllabus:'课程教学大纲', examQuestions:'考试问题', seminar3:'研讨课3任务', seminar5Variants:'公民来信案例', seminar5Template:'答复模板',
@@ -95,7 +95,7 @@ const UI = {
     save:'保存', submit:'提交', cancel:'取消', cloud:'云端同步', local:'本地保存',
     lectureMaterials:'讲座资料', videoLecture:'视频讲座', presentation:'演示文稿', lectureTest:'讲座测验', startTest:'开始测验', noLectureTest:'本讲座不设单独测验。',
     reflectionTitle:'职业反思', reflectionLead:'完成职业指导测试，并记录结果与个人结论。', careerResult:'获得的职业类型 / 方向', reflection:'简要说明：哪些公共管理岗位更适合你，为什么？', externalTest:'打开职业指导测试',
-    seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和司法三类。', seminar1ClassroomTitle:'课堂测验 · 50题', seminar1ClassroomLead:'包含原课堂测验中的全部50个机关，不计入成绩册。', launchQuiz:'开始测验', seminar1AssessmentTitle:'自主作业 · 5题', seminar1AssessmentLead:'包含原考核中的5道题，最终成绩为0至5分。', launchAssessment:'开始作业', joinLive:'打开共享大屏',
+    seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和其他机关三类。', seminar1ClassroomTitle:'测验 · 50题', seminar1ClassroomLead:'包含原课堂测验中的全部50个机关，不计入成绩册。', launchQuiz:'开始测验', seminar1AssessmentTitle:'自主作业 · 5题', seminar1AssessmentLead:'包含原考核中的5道题，最终成绩为0至5分。', launchAssessment:'开始作业', joinLive:'打开共享大屏',
     seminar2Lead:'用89个联邦主体拼合俄罗斯地图。选择难度，最佳成绩将保存到成绩册。', openPuzzle:'打开地理拼图构造器',
     seminar3Lead:'使用互动数据看板研究居民点体系，并提出管理结论。', openDashboard:'打开数据看板', territory:'所选城市群 / 地区', indicator:'关键指标', dynamics:'主要变化与空间差异', conclusion:'管理结论', attachment:'演示文稿或提纲（可选）',
     seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。',
@@ -114,7 +114,7 @@ const UI = {
     pagesLimitation:'GitHub Pages发布静态应用。评分在浏览器中执行，成绩册保存在Firebase中；正式高风险考试仍需独立的服务器端系统。',
     practiceAuto:'自动初评分', manualReview:'需教师复核', fileCloudOnly:'仅在云端同步可用时才能上传文件。', chooseFile:'选择文件', successful:'已完成', failed:'未完成',
     externalResource:'外部资源', openNewTab:'在新标签页打开', back:'返回课程', noProfile:'尚未创建个人资料', refresh:'刷新',
-    adminQuizInstruction:'可在投影仪上另开此页面；揭晓答案前不会显示学生个人答案。',
+    adminQuizInstruction:'可在投影仪上另开共享大屏。在答题模式中，教师与所选班级的学生一起作答。', quizBoardMode:'共享大屏', takeQuizMode:'参加测验', teacherQuizGroup:'答题班级',
   }
 };
 
@@ -236,7 +236,7 @@ function contentPage(title,lead,body,actions=''){
 }
 function activityHeader(item,kind,preview){
   const grade=backend.localGrades()[item.slug];
-  return `<div class="activity-header">${preview?`<img src="${esc(preview)}" alt="">`:''}<div><span class="badge">${esc(kind)}</span><h1>${esc(loc(item,'title',item.title))}</h1><div class="activity-meta"><span class="badge success">${esc(String(item.points))}/5</span><span class="badge dark">${grade?`${number(grade.points)}/5`:`${ui('notPassed')}`}</span></div></div></div>`;
+  return `<div class="activity-header">${preview?`<img src="${esc(preview)}" alt="">`:''}<div><span class="badge">${esc(kind)}</span><h1>${esc(loc(item,'title',item.title))}</h1><div class="activity-meta"><span class="badge success">${ui('max')}: ${esc(String(item.points))}</span><span class="badge dark">${ui('result')}: ${grade?`${number(grade.points)}/5`:`${ui('notPassed')}`}</span></div></div></div>`;
 }
 function externalCard(title,description,url,button=ui('openNewTab')){
   return `<div class="panel external-card"><div><span class="badge">${ui('externalResource')}</span><h2>${esc(title)}</h2><p class="muted">${esc(description||'')}</p></div><a class="btn btn-primary" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(button)} ↗</a></div>`;
@@ -251,7 +251,7 @@ async function render(){
     else if(r.name==='gradebook') await renderGradebook();
     else if(r.name==='materials') renderMaterials();
     else if(r.name==='profile') renderProfile();
-    else if(r.name==='live') await renderLive();
+    else if(r.name==='live'){location.hash='activity/seminar-1-classroom';return}
     else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='admin') await renderAdmin();
     else if(r.name==='activity') await renderActivity(r.parts[0]);
@@ -261,18 +261,36 @@ async function render(){
   scheduleAccessRefresh();
 }
 
+function bestCourseQuizAttempt(attempts=[]){
+  return attempts.filter(item=>item.activitySlug==='seminar-1-classroom').reduce((best,item)=>!best||number(item.points)>number(best.points)?item:best,null);
+}
+function isPerfectResult(result,max){return Boolean(result)&&number(result.points)>=Number(max)}
+function courseResult(result,max){
+  const perfect=isPerfectResult(result,max);const value=result?`${number(result.points)}/${max}`:`—/${max}`;
+  return `${esc(value)}${perfect?` <span class="achievement-star" role="img" aria-label="${esc(ui('perfectResult'))}" title="${esc(ui('perfectResult'))}">★</span>`:''}`;
+}
 async function renderDashboard(){
-  const grades=await backend.getGrades();
+  const profile=backend.getProfile();
+  const [grades,attempts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts()]):[{},[]];
+  const classroomBest=bestCourseQuizAttempt(attempts);
   const total=Object.values(grades).reduce((sum,g)=>sum+number(g.points),0);
   const coursework=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).reduce((sum,slug)=>sum+number(grades[slug]?.points),0);
   const completed=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).filter(slug=>number(grades[slug]?.points)>0).length;
-  const profile=backend.getProfile();
   const access=accessSnapshot();
   const topics=data.course.topics.map(topic=>{
     const lecture=topic.lecture,seminar=topic.seminar;const gate=topicGate(topic.number,access.overrides,access.now);const allowed=accessAllowed(gate);
-    const lg=grades[lecture.slug],sg=grades[seminar.slug];
     const action=(slug)=>allowed?`<a class="btn btn-secondary btn-small" href="#activity/${slug}">${ui('openActivity')}</a>`:`<span class="btn btn-neutral btn-small access-disabled" aria-disabled="true">${accessText('locked')}</span>`;
-    return `<article class="topic-card ${allowed?'':'access-locked'}"><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong><span>${esc(ui('learningPath'))}</span></div><div class="topic-copy"><div class="access-status ${gate.open?'open':'closed'}">${esc(gateStatus(gate))}</div><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair"><div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${ui('lectureWord')}</span><strong>${esc(loc(lecture,'title',lecture.title))}</strong></div><footer><span class="grade">${lg?`${number(lg.points)}/5`:'—/5'}</span>${action(lecture.slug)}</footer></div><div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${ui('seminarWord')}</span><strong>${esc(loc(seminar,'title',seminar.title))}</strong></div><footer><span class="grade">${sg?`${number(sg.points)}/5`:'—/5'}</span>${action(seminar.slug)}</footer></div></div></article>`;
+    const activities=topic.number===1?[
+      {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
+      {kind:ui('quizWord'),title:ui('seminar1ClassroomTitle'),route:'seminar-1-classroom',result:classroomBest,max:50},
+      {kind:ui('independentWork'),title:ui('seminar1AssessmentTitle'),route:'seminar-1-assessment',result:grades[seminar.slug],max:5}
+    ]:[
+      {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
+      {kind:ui('seminarWord'),title:loc(seminar,'title',seminar.title),route:seminar.slug,result:grades[seminar.slug],max:5}
+    ];
+    const perfect=activities.every(item=>isPerfectResult(item.result,item.max));
+    const activityCards=activities.map(item=>`<div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${courseResult(item.result,item.max)}</span>${action(item.route)}</footer></div>`).join('');
+    return `<article class="topic-card ${allowed?'':'access-locked'} ${perfect?'topic-perfect':''}" ${perfect?`aria-label="${esc(ui('platinumTopic'))}"`:''}><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong></div><div class="topic-copy"><div class="access-status ${gate.open?'open':'closed'}">${esc(gateStatus(gate))}</div><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair ${activities.length===3?'activity-trio':''}">${activityCards}</div></article>`;
   }).join('');
   app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</span><span>${accessText('currentWeek')}: ${access.context.week}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${accessText('scheduleLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
   app.querySelector('#heroLogin')?.addEventListener('click',openAuthDialog);
@@ -289,7 +307,7 @@ async function renderGradebook(){
   const profile=backend.getProfile();const grades=await backend.getGrades();const attempts=await backend.getAttempts();const items=gradeItems();
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
   const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:'<span class="grade-empty">—</span>'}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
-  const attemptRows=attempts.slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
+  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
   app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
@@ -320,6 +338,8 @@ function renderProfile(){
   app.querySelector('#removeProfile')?.addEventListener('click',()=>{if(confirm(ui('confirmDelete'))){backend.clearLocalProfile();render()}});
 }
 async function renderActivity(slug){
+  if(slug==='seminar-1'){location.hash='activity/seminar-1-classroom';return}
+  if(slug==='seminar-1-classroom'||slug==='seminar-1-assessment'){await startQuiz(slug);return}
   const topic=data.course.topics.find(x=>x.lecture.slug===slug||x.seminar.slug===slug);
   if(!topic){location.hash='dashboard';return}
   const access=accessSnapshot();const gate=topicGate(topic.number,access.overrides,access.now);
@@ -332,7 +352,7 @@ function renderLecture(topic){
   const testAvailable=n<=7;
   const access=accessSnapshot();const testGate=testAvailable?lectureTestGate(n,access.overrides,access.now):null;const testAllowed=testGate&&accessAllowed(testGate);
   const testPanel=testAvailable?(testAllowed?`<div class="panel"><span class="access-status ${testGate.open?'open':'closed'}">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p>${backend.isAdmin()&&!testGate.open?`<p class="notice warning">${accessText('teacherPreview')}</p>`:''}<button class="btn btn-primary" id="launchLectureTest">${ui('startTest')}</button></div>`:`<div class="panel access-locked"><span class="access-status closed">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p><button class="btn btn-neutral" type="button" disabled>${accessText('locked')}</button></div>`):`<div class="panel"><h2>${ui('reflectionTitle')}</h2><p class="muted">${ui('reflectionLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.career_guidance)}" target="_blank" rel="noopener">${ui('externalTest')} ↗</a></div><form id="reflectionForm" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('careerResult')}</span><input name="result" required></label><label class="full"><span>${ui('reflection')}</span><textarea name="reflection" required minlength="120"></textarea></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`;
-  app.innerHTML=`<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(lecture,`${ui('lectureWord')} ${n}`,lecture.preview)}<div class="panel"><div class="tabs" role="tablist"><button class="tab active" data-video-platform="youtube">YouTube</button><button class="tab" data-video-platform="vk">VK Видео</button><button class="tab" data-video-platform="presentation">${ui('presentation')}</button></div><div id="lectureContent"><iframe class="video-frame" src="${esc(lecture.youtube_embed)}" title="${esc(loc(lecture,'title',lecture.title))}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div><div class="page-actions" style="margin-top:14px"><a class="btn btn-neutral btn-small" href="${esc(lecture.youtube_link)}" target="_blank">YouTube ↗</a><a class="btn btn-neutral btn-small" href="${esc(lecture.vk_link)}" target="_blank">VK ↗</a><a class="btn btn-secondary btn-small" href="${esc(currentPresentation)}" target="_blank">PDF</a><a class="btn btn-neutral btn-small" href="${esc(lecture.presentation_pptx)}">PPTX</a></div></div>${testPanel}</section>`;
+  app.innerHTML=`<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(lecture,`${ui('lectureWord')} ${n}`,lecture.preview)}<div class="panel"><div class="tabs" role="tablist"><button class="tab active" data-video-platform="vk">VK Видео</button><button class="tab" data-video-platform="youtube">YouTube</button><button class="tab" data-video-platform="presentation">${ui('presentation')}</button></div><div id="lectureContent"><iframe class="video-frame" src="${esc(lecture.vk_embed)}" title="${esc(loc(lecture,'title',lecture.title))}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div><div class="page-actions" style="margin-top:14px"><a class="btn btn-neutral btn-small" href="${esc(lecture.vk_link)}" target="_blank">VK ↗</a><a class="btn btn-neutral btn-small" href="${esc(lecture.youtube_link)}" target="_blank">YouTube ↗</a><a class="btn btn-secondary btn-small" href="${esc(currentPresentation)}" target="_blank">PDF</a><a class="btn btn-neutral btn-small" href="${esc(lecture.presentation_pptx)}">PPTX</a></div></div>${testPanel}</section>`;
   app.querySelectorAll('[data-video-platform]').forEach(btn=>btn.addEventListener('click',()=>{
     app.querySelectorAll('[data-video-platform]').forEach(x=>x.classList.toggle('active',x===btn));
     const kind=btn.dataset.videoPlatform;const container=app.querySelector('#lectureContent');
@@ -351,7 +371,6 @@ function renderLecture(topic){
 
 async function renderSeminar(topic){
   const seminar=topic.seminar,n=topic.number;
-  if(n===1) return renderSeminar1(topic);
   if(n===2) return renderPuzzleRoute(true);
   if(n===3) return renderSeminar3(topic);
   if(n===4) return renderSeminar4(topic);
@@ -361,11 +380,6 @@ async function renderSeminar(topic){
   if(n===8) return renderSeminar8(topic);
 }
 function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
-function renderSeminar1(topic){
-  app.innerHTML=seminarShell(topic,`<div class="seminar1-actions-grid"><div class="panel"><h2>${ui('seminar1ClassroomTitle')}</h2><p class="muted">${ui('seminar1ClassroomLead')}</p><p class="muted">${ui('seminar1Lead')}</p><button class="btn btn-primary" id="seminar1Quiz">${ui('launchQuiz')}</button></div><div class="panel"><h2>${ui('seminar1AssessmentTitle')}</h2><p class="muted">${ui('seminar1AssessmentLead')}</p><button class="btn btn-primary" id="seminar1Assessment">${ui('launchAssessment')}</button></div><div class="panel"><h2>${ui('liveTitle')}</h2><a class="btn btn-secondary" href="#live">${ui('joinLive')}</a></div></div>`);
-  app.querySelector('#seminar1Quiz').onclick=()=>startQuiz('seminar-1-classroom');
-  app.querySelector('#seminar1Assessment').onclick=()=>startQuiz('seminar-1-assessment');
-}
 function renderSeminar4(topic){
   app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('seminar4Lead')}</p><button class="btn btn-primary" id="seminar4Quiz">${ui('launchQuiz')}</button></div>`);
   app.querySelector('#seminar4Quiz').onclick=()=>startQuiz('seminar-4');
@@ -377,17 +391,38 @@ function renderSeminar8(topic){
 async function startQuiz(activitySlug){
   const gate=quizAccessGate(activitySlug);
   if(gate&&!accessAllowed(gate)){lockedAccessPage(activitySlug,gate);return}
-  if(!requireProfile())return;
+  const classroom=activitySlug==='seminar-1-classroom';
+  if(!(classroom&&backend.isAdmin())&&!requireProfile())return;
   app.innerHTML=`<section class="page"><div id="quizMount"></div></section>`;
   const mount=app.querySelector('#quizMount');
   const returnTo=(target)=>{const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
   if(activitySlug==='seminar-1-classroom'){
-    currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>returnTo('activity/seminar-1')});
+    if(backend.isAdmin()){
+      const availableGroups=groupOptions();let selectedGroup=availableGroups.includes(backend.getProfile()?.group)?backend.getProfile().group:availableGroups[0];
+      mount.insertAdjacentHTML('beforebegin',`<div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div><header class="page-head"><div><h1>${ui('seminar1ClassroomTitle')}</h1><p>${ui('adminQuizInstruction')}</p></div></header><div class="admin-quiz-mode" role="group" aria-label="${esc(ui('seminar1ClassroomTitle'))}"><button class="btn btn-primary" type="button" data-admin-quiz-mode="board">${ui('quizBoardMode')}</button><button class="btn btn-neutral" type="button" data-admin-quiz-mode="play">${ui('takeQuizMode')}</button><span class="badge" id="adminQuizGroup">${ui('teacherQuizGroup')}: ${esc(selectedGroup)}</span></div>`);
+      const controls=app.querySelector('.admin-quiz-mode');let activeCleanup=()=>{};let disposed=false;
+      const setMode=(mode)=>controls.querySelectorAll('[data-admin-quiz-mode]').forEach(button=>{const active=button.dataset.adminQuizMode===mode;button.classList.toggle('btn-primary',active);button.classList.toggle('btn-neutral',!active);button.setAttribute('aria-pressed',String(active))});
+      const updateGroup=()=>{controls.querySelector('#adminQuizGroup').textContent=`${ui('teacherQuizGroup')}: ${selectedGroup}`};
+      const showBoard=()=>{
+        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('board');updateGroup();
+        activeCleanup=mountAutomaticBoard(mount,{initialGroup:selectedGroup,onGroupChange:group=>{selectedGroup=group;updateGroup()}});
+      };
+      const showQuiz=async()=>{
+        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('play');updateGroup();
+        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,onExit:showBoard});
+      };
+      controls.querySelector('[data-admin-quiz-mode="board"]').onclick=showBoard;
+      controls.querySelector('[data-admin-quiz-mode="play"]').onclick=()=>showQuiz().catch(error=>toast(String(error.message||error),'error'));
+      currentCleanup=()=>{disposed=true;try{activeCleanup()}catch{}};
+      showBoard();
+      return;
+    }
+    currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>returnTo('dashboard')});
     return;
   }
   const assessment=activitySlug==='seminar-1-assessment';
   const session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
-  renderQuiz(mount,session,{onExit:()=>returnTo(assessment?'activity/seminar-1':`activity/${activitySlug}`)});
+  renderQuiz(mount,session,{onExit:()=>returnTo(assessment?'dashboard':`activity/${activitySlug}`)});
 }
 function renderSeminar3(topic){
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openDashboard'),ui('seminar3Lead'),data.course.external_apps.settlement_dashboard,ui('openDashboard'))}<div class="panel"><h2>${ui('seminarAssignment')}</h2><form id="settlementForm" class="form-grid"><label><span>${ui('territory')}</span><input name="territory" required></label><label><span>${ui('indicator')}</span><input name="indicators" required></label><label class="full"><span>${ui('dynamics')}</span><textarea name="dynamics" required minlength="180"></textarea></label><label class="full"><span>${ui('conclusion')}</span><textarea name="conclusion" required minlength="180"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
@@ -472,18 +507,6 @@ async function renderPuzzleRoute(asSeminar=false){
   currentCleanup=await mountPuzzlePage({context,base:'assets/puzzle/data',legacyBase:'data'});
 }
 
-async function renderLive(){
-  const access=accessSnapshot(),gate=topicGate(1,access.overrides,access.now);
-  if(!accessAllowed(gate)){lockedAccessPage(ui('liveTitle'),gate);return}
-  const profile=backend.getProfile();
-  app.innerHTML=contentPage(ui('liveTitle'),ui('liveLead'),`<div id="automaticBoard"></div>`);
-  if(backend.isAdmin()){
-    currentCleanup=mountAutomaticBoard(app.querySelector('#automaticBoard'),{initialGroup:profile?.group});
-    return;
-  }
-  if(!profile){requireProfile();return}
-  currentCleanup=await mountAdaptiveSeminar1(app.querySelector('#automaticBoard'),{onExit:()=>{location.hash='dashboard'}});
-}
 async function renderAdmin(){
   if(!backend.isAdmin()){
     app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="panel admin-login"><div class="notice warning">${ui('firebaseRequired')}</div><form id="adminLogin" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('email')}</span><input name="email" type="email" value="${esc(CONFIG.adminEmails[0])}" required></label><label class="full"><span>${ui('password')}</span><input name="password" type="password" required></label><div class="full"><button class="btn btn-primary btn-wide">${ui('teacherLogin')}</button></div></form></div>`);
@@ -500,7 +523,7 @@ async function renderAdmin(){
     return `<div class="access-admin-row"><div class="access-admin-copy"><strong>${esc(title)}</strong><small>${esc(automatic)}</small><span class="access-status ${item.gate.open?'open':'closed'}">${esc(gateStatus(item.gate))}</span></div><div class="access-mode" role="group" aria-label="${esc(title)}"><button type="button" class="${item.gate.override==='auto'?'active auto':''}" data-access-key="${esc(item.gate.key)}" data-access-state="auto">${accessText('automatic')}</button><button type="button" class="${item.gate.override==='open'?'active open':''}" data-access-key="${esc(item.gate.key)}" data-access-state="open">${accessText('forceOpen')}</button><button type="button" class="${item.gate.override==='closed'?'active closed':''}" data-access-key="${esc(item.gate.key)}" data-access-state="closed">${accessText('forceClosed')}</button></div></div>`;
   }).join('');
   const items=gradeItems();const profiles=Object.values(all.profiles||{});const rows=profiles.map(p=>{const grades=all.grades?.[p.studentKey]||{};const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);return`<tr data-student-row data-search="${esc(`${p.fullName||''} ${p.ticket} ${p.email} ${p.group}`.toLowerCase())}"><td><strong>${esc(p.fullName||p.ticket)}</strong><br><small>${esc(p.ticket)} · ${esc(p.email||'')}</small></td><td>${esc(p.group)}</td><td><strong>${total}/100</strong></td><td>${items.filter(item=>number(grades[item.slug]?.points)>0).length}/17</td><td><button class="btn btn-secondary btn-small" data-edit-student="${esc(p.studentKey)}">${ui('editGrades')}</button></td></tr>`}).join('');
-  app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="admin-toolbar"><div class="page-actions"><a class="btn btn-primary" href="#live">${ui('createSession')}</a><button class="btn btn-secondary" id="exportAll">${ui('exportAll')}</button></div><button class="btn btn-neutral" id="adminLogout">${ui('teacherLogout')}</button></div><section class="panel access-admin"><div class="access-admin-header"><div><h2>${accessText('scheduleTitle')}</h2><p>${accessText('scheduleLead')}</p></div><div class="access-admin-meta"><strong>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</strong><span>${accessText('currentWeek')}: ${access.context.week}</span></div></div><div class="access-admin-list">${accessRows}</div></section><div class="panel"><h2>${ui('students')} · ${profiles.length}</h2><input id="studentFilter" placeholder="${esc(ui('filter'))}"><div class="table-wrap" style="margin-top:12px"><table class="data-table"><thead><tr><th>${ui('fullName')} / ${ui('identifier')}</th><th>${ui('group')}</th><th>${ui('totalScore')}</th><th>${ui('completedCount')}</th><th>${ui('actions')}</th></tr></thead><tbody>${rows||`<tr><td colspan="5">${ui('noStudents')}</td></tr>`}</tbody></table></div></div>`);
+  app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="admin-toolbar"><div class="page-actions"><button class="btn btn-secondary" id="exportAll">${ui('exportAll')}</button></div><button class="btn btn-neutral" id="adminLogout">${ui('teacherLogout')}</button></div><section class="panel access-admin"><div class="access-admin-header"><div><h2>${accessText('scheduleTitle')}</h2><p>${accessText('scheduleLead')}</p></div><div class="access-admin-meta"><strong>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</strong><span>${accessText('currentWeek')}: ${access.context.week}</span></div></div><div class="access-admin-list">${accessRows}</div></section><div class="panel"><h2>${ui('students')} · ${profiles.length}</h2><input id="studentFilter" placeholder="${esc(ui('filter'))}"><div class="table-wrap" style="margin-top:12px"><table class="data-table"><thead><tr><th>${ui('fullName')} / ${ui('identifier')}</th><th>${ui('group')}</th><th>${ui('totalScore')}</th><th>${ui('completedCount')}</th><th>${ui('actions')}</th></tr></thead><tbody>${rows||`<tr><td colspan="5">${ui('noStudents')}</td></tr>`}</tbody></table></div></div>`);
   app.querySelector('#adminLogout').onclick=async()=>{await backend.adminSignOut();render()};
   app.querySelector('#studentFilter').oninput=event=>{const query=event.target.value.toLowerCase();app.querySelectorAll('[data-student-row]').forEach(row=>row.hidden=!row.dataset.search.includes(query))};
   app.querySelectorAll('[data-edit-student]').forEach(button=>button.onclick=()=>renderStudentGrades(button.dataset.editStudent,all));

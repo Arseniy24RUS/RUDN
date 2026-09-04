@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.17';
-import {backend} from './backend.js?v=1.1.17';
+import {getLocale,localized,t} from './i18n.js?v=1.1.18';
+import {backend} from './backend.js?v=1.1.18';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -16,8 +16,8 @@ const SEMINAR1_ASSESSMENT_IDS=[
 const MATRIX_COPY={
   ru:{
     federal:'Федеральный уровень',regional:'Региональный уровень',municipal:'Муниципальный уровень',
-    federal_legislative:'Законо­дательная',federal_executive:'Исполни­тельная',federal_judicial:'Судебная',
-    regional_legislative:'Законо­дательная',regional_executive:'Исполни­тельная',regional_judicial:'Судебная',
+    federal_legislative:'Законодательная',federal_executive:'Исполнительная',federal_judicial:'Судебная',
+    regional_legislative:'Законодательная',regional_executive:'Исполнительная',regional_judicial:'Судебная',
     municipal_representative:'Представительная',municipal_administration:'Исполнительная',municipal_other:'Иные органы'
   },
   en:{
@@ -80,17 +80,17 @@ export function reviewNoteText(q){return localized(q,'review_note',q.review_note
 export function categoryText(q){return localized(q,'category',q.category||'')}
 
 export function buildQuiz(questions,activitySlug,profile,options={}){
-  let pool=[];let title='';let pointsMax=5;let recordAttempt=true;
+  let pool=[];let title='';let pointsMax=5;let recordAttempt=true;let recordGrade=true;let resultActivitySlug=activitySlug;
   const byCategory=(name)=>questions.filter(q=>q.category===name);
   if(/^lecture-[1-7]$/.test(activitySlug)){
     const n=Number(activitySlug.split('-')[1]);pool=byCategory(`Тест по лекции ${n}`);title=`${t('test')} · ${t('lecture')} ${n}`;
-  }else if(activitySlug==='seminar-1'){
+  }else if(activitySlug==='seminar-1'||activitySlug==='seminar-1-classroom'){
     const all=byCategory('Семинар 1. Ветви и уровни власти');
     const byId=new Map(all.map(q=>[q.id,q]));const assessment=options.mode==='assessment';
     if(Array.isArray(options.questionIds)&&options.questionIds.length)pool=options.questionIds.map(id=>byId.get(id)).filter(Boolean);
     else if(assessment)pool=SEMINAR1_ASSESSMENT_IDS.map(id=>byId.get(id)).filter(Boolean);
     else pool=[...all];
-    pointsMax=assessment?5:pool.length;recordAttempt=assessment;
+    pointsMax=assessment?5:pool.length;recordAttempt=true;recordGrade=assessment;resultActivitySlug=assessment?'seminar-1':'seminar-1-classroom';
     title=assessment
       ?getLocale()==='en'?'Independent work · Branches and Levels of Public Authority':getLocale()==='zh'?'自主作业 · 公共权力分支与层级':'Самостоятельная работа · Ветви и уровни власти'
       :getLocale()==='en'?'Classroom quiz · Branches and Levels of Public Authority':getLocale()==='zh'?'课堂测验 · 公共权力分支与层级':'Аудиторный квиз · Ветви и уровни власти';
@@ -101,7 +101,7 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
   }else if(activitySlug==='exam'){
     pool=byCategory('Итоговый тест по дисциплине');title=getLocale()==='en'?'Examination test':getLocale()==='zh'?'考试测验':'Экзаменационный тест';pointsMax=20;
   }
-  return {id:uuid(),activitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt,buildOptions:{...options}};
+  return {id:uuid(),activitySlug:resultActivitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt,recordGrade,buildOptions:{...options}};
 }
 
 export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
@@ -158,7 +158,7 @@ export function renderQuiz(container,session,options={}){
   const body=q.type==='matrix_single'?renderMatrix(q,session,matrixOptions):q.type==='shortanswer'?renderShort(q,session):renderMultichoice(q,session);
   const heading=q.type==='matrix_single'?renderInstitutionHeading(q):`<h2>${escapeHtml(questionText(q))}</h2>`;
   const statusText=typeof options.statusText==='function'?options.statusText({question:q,index:session.index,session}):options.statusText;
-  const questionNavigatorHtml=session.activitySlug==='seminar-1'&&session.recordAttempt===false?renderQuestionNavigator(session):'';
+  const questionNavigatorHtml=session.activitySlug==='seminar-1-classroom'?renderQuestionNavigator(session):'';
   container.innerHTML=`<div class="quiz-shell"><div class="quiz-progress"><span>${t('quizQuestion')} ${session.index+1}/${session.questions.length}</span><div class="track"><span style="width:${progress}%"></span></div>${statusText?`<span class="quiz-live-status">${escapeHtml(statusText)}</span>`:''}</div><article class="quiz-question">${questionNavigatorHtml}<div class="question-kicker">${escapeHtml(categoryText(q))}</div>${heading}${renderQuestionMedia(q,{showSymbol:q.type!=='matrix_single'})}${body}<div class="quiz-actions"><button class="btn btn-neutral" id="quizPrev" ${session.index===0?'disabled':''}>← ${t('previous')}</button><button class="btn btn-primary" id="quizNext">${session.index===session.questions.length-1?t('finish'):t('next')} →</button></div></article></div>`;
   Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(console.warn);
   const choose=(value)=>{
@@ -213,7 +213,7 @@ function renderReviewItem(result,index){
 export async function finishQuiz(container,session,options={}){
   const {onExit,onFinish}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
   const raw=results.reduce((s,r)=>s+r.fraction,0);const ratio=results.length?raw/results.length:0;const points=Math.round(ratio*session.pointsMax*100)/100;
-  const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points,maxPoints:session.pointsMax,ratio,answers:session.answers,questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt};
+  const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points,maxPoints:session.pointsMax,ratio,recordGrade:session.recordGrade!==false,answers:session.answers,questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt};
   if(session.recordAttempt!==false){
     await backend.saveAttempt(attempt);
   }

@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.17';
-import {backend,groupOptions} from './backend.js?v=1.1.17';
+import {CONFIG} from './config.js?v=1.1.18';
+import {backend,groupOptions} from './backend.js?v=1.1.18';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -11,8 +11,8 @@ import {
   renderQuestionMedia,
   renderQuiz,
   reviewNoteText
-} from './quiz.js?v=1.1.17';
-import {getLocale} from './i18n.js?v=1.1.17';
+} from './quiz.js?v=1.1.18';
+import {getLocale} from './i18n.js?v=1.1.18';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -24,21 +24,21 @@ const COPY={
     waiting:'Ожидаем ответы студентов…',answered:'Ответили на этот вопрос',
     revealed:'Результаты открыты автоматически',accuracy:'Точность группы',commonError:'Частая ошибка',
     cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase.',
-    question:'Вопрос',questionList:'Список вопросов'
+    question:'Вопрос',questionList:'Список вопросов',autoGroup:'определяется автоматически'
   },
   en:{
     group:'Study group',online:'Currently in the quiz',participants:'participants',unique:'answered at least once',
     waiting:'Waiting for student responses…',answered:'Responses to this question',
     revealed:'Results revealed automatically',accuracy:'Class accuracy',commonError:'Most common misconception',
     cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached.',
-    question:'Question',questionList:'Question list'
+    question:'Question',questionList:'Question list',autoGroup:'detected automatically'
   },
   zh:{
     group:'班级',online:'当前参加测验',participants:'名学生',unique:'至少回答过一次',
     waiting:'正在等待学生作答……',answered:'本题已作答',
     revealed:'结果已自动显示',accuracy:'班级正确率',commonError:'最常见误区',
     cloudRequired:'因无法连接 Firebase，共享大屏暂不可用。',
-    question:'题目',questionList:'题目列表'
+    question:'题目',questionList:'题目列表',autoGroup:'自动识别'
   }
 };
 
@@ -54,7 +54,7 @@ function participantNoun(count){
 }
 function roomQuestionSet(group){
   const roomKey=backend.automaticRoomKey(group);
-  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1',{studentKey:roomKey});
+  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1-classroom',{studentKey:roomKey});
   return {roomKey,session};
 }
 
@@ -78,6 +78,14 @@ function answerCounts(records){
   for(const record of records){const answer=canonicalMatrixValue(record.answer);counts[answer]=(counts[answer]||0)+1;}
   return counts;
 }
+function detectedGroup(presence,fallback=''){
+  const counts={};
+  for(const connections of Object.values(presence||{})){
+    const groups=new Set(Object.values(connections||{}).filter(connection=>connection?.joinedAt!=null).map(connection=>connection.group).filter(Boolean));
+    for(const group of groups)counts[group]=(counts[group]||0)+1;
+  }
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0]||fallback;
+}
 function submittedAt(record){return Number(record?.submittedAt||record?.clientSubmittedAt||0)}
 function latestQuestionIndex(questions,responses,activeIds){
   let best=0;
@@ -99,9 +107,12 @@ export function revealState(records,active,nowValue=Date.now()){
   return records.length>=threshold||Boolean(first&&nowValue-first>=(CONFIG.live?.revealAfterMs||45000));
 }
 
-export async function mountAdaptiveSeminar1(container,{onExit}={}){
+export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGroup,recordAttempt}={}){
   const profile=backend.getProfile();
-  const {roomKey,session}=roomQuestionSet(profile.group);
+  const group=groupOptions().includes(requestedGroup)?requestedGroup:profile?.group;
+  if(!groupOptions().includes(group))throw new Error('Выберите учебную группу');
+  const {roomKey,session}=roomQuestionSet(group);
+  session.recordAttempt=recordAttempt??!backend.isAdmin();
   let leave=()=>{};
   let unsubPresence=()=>{};
   let unsubResponses=()=>{};
@@ -133,7 +144,7 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
     const activeIds=activeParticipantIds(presence);
     renderQuiz(container,session,{
       onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
-      onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index),
+      onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index,group),
       onFinish:()=>{},
       statusText:()=>{const active=Math.max(joined?1:0,activeIds.size);return backend.mode==='cloud'?`${c('online')}: ${active} ${participantNoun(active)}`:c('cloudRequired')},
       matrixOptions:({question})=>{
@@ -152,7 +163,7 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
   };
   if(backend.mode==='cloud'){
     try{
-      ({leave}=await backend.joinAutomaticQuizRoom(profile.group));joined=true;
+      ({leave}=await backend.joinAutomaticQuizRoom(group));joined=true;
       unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;updateLiveState()});
       unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
     }
@@ -172,7 +183,7 @@ function boardInsight({reveal,active,accuracy,wrong,question}){
   return `<div class="board-insight revealed"><strong>${escapeHtml(c('revealed'))}</strong><span>${escapeHtml(c('accuracy'))}: ${accuracy}%</span>${common}${feedback}</div>`;
 }
 
-export function mountAutomaticBoard(container,{initialGroup}={}){
+export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   const availableGroups=groupOptions();
   let group=availableGroups.includes(initialGroup)?initialGroup:availableGroups[0];
   let presence={};
@@ -184,13 +195,10 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
   let unsubResponses=()=>{};
   let disposed=false;
 
-  const groupOptionsHtml=availableGroups
-    .map((value)=>`<option value="${escapeHtml(value)}" ${value===group?'selected':''}>${escapeHtml(value)}</option>`)
-    .join('');
   container.innerHTML=`
     <div class="auto-board-shell">
       <div class="panel auto-board-toolbar">
-        <label><span>${escapeHtml(c('group'))}</span><select id="autoBoardGroup">${groupOptionsHtml}</select></label>
+        <div class="auto-board-stat"><span>${escapeHtml(c('group'))}</span><strong id="autoBoardGroup">${escapeHtml(group)}</strong><small>${escapeHtml(c('autoGroup'))}</small></div>
         <div class="auto-board-stat"><span>${escapeHtml(c('online'))}</span><strong id="autoBoardParticipants">0</strong><small id="autoBoardParticipantLabel">${escapeHtml(participantNoun(0))}</small></div>
         <div class="auto-board-stat"><span>${escapeHtml(c('unique'))}</span><strong id="autoBoardUnique">0</strong></div>
       </div>
@@ -210,6 +218,9 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
     const questions=session.questions;
     const activeIds=activeParticipantIds(presence);
     const active=activeIds.size;
+    const nextGroup=detectedGroup(presence,group);
+    if(availableGroups.includes(nextGroup)&&nextGroup!==group){group=nextGroup;onGroupChange?.(group)}
+    container.querySelector('#autoBoardGroup').textContent=group;
     const unique=new Set();
     for(const question of questions){
       for(const [uid] of Object.entries(responses?.[question.id]||{})){
@@ -268,7 +279,7 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
     unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;render()});
     render();
   }
-  container.querySelector('#autoBoardGroup').onchange=(event)=>{group=event.target.value;subscribe()};
+  onGroupChange?.(group);
   subscribe();
   const timer=setInterval(render,1000);
   return ()=>{disposed=true;cleanupSubscriptions();clearInterval(timer)};

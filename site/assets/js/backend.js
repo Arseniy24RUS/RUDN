@@ -1,8 +1,9 @@
-import {CONFIG} from './config.js?v=1.1.17';
+import {CONFIG} from './config.js?v=1.1.18';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
-const GRADES_KEY='rudn.grades.v1';
+const LEGACY_GRADES_KEY='rudn.grades.v1';
+const GRADES_KEY='rudn.grades.v2';
 const LIVE_KEY='rudn.live.lastCode';
 
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
@@ -47,8 +48,8 @@ async function sha256(value){
   return [...new Uint8Array(bytes)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
 }
 
-export function automaticRoomKey(group,date=new Date()){
-  return `${cleanKey(group)}-${ymd(date)}`;
+export function automaticRoomKey(_group,date=new Date()){
+  return `all-groups-${ymd(date)}`;
 }
 
 class Backend{
@@ -56,6 +57,7 @@ class Backend{
     this.mode='local';this.error=null;this.firebase=null;this.auth=null;this.db=null;this.storage=null;this.user=null;
     this.profile=this.migrateProfile(readLocal(PROFILE_KEY,null));this.listeners=[];
     this.accessOverrides={};this.serverTimeOffset=0;this.accessUnsubscribe=null;this.timeUnsubscribe=null;
+    this.migrateGrades();
   }
   migrateProfile(profile){
     if(!profile)return null;
@@ -69,6 +71,15 @@ class Backend{
       delete migrated.recoveryPin;delete migrated.recoveryHash;
       writeLocal(PROFILE_KEY,migrated);return migrated;
     }catch{return null}
+  }
+  migrateGrades(){
+    if(!this.profile?.studentKey)return;
+    const scoped=readLocal(GRADES_KEY,{});
+    if(Object.keys(scoped).length)return;
+    const legacy=readLocal(LEGACY_GRADES_KEY,null);
+    if(!legacy||typeof legacy!=='object'||Array.isArray(legacy)||!Object.keys(legacy).length)return;
+    scoped[this.profile.studentKey]=legacy;
+    writeLocal(GRADES_KEY,scoped);
   }
   async init(){
     try{
@@ -196,21 +207,31 @@ class Backend{
   }
   clearLocalProfile(){this.profile=null;localStorage.removeItem(PROFILE_KEY);this.emitStatus()}
   localAttempts(){return readLocal(ATTEMPTS_KEY,[])}
-  localGrades(){return readLocal(GRADES_KEY,{})}
+  localGrades(studentKey=this.profile?.studentKey){
+    if(!studentKey)return {};
+    const scoped=readLocal(GRADES_KEY,{});
+    return scoped[studentKey]&&typeof scoped[studentKey]==='object'?scoped[studentKey]:{};
+  }
+  writeLocalGrades(studentKey,grades){
+    if(!studentKey)return;
+    const scoped=readLocal(GRADES_KEY,{});
+    scoped[studentKey]=grades;
+    writeLocal(GRADES_KEY,scoped);
+  }
   async saveAttempt(attempt){
     if(!this.profile)throw new Error('Сначала войдите в профиль');
     const record={...attempt,id:attempt.id||uuid(),studentKey:this.profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
     const attempts=this.localAttempts();attempts.push(record);writeLocal(ATTEMPTS_KEY,attempts.slice(-800));
     if(this.mode==='cloud')await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`),record);
-    if(Number.isFinite(Number(record.points))&&record.activitySlug)await this.updateBestGrade(record.activitySlug,Number(record.points),record);
+    if(record.recordGrade!==false&&Number.isFinite(Number(record.points))&&record.activitySlug)await this.updateBestGrade(record.activitySlug,Number(record.points),record);
     window.dispatchEvent(new CustomEvent('rudn:gradechange',{detail:{activitySlug:record.activitySlug}}));return record;
   }
   async updateBestGrade(activitySlug,points,source={}){
     const max=CONFIG.activityMax[activitySlug]??5;const bounded=Math.max(0,Math.min(max,Number(points)||0));
     const sourceAttemptId=source.sourceAttemptId||source.id||source.attemptId||null;
-    const grades=this.localGrades();const prior=grades[activitySlug];
+    const studentKey=this.profile?.studentKey;const grades=this.localGrades(studentKey);const prior=grades[activitySlug];
     if(!prior||bounded>Number(prior.points||0))grades[activitySlug]={points:bounded,max,updatedAt:now(),sourceAttemptId};
-    writeLocal(GRADES_KEY,grades);
+    this.writeLocalGrades(studentKey,grades);
     if(this.mode==='cloud'&&this.profile){
       const ref=this.db.ref(this.database,`${CONFIG.rootPath}/grades/${this.profile.studentKey}/${activitySlug}`);
       const candidate={points:bounded,max,updatedAt:now(),sourceAttemptId,ownerUid:this.user.uid};
@@ -231,8 +252,8 @@ class Backend{
     return items.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
   }
   async getGrades(studentKey=this.profile?.studentKey){
-    let grades=this.localGrades();
-    if(this.mode==='cloud'&&studentKey){try{const snap=await this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}`));grades={...grades,...(snap.val()||{})}}catch(e){console.warn(e)}}
+    let grades=this.localGrades(studentKey);
+    if(this.mode==='cloud'&&studentKey){try{const snap=await this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}`));grades={...grades,...(snap.val()||{})};this.writeLocalGrades(studentKey,grades)}catch(e){console.warn(e)}}
     return grades;
   }
   async uploadFile(activitySlug,file){
@@ -267,7 +288,7 @@ class Backend{
       for(const attempt of this.localAttempts().filter(x=>x.studentKey===this.profile.studentKey)){
         const record={...attempt,ownerUid:this.user.uid};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`);const snap=await this.db.get(ref);if(!snap.exists())await this.db.set(ref,record);
       }
-      for(const [slug,grade] of Object.entries(this.localGrades()))await this.updateBestGrade(slug,grade.points,grade);
+      for(const [slug,grade] of Object.entries(this.localGrades(this.profile.studentKey)))await this.updateBestGrade(slug,grade.points,grade);
     }catch(error){console.warn('Cloud synchronization failed',error)}
   }
   async adminAll(){
@@ -315,8 +336,8 @@ class Backend{
 
   automaticRoomKey(group,date=new Date()){return automaticRoomKey(group,date)}
   async joinAutomaticQuizRoom(group){
-    if(this.mode!=='cloud'||!this.profile||!this.user)throw new Error('Облачная синхронизация недоступна');
-    const roomKey=automaticRoomKey(group);const participantUid=this.user.uid;const connectionId=uuid();
+    if(this.mode!=='cloud'||!this.user)throw new Error('Облачная синхронизация недоступна');
+    const participantGroup=normalizeGroup(group);const roomKey=automaticRoomKey(participantGroup);const participantUid=this.user.uid;const connectionId=uuid();
     const presenceRef=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/presence/${participantUid}/${connectionId}`);
     const connectedRef=this.db.ref(this.database,'.info/connected');let disconnectHandle=null;
     const stop=this.db.onValue(connectedRef,async snap=>{
@@ -324,7 +345,7 @@ class Backend{
       try{
         disconnectHandle=this.db.onDisconnect(presenceRef);
         await disconnectHandle.remove();
-        await this.db.set(presenceRef,{participantUid,group,joinedAt:this.db.serverTimestamp(),clientJoinedAt:Date.now()});
+        await this.db.set(presenceRef,{participantUid,group:participantGroup,joinedAt:this.db.serverTimestamp(),clientJoinedAt:Date.now()});
       }catch(error){console.warn('Presence connection failed',error)}
     });
     const leave=async()=>{try{stop()}catch{};try{await disconnectHandle?.cancel()}catch{};try{await this.db.remove(presenceRef)}catch{}};
@@ -338,11 +359,12 @@ class Backend{
     if(this.mode!=='cloud')return()=>{};
     const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses`);return this.db.onValue(ref,snap=>callback(snap.val()||{}));
   }
-  async submitAutomaticQuizResponse(roomKey,questionId,answer,questionIndex){
-    if(this.mode!=='cloud'||!this.profile||!this.user)return false;
+  async submitAutomaticQuizResponse(roomKey,questionId,answer,questionIndex,group=this.profile?.group){
+    if(this.mode!=='cloud'||!this.user)return false;
+    const participantGroup=normalizeGroup(group);
     const participantUid=this.user.uid;
     await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses/${questionId}/${participantUid}`),{
-      participantUid,questionId,questionIndex:Number(questionIndex)||0,answer,group:this.profile.group,
+      participantUid,questionId,questionIndex:Number(questionIndex)||0,answer,group:participantGroup,
       submittedAt:this.db.serverTimestamp(),clientSubmittedAt:Date.now()
     });
     return true;
