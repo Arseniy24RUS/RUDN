@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.15';
-import {backend} from './backend.js?v=1.1.15';
+import {getLocale,localized,t} from './i18n.js?v=1.1.16';
+import {backend} from './backend.js?v=1.1.16';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -123,9 +123,10 @@ export function renderMatrixButtons(q,selected='',options={}){
   return `<div class="matrix-option-grid" role="radiogroup" aria-label="${escapeHtml(t('selectAnswer'))}">${matrixChoices().map(choice=>{
     const count=Number(normalizedCounts[choice.value]||0);const percent=total?Math.round(count/total*100):0;
     const state=[selectedValueCanonical===choice.value?'selected':'',showDistribution?'live-distribution':'',reveal&&choice.value===correct?'correct':'',reveal&&count&&choice.value!==correct?'has-wrong':''].filter(Boolean).join(' ');
+    const authorityIcon=['legislative','representative'].includes(choice.column)?'legislative':['executive','administration'].includes(choice.column)?'executive':'judicial';
     const fullLabel=`${choice.level}: ${choice.authority}`;
     const accessibleLabel=showDistribution?`${fullLabel} · ${percent}%`:fullLabel;
-    return `<button type="button" class="matrix-option ${state}" style="--answer-share:${percent}%" data-level="${choice.row}" data-matrix="${choice.value}" aria-label="${escapeHtml(accessibleLabel)}" title="${escapeHtml(fullLabel)}" aria-pressed="${selectedValueCanonical===choice.value}" aria-keyshortcuts="${choice.index}" ${options.disabled?'disabled':''}><span class="matrix-option-level">${escapeHtml(choice.level)}</span><strong>${escapeHtml(choice.authority)}</strong>${reveal||(showDistribution&&count>0)?`<span class="matrix-option-result"><b>${count}</b><small>${percent}%</small></span>`:''}</button>`;
+    return `<button type="button" class="matrix-option ${state}" style="--answer-share:${percent}%" data-level="${choice.row}" data-authority="${authorityIcon}" data-matrix="${choice.value}" aria-label="${escapeHtml(accessibleLabel)}" title="${escapeHtml(fullLabel)}" aria-pressed="${selectedValueCanonical===choice.value}" aria-keyshortcuts="${choice.index}" ${options.disabled?'disabled':''}><span class="matrix-option-symbol" aria-hidden="true"></span><span class="matrix-option-level">${escapeHtml(choice.level)}</span><strong>${escapeHtml(choice.authority)}</strong>${reveal||(showDistribution&&count>0)?`<span class="matrix-option-result"><b>${count}</b><small>${percent}%</small></span>`:''}</button>`;
   }).join('')}</div>`;
 }
 function renderMatrix(q,session,options={}){return renderMatrixButtons(q,selectedValue(session,q),options)}
@@ -149,7 +150,20 @@ export function renderQuiz(container,session,options={}){
   const questionNavigatorHtml=session.activitySlug==='seminar-1'&&session.recordAttempt===false?renderQuestionNavigator(session):'';
   container.innerHTML=`<div class="quiz-shell"><div class="quiz-progress"><span>${t('quizQuestion')} ${session.index+1}/${session.questions.length}</span><div class="track"><span style="width:${progress}%"></span></div>${statusText?`<span class="quiz-live-status">${escapeHtml(statusText)}</span>`:''}</div><article class="quiz-question">${questionNavigatorHtml}<div class="question-kicker">${escapeHtml(categoryText(q))}</div>${heading}${renderQuestionMedia(q,{showSymbol:q.type!=='matrix_single'})}${body}<div class="quiz-actions"><button class="btn btn-neutral" id="quizPrev" ${session.index===0?'disabled':''}>← ${t('previous')}</button><button class="btn btn-primary" id="quizNext">${session.index===session.questions.length-1?t('finish'):t('next')} →</button></div></article></div>`;
   Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(console.warn);
-  const choose=(value)=>{session.answers[q.id]=value;Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(console.warn);renderQuiz(container,session,options)};
+  const choose=(value)=>{
+    session.answers[q.id]=value;
+    Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(console.warn);
+    if(q.type==='matrix_single'){
+      const canonical=canonicalMatrixValue(value);
+      container.querySelectorAll('[data-matrix]').forEach(button=>{
+        const selected=canonicalMatrixValue(button.dataset.matrix)===canonical;
+        button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));
+      });
+      container.querySelector(`[data-quiz-index="${session.index}"]`)?.classList.add('answered');
+      return;
+    }
+    renderQuiz(container,session,options);
+  };
   container.tabIndex=-1;container.focus({preventScroll:true});
   container.querySelectorAll('.answer-option input').forEach(input=>input.addEventListener('change',()=>{if(q.single)choose(input.value);else{const values=[...container.querySelectorAll('.answer-option input:checked')].map(x=>x.value);choose(values)}}));
   container.querySelectorAll('[data-matrix]').forEach(btn=>btn.addEventListener('click',()=>choose(btn.dataset.matrix)));

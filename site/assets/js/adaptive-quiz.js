@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.15';
-import {backend,groupOptions} from './backend.js?v=1.1.15';
+import {CONFIG} from './config.js?v=1.1.16';
+import {backend,groupOptions} from './backend.js?v=1.1.16';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -10,8 +10,8 @@ import {
   renderMatrixButtons,
   renderQuestionMedia,
   renderQuiz
-} from './quiz.js?v=1.1.15';
-import {getLocale} from './i18n.js?v=1.1.15';
+} from './quiz.js?v=1.1.16';
+import {getLocale} from './i18n.js?v=1.1.16';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -108,6 +108,25 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
   let responses={};
   let joined=false;
   let closed=false;
+  const updateLiveState=()=>{
+    if(closed)return;
+    const activeIds=activeParticipantIds(presence);
+    const active=Math.max(joined?1:0,activeIds.size);
+    const status=container.querySelector('.quiz-live-status');
+    if(status)status.textContent=backend.mode==='cloud'?`${c('online')}: ${active} ${participantNoun(active)}`:c('cloudRequired');
+    const question=session.questions[session.index];if(!question)return;
+    const records=recordsFor(responses,question.id,activeIds);const counts=answerCounts(records);const total=records.length;
+    container.querySelectorAll('[data-matrix]').forEach(button=>{
+      const count=Number(counts[canonicalMatrixValue(button.dataset.matrix)]||0);const percent=total?Math.round(count/total*100):0;
+      button.classList.add('live-distribution');button.style.setProperty('--answer-share',`${percent}%`);
+      button.setAttribute('aria-label',`${button.title} · ${percent}%`);
+      let result=button.querySelector('.matrix-option-result');
+      if(count>0){
+        if(!result){result=document.createElement('span');result.className='matrix-option-result';result.innerHTML='<b></b><small></small>';button.append(result)}
+        result.querySelector('b').textContent=String(count);result.querySelector('small').textContent=`${percent}%`;
+      }else result?.remove();
+    });
+  };
   const render=()=>{
     if(closed)return;
     const activeIds=activeParticipantIds(presence);
@@ -121,6 +140,7 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
         return {counts:answerCounts(records),total:records.length,showDistribution:true};
       }
     });
+    updateLiveState();
   };
   const cleanup=()=>{
     if(closed)return;
@@ -132,8 +152,8 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
   if(backend.mode==='cloud'){
     try{
       ({leave}=await backend.joinAutomaticQuizRoom(profile.group));joined=true;
-      unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;render()});
-      unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;render()});
+      unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;updateLiveState()});
+      unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
     }
     catch(error){console.warn('Automatic classroom connection failed',error)}
   }
