@@ -1,5 +1,5 @@
 export const CONFIG = {
-  version: '1.0.7-pages',
+  version: '1.1.1-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
   adminEmails: ['omnistat@yandex.ru'],
@@ -14,6 +14,9 @@ export const CONFIG = {
     databaseURL: 'https://russian-regions-puzzle-default-rtdb.firebaseio.com/'
   },
   rootPath: 'rudn-platform/v1',
+  groupPrefix: 'ГГУбд',
+  groupCount: 6,
+  live: {revealRatio: 0.7, revealAfterMs: 45000},
   simulatorResultsUrl: 'https://government-budget-simulator-default-rtdb.europe-west1.firebasedatabase.app/results.json',
   activityMax: {
     'lecture-1':5,'lecture-2':5,'lecture-3':5,'lecture-4':5,'lecture-5':5,'lecture-6':5,'lecture-7':5,'lecture-8':5,

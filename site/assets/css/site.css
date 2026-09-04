@@ -6,6 +6,7 @@
   --top:76px; --side:248px; font-family:Inter,Manrope,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#eef4f8;color:var(--ink);min-height:100vh}button,input,select,textarea{font:inherit}a{color:inherit;text-decoration:none}img{max-width:100%}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(0,121,193,.28);outline-offset:2px}
 .topbar{position:fixed;z-index:30;inset:0 0 auto 0;height:var(--top);display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
 .brand{display:flex;align-items:center;gap:16px;min-width:0}.brand img{width:116px;height:48px;object-fit:contain;object-position:left center}.brand-copy{display:flex;flex-direction:column;min-width:0;border-left:1px solid var(--line);padding-left:16px}.brand-copy strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-copy small{color:var(--muted);font-size:12px;margin-top:3px}
@@ -42,3 +43,103 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
 .app-frame{width:100%;height:calc(100vh - 145px);min-height:720px;border:0;border-radius:16px;background:#eef4f8}.puzzle-embed-panel{padding:0;overflow:hidden}.puzzle-frame{height:calc(100vh - 110px);min-height:760px}.grade-edit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.grade-edit-grid .full{grid-column:1/-1}.live-admin-question{background:#f5f9fc;border:1px solid var(--line);border-radius:14px;padding:14px}.live-admin-question>strong{display:block;line-height:1.5}.external-card .badge{margin-bottom:8px}.form-grid button[type=submit]{min-width:180px}.page-actions a.btn{white-space:nowrap}
 @media(max-width:900px){.external-card{align-items:flex-start;flex-direction:column}.grade-edit-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.profile-dl{grid-template-columns:1fr}.profile-dl dt{margin-top:7px}.app-frame,.puzzle-frame{height:calc(100vh - 140px);min-height:650px}.grade-edit-grid{grid-template-columns:1fr}.external-card .btn{width:100%}}
+
+/* Adaptive Seminar 1 quiz and automatic classroom board · v1.1.1 */
+.matrix-option-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.matrix-option{
+  position:relative;
+  min-height:118px;
+  padding:20px 14px 15px;
+  border:2px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  color:var(--ink);
+  cursor:pointer;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:7px;
+  transition:transform .15s,border-color .15s,box-shadow .15s,background .15s;
+  overflow:hidden;
+}
+.matrix-option::before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:7px;
+  background:var(--rudn-blue);
+}
+.matrix-option[data-level="regional"]::before{background:var(--rudn-cyan)}
+.matrix-option[data-level="municipal"]::before{background:#e1a72a}
+.matrix-option:hover:not(:disabled){
+  transform:translateY(-2px);
+  border-color:#82c4e7;
+  box-shadow:0 12px 28px rgba(0,83,139,.12);
+}
+.matrix-option.selected{
+  border-color:var(--rudn-blue);
+  background:#eaf6fc;
+  box-shadow:0 0 0 3px rgba(0,121,193,.12);
+}
+.matrix-option.correct{border-color:var(--success);background:#e8f8f1}
+.matrix-option.has-wrong:not(.correct){border-color:#f0c1c9;background:#fff3f5}
+.matrix-option:disabled{cursor:default;opacity:1}
+.matrix-option-level{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+  color:var(--muted);
+}
+.matrix-option strong{font-size:15px;line-height:1.3}
+.matrix-option-result{display:flex;align-items:baseline;gap:6px;margin-top:5px;color:var(--rudn-navy)}
+.matrix-option-result b{font-size:24px}.matrix-option-result small{color:var(--muted)}
+.auto-board-shell{display:grid;gap:16px}
+.auto-board-toolbar{
+  display:grid;
+  grid-template-columns:minmax(260px,1fr) 210px 210px;
+  gap:14px;
+  align-items:end;
+}
+.auto-board-stat{border:1px solid var(--line);border-radius:15px;padding:13px 15px;background:var(--surface-2)}
+.auto-board-stat span,.auto-board-stat small{display:block;color:var(--muted);font-size:11px}
+.auto-board-stat strong{display:block;font-size:29px;margin:4px 0}
+.auto-board-panel{display:grid;gap:18px}
+.board-question-nav{display:grid;grid-template-columns:repeat(10,1fr);gap:7px}
+.board-question-tab{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:11px;
+  padding:8px 4px;
+  cursor:pointer;
+  display:grid;
+  gap:2px;
+}
+.board-question-tab span{font-weight:900}.board-question-tab small{color:var(--muted)}
+.board-question-tab.active{background:var(--rudn-blue);color:#fff;border-color:var(--rudn-blue)}
+.board-question-tab.active small{color:rgba(255,255,255,.75)}
+.board-meta{display:flex;gap:8px;flex-wrap:wrap}
+.board-question-title{font-size:30px;line-height:1.25;margin:0}
+.board-insight{border-radius:15px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.board-insight.waiting{background:#fff8e9;border:1px solid #efd7a6}
+.board-insight.revealed{background:#eaf8f2;border:1px solid #bae5d4}
+.board-insight p{flex-basis:100%;margin:0;line-height:1.5}
+@media(max-width:900px){
+  .auto-board-toolbar{grid-template-columns:1fr 1fr}
+  .auto-board-toolbar label{grid-column:1/-1}
+  .board-question-nav{grid-template-columns:repeat(5,1fr)}
+}
+@media(max-width:600px){
+  .matrix-option-grid{gap:7px}
+  .matrix-option{min-height:76px;padding:9px 7px;border-radius:13px;gap:4px}
+  .matrix-option strong{font-size:11px;line-height:1.2}
+  .matrix-option-level{font-size:8px}
+  .auto-board-toolbar{grid-template-columns:1fr 1fr;padding:15px}
+  .board-question-title{font-size:22px}
+}
+
+.matrix-option strong{overflow-wrap:break-word;hyphens:auto}

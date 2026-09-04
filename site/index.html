@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0079c1">
-  <meta name="robots" content="noindex,nofollow">
+  <meta name="robots" content="index,follow">
   <meta name="description" content="Образовательная платформа курса «Введение в специальность: государственное и муниципальное управление» РУДН.">
   <title>Введение в специальность · РУДН</title>
   <link rel="icon" href="assets/img/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/site.css?v=1.0.7">
+  <link rel="stylesheet" href="assets/css/site.css?v=1.1.1">
 </head>
 <body>
   <div class="app-shell" id="appShell">
@@ -19,7 +19,7 @@
         <span class="brand-copy"><strong data-i18n="courseShort">Введение в специальность</strong><small data-i18n="programmeShort">Государственное и муниципальное управление</small></span>
       </a>
       <div class="topbar-actions">
-        <span class="sync-chip" id="syncChip"><span class="sync-dot"></span><span data-i18n="localMode">Локальный режим</span></span>
+        <span class="sr-only" id="syncChip" aria-live="polite"></span>
         <div class="language-switcher" role="group" aria-label="Выбор языка интерфейса">
           <button class="language-option" type="button" data-lang="ru" aria-label="Русский" title="Русский">
             <svg class="country-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><rect y="6.667" width="30" height="6.667" fill="#0039a6"/><rect y="13.333" width="30" height="6.667" fill="#d52b1e"/></svg>
@@ -39,7 +39,7 @@
       <nav>
         <a href="#dashboard" data-route="dashboard"><span>⌂</span><b data-i18n="navDashboard">Курс</b></a>
         <a href="#gradebook" data-route="gradebook"><span>▦</span><b data-i18n="navGradebook">Журнал</b></a>
-        <a href="#live" data-route="live"><span>◉</span><b data-i18n="navLive">Live-квиз</b></a>
+        <a href="#live" data-route="live"><span>◉</span><b data-i18n="navLive">Общая доска</b></a>
         <a href="#puzzle" data-route="puzzle"><span>⌖</span><b data-i18n="navPuzzle">Карты</b></a>
         <a href="#materials" data-route="materials"><span>▤</span><b data-i18n="navMaterials">Материалы</b></a>
         <a href="#profile" data-route="profile"><span>◎</span><b data-i18n="navProfile">Профиль</b></a>
@@ -57,7 +57,7 @@
     <nav class="mobile-nav" aria-label="Мобильная навигация">
       <a href="#dashboard" data-route="dashboard"><span>⌂</span><small data-i18n="navDashboard">Курс</small></a>
       <a href="#gradebook" data-route="gradebook"><span>▦</span><small data-i18n="navGradebook">Журнал</small></a>
-      <a href="#live" data-route="live"><span>◉</span><small data-i18n="navLive">Live</small></a>
+      <a href="#live" data-route="live"><span>◉</span><small data-i18n="navLive">Доска</small></a>
       <a href="#puzzle" data-route="puzzle"><span>⌖</span><small data-i18n="navPuzzle">Карты</small></a>
       <a href="#profile" data-route="profile"><span>◎</span><small data-i18n="navProfile">Профиль</small></a>
     </nav>
@@ -66,18 +66,17 @@
   <dialog class="modal" id="authDialog">
     <form method="dialog" class="modal-card" id="authForm">
       <button class="modal-close" value="cancel" aria-label="Закрыть">×</button>
-      <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН"><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Список группы заранее не требуется</span></div></div>
+      <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН"><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Данные профиля можно изменить</span></div></div>
       <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru"></label>
-      <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" required></label>
-      <label><span data-i18n="groupLabel">Учебная группа</span><input id="authGroup" required placeholder="ГГУбд-01-26"></label>
-      <label class="pin-row"><span data-i18n="recoveryPinLabel">Код восстановления (только при входе с нового устройства)</span><input id="authRecovery" inputmode="numeric" maxlength="8" placeholder="необязательно"></label>
-      <p class="form-hint" data-i18n="authHint">При первом входе платформа создаст профиль. Пароль и одноразовый код не используются.</p>
+      <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" maxlength="150" required></label>
+      <label><span data-i18n="groupLabel">Учебная группа</span><select id="authGroup" required></select></label>
+      <p class="form-hint" id="rosterStatus" data-i18n="authHint" aria-live="polite">После ввода билета ФИО и группа заполнятся автоматически, если студент есть в списке. Все поля можно изменить.</p>
       <button class="btn btn-primary btn-wide" type="submit" value="default" data-i18n="continue">Продолжить</button>
     </form>
   </dialog>
 
   <dialog class="modal" id="confirmDialog"><form method="dialog" class="modal-card compact"><h2 id="confirmTitle">Подтверждение</h2><p id="confirmText"></p><div class="dialog-actions"><button class="btn btn-neutral" value="cancel" data-i18n="cancel">Отмена</button><button class="btn btn-primary" value="ok" data-i18n="confirm">Подтвердить</button></div></form></dialog>
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-  <script type="module" src="assets/js/main.js?v=1.0.7"></script>
+  <script type="module" src="assets/js/main.js?v=1.1.1"></script>
 </body>
 </html>

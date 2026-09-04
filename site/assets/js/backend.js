@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.0.7';
+import {CONFIG} from './config.js?v=1.1.1';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -8,17 +8,65 @@ const LIVE_KEY='rudn.live.lastCode';
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 function writeLocal(key,value){localStorage.setItem(key,JSON.stringify(value))}
 function now(){return new Date().toISOString()}
+function uuid(){return globalThis.crypto?.randomUUID?.()||`rudn-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 function cleanKey(value){return String(value||'').trim().toLowerCase().replace(/@(?:rudn|pfur)\.ru$/,'').replace(/[^a-zа-яё0-9_-]/gi,'-').replace(/-+/g,'-').slice(0,80)}
-function normalizeIdentifier(value){
-  const raw=String(value||'').trim().toLowerCase();
-  const ticket=raw.includes('@')?raw.split('@')[0]:raw;
-  return {ticket,email:raw.includes('@')?raw:`${ticket}@rudn.ru`,studentKey:cleanKey(ticket)};
+function twoDigitYear(date=new Date()){return String(date.getFullYear()).slice(-2)}
+function ymd(date=new Date()){return `${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}`}
+
+export function groupOptions(date=new Date()){
+  const yy=twoDigitYear(date);
+  return Array.from({length:CONFIG.groupCount||6},(_,index)=>`${CONFIG.groupPrefix||'ГГУбд'}-${String(index+1).padStart(2,'0')}-${yy}`);
 }
-async function sha256(value){const data=new TextEncoder().encode(String(value));const hash=await crypto.subtle.digest('SHA-256',data);return [...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,'0')).join('')}
-function randomPin(){return String(Math.floor(100000+Math.random()*900000))}
+
+export function normalizeGroup(value,date=new Date()){
+  const group=String(value||'').trim();
+  const valid=groupOptions(date);
+  if(!valid.includes(group))throw new Error(`Выберите учебную группу ${valid[0]}–${valid[valid.length-1]}`);
+  return group;
+}
+
+export function normalizeIdentifier(value){
+  const raw=String(value||'').trim().toLowerCase();
+  const emailMatch=raw.match(/^(\d{5,20})@(rudn|pfur)\.ru$/i);
+  const ticket=emailMatch?.[1]||(/^\d{5,20}$/.test(raw)?raw:'');
+  if(!ticket)throw new Error('Введите номер студенческого билета или корпоративный email РУДН');
+  return {ticket,email:emailMatch?raw:`${ticket}@rudn.ru`,studentKey:cleanKey(ticket)};
+}
+
+export function normalizeFullName(value){
+  const fullName=String(value||'').trim().replace(/\s+/g,' ');
+  if(fullName.length<2||fullName.length>150)throw new Error('Введите ФИО студента');
+  return fullName;
+}
+
+async function sha256(value){
+  if(!globalThis.crypto?.subtle)throw new Error('Браузер не поддерживает безопасный поиск по списку');
+  const bytes=await globalThis.crypto.subtle.digest('SHA-256',new TextEncoder().encode(String(value)));
+  return [...new Uint8Array(bytes)].map(byte=>byte.toString(16).padStart(2,'0')).join('');
+}
+
+export function automaticRoomKey(group,date=new Date()){
+  return `${cleanKey(group)}-${ymd(date)}`;
+}
 
 class Backend{
-  constructor(){this.mode='local';this.error=null;this.firebase=null;this.auth=null;this.db=null;this.storage=null;this.user=null;this.profile=readLocal(PROFILE_KEY,null);this.listeners=[]}
+  constructor(){
+    this.mode='local';this.error=null;this.firebase=null;this.auth=null;this.db=null;this.storage=null;this.user=null;
+    this.profile=this.migrateProfile(readLocal(PROFILE_KEY,null));this.listeners=[];
+  }
+  migrateProfile(profile){
+    if(!profile)return null;
+    try{
+      const identity=normalizeIdentifier(profile.email||profile.ticket||profile.studentKey);
+      let group=String(profile.group||'').trim();
+      const legacy=group.match(/^ГГУбд-(0[1-6])-\d{2}$/);
+      if(legacy&&!groupOptions().includes(group))group=`${CONFIG.groupPrefix||'ГГУбд'}-${legacy[1]}-${twoDigitYear()}`;
+      const fullName=String(profile.fullName||profile.displayName||identity.ticket).trim();
+      const migrated={...profile,studentKey:identity.studentKey,ticket:identity.ticket,email:identity.email,displayName:fullName,fullName,group,schemaVersion:2};
+      delete migrated.recoveryPin;delete migrated.recoveryHash;
+      writeLocal(PROFILE_KEY,migrated);return migrated;
+    }catch{return null}
+  }
   async init(){
     try{
       const [appMod,authMod,dbMod,storageMod]=await Promise.all([
@@ -46,48 +94,49 @@ class Backend{
     if(!this.authClient)throw new Error('Firebase недоступен');
     const credential=await this.auth.signInWithEmailAndPassword(this.authClient,email,password);this.user=credential.user;this.mode='cloud';this.emitStatus();return this.user;
   }
-  async adminSignOut(){if(this.authClient)await this.auth.signOut(this.authClient);this.user=null;await this.init();}
+  async adminSignOut(){if(this.authClient)await this.auth.signOut(this.authClient);this.user=null;await this.init()}
   getProfile(){return this.profile}
+  async lookupRoster(identifier){
+    if(this.mode!=='cloud'||!this.db||!this.database)return null;
+    const identity=normalizeIdentifier(identifier);
+    const ticketHash=await sha256(identity.ticket);
+    const snapshot=await this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/roster/${ticketHash}`));
+    const record=snapshot.val();
+    if(!record||typeof record.fullName!=='string'||typeof record.group!=='string')return null;
+    return {...identity,fullName:normalizeFullName(record.fullName),group:normalizeGroup(record.group)};
+  }
   async saveProfile(input){
     const identity=normalizeIdentifier(input.identifier||input.ticket||input.email);
-    if(!identity.studentKey)throw new Error('Не указан номер студенческого билета');
-    if(!String(input.fullName||'').trim())throw new Error('Не указано ФИО');
-    if(!String(input.group||'').trim())throw new Error('Не указана группа');
+    const fullName=normalizeFullName(input.fullName);
+    const group=normalizeGroup(input.group);
     const existing=this.profile&&this.profile.studentKey===identity.studentKey?this.profile:null;
-    const suppliedPin=String(input.recoveryPin||'').trim();
-    const pin=suppliedPin||existing?.recoveryPin||randomPin();
+    const timestamp=now();
     const profile={
-      studentKey:identity.studentKey,ticket:identity.ticket,email:identity.email,
-      fullName:String(input.fullName).trim(),group:String(input.group).trim(),
-      recoveryPin:pin,updatedAt:now(),createdAt:existing?.createdAt||now()
+      studentKey:identity.studentKey,ticket:identity.ticket,email:identity.email,group,
+      displayName:fullName,fullName,
+      schemaVersion:2,updatedAt:timestamp,createdAt:existing?.createdAt||timestamp
     };
     if(this.mode==='cloud'){
-      const pinHash=await sha256(pin);
       const ref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${profile.studentKey}`);
-      try{
-        await this.db.set(ref,{...profile,recoveryPin:null,recoveryHash:pinHash,ownerUid:this.user.uid});
-      }catch(error){
+      try{await this.db.set(ref,{...profile,ownerUid:this.user.uid})}
+      catch(error){
         const message=String(error?.message||error);
-        if(/permission|denied/i.test(message))throw new Error('Профиль с этим номером уже существует либо указан неверный код восстановления.');
+        if(/permission|denied/i.test(message))throw new Error('Не удалось сохранить профиль. Примените обновлённые правила Firebase из патча.');
         throw error;
       }
     }
-    this.profile=profile;writeLocal(PROFILE_KEY,profile);
-    this.emitStatus();return profile;
+    this.profile=profile;writeLocal(PROFILE_KEY,profile);this.emitStatus();return profile;
   }
   clearLocalProfile(){this.profile=null;localStorage.removeItem(PROFILE_KEY);this.emitStatus()}
   localAttempts(){return readLocal(ATTEMPTS_KEY,[])}
   localGrades(){return readLocal(GRADES_KEY,{})}
   async saveAttempt(attempt){
     if(!this.profile)throw new Error('Сначала войдите в профиль');
-    const record={...attempt,id:attempt.id||crypto.randomUUID(),studentKey:this.profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
+    const record={...attempt,id:attempt.id||uuid(),studentKey:this.profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
     const attempts=this.localAttempts();attempts.push(record);writeLocal(ATTEMPTS_KEY,attempts.slice(-800));
-    if(this.mode==='cloud'){
-      await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`),record);
-    }
-    if(Number.isFinite(Number(record.points))&&record.activitySlug){await this.updateBestGrade(record.activitySlug,Number(record.points),record)}
-    window.dispatchEvent(new CustomEvent('rudn:gradechange',{detail:{activitySlug:record.activitySlug}}));
-    return record;
+    if(this.mode==='cloud')await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`),record);
+    if(Number.isFinite(Number(record.points))&&record.activitySlug)await this.updateBestGrade(record.activitySlug,Number(record.points),record);
+    window.dispatchEvent(new CustomEvent('rudn:gradechange',{detail:{activitySlug:record.activitySlug}}));return record;
   }
   async updateBestGrade(activitySlug,points,source={}){
     const max=CONFIG.activityMax[activitySlug]??5;const bounded=Math.max(0,Math.min(max,Number(points)||0));
@@ -128,14 +177,10 @@ class Backend{
   async syncLocalToCloud(){
     if(this.mode!=='cloud'||!this.profile)return;
     try{
-      const p={...this.profile};delete p.recoveryPin;
-      const pinHash=await sha256(this.profile.recoveryPin||'');
       const pref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${this.profile.studentKey}`);
-      await this.db.set(pref,{...p,recoveryHash:pinHash,ownerUid:this.user.uid});
+      await this.db.set(pref,{...this.profile,ownerUid:this.user.uid});
       for(const attempt of this.localAttempts().filter(x=>x.studentKey===this.profile.studentKey)){
-        const record={...attempt,ownerUid:this.user.uid};
-        const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`);
-        const snap=await this.db.get(ref);if(!snap.exists())await this.db.set(ref,record);
+        const record={...attempt,ownerUid:this.user.uid};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`);const snap=await this.db.get(ref);if(!snap.exists())await this.db.set(ref,record);
       }
       for(const [slug,grade] of Object.entries(this.localGrades()))await this.updateBestGrade(slug,grade.points,grade);
     }catch(error){console.warn('Cloud synchronization failed',error)}
@@ -149,33 +194,55 @@ class Backend{
     ]);
     return {profiles:p.val()||{},attempts:a.val()||{},grades:g.val()||{}};
   }
+
+  automaticRoomKey(group,date=new Date()){return automaticRoomKey(group,date)}
+  async joinAutomaticQuizRoom(group){
+    if(this.mode!=='cloud'||!this.profile||!this.user)throw new Error('Облачная синхронизация недоступна');
+    const roomKey=automaticRoomKey(group);const participantUid=this.user.uid;const connectionId=uuid();
+    const presenceRef=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/presence/${participantUid}/${connectionId}`);
+    const connectedRef=this.db.ref(this.database,'.info/connected');let disconnectHandle=null;
+    const stop=this.db.onValue(connectedRef,async snap=>{
+      if(snap.val()!==true)return;
+      try{
+        disconnectHandle=this.db.onDisconnect(presenceRef);
+        await disconnectHandle.remove();
+        await this.db.set(presenceRef,{participantUid,group,joinedAt:this.db.serverTimestamp(),clientJoinedAt:Date.now()});
+      }catch(error){console.warn('Presence connection failed',error)}
+    });
+    const leave=async()=>{try{stop()}catch{};try{await disconnectHandle?.cancel()}catch{};try{await this.db.remove(presenceRef)}catch{}};
+    return {roomKey,participantUid,connectionId,leave};
+  }
+  subscribeAutomaticPresence(roomKey,callback){
+    if(this.mode!=='cloud')return()=>{};
+    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/presence`);return this.db.onValue(ref,snap=>callback(snap.val()||{}));
+  }
+  subscribeAutomaticResponses(roomKey,callback){
+    if(this.mode!=='cloud')return()=>{};
+    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses`);return this.db.onValue(ref,snap=>callback(snap.val()||{}));
+  }
+  async submitAutomaticQuizResponse(roomKey,questionId,answer,questionIndex){
+    if(this.mode!=='cloud'||!this.profile||!this.user)return false;
+    const participantUid=this.user.uid;
+    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses/${questionId}/${participantUid}`),{
+      participantUid,questionId,questionIndex:Number(questionIndex)||0,answer,group:this.profile.group,
+      submittedAt:this.db.serverTimestamp(),clientSubmittedAt:Date.now()
+    });
+    return true;
+  }
+
+  // Legacy code-based sessions remain readable for already stored records but are no longer used by the interface.
   async createLiveSession(questionIds){
     if(!this.isAdmin())throw new Error('Требуются права преподавателя');
-    const code=String(Math.floor(100000+Math.random()*900000));const sessionId=crypto.randomUUID();
+    const code=String(Math.floor(100000+Math.random()*900000));const sessionId=uuid();
     const record={sessionId,code,state:'lobby',questionIds,currentIndex:-1,createdAt:now(),teacherUid:this.user.uid};
     await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/sessions/${sessionId}`),record);
     await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/current`),record);
     localStorage.setItem(LIVE_KEY,code);return record;
   }
-  async updateLiveSession(session){
-    if(!this.isAdmin())throw new Error('Требуются права преподавателя');
-    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/sessions/${session.sessionId}`),session);
-    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/current`),session);return session;
-  }
-  subscribeCurrentLive(callback){
-    if(this.mode!=='cloud')return()=>{};
-    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/current`);return this.db.onValue(ref,snap=>callback(snap.val()));
-  }
-  subscribeLiveResponses(sessionId,callback){
-    if(this.mode!=='cloud')return()=>{};
-    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/responses/${sessionId}`);return this.db.onValue(ref,snap=>callback(snap.val()||{}));
-  }
-  async submitLiveResponse(sessionId,questionId,answer){
-    if(this.mode!=='cloud'||!this.profile)throw new Error('Нужны профиль и облачное подключение');
-    const key=this.profile.studentKey;
-    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/responses/${sessionId}/${questionId}/${key}`),{answer,studentKey:key,fullName:this.profile.fullName,group:this.profile.group,submittedAt:now(),ownerUid:this.user.uid});
-  }
+  async updateLiveSession(session){if(!this.isAdmin())throw new Error('Требуются права преподавателя');await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/sessions/${session.sessionId}`),session);await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/current`),session);return session}
+  subscribeCurrentLive(callback){if(this.mode!=='cloud')return()=>{};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/current`);return this.db.onValue(ref,snap=>callback(snap.val()))}
+  subscribeLiveResponses(sessionId,callback){if(this.mode!=='cloud')return()=>{};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/responses/${sessionId}`);return this.db.onValue(ref,snap=>callback(snap.val()||{}))}
+  async submitLiveResponse(sessionId,questionId,answer){if(this.mode!=='cloud'||!this.profile)throw new Error('Нужны профиль и облачное подключение');const key=this.profile.studentKey;await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/responses/${sessionId}/${questionId}/${key}`),{answer,studentKey:key,group:this.profile.group,submittedAt:now(),ownerUid:this.user.uid})}
 }
 
 export const backend=new Backend();
-export {normalizeIdentifier,sha256};
