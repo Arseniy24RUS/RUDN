@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.5';
-import {backend,groupOptions} from './backend.js?v=1.1.5';
+import {CONFIG} from './config.js?v=1.1.6';
+import {backend,groupOptions} from './backend.js?v=1.1.6';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -10,8 +10,8 @@ import {
   renderMatrixButtons,
   renderQuestionMedia,
   renderQuiz
-} from './quiz.js?v=1.1.5';
-import {getLocale} from './i18n.js?v=1.1.5';
+} from './quiz.js?v=1.1.6';
+import {getLocale} from './i18n.js?v=1.1.6';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -42,6 +42,15 @@ const COPY={
 };
 
 function c(key){return COPY[getLocale()]?.[key]||COPY.ru[key]||key}
+function participantNoun(count){
+  const locale=getLocale();const value=Math.abs(Number(count)||0);
+  if(locale==='en')return value===1?'participant':'participants';
+  if(locale==='zh')return COPY.zh.participants;
+  const lastTwo=value%100;const last=value%10;
+  if(last===1&&lastTwo!==11)return'участник';
+  if(last>=2&&last<=4&&(lastTwo<12||lastTwo>14))return'участника';
+  return'участников';
+}
 function roomQuestionSet(group){
   const roomKey=backend.automaticRoomKey(group);
   const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1',{studentKey:roomKey});
@@ -106,7 +115,7 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
       onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
       onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index),
       onFinish:()=>{},
-      statusText:()=>backend.mode==='cloud'?`${c('online')}: ${Math.max(joined?1:0,activeIds.size)} ${c('participants')}`:c('cloudRequired'),
+      statusText:()=>{const active=Math.max(joined?1:0,activeIds.size);return backend.mode==='cloud'?`${c('online')}: ${active} ${participantNoun(active)}`:c('cloudRequired')},
       matrixOptions:({question})=>{
         const records=recordsFor(responses,question.id,activeIds);
         return {counts:answerCounts(records),total:records.length,showDistribution:true};
@@ -160,7 +169,7 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
     <div class="auto-board-shell">
       <div class="panel auto-board-toolbar">
         <label><span>${escapeHtml(c('group'))}</span><select id="autoBoardGroup">${groupOptionsHtml}</select></label>
-        <div class="auto-board-stat"><span>${escapeHtml(c('online'))}</span><strong id="autoBoardParticipants">0</strong><small>${escapeHtml(c('participants'))}</small></div>
+        <div class="auto-board-stat"><span>${escapeHtml(c('online'))}</span><strong id="autoBoardParticipants">0</strong><small id="autoBoardParticipantLabel">${escapeHtml(participantNoun(0))}</small></div>
         <div class="auto-board-stat"><span>${escapeHtml(c('unique'))}</span><strong id="autoBoardUnique">0</strong></div>
       </div>
       <div id="autoBoardContent"></div>
@@ -186,6 +195,7 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
       }
     }
     container.querySelector('#autoBoardParticipants').textContent=String(active);
+    container.querySelector('#autoBoardParticipantLabel').textContent=participantNoun(active);
     container.querySelector('#autoBoardUnique').textContent=String(unique.size);
     if(!questions.length){
       content.innerHTML=`<div class="panel notice warning">${escapeHtml(c('waiting'))}</div>`;

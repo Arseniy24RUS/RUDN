@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.5';
-import {backend} from './backend.js?v=1.1.5';
+import {getLocale,localized,t} from './i18n.js?v=1.1.6';
+import {backend} from './backend.js?v=1.1.6';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -95,14 +95,14 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
 
 export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
   const safeTag=tag==='h1'?'h1':'h2';const m=q.media||{};
-  const symbol=m.symbol?`<img class="institution-heading-logo" src="${escapeHtml(m.symbol)}" alt="${escapeHtml(localized(m,'symbol_alt',''))}">`:'';
+  const symbol=m.symbol?`<img class="institution-heading-logo" src="${escapeHtml(m.symbol)}" alt="">`:'';
   return `<div class="institution-heading ${board?'board-institution-heading':''}">${symbol}<${safeTag} class="institution-title ${board?'board-question-title':''}">${escapeHtml(institutionText(q))}</${safeTag}></div>`;
 }
 
 export function renderQuestionMedia(q,{showSymbol=true}={}){
   const m=q.media;if(!m)return'';
-  const photo=m.photo?`<div><img class="question-photo" src="${escapeHtml(m.photo)}" alt="${escapeHtml(localized(m,'photo_alt',''))}"></div>`:'';
-  const symbol=showSymbol&&m.symbol?`<div><img class="question-symbol" src="${escapeHtml(m.symbol)}" alt="${escapeHtml(localized(m,'symbol_alt',''))}"></div>`:'';
+  const photo=m.photo?`<div><img class="question-photo" src="${escapeHtml(m.photo)}" alt="${escapeHtml(institutionText(q))}"></div>`:'';
+  const symbol=showSymbol&&m.symbol?`<div><img class="question-symbol" src="${escapeHtml(m.symbol)}" alt=""></div>`:'';
   return photo||symbol?`<div class="question-media ${photo&&symbol?'':'single'}">${photo}${symbol}</div>`:'';
 }
 

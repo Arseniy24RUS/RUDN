@@ -1,15 +1,14 @@
-import {CONFIG} from './config.js?v=1.1.5';
-import {backend,groupOptions} from './backend.js?v=1.1.5';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.5';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.5';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.5';
+import {CONFIG} from './config.js?v=1.1.6';
+import {backend,groupOptions} from './backend.js?v=1.1.6';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.6';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.6';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.6';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
 const authForm = document.getElementById('authForm');
 const profileButton = document.getElementById('profileButton');
 const languageOptions = [...document.querySelectorAll('[data-lang]')];
-const syncChip = document.getElementById('syncChip');
 const versionLabel = document.getElementById('versionLabel');
 const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const slugify = (value) => String(value || '').toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, '-').replace(/^-|-$/g, '');
@@ -171,7 +170,6 @@ function updateTopProfile(){
   document.getElementById('topGroup').textContent=profile?`${profile.group} · ${profile.ticket}`:'';
 }
 function updateSync(status){
-  if(syncChip)syncChip.textContent=status.mode==='cloud'?t('cloudMode'):status.error?t('connectionError'):t('localMode');
   updateTopProfile();
 }
 function requireProfile({open=true}={}){
