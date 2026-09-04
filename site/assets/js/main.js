@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.1.19';
-import {backend,groupOptions} from './backend.js?v=1.1.19';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.19';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.19';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.19';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.19';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.19';
+import {CONFIG} from './config.js?v=1.1.20';
+import {backend,groupOptions} from './backend.js?v=1.1.20';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.20';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.20';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.20';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.20';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.20';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -48,7 +48,7 @@ const UI = {
     pagesLimitation:'GitHub Pages публикует статическое приложение. Оценивание выполняется в браузере, а журнал хранится в Firebase; для официального экзамена потребуется отдельный серверный контур.',
     practiceAuto:'Предварительный автоматический балл', manualReview:'подлежит проверке преподавателем', fileCloudOnly:'Файл можно загрузить только при активной облачной синхронизации.', chooseFile:'Выберите файл', successful:'выполнено', failed:'не выполнено',
     externalResource:'Внешний ресурс', openNewTab:'Открыть в новой вкладке', back:'Назад к курсу', noProfile:'Профиль не создан', refresh:'Обновить',
-    adminQuizInstruction:'На проектор можно вывести общую доску в отдельном окне. В режиме прохождения преподаватель отвечает вместе со студентами выбранной группы.', quizBoardMode:'Общая доска', takeQuizMode:'Пройти квиз', teacherQuizGroup:'Группа прохождения',
+    adminQuizInstruction:'На проектор можно вывести общую доску. В режиме прохождения преподаватель отвечает вместе со студентами; группа определяется автоматически по подключившимся участникам.', quizBoardMode:'Общая доска', takeQuizMode:'Пройти квиз', teacherQuizGroup:'Группа определяется автоматически',
   },
   en: {
     dashboardTitle:'Course and learning pathway', currentGroup:'Current group', materialsTitle:'Course materials', seminarAssignment:'Practical assignment', download:'Download', noResults:'No results yet', dashboardLead:'Eight lectures, eight seminars, interactive assignments and a unified electronic gradebook.',
@@ -81,7 +81,7 @@ const UI = {
     pagesLimitation:'GitHub Pages publishes a static application. Scoring runs in the browser and the gradebook is stored in Firebase; an official high-stakes examination would require a separate server-side layer.',
     practiceAuto:'Preliminary automated mark', manualReview:'subject to instructor review', fileCloudOnly:'File upload requires active cloud synchronization.', chooseFile:'Choose a file', successful:'completed', failed:'not completed',
     externalResource:'External resource', openNewTab:'Open in new tab', back:'Back to course', noProfile:'No profile created', refresh:'Refresh',
-    adminQuizInstruction:'The shared board may be shown on the projector in a separate window. In play mode, the instructor answers together with the selected group.', quizBoardMode:'Shared board', takeQuizMode:'Take the quiz', teacherQuizGroup:'Quiz group',
+    adminQuizInstruction:'The shared board may be shown on the projector. In play mode, the instructor answers together with the students; the active group is detected automatically.', quizBoardMode:'Shared board', takeQuizMode:'Take the quiz', teacherQuizGroup:'Group detected automatically',
   },
   zh: {
     dashboardTitle:'课程与学习路径', currentGroup:'当前班级', materialsTitle:'课程资料', seminarAssignment:'实践任务', download:'下载', noResults:'暂无成绩', dashboardLead:'八次讲座、八次研讨课、互动任务和统一电子成绩册。',
@@ -114,7 +114,7 @@ const UI = {
     pagesLimitation:'GitHub Pages发布静态应用。评分在浏览器中执行，成绩册保存在Firebase中；正式高风险考试仍需独立的服务器端系统。',
     practiceAuto:'自动初评分', manualReview:'需教师复核', fileCloudOnly:'仅在云端同步可用时才能上传文件。', chooseFile:'选择文件', successful:'已完成', failed:'未完成',
     externalResource:'外部资源', openNewTab:'在新标签页打开', back:'返回课程', noProfile:'尚未创建个人资料', refresh:'刷新',
-    adminQuizInstruction:'可在投影仪上另开共享大屏。在答题模式中，教师与所选班级的学生一起作答。', quizBoardMode:'共享大屏', takeQuizMode:'参加测验', teacherQuizGroup:'答题班级',
+    adminQuizInstruction:'可在投影仪上显示共享大屏。在答题模式中，教师与学生一起作答；系统会根据已加入的学生自动识别班级。', quizBoardMode:'共享大屏', takeQuizMode:'参加测验', teacherQuizGroup:'自动识别班级',
   }
 };
 
@@ -398,18 +398,17 @@ async function startQuiz(activitySlug){
   const returnTo=(target)=>{const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
   if(activitySlug==='seminar-1-classroom'){
     if(backend.isAdmin()){
-      const availableGroups=groupOptions();let selectedGroup=availableGroups.includes(backend.getProfile()?.group)?backend.getProfile().group:availableGroups[0];
-      mount.insertAdjacentHTML('beforebegin',`<div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div><header class="page-head"><div><h1>${ui('seminar1ClassroomTitle')}</h1><p>${ui('adminQuizInstruction')}</p></div></header><div class="admin-quiz-mode" role="group" aria-label="${esc(ui('seminar1ClassroomTitle'))}"><button class="btn btn-primary" type="button" data-admin-quiz-mode="board">${ui('quizBoardMode')}</button><button class="btn btn-neutral" type="button" data-admin-quiz-mode="play">${ui('takeQuizMode')}</button><span class="badge" id="adminQuizGroup">${ui('teacherQuizGroup')}: ${esc(selectedGroup)}</span></div>`);
+      let selectedGroup='';
+      mount.insertAdjacentHTML('beforebegin',`<div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div><header class="page-head"><div><h1>${ui('seminar1ClassroomTitle')}</h1><p>${ui('adminQuizInstruction')}</p></div></header><div class="admin-quiz-mode" role="group" aria-label="${esc(ui('seminar1ClassroomTitle'))}"><button class="btn btn-primary" type="button" data-admin-quiz-mode="board">${ui('quizBoardMode')}</button><button class="btn btn-neutral" type="button" data-admin-quiz-mode="play">${ui('takeQuizMode')}</button></div>`);
       const controls=app.querySelector('.admin-quiz-mode');let activeCleanup=()=>{};let disposed=false;
       const setMode=(mode)=>controls.querySelectorAll('[data-admin-quiz-mode]').forEach(button=>{const active=button.dataset.adminQuizMode===mode;button.classList.toggle('btn-primary',active);button.classList.toggle('btn-neutral',!active);button.setAttribute('aria-pressed',String(active))});
-      const updateGroup=()=>{controls.querySelector('#adminQuizGroup').textContent=`${ui('teacherQuizGroup')}: ${selectedGroup}`};
       const showBoard=()=>{
-        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('board');updateGroup();
-        activeCleanup=mountAutomaticBoard(mount,{initialGroup:selectedGroup,onGroupChange:group=>{selectedGroup=group;updateGroup()}});
+        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('board');
+        activeCleanup=mountAutomaticBoard(mount,{initialGroup:selectedGroup,onGroupChange:group=>{selectedGroup=group}});
       };
       const showQuiz=async()=>{
-        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('play');updateGroup();
-        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,onExit:showBoard});
+        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('play');
+        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,participateLive:false,onExit:showBoard});
       };
       controls.querySelector('[data-admin-quiz-mode="board"]').onclick=showBoard;
       controls.querySelector('[data-admin-quiz-mode="play"]').onclick=()=>showQuiz().catch(error=>toast(String(error.message||error),'error'));

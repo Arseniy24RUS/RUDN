@@ -28,7 +28,7 @@
           "$studentKey": {
             ".read": "auth != null",
             ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || (newData.child('ownerUid').val() === auth.uid && newData.child('ownerUids').child(auth.uid).val() === true && newData.child('studentKey').val() === $studentKey && newData.child('ticket').val() === $studentKey))",
-            ".validate": "newData.hasChildren(['studentKey','ticket','email','fullName','group','ownerUid','ownerUids']) && newData.child('studentKey').val() === $studentKey && newData.child('ticket').val() === $studentKey && newData.child('email').isString() && (newData.child('email').val() === $studentKey + '@rudn.ru' || newData.child('email').val() === $studentKey + '@pfur.ru') && newData.child('fullName').isString() && newData.child('fullName').val().length >= 2 && newData.child('fullName').val().length <= 150 && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/) && newData.child('ownerUids').hasChild(newData.child('ownerUid').val()) && (auth.token.email === 'omnistat@yandex.ru' || newData.child('ownerUids').child(auth.uid).val() === true)"
+            ".validate": "(!newData.exists() && auth.token.email === 'omnistat@yandex.ru') || (newData.exists() && (newData.hasChildren(['studentKey','ticket','email','fullName','group','ownerUid','ownerUids']) && newData.child('studentKey').val() === $studentKey && newData.child('ticket').val() === $studentKey && newData.child('email').isString() && (newData.child('email').val() === $studentKey + '@rudn.ru' || newData.child('email').val() === $studentKey + '@pfur.ru') && newData.child('fullName').isString() && newData.child('fullName').val().length >= 2 && newData.child('fullName').val().length <= 150 && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/) && newData.child('ownerUids').hasChild(newData.child('ownerUid').val()) && (auth.token.email === 'omnistat@yandex.ru' || newData.child('ownerUids').child(auth.uid).val() === true)))"
           }
         },
         "roster": {
@@ -45,7 +45,7 @@
             ".read": "auth != null && (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true || auth.token.email === 'omnistat@yandex.ru')",
             "$attemptId": {
               ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || (!data.exists() && (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true) && newData.child('ownerUid').val() === auth.uid && newData.child('studentKey').val() === $studentKey))",
-              ".validate": "newData.hasChildren(['id','studentKey','createdAt','ownerUid']) && newData.child('id').val() === $attemptId && newData.child('studentKey').val() === $studentKey && newData.child('createdAt').isString() && newData.child('ownerUid').isString()"
+              ".validate": "(!newData.exists() && auth.token.email === 'omnistat@yandex.ru') || (newData.exists() && (newData.hasChildren(['id','studentKey','createdAt','ownerUid']) && newData.child('id').val() === $attemptId && newData.child('studentKey').val() === $studentKey && newData.child('createdAt').isString() && newData.child('ownerUid').isString()))"
             }
           }
         },
@@ -55,7 +55,7 @@
             ".read": "auth != null && (root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true || auth.token.email === 'omnistat@yandex.ru')",
             "$activitySlug": {
               ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || ((root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true) && newData.child('ownerUid').val() === auth.uid && newData.child('sourceAttemptId').isString() && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('ownerUid').val() === auth.uid && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('activitySlug').val() === $activitySlug && root.child('rudn-platform/v1/attempts').child($studentKey).child(newData.child('sourceAttemptId').val()).child('points').val() === newData.child('points').val()))",
-              ".validate": "newData.child('points').isNumber() && newData.child('points').val() >= 0 && (!data.exists() || newData.child('points').val() >= data.child('points').val()) && (($activitySlug === 'exam' && newData.child('points').val() <= 20) || ($activitySlug !== 'exam' && newData.child('points').val() <= 5))"
+              ".validate": "(!newData.exists() && auth.token.email === 'omnistat@yandex.ru') || (newData.exists() && (newData.child('points').isNumber() && newData.child('points').val() >= 0 && (!data.exists() || newData.child('points').val() >= data.child('points').val()) && (($activitySlug === 'exam' && newData.child('points').val() <= 20) || ($activitySlug !== 'exam' && newData.child('points').val() <= 5))))"
             }
           }
         },
@@ -66,8 +66,8 @@
                 ".read": "auth != null",
                 "$participantUid": {
                   "$connectionId": {
-                    ".write": "auth != null && $participantUid === auth.uid",
-                    ".validate": "newData.hasChildren(['participantUid','group']) && newData.child('participantUid').val() === auth.uid && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/)"
+                    ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || $participantUid === auth.uid)",
+                    ".validate": "!newData.exists() || (newData.hasChildren(['participantUid','group']) && newData.child('participantUid').val() === auth.uid && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/))"
                   }
                 }
               },
@@ -75,8 +75,8 @@
                 ".read": "auth != null",
                 "$questionId": {
                   "$participantUid": {
-                    ".write": "auth != null && $participantUid === auth.uid",
-                    ".validate": "newData.hasChildren(['participantUid','questionId','questionIndex','answer','group']) && newData.child('participantUid').val() === auth.uid && newData.child('questionId').val() === $questionId && newData.child('questionIndex').isNumber() && newData.child('questionIndex').val() >= 0 && newData.child('questionIndex').val() < 50 && newData.child('answer').isString() && newData.child('answer').val().matches(/^((federal|regional)\\|(legislative|executive|judicial)|municipal\\|(representative|administration|other|legislative|executive|judicial))$/) && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/)"
+                    ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || $participantUid === auth.uid)",
+                    ".validate": "!newData.exists() || (newData.hasChildren(['participantUid','questionId','questionIndex','answer','group']) && newData.child('participantUid').val() === auth.uid && newData.child('questionId').val() === $questionId && newData.child('questionIndex').isNumber() && newData.child('questionIndex').val() >= 0 && newData.child('questionIndex').val() < 50 && newData.child('answer').isString() && newData.child('answer').val().matches(/^((federal|regional)\\|(legislative|executive|judicial)|municipal\\|(representative|administration|other|legislative|executive|judicial))$/) && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/))"
                   }
                 }
               }

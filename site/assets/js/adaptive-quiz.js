@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.19';
-import {backend,groupOptions} from './backend.js?v=1.1.19';
+import {CONFIG} from './config.js?v=1.1.20';
+import {backend,groupOptions} from './backend.js?v=1.1.20';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -11,8 +11,8 @@ import {
   renderQuestionMedia,
   renderQuiz,
   reviewNoteText
-} from './quiz.js?v=1.1.19';
-import {getLocale} from './i18n.js?v=1.1.19';
+} from './quiz.js?v=1.1.20';
+import {getLocale} from './i18n.js?v=1.1.20';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -24,21 +24,21 @@ const COPY={
     waiting:'Ожидаем ответы студентов…',answered:'Ответили на этот вопрос',
     revealed:'Результаты открыты автоматически',accuracy:'Точность группы',commonError:'Частая ошибка',
     cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase.',
-    question:'Вопрос',questionList:'Список вопросов',autoGroup:'определяется автоматически'
+    question:'Вопрос',questionList:'Список вопросов',autoGroup:'определяется автоматически',waitingGroup:'Ждём студентов'
   },
   en:{
     group:'Study group',online:'Currently in the quiz',participants:'participants',unique:'answered at least once',
     waiting:'Waiting for student responses…',answered:'Responses to this question',
     revealed:'Results revealed automatically',accuracy:'Class accuracy',commonError:'Most common misconception',
     cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached.',
-    question:'Question',questionList:'Question list',autoGroup:'detected automatically'
+    question:'Question',questionList:'Question list',autoGroup:'detected automatically',waitingGroup:'Waiting for students'
   },
   zh:{
     group:'班级',online:'当前参加测验',participants:'名学生',unique:'至少回答过一次',
     waiting:'正在等待学生作答……',answered:'本题已作答',
     revealed:'结果已自动显示',accuracy:'班级正确率',commonError:'最常见误区',
     cloudRequired:'因无法连接 Firebase，共享大屏暂不可用。',
-    question:'题目',questionList:'题目列表',autoGroup:'自动识别'
+    question:'题目',questionList:'题目列表',autoGroup:'自动识别',waitingGroup:'等待学生加入'
   }
 };
 
@@ -107,10 +107,10 @@ export function revealState(records,active,nowValue=Date.now()){
   return records.length>=threshold||Boolean(first&&nowValue-first>=(CONFIG.live?.revealAfterMs||45000));
 }
 
-export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGroup,recordAttempt}={}){
+export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGroup,recordAttempt,participateLive=true}={}){
   const profile=backend.getProfile();
   const group=groupOptions().includes(requestedGroup)?requestedGroup:profile?.group;
-  if(!groupOptions().includes(group))throw new Error('Выберите учебную группу');
+  if(participateLive&&!groupOptions().includes(group))throw new Error('Выберите учебную группу');
   const {roomKey,session}=roomQuestionSet(group);
   session.recordAttempt=recordAttempt??!backend.isAdmin();
   let leave=()=>{};
@@ -144,7 +144,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
     const activeIds=activeParticipantIds(presence);
     renderQuiz(container,session,{
       onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
-      onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index,group),
+      onAnswer:({question,value,index})=>participateLive?backend.submitAutomaticQuizResponse(roomKey,question.id,value,index,group):undefined,
       onFinish:()=>{},
       statusText:()=>{const active=Math.max(joined?1:0,activeIds.size);return backend.mode==='cloud'?`${c('online')}: ${active} ${participantNoun(active)}`:c('cloudRequired')},
       matrixOptions:({question})=>{
@@ -163,7 +163,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   };
   if(backend.mode==='cloud'){
     try{
-      ({leave}=await backend.joinAutomaticQuizRoom(group));joined=true;
+      if(participateLive){({leave}=await backend.joinAutomaticQuizRoom(group));joined=true}
       unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;updateLiveState()});
       unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
     }
@@ -185,7 +185,7 @@ function boardInsight({reveal,active,accuracy,wrong,question}){
 
 export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   const availableGroups=groupOptions();
-  let group=availableGroups.includes(initialGroup)?initialGroup:availableGroups[0];
+  let group=availableGroups.includes(initialGroup)?initialGroup:'';
   let presence={};
   let responses={};
   let selectedIndex=null;
@@ -198,7 +198,7 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   container.innerHTML=`
     <div class="auto-board-shell">
       <div class="panel auto-board-toolbar">
-        <div class="auto-board-stat"><span>${escapeHtml(c('group'))}</span><strong id="autoBoardGroup">${escapeHtml(group)}</strong><small>${escapeHtml(c('autoGroup'))}</small></div>
+        <div class="auto-board-stat"><span>${escapeHtml(c('group'))}</span><strong id="autoBoardGroup">${escapeHtml(group||c('waitingGroup'))}</strong><small>${escapeHtml(c('autoGroup'))}</small></div>
         <div class="auto-board-stat"><span>${escapeHtml(c('online'))}</span><strong id="autoBoardParticipants">0</strong><small id="autoBoardParticipantLabel">${escapeHtml(participantNoun(0))}</small></div>
         <div class="auto-board-stat"><span>${escapeHtml(c('unique'))}</span><strong id="autoBoardUnique">0</strong></div>
       </div>
@@ -218,9 +218,9 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
     const questions=session.questions;
     const activeIds=activeParticipantIds(presence);
     const active=activeIds.size;
-    const nextGroup=detectedGroup(presence,group);
-    if(availableGroups.includes(nextGroup)&&nextGroup!==group){group=nextGroup;onGroupChange?.(group)}
-    container.querySelector('#autoBoardGroup').textContent=group;
+    const nextGroup=detectedGroup(presence,'');
+    if(nextGroup!==group&&(nextGroup===''||availableGroups.includes(nextGroup))){group=nextGroup;onGroupChange?.(group)}
+    container.querySelector('#autoBoardGroup').textContent=group||c('waitingGroup');
     const unique=new Set();
     for(const question of questions){
       for(const [uid] of Object.entries(responses?.[question.id]||{})){
