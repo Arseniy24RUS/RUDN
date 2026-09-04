@@ -65,7 +65,7 @@
                 "$questionId": {
                   "$participantUid": {
                     ".write": "auth != null && $participantUid === auth.uid",
-                    ".validate": "newData.hasChildren(['participantUid','questionId','questionIndex','answer','group']) && newData.child('participantUid').val() === auth.uid && newData.child('questionId').val() === $questionId && newData.child('questionIndex').isNumber() && newData.child('questionIndex').val() >= 0 && newData.child('questionIndex').val() < 10 && newData.child('answer').isString() && newData.child('answer').val().matches(/^((federal|regional)\\|(legislative|executive|judicial)|municipal\\|(representative|administration|other|legislative|executive|judicial))$/) && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/)"
+                    ".validate": "newData.hasChildren(['participantUid','questionId','questionIndex','answer','group']) && newData.child('participantUid').val() === auth.uid && newData.child('questionId').val() === $questionId && newData.child('questionIndex').isNumber() && newData.child('questionIndex').val() >= 0 && newData.child('questionIndex').val() < 50 && newData.child('answer').isString() && newData.child('answer').val().matches(/^((federal|regional)\\|(legislative|executive|judicial)|municipal\\|(representative|administration|other|legislative|executive|judicial))$/) && newData.child('group').isString() && newData.child('group').val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/)"
                   }
                 }
               }

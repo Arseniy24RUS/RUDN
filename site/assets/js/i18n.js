@@ -13,7 +13,7 @@ const dictionaries = {
     puzzleTitle:'Географический конструктор', puzzleLead:'Субъекты России, муниципалитеты, страны мира и регионы других государств.', launchPuzzle:'Открыть конструктор',
     teacherTitle:'Панель преподавателя', teacherLead:'Электронный журнал, контингент и общая доска аудиторного квиза.', teacherEmail:'Email преподавателя', password:'Пароль', teacherLogin:'Войти как преподаватель', firebaseSetup:'Для защищённого журнала включите Firebase Authentication и примените правила из каталога firebase.',
     test:'Тест', video:'Видео', pdf:'PDF', pptx:'PPTX', watchLecture:'Смотреть лекцию', takeTest:'Пройти тест', youtube:'YouTube', vk:'VK Видео', source:'Источник',
-    quizQuestion:'Вопрос', next:'Далее', previous:'Назад', finish:'Завершить', selectAnswer:'Выберите ответ', typeAnswer:'Введите ответ', quizResult:'Результат', correct:'Верно', incorrect:'Неверно', review:'Разбор ответов', retry:'Пройти ещё раз', backToCourse:'Вернуться к курсу',
+    quizQuestion:'Вопрос', questionList:'Список вопросов', next:'Далее', previous:'Назад', finish:'Завершить', selectAnswer:'Выберите ответ', typeAnswer:'Введите ответ', quizResult:'Результат', correct:'Верно', incorrect:'Неверно', review:'Разбор ответов', retry:'Пройти ещё раз', backToCourse:'Вернуться к курсу',
     submissionSaved:'Работа сохранена', synced:'Синхронизировано', localSaved:'Сохранено на устройстве', error:'Ошибка',
   },
   en: {
@@ -30,7 +30,7 @@ const dictionaries = {
     puzzleTitle:'Geographic Constructor', puzzleLead:'Russian federal subjects, municipalities, countries of the world and regions of other states.', launchPuzzle:'Open constructor',
     teacherTitle:'Instructor panel', teacherLead:'Gradebook, enrolment data and the shared classroom quiz board.', teacherEmail:'Instructor email', password:'Password', teacherLogin:'Sign in as instructor', firebaseSetup:'For a protected gradebook, enable Firebase Authentication and apply the rules from the firebase directory.',
     test:'Test', video:'Video', pdf:'PDF', pptx:'PPTX', watchLecture:'Watch lecture', takeTest:'Take test', youtube:'YouTube', vk:'VK Video', source:'Source',
-    quizQuestion:'Question', next:'Next', previous:'Back', finish:'Finish', selectAnswer:'Select an answer', typeAnswer:'Enter your answer', quizResult:'Result', correct:'Correct', incorrect:'Incorrect', review:'Review answers', retry:'Try again', backToCourse:'Return to course',
+    quizQuestion:'Question', questionList:'Question list', next:'Next', previous:'Back', finish:'Finish', selectAnswer:'Select an answer', typeAnswer:'Enter your answer', quizResult:'Result', correct:'Correct', incorrect:'Incorrect', review:'Review answers', retry:'Try again', backToCourse:'Return to course',
     submissionSaved:'Submission saved', synced:'Synchronized', localSaved:'Saved on this device', error:'Error',
   },
   zh: {
@@ -47,7 +47,7 @@ const dictionaries = {
     puzzleTitle:'地理拼图构造器', puzzleLead:'俄罗斯联邦主体、市政单位、世界各国及其他国家的一级行政区。', launchPuzzle:'打开构造器',
     teacherTitle:'教师控制台', teacherLead:'电子成绩册、学生信息和课堂测验共享大屏。', teacherEmail:'教师邮箱', password:'密码', teacherLogin:'教师登录', firebaseSetup:'为确保成绩册安全，请启用Firebase Authentication并应用firebase目录中的规则。',
     test:'测验', video:'视频', pdf:'PDF', pptx:'PPTX', watchLecture:'观看讲座', takeTest:'参加测验', youtube:'YouTube', vk:'VK视频', source:'来源',
-    quizQuestion:'题目', next:'下一题', previous:'上一题', finish:'完成', selectAnswer:'请选择答案', typeAnswer:'请输入答案', quizResult:'结果', correct:'正确', incorrect:'错误', review:'查看答案', retry:'重新作答', backToCourse:'返回课程',
+    quizQuestion:'题目', questionList:'题目列表', next:'下一题', previous:'上一题', finish:'完成', selectAnswer:'请选择答案', typeAnswer:'请输入答案', quizResult:'结果', correct:'正确', incorrect:'错误', review:'查看答案', retry:'重新作答', backToCourse:'返回课程',
     submissionSaved:'作业已保存', synced:'已同步', localSaved:'已保存在本设备', error:'错误',
   }
 };

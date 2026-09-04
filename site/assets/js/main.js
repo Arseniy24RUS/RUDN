@@ -1,8 +1,8 @@
-import {CONFIG} from './config.js?v=1.1.2';
-import {backend,groupOptions} from './backend.js?v=1.1.2';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.2';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.2';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.2';
+import {CONFIG} from './config.js?v=1.1.3';
+import {backend,groupOptions} from './backend.js?v=1.1.3';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.3';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.3';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.3';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -388,7 +388,12 @@ function renderPuzzleRoute(asSeminar=false){
 async function renderLive(){
   const profile=backend.getProfile();
   app.innerHTML=contentPage(ui('liveTitle'),ui('liveLead'),`<div id="automaticBoard"></div>`);
-  currentCleanup=mountAutomaticBoard(app.querySelector('#automaticBoard'),{initialGroup:profile?.group});
+  if(backend.isAdmin()){
+    currentCleanup=mountAutomaticBoard(app.querySelector('#automaticBoard'),{initialGroup:profile?.group});
+    return;
+  }
+  if(!profile){requireProfile();return}
+  currentCleanup=await mountAdaptiveSeminar1(app.querySelector('#automaticBoard'),{onExit:()=>{location.hash='dashboard'}});
 }
 async function renderAdmin(){
   if(!backend.isAdmin()){

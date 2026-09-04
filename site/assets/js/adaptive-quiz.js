@@ -1,17 +1,17 @@
-import {CONFIG} from './config.js?v=1.1.2';
-import {backend,groupOptions} from './backend.js?v=1.1.2';
+import {CONFIG} from './config.js?v=1.1.3';
+import {backend,groupOptions} from './backend.js?v=1.1.3';
 import {
   buildQuiz,
   canonicalMatrixValue,
   correctMatrixValue,
   feedbackText,
-  institutionText,
   matrixChoiceLabel,
+  renderInstitutionHeading,
   renderMatrixButtons,
   renderQuestionMedia,
   renderQuiz
-} from './quiz.js?v=1.1.2';
-import {getLocale} from './i18n.js?v=1.1.2';
+} from './quiz.js?v=1.1.3';
+import {getLocale} from './i18n.js?v=1.1.3';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -23,35 +23,37 @@ const COPY={
     waiting:'Ожидаем ответы студентов…',answered:'Ответили на этот вопрос',
     revealed:'Результаты открыты автоматически',accuracy:'Точность группы',commonError:'Частая ошибка',
     cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase.',
-    question:'Вопрос'
+    question:'Вопрос',questionList:'Список вопросов'
   },
   en:{
     group:'Study group',online:'Currently in the quiz',participants:'participants',unique:'answered at least once',
     waiting:'Waiting for student responses…',answered:'Responses to this question',
     revealed:'Results revealed automatically',accuracy:'Class accuracy',commonError:'Most common misconception',
     cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached.',
-    question:'Question'
+    question:'Question',questionList:'Question list'
   },
   zh:{
     group:'班级',online:'当前参加测验',participants:'名学生',unique:'至少回答过一次',
     waiting:'正在等待学生作答……',answered:'本题已作答',
     revealed:'结果已自动显示',accuracy:'班级正确率',commonError:'最常见误区',
     cloudRequired:'因无法连接 Firebase，共享大屏暂不可用。',
-    question:'题目'
+    question:'题目',questionList:'题目列表'
   }
 };
 
 function c(key){return COPY[getLocale()]?.[key]||COPY.ru[key]||key}
 function roomQuestionSet(group){
   const roomKey=backend.automaticRoomKey(group);
-  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1',{studentKey:roomKey},{seedKey:roomKey});
+  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1',{studentKey:roomKey});
   return {roomKey,session};
 }
 
 export function activeParticipantIds(presence){
   return new Set(
     Object.entries(presence||{})
-      .filter(([,connections])=>connections&&typeof connections==='object'&&Object.keys(connections).length>0)
+      .filter(([,connections])=>connections&&typeof connections==='object'&&Object.values(connections).some(
+        (connection)=>connection&&typeof connection==='object'&&connection.joinedAt!=null
+      ))
       .map(([uid])=>uid)
   );
 }
@@ -91,21 +93,42 @@ export async function mountAdaptiveSeminar1(container,{onExit}={}){
   const profile=backend.getProfile();
   const {roomKey,session}=roomQuestionSet(profile.group);
   let leave=()=>{};
-  if(backend.mode==='cloud'){
-    try{({leave}=await backend.joinAutomaticQuizRoom(profile.group))}
-    catch(error){console.warn('Automatic classroom connection failed',error)}
-  }
+  let unsubPresence=()=>{};
+  let unsubResponses=()=>{};
+  let presence={};
+  let responses={};
+  let joined=false;
   let closed=false;
+  const render=()=>{
+    if(closed)return;
+    const activeIds=activeParticipantIds(presence);
+    renderQuiz(container,session,{
+      onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
+      onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index),
+      onFinish:()=>{},
+      statusText:()=>backend.mode==='cloud'?`${c('online')}: ${Math.max(joined?1:0,activeIds.size)} ${c('participants')}`:c('cloudRequired'),
+      matrixOptions:({question})=>{
+        const records=recordsFor(responses,question.id,activeIds);
+        return {counts:answerCounts(records),total:records.length,showDistribution:true};
+      }
+    });
+  };
   const cleanup=()=>{
     if(closed)return;
     closed=true;
+    try{unsubPresence()}catch{}
+    try{unsubResponses()}catch{}
     try{leave()}catch{}
   };
-  renderQuiz(container,session,{
-    onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
-    onAnswer:({question,value,index})=>backend.submitAutomaticQuizResponse(roomKey,question.id,value,index),
-    onFinish:()=>{}
-  });
+  if(backend.mode==='cloud'){
+    try{
+      ({leave}=await backend.joinAutomaticQuizRoom(profile.group));joined=true;
+      unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;render()});
+      unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;render()});
+    }
+    catch(error){console.warn('Automatic classroom connection failed',error)}
+  }
+  render();
   return cleanup;
 }
 
@@ -125,6 +148,7 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
   let responses={};
   let selectedIndex=null;
   let followLatest=true;
+  let navOpen=false;
   let unsubPresence=()=>{};
   let unsubResponses=()=>{};
   let disposed=false;
@@ -181,25 +205,26 @@ export function mountAutomaticBoard(container,{initialGroup}={}){
       .sort((a,b)=>b[1]-a[1])[0];
     const tabs=questions.map((item,index)=>{
       const answered=recordsFor(responses,item.id,activeIds).length;
-      return `<button type="button" class="board-question-tab ${index===selectedIndex?'active':''}" data-board-index="${index}"><span>${index+1}</span><small>${answered}</small></button>`;
+      return `<button type="button" class="board-question-tab ${index===selectedIndex?'active':''}" data-board-index="${index}" aria-current="${index===selectedIndex?'step':'false'}"><span>${index+1}</span><small>${answered}</small></button>`;
     }).join('');
     const status=records.length?`${c('answered')}: ${records.length}${active?` / ${active}`:''}`:c('waiting');
     content.innerHTML=`
       <section class="panel auto-board-panel">
-        <div class="board-question-nav">${tabs}</div>
-        <div class="board-meta"><span class="badge">${escapeHtml(c('question'))} ${selectedIndex+1}/${questions.length}</span><span class="badge ${active>1?'success':''}">${escapeHtml(status)}</span></div>
-        <h1 class="board-question-title institution-title">${escapeHtml(institutionText(question))}</h1>
-        ${renderQuestionMedia(question)}
-        ${renderMatrixButtons(question,'',{counts,total:records.length,reveal,disabled:true})}
+        <details class="board-question-navigation" ${navOpen?'open':''}><summary><span>${escapeHtml(c('questionList'))}</span><strong>${selectedIndex+1}/${questions.length}</strong></summary><div class="board-question-nav">${tabs}</div></details>
+        <div class="board-meta"><span class="badge ${active>1?'success':''}">${escapeHtml(status)}</span></div>
+        ${renderInstitutionHeading(question,{tag:'h1',board:true})}
+        ${renderQuestionMedia(question,{showSymbol:false})}
+        ${renderMatrixButtons(question,'',{counts,total:records.length,reveal,showDistribution:true,disabled:true})}
         ${boardInsight({reveal,active,accuracy,wrong,question})}
       </section>`;
+    const navigation=content.querySelector('.board-question-navigation');if(navigation)navigation.ontoggle=()=>{navOpen=navigation.open};
     content.querySelectorAll('[data-board-index]').forEach((button)=>{
-      button.onclick=()=>{followLatest=false;selectedIndex=Number(button.dataset.boardIndex);render()};
+      button.onclick=()=>{followLatest=false;selectedIndex=Number(button.dataset.boardIndex);navOpen=false;render()};
     });
   }
   function subscribe(){
     cleanupSubscriptions();
-    presence={};responses={};selectedIndex=null;followLatest=true;
+    presence={};responses={};selectedIndex=null;followLatest=true;navOpen=false;
     if(backend.mode!=='cloud'){
       content.innerHTML=`<div class="panel notice warning">${escapeHtml(c('cloudRequired'))}</div>`;
       container.querySelector('#autoBoardParticipants').textContent='0';

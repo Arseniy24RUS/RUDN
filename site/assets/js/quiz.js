@@ -1,9 +1,8 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.2';
-import {backend} from './backend.js?v=1.1.2';
+import {getLocale,localized,t} from './i18n.js?v=1.1.3';
+import {backend} from './backend.js?v=1.1.3';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const shuffle=(array,seed=Date.now())=>{const copy=[...array];let state=seed>>>0;const rand=()=>{state+=0x6D2B79F5;let x=state;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296};for(let i=copy.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy};
 const hash=(s)=>{let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const norm=(s)=>String(s??'').toLowerCase().replace(/ё/g,'е').replace(/[«»“”"'.,;:!?()\[\]{}]/g,' ').replace(/\s+/g,' ').trim();
 const SEMINAR1_ASSESSMENT_IDS=[
@@ -79,7 +78,7 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
     const byId=new Map(all.map(q=>[q.id,q]));const assessment=options.mode==='assessment';
     if(Array.isArray(options.questionIds)&&options.questionIds.length)pool=options.questionIds.map(id=>byId.get(id)).filter(Boolean);
     else if(assessment)pool=SEMINAR1_ASSESSMENT_IDS.map(id=>byId.get(id)).filter(Boolean);
-    else pool=shuffle(all,hash(options.seedKey||profile?.studentKey||Date.now()));
+    else pool=[...all];
     pointsMax=assessment?5:pool.length;recordAttempt=assessment;
     title=assessment
       ?getLocale()==='en'?'Independent work · Branches and Levels of Public Authority':getLocale()==='zh'?'自主作业 · 公共权力分支与层级':'Самостоятельная работа · Ветви и уровни власти'
@@ -94,11 +93,17 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
   return {id:uuid(),activitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt,buildOptions:{...options}};
 }
 
-export function renderQuestionMedia(q){
+export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
+  const safeTag=tag==='h1'?'h1':'h2';const m=q.media||{};
+  const symbol=m.symbol?`<img class="institution-heading-logo" src="${escapeHtml(m.symbol)}" alt="${escapeHtml(localized(m,'symbol_alt',''))}">`:'';
+  return `<div class="institution-heading ${board?'board-institution-heading':''}">${symbol}<${safeTag} class="institution-title ${board?'board-question-title':''}">${escapeHtml(institutionText(q))}</${safeTag}></div>`;
+}
+
+export function renderQuestionMedia(q,{showSymbol=true}={}){
   const m=q.media;if(!m)return'';
   const photo=m.photo?`<div><img class="question-photo" src="${escapeHtml(m.photo)}" alt="${escapeHtml(localized(m,'photo_alt',''))}"></div>`:'';
-  const symbol=m.symbol?`<div><img class="question-symbol" src="${escapeHtml(m.symbol)}" alt="${escapeHtml(localized(m,'symbol_alt',''))}"></div>`:'';
-  return photo||symbol?`<div class="question-media">${photo}${symbol}</div>`:'';
+  const symbol=showSymbol&&m.symbol?`<div><img class="question-symbol" src="${escapeHtml(m.symbol)}" alt="${escapeHtml(localized(m,'symbol_alt',''))}"></div>`:'';
+  return photo||symbol?`<div class="question-media ${photo&&symbol?'':'single'}">${photo}${symbol}</div>`:'';
 }
 
 function selectedValue(session,q){return session.answers[q.id]??(q.single?'':[])}
@@ -114,27 +119,42 @@ export function renderMatrixButtons(q,selected='',options={}){
     normalizedCounts[canonical]=(normalizedCounts[canonical]||0)+Number(count||0);
   }
   const selectedValueCanonical=canonicalMatrixValue(selected);
-  const reveal=Boolean(options.reveal);const total=Number(options.total||0);const correct=correctMatrixValue(q);
+  const reveal=Boolean(options.reveal);const showDistribution=Boolean(options.showDistribution);const total=Number(options.total||0);const correct=correctMatrixValue(q);
   return `<div class="matrix-option-grid" role="radiogroup" aria-label="${escapeHtml(t('selectAnswer'))}">${matrixChoices().map(choice=>{
     const count=Number(normalizedCounts[choice.value]||0);const percent=total?Math.round(count/total*100):0;
-    const state=[selectedValueCanonical===choice.value?'selected':'',reveal&&choice.value===correct?'correct':'',reveal&&count&&choice.value!==correct?'has-wrong':''].filter(Boolean).join(' ');
+    const state=[selectedValueCanonical===choice.value?'selected':'',showDistribution?'live-distribution':'',reveal&&choice.value===correct?'correct':'',reveal&&count&&choice.value!==correct?'has-wrong':''].filter(Boolean).join(' ');
     const fullLabel=`${choice.level}: ${choice.authority}`;
-    return `<button type="button" class="matrix-option ${state}" data-level="${choice.row}" data-matrix="${choice.value}" aria-label="${escapeHtml(fullLabel)}" title="${escapeHtml(fullLabel)}" aria-pressed="${selectedValueCanonical===choice.value}" aria-keyshortcuts="${choice.index}" ${options.disabled?'disabled':''}><span class="matrix-option-level">${escapeHtml(choice.level)}</span><strong>${escapeHtml(choice.authority)}</strong>${reveal?`<span class="matrix-option-result"><b>${count}</b><small>${percent}%</small></span>`:''}</button>`;
+    const accessibleLabel=showDistribution?`${fullLabel} · ${percent}%`:fullLabel;
+    return `<button type="button" class="matrix-option ${state}" style="--answer-share:${percent}%" data-level="${choice.row}" data-matrix="${choice.value}" aria-label="${escapeHtml(accessibleLabel)}" title="${escapeHtml(fullLabel)}" aria-pressed="${selectedValueCanonical===choice.value}" aria-keyshortcuts="${choice.index}" ${options.disabled?'disabled':''}><span class="matrix-option-level">${escapeHtml(choice.level)}</span><strong>${escapeHtml(choice.authority)}</strong>${reveal||(showDistribution&&count>0)?`<span class="matrix-option-result"><b>${count}</b><small>${percent}%</small></span>`:''}</button>`;
   }).join('')}</div>`;
 }
-function renderMatrix(q,session){return renderMatrixButtons(q,selectedValue(session,q))}
+function renderMatrix(q,session,options={}){return renderMatrixButtons(q,selectedValue(session,q),options)}
+
+function renderQuestionNavigator(session){
+  const items=session.questions.map((question,index)=>{
+    const active=index===session.index;const answered=hasAnswer(question,session.answers[question.id]);
+    return `<button type="button" class="quiz-question-tab ${active?'active':''} ${answered?'answered':''}" data-quiz-index="${index}" aria-current="${active?'step':'false'}" aria-label="${escapeHtml(t('quizQuestion'))} ${index+1}">${index+1}</button>`;
+  }).join('');
+  return `<details class="quiz-question-nav" ${session.navOpen?'open':''}><summary><span>${escapeHtml(t('questionList'))}</span><strong>${session.index+1}/${session.questions.length}</strong></summary><div class="quiz-question-list">${items}</div></details>`;
+}
 
 export function renderQuiz(container,session,options={}){
   const {onExit,onAnswer,onQuestionChange}=options;const q=session.questions[session.index];
   if(!q){container.innerHTML=`<div class="panel"><p>В этом блоке пока нет вопросов.</p><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div>`;container.querySelector('#quizExit').onclick=onExit||(()=>history.back());return}
-  const progress=(session.index/session.questions.length)*100;const body=q.type==='matrix_single'?renderMatrix(q,session):q.type==='shortanswer'?renderShort(q,session):renderMultichoice(q,session);
-  const title=q.type==='matrix_single'?institutionText(q):questionText(q);
-  container.innerHTML=`<div class="quiz-shell"><div class="quiz-progress"><span>${t('quizQuestion')} ${session.index+1}/${session.questions.length}</span><div class="track"><span style="width:${progress}%"></span></div></div><article class="quiz-question"><div class="question-kicker">${escapeHtml(categoryText(q))}</div><h2 class="${q.type==='matrix_single'?'institution-title':''}">${escapeHtml(title)}</h2>${renderQuestionMedia(q)}${body}<div class="quiz-actions"><button class="btn btn-neutral" id="quizPrev" ${session.index===0?'disabled':''}>← ${t('previous')}</button><button class="btn btn-primary" id="quizNext">${session.index===session.questions.length-1?t('finish'):t('next')} →</button></div></article></div>`;
+  const progress=(session.index/session.questions.length)*100;
+  const matrixOptions=typeof options.matrixOptions==='function'?options.matrixOptions({question:q,index:session.index,session}):(options.matrixOptions||{});
+  const body=q.type==='matrix_single'?renderMatrix(q,session,matrixOptions):q.type==='shortanswer'?renderShort(q,session):renderMultichoice(q,session);
+  const heading=q.type==='matrix_single'?renderInstitutionHeading(q):`<h2>${escapeHtml(questionText(q))}</h2>`;
+  const statusText=typeof options.statusText==='function'?options.statusText({question:q,index:session.index,session}):options.statusText;
+  const questionNavigatorHtml=session.activitySlug==='seminar-1'&&session.recordAttempt===false?renderQuestionNavigator(session):'';
+  container.innerHTML=`<div class="quiz-shell"><div class="quiz-progress"><span>${t('quizQuestion')} ${session.index+1}/${session.questions.length}</span><div class="track"><span style="width:${progress}%"></span></div>${statusText?`<span class="quiz-live-status">${escapeHtml(statusText)}</span>`:''}</div><article class="quiz-question">${questionNavigatorHtml}<div class="question-kicker">${escapeHtml(categoryText(q))}</div>${heading}${renderQuestionMedia(q,{showSymbol:q.type!=='matrix_single'})}${body}<div class="quiz-actions"><button class="btn btn-neutral" id="quizPrev" ${session.index===0?'disabled':''}>← ${t('previous')}</button><button class="btn btn-primary" id="quizNext">${session.index===session.questions.length-1?t('finish'):t('next')} →</button></div></article></div>`;
   Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(console.warn);
   const choose=(value)=>{session.answers[q.id]=value;Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(console.warn);renderQuiz(container,session,options)};
   container.tabIndex=-1;container.focus({preventScroll:true});
   container.querySelectorAll('.answer-option input').forEach(input=>input.addEventListener('change',()=>{if(q.single)choose(input.value);else{const values=[...container.querySelectorAll('.answer-option input:checked')].map(x=>x.value);choose(values)}}));
   container.querySelectorAll('[data-matrix]').forEach(btn=>btn.addEventListener('click',()=>choose(btn.dataset.matrix)));
+  const questionNavigatorElement=container.querySelector('.quiz-question-nav');if(questionNavigatorElement)questionNavigatorElement.ontoggle=()=>{session.navOpen=questionNavigatorElement.open};
+  container.querySelectorAll('[data-quiz-index]').forEach(button=>button.onclick=()=>{session.index=Number(button.dataset.quizIndex);session.navOpen=false;renderQuiz(container,session,options)});
   container.onkeydown=event=>{if(q.type!=='matrix_single'||event.altKey||event.ctrlKey||event.metaKey)return;const n=Number(event.key);if(n>=1&&n<=9){event.preventDefault();container.querySelector(`[aria-keyshortcuts="${n}"]`)?.click()}};
   const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>session.answers[q.id]=short.value);short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(console.warn))}
   container.querySelector('#quizPrev').onclick=()=>{session.index=Math.max(0,session.index-1);renderQuiz(container,session,options)};
