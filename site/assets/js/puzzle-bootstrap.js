@@ -1,6 +1,6 @@
-import {backend} from './backend.js?v=1.1.13';
-import {getLocale} from './i18n.js?v=1.1.13';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.13';
+import {backend} from './backend.js?v=1.1.14';
+import {getLocale} from './i18n.js?v=1.1.14';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.14';
 
 const locale=getLocale();
 const context=new URLSearchParams(location.search).get('context')==='seminar'?'seminar':'free';
@@ -88,7 +88,7 @@ const formatLeaderboardTime=value=>{const seconds=Math.max(0,Math.floor(Number(v
 let leaderboardRows=[];
 function bestLeaderboardRows(items){
   const best=new Map();
-  for(const row of items){if(!['easy','medium','hard'].includes(row?.difficulty)||Number(row?.total)!==89||Number(row?.placed)!==89)continue;const key=`${String(row.fio||'').trim().toLowerCase()}|${String(row.group||'').trim().toLowerCase()}|${row.difficulty}`;const prior=best.get(key);if(!prior||Number(row.time_ms)<Number(prior.time_ms))best.set(key,row)}
+  for(const row of items){if(!['easy','medium','hard'].includes(row?.difficulty)||Number(row?.total)!==89||Number(row?.placed)!==89||Number(row?.time_ms)<=1000)continue;const key=`${String(row.fio||'').trim().toLowerCase()}|${String(row.group||'').trim().toLowerCase()}|${row.difficulty}`;const prior=best.get(key);if(!prior||Number(row.time_ms)<Number(prior.time_ms))best.set(key,row)}
   return [...best.values()].sort((a,b)=>Number(a.time_ms)-Number(b.time_ms)||Number(a.timestamp)-Number(b.timestamp));
 }
 async function renderLeaderboard(){

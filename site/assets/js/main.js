@@ -1,9 +1,9 @@
-import {CONFIG} from './config.js?v=1.1.13';
-import {backend,groupOptions} from './backend.js?v=1.1.13';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.13';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.13';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.13';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.13';
+import {CONFIG} from './config.js?v=1.1.14';
+import {backend,groupOptions} from './backend.js?v=1.1.14';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.14';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.14';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.14';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.14';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');

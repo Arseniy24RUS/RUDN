@@ -1182,7 +1182,7 @@
     ctx.fillStyle = "#152238";
     ctx.font = '800 13px Inter, "Segoe UI", sans-serif';
     const name = state.current >= 0 ? state.features[state.current].properties._puzzleName : "";
-    drawEllipsizedText(ctx, name, tray.x + 13, tray.y + 42, Math.min(350, tray.width * 0.35));
+    drawWrappedText(ctx, name, tray.x + 13, tray.y + 42, tray.width - 26, 16);
     ctx.restore();
   }
 
@@ -1197,14 +1197,21 @@
     context.closePath();
   }
 
-  function drawEllipsizedText(context, text, x, y, maxWidth) {
-    let value = String(text || "");
-    if (context.measureText(value).width <= maxWidth) {
-      context.fillText(value, x, y);
-      return;
-    }
-    while (value.length > 2 && context.measureText(`${value}…`).width > maxWidth) value = value.slice(0, -1);
-    context.fillText(`${value}…`, x, y);
+  function drawWrappedText(context, text, x, y, maxWidth, lineHeight) {
+    const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+    const lines = [];
+    let line = "";
+    words.forEach((word) => {
+      const candidate = line ? `${line} ${word}` : word;
+      if (line && context.measureText(candidate).width > maxWidth) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = candidate;
+      }
+    });
+    if (line) lines.push(line);
+    lines.forEach((value, index) => context.fillText(value, x, y + index * lineHeight));
   }
 
   function rebuildStaticLayer() {
@@ -1449,8 +1456,9 @@
   }
 
   async function completeGame() {
+    const completedDuration = elapsedMs();
     state.finished = true;
-    state.elapsedBeforeStart = elapsedMs();
+    state.elapsedBeforeStart = completedDuration;
     state.current = -1;
     updateUi();
     drawAll(true);
@@ -1497,8 +1505,8 @@
       els.resultPointsLabel.textContent = tr("Баллы в журнал");
       els.resultPoints.textContent = `${formatPoints(result.points)}/5`;
     } else {
-      els.resultPointsLabel.textContent = tr("Режим");
-      els.resultPoints.textContent = tr("тренировка");
+      els.resultPointsLabel.textContent = tr("Сложность");
+      els.resultPoints.textContent = DIFFICULTY[state.difficulty].label;
     }
     els.resultCount.textContent = String(state.features.length);
     els.resultTime.textContent = formatTime(duration);

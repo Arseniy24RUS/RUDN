@@ -1,4 +1,4 @@
-import {CONFIG} from './config.js?v=1.1.13';
+import {CONFIG} from './config.js?v=1.1.14';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -283,11 +283,13 @@ class Backend{
   async savePuzzleLeaderboardResult({difficulty,timeMs,placed,total}){
     if(!this.profile||this.mode!=='cloud'||!this.db||!this.database)return null;
     const level=['easy','medium','hard'].includes(difficulty)?difficulty:'medium';
+    const measuredTime=Math.max(0,Math.min(3599000,Math.round(Number(timeMs)||0)));
+    if(measuredTime<=1000)return null;
     const record={
       fio:String(this.profile.fullName||'').slice(0,100),
       group:String(this.profile.group||'').slice(0,50),
       difficulty:level,
-      time_ms:Math.max(0,Math.min(3599000,Math.round(Number(timeMs)||0))),
+      time_ms:measuredTime,
       placed:Number(placed),total:Number(total),
       timestamp:this.db.serverTimestamp(),
       user_agent:String(navigator.userAgent||'browser').slice(0,200)
