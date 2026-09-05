@@ -1,5 +1,5 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.20';
-import {backend} from './backend.js?v=1.1.20';
+import {getLocale,localized,t} from './i18n.js?v=1.1.21';
+import {backend} from './backend.js?v=1.1.21';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -213,12 +213,15 @@ function renderReviewItem(result,index){
 export async function finishQuiz(container,session,options={}){
   const {onExit,onFinish}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
   const raw=results.reduce((s,r)=>s+r.fraction,0);const ratio=results.length?raw/results.length:0;const points=Math.round(ratio*session.pointsMax*100)/100;
+  const showReview=session.buildOptions?.mode!=='assessment';
   const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points,maxPoints:session.pointsMax,ratio,recordGrade:session.recordGrade!==false,answers:session.answers,questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt};
   if(session.recordAttempt!==false){
     await backend.saveAttempt(attempt);
   }
   await Promise.resolve(onFinish?.({attempt,results,session}));
-  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1><p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p><div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div><div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map(renderReviewItem).join('')}</div></div></div>`;
+  const summary=showReview?`<p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p>`:'';
+  const review=showReview?`<div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map(renderReviewItem).join('')}</div></div>`:'';
+  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1>${summary}<div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div>${review}</div>`;
   container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),session.buildOptions||{});renderQuiz(container,next,options)};
   container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');window.dispatchEvent(new CustomEvent('rudn:gradechange'));
 }

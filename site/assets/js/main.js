@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.1.20';
-import {backend,groupOptions} from './backend.js?v=1.1.20';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.20';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.20';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.20';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.20';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.20';
+import {CONFIG} from './config.js?v=1.1.21';
+import {backend,groupOptions} from './backend.js?v=1.1.21';
+import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.21';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.21';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.21';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.21';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.21';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
