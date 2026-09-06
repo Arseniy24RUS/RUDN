@@ -1,5 +1,5 @@
-import {backend} from './backend.js?v=1.2.0';
-import {readState,writeState} from './session.js?v=1.2.0';
+import {backend} from './backend.js?v=1.2.1';
+import {readState,writeState} from './session.js?v=1.2.1';
 
 export function attemptOwner(){
   if(backend.isAdmin())return `teacher:${backend.user.uid}`;

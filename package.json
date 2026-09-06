@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "engines": {"node": ">=20"},
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {"build:firebase": "node scripts/build-firebase.mjs"},
   "dependencies": {"firebase": "12.18.0"},
   "devDependencies": {"esbuild": "0.28.2"}

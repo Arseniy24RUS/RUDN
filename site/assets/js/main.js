@@ -1,14 +1,14 @@
-import {CONFIG} from './config.js?v=1.2.0';
-import {backend,groupOptions} from './backend.js?v=1.2.0';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.2.0';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.2.0';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.2.0';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.2.0';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.2.0';
-import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.2.0';
-import {attemptOwner} from './attempt-session.js?v=1.2.0';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.2.0';
-import {openAccount,mountProfile} from './account.js?v=1.2.0';
+import {CONFIG} from './config.js?v=1.2.1';
+import {backend,groupOptions} from './backend.js?v=1.2.1';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.2.1';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.2.1';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.2.1';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.2.1';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.2.1';
+import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.2.1';
+import {attemptOwner} from './attempt-session.js?v=1.2.1';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.2.1';
+import {openAccount,mountProfile} from './account.js?v=1.2.1';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -212,6 +212,7 @@ function setActiveNav(name){
   document.querySelectorAll('[data-route]').forEach(link=>link.classList.toggle('active',link.dataset.route===normal));
 }
 function updateTopProfile(){
+  document.getElementById('topName').removeAttribute('data-i18n');
   if(backend.isAdmin()){
     document.getElementById('topAvatar').textContent=(backend.user.displayName||backend.user.email||'A')[0].toUpperCase();
     document.getElementById('topName').textContent=backend.user.displayName||backend.user.email;

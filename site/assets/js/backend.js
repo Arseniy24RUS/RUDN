@@ -1,6 +1,6 @@
-import {CONFIG} from './config.js?v=1.2.0';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.2.0';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.2.0';
+import {CONFIG} from './config.js?v=1.2.1';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.2.1';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.2.1';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
