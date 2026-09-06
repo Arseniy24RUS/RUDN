@@ -197,6 +197,7 @@
   };
 
   function toast(message, type = "info", ms = 3000) {
+    if(document.getElementById('toastStack')){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message,type}}));return}
     els.toast.textContent = message;
     els.toast.className = `puzzle-toast ${type}`;
     requestAnimationFrame(() => els.toast.classList.add("visible"));

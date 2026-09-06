@@ -1,10 +1,14 @@
-import {CONFIG} from './config.js?v=1.1.22';
-import {backend,groupOptions} from './backend.js?v=1.1.22';
-import {buildQuiz, renderQuiz, questionText} from './quiz.js?v=1.1.22';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.1.22';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.1.22';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.1.22';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.1.22';
+import {CONFIG} from './config.js?v=1.2.0';
+import {backend,groupOptions} from './backend.js?v=1.2.0';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.2.0';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.2.0';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.2.0';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.2.0';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.2.0';
+import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.2.0';
+import {attemptOwner} from './attempt-session.js?v=1.2.0';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.2.0';
+import {openAccount,mountProfile} from './account.js?v=1.2.0';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -169,15 +173,11 @@ function formatDate(value){
   try{return new Intl.DateTimeFormat(getLocale()==='zh'?'zh-CN':getLocale()==='en'?'en-GB':'ru-RU',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value))}catch{return String(value)}
 }
 function formatDuration(ms){const total=Math.max(0,Math.round(number(ms)/1000));const m=Math.floor(total/60);const s=total%60;return `${m}:${String(s).padStart(2,'0')}`}
-function toast(message,type='info',timeout=3800){
-  const stack=document.getElementById('toastStack');
-  const node=document.createElement('div');node.className=`toast ${type}`;node.textContent=message;stack.append(node);
-  setTimeout(()=>node.remove(),timeout);
-}
-window.addEventListener('rudn:toast',(event)=>toast(event.detail?.message||'',event.detail?.type||'info'));
+initNotifications();
 
 let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{}};
 let currentCleanup=null;
+let renderedKey='';let dataReady=false;let renderRunning=false;let renderAgain=false;
 let accessRefreshTimer=null;
 
 function scheduleAccessRefresh(){
@@ -213,8 +213,8 @@ function setActiveNav(name){
 }
 function updateTopProfile(){
   if(backend.isAdmin()){
-    document.getElementById('topAvatar').textContent='A';
-    document.getElementById('topName').textContent=backend.user.email;
+    document.getElementById('topAvatar').textContent=(backend.user.displayName||backend.user.email||'A')[0].toUpperCase();
+    document.getElementById('topName').textContent=backend.user.displayName||backend.user.email;
     document.getElementById('topGroup').textContent=ui('teacherTitle');
     return;
   }
@@ -224,10 +224,10 @@ function updateTopProfile(){
   document.getElementById('topGroup').textContent=profile?`${profile.group} · ${profile.ticket}`:'';
 }
 function updateSync(status){
-  updateTopProfile();
+  updateTopProfile();updateQuizSaveStatus(app);
 }
 function requireProfile({open=true}={}){
-  if(backend.getProfile())return true;
+  if(backend.getProfile()||backend.isAdmin())return true;
   if(open)openAuthDialog();
   toast(ui('profileRequired'),'error');return false;
 }
@@ -243,22 +243,39 @@ function externalCard(title,description,url,button=ui('openNewTab')){
 }
 
 async function render(){
+  if(!dataReady)return;
+  if(renderRunning){renderAgain=true;return}
+  const nextKey=`${location.hash}:${attemptOwner()}`;
+  if(renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
+  const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;
   if(currentCleanup){try{currentCleanup()}catch{} currentCleanup=null}
   const r=route();setActiveNav(r.name);
   app.setAttribute('aria-busy','true');
   try{
-    if(r.name==='dashboard') await renderDashboard();
+    if(!backend.authReady&&['activity','gradebook','profile','admin','live'].includes(r.name))app.innerHTML=`<div class="panel" role="status">${t('loading')}</div>`;
+    else if(r.name==='dashboard') await renderDashboard();
     else if(r.name==='gradebook') await renderGradebook();
     else if(r.name==='materials') renderMaterials();
     else if(r.name==='profile') renderProfile();
-    else if(r.name==='live'){location.hash='activity/seminar-1-classroom';return}
+    else if(r.name==='live'){location.hash='activity/seminar-1-classroom'}
     else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='admin') await renderAdmin();
     else if(r.name==='activity') await renderActivity(r.parts[0]);
     else location.hash='dashboard';
-  }catch(error){console.error(error);app.innerHTML=contentPage(t('error'),String(error?.message||error),`<div class="panel notice danger">${esc(String(error?.stack||error))}</div>`);}
+  }catch(error){console.error(error.code||error);app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
   app.setAttribute('aria-busy','false');app.focus({preventScroll:true});translateDocument(app);
+  guardSubmissions();
+  if(resetScroll)window.scrollTo({top:0,left:0,behavior:'instant'});
   scheduleAccessRefresh();
+  renderRunning=false;if(renderAgain){renderAgain=false;render()}
+}
+function guardSubmissions(){
+  app.querySelectorAll('#settlementForm,#appealForm,#civilForm,#simulatorForm').forEach(form=>{
+    const submit=form.onsubmit;if(!submit||form.dataset.guarded)return;form.dataset.guarded='true';
+    form.onsubmit=async event=>{event.preventDefault();if(form.dataset.saving)return;form.dataset.saving='true';form.setAttribute('aria-busy','true');const button=form.querySelector('[type=submit]'),label=button.textContent;button.disabled=true;button.textContent=t('loading');
+      try{await submit.call(form,event)}catch(error){toast(error,'error')}finally{delete form.dataset.saving;form.setAttribute('aria-busy','false');button.disabled=false;button.textContent=label}
+    };
+  });
 }
 
 function bestCourseQuizAttempt(attempts=[]){
@@ -271,11 +288,13 @@ function courseResult(result,max){
 }
 async function renderDashboard(){
   const profile=backend.getProfile();
+  const owner=attemptOwner();
   const [grades,attempts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts()]):[{},[]];
+  if(owner!==attemptOwner())return;
   const classroomBest=bestCourseQuizAttempt(attempts);
   const total=Object.values(grades).reduce((sum,g)=>sum+number(g.points),0);
   const coursework=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).reduce((sum,slug)=>sum+number(grades[slug]?.points),0);
-  const completed=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).filter(slug=>number(grades[slug]?.points)>0).length;
+  const completed=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).filter(slug=>Boolean(grades[slug])).length;
   const access=accessSnapshot();
   const topics=data.course.topics.map(topic=>{
     const lecture=topic.lecture,seminar=topic.seminar;const gate=topicGate(topic.number,access.overrides,access.now);const allowed=accessAllowed(gate);
@@ -294,6 +313,11 @@ async function renderDashboard(){
   }).join('');
   app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</span><span>${accessText('currentWeek')}: ${access.context.week}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${accessText('scheduleLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
   app.querySelector('#heroLogin')?.addEventListener('click',openAuthDialog);
+  if(backend.isAdmin()){
+    app.querySelector('.score-ring')?.remove();app.querySelector('.stats-grid')?.remove();app.querySelector('#heroLogin')?.remove();
+    app.querySelectorAll('.activity-mini .grade').forEach(element=>element.remove());
+    const status=app.querySelector('.hero-meta span:last-child');if(status)status.textContent=`${backend.user.displayName||backend.user.email} · ${ui('teacherTitle')}`;
+  }
 }
 
 const gradeItems=()=>[
@@ -304,7 +328,15 @@ const gradeItems=()=>[
   {slug:'exam',title:ui('examination'),max:20,kind:ui('examination')}
 ];
 async function renderGradebook(){
+  if(backend.isAdmin()){
+    const hash=location.hash,uid=backend.user.uid;
+    app.innerHTML=contentPage(ui('gradebookTitle'),'',`<div class="panel" role="status">${t('loading')}</div>`);
+    mountTeacherJournal(app,{topics:data.course.topics,onEdit:renderStudentGrades,downloadCsv}).catch(error=>{if(location.hash===hash&&backend.user?.uid===uid&&backend.isAdmin()){app.innerHTML=contentPage(ui('gradebookTitle'),'',`<div class="panel notice danger">${esc(errorText(error))}</div>`);toast(error,'error')}});
+    return;
+  }
+  const owner=attemptOwner();
   const profile=backend.getProfile();const grades=await backend.getGrades();const attempts=await backend.getAttempts();const items=gradeItems();
+  if(owner!==attemptOwner())return;
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
   const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:'<span class="grade-empty">—</span>'}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
   const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
@@ -330,12 +362,10 @@ function renderMaterials(){
 }
 
 function renderProfile(){
-  const p=backend.getProfile();
-  const body=p?`<div class="panel"><h2>${ui('profileReady')}</h2><dl class="profile-dl"><dt>${ui('fullName')}</dt><dd>${esc(p.fullName)}</dd><dt>${ui('identifier')}</dt><dd>${esc(p.ticket)}</dd><dt>${ui('corporateEmail')}</dt><dd>${esc(p.email)}</dd><dt>${ui('group')}</dt><dd>${esc(p.group)}</dd></dl><div class="page-actions"><button class="btn btn-primary" id="editProfile">${ui('editProfile')}</button><button class="btn btn-danger" id="removeProfile">${ui('signOutLocal')}</button></div></div>`:`<div class="panel empty-state"><div class="icon">◎</div><h2>${ui('noProfile')}</h2><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="profileLogin">${ui('login')}</button></div>`;
-  app.innerHTML=contentPage(ui('profileTitle'),ui('profileHelp'),body);
+  if(mountProfile(app))return;
+  const body=`<div class="panel empty-state"><div class="icon">◎</div><h2>${ui('noProfile')}</h2><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="profileLogin">${ui('login')}</button></div>`;
+  app.innerHTML=contentPage(t('navProfile'),'',body);
   app.querySelector('#profileLogin')?.addEventListener('click',openAuthDialog);
-  app.querySelector('#editProfile')?.addEventListener('click',openAuthDialog);
-  app.querySelector('#removeProfile')?.addEventListener('click',()=>{if(confirm(ui('confirmDelete'))){backend.clearLocalProfile();render()}});
 }
 async function renderActivity(slug){
   if(slug==='seminar-1'){location.hash='activity/seminar-1-classroom';return}
@@ -348,6 +378,7 @@ async function renderActivity(slug){
   else await renderSeminar(topic);
 }
 function renderLecture(topic){
+  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
   const lecture=topic.lecture;const n=topic.number;const currentPresentation=presentationPdf(lecture);
   const testAvailable=n<=7;
   const access=accessSnapshot();const testGate=testAvailable?lectureTestGate(n,access.overrides,access.now):null;const testAllowed=testGate&&accessAllowed(testGate);
@@ -365,7 +396,7 @@ function renderLecture(topic){
     event.preventDefault();if(!requireProfile())return;
     const form=new FormData(event.currentTarget);const reflection=String(form.get('reflection')||'').trim();
     const result=String(form.get('result')||'').trim();if(reflection.length<120||!result){toast(ui('fillRequired'),'error');return}
-    await backend.saveAttempt({type:'reflection',activitySlug:'lecture-8',title:loc(lecture,'title',lecture.title),points:5,maxPoints:5,result,reflection});toast(ui('saved'),'success');render();
+    await backend.saveAttempt({studentKey,type:'reflection',activitySlug:'lecture-8',title:loc(lecture,'title',lecture.title),points:5,maxPoints:5,result,reflection});toast(ui('saved'),'success');render();
   });
 }
 
@@ -394,6 +425,7 @@ async function startQuiz(activitySlug){
   const classroom=activitySlug==='seminar-1-classroom';
   if(!(classroom&&backend.isAdmin())&&!requireProfile())return;
   app.innerHTML=`<section class="page"><div id="quizMount"></div></section>`;
+  window.scrollTo({top:0,left:0,behavior:'instant'});
   const mount=app.querySelector('#quizMount');
   const returnTo=(target)=>{const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
   if(activitySlug==='seminar-1-classroom'){
@@ -408,11 +440,17 @@ async function startQuiz(activitySlug){
       };
       const showQuiz=async()=>{
         if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('play');
-        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,participateLive:false,onExit:showBoard});
+        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,participateLive:false,onExit:()=>returnTo('dashboard')});
       };
       controls.querySelector('[data-admin-quiz-mode="board"]').onclick=showBoard;
-      controls.querySelector('[data-admin-quiz-mode="play"]').onclick=()=>showQuiz().catch(error=>toast(String(error.message||error),'error'));
+      controls.querySelector('[data-admin-quiz-mode="play"]').onclick=()=>showQuiz().catch(error=>toast(error,'error'));
       currentCleanup=()=>{disposed=true;try{activeCleanup()}catch{}};
+      currentCleanup.refreshLocale=()=>{
+        controls.querySelector('[data-admin-quiz-mode="board"]').textContent=ui('quizBoardMode');
+        controls.querySelector('[data-admin-quiz-mode="play"]').textContent=ui('takeQuizMode');
+        app.querySelector('.page-head h1').textContent=ui('seminar1ClassroomTitle');app.querySelector('.page-head p').textContent=ui('adminQuizInstruction');
+        app.querySelector('.page-actions a').textContent=`← ${ui('back')}`;activeCleanup.refreshLocale?.();
+      };
       showBoard();
       return;
     }
@@ -420,22 +458,26 @@ async function startQuiz(activitySlug){
     return;
   }
   const assessment=activitySlug==='seminar-1-assessment';
-  const session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
-  renderQuiz(mount,session,{onExit:()=>returnTo(assessment?'dashboard':`activity/${activitySlug}`)});
+  let session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
+  const options={onExit:()=>returnTo('dashboard'),onSessionChange:next=>{session=next}};
+  currentCleanup=()=>{};currentCleanup.refreshLocale=()=>renderQuiz(mount,session,options);
+  renderQuiz(mount,session,options);
 }
 function renderSeminar3(topic){
+  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openDashboard'),ui('seminar3Lead'),data.course.external_apps.settlement_dashboard,ui('openDashboard'))}<div class="panel"><h2>${ui('seminarAssignment')}</h2><form id="settlementForm" class="form-grid"><label><span>${ui('territory')}</span><input name="territory" required></label><label><span>${ui('indicator')}</span><input name="indicators" required></label><label class="full"><span>${ui('dynamics')}</span><textarea name="dynamics" required minlength="180"></textarea></label><label class="full"><span>${ui('conclusion')}</span><textarea name="conclusion" required minlength="180"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
   app.querySelector('#settlementForm').onsubmit=async event=>{
     event.preventDefault();if(!requireProfile())return;const form=new FormData(event.currentTarget);
     const territory=String(form.get('territory')||'').trim(),indicators=String(form.get('indicators')||'').trim(),dynamics=String(form.get('dynamics')||'').trim(),conclusion=String(form.get('conclusion')||'').trim();
     if(!territory||!indicators||dynamics.length<180||conclusion.length<180){toast(ui('fillRequired'),'error');return}
-    let fileUrl='';const file=form.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-3',file)}catch(error){toast(error.message,'error')}}
+    let fileUrl='';const file=form.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-3',file)}catch(error){toast(error,'error')}}
     const points=Math.min(5,(territory?1:0)+(indicators?1:0)+(dynamics.length>=180?1:0)+(conclusion.length>=180?1:0)+(dynamics.length+conclusion.length>=600||fileUrl?1:0));
-    await backend.saveAttempt({type:'settlement-analysis',activitySlug:'seminar-3',title:loc(topic.seminar,'title'),points,maxPoints:5,territory,indicators,dynamics,conclusion,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
+    await backend.saveAttempt({studentKey,type:'settlement-analysis',activitySlug:'seminar-3',title:loc(topic.seminar,'title'),points,maxPoints:5,territory,indicators,dynamics,conclusion,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
   };
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
 function renderSeminar5(topic){
+  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
   const v=stableVariant();
   const caseText=[`${ui('yourVariant')} №${v.number}`,`${v.directed_to}`,`${v.citizen_name}; ${v.citizen_address}; ${v.contacts}`,`${v.sent_at} / ${v.received_at} / ${v.registered_at}`,v.appeal_text].join('\n\n');
   app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${ui('yourVariant')} №${v.number}</h2><div class="submission-case">${esc(caseText)}</div></div><div class="panel"><p class="notice">${ui('seminar5Lead')}</p><form id="appealForm" class="form-grid"><label><span>${ui('appealType')}</span><select name="appealType" required><option value="">—</option><option>Заявление / Application / 申请</option><option>Жалоба / Complaint / 投诉</option><option>Предложение / Proposal / 建议</option></select></label><label><span>${ui('completeness')}</span><input name="completeness" required></label><label><span>${ui('registration')}</span><input name="registration" required></label><label><span>${ui('deadline')}</span><input name="deadline" required></label><label><span>${ui('competentBody')}</span><input name="competentBody" required></label><label><span>${ui('addresseeDetails')}</span><input name="details" required></label><label class="full"><span>${ui('officialReply')}</span><textarea name="reply" required minlength="500"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.doc,.docx"></label><div class="full"><p class="form-hint">${ui('rubric')}</p><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
@@ -449,22 +491,24 @@ function renderSeminar5(topic){
     if(values.competentBody&&values.details)points+=1;
     if(reply.length>=500&&/(59[-–— ]?фз|федеральн|federal law|联邦法|уважаем|dear|尊敬)/i.test(combined))points+=1;else if(reply.length>=500)points+=.5;
     points=Math.min(5,Math.round(points*2)/2);
-    let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-5',file)}catch(error){toast(error.message,'error')}}
-    await backend.saveAttempt({type:'citizen-appeal',activitySlug:'seminar-5',title:loc(topic.seminar,'title'),points,maxPoints:5,variant:v.number,case:v,answers:values,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
+    let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-5',file)}catch(error){toast(error,'error')}}
+    await backend.saveAttempt({studentKey,type:'citizen-appeal',activitySlug:'seminar-5',title:loc(topic.seminar,'title'),points,maxPoints:5,variant:v.number,case:v,answers:values,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
   };
 }
 function renderSeminar6(topic){
+  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openCivilTest'),ui('seminar6Lead'),data.course.external_apps.civil_service_test,ui('openCivilTest'))}<div class="panel"><form id="civilForm" class="form-grid"><label><span>${ui('testScore')}</span><input name="score" required></label><label><span>${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
   app.querySelector('#civilForm').onsubmit=async event=>{
     event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const score=String(fd.get('score')||'').trim();const file=fd.get('file');if(!score||!(file instanceof File)||!file.size){toast(ui('fillRequired'),'error');return}
-    let fileUrl='';try{fileUrl=await backend.uploadFile('seminar-6',file)}catch(error){toast(error.message,'error');return}
-    await backend.saveAttempt({type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');render();
+    let fileUrl='';try{fileUrl=await backend.uploadFile('seminar-6',file)}catch(error){toast(error,'error');return}
+    await backend.saveAttempt({studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');render();
   };
 }
 function flattenObjects(value,out=[]){if(Array.isArray(value))value.forEach(x=>flattenObjects(x,out));else if(value&&typeof value==='object'){if(value.fio||value.fullName||value.name||value.group||value.kpi||value.finalKpi||value.KPI)out.push(value);Object.values(value).forEach(x=>flattenObjects(x,out))}return out}
 function nameNorm(s){return String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9]+/gi,' ').trim()}
 function simulatorPoints(kpi){const x=number(kpi);return x>=85?5:x>=70?4:x>=55?3:0}
 function renderSeminar7(topic){
+  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
   app.innerHTML=seminarShell(topic,`${externalCard(ui('openSimulator'),ui('seminar7Lead'),data.course.external_apps.governor_simulator,ui('openSimulator'))}<div class="panel"><div class="page-actions"><button class="btn btn-primary" id="syncSimulator">${ui('syncSimulator')}</button></div><form id="simulatorForm" class="form-grid" style="margin-top:16px"><label><span>${ui('kpi')}</span><input name="kpi" type="number" min="0" max="100" step="0.01" required></label><label><span>${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf"></label><div class="full"><button class="btn btn-secondary" type="submit">${ui('submit')}</button></div></form><p class="form-hint" id="simulatorStatus"></p></div>`);
   app.querySelector('#syncSimulator').onclick=async()=>{
     if(!requireProfile())return;const status=app.querySelector('#simulatorStatus');status.textContent=t('loading');
@@ -472,11 +516,11 @@ function renderSeminar7(topic){
       const matches=objects.filter(x=>{const n=nameNorm(x.fio||x.fullName||x.name||x.studentName),g=nameNorm(x.group||x.groupNumber||x.studentGroup);return n&&n===targetName&&(!g||!targetGroup||g===targetGroup)});
       matches.sort((a,b)=>String(b.completedAt||b.date||b.timestamp||'').localeCompare(String(a.completedAt||a.date||a.timestamp||'')));
       const found=matches[0];if(!found)throw new Error(ui('simulatorNotFound'));const kpi=number(found.kpi??found.finalKpi??found.KPI??found.final_kpi??found.result?.kpi);if(!Number.isFinite(kpi))throw new Error(ui('simulatorNotFound'));
-      app.querySelector('[name="kpi"]').value=kpi;const points=simulatorPoints(kpi);await backend.saveAttempt({type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,source:'firebase-import',sourceRecord:found});status.textContent=`${ui('saved')}: KPI ${kpi} → ${points}/5`;toast(status.textContent,'success');
+      app.querySelector('[name="kpi"]').value=kpi;const points=simulatorPoints(kpi);await backend.saveAttempt({studentKey,type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,source:'firebase-import',sourceRecord:found});status.textContent=`${ui('saved')}: KPI ${kpi} → ${points}/5`;toast(status.textContent,'success');
     }catch(error){status.textContent=String(error.message||error);toast(status.textContent,'error')}
   };
   app.querySelector('#simulatorForm').onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const kpi=number(fd.get('kpi'));if(kpi<0||kpi>100){toast(ui('fillRequired'),'error');return}let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-7',file)}catch(error){toast(error.message,'error')}}const points=simulatorPoints(kpi);await backend.saveAttempt({type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,fileUrl,source:'manual',reviewStatus:'pending'});toast(`${ui('saved')}: ${points}/5`,'success');render();
+    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const kpi=number(fd.get('kpi'));if(kpi<0||kpi>100){toast(ui('fillRequired'),'error');return}let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-7',file)}catch(error){toast(error,'error')}}const points=simulatorPoints(kpi);await backend.saveAttempt({studentKey,type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,fileUrl,source:'manual',reviewStatus:'pending'});toast(`${ui('saved')}: ${points}/5`,'success');render();
   };
 }
 let puzzleFragmentPromise=null;
@@ -509,9 +553,9 @@ async function renderPuzzleRoute(asSeminar=false){
 async function renderAdmin(){
   if(!backend.isAdmin()){
     app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="panel admin-login"><div class="notice warning">${ui('firebaseRequired')}</div><form id="adminLogin" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('email')}</span><input name="email" type="email" value="${esc(CONFIG.adminEmails[0])}" required></label><label class="full"><span>${ui('password')}</span><input name="password" type="password" required></label><div class="full"><button class="btn btn-primary btn-wide">${ui('teacherLogin')}</button></div></form></div>`);
-    app.querySelector('#adminLogin').onsubmit=async event=>{event.preventDefault();const fd=new FormData(event.currentTarget);try{await backend.adminSignIn(fd.get('email'),fd.get('password'));toast(ui('profileReady'),'success');render()}catch(error){toast(String(error.message||error),'error')}};return;
+    app.querySelector('#adminLogin').insertAdjacentHTML('beforeend','<div class="form-error full" id="adminLoginError" hidden></div>');
+    app.querySelector('#adminLogin').onsubmit=async event=>{event.preventDefault();const form=event.currentTarget,button=form.querySelector('button');if(button.disabled)return;button.disabled=true;const fd=new FormData(form);try{await backend.adminSignIn(fd.get('email'),fd.get('password'));form.querySelector('[name=password]').value='';toast(ui('profileReady'),'success');render()}catch(error){formError(form.querySelector('#adminLoginError'),error)}finally{button.disabled=false}};return;
   }
-  let all;try{all=await backend.adminAll()}catch(error){app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="notice danger">${esc(error.message)}</div>`);return}
   const access=accessSnapshot();
   const accessRows=accessDefinitions(data.course.topics,access.overrides,access.now).map(item=>{
     const topic=data.course.topics.find(entry=>Number(entry.number)===Number(item.number));
@@ -521,22 +565,24 @@ async function renderAdmin(){
     const automatic=`${accessText('week')} ${item.gate.week} · ${formatAccessDate(item.gate.opensAt,getLocale())}`;
     return `<div class="access-admin-row"><div class="access-admin-copy"><strong>${esc(title)}</strong><small>${esc(automatic)}</small><span class="access-status ${item.gate.open?'open':'closed'}">${esc(gateStatus(item.gate))}</span></div><div class="access-mode" role="group" aria-label="${esc(title)}"><button type="button" class="${item.gate.override==='auto'?'active auto':''}" data-access-key="${esc(item.gate.key)}" data-access-state="auto">${accessText('automatic')}</button><button type="button" class="${item.gate.override==='open'?'active open':''}" data-access-key="${esc(item.gate.key)}" data-access-state="open">${accessText('forceOpen')}</button><button type="button" class="${item.gate.override==='closed'?'active closed':''}" data-access-key="${esc(item.gate.key)}" data-access-state="closed">${accessText('forceClosed')}</button></div></div>`;
   }).join('');
-  const items=gradeItems();const profiles=Object.values(all.profiles||{});const rows=profiles.map(p=>{const grades=all.grades?.[p.studentKey]||{};const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);return`<tr data-student-row data-search="${esc(`${p.fullName||''} ${p.ticket} ${p.email} ${p.group}`.toLowerCase())}"><td><strong>${esc(p.fullName||p.ticket)}</strong><br><small>${esc(p.ticket)} · ${esc(p.email||'')}</small></td><td>${esc(p.group)}</td><td><strong>${total}/100</strong></td><td>${items.filter(item=>number(grades[item.slug]?.points)>0).length}/17</td><td><button class="btn btn-secondary btn-small" data-edit-student="${esc(p.studentKey)}">${ui('editGrades')}</button></td></tr>`}).join('');
-  app.innerHTML=contentPage(ui('teacherTitle'),ui('teacherLead'),`<div class="admin-toolbar"><div class="page-actions"><button class="btn btn-secondary" id="exportAll">${ui('exportAll')}</button></div><button class="btn btn-neutral" id="adminLogout">${ui('teacherLogout')}</button></div><section class="panel access-admin"><div class="access-admin-header"><div><h2>${accessText('scheduleTitle')}</h2><p>${accessText('scheduleLead')}</p></div><div class="access-admin-meta"><strong>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</strong><span>${accessText('currentWeek')}: ${access.context.week}</span></div></div><div class="access-admin-list">${accessRows}</div></section><div class="panel"><h2>${ui('students')} · ${profiles.length}</h2><input id="studentFilter" placeholder="${esc(ui('filter'))}"><div class="table-wrap" style="margin-top:12px"><table class="data-table"><thead><tr><th>${ui('fullName')} / ${ui('identifier')}</th><th>${ui('group')}</th><th>${ui('totalScore')}</th><th>${ui('completedCount')}</th><th>${ui('actions')}</th></tr></thead><tbody>${rows||`<tr><td colspan="5">${ui('noStudents')}</td></tr>`}</tbody></table></div></div>`);
+  app.innerHTML=contentPage(ui('teacherTitle'),'',`<div class="admin-toolbar"><a class="btn btn-primary" href="#gradebook">${ui('gradebookTitle')}</a><button class="btn btn-neutral" id="adminLogout">${ui('teacherLogout')}</button></div><section class="panel access-admin"><div class="access-admin-header"><div><h2>${accessText('scheduleTitle')}</h2><p>${accessText('scheduleLead')}</p></div><div class="access-admin-meta"><strong>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</strong><span>${accessText('currentWeek')}: ${access.context.week}</span></div></div><div class="access-admin-list">${accessRows}</div></section>`);
   app.querySelector('#adminLogout').onclick=async()=>{await backend.adminSignOut();render()};
-  app.querySelector('#studentFilter').oninput=event=>{const query=event.target.value.toLowerCase();app.querySelectorAll('[data-student-row]').forEach(row=>row.hidden=!row.dataset.search.includes(query))};
-  app.querySelectorAll('[data-edit-student]').forEach(button=>button.onclick=()=>renderStudentGrades(button.dataset.editStudent,all));
-  app.querySelector('#exportAll').onclick=()=>exportAdminCsv(profiles,all.grades||{},items);
+  if(!backend.connected)app.querySelectorAll('[data-access-key]').forEach(button=>button.disabled=true);
   app.querySelectorAll('[data-access-key]').forEach(button=>button.onclick=async()=>{
     const controls=button.closest('.access-mode');controls.querySelectorAll('button').forEach(item=>item.disabled=true);
     try{await backend.setAccessOverride(access.context.startYear,button.dataset.accessKey,button.dataset.accessState);toast(accessText('accessSaved'),'success');await render()}
-    catch(error){toast(String(error.message||error),'error');controls.querySelectorAll('button').forEach(item=>item.disabled=false)}
+    catch(error){toast(error,'error');controls.querySelectorAll('button').forEach(item=>item.disabled=false)}
   });
 }
 function renderStudentGrades(studentKey,all){
   const p=all.profiles[studentKey],grades=all.grades?.[studentKey]||{},items=gradeItems();
-  app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${p.ticket} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="0" max="${i.max}" step="0.01" value="${number(grades[i.slug]?.points)}"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><a class="btn btn-neutral" href="#admin">${ui('cancel')}</a></div></form></div>`);
-  app.querySelector('#gradeEdit').onsubmit=async event=>{event.preventDefault();const fd=new FormData(event.currentTarget);const note=fd.get('note');for(const item of items)await backend.setManualGrade(studentKey,item.slug,fd.get(item.slug),note);toast(ui('saved'),'success');location.hash='admin'};
+  app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${p.ticket} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
+  app.querySelector('#gradeEditCancel').onclick=()=>renderGradebook();
+  app.querySelector('#gradeEdit').onsubmit=async event=>{
+    event.preventDefault();const form=event.currentTarget,button=form.querySelector('[type=submit]');if(button.disabled)return;button.disabled=true;
+    try{const fd=new FormData(form);for(const item of items){const value=String(fd.get(item.slug)||'');if(value!==''&&(!grades[item.slug]||Number(value)!==Number(grades[item.slug].points)))await backend.setManualGrade(studentKey,item.slug,value,fd.get('note'))}toast(ui('saved'),'success');await renderGradebook()}
+    catch(error){formError(form.querySelector('#gradeEditError'),error)}finally{button.disabled=false}
+  };
 }
 function exportAdminCsv(profiles,grades,items){const rows=[['student_id','full_name','email','group',...items.map(x=>x.slug),'total']];for(const p of profiles){const g=grades[p.studentKey]||{},values=items.map(x=>number(g[x.slug]?.points)),total=values.reduce((a,b)=>a+b,0);rows.push([p.ticket,p.fullName||'',p.email,p.group,...values,total])}downloadCsv('rudn-gradebook.csv',rows)}
 function downloadCsv(filename,rows){const text='\ufeff'+rows.map(row=>row.map(cell=>`"${String(cell??'').replaceAll('"','""')}"`).join(';')).join('\r\n');const blob=new Blob([text],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
@@ -609,12 +655,15 @@ async function resolveIdentifier(){
     if(request===rosterLookupRequest){
       resolvedIdentifier='';
       setAuthStage('identifier');
-      rosterStatus.textContent=String(error.message||error);
+      rosterStatus.textContent=errorText(error);formError(document.getElementById('authError'),error);
     }
     return false;
   }
 }
 function openAuthDialog(){
+  if(!backend.authReady){toast(t('loading'));return}
+  if(backend.isAdmin()){location.hash='profile';return}
+  document.getElementById('authError').hidden=true;
   const p=backend.isAdmin()?null:backend.getProfile();
   authIdentifier.value=backend.isAdmin()?backend.user.email:(p?.email||p?.ticket||'');
   authFullName.value=p?.fullName||'';
@@ -639,30 +688,40 @@ authIdentifier.addEventListener('input',()=>{
 });
 authIdentifier.addEventListener('blur',()=>{clearTimeout(rosterLookupTimer);if(!resolvedIdentifier)resolveIdentifier()});
 document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
-profileButton.addEventListener('click',openAuthDialog);
+profileButton.addEventListener('click',()=>openAccount(openAuthDialog));
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
+  if(authSubmit.disabled)return;
   const identifier=authIdentifier.value.trim();
   if(resolvedIdentifier!==authKey(identifier)){await resolveIdentifier();return}
+  authSubmit.disabled=true;const priorText=authSubmit.textContent;
+  const slow=setTimeout(()=>{rosterStatus.textContent=getLocale()==='en'?'Still connecting. Please wait…':getLocale()==='zh'?'正在连接，请稍候……':'Подключение занимает больше времени. Подождите…'},4000);
   try{
     if(isAdminIdentifier(identifier)){
       await backend.adminSignIn(identifier,authPassword.value);
-      authDialog.close();toast(ui('profileReady'),'success');location.hash='admin';await render();return;
+      authPassword.value='';authDialog.close();toast(ui('profileReady'),'success');await render();return;
     }
     const p=await backend.saveProfile({identifier,fullName:authFullName.value,group:authGroup.value});
     authDialog.close();toast(ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated'),'success');render();
-  }catch(error){toast(String(error.message||error),'error')}
+  }catch(error){formError(document.getElementById('authError'),error)}
+  finally{clearTimeout(slow);authSubmit.disabled=false;authSubmit.textContent=priorText}
 });
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
-window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{if(route().name==='gradebook'||route().name==='dashboard')render()});
+window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>render());
+window.addEventListener('rudn:identitychange',()=>{
+  updateTopProfile();document.getElementById('accountDialog')?.close();
+  if(attemptOwner()==='guest'&&/:(student|teacher):/.test(renderedKey)){authDialog.close();location.hash='dashboard'}
+  render();
+});
 
 async function bootstrap(){
   translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
-  await Promise.all([loadData(),backend.init()]);
+  backend.init().then(()=>render()).catch(error=>toast(error,'error'));
+  await loadData();dataReady=true;
   updateTopProfile();await render();
   if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>console.warn('Service worker',error))}
 }

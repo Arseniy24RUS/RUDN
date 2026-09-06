@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.22';
-import {backend,groupOptions} from './backend.js?v=1.1.22';
+import {CONFIG} from './config.js?v=1.2.0';
+import {backend,groupOptions} from './backend.js?v=1.2.0';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -11,8 +11,9 @@ import {
   renderQuestionMedia,
   renderQuiz,
   reviewNoteText
-} from './quiz.js?v=1.1.22';
-import {getLocale} from './i18n.js?v=1.1.22';
+} from './quiz.js?v=1.2.0';
+import {getLocale} from './i18n.js?v=1.2.0';
+import {attemptOwner} from './attempt-session.js?v=1.2.0';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -52,9 +53,9 @@ function participantNoun(count){
   if(last>=2&&last<=4&&(lastTwo<12||lastTwo>14))return'участника';
   return'участников';
 }
-function roomQuestionSet(group){
+function roomQuestionSet(group,{persist=false}={}){
   const roomKey=backend.automaticRoomKey(group);
-  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1-classroom',{studentKey:roomKey});
+  const session=buildQuiz(window.RUDN_DATA.questions,'seminar-1-classroom',backend.getProfile(),{persist});
   return {roomKey,session};
 }
 
@@ -111,7 +112,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   const profile=backend.getProfile();
   const group=groupOptions().includes(requestedGroup)?requestedGroup:profile?.group;
   if(participateLive&&!groupOptions().includes(group))throw new Error('Выберите учебную группу');
-  const {roomKey,session}=roomQuestionSet(group);
+  let {roomKey,session}=roomQuestionSet(group,{persist:true});
   session.recordAttempt=recordAttempt??!backend.isAdmin();
   let leave=()=>{};
   let unsubPresence=()=>{};
@@ -119,6 +120,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   let presence={};
   let responses={};
   let joined=false;
+  let connected=false;let connecting=false;let stopStatus=()=>{};
   let closed=false;
   const updateLiveState=()=>{
     if(closed)return;
@@ -146,6 +148,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
       onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
       onAnswer:({question,value,index})=>participateLive?backend.submitAutomaticQuizResponse(roomKey,question.id,value,index,group):undefined,
       onFinish:()=>{},
+      onSessionChange:next=>{session=next},
       statusText:()=>{const active=Math.max(joined?1:0,activeIds.size);return backend.mode==='cloud'?`${c('online')}: ${active} ${participantNoun(active)}`:c('cloudRequired')},
       matrixOptions:({question})=>{
         const records=recordsFor(responses,question.id,activeIds);
@@ -159,17 +162,26 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
     closed=true;
     try{unsubPresence()}catch{}
     try{unsubResponses()}catch{}
+    try{stopStatus()}catch{}
     try{leave()}catch{}
   };
-  if(backend.mode==='cloud'){
+  const connect=async()=>{
+    if(closed||connected||connecting||backend.mode!=='cloud'||session.owner!==attemptOwner())return;
+    connecting=true;
     try{
       if(participateLive){({leave}=await backend.joinAutomaticQuizRoom(group));joined=true}
+      if(closed){leave();return}
       unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;updateLiveState()});
       unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
+      connected=true;
     }
     catch(error){console.warn('Automatic classroom connection failed',error)}
-  }
+    finally{connecting=false;updateLiveState()}
+  };
+  stopStatus=backend.onStatus(()=>{updateLiveState();connect()});
+  await connect();
   render();
+  cleanup.refreshLocale=render;
   return cleanup;
 }
 
@@ -194,6 +206,7 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   let unsubPresence=()=>{};
   let unsubResponses=()=>{};
   let disposed=false;
+  let subscribed=false;
 
   container.innerHTML=`
     <div class="auto-board-shell">
@@ -214,6 +227,9 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   }
   function render(){
     if(disposed)return;
+    const stats=container.querySelectorAll('.auto-board-stat');
+    [c('group'),c('online'),c('unique')].forEach((label,index)=>{stats[index].querySelector('span').textContent=label});
+    stats[0].querySelector('small').textContent=c('autoGroup');
     const {session}=roomQuestionSet(group);
     const questions=session.questions;
     const activeIds=activeParticipantIds(presence);
@@ -275,12 +291,15 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
       return;
     }
     const {roomKey}=roomQuestionSet(group);
+    subscribed=true;
     unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;render()});
     unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;render()});
     render();
   }
   onGroupChange?.(group);
   subscribe();
+  const stopStatus=backend.onStatus(()=>{if(!disposed&&!subscribed&&backend.mode==='cloud')subscribe()});
   const timer=setInterval(render,1000);
-  return ()=>{disposed=true;cleanupSubscriptions();clearInterval(timer)};
+  const cleanup=()=>{disposed=true;cleanupSubscriptions();stopStatus();clearInterval(timer)};
+  cleanup.refreshLocale=render;return cleanup;
 }

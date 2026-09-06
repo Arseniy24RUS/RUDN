@@ -180,6 +180,30 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 }
 
 .matrix-option strong{overflow-wrap:break-word;hyphens:auto}
+.stat-card,.topic-copy,.activity-mini,.hero-grid>div{min-width:0;overflow-wrap:anywhere}
+.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:760px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topic-card{grid-template-columns:58px minmax(0,1fr)}.stat-card strong{font-size:19px}}
+
+/* v1.2: role-aware account, accessible journal and browser top-layer notices. */
+.toast-stack[popover]{inset:auto 20px 20px auto;margin:0;padding:0;border:0;background:transparent;overflow:visible;width:min(380px,calc(100vw - 24px));z-index:2147483647;pointer-events:none}
+.toast-stack[popover]:not(:popover-open){display:none}
+.toast-stack[popover]:popover-open{display:grid}
+.toast{display:flex;align-items:flex-start;gap:12px;pointer-events:auto;overflow-wrap:anywhere;font-size:14px}
+.toast>span{flex:1}.toast>button{background:transparent;color:inherit;border:0;min-width:28px;min-height:28px;font-size:22px;cursor:pointer;padding:0}
+.form-error{background:#fff1f3;color:#8e2338;border:1px solid #edbbc5;border-radius:12px;padding:12px;font-size:14px;overflow-wrap:anywhere}
+.form-error[hidden]{display:none}.form-error details{font-size:12px;margin-top:8px}.form-error summary{cursor:pointer}
+.account-role{color:var(--rudn-blue);font-weight:700}.profile-panel{max-width:750px}.profile-panel fieldset,.journal-filters fieldset{border:0;padding:0;margin:0;min-width:0}
+.profile-panel legend,.journal-filters legend{font-weight:700;margin-bottom:10px}.auth-group-option.active{border-color:var(--rudn-blue);background:#e8f5fb;color:var(--rudn-blue-2);box-shadow:inset 0 0 0 1px var(--rudn-blue)}
+.journal-filters{display:grid;gap:18px}.journal-groups{display:flex;flex-wrap:wrap;gap:8px}.journal-groups .selected{background:#e8f5fb;border-color:var(--rudn-blue);color:#005f97}
+.journal-group{min-width:0;margin-top:20px;padding:20px}.journal-summary{display:flex;flex-wrap:wrap;gap:12px 24px;margin:12px 0 18px;font-size:13px;color:var(--muted)}
+.teacher-table-scroll{max-width:100%;overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:12px;position:relative;overscroll-behavior:contain}
+.teacher-gradebook{border-collapse:separate;border-spacing:0;min-width:1800px;width:100%;font-size:13px;isolation:isolate}
+.teacher-gradebook th,.teacher-gradebook td{padding:12px 9px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;min-width:78px}
+.teacher-gradebook thead{position:sticky;top:0;z-index:4}.teacher-gradebook thead th{background:#eaf4fa;color:#193d56;font-size:12px}
+.teacher-gradebook .student-sticky{position:sticky;left:0;z-index:2;text-align:left;min-width:230px;width:230px;max-width:230px;white-space:normal;overflow-wrap:anywhere;box-shadow:2px 0 0 #dbe6ed}
+.teacher-gradebook thead .student-sticky{z-index:5}.teacher-gradebook small{display:block;color:#58677a;font-size:11px;font-weight:400;margin-top:5px}
+.teacher-gradebook .ungraded{color:#5b6370}.teacher-gradebook .journal-total{font-weight:800;color:#006aab}.teacher-gradebook .journal-statistics th,.teacher-gradebook .journal-statistics td{background:#f5f9fc;font-size:12px}
+@media(max-width:760px){.toast-stack[popover]{inset:auto 12px 84px 12px;width:auto}.teacher-gradebook .student-sticky{min-width:140px;width:140px;max-width:140px;font-size:12px}.journal-group{padding:13px}.journal-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.journal-groups button{font-size:12px;padding:10px}.journal-summary{gap:8px;font-size:12px}}
 
 /* Seminar 1 quiz refinements · v1.1.14 */
 .question-media.single{grid-template-columns:1fr}

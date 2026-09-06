@@ -1,5 +1,7 @@
-import {getLocale,localized,t} from './i18n.js?v=1.1.22';
-import {backend} from './backend.js?v=1.1.22';
+import {getLocale,localized,t} from './i18n.js?v=1.2.0';
+import {backend} from './backend.js?v=1.2.0';
+import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.2.0';
+import {readState,pendingStorageKey} from './session.js?v=1.2.0';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -101,7 +103,8 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
   }else if(activitySlug==='exam'){
     pool=byCategory('Итоговый тест по дисциплине');title=getLocale()==='en'?'Examination test':getLocale()==='zh'?'考试测验':'Экзаменационный тест';pointsMax=20;
   }
-  return {id:uuid(),activitySlug:resultActivitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt,recordGrade,buildOptions:{...options}};
+  const {fresh,persist,...buildOptions}=options;
+  return restoreQuiz({id:uuid(),activitySlug:resultActivitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt:recordAttempt&&!backend.isAdmin(),recordGrade,buildOptions},{fresh,persist});
 }
 
 export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
@@ -151,6 +154,9 @@ function renderQuestionNavigator(session){
 }
 
 export function renderQuiz(container,session,options={}){
+  options.onSessionChange?.(session);
+  if(session.phase==='completed')return renderQuizResult(container,session,options);
+  if(session.phase==='submitting'){container.innerHTML=`<div class="panel" role="status">${getLocale()==='en'?'Saving your result…':getLocale()==='zh'?'正在保存结果……':'Сохраняем результат…'}</div>`;return}
   const {onExit,onAnswer,onQuestionChange}=options;const q=session.questions[session.index];
   if(!q){container.innerHTML=`<div class="panel"><p>В этом блоке пока нет вопросов.</p><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div>`;container.querySelector('#quizExit').onclick=onExit||(()=>history.back());return}
   const progress=(session.index/session.questions.length)*100;
@@ -163,6 +169,7 @@ export function renderQuiz(container,session,options={}){
   Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(console.warn);
   const choose=(value)=>{
     session.answers[q.id]=value;
+    persistQuiz(session);
     Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(console.warn);
     if(q.type==='matrix_single'){
       const canonical=canonicalMatrixValue(value);
@@ -178,12 +185,12 @@ export function renderQuiz(container,session,options={}){
   container.tabIndex=-1;container.focus({preventScroll:true});
   container.querySelectorAll('.answer-option input').forEach(input=>input.addEventListener('change',()=>{if(q.single)choose(input.value);else{const values=[...container.querySelectorAll('.answer-option input:checked')].map(x=>x.value);choose(values)}}));
   container.querySelectorAll('[data-matrix]').forEach(btn=>btn.addEventListener('click',()=>choose(btn.dataset.matrix)));
-  const questionNavigatorElement=container.querySelector('.quiz-question-nav');if(questionNavigatorElement)questionNavigatorElement.ontoggle=()=>{session.navOpen=questionNavigatorElement.open};
-  container.querySelectorAll('[data-quiz-index]').forEach(button=>button.onclick=()=>{session.index=Number(button.dataset.quizIndex);session.navOpen=false;renderQuiz(container,session,options)});
+  const questionNavigatorElement=container.querySelector('.quiz-question-nav');if(questionNavigatorElement)questionNavigatorElement.ontoggle=()=>{session.navOpen=questionNavigatorElement.open;persistQuiz(session)};
+  container.querySelectorAll('[data-quiz-index]').forEach(button=>button.onclick=()=>{session.index=Number(button.dataset.quizIndex);session.navOpen=false;persistQuiz(session);renderQuiz(container,session,options)});
   container.onkeydown=event=>{if(q.type!=='matrix_single'||event.altKey||event.ctrlKey||event.metaKey)return;const n=Number(event.key);if(n>=1&&n<=9){event.preventDefault();container.querySelector(`[aria-keyshortcuts="${n}"]`)?.click()}};
-  const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>session.answers[q.id]=short.value);short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(console.warn))}
-  container.querySelector('#quizPrev').onclick=()=>{session.index=Math.max(0,session.index-1);renderQuiz(container,session,options)};
-  container.querySelector('#quizNext').onclick=()=>{if(!hasAnswer(q,session.answers[q.id])){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:t('selectAnswer'),type:'error'}}));return}if(session.index<session.questions.length-1){session.index++;renderQuiz(container,session,options)}else finishQuiz(container,session,options)};
+  const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>{session.answers[q.id]=short.value;persistQuiz(session)});short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(console.warn))}
+  container.querySelector('#quizPrev').onclick=()=>{session.index=Math.max(0,session.index-1);persistQuiz(session);renderQuiz(container,session,options)};
+  container.querySelector('#quizNext').onclick=()=>{if(!hasAnswer(q,session.answers[q.id])){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:t('selectAnswer'),type:'error'}}));return}if(session.index<session.questions.length-1){session.index++;persistQuiz(session);renderQuiz(container,session,options)}else finishQuiz(container,session,options).catch(error=>window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:error,type:'error'}})))};
 }
 function hasAnswer(q,value){if(q.type==='multichoice'&&!q.single)return Array.isArray(value)&&value.length>0;return value!==undefined&&value!==null&&String(value).trim()!==''}
 
@@ -211,17 +218,41 @@ function renderReviewItem(result,index){
 }
 
 export async function finishQuiz(container,session,options={}){
-  const {onExit,onFinish}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
+  if(session.phase==='completed')return renderQuizResult(container,session,options);
+  if(session.finishPromise)return session.finishPromise;
+  if(session.owner!==attemptOwner())throw Object.assign(new Error('auth/profile-changed'),{code:'auth/profile-changed'});
+  session.phase='submitting';persistQuiz(session);renderQuiz(container,session,options);
+  session.finishPromise=(async()=>{try{
+    const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
+    const ratio=results.length?results.reduce((sum,result)=>sum+result.fraction,0)/results.length:0;
+    const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points:Math.round(ratio*session.pointsMax*100)/100,maxPoints:session.pointsMax,ratio,recordGrade:session.recordGrade!==false,answers:{...session.answers},questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt,createdAt:new Date().toISOString()};
+    session.resultAttempt=session.recordAttempt!==false?await backend.saveAttempt(attempt):attempt;
+    session.phase='completed';persistQuiz(session);
+    await Promise.resolve(options.onFinish?.({attempt:session.resultAttempt,results,session}));
+    if(session.owner===attemptOwner()&&container.isConnected)renderQuizResult(container,session,options);
+    window.dispatchEvent(new CustomEvent('rudn:gradechange'));
+  }catch(error){session.phase='answering';persistQuiz(session);if(container.isConnected)renderQuiz(container,session,options);throw error}
+  finally{delete session.finishPromise}})();
+  return session.finishPromise;
+}
+function renderQuizResult(container,session,options={}){
+  container.onkeydown=null;
+  const {onExit}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
   const raw=results.reduce((s,r)=>s+r.fraction,0);const ratio=results.length?raw/results.length:0;const points=Math.round(ratio*session.pointsMax*100)/100;
   const showReview=session.buildOptions?.mode!=='assessment';
-  const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points,maxPoints:session.pointsMax,ratio,recordGrade:session.recordGrade!==false,answers:session.answers,questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt};
-  if(session.recordAttempt!==false){
-    await backend.saveAttempt(attempt);
-  }
-  await Promise.resolve(onFinish?.({attempt,results,session}));
   const summary=showReview?`<p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p>`:'';
   const review=showReview?`<div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map(renderReviewItem).join('')}</div></div>`:'';
   container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1>${summary}<div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div>${review}</div>`;
-  container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),session.buildOptions||{});renderQuiz(container,next,options)};
-  container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');window.dispatchEvent(new CustomEvent('rudn:gradechange'));
+  if(session.resultAttempt?.studentKey){
+    const status=document.createElement('p');status.className='quiz-save-status muted';status.setAttribute('role','status');status.dataset.attemptId=session.id;status.dataset.studentKey=session.resultAttempt.studentKey;
+    container.querySelector('.result-hero h1').after(status);updateQuizSaveStatus(container);
+  }
+  container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),{...session.buildOptions,fresh:true});renderQuiz(container,next,options)};
+  container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');
+}
+export function updateQuizSaveStatus(container=document){
+  container.querySelectorAll('.quiz-save-status').forEach(element=>{
+    const pending=readState(pendingStorageKey({studentKey:element.dataset.studentKey,id:element.dataset.attemptId}),null);
+    const copy={ru:['Результат сохранён','Результат сохранён на устройстве. Отправим его при восстановлении соединения.'],en:['Result saved','Saved on this device. Your result will be sent when the connection returns.'],zh:['结果已保存','结果已保存在此设备上，恢复连接后将自动上传。']};element.textContent=(copy[getLocale()]||copy.ru)[pending?1:0];
+  });
 }

@@ -53,14 +53,14 @@ Push в `main` запускает workflow автоматически. Его с
 
 Без Firebase статический сайт открывается и позволяет знакомиться с курсом и выполнять задания в локальном режиме браузера. Для единого электронного журнала, синхронизации между устройствами, преподавательской панели, live-квиза и загрузки подтверждений нужна первоначальная настройка Firebase.
 
-Для проекта `russian-regions-puzzle` уже включены:
+Для проекта `rudn-gmu-learning-platform` уже включены:
 
 ```text
 Anonymous
 Email/Password
 ```
 
-Правила из `firebase/database.rules.json` и `firebase/storage.rules` опубликованы, Storage-бакет создан в регионе `US-EAST1`, а преподавательская учётная запись зарегистрирована:
+Правила находятся в `firebase/database.rules.json` и `firebase/storage.rules`; используется Storage-бакет отдельного проекта платформы, а преподавательская учётная запись зарегистрирована:
 
 ```text
 omnistat@yandex.ru
@@ -72,10 +72,10 @@ Anonymous Authentication и Email/Password не требуют добавлен�
 
 ```bash
 npx firebase-tools@latest login
-npx firebase-tools@latest deploy --project russian-regions-puzzle --config firebase/firebase.json --only database,storage
+npx firebase-tools@15.29.0 deploy --project rudn-gmu-learning-platform --config firebase/firebase.json --only database,storage
 ```
 
-При выборе проекта укажите действующий проект `russian-regions-puzzle` либо отдельный новый Firebase-проект для платформы. Если используется новый проект, замените `firebaseConfig` в `site/assets/js/config.js`.
+Используйте действующий проект `rudn-gmu-learning-platform`. Обновление 1.2 не переносит базу, не заменяет данные и не меняет идентификаторы. Перед изменением правил сохраните закрытую резервную копию текущих данных и правил. Для отката сайта верните предыдущую версию кода; не загружайте старый снимок поверх рабочей базы студентов.
 
 Рекомендуется сначала развернуть правила на тестовом проекте и проверить вход тестового студента и преподавателя.
 

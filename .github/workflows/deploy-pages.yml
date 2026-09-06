@@ -28,6 +28,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Build pinned, self-hosted Firebase SDK
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
       - name: Validate static bundle
         shell: bash
         run: |

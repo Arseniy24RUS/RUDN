@@ -1,10 +1,13 @@
-import {backend,groupOptions} from './backend.js?v=1.1.22';
-import {getLocale} from './i18n.js?v=1.1.22';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.1.22';
+import {backend,groupOptions} from './backend.js?v=1.2.0';
+import {getLocale} from './i18n.js?v=1.2.0';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.2.0';
+import {initNotifications} from './notifications.js?v=1.2.0';
 
 export async function mountPuzzlePage(options={}){
 const root=document.getElementById('geoPuzzleApp');
 if(!root)return ()=>{};
+if(!document.getElementById('toastStack')){const host=document.createElement('div');host.id='toastStack';host.className='toast-stack';host.setAttribute('aria-live','polite');document.body.append(host)}
+initNotifications();
 const native=root.dataset.native==='true';
 const locale=getLocale();
 const context=options.context==='seminar'||(!options.context&&new URLSearchParams(location.search).get('context')==='seminar')?'seminar':'free';
