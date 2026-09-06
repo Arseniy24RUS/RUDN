@@ -10492,7 +10492,7 @@
       {
         "id": "a409660e-17b2-59ae-b54d-7b7f1c234586",
         "text": "Исполнительная власть / Региональный уровень",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Executive authority / Regional level",
         "text_zh": "行政权 / 地区层级"
@@ -10531,9 +10531,9 @@
       }
     ],
     "single": true,
-    "general_feedback": "Правильная классификация в учебной матрице: региональный уровень, законодательная (представительная) власть.",
-    "general_feedback_en": "Correct classification in this teaching matrix: regional level, legislative (representative) authority.",
-    "general_feedback_zh": "本教学矩阵中的正确分类：地区层级，立法（代表）权。",
+    "general_feedback": "В этом вопросе засчитываются обе региональные категории: законодательная и исполнительная.",
+    "general_feedback_en": "This question accepts both regional categories: legislative and executive.",
+    "general_feedback_zh": "本题接受地区层级的立法和行政两种分类。",
     "block_key": null,
     "block_title": null,
     "source": "Yandex Forms public survey → native live matrix quiz",
@@ -10632,11 +10632,12 @@
     "classification_source": "https://www.consultant.ru/document/cons_doc_LAW_116725/9ca4a9ea339e6f38973664283e2ed27612a841da/",
     "classification_correct": "regional|legislative",
     "classification_accepted": [
-      "regional|legislative"
+      "regional|legislative",
+      "regional|executive"
     ],
-    "review_note": "Контрольно-счётная палата — орган внешнего государственного финансового контроля, образуемый Законодательным Собранием и подотчётный ему. К исполнительной власти она не относится.",
-    "review_note_en": "The Audit Chamber is an external public financial-control body formed by and accountable to the Legislative Assembly. It is not an executive authority.",
-    "review_note_zh": "审计机关是由立法会议设立并向其负责的外部国家财政监督机关，不属于行政权机关。"
+    "review_note": "КСП — самостоятельный орган внешнего государственного финансового контроля, образуемый Законодательным Собранием и подотчётный ему, а не орган исполнительной власти. Из-за ограничений учебной матрицы по решению преподавателя в этом вопросе засчитываются обе региональные категории: законодательная и исполнительная.",
+    "review_note_en": "The Audit Chamber is an independent external public financial-control body formed by and accountable to the Legislative Assembly, not an executive authority. Because of the teaching matrix's limitations, the instructor accepts both regional categories for this question: legislative and executive.",
+    "review_note_zh": "审计机关是由立法会议设立并向其负责的独立外部国家财政监督机关，并非行政机关。鉴于教学矩阵的局限，教师决定本题接受地区层级的立法和行政两种分类。"
   },
   {
     "id": "b0f83b11-6b89-5d18-a8aa-4fa655339400",

@@ -1395,7 +1395,8 @@
       "nuance": "audit_chamber"
     },
     "accepted_classifications": [
-      "regional|legislative"
+      "regional|legislative",
+      "regional|executive"
     ],
     "local_photo": "/static/course/quiz_media/branches_levels/photos/irkutsk_audit_chamber.webp",
     "source_photo_url": "https://avatars.mds.yandex.net/get-forms/6211551/cde6a176aaf7bb20202613c80c942887/2560x",

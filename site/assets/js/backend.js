@@ -1,4 +1,5 @@
-import {CONFIG} from './config.js?v=1.1.21';
+import {CONFIG} from './config.js?v=1.1.22';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.1.22';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -208,6 +209,20 @@ class Backend{
   }
   clearLocalProfile(){this.profile=null;localStorage.removeItem(PROFILE_KEY);this.emitStatus()}
   localAttempts(){return readLocal(ATTEMPTS_KEY,[])}
+  async reconcileQuizAttempts(items){
+    if(!items.some(needsSeminar1Q48Review))return items;
+    try{
+      if(!this.gradingQuestions)this.gradingQuestions=fetch(new URL('../../data/questions.json',import.meta.url)).then(response=>{
+        if(!response.ok)throw new Error('Question bank unavailable');
+        return response.json();
+      });
+      const questions=await this.gradingQuestions;
+      const result=items.map(attempt=>reconcileSeminar1Q48(attempt,questions));
+      const changed=new Map(result.filter((attempt,index)=>attempt!==items[index]).map(attempt=>[`${attempt.studentKey}/${attempt.id}`,attempt]));
+      if(changed.size)writeLocal(ATTEMPTS_KEY,this.localAttempts().map(attempt=>changed.get(`${attempt.studentKey}/${attempt.id}`)||attempt));
+      return result;
+    }catch(error){this.gradingQuestions=null;console.warn('Quiz score reconciliation deferred',error);return items}
+  }
   localGrades(studentKey=this.profile?.studentKey){
     if(!studentKey)return {};
     const scoped=readLocal(GRADES_KEY,{});
@@ -221,7 +236,8 @@ class Backend{
   }
   async saveAttempt(attempt){
     if(!this.profile)throw new Error('Сначала войдите в профиль');
-    const record={...attempt,id:attempt.id||uuid(),studentKey:this.profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
+    const [reviewed]=await this.reconcileQuizAttempts([attempt]);
+    const record={...reviewed,id:attempt.id||uuid(),studentKey:this.profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
     const attempts=this.localAttempts();attempts.push(record);writeLocal(ATTEMPTS_KEY,attempts.slice(-800));
     if(this.mode==='cloud')await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`),record);
     if(record.recordGrade!==false&&Number.isFinite(Number(record.points))&&record.activitySlug)await this.updateBestGrade(record.activitySlug,Number(record.points),record);
@@ -250,6 +266,7 @@ class Backend{
   async getAttempts(studentKey=this.profile?.studentKey){
     let items=this.localAttempts().filter(x=>!studentKey||x.studentKey===studentKey);
     if(this.mode==='cloud'&&studentKey){try{const snap=await this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${studentKey}`));const remote=Object.values(snap.val()||{});const map=new Map([...items,...remote].map(x=>[x.id,x]));items=[...map.values()]}catch(e){console.warn(e)}}
+    items=await this.reconcileQuizAttempts(items);
     return items.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
   }
   async getGrades(studentKey=this.profile?.studentKey){
@@ -286,7 +303,7 @@ class Backend{
         writeLocal(PROFILE_KEY,this.profile);
       }
       await this.db.set(pref,this.ownedProfile(this.profile,remoteProfile||{}));
-      for(const attempt of this.localAttempts().filter(x=>x.studentKey===this.profile.studentKey)){
+      for(const attempt of await this.reconcileQuizAttempts(this.localAttempts().filter(x=>x.studentKey===this.profile.studentKey))){
         const record={...attempt,ownerUid:this.user.uid};const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${this.profile.studentKey}/${record.id}`);const snap=await this.db.get(ref);if(!snap.exists())await this.db.set(ref,record);
       }
       for(const [slug,grade] of Object.entries(this.localGrades(this.profile.studentKey)))await this.updateBestGrade(slug,grade.points,grade);
@@ -299,7 +316,10 @@ class Backend{
       this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/attempts`)),
       this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/grades`))
     ]);
-    return {profiles:p.val()||{},attempts:a.val()||{},grades:g.val()||{}};
+    const attempts=a.val()||{};
+    const reviewed=await this.reconcileQuizAttempts(Object.values(attempts).flatMap(items=>Object.values(items||{})));
+    for(const attempt of reviewed)attempts[attempt.studentKey][attempt.id]=attempt;
+    return {profiles:p.val()||{},attempts,grades:g.val()||{}};
   }
 
   async savePuzzleLeaderboardResult({difficulty,timeMs,placed,total}){
