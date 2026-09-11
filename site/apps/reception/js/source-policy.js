@@ -1,0 +1,7 @@
+/** Editorial monitoring only. Calendar publication status and marks are untouched. */
+export const SOURCE_POLICY_VERSION='source-policy-2026-09-08.1';
+export const SOURCE_POLICY=[
+ {id:'fire-rules-2027',urlIncludes:['cons_doc_LAW_363263'],families:['F28'],reviewFrom:'2027-01-01',title:'Перепроверить профиль Правил противопожарного режима',reason:'Публикация постановления № 1479 содержит ограничение срока действия. Не подменять ожидаемую новую редакцию предположением.',referenceUrl:'https://www.consultant.ru/document/cons_doc_LAW_363263/92d969e26a4326c5d02fa79b8f9cf4994ee5633b/',verifiedAt:'2026-09-08',kind:'editorial-review-date'},
+ {id:'heritage-2027',urlIncludes:['cons_doc_LAW_37318','12127232','483424559'],families:['F10'],reviewFrom:'2027-03-01',title:'Проверить изменения статьи 45 закона № 73-ФЗ',reason:'Предусмотрены изменения с 01.03.2027. Потребуется сопоставить конкретное учебное положение и новую редакцию; эта запись сама не меняет правовой ключ.',referenceUrl:'https://www.consultant.ru/document/cons_doc_LAW_37318/774d929a1d0aa7f267ba8d331134193b354f8137/',verifiedAt:'2026-09-08',kind:'editorial-review-date'},
+ {id:'driver-160',urlIncludes:['414140907','0001202605180007'],families:['F25'],effectiveFrom:'2026-09-01',reviewFrom:'2032-08-01',title:'Режим водителей: приказ № 160',reason:'Для нового порядка проверяется применимость с 01.09.2026; старая дата документа не меняется вместе с календарным годом задачи.',referenceUrl:'https://pravo.ppt.ru/prikaz/mintrans/n-160-337489',verifiedAt:'2026-09-08',kind:'effective-from-and-review-date'}
+];

@@ -9,3 +9,6 @@ node_modules/
 Thumbs.db
 *.log
 __pycache__/
+
+# Local backups, never publish
+.reception-backup-*/

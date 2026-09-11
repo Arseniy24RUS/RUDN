@@ -484,23 +484,49 @@ function renderSeminar3(topic){
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
 function renderSeminar5(topic){
-  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
-  const v=stableVariant();
-  const caseText=[`${ui('yourVariant')} №${v.number}`,`${v.directed_to}`,`${v.citizen_name}; ${v.citizen_address}; ${v.contacts}`,`${v.sent_at} / ${v.received_at} / ${v.registered_at}`,v.appeal_text].join('\n\n');
-  app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${ui('yourVariant')} №${v.number}</h2><div class="submission-case">${esc(caseText)}</div></div><div class="panel"><p class="notice">${ui('seminar5Lead')}</p><form id="appealForm" class="form-grid"><label><span>${ui('appealType')}</span><select name="appealType" required><option value="">—</option><option>Заявление / Application / 申请</option><option>Жалоба / Complaint / 投诉</option><option>Предложение / Proposal / 建议</option></select></label><label><span>${ui('completeness')}</span><input name="completeness" required></label><label><span>${ui('registration')}</span><input name="registration" required></label><label><span>${ui('deadline')}</span><input name="deadline" required></label><label><span>${ui('competentBody')}</span><input name="competentBody" required></label><label><span>${ui('addresseeDetails')}</span><input name="details" required></label><label class="full"><span>${ui('officialReply')}</span><textarea name="reply" required minlength="500"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.doc,.docx"></label><div class="full"><p class="form-hint">${ui('rubric')}</p><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
-  app.querySelector('#appealForm').onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const values=Object.fromEntries([...fd.entries()].filter(([k,v])=>!(v instanceof File)));
-    const reply=String(values.reply||'').trim();if(Object.values(values).some(v=>!String(v).trim())||reply.length<500){toast(ui('fillRequired'),'error');return}
-    const combined=Object.values(values).join(' ').toLowerCase();let points=0;
-    if(values.appealType&&values.completeness)points+=1;
-    if(values.registration&&/(3|тр[её]х|three|三)/i.test(values.registration))points+=1;else if(values.registration)points+=.5;
-    if(values.deadline&&/(30|тридцат|thirty|三十)/i.test(values.deadline))points+=1;else if(values.deadline)points+=.5;
-    if(values.competentBody&&values.details)points+=1;
-    if(reply.length>=500&&/(59[-–— ]?фз|федеральн|federal law|联邦法|уважаем|dear|尊敬)/i.test(combined))points+=1;else if(reply.length>=500)points+=.5;
-    points=Math.min(5,Math.round(points*2)/2);
-    let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-5',file)}catch(error){toast(error,'error')}}
-    await backend.saveAttempt({studentKey,type:'citizen-appeal',activitySlug:'seminar-5',title:loc(topic.seminar,'title'),points,maxPoints:5,variant:v.number,case:v,answers:values,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
+  /* RUDN_RECEPTION_1_0_1 */
+  if(!document.getElementById('receptionPlatformStyle')){
+    const link=document.createElement('link');link.id='receptionPlatformStyle';link.rel='stylesheet';
+    link.href=new URL('../../apps/reception/platform.css?v=1.0.1',import.meta.url).href;
+    document.head.append(link);
+  }
+  app.innerHTML='<section class="page reception-page"><div id="receptionMount" lang="ru" aria-busy="true"><p role="status">Открываем приёмную…</p></div></section>';
+  const mount=app.querySelector('#receptionMount');
+  const controller=new AbortController(),owner=attemptOwner();
+  let mountedCleanup=()=>{},locale=getLocale();
+  const cleanup=()=>{controller.abort();mountedCleanup();};
+  const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()
+    &&route().name==='activity'&&route().parts[0]==='seminar-5';
+  cleanup.refreshLocale=()=>{
+    const access=accessSnapshot(),gate=topicGate(5,access.overrides,access.now);
+    if(!accessAllowed(gate)){
+      cleanup();currentCleanup=null;
+      lockedAccessPage(loc(topic.seminar,'title'),gate);
+      return;
+    }
+    if(locale!==getLocale()){locale=getLocale();mountedCleanup.refreshLocale?.();}
   };
+  currentCleanup=cleanup;
+  void (async()=>{
+    try{
+      const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
+      if(!active()){cleanup();return;}
+      mountedCleanup=await mountReception(mount,{
+        backend,locale,signal:controller.signal,
+        period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
+        assessmentAllowed:()=>{const access=accessSnapshot();return topicGate(5,access.overrides,access.now).open;},
+        onExit:()=>{location.hash='dashboard'}
+      });
+      if(!active()){cleanup();return;}
+      mount.setAttribute('aria-busy','false');
+    }catch(error){
+      if(!active())return;
+      mount.setAttribute('aria-busy','false');
+      mount.innerHTML='<div class="panel" role="alert"><h2>Не удалось открыть приёмную</h2><p>Сохранённые ответы остаются на устройстве.</p><button type="button" class="btn btn-primary" id="receptionRetry">Повторить загрузку</button></div>';
+      mount.querySelector('#receptionRetry').onclick=()=>{cleanup();renderedKey='';render();};
+      console.error('Reception module:',error);
+    }
+  })();
 }
 function renderSeminar6(topic){
   const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview';
