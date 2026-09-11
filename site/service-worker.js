@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.1`;
+const CACHE=`${CACHE_PREFIX}v1.3.1-reception-1.0.1`;
 const LEGACY_CACHES=new Set(['rudn-gmu-pages-v1.2.2','rudn-gmu-pages-v1.3.0-career']);
 const CAREER_SHELL=[
   './apps/career/entry.mjs',
@@ -35,6 +35,42 @@ const CAREER_SHELL=[
   './apps/career/reports/stage8/independent-audit.json'
 ];
 const SHELL=[
+  './apps/reception/index.html',
+  './apps/reception/js/app.js',
+  './apps/reception/js/assignment.js',
+  './apps/reception/js/boot.js',
+  './apps/reception/js/case-time.js',
+  './apps/reception/js/cases.js',
+  './apps/reception/js/catalog.js',
+  './apps/reception/js/characters.js',
+  './apps/reception/js/confirm.js',
+  './apps/reception/js/documents.js',
+  './apps/reception/js/engine.js',
+  './apps/reception/js/evidence-catalog.js',
+  './apps/reception/js/evidence.js',
+  './apps/reception/js/graphics-data.js',
+  './apps/reception/js/icons.js',
+  './apps/reception/js/legal-reference.js',
+  './apps/reception/js/pilot.js',
+  './apps/reception/js/policy.js',
+  './apps/reception/js/settings.js',
+  './apps/reception/js/source-index.js',
+  './apps/reception/js/source-lifecycle.js',
+  './apps/reception/js/source-monitor-ui.js',
+  './apps/reception/js/source-policy.js',
+  './apps/reception/js/standalone.js',
+  './apps/reception/js/storage.js',
+  './apps/reception/style.css',
+  './assets/data/calendars/current.json',
+  './assets/js/calendar-bundled.js',
+  './assets/js/calendar-consultant.js',
+  './assets/js/calendar-model.js',
+  './assets/js/calendar-providers.js',
+  './assets/js/calendar-repository.js',
+  './assets/js/legal-calendar.js',
+  './apps/reception/js/app.js?v=1.0.1',
+  './apps/reception/style.css?v=1.0.1',
+  './apps/reception/platform.css?v=1.0.1',
   './','./index.html','./apps/puzzle.html',
   './assets/css/site.css?v=1.3.0',
   './assets/css/puzzle.css?v=1.2.2',

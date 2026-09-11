@@ -121,7 +121,7 @@ test('install includes every native runtime file and both native entry URLs',asy
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
-  assert.ok(worker.cacheName.endsWith(':v1.3.1'));
+  assert.ok(worker.cacheName.endsWith(':v1.3.1-reception-1.0.1'));
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{

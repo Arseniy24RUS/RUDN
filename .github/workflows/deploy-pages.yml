@@ -1,6 +1,9 @@
 name: Deploy RUDN learning platform to GitHub Pages
 
 on:
+  # RUDN_RECEPTION_CALENDAR_SCHEDULE
+  schedule:
+    - cron: "23 4 * * *"
   push:
     branches: [main]
   workflow_dispatch:
@@ -33,6 +36,9 @@ jobs:
           npm ci --ignore-scripts
           npm run build:firebase
           npm run build:career
+      # RUDN_RECEPTION_CALENDAR_UPDATE
+      - name: Update published reception calendars
+        run: node scripts/update-reception-calendars.mjs --previous-url https://arseniy24rus.github.io/RUDN/assets/data/calendars/current.json
       - name: Validate static bundle
         shell: bash
         run: |
