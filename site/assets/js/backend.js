@@ -1,6 +1,6 @@
-import {CONFIG} from './config.js?v=1.2.1';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.2.1';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.2.1';
+import {CONFIG} from './config.js?v=1.2.2';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.2.2';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.2.2';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -193,9 +193,30 @@ class Backend{
     if(!record||typeof record.fullName!=='string'||typeof record.group!=='string')return null;
     return {...identity,fullName:normalizeFullName(record.fullName),group:normalizeGroup(record.group)};
   }
+  async resolveStudentIdentity(identifier){
+    const input=normalizeIdentifier(identifier);
+    const cacheKey=`identity-alias.v1:${input.ticket}`;
+    try{
+      if(!this.db||!this.database||!this.user)throw serviceError('network/offline');
+      const snapshot=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/studentAliases/${input.ticket}`)));
+      const alias=snapshot.val();
+      if(alias!==null&&(typeof alias!=='string'||!/^\d{5,20}$/.test(alias)))throw serviceError('auth/invalid-identifier');
+      const identity=alias?normalizeIdentifier(alias):input;
+      // A failed/offline lookup must never turn an alias into a new student.
+      if(!this.connected&&!readState(`profile-cache.v1:${identity.studentKey}`,null)&&this.profile?.studentKey!==identity.studentKey)throw serviceError('network/offline');
+      writeState(cacheKey,identity.studentKey);
+      return identity;
+    }catch(error){
+      const cachedKey=readState(cacheKey,null);
+      const identity=cachedKey?normalizeIdentifier(cachedKey):input;
+      if(readState(`profile-cache.v1:${identity.studentKey}`,null)||this.profile?.studentKey===identity.studentKey)return identity;
+      throw error;
+    }
+  }
   async lookupStudent(identifier){
-    const identity=normalizeIdentifier(identifier);
+    let identity=normalizeIdentifier(identifier);
     try{await bounded(this.ensureStudentCloud());
+    identity=await this.resolveStudentIdentity(identifier);
     if(this.db&&this.database){
       const profileRef=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${identity.studentKey}`);
       const snapshot=await bounded(this.db.get(profileRef));
@@ -224,10 +245,11 @@ class Backend{
   }
   async saveProfile(input){
     if(this.isAdmin())throw serviceError('auth/operation-not-allowed');
-    const identity=normalizeIdentifier(input.identifier||input.ticket||input.email);
+    const generation=this.generation;const uid=this.user?.uid;
+    const identity=await this.resolveStudentIdentity(input.identifier||input.ticket||input.email);
+    if(generation!==this.generation||uid!==this.user?.uid||this.isAdmin())throw serviceError('auth/profile-changed');
     const fullName=normalizeFullName(input.fullName);
     const group=normalizeGroup(input.group);
-    const generation=this.generation;const uid=this.user?.uid;
     const existing=this.profile&&this.profile.studentKey===identity.studentKey?this.profile:readState(`profile-cache.v1:${identity.studentKey}`,null);
     const timestamp=now();
     let profile={

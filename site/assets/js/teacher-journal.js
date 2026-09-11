@@ -1,5 +1,5 @@
-import {backend,groupOptions} from './backend.js?v=1.2.1';
-import {getLocale} from './i18n.js?v=1.2.1';
+import {backend,groupOptions} from './backend.js?v=1.2.2';
+import {getLocale} from './i18n.js?v=1.2.2';
 
 const COPY={
   ru:{title:'Электронный журнал',groups:'Учебные группы',search:'Поиск по ФИО или билету',name:'ФИО / билет',topic:'Тема',lecture:'Лекция',seminar:'Семинар',quiz:'Квиз',work:'Самостоятельная',exam:'Экзамен',total:'Итог',registered:'Зарегистрировано',results:'С результатами',average:'Средний итог',activityAverage:'Среднее',submitted:'С результатом',export:'Скачать CSV',refresh:'Обновить',edit:'Оценки',empty:'Нет студентов для выбранных условий',cached:'Сохранённая копия',updated:'Обновлено',settings:'Настройки курса'},
