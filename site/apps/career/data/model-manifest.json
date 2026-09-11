@@ -1,0 +1,24 @@
+{
+  "release": "8.0.0-stage8",
+  "model": "8.0.0",
+  "questionnaire": "8.0.0",
+  "registry": "ru-public-careers-2026-09-05-stage8",
+  "changedQuestionIds": [
+    "K3",
+    "T3",
+    "I3"
+  ],
+  "sourceCheckDate": "2026-09-05",
+  "validatedPsychometrically": false,
+  "weights": {
+    "role": 40,
+    "sector": 45,
+    "conditions": 15
+  },
+  "smoothingRawSD": 0.65,
+  "conditionUnknownFit": 0.5,
+  "scope": "Russian institutions only",
+  "modelVersion": "8.0.0",
+  "questionnaireVersion": "8.0.0",
+  "registryVersion": "ru-public-careers-2026-09-05-stage8"
+}

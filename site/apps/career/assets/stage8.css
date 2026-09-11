@@ -1,0 +1,53 @@
+/* Stage 8 readability and resilience, within the existing RUDN visual system. */
+.profile-panel{background:#075b8d!important;color:#fff;display:block!important;padding:26px!important;min-width:0}
+.profile-panel .profile-title{font-family:inherit;font-size:1.15rem;margin:0 0 8px;color:#fff!important}
+.profile-panel .profile-scale-note,.profile-panel .profile-flag{color:#fff!important;opacity:1;font-size:.85rem;line-height:1.5}
+.profile-panel .profile-strengths{width:100%;max-width:none}
+.profile-panel .profile-strength{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;margin-bottom:10px}
+.profile-panel .profile-strength span{color:#fff!important;font-size:.84rem;line-height:1.4}
+.profile-panel .profile-strength b{color:#fff!important;white-space:nowrap;font-size:.84rem}
+.profile-panel .profile-strength i{grid-column:1/-1;background:#3a83ac;height:4px}
+.profile-panel .profile-strength em{background:#fff!important}
+.app-notice{max-width:1380px;margin:16px auto;padding:16px 22px;background:#ecf6fd;border:1px solid #b6d5e9;color:#123e59;font-size:.94rem;line-height:1.55;border-radius:12px}
+.app-notice button{margin:4px 10px 0 0}.topic-questions{margin:32px 0 10px;padding:26px;background:#f1f8fd;border:1px solid #c4deec;border-radius:18px}
+.topic-questions h2{margin:0 0 8px}.topic-questions p{color:#385a6d;line-height:1.6}.topic-questions fieldset{border:0;margin:20px 0 0;padding:0;min-width:0}
+.topic-questions legend{font-weight:650;margin:0 0 10px}.topic-options{display:flex;flex-wrap:wrap;gap:8px}
+.topic-options button{min-height:44px;background:#fff;border:1px solid #95bbd1;border-radius:10px;color:#16435f;padding:10px 14px;font:inherit;text-align:left}
+.topic-options button[aria-pressed=true]{background:#075b8d;border-color:#075b8d;color:white}
+.evidence-levels{background:#f0f7fc;border:1px solid #cee2f0;padding:18px;border-radius:12px;line-height:1.65}
+.path-assumption{font-size:.88rem;color:#355a70;line-height:1.55}.requirement-table{width:100%;border-collapse:collapse;margin:12px 0}
+.requirement-table th,.requirement-table td{text-align:left;padding:8px;border-bottom:1px solid #dbe5ec;vertical-align:top}
+.requirement-table caption{text-align:left;font-weight:600;margin:8px 0}
+.skip-link:focus{z-index:10000;outline:3px solid #123c57}#main-content:focus{outline:none}
+@media(max-width:600px){.app-notice{margin:10px 14px}.profile-panel{padding:22px!important}.topic-questions{padding:18px}.topic-options{flex-direction:column}.results-hero{gap:22px}.result-actions .button{min-height:44px}.requirement-table{font-size:.85rem}}
+@media print{
+ .profile-panel,.profile-panel *{color:#152d3c!important;background:transparent!important;opacity:1!important;box-shadow:none!important;text-shadow:none!important}
+ .profile-panel{border:1px solid #596974!important;break-inside:avoid}.profile-panel .profile-strength i{border-bottom:1px solid #96a4ad!important}
+ .profile-panel .profile-strength em{background:#273c4c!important;print-color-adjust:exact}
+ .app-notice,.topic-questions button,.result-actions,.dl-lab-launch,.workshop-launch,.ps-entry-link,.match-card-actions,.dl-explain-link,.update-banner,.skip-link{display:none!important}
+ .results-hero{display:block!important}.profile-panel{max-width:100%!important;margin:20px 0!important}.profile-strengths{width:100%!important}
+}
+/* Opaque, high-contrast text surfaces. Colour still follows the blue/white brand. */
+.results-hero{background:linear-gradient(120deg,#075ba4,#006b93)!important}
+.results-intro>p,.results-intro .step-kicker{color:#fff!important;opacity:1!important}
+.workflow-aside{background:linear-gradient(140deg,#075ba4,#006b93)!important}
+.live-profile-row label{color:#fff!important}.small-note{color:#52627a}
+.requirement-table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.requirement-table{min-width:520px}.requirement-table th{max-width:200px;font-size:.9rem}
+@media print{.results-hero{background:#fff!important}.results-hero h1,.results-hero p,.results-hero span{color:#152d3c!important;opacity:1!important}.requirement-table-wrap{overflow:visible}.requirement-table{min-width:0}.results-hero::after{display:none}}
+@media print {
+ #results-root .profile-panel,#results-root .profile-panel *{color:#152d3c!important;opacity:1!important;background:transparent!important}
+ #results-root .profile-panel .profile-strength em{background:#273c4c!important}
+ #results-root .app-notice{display:block!important;color:#152d3c!important;background:white!important;border:1px solid #596974;box-shadow:none}
+}
+/* Keep all nine labels, but avoid double vertical gaps inherited from the old radar layout. */
+.profile-panel .profile-strengths{gap:8px}
+.profile-panel .profile-strength{margin-bottom:4px}
+@media(max-width:600px){
+ .results-intro h1{font-size:32px;line-height:1.14}
+ .results-intro>p{font-size:14px;line-height:1.65}
+ .result-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .result-actions .button{min-width:0;width:100%;min-height:44px;padding:10px 8px;font-size:.81rem;line-height:1.25;white-space:normal;justify-content:center}
+ .result-actions .button:first-child{grid-column:1/-1}
+ .result-actions .button svg{width:16px;flex:0 0 16px}
+}

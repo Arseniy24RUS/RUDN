@@ -210,7 +210,7 @@
       "title": "Документооборот и делопроизводство в системе ГМУ",
       "short_title": "Документооборот и делопроизводство",
       "summary": "Жизненный цикл документа, реквизиты, регистрация, резолюция, контроль исполнения, архивирование, обращения граждан и электронный документооборот.",
-      "seminar_title": "Государственная служба: внешний тест",
+      "seminar_title": "Профориентация и государственная служба",
       "lecture": {
         "slug": "lecture-6",
         "title": "Лекция 6. Документооборот и делопроизводство",
@@ -229,10 +229,10 @@
       },
       "seminar": {
         "slug": "seminar-6",
-        "title": "Семинар 6. Государственная служба: внешний тест",
+        "title": "Семинар 6. Профориентация и государственная служба",
         "points": 5,
-        "title_en": "Seminar 6. State-service test",
-        "title_zh": "研讨课6：国家公务测试"
+        "title_en": "Seminar 6. Career guidance and public service",
+        "title_zh": "研讨课6：职业倾向与公共服务"
       },
       "title_en": "Document flow and records management",
       "title_zh": "文件流转与文书管理",
@@ -240,8 +240,8 @@
       "short_title_zh": "文书管理",
       "summary_en": "The official language, document particulars, records management, citizens’ petitions and personal-data protection.",
       "summary_zh": "公务语言、公文要素、文书管理、公民来信及个人数据保护。",
-      "seminar_title_en": "Seminar 6. State-service test",
-      "seminar_title_zh": "研讨课6：国家公务测试"
+      "seminar_title_en": "Career guidance and public service",
+      "seminar_title_zh": "职业倾向与公共服务"
     },
     {
       "number": 7,
@@ -331,7 +331,7 @@
     "settlement_dashboard": "https://datalens.yandex/kqam1c0gzr265",
     "civil_service_test": "https://edu.gossluzhba.gov.ru/test",
     "governor_simulator": "https://arseniy24rus.github.io/government-budget-simulator/",
-    "career_guidance": "https://arseniy24rus.github.io/career-guidance-for-civil-servants/"
+    "career_guidance": "#activity/seminar-6"
   },
   "firebase": {
     "puzzle_results": "https://rudn-gmu-learning-platform-default-rtdb.europe-west1.firebasedatabase.app/results.json",

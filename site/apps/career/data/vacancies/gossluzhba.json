@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "source": "https://gossluzhba.gov.ru",
+  "sourcePage": "https://gossluzhba.gov.ru/vacancy/",
+  "state": "not_connected",
+  "lastSuccessAt": null,
+  "directoryCoverage": "not_observed",
+  "vacancyCoverage": "not_observed",
+  "organizations": [],
+  "vacancies": [],
+  "note": "No live source data were obtained in the build environment. The empty array is NOT evidence of no vacancies. Run the connection command on a machine with source access."
+}

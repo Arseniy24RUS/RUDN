@@ -1,0 +1,373 @@
+<!-- Native career module surface. Lifecycle and ownership are managed by the host. -->
+<a class="skip-link" href="#main-content">Перейти к основному содержанию</a>
+  <svg aria-hidden="true" class="svg-sprite">
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5m6 6-6-6 6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-test" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 24 24"><path d="m3 10 9-6 9 6M5 10h14M6 10v8m4-8v8m4-8v8m4-8v8M3 21h18M4 18h16"/></symbol>
+    <symbol id="i-method" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5z"/><path d="M8 7h8M8 11h8"/></symbol>
+    <symbol id="i-seminar" viewBox="0 0 24 24"><path d="M4 5h16v11H4zM8 20h8M12 16v4"/><path d="m9 10 2 2 4-4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M10 14 20 4M20 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8 8 9 4.6-1 8-4 8-9V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8"/><path d="M4 3v5h5"/></symbol>
+    <symbol id="i-source" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5M10 16h5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+
+    <symbol id="i-compare" viewBox="0 0 24 24"><path d="M8 4h8M12 4v16M5 8h6l-3 6zM13 8h6l-3 6z"/><path d="M4 20h16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 20h16"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4m-5 5 5-5 5 5M4 20h16"/></symbol>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/></symbol>
+    <symbol id="i-graduation" viewBox="0 0 24 24"><path d="m2 9 10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5M22 9v6"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3a3 3 0 0 0 3-3v-6a3 3 0 0 1 3-3h-1"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a5 5 0 0 1 10 0v2M16 11a3 3 0 1 0 0-6M15 15a5 5 0 0 1 6 5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  </svg>
+
+  <div id="app-loading" class="app-loading" role="status" aria-live="polite">
+    <div class="loading-mark"><span></span><span></span><span></span></div>
+    <p>Загружаем карьерный навигатор…</p>
+  </div>
+
+  <div id="app" class="app-shell" hidden>
+    <div class="site-header career-toolbar" role="region" aria-label="Инструменты профориентации">
+      <span class="career-toolbar-label">Инструменты</span>
+      <nav id="career-tool-navigation" class="desktop-nav" aria-label="Разделы профориентационного теста">
+        <button type="button" data-route="home"><svg aria-hidden="true"><use href="#i-home"/></svg>Обзор</button>
+        <button type="button" data-route="test"><svg><use href="#i-test"/></svg>Пройти тест</button>
+        <button type="button" data-route="directory"><svg><use href="#i-landmark"/></svg>Органы власти</button>
+        <button id="compare-nav-button" type="button" data-route="compare" hidden><svg><use href="#i-compare"/></svg>Сравнение <span id="compare-nav-count">0</span></button>
+        <button type="button" data-route="structure"><svg><use href="#i-route"/></svg>Система органов</button>
+        <button type="button" data-route="scenarios"><svg><use href="#i-file"/></svg>Сценарии</button>
+        <details class="nav-more"><summary>Ещё<svg aria-hidden="true"><use href="#i-chevron"/></svg></summary><div>
+          <button type="button" data-route="public-service"><svg><use href="#i-landmark"/></svg>Другие ветви и уровни</button>
+          <button type="button" data-route="vacancies"><svg><use href="#i-briefcase"/></svg>Вакансии и конкурсы</button>
+          <button type="button" data-route="opportunities"><svg><use href="#i-briefcase"/></svg>Карьера</button>
+          <button type="button" data-route="seminar"><svg><use href="#i-seminar"/></svg>Семинар</button>
+          <button type="button" data-route="lab"><svg><use href="#i-chart"/></svg>Лаборатория выбора</button>
+          <button type="button" data-route="workshop"><svg><use href="#i-briefcase"/></svg>Мастерская</button>
+          <button type="button" data-route="methodology"><svg><use href="#i-method"/></svg>Методика</button>
+        </div></details>
+      </nav>
+      <div class="header-actions">
+        <div class="language-control" hidden role="group" aria-label="Язык интерфейса"><button type="button" data-language="ru" aria-pressed="true" lang="ru">RU</button><button type="button" data-language="en" aria-pressed="false" lang="en">EN</button><button type="button" data-language="zh-Hans" lang="zh-Hans" aria-label="简体中文" aria-pressed="false">中文</button></div>
+        <button id="resume-button" class="header-result-button" type="button" hidden><svg><use href="#i-arrow-right"/></svg><span>Продолжить</span></button>
+        <button id="mobile-menu-button" class="icon-button mobile-menu-button" aria-controls="career-tool-navigation" type="button" aria-label="Открыть меню" aria-expanded="false"><svg><use href="#i-menu"/></svg></button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <main id="main-content" tabindex="-1">
+      <div id="session-strip" class="session-strip" data-status="idle">
+        <p id="session-status" role="status" aria-live="polite">Ответы остаются на Вашем устройстве</p>
+        <div class="session-actions"><button class="button button-ghost" type="button" id="session-export"><svg aria-hidden="true"><use href="#i-download"/></svg>Скачать ответы</button><label class="button button-ghost session-import"><svg aria-hidden="true"><use href="#i-upload"/></svg>Восстановить ответы<input type="file" id="session-import" aria-label="Восстановить ответы" accept=".json,application/json"></label></div>
+      </div>
+      <div id="storage-warning" class="storage-warning" role="status" hidden>Браузер не сохраняет ответы. Не закрывайте вкладку до выгрузки результата.</div>
+      <section id="view-home" class="view home-view">
+        <div class="hero">
+          <div class="hero-copy">
+            <h1>Ваш путь<br>на госслужбе</h1>
+            <p class="hero-lead">Определите, какие виды государственной работы и какие органы власти ближе Вашим профессиональным интересам.</p>
+            <div class="hero-actions">
+              <button id="start-test-button" class="button button-primary button-large" type="button">Начать тест<svg><use href="#i-arrow-right"/></svg></button>
+              <button class="button button-secondary button-large" type="button" data-route="directory">Изучить органы власти</button>
+            </div>
+            <div class="hero-meta">
+              <span><svg><use href="#i-check"/></svg>27 вопросов об интересах</span>
+              <span><svg><use href="#i-check"/></svg>73 органа и организации</span>
+              <span><svg><use href="#i-check"/></svg>8–10 минут</span>
+            </div>
+            <p class="hero-boundary">Учебный инструмент для выбора направлений развития. Он не оценивает способности и не используется при приёме на работу.</p>
+          </div>
+          <div class="hero-visual" aria-label="Схема карьерной навигации">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="hero-core">
+              <svg><use href="#i-landmark"/></svg>
+              <strong>Интересы.<br>Возможности.<br>Ваш выбор.</strong>
+            </div>
+            <div class="orbit-node node-a">Политика</div>
+            <div class="orbit-node node-b">Данные</div>
+            <div class="orbit-node node-c">Право</div>
+            <div class="orbit-node node-d">Граждане</div>
+            <div class="orbit-node node-e">Территории</div>
+            <div class="hero-agency-stack">
+              <span>Министерства</span><span>Службы</span><span>Агентства</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-steps">
+          <article><span>01</span><div><h2>Что Вам интересно делать</h2><p>Оцените конкретные профессиональные задачи: от аналитики и права до цифровых систем и работы в регионах.</p></div></article>
+          <article><span>02</span><div><h2>Какие сферы Вам близки</h2><p>Выберите предметные области государственной политики, которые хотелось бы изучать и развивать.</p></div></article>
+          <article><span>03</span><div><h2>Где это можно реализовать</h2><p>Получите объяснимый ТОП-5, примеры карьерных ролей, требования к подготовке и неочевидный вариант для семинара.</p></div></article>
+        </div>
+
+        <section class="method-preview">
+          <div>
+            <h2>От интересов — к конкретным задачам</h2>
+            <p>Модель сопоставляет интерес к видам работы, выбранные сферы государственной политики и предпочтения по условиям труда. Для каждого органа она показывает подходящее направление работы и вклад каждого компонента в результат.</p>
+            <button class="text-link" type="button" data-route="methodology">Посмотреть методику<svg><use href="#i-arrow-right"/></svg></button>
+          </div>
+          <div class="formula-card">
+            <span>Профессиональные интересы</span><b>+</b><span>Сфера политики</span><b>+</b><span>Условия труда</span><b>=</b><strong>Подходящий карьерный трек</strong>
+          </div>
+        </section>
+        <section class="home-launchpad" aria-label="Возможности платформы">
+          <article><h2>Исследовать свой результат</h2><p>Узнайте, из чего складывается индекс, и проверьте, как изменение предпочтений влияет на рекомендации.</p><button class="text-link" type="button" data-route="lab">Лаборатория выбора<svg aria-hidden="true"><use href="#i-arrow-right"/></svg></button></article>
+          <article><h2>Попробовать работу</h2><p>Разберите 12 учебных ситуаций и сформулируйте собственный следующий шаг в листе карьерного выбора.</p><button class="text-link" type="button" data-route="workshop">Профессиональные пробы<svg aria-hidden="true"><use href="#i-arrow-right"/></svg></button></article>
+          <article><h2>Провести занятие</h2><p>Используйте план семинара на 45 или 90 минут и локальную сводку обезличенных результатов группы.</p><button class="text-link" type="button" data-route="seminar">Преподавателю<svg aria-hidden="true"><use href="#i-arrow-right"/></svg></button></article>
+        </section>
+        <section class="home-faq"><h2>Перед началом</h2>
+          <details><summary>Что означает результат?</summary><p>Это отправная точка для знакомства с профессиями. Индекс от 0 до 100 — результат авторской модели, а не процент пригодности. Близкие индексы и равные результаты не дают оснований считать один орган объективно лучшим для Вас.</p></details>
+          <details><summary>Можно ли продолжить позже?</summary><p>Ответы автоматически сохраняются в этом браузере. Для другого устройства скачайте файл ответов и восстановите его на новом устройстве. Очистка данных сайта удаляет локальные записи.</p></details>
+          <details><summary>Кто видит мои ответы?</summary><p>Ответы и расчёт сохраняются в этом браузере отдельно для Вашего профиля платформы. Результат автоматически не попадает в журнал оценок. Для передачи преподавателю скачайте файл результата. Фамилия, контакты и номер студенческого билета для теста не нужны.</p></details>
+          <details><summary>Какие направления представлены?</summary><p>Основной каталог содержит 69 органов и 4 работодателя публичного сектора. Ещё 8 примеров законодательной, судебной, региональной и муниципальной работы представлены отдельно. Это учебная подборка, а не полный перечень должностей.</p></details>
+        </section>
+      </section>
+
+      <section id="view-test" class="view test-view" hidden>
+        <div class="workflow-shell">
+          <aside class="workflow-aside">
+            <div class="workflow-intro">
+              <span class="step-kicker">Этап 1 из 3</span>
+              <h2>Виды профессиональной работы</h2>
+              <p>Оценивайте не собственные навыки, а то, насколько Вам было бы интересно регулярно выполнять описанную задачу.</p>
+            </div>
+            <details class="live-profile-disclosure"><summary>Посмотреть текущие ответы по шкалам</summary><div id="live-profile" class="live-profile"></div></details>
+            <div class="aside-note"><svg><use href="#i-info"/></svg><span>Правильных и неправильных ответов нет. Можно изменить любой ответ до расчёта результата.</span></div>
+          </aside>
+          <div class="question-stage">
+            <div class="workflow-topline">
+              <button id="question-back" class="button button-ghost" type="button"><svg><use href="#i-arrow-left"/></svg>Назад</button>
+              <div class="progress-copy"><span id="question-counter">Вопрос 1 из 27</span><strong id="question-percent">4%</strong></div>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Вопросов отвечено" aria-valuemin="0" aria-valuemax="27" aria-valuenow="0"><span id="question-progress"></span></div>
+            <article class="question-card">
+              <div class="question-icon"><svg><use href="#i-test"/></svg></div>
+              <p class="question-prompt">Насколько Вам было бы интересно регулярно выполнять такую работу?</p>
+              <h1 id="question-text"></h1>
+              <div id="answer-options" class="answer-options" role="radiogroup" aria-label="Варианты ответа"></div>
+              <div class="question-controls">
+                <span class="keyboard-hint">Клавиши 1–5 для ответа</span>
+                <button id="question-next" class="button button-primary" type="button">Следующий вопрос<svg><use href="#i-arrow-right"/></svg></button>
+              </div>
+            </article>
+            <details class="question-map"><summary>Все вопросы и сохранённые ответы</summary><div id="question-map-grid" class="question-map-grid"></div><p>Отмеченные вопросы уже заполнены. Можно вернуться к любому вопросу.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-sectors" class="view sectors-view" hidden>
+        <div class="section-heading workflow-heading">
+          <div><span class="step-kicker">Этап 2 из 3</span><h1>Какие сферы Вам интересны?</h1><p>Отметьте четыре наиболее привлекательные сферы в порядке приоритета и две сферы, которые сейчас интересуют Вас меньше всего.</p></div>
+          <div class="selection-status"><strong id="priority-count">0 / 4</strong><span>в приоритете</span><strong id="low-count">0 / 2</strong><span>не в приоритете</span></div>
+        </div>
+        <div id="sector-grid" class="sector-grid"></div>
+        <div class="sticky-actions">
+          <button class="button button-secondary" type="button" data-route="test"><svg><use href="#i-arrow-left"/></svg>К вопросам</button>
+          <button id="sectors-next" class="button button-primary" type="button">Условия работы<svg><use href="#i-arrow-right"/></svg></button>
+        </div>
+      </section>
+
+      <section id="view-conditions" class="view conditions-view" hidden>
+        <div class="section-heading workflow-heading">
+          <div><span class="step-kicker">Этап 3 из 3</span><h1>Какой рабочий режим для Вас приемлем?</h1><p>Эти ответы не создают «правильный» профиль. Они лишь помогают не рекомендовать трек, условия которого заметно расходятся с Вашими предпочтениями.</p></div>
+        </div>
+        <div id="condition-list" class="condition-list"></div>
+        <section id="answer-review" class="review-panel"></section>
+        <div class="sticky-actions">
+          <button class="button button-secondary" type="button" data-route="sectors"><svg><use href="#i-arrow-left"/></svg>К сферам</button>
+          <button id="calculate-button" class="button button-primary button-large" type="button">Построить карьерную карту<svg><use href="#i-arrow-right"/></svg></button>
+        </div>
+      </section>
+
+      <section id="view-results" class="view results-view" hidden>
+        <div id="results-root"></div>
+      </section>
+
+      <section id="view-directory" class="view directory-view" hidden>
+        <div class="ps-entry-link"><div><strong>Другие ветви и уровни</strong><p>Восемь проверенных российских примеров: аппараты парламентов и судов, региональный и муниципальный уровни.</p></div><button class="button button-secondary" type="button" data-route="public-service">Открыть направления<svg><use href="#i-arrow-right"/></svg></button></div>
+        <div class="section-heading directory-heading">
+          <div><h1>Справочник органов и организаций</h1><p>Изучайте полномочия, карьерные роли, типовые подразделения, требования к подготовке и способы входа. Источники и границы модели указаны в карточках.</p></div>
+          <div class="directory-counter"><strong id="directory-visible-count">73</strong><span>объекта в реестре</span></div>
+        </div>
+        <div class="directory-toolbar">
+          <label class="search-field"><svg><use href="#i-search"/></svg><input id="directory-search" type="search" placeholder="Найти орган, сферу или направление работы" autocomplete="off"></label>
+          <select id="directory-type-filter" aria-label="Тип организации">
+            <option value="">Все типы</option>
+            <option value="ministry">Министерства</option>
+            <option value="service">Федеральные службы</option>
+            <option value="agency">Федеральные агентства</option>
+            <option value="presidential">Органы при Президенте</option>
+            <option value="corporation">Государственные корпорации</option>
+            <option value="fund">Государственные фонды</option>
+          </select>
+          <select id="directory-sector-filter" aria-label="Сфера деятельности"><option value="">Все сферы</option></select>
+          <select id="directory-track-filter" aria-label="Карьерный трек"><option value="">Все карьерные треки</option></select>
+          <button id="directory-reset" class="button button-ghost" type="button"><svg><use href="#i-reset"/></svg>Сбросить</button>
+        </div>
+        <div id="directory-grid" class="directory-grid"></div>
+      </section>
+
+      <section id="view-compare" class="view compare-view" hidden>
+        <div class="section-heading compare-heading">
+          <div><span class="step-kicker">Карьерная развилка</span><h1>Сравнение органов власти</h1><p>Сопоставьте два или три варианта по сферам, карьерным ролям, условиям работы и возможным шагам входа.</p></div>
+          <button id="compare-clear" class="button button-ghost" type="button"><svg><use href="#i-trash"/></svg>Очистить сравнение</button>
+        </div>
+        <div id="compare-empty" class="compare-empty">
+          <div class="compare-empty-icon"><svg><use href="#i-compare"/></svg></div>
+          <h2>Добавьте от двух до трёх органов</h2>
+          <p>Выбирать варианты можно в справочнике, результатах теста или подробной карточке органа.</p>
+          <button class="button button-primary" type="button" data-route="directory">Открыть справочник<svg><use href="#i-arrow-right"/></svg></button>
+        </div>
+        <div id="compare-root"></div>
+      </section>
+
+      <section id="view-vacancies" class="view workspace-view" hidden><div id="vacancies-root" data-no-i18n></div></section>
+      <section id="view-public-service" class="view" hidden><div id="public-service-root"></div></section>
+      <section id="view-lab" class="view" hidden><div id="decision-root"></div></section>
+      <section id="view-workshop" class="view workshop-view" hidden><div id="classroom-root"></div></section>
+
+      <section id="view-seminar" class="view seminar-view" hidden>
+        <div class="section-heading">
+          <div><h1>Режим семинара</h1><p>Короткий сценарий для знакомства группы с менее известными органами и обсуждения реальных карьерных ролей.</p></div>
+        </div>
+        <div class="workshop-launch"><div><h2>От результата к карьерному выбору</h2><p>Восемь профессиональных проб, личный лист выбора и сценарий занятия на 45 или 90 минут.</p></div><button class="button button-primary" type="button" data-route="workshop">Открыть мастерскую<svg><use href="#i-arrow-right"/></svg></button></div>
+        <div class="seminar-layout">
+          <article class="seminar-draw">
+            <div class="seminar-orbit"><svg><use href="#i-landmark"/></svg></div>
+            <span class="step-kicker">Орган для обсуждения</span>
+            <h2 id="seminar-name">Нажмите кнопку, чтобы выбрать орган</h2>
+            <p id="seminar-mission">Платформа предложит один из менее известных органов и подготовит вопросы для групповой дискуссии.</p>
+            <button id="seminar-draw-button" class="button button-primary button-large" type="button"><svg><use href="#i-reset"/></svg>Выбрать неочевидный орган</button>
+          </article>
+          <article class="discussion-card">
+            <h2>Вопросы для обсуждения</h2>
+            <ol id="seminar-questions">
+              <li>Какие государственные задачи решает этот орган?</li>
+              <li>Какие профессиональные роли могут существовать внутри него?</li>
+              <li>Какие знания и навыки нужны будущему сотруднику?</li>
+              <li>Что в этой карьерной траектории кажется привлекательным, а что — сложным?</li>
+            </ol>
+            <div id="seminar-tags" class="tag-row"></div>
+            <button id="seminar-details" class="button button-secondary" type="button" disabled>Открыть карточку органа<svg><use href="#i-arrow-right"/></svg></button>
+          </article>
+        </div>
+
+        <section class="group-lab" aria-labelledby="group-lab-title">
+          <div class="group-lab-heading">
+            <div><span class="step-kicker">Локально и без персональных данных</span><h2 id="group-lab-title">Обзор результатов учебной группы</h2><p>Студенты экспортируют обезличенные JSON-файлы со своего устройства. Преподаватель импортирует их здесь; файлы обрабатываются только в браузере и не отправляются на сервер.</p></div>
+            <div class="privacy-seal"><svg><use href="#i-lock"/></svg><span><strong>Локальная обработка</strong><small>без Ф. И. О., почты и номера студента</small></span></div>
+          </div>
+          <div class="group-lab-controls">
+            <label class="file-button button button-primary"><svg><use href="#i-upload"/></svg>Импортировать JSON<input id="group-file-input" type="file" accept="application/json,.json" multiple></label>
+            <button id="group-backup" class="button button-secondary" type="button" disabled><svg><use href="#i-download"/></svg>Резервная копия JSON</button>
+            <button id="group-demo-button" class="button button-secondary" type="button"><svg><use href="#i-users"/></svg>Демонстрационная группа</button>
+            <button id="group-export-csv" class="button button-secondary" type="button" disabled><svg><use href="#i-download"/></svg>Выгрузить таблицу CSV</button>
+            <button id="group-export-summary" class="button button-secondary" type="button" disabled><svg><use href="#i-chart"/></svg>Выгрузить сводку</button>
+            <button id="group-clear" class="button button-ghost" type="button" disabled><svg><use href="#i-trash"/></svg>Очистить</button>
+          </div>
+          <p id="group-mode-note" class="group-mode-note">Набор хранится в памяти вкладки. Скачайте резервную копию перед закрытием. Загруженные результаты – не число уникальных студентов.</p>
+          <div id="group-import-status" class="group-import-status" role="status" aria-live="polite"></div>
+          <details id="group-import-details" class="group-import-details" hidden><summary>Протокол последнего импорта</summary><div id="group-import-log"></div></details>
+          <div id="group-dashboard" class="group-dashboard"></div>
+        </section>
+      </section>
+
+      <section id="view-methodology" class="view methodology-view" hidden>
+        <div class="methodology-hero">
+          <div><h1>Как строится рекомендация</h1><p>Тест является учебным профориентационным инструментом. Он сопоставляет выраженные интересы студента с карьерными треками, сферами деятельности и условиями работы в публичном секторе.</p></div>
+          <div class="version-badge"><span>Версия платформы</span><strong>1.0 · Модель 8.0</strong><small>Открытые формулы, авторские допущения и проверка результатов</small></div>
+        </div>
+        <div class="methodology-grid">
+          <article><span class="method-number">01</span><h2>Профессиональные интересы</h2><p>27 утверждений образуют девять шкал. Каждый пункт описывает одну наблюдаемую рабочую задачу и оценивается от «совершенно неинтересно» до «очень интересно».</p></article>
+          <article><span class="method-number">02</span><h2>Сферы политики</h2><p>Четыре приоритетные и две менее привлекательные сферы позволяют отличить, например, интерес к контролю в экологии от интереса к контролю в финансах.</p></article>
+          <article><span class="method-number">03</span><h2>Карьерные треки</h2><p>Орган не представлен одним «средним» вектором. Для него указываются реально возможные семейства работы: политика, право, надзор, программы, финансы, данные, услуги, территория и международное сотрудничество.</p></article>
+          <article><span class="method-number">04</span><h2>Объяснимый итог</h2><p>Индекс объединяет близость профессиональной роли, отраслевого интереса и условий труда. Он является относительным баллом внутри текущего реестра, а не вероятностью трудоустройства.</p></article>
+        </div>
+        <div class="formula-panel">
+          <div><span>40%</span><strong>Профессиональная роль</strong></div>
+          <b>+</b>
+          <div><span>45%</span><strong>Сфера государственной политики</strong></div>
+          <b>+</b>
+          <div><span>15%</span><strong>Условия труда</strong></div>
+          <b>=</b>
+          <div class="formula-result"><span>0–100</span><strong>Индекс относительного соответствия</strong></div>
+        </div>
+        <div class="methodology-details">
+          <article><h2>Плавный расчёт и уровень интереса</h2><p>Влияние формы интересов ослабляется плавно при близких ответах. Отдельно показывается отсутствие положительного интереса. Равные индексы означают неразличимость в этой модели, а не одинаковую профессиональную пригодность.</p></article>
+          <article><h2>Уточнение предметной области</h2><p>В двух ведущих сферах могут появиться короткие необязательные уточнения. Без ответа система сохраняет широкую область. Итог также учитывает авторский коэффициент представленности направления: 1,00; 0,96 или 0,91.</p></article>
+          <article>
+            <h2>Факты и модельные допущения</h2>
+            <p>Ссылки подтверждают учреждения и отдельные функции, но не числовые веса. Сферы и условия заданы по направлениям работы как авторские сценарии. Неизвестные условия отмечены явно. Новая проверка конкретных функций выполнена для МЧС и Минюста; остальные записи требуют дальнейшей содержательной сверки.</p>
+          </article>
+          <article>
+            <h2>Границы интерпретации</h2>
+            <p>Результат предназначен для обсуждения и дальнейшего изучения органов власти. Он не оценивает профессиональную пригодность, не заменяет консультацию и не используется для кадрового отбора.</p>
+          </article>
+        </div>
+        <div class="document-links">
+          <a href="docs/METHODOLOGY-STAGE8.md" target="_blank"><svg><use href="#i-method"/></svg><span><strong>Полная методика</strong><small>Формулы, шкалы и правила интерпретации</small></span></a>
+          <a href="docs/AUDIT-1.0.md" target="_blank"><svg><use href="#i-source"/></svg><span><strong>Основания и открытые замечания</strong><small>Сферы, треки, источники и уровни уверенности</small></span></a>
+          <a href="reports/stage8/independent-audit.json" target="_blank"><svg><use href="#i-eye"/></svg><span><strong>Машиночитаемый аудит</strong><small>Покрытие реестра и результаты сценарных проверок</small></span></a>
+          <a href="docs/TEACHER-GUIDE-STAGE8.md" target="_blank"><svg><use href="#i-seminar"/></svg><span><strong>Руководство для преподавателя</strong><small>Сценарий семинара и вопросы для обсуждения</small></span></a>
+        </div>
+      <div class="language-method-note"><p>Модель расчёта: 8.0.0. Индексы прежних версий напрямую не сопоставимы.</p><p>Переводы обеспечивают доступ к учебному материалу, но не подтверждают психометрическую эквивалентность языковых версий. Официальные русские названия органов сохранены рядом с рабочими переводами.</p></div></section>
+
+      <section id="view-structure" class="view workspace-view" hidden>
+        <div class="workspace-heading"><div><h1>Система органов власти</h1><p>От руководства деятельностью к ведомству и территориальному уровню. Выберите ветвь, чтобы разобраться в подчинённости.</p></div><button type="button" id="structure-home" class="button button-secondary">К началу схемы</button></div>
+        <div class="workspace-toolbar"><label class="search-field"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="structure-search" type="search" placeholder="Найти орган в схеме" aria-label="Найти орган в схеме" autocomplete="off"></label><span class="workspace-caption">69 органов · 2 ветви руководства</span></div>
+        <div id="structure-search-results" class="structure-search-results" aria-live="polite"></div><div id="structure-root"></div>
+      </section>
+      <section id="view-scenarios" class="view workspace-view" hidden>
+        <div class="workspace-heading"><div><h1>Мои карьерные сценарии</h1><p>Сохраните разные варианты интересов и сравните, как меняются рекомендации. Всё остаётся на этом устройстве.</p></div><span id="scenario-count" class="workspace-caption">0 / 12</span></div>
+        <form id="scenario-form" class="scenario-save-panel"><div><label for="scenario-title">Название текущего сценария</label><input id="scenario-title" maxlength="60" placeholder="Например: финансы и данные" autocomplete="off"><small>Не указывайте Ф. И. О. или другие личные данные.</small></div><button id="scenario-save" type="button" class="button button-primary"><svg aria-hidden="true"><use href="#i-plus"/></svg>Сохранить текущий результат</button></form>
+        <div class="workspace-toolbar"><button type="button" id="scenario-export" class="button button-secondary"><svg aria-hidden="true"><use href="#i-download"/></svg>Экспорт сценариев</button><label class="button button-secondary file-label"><svg aria-hidden="true"><use href="#i-upload"/></svg>Импорт сценариев<input id="scenario-import" type="file" accept=".json,application/json"></label><span>Это отдельный формат, не файлы для панели группы.</span></div>
+        <p id="scenario-storage-warning" class="scenario-warning" hidden>Автосохранение недоступно или хранилище повреждено. Используйте экспорт; существующий файл хранилища не удалён автоматически.</p>
+        <div id="scenarios-root" class="saved-scenarios"></div><section id="scenario-comparison" class="scenario-comparison"></section>
+      </section>
+      <section id="view-opportunities" class="view workspace-view" hidden>
+        <div class="workspace-heading"><div><h1>Первые шаги в карьере</h1><p>Официальные кадровые страницы, региональные примеры и архивы программ. Проверяйте условия и сроки на первоисточнике.</p></div></div>
+        <div class="source-policy"><svg aria-hidden="true"><use href="#i-info"/></svg><p>Это каталог проверенных источников, а не поток действующих вакансий. Ссылка на кадровую страницу не означает, что сейчас идёт набор. Переводы платформы не меняют требования к гражданству, языку и образованию.</p></div>
+        <div class="workspace-toolbar"><label>Орган<select id="opportunity-authority"><option value="">Все органы</option></select></label><label>Тип ресурса<select id="opportunity-kind"><option value="">Все источники</option><option value="directory">Кадровые страницы</option><option value="regional">Территориальные примеры</option><option value="archive">Архив программ</option></select></label><span>Источников: <b id="opportunity-count">0</b></span></div><div id="opportunities-root"></div>
+      </section>
+
+    </main>
+
+    <aside id="compare-tray" class="compare-tray" hidden aria-label="Выбранные для сравнения органы">
+      <div class="compare-tray-copy"><svg><use href="#i-compare"/></svg><span><strong>Сравнение</strong><small id="compare-tray-status">Выберите 2–3 органа</small></span></div>
+      <div id="compare-tray-items" class="compare-tray-items"></div>
+      <button id="compare-open" class="button button-primary" type="button" disabled>Сравнить<svg><use href="#i-arrow-right"/></svg></button>
+    </aside>
+
+    <nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
+      <button type="button" data-route="home"><svg><use href="#i-home"/></svg><span>Главная</span></button>
+      <button type="button" data-route="test"><svg><use href="#i-test"/></svg><span>Тест</span></button>
+      <button type="button" data-route="directory"><svg><use href="#i-landmark"/></svg><span>Органы</span></button>
+      <button type="button" data-route="seminar"><svg><use href="#i-seminar"/></svg><span>Семинар</span></button>
+    </nav>
+
+
+  </div>
+
+  <dialog id="authority-dialog" class="authority-dialog" aria-labelledby="authority-dialog-title">
+    <button id="dialog-close" class="dialog-close icon-button" type="button" aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
+    <div id="authority-dialog-content"></div>
+  </dialog>

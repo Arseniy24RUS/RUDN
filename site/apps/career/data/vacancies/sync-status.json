@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "state": "not_connected",
+  "attemptedAt": null,
+  "lastSuccessAt": null,
+  "errorCode": "LIVE_ACCESS_NOT_VERIFIED",
+  "message": "The public page and JSON contract could not be read in the build environment. No successful live integration is claimed."
+}

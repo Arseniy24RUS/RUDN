@@ -1,3 +1,4 @@
+import {CAREER_COPY,careerRoute} from './career-course.js';
 import {CONFIG} from './config.js?v=1.2.2';
 import {backend,groupOptions} from './backend.js?v=1.2.2';
 import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.2.2';
@@ -177,6 +178,7 @@ initNotifications();
 
 let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{}};
 let currentCleanup=null;
+let currentCareer=null;
 let renderedKey='';let dataReady=false;let renderRunning=false;let renderAgain=false;
 let accessRefreshTimer=null;
 
@@ -247,7 +249,11 @@ async function render(){
   if(!dataReady)return;
   if(renderRunning){renderAgain=true;return}
   const nextKey=`${location.hash}:${attemptOwner()}`;
-  if(renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
+  const currentRoute=route();
+  if(currentCareer?.handle&&currentCareer.owner===attemptOwner()&&currentRoute.name==='activity'&&currentRoute.parts[0]==='seminar-6'&&backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow()))){
+    renderedKey=nextKey;currentCleanup.refreshLocale();currentCareer.handle.navigate(careerRoute(currentRoute.parts[1]));return;
+  }
+  if(!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
   const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;
   if(currentCleanup){try{currentCleanup()}catch{} currentCleanup=null}
   const r=route();setActiveNav(r.name);
@@ -383,7 +389,7 @@ function renderLecture(topic){
   const lecture=topic.lecture;const n=topic.number;const currentPresentation=presentationPdf(lecture);
   const testAvailable=n<=7;
   const access=accessSnapshot();const testGate=testAvailable?lectureTestGate(n,access.overrides,access.now):null;const testAllowed=testGate&&accessAllowed(testGate);
-  const testPanel=testAvailable?(testAllowed?`<div class="panel"><span class="access-status ${testGate.open?'open':'closed'}">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p>${backend.isAdmin()&&!testGate.open?`<p class="notice warning">${accessText('teacherPreview')}</p>`:''}<button class="btn btn-primary" id="launchLectureTest">${ui('startTest')}</button></div>`:`<div class="panel access-locked"><span class="access-status closed">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p><button class="btn btn-neutral" type="button" disabled>${accessText('locked')}</button></div>`):`<div class="panel"><h2>${ui('reflectionTitle')}</h2><p class="muted">${ui('reflectionLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.career_guidance)}" target="_blank" rel="noopener">${ui('externalTest')} ↗</a></div><form id="reflectionForm" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('careerResult')}</span><input name="result" required></label><label class="full"><span>${ui('reflection')}</span><textarea name="reflection" required minlength="120"></textarea></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`;
+  const testPanel=testAvailable?(testAllowed?`<div class="panel"><span class="access-status ${testGate.open?'open':'closed'}">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p>${backend.isAdmin()&&!testGate.open?`<p class="notice warning">${accessText('teacherPreview')}</p>`:''}<button class="btn btn-primary" id="launchLectureTest">${ui('startTest')}</button></div>`:`<div class="panel access-locked"><span class="access-status closed">${esc(gateStatus(testGate))}</span><h2>${ui('lectureTest')}</h2><p class="muted">${esc(loc(topic,'summary',topic.summary))}</p><button class="btn btn-neutral" type="button" disabled>${accessText('locked')}</button></div>`):`<div class="panel"><h2>${ui('reflectionTitle')}</h2><p class="muted">${ui('reflectionLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.career_guidance)}">${ui('externalTest')}</a></div><form id="reflectionForm" class="form-grid" style="margin-top:18px"><label class="full"><span>${ui('careerResult')}</span><input name="result" required></label><label class="full"><span>${ui('reflection')}</span><textarea name="reflection" required minlength="120"></textarea></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`;
   app.innerHTML=`<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(lecture,`${ui('lectureWord')} ${n}`,lecture.preview)}<div class="panel"><div class="tabs" role="tablist"><button class="tab active" data-video-platform="vk">VK Видео</button><button class="tab" data-video-platform="youtube">YouTube</button><button class="tab" data-video-platform="presentation">${ui('presentation')}</button></div><div id="lectureContent"><iframe class="video-frame" src="${esc(lecture.vk_embed)}" title="${esc(loc(lecture,'title',lecture.title))}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div><div class="page-actions" style="margin-top:14px"><a class="btn btn-neutral btn-small" href="${esc(lecture.vk_link)}" target="_blank">VK ↗</a><a class="btn btn-neutral btn-small" href="${esc(lecture.youtube_link)}" target="_blank">YouTube ↗</a><a class="btn btn-secondary btn-small" href="${esc(currentPresentation)}" target="_blank">PDF</a><a class="btn btn-neutral btn-small" href="${esc(lecture.presentation_pptx)}">PPTX</a></div></div>${testPanel}</section>`;
   app.querySelectorAll('[data-video-platform]').forEach(btn=>btn.addEventListener('click',()=>{
     app.querySelectorAll('[data-video-platform]').forEach(x=>x.classList.toggle('active',x===btn));
@@ -497,14 +503,52 @@ function renderSeminar5(topic){
   };
 }
 function renderSeminar6(topic){
-  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
-  app.innerHTML=seminarShell(topic,`${externalCard(ui('openCivilTest'),ui('seminar6Lead'),data.course.external_apps.civil_service_test,ui('openCivilTest'))}<div class="panel"><form id="civilForm" class="form-grid"><label><span>${ui('testScore')}</span><input name="score" required></label><label><span>${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
+  const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview';
+  const text=key=>CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
+  let disposed=false,handle=null;
+  const controller=new AbortController();
+  const token={owner,handle:null,lang:getLocale()};currentCareer=token;
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.civil_service_test)}" target="_blank" rel="noopener noreferrer" data-career-ui="openCivilTest">${ui('openCivilTest')}</a></div><form id="civilForm" class="form-grid"><label><span data-career-ui="testScore">${ui('testScore')}</span><input name="score" required></label><label><span data-career-ui="screenshot">${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit" data-career-ui="submit">${ui('submit')}</button></div></form></details></section>`;
+  const mount=app.querySelector('#careerMount');
+  const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&route().name==='activity'&&route().parts[0]==='seminar-6'&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow()));
+  const cleanup=()=>{disposed=true;controller.abort();handle?.destroy();if(currentCareer===token)currentCareer=null;};
+  cleanup.refreshLocale=()=>{
+    if(!active())return;
+    app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
+    app.querySelectorAll('[data-career-ui]').forEach(el=>el.textContent=ui(el.dataset.careerUi));
+    app.querySelector('#careerCourseStatus').textContent=text('local');
+    mount.setAttribute('aria-label',text('title'));
+    if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active())console.error('Career locale:',error);});}
+  };
+  currentCleanup=cleanup;
   app.querySelector('#civilForm').onsubmit=async event=>{
     event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const score=String(fd.get('score')||'').trim();const file=fd.get('file');if(!score||!(file instanceof File)||!file.size){toast(ui('fillRequired'),'error');return}
     let fileUrl='';try{fileUrl=await backend.uploadFile('seminar-6',file)}catch(error){toast(error,'error');return}
     await backend.saveAttempt({studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');render();
   };
+  void (async()=>{try{
+    const {mountCareer}=await import('../../apps/career/entry.mjs');
+    if(!active()){cleanup();return;}
+    token.lang=getLocale();
+    handle=await mountCareer(mount,{owner,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
+      onRouteChange:(view,{replace=false}={})=>{
+        if(!active())return;
+        const next=`#activity/seminar-6/${careerRoute(view)}`;
+        if(location.hash!==next){const method=replace||!route().parts[1]?'replaceState':'pushState';history[method](null,'',next);}
+        renderedKey=`${location.hash}:${owner}`;
+      }
+    });
+    token.handle=handle;
+    if(!active()){cleanup();return;}
+    mount.setAttribute('aria-busy','false');
+  }catch(error){
+    if(!active())return;
+    mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${esc(text('failed'))}</p><button type="button" class="btn btn-primary" id="retryCareer">${text('retry')}</button></div>`;
+    mount.querySelector('#retryCareer').onclick=()=>{cleanup();renderedKey='';render();};
+    console.error('Career module:',error);
+  }})();
 }
+
 function flattenObjects(value,out=[]){if(Array.isArray(value))value.forEach(x=>flattenObjects(x,out));else if(value&&typeof value==='object'){if(value.fio||value.fullName||value.name||value.group||value.kpi||value.finalKpi||value.KPI)out.push(value);Object.values(value).forEach(x=>flattenObjects(x,out))}return out}
 function nameNorm(s){return String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9]+/gi,' ').trim()}
 function simulatorPoints(kpi){const x=number(kpi);return x>=85?5:x>=70?4:x>=55?3:0}
@@ -711,8 +755,9 @@ function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
-window.addEventListener('rudn:accesschange',()=>render());
+window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
 window.addEventListener('rudn:identitychange',()=>{
+  if(currentCareer&&currentCareer.owner!==attemptOwner()){currentCleanup?.();currentCleanup=null;}
   updateTopProfile();document.getElementById('accountDialog')?.close();
   if(attemptOwner()==='guest'&&/:(student|teacher):/.test(renderedKey)){authDialog.close();location.hash='dashboard'}
   render();

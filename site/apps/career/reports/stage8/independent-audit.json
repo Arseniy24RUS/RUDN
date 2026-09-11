@@ -1,0 +1,1764 @@
+{
+  "release": "1.0.0",
+  "modelVersion": "8.0.0",
+  "questionnaireVersion": "8.0.0",
+  "registryVersion": "ru-public-careers-2026-09-05-stage8",
+  "seed": 20260905,
+  "method": "Deterministic synthetic stress tests; not empirical validation, not estimated student frequencies. Equal leaders counted fractionally. Authored named scenarios are not derived from an agency vector.",
+  "cases": {
+    "threshold-before": {
+      "before": [
+        {
+          "id": "minjust",
+          "score": 73.4
+        },
+        {
+          "id": "fssp",
+          "score": 71.6
+        },
+        {
+          "id": "gusp",
+          "score": 64.9
+        }
+      ],
+      "after": [
+        {
+          "id": "fssp",
+          "score": 80.2
+        },
+        {
+          "id": "minjust",
+          "score": 80.2
+        },
+        {
+          "id": "gusp",
+          "score": 69.2
+        }
+      ],
+      "mean": 3.074074074074074,
+      "dispersion": 0.2095131203515696,
+      "lowInterest": false,
+      "flat": true
+    },
+    "threshold-after": {
+      "before": [
+        {
+          "id": "minjust",
+          "score": 90.8
+        },
+        {
+          "id": "fssp",
+          "score": 89
+        },
+        {
+          "id": "gusp",
+          "score": 79
+        }
+      ],
+      "after": [
+        {
+          "id": "fssp",
+          "score": 82.4
+        },
+        {
+          "id": "minjust",
+          "score": 82.4
+        },
+        {
+          "id": "gusp",
+          "score": 71.4
+        }
+      ],
+      "mean": 3.111111111111111,
+      "dispersion": 0.31426968052735454,
+      "lowInterest": false,
+      "flat": false
+    },
+    "low-interest-input": {
+      "before": [
+        {
+          "id": "minjust",
+          "score": 90.8
+        },
+        {
+          "id": "fssp",
+          "score": 89
+        },
+        {
+          "id": "gusp",
+          "score": 79
+        }
+      ],
+      "after": [
+        {
+          "id": "fssp",
+          "score": 82.4
+        },
+        {
+          "id": "minjust",
+          "score": 82.4
+        },
+        {
+          "id": "gusp",
+          "score": 71.4
+        }
+      ],
+      "mean": 1.1111111111111112,
+      "dispersion": 0.31426968052735454,
+      "lowInterest": true,
+      "flat": false
+    },
+    "high-interest-input": {
+      "before": [
+        {
+          "id": "minjust",
+          "score": 90.8
+        },
+        {
+          "id": "fssp",
+          "score": 89
+        },
+        {
+          "id": "gusp",
+          "score": 79
+        }
+      ],
+      "after": [
+        {
+          "id": "fssp",
+          "score": 82.4
+        },
+        {
+          "id": "minjust",
+          "score": 82.4
+        },
+        {
+          "id": "gusp",
+          "score": 71.4
+        }
+      ],
+      "mean": 4.111111111111111,
+      "dispersion": 0.3142696805273545,
+      "lowInterest": false,
+      "flat": false
+    }
+  },
+  "simulation": [
+    {
+      "mode": "uniform",
+      "n": 2500,
+      "leadingTieShare": 0.422,
+      "fifthTieContinuationShare": 0.504,
+      "lowInterestShare": 0.0028,
+      "discoveryShare": 0.942,
+      "technicalFirst": {
+        "rkn": 68,
+        "rosleshoz": 22,
+        "minvostok": 48,
+        "rossotrudnichestvo": 63,
+        "rostransnadzor": 51,
+        "mchs": 172,
+        "rosreestr": 45,
+        "rosarchiv": 25,
+        "minselkhoz": 84,
+        "minenergo": 96,
+        "fas": 109,
+        "rosselkhoznadzor": 14,
+        "minzdrav": 63,
+        "rosimushchestvo": 22,
+        "fmba": 79,
+        "gfs": 47,
+        "minfin": 64,
+        "gusp": 70,
+        "fadn": 78,
+        "mintrud": 86,
+        "rostrud": 94,
+        "rosrybolovstvo": 77,
+        "minstroy": 82,
+        "rosmolodezh": 47,
+        "rosnedra": 36,
+        "minprirody": 73,
+        "mid": 68,
+        "mincifry": 48,
+        "rospotrebnadzor": 47,
+        "fsb": 49,
+        "rosreserv": 28,
+        "fns": 116,
+        "rosobrnadzor": 48,
+        "minjust": 39,
+        "minoborony": 17,
+        "mineconom": 44,
+        "rostekhnadzor": 80,
+        "fsvts": 53,
+        "rosprirodnadzor": 39,
+        "fts": 19,
+        "minkult": 8,
+        "udp": 33,
+        "rosstandart": 9,
+        "fssp": 27,
+        "fsin": 11,
+        "minobrnauki": 2
+      },
+      "equalLeadingFractional": {
+        "rkn": 71.08333333333337,
+        "rosleshoz": 11,
+        "rosprirodnadzor": 50,
+        "minvostok": 31.90476190476188,
+        "rosavtodor": 19.57142857142857,
+        "rosmorrechflot": 11.571428571428573,
+        "rostransnadzor": 65.66666666666669,
+        "rossotrudnichestvo": 74.25,
+        "mchs": 154.5,
+        "rosreestr": 47.58333333333335,
+        "rosarchiv": 30.583333333333307,
+        "udp": 60.500000000000036,
+        "minselkhoz": 76,
+        "minenergo": 42.33333333333335,
+        "minpromtorg": 42.33333333333335,
+        "fas": 93,
+        "rospatent": 22.33333333333333,
+        "rosselkhoznadzor": 52.5,
+        "minzdrav": 64,
+        "rosimushchestvo": 28.16666666666668,
+        "fmba": 59.5,
+        "gfs": 47,
+        "minfin": 70.16666666666666,
+        "gusp": 40.00000000000001,
+        "fadn": 18.533333333333317,
+        "mintrud": 86,
+        "rostrud": 94,
+        "rosrybolovstvo": 46.5,
+        "minstroy": 22.57142857142855,
+        "mintrans": 22.57142857142855,
+        "rosaviatsiya": 3.5714285714285703,
+        "roszheldor": 3.5714285714285703,
+        "rosmolodezh": 52.33333333333332,
+        "rosnedra": 21.083333333333332,
+        "rosvodresursy": 18,
+        "minprirody": 54.5,
+        "rosstandart": 15.833333333333341,
+        "minkult": 16.19999999999998,
+        "minobrnauki": 15.53333333333331,
+        "minpros": 16.19999999999998,
+        "minsport": 13.533333333333319,
+        "roshydromet": 21.583333333333332,
+        "mid": 79.25,
+        "mincifry": 51.08333333333335,
+        "rospotrebnadzor": 39,
+        "roszdravnadzor": 26.5,
+        "fsb": 8.833333333333336,
+        "fsin": 14.33333333333332,
+        "fssp": 21.083333333333325,
+        "fstek": 14.66666666666667,
+        "mvd": 8.833333333333336,
+        "rosgvardiya": 8.833333333333336,
+        "rosreserv": 45.5,
+        "fns": 29.5,
+        "fts": 32.416666666666686,
+        "rosfinmonitoring": 9.249999999999998,
+        "treasury": 9.249999999999998,
+        "rosobrnadzor": 50.666666666666664,
+        "minjust": 19.749999999999996,
+        "minoborony": 29.999999999999986,
+        "svr": 24.24999999999999,
+        "mineconom": 18.833333333333336,
+        "rosakkreditaciya": 9.416666666666664,
+        "rosstat": 16.083333333333343,
+        "probirnaya": 7.25,
+        "rosalkotab": 7.25,
+        "rostekhnadzor": 84.5,
+        "fsvts": 26
+      },
+      "displayedTop5": {
+        "rkn": 226,
+        "rosreestr": 232,
+        "mincifry": 209,
+        "fns": 410,
+        "fstek": 234,
+        "rosleshoz": 162,
+        "rosprirodnadzor": 191,
+        "rosnedra": 181,
+        "rosvodresursy": 134,
+        "roshydromet": 153,
+        "minvostok": 221,
+        "rosavtodor": 164,
+        "rosmorrechflot": 87,
+        "rostransnadzor": 157,
+        "minstroy": 200,
+        "rossotrudnichestvo": 241,
+        "mid": 238,
+        "svr": 207,
+        "fsvts": 271,
+        "rosaviatsiya": 120,
+        "mchs": 256,
+        "fas": 239,
+        "rosreserv": 223,
+        "rosakkreditaciya": 251,
+        "rospatent": 199,
+        "mineconom": 221,
+        "rosstat": 186,
+        "rosarchiv": 196,
+        "udp": 205,
+        "gusp": 215,
+        "gfs": 189,
+        "minselkhoz": 226,
+        "rosrybolovstvo": 232,
+        "rosselkhoznadzor": 212,
+        "minenergo": 235,
+        "minpromtorg": 210,
+        "rosstandart": 205,
+        "rostekhnadzor": 222,
+        "minprirody": 196,
+        "mintrans": 140,
+        "minzdrav": 236,
+        "fmba": 235,
+        "rospotrebnadzor": 232,
+        "roszdravnadzor": 195,
+        "rosimushchestvo": 157,
+        "fts": 305,
+        "minfin": 184,
+        "rosfinmonitoring": 118,
+        "fadn": 244,
+        "mintrud": 233,
+        "minkult": 220,
+        "minobrnauki": 167,
+        "minpros": 165,
+        "minsport": 84,
+        "rostrud": 247,
+        "fsin": 110,
+        "fssp": 143,
+        "fsb": 128,
+        "minjust": 111,
+        "rosmolodezh": 106,
+        "rosobrnadzor": 130,
+        "probirnaya": 111,
+        "rosalkotab": 85,
+        "treasury": 26,
+        "mvd": 59,
+        "minoborony": 100,
+        "rosgvardiya": 35,
+        "roszheldor": 21,
+        "fso": 17
+      }
+    },
+    {
+      "mode": "central",
+      "n": 2500,
+      "leadingTieShare": 0.434,
+      "fifthTieContinuationShare": 0.5384,
+      "lowInterestShare": 0,
+      "discoveryShare": 0.9424,
+      "technicalFirst": {
+        "minselkhoz": 103,
+        "fadn": 73,
+        "fts": 25,
+        "rospotrebnadzor": 36,
+        "rosmolodezh": 43,
+        "minstroy": 96,
+        "rosreserv": 13,
+        "mineconom": 49,
+        "gusp": 92,
+        "fas": 94,
+        "minenergo": 114,
+        "mincifry": 67,
+        "mchs": 175,
+        "minprirody": 74,
+        "rkn": 67,
+        "fns": 117,
+        "mintrud": 95,
+        "rosrybolovstvo": 55,
+        "gfs": 42,
+        "rostransnadzor": 53,
+        "fsvts": 47,
+        "rostekhnadzor": 88,
+        "minfin": 60,
+        "rosleshoz": 21,
+        "fssp": 31,
+        "rossotrudnichestvo": 74,
+        "fmba": 83,
+        "fsb": 52,
+        "minvostok": 49,
+        "rosarchiv": 19,
+        "mid": 73,
+        "rostrud": 89,
+        "rosimushchestvo": 22,
+        "minjust": 29,
+        "minzdrav": 59,
+        "rosprirodnadzor": 37,
+        "rosreestr": 42,
+        "rosnedra": 37,
+        "rosobrnadzor": 35,
+        "udp": 21,
+        "fsin": 13,
+        "minoborony": 23,
+        "rosselkhoznadzor": 4,
+        "minkult": 3,
+        "minobrnauki": 1,
+        "rosstandart": 5
+      },
+      "equalLeadingFractional": {
+        "minselkhoz": 99,
+        "fadn": 15.309523809523792,
+        "minkult": 14.309523809523792,
+        "minobrnauki": 14.30952380952379,
+        "minpros": 14.309523809523792,
+        "minsport": 13.309523809523796,
+        "fts": 37.5,
+        "rospotrebnadzor": 27.333333333333332,
+        "roszdravnadzor": 19.333333333333336,
+        "rosmolodezh": 47.3095238095238,
+        "minstroy": 26.095238095238066,
+        "mintrans": 26.095238095238066,
+        "minvostok": 38.01190476190475,
+        "rosreserv": 43.5,
+        "mineconom": 21.08333333333333,
+        "rosakkreditaciya": 11.416666666666675,
+        "rospatent": 23.583333333333332,
+        "gusp": 48.000000000000036,
+        "rosarchiv": 35.5833333333333,
+        "udp": 52.500000000000036,
+        "fas": 77.25,
+        "minenergo": 50.16666666666669,
+        "minpromtorg": 50.16666666666669,
+        "rosstandart": 16.166666666666675,
+        "mincifry": 71.08333333333337,
+        "mchs": 144.5,
+        "minprirody": 52,
+        "roshydromet": 26.08333333333331,
+        "rkn": 71.08333333333337,
+        "fns": 23.583333333333318,
+        "minfin": 65.5,
+        "rosfinmonitoring": 9.583333333333334,
+        "rosimushchestvo": 27.5,
+        "treasury": 9.583333333333334,
+        "mintrud": 95,
+        "rosrybolovstvo": 31.5,
+        "rosselkhoznadzor": 31.5,
+        "gfs": 42,
+        "rostransnadzor": 65.58333333333334,
+        "fsvts": 24,
+        "mid": 83.25,
+        "rossotrudnichestvo": 84.25,
+        "svr": 19.91666666666667,
+        "rostekhnadzor": 90.5,
+        "rosleshoz": 10.5,
+        "rosprirodnadzor": 47.5,
+        "fssp": 23.816666666666663,
+        "fstek": 16.00000000000001,
+        "minjust": 17.41666666666667,
+        "fmba": 64,
+        "fsb": 9.566666666666666,
+        "fsin": 16.066666666666652,
+        "mvd": 9.566666666666666,
+        "rosgvardiya": 9.566666666666666,
+        "rosavtodor": 18.67857142857142,
+        "rosmorrechflot": 14.678571428571425,
+        "rostrud": 89,
+        "minoborony": 32.66666666666665,
+        "rosaviatsiya": 4.428571428571428,
+        "roszheldor": 4.428571428571428,
+        "probirnaya": 7,
+        "rosalkotab": 7,
+        "minzdrav": 67.33333333333334,
+        "rosreestr": 46.083333333333364,
+        "rosnedra": 22.583333333333318,
+        "rosvodresursy": 18.5,
+        "rosstat": 17.833333333333346,
+        "rosobrnadzor": 36.14285714285714
+      },
+      "displayedTop5": {
+        "minselkhoz": 233,
+        "rosrybolovstvo": 222,
+        "rosselkhoznadzor": 199,
+        "rkn": 223,
+        "mincifry": 232,
+        "fadn": 211,
+        "minkult": 184,
+        "minobrnauki": 148,
+        "minpros": 140,
+        "minsport": 76,
+        "fts": 304,
+        "rosimushchestvo": 150,
+        "minfin": 197,
+        "fns": 451,
+        "probirnaya": 97,
+        "rospotrebnadzor": 224,
+        "roszdravnadzor": 188,
+        "fmba": 237,
+        "minzdrav": 215,
+        "rostrud": 243,
+        "rosmolodezh": 85,
+        "minstroy": 246,
+        "mintrans": 153,
+        "minvostok": 229,
+        "rosaviatsiya": 130,
+        "rosavtodor": 179,
+        "rosreserv": 224,
+        "mchs": 263,
+        "mineconom": 214,
+        "rosakkreditaciya": 307,
+        "rospatent": 183,
+        "rosstat": 162,
+        "fas": 228,
+        "gusp": 218,
+        "rosarchiv": 201,
+        "udp": 202,
+        "gfs": 189,
+        "rosreestr": 177,
+        "minenergo": 260,
+        "minpromtorg": 237,
+        "rosstandart": 221,
+        "rostekhnadzor": 247,
+        "fstek": 289,
+        "mintrud": 239,
+        "minprirody": 197,
+        "roshydromet": 164,
+        "rosnedra": 187,
+        "rosvodresursy": 136,
+        "rosprirodnadzor": 168,
+        "rosfinmonitoring": 106,
+        "fsvts": 278,
+        "mid": 237,
+        "rostransnadzor": 147,
+        "rosmorrechflot": 83,
+        "rossotrudnichestvo": 235,
+        "svr": 246,
+        "rosalkotab": 79,
+        "rosleshoz": 153,
+        "fssp": 157,
+        "minjust": 112,
+        "minoborony": 120,
+        "treasury": 24,
+        "fsb": 123,
+        "fsin": 112,
+        "mvd": 61,
+        "rosgvardiya": 35,
+        "rosobrnadzor": 72,
+        "roszheldor": 3,
+        "fso": 8
+      }
+    },
+    {
+      "mode": "low",
+      "n": 2500,
+      "leadingTieShare": 0.4792,
+      "fifthTieContinuationShare": 0.5684,
+      "lowInterestShare": 1,
+      "discoveryShare": 0.95,
+      "technicalFirst": {
+        "rostrud": 88,
+        "mintrud": 78,
+        "rosleshoz": 24,
+        "gfs": 45,
+        "minfin": 54,
+        "fsb": 69,
+        "rosnedra": 47,
+        "rostekhnadzor": 78,
+        "rospotrebnadzor": 36,
+        "fns": 112,
+        "fas": 76,
+        "mchs": 159,
+        "rostransnadzor": 53,
+        "rosmolodezh": 60,
+        "fmba": 92,
+        "fssp": 33,
+        "minstroy": 103,
+        "rosrybolovstvo": 86,
+        "minenergo": 92,
+        "minselkhoz": 107,
+        "mid": 71,
+        "minjust": 41,
+        "mincifry": 48,
+        "mineconom": 61,
+        "minprirody": 84,
+        "rosimushchestvo": 23,
+        "fts": 17,
+        "fsvts": 50,
+        "rossotrudnichestvo": 65,
+        "gusp": 104,
+        "rosreestr": 27,
+        "rosobrnadzor": 43,
+        "fadn": 112,
+        "minoborony": 35,
+        "rosreserv": 21,
+        "udp": 19,
+        "rkn": 51,
+        "minvostok": 22,
+        "minzdrav": 52,
+        "rosstandart": 3,
+        "rosprirodnadzor": 34,
+        "rosselkhoznadzor": 4,
+        "rosarchiv": 14,
+        "fsin": 4,
+        "minkult": 3
+      },
+      "equalLeadingFractional": {
+        "rostrud": 88,
+        "mintrud": 78,
+        "rosleshoz": 12,
+        "rosprirodnadzor": 46,
+        "gfs": 45,
+        "minfin": 58.333333333333314,
+        "fsb": 12.366666666666655,
+        "fsin": 14.366666666666651,
+        "fssp": 22.61666666666666,
+        "mvd": 12.366666666666655,
+        "rosgvardiya": 12.366666666666655,
+        "fstek": 20,
+        "rosnedra": 28.083333333333304,
+        "rosvodresursy": 23.5,
+        "rostekhnadzor": 79.5,
+        "rospotrebnadzor": 31.666666666666664,
+        "roszdravnadzor": 19.666666666666668,
+        "fns": 19.66666666666667,
+        "fts": 28.083333333333336,
+        "rosfinmonitoring": 8.916666666666663,
+        "rosimushchestvo": 27.333333333333343,
+        "treasury": 8.916666666666663,
+        "fas": 65.25,
+        "mineconom": 27.416666666666664,
+        "rospatent": 16.916666666666668,
+        "rosstat": 25.833333333333318,
+        "mchs": 123.5,
+        "rostransnadzor": 58.75,
+        "rosmolodezh": 64.66666666666664,
+        "fmba": 66,
+        "fsvts": 23,
+        "minjust": 21.916666666666657,
+        "minstroy": 26.904761904761873,
+        "mintrans": 26.904761904761873,
+        "minvostok": 32.15476190476187,
+        "rosreserv": 56.5,
+        "rosrybolovstvo": 45.5,
+        "rosselkhoznadzor": 47,
+        "minenergo": 41.50000000000001,
+        "minpromtorg": 41.50000000000001,
+        "rosstandart": 10.5,
+        "minzdrav": 62.66666666666667,
+        "minselkhoz": 104.5,
+        "mid": 82.75,
+        "minoborony": 48.666666666666686,
+        "svr": 25.416666666666654,
+        "rosaviatsiya": 5.571428571428574,
+        "rosavtodor": 11.82142857142857,
+        "rosmorrechflot": 10.32142857142857,
+        "roszheldor": 5.571428571428574,
+        "mincifry": 52.08333333333335,
+        "rkn": 56.083333333333364,
+        "rosakkreditaciya": 11.250000000000007,
+        "rosarchiv": 39.91666666666667,
+        "roshydromet": 31.083333333333307,
+        "rosreestr": 31.08333333333331,
+        "minprirody": 57.5,
+        "rossotrudnichestvo": 76.75,
+        "gusp": 47.33333333333337,
+        "udp": 54.333333333333414,
+        "rosobrnadzor": 44.00000000000001,
+        "fadn": 22.266666666666637,
+        "minkult": 22.26666666666664,
+        "minobrnauki": 21.26666666666664,
+        "minpros": 22.26666666666664,
+        "minsport": 21.26666666666664,
+        "probirnaya": 6.75,
+        "rosalkotab": 6.75
+      },
+      "displayedTop5": {
+        "rostrud": 215,
+        "mintrud": 226,
+        "gfs": 205,
+        "udp": 212,
+        "gusp": 230,
+        "fas": 211,
+        "rospatent": 166,
+        "rosreestr": 161,
+        "rosleshoz": 161,
+        "rosprirodnadzor": 161,
+        "roshydromet": 173,
+        "rosnedra": 217,
+        "rosvodresursy": 172,
+        "rosarchiv": 211,
+        "fsb": 149,
+        "minfin": 172,
+        "rosimushchestvo": 131,
+        "rosfinmonitoring": 93,
+        "fns": 408,
+        "fts": 302,
+        "fsin": 137,
+        "fssp": 185,
+        "mvd": 85,
+        "rosgvardiya": 31,
+        "fstek": 290,
+        "mchs": 249,
+        "rosreserv": 215,
+        "mincifry": 205,
+        "minselkhoz": 249,
+        "rosrybolovstvo": 256,
+        "rosselkhoznadzor": 228,
+        "minprirody": 224,
+        "rostekhnadzor": 204,
+        "minenergo": 231,
+        "minpromtorg": 202,
+        "rosstandart": 194,
+        "rospotrebnadzor": 219,
+        "roszdravnadzor": 189,
+        "fmba": 222,
+        "minzdrav": 216,
+        "mineconom": 203,
+        "rosstat": 144,
+        "rostransnadzor": 115,
+        "minstroy": 211,
+        "mintrans": 157,
+        "minvostok": 218,
+        "rosaviatsiya": 133,
+        "rosmolodezh": 118,
+        "fadn": 271,
+        "minkult": 245,
+        "minobrnauki": 215,
+        "minpros": 189,
+        "fsvts": 283,
+        "minjust": 122,
+        "minoborony": 131,
+        "rosavtodor": 167,
+        "treasury": 12,
+        "rosobrnadzor": 85,
+        "mid": 232,
+        "rossotrudnichestvo": 223,
+        "svr": 236,
+        "rkn": 195,
+        "rosakkreditaciya": 271,
+        "probirnaya": 78,
+        "rosalkotab": 61,
+        "minsport": 111,
+        "rosmorrechflot": 59,
+        "fso": 6,
+        "roszheldor": 2
+      }
+    },
+    {
+      "mode": "high",
+      "n": 2500,
+      "leadingTieShare": 0.4648,
+      "fifthTieContinuationShare": 0.5628,
+      "lowInterestShare": 0,
+      "discoveryShare": 0.9592,
+      "technicalFirst": {
+        "minprirody": 80,
+        "fssp": 28,
+        "rosleshoz": 26,
+        "gusp": 96,
+        "rosrybolovstvo": 66,
+        "minselkhoz": 86,
+        "rostekhnadzor": 82,
+        "minzdrav": 54,
+        "fadn": 81,
+        "minenergo": 111,
+        "minfin": 63,
+        "mid": 67,
+        "fsb": 83,
+        "fns": 114,
+        "minvostok": 30,
+        "mchs": 167,
+        "fsvts": 49,
+        "mincifry": 49,
+        "gfs": 57,
+        "rossotrudnichestvo": 72,
+        "rosreestr": 36,
+        "rkn": 66,
+        "rosstandart": 5,
+        "rosnedra": 43,
+        "fas": 81,
+        "mintrud": 88,
+        "rosimushchestvo": 33,
+        "rostrud": 84,
+        "rosprirodnadzor": 39,
+        "fts": 16,
+        "rosobrnadzor": 41,
+        "minstroy": 118,
+        "fmba": 81,
+        "rosarchiv": 14,
+        "mineconom": 43,
+        "minoborony": 29,
+        "rosmolodezh": 48,
+        "rosreserv": 19,
+        "rostransnadzor": 47,
+        "minjust": 47,
+        "udp": 9,
+        "rospotrebnadzor": 35,
+        "rosselkhoznadzor": 3,
+        "fsin": 11,
+        "minkult": 3
+      },
+      "equalLeadingFractional": {
+        "minprirody": 56,
+        "roshydromet": 27.999999999999986,
+        "fssp": 27.20000000000001,
+        "fstek": 20.499999999999996,
+        "fsvts": 22.25,
+        "minjust": 22.666666666666657,
+        "rosleshoz": 13,
+        "rosprirodnadzor": 52,
+        "gusp": 48.66666666666669,
+        "rosarchiv": 34.66666666666665,
+        "udp": 39.66666666666668,
+        "rosrybolovstvo": 34,
+        "rosselkhoznadzor": 36,
+        "minselkhoz": 85,
+        "rostekhnadzor": 84.5,
+        "minzdrav": 65.66666666666666,
+        "fadn": 15.29999999999998,
+        "minkult": 16.29999999999998,
+        "minobrnauki": 15.29999999999998,
+        "minpros": 16.29999999999998,
+        "minsport": 15.29999999999998,
+        "rosmolodezh": 52.49999999999999,
+        "minenergo": 47.500000000000014,
+        "minpromtorg": 47.500000000000014,
+        "minfin": 67.49999999999999,
+        "mid": 78.25,
+        "rosstandart": 18.5,
+        "fsb": 14.699999999999982,
+        "fsin": 20.199999999999992,
+        "mvd": 14.699999999999982,
+        "rosgvardiya": 14.699999999999982,
+        "fns": 22.749999999999993,
+        "mincifry": 53.00000000000002,
+        "rkn": 70.00000000000001,
+        "rosakkreditaciya": 10.333333333333336,
+        "rosfinmonitoring": 8.5,
+        "rosnedra": 25.499999999999993,
+        "rosreestr": 40.00000000000002,
+        "rosstat": 16.000000000000004,
+        "treasury": 8.5,
+        "minvostok": 39.42857142857145,
+        "rosavtodor": 13.428571428571422,
+        "rosmorrechflot": 12.428571428571422,
+        "rostransnadzor": 54.666666666666664,
+        "mchs": 129,
+        "rossotrudnichestvo": 83.25,
+        "svr": 26.916666666666647,
+        "gfs": 57,
+        "rosreserv": 57,
+        "rosvodresursy": 21.5,
+        "fas": 68,
+        "fts": 28.75000000000001,
+        "probirnaya": 8.25,
+        "rosalkotab": 8.25,
+        "mintrud": 88,
+        "rosimushchestvo": 37.5,
+        "rostrud": 84,
+        "rosobrnadzor": 42,
+        "minstroy": 32.095238095238045,
+        "mintrans": 32.095238095238045,
+        "fmba": 61,
+        "mineconom": 18.33333333333333,
+        "minoborony": 44.66666666666668,
+        "rospatent": 19.333333333333325,
+        "rosaviatsiya": 5.428571428571431,
+        "roszheldor": 5.428571428571431,
+        "rospotrebnadzor": 25.166666666666664,
+        "roszdravnadzor": 18.166666666666664
+      },
+      "displayedTop5": {
+        "minprirody": 206,
+        "roshydromet": 169,
+        "rosnedra": 223,
+        "rosvodresursy": 167,
+        "rosleshoz": 165,
+        "fssp": 196,
+        "fstek": 329,
+        "fsvts": 288,
+        "minjust": 122,
+        "fsin": 144,
+        "rosprirodnadzor": 177,
+        "gusp": 215,
+        "rosarchiv": 202,
+        "udp": 211,
+        "gfs": 195,
+        "fmba": 225,
+        "rosrybolovstvo": 202,
+        "rosselkhoznadzor": 183,
+        "minselkhoz": 204,
+        "rosobrnadzor": 90,
+        "minkult": 204,
+        "mineconom": 200,
+        "rosakkreditaciya": 282,
+        "rostekhnadzor": 237,
+        "minenergo": 262,
+        "minpromtorg": 231,
+        "rosstandart": 215,
+        "minzdrav": 207,
+        "rospotrebnadzor": 210,
+        "roszdravnadzor": 185,
+        "mintrud": 220,
+        "fas": 187,
+        "rosreestr": 139,
+        "fadn": 229,
+        "minobrnauki": 175,
+        "minpros": 141,
+        "minsport": 81,
+        "minfin": 176,
+        "fns": 432,
+        "fts": 342,
+        "probirnaya": 114,
+        "rosalkotab": 84,
+        "rosmolodezh": 112,
+        "mid": 241,
+        "rossotrudnichestvo": 230,
+        "svr": 252,
+        "fsb": 153,
+        "mvd": 99,
+        "mincifry": 222,
+        "rkn": 196,
+        "minvostok": 234,
+        "rosavtodor": 173,
+        "rosmorrechflot": 58,
+        "rostransnadzor": 131,
+        "minstroy": 228,
+        "mchs": 248,
+        "rosreserv": 212,
+        "rosstat": 142,
+        "rospatent": 155,
+        "rosimushchestvo": 147,
+        "rostrud": 224,
+        "rosfinmonitoring": 89,
+        "mintrans": 171,
+        "rosaviatsiya": 132,
+        "minoborony": 117,
+        "fso": 10,
+        "rosgvardiya": 34,
+        "treasury": 21,
+        "roszheldor": 3
+      }
+    },
+    {
+      "mode": "flat",
+      "n": 2500,
+      "leadingTieShare": 0.7036,
+      "fifthTieContinuationShare": 0.69,
+      "lowInterestShare": 0,
+      "discoveryShare": 0.9844,
+      "technicalFirst": {
+        "minenergo": 173,
+        "mid": 163,
+        "gusp": 131,
+        "mineconom": 156,
+        "minfin": 158,
+        "minselkhoz": 175,
+        "minzdrav": 135,
+        "minjust": 150,
+        "minstroy": 199,
+        "mchs": 165,
+        "fns": 199,
+        "fadn": 172,
+        "mintrud": 176,
+        "minprirody": 182,
+        "fas": 34,
+        "gfs": 38,
+        "fsb": 10,
+        "fssp": 23,
+        "fsvts": 17,
+        "fmba": 44
+      },
+      "equalLeadingFractional": {
+        "minenergo": 81.33333333333333,
+        "minpromtorg": 81.33333333333333,
+        "mid": 162.75,
+        "gusp": 53.16666666666677,
+        "rosarchiv": 67.50000000000021,
+        "udp": 53.16666666666677,
+        "mineconom": 84.13333333333338,
+        "rosstat": 98.46666666666654,
+        "minfin": 161.95833333333331,
+        "minselkhoz": 163.00000000000003,
+        "minzdrav": 151.5,
+        "minjust": 54.833333333333435,
+        "minoborony": 54.833333333333435,
+        "svr": 59.08333333333346,
+        "minstroy": 61.63095238095254,
+        "mintrans": 61.63095238095254,
+        "minvostok": 61.63095238095254,
+        "mchs": 82.5,
+        "rosreserv": 82.5,
+        "rosstandart": 6.333333333333333,
+        "rostekhnadzor": 4,
+        "fns": 18.29166666666667,
+        "fstek": 19.16666666666667,
+        "mincifry": 14.333333333333366,
+        "rkn": 14.333333333333366,
+        "rosakkreditaciya": 17.66666666666668,
+        "rosfinmonitoring": 18.29166666666667,
+        "roshydromet": 101.53333333333312,
+        "rosnedra": 17.03333333333336,
+        "rosreestr": 20.466666666666654,
+        "treasury": 18.29166666666667,
+        "fadn": 33.0523809523809,
+        "minkult": 33.0523809523809,
+        "minobrnauki": 33.0523809523809,
+        "minpros": 33.0523809523809,
+        "minsport": 33.0523809523809,
+        "mintrud": 156.5,
+        "rostrud": 19.5,
+        "minprirody": 87.2,
+        "fas": 6.133333333333337,
+        "rospatent": 6.133333333333337,
+        "rosaviatsiya": 2.964285714285714,
+        "rosavtodor": 2.964285714285714,
+        "rosmorrechflot": 2.964285714285714,
+        "rostransnadzor": 2.25,
+        "roszheldor": 2.964285714285714,
+        "gfs": 9.5,
+        "rosmolodezh": 5.452380952380953,
+        "rosobrnadzor": 1.2857142857142854,
+        "fsb": 0.9999999999999999,
+        "fsin": 0.9999999999999999,
+        "fssp": 4.833333333333331,
+        "fsvts": 9.083333333333332,
+        "mvd": 0.9999999999999999,
+        "rosgvardiya": 0.9999999999999999,
+        "rossotrudnichestvo": 8.75,
+        "fts": 3.9583333333333326,
+        "rosimushchestvo": 3.9583333333333326,
+        "rosrybolovstvo": 5.999999999999998,
+        "rosselkhoznadzor": 5.999999999999998,
+        "fmba": 16.5,
+        "rospotrebnadzor": 5.5,
+        "roszdravnadzor": 5.5,
+        "probirnaya": 1.625,
+        "rosalkotab": 1.625,
+        "rosleshoz": 0.5,
+        "rosprirodnadzor": 1.6999999999999997,
+        "rosvodresursy": 2.6999999999999997
+      },
+      "displayedTop5": {
+        "minenergo": 241,
+        "minpromtorg": 212,
+        "rosstandart": 204,
+        "rostekhnadzor": 173,
+        "minstroy": 282,
+        "mid": 248,
+        "rossotrudnichestvo": 205,
+        "fsvts": 241,
+        "svr": 363,
+        "fts": 384,
+        "gusp": 240,
+        "rosarchiv": 209,
+        "udp": 196,
+        "gfs": 179,
+        "minprirody": 265,
+        "mineconom": 263,
+        "rosstat": 203,
+        "rosakkreditaciya": 350,
+        "rospatent": 154,
+        "rosreestr": 197,
+        "minfin": 245,
+        "rosimushchestvo": 194,
+        "fns": 471,
+        "rosfinmonitoring": 113,
+        "minselkhoz": 237,
+        "rosrybolovstvo": 197,
+        "rosselkhoznadzor": 197,
+        "mintrud": 239,
+        "rostrud": 200,
+        "minzdrav": 256,
+        "fmba": 235,
+        "rospotrebnadzor": 218,
+        "roszdravnadzor": 179,
+        "mintrans": 234,
+        "minjust": 251,
+        "minoborony": 211,
+        "fssp": 142,
+        "fstek": 356,
+        "fadn": 239,
+        "minvostok": 226,
+        "rosaviatsiya": 199,
+        "rosavtodor": 199,
+        "fsb": 74,
+        "fsin": 62,
+        "mchs": 237,
+        "rosreserv": 198,
+        "mincifry": 202,
+        "rkn": 172,
+        "minkult": 206,
+        "minobrnauki": 194,
+        "minpros": 172,
+        "minsport": 172,
+        "fas": 104,
+        "roshydromet": 215,
+        "rosnedra": 196,
+        "rosvodresursy": 139,
+        "rosprirodnadzor": 154,
+        "probirnaya": 72,
+        "rosleshoz": 71,
+        "rosalkotab": 13
+      }
+    },
+    {
+      "mode": "structured",
+      "n": 2500,
+      "leadingTieShare": 0.4204,
+      "fifthTieContinuationShare": 0.4848,
+      "lowInterestShare": 0.0076,
+      "discoveryShare": 0.9388,
+      "technicalFirst": {
+        "minselkhoz": 93,
+        "mchs": 123,
+        "rosrybolovstvo": 70,
+        "fadn": 82,
+        "minkult": 11,
+        "minenergo": 94,
+        "minzdrav": 57,
+        "mineconom": 39,
+        "rkn": 85,
+        "minjust": 23,
+        "fas": 103,
+        "rosimushchestvo": 28,
+        "rosobrnadzor": 41,
+        "fssp": 41,
+        "mid": 64,
+        "rosprirodnadzor": 38,
+        "rostransnadzor": 64,
+        "minfin": 45,
+        "minprirody": 79,
+        "fmba": 81,
+        "gfs": 50,
+        "rostekhnadzor": 88,
+        "gusp": 70,
+        "rospotrebnadzor": 39,
+        "rosstandart": 18,
+        "fns": 111,
+        "mincifry": 51,
+        "fts": 25,
+        "fsb": 63,
+        "mintrud": 96,
+        "udp": 29,
+        "rossotrudnichestvo": 52,
+        "fsvts": 66,
+        "minoborony": 28,
+        "rosselkhoznadzor": 22,
+        "rosreestr": 42,
+        "rosmolodezh": 28,
+        "rosarchiv": 21,
+        "minstroy": 77,
+        "rosleshoz": 32,
+        "rostrud": 104,
+        "minvostok": 43,
+        "rosnedra": 33,
+        "fsin": 14,
+        "minobrnauki": 8,
+        "rosreserv": 29
+      },
+      "equalLeadingFractional": {
+        "minselkhoz": 83.5,
+        "mchs": 110.5,
+        "rosreserv": 41.5,
+        "rosrybolovstvo": 44.5,
+        "rosselkhoznadzor": 57,
+        "fadn": 25.76666666666666,
+        "minkult": 16.43333333333332,
+        "minobrnauki": 20.766666666666662,
+        "minpros": 16.43333333333332,
+        "minsport": 12.766666666666655,
+        "rosobrnadzor": 44.66666666666668,
+        "minenergo": 41.83333333333334,
+        "minpromtorg": 41.83333333333334,
+        "rosstandart": 19.333333333333336,
+        "minzdrav": 63.16666666666668,
+        "mineconom": 16.500000000000004,
+        "rosakkreditaciya": 9.25,
+        "rospatent": 19.5,
+        "rkn": 88.24999999999994,
+        "minjust": 17.916666666666664,
+        "minoborony": 35.66666666666666,
+        "svr": 21.41666666666666,
+        "fas": 89.5,
+        "rosimushchestvo": 33.83333333333334,
+        "fssp": 28.583333333333332,
+        "fstek": 19.83333333333333,
+        "fsvts": 35,
+        "mid": 77.75,
+        "rosprirodnadzor": 54,
+        "rostransnadzor": 73.75,
+        "minfin": 50.833333333333314,
+        "minprirody": 60.5,
+        "roshydromet": 21.749999999999993,
+        "fmba": 57,
+        "rospotrebnadzor": 34.66666666666666,
+        "gfs": 50,
+        "rostekhnadzor": 97,
+        "gusp": 41.333333333333336,
+        "roszdravnadzor": 22.166666666666664,
+        "fns": 28.83333333333332,
+        "fts": 36.58333333333333,
+        "probirnaya": 5.75,
+        "rosalkotab": 5.75,
+        "mincifry": 54.25000000000002,
+        "fsb": 11.333333333333327,
+        "fsin": 18.33333333333333,
+        "mvd": 11.333333333333327,
+        "rosgvardiya": 11.333333333333327,
+        "mintrud": 96,
+        "rosmolodezh": 33.16666666666668,
+        "udp": 53.83333333333337,
+        "rossotrudnichestvo": 65.75,
+        "rosreestr": 42.75000000000003,
+        "rosarchiv": 28.0833333333333,
+        "minstroy": 19.952380952380942,
+        "mintrans": 19.952380952380942,
+        "minvostok": 31.70238095238093,
+        "rosfinmonitoring": 9.083333333333337,
+        "treasury": 9.083333333333337,
+        "rosleshoz": 16,
+        "rostrud": 104,
+        "rosavtodor": 20.03571428571428,
+        "rosnedra": 19.74999999999999,
+        "rosvodresursy": 16.5,
+        "rosstat": 16.250000000000014,
+        "rosaviatsiya": 4.285714285714285,
+        "rosmorrechflot": 10.035714285714288,
+        "roszheldor": 4.285714285714285
+      },
+      "displayedTop5": {
+        "minselkhoz": 234,
+        "rosselkhoznadzor": 217,
+        "rosrybolovstvo": 255,
+        "fas": 229,
+        "rospatent": 159,
+        "mchs": 237,
+        "rosreserv": 199,
+        "fsvts": 297,
+        "mid": 230,
+        "rossotrudnichestvo": 234,
+        "mineconom": 192,
+        "fadn": 243,
+        "minkult": 203,
+        "minobrnauki": 146,
+        "minpros": 163,
+        "minsport": 86,
+        "rosobrnadzor": 110,
+        "minenergo": 252,
+        "minpromtorg": 224,
+        "rosstandart": 217,
+        "rostekhnadzor": 224,
+        "minzdrav": 195,
+        "rospotrebnadzor": 213,
+        "roszdravnadzor": 169,
+        "minjust": 118,
+        "rosakkreditaciya": 256,
+        "rosstat": 175,
+        "rkn": 248,
+        "rosreestr": 237,
+        "mincifry": 226,
+        "minoborony": 111,
+        "svr": 184,
+        "fstek": 276,
+        "rosimushchestvo": 147,
+        "treasury": 30,
+        "fns": 387,
+        "fts": 268,
+        "minfin": 181,
+        "rosmolodezh": 100,
+        "fssp": 197,
+        "rosprirodnadzor": 195,
+        "rosleshoz": 166,
+        "minprirody": 192,
+        "rosnedra": 191,
+        "rosvodresursy": 142,
+        "rostransnadzor": 158,
+        "minstroy": 184,
+        "mintrans": 141,
+        "rosaviatsiya": 128,
+        "minvostok": 231,
+        "probirnaya": 106,
+        "rosalkotab": 85,
+        "roshydromet": 164,
+        "rosavtodor": 164,
+        "rosmorrechflot": 83,
+        "fmba": 217,
+        "gfs": 170,
+        "gusp": 209,
+        "rosarchiv": 182,
+        "udp": 217,
+        "rostrud": 260,
+        "rosfinmonitoring": 110,
+        "fsb": 170,
+        "fsin": 142,
+        "mvd": 86,
+        "rosgvardiya": 43,
+        "mintrud": 247,
+        "fso": 18,
+        "roszheldor": 30
+      }
+    }
+  ],
+  "neighbourhood": {
+    "inputs": 122,
+    "variants": 5620,
+    "authorityComparisons": 387780,
+    "analyticalBound": 3.223278774639532,
+    "maxRawDelta": 2.8841113343844214,
+    "meanTop5Intersection": 4.722241992882562,
+    "technicalFirstChanges": 0.1702846975088968,
+    "worst": {
+      "id": "rosmolodezh",
+      "question": "C1",
+      "oldAnswer": 3,
+      "newAnswer": 4,
+      "before": 50.55499999999999,
+      "after": 53.439111334384414
+    }
+  },
+  "independentScenarios": [
+    {
+      "name": "Weather and environmental data",
+      "fav": [
+        "A",
+        "D"
+      ],
+      "sectors": [
+        "ENV",
+        "DIG",
+        "ECO",
+        "INT"
+      ],
+      "focus": {
+        "ENV": "weather",
+        "DIG": "data"
+      },
+      "targets": [
+        {
+          "id": "roshydromet",
+          "rank": 2,
+          "score": 86.9
+        }
+      ],
+      "top10": [
+        {
+          "id": "minprirody",
+          "score": 86.9
+        },
+        {
+          "id": "roshydromet",
+          "score": 86.9
+        },
+        {
+          "id": "fns",
+          "score": 83.9
+        },
+        {
+          "id": "mincifry",
+          "score": 83.9
+        },
+        {
+          "id": "rosakkreditaciya",
+          "score": 83.9
+        },
+        {
+          "id": "rosarchiv",
+          "score": 83.9
+        },
+        {
+          "id": "rosfinmonitoring",
+          "score": 83.9
+        },
+        {
+          "id": "rosnedra",
+          "score": 83.9
+        },
+        {
+          "id": "rosreestr",
+          "score": 83.9
+        },
+        {
+          "id": "rosstat",
+          "score": 83.9
+        }
+      ]
+    },
+    {
+      "name": "Tax administration",
+      "fav": [
+        "E",
+        "K",
+        "D"
+      ],
+      "sectors": [
+        "FIN",
+        "DIG",
+        "ECO",
+        "ADM"
+      ],
+      "focus": {
+        "FIN": "tax"
+      },
+      "targets": [
+        {
+          "id": "fns",
+          "rank": 1,
+          "score": 83.8
+        }
+      ],
+      "top10": [
+        {
+          "id": "fns",
+          "score": 83.8
+        },
+        {
+          "id": "minfin",
+          "score": 83.8
+        },
+        {
+          "id": "rosalkotab",
+          "score": 80.4
+        },
+        {
+          "id": "probirnaya",
+          "score": 79.3
+        },
+        {
+          "id": "fstek",
+          "score": 73.4
+        },
+        {
+          "id": "mincifry",
+          "score": 73.4
+        },
+        {
+          "id": "rkn",
+          "score": 73.4
+        },
+        {
+          "id": "rosakkreditaciya",
+          "score": 73.4
+        },
+        {
+          "id": "rosarchiv",
+          "score": 73.4
+        },
+        {
+          "id": "rosfinmonitoring",
+          "score": 73.4
+        }
+      ]
+    },
+    {
+      "name": "Science and higher education policy",
+      "fav": [
+        "A",
+        "M"
+      ],
+      "sectors": [
+        "EDU",
+        "ECO",
+        "DIG",
+        "INT"
+      ],
+      "focus": {
+        "EDU": "science"
+      },
+      "targets": [
+        {
+          "id": "minobrnauki",
+          "rank": 1,
+          "score": 90.8
+        }
+      ],
+      "top10": [
+        {
+          "id": "minobrnauki",
+          "score": 90.8
+        },
+        {
+          "id": "mineconom",
+          "score": 82.7
+        },
+        {
+          "id": "rosstat",
+          "score": 82.7
+        },
+        {
+          "id": "rosobrnadzor",
+          "score": 81.6
+        },
+        {
+          "id": "rosakkreditaciya",
+          "score": 81.6
+        },
+        {
+          "id": "rospatent",
+          "score": 81.6
+        },
+        {
+          "id": "fas",
+          "score": 79.4
+        },
+        {
+          "id": "rosreestr",
+          "score": 78.3
+        },
+        {
+          "id": "fadn",
+          "score": 77.3
+        },
+        {
+          "id": "minkult",
+          "score": 77.3
+        }
+      ]
+    },
+    {
+      "name": "Culture and archives",
+      "fav": [
+        "M",
+        "C",
+        "D"
+      ],
+      "sectors": [
+        "EDU",
+        "ADM",
+        "DIG",
+        "INT"
+      ],
+      "focus": {
+        "EDU": "culture"
+      },
+      "targets": [
+        {
+          "id": "minkult",
+          "rank": 2,
+          "score": 86.3
+        },
+        {
+          "id": "rosarchiv",
+          "rank": 4,
+          "score": 78.2
+        }
+      ],
+      "top10": [
+        {
+          "id": "fadn",
+          "score": 86.3
+        },
+        {
+          "id": "minkult",
+          "score": 86.3
+        },
+        {
+          "id": "gusp",
+          "score": 78.2
+        },
+        {
+          "id": "rosarchiv",
+          "score": 78.2
+        },
+        {
+          "id": "udp",
+          "score": 78.2
+        },
+        {
+          "id": "gfs",
+          "score": 75.1
+        },
+        {
+          "id": "rosmolodezh",
+          "score": 74.6
+        },
+        {
+          "id": "minobrnauki",
+          "score": 72.8
+        },
+        {
+          "id": "minpros",
+          "score": 72.8
+        },
+        {
+          "id": "minsport",
+          "score": 72.8
+        }
+      ]
+    },
+    {
+      "name": "Fisheries inspection",
+      "fav": [
+        "K",
+        "T"
+      ],
+      "sectors": [
+        "AGR",
+        "ENV",
+        "SEC",
+        "ECO"
+      ],
+      "focus": {
+        "AGR": "fish",
+        "ENV": "water-resources"
+      },
+      "targets": [
+        {
+          "id": "rosrybolovstvo",
+          "rank": 1,
+          "score": 90.5
+        }
+      ],
+      "top10": [
+        {
+          "id": "rosrybolovstvo",
+          "score": 90.5
+        },
+        {
+          "id": "minselkhoz",
+          "score": 82.8
+        },
+        {
+          "id": "rosselkhoznadzor",
+          "score": 77
+        },
+        {
+          "id": "fsb",
+          "score": 75.2
+        },
+        {
+          "id": "fsin",
+          "score": 75.2
+        },
+        {
+          "id": "fssp",
+          "score": 75.2
+        },
+        {
+          "id": "fstek",
+          "score": 75.2
+        },
+        {
+          "id": "mvd",
+          "score": 75.2
+        },
+        {
+          "id": "rosgvardiya",
+          "score": 75.2
+        },
+        {
+          "id": "rosvodresursy",
+          "score": 75
+        }
+      ]
+    },
+    {
+      "name": "Justice digital process role exists",
+      "fav": [
+        "D",
+        "A"
+      ],
+      "sectors": [
+        "DIG",
+        "SEC",
+        "ADM",
+        "ECO"
+      ],
+      "focus": {
+        "DIG": "services"
+      },
+      "targets": [
+        {
+          "id": "minjust",
+          "rank": 14,
+          "score": 88.3
+        }
+      ],
+      "top10": [
+        {
+          "id": "fns",
+          "score": 92
+        },
+        {
+          "id": "mincifry",
+          "score": 92
+        },
+        {
+          "id": "rkn",
+          "score": 92
+        },
+        {
+          "id": "rosakkreditaciya",
+          "score": 92
+        },
+        {
+          "id": "rosarchiv",
+          "score": 92
+        },
+        {
+          "id": "rosreestr",
+          "score": 92
+        },
+        {
+          "id": "treasury",
+          "score": 92
+        },
+        {
+          "id": "fmba",
+          "score": 88.3
+        },
+        {
+          "id": "fsb",
+          "score": 88.3
+        },
+        {
+          "id": "fso",
+          "score": 88.3
+        }
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "name": "Exact audit threshold counterexample: displayed Minjust delta < 3",
+      "pass": true,
+      "detail": {
+        "before": 17.39999999999999,
+        "after": 2.200000000000003
+      }
+    },
+    {
+      "name": "Same relative order does not become the same interest interpretation",
+      "pass": true
+    },
+    {
+      "name": "Reconstructed ordinary export is valid",
+      "pass": true
+    },
+    {
+      "name": "The recorded 100..91 forgery is rejected",
+      "pass": true
+    },
+    {
+      "name": "Discovery candidates never bypass all eligibility criteria",
+      "pass": true,
+      "detail": {
+        "discoveryViolations": 0
+      }
+    },
+    {
+      "name": "Every tested raw score obeys the analytical one-item bound",
+      "pass": true,
+      "detail": {
+        "maxDelta": 2.8841113343844214,
+        "bound": 3.223278774639532,
+        "variants": 5620,
+        "comparisons": 387780,
+        "worst": {
+          "id": "rosmolodezh",
+          "question": "C1",
+          "oldAnswer": 3,
+          "newAnswer": 4,
+          "before": 50.55499999999999,
+          "after": 53.439111334384414
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "High rates of exact ties reflect shared generic paths; no forced tie-breaking to imply suitability.",
+    "Unknown conditions and authored ranges are not verified vacancy requirements.",
+    "Only MChS INSPECT and Minjust DIGITAL functions were additionally verified on official pages in this release.",
+    "Native PWA/storage restart acceptance must be run on a normal browser; the local harness does not prove it."
+  ]
+}

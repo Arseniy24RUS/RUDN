@@ -1,0 +1,252 @@
+{
+  "version": "8.0.0",
+  "status": "authored-teaching-taxonomy",
+  "groups": [
+    {
+      "id": "EDU",
+      "topics": [
+        {
+          "id": "science",
+          "title": {
+            "ru": "Наука и высшее образование",
+            "en": "Science and higher education",
+            "zh-Hans": "科学与高等教育"
+          }
+        },
+        {
+          "id": "school",
+          "title": {
+            "ru": "Общее и профессиональное образование",
+            "en": "School and vocational education",
+            "zh-Hans": "普通与职业教育"
+          }
+        },
+        {
+          "id": "culture",
+          "title": {
+            "ru": "Культура и историческое наследие",
+            "en": "Culture and heritage",
+            "zh-Hans": "文化与历史遗产"
+          }
+        },
+        {
+          "id": "youth",
+          "title": {
+            "ru": "Молодёжь и общественные инициативы",
+            "en": "Youth and community initiatives",
+            "zh-Hans": "青年与社会倡议"
+          }
+        },
+        {
+          "id": "sport",
+          "title": {
+            "ru": "Спорт",
+            "en": "Sport",
+            "zh-Hans": "体育"
+          }
+        }
+      ]
+    },
+    {
+      "id": "INF",
+      "topics": [
+        {
+          "id": "air",
+          "title": {
+            "ru": "Воздушный транспорт",
+            "en": "Air transport",
+            "zh-Hans": "航空运输"
+          }
+        },
+        {
+          "id": "road",
+          "title": {
+            "ru": "Дороги и дорожное хозяйство",
+            "en": "Road infrastructure",
+            "zh-Hans": "道路基础设施"
+          }
+        },
+        {
+          "id": "rail",
+          "title": {
+            "ru": "Железнодорожный транспорт",
+            "en": "Rail transport",
+            "zh-Hans": "铁路运输"
+          }
+        },
+        {
+          "id": "water",
+          "title": {
+            "ru": "Морской и речной транспорт",
+            "en": "Maritime and inland water transport",
+            "zh-Hans": "海运与内河运输"
+          }
+        },
+        {
+          "id": "housing",
+          "title": {
+            "ru": "Строительство и ЖКХ",
+            "en": "Construction and housing services",
+            "zh-Hans": "建设与住房公用事业"
+          }
+        }
+      ]
+    },
+    {
+      "id": "AGR",
+      "topics": [
+        {
+          "id": "fish",
+          "title": {
+            "ru": "Рыболовство и водные биоресурсы",
+            "en": "Fisheries and aquatic resources",
+            "zh-Hans": "渔业与水生资源"
+          }
+        },
+        {
+          "id": "agriculture",
+          "title": {
+            "ru": "Сельское хозяйство",
+            "en": "Agriculture",
+            "zh-Hans": "农业"
+          }
+        },
+        {
+          "id": "veterinary",
+          "title": {
+            "ru": "Ветеринария и фитосанитарный контроль",
+            "en": "Veterinary and plant-health control",
+            "zh-Hans": "兽医与植物检疫"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ENV",
+      "topics": [
+        {
+          "id": "weather",
+          "title": {
+            "ru": "Погода, климат и мониторинг среды",
+            "en": "Weather, climate and environmental monitoring",
+            "zh-Hans": "天气、气候与环境监测"
+          }
+        },
+        {
+          "id": "forest",
+          "title": {
+            "ru": "Лесное хозяйство",
+            "en": "Forestry",
+            "zh-Hans": "林业"
+          }
+        },
+        {
+          "id": "water-resources",
+          "title": {
+            "ru": "Водные ресурсы",
+            "en": "Water resources",
+            "zh-Hans": "水资源"
+          }
+        },
+        {
+          "id": "subsoil",
+          "title": {
+            "ru": "Геология и недропользование",
+            "en": "Geology and subsoil use",
+            "zh-Hans": "地质与矿产资源利用"
+          }
+        },
+        {
+          "id": "environment",
+          "title": {
+            "ru": "Охрана окружающей среды",
+            "en": "Environmental protection",
+            "zh-Hans": "环境保护"
+          }
+        }
+      ]
+    },
+    {
+      "id": "FIN",
+      "topics": [
+        {
+          "id": "budget",
+          "title": {
+            "ru": "Бюджет и казначейские операции",
+            "en": "Budget and treasury operations",
+            "zh-Hans": "预算与国库业务"
+          }
+        },
+        {
+          "id": "tax",
+          "title": {
+            "ru": "Налоговое администрирование",
+            "en": "Tax administration",
+            "zh-Hans": "税务管理"
+          }
+        },
+        {
+          "id": "customs",
+          "title": {
+            "ru": "Таможенное дело",
+            "en": "Customs administration",
+            "zh-Hans": "海关事务"
+          }
+        },
+        {
+          "id": "assets",
+          "title": {
+            "ru": "Государственное имущество",
+            "en": "Public assets",
+            "zh-Hans": "国有资产"
+          }
+        },
+        {
+          "id": "monitoring",
+          "title": {
+            "ru": "Финансовый мониторинг",
+            "en": "Financial monitoring",
+            "zh-Hans": "金融监测"
+          }
+        }
+      ]
+    },
+    {
+      "id": "DIG",
+      "topics": [
+        {
+          "id": "data",
+          "title": {
+            "ru": "Анализ данных",
+            "en": "Data analysis",
+            "zh-Hans": "数据分析"
+          }
+        },
+        {
+          "id": "services",
+          "title": {
+            "ru": "Цифровые услуги и процессы",
+            "en": "Digital services and processes",
+            "zh-Hans": "数字服务与流程"
+          }
+        },
+        {
+          "id": "infrastructure",
+          "title": {
+            "ru": "Информационные системы",
+            "en": "Information systems",
+            "zh-Hans": "信息系统"
+          }
+        },
+        {
+          "id": "security",
+          "title": {
+            "ru": "Защита информации",
+            "en": "Information security",
+            "zh-Hans": "信息安全"
+          }
+        }
+      ]
+    }
+  ]
+}

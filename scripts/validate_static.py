@@ -46,6 +46,24 @@ def resolve_local(html_file: Path, value: str) -> Path | None:
     return (html_file.parent / relative).resolve()
 
 
+def validate_reference(source: Path, reference: str, errors: list[str]) -> None:
+    """Check one statically resolvable asset without allowing Pages-root escapes."""
+    try:
+        target = resolve_local(source, reference)
+    except AssertionError as error:
+        errors.append(str(error))
+        return
+    if target is None:
+        return
+    try:
+        target.relative_to(SITE.resolve())
+    except ValueError:
+        errors.append(f"URL escapes site root in {source.relative_to(ROOT)}: {reference}")
+        return
+    if not target.is_file():
+        errors.append(f"Missing asset in {source.relative_to(ROOT)}: {reference}")
+
+
 def main() -> int:
     required = [
         SITE / "index.html",
@@ -58,6 +76,10 @@ def main() -> int:
         SITE / "apps/puzzle.html",
         SITE / "data/course.json",
         SITE / "data/questions.json",
+        SITE / "apps/career/entry.mjs",
+        SITE / "apps/career/runtime.bundle.mjs",
+        SITE / "apps/career/surface.html",
+        SITE / "apps/career/module.css",
     ]
     missing_required = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing_required:
@@ -137,15 +159,41 @@ def main() -> int:
         fail("manifest scope must be './' for project Pages")
 
     module_errors: list[str] = []
-    import_pattern = re.compile(r"(?:from\s+|import\s*\()(['\"])(\.[^'\"]+)\1")
-    for script in (SITE / "assets/js").glob("*.js"):
+    # Static imports, re-exports, side-effect imports and literal dynamic imports.
+    # Bare package names and remote URLs are not filesystem references.
+    import_pattern = re.compile(
+        r"(?:\bfrom\s*|\bimport\s*\(\s*|\bimport\s*)(['\"])([./][^'\"]+)\1"
+    )
+    module_url_pattern = re.compile(
+        r"\bnew\s+URL\s*\(\s*(['\"])([^'\"]+)\1\s*,\s*import\.meta\.url\s*\)"
+    )
+    scripts = sorted({
+        script
+        for folder in [SITE / "assets/js", SITE / "apps/career"]
+        for script in folder.rglob("*")
+        if script.suffix in {".js", ".mjs"}
+    })
+    for script in scripts:
         source = script.read_text(encoding="utf-8")
         for _quote, specifier in import_pattern.findall(source):
-            target = (script.parent / unquote(urlsplit(specifier).path)).resolve()
-            if not target.is_file():
-                module_errors.append(
-                    f"Missing module imported by {script.relative_to(ROOT)}: {specifier}"
-                )
+            validate_reference(script, specifier, module_errors)
+        for _quote, reference in module_url_pattern.findall(source):
+            # A directory URL is a valid base for subsequent runtime URLs.
+            if not reference.endswith("/"):
+                validate_reference(script, reference, module_errors)
+
+    css_url_pattern = re.compile(r"\burl\(\s*['\"]?([^'\")]+)['\"]?\s*\)")
+    career_styles = sorted((SITE / "apps/career").rglob("*.css"))
+    for stylesheet in career_styles:
+        for reference in css_url_pattern.findall(stylesheet.read_text(encoding="utf-8")):
+            validate_reference(stylesheet, reference.strip(), module_errors)
+
+    # A broken precache URL rejects service-worker installation as a whole.
+    worker = SITE / "service-worker.js"
+    worker_header = worker.read_text(encoding="utf-8").split("self.addEventListener", 1)[0]
+    precache_paths = re.findall(r"['\"](\./[^'\"]+)['\"]", worker_header)
+    for reference in precache_paths:
+        validate_reference(worker, reference, module_errors)
     if module_errors:
         fail("\n".join(module_errors))
 
@@ -166,6 +214,9 @@ def main() -> int:
         "json_files": len(json_files),
         "questions": len(questions),
         "topics": len(course["topics"]),
+        "validated_modules": len(scripts),
+        "validated_career_styles": len(career_styles),
+        "validated_precache_paths": len(precache_paths),
         "municipal_maps": len(municipal_maps),
         "site_files": len(files),
         "site_bytes": site_bytes,

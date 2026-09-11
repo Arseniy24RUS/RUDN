@@ -236,3 +236,27 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
   .matrix-option-result{right:5px;top:auto;bottom:4px}.matrix-option-result b{display:none}.matrix-option-result small{font-size:8px;background:rgba(255,255,255,.72);border-radius:5px;padding:1px 3px}
   .review-answer-row{grid-template-columns:1fr;gap:4px}.review-answer-row dd{font-size:11px}
 }
+
+/* Native seminar 6: the course owns identity, navigation and assessment. */
+.career-course-heading{margin:22px 0 12px;max-width:880px;}
+.career-course-heading h1{font-size:clamp(26px,3vw,40px);line-height:1.15;margin:14px 0;}
+.career-course-heading p{line-height:1.7;color:var(--muted,#526579);}
+.career-course-features{font-size:13px;color:#316789;}
+.career-course-status{font-size:13px;line-height:1.6;color:#37654f;margin:16px 0;}
+#careerMount{min-width:0;max-width:100%;}
+.career-knowledge{margin-top:28px;}
+.career-knowledge summary{font-weight:700;cursor:pointer;line-height:1.6;}
+.career-knowledge>.page-actions,.career-knowledge>.form-grid{margin-top:18px;}
+@media(max-width:640px){.career-course-heading{margin-top:18px;}.career-course-heading h1{font-size:26px;}.career-course-heading p{font-size:14px;}}
+@media print{.career-course-heading,.career-course-status,.career-knowledge,.career-course-page>.page-actions{display:none!important;}}
+
+/* Keep navigation readable and the native toolbar below the fixed course header. */
+.sidebar a,.sidebar-bottom small{color:#fff}
+.sidebar a:hover,.sidebar a.active{background:#00649e}
+#careerMount{scroll-margin-top:calc(var(--top) + 16px)}
+
+@media print{
+  body:has(#careerMount) .topbar,body:has(#careerMount) .sidebar,body:has(#careerMount) .mobile-nav,body:has(#careerMount) .toast-stack{display:none!important}
+  body:has(#careerMount),body:has(#careerMount) .main{margin:0;padding:0;background:#fff}
+  body:has(#careerMount) .page,body:has(#careerMount) #careerMount{max-width:none;width:100%;margin:0;border:0;padding:0}
+}

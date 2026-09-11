@@ -1,0 +1,115 @@
+{
+  "version": "8.0.0",
+  "status": "authored-not-empirical",
+  "requirements": {
+    "POLICY": {
+      "FIELD": [
+        1,
+        2
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        3,
+        4
+      ],
+      "SECURITY": null
+    },
+    "LEGAL": {
+      "FIELD": [
+        1,
+        2
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        4,
+        5
+      ],
+      "SECURITY": null
+    },
+    "INSPECT": {
+      "FIELD": [
+        2,
+        4
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        4,
+        5
+      ],
+      "SECURITY": null
+    },
+    "PROGRAM": {
+      "FIELD": [
+        1,
+        3
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        3,
+        5
+      ],
+      "SECURITY": null
+    },
+    "FINANCE": {
+      "FIELD": [
+        1,
+        2
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        4,
+        5
+      ],
+      "SECURITY": null
+    },
+    "DIGITAL": {
+      "FIELD": [
+        1,
+        2
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        2,
+        4
+      ],
+      "SECURITY": null
+    },
+    "SERVICE": {
+      "FIELD": [
+        1,
+        2
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        3,
+        5
+      ],
+      "SECURITY": null
+    },
+    "TERRITORIAL": {
+      "FIELD": [
+        3,
+        5
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        3,
+        5
+      ],
+      "SECURITY": null
+    },
+    "INTERNATIONAL": {
+      "FIELD": [
+        2,
+        4
+      ],
+      "SCHEDULE": null,
+      "FORMAL": [
+        3,
+        5
+      ],
+      "SECURITY": null
+    }
+  },
+  "unknownPolicy": "Neutral 0.5 contribution for unknown condition. An interval is a role scenario, not a confidence interval."
+}

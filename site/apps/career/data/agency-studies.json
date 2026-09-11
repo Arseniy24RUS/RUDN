@@ -1,0 +1,1367 @@
+{
+  "version": "1.1",
+  "checkedAt": "2026-09-05",
+  "disclaimer": {
+    "ru": "Ситуации придуманы для семинара. Источники подтверждают направления деятельности, но не конкретный сценарий, должность или вакансию. Выбор ответа не изменяет профориентационный рейтинг.",
+    "en": "Cases are fictional training scenarios. Sources support the areas of activity, not the scenario, a specific post or a vacancy. Choices never change the career ranking.",
+    "zh-Hans": "这些案例是虚构的教学情景。来源仅支持相关业务方向，不证明具体情景、岗位或招聘信息。选择不改变职业推荐排名。"
+  },
+  "cases": [
+    {
+      "id": "water-resource-signal",
+      "authorityId": "rosrybolovstvo",
+      "title": {
+        "ru": "Сообщение о нарушении на водоёме",
+        "en": "A report from an inland waterbody",
+        "zh-Hans": "来自内陆水域的举报"
+      },
+      "trackId": "INSPECT",
+      "source": {
+        "title": {
+          "ru": "Положение о Росрыболовстве: раздел I",
+          "en": "Regulation on the Federal Agency for Fishery: section I",
+          "zh-Hans": "《联邦渔业署条例》第一部分"
+        },
+        "url": "https://fish.gov.ru/about/polozhenie/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "full-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росрыболовство осуществляет контроль в области рыболовства и сохранения водных биоресурсов в пределах закреплённых полномочий. В положении есть исключения по акваториям: агентство нельзя считать универсальным органом надзора за любой деятельностью на воде.",
+        "en": "The agency supervises fisheries and aquatic biological resources within its statutory remit. The regulation distinguishes water areas; the agency is not the universal regulator of every activity on water.",
+        "zh-Hans": "渔业署在法定权限内监督渔业和水生生物资源。条例区分不同水域，该署不是所有水上活动的统一监管者。"
+      },
+      "situation": {
+        "ru": "В учебной ситуации поступило сообщение о возможном незаконном вылове. Есть фотографии, но не указаны точное место и время. Руководитель просит подготовить первичную записку. С чего начать?",
+        "en": "In this fictional case, a report alleges illegal fishing. Photographs are attached, but the exact place and time are missing. Your supervisor asks for an initial briefing. Where would you start?",
+        "zh-Hans": "在这个虚构案例中，有人举报非法捕捞，并附有照片，但没有准确地点和时间。负责人要求准备初步简报。你会从哪里开始？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Сразу предложить штраф: фотографии выглядят убедительно.",
+            "en": "Recommend a fine immediately: the photographs look convincing.",
+            "zh-Hans": "立即建议罚款：照片看起来很有说服力。"
+          },
+          "feedback": {
+            "ru": "Фотография сама по себе не устанавливает обстоятельства и компетенцию органа. В учебной записке вывод о нарушении пока преждевременен.",
+            "en": "Photographs alone do not establish the circumstances or jurisdiction. A conclusion that a violation occurred would be premature.",
+            "zh-Hans": "仅凭照片不能确认全部事实和管辖权，此时断定违法为时过早。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Уточнить место, время и объект сообщения; отделить установленные сведения от предположений и проверить компетенцию.",
+            "en": "Clarify the place, time and subject; separate established information from assumptions and check jurisdiction.",
+            "zh-Hans": "核实地点、时间和事项，区分已知信息与推测，并检查管辖权限。"
+          },
+          "feedback": {
+            "ru": "Это обоснованный первый шаг. Вы связываете содержание сообщения с полномочиями органа и указываете, какие сведения ещё нужны.",
+            "en": "This is a well-grounded first step: connect the report to the agency’s remit and identify the missing information.",
+            "zh-Hans": "这是合理的第一步：将举报与机关职责联系起来，识别缺失信息。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Передать любое сообщение о воде в Росприроднадзор, не изучая обстоятельства.",
+            "en": "Forward every water-related report to the environmental supervisor without examining it.",
+            "zh-Hans": "不作分析，将一切涉水举报转交环境监督机关。"
+          },
+          "feedback": {
+            "ru": "Близость тематик не означает совпадения полномочий. Маршрутизация обращения требует уточнения предмета, а не выбора по названию.",
+            "en": "Related policy areas do not imply identical powers. Routing a report requires understanding its subject, not guessing from agency names.",
+            "zh-Hans": "业务领域相近不意味着权限相同。转交举报需要理解事项，而不是凭机关名称猜测。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "В такой работе сочетаются проверка фактов, правовые границы и взаимодействие на территории. Интерес к природе не равен интересу к инспекционной работе.",
+        "en": "This work combines fact-checking, legal boundaries and local coordination. Interest in nature is not the same as interest in inspections.",
+        "zh-Hans": "这类工作结合事实核查、法律边界和地方协调。喜欢自然不等于喜欢检查工作。"
+      },
+      "task": {
+        "ru": "Составьте таблицу: что известно; чего не хватает; какую компетенцию нужно проверить.",
+        "en": "Draft a table: what is known; what is missing; which powers need checking.",
+        "zh-Hans": "编制三列表格：已知事实、缺失信息、需要核对的权限。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "weather-brief",
+      "authorityId": "roshydromet",
+      "title": {
+        "ru": "Прогноз для управленческого решения",
+        "en": "A forecast for a public decision",
+        "zh-Hans": "为公共决策准备天气信息"
+      },
+      "trackId": "DIGITAL",
+      "source": {
+        "title": {
+          "ru": "Информационные ресурсы и продукция Росгидромета",
+          "en": "Roshydromet information resources and products",
+          "zh-Hans": "水文气象局的信息资源和产品"
+        },
+        "url": "https://www.meteorf.gov.ru/product/info/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росгидромет публикует данные наблюдений, прогнозы и гидрометеорологические предупреждения. Это информационная основа решений других участников, а не самостоятельное выполнение всех мер реагирования.",
+        "en": "Roshydromet provides observations, forecasts and hydrometeorological warnings. These inform other organisations’ decisions; they do not imply responsibility for every response measure.",
+        "zh-Hans": "水文气象局提供观测、预报和水文气象预警，支持其他组织决策，但不因此负责全部应对措施。"
+      },
+      "situation": {
+        "ru": "Муниципалитет готовит мероприятие под открытым небом. В двух сообщениях о погоде различаются время выпуска и территория. Как подготовить полезную сводку?",
+        "en": "A municipality is planning an outdoor event. Two weather reports differ in issue time and geographical coverage. How would you prepare a useful briefing?",
+        "zh-Hans": "某市计划举办户外活动。两份天气报告的发布时间和覆盖区域不同。你会怎样准备一份有用的简报？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Выбрать более спокойный прогноз, чтобы не тревожить организаторов.",
+            "en": "Pick the calmer forecast so as not to worry organisers.",
+            "zh-Hans": "选择更温和的预报，以免让组织者担忧。"
+          },
+          "feedback": {
+            "ru": "Выбор по удобству для адресата скрывает неопределённость. Сначала нужно установить сопоставимость и актуальность сообщений.",
+            "en": "Choosing the more convenient report hides uncertainty. First establish whether the messages are comparable and current.",
+            "zh-Hans": "挑选方便的报告会隐藏不确定性。应先确认信息是否可比、是否仍有效。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Объявить отмену мероприятия от имени Росгидромета.",
+            "en": "Announce cancellation of the event on behalf of Roshydromet.",
+            "zh-Hans": "以水文气象局的名义宣布取消活动。"
+          },
+          "feedback": {
+            "ru": "В этой роли Вы готовите информацию. Решение об организации мероприятия нельзя автоматически присвоить поставщику прогноза.",
+            "en": "Your role here is to prepare information. The forecast provider does not automatically own the event-management decision.",
+            "zh-Hans": "此处你的任务是准备信息。提供预报的机关并不自动拥有活动管理决策权。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Сверить источник, время и территорию; изложить риск, неопределённость и время следующего обновления.",
+            "en": "Check the source, time and coverage; describe the risk, uncertainty and next update.",
+            "zh-Hans": "核对来源、时间和覆盖区域，说明风险、不确定性及下一次更新。"
+          },
+          "feedback": {
+            "ru": "Так сводка становится пригодной для решения: адресат понимает границы информации и необходимость обновления.",
+            "en": "This makes the briefing actionable: the reader understands its limits and the need for updates.",
+            "zh-Hans": "这样读者能了解简报的适用范围及更新需求，并据此行动。"
+          },
+          "recommended": true
+        }
+      ],
+      "insight": {
+        "ru": "В управленческой роли здесь нужны работа с данными и ясная коммуникация. Это не означает, что выпускник ГМУ без специальной подготовки становится метеорологом.",
+        "en": "Management-related roles need data handling and clear communication. A public administration degree alone does not qualify someone as a meteorologist.",
+        "zh-Hans": "管理岗位需要数据处理和清晰沟通，但国家与市政管理学历本身不构成气象专业资格。"
+      },
+      "task": {
+        "ru": "Подготовьте краткий шаблон сводки с полями «источник», «дата», «территория», «ограничения».",
+        "en": "Prepare a briefing template with source, date, coverage and limitations.",
+        "zh-Hans": "设计包含来源、日期、覆盖范围和局限的简报模板。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "archive-access",
+      "authorityId": "rosarchiv",
+      "title": {
+        "ru": "Цифровой архив: найти, а не просто отсканировать",
+        "en": "A digital archive: access beyond scanning",
+        "zh-Hans": "数字档案：扫描之外的可用性"
+      },
+      "trackId": "DIGITAL",
+      "source": {
+        "title": {
+          "ru": "О Федеральном архивном агентстве",
+          "en": "About the Federal Archival Agency",
+          "zh-Hans": "联邦档案署概况"
+        },
+        "url": "https://archives.gov.ru/about.shtml",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росархив занимается государственной политикой и нормативным регулированием архивного дела и делопроизводства; в его ведении находятся федеральные архивы. Работа с документами в архиве и работа в центральном аппарате не тождественны.",
+        "en": "Rosarkhiv oversees archival and records-management policy and regulation, and has federal archives under its authority. Work in an archive is not identical to work in the central agency.",
+        "zh-Hans": "档案署承担档案和文书管理领域的政策与规范职能，并管理所属联邦档案馆。在档案馆任职与在中央机关任职不是同一回事。"
+      },
+      "situation": {
+        "ru": "В учебном проекте оцифрованы документы, но пользователи не могут их найти. У команды есть ресурс только на одно первоочередное улучшение. Что предложить?",
+        "en": "A training project has digitised documents, but users cannot find them. The team can prioritise one improvement. What would you propose?",
+        "zh-Hans": "某教学项目已扫描文献，但使用者找不到所需文件。团队只能优先改进一项功能。你会建议什么？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Создать единообразные описания, поисковые поля и проверить правила доступа.",
+            "en": "Create consistent descriptions and search fields, and check access rules.",
+            "zh-Hans": "建立一致的描述和检索字段，并核对访问规则。"
+          },
+          "feedback": {
+            "ru": "Оцифровка полезна, когда документ можно найти и правомерно использовать. Такой шаг связывает данные, сервис и ограничения доступа.",
+            "en": "Digitisation is useful when documents can be found and accessed appropriately. This links data quality, service design and access limits.",
+            "zh-Hans": "只有能找到文件且访问符合规定，数字化才有用。这涉及数据质量、服务设计和访问限制。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Отсканировать ещё больше страниц без описаний.",
+            "en": "Scan more pages without adding descriptions.",
+            "zh-Hans": "继续扫描更多页面，不添加描述。"
+          },
+          "feedback": {
+            "ru": "Объём сканов растёт, но заявленная проблема поиска остаётся. Количество файлов не заменяет качество информационной системы.",
+            "en": "The number of scans grows, but the stated discovery problem remains. File volume does not replace information quality.",
+            "zh-Hans": "扫描数量增加了，但查找问题仍在。文件体量不能替代信息质量。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Открыть все документы без проверки ограничений.",
+            "en": "Make every document public without checking restrictions.",
+            "zh-Hans": "不核对限制，公开所有文件。"
+          },
+          "feedback": {
+            "ru": "Доступность не означает отсутствие ограничений. В учебном решении нужно предусмотреть проверку правил доступа, не обещая открытость любого документа.",
+            "en": "Accessibility does not mean that restrictions never apply. The plan must include checking access rules.",
+            "zh-Hans": "提高可访问性不等于没有任何限制。方案必须包含访问规则核查。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Здесь могут быть интересны описание данных, управление проектом и пользовательские сервисы. Типовые роли в подведомственном архиве нужно отличать от должностей гражданской службы.",
+        "en": "Relevant interests include metadata, project coordination and user services. Roles in subordinate archives should be distinguished from civil service posts.",
+        "zh-Hans": "相关兴趣包括元数据、项目协调和用户服务。所属档案馆的岗位应与公务员职位区分。"
+      },
+      "task": {
+        "ru": "Придумайте пять полей карточки документа и объясните, какую задачу поиска решает каждое.",
+        "en": "Suggest five document metadata fields and explain the search need each addresses.",
+        "zh-Hans": "提出五个文献元数据字段，解释各自解决的检索需求。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "ip-service",
+      "authorityId": "rospatent",
+      "title": {
+        "ru": "Какой результат хочет защитить заявитель?",
+        "en": "What does the applicant want to protect?",
+        "zh-Hans": "申请人究竟希望保护什么？"
+      },
+      "trackId": "LEGAL",
+      "source": {
+        "title": {
+          "ru": "Государственные услуги Роспатента",
+          "en": "Rospatent public services",
+          "zh-Hans": "知识产权局公共服务"
+        },
+        "url": "https://rospatent.gov.ru/ru/stateservices",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Роспатент перечисляет разные услуги регистрации: изобретений, товарных знаков, программ для ЭВМ и других объектов. Эти объекты нельзя считать взаимозаменяемыми.",
+        "en": "Rospatent lists distinct registration services for inventions, trademarks, software and other objects. These categories are not interchangeable.",
+        "zh-Hans": "知识产权局对发明、商标、软件等对象提供不同登记服务，这些类别不可互换。"
+      },
+      "situation": {
+        "ru": "Студенческая команда создала приложение с новым названием и спрашивает: «Нам нужен один патент на всё?» Как построить первичное разъяснение?",
+        "en": "A student team has built an app with a new name and asks: “Do we need one patent for everything?” How would you structure an initial explanation?",
+        "zh-Hans": "学生团队开发了一个有新名称的应用，询问“是否用一项专利保护全部内容”。你会怎样初步解释？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Пообещать один патент на название, код и идею.",
+            "en": "Promise a single patent for the name, code and idea.",
+            "zh-Hans": "承诺用一项专利保护名称、代码和创意。"
+          },
+          "feedback": {
+            "ru": "Такое обещание смешивает разные объекты. Учебный разбор не должен гарантировать правовую охрану без анализа конкретного результата.",
+            "en": "This conflates different objects. A training response should not guarantee protection without examining the specific output.",
+            "zh-Hans": "这混淆了不同客体。未审查具体成果，不应承诺保护。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Разделить название, программу и возможное техническое решение; найти соответствующие официальные услуги.",
+            "en": "Distinguish the name, software and any technical solution, then identify the relevant official services.",
+            "zh-Hans": "区分名称、软件及可能的技术方案，再查找相应官方服务。"
+          },
+          "feedback": {
+            "ru": "Это корректная постановка задачи: уточнить объект и путь обращения, не подменяя экспертизу обещанием регистрации.",
+            "en": "This frames the task appropriately: clarify the object and service without substituting a promise of registration for examination.",
+            "zh-Hans": "先明确保护客体和服务类型，而不是用登记承诺代替审查。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Передать весь вопрос техническому специалисту: правовые различия можно обсудить после выпуска приложения.",
+            "en": "Forward the whole issue to a technical specialist; legal distinctions can be discussed after the app is released.",
+            "zh-Hans": "将全部问题转给技术人员，等应用发布后再讨论法律区别。"
+          },
+          "feedback": {
+            "ru": "Техническая консультация полезна, но не заменяет определения объекта правовой охраны. Откладывание этого вопроса может затруднить выбор правильной услуги.",
+            "en": "Technical advice is useful but does not identify the subject of protection. Deferring this distinction can make it harder to select the appropriate service.",
+            "zh-Hans": "技术意见有帮助，却不能代替保护客体的界定。延后区分可能影响选择适当服务。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Работа на стыке права, технологий и государственных услуг может быть интересна и управленцу. Техническая патентная экспертиза при этом требует отдельной профильной подготовки.",
+        "en": "Work combining law, technology and public services can interest public administration students. Technical patent examination requires separate specialist preparation.",
+        "zh-Hans": "法律、技术和公共服务的交叉工作可能适合该专业学生，但技术性专利审查需要另行取得专业准备。"
+      },
+      "task": {
+        "ru": "Составьте схему «результат команды → возможный объект → официальная услуга».",
+        "en": "Create a map: team output → possible category → official service.",
+        "zh-Hans": "制作路径图：团队成果 → 可能类别 → 官方服务。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "budget-periods",
+      "authorityId": "treasury",
+      "title": {
+        "ru": "Две цифры исполнения бюджета",
+        "en": "Two budget execution figures",
+        "zh-Hans": "两项预算执行数字"
+      },
+      "trackId": "FINANCE",
+      "source": {
+        "title": {
+          "ru": "Положение о Федеральном казначействе",
+          "en": "Regulation on the Federal Treasury",
+          "zh-Hans": "《联邦国库署条例》"
+        },
+        "url": "https://roskazna.gov.ru/o-kaznachejstve/polozhenie-o-federalnom-kaznachejstve",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Казначейство обеспечивает исполнение федерального бюджета, казначейское обслуживание, финансово-бюджетный контроль и работу государственных информационных систем в пределах своих полномочий.",
+        "en": "The Treasury supports federal budget execution, treasury services, financial and budget oversight, and public information systems within its remit.",
+        "zh-Hans": "国库署在权限内支持联邦预算执行、国库服务、财政预算监督和公共信息系统。"
+      },
+      "situation": {
+        "ru": "В учебной записке один показатель отражает кассовое исполнение за квартал, а другой – годовой план. Коллега хочет назвать их расхождение «потерей денег». Как поступить?",
+        "en": "One figure in a training memo is quarterly cash expenditure, while another is the annual plan. A colleague wants to label the difference “missing money”. What would you do?",
+        "zh-Hans": "教学简报中一个数字是季度现金支出，另一个是全年计划。同事想把差额称为“资金失踪”。你会怎么办？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Опубликовать вывод: разница уже показывает нарушение.",
+            "en": "Publish the conclusion: the difference already proves a violation.",
+            "zh-Hans": "直接发表结论：差额已经证明违法。"
+          },
+          "feedback": {
+            "ru": "Несопоставимые периоды и разные виды показателей не доказывают нарушения. Сначала требуется корректная база сравнения.",
+            "en": "Different periods and indicator types do not establish a violation. A valid comparison comes first.",
+            "zh-Hans": "期间和指标类型不同不能证明违法。应先建立有效比较。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Сопоставить разницу с прошлогодним значением, не уточняя определения показателей.",
+            "en": "Compare the difference with last year’s figure without clarifying the indicator definitions.",
+            "zh-Hans": "不明确指标定义，直接将差额与去年比较。"
+          },
+          "feedback": {
+            "ru": "Сравнение во времени поможет только после проверки единиц и периода. Иначе прежняя несопоставимость перейдёт в новый расчёт.",
+            "en": "A comparison over time helps only after checking units and periods. Otherwise the original mismatch carries over into the new calculation.",
+            "zh-Hans": "时间比较只有在单位和期间一致后才有意义，否则原来的不匹配会延续。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Уточнить период, единицы и определения; сопоставить план и исполнение на одной базе и обозначить ограничения.",
+            "en": "Check periods, units and definitions; compare plan and execution on a consistent basis and state the limits.",
+            "zh-Hans": "检查期间、单位和定义，在一致基础上比较计划与执行并说明局限。"
+          },
+          "feedback": {
+            "ru": "Вы отделяете факт от оценочного вывода и готовите проверяемое обоснование. Это центральный навык финансово-аналитической работы.",
+            "en": "You separate facts from judgements and make the reasoning verifiable: a key financial-analysis skill.",
+            "zh-Hans": "这区分了事实和判断，使分析可核查，是财政分析的重要能力。"
+          },
+          "recommended": true
+        }
+      ],
+      "insight": {
+        "ru": "Подготовка финансовой информации, контроль и распределение бюджетных приоритетов – разные задачи. По двум цифрам нельзя присваивать органу все бюджетные полномочия.",
+        "en": "Financial reporting, oversight and setting spending priorities are different tasks. Two figures do not imply that one agency has every budget power.",
+        "zh-Hans": "财务报告、监督和支出优先级制定属于不同任务。两个数字不意味着某机关拥有全部预算权限。"
+      },
+      "task": {
+        "ru": "Сделайте паспорт каждого показателя: период, единица, определение, источник и допустимое сравнение.",
+        "en": "Write an indicator passport: period, unit, definition, source and valid comparison.",
+        "zh-Hans": "制作指标说明卡：期间、单位、定义、来源和有效比较方法。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "justice-data-route",
+      "authorityId": "minjust",
+      "title": {
+        "ru": "Цифровые задачи в юридическом ведомстве",
+        "en": "Digital work in a justice ministry",
+        "zh-Hans": "司法部中的数字工作"
+      },
+      "trackId": "DIGITAL",
+      "source": {
+        "title": {
+          "ru": "Департамент информатизации и цифровой трансформации Минюста",
+          "en": "Ministry of Justice: IT and Digital Transformation Department",
+          "zh-Hans": "司法部信息技术和数字转型司"
+        },
+        "url": "https://www.minjust.gov.ru/ru/ministry/departments/233/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "На странице департамента Минюста перечислены отделы инфраструктуры, защиты информации, управления проектами и процессами, аналитики и управления данными. Это конкретный пример разнообразия работы внутри юридического ведомства.",
+        "en": "The department page lists infrastructure, information security, project and process management, and analytics and data management units: a concrete example of role diversity within a justice ministry.",
+        "zh-Hans": "官方页面列出基础设施、信息安全、项目与流程管理以及分析和数据管理等单位，具体体现司法部内部角色的多样性。"
+      },
+      "situation": {
+        "ru": "Учебная команда помогает уменьшить повторный ввод одних и тех же сведений в информационную систему. Какой первый результат полезнее подготовить?",
+        "en": "A training team wants to reduce repeated entry of the same information into a system. What initial deliverable would be most useful?",
+        "zh-Hans": "教学团队想减少系统中同一信息的重复录入。最有用的初始成果是什么？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Карту процесса: кто вводит данные, откуда они поступают, где повторяются и кто отвечает за качество.",
+            "en": "A process map showing data entry, sources, duplication points and quality ownership.",
+            "zh-Hans": "绘制标注录入、来源、重复点和质量责任人的流程图。"
+          },
+          "feedback": {
+            "ru": "Такой результат позволяет поставить задачу на изменение процесса. Он понятен и управленцу, и техническому специалисту.",
+            "en": "This helps define the process change and is understandable to both managers and technical specialists.",
+            "zh-Hans": "这有助于明确流程改进，管理者和技术人员都能理解。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Сразу заказать новую систему, не изучая текущий процесс.",
+            "en": "Immediately commission a new system without examining the current process.",
+            "zh-Hans": "不分析现有流程，立即委托开发新系统。"
+          },
+          "feedback": {
+            "ru": "Новая система может воспроизвести прежние проблемы. Требования следует связать с реальным процессом и пользователями.",
+            "en": "A new system may reproduce old problems. Requirements need to reflect actual workflows and users.",
+            "zh-Hans": "新系统可能复制旧问题。需求应基于实际流程和用户。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Сначала написать подробную инструкцию повторного ввода, не выясняя причины дублирования.",
+            "en": "First write detailed instructions for re-entering the data without investigating the duplication.",
+            "zh-Hans": "不研究重复原因，先写详细的重复录入操作说明。"
+          },
+          "feedback": {
+            "ru": "Инструкция может уменьшить ошибки, но пока закрепляет повторную работу. Для поставленной задачи сначала нужно понять процесс и основания каждого ввода.",
+            "en": "Instructions may reduce errors but still preserve duplicate work. The stated task first requires understanding the process and the reason for each entry.",
+            "zh-Hans": "说明可以减少错误，却仍保留重复劳动。首先应理解流程及每次录入的原因。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Это пример подтверждённого подразделения, но не открытая вакансия. Наличие отдела не гарантирует набор студентов или отсутствие требований к образованию.",
+        "en": "This is an example of a documented unit, not an open vacancy. Its existence does not guarantee recruitment or waive education requirements.",
+        "zh-Hans": "这是有官方资料支持的单位示例，不是在招职位，也不保证招聘或免除学历要求。"
+      },
+      "task": {
+        "ru": "Нарисуйте процесс из пяти шагов и предложите одно измеримое улучшение.",
+        "en": "Map a five-step process and propose one measurable improvement.",
+        "zh-Hans": "绘制五步流程，并提出一项可衡量的改进。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "statistics-comparison",
+      "authorityId": "rosstat",
+      "title": {
+        "ru": "Что на самом деле сравнивает показатель?",
+        "en": "What does this indicator really compare?",
+        "zh-Hans": "这个指标究竟比较什么？"
+      },
+      "trackId": "POLICY",
+      "source": {
+        "title": {
+          "ru": "Официальная статистика и методология Росстата",
+          "en": "Rosstat official statistics and methodology",
+          "zh-Hans": "统计局官方统计与方法资料"
+        },
+        "url": "https://rosstat.gov.ru/statistic",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росстат публикует официальную статистику, сведения о наблюдениях и методологические материалы. Интерпретация показателя требует обращения к его определению и охвату.",
+        "en": "Rosstat publishes official statistics, survey information and methodological material. Interpreting an indicator requires checking its definition and coverage.",
+        "zh-Hans": "统计局发布官方统计、调查信息和方法资料。解释指标需要核对定义及覆盖范围。"
+      },
+      "situation": {
+        "ru": "В учебной презентации численность занятых сопоставляют с долей занятых в населении другого региона. Получается эффектный рейтинг. Что Вы предложите?",
+        "en": "A training presentation compares the number of employed people in one region with an employment share in another. The ranking looks striking. What would you suggest?",
+        "zh-Hans": "教学演示将一个地区的就业人数与另一个地区的就业比例比较，排名看起来很鲜明。你会建议什么？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Оставить рейтинг, если график выглядит убедительно.",
+            "en": "Keep the ranking if the chart looks convincing.",
+            "zh-Hans": "图表有说服力就保留排名。"
+          },
+          "feedback": {
+            "ru": "Визуальная выразительность не делает абсолютное число и долю сопоставимыми. Читатель может получить неверный вывод.",
+            "en": "An attractive chart does not make a count and a proportion comparable. It can mislead readers.",
+            "zh-Hans": "漂亮图表不能使人数和比例可比，反而可能误导读者。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Проверить определения, знаменатели, период и охват; затем выбрать единый показатель.",
+            "en": "Check definitions, denominators, period and coverage, then choose one consistent indicator.",
+            "zh-Hans": "核对定义、分母、期间和覆盖范围，再选择统一指标。"
+          },
+          "feedback": {
+            "ru": "Это обоснованная последовательность. Качество аналитики зависит от сопоставимости данных, а не только от вычислений.",
+            "en": "This is a sound sequence. Analytical quality depends on comparability, not just calculation.",
+            "zh-Hans": "这是合理顺序。分析质量取决于可比性，而不仅是计算。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Привести оба ряда к индексу 100, не проверяя, одинаковые ли явления они описывают.",
+            "en": "Convert both series to an index of 100 without checking whether they describe the same phenomenon.",
+            "zh-Hans": "不检查是否描述相同现象，将两个序列都转为基期100的指数。"
+          },
+          "feedback": {
+            "ru": "Индексирование меняет масштаб, но само по себе не делает показатели содержательно сопоставимыми. Сначала нужно установить их определения и охват.",
+            "en": "Indexing changes the scale but does not by itself make indicators conceptually comparable. Their definitions and coverage must be established first.",
+            "zh-Hans": "指数化只改变尺度，不自动建立概念上的可比性。应先核对定义和覆盖范围。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Работа со статистикой включает методологию, объяснение ограничений и коммуникацию. Она не сводится к вводу чисел в таблицу.",
+        "en": "Statistical work includes methodology, explaining limitations and communication. It is more than entering numbers into a table.",
+        "zh-Hans": "统计工作包含方法、局限解释和沟通，不只是往表格里填数字。"
+      },
+      "task": {
+        "ru": "Исправьте подпись графика так, чтобы она содержала показатель, единицу, период и источник.",
+        "en": "Rewrite the chart label to include the indicator, unit, period and source.",
+        "zh-Hans": "重写图表说明，加入指标、单位、期间和来源。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "forest-change",
+      "authorityId": "rosleshoz",
+      "title": {
+        "ru": "Спутниковый сигнал: изменение ещё не доказательство",
+        "en": "A satellite signal is not yet proof",
+        "zh-Hans": "卫星信号尚不等于证据"
+      },
+      "trackId": "DIGITAL",
+      "source": {
+        "title": {
+          "ru": "Рослесхоз: непрерывный дистанционный мониторинг в 2026 году",
+          "en": "Rosleskhoz: continuous remote monitoring in 2026",
+          "zh-Hans": "林业署：2026年持续遥感监测"
+        },
+        "url": "https://rosleshoz.gov.ru/news/federal/rosleskhoz-v-2026-godu-ploshchad-nepreryvnogo-distantsionnogo-monitoringa-uvelichilas-na-10/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Рослесхоз сообщает об использовании непрерывного дистанционного мониторинга лесов для выявления изменений и реагирования на возможные нарушения. Цифровые данные являются частью этой деятельности.",
+        "en": "Rosleskhoz reports using continuous remote forest monitoring to detect changes and support responses to possible violations. Digital data are part of this work.",
+        "zh-Hans": "林业署使用持续遥感监测发现森林变化，并支持对潜在违法行为的应对。数字数据是这类工作的组成部分。"
+      },
+      "situation": {
+        "ru": "На снимке учебной территории алгоритм отметил изменение лесного покрова. Студент предлагает автоматически объявить его незаконной рубкой. Что важнее сделать сначала?",
+        "en": "An algorithm marks a forest-cover change in an imaginary training area. A student suggests automatically calling it illegal logging. What should come first?",
+        "zh-Hans": "算法在虚构教学区域标记了森林覆盖变化。学生建议直接称其为非法采伐。首先应该做什么？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Подготовить проверку сигнала: дата снимка, качество, границы участка и доступные сведения о допустимой деятельности.",
+            "en": "Prepare checks of the signal: image date, quality, plot boundaries and available records of permitted activity.",
+            "zh-Hans": "准备核查影像日期、质量、地块边界及已获许可活动记录。"
+          },
+          "feedback": {
+            "ru": "Изменение на изображении требует интерпретации. Такой подход отделяет автоматический сигнал от доказанного нарушения.",
+            "en": "An image change needs interpretation. This separates an automated signal from an established violation.",
+            "zh-Hans": "影像变化需要解释。应区分自动信号与已经确认的违法行为。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Сразу назвать ответственное лицо нарушителем.",
+            "en": "Immediately label a responsible person an offender.",
+            "zh-Hans": "立即将某个责任人认定为违法者。"
+          },
+          "feedback": {
+            "ru": "Сигнал алгоритма не устанавливает ни все обстоятельства, ни ответственность конкретного лица.",
+            "en": "An algorithmic signal establishes neither all circumstances nor individual responsibility.",
+            "zh-Hans": "算法信号不能证明全部事实，更不能单独确认个人责任。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Отложить анализ до планового выезда, не проверяя доступные сведения о сигнале.",
+            "en": "Postpone the analysis until the scheduled site visit without checking the available information about the signal.",
+            "zh-Hans": "不检查已有信息，等计划中的现场检查再分析。"
+          },
+          "feedback": {
+            "ru": "Выезд может понадобиться, но до него уже можно проверить качество снимка, дату и контекст. Эти сведения помогают обоснованно спланировать дальнейшую работу.",
+            "en": "A site visit may be necessary, but image quality, date and context can already be checked. These details help plan subsequent work on a sound basis.",
+            "zh-Hans": "现场检查可能必要，但影像质量、日期和背景可先核实，这有助于合理安排后续工作。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Здесь востребован интерес к геоданным и контролю качества. Содержание конкретной должности и распределение полномочий нужно проверять отдельно.",
+        "en": "Interest in geospatial data and quality assurance is relevant. Specific duties and allocation of powers still require separate checking.",
+        "zh-Hans": "对地理空间数据和质量控制的兴趣具有相关性，但具体职责与权限分配仍需另行核实。"
+      },
+      "task": {
+        "ru": "Составьте перечень сведений для проверки сигнала и укажите, какие из них отсутствуют.",
+        "en": "List the information needed to check the signal and identify what is missing.",
+        "zh-Hans": "列出核查信号所需的信息，并指出缺失内容。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false
+    },
+    {
+      "id": "airport-service-queue",
+      "authorityId": "rosaviatsiya",
+      "title": {
+        "ru": "Заявление движется, но ответа нет",
+        "en": "An application moves, but the answer does not",
+        "zh-Hans": "申请在流转，答复却迟迟未到"
+      },
+      "trackId": "PROGRAM",
+      "source": {
+        "title": {
+          "ru": "Росавиация: государственные услуги",
+          "en": "Rosaviatsiya: public services",
+          "zh-Hans": "航空运输署：公共服务"
+        },
+        "url": "https://favt.gov.ru/dejatelnost/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росавиация оказывает услуги по регистрации и сертификации в сфере гражданской авиации. В официальном перечне раздельно указаны регистрация аэродромов, сертификация и разрешительные процедуры.",
+        "en": "Rosaviatsiya provides registration and certification services in civil aviation. Its official list distinguishes aerodrome registration, certification and permit procedures.",
+        "zh-Hans": "航空运输署提供民航登记和认证服务。官方清单区分机场登记、认证和许可程序。"
+      },
+      "situation": {
+        "ru": "В вымышленном подразделении изучили путь десяти однотипных заявлений. Дольше всего занимает ожидание между этапами. Нельзя отменять обязательную экспертизу. Какое изменение процесса стоит испытать первым?",
+        "en": "A fictional team reviewed ten applications for the same service. Most delay occurs between stages. Mandatory assessment cannot be removed. Which process change would you pilot first?",
+        "zh-Hans": "虚构团队分析了同一服务的十份申请，主要延迟发生在阶段交接中。强制性审查不可取消。你首先试行哪项改进？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Сократить техническую экспертизу с четырёх дней до одного без изменения процедуры.",
+            "en": "Cut technical assessment from four days to one without changing the process.",
+            "zh-Hans": "不改变流程，将技术审查从四天缩短到一天。"
+          },
+          "feedback": {
+            "ru": "Сокращение обязательной работы само по себе не устраняет очереди. Не показано, как сохранить качество и соблюдение требований.",
+            "en": "Cutting mandatory work does not itself remove queues. There is no explanation of how quality and requirements would be preserved.",
+            "zh-Hans": "压缩必要工作不等于消除排队，也未说明如何保证质量与合规。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Назначить ответственных за передачу между этапами и сделать статус заявления видимым; сравнить время ожидания до и после.",
+            "en": "Assign responsibility for hand-offs and make application status visible; compare waiting times before and after.",
+            "zh-Hans": "明确交接责任，公开申请状态，比较试行前后的等待时间。"
+          },
+          "feedback": {
+            "ru": "Мера направлена на наблюдаемую задержку, а не на отмену проверки. Сначала нужен пилот: из этих десяти случаев нельзя обещать гарантированное ускорение всей службы.",
+            "en": "This targets the observed delay without removing assessment. Pilot it first: ten cases cannot establish a guaranteed improvement across the agency.",
+            "zh-Hans": "这针对已观察到的延迟且不取消审查。应先试行：十个案例不能保证全机关均有相同改善。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Считать заявление завершённым в момент передачи на экспертизу.",
+            "en": "Mark applications complete when they are sent for assessment.",
+            "zh-Hans": "申请转交审查时即标记为完成。"
+          },
+          "feedback": {
+            "ru": "Показатель улучшится на бумаге, но услуга не будет завершена. Это подмена результата внутренним действием.",
+            "en": "The metric improves on paper, but the service remains incomplete. An internal action is being mistaken for the outcome.",
+            "zh-Hans": "纸面指标改善了，但服务尚未完成。这是把内部动作当作最终结果。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "ГМУ в авиации – это также проектирование государственных услуг и организация взаимодействия, а не только техническая работа с воздушными судами.",
+        "en": "Public administration in aviation includes designing services and coordinating work, not only aircraft engineering.",
+        "zh-Hans": "航空领域公共管理也包括服务设计和协调，而不只有飞机工程。"
+      },
+      "task": {
+        "ru": "Нарисуйте процесс из четырёх этапов. Для каждой передачи укажите ответственного, проверяемое условие готовности и видимый заявителю статус.",
+        "en": "Draw a four-stage process. For each hand-off, name an owner, a readiness criterion and a status visible to the applicant.",
+        "zh-Hans": "绘制四阶段流程，为每次交接确定责任人、就绪条件及申请人可见状态。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false,
+      "materials": {
+        "title": {
+          "ru": "Материалы учебной ситуации",
+          "en": "Fictional case materials",
+          "zh-Hans": "虚构案例材料"
+        },
+        "note": {
+          "ru": "Все числа и обстоятельства ниже придуманы для упражнения. Это не статистика ведомства.",
+          "en": "All figures and circumstances below are fictional. They are not agency statistics.",
+          "zh-Hans": "以下数字和情境均为虚构，不是机关统计。"
+        },
+        "headers": [
+          {
+            "ru": "Этап",
+            "en": "Stage",
+            "zh-Hans": "阶段"
+          },
+          {
+            "ru": "Условное время",
+            "en": "Fictional duration",
+            "zh-Hans": "虚构耗时"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "ru": "Приём",
+              "en": "Intake",
+              "zh-Hans": "受理"
+            },
+            {
+              "ru": "1 день",
+              "en": "1 day",
+              "zh-Hans": "1天"
+            }
+          ],
+          [
+            {
+              "ru": "Ожидание передачи",
+              "en": "Waiting for hand-off",
+              "zh-Hans": "等待交接"
+            },
+            {
+              "ru": "10 дней",
+              "en": "10 days",
+              "zh-Hans": "10天"
+            }
+          ],
+          [
+            {
+              "ru": "Экспертиза",
+              "en": "Assessment",
+              "zh-Hans": "审查"
+            },
+            {
+              "ru": "4 дня",
+              "en": "4 days",
+              "zh-Hans": "4天"
+            }
+          ],
+          [
+            {
+              "ru": "Оформление ответа",
+              "en": "Final response",
+              "zh-Hans": "最终答复"
+            },
+            {
+              "ru": "2 дня",
+              "en": "2 days",
+              "zh-Hans": "2天"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "water-program-budget",
+      "authorityId": "rosvodresursy",
+      "title": {
+        "ru": "Две стройки или один крупный проект?",
+        "en": "Two projects or one large one?",
+        "zh-Hans": "两个项目还是一个大项目？"
+      },
+      "trackId": "PROGRAM",
+      "source": {
+        "title": {
+          "ru": "Росводресурсы: об агентстве",
+          "en": "Federal Agency for Water Resources: agency profile",
+          "zh-Hans": "联邦水资源署：机关概况"
+        },
+        "url": "https://voda.gov.ru/favr/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росводресурсы оказывают государственные услуги и управляют федеральным имуществом в сфере водных ресурсов. Планирование водохозяйственных мероприятий – содержательная область для учебной пробы управленческой работы.",
+        "en": "The agency provides public services and manages federal property in water resources. Water-management planning provides the subject matter for this public-administration exercise.",
+        "zh-Hans": "该署在水资源领域提供公共服务并管理联邦财产。水务规划是本项公共管理练习的主题。"
+      },
+      "situation": {
+        "ru": "Учебная программа располагает 10 условными единицами бюджета. По условиям упражнения в неё включаются только проекты с готовой документацией, которые можно завершить в текущем году. Проекты независимы; сравниваемый эффект измерен одним способом. Какой набор отвечает всем условиям?",
+        "en": "A fictional programme has 10 budget units. Under this exercise’s rules, only projects with complete documentation that can finish this year qualify. Projects are independent and their effects are measured consistently. Which set meets all conditions?",
+        "zh-Hans": "虚构计划有10个预算单位。按练习规则，只有文件齐备且可在今年完成的项目才可入选。项目相互独立，效果衡量一致。哪个组合满足全部条件？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "А и Б: вместе они дадут самый большой эффект.",
+            "en": "A and B: together they have the largest effect.",
+            "zh-Hans": "A和B：总效果最大。"
+          },
+          "feedback": {
+            "ru": "Стоимость 6 + 6 = 12 превышает бюджет. У проекта Б также не выполнено условие готовности.",
+            "en": "The cost of 6 + 6 = 12 exceeds the budget. Project B also fails the readiness condition.",
+            "zh-Hans": "成本6＋6＝12，超过预算；B还不满足就绪要求。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Только Б: у него наибольшее число получателей.",
+            "en": "B alone: it has the largest beneficiary count.",
+            "zh-Hans": "只选B：受益人数最多。"
+          },
+          "feedback": {
+            "ru": "Единственного показателя недостаточно. По явно заданным условиям Б нельзя завершить в текущем году; его можно рассматривать для следующего периода.",
+            "en": "One indicator is not enough. Under the stated rules, B cannot finish this year and may be considered for a later period.",
+            "zh-Hans": "单一指标不足以决策。按规则，B今年无法完成，可考虑后续期间。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "А и В: бюджет 10, оба готовы; Б оставить в отдельном плане подготовки.",
+            "en": "A and C: total cost 10, both ready; keep B in a separate preparation plan.",
+            "zh-Hans": "A和C：总成本10，均已就绪；将B纳入单独的准备计划。"
+          },
+          "feedback": {
+            "ru": "При этих учебных допущениях вариант допустим: 6 + 4 = 10 и 450 + 250 = 700 получателей. В реальной программе потребовались бы также обоснование рисков, затрат и установленных приоритетов.",
+            "en": "Under these fictional assumptions this is feasible: 6 + 4 = 10 and 450 + 250 = 700 beneficiaries. A real programme would also require evidence on risks, costs and statutory priorities.",
+            "zh-Hans": "在这些虚构假设下可行：6＋4＝10，受益人数450＋250＝700。真实计划还需核实风险、成本和法定优先事项。"
+          },
+          "recommended": true
+        }
+      ],
+      "insight": {
+        "ru": "Управление программой требует связывать эффект, ресурсы и готовность. Самый крупный проект не всегда допустим в заданном периоде.",
+        "en": "Programme management links impact, resources and readiness. The largest project is not always feasible in the chosen period.",
+        "zh-Hans": "项目管理关联效果、资源和就绪程度。最大项目不一定能在选定期间实施。"
+      },
+      "task": {
+        "ru": "Измените одно условие: бюджет стал 12, а Б получил готовую документацию. Пересмотрите набор и укажите, какие допущения позволили изменить решение.",
+        "en": "Change one condition: the budget is now 12 and B has complete documentation. Reconsider the set and identify the assumptions behind your changed decision.",
+        "zh-Hans": "改变条件：预算为12，B文件齐备。重新选择组合，并指出决策变化依赖哪些假设。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false,
+      "materials": {
+        "title": {
+          "ru": "Материалы учебной ситуации",
+          "en": "Fictional case materials",
+          "zh-Hans": "虚构案例材料"
+        },
+        "note": {
+          "ru": "Все числа и обстоятельства ниже придуманы для упражнения. Это не статистика ведомства.",
+          "en": "All figures and circumstances below are fictional. They are not agency statistics.",
+          "zh-Hans": "以下数字和情境均为虚构，不是机关统计。"
+        },
+        "headers": [
+          {
+            "ru": "Проект",
+            "en": "Project",
+            "zh-Hans": "项目"
+          },
+          {
+            "ru": "Бюджет",
+            "en": "Cost",
+            "zh-Hans": "成本"
+          },
+          {
+            "ru": "Получатели",
+            "en": "Beneficiaries",
+            "zh-Hans": "受益人数"
+          },
+          {
+            "ru": "Готовность",
+            "en": "Ready this year",
+            "zh-Hans": "今年已就绪"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "ru": "А",
+              "en": "A",
+              "zh-Hans": "A"
+            },
+            {
+              "ru": "6",
+              "en": "6",
+              "zh-Hans": "6"
+            },
+            {
+              "ru": "450",
+              "en": "450",
+              "zh-Hans": "450"
+            },
+            {
+              "ru": "Да",
+              "en": "Yes",
+              "zh-Hans": "是"
+            }
+          ],
+          [
+            {
+              "ru": "Б",
+              "en": "B",
+              "zh-Hans": "B"
+            },
+            {
+              "ru": "6",
+              "en": "6",
+              "zh-Hans": "6"
+            },
+            {
+              "ru": "800",
+              "en": "800",
+              "zh-Hans": "800"
+            },
+            {
+              "ru": "Нет",
+              "en": "No",
+              "zh-Hans": "否"
+            }
+          ],
+          [
+            {
+              "ru": "В",
+              "en": "C",
+              "zh-Hans": "C"
+            },
+            {
+              "ru": "4",
+              "en": "4",
+              "zh-Hans": "4"
+            },
+            {
+              "ru": "250",
+              "en": "250",
+              "zh-Hans": "250"
+            },
+            {
+              "ru": "Да",
+              "en": "Yes",
+              "zh-Hans": "是"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "youth-project-outcomes",
+      "authorityId": "rosmolodezh",
+      "title": {
+        "ru": "Посещения или результат проекта?",
+        "en": "Visits or project outcomes?",
+        "zh-Hans": "浏览量还是项目成果？"
+      },
+      "trackId": "PROGRAM",
+      "source": {
+        "title": {
+          "ru": "Росмолодёжь: поддержка студенческих программ и инициатив",
+          "en": "Rosmolodezh: support for student programmes and initiatives",
+          "zh-Hans": "青年事务署：支持学生计划和倡议"
+        },
+        "url": "https://fadm.gov.ru/news/rosmolodyezh-zavershila-priyem-zayavok-na-grantovyy-konkurs-sredi-vuzov/",
+        "checkedAt": "2026-09-05",
+        "retrieval": "indexed-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "Росмолодёжь поддерживает студенческие программы и инициативы через грантовые конкурсы. Использованный материал описывает завершённый приём заявок; он не означает, что набор сейчас открыт.",
+        "en": "Rosmolodezh supports student programmes and initiatives through grant competitions. The source describes an application window that has closed; it does not indicate a current open call.",
+        "zh-Hans": "青年事务署通过资助评选支持学生计划和倡议。来源中的报名期已结束，不代表当前开放申请。"
+      },
+      "situation": {
+        "ru": "В учебном проекте хотели научить студентов готовить социальные инициативы. Организаторы сообщают о 1200 просмотрах публикации, 100 регистрациях, 60 завершивших обучение и 12 разработанных проектах. Как построить честный отчёт?",
+        "en": "A fictional project aimed to teach students to develop social initiatives. Organisers report 1,200 post views, 100 registrations, 60 course completions and 12 developed projects. How should the results be reported?",
+        "zh-Hans": "虚构项目旨在教学生设计社会倡议。组织者报告1200次浏览、100人注册、60人完成课程和12个完成的项目。应如何报告成果？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Показать охват, прохождение и подготовленные проекты отдельно; заранее определить, что считается готовым проектом.",
+            "en": "Report reach, course completion and developed projects separately; define a completed project in advance.",
+            "zh-Hans": "分别报告传播覆盖、课程完成和项目成果，并事先定义何谓完成的项目。"
+          },
+          "feedback": {
+            "ru": "Вы различаете коммуникационный охват, участие и учебный результат. Число проектов само по себе ещё не доказывает последующего социального эффекта.",
+            "en": "This separates communication reach, participation and educational output. The project count alone does not prove subsequent social impact.",
+            "zh-Hans": "这区分了传播、参与和学习产出。项目数量本身不证明后续社会影响。"
+          },
+          "recommended": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Сложить все четыре числа и назвать сумму числом получателей результата.",
+            "en": "Add all four figures and call the sum the number of beneficiaries.",
+            "zh-Hans": "将四个数字相加，称为受益人数。"
+          },
+          "feedback": {
+            "ru": "Одни и те же люди могут учитываться на нескольких этапах, а просмотры могут быть повторными. Сумма 1372 не является числом уникальных участников.",
+            "en": "The same people can appear at several stages, and views may repeat. The total of 1,372 is not a unique participant count.",
+            "zh-Hans": "同一人可能出现在多个阶段，浏览也可能重复。1372不是独立参与人数。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Оставить только 1200 просмотров: это самое убедительное число.",
+            "en": "Use only the 1,200 views because it is the most impressive number.",
+            "zh-Hans": "只用1200次浏览，因为这个数字最漂亮。"
+          },
+          "feedback": {
+            "ru": "Охват не отвечает на вопрос, научились ли участники готовить инициативы. Выбор удобной метрики скрывает цель проекта.",
+            "en": "Reach does not establish whether participants learned to develop initiatives. Selecting the convenient metric obscures the project’s objective.",
+            "zh-Hans": "传播覆盖不证明学会了设计倡议。选择方便的指标会掩盖项目目标。"
+          },
+          "recommended": false
+        }
+      ],
+      "insight": {
+        "ru": "Работа с молодёжными программами включает оценку результатов и проектную логику, а не только организацию мероприятий.",
+        "en": "Youth programmes involve outcome evaluation and project design, not only organising events.",
+        "zh-Hans": "青年计划包括成果评估和项目设计，不只是组织活动。"
+      },
+      "task": {
+        "ru": "Предложите три показателя: охват, учебный результат и изменение через месяц. Для каждого назовите источник данных и риск двойного счёта.",
+        "en": "Propose three indicators: reach, learning output and change after one month. Give each a data source and a risk of double counting.",
+        "zh-Hans": "提出传播、学习产出和一个月后变化三项指标，分别说明来源及重复计数风险。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false,
+      "materials": {
+        "title": {
+          "ru": "Материалы учебной ситуации",
+          "en": "Fictional case materials",
+          "zh-Hans": "虚构案例材料"
+        },
+        "note": {
+          "ru": "Все числа и обстоятельства ниже придуманы для упражнения. Это не статистика ведомства.",
+          "en": "All figures and circumstances below are fictional. They are not agency statistics.",
+          "zh-Hans": "以下数字和情境均为虚构，不是机关统计。"
+        },
+        "headers": [
+          {
+            "ru": "Показатель",
+            "en": "Indicator",
+            "zh-Hans": "指标"
+          },
+          {
+            "ru": "Учебное значение",
+            "en": "Fictional value",
+            "zh-Hans": "虚构数值"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "ru": "Просмотры публикации",
+              "en": "Post views",
+              "zh-Hans": "帖子浏览量"
+            },
+            {
+              "ru": "1200",
+              "en": "1,200",
+              "zh-Hans": "1200"
+            }
+          ],
+          [
+            {
+              "ru": "Регистрации",
+              "en": "Registrations",
+              "zh-Hans": "注册人数"
+            },
+            {
+              "ru": "100",
+              "en": "100",
+              "zh-Hans": "100"
+            }
+          ],
+          [
+            {
+              "ru": "Завершили обучение",
+              "en": "Completed the course",
+              "zh-Hans": "完成课程"
+            },
+            {
+              "ru": "60",
+              "en": "60",
+              "zh-Hans": "60"
+            }
+          ],
+          [
+            {
+              "ru": "Подготовленные проекты",
+              "en": "Developed projects",
+              "zh-Hans": "完成的项目"
+            },
+            {
+              "ru": "12",
+              "en": "12",
+              "zh-Hans": "12"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "health-response-quality",
+      "authorityId": "roszdravnadzor",
+      "title": {
+        "ru": "Ответ отправлен. Вопрос решён?",
+        "en": "Reply sent. Problem solved?",
+        "zh-Hans": "已发答复，问题解决了吗？"
+      },
+      "trackId": "INSPECT",
+      "source": {
+        "title": {
+          "ru": "Росздравнадзор: оценка качества ответа на обращение",
+          "en": "Roszdravnadzor: feedback on responses to enquiries",
+          "zh-Hans": "卫生监督局：对答复质量的反馈"
+        },
+        "url": "https://www.roszdravnadzor.gov.ru/services/form",
+        "checkedAt": "2026-09-05",
+        "retrieval": "full-page",
+        "language": "ru"
+      },
+      "fact": {
+        "ru": "В официальной анкете Росздравнадзора запрашиваются сведения о повторных обращениях, сроках ответа и удовлетворённости. Эти характеристики позволяют обсуждать качество работы с обращениями, не сводя его к числу отправленных писем.",
+        "en": "The official feedback form asks about repeated enquiries, response timing and satisfaction. These dimensions support discussing response quality beyond the number of letters sent.",
+        "zh-Hans": "官方反馈表询问重复来信、答复时间和满意度，可支持讨论超出发信数量的质量问题。"
+      },
+      "situation": {
+        "ru": "В учебной ситуации подразделение ответило на 100 обращений, но 30 заявителей снова задали тот же вопрос. Руководитель просит улучшить следующий цикл работы. Какое действие наиболее содержательно?",
+        "en": "In this fictional case a unit answered 100 enquiries, but 30 applicants asked the same question again. The supervisor wants to improve the next cycle. What is the most meaningful action?",
+        "zh-Hans": "虚构案例中，一个单位答复了100件咨询，但30名申请者重复询问同一问题。负责人希望改进下一轮工作。最有意义的行动是什么？"
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Считать все обращения решёнными: письма уже отправлены.",
+            "en": "Count every enquiry as resolved because replies were sent.",
+            "zh-Hans": "因为已发出答复，将所有事项标为已解决。"
+          },
+          "feedback": {
+            "ru": "Отправка письма – действие подразделения. Она не подтверждает, что заявитель получил ответ по существу и понял следующий шаг.",
+            "en": "Sending a letter is an internal action. It does not establish whether the applicant received a substantive answer or understood what to do next.",
+            "zh-Hans": "发信是内部动作，不证明申请者得到实质答复或理解下一步行动。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Убрать повторные обращения из отчёта, чтобы не портить показатель.",
+            "en": "Remove repeated enquiries from the report so they do not spoil the metric.",
+            "zh-Hans": "从报告中删除重复来信，以免影响指标。"
+          },
+          "feedback": {
+            "ru": "Так исчезнет сигнал о возможном недостатке процесса. Повторы полезно различать по причинам, а не скрывать.",
+            "en": "This hides a possible process problem. Repeated enquiries should be classified by reason, not concealed.",
+            "zh-Hans": "这隐藏了可能的流程问题。应按原因分类，而不是隐瞒。"
+          },
+          "recommended": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Разобрать обезличенную выборку повторов: что не поняли, какие сведения отсутствовали и какой следующий шаг был объяснён.",
+            "en": "Review an anonymised sample of repeated enquiries: what was unclear, what information was missing and which next step was explained.",
+            "zh-Hans": "分析匿名重复咨询样本：哪些内容不清楚、信息缺失，以及是否说明下一步。"
+          },
+          "feedback": {
+            "ru": "Так можно проверить конкретные причины повторов и улучшить ответ. Не все повторы означают ошибку: часть может быть связана с новыми обстоятельствами.",
+            "en": "This investigates specific causes and helps improve replies. Not every repeat indicates an error: some may reflect changed circumstances.",
+            "zh-Hans": "这调查具体原因并支持改进。并非每次重复都表示错误，也可能来自情况变化。"
+          },
+          "recommended": true
+        }
+      ],
+      "insight": {
+        "ru": "Даже в надзорном органе понятность коммуникации – важная часть работы. Этот кейс касается организации обращений, не медицинских решений.",
+        "en": "Clear communication matters even in a supervisory agency. This case concerns enquiry handling, not clinical decisions.",
+        "zh-Hans": "清晰沟通在监督机关同样重要。本案例涉及咨询处理，不涉及临床决策。"
+      },
+      "task": {
+        "ru": "Напишите понятный шаблон из трёх частей: что рассмотрено; что установлено; какой следующий шаг доступен. Не включайте персональные и медицинские данные.",
+        "en": "Write a clear three-part template: what was examined; what was established; the available next step. Do not include personal or medical information.",
+        "zh-Hans": "编写清晰的三部分模板：审查了什么、确认了什么、下一步可做什么。勿包含个人或医疗信息。"
+      },
+      "kind": "fictional-training-case",
+      "affectsScore": false,
+      "materials": {
+        "title": {
+          "ru": "Материалы учебной ситуации",
+          "en": "Fictional case materials",
+          "zh-Hans": "虚构案例材料"
+        },
+        "note": {
+          "ru": "Все числа и обстоятельства ниже придуманы для упражнения. Это не статистика ведомства.",
+          "en": "All figures and circumstances below are fictional. They are not agency statistics.",
+          "zh-Hans": "以下数字和情境均为虚构，不是机关统计。"
+        },
+        "headers": [
+          {
+            "ru": "Событие",
+            "en": "Event",
+            "zh-Hans": "事项"
+          },
+          {
+            "ru": "Учебное число",
+            "en": "Fictional count",
+            "zh-Hans": "虚构数量"
+          }
+        ],
+        "rows": [
+          [
+            {
+              "ru": "Первые обращения",
+              "en": "Initial enquiries",
+              "zh-Hans": "首次咨询"
+            },
+            {
+              "ru": "100",
+              "en": "100",
+              "zh-Hans": "100"
+            }
+          ],
+          [
+            {
+              "ru": "Повторили тот же вопрос",
+              "en": "Repeated the same question",
+              "zh-Hans": "重复同一问题"
+            },
+            {
+              "ru": "30",
+              "en": "30",
+              "zh-Hans": "30"
+            }
+          ],
+          [
+            {
+              "ru": "Причины повторов изучены",
+              "en": "Reasons reviewed",
+              "zh-Hans": "已分析原因"
+            },
+            {
+              "ru": "Пока нет",
+              "en": "Not yet",
+              "zh-Hans": "尚未"
+            }
+          ]
+        ]
+      }
+    }
+  ]
+}

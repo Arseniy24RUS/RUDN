@@ -1,0 +1,176 @@
+@font-face{font-family:'RUDN CJK';src:url('./fonts/noto-sans-sc.woff2') format('woff2');font-weight:400;font-display:swap;unicode-range:U+3000-30FF,U+3400-9FFF,U+F900-FAFF,U+FF00-FFEF;}
+html:lang(zh-Hans),[lang=zh-Hans]{font-family:'RUDN CJK',"Segoe UI",Arial,sans-serif;}
+html:lang(zh-Hans) h1,html:lang(zh-Hans) h2,html:lang(zh-Hans) h3,html:lang(zh-Hans) .hero-core strong{font-family:inherit;}
+/* Release 1.0: finish the existing RUDN design without external dependencies. */
+:focus-visible { outline:3px solid #0063ac; outline-offset:4px; }
+.workflow-aside :focus-visible,.hero :focus-visible { outline-color:#fff; }
+button,input,select,textarea,a { touch-action:manipulation; }
+textarea { font:inherit; }
+.session-strip { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:12px 0 0; font-size:13px; color:#385575; }
+.session-strip p { margin:0; display:flex; align-items:center; gap:8px; }
+.session-strip svg { width:17px; height:17px; }
+.session-strip[data-status="saved"] p::before { content:""; width:7px; height:7px; background:#187255; border-radius:50%; }
+.session-strip[data-status="failed"] { color:#9d3347; }
+.session-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.session-actions .button { min-height:36px; padding:6px 12px; font-size:12px; box-shadow:none; }
+.session-import { position:relative; overflow:hidden; }
+.session-import input { position:absolute; inset:0; width:100%; opacity:0; cursor:pointer; }
+.session-import:focus-within { outline:3px solid #0063ac; outline-offset:3px; }
+.hero { min-height:560px; }
+.hero h1 { font-size:clamp(38px,4.5vw,72px); max-width:900px; overflow-wrap:normal; }
+.hero-lead { max-width:710px; }
+.hero-boundary { font-size:13px; line-height:1.6; color:#fff; max-width:670px; margin:20px 0 0; }
+.home-launchpad { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:26px 0; }
+.home-launchpad article { background:#fff; border:1px solid var(--line); border-radius:20px; padding:24px; }
+.home-launchpad h2 { font-size:19px; margin:0 0 10px; }
+.home-launchpad p { font-size:14px; line-height:1.7; color:#526782; }
+.home-faq { max-width:940px; margin:54px auto 15px; }
+.home-faq>h2 { font-size:28px; margin:0 0 20px; }
+.home-faq details { padding:18px 0; border-bottom:1px solid var(--line); }
+.home-faq summary { font-weight:650; cursor:pointer; line-height:1.6; }
+.home-faq p { line-height:1.75; max-width:780px; color:#48617d; }
+.question-map { margin-top:22px; }
+.question-map summary { cursor:pointer; padding:10px 0; font-weight:650; }
+.question-map-grid { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); gap:7px; padding:12px 0; }
+.question-map-grid button { min-height:44px; padding:5px; border:1px solid #a9c5dc; border-radius:9px; background:#fff; color:#214764; cursor:pointer; }
+.question-map-grid button.answered { background:#e5f3ff; border-color:#438bc5; }
+.question-map-grid button[aria-current="step"] { background:#075ba4; color:#fff; border-color:#075ba4; font-weight:700; }
+.question-map p { font-size:13px; color:#48617d; }
+.review-panel { padding:24px; border:1px solid var(--line); border-radius:18px; background:#f4f9fe; margin:24px 0; }
+.review-panel h2 { margin-top:0; font-size:22px; }
+.review-panel>p { color:#48617d; line-height:1.7; }
+.review-summary { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.review-summary h3 { font-size:15px; }
+.review-summary ol { padding-left:22px; line-height:1.8; }
+.review-answers { margin-top:16px; }
+.review-answers summary { cursor:pointer; font-weight:650; padding:8px 0; }
+.review-answer { width:100%; display:grid; grid-template-columns:24px minmax(0,1fr) 42px; gap:12px; text-align:left; padding:14px 0; background:transparent; border:0; border-bottom:1px solid #d6e4ef; cursor:pointer; font-size:14px; line-height:1.6; }
+.review-answer strong { color:#075ba4; text-align:right; }
+.save-recovery { border:1px solid #d8af70; padding:18px; background:#fff9ed; border-radius:14px; margin:16px 0; color:#694414; }
+.save-recovery p { line-height:1.6; }
+.save-recovery .button { margin:4px; }
+.release-version { font-size:12px; color:#526782; margin-left:10px; }
+.boot-error { max-width:600px; margin:30px; text-align:center; line-height:1.7; }
+.boot-error pre { white-space:pre-wrap; overflow-wrap:anywhere; max-width:100%; font-size:12px; text-align:left; }
+.nav-more { position:relative; }
+.view h1:focus,.question-card h1:focus { outline:none; }
+.vac-setup pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+@media(max-width:1100px) {
+ .home-launchpad { gap:12px; }
+ .home-launchpad article { padding:20px; }
+ .hero { min-height:auto; }
+}
+@media(max-width:680px) {
+ .hero h1 { font-size:37px; line-height:1.12; }
+ .hero-boundary { font-size:12px; }
+ .home-launchpad { grid-template-columns:1fr; }
+ .home-faq { margin-top:32px; }
+ .session-strip { font-size:12px; gap:6px; }
+ .session-actions { width:100%; }
+ .session-actions .button { min-height:44px; }
+ .review-panel { padding:18px; }
+ .review-summary { grid-template-columns:1fr; gap:4px; }
+ .question-map-grid { grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+ input,select,textarea { font-size:16px!important; }
+ .priority-toggle,.low-toggle,.topic-options button,.language-control button { min-height:44px; }
+ .hero-visual { display:none; }
+ .keyboard-hint { display:none; }
+}
+@media print {
+ .session-strip,.question-map,.home-launchpad,.home-faq,.release-version,.vac-card-link,.vac-result-preview { display:none!important; }
+ .equal-results { display:block!important; }
+ .full-ranking { break-inside:auto; }
+ .ranking-row { break-inside:avoid; }
+}
+
+/* Contrast corrections measured against the rendered surfaces. */
+.text-link { color:#00669c; }
+.ranking-position,.language-method-note,.structure-focus p,.branch-node small,
+.scenario-save-panel small,.workspace-empty p,.resource-top>span,.resource-card p,
+.resource-meta,.ps-place { color:#48617b; }
+.structure-focus .step-kicker { color:#006a9d; }
+.privacy-seal small { color:#366b5b; font-size:11px; }
+.resource-top .status-tag { color:#145f86; }
+.hero-core strong { font-size:24px; line-height:1.25; }
+
+.ps-card .ps-place {color:#48617b;}
+.resource-card.archived .status-tag {color:#5c6670;}
+
+.workflow-shell>* , .condition-card>* , .condition-title>* , .section-heading>* , .methodology-hero>* , .vac-heading>* {min-width:0;}
+.workflow-aside {align-self:start;min-height:0;}
+.live-profile-disclosure summary {cursor:pointer;font-size:13px;line-height:1.6;margin-top:20px;}
+.live-profile-disclosure .live-profile {margin-top:16px;}
+@media(max-width:680px){
+ .workflow-shell {grid-template-columns:minmax(0,1fr);min-height:0;}
+ .workflow-aside {padding:16px 20px;min-height:0;}
+ .workflow-intro h2,.workflow-aside .aside-note,.live-profile-disclosure {display:none;}
+ .workflow-intro p {font-size:13px;margin:8px 0 0;}
+ .workflow-topline {gap:8px;flex-wrap:wrap;}
+ .workflow-topline .button {font-size:12px;padding:8px;}
+ .progress-copy {gap:8px;font-size:12px;}
+ .answer-options {grid-template-columns:1fr;gap:8px;margin-top:24px;}
+ .answer-option {display:flex;flex-direction:row;justify-content:flex-start;text-align:left;min-height:52px;padding:8px 12px;gap:12px;}
+ .answer-option span {display:block;font-size:14px;color:#405c79;}
+ .answer-option b {flex:0 0 30px;}
+ .condition-list,.condition-card {grid-template-columns:minmax(0,1fr);}
+ .condition-title {grid-template-columns:35px minmax(0,1fr);gap:10px;}
+ .condition-title .condition-icon {width:35px;height:35px;}
+ .condition-title h2 {font-size:16px;overflow-wrap:anywhere;}
+ .condition-anchors {font-size:11px;gap:16px;}
+ .condition-anchors span {min-width:0;flex:1;}
+ .condition-anchors span:last-child {text-align:right;}
+ .condition-control {min-width:0;}
+ .condition-scale {grid-template-columns:repeat(5,minmax(0,1fr));}
+ .section-heading h1,.methodology-hero h1 {font-size:32px;line-height:1.15;overflow-wrap:anywhere;}
+ .directory-heading {display:block;}
+ .directory-counter {text-align:left;margin-top:12px;}
+ .directory-counter strong {display:inline;font-size:24px;}
+ .directory-counter span {display:inline;margin-left:8px;}
+ .methodology-hero {grid-template-columns:minmax(0,1fr);}
+ .version-badge strong {font-size:23px;white-space:normal;}
+ .vac-heading>div {width:100%;}
+ .vac-heading h1 {font-size:27px;overflow-wrap:anywhere;}
+ .question-map-grid {grid-template-columns:repeat(6,minmax(0,1fr));}
+}
+
+.saved-scenario .saved-scenario-heading p,.scenario-table caption,.scenario-table td small {color:#48617b;}
+
+.language-control [lang=zh-Hans] {font-family:"RUDN CJK",sans-serif;}
+.mobile-bottom-nav button,.bottom-nav button {color:#48617b;}
+#scenario-count,.comparison-hint {color:#48617b;}
+
+@media(max-width:680px){
+ .question-card {padding:22px 20px;min-height:0;}
+ .question-card .question-icon {display:none;}
+ .question-card h1 {font-size:24px;line-height:1.28;letter-spacing:-.02em;scroll-margin-top:100px;}
+ .question-card .question-prompt {margin-bottom:12px;}
+ .question-controls {padding-top:22px;}
+}
+
+@media print{
+ .view {animation:none!important;transform:none!important;opacity:1!important;min-height:0;}
+ .view * {animation:none!important;transition:none!important;}
+ .results-hero {overflow:visible;padding:24px;border-radius:12px;}
+ .results-intro h1 {font-size:30px;line-height:1.15;}
+}
+
+@media print{#toast,.toast,.button,.icon-button {display:none!important;} .results-section-header {display:block;}}
+
+@page {size:A4;margin:12mm;}
+@media print{
+ .match-card,.match-card:nth-child(n+4) {min-height:0;padding:16px;}
+ .match-card h3 {margin-top:12px;}
+ .discovery-card,.result-note,.development-card {break-inside:avoid;}
+ .ranking-compare,.ranking-row>svg {display:none!important;}
+ .results-section-header {break-after:avoid;}
+}
+
+@media print{.results-section-header {break-inside:avoid;} .ranking-row {padding:8px 10px;min-height:0;}}
+
+html:lang(zh-Hans) body {font-family:"RUDN CJK","Segoe UI",Arial,sans-serif;}
+
+@media print{
+ .development-grid {display:block!important;}
+ .development-card,.development-card:last-child {min-height:0;padding:18px;margin:0 0 12px;}
+ .results-section-header {break-after:auto;}
+}

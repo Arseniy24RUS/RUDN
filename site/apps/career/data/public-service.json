@@ -1,0 +1,1335 @@
+{
+  "schemaVersion": 1,
+  "registryVersion": "ru-public-service-sample-2026-09-05-v1",
+  "modelVersion": "8.0.0",
+  "country": "RU",
+  "checkedAt": "2026-09-05",
+  "coverage": "curated-sample-not-national-register",
+  "records": [
+    {
+      "id": "state-duma-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Государственной Думы Федерального Собрания Российской Федерации",
+        "en": "Staff of the State Duma of the Federal Assembly of the Russian Federation",
+        "zh-Hans": "俄罗斯联邦会议国家杜马机关"
+      },
+      "cohort": "federal-legislative",
+      "level": "federal",
+      "branch": "legislative",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Москва",
+        "en": "Moscow",
+        "zh-Hans": "莫斯科"
+      },
+      "mission": {
+        "ru": "Организационное, правовое, аналитическое и информационное обеспечение работы палаты. Карьерный объект – работа в Аппарате, а не депутатский мандат.",
+        "en": "Organisational, legal, analytical and information support for the chamber. The career object is staff work, not an elected seat.",
+        "zh-Hans": "为议院提供组织、法律、分析和信息保障。职业对象是机关工作人员，不是当选议员。"
+      },
+      "verifiedUnits": [
+        "Экспертно-аналитическое управление",
+        "Управление организационного обеспечения законодательного процесса"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://duma.gov.ru/duma/staff/",
+          "title": {
+            "ru": "Структура Аппарата Государственной Думы",
+            "en": "State Duma staff structure",
+            "zh-Hans": "国家杜马机关结构"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        },
+        {
+          "id": "regulation",
+          "url": "https://duma.gov.ru/duma/staff/status/",
+          "title": {
+            "ru": "Положение об Аппарате",
+            "en": "Regulation on the staff organisation",
+            "zh-Hans": "机关条例"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "POLICY",
+          "importance": 3,
+          "title": {
+            "ru": "Аналитическое сопровождение законодательной работы",
+            "en": "Analysis supporting legislative work",
+            "zh-Hans": "立法工作的分析支持"
+          },
+          "rationale": {
+            "ru": "Публичная структура подтверждает аналитическое управление. Связь с треком и его веса – наша учебная интерпретация.",
+            "en": "The public structure identifies an analytical unit. The track mapping and weights are our teaching interpretation.",
+            "zh-Hans": "公开结构确认分析部门；方向映射及权重是教学解释。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "ECO",
+              "weight": 0.6
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Организация законодательного процесса",
+            "en": "Organising the legislative process",
+            "zh-Hans": "立法程序的组织保障"
+          },
+          "rationale": {
+            "ru": "Организационное обеспечение не означает самостоятельного принятия законов сотрудником аппарата.",
+            "en": "Organisational support does not mean that staff independently enact laws.",
+            "zh-Hans": "组织保障不意味着机关工作人员独立制定法律。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "LEGAL",
+          "importance": 2,
+          "title": {
+            "ru": "Правовое сопровождение",
+            "en": "Legal support",
+            "zh-Hans": "法律支持"
+          },
+          "rationale": {
+            "ru": "Правовое направление требует отдельно сверять требования к юридическому образованию.",
+            "en": "Legal roles require a separate check of law-degree requirements.",
+            "zh-Hans": "法律工作须另行核对法学学历要求。"
+          },
+          "sectors": [
+            {
+              "id": "SEC",
+              "weight": 0.7
+            },
+            {
+              "id": "ADM",
+              "weight": 1
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Учебная проба: составьте паспорт законопроекта из официальной карточки – предмет, стадия рассмотрения, ответственный комитет и источник. Не оценивайте политические взгляды автора.",
+        "en": "Learning task: use an official bill record to identify its subject, stage, responsible committee and source; do not assess the author’s political views.",
+        "zh-Hans": "练习：从官方法案资料提取主题、审议阶段、负责委员会和来源，不评价作者政治立场。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "federation-council-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Совета Федерации Федерального Собрания Российской Федерации",
+        "en": "Staff of the Federation Council of the Federal Assembly of the Russian Federation",
+        "zh-Hans": "俄罗斯联邦会议联邦委员会机关"
+      },
+      "cohort": "federal-legislative",
+      "level": "federal",
+      "branch": "legislative",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Москва",
+        "en": "Moscow",
+        "zh-Hans": "莫斯科"
+      },
+      "mission": {
+        "ru": "Обеспечение деятельности Совета Федерации и его комитетов. Рассматриваются штатные обеспечивающие функции, не полномочия сенатора.",
+        "en": "Support for the Federation Council and its committees. This covers staff functions, not senators’ powers.",
+        "zh-Hans": "为联邦委员会及其委员会提供支持，涉及工作人员职能而非参议员权限。"
+      },
+      "verifiedUnits": [
+        "Информационно-аналитическое управление",
+        "Управление организационного обеспечения"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://council.gov.ru/structure/machinery/",
+          "title": {
+            "ru": "Аппарат Совета Федерации: структура",
+            "en": "Federation Council staff structure",
+            "zh-Hans": "联邦委员会机关结构"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "POLICY",
+          "importance": 3,
+          "title": {
+            "ru": "Информационно-аналитическая работа",
+            "en": "Information and analysis",
+            "zh-Hans": "信息与分析"
+          },
+          "rationale": {
+            "ru": "Подготовка материалов для парламентской работы сопоставлена с аналитикой, а не с принятием политических решений.",
+            "en": "Preparing parliamentary materials is mapped to analysis, not political decision-making.",
+            "zh-Hans": "编制议会材料映射为分析工作，而非政治决策。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "ECO",
+              "weight": 0.5
+            },
+            {
+              "id": "SOC",
+              "weight": 0.4
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "INTERNATIONAL",
+          "importance": 2,
+          "title": {
+            "ru": "Обеспечение международных связей",
+            "en": "Supporting international relations",
+            "zh-Hans": "国际联系保障"
+          },
+          "rationale": {
+            "ru": "В официальной структуре есть международное направление. Языковые и иные требования определяются конкретной должностью.",
+            "en": "The official structure includes international relations. Language and other requirements depend on the position.",
+            "zh-Hans": "官方结构包含国际联系方向；语言及其他要求依具体岗位确定。"
+          },
+          "sectors": [
+            {
+              "id": "INT",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.5
+            }
+          ],
+          "conditions": {
+            "FIELD": 3,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "DIGITAL",
+          "importance": 2,
+          "title": {
+            "ru": "Информационные технологии и документооборот",
+            "en": "IT and document workflows",
+            "zh-Hans": "信息技术与文书流转"
+          },
+          "rationale": {
+            "ru": "Цифровое обеспечение отражено в структуре; программирование не считается обязательной задачей любого выпускника ГМУ.",
+            "en": "Digital support appears in the structure; programming is not assumed to be a task for every public administration graduate.",
+            "zh-Hans": "结构包含数字保障；不假定每位公共管理毕业生都承担编程任务。"
+          },
+          "sectors": [
+            {
+              "id": "DIG",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.6
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Сопоставьте две справки по одной региональной проблеме: источники, период наблюдения и выводы. Предложите структуру краткой записки.",
+        "en": "Compare two briefings on one regional issue by sources, observation periods and conclusions. Propose a concise note outline.",
+        "zh-Hans": "按来源、观察期间和结论比较同一地区问题的两份简报，并拟定短报告结构。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "supreme-court-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Верховного Суда Российской Федерации",
+        "en": "Staff of the Supreme Court of the Russian Federation",
+        "zh-Hans": "俄罗斯联邦最高法院机关"
+      },
+      "cohort": "federal-judicial",
+      "level": "federal",
+      "branch": "judicial",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Москва",
+        "en": "Moscow",
+        "zh-Hans": "莫斯科"
+      },
+      "mission": {
+        "ru": "Обеспечение деятельности Верховного Суда. Сотрудник аппарата не осуществляет правосудие вместо судьи. Юридические процессуальные роли требуют отдельной проверки квалификации.",
+        "en": "Support for the Supreme Court. Staff do not administer justice in place of judges. Procedural legal roles require a separate qualification check.",
+        "zh-Hans": "为最高法院提供工作保障。工作人员不代替法官行使审判权。诉讼法律岗位须另行核对资格。"
+      },
+      "verifiedUnits": [
+        "Управление документооборота и делопроизводства",
+        "Финансово-экономическое управление"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://vsrf.ru/about/structure/224/",
+          "title": {
+            "ru": "Аппарат Верховного Суда: структура и назначение",
+            "en": "Supreme Court staff: structure and remit",
+            "zh-Hans": "最高法院机关结构与职责"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        },
+        {
+          "id": "hr",
+          "url": "https://www.vsrf.ru/about/hr/admission/conditions_carrying/",
+          "title": {
+            "ru": "Условия поступления на гражданскую службу",
+            "en": "Civil service entry conditions",
+            "zh-Hans": "公务员录用条件"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Организационно-документационное обеспечение",
+            "en": "Organisational and document support",
+            "zh-Hans": "组织与文书保障"
+          },
+          "rationale": {
+            "ru": "Документооборот и организация работы – обеспечивающие функции; модель не присваивает сотруднику судебные полномочия.",
+            "en": "Document and organisational work are support functions; the model assigns no judicial powers.",
+            "zh-Hans": "文书和组织工作是保障职能；模型不赋予审判权。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "SEC",
+              "weight": 0.3
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "FINANCE",
+          "importance": 3,
+          "title": {
+            "ru": "Финансово-экономическое обеспечение суда",
+            "en": "Financial support for the court",
+            "zh-Hans": "法院财政经济保障"
+          },
+          "rationale": {
+            "ru": "Самостоятельное финансово-экономическое подразделение подтверждено источником. Вес отражает учебное соответствие роли.",
+            "en": "A financial unit is documented. Its weight reflects an educational role match.",
+            "zh-Hans": "来源确认独立财务部门；权重仅表示教学角色匹配。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.5
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "DIGITAL",
+          "importance": 2,
+          "title": {
+            "ru": "Информатизация и связь",
+            "en": "IT and communications",
+            "zh-Hans": "信息化与通信"
+          },
+          "rationale": {
+            "ru": "Официальная структура включает ИТ-обеспечение. Технические требования к вакансии не заменяются интересом к данным.",
+            "en": "The structure includes IT support. Interest in data does not replace a vacancy’s technical requirements.",
+            "zh-Hans": "结构包括IT保障。对数据感兴趣不能替代职位技术要求。"
+          },
+          "sectors": [
+            {
+              "id": "DIG",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.5
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 4,
+            "SECURITY": 4
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Составьте схему движения учебного документа: регистрация, передача, срок, хранение. Не используйте реальные материалы дел и персональные данные.",
+        "en": "Map a fictional document workflow: registration, routing, deadline and storage. Do not use actual case files or personal data.",
+        "zh-Hans": "绘制虚构文书流程：登记、转交、期限和保存，不使用真实案卷或个人数据。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "constitutional-court-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Конституционного Суда Российской Федерации",
+        "en": "Staff of the Constitutional Court of the Russian Federation",
+        "zh-Hans": "俄罗斯联邦宪法法院机关"
+      },
+      "cohort": "federal-judicial",
+      "level": "federal",
+      "branch": "judicial",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Санкт-Петербург",
+        "en": "St Petersburg",
+        "zh-Hans": "圣彼得堡"
+      },
+      "mission": {
+        "ru": "Организационное и иное обеспечение Конституционного Суда. Работа в аппарате не является замещением должности судьи и не даёт права конституционного судопроизводства.",
+        "en": "Organisational and other support for the Constitutional Court. Staff work is not appointment as a judge and does not confer constitutional judicial powers.",
+        "zh-Hans": "为宪法法院提供组织等保障。机关任职不是法官任命，也不赋予宪法审判权。"
+      },
+      "verifiedUnits": [
+        "Управление государственной службы и кадров",
+        "Финансовое управление"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://www.ksrf.ru/about/apparat/",
+          "title": {
+            "ru": "Аппарат Конституционного Суда",
+            "en": "Constitutional Court staff structure",
+            "zh-Hans": "宪法法院机关结构"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Кадровое и организационное обеспечение",
+            "en": "HR and organisational support",
+            "zh-Hans": "人事与组织保障"
+          },
+          "rationale": {
+            "ru": "Кадровое направление сопоставлено с координацией процессов. Это не оценка возможности немедленного трудоустройства.",
+            "en": "HR work is mapped to process coordination, not an assessment of immediate employability.",
+            "zh-Hans": "人事工作映射为流程协调，不表示可立即录用。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "FINANCE",
+          "importance": 3,
+          "title": {
+            "ru": "Финансовое обеспечение",
+            "en": "Financial support",
+            "zh-Hans": "财务保障"
+          },
+          "rationale": {
+            "ru": "Финансовая функция подтверждена структурой. Требования к финансовому образованию и опыту проверяются в объявлении.",
+            "en": "The structure confirms a finance function. Education and experience requirements must be checked in the announcement.",
+            "zh-Hans": "结构确认财务职能；学历和经验要求以公告为准。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.5
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "INTERNATIONAL",
+          "importance": 2,
+          "title": {
+            "ru": "Международные связи аппарата",
+            "en": "Staff international relations",
+            "zh-Hans": "机关国际联系"
+          },
+          "rationale": {
+            "ru": "В структуре предусмотрены международные связи. Модель относится к обеспечению взаимодействия, а не к дипломатическому статусу.",
+            "en": "International relations are documented. The model concerns support work, not diplomatic status.",
+            "zh-Hans": "结构包含国际联系，模型指交流保障工作而非外交身份。"
+          },
+          "sectors": [
+            {
+              "id": "INT",
+              "weight": 1
+            },
+            {
+              "id": "SEC",
+              "weight": 0.4
+            },
+            {
+              "id": "ADM",
+              "weight": 0.4
+            }
+          ],
+          "conditions": {
+            "FIELD": 3,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Подготовьте перечень вопросов к кадровой странице: категория должности, образование, стаж, ограничения и порядок отбора. Не приравнивайте интерес к праву к юридической квалификации.",
+        "en": "Create a checklist for an HR page: position category, education, experience, restrictions and selection procedure. Interest in law is not a legal qualification.",
+        "zh-Hans": "列出人事页面核查项：岗位类别、学历、经历、限制和选拔程序。对法律感兴趣不等于具备法律资格。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "chelyabinsk-assembly-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Законодательного Собрания Челябинской области",
+        "en": "Staff of the Legislative Assembly of Chelyabinsk Region",
+        "zh-Hans": "车里雅宾斯克州立法会议机关"
+      },
+      "cohort": "regional",
+      "level": "regional",
+      "branch": "legislative",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Челябинская область",
+        "en": "Chelyabinsk Region",
+        "zh-Hans": "车里雅宾斯克州"
+      },
+      "mission": {
+        "ru": "Обеспечение работы регионального парламента. Кадровая страница прямо описывает гражданскую службу области в его аппарате. Это не федеральный территориальный орган.",
+        "en": "Support for the regional parliament. Its HR page describes regional civil service within the staff organisation, not a territorial office of a federal body.",
+        "zh-Hans": "为地区议会提供支持。人事页面明确说明州级公务员制度，不是联邦机关的地方分支。"
+      },
+      "verifiedUnits": [],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://www.zs74.ru/apparat",
+          "title": {
+            "ru": "Аппарат Законодательного Собрания",
+            "en": "Legislative Assembly staff",
+            "zh-Hans": "立法会议机关"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        },
+        {
+          "id": "hr",
+          "url": "https://www.zs74.ru/kadrovoe-obespechenie",
+          "title": {
+            "ru": "Кадровое обеспечение аппарата",
+            "en": "Staff HR information",
+            "zh-Hans": "机关人事信息"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Обеспечение деятельности регионального парламента",
+            "en": "Supporting a regional parliament",
+            "zh-Hans": "地区议会工作保障"
+          },
+          "rationale": {
+            "ru": "Кадровая страница подтверждает службу в аппарате. Узкие должности без изучения регламента не объявляются доступными.",
+            "en": "The HR page confirms staff civil service. No specific position is claimed to be accessible without checking its regulations.",
+            "zh-Hans": "人事页面确认机关公务员工作；未核对岗位规定，不宣称特定职位可进入。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "SOC",
+              "weight": 0.4
+            }
+          ],
+          "conditions": {
+            "FIELD": 2,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "LEGAL",
+          "importance": 2,
+          "title": {
+            "ru": "Правовое сопровождение региональной работы",
+            "en": "Legal support for regional work",
+            "zh-Hans": "地区工作法律支持"
+          },
+          "rationale": {
+            "ru": "Это учебное сопоставление правовой деятельности парламента; профильное образование необходимо проверять отдельно.",
+            "en": "An educational mapping of parliamentary legal work; specialist education requirements need separate checking.",
+            "zh-Hans": "这是议会法律工作的教学映射；须另行核对专业学历要求。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "SEC",
+              "weight": 0.6
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 3
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Найдите в официальной структуре различие между комитетом депутатов и аппаратом. Подберите одну кадровую норму и один вопрос, который она не разрешает без объявления о вакансии.",
+        "en": "Distinguish a committee of elected members from staff in the official structure. Identify one HR rule and a question that still requires a vacancy notice.",
+        "zh-Hans": "在官方结构中区分议员委员会和机关工作人员，找出一条人事规则及一个仍需职位公告才能回答的问题。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "stp-finance-committee",
+      "country": "RU",
+      "name": {
+        "ru": "Комитет финансов Санкт-Петербурга",
+        "en": "Finance Committee of St Petersburg",
+        "zh-Hans": "圣彼得堡财政委员会"
+      },
+      "cohort": "regional",
+      "level": "regional",
+      "branch": "executive",
+      "unitType": "authority",
+      "location": {
+        "ru": "Санкт-Петербург",
+        "en": "St Petersburg",
+        "zh-Hans": "圣彼得堡"
+      },
+      "mission": {
+        "ru": "Исполнительный орган государственной власти Санкт-Петербурга в финансово-бюджетной сфере. Санкт-Петербург – субъект РФ; этот комитет не относится к муниципальному уровню.",
+        "en": "A regional executive authority in finance and budgeting. St Petersburg is a federal subject; this committee is not a municipal authority.",
+        "zh-Hans": "圣彼得堡财政预算领域的地区行政机关。圣彼得堡是俄罗斯联邦主体，该委员会不是市政自治机关。"
+      },
+      "verifiedUnits": [],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://www.gov.spb.ru/gov/otrasl/finance/information/",
+          "title": {
+            "ru": "Комитет финансов: общая информация",
+            "en": "Finance Committee: official overview",
+            "zh-Hans": "财政委员会官方概况"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "official-indexed-text",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "FINANCE",
+          "importance": 3,
+          "title": {
+            "ru": "Региональные финансы и бюджет",
+            "en": "Regional finance and budgeting",
+            "zh-Hans": "地区财政与预算"
+          },
+          "rationale": {
+            "ru": "Предметная финансовая функция подтверждена официальным описанием. Веса – авторская настройка, не требования к поступлению.",
+            "en": "The official overview confirms the financial remit. Weights are authored settings, not admission requirements.",
+            "zh-Hans": "官方概况确认财政职能；权重为作者设置，不是录用要求。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "ECO",
+              "weight": 0.4
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "POLICY",
+          "importance": 2,
+          "title": {
+            "ru": "Анализ бюджетных решений",
+            "en": "Analysis of budget decisions",
+            "zh-Hans": "预算决策分析"
+          },
+          "rationale": {
+            "ru": "Аналитический трек выделен как учебная интерпретация бюджетной работы; штатная должность не заявляется.",
+            "en": "The analysis track is a teaching interpretation of budget work, not an asserted staffing position.",
+            "zh-Hans": "分析方向是预算工作的教学解释，不是对具体编制职位的声明。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "ECO",
+              "weight": 0.6
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Сравните план и исполнение бюджета за одинаковый период. Объясните, какие расходы относятся к региональному, а не муниципальному уровню.",
+        "en": "Compare budget plan and execution for the same period. Explain which spending belongs to the regional rather than municipal level.",
+        "zh-Hans": "比较同一期间的预算计划与执行，解释哪些支出属于地区而非市政层级。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "novosibirsk-mayor-office",
+      "country": "RU",
+      "name": {
+        "ru": "Мэрия города Новосибирска",
+        "en": "Mayor’s Office of Novosibirsk",
+        "zh-Hans": "新西伯利亚市政府"
+      },
+      "cohort": "municipal",
+      "level": "municipal",
+      "branch": "local-executive",
+      "unitType": "authority",
+      "location": {
+        "ru": "Новосибирск",
+        "en": "Novosibirsk",
+        "zh-Hans": "新西伯利亚"
+      },
+      "mission": {
+        "ru": "Реальный орган местного самоуправления. Здесь рассматриваются профессиональные муниципальные должности в подразделениях, не должность мэра.",
+        "en": "An actual local self-government body. This concerns professional municipal staff roles, not the office of mayor.",
+        "zh-Hans": "真实的地方自治机关。这里讨论所属单位的专业市政工作人员岗位，不是市长职位。"
+      },
+      "verifiedUnits": [
+        "Управление муниципальной службы и кадров мэрии"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://novo-sibirsk.ru/",
+          "title": {
+            "ru": "Официальный сайт города Новосибирска",
+            "en": "Official Novosibirsk website",
+            "zh-Hans": "新西伯利亚市官方网站"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        },
+        {
+          "id": "hr",
+          "url": "https://novo-sibirsk.ru/dep/staff/info/",
+          "title": {
+            "ru": "Кадровое обеспечение мэрии",
+            "en": "Mayor’s Office HR information",
+            "zh-Hans": "市政府人事信息"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Координация муниципальных задач",
+            "en": "Municipal programme coordination",
+            "zh-Hans": "市政任务协调"
+          },
+          "rationale": {
+            "ru": "Широкий муниципальный профиль – учебная модель. Конкретные полномочия и требования проверяются по подразделению.",
+            "en": "This broad municipal profile is a teaching model; exact powers and requirements must be checked by unit.",
+            "zh-Hans": "广义市政画像是教学模型；具体权限和要求依所属单位核对。"
+          },
+          "sectors": [
+            {
+              "id": "INF",
+              "weight": 1
+            },
+            {
+              "id": "SOC",
+              "weight": 0.6
+            },
+            {
+              "id": "ADM",
+              "weight": 0.5
+            }
+          ],
+          "conditions": {
+            "FIELD": 3,
+            "SCHEDULE": 3,
+            "FORMAL": 4,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "SERVICE",
+          "importance": 2,
+          "title": {
+            "ru": "Административное взаимодействие с жителями",
+            "en": "Administrative engagement with residents",
+            "zh-Hans": "与居民的行政沟通"
+          },
+          "rationale": {
+            "ru": "Трек относится к работе с обращениями и организацией взаимодействия; не предполагает одинаковых полномочий у всех подразделений.",
+            "en": "This concerns enquiries and engagement; it does not assume identical powers across departments.",
+            "zh-Hans": "方向涉及咨询与沟通组织，不假定所有部门权限相同。"
+          },
+          "sectors": [
+            {
+              "id": "SOC",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.7
+            }
+          ],
+          "conditions": {
+            "FIELD": 2,
+            "SCHEDULE": 2,
+            "FORMAL": 4,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "FINANCE",
+          "importance": 2,
+          "title": {
+            "ru": "Муниципальное финансовое управление",
+            "en": "Municipal financial management",
+            "zh-Hans": "市政财务管理"
+          },
+          "rationale": {
+            "ru": "Учебное направление для изучения финансовой работы мэрии. Наличие вакансии не подтверждается.",
+            "en": "An educational direction for exploring municipal finance; no open vacancy is confirmed.",
+            "zh-Hans": "用于探索市政府财政工作的教学方向，未确认开放职位。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "INF",
+              "weight": 0.4
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Для одной городской проблемы разделите действия муниципалитета, региона и федерального органа. Каждое полномочие подтвердите источником.",
+        "en": "For one city issue, distinguish local, regional and federal actions. Support each claimed power with a source.",
+        "zh-Hans": "围绕一个城市问题区分市政、地区和联邦行动，每项权限均注明来源。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    },
+    {
+      "id": "novosibirsk-council-staff",
+      "country": "RU",
+      "name": {
+        "ru": "Аппарат Совета депутатов города Новосибирска",
+        "en": "Staff of the Council of Deputies of Novosibirsk",
+        "zh-Hans": "新西伯利亚市议会机关"
+      },
+      "cohort": "municipal",
+      "level": "municipal",
+      "branch": "local-representative",
+      "unitType": "apparatus",
+      "location": {
+        "ru": "Новосибирск",
+        "en": "Novosibirsk",
+        "zh-Hans": "新西伯利亚"
+      },
+      "mission": {
+        "ru": "Обеспечивает работу муниципального представительного органа. Работник аппарата и избранный депутат имеют разный статус; муниципальная служба не является федеральной гражданской службой.",
+        "en": "Supports the local representative body. Staff and elected members have different status; municipal service is not federal civil service.",
+        "zh-Hans": "保障市政代表机关工作。工作人员与当选议员身份不同，市政服务不是联邦公务员服务。"
+      },
+      "verifiedUnits": [
+        "Управление по правовым и экономическим вопросам",
+        "Управление по организационной работе"
+      ],
+      "sources": [
+        {
+          "id": "structure",
+          "url": "https://gorsovetnsk.ru/about/apparat-soveta-deputatov/",
+          "title": {
+            "ru": "Аппарат Совета: подразделения и задачи",
+            "en": "Council staff: units and functions",
+            "zh-Hans": "市议会机关部门与职责"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        },
+        {
+          "id": "hr",
+          "url": "https://gorsovetnsk.ru/about/munitsipalnaya-sluzhba/",
+          "title": {
+            "ru": "Муниципальная служба в Совете",
+            "en": "Municipal service in the Council",
+            "zh-Hans": "议会市政服务制度"
+          },
+          "checkedAt": "2026-09-05",
+          "access": "full-page",
+          "supports": [
+            "existence",
+            "institutional-remit"
+          ],
+          "doesNotSupport": [
+            "model-weights",
+            "vacancy-status",
+            "individual-eligibility"
+          ]
+        }
+      ],
+      "tracks": [
+        {
+          "id": "LEGAL",
+          "importance": 3,
+          "title": {
+            "ru": "Правовое и экономическое сопровождение решений",
+            "en": "Legal and economic support for decisions",
+            "zh-Hans": "决策法律与经济支持"
+          },
+          "rationale": {
+            "ru": "Подразделение подтверждено источником. Для юридической работы нужно отдельно проверять требуемую специальность.",
+            "en": "The unit is documented. The required degree for legal work must be checked separately.",
+            "zh-Hans": "来源确认该部门；法律岗位所需专业须另行核实。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "ECO",
+              "weight": 0.6
+            },
+            {
+              "id": "SEC",
+              "weight": 0.3
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "PROGRAM",
+          "importance": 3,
+          "title": {
+            "ru": "Организация заседаний и документооборота",
+            "en": "Meetings and document coordination",
+            "zh-Hans": "会议与文书组织"
+          },
+          "rationale": {
+            "ru": "Официальное описание относит организацию и документооборот к обеспечивающим задачам аппарата.",
+            "en": "The official description assigns organisational and document functions to council staff.",
+            "zh-Hans": "官方说明将组织和文书职能归于议会机关保障任务。"
+          },
+          "sectors": [
+            {
+              "id": "ADM",
+              "weight": 1
+            },
+            {
+              "id": "SOC",
+              "weight": 0.3
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 3,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        },
+        {
+          "id": "FINANCE",
+          "importance": 2,
+          "title": {
+            "ru": "Финансовое обеспечение аппарата",
+            "en": "Staff financial administration",
+            "zh-Hans": "机关财务保障"
+          },
+          "rationale": {
+            "ru": "Это обеспечение деятельности Совета, а не самостоятельное принятие бюджета сотрудником.",
+            "en": "This supports the Council’s operations; staff do not independently adopt the city budget.",
+            "zh-Hans": "这是议会运行保障，不是工作人员独立通过城市预算。"
+          },
+          "sectors": [
+            {
+              "id": "FIN",
+              "weight": 1
+            },
+            {
+              "id": "ADM",
+              "weight": 0.7
+            }
+          ],
+          "conditions": {
+            "FIELD": 1,
+            "SCHEDULE": 2,
+            "FORMAL": 5,
+            "SECURITY": 2
+          },
+          "sourceIds": [
+            "structure"
+          ],
+          "status": "authored-functional-mapping"
+        }
+      ],
+      "exercise": {
+        "ru": "Постройте маршрут материала к заседанию: получение, правовая проверка, включение в повестку, оформление решения. Отделите подготовку от голосования депутатов.",
+        "en": "Map a meeting document: receipt, legal review, agenda and recording the decision. Distinguish preparation from elected members’ votes.",
+        "zh-Hans": "绘制会议材料路径：接收、法律核查、列入议程、形成决议文件；区分准备工作和议员表决。"
+      },
+      "vacancyStatus": "not-a-vacancy",
+      "educationStatus": "check-each-position",
+      "verifiedAt": "2026-09-05"
+    }
+  ],
+  "eligibilitySources": [
+    "https://www.minjust.gov.ru/ru/pages/gosudarstvennaya-sluzhba/",
+    "https://novo-sibirsk.ru/dep/staff/info/"
+  ]
+}

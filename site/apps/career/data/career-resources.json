@@ -1,0 +1,175 @@
+[
+  {
+    "id": "eisuks",
+    "authorityIds": [
+      "*"
+    ],
+    "title": "ЕИСУКС: поиск вакансий и конкурсов",
+    "url": "https://gossluzhba.gov.ru/",
+    "note": "Ресурс указан на кадровой странице Росжелдора. Прямая доступность портала в ходе проверки не подтверждена; при проблемах используйте сайт ведомства.",
+    "kind": "directory",
+    "verification": "indirect",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false,
+    "evidenceUrl": "https://rlw.gov.ru/public_job"
+  },
+  {
+    "id": "fish-hr",
+    "authorityIds": [
+      "rosrybolovstvo"
+    ],
+    "title": "Росрыболовство: государственная служба",
+    "url": "https://fish.gov.ru/about/gosudarstvennaya-sluzhba/",
+    "note": "Кадровый раздел, объявления и результаты конкурсов. Наличие страницы не означает, что приём документов открыт.",
+    "kind": "directory",
+    "verification": "page-read",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "rail-hr",
+    "authorityIds": [
+      "roszheldor"
+    ],
+    "title": "Росжелдор: государственная служба",
+    "url": "https://rlw.gov.ru/public_job",
+    "note": "Кадровые материалы центрального аппарата и переход к сведениям о вакансиях.",
+    "kind": "directory",
+    "verification": "page-read",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "justice-hr",
+    "authorityIds": [
+      "minjust"
+    ],
+    "title": "Минюст России: государственная служба",
+    "url": "https://www.minjust.gov.ru/ru/pages/gosudarstvennaya-sluzhba/",
+    "note": "Порядок поступления, требования к кандидатам и кадровые материалы.",
+    "kind": "directory",
+    "verification": "page-read",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "stat-hr",
+    "authorityIds": [
+      "rosstat"
+    ],
+    "title": "Росстат: вакансии",
+    "url": "https://rosstat.gov.ru/vacancies",
+    "note": "Официальная страница объясняет, где публикуются объявления о вакансиях центрального аппарата.",
+    "kind": "directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "aviation-hr",
+    "authorityIds": [
+      "rosaviatsiya"
+    ],
+    "title": "Росавиация: государственная служба",
+    "url": "https://favt.gov.ru/dejatelnost-gosudarstvennaia-sluzhba/",
+    "note": "Кадровые объявления, результаты и нормативные материалы. Проверяйте даты конкретного объявления.",
+    "kind": "directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "health-hr",
+    "authorityIds": [
+      "roszdravnadzor"
+    ],
+    "title": "Росздравнадзор: государственная служба и кадровая работа",
+    "url": "https://roszdravnadzor.gov.ru/spec/about/goskadr",
+    "note": "Специальная версия официального кадрового раздела.",
+    "kind": "directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "fish-west-baltic-hr",
+    "authorityIds": [
+      "rosrybolovstvo"
+    ],
+    "title": "Западно-Балтийское территориальное управление Росрыболовства",
+    "url": "https://zbtu.fish.gov.ru/about/gossluzhba/",
+    "note": "Региональный пример. Не является списком всех территориальных подразделений.",
+    "kind": "territorial-directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "rosstat-moscow-hr",
+    "authorityIds": [
+      "rosstat"
+    ],
+    "title": "Мосстат: управление по Москве и Московской области",
+    "url": "https://77.rosstat.gov.ru/folder/206505",
+    "note": "Региональный пример. Не является списком всех территориальных подразделений.",
+    "kind": "territorial-directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "aviation-komi-hr",
+    "authorityIds": [
+      "rosaviatsiya"
+    ],
+    "title": "Коми межрегиональное территориальное управление Росавиации",
+    "url": "https://komi-s.favt.ru/o-upravlenii-gosudarstvennaja-sluzhba-konkursy-centralnyj-apparat/",
+    "note": "Региональный пример. Не является списком всех территориальных подразделений.",
+    "kind": "territorial-directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "rosstat-petrostat-hr",
+    "authorityIds": [
+      "rosstat"
+    ],
+    "title": "Петростат: управление по Санкт-Петербургу и Ленинградской области",
+    "url": "https://78.rosstat.gov.ru/competitions_to_fill",
+    "note": "Региональный пример. Не является списком всех территориальных подразделений.",
+    "kind": "territorial-directory",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false
+  },
+  {
+    "id": "gosstart-2026",
+    "authorityIds": [
+      "rosmolodezh",
+      "rosrybolovstvo",
+      "mintrud",
+      "minobrnauki"
+    ],
+    "title": "ГосСтарт.Стажировки: федеральный набор 2026 года",
+    "url": "https://fish.gov.ru/news/2026/07/10/otkryta-registracziya-na-federalnyj-etap-napravleniya-gosstart-stazhirovki/",
+    "note": "Исторический пример программы: регистрация завершилась 31.07.2026. Новые наборы нужно искать на официальных ресурсах; повторный набор не обещается.",
+    "kind": "announcement",
+    "verification": "indexed-official-content",
+    "checkedAt": "2026-09-05",
+    "sourceLanguage": "ru",
+    "liveFeed": false,
+    "deadline": "2026-07-31"
+  }
+]

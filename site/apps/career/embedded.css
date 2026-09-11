@@ -1,0 +1,244 @@
+/* Loaded last inside the module's Shadow Root. Host navigation, identity,
+   routing and language remain the responsibility of the educational platform. */
+.career-surface {
+  --content: 100%;
+  --header-height: 0px;
+  --muted: #48617b;
+  position: relative;
+  isolation: isolate;
+  container: career / inline-size;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  color-scheme: light;
+  background: transparent;
+  overflow-wrap: break-word;
+}
+.app-shell { min-height: 0; }
+.app-loading { min-height: 260px; padding: 32px 20px; text-align: center; }
+main, #main-content { width: 100%; min-width: 0; margin: 0; }
+.view, .workspace-view { min-height: 0; padding: 28px 0 40px; animation: none; }
+.view[hidden], [hidden] { display: none !important; }
+.site-header.career-toolbar {
+  position: relative;
+  top: auto;
+  width: 100%;
+  min-height: 58px;
+  height: auto;
+  margin: 0;
+  padding: 10px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: none;
+  backdrop-filter: none;
+  z-index: 4;
+}
+.career-toolbar-label { display: none; font-size: 14px; font-weight: 700; }
+.career-toolbar .desktop-nav {
+  position: static;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 3px;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.career-toolbar .desktop-nav > button,
+.career-toolbar .nav-more > summary { min-height: 42px; font-size: 12px; padding: 10px; }
+.career-toolbar .desktop-nav > button.active { background: #eaf4ff; color: #0057a2; }
+.career-toolbar .header-actions { margin-left: auto; gap: 6px; }
+.career-toolbar #resume-button:not([hidden]) { display: inline-flex; min-height: 42px; font-size: 12px; padding: 10px 12px; box-shadow: none; }
+.career-toolbar .mobile-menu-button { display: none; }
+.career-toolbar .language-control, .mobile-bottom-nav { display: none !important; }
+.career-toolbar .nav-more { width: auto; position: relative; }
+.career-toolbar .nav-more > div {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: auto;
+  width: 230px;
+  max-width: 100cqi;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 30px #13416b20;
+  z-index: 6;
+}
+.career-toolbar .nav-more button { min-height: 42px; text-align: left; }
+.session-strip { padding: 16px 0 0; }
+.session-actions { min-width: 0; }
+.hero {
+  min-height: 390px;
+  grid-template-columns: minmax(0, 1.3fr) minmax(240px, .7fr);
+  gap: 28px;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: none;
+}
+.hero h1 { font-size: clamp(34px, 5cqi, 58px); line-height: 1.06; }
+.hero-lead { font-size: 18px; line-height: 1.6; margin-bottom: 24px; }
+.hero-visual { min-height: 300px; }
+.hero-core { width: 185px; }
+.hero-core::after { width: 220px; }
+.hero-core strong { font-size: 21px; }
+.orbit-one { width: 300px; height: 220px; }
+.orbit-two { width: 340px; height: 280px; }
+.hero-agency-stack { display: none; }
+.workflow-aside { position: static; top: auto; max-height: none; }
+.sticky-actions {
+  position: static;
+  bottom: auto;
+  width: 100%;
+  margin-top: 24px;
+  box-shadow: none;
+}
+.compare-tray {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: 8px;
+  width: 100%;
+  max-width: 100%;
+  transform: none;
+  margin: 0 0 16px;
+  z-index: 5;
+  box-shadow: 0 8px 24px #13416b20;
+}
+.compare-table-head { position: static; top: auto; }
+.compare-tray .button { width: auto; padding: 10px 14px; font-size: 13px; }
+.toast {
+  position: static;
+  display: none;
+  width: 100%;
+  max-width: 100%;
+  margin: 12px 0 0;
+  transform: none;
+  opacity: 1;
+  box-shadow: none;
+  font-size: 13px;
+  line-height: 1.6;
+  transition: none;
+}
+.toast.show { display: block; transform: none; }
+.skip-link { position: absolute; top: 8px; left: 8px; z-index: 10; }
+.skip-link:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+.authority-dialog { max-width: min(1000px, calc(100vw - 28px)); max-height: calc(100dvh - 32px); }
+#question-text, #main-content, .view h1 { scroll-margin-top: 100px; }
+
+@container career (max-width: 1024px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding: 32px; }
+  .hero-visual { display: none; }
+  .hero h1 { font-size: 44px; }
+  .workflow-shell { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .workflow-aside { display: block; padding: 24px; }
+  .workflow-intro h2 { font-size: 24px; }
+  .live-profile-disclosure, .workflow-aside .aside-note { display: none; }
+  .home-steps, .home-launchpad { grid-template-columns: minmax(0, 1fr); }
+  .home-steps article { min-width: 0; }
+  .method-preview { grid-template-columns: minmax(0, 1fr); }
+  .results-hero { grid-template-columns: minmax(0, 1fr); padding: 30px; }
+  .top-match-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-panel { max-width: 100%; }
+  .career-toolbar .desktop-nav { flex: 1 1 100%; }
+  .methodology-hero { grid-template-columns: minmax(0, 1fr); padding: 28px; }
+  .methodology-hero h1 { font-size: 38px; }
+}
+
+@container career (max-width: 760px) {
+  .career-toolbar-label { display: inline; }
+  .career-toolbar .header-actions { margin-left: auto; }
+  .career-toolbar .mobile-menu-button { display: inline-grid; }
+  .career-toolbar .desktop-nav { display: none; order: 3; flex: 1 0 100%; width: 100%; padding-top: 8px; border-top: 1px solid var(--line); }
+  .career-toolbar .desktop-nav.open { display: flex; flex-direction: column; align-items: stretch; }
+  .career-toolbar .desktop-nav > button { width: 100%; justify-content: flex-start; }
+  .career-toolbar .nav-more { width: 100%; }
+  .career-toolbar .nav-more > div { position: static; width: 100%; max-width: 100%; padding: 0 0 0 12px; border: 0; border-radius: 0; box-shadow: none; }
+  .career-toolbar .nav-more button { width: 100%; }
+  .career-toolbar .nav-more > summary { justify-content: flex-start; }
+  .view, .workspace-view { padding: 24px 0 32px; }
+  .section-heading { display: block; }
+  .sector-grid, .condition-list, .resource-grid, .saved-scenarios { grid-template-columns: minmax(0, 1fr); }
+  .selection-status { margin-top: 20px; }
+  .workspace-heading { display: block; }
+  .workspace-heading h1, .section-heading h1, .methodology-hero h1 { font-size: 32px; line-height: 1.15; overflow-wrap: anywhere; }
+  .workspace-heading > .button { margin-top: 16px; }
+  .workspace-toolbar { flex-wrap: wrap; }
+  .workspace-toolbar label:not(.file-label) { max-width: 100%; min-width: 0; }
+  .directory-toolbar { flex-wrap: wrap; }
+  .directory-toolbar .search-field { flex-basis: 100%; min-width: 0; }
+  .directory-counter { margin-top: 16px; }
+  .methodology-grid, .methodology-details, .formula-panel, .document-links { grid-template-columns: minmax(0, 1fr); }
+  .branch-grid { grid-template-columns: minmax(0, 1fr); }
+  .compare-tray { grid-template-columns: minmax(0, 1fr) auto; gap: 10px; padding: 12px; }
+  .compare-tray-items { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; flex-wrap: wrap; }
+}
+
+@container career (max-width: 520px) {
+  .career-toolbar { padding: 8px 10px; }
+  .career-toolbar-label { font-size: 13px; }
+  .career-toolbar #resume-button:not([hidden]) { font-size: 11px; padding: 8px; }
+  .hero { padding: 26px 20px; gap: 16px; border-radius: 18px; }
+  .hero h1 { font-size: 34px; }
+  .hero-lead { font-size: 15px; }
+  .hero-actions { display: grid; }
+  .hero-actions .button { width: 100%; }
+  .hero-meta { display: grid; gap: 10px; font-size: 12px; }
+  .hero-boundary { font-size: 12px; }
+  .session-actions .button { min-height: 44px; padding: 6px 8px; }
+  .session-actions { gap: 2px; }
+  .question-card { padding: 24px 18px; }
+  .question-card h1 { font-size: 25px; line-height: 1.25; }
+  .answer-options { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .answer-option { display: flex; align-items: center; text-align: left; min-height: 54px; gap: 12px; padding: 10px 12px; }
+  .answer-option span { display: block; font-size: 13px; }
+  .answer-option b { width: 28px; flex-shrink: 0; margin: 0; }
+  .question-controls { flex-wrap: wrap; }
+  .keyboard-hint { display: none; }
+  .question-controls .button { width: 100%; }
+  .workflow-aside { padding: 18px; }
+  .workflow-intro h2 { display: none; }
+  .workflow-intro p { margin: 8px 0 0; font-size: 14px; }
+  .top-match-grid { grid-template-columns: minmax(0, 1fr); }
+  .profile-panel { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .profile-strengths { width: 100%; }
+  .results-hero { padding: 24px 18px; border-radius: 18px; }
+  .results-intro h1 { font-size: 32px; }
+  .sticky-actions { padding: 9px; gap: 8px; flex-wrap: wrap; }
+  .sticky-actions .button { flex: 1 1 auto; font-size: 12px; padding-inline: 12px; }
+  .condition-card { display: block; padding: 18px; }
+  .condition-title { margin-bottom: 14px; }
+  .question-map-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .methodology-hero { padding: 24px 18px; }
+  .scenario-save-panel { display: block; padding: 18px; }
+  .scenario-save-panel > button { width: 100%; margin-top: 14px; }
+}
+
+@media print {
+  .career-surface { container-type: normal; width: 100%; min-height: 0; background: #fff; }
+  .career-toolbar, .session-strip, .toast, .compare-tray, .mobile-bottom-nav, .skip-link, .sticky-actions { display: none !important; }
+  main, #main-content, .app-shell, .view, .workspace-view { width: 100%; min-height: 0; padding: 0; margin: 0; overflow: visible; }
+  .view[hidden] { display: none !important; }
+  .workflow-aside, .compare-table-head { position: static; }
+  .results-hero { display: block; color: #000; background: #fff; box-shadow: none; }
+  .results-hero::after { display: none; }
+  .match-card, .saved-scenario, .resource-card { break-inside: avoid; }
+  .career-surface.print-workbook > :not(#workbook-print-root) { display: none !important; }
+  .career-surface.print-workbook #workbook-print-root { display: block !important; }
+}

@@ -1,0 +1,656 @@
+{
+  "version": "1.0-stage4",
+  "checkedAt": "2026-09-05",
+  "scope": "69 федеральных органов; территориальные узлы представлены отдельными подтверждёнными примерами, а не полным перечнем. Фонды и корпорации показаны вне дерева ФОИВ.",
+  "roots": [
+    {
+      "id": "president",
+      "title": "Президент Российской Федерации"
+    },
+    {
+      "id": "government",
+      "title": "Правительство Российской Федерации"
+    }
+  ],
+  "links": [
+    {
+      "child": "mvd",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mchs",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mid",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rossotrudnichestvo",
+      "parent": "mid",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minoborony",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fstek",
+      "parent": "minoborony",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minjust",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fsin",
+      "parent": "minjust",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fssp",
+      "parent": "minjust",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minzdrav",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "roszdravnadzor",
+      "parent": "minzdrav",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minkult",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minobrnauki",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minprirody",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "roshydromet",
+      "parent": "minprirody",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosprirodnadzor",
+      "parent": "minprirody",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosvodresursy",
+      "parent": "minprirody",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosleshoz",
+      "parent": "minprirody",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosnedra",
+      "parent": "minprirody",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minpromtorg",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosstandart",
+      "parent": "minpromtorg",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minpros",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minvostok",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minselkhoz",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosselkhoznadzor",
+      "parent": "minselkhoz",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosrybolovstvo",
+      "parent": "minselkhoz",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minsport",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minstroy",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mintrans",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rostransnadzor",
+      "parent": "mintrans",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosaviatsiya",
+      "parent": "mintrans",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosavtodor",
+      "parent": "mintrans",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "roszheldor",
+      "parent": "mintrans",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosmorrechflot",
+      "parent": "mintrans",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mintrud",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rostrud",
+      "parent": "mintrud",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minfin",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fns",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "probirnaya",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosalkotab",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fts",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "treasury",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosimushchestvo",
+      "parent": "minfin",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mincifry",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rkn",
+      "parent": "mincifry",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "mineconom",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosakkreditaciya",
+      "parent": "mineconom",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosstat",
+      "parent": "mineconom",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rospatent",
+      "parent": "mineconom",
+      "relation": "ministerial-jurisdiction",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "minenergo",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "svr",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fsb",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosgvardiya",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fso",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fsvts",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosfinmonitoring",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosarchiv",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "gusp",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "gfs",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "udp",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fmba",
+      "parent": "president",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "fmba-leadership"
+      ]
+    },
+    {
+      "child": "fas",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosreestr",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rospotrebnadzor",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosobrnadzor",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rostekhnadzor",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosreserv",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "rosmolodezh",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    },
+    {
+      "child": "fadn",
+      "parent": "government",
+      "relation": "direct-leadership",
+      "sourceIds": [
+        "government-directory"
+      ]
+    }
+  ],
+  "territorialExamples": [
+    {
+      "id": "fish-west-baltic",
+      "parent": "rosrybolovstvo",
+      "title": "Западно-Балтийское территориальное управление Росрыболовства",
+      "url": "https://zbtu.fish.gov.ru/about/gossluzhba/",
+      "sourceIds": [
+        "fish-west-baltic"
+      ],
+      "coverage": "illustrative-official-example"
+    },
+    {
+      "id": "rosstat-moscow",
+      "parent": "rosstat",
+      "title": "Мосстат: управление по Москве и Московской области",
+      "url": "https://77.rosstat.gov.ru/folder/206505",
+      "sourceIds": [
+        "rosstat-moscow"
+      ],
+      "coverage": "illustrative-official-example"
+    },
+    {
+      "id": "aviation-komi",
+      "parent": "rosaviatsiya",
+      "title": "Коми межрегиональное территориальное управление Росавиации",
+      "url": "https://komi-s.favt.ru/o-upravlenii-gosudarstvennaja-sluzhba-konkursy-centralnyj-apparat/",
+      "sourceIds": [
+        "aviation-komi"
+      ],
+      "coverage": "illustrative-official-example"
+    },
+    {
+      "id": "rosstat-petrostat",
+      "parent": "rosstat",
+      "title": "Петростат: управление по Санкт-Петербургу и Ленинградской области",
+      "url": "https://78.rosstat.gov.ru/competitions_to_fill",
+      "sourceIds": [
+        "rosstat-petrostat"
+      ],
+      "coverage": "illustrative-official-example"
+    }
+  ],
+  "sources": [
+    {
+      "id": "government-directory",
+      "title": "Министерства и ведомства: официальный каталог Правительства России",
+      "url": "https://government.ru/ministries/",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content",
+      "note": "Базовая ведомственная структура. На странице обозначена дата изменения 14.08.2024; сведения дополнены отдельными официальными источниками."
+    },
+    {
+      "id": "fmba-leadership",
+      "title": "ФМБА России: общая информация и Указ от 17.06.2024 № 522",
+      "url": "https://fmba.gov.ru/o-fmba-rossii/obshchaya-informatsiya/spravka-o-fmba-rossii/",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content"
+    },
+    {
+      "id": "fish-west-baltic",
+      "title": "Официальная страница государственной службы Западно-Балтийского управления",
+      "url": "https://zbtu.fish.gov.ru/about/gossluzhba/",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content"
+    },
+    {
+      "id": "rosstat-moscow",
+      "title": "Официальная страница вакансий Мосстата",
+      "url": "https://77.rosstat.gov.ru/folder/206505",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content"
+    },
+    {
+      "id": "aviation-komi",
+      "title": "Официальная страница государственной службы Коми МТУ",
+      "url": "https://komi-s.favt.ru/o-upravlenii-gosudarstvennaja-sluzhba-konkursy-centralnyj-apparat/",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content"
+    },
+    {
+      "id": "rosstat-petrostat",
+      "title": "Официальная страница вакансий Петростата",
+      "url": "https://78.rosstat.gov.ru/competitions_to_fill",
+      "checkedAt": "2026-09-05",
+      "verification": "indexed-official-content"
+    }
+  ]
+}
