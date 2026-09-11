@@ -1,0 +1,1263 @@
+{
+  "version": "1.0.0",
+  "release": "0.11.0",
+  "source": "User-provided images and PNG packs from this conversation",
+  "processing": "Alpha-bound crop, padding to common ground anchor, downscale only, WebP with transparency. No new image generation or AI enlargement.",
+  "notes": [
+    "Images 01–08 and 17–24 were extracted from image sheets; suitable for compact displays.",
+    "Building delivery variants are semantic illustrations, not pixel-aligned versions of the final assets.",
+    "Asset 03 is catalogued but intentionally not mapped to software procurement as physical construction."
+  ],
+  "assets": [
+    {
+      "number": 1,
+      "id": "school-delivery",
+      "sourceName": "school-delivery.png",
+      "sourceSha256": "32fcae408e7fcd7f2877e83e185c1cc0b8ce6b21cf164168a8b8e206c70e0997",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        65,
+        235,
+        574,
+        601
+      ],
+      "effectiveSourcePixels": [
+        509,
+        366
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 592,
+      "masterHeight": 592,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/school-delivery.webp",
+          "bytes": 80722,
+          "sha256": "960ba91d2edfbae78a45878d952a7072b82adea4a1dd15143d9ec9c6499517ac",
+          "width": 592,
+          "height": 592,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/school-delivery-thumb.webp",
+          "bytes": 18908,
+          "sha256": "da6b1711885ee9dc1093df953a912ce30961ad47d7b809d8d4fb91b37a486f54",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "school-campus"
+      ]
+    },
+    {
+      "number": 2,
+      "id": "clinic-delivery",
+      "sourceName": "clinic-delivery.png",
+      "sourceSha256": "d2865ed511aa000511f2b9a0805c6ec8a6c0bfebdac0ba86e729f902856e96f0",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        66,
+        240,
+        573,
+        601
+      ],
+      "effectiveSourcePixels": [
+        507,
+        361
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 592,
+      "masterHeight": 592,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/clinic-delivery.webp",
+          "bytes": 75104,
+          "sha256": "14d09a55648227cd0baf699a7437e6b127f7342e85558af0234f1e1acceb48b7",
+          "width": 592,
+          "height": 592,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/clinic-delivery-thumb.webp",
+          "bytes": 18038,
+          "sha256": "70306ccf13e1ad17f38a89a4aa3d247bc0234c9ff7ca8d6e8ae41fde85857148",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "clinics",
+        "medical-hub"
+      ]
+    },
+    {
+      "number": 3,
+      "id": "digital-delivery",
+      "sourceName": "digital-delivery.png",
+      "sourceSha256": "e15411fdc4ca8e79c8d7a5e895203754866a3ec96f49545b0748d2f76609b21a",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        74,
+        224,
+        565,
+        601
+      ],
+      "effectiveSourcePixels": [
+        491,
+        377
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 560,
+      "masterHeight": 560,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "guide-reserve",
+      "files": [
+        {
+          "path": "assets/services/digital-delivery.webp",
+          "bytes": 70770,
+          "sha256": "82c6ac36a90a24ff00769218f99acba4af1cb9be52f1698964582d1c95a7a109",
+          "width": 560,
+          "height": 560,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/digital-delivery-thumb.webp",
+          "bytes": 19170,
+          "sha256": "bd6f1e72b6a0b8948206127884271523d390bd277dadffc7d77f5e6de3212989",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": []
+    },
+    {
+      "number": 4,
+      "id": "industry-delivery",
+      "sourceName": "industry-delivery.png",
+      "sourceSha256": "e1d88985bd70770c41d97ca0d51494f908a21718cb48759fff03289f1628868e",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        66,
+        268,
+        574,
+        601
+      ],
+      "effectiveSourcePixels": [
+        508,
+        333
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 592,
+      "masterHeight": 592,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/industry-delivery.webp",
+          "bytes": 81248,
+          "sha256": "46a24dd0527d09e468eaff09cde78c2400274df9d305ecaf34ccd85b742d6ccb",
+          "width": 592,
+          "height": 592,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/industry-delivery-thumb.webp",
+          "bytes": 19016,
+          "sha256": "678c3e232a58525793cdffa7495596a0903ad04caaeca98fbd469bfd7763b834",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "industrial-park",
+        "green-manufacturing",
+        "university-industry-city"
+      ]
+    },
+    {
+      "number": 5,
+      "id": "barrier-delivery",
+      "sourceName": "barrier-delivery.png",
+      "sourceSha256": "94e4ad33f44a7f84cbce14fb0c7374248597b12c953514a4470a81ab30a8353d",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        67,
+        268,
+        573,
+        601
+      ],
+      "effectiveSourcePixels": [
+        506,
+        333
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 576,
+      "masterHeight": 576,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/barrier-delivery.webp",
+          "bytes": 87298,
+          "sha256": "542cea2526419c191785a0ea3b1936e33a46f3ace19b7c9452d2bd9daabc3f60",
+          "width": 576,
+          "height": 576,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/barrier-delivery-thumb.webp",
+          "bytes": 21312,
+          "sha256": "361930340ea70665aa49e649fb4de29b45097d96fb38c61c940453a205f4e5ca",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "defenses",
+        "logistics-embankment",
+        "rebuild-better"
+      ]
+    },
+    {
+      "number": 6,
+      "id": "housing-delivery",
+      "sourceName": "housing-delivery.png",
+      "sourceSha256": "c4620fff7cc62841c576e728754d97ae347a751f384df1b379a454f7b97a906f",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        78,
+        270,
+        561,
+        601
+      ],
+      "effectiveSourcePixels": [
+        483,
+        331
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 560,
+      "masterHeight": 560,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/housing-delivery.webp",
+          "bytes": 82328,
+          "sha256": "f3a73b0458fe46937a429187dc69ac76fdb3ba12939a1992ff439356408435bb",
+          "width": 560,
+          "height": 560,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/housing-delivery-thumb.webp",
+          "bytes": 21416,
+          "sha256": "a57923effb2142af8dbb21584562b983177edce1cc5880455e04d86878079884",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "complete-neighbourhood",
+        "housing-first",
+        "housing-package",
+        "resilient-relocation",
+        "build-back-fast"
+      ]
+    },
+    {
+      "number": 7,
+      "id": "mobile-medical-unit",
+      "sourceName": "mobile-medical-unit.png",
+      "sourceSha256": "24108ba141b48114905c3a598b2a1f081a54e535e7c5dd320a8a78db972e3aa4",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        40,
+        290,
+        599,
+        601
+      ],
+      "effectiveSourcePixels": [
+        559,
+        311
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 640,
+      "masterHeight": 640,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/mobile-medical-unit.webp",
+          "bytes": 70362,
+          "sha256": "ba82fe12bfe978d591a1ca705c1211bd60f7d074e2e3ad3ba6505e6541125e99",
+          "width": 640,
+          "height": 640,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/mobile-medical-unit-thumb.webp",
+          "bytes": 15248,
+          "sha256": "8e1ef19e82ad3d9786a5385da1893f649d7dd76fca98246547583176a71cc862",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "mobile-units",
+        "mobilise-network"
+      ]
+    },
+    {
+      "number": 8,
+      "id": "school-bus",
+      "sourceName": "school-bus.png",
+      "sourceSha256": "8eb58f45647596b975570ef614b122129742dbabeb28242d109b5352969ca55e",
+      "sourceCanvas": [
+        640,
+        640
+      ],
+      "sourceAlphaBounds": [
+        27,
+        281,
+        612,
+        602
+      ],
+      "effectiveSourcePixels": [
+        585,
+        321
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 672,
+      "masterHeight": 672,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/school-bus.webp",
+          "bytes": 75874,
+          "sha256": "abba82e708657e3163df5274fc484f6f1f614f802802c2e47a9c43235a202cc0",
+          "width": 672,
+          "height": 672,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/school-bus-thumb.webp",
+          "bytes": 15686,
+          "sha256": "31ef79e758429f27b4cd6a80c6ec38a3b7260107d6c506c30246812832ad2e62",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "school-bus"
+      ]
+    },
+    {
+      "number": 9,
+      "id": "medical-training",
+      "sourceName": "изометрическая_сцена_обучения_слр_в_клинике.png",
+      "sourceSha256": "f1213d21277a34ae91d7d3c492568f2e42b271a4a198d0975e386347c47ed64e",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        24,
+        208,
+        1160,
+        1093
+      ],
+      "effectiveSourcePixels": [
+        1136,
+        885
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/medical-training.webp",
+          "bytes": 75296,
+          "sha256": "7a6e66a185c508c13667293b6ca0f6b92fa0a85150bd59bd09cda13a6ed02718",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/medical-training-thumb.webp",
+          "bytes": 14078,
+          "sha256": "26f43c0f8f5638407ea13326c834bce89a70c0bfb85a499e3a984101ffc6249d",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "train-staff"
+      ]
+    },
+    {
+      "number": 10,
+      "id": "vocational-training",
+      "sourceName": "изометрическая_мастерская_обучения.png",
+      "sourceSha256": "4302adbea55fc5c5f2467c8f418f0408fd4bd89013dc3a010a76dfe0e98513d2",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        1238,
+        1182
+      ],
+      "effectiveSourcePixels": [
+        1238,
+        1182
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/vocational-training.webp",
+          "bytes": 94912,
+          "sha256": "3d9424d914b86b836c998aa01f169f320c050662579c5d993906743a0a02b535",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/vocational-training-thumb.webp",
+          "bytes": 16706,
+          "sha256": "3f7378190358a9aaeef06759caa2ecb4747f48ce70e989e814dd96bb74ff4b9f",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "skills-compact",
+        "worker-income-guarantee",
+        "skills-scale"
+      ]
+    },
+    {
+      "number": 11,
+      "id": "first-job-mentoring",
+      "sourceName": "изометрическая_мастерская_наставник_обучает_учени.png",
+      "sourceSha256": "96b5ccb0c6e3721b0cc8914f2bd827d1e9e227a03f82bcee418dc1acd3d39a10",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        83,
+        179,
+        1182,
+        1254
+      ],
+      "effectiveSourcePixels": [
+        1099,
+        1075
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/first-job-mentoring.webp",
+          "bytes": 104802,
+          "sha256": "496fa741a5afb66a17d946385208a3c81efaa1533ea56952f612c0f83e070c38",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/first-job-mentoring-thumb.webp",
+          "bytes": 18150,
+          "sha256": "a328d581d0de1ca91a9ff17c2a381722d1eb09d87bd35502491b6c6d7c0f2457",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "first-job"
+      ]
+    },
+    {
+      "number": 12,
+      "id": "modular-nursery",
+      "sourceName": "изометрический_детский_сад_с_игровой_площадкой.png",
+      "sourceSha256": "8f7eb4cd09ab363ef06c29bd105aeb8bbb5e1df73beaa49196d3d7c88268382d",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        0,
+        21,
+        1242,
+        1254
+      ],
+      "effectiveSourcePixels": [
+        1242,
+        1233
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/modular-nursery.webp",
+          "bytes": 109730,
+          "sha256": "2798d805a40221df59afa4a4f93a840366e5493214cc06263eb9241e5b29c87c",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/modular-nursery-thumb.webp",
+          "bytes": 15500,
+          "sha256": "3b4473e4fc4e2619529b6977ec9e3a47372eb4fa59c40c69b8a55be1a85a83d2",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "modular-nursery"
+      ]
+    },
+    {
+      "number": 13,
+      "id": "family-childcare",
+      "sourceName": "уютная_изометрическая_игровая_комната_с_детьми.png",
+      "sourceSha256": "9533d232f1f5acb9954fb31b8bc3533390efa9b8757cbb0daf31c1bcb2ecf92a",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        0,
+        39,
+        1230,
+        1254
+      ],
+      "effectiveSourcePixels": [
+        1230,
+        1215
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/family-childcare.webp",
+          "bytes": 80998,
+          "sha256": "ec52bb3ece31f78c66ecd47672e42ed978853e8daa986da5e38c6ed362b0523d",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/family-childcare-thumb.webp",
+          "bytes": 14690,
+          "sha256": "deb1aec6864c052d5744a9188d293fe65e30dfa3f83a42f2e7876ee2f612d13a",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "licensed-childminders"
+      ]
+    },
+    {
+      "number": 14,
+      "id": "home-long-term-care",
+      "sourceName": "забота_и_уют_в_гостиной.png",
+      "sourceSha256": "8eff9746f05fe2b53671ac54a4fdb72da1d577f6d51549520124d9e3d155aa65",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        0,
+        55,
+        1234,
+        1214
+      ],
+      "effectiveSourcePixels": [
+        1234,
+        1159
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/home-long-term-care.webp",
+          "bytes": 94632,
+          "sha256": "a889e79dcf970fe095f69c81e03505f5eeaab7f9c00766a4070a4181f8b62ea3",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/home-long-term-care-thumb.webp",
+          "bytes": 15924,
+          "sha256": "c175988d9d2ca8c6ac0bb3f8d21551e642b179a7f4e825b1ff236ab983b1bc84",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "long-term-care-network"
+      ]
+    },
+    {
+      "number": 15,
+      "id": "bridge-drainage",
+      "sourceName": "изометрический_мост_через_ручей.png",
+      "sourceSha256": "bcf8fc738d8a64e726667676b84b66a0c98b27ed803ab5780306a3a9e282a373",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        23,
+        52,
+        1253,
+        1254
+      ],
+      "effectiveSourcePixels": [
+        1230,
+        1202
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/bridge-drainage.webp",
+          "bytes": 107714,
+          "sha256": "94f305d90f794cf40897fdb412d00e67e0045afedceba63f6eea4afd953272b3",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/bridge-drainage-thumb.webp",
+          "bytes": 14706,
+          "sha256": "4a356dd985b7bb28e2fafb1716f548260afb63bdefc8b0401524a1b6f8c24481",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "infrastructure"
+      ]
+    },
+    {
+      "number": 16,
+      "id": "river-nature-buffer",
+      "sourceName": "изометрический_пейзаж_речного_водно_болотного_угод.png",
+      "sourceSha256": "673639df513d9c5cec3e22a78da84857d62e562b87661733dc95c3304b31c219",
+      "sourceCanvas": [
+        1254,
+        1254
+      ],
+      "sourceAlphaBounds": [
+        0,
+        8,
+        1241,
+        1254
+      ],
+      "effectiveSourcePixels": [
+        1241,
+        1246
+      ],
+      "sourceType": "individual-render",
+      "masterWidth": 768,
+      "masterHeight": 768,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "large",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/river-nature-buffer.webp",
+          "bytes": 162450,
+          "sha256": "d42acaa8e36b150874c6fbb355c9c03371be5b18867555fafd69fcf7b8a765a1",
+          "width": 768,
+          "height": 768,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/river-nature-buffer-thumb.webp",
+          "bytes": 20954,
+          "sha256": "ac8eafbc18497ef13813f1bd5423fb9e18131d3f5e5b30480ad13a30272c2cdf",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "nature-buffer",
+        "zoning-moratorium"
+      ]
+    },
+    {
+      "number": 17,
+      "id": "flood-warning-service",
+      "sourceName": "flood-warning-service.png",
+      "sourceSha256": "85018db0b188a53b88a3307f5801436024c310e682696958843b6d6340971d3f",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        83,
+        196,
+        428,
+        464
+      ],
+      "effectiveSourcePixels": [
+        345,
+        268
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 400,
+      "masterHeight": 400,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 400,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/flood-warning-service.webp",
+          "bytes": 42404,
+          "sha256": "76e1212dd2545029dd63098bf962a0d59d6da79695a9864bdd6ede40d5af99a9",
+          "width": 400,
+          "height": 400,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/flood-warning-service-thumb.webp",
+          "bytes": 22160,
+          "sha256": "a5cb1985b3047c4307ac5f1bcc839bcbfe3b22ebd2fcc288e3d1022f6b6c8e1d",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "outreach",
+        "evacuate"
+      ]
+    },
+    {
+      "number": 18,
+      "id": "public-service-desk",
+      "sourceName": "public-service-desk.png",
+      "sourceSha256": "85c3bd495e62d90b1eba65488c5862eab31aed5effa2d79838b00d6ddb19cbd0",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        61,
+        213,
+        450,
+        464
+      ],
+      "effectiveSourcePixels": [
+        389,
+        251
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 448,
+      "masterHeight": 448,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/public-service-desk.webp",
+          "bytes": 33664,
+          "sha256": "4bbe56517af9747137cba19710be25ea3f057109f07e160237b7f79aa2bef74d",
+          "width": 448,
+          "height": 448,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/public-service-desk-thumb.webp",
+          "bytes": 15662,
+          "sha256": "3d39fed51db005c2600ff32a3d0d5d9a958a361f2d25cff5b83d3428d852a9c0",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "single-window",
+        "compensation",
+        "offline-centres",
+        "climate-insurance-pool",
+        "family-grant"
+      ]
+    },
+    {
+      "number": 19,
+      "id": "telemedicine-room",
+      "sourceName": "telemedicine-room.png",
+      "sourceSha256": "63112efd1f0c10d2bb7e16546b38d984864f3d5c1171e1adb0517951d5878933",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        83,
+        203,
+        428,
+        464
+      ],
+      "effectiveSourcePixels": [
+        345,
+        261
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 400,
+      "masterHeight": 400,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 400,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/telemedicine-room.webp",
+          "bytes": 29538,
+          "sha256": "a0c0bc8dda540dcf20b967c0616ca665bc4d77fa779e0b06be4524e86e7bd84c",
+          "width": 400,
+          "height": 400,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/telemedicine-room-thumb.webp",
+          "bytes": 15754,
+          "sha256": "f8ba7c838c83cd3e72f7e321b7ac2d83b26e72ef7671f3422eb893328e929e63",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "telemedicine-network"
+      ]
+    },
+    {
+      "number": 20,
+      "id": "backup-server-room",
+      "sourceName": "backup-server-room.png",
+      "sourceSha256": "8b96dca8a295c53fb6f27e35308c0c3c6dc8192784cb25fb098a30eb545ee178",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        67,
+        209,
+        444,
+        464
+      ],
+      "effectiveSourcePixels": [
+        377,
+        255
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 432,
+      "masterHeight": 432,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/backup-server-room.webp",
+          "bytes": 30386,
+          "sha256": "aa3485def6c277559a4f74e64b91d195caa1457820522556f05f9415b8c3d217",
+          "width": 432,
+          "height": 432,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/backup-server-room-thumb.webp",
+          "bytes": 14110,
+          "sha256": "78f0782626e2e6eae6135d22deee3fdf1a2c5ebc17bd9112aa5b507e7aa5ba30",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "cyber-first",
+        "single-vendor-contract",
+        "incident-command"
+      ]
+    },
+    {
+      "number": 21,
+      "id": "civic-tech-workshop",
+      "sourceName": "civic-tech-workshop.png",
+      "sourceSha256": "e30c38e8bbff72e6a9976e874a787ba192dad18862ed4ffce9e68f8dba7c41e0",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        98,
+        231,
+        413,
+        464
+      ],
+      "effectiveSourcePixels": [
+        315,
+        233
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 368,
+      "masterHeight": 368,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 368,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/civic-tech-workshop.webp",
+          "bytes": 35214,
+          "sha256": "e6cb76aaf5e3e29806e196cc7c2cca1270691fe1740d5bc113811d8e4324dbd3",
+          "width": 368,
+          "height": 368,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/civic-tech-workshop-thumb.webp",
+          "bytes": 20600,
+          "sha256": "b409ee09c50040c9df64ff3bfbf98670485c1b17e0028ad757c259782585951b",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "open-feedback",
+        "modular-platform",
+        "civic-tech-lab",
+        "startup-challenge",
+        "open-briefing",
+        "flexible-employers",
+        "open-ledger",
+        "citizens-assembly"
+      ]
+    },
+    {
+      "number": 22,
+      "id": "commuter-transport",
+      "sourceName": "commuter-transport.png",
+      "sourceSha256": "2e1fb53ffb7e36e4faf1fb3cb657fbb95b23b263bd99a55e475d8e7b8274ff56",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        47,
+        231,
+        465,
+        464
+      ],
+      "effectiveSourcePixels": [
+        418,
+        233
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 480,
+      "masterHeight": 480,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/commuter-transport.webp",
+          "bytes": 48038,
+          "sha256": "2f9c58da567a95398d7e65c3950b3f41aee6ec14d78952459bd7ceb0d2fe1ce2",
+          "width": 480,
+          "height": 480,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/commuter-transport-thumb.webp",
+          "bytes": 18108,
+          "sha256": "3acd44b29e4a08ed3e82946bb07093ac9fde2a8c47d5d0cfd49a81e3633a6cec",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "commuter-link",
+        "age-friendly-routes"
+      ]
+    },
+    {
+      "number": 23,
+      "id": "intergenerational-centre",
+      "sourceName": "intergenerational-centre.png",
+      "sourceSha256": "7d5562f8ba2a560af85ed33fb235417ef895baf1a49d074cb93b629f48f25729",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        54,
+        227,
+        457,
+        464
+      ],
+      "effectiveSourcePixels": [
+        403,
+        237
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 464,
+      "masterHeight": 464,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/intergenerational-centre.webp",
+          "bytes": 44658,
+          "sha256": "dfdb3a83ca9cbaf6c5a4ceb0c4291d066f71fe9e271fb0da4c99e209cf337562",
+          "width": 464,
+          "height": 464,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/intergenerational-centre-thumb.webp",
+          "bytes": 17402,
+          "sha256": "ac687e68486f4ba409b93309fa4ee0b570e14de632c80dc7375c4b94542ba847",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "mixed-generations"
+      ]
+    },
+    {
+      "number": 24,
+      "id": "clean-production-line",
+      "sourceName": "clean-production-line.png",
+      "sourceSha256": "b607186af7c701d53c06d82f1ef33c1ddfd7988258a078ce54d1de2942b7eea2",
+      "sourceCanvas": [
+        512,
+        512
+      ],
+      "sourceAlphaBounds": [
+        72,
+        203,
+        440,
+        464
+      ],
+      "effectiveSourcePixels": [
+        368,
+        261
+      ],
+      "sourceType": "extracted-sheet",
+      "masterWidth": 432,
+      "masterHeight": 432,
+      "anchor": [
+        0.5,
+        0.94
+      ],
+      "maxDisplayWidth": 432,
+      "qualityTier": "compact",
+      "displayRole": "campaign",
+      "files": [
+        {
+          "path": "assets/services/clean-production-line.webp",
+          "bytes": 45704,
+          "sha256": "206c7663fc624622ddd597e227a3b81fca24535f2c2b393840577ed7762f815e",
+          "width": 432,
+          "height": 432,
+          "alpha": true
+        },
+        {
+          "path": "assets/services/clean-production-line-thumb.webp",
+          "bytes": 20810,
+          "sha256": "1daadfecbf168a27bbd0fff7f0a4193cb3e28f0b43736b827a58fb4b43c213d4",
+          "width": 256,
+          "height": 256,
+          "alpha": true
+        }
+      ],
+      "actionIds": [
+        "clean-line-modernisation"
+      ]
+    }
+  ]
+}

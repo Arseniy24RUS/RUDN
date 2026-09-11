@@ -1,0 +1,108 @@
+/* Stage 8: readable choices and evidence, no new permanent KPI dashboard. */
+.save-access {min-height:40px; padding:8px 12px; border-radius:12px; border:1px solid #aad5ed;background:#fff;color:#07537c;font-weight:650;cursor:pointer;}
+.start-card .save-access{width:100%;margin-top:10px}
+.save-dialog {width:min(620px,calc(100vw - 24px));padding:26px;border:0;border-radius:22px;color:#123b57;max-height:90dvh;overflow:auto}
+.save-dialog::backdrop{background:#052f50a8}
+.save-dialog h2{margin:0 32px 14px 0;font-size:24px}
+.save-dialog p{font-size:15px;line-height:1.5}
+.save-dialog button{min-height:44px}
+.save-dialog .save-actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.save-dialog label{display:flex;align-items:center;gap:10px;line-height:1.4;font-size:14px}
+.save-dialog input[type=checkbox]{width:22px;height:22px;flex-shrink:0}
+#save-status{padding:12px;background:#eef8ff;border-radius:12px;min-height:70px;overflow-wrap:anywhere}
+#save-backup-info{font-size:13px}#save-current{font-weight:650}
+#save-import-confirm[hidden]{display:none}
+.fiscal-tools{margin:20px 0;padding:22px;border-radius:20px;background:white;border:1px solid #c3e2f4;color:#183e59}
+.fiscal-tools h3{margin:0 0 10px}.fiscal-tools p{font-size:14px;line-height:1.5}
+.treasury-ops{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;margin:18px 0}
+.treasury-ops label{display:flex;flex-direction:column;gap:8px;font-size:14px}
+.treasury-ops input{width:130px;min-height:44px;font-size:16px;padding:8px;border:1px solid #a3cbe3;border-radius:10px}
+.treasury-ops button{padding:10px 16px;min-height:44px}
+.aid-warning{padding:14px;border-left:4px solid #ae6418;background:#fff5e9;font-size:14px;line-height:1.5;margin:14px 0}
+.future-budget summary{cursor:pointer;padding:14px 0;font-weight:700;font-size:16px;min-height:44px}
+.future-years{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.future-years article{padding:12px;background:#f3f9fd;border-radius:12px}
+.future-years article>b{font-size:22px}.future-years span{display:flex;justify-content:space-between;gap:12px;font-size:13px;line-height:1.5;margin-top:8px}
+.execution-note{margin:15px 0;padding:16px;background:#f0f9ff;border-radius:14px;font-size:14px;line-height:1.5;color:#1b435d}
+.execution-note h4{margin:0 0 8px;font-size:17px}.execution-note p{margin:8px 0}.execution-note summary{padding:10px 0;cursor:pointer;font-weight:650}
+.range-footnote{font-size:12px!important;line-height:1.45!important;color:#42627b;padding-top:8px}
+.stat-copy em{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.15!important;font-size:11px!important}
+@media(min-width:901px) and (max-height:820px){
+ .topbar{min-height:94px;height:auto;padding-top:10px;padding-bottom:10px}
+ .topbar-name span{display:none}.core-stats{gap:7px}.stat-card{padding:9px 10px}
+ .advisor-dock{bottom:12px!important}.advisor-avatar{width:54px!important;height:54px!important}
+ .advisor-dock .advisor-portrait,.advisor-dock img{max-height:62px;object-fit:cover}
+ .mission-panel .mission-header{padding-bottom:10px}
+ .game-footer{max-height:82px}.game-footer .footer-tip{display:none}
+ .action-card .action-art{height:100px!important;min-height:100px!important}
+}
+@media(min-width:901px) and (max-width:1450px){
+ .topbar-name{display:none!important}.topbar-brand{flex:0 0 152px!important;min-width:0!important}
+ .topbar-logo{width:130px!important;max-width:130px!important}.topbar .brand-divider{display:none}
+ .core-stats{flex:1!important;min-width:0}.stat-copy{min-width:0}.profile-copy{display:none!important}
+ .profile-box{min-width:0!important;gap:5px}.chapter-box{max-width:135px}.stat-card{min-width:0!important}
+}
+@media(max-width:900px){
+ .mission-panel .action-cards:not(.has-selection){display:grid!important;grid-template-columns:1fr!important;gap:10px;overflow:visible!important;scroll-snap-type:none!important}
+ .action-cards:not(.has-selection) .action-card{display:grid!important;grid-template-columns:68px minmax(0,1fr)!important;min-width:0!important;width:100%!important;min-height:110px!important;padding:12px!important;gap:4px 12px!important;text-align:left}
+ .action-cards:not(.has-selection) .action-art{grid-column:1;grid-row:1 / 4;height:68px!important;min-height:68px!important;width:68px!important;margin:0!important;border-radius:12px!important;align-self:center}
+ .action-cards:not(.has-selection) .action-card-heading,.action-cards:not(.has-selection) .action-card p,.action-cards:not(.has-selection) .action-card-footer{grid-column:2;margin:0!important}
+ .action-cards:not(.has-selection) .action-card-heading h4{font-size:16px!important}
+ .action-cards:not(.has-selection) .action-card p{font-size:13px!important;line-height:1.4!important}
+ .action-cards:not(.has-selection) .action-card-footer{display:flex;gap:10px;flex-wrap:wrap;padding-top:5px!important}
+ .action-cards:not(.has-selection) .risk-mini{display:none}
+ .action-card .action-art{height:100px!important;min-height:100px!important}
+ .mission-panel{padding:17px!important}.mission-description{font-size:14px!important;line-height:1.5!important}
+ #mission-title{font-size:23px!important}.mission-header{padding-bottom:10px!important}
+ .core-stats .stat-icon{display:none!important}.stat-copy em{font-size:10px!important}
+ #floating-save{position:fixed;right:12px;bottom:82px;z-index:40;box-shadow:0 4px 12px #03416b22;font-size:12px}
+ .future-years{grid-template-columns:1fr}.fiscal-tools{padding:16px}.save-dialog{padding:20px}
+ .save-actions{flex-direction:column}.save-actions button{width:100%}
+}
+
+/* A deliberate fallback, not a fourth competing hero card. */
+.action-cards .defer-action { grid-column: 1/-1; display:flex;align-items:center;gap:12px; min-height:64px;max-height:90px;width:100%;padding:12px 16px;text-align:left;background:#f4f8fc;}
+.defer-action small{display:block;font-size:12px;font-weight:400;margin-top:4px;color:#475d74;line-height:1.4;}
+.action-cards:not(.has-selection){flex-wrap:wrap;}
+@media(min-width:901px){.action-cards:not(.has-selection) .action-card:not(.defer-action){flex:1 1 29%;min-width:0;}.action-cards .defer-action{flex:1 1 100%;}}
+#floating-save{position:fixed;right:16px;bottom:12px;z-index:24;padding:8px 12px;background:white;color:#085e9f;border:1px solid #a6c8e0;border-radius:8px;font-size:12px;}
+@media(max-width:900px){#floating-save{right:9px;bottom:72px;opacity:.95;}}
+
+.forecast-scope{font-size:12px;line-height:1.45;color:#4b6175;margin:7px 0 11px;}
+
+@media(min-width:901px) and (max-height:850px){
+ .mission-heading{gap:12px;margin-bottom:9px;} .mission-heading h2{font-size:21px;line-height:1.1;}
+ .mission-icon{width:48px;height:48px;min-width:48px;}
+ .mission-description{font-size:13px;line-height:1.38;margin:7px 0 10px;}
+ .mission-context{margin:8px 0;} .choice-heading{margin:10px 0 8px;}
+ .action-cards:not(.has-selection) .action-card:not(.defer-action){min-height:185px;padding:8px;}
+ .action-cards:not(.has-selection) .action-art{height:55px;min-height:55px;}
+ .action-cards:not(.has-selection) .action-card h4{font-size:12px;line-height:1.3;}
+ .action-cards:not(.has-selection) .action-card>p{display:none;}
+ .action-cards:not(.has-selection) .action-card-footer{margin-top:6px;gap:4px;}
+ .action-cards:not(.has-selection) .risk-mini{display:none;}
+ .defer-action{min-height:53px!important;font-size:12px;}
+ .footer-progress{padding:12px 16px;}.mission-footer{padding-top:8px;padding-bottom:8px;}
+}
+.defer-action{flex-direction:row!important;justify-content:flex-start!important;}
+.defer-action>div{text-align:left;}.defer-action>span{flex:0 0 22px;}
+@media(min-width:901px) and (max-height:850px){
+ .mission-footer{min-height:62px;padding-top:6px;padding-bottom:6px;grid-template-columns:1fr;}
+ .footer-tip{display:none;}.footer-progress{min-height:44px;padding:5px 16px;}
+ .action-cards:not(.has-selection) .action-art{height:55px!important;min-height:55px!important;aspect-ratio:auto!important;flex:0 0 55px!important;}
+ .action-cards:not(.has-selection) .action-card:not(.defer-action){min-height:158px!important;}
+ .action-cards:not(.has-selection) .defer-action{min-height:54px!important;max-height:70px!important;}
+ .mission-scroll{padding-bottom:5px;}
+}
+/* The fallback response is a compact row, not a full policy-art card. */
+.action-cards:not(.has-selection) .defer-action{
+ display:flex!important;min-height:64px!important;height:auto!important;max-height:none!important;
+ flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;padding:12px 16px!important;
+}
+.action-cards:not(.has-selection) .defer-action>div{min-width:0;}
+
+/* Three real map sections must remain reachable on a 320 px viewport. */
+@media (max-width: 380px) {
+  .world-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .world-tabs button { min-width: 0; padding: 8px 4px; flex-direction: column; gap: 4px; }
+}

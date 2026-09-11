@@ -1,0 +1,393 @@
+{
+  "version": "1.0",
+  "description": "Prepared from supplied image-generation assets, not UI screenshots. No new artwork generated in this iteration. Normalised floor anchor for seven freestanding models. State symbols are supporting UI, not simulated facility counts.",
+  "files": [
+    {
+      "id": "school",
+      "path": "assets/illustrated/school.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 180354,
+      "sha256": "20813f55af038f19a38b8f2837a05ce63826c694a2b551d042ecdd3284b75da9",
+      "source": "современный_школьный_кампус_в_изометрии.png",
+      "sourceSha256": "9cb1099e78b2fc17ccf4c0894673aa8408d7aa033624121764f97d4e6e6bcff7"
+    },
+    {
+      "id": "school-thumb",
+      "path": "assets/illustrated/school-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 34506,
+      "sha256": "005724876685edbaed1cb508bbccf46f270bbc1f4055ab848e196d5e77ccdb47",
+      "source": "современный_школьный_кампус_в_изометрии.png",
+      "sourceSha256": "9cb1099e78b2fc17ccf4c0894673aa8408d7aa033624121764f97d4e6e6bcff7"
+    },
+    {
+      "id": "clinic",
+      "path": "assets/illustrated/clinic.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 165930,
+      "sha256": "a729a260a114fda35cb7f2ac9460ed3ea114c2f3048131edfac37706c82bdad9",
+      "source": "изометрическая_модель_современной_клиники.png",
+      "sourceSha256": "3b67f11171aafe0e280f5b209d56da1eb3d75780c3bfdf6c50376af3ae94e79b"
+    },
+    {
+      "id": "clinic-thumb",
+      "path": "assets/illustrated/clinic-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 35572,
+      "sha256": "c20dd5225e01ae01ba16aef356d93a3abdc95a36115940913a1797b698591b0a",
+      "source": "изометрическая_модель_современной_клиники.png",
+      "sourceSha256": "3b67f11171aafe0e280f5b209d56da1eb3d75780c3bfdf6c50376af3ae94e79b"
+    },
+    {
+      "id": "digital",
+      "path": "assets/illustrated/digital.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 173642,
+      "sha256": "08e0e58ba13af4d1e7c766eed2a76b683c001838b15fb41215e98329ee08f3ea",
+      "source": "современный_техноцентр_на_изометрическом_участке.png",
+      "sourceSha256": "1878277b9053010abd62af044d6d9324fbe3db1d8e3a94d0514c7fbbc481c3b5"
+    },
+    {
+      "id": "digital-thumb",
+      "path": "assets/illustrated/digital-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 34916,
+      "sha256": "ef9111c73cc57e90529668a5cc4385750e4738de843f0170c844a05d34d48b06",
+      "source": "современный_техноцентр_на_изометрическом_участке.png",
+      "sourceSha256": "1878277b9053010abd62af044d6d9324fbe3db1d8e3a94d0514c7fbbc481c3b5"
+    },
+    {
+      "id": "industry",
+      "path": "assets/illustrated/industry.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 175716,
+      "sha256": "c1a190b5fb2c78cf7528b2b0d626313e7bbaa3df14acbdd139b9b1ce66efcec7",
+      "source": "изометрический_кампус_инновационной_фабрики.png",
+      "sourceSha256": "bcd2f75a48355499789e5e2ff2a1c41af00f0db3cd8f7f6b2f03efd078a7c8ee"
+    },
+    {
+      "id": "industry-thumb",
+      "path": "assets/illustrated/industry-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 36462,
+      "sha256": "0ded8ebff2d86bc47e2cf64675966ecaf435340788cc080d5c055177b6e5a43d",
+      "source": "изометрический_кампус_инновационной_фабрики.png",
+      "sourceSha256": "bcd2f75a48355499789e5e2ff2a1c41af00f0db3cd8f7f6b2f03efd078a7c8ee"
+    },
+    {
+      "id": "barrier",
+      "path": "assets/illustrated/barrier.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 190106,
+      "sha256": "a8d73c7c18e683f9f8e868bf29342a8daeee0fd8e0bc67141ed70e7925f2a1fd",
+      "source": "изометрический_шлюз_и_восстановленные_водно_болотн.png",
+      "sourceSha256": "650b8ec85e175be9d5aa271b43c5fcaa8fbb7ddaad28f71b6d0ffd4b08db341a"
+    },
+    {
+      "id": "barrier-thumb",
+      "path": "assets/illustrated/barrier-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 34770,
+      "sha256": "cdcf4544eecbbee5c5a5c31b9ad59b632b21d6bbf4addede782d3088e23264f0",
+      "source": "изометрический_шлюз_и_восстановленные_водно_болотн.png",
+      "sourceSha256": "650b8ec85e175be9d5aa271b43c5fcaa8fbb7ddaad28f71b6d0ffd4b08db341a"
+    },
+    {
+      "id": "housing",
+      "path": "assets/illustrated/housing.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 171642,
+      "sha256": "d3320b5cd7a1ba63aaa8abeea3a12bf6ed01b4dd0f9c07b143c4049c4aaaa96e",
+      "source": "современный_жилой_квартал_с_детской_площадкой.png",
+      "sourceSha256": "72418ad05f0826bd5cc584fdb181ab7d61c62b9f09f90a3a03906f3c0b07a14d"
+    },
+    {
+      "id": "housing-thumb",
+      "path": "assets/illustrated/housing-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 33850,
+      "sha256": "0121945d6546567d02c23fae4778c0fc356294fa7788f288741ded2dd92fcf8b",
+      "source": "современный_жилой_квартал_с_детской_площадкой.png",
+      "sourceSha256": "72418ad05f0826bd5cc584fdb181ab7d61c62b9f09f90a3a03906f3c0b07a14d"
+    },
+    {
+      "id": "construction",
+      "path": "assets/illustrated/construction.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 204306,
+      "sha256": "65d99e62337df0d969edbc1346e707076ec24332927922e4ba454f8a28de4ebe",
+      "source": "изометрическая_строительная_площадка_с_краном.png",
+      "sourceSha256": "ff0f95ea1c20f8b8ab0f9d69c04eb6fce312ee8825df3b16d5a69831188bacde"
+    },
+    {
+      "id": "construction-thumb",
+      "path": "assets/illustrated/construction-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 39728,
+      "sha256": "69e3c749e6d2f1bc98bd8648b45d824d3b8ecc4844e26884dbe5a5789e18afba",
+      "source": "изометрическая_строительная_площадка_с_краном.png",
+      "sourceSha256": "ff0f95ea1c20f8b8ab0f9d69c04eb6fce312ee8825df3b16d5a69831188bacde"
+    },
+    {
+      "id": "stage-decision",
+      "path": "assets/illustrated/stage-decision.webp",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 28580,
+      "sha256": "ed8fa798188ecee541bd92e11ab053925348b629b8f3953d9a14071252e73d28",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-decision-thumb",
+      "path": "assets/illustrated/stage-decision-thumb.webp",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 10754,
+      "sha256": "fbdf03e8f5cddc2610bd229b126799e8fb4b305ae256ccc030b2c32c2c45747e",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-delivery",
+      "path": "assets/illustrated/stage-delivery.webp",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 30514,
+      "sha256": "dd668e4f579b5d795f2d13055b42f3e7cbd3639be00e7ee17eec6db32b0e1709",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-delivery-thumb",
+      "path": "assets/illustrated/stage-delivery-thumb.webp",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 10718,
+      "sha256": "e497f52a26bb6975d46b681516037e861d5375bf037dce8feac7d02be8213249",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-opening",
+      "path": "assets/illustrated/stage-opening.webp",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 31574,
+      "sha256": "4fc60383eeb6148723d1d0bfd85e5269957f97fc945e1af6e5280db39a29a645",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-opening-thumb",
+      "path": "assets/illustrated/stage-opening-thumb.webp",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 11524,
+      "sha256": "0d0282c6ebc8959e635fa07ce5c8194bfc74168c72dd3ce0c72f13c7356873f1",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-operation",
+      "path": "assets/illustrated/stage-operation.webp",
+      "size": [
+        256,
+        256
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 30540,
+      "sha256": "b6342d504fd8a0b1281792e84f1b773086b006efa9a9e7b2d1ea144875b8a658",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "stage-operation-thumb",
+      "path": "assets/illustrated/stage-operation-thumb.webp",
+      "size": [
+        128,
+        128
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "alpha": true,
+      "bytes": 11114,
+      "sha256": "f101f0b1430688a896319cff7d78ae553486d73f210359dd3fb5f28d1b09a0d3",
+      "source": "четыре_изометрические_иконки_городского_управления.png",
+      "sourceSha256": "13596e2bcfc8e8a5394fb3cb52b694e7cd291ffd0270b31ea52b193a88f20c1d"
+    },
+    {
+      "id": "region",
+      "path": "assets/illustrated/region.webp",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "bytes": 600840,
+      "sha256": "17587583653deccf4bc6fc2ab0bae05eefe1965743489b13ef4bd383cbec51dc",
+      "source": "изометрическая_карта_города_и_природы.png",
+      "sourceSha256": "1b3b86441cb6c14373efcb134bd80c9aaa06439f973c1b8f7474da8894d6396b"
+    }
+  ]
+}

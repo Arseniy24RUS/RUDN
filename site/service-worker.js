@@ -1,5 +1,8 @@
-const CACHE_PREFIX='rudn-gmu-pages-';
-const CACHE=`${CACHE_PREFIX}v1.3.0-career`;
+const SCOPE=new URL(self.registration.scope);
+// CacheStorage is shared by every application on this origin. Own only this scope.
+const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
+const CACHE=`${CACHE_PREFIX}v1.3.1`;
+const LEGACY_CACHES=new Set(['rudn-gmu-pages-v1.2.2','rudn-gmu-pages-v1.3.0-career']);
 const CAREER_SHELL=[
   './apps/career/entry.mjs',
   './apps/career/runtime.bundle.mjs',
@@ -35,14 +38,14 @@ const SHELL=[
   './','./index.html','./apps/puzzle.html',
   './assets/css/site.css?v=1.3.0',
   './assets/css/puzzle.css?v=1.2.2',
-  './assets/js/main.js?v=1.3.0',
+  './assets/js/main.js?v=1.3.1',
   './assets/js/career-course.js',
   './assets/js/backend.js?v=1.2.2',
   './assets/js/session.js?v=1.2.2',
   './assets/js/attempt-session.js?v=1.2.2',
   './assets/js/notifications.js?v=1.2.2',
   './assets/js/account.js?v=1.2.2',
-  './assets/js/teacher-journal.js?v=1.2.2',
+  './assets/js/teacher-journal.js?v=1.3.1',
   './assets/vendor/firebase/firebase-core.js',
   './assets/vendor/firebase/firebase-storage.js',
   './assets/vendor/firebase/firebase-shared.js',
@@ -58,31 +61,305 @@ const SHELL=[
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
   './assets/img/quiz-legislative.png','./assets/img/quiz-executive.png','./assets/img/quiz-judicial.png','./assets/img/quiz-other.svg',
+  './assets/course/previews/seminar_07_simulator.jpg',
   './manifest.webmanifest',
   './data/course.json','./data/questions.json','./data/seminar5_variants.json',
-  './data/exam_questions.json','./data/question_media.json','./data/symbol_manifest.json',
-  ...CAREER_SHELL
+  './data/exam_questions.json','./data/question_media.json','./data/symbol_manifest.json'
 ];
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
+// Native simulator runtime and artwork. Keep this list in sync with the module;
+// scripts/test_governor_service_worker.mjs checks every shipped runtime file.
+const GOVERNOR_ASSETS=[
+  "./apps/governor/",
+  "./apps/governor/agenda.css",
+  "./apps/governor/assets/advisors/anna-berezina.png",
+  "./apps/governor/assets/advisors/anna-resident.png",
+  "./apps/governor/assets/advisors/denis-kovalev.png",
+  "./apps/governor/assets/advisors/denis-resident.png",
+  "./apps/governor/assets/advisors/elena.png",
+  "./apps/governor/assets/advisors/ilya.png",
+  "./apps/governor/assets/advisors/mikhail-resident.png",
+  "./apps/governor/assets/advisors/mira.png",
+  "./apps/governor/assets/advisors/olga-resident.png",
+  "./apps/governor/assets/advisors/valentina-resident.png",
+  "./apps/governor/assets/advisors/viktor.png",
+  "./apps/governor/assets/art/digital-procurement.webp",
+  "./apps/governor/assets/art/flood-defenses.webp",
+  "./apps/governor/assets/art/flood-event.webp",
+  "./apps/governor/assets/art/flood-infrastructure.webp",
+  "./apps/governor/assets/art/flood-outreach.webp",
+  "./apps/governor/assets/art/health-clinics.webp",
+  "./apps/governor/assets/art/health-delivery.webp",
+  "./apps/governor/assets/art/health-legacy.webp",
+  "./apps/governor/assets/art/health-mobile.webp",
+  "./apps/governor/assets/art/health-training.webp",
+  "./apps/governor/assets/art/industrial-green.webp",
+  "./apps/governor/assets/art/industrial-legacy.webp",
+  "./apps/governor/assets/art/industrial-transition.webp",
+  "./apps/governor/assets/art/public-audit.webp",
+  "./apps/governor/assets/art/region-map.webp",
+  "./apps/governor/assets/art/river-land-use.webp",
+  "./apps/governor/assets/art/river-legacy.webp",
+  "./apps/governor/assets/art/river-nature.webp",
+  "./apps/governor/assets/art/storm-event.webp",
+  "./apps/governor/assets/art/youth-event.webp",
+  "./apps/governor/assets/asset-plan-status.json",
+  "./apps/governor/assets/characters/anna-berezina-avatar.webp",
+  "./apps/governor/assets/characters/anna-berezina.webp",
+  "./apps/governor/assets/characters/anna-resident-avatar.webp",
+  "./apps/governor/assets/characters/anna-resident.webp",
+  "./apps/governor/assets/characters/denis-kovalev-avatar.webp",
+  "./apps/governor/assets/characters/denis-kovalev.webp",
+  "./apps/governor/assets/characters/denis-resident-avatar.webp",
+  "./apps/governor/assets/characters/denis-resident.webp",
+  "./apps/governor/assets/characters/elena-avatar.webp",
+  "./apps/governor/assets/characters/elena.webp",
+  "./apps/governor/assets/characters/ilya-avatar.webp",
+  "./apps/governor/assets/characters/ilya.webp",
+  "./apps/governor/assets/characters/manifest.json",
+  "./apps/governor/assets/characters/mikhail-resident-avatar.webp",
+  "./apps/governor/assets/characters/mikhail-resident.webp",
+  "./apps/governor/assets/characters/mira-avatar.webp",
+  "./apps/governor/assets/characters/mira.webp",
+  "./apps/governor/assets/characters/olga-resident-avatar.webp",
+  "./apps/governor/assets/characters/olga-resident.webp",
+  "./apps/governor/assets/characters/valentina-resident-avatar.webp",
+  "./apps/governor/assets/characters/valentina-resident.webp",
+  "./apps/governor/assets/characters/viktor-avatar.webp",
+  "./apps/governor/assets/characters/viktor.webp",
+  "./apps/governor/assets/icon-192.png",
+  "./apps/governor/assets/icon-512.png",
+  "./apps/governor/assets/illustrated/barrier-thumb.webp",
+  "./apps/governor/assets/illustrated/barrier.webp",
+  "./apps/governor/assets/illustrated/clinic-thumb.webp",
+  "./apps/governor/assets/illustrated/clinic.webp",
+  "./apps/governor/assets/illustrated/construction-thumb.webp",
+  "./apps/governor/assets/illustrated/construction.webp",
+  "./apps/governor/assets/illustrated/digital-thumb.webp",
+  "./apps/governor/assets/illustrated/digital.webp",
+  "./apps/governor/assets/illustrated/housing-thumb.webp",
+  "./apps/governor/assets/illustrated/housing.webp",
+  "./apps/governor/assets/illustrated/industry-thumb.webp",
+  "./apps/governor/assets/illustrated/industry.webp",
+  "./apps/governor/assets/illustrated/manifest.json",
+  "./apps/governor/assets/illustrated/region.webp",
+  "./apps/governor/assets/illustrated/school-thumb.webp",
+  "./apps/governor/assets/illustrated/school.webp",
+  "./apps/governor/assets/illustrated/stage-decision-thumb.webp",
+  "./apps/governor/assets/illustrated/stage-decision.webp",
+  "./apps/governor/assets/illustrated/stage-delivery-thumb.webp",
+  "./apps/governor/assets/illustrated/stage-delivery.webp",
+  "./apps/governor/assets/illustrated/stage-opening-thumb.webp",
+  "./apps/governor/assets/illustrated/stage-opening.webp",
+  "./apps/governor/assets/illustrated/stage-operation-thumb.webp",
+  "./apps/governor/assets/illustrated/stage-operation.webp",
+  "./apps/governor/assets/letters/anna-letter-02-avatar.webp",
+  "./apps/governor/assets/letters/anna-letter-02.webp",
+  "./apps/governor/assets/letters/anna-letter-03-avatar.webp",
+  "./apps/governor/assets/letters/anna-letter-03.webp",
+  "./apps/governor/assets/letters/denis-letter-02-avatar.webp",
+  "./apps/governor/assets/letters/denis-letter-02.webp",
+  "./apps/governor/assets/letters/denis-letter-03-avatar.webp",
+  "./apps/governor/assets/letters/denis-letter-03.webp",
+  "./apps/governor/assets/letters/manifest.json",
+  "./apps/governor/assets/letters/mikhail-letter-02-avatar.webp",
+  "./apps/governor/assets/letters/mikhail-letter-02.webp",
+  "./apps/governor/assets/letters/mikhail-letter-03-avatar.webp",
+  "./apps/governor/assets/letters/mikhail-letter-03.webp",
+  "./apps/governor/assets/letters/olga-letter-02-avatar.webp",
+  "./apps/governor/assets/letters/olga-letter-02.webp",
+  "./apps/governor/assets/letters/olga-letter-03-avatar.webp",
+  "./apps/governor/assets/letters/olga-letter-03.webp",
+  "./apps/governor/assets/letters/valentina-letter-02-avatar.webp",
+  "./apps/governor/assets/letters/valentina-letter-02.webp",
+  "./apps/governor/assets/letters/valentina-letter-03-avatar.webp",
+  "./apps/governor/assets/letters/valentina-letter-03.webp",
+  "./apps/governor/assets/rudn-logo.png",
+  "./apps/governor/assets/rudn-logo.webp",
+  "./apps/governor/assets/scenes/capital-service-scene.webp",
+  "./apps/governor/assets/scenes/digital-outage-scene.webp",
+  "./apps/governor/assets/scenes/flood-response-scene.webp",
+  "./apps/governor/assets/scenes/governor-office.webp",
+  "./apps/governor/assets/scenes/industrial-mentoring-scene.webp",
+  "./apps/governor/assets/scenes/negotiation-room.webp",
+  "./apps/governor/assets/scenes/north-access-scene.webp",
+  "./apps/governor/assets/scenes/public-meeting-room.webp",
+  "./apps/governor/assets/scenes/respiratory-outbreak-scene.webp",
+  "./apps/governor/assets/scenes/river-before-flood-scene.webp",
+  "./apps/governor/assets/scenes/suburb-school-scene.webp",
+  "./apps/governor/assets/scenes/youth-outflow-scene.webp",
+  "./apps/governor/assets/services/backup-server-room-thumb.webp",
+  "./apps/governor/assets/services/backup-server-room.webp",
+  "./apps/governor/assets/services/barrier-delivery-thumb.webp",
+  "./apps/governor/assets/services/barrier-delivery.webp",
+  "./apps/governor/assets/services/bridge-drainage-thumb.webp",
+  "./apps/governor/assets/services/bridge-drainage.webp",
+  "./apps/governor/assets/services/civic-tech-workshop-thumb.webp",
+  "./apps/governor/assets/services/civic-tech-workshop.webp",
+  "./apps/governor/assets/services/clean-production-line-thumb.webp",
+  "./apps/governor/assets/services/clean-production-line.webp",
+  "./apps/governor/assets/services/clinic-delivery-thumb.webp",
+  "./apps/governor/assets/services/clinic-delivery.webp",
+  "./apps/governor/assets/services/commuter-transport-thumb.webp",
+  "./apps/governor/assets/services/commuter-transport.webp",
+  "./apps/governor/assets/services/digital-delivery-thumb.webp",
+  "./apps/governor/assets/services/digital-delivery.webp",
+  "./apps/governor/assets/services/family-childcare-thumb.webp",
+  "./apps/governor/assets/services/family-childcare.webp",
+  "./apps/governor/assets/services/first-job-mentoring-thumb.webp",
+  "./apps/governor/assets/services/first-job-mentoring.webp",
+  "./apps/governor/assets/services/flood-warning-service-thumb.webp",
+  "./apps/governor/assets/services/flood-warning-service.webp",
+  "./apps/governor/assets/services/home-long-term-care-thumb.webp",
+  "./apps/governor/assets/services/home-long-term-care.webp",
+  "./apps/governor/assets/services/housing-delivery-thumb.webp",
+  "./apps/governor/assets/services/housing-delivery.webp",
+  "./apps/governor/assets/services/industry-delivery-thumb.webp",
+  "./apps/governor/assets/services/industry-delivery.webp",
+  "./apps/governor/assets/services/intergenerational-centre-thumb.webp",
+  "./apps/governor/assets/services/intergenerational-centre.webp",
+  "./apps/governor/assets/services/manifest.json",
+  "./apps/governor/assets/services/medical-training-thumb.webp",
+  "./apps/governor/assets/services/medical-training.webp",
+  "./apps/governor/assets/services/mobile-medical-unit-thumb.webp",
+  "./apps/governor/assets/services/mobile-medical-unit.webp",
+  "./apps/governor/assets/services/modular-nursery-thumb.webp",
+  "./apps/governor/assets/services/modular-nursery.webp",
+  "./apps/governor/assets/services/public-service-desk-thumb.webp",
+  "./apps/governor/assets/services/public-service-desk.webp",
+  "./apps/governor/assets/services/river-nature-buffer-thumb.webp",
+  "./apps/governor/assets/services/river-nature-buffer.webp",
+  "./apps/governor/assets/services/school-bus-thumb.webp",
+  "./apps/governor/assets/services/school-bus.webp",
+  "./apps/governor/assets/services/school-delivery-thumb.webp",
+  "./apps/governor/assets/services/school-delivery.webp",
+  "./apps/governor/assets/services/telemedicine-room-thumb.webp",
+  "./apps/governor/assets/services/telemedicine-room.webp",
+  "./apps/governor/assets/services/unavailable.svg",
+  "./apps/governor/assets/services/vocational-training-thumb.webp",
+  "./apps/governor/assets/services/vocational-training.webp",
+  "./apps/governor/assets/world/atlas.webp",
+  "./apps/governor/assets/world/barrier.webp",
+  "./apps/governor/assets/world/care.webp",
+  "./apps/governor/assets/world/clinic.webp",
+  "./apps/governor/assets/world/digital.webp",
+  "./apps/governor/assets/world/greenIndustry.webp",
+  "./apps/governor/assets/world/housing.webp",
+  "./apps/governor/assets/world/industry.webp",
+  "./apps/governor/assets/world/nature.webp",
+  "./apps/governor/assets/world/school.webp",
+  "./apps/governor/assets/world/service.webp",
+  "./apps/governor/assets/world/training.webp",
+  "./apps/governor/assets/world/transport.webp",
+  "./apps/governor/budget-review.css",
+  "./apps/governor/consolidation.css",
+  "./apps/governor/delivery.css",
+  "./apps/governor/governance.css",
+  "./apps/governor/illustrated.css",
+  "./apps/governor/index.html",
+  "./apps/governor/platform-bridge.js",
+  "./apps/governor/platform-contract.js",
+  "./apps/governor/platform.css",
+  "./apps/governor/recovery.css",
+  "./apps/governor/release.css",
+  "./apps/governor/src/agenda-ui.js",
+  "./apps/governor/src/agenda.js",
+  "./apps/governor/src/app.js",
+  "./apps/governor/src/asset-metadata.js",
+  "./apps/governor/src/budget-review-ui.js",
+  "./apps/governor/src/budget-review.js",
+  "./apps/governor/src/consolidation-data.js",
+  "./apps/governor/src/consolidation-ui.js",
+  "./apps/governor/src/delivery-desk.js",
+  "./apps/governor/src/delivery-ui.js",
+  "./apps/governor/src/engine.js",
+  "./apps/governor/src/finance.js",
+  "./apps/governor/src/game-data.js",
+  "./apps/governor/src/governance-data.js",
+  "./apps/governor/src/governance-ui.js",
+  "./apps/governor/src/governance.js",
+  "./apps/governor/src/icons.js",
+  "./apps/governor/src/illustrated-assets.js",
+  "./apps/governor/src/illustrated-world.js",
+  "./apps/governor/src/learning.js",
+  "./apps/governor/src/population-ui.js",
+  "./apps/governor/src/population.js",
+  "./apps/governor/src/presentation.js",
+  "./apps/governor/src/project-presentation.js",
+  "./apps/governor/src/project-state.js",
+  "./apps/governor/src/project-ui.js",
+  "./apps/governor/src/recovery-ui.js",
+  "./apps/governor/src/recovery.js",
+  "./apps/governor/src/release-ui.js",
+  "./apps/governor/src/save-system.js",
+  "./apps/governor/src/stage3-data.js",
+  "./apps/governor/src/stage4-data.js",
+  "./apps/governor/src/state-integrity.js",
+  "./apps/governor/src/stories-data.js",
+  "./apps/governor/src/stories-ui.js",
+  "./apps/governor/src/stories.js",
+  "./apps/governor/src/world-geometry.js",
+  "./apps/governor/src/world-model.js",
+  "./apps/governor/src/world-outcomes.js",
+  "./apps/governor/src/world-ui.js",
+  "./apps/governor/stories.css",
+  "./apps/governor/styles.css",
+  "./apps/governor/world.css"
+];
+const PRECACHE=[...SHELL,...CAREER_SHELL,...GOVERNOR_ASSETS];
 
-function cacheSuccessfulResponse(event,response){
-  if(response.ok){
-    const copy=response.clone();
-    event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{}));
+self.addEventListener('install',event=>{
+  event.waitUntil(
+    caches.open(CACHE)
+      .then(cache=>cache.addAll(PRECACHE.map(path=>new Request(new URL(path,SCOPE),{cache:'reload'}))))
+      .then(()=>self.skipWaiting())
+  );
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil(
+    caches.keys()
+      .then(keys=>Promise.all(keys
+        .filter(key=>key!==CACHE&&(key.startsWith(CACHE_PREFIX)||LEGACY_CACHES.has(key)))
+        .map(key=>caches.delete(key))))
+      .then(()=>self.clients.claim())
+  );
+});
+
+async function matchOwnCache(cache,request){
+  const cached=await cache.match(request);
+  if(cached)return cached;
+  // Navigation parameters do not change these static HTML entry points.
+  if(request.mode==='navigate'){
+    const url=new URL(request.url);
+    url.search='';
+    url.hash='';
+    return cache.match(url.href);
   }
-  return response;
 }
-const cachedResponse=request=>caches.open(CACHE).then(cache=>cache.match(request));
+
+async function serveRequest(request,networkFirst){
+  const cache=await caches.open(CACHE);
+  if(!networkFirst){
+    const cached=await matchOwnCache(cache,request);
+    if(cached)return cached;
+  }
+  try{
+    const response=await fetch(request);
+    if(response.ok){
+      // An unavailable/full cache must not turn a successful request into an error.
+      try{await cache.put(request,response.clone())}catch{}
+      return response;
+    }
+    // A failed deployment or temporary server error must not poison offline copies.
+    return await matchOwnCache(cache,request)||response;
+  }catch{
+    return await matchOwnCache(cache,request)||Response.error();
+  }
+}
 
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
-  if(url.origin!==location.origin)return;
+  if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))return;
   const networkFirst=event.request.mode==='navigate'||/\.(?:html|css|m?js|json|geojson|topojson|webmanifest)$/i.test(url.pathname);
-  if(networkFirst){
-    event.respondWith(fetch(event.request).then(response=>cacheSuccessfulResponse(event,response)).catch(async()=>await cachedResponse(event.request)||Response.error()));
-    return;
-  }
-  event.respondWith(cachedResponse(event.request).then(cached=>cached||fetch(event.request).then(response=>cacheSuccessfulResponse(event,response))));
+  event.respondWith(serveRequest(event.request,networkFirst));
 });

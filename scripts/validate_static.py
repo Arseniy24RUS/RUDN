@@ -60,6 +60,9 @@ def validate_reference(source: Path, reference: str, errors: list[str]) -> None:
     except ValueError:
         errors.append(f"URL escapes site root in {source.relative_to(ROOT)}: {reference}")
         return
+    # GitHub Pages serves index.html for native module directory routes.
+    if target.is_dir() and urlsplit(reference).path.endswith("/"):
+        target = target / "index.html"
     if not target.is_file():
         errors.append(f"Missing asset in {source.relative_to(ROOT)}: {reference}")
 
@@ -80,6 +83,9 @@ def main() -> int:
         SITE / "apps/career/runtime.bundle.mjs",
         SITE / "apps/career/surface.html",
         SITE / "apps/career/module.css",
+        SITE / "apps/governor/index.html",
+        SITE / "apps/governor/platform-bridge.js",
+        SITE / "apps/governor/platform-contract.js",
     ]
     missing_required = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]
     if missing_required:
@@ -169,7 +175,7 @@ def main() -> int:
     )
     scripts = sorted({
         script
-        for folder in [SITE / "assets/js", SITE / "apps/career"]
+        for folder in [SITE / "assets/js", SITE / "apps/career", SITE / "apps/governor"]
         for script in folder.rglob("*")
         if script.suffix in {".js", ".mjs"}
     })

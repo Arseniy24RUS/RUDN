@@ -41,6 +41,22 @@ jobs:
           while IFS= read -r -d '' file; do
             node --check "$file"
           done < <(find site -type f \( -name '*.js' -o -name '*.mjs' \) -print0)
+      - name: Verify Governor grading and offline contract
+        run: node --test scripts/test_governor_contract.mjs scripts/test_governor_service_worker.mjs
+      - name: Prepare native browser checks
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Test native Governor on desktop and mobile
+        run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
+      - name: Save native browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: governor-browser-qa
+          path: ${{ runner.temp }}/governor-browser-qa
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

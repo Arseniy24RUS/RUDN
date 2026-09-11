@@ -1,0 +1,463 @@
+{
+  "version": "0.13.0",
+  "generationPerformed": false,
+  "ageVariantsAvailable": true,
+  "assets": [
+    {
+      "number": 25,
+      "id": "mira",
+      "source": "профессиональный_портрет_в_синем_жакете.png",
+      "sourceSha256": "320502ca4348eac8e09bc2f55b8a96e80940c202092e1732ffce0f15ccd688c6",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/mira.webp",
+          "bytes": 52356,
+          "sha256": "8a039e5a40d52e8770f0c2d7096d7e75ddba2fa399f25603cb63c71fe1a2b6e2"
+        },
+        {
+          "path": "assets/characters/mira-avatar.webp",
+          "bytes": 14810,
+          "sha256": "e7f7b01405100c75238d6b03c93cef9bad1091e76a38e757b6af8c028c5f1022"
+        },
+        {
+          "path": "assets/advisors/mira.png",
+          "bytes": 85757,
+          "sha256": "ee82ffc690e001dfe7af1db620d1c392991ec8829136be6e9486076fa801dee0"
+        }
+      ]
+    },
+    {
+      "number": 26,
+      "id": "ilya",
+      "source": "задумчивый_бизнес_советник_в_очках.png",
+      "sourceSha256": "c6999cd4660c099037ac6dca70061ca508629b73b65d7a209779f4cba8995803",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/ilya.webp",
+          "bytes": 53302,
+          "sha256": "37b4e269c2ce6eb68191781737cbc920a24177a29b03f2b23c9030b6363baa2b"
+        },
+        {
+          "path": "assets/characters/ilya-avatar.webp",
+          "bytes": 13888,
+          "sha256": "2ec3bd0d293378e594c7a600fb061aa2080da6819cc454355300eaa80e573833"
+        },
+        {
+          "path": "assets/advisors/ilya.png",
+          "bytes": 79571,
+          "sha256": "19df5dce7d144a25a715fc558d33425c34d7dd6a2328c63ceed3588530f85e85"
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "id": "elena",
+      "source": "профессиональный_портрет_елены_крыловой.png",
+      "sourceSha256": "c918f4c1789145e2a5e41b83c5d74815081a8a760a7a0e285df40f2debdc8bc5",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/elena.webp",
+          "bytes": 53160,
+          "sha256": "1fcf6565f347f4d73574aca3efd9e9eca9a8f36f9e350844e5f74553b295574d"
+        },
+        {
+          "path": "assets/characters/elena-avatar.webp",
+          "bytes": 13320,
+          "sha256": "2bcfd3db6189452e66f679683d5e34702a84d9bc85ab5359341032cd66c1e146"
+        },
+        {
+          "path": "assets/advisors/elena.png",
+          "bytes": 83304,
+          "sha256": "996db5e491f712100f44e7e77b606a39d167a529bce7f9118e5c3230d9e64978"
+        }
+      ]
+    },
+    {
+      "number": 28,
+      "id": "viktor",
+      "source": "суровый_портрет_пожилого_бизнесмена.png",
+      "sourceSha256": "ffc0b90551162e2f57f0181e5cf4e0f2725a481668236969e2946081a6b6411e",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/viktor.webp",
+          "bytes": 55418,
+          "sha256": "ac56fee18f65aa6b27c7c44c25e8596a0f482dd71e8ca0116a9ed025aebce07f"
+        },
+        {
+          "path": "assets/characters/viktor-avatar.webp",
+          "bytes": 13004,
+          "sha256": "502ab1f1915cad9501e1985fa7c45fbdfe5a06070e580d7d069d9eee7093b311"
+        },
+        {
+          "path": "assets/advisors/viktor.png",
+          "bytes": 77767,
+          "sha256": "78c405ad8cb6851d60d21e78d886ee222364a583e2257ac91fea3a194cd8b8b5"
+        }
+      ]
+    },
+    {
+      "number": 29,
+      "id": "anna-berezina",
+      "source": "профессиональный_портрет_женщины_в_пиджаке.png",
+      "sourceSha256": "08721994cf23a20b0f47114546a704c17b66aa5f18f0c0e83ed70eb06217d7c9",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/anna-berezina.webp",
+          "bytes": 49292,
+          "sha256": "717ee49f77b25b14ce81d978dc04d0bd97a8bfa0587b10678671c8bd77058877"
+        },
+        {
+          "path": "assets/characters/anna-berezina-avatar.webp",
+          "bytes": 13080,
+          "sha256": "90a860163f7fd1029a779ee81f882897f011b88c4b3472276cc4c4f55d28e60f"
+        },
+        {
+          "path": "assets/advisors/anna-berezina.png",
+          "bytes": 77661,
+          "sha256": "3cfd551d7cf0177fd145b275a02ecfb783cc1851a1e4081ab468dae17f60f7e2"
+        }
+      ]
+    },
+    {
+      "number": 30,
+      "id": "denis-kovalev",
+      "source": "профессиональный_портрет_мужчины_на_прозрачном_фон.png",
+      "sourceSha256": "574b73d51350781bb051401d8ce924d84483ea337e74527c451382274bbcf998",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/denis-kovalev.webp",
+          "bytes": 62602,
+          "sha256": "a9109cf2c63261d2a8b91b4c08a383f194367b23083ba1ad825d83087bc27ed7"
+        },
+        {
+          "path": "assets/characters/denis-kovalev-avatar.webp",
+          "bytes": 12588,
+          "sha256": "a9ef47761f98596effb089fe2dddc8ffcb833026a9666684425766050e6f0a8a"
+        },
+        {
+          "path": "assets/advisors/denis-kovalev.png",
+          "bytes": 79222,
+          "sha256": "0429112fbfc3d42d352d5bef26d167796b71c47b3125faefdcbb9e7032f5d6ea"
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "id": "anna-resident",
+      "source": "медсестра_в_голубых_скрабах_и_кардигане.png",
+      "sourceSha256": "e1da2cc689ec24b1b99fe51f98c7ffac2b34f1c03ce8cd1fe3d9651ed244044e",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/anna-resident.webp",
+          "bytes": 61570,
+          "sha256": "964491ce4a6959159c0f97aae6b22767c1e4dc121db386b09a51d349a6847730"
+        },
+        {
+          "path": "assets/characters/anna-resident-avatar.webp",
+          "bytes": 14286,
+          "sha256": "70f6850019773f6130a02bd7ced97f36c8163e3d415848fc4a51352937463422"
+        },
+        {
+          "path": "assets/advisors/anna-resident.png",
+          "bytes": 79657,
+          "sha256": "2030b7773af0ed9182083945d857fa2f0bd8a36829608268778a852692b0fdee"
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "id": "denis-resident",
+      "source": "портрет_молодого_мужчины_в_рабочей_куртке.png",
+      "sourceSha256": "0984988fc0dcfde9c7aef2b0029609e7a03336e141455e3de2a5da78184ba61e",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/denis-resident.webp",
+          "bytes": 55666,
+          "sha256": "f4b98286304d88409bff1fa3d07b009bd1f76a06c70fb451cfa6b621a56cd9d7"
+        },
+        {
+          "path": "assets/characters/denis-resident-avatar.webp",
+          "bytes": 12950,
+          "sha256": "5fdb3c391c94811752b7254650df9053835b3e9c29ce37177162dbec77eaa177"
+        },
+        {
+          "path": "assets/advisors/denis-resident.png",
+          "bytes": 77855,
+          "sha256": "b7556cd5f90f407407c57b6b9a4409a9d29555e1ae1231f08bd250c50969b81b"
+        }
+      ]
+    },
+    {
+      "number": 33,
+      "id": "valentina-resident",
+      "source": "уверенная_женщина_в_синем_кардигане.png",
+      "sourceSha256": "f70e4a2e85fa261b8637583125e59134370da53b7a1b36e2e4de85721fd72da2",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/valentina-resident.webp",
+          "bytes": 87140,
+          "sha256": "cf1c2183d02fef197b8c865e07cfa367295f41f238fc31f20834e913da45786d"
+        },
+        {
+          "path": "assets/characters/valentina-resident-avatar.webp",
+          "bytes": 15984,
+          "sha256": "74d24498450167f349d274f551ea7775720f4333b983aecd117f7df830cdb041"
+        },
+        {
+          "path": "assets/advisors/valentina-resident.png",
+          "bytes": 88630,
+          "sha256": "1b67144b39563ea092fe8e25be20a1e6ac711ffac7e0d3868c403f8d9180f488"
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "id": "mikhail-resident",
+      "source": "профессиональный_портрет_с_портфелем.png",
+      "sourceSha256": "f630c3acb9d2107037652e4afae91b9e99ffa17bd0a8f887aa4309fedaeae725",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "portraitSize": [
+        600,
+        800
+      ],
+      "avatarCrop": [
+        130,
+        0,
+        955,
+        825
+      ],
+      "files": [
+        {
+          "path": "assets/characters/mikhail-resident.webp",
+          "bytes": 60466,
+          "sha256": "39259a9b8b4e20c8d3b1fcf78acc83264e6a1a493876892a84e5068ebc9fbc77"
+        },
+        {
+          "path": "assets/characters/mikhail-resident-avatar.webp",
+          "bytes": 12910,
+          "sha256": "124414af32dd16c5ef4de0fd8310f6c90ab661ff7622075633433cc0c4bd7b80"
+        },
+        {
+          "path": "assets/advisors/mikhail-resident.png",
+          "bytes": 80190,
+          "sha256": "47b7e11f53fe9aaa1ab994dae83107b93c76e9366fd84554238983ea81b925a4"
+        }
+      ]
+    },
+    {
+      "number": 35,
+      "id": "olga-resident",
+      "source": "a_clean_high_resolution_studio_like_portrait_cut.png",
+      "sourceSha256": "7226469868b9146e1c3a6513cfe07effa45f5a8f60a087683a4060daed41f867",
+      "sourceDimensions": [
+        1055,
+        1491
+      ],
+      "portraitSize": [
+        566,
+        800
+      ],
+      "avatarCrop": [
+        126,
+        0,
+        928,
+        802
+      ],
+      "files": [
+        {
+          "path": "assets/characters/olga-resident.webp",
+          "bytes": 68260,
+          "sha256": "505bd18d19535f56c3103fe996156709a4ff35b5431d8a357d8d7e87bf4234a3"
+        },
+        {
+          "path": "assets/characters/olga-resident-avatar.webp",
+          "bytes": 15110,
+          "sha256": "548e7634a93aa6d4b2daa6badf80bdd0ca0b476d93c417d29b170ee6e1cbb51e"
+        },
+        {
+          "path": "assets/advisors/olga-resident.png",
+          "bytes": 82212,
+          "sha256": "a267c53dde56780ee9e62f87b63b99d0567d3ddc3f0c016bfdec0e6c4dc98c33"
+        }
+      ]
+    },
+    {
+      "id": "suburb-school-scene",
+      "source": "a_4_panel_collage_storyboard_style_image_two_ro.png",
+      "sourceSha256": "c5817883bced58af314331cceabfc8465c011a985110243d2eb167bc92ba1a08",
+      "crop": [
+        841,
+        0,
+        1672,
+        465
+      ],
+      "size": [
+        831,
+        465
+      ],
+      "file": "assets/scenes/suburb-school-scene.webp"
+    },
+    {
+      "id": "governor-office",
+      "source": "a_4_panel_collage_storyboard_style_image_two_ro.png",
+      "sourceSha256": "c5817883bced58af314331cceabfc8465c011a985110243d2eb167bc92ba1a08",
+      "crop": [
+        0,
+        476,
+        830,
+        941
+      ],
+      "size": [
+        830,
+        465
+      ],
+      "file": "assets/scenes/governor-office.webp"
+    },
+    {
+      "id": "public-meeting-room",
+      "source": "a_4_panel_collage_storyboard_style_image_two_ro.png",
+      "sourceSha256": "c5817883bced58af314331cceabfc8465c011a985110243d2eb167bc92ba1a08",
+      "crop": [
+        841,
+        476,
+        1672,
+        941
+      ],
+      "size": [
+        831,
+        465
+      ],
+      "file": "assets/scenes/public-meeting-room.webp"
+    }
+  ],
+  "ageManifest": "assets/letters/manifest.json"
+}
