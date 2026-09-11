@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0784d1">
+  <meta name="description" content="Учебная видеоигра РУДН о региональном управлении, финансировании проектов и последствиях публичной политики">
+  <title>Губернатор: Новая область · РУДН</title>
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png" sizes="192x192">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="governance.css">
+  <link rel="stylesheet" href="world.css">
+  <link rel="stylesheet" href="stories.css">
+  <link rel="stylesheet" href="consolidation.css">
+  <link rel="stylesheet" href="agenda.css">
+  <link rel="stylesheet" href="illustrated.css">
+  <link rel="stylesheet" href="delivery.css">
+  <link rel="stylesheet" href="recovery.css">
+  <link rel="stylesheet" href="budget-review.css">
+  <link rel="stylesheet" href="release.css">
+  <link rel="stylesheet" href="platform.css">
+</head>
+<body>
+  <header class="platform-bar" aria-label="Образовательная платформа РУДН">
+    <a class="platform-brand" href="../../#dashboard"><img src="../../assets/img/rudn-logo.png" alt="РУДН"><span class="platform-brand-copy"><strong id="platform-course-name">Введение в специальность</strong><small id="platform-section">Семинар 7 · Губернатор: Новая область</small></span></a>
+    <nav class="platform-bar-actions" aria-label="Навигация курса"><span class="platform-identity" id="platform-identity"></span><a id="platform-back" class="platform-back" href="../../#activity/seminar-7">← Раздел 7</a><button id="platform-report" type="button" disabled>Отчёт к семинару</button></nav>
+  </header>
+  <p class="platform-status" id="platform-status" role="status">Восстанавливаем профиль платформы…</p>
+  <section class="platform-loading" id="platform-loading"><h1>Симулятор губернатора</h1><p id="platform-loading-text">Восстанавливаем профиль платформы…</p><a id="platform-loading-back" href="../../#activity/seminar-7">Вернуться в раздел 7</a></section>
+  <dialog id="platform-submission" class="release-dialog platform-submission" aria-labelledby="platform-submission-title">
+    <button id="platform-submission-close" type="button" class="secondary-button">Закрыть</button><h2 id="platform-submission-title">Отчёт к седьмому семинару</h2><p id="platform-submission-intro"></p><p id="platform-run-progress"></p><div id="platform-assessment"></div>
+    <label for="platform-reflection" id="platform-reflection-label">Учебный вывод</label><p id="platform-reflection-hint"></p><textarea id="platform-reflection" maxlength="6000" aria-describedby="platform-reflection-hint"></textarea>
+    <div class="platform-submission-actions"><button type="button" id="platform-readable" class="secondary-button">Открыть полный учебный отчёт</button><button type="button" id="platform-submit" class="primary-button">Передать преподавателю</button></div><p id="platform-submission-status" role="status"></p>
+  </dialog>
+  <noscript><p class="boot-notice">Для работы симулятора включите JavaScript. / Enable JavaScript to run the simulator.</p></noscript>
+  <p id="boot-error" class="boot-notice" hidden role="alert"></p>
+  <a class="skip-link" href="#main-game">Перейти к игре</a>
+
+  <div id="app" hidden inert>
+    <section id="start-screen" class="start-screen" aria-labelledby="start-title">
+      <div class="start-backdrop" aria-hidden="true"></div>
+      <header class="start-brand">
+        <img src="assets/rudn-logo.webp" alt="РУДН" class="start-logo">
+        <div class="brand-divider" aria-hidden="true"></div>
+        <div>
+          <div class="brand-title" data-ui="appTitle">Губернатор: Новая область</div>
+          <div class="brand-subtitle" data-ui="appSubtitle">Учись. Решай. Меняй регион.</div>
+        </div>
+        <div class="start-utilities">
+          <button class="icon-button" id="start-language" type="button" aria-label="Переключить язык">EN</button>
+          <button class="icon-button" id="start-sound" type="button" aria-label="Звуки интерфейса"></button>
+        </div>
+      </header>
+
+      <div class="start-layout">
+        <div class="start-copy">
+          <div class="stage-badge" data-ui="demoBadge">Версия 1.0 · Учебная кампания</div>
+          <p class="start-eyebrow" data-ui="startEyebrow">Учебная видеоигра РУДН</p>
+          <h1 id="start-title" data-ui="startTitle">Какой останется ваша область?</h1>
+          <p class="start-lead" data-ui="startLead">Двадцать годовых решений. Пять территорий. Стройте, договаривайтесь и возвращайтесь к людям, которым дали обещания.</p>
+          <figure class="start-region"><img src="assets/illustrated/region.webp" width="1672" height="941" alt="Иллюстрированная карта пяти территорий Новой области" fetchpriority="high"><figcaption data-ui="regionCaption">Один регион. Пять территорий. Последствия каждого решения.</figcaption></figure>
+          <div class="feature-ribbon" aria-label="Возможности версии">
+            <span><i aria-hidden="true"></i><b>20</b> <span data-ui="featureMission">миссий в четырёх сюжетных главах</span></span>
+            <span><i aria-hidden="true"></i><span data-ui="featureConsequences">карта хранит проекты и последствия</span></span>
+            <span><i aria-hidden="true"></i><span data-ui="featureOffline">синергии, конфликты и повторные прохождения</span></span>
+          </div>
+        </div>
+
+        <form id="start-form" class="start-card" novalidate>
+          <div class="start-card-top">
+            <div class="start-card-icon" id="start-card-icon"></div>
+            <div>
+              <h2 data-ui="startButton">Начать кампанию</h2>
+              <p id="start-card-scenario-preview"></p>
+            </div>
+          </div>
+
+          <label for="player-name" data-ui="startName">Имя губернатора</label>
+          <input id="player-name" name="playerName" autocomplete="name" maxlength="80" aria-describedby="start-error" required placeholder="Например, Алексей Иванов" data-ui-placeholder="startNamePlaceholder">
+
+          <label for="player-group" data-ui="startGroup">Учебная группа</label>
+          <input id="player-group" name="playerGroup" autocomplete="organization" maxlength="40" placeholder="Например, ГГУбд-01-26" data-ui-placeholder="startGroupPlaceholder">
+
+          <label for="scenario-select" data-ui="startScenario">Стартовый сценарий</label>
+          <select id="scenario-select" name="scenario"></select>
+
+          <details id="campaign-options" class="campaign-options"><summary data-ui="campaignOptions">Параметры кампании</summary>
+          <label id="campaign-mode-label" for="campaign-mode">Маршрут кампании</label>
+          <select id="campaign-mode" aria-describedby="campaign-mode-hint"><option value="agenda">Своя повестка · первые пять лет на ваш выбор</option><option value="guided">Последовательный маршрут · фиксированный порядок</option></select>
+          <p class="field-hint" id="campaign-mode-hint">В обоих вариантах 20 лет. Последующие главы сохраняют сюжетный порядок.</p>
+
+          <div class="budget-start"><input type="checkbox" id="budget-review-mode" aria-describedby="budget-review-mode-hint"><label for="budget-review-mode"><strong id="budget-review-mode-label">Дефицит требует решения</strong><small id="budget-review-mode-hint">Реальные разрывы бюджета: резерв, ограниченный заём, помощь с условиями. Без автоматического спасения; возможна досрочная передача управления. Включается только для новой партии.</small></label></div>
+          <div class="recovery-start"><input type="checkbox" id="recovery-case" aria-describedby="recovery-case-hint"><label for="recovery-case"><strong id="recovery-case-label">Особое начало: «Счёт из прошлого»</strong><small id="recovery-case-hint">Сравните резерв, помощь с условиями и заём. Отдельный учебный кейс на сбалансированной области, обычные правила, открытая повестка.</small></label></div>
+          <label for="session-seed" data-ui="startSeed">Код учебной сессии</label>
+          <input id="session-seed" name="seed" maxlength="40" value="RUDN-2026" spellcheck="false" aria-describedby="seed-hint">
+          <p class="field-hint" id="seed-hint" data-ui="startSeedHint">Одинаковый код даёт группе одинаковые стартовые условия.</p>
+
+          <label for="challenge-select" data-ui="startChallenge">Режим повторного прохождения</label>
+          <select id="challenge-select" name="challenge" aria-describedby="challenge-hint"></select>
+          <p class="field-hint" id="challenge-hint" data-ui="challengeHint">Дополнительные режимы открываются после завершения кампаний и меняют правила, а не только цифры.</p>
+          <div id="challenge-preview" class="challenge-preview"></div>
+
+          </details>
+
+          <details class="platform-rubric" id="platform-rubric"><summary>Как рассчитывается оценка 0–5</summary></details>
+          <p id="start-error" class="form-error" role="alert"></p>
+          <button class="primary-button start-primary" type="submit">
+            <span data-ui="startButton">Начать кампанию</span>
+            <span class="button-icon" id="start-arrow"></span>
+          </button>
+          <button class="secondary-button hidden" id="continue-campaign" type="button" data-ui="continueButton">Продолжить сохранённую кампанию</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="game-shell" class="game-shell hidden" aria-label="Симулятор губернатора">
+      <header class="topbar">
+        <div class="topbar-brand">
+          <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Открыть главное меню"></button>
+          <img src="assets/rudn-logo.webp" alt="РУДН" class="topbar-logo">
+          <div class="brand-divider" aria-hidden="true"></div>
+          <div class="topbar-name">
+            <strong data-ui="appTitle">Губернатор: Новая область</strong>
+            <span data-ui="appSubtitle">Учись. Решай. Меняй регион.</span>
+          </div>
+        </div>
+
+        <div class="core-stats" aria-label="Основные ресурсы">
+          <button class="stat-card budget-stat stat-card-button" id="treasury-shortcut" type="button" data-view="treasury" aria-label="Открыть казначейство">
+            <span class="stat-icon" id="budget-icon"></span>
+            <span class="stat-copy"><small data-ui="budget">Свободный ресурс</small><strong id="budget-value">0</strong><em id="budget-income"></em></span>
+          </button>
+          <div class="stat-card support-stat">
+            <span class="stat-icon" id="support-icon"></span>
+            <span class="stat-copy"><small data-ui="support">Поддержка</small><strong id="support-value">0%</strong><em id="support-trend"></em></span>
+          </div>
+          <div class="stat-card development-stat">
+            <span class="stat-icon" id="development-icon"></span>
+            <span class="stat-copy"><small data-ui="development">Развитие</small><strong id="development-value">0</strong><em id="development-trend"></em></span>
+          </div>
+        </div>
+
+        <div class="campaign-status">
+          <div class="chapter-box">
+            <span><small data-ui="chapter">Глава</small> <b id="chapter-number">1</b></span>
+            <strong id="chapter-title">Первые решения</strong>
+            <div class="chapter-dots" id="chapter-dots" role="group" aria-label="Прогресс главы"></div>
+            <em id="challenge-active" class="challenge-active"></em>
+          </div>
+          <div class="turn-box">
+            <span id="turn-icon"></span>
+            <span><small data-ui="turn">Ход</small><strong id="turn-value">1 / 20</strong></span>
+          </div>
+        </div>
+
+        <div class="profile-box">
+          <button class="icon-button" id="sound-toggle" type="button" aria-label="Звуки интерфейса"></button>
+          <button class="language-button" id="language-toggle" type="button" aria-label="Переключить язык">EN</button>
+          <button class="profile-button" id="profile-button" type="button" aria-label="Профиль игрока">
+            <span class="profile-avatar" id="profile-avatar">Г</span>
+            <span class="profile-copy"><small data-ui="profileGovernor">Губернатор-студент</small><strong id="profile-name"></strong><em id="profile-level"></em></span>
+          </button>
+        </div>
+      </header>
+
+      <div class="game-grid">
+        <nav class="side-nav" id="side-nav" aria-label="Разделы игры">
+          <button class="nav-button active" type="button" data-view="mission"><span class="nav-icon" data-icon="flag"></span><span data-ui="navMission">Миссия</span></button>
+          <button class="nav-button" type="button" data-view="map"><span class="nav-icon" data-icon="map"></span><span data-ui="navMap">Карта</span></button>
+          <button class="nav-button" type="button" data-view="treasury"><span class="nav-icon" data-icon="vault"></span><span data-ui="navTreasury">Казна</span></button>
+          <button class="nav-button" type="button" data-view="quests"><span class="nav-icon" data-icon="quest"></span><span data-ui="navQuests">Задания</span><b class="nav-badge" id="quest-badge">4</b></button>
+          <button class="nav-button" type="button" data-view="advisors"><span class="nav-icon" data-icon="people"></span><span data-ui="navAdvisors">Советники</span></button>
+          <button class="nav-button" type="button" data-view="badges"><span class="nav-icon" data-icon="shield"></span><span data-ui="navBadges">Награды</span><b class="nav-badge muted" id="badge-count">0</b></button>
+          <button class="nav-button" type="button" data-view="journal"><span class="nav-icon" data-icon="journal"></span><span data-ui="navJournal">История</span></button>
+          <span class="nav-spacer"></span>
+          <button class="nav-button" type="button" data-view="settings"><span class="nav-icon" data-icon="settings"></span><span data-ui="navSettings">Настройки</span></button>
+        </nav>
+
+        <main id="main-game" class="stage-column" tabindex="-1">
+          <section id="map-stage" class="map-stage view-panel" data-panel="mission">
+            <div id="main-world"></div>
+            <img class="map-art" src="assets/illustrated/region.webp" alt="Стилизованная карта Новой области">
+            <div class="map-shade" aria-hidden="true"></div>
+            <div class="weather-layer" id="weather-layer" aria-hidden="true"></div>
+            <div id="map-district-auras" class="map-district-auras" aria-hidden="true"></div>
+            <div id="map-world-objects" class="map-world-objects"></div>
+            <div id="map-hotspots" class="map-hotspots"></div>
+            <div id="map-story-card" class="map-story-card" aria-live="polite"></div>
+
+            <div class="region-card">
+              <div class="region-thumb"><img src="assets/illustrated/region.webp" alt=""></div>
+              <div>
+                <small data-ui="regionOverview">Ваш регион</small>
+                <strong data-ui="regionName">Новая область</strong>
+                <p data-ui="regionTagline">Территория возможностей и трудных компромиссов.</p>
+              </div>
+            </div>
+
+            <div class="advisor-dock">
+              <div class="advisor-dock-title">
+                <strong data-ui="advisors">Ваши советники</strong>
+                <span data-ui="advisorHint">Нажмите на портрет, чтобы услышать аргумент.</span>
+              </div>
+              <div id="advisor-portraits" class="advisor-portraits"></div>
+            </div>
+          </section>
+
+          <section id="secondary-stage" class="secondary-stage view-panel hidden" aria-live="polite"></section>
+        </main>
+
+        <aside id="mission-panel" class="mission-panel" aria-labelledby="mission-title">
+          <div class="mission-ribbon" aria-hidden="true"><span id="mission-ribbon-icon"></span></div>
+          <div id="mission-scroll" class="mission-scroll">
+            <div class="mission-heading">
+              <span class="mission-icon" id="mission-icon"></span>
+              <div>
+                <p class="mission-kicker" id="mission-kicker"></p>
+                <h2 id="mission-title"></h2>
+              </div>
+            </div>
+            <p class="mission-description" id="mission-description"></p>
+            <div class="mission-objective" id="mission-objective"></div>
+
+            <div id="year-world-note" class="hidden"></div>
+            <div id="resident-brief-container"></div>
+            <div id="entry-impact" class="entry-impact hidden" role="status"></div>
+            <details class="mission-context" id="mission-context"><summary data-ui="missionContext">Советники и награда миссии</summary>
+            <div id="council-debate" class="council-debate"></div>
+
+            <div class="reward-strip">
+              <span class="reward-label" data-ui="missionReward">Награда миссии</span>
+              <span class="reward-item"><i id="reward-xp-icon"></i><b id="reward-xp"></b><small data-ui="xp">опыт</small></span>
+              <span class="reward-item"><i id="reward-stars-icon"></i><b id="reward-stars"></b><small data-ui="stars">звёзды</small></span>
+            </div>
+
+            </details>
+            <div class="choice-heading"><span></span><h3 data-ui="chooseAction">Выберите решение</h3><span></span></div>
+            <div id="action-cards" class="action-cards" role="radiogroup" aria-label="Варианты решения"></div>
+            <div id="selected-preview" class="selected-preview" aria-live="polite"></div>
+          </div>
+          <button id="confirm-action" class="primary-button confirm-button" type="button" disabled>
+            <span data-ui="confirmAction">Утвердить решение</span>
+            <span class="button-icon" id="confirm-arrow"></span>
+          </button>
+        </aside>
+      </div>
+
+      <footer class="mission-footer">
+        <div class="footer-progress">
+          <div>
+            <strong data-ui="missionProgress">Прогресс миссии</strong>
+            <span id="footer-mission-title"></span>
+          </div>
+          <div class="progress-track" aria-label="Прогресс текущей миссии">
+            <span class="progress-step active"><i></i><small data-ui="missionStarted">Миссия начата</small></span>
+            <span class="progress-line"></span>
+            <span class="progress-step" id="progress-action"><i></i><small data-ui="actionChosen">Решение принято</small></span>
+            <span class="progress-line"></span>
+            <span class="progress-step" id="progress-result"><i></i><small data-ui="missionComplete">Последствия оценены</small></span>
+          </div>
+        </div>
+        <div class="footer-tip"><span id="tip-icon"></span><div><strong data-ui="proTip">Подсказка</strong><p data-ui="proTipText">Не максимизируйте один показатель. Сильная стратегия переживает кризисы, а не только красиво выглядит сегодня.</p></div></div>
+      </footer>
+
+      <nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
+        <button type="button" data-view="map"><span data-icon="map"></span><small data-ui="navMap">Карта</small></button>
+        <button type="button" data-view="treasury"><span data-icon="vault"></span><small data-ui="navTreasury">Казна</small></button>
+        <button class="mobile-primary" type="button" data-view="mission"><span data-icon="balance"></span><small data-ui="confirmAction">Решение</small></button>
+        <button type="button" data-view="advisors"><span data-icon="people"></span><small data-ui="navAdvisors">Советники</small></button>
+        <button type="button" data-view="journal"><span data-icon="journal"></span><small data-ui="navJournal">История</small></button>
+      </nav>
+    </section>
+  </div>
+
+  <dialog id="advisor-dialog" class="game-dialog advisor-dialog" aria-label="Советник">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть"></button>
+    <div id="advisor-dialog-content"></div>
+  </dialog>
+
+  <dialog id="district-dialog" class="game-dialog district-dialog" aria-label="Территория и проекты">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть"></button>
+    <div id="district-dialog-content"></div>
+  </dialog>
+
+  <dialog id="resolution-dialog" class="game-dialog resolution-dialog" aria-labelledby="resolution-title">
+    <div class="result-hero">
+      <span class="result-check" id="result-check"></span>
+      <div><p data-ui="resultTitle">Решение принято</p><h2 id="resolution-title"></h2></div>
+      <div class="result-reward"><span id="result-star-icon"></span><b id="result-reward-stars"></b></div>
+    </div>
+    <div id="resolution-content"></div>
+    <button id="continue-turn" class="primary-button" type="button"><span data-ui="nextTurn">Перейти к следующему ходу</span><span class="button-icon" id="continue-arrow"></span></button>
+  </dialog>
+
+  <dialog id="profile-dialog" class="game-dialog profile-dialog" aria-label="Профиль игрока">
+    <button class="dialog-close" type="button" data-close-dialog aria-label="Закрыть"></button>
+    <div id="profile-dialog-content"></div>
+  </dialog>
+
+  <dialog id="end-dialog" class="game-dialog end-dialog" aria-labelledby="end-title">
+    <div class="end-illustration" aria-hidden="true"><img src="assets/illustrated/region.webp" alt=""></div>
+    <div class="end-content">
+      <p class="end-kicker" data-ui="endTitle">Кампания завершена</p>
+      <h2 id="end-title"></h2>
+      <p data-ui="endSubtitle">Ваш стиль управления сформирован двадцатью решениями и тем, как они выдержали проверку кризисами.</p>
+      <div id="end-summary"></div>
+      <div class="end-actions">
+        <button id="review-region" class="secondary-button end-review" type="button" data-ui="reviewRegion">Вернуться к региону</button>
+        <button id="download-report-end" class="secondary-button" type="button"><span id="end-download-icon"></span><span data-ui="reportDownload">Скачать полный отчёт</span></button>
+        <button id="play-again" class="primary-button" type="button"><span data-ui="playAgain">Новая кампания</span><span class="button-icon" id="play-again-icon"></span></button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="confetti-layer" class="confetti-layer" aria-hidden="true"></div>
+  <div id="screen-reader-live" class="sr-only" aria-live="assertive"></div>
+
+  <script src="src/icons.js"></script>
+  <script src="src/game-data.js"></script>
+  <script src="src/stage3-data.js"></script>
+  <script src="src/stage4-data.js"></script>
+  <script src="src/consolidation-data.js"></script>
+  <script src="src/agenda.js"></script>
+  <script src="src/project-state.js"></script>
+  <script src="src/population.js"></script>
+  <script src="src/recovery.js"></script>
+  <script src="src/budget-review.js"></script>
+  <script src="src/finance.js"></script>
+  <script src="src/governance-data.js"></script>
+  <script src="src/governance.js"></script>
+  <script src="src/stories-data.js"></script>
+  <script src="src/stories.js"></script>
+  <script src="src/world-outcomes.js"></script>
+  <script src="src/state-integrity.js"></script>
+  <script src="src/engine.js"></script>
+  <script src="src/population-ui.js"></script>
+  <script src="src/governance-ui.js"></script>
+  <script src="src/world-model.js"></script>
+  <script src="src/world-geometry.js"></script>
+  <script src="src/asset-metadata.js"></script>
+  <script src="src/illustrated-assets.js"></script>
+  <script src="src/illustrated-world.js"></script>
+  <script src="src/project-presentation.js"></script>
+  <script src="src/project-ui.js"></script>
+  <script src="src/delivery-desk.js"></script>
+  <script src="src/delivery-ui.js"></script>
+  <script src="src/world-ui.js"></script>
+  <script src="src/presentation.js"></script>
+  <script src="src/stories-ui.js"></script>
+  <script src="src/consolidation-ui.js"></script>
+  <script src="src/save-system.js"></script>
+  <script src="src/agenda-ui.js"></script>
+  <script src="src/recovery-ui.js"></script>
+  <script src="src/budget-review-ui.js"></script>
+  <script src="src/learning.js"></script>
+  <script src="src/release-ui.js"></script>
+  <script type="module" src="platform-bridge.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/* Stage 13 extends the RUDN-blue shell. No extra permanent HUD indicators. */
+.delivery-desk,.renew-confirm{color:#173d60;max-width:960px;margin:auto}
+.delivery-heading{display:flex;gap:20px;justify-content:space-between;align-items:start;margin-bottom:20px;padding-right:42px}
+.delivery-heading p{color:#087bb7;font-size:12px;font-weight:700;margin:0 0 8px}
+.delivery-heading h2,.renew-confirm h2{font-size:clamp(25px,3vw,34px);margin:0 0 10px;letter-spacing:-.7px;line-height:1.15}
+.delivery-heading span{display:block;color:#526f85;font-size:14px;line-height:1.55;max-width:530px}
+.delivery-heading .secondary-button{min-height:44px;flex-shrink:0}
+.delivery-filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.delivery-filters button{background:#f1f8fd;border:1px solid #cae3f3;color:#316181;min-height:42px;padding:8px 13px;border-radius:12px;font:inherit;font-size:13px;cursor:pointer}
+.delivery-filters button.selected{background:#087fbd;color:white;border-color:#087fbd}
+.delivery-list{display:grid;gap:18px}
+.delivery-item{display:grid;grid-template-columns:125px minmax(0,1fr);border:1px solid #d8e7f1;border-radius:18px;overflow:hidden;background:#fff}
+.delivery-item.ending{border-color:#dbb66f}
+.delivery-item-art{display:flex;align-items:center;justify-content:center;background:#f1f8fd;padding:10px}
+.delivery-item.ending .delivery-item-art{background:#fff8e9}
+.delivery-item-art img{width:100%;height:auto;object-fit:contain}
+.delivery-item-body{padding:18px 20px;min-width:0}
+.delivery-item-body>small{font-size:11px;color:#527185}
+.delivery-status{color:#067aaf;font-weight:700;font-size:12px;margin:4px 0 6px}
+.ending .delivery-status{color:#86580e}
+.delivery-item h3{margin:0 0 10px;line-height:1.4;font-size:17px}
+.delivery-item-body>p:not(.delivery-status){margin:0 0 12px;font-size:13px;line-height:1.6;color:#4c697d}
+.delivery-item-actions,.renew-actions{display:flex;flex-wrap:wrap;gap:10px}
+.delivery-item-actions button,.renew-actions button{font-size:13px;min-height:44px}
+.delivery-item-actions button:disabled,.renew-actions button:disabled{opacity:.55;cursor:not-allowed}
+.delivery-method,.delivery-end-explanation small{font-size:12px;color:#526f85;line-height:1.65}
+.delivery-method{margin:20px 0 0}
+.delivery-empty{padding:30px 20px;border:1px dashed #c6dfec;border-radius:18px;background:#f5faff}
+.delivery-empty h3{margin:12px 0;font-size:21px}
+.delivery-empty p{font-size:14px;line-height:1.6;max-width:600px;margin:0}
+.delivery-calendar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}
+.delivery-cell{border-left:3px solid #acc6d9;padding:11px 10px;background:#f5f9fc;border-radius:0 10px 10px 0;min-width:0;display:flex;flex-direction:column;gap:5px}
+.delivery-cell.active{border-color:#138862;background:#edf8f2}.delivery-cell.delivery{border-color:#128ecb}.delivery-cell.completed{background:#f6f5f2;border-color:#c7ba99}
+.delivery-cell b{font-size:17px}.delivery-cell span{font-size:13px;font-weight:700}.delivery-cell small{font-size:10px;color:#526c81;line-height:1.4}.delivery-cell em{font-size:11px;font-style:normal;color:#315e54;line-height:1.5}
+.delivery-project-plan{border-top:1px solid #d8e8f1;padding:20px 0 8px;margin:14px 0}.delivery-project-plan h3{font-size:19px;margin:0 0 10px}
+.delivery-project-plan details summary{cursor:pointer;font-size:13px;font-weight:650;min-height:34px;line-height:1.5}.delivery-project-plan details p{font-size:13px;color:#4c6c82;line-height:1.6}
+.delivery-renew-prompt{padding:16px;background:#fff8e9;border:1px solid #e3c88f;border-radius:14px;margin:16px 0 4px}.delivery-renew-prompt p{font-size:14px;line-height:1.6;margin:0 0 12px}.delivery-renew-prompt small{display:block;margin-top:10px;font-size:12px}
+.delivery-renewed{color:#16704f;font-size:13px;display:flex;gap:8px;align-items:center}.delivery-desk-launch{margin:0 0 15px;font-size:13px;min-height:44px}
+.agenda-delivery-link{width:100%;display:flex;align-items:center;gap:9px;padding:10px 14px;background:#edf7fd;border:1px solid #c9e3f0;border-radius:12px;color:#1b6289;text-align:left;font-size:12px;cursor:pointer;margin:0 0 16px;min-height:44px}.agenda-delivery-link span{flex:1}.agenda-delivery-link svg{flex-shrink:0}.agenda-delivery-link b{font-size:11px}
+.renew-confirm>p{line-height:1.65;color:#4c6c84;font-size:14px}.renew-confirm>.dialog-eyebrow{padding-right:45px;line-height:1.6;font-size:11px}
+.renew-project{display:flex;gap:20px;align-items:center}.renew-project img{width:100px;height:100px;object-fit:contain}.renew-project h3{font-size:19px;line-height:1.5}
+.renew-amounts{background:#f1f8fd;border-radius:15px;padding:16px;margin:16px 0}.renew-amounts>div{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px solid #d9e9f3;align-items:center}.renew-amounts>div:last-child{border:0}.renew-amounts dt{font-size:13px;line-height:1.5;color:#476881}.renew-amounts dd{margin:0;font-size:17px;font-weight:750;white-space:nowrap}
+.renew-confirm details{font-size:13px;line-height:1.6;color:#526b82;margin:15px 0 22px}.renew-confirm summary{cursor:pointer;font-weight:650;min-height:34px}.renew-actions{justify-content:space-between;padding-top:14px;border-top:1px solid #d8e9f4}.renew-error{color:#97372c!important}
+.letter-character{position:relative;height:280px;flex:0 0 280px;overflow:hidden;background:linear-gradient(160deg,#e3f3fc,#f9fcff)}
+.letter-character .letter-illustration{height:100%;width:100%;object-fit:contain;object-position:center 15%;background:transparent}.portrait-era{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-size:10px;line-height:1.3;background:#f3faffdc;color:#486d85;padding:5px}
+.address-art .address-scene{object-fit:cover;opacity:.45;width:100%;height:100%}.address-art .address-face{position:absolute;right:18px;bottom:0;width:120px;height:120px;object-fit:contain}
+.gov-header-art{height:78px;width:138px;flex:0 0 138px}
+.agenda-illustration.with-scene{height:170px;min-height:0;aspect-ratio:auto;width:100%}.agenda-illustration.with-scene img{object-fit:cover;object-position:center;width:100%;height:100%;max-width:none;max-height:none;padding:0;filter:none}.agenda-illustration.with-scene>span{background:#eef8fcf0;color:#214e6e;max-width:80%;font-size:11px;padding:4px 8px}
+.delivery-desk button:focus-visible,.renew-confirm button:focus-visible,.delivery-project-plan button:focus-visible,.agenda-delivery-link:focus-visible{outline:3px solid #00568d;outline-offset:3px}
+@media(max-width:900px){
+ .delivery-heading{display:block;padding-right:38px}.delivery-heading h2,.renew-confirm h2{font-size:26px}.delivery-heading span{font-size:13px}.delivery-heading .secondary-button{font-size:12px;padding:7px 12px;margin-top:10px}
+ .delivery-filters{gap:6px}.delivery-filters button{font-size:12px;flex-grow:1}
+ .delivery-item{grid-template-columns:74px minmax(0,1fr)}.delivery-item-body{padding:13px 12px}.delivery-item-art{padding:20px 4px 4px;align-items:flex-start}.delivery-item h3{font-size:15px}.delivery-item-body>p:not(.delivery-status){font-size:12px}.delivery-item-actions button{width:100%;font-size:12px}
+ .delivery-item .delivery-calendar{grid-template-columns:1fr}.delivery-item .delivery-cell{padding:10px;display:grid;grid-template-columns:44px 1fr}.delivery-item .delivery-cell small,.delivery-item .delivery-cell em{grid-column:2}
+ .delivery-project-plan .delivery-calendar{gap:5px}.delivery-project-plan .delivery-cell{padding:9px 6px}.delivery-cell span{font-size:11px}.delivery-cell em{font-size:10px}.delivery-cell b{font-size:15px}
+ .renew-amounts{padding:10px}.renew-amounts dd{font-size:15px}.renew-amounts dt{font-size:12px}.renew-actions button{width:100%}.renew-project{gap:12px}.renew-project img{width:78px;height:78px}.renew-project h3{font-size:16px}
+ .letter-character{width:83px;height:103px;flex:0 0 83px;border-radius:10px}.letter-character .letter-illustration{width:100%;height:100%;border-radius:0;object-fit:cover;object-position:top}.portrait-era{font-size:8px;padding:3px}
+ .address-art .address-face{position:static;width:88px;height:88px}.address-art .address-scene{display:none}.gov-header-art{display:none}.gov-header{flex-wrap:nowrap}.gov-header-copy{min-width:0}
+ .agenda-delivery-link{flex-wrap:wrap}.agenda-delivery-link b{font-weight:600}.agenda-illustration.with-scene{height:145px}
+}
+@media(max-width:360px){.delivery-item{grid-template-columns:1fr}.delivery-item-art{display:none}.agenda-delivery-link b{flex:1 1 100%;padding-left:28px}}
+@media(prefers-reduced-motion:reduce){.delivery-desk *,.renew-confirm *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

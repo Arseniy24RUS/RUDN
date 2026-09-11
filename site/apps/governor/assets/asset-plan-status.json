@@ -1,0 +1,474 @@
+{
+  "version": "0.15.0",
+  "slots": 57,
+  "missingSlots": [],
+  "qualityQualification": "File coverage, not final artistic acceptance. Low-resolution scene extracts and misaligned building pairs remain. Slot03 is reserved in the object guide.",
+  "assets": [
+    {
+      "number": 1,
+      "id": "school-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/school-delivery.webp",
+      "status": "integrated",
+      "sha256": "960ba91d2edfbae78a45878d952a7072b82adea4a1dd15143d9ec9c6499517ac"
+    },
+    {
+      "number": 2,
+      "id": "clinic-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/clinic-delivery.webp",
+      "status": "integrated",
+      "sha256": "14d09a55648227cd0baf699a7437e6b127f7342e85558af0234f1e1acceb48b7"
+    },
+    {
+      "number": 3,
+      "id": "digital-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/digital-delivery.webp",
+      "status": "reserved-in-guide",
+      "sha256": "82c6ac36a90a24ff00769218f99acba4af1cb9be52f1698964582d1c95a7a109"
+    },
+    {
+      "number": 4,
+      "id": "industry-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/industry-delivery.webp",
+      "status": "integrated",
+      "sha256": "46a24dd0527d09e468eaff09cde78c2400274df9d305ecaf34ccd85b742d6ccb"
+    },
+    {
+      "number": 5,
+      "id": "barrier-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/barrier-delivery.webp",
+      "status": "integrated",
+      "sha256": "542cea2526419c191785a0ea3b1936e33a46f3ace19b7c9452d2bd9daabc3f60"
+    },
+    {
+      "number": 6,
+      "id": "housing-delivery",
+      "type": "object-or-service",
+      "path": "assets/services/housing-delivery.webp",
+      "status": "integrated",
+      "sha256": "f3a73b0458fe46937a429187dc69ac76fdb3ba12939a1992ff439356408435bb"
+    },
+    {
+      "number": 7,
+      "id": "mobile-medical-unit",
+      "type": "object-or-service",
+      "path": "assets/services/mobile-medical-unit.webp",
+      "status": "integrated",
+      "sha256": "ba82fe12bfe978d591a1ca705c1211bd60f7d074e2e3ad3ba6505e6541125e99"
+    },
+    {
+      "number": 8,
+      "id": "school-bus",
+      "type": "object-or-service",
+      "path": "assets/services/school-bus.webp",
+      "status": "integrated",
+      "sha256": "abba82e708657e3163df5274fc484f6f1f614f802802c2e47a9c43235a202cc0"
+    },
+    {
+      "number": 9,
+      "id": "medical-training",
+      "type": "object-or-service",
+      "path": "assets/services/medical-training.webp",
+      "status": "integrated",
+      "sha256": "7a6e66a185c508c13667293b6ca0f6b92fa0a85150bd59bd09cda13a6ed02718"
+    },
+    {
+      "number": 10,
+      "id": "vocational-training",
+      "type": "object-or-service",
+      "path": "assets/services/vocational-training.webp",
+      "status": "integrated",
+      "sha256": "3d9424d914b86b836c998aa01f169f320c050662579c5d993906743a0a02b535"
+    },
+    {
+      "number": 11,
+      "id": "first-job-mentoring",
+      "type": "object-or-service",
+      "path": "assets/services/first-job-mentoring.webp",
+      "status": "integrated",
+      "sha256": "496fa741a5afb66a17d946385208a3c81efaa1533ea56952f612c0f83e070c38"
+    },
+    {
+      "number": 12,
+      "id": "modular-nursery",
+      "type": "object-or-service",
+      "path": "assets/services/modular-nursery.webp",
+      "status": "integrated",
+      "sha256": "2798d805a40221df59afa4a4f93a840366e5493214cc06263eb9241e5b29c87c"
+    },
+    {
+      "number": 13,
+      "id": "family-childcare",
+      "type": "object-or-service",
+      "path": "assets/services/family-childcare.webp",
+      "status": "integrated",
+      "sha256": "ec52bb3ece31f78c66ecd47672e42ed978853e8daa986da5e38c6ed362b0523d"
+    },
+    {
+      "number": 14,
+      "id": "home-long-term-care",
+      "type": "object-or-service",
+      "path": "assets/services/home-long-term-care.webp",
+      "status": "integrated",
+      "sha256": "a889e79dcf970fe095f69c81e03505f5eeaab7f9c00766a4070a4181f8b62ea3"
+    },
+    {
+      "number": 15,
+      "id": "bridge-drainage",
+      "type": "object-or-service",
+      "path": "assets/services/bridge-drainage.webp",
+      "status": "integrated",
+      "sha256": "94f305d90f794cf40897fdb412d00e67e0045afedceba63f6eea4afd953272b3"
+    },
+    {
+      "number": 16,
+      "id": "river-nature-buffer",
+      "type": "object-or-service",
+      "path": "assets/services/river-nature-buffer.webp",
+      "status": "integrated",
+      "sha256": "d42acaa8e36b150874c6fbb355c9c03371be5b18867555fafd69fcf7b8a765a1"
+    },
+    {
+      "number": 17,
+      "id": "flood-warning-service",
+      "type": "object-or-service",
+      "path": "assets/services/flood-warning-service.webp",
+      "status": "integrated",
+      "sha256": "76e1212dd2545029dd63098bf962a0d59d6da79695a9864bdd6ede40d5af99a9"
+    },
+    {
+      "number": 18,
+      "id": "public-service-desk",
+      "type": "object-or-service",
+      "path": "assets/services/public-service-desk.webp",
+      "status": "integrated",
+      "sha256": "4bbe56517af9747137cba19710be25ea3f057109f07e160237b7f79aa2bef74d"
+    },
+    {
+      "number": 19,
+      "id": "telemedicine-room",
+      "type": "object-or-service",
+      "path": "assets/services/telemedicine-room.webp",
+      "status": "integrated",
+      "sha256": "a0c0bc8dda540dcf20b967c0616ca665bc4d77fa779e0b06be4524e86e7bd84c"
+    },
+    {
+      "number": 20,
+      "id": "backup-server-room",
+      "type": "object-or-service",
+      "path": "assets/services/backup-server-room.webp",
+      "status": "integrated",
+      "sha256": "aa3485def6c277559a4f74e64b91d195caa1457820522556f05f9415b8c3d217"
+    },
+    {
+      "number": 21,
+      "id": "civic-tech-workshop",
+      "type": "object-or-service",
+      "path": "assets/services/civic-tech-workshop.webp",
+      "status": "integrated",
+      "sha256": "e6cb76aaf5e3e29806e196cc7c2cca1270691fe1740d5bc113811d8e4324dbd3"
+    },
+    {
+      "number": 22,
+      "id": "commuter-transport",
+      "type": "object-or-service",
+      "path": "assets/services/commuter-transport.webp",
+      "status": "integrated",
+      "sha256": "2f9c58da567a95398d7e65c3950b3f41aee6ec14d78952459bd7ceb0d2fe1ce2"
+    },
+    {
+      "number": 23,
+      "id": "intergenerational-centre",
+      "type": "object-or-service",
+      "path": "assets/services/intergenerational-centre.webp",
+      "status": "integrated",
+      "sha256": "dfdb3a83ca9cbaf6c5a4ceb0c4291d066f71fe9e271fb0da4c99e209cf337562"
+    },
+    {
+      "number": 24,
+      "id": "clean-production-line",
+      "type": "object-or-service",
+      "path": "assets/services/clean-production-line.webp",
+      "status": "integrated",
+      "sha256": "206c7663fc624622ddd597e227a3b81fca24535f2c2b393840577ed7762f815e"
+    },
+    {
+      "number": 25,
+      "id": "mira",
+      "type": "character",
+      "path": "assets/characters/mira.webp",
+      "status": "integrated",
+      "sha256": "8a039e5a40d52e8770f0c2d7096d7e75ddba2fa399f25603cb63c71fe1a2b6e2"
+    },
+    {
+      "number": 26,
+      "id": "ilya",
+      "type": "character",
+      "path": "assets/characters/ilya.webp",
+      "status": "integrated",
+      "sha256": "37b4e269c2ce6eb68191781737cbc920a24177a29b03f2b23c9030b6363baa2b"
+    },
+    {
+      "number": 27,
+      "id": "elena",
+      "type": "character",
+      "path": "assets/characters/elena.webp",
+      "status": "integrated",
+      "sha256": "1fcf6565f347f4d73574aca3efd9e9eca9a8f36f9e350844e5f74553b295574d"
+    },
+    {
+      "number": 28,
+      "id": "viktor",
+      "type": "character",
+      "path": "assets/characters/viktor.webp",
+      "status": "integrated",
+      "sha256": "ac56fee18f65aa6b27c7c44c25e8596a0f482dd71e8ca0116a9ed025aebce07f"
+    },
+    {
+      "number": 29,
+      "id": "anna-berezina",
+      "type": "character",
+      "path": "assets/characters/anna-berezina.webp",
+      "status": "integrated",
+      "sha256": "717ee49f77b25b14ce81d978dc04d0bd97a8bfa0587b10678671c8bd77058877"
+    },
+    {
+      "number": 30,
+      "id": "denis-kovalev",
+      "type": "character",
+      "path": "assets/characters/denis-kovalev.webp",
+      "status": "integrated",
+      "sha256": "a9109cf2c63261d2a8b91b4c08a383f194367b23083ba1ad825d83087bc27ed7"
+    },
+    {
+      "number": 31,
+      "id": "anna-resident",
+      "type": "character",
+      "path": "assets/characters/anna-resident.webp",
+      "status": "integrated",
+      "sha256": "964491ce4a6959159c0f97aae6b22767c1e4dc121db386b09a51d349a6847730"
+    },
+    {
+      "number": 32,
+      "id": "denis-resident",
+      "type": "character",
+      "path": "assets/characters/denis-resident.webp",
+      "status": "integrated",
+      "sha256": "f4b98286304d88409bff1fa3d07b009bd1f76a06c70fb451cfa6b621a56cd9d7"
+    },
+    {
+      "number": 33,
+      "id": "valentina-resident",
+      "type": "character",
+      "path": "assets/characters/valentina-resident.webp",
+      "status": "integrated",
+      "sha256": "cf1c2183d02fef197b8c865e07cfa367295f41f238fc31f20834e913da45786d"
+    },
+    {
+      "number": 34,
+      "id": "mikhail-resident",
+      "type": "character",
+      "path": "assets/characters/mikhail-resident.webp",
+      "status": "integrated",
+      "sha256": "39259a9b8b4e20c8d3b1fcf78acc83264e6a1a493876892a84e5068ebc9fbc77"
+    },
+    {
+      "number": 35,
+      "id": "olga-resident",
+      "type": "character",
+      "path": "assets/characters/olga-resident.webp",
+      "status": "integrated",
+      "sha256": "505bd18d19535f56c3103fe996156709a4ff35b5431d8a357d8d7e87bf4234a3"
+    },
+    {
+      "number": 36,
+      "id": "north-access-scene",
+      "type": "scene",
+      "path": "assets/scenes/north-access-scene.webp",
+      "status": "integrated",
+      "sha256": "d81d42a3fbceb21a1e7fc6cfafda3683001d4750e0766f67468f924b73441fb0"
+    },
+    {
+      "number": 37,
+      "id": "industrial-mentoring-scene",
+      "type": "scene",
+      "path": "assets/scenes/industrial-mentoring-scene.webp",
+      "status": "integrated",
+      "sha256": "3681f4bef262b1550387e7fca1bff9288b08c2cf0e2e6db149ecf770cef3d09b"
+    },
+    {
+      "number": 38,
+      "id": "river-before-flood-scene",
+      "type": "scene",
+      "path": "assets/scenes/river-before-flood-scene.webp",
+      "status": "integrated",
+      "sha256": "2468c31a22b7eef90f196a61504ffaca8237fb7f39113e8281699bf31cf8c15f"
+    },
+    {
+      "number": 39,
+      "id": "capital-service-scene",
+      "type": "scene",
+      "path": "assets/scenes/capital-service-scene.webp",
+      "status": "integrated",
+      "sha256": "841d258d8d54750b086ec5380431d8653e66ae80f074cece8f4cd461c606cd5d"
+    },
+    {
+      "number": 40,
+      "id": "suburb-school-scene",
+      "type": "scene",
+      "path": "assets/scenes/suburb-school-scene.webp",
+      "status": "integrated",
+      "sha256": "8f4f20f398a17448cdb5858f5a246eb4d330b2d58b22b5666a65a4f2628a59ec"
+    },
+    {
+      "number": 41,
+      "id": "respiratory-outbreak-scene",
+      "type": "scene",
+      "path": "assets/scenes/respiratory-outbreak-scene.webp",
+      "status": "integrated",
+      "sha256": "d4c57c4f8dbcbac9bfbae1795d6f72b4c2fe0b070e079446c3281a27d02df8fa"
+    },
+    {
+      "number": 42,
+      "id": "youth-outflow-scene",
+      "type": "scene",
+      "path": "assets/scenes/youth-outflow-scene.webp",
+      "status": "integrated",
+      "sha256": "380171c6045ea318e8f833c83baf70e86ad0946b14f24c1f33ccbf21b6fdb7a8"
+    },
+    {
+      "number": 43,
+      "id": "flood-response-scene",
+      "type": "scene",
+      "path": "assets/scenes/flood-response-scene.webp",
+      "status": "integrated",
+      "sha256": "a1cb92df5aebf18b30ef1deee030aaab03cfba0760fbfc16ed25491ab3fcd177"
+    },
+    {
+      "number": 44,
+      "id": "digital-outage-scene",
+      "type": "scene",
+      "path": "assets/scenes/digital-outage-scene.webp",
+      "status": "integrated",
+      "sha256": "e6c93a4badd818789fae84691b605ee90bb593964b8fc358e3d81a89664cf5ca"
+    },
+    {
+      "number": 45,
+      "id": "negotiation-room",
+      "type": "scene",
+      "path": "assets/scenes/negotiation-room.webp",
+      "status": "integrated",
+      "sha256": "0cee6b3ec92c9232f1f39950c1097638f81fe7e9bd23ed084e53408c5c28d90a"
+    },
+    {
+      "number": 46,
+      "id": "governor-office",
+      "type": "scene",
+      "path": "assets/scenes/governor-office.webp",
+      "status": "integrated",
+      "sha256": "3baef73b5b96af7b137af56d01f142d0ed81cc7883de1da98ba463730600c3a9"
+    },
+    {
+      "number": 47,
+      "id": "public-meeting-room",
+      "type": "scene",
+      "path": "assets/scenes/public-meeting-room.webp",
+      "status": "integrated",
+      "sha256": "4596fb1304822b23111858c09442419d1d9da7c9eb0d38e77e9987a73fa95aeb"
+    },
+    {
+      "number": 48,
+      "id": "anna-letter-02",
+      "type": "age-portrait",
+      "path": "assets/letters/anna-letter-02.webp",
+      "status": "integrated",
+      "age": 40,
+      "sha256": "0f73a3ab25f78ffba667047afbcadce188f645a07f2e44a1d710e0f04d812cab"
+    },
+    {
+      "number": 49,
+      "id": "anna-letter-03",
+      "type": "age-portrait",
+      "path": "assets/letters/anna-letter-03.webp",
+      "status": "integrated",
+      "age": 49,
+      "sha256": "6bb109fba0f49e6205e9c71f5a5c73666293040abe5838b591f756256f7c93b6"
+    },
+    {
+      "number": 50,
+      "id": "denis-letter-02",
+      "type": "age-portrait",
+      "path": "assets/letters/denis-letter-02.webp",
+      "status": "integrated",
+      "age": 36,
+      "sha256": "b2abd26936153ec89c08efe15f28a54e6df0389d94e796a772d606e9d5a07e38"
+    },
+    {
+      "number": 51,
+      "id": "denis-letter-03",
+      "type": "age-portrait",
+      "path": "assets/letters/denis-letter-03.webp",
+      "status": "integrated",
+      "age": 44,
+      "sha256": "14355c8c4b834ad9f043439e8cb5b6e3f1f1936fb0b2d50ebb7e4f41c0e8807f"
+    },
+    {
+      "number": 52,
+      "id": "valentina-letter-02",
+      "type": "age-portrait",
+      "path": "assets/letters/valentina-letter-02.webp",
+      "status": "integrated",
+      "age": 70,
+      "sha256": "40b3ab306891992cd83e2f043357fbee95910fa77231c5aeda2ceb491e10ce70"
+    },
+    {
+      "number": 53,
+      "id": "valentina-letter-03",
+      "type": "age-portrait",
+      "path": "assets/letters/valentina-letter-03.webp",
+      "status": "integrated",
+      "age": 77,
+      "sha256": "132351b2097b29f8ede51e53f4ae6266ad06c70259195574a30e45aa8f7ffcdb"
+    },
+    {
+      "number": 54,
+      "id": "mikhail-letter-02",
+      "type": "age-portrait",
+      "path": "assets/letters/mikhail-letter-02.webp",
+      "status": "integrated",
+      "age": 47,
+      "sha256": "5e4058bd1418720661c636a132393eae8ba83a1ae300c2c6d51c6860460abba9"
+    },
+    {
+      "number": 55,
+      "id": "mikhail-letter-03",
+      "type": "age-portrait",
+      "path": "assets/letters/mikhail-letter-03.webp",
+      "status": "integrated",
+      "age": 53,
+      "sha256": "ee882e56e84f223128c05b5923a56c7a3d9507c4f18010a06cf1d2884a515aec"
+    },
+    {
+      "number": 56,
+      "id": "olga-letter-02",
+      "type": "age-portrait",
+      "path": "assets/letters/olga-letter-02.webp",
+      "status": "integrated",
+      "age": 43,
+      "sha256": "d659adf15c12e172a5979ac63a94785315d00a534779a8d20cccbd300cf865b7"
+    },
+    {
+      "number": 57,
+      "id": "olga-letter-03",
+      "type": "age-portrait",
+      "path": "assets/letters/olga-letter-03.webp",
+      "status": "integrated",
+      "age": 48,
+      "sha256": "5e69b46f478c7ef79568c4c214fcd90aa794b95c9d5fad31fa66a3667b962216"
+    }
+  ]
+}

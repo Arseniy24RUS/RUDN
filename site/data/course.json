@@ -330,7 +330,7 @@
     "puzzle": "https://arseniy24rus.github.io/Russian-regions-puzzle/",
     "settlement_dashboard": "https://datalens.yandex/kqam1c0gzr265",
     "civil_service_test": "https://edu.gossluzhba.gov.ru/test",
-    "governor_simulator": "https://arseniy24rus.github.io/government-budget-simulator/",
+    "governor_simulator": "apps/governor/index.html",
     "career_guidance": "#activity/seminar-6"
   },
   "firebase": {

@@ -8,7 +8,7 @@ import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lec
 import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.2.2';
 import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.2.2';
 import {attemptOwner} from './attempt-session.js?v=1.2.2';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.2.2';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.1';
 import {openAccount,mountProfile} from './account.js?v=1.2.2';
 
 const app = document.getElementById('app');
@@ -40,7 +40,7 @@ const UI = {
     seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.',
     seminar5Lead:'Система закрепляет за студентом один из 30 вариантов обращения. Заполните служебную карточку и подготовьте официальный ответ гражданину.', yourVariant:'Ваш вариант', appealType:'Тип обращения', completeness:'Полнота обязательных сведений', registration:'Регистрация и первоначальное действие', deadline:'Срок рассмотрения', competentBody:'Компетентный орган', addresseeDetails:'Реквизиты адресата', officialReply:'Проект официального ответа гражданину', rubric:'Автоматическая предварительная оценка проверяет полноту карточки, сроки, компетенцию и структуру ответа. Преподаватель может уточнить итог.',
     seminar6Lead:'Пройдите официальный внешний тест, укажите результат и прикрепите скриншот.', openCivilTest:'Открыть тест госслужбы', testScore:'Результат теста (процент или балл)', screenshot:'Скриншот результата',
-    seminar7Lead:'Пройдите симулятор губернатора. Платформа попытается найти итоговый KPI автоматически.', openSimulator:'Открыть симулятор', syncSimulator:'Найти мой результат', kpi:'Итоговый KPI', simulatorNotFound:'Результат не найден автоматически. Введите KPI вручную после завершения симуляции.',
+    seminar7Lead:'Управляйте регионом и проследите последствия решений. По итогам кампании оценка и учебный отчёт сохранятся автоматически.', openSimulator:'Открыть симулятор',
     finalLead:'Итоговый тест проверяет освоение всех тем курса.',
     saved:'Результат сохранён', fillRequired:'Заполните обязательные поля', profileRequired:'Для сохранения результата сначала войдите в профиль.',
     gradebookTitle:'Электронный журнал', gradebookLead:'По каждой активности учитывается лучший результат. Максимум за курс — 100 баллов.', exportCsv:'Скачать CSV', attempts:'История попыток', date:'Дата', type:'Тип', duration:'Время',
@@ -73,7 +73,7 @@ const UI = {
     seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.',
     seminar5Lead:'The platform assigns one of 30 petition cases to each student. Complete the processing card and draft an official reply.', yourVariant:'Your case', appealType:'Type of petition', completeness:'Completeness of mandatory information', registration:'Registration and initial action', deadline:'Review deadline', competentBody:'Competent authority', addresseeDetails:'Addressee details', officialReply:'Draft official reply to the citizen', rubric:'The preliminary automated mark checks completeness, deadlines, competence and reply structure. The instructor may adjust it.',
     seminar6Lead:'Complete the official external test, record the result and upload a screenshot.', openCivilTest:'Open civil-service test', testScore:'Test result (percentage or score)', screenshot:'Result screenshot',
-    seminar7Lead:'Complete the governor simulator. The platform will try to locate your final KPI automatically.', openSimulator:'Open simulator', syncSimulator:'Find my result', kpi:'Final KPI', simulatorNotFound:'The result could not be found automatically. Enter the KPI manually after completing the simulation.',
+    seminar7Lead:'Manage a region and explore the consequences of your decisions. Your score and learning report are saved automatically when the campaign ends.', openSimulator:'Open simulator',
     finalLead:'The final course test covers all course themes.',
     saved:'Result saved', fillRequired:'Complete all required fields', profileRequired:'Sign in before saving a result.',
     gradebookTitle:'Electronic gradebook', gradebookLead:'The best result is retained for each activity. The course maximum is 100 points.', exportCsv:'Download CSV', attempts:'Attempt history', date:'Date', type:'Type', duration:'Time',
@@ -106,7 +106,7 @@ const UI = {
     seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。',
     seminar5Lead:'系统为每位学生固定分配30个公民来信案例之一。请填写办理卡并起草正式答复。', yourVariant:'你的案例', appealType:'来信类型', completeness:'必备信息完整性', registration:'登记与初始处理', deadline:'办理期限', competentBody:'主管机关', addresseeDetails:'收件人信息', officialReply:'致公民的正式答复草案', rubric:'自动初评检查资料完整性、期限、职权归属和答复结构；教师可调整最终成绩。',
     seminar6Lead:'完成外部官方测试，填写结果并上传截图。', openCivilTest:'打开公务员测试', testScore:'测试结果（百分比或分数）', screenshot:'成绩截图',
-    seminar7Lead:'完成行政长官模拟器；平台将尝试自动查找最终KPI。', openSimulator:'打开模拟器', syncSimulator:'查找我的结果', kpi:'最终KPI', simulatorNotFound:'未能自动找到结果。完成模拟后可手动输入KPI。',
+    seminar7Lead:'管理地区，观察决策后果。任期结束后，成绩和学习报告将自动保存。', openSimulator:'打开模拟器',
     finalLead:'课程期末测验覆盖全部主题。',
     saved:'结果已保存', fillRequired:'请填写必填项', profileRequired:'保存结果前请先登录。',
     gradebookTitle:'电子成绩册', gradebookLead:'每项活动保留最佳成绩，课程总分上限为100分。', exportCsv:'下载CSV', attempts:'作答记录', date:'日期', type:'类型', duration:'用时',
@@ -548,25 +548,70 @@ function renderSeminar6(topic){
     console.error('Career module:',error);
   }})();
 }
-
-function flattenObjects(value,out=[]){if(Array.isArray(value))value.forEach(x=>flattenObjects(x,out));else if(value&&typeof value==='object'){if(value.fio||value.fullName||value.name||value.group||value.kpi||value.finalKpi||value.KPI)out.push(value);Object.values(value).forEach(x=>flattenObjects(x,out))}return out}
-function nameNorm(s){return String(s||'').toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9]+/gi,' ').trim()}
-function simulatorPoints(kpi){const x=number(kpi);return x>=85?5:x>=70?4:x>=55?3:0}
-function renderSeminar7(topic){
-  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
-  app.innerHTML=seminarShell(topic,`${externalCard(ui('openSimulator'),ui('seminar7Lead'),data.course.external_apps.governor_simulator,ui('openSimulator'))}<div class="panel"><div class="page-actions"><button class="btn btn-primary" id="syncSimulator">${ui('syncSimulator')}</button></div><form id="simulatorForm" class="form-grid" style="margin-top:16px"><label><span>${ui('kpi')}</span><input name="kpi" type="number" min="0" max="100" step="0.01" required></label><label><span>${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf"></label><div class="full"><button class="btn btn-secondary" type="submit">${ui('submit')}</button></div></form><p class="form-hint" id="simulatorStatus"></p></div>`);
-  app.querySelector('#syncSimulator').onclick=async()=>{
-    if(!requireProfile())return;const status=app.querySelector('#simulatorStatus');status.textContent=t('loading');
-    try{const response=await fetch(CONFIG.simulatorResultsUrl,{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const objects=flattenObjects(await response.json());const p=backend.getProfile();const targetName=nameNorm(p.fullName),targetGroup=nameNorm(p.group);
-      const matches=objects.filter(x=>{const n=nameNorm(x.fio||x.fullName||x.name||x.studentName),g=nameNorm(x.group||x.groupNumber||x.studentGroup);return n&&n===targetName&&(!g||!targetGroup||g===targetGroup)});
-      matches.sort((a,b)=>String(b.completedAt||b.date||b.timestamp||'').localeCompare(String(a.completedAt||a.date||a.timestamp||'')));
-      const found=matches[0];if(!found)throw new Error(ui('simulatorNotFound'));const kpi=number(found.kpi??found.finalKpi??found.KPI??found.final_kpi??found.result?.kpi);if(!Number.isFinite(kpi))throw new Error(ui('simulatorNotFound'));
-      app.querySelector('[name="kpi"]').value=kpi;const points=simulatorPoints(kpi);await backend.saveAttempt({studentKey,type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,source:'firebase-import',sourceRecord:found});status.textContent=`${ui('saved')}: KPI ${kpi} → ${points}/5`;toast(status.textContent,'success');
-    }catch(error){status.textContent=String(error.message||error);toast(status.textContent,'error')}
-  };
-  app.querySelector('#simulatorForm').onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const kpi=number(fd.get('kpi'));if(kpi<0||kpi>100){toast(ui('fillRequired'),'error');return}let fileUrl='';const file=fd.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-7',file)}catch(error){toast(error,'error')}}const points=simulatorPoints(kpi);await backend.saveAttempt({studentKey,type:'governor-simulator',activitySlug:'seminar-7',title:loc(topic.seminar,'title'),points,maxPoints:5,kpi,fileUrl,source:'manual',reviewStatus:'pending'});toast(`${ui('saved')}: ${points}/5`,'success');render();
-  };
+const GOVERNOR_COPY={
+  ru:{module:'Учебный симулятор',title:'Губернатор: Новая область',languages:'Интерфейс симулятора доступен на русском и английском языках.',assessment:'Оценка за выполнение задания в симуляторе рассчитывается автоматически по единой формуле: от 0 до 5 баллов. Отчёт показывает вклад каждого критерия. В журнале сохраняется лучший результат за семинар; максимум за курс — 100 баллов.',history:'Мои результаты и отчёты',teacherReports:'Семинар 7 · Отчёты симулятора',historyLead:'Здесь показаны автоматически сохранённые результаты кампаний и разбор оценки. Факультативную рефлексию для учебного обсуждения готовят во время кампании, до сохранения итогового результата.',empty:'Результатов пока нет. Завершите кампанию или оформите досрочную передачу управления — оценка и отчёт сохранятся автоматически.',preview:'Предпросмотр преподавателя. Учебные попытки в журнал не отправляются.',submitted:'Результат синхронизирован',pending:'Сохранён на устройстве · ожидает синхронизации',saved:'Результат сохранён',complete:'Кампания завершена',handover:'Досрочная передача финансового управления',unknown:'Статус кампании не указан',decisions:'Принято решений',scenario:'Сценарий',seed:'Код сессии',model:'Версия модели',application:'Версия приложения',details:'Открыть отчёт и рефлексию',reflection:'Рефлексия студента',noReflection:'Рефлексия не указана.',outcomes:'Состояние региона',support:'Поддержка · индекс 0–100',development:'Развитие · индекс 0–100',fiscalSpace:'Казна · млрд ₽',reserve:'Резерв · млрд ₽',debt:'Долг · млрд ₽',population:'Население · чел.',territories:'Пять территорий',territory:'Территория',health:'Доступность медицины · %',school:'Доступность школы · %',employment:'Занятость · %',register:'Принятые решения',year:'Год',mission:'Задача',action:'Решение',funding:'Финансирование',cost:'Стоимость · млрд ₽',delivery:'Исполнение',treasury:'Казна',cofinance:'Софинансирование',debtFunding:'Заём',reserveFunding:'Резерв',onTime:'По плану',delayed:'Задержка',overrun:'Удорожание',partial:'Неполное исполнение',noRows:'Нет записей',teacherHelp:'Отчёт содержит автоматическую оценку, её критерии, решения и рефлексию для учебного разбора. При необходимости используйте существующую форму корректировки оценки ниже; в журнале сохраняется лучший балл.',cached:'Сохранённая копия. Для изменения оценки обновите журнал после подключения к сети.'},
+  en:{module:'Learning simulator',title:'Governor: Novaya Oblast',languages:'The simulator interface is available in Russian and English.',assessment:'Performance on the simulation task is graded automatically using a fixed formula, from 0 to 5 points. The report shows each criterion’s contribution. The gradebook retains the best seminar result within the 100-point course total.',history:'My results and reports',teacherReports:'Seminar 7 · Simulator reports',historyLead:'Automatically saved campaign results and score breakdowns appear here. Prepare an optional reflection for classroom discussion during the campaign, before the final result is saved.',empty:'No results yet. Complete a campaign or an early financial handover; your score and report will be saved automatically.',preview:'Instructor preview. Practice attempts are not submitted to the gradebook.',submitted:'Result synced',pending:'Saved on this device · awaiting sync',saved:'Result saved',complete:'Campaign complete',handover:'Early financial handover',unknown:'Campaign status not specified',decisions:'Decisions made',scenario:'Scenario',seed:'Session code',model:'Model version',application:'Application version',details:'Read report and reflection',reflection:'Student reflection',noReflection:'No reflection provided.',outcomes:'Regional outcomes',support:'Support · 0–100 index',development:'Development · 0–100 index',fiscalSpace:'Treasury · bn RUB',reserve:'Reserve · bn RUB',debt:'Debt · bn RUB',population:'Population · people',territories:'Five districts',territory:'District',health:'Health access · %',school:'School access · %',employment:'Employment · %',register:'Decision register',year:'Year',mission:'Task',action:'Decision',funding:'Funding',cost:'Cost · bn RUB',delivery:'Delivery',treasury:'Treasury',cofinance:'Co-financing',debtFunding:'Borrowing',reserveFunding:'Reserve',onTime:'On time',delayed:'Delayed',overrun:'Cost overrun',partial:'Partial delivery',noRows:'No entries',teacherHelp:'The report contains the automatic score, criteria, decisions and reflection for classroom analysis. The existing grade adjustment form below remains available if needed; the gradebook retains the best score.',cached:'Cached copy. Reconnect and refresh the gradebook before changing a grade.'},
+  zh:{module:'学习模拟器',title:'行政长官：新州',languages:'模拟器界面提供俄语和英语。',assessment:'系统按固定公式自动评定模拟任务的完成情况，得分为0至5分。报告显示各项标准的得分。成绩册保留本研讨课的最佳成绩，课程总分仍为100分。',history:'我的成绩与报告',teacherReports:'研讨课7 · 模拟器报告',historyLead:'此处显示自动保存的任期成绩和评分明细。可在任期进行中、最终成绩保存前准备选填反思，用于课堂讨论。',empty:'暂无成绩。完成整个任期或提前移交财政管理后，成绩和报告将自动保存。',preview:'教师预览模式。练习记录不会提交到成绩册。',submitted:'成绩已同步',pending:'已保存到此设备 · 等待同步',saved:'成绩已保存',complete:'任期已完成',handover:'提前移交财政管理',unknown:'未注明任期状态',decisions:'已作决策',scenario:'情景',seed:'会话代码',model:'模型版本',application:'应用版本',details:'查看报告与反思',reflection:'学生反思',noReflection:'未填写反思。',outcomes:'地区状况',support:'支持度 · 0–100指数',development:'发展 · 0–100指数',fiscalSpace:'国库 · 十亿卢布',reserve:'储备 · 十亿卢布',debt:'债务 · 十亿卢布',population:'人口 · 人',territories:'五个地区',territory:'地区',health:'医疗可及性 · %',school:'学校可及性 · %',employment:'就业率 · %',register:'决策记录',year:'年份',mission:'任务',action:'决策',funding:'资金来源',cost:'成本 · 十亿卢布',delivery:'执行情况',treasury:'国库',cofinance:'共同融资',debtFunding:'借款',reserveFunding:'储备',onTime:'按计划',delayed:'延迟',overrun:'成本超支',partial:'部分执行',noRows:'暂无记录',teacherHelp:'报告提供自动成绩、评分标准、决策和反思，供课堂分析使用。必要时可使用下方现有表单调整成绩；成绩册保留最佳得分。',cached:'这是缓存副本。重新联网并刷新成绩册后才能修改成绩。'}
+};
+Object.assign(GOVERNOR_COPY.ru,{score:'Оценка за попытку',breakdown:'Как рассчитана оценка',criterion:'Критерий',criterionPoints:'Баллы',criterionDetail:'Основание',assessmentVersion:'Версия формулы',ungraded:'Без записи оценки',currentGrade:'Лучший балл за семинар в журнале'});
+Object.assign(GOVERNOR_COPY.en,{score:'Attempt score',breakdown:'Score breakdown',criterion:'Criterion',criterionPoints:'Points',criterionDetail:'Basis',assessmentVersion:'Formula version',ungraded:'No grade recorded',currentGrade:'Best seminar score in the gradebook'});
+Object.assign(GOVERNOR_COPY.zh,{score:'本次得分',breakdown:'评分明细',criterion:'标准',criterionPoints:'得分',criterionDetail:'依据',assessmentVersion:'公式版本',ungraded:'未记录成绩',currentGrade:'成绩册中的研讨课最佳得分'});
+Object.assign(GOVERNOR_COPY.ru,{rubric:'Пять критериев по 1 баллу: завершение кампании, работающие программы, медицина/школа/занятость в пяти территориях относительно начала, финансовый запас с учётом трёх будущих бюджетов и исполненные обещания. При досрочной передаче управления максимум за попытку — 2,5 балла.'});
+Object.assign(GOVERNOR_COPY.en,{rubric:'Five criteria, worth 1 point each: campaign completion, delivered programmes, health/school/employment across five districts relative to the starting position, financial headroom including three future budgets, and fulfilled promises. An early financial handover caps the attempt score at 2.5 points.'});
+Object.assign(GOVERNOR_COPY.zh,{rubric:'五项标准各占1分：完成任期、投入运行的项目、五个地区的医疗/教育/就业相较起点的表现、考虑未来三期预算的财政余量，以及兑现承诺。提前移交财政管理时，本次得分上限为2.5分。'});
+const governorCopy=()=>GOVERNOR_COPY[getLocale()]||GOVERNOR_COPY.ru;
+function nativeGovernorAttempts(attempts,studentKey){
+  return Object.values(attempts||{}).filter(a=>a?.studentKey===studentKey&&a.activitySlug==='seminar-7'&&a.type==='governor-simulator'&&a.source==='native-v1'&&a.governor&&typeof a.governor==='object')
+    .sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+}
+function governorPending(studentKey,id){try{return localStorage.getItem(`rudn.pending.v1:${studentKey}:${id}`)!==null}catch{return null}}
+function governorSaveLabel(studentKey,id){const c=governorCopy(),pending=governorPending(studentKey,id);return c[pending===true?'pending':pending===false?'submitted':'saved']}
+function updateGovernorSaveStatus(container){
+  const studentKey=backend.getProfile()?.studentKey;if(!studentKey)return;
+  container.querySelectorAll('[data-governor-save]').forEach(node=>{if(node.dataset.governorStudent===studentKey)node.textContent=governorSaveLabel(studentKey,node.dataset.governorSave)});
+}
+function governorNumber(value,scale=1){
+  if(value===null||value===undefined||value===''||!Number.isFinite(Number(value)))return '—';
+  return new Intl.NumberFormat(getLocale()==='zh'?'zh-CN':getLocale(),{maximumFractionDigits:2}).format(Number(value)*scale);
+}
+function governorTable(title,headers,rows,{wrap=false}={}){
+  const c=governorCopy(),cellStyle=wrap?' style="white-space:normal"':'';return `<h3>${esc(title)}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${esc(title)}"><table class="data-table"><thead><tr>${headers.map(label=>`<th scope="col"${cellStyle}>${esc(label)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(row=>`<tr>${row.map((value,index)=>index===0?`<th scope="row"${cellStyle}>${esc(value)}</th>`:`<td${cellStyle}>${esc(value)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">${esc(c.noRows)}</td></tr>`}</tbody></table></div>`;
+}
+function governorReportText(value){return value&&typeof value==='object'?(value[getLocale()]??value.ru??value.en??'—'):value??'—'}
+function governorAssessmentDetails(report){
+  const assessment=report.assessment;if(!assessment||typeof assessment!=='object')return '';
+  const c=governorCopy(),criteria=(Array.isArray(assessment.criteria)?assessment.criteria:[]).slice(0,20).map(row=>[
+    governorReportText(row?.title||row?.id),`${governorNumber(row?.points)}/${governorNumber(row?.maxPoints)}`,governorReportText(row?.detail)
+  ]);
+  return `<section class="subsection">${governorTable(c.breakdown,[c.criterion,c.criterionPoints,c.criterionDetail],criteria,{wrap:true})}<p class="form-hint">${esc(c.assessmentVersion)}: ${esc(assessment.version||'—')}</p></section>`;
+}
+function governorReportCards(attempts,{teacher=false}={}){
+  const c=governorCopy();
+  return attempts.map(attempt=>{
+    const report=attempt.governor,final=report.final||{};
+    const hasGrade=attempt.recordGrade!==false&&attempt.points!==null&&attempt.points!==undefined&&attempt.points!==''&&Number.isFinite(Number(attempt.points));
+    const score=hasGrade?`${c.score}: ${governorNumber(attempt.points)}/5`:c.ungraded;
+    const status=c[report.campaignStatus==='completed'?'complete':report.campaignStatus==='financial-handover'?'handover':'unknown'];
+    const metrics=['support','development','fiscalSpace','reserve','debt','population'];
+    const territories=(Array.isArray(report.territories)?report.territories:[]).slice(0,5).map(row=>[row?.name||row?.id||'—',governorNumber(row?.population),governorNumber(row?.healthAccess,100),governorNumber(row?.schoolAccess,100),governorNumber(row?.employment,100)]);
+    const funding={treasury:c.treasury,cofinance:c.cofinance,debt:c.debtFunding,reserve:c.reserveFunding};
+    const delivery={'on-time':c.onTime,delayed:c.delayed,overrun:c.overrun,partial:c.partial};
+    const decisions=(Array.isArray(report.decisionRegister)?report.decisionRegister:[]).slice(0,20).map(row=>[row?.year??'—',row?.mission||'—',row?.action||'—',funding[row?.fundingMode]||row?.fundingMode||'—',governorNumber(row?.cost),delivery[row?.delivery]||row?.delivery||'—']);
+    return `<article class="panel governor-report" style="overflow-wrap:anywhere"><h3>${esc(attempt.title||c.title)}</h3><p>${esc(formatDate(attempt.createdAt))} · ${esc(status)} · ${esc(c.decisions)}: ${esc(governorNumber(report.decisions))}/20</p><p><strong class="badge success">${esc(score)}</strong> <span class="badge"${teacher?'':` data-governor-save="${esc(attempt.id)}" data-governor-student="${esc(attempt.studentKey)}"`}>${esc(teacher?c.submitted:governorSaveLabel(attempt.studentKey,attempt.id))}</span></p><details><summary>${esc(c.details)}</summary>${governorAssessmentDetails(report)}<dl class="profile-dl"><dt>${esc(c.scenario)}</dt><dd>${esc(report.scenario||'—')}</dd><dt>${esc(c.seed)}</dt><dd>${esc(report.seed||'—')}</dd><dt>${esc(c.application)}</dt><dd>${esc(report.applicationVersion||'—')}</dd><dt>${esc(c.model)}</dt><dd>${esc(report.modelVersion||'—')}</dd></dl><h3>${esc(c.reflection)}</h3><p class="submission-case">${esc(attempt.reflection||c.noReflection)}</p><h3>${esc(c.outcomes)}</h3><dl class="profile-dl">${metrics.map(key=>`<dt>${esc(c[key])}</dt><dd>${esc(governorNumber(final[key]))}</dd>`).join('')}</dl>${governorTable(c.territories,[c.territory,c.population,c.health,c.school,c.employment],territories)}<div class="subsection">${governorTable(c.register,[c.year,c.mission,c.action,c.funding,c.cost,c.delivery],decisions)}</div></details></article>`;
+  }).join('');
+}
+async function renderSeminar7(topic){
+  const c=governorCopy(),owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey,hash=location.hash;
+  const intro=`<div class="panel external-card"><div><span class="badge">${esc(c.module)}</span><h2>${esc(c.title)}</h2><p>${esc(ui('seminar7Lead'))}</p><p class="muted">${esc(c.languages)}</p></div><a class="btn btn-primary" href="apps/governor/index.html">${esc(ui('openSimulator'))}</a></div><div class="panel"><p class="notice">${esc(c.assessment)}</p><p>${esc(c.rubric)}</p></div>`;
+  app.innerHTML=seminarShell(topic,`${intro}<section class="panel"><h2>${esc(c.history)}</h2><div id="governorHistory" role="status">${backend.isAdmin()?esc(c.preview):!studentKey?esc(ui('profileRequired')):esc(t('loading'))}</div></section>`);
+  if(!studentKey)return;
+  const [items,grades]=await Promise.all([backend.getAttempts(studentKey),backend.getGrades(studentKey)]);
+  if(owner!==attemptOwner()||hash!==location.hash)return;
+  const history=app.querySelector('#governorHistory');if(!history)return;
+  history.removeAttribute('role');
+  const attempts=nativeGovernorAttempts(items,studentKey);
+  history.innerHTML=`<p><strong>${esc(c.currentGrade)}: ${esc(governorNumber(grades['seminar-7']?.points))}/5</strong></p><p class="muted">${esc(c.historyLead)}</p><div class="page-actions"><button class="btn btn-neutral btn-small" id="governorHistoryRefresh">${esc(ui('refresh'))}</button></div>${attempts.length?governorReportCards(attempts):`<p>${esc(c.empty)}</p>`}`;
+  history.querySelector('#governorHistoryRefresh').onclick=()=>render();
 }
 let puzzleFragmentPromise=null;
 async function getPuzzleFragment(){
@@ -628,6 +673,12 @@ function renderStudentGrades(studentKey,all){
     try{const fd=new FormData(form);for(const item of items){const value=String(fd.get(item.slug)||'');if(value!==''&&(!grades[item.slug]||Number(value)!==Number(grades[item.slug].points)))await backend.setManualGrade(studentKey,item.slug,value,fd.get('note'))}toast(ui('saved'),'success');await renderGradebook()}
     catch(error){formError(form.querySelector('#gradeEditError'),error)}finally{button.disabled=false}
   };
+  const reports=nativeGovernorAttempts(all.attempts?.[studentKey],studentKey);
+  if(reports.length){
+    const c=governorCopy(),gradePanel=app.querySelector('#gradeEdit').closest('.panel');
+    gradePanel.insertAdjacentHTML('beforebegin',`<section class="panel"><h2>${esc(c.teacherReports)}</h2><p class="muted">${esc(c.teacherHelp)}</p>${all.stale?`<p class="notice warning">${esc(c.cached)}</p>`:''}${governorReportCards(reports,{teacher:true})}</section>`);
+    if(all.stale)app.querySelectorAll('#gradeEdit input,#gradeEdit textarea,#gradeEdit button[type="submit"]').forEach(control=>control.disabled=true);
+  }
 }
 function exportAdminCsv(profiles,grades,items){const rows=[['student_id','full_name','email','group',...items.map(x=>x.slug),'total']];for(const p of profiles){const g=grades[p.studentKey]||{},values=items.map(x=>number(g[x.slug]?.points)),total=values.reduce((a,b)=>a+b,0);rows.push([p.ticket,p.fullName||'',p.email,p.group,...values,total])}downloadCsv('rudn-gradebook.csv',rows)}
 function downloadCsv(filename,rows){const text='\ufeff'+rows.map(row=>row.map(cell=>`"${String(cell??'').replaceAll('"','""')}"`).join(';')).join('\r\n');const blob=new Blob([text],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
@@ -754,7 +805,7 @@ authForm.addEventListener('submit',async event=>{
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
-window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
+window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
 window.addEventListener('rudn:identitychange',()=>{
   if(currentCareer&&currentCareer.owner!==attemptOwner()){currentCleanup?.();currentCleanup=null;}

@@ -1,0 +1,356 @@
+{
+  "version": "0.15.0",
+  "generationPerformed": false,
+  "assets": [
+    {
+      "number": 48,
+      "id": "anna-letter-02",
+      "intendedAge": 40,
+      "source": "уверенный_портрет_врача_в_кардигане.png",
+      "sourceSha256": "7ae3af39d0c0ff653d4b7f3012628411d52070af54db5441be47e9c7ad49dc1b",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/anna-letter-02.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 44100,
+          "sha256": "0f73a3ab25f78ffba667047afbcadce188f645a07f2e44a1d710e0f04d812cab"
+        },
+        {
+          "path": "assets/letters/anna-letter-02-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 16188,
+          "sha256": "d83350f763e6014d9d23bccef355cba9799d77b3455397dfc753ac3a14b02519"
+        }
+      ]
+    },
+    {
+      "number": 49,
+      "id": "anna-letter-03",
+      "intendedAge": 49,
+      "source": "уверенная_медицинская_специалистка_в_кардигане.png",
+      "sourceSha256": "06efa34cdba9731345f3dc6773bc2c021fb8ac1ab3a6a92eb09caf15b4bf4b70",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/anna-letter-03.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 43398,
+          "sha256": "6bb109fba0f49e6205e9c71f5a5c73666293040abe5838b591f756256f7c93b6"
+        },
+        {
+          "path": "assets/letters/anna-letter-03-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 16288,
+          "sha256": "51ff005e3ba37a8b52a69d5f21aeaec22d7772e3748cf050a640eb6b5dee5bb5"
+        }
+      ]
+    },
+    {
+      "number": 50,
+      "id": "denis-letter-02",
+      "intendedAge": 36,
+      "source": "серьёзный_мужчина_в_рабочей_куртке.png",
+      "sourceSha256": "1cb089d92bbaf3e847981ffcc1dfa80611624d1a4bc25939a9641c5a97902f34",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/denis-letter-02.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 44684,
+          "sha256": "b2abd26936153ec89c08efe15f28a54e6df0389d94e796a772d606e9d5a07e38"
+        },
+        {
+          "path": "assets/letters/denis-letter-02-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 15656,
+          "sha256": "0c4b18bc72bfa8c8f6a1ea4b9c584ec8b355155c0acf54bf7ecacfed270d44d2"
+        }
+      ]
+    },
+    {
+      "number": 51,
+      "id": "denis-letter-03",
+      "intendedAge": 44,
+      "source": "опытный_мастер_в_рабочей_куртке.png",
+      "sourceSha256": "f99e1a6710cadca22dcabbb58d63c3f8e3d9a4a5048f26136512198d1f636e1e",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/denis-letter-03.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 47350,
+          "sha256": "14355c8c4b834ad9f043439e8cb5b6e3f1f1936fb0b2d50ebb7e4f41c0e8807f"
+        },
+        {
+          "path": "assets/letters/denis-letter-03-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 16042,
+          "sha256": "544ad50ec9f36fc0825b5041912dba1e6472135ef1b3897174d7d2743ddd0987"
+        }
+      ]
+    },
+    {
+      "number": 52,
+      "id": "valentina-letter-02",
+      "intendedAge": 70,
+      "source": "добрая_валентина_в_вязаном_кардигане.png",
+      "sourceSha256": "b141e1138bd655dae1f120ce7cad879fdf5b606177a2bc2a5b14dca16646c959",
+      "sourceDimensions": [
+        1086,
+        1448
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/valentina-letter-02.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 86520,
+          "sha256": "40b3ab306891992cd83e2f043357fbee95910fa77231c5aeda2ceb491e10ce70"
+        },
+        {
+          "path": "assets/letters/valentina-letter-02-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 23092,
+          "sha256": "6c27789517e3e2209ffedeced82d5c5b47fa5af0bdd1f797d0035c1ab86dace8"
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "id": "valentina-letter-03",
+      "intendedAge": 77,
+      "source": "пожилая_женщина_в_уютном_кардигане.png",
+      "sourceSha256": "cb629c2465ed67be313822f00a4b345f6414a203271eb4e2b12271c2d1a93892",
+      "sourceDimensions": [
+        1122,
+        1402
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/valentina-letter-03.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 73210,
+          "sha256": "132351b2097b29f8ede51e53f4ae6266ad06c70259195574a30e45aa8f7ffcdb"
+        },
+        {
+          "path": "assets/letters/valentina-letter-03-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 20014,
+          "sha256": "c02666fc2ad8db7e21b4516dd50ba6202545c1b163d9467fa55b0ac55a30bb29"
+        }
+      ]
+    },
+    {
+      "number": 54,
+      "id": "mikhail-letter-02",
+      "intendedAge": 47,
+      "source": "михаил_в_очках_на_прозрачном_фоне.png",
+      "sourceSha256": "337ce9300744bd69998cd3a2ee4b86610cc6a0bcf55578e7bd8503f4ae3a93f5",
+      "sourceDimensions": [
+        1122,
+        1402
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/mikhail-letter-02.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 35164,
+          "sha256": "5e4058bd1418720661c636a132393eae8ba83a1ae300c2c6d51c6860460abba9"
+        },
+        {
+          "path": "assets/letters/mikhail-letter-02-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 13672,
+          "sha256": "cfdcc6e10110a88af40a839f8fb7485c6dbd9e2a4e1554fd206af113a1e93895"
+        }
+      ]
+    },
+    {
+      "number": 55,
+      "id": "mikhail-letter-03",
+      "intendedAge": 53,
+      "source": "портрет_седовласого_профессора_в_очках.png",
+      "sourceSha256": "252a4375ed416853893569c9ac17b97aa5bf0bc027ea3115da2321764d66f856",
+      "sourceDimensions": [
+        1122,
+        1402
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/mikhail-letter-03.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 52242,
+          "sha256": "ee882e56e84f223128c05b5923a56c7a3d9507c4f18010a06cf1d2884a515aec"
+        },
+        {
+          "path": "assets/letters/mikhail-letter-03-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 16014,
+          "sha256": "8441ee2900fdedb950c76d39700128ed6ef87e6a66ec0adc45e6b6e51c348576"
+        }
+      ]
+    },
+    {
+      "number": 56,
+      "id": "olga-letter-02",
+      "intendedAge": 43,
+      "source": "женщина_в_бежевом_свитере_с_руками_в_карманах.png",
+      "sourceSha256": "4493d71bdb7968d33e8f688fcfdbb4bc2c3826ec9ecd72dd54f9bf880578c496",
+      "sourceDimensions": [
+        1122,
+        1402
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/olga-letter-02.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 38392,
+          "sha256": "d659adf15c12e172a5979ac63a94785315d00a534779a8d20cccbd300cf865b7"
+        },
+        {
+          "path": "assets/letters/olga-letter-02-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 14188,
+          "sha256": "571238a7e7e06e8947f04ab3addcd1f841d9f862050199679eed33973ccf84c1"
+        }
+      ]
+    },
+    {
+      "number": 57,
+      "id": "olga-letter-03",
+      "intendedAge": 48,
+      "source": "porträt_einer_lächelnden_frau_im_trenchcoat.png",
+      "sourceSha256": "56468e2c95b4d656197791c49241f393f26aa04cf430657367f82b77ae361575",
+      "sourceDimensions": [
+        1122,
+        1402
+      ],
+      "avatarCropFromPreparedPortrait": [
+        70,
+        0,
+        530,
+        460
+      ],
+      "files": [
+        {
+          "path": "assets/letters/olga-letter-03.webp",
+          "width": 600,
+          "height": 800,
+          "alpha": true,
+          "bytes": 48278,
+          "sha256": "5e69b46f478c7ef79568c4c214fcd90aa794b95c9d5fad31fa66a3667b962216"
+        },
+        {
+          "path": "assets/letters/olga-letter-03-avatar.webp",
+          "width": 256,
+          "height": 256,
+          "alpha": true,
+          "bytes": 16062,
+          "sha256": "cad38055f884ebfac3a39caa70cc77ab55d9c5afe3029f3496a4e2d7a2e2b282"
+        }
+      ]
+    }
+  ]
+}
