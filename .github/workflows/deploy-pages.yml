@@ -94,6 +94,7 @@ jobs:
           node scripts/test_reception_backup.cjs
           DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_locale_race.cjs
           node scripts/test_platform_i18n.cjs
+          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_entry_i18n.cjs
           node site/apps/reception/localization/test.mjs
           node site/apps/reception/localization/pack-test.mjs
           node site/apps/reception/localization/presentation-test.mjs

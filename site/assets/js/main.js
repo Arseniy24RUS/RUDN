@@ -507,7 +507,7 @@ function renderSeminar5(topic){
     link.href=new URL('../../apps/reception/platform.css?v=1.0.1',import.meta.url).href;
     document.head.append(link);
   }
-  app.innerHTML=`<section class="page reception-page"><div id="receptionMount" lang="${getLocale()}" aria-busy="true"><p role="status">${ui('receptionOpening')}</p></div></section>`;
+  app.innerHTML=`<section class="page reception-page"><div id="receptionMount" lang="${getLocale()}" aria-busy="true"><p role="status">${t('receptionOpening')}</p></div></section>`;
   const mount=app.querySelector('#receptionMount');
   const controller=new AbortController(),owner=attemptOwner();
   let mountedCleanup=()=>{},locale=getLocale();
@@ -540,7 +540,7 @@ function renderSeminar5(topic){
     }catch(error){
       if(!active())return;
       mount.setAttribute('aria-busy','false');
-      mount.innerHTML=`<div class="panel" role="alert"><h2>${ui('receptionUnavailable')}</h2><p>${ui('answersOnDevice')}</p><button type="button" class="btn btn-primary" id="receptionRetry">${ui('retryLoading')}</button></div>`;
+      mount.innerHTML=`<div class="panel" role="alert"><h2>${t('receptionUnavailable')}</h2><p>${t('answersOnDevice')}</p><button type="button" class="btn btn-primary" id="receptionRetry">${t('retryLoading')}</button></div>`;
       mount.querySelector('#receptionRetry').onclick=()=>{cleanup();renderedKey='';render();};
       console.error('Reception module:',error);
     }

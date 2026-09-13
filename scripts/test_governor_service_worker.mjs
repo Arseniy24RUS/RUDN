@@ -132,7 +132,7 @@ test('module manifest includes runtime files; only the minimal platform is insta
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
   assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')),'Optional modules cannot delay installation');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
-  assert.ok(worker.cacheName.endsWith(`:v${currentVersion}-durable`));
+  assert.ok(worker.cacheName.startsWith(worker.cachePrefix+`v${currentVersion}-durable`));
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{
@@ -339,7 +339,7 @@ test('client bindings survive worker restarts and a second update without moving
   assert.notEqual(futureSource,workerSource,'Synthetic update must change the worker source');
   const next=makeWorker(scope,{stores:worker.stores,source:futureSource});
   assert.notEqual(next.cacheName,worker.cacheName,'The second update must use a distinct cache');
-  assert.ok(next.cacheName.endsWith(`:v${futureVersion}-durable`));
+  assert.ok(next.cacheName.startsWith(next.cachePrefix+`v${futureVersion}-durable`));
   next.activeClients=clients;
   const nextCache=await next.cacheStorage.open(next.cacheName);
   await nextCache.put('./apps/career/entry.mjs',new Response(futureVersion+' career'));
