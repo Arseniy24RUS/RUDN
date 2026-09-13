@@ -112,6 +112,7 @@ async function switchLanguages(page){
       assert.equal(await page.title(),'Reception positive UI QA');
       await page.locator('[data-mode="assessment"]').check();await flush(page);
       await act(page,'start');const initial=await draft(page);assert.equal(initial.state.caseIds.length,8);
+      console.log(`ASSIGNMENT ${name} ${locale}: ${JSON.stringify({seed:initial.state.seed,templateIds:initial.state.assignment.manifest.map(row=>row.templateId)})}`);
       await screenshot(page,name+'-begin');
       for(let index=0;index<8;index++){
         const key=await oracle(page);assert.equal(key.id,initial.state.caseIds[index]);
@@ -191,7 +192,14 @@ async function switchLanguages(page){
       fs.writeFileSync(path.join(output,locale+'-'+name+'-result.json'),JSON.stringify({browser:name,locale,viewport:'390x844',attemptId:initial.attemptId,caseIds:initial.state.caseIds,results,score:5,errors,missingTranslations:missing,productionAccess:false},null,2));
       assert.deepEqual(missing,[],'No untranslated authored UI or case text');
       console.log(`PASS ${name}: complete eight-case positive shift 5/5, reload preserved answers, one immutable attempt`);
-    }catch(error){await screenshot(page,name+'-failure');console.error('Visible status:',await page.locator('.rx-global-status').textContent().catch(()=>''));throw error;}
+    }catch(error){
+      await screenshot(page,name+'-failure');
+      const failed=await draft(page).catch(()=>null);
+      fs.writeFileSync(path.join(output,locale+'-'+name+'-failure.json'),JSON.stringify({browser:name,locale,seed:failed?.state?.seed,
+        templateIds:failed?.state?.assignment?.manifest?.map(row=>row.templateId),active:failed?.state?.active,
+        missingTranslations:await page.evaluate(()=>window.localeMissing||[]),errors,productionAccess:false},null,2));
+      console.error('Visible status:',await page.locator('.rx-global-status').textContent().catch(()=>''));throw error;
+    }
     finally{await context.close();await browser.close();}
   }
 })().catch(error=>{console.error(error);process.exitCode=1;});

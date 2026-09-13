@@ -18,13 +18,17 @@ export function createReceptionTranslator({locale = 'ru', catalog = {}, literals
   const dictionary = new Map([...UI_COPY, ...UI_TEMPLATES].map(row => [normalize(row[0]), row[languageIndex]]));
   for (const [source, translated] of Object.entries(catalog)) dictionary.set(normalize(source), translated);
   const folded=new Map([...dictionary].map(([source,target])=>[source.toLocaleLowerCase('ru'),{source,target}]));
+  const uiTemplates=new Set(UI_TEMPLATES.map(([source])=>normalize(source)));
   const templates = [...dictionary].filter(([source]) => /\{\{\w+\}\}/.test(source)).map(([source, target]) => {
     const names = []; let last = 0; let pattern = '^';
     for (const match of source.matchAll(/\{\{(\w+)\}\}/g)) {
       // This is an authored difficulty label, not an arbitrary phrase ending in
       // «уровень». Otherwise evidence captions such as «Наименование и уровень»
       // are misread as a level and never reach exact-segment composition.
-      const capture=source==='{{topic}} · {{level}} уровень'&&match[1]==='level'?'(Базовый|Средний|Сложный)':'(.+?)';
+      // Count slots in the UI are canonical integer counters. An unconstrained
+      // "{{count}} месяц" would consume an entire document caption ending in
+      // «месяц» before its known complete title can be translated.
+      const capture=source==='{{topic}} · {{level}} уровень'&&match[1]==='level'?'(Базовый|Средний|Сложный)':uiTemplates.has(source)&&match[1]==='count'?'(\\d+)':'(.+?)';
       pattern += escapeRegExp(source.slice(last, match.index)) + capture; names.push(match[1]); last = match.index + match[0].length;
     }
     return {pattern: new RegExp(pattern + escapeRegExp(source.slice(last)) + '$','s'), names, target,source};
@@ -59,7 +63,10 @@ export function createReceptionTranslator({locale = 'ru', catalog = {}, literals
     if (translated === undefined) translated = source.replace(fragmentPattern, (segment, index) => {
       const before = source[index - 1], after = source[index + segment.length];
       if ((before && word.test(before) && word.test(segment[0])) || (after && word.test(after) && word.test(segment.at(-1)))) return segment;
-      const match=folded.get(segment.toLocaleLowerCase('ru'));
+      // A case-sensitive authored title can intentionally differ from its
+      // sentence-case variant. Prefixing it must keep the same translation and
+      // reference-code spelling as rendering the complete title on its own.
+      const match=dictionary.has(segment)?{source:segment,target:dictionary.get(segment)}:folded.get(segment.toLocaleLowerCase('ru'));
       allowed.push(...(literals[match.source]||[]));
       return match.target;
     });

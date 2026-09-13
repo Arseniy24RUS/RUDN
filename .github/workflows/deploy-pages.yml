@@ -81,7 +81,7 @@ jobs:
           QA_OUT: ${{ runner.temp }}/reception-browser-qa
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          python -m http.server 8765 --bind 127.0.0.1 --directory site > "${{ runner.temp }}/reception-server.log" 2>&1 &
+          python -m http.server 8765 --bind 127.0.0.1 --protocol HTTP/1.1 --directory site > "${{ runner.temp }}/reception-server.log" 2>&1 &
           reception_server_pid=$!
           trap 'kill "$reception_server_pid" 2>/dev/null || true' EXIT
           for attempt in {1..30}; do
@@ -95,6 +95,7 @@ jobs:
           DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_locale_race.cjs
           node scripts/test_platform_i18n.cjs
           DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_entry_i18n.cjs
+          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_document_labels.cjs
           node site/apps/reception/localization/test.mjs
           node site/apps/reception/localization/pack-test.mjs
           node site/apps/reception/localization/presentation-test.mjs

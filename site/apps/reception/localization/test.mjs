@@ -57,6 +57,41 @@ try {
           for(const level of ['Базовый','Средний','Сложный'])check(!/[А-Яа-яЁё]/.test(translator.translate('Документы · '+level+' уровень')),'Known difficulty label no longer translates');
           check(translator.missing().length===0,'False missing caption or level translation');
         }
+        // CI full-shift regression: a month in a document title is not a
+        // numeric calendar counter. Check both label composition and the real
+        // DOM accessibility attribute as comparison is selected/unselected.
+        const documentTitle='График на будущий месяц';
+        for(const locale of ['ru','en','zh','ru']){
+          const title=locale==='zh'?'下月计划':locale==='en'?'Schedule for the coming month':documentTitle;
+          const translator=createReceptionTranslator({locale,catalog:{[documentTitle]:title}});
+          root.innerHTML='<button data-action="compare-document" data-id="d2" aria-pressed="false" aria-label="Сопоставить: '+documentTitle+'">Сопоставить</button><input value="'+documentTitle+'">';
+          const control=root.querySelector('button');
+          translator.apply(root);
+          check(control.getAttribute('aria-label')===translator.translate('Сопоставить:')+' '+title,'Month title misread as a count in comparison aria-label');
+          control.onclick=()=>{control.setAttribute('aria-pressed','true');control.setAttribute('aria-label','Убрать из сравнения: '+documentTitle);translator.apply(root);};
+          control.click();
+          check(control.getAttribute('aria-label')===translator.translate('Убрать из сравнения:')+' '+title,'Selected comparison label lost full document title');
+          check(control.dataset.id==='d2'&&control.getAttribute('aria-pressed')==='true','Comparison identity or selected state changed');
+          check(root.querySelector('input').value===documentTitle,'Typed text was altered by caption repair');
+          for(const count of ['0','1','2','12','1000'])for(const suffix of ['месяц','месяца','месяцев','рабочий день','рабочих дня','рабочих дней','календарный день','календарных дня','календарных дней']){
+            const rendered=translator.translate(count+' '+suffix);
+            check(rendered.includes(count),'Numeric calendar counter lost');
+            if(locale!=='ru')check(!/[А-Яа-яЁё]/.test(rendered),'Numeric calendar counter translation regressed');
+          }
+          check(translator.missing().length===0,'Unexpected missing document-label or counter translation');
+        }
+        // The bank contains deliberately distinct title/sentence-case copies.
+        // Composed labels must use the exact same authored translation as the
+        // standalone title, including the Cyrillic document identifier.
+        for(const locale of ['ru','en','zh']){
+          const catalog=locale==='zh'?{'Акт вручения МПО-93':'投递记录МПО-93','акт вручения МПО-93':'MPO-93 交付记录','Обращение и предложенный график':'来函与所提履行计划','обращение и предложенный график':'来函及拟议时间表'}:{'Акт вручения МПО-93':'Delivery report МПО-93','акт вручения МПО-93':'delivery report MPO-93','Обращение и предложенный график':'Submission and proposed schedule','обращение и предложенный график':'submission and proposed schedule'};
+          const translator=createReceptionTranslator({locale,catalog});
+          for(const title of Object.keys(catalog))for(const prefix of ['Сопоставить:','Убрать из сравнения:']){
+            const expected=translator.translate(prefix)+' '+translator.translate(title);
+            check(translator.translate(prefix+' '+title)===expected,'Composed document title lost exact source case or identifier');
+          }
+          check(translator.missing().length===0,'Exact document identifier was rejected as Russian fallback');
+        }
         let missingCalls = 0;
         const unknown = createReceptionTranslator({locale: 'en', onMissing: () => missingCalls++});
         check(unknown.translate('Неизвестный авторский абзац') === 'Неизвестный авторский абзац', 'unknown content silently fabricated');
@@ -70,7 +105,7 @@ try {
         const manifest={schema:2,locale:'en',complete:true,contentVersion:'fixture',sourceVersion:'a'.repeat(64),templates:[],entries:{common:entry,catalog:{},'source-index':{}}};
         const loaded = await loadReceptionTranslator('en', {fetch: async url => ({ok: true, json: async () => String(url).includes('.manifest.json')?manifest:pack})});
         check(loaded.translate('Полный абзац') === 'Full paragraph', 'catalog failed after incomplete load retry');
-        return {languages: 4, immutableState: true, userContentPreserved: true, datesPreserved: true, incompleteCatalogRejected: true};
+        return {languages: 4, immutableState: true, userContentPreserved: true, datesPreserved: true, documentComparisonLabels: true, numericCounters: true, incompleteCatalogRejected: true};
       });
       assert.equal(errors.length, 0, errors.join('\n'));
       console.log(`${engine}: ${JSON.stringify(result)}`);
