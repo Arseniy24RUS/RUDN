@@ -1,8 +1,9 @@
-import {backend} from '../../assets/js/backend.js?v=1.3.2';
-import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.2';
-import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.2';
-import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.2';
-import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.2';
+import {backend} from '../../assets/js/backend.js?v=1.3.3';
+import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.3';
+import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.3';
+import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.3';
+import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.3';
+import {durableStore} from '../../assets/js/durable-store.js?v=1.3.3';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
@@ -10,6 +11,8 @@ const $=selector=>document.querySelector(selector);
 const courseUrl=new URL('../../#activity/seminar-7',import.meta.url).href;
 const courseLocale=getLocale();
 let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false;
+const storageValues=new Map(),pendingCheckpoints=new Set();
+let latestSaveStatus=null;
 let language=getLocale()==='en'?'en':'ru';
 const tr=(ru,en)=>language==='en'?en:ru;
 const local=value=>typeof value==='string'?value:value?.[language]||value?.ru||'';
@@ -22,18 +25,28 @@ const canAccess=()=>{
 const sameOwner=()=>active&&attemptOwner()===owner&&canAccess();
 const terminal=s=>Boolean(s&&(s.completed||G.BudgetReview.stopped(s)));
 function stored(key,fallback=null){try{return JSON.parse(storage.getItem(key))??fallback;}catch{return fallback;}}
-function persistRun(){storage.setItem('platform-run',JSON.stringify(run));}
+function checkpointCampaign(state){
+ if(!owner||!run||!state)return Promise.resolve();
+ const snapshot={campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)};
+ const promise=backend.checkpoint({owner,activitySlug:'seminar-7',mode:'campaign',attemptId:run.submissionId,contentVersion:String(state.version||'governor-v1'),phase:terminal(state)?'completed':'answering',state:snapshot},{queue:owner.startsWith('student:')})
+  .then(saved=>{latestSaveStatus=saved.saveStatus;if(sameOwner())refresh();return saved;})
+  .catch(error=>{window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner,errorCode:error.code||'storage/unavailable'}}));return null;});
+ pendingCheckpoints.add(promise);promise.finally(()=>pendingCheckpoints.delete(promise));return promise;
+}
+async function flushCampaign(){if(runtime?.state())await checkpointCampaign(runtime.state());await Promise.allSettled([...pendingCheckpoints]);await durableStore.flush();}
+function persistRun(state=runtime?.state()){storage.setItem('platform-run',JSON.stringify(run));if(state)checkpointCampaign(state);}
 function ensureRun(state){
   if(!run||run.campaignToken&&state?.storiesRunId&&run.campaignToken!==state.storiesRunId){run=createRunMetadata();}
   if(state?.storiesRunId)run.campaignToken=state.storiesRunId;
-  persistRun();return run;
+  persistRun(state);return run;
 }
 function runChanged(state){
   run=createRunMetadata();run.campaignToken=state?.storiesRunId||null;
-  try{persistRun();message(tr('Новая партия сохраняется в вашем профиле на этом устройстве.','A new campaign is saved to your profile on this device.'));}
+  try{persistRun(state);message(tr('Новая партия сохраняется в вашем профиле на этом устройстве.','A new campaign is saved to your profile on this device.'));}
   catch{message(tr('Не удалось сохранить сведения о попытке. Скачайте файл партии.','Attempt metadata could not be saved. Download a campaign save.'));}
 }
 function syncText(){
+  if(latestSaveStatus?.durable===false)return tr('Не удалось сохранить партию на устройстве. Скачайте файл сохранения перед закрытием.','Could not save the campaign on this device. Download a save before closing.');
   if(backend.isAdmin())return tr('Режим преподавателя · пробные результаты не отправляются в журнал.','Instructor preview · practice results are not sent to the gradebook.');
   if(!run)return tr('Партия сохраняется на устройстве. Отчёт передаётся после завершения.','The campaign is saved on this device. The final grade and report are submitted automatically.');
   const record=backend.localAttempts().find(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner);
@@ -41,7 +54,7 @@ function syncText(){
     ?tr(`Автоматическая оценка: ${record.points}/5. Отчёт сохранён на устройстве и ожидает отправки. Не очищайте данные браузера.`,`Automatic grade: ${record.points}/5. The report is saved on this device and is awaiting upload. Keep browser data intact.`)
     :tr(`Отчёт отправлен. Автоматическая оценка: ${record.points}/5; в журнале учитывается лучший результат.`,`Report submitted. Automatic grade: ${record.points}/5; the gradebook keeps your best result.`);
   return terminal(runtime?.state())?tr('Кампания закончена. Сохраняем автоматическую оценку и отчёт.','The campaign has ended. Saving your automatic grade and report.')
-    :tr('Партия сохраняется на устройстве. Для переноса скачайте файл сохранения.','The campaign is saved on this device. Download a save to change devices.');
+    :latestSaveStatus?.state==='saved'?tr('Партия сохранена. Можно продолжить позже.','Campaign saved. You can continue later.'):tr('Партия сохранена на устройстве. Изменения отправятся автоматически.','Campaign saved on this device. Changes will upload automatically.');
 }
 function refresh(){
   $('#platform-report').textContent=tr('Отчёт к семинару','Seminar report');
@@ -67,6 +80,7 @@ function renderAssessment(assessment){
   for(const criterion of assessment.criteria){const section=document.createElement('div');section.className='platform-criterion';const h=document.createElement('strong');h.textContent=`${local(criterion.title)} · ${criterion.points}/${criterion.maxPoints}`;const p=document.createElement('p');p.textContent=local(criterion.detail);section.append(h,p);root.append(section);}
 }
 function block(reason){
+  if(runtime?.state())checkpointCampaign(runtime.state());
   active=false;
   runtime?.freeze();
   document.querySelectorAll('dialog[open]').forEach(d=>d.close());
@@ -116,7 +130,7 @@ async function submit(){
     let record=stored('submission:'+run.submissionId);
     if(!record){record=makeSubmission({state,G,owner,studentKey:backend.getProfile().studentKey,run,reflection:(run.reflection||'').trim().slice(0,6000),now:new Date().toISOString()});record.title=tr('Семинар 7. Симулятор деятельности губернатора','Seminar 7. Governor simulator');storage.setItem('submission:'+run.submissionId,JSON.stringify(record));}
     if(!sameOwner())throw new Error('auth/profile-changed');
-    await backend.saveAttempt(record);
+    await backend.saveAttempt({...record,draftMode:'campaign'});
     run.submitted=true;persistRun();
     if(sameOwner()){refresh();if($('#platform-submission').open)submissionDialog();}
   }catch(error){
@@ -133,8 +147,23 @@ async function tryStart(){
   }
   started=true;active=true;owner=candidate;
   const scoped=scopedStorage(localStorage,owner);
-  storage={getItem:key=>scoped.getItem(key),setItem:(key,value)=>{if(!sameOwner())throw new Error('auth/profile-changed');scoped.setItem(key,value);},removeItem:key=>{if(!sameOwner())throw new Error('auth/profile-changed');scoped.removeItem(key);}};
+  const observed=new Map();
+  const remember=key=>{if(!storageValues.has(key)){let value=null;try{value=scoped.getItem(key);}catch{}storageValues.set(key,value);observed.set(key,value);}return storageValues.get(key);};
+  storage={getItem:remember,setItem:(key,value)=>{
+    if(!sameOwner())throw new Error('auth/profile-changed');remember(key);
+    let actual;try{actual=scoped.getItem(key);}catch{actual=observed.get(key);}
+    if(actual!==observed.get(key))throw Object.assign(new Error('other-tab'),{code:'other-tab'});
+    storageValues.set(key,String(value));try{scoped.setItem(key,String(value));observed.set(key,String(value));}catch{/* The onSaved boundary commits to IndexedDB even when localStorage is full. */}
+  },removeItem:key=>{if(!sameOwner())throw new Error('auth/profile-changed');storageValues.set(key,null);try{scoped.removeItem(key);observed.set(key,null);}catch{}}};
   run=stored('platform-run');
+  const restored=await backend.loadDraft({owner,activitySlug:'seminar-7',mode:'campaign'});
+  if(!sameOwner())return;
+  let localCampaign=stored(G.Saves.Key);
+  if(restored?.state?.campaign&&restored.state.run&&G.Engine.restoreState(restored.state.campaign)&&(!localCampaign||restored.updatedAt>=(Date.parse(localCampaign.savedAt)||0))){
+    for(const [key,value] of Object.entries(restored.state.storage||{})){remember(key);storageValues.set(key,value);}
+    remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify({format:'rudn-autosave',revision:Math.max(1,Number(localCampaign?.revision)||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restored.state.campaign}));
+    run=structuredClone(restored.state.run);remember('platform-run');storageValues.set('platform-run',JSON.stringify(run));latestSaveStatus=restored.saveStatus;
+  }else if(localCampaign?.state){ensureRun(localCampaign.state);}
   const profile=backend.getProfile();
   G.Platform={
     storage,lockName:scoped.lockName,storageKey:scoped.keyFor(G.Saves.Key),offlineEnabled:false,
@@ -157,6 +186,8 @@ $('#platform-submission-close').addEventListener('click',()=>$('#platform-submis
 $('#platform-readable').addEventListener('click',()=>{$('#platform-submission').close();G.ReleaseUI.openReport();});
 $('#platform-submit').addEventListener('click',submit);
 $('#platform-reflection').addEventListener('input',()=>{if(!run||!sameOwner()||run.submitted)return;run.reflection=$('#platform-reflection').value.slice(0,6000);try{persistRun();}catch{message(tr('Не удалось сохранить текст. Скопируйте его перед закрытием страницы.','Text could not be saved. Copy it before closing this page.'));}});
+$('#platform-back').addEventListener('click',async event=>{event.preventDefault();await flushCampaign();location.href=courseUrl;});
+window.addEventListener('pagehide',()=>{if(runtime?.state())checkpointCampaign(runtime.state());});
 window.addEventListener('rudn:identitychange',identityChanged);
 window.addEventListener('rudn:accesschange',identityChanged);
 window.addEventListener('visibilitychange',()=>{if(!document.hidden)identityChanged();});
@@ -165,4 +196,30 @@ refresh();
 backend.init().then(tryStart).catch(()=>block(tr('Не удалось восстановить профиль. Вернитесь на платформу.','Your profile could not be restored. Return to the platform.')));
 
 // The platform owns caching; never install a competing nested service worker.
-if('serviceWorker'in navigator){navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url)).then(()=>navigator.serviceWorker.ready).then(()=>{$('#offline-status')?.setAttribute('data-platform-offline','ready');}).catch(()=>{});}
+if('serviceWorker'in navigator){
+  let preparing=false,moduleReady=false;
+  const updateOfflineStatus=()=>{
+    const element=$('#offline-status');if(!element)return;
+    element.dataset.platformOffline=moduleReady?'ready':'pending';
+    element.textContent=moduleReady
+      ?tr('Готово к работе без сети','Ready for offline use')
+      :tr('Автономное приложение · ресурсы загружаются','Standalone app · resources loading');
+  };
+  // Cached resources may be acknowledged before Auth has mounted the game UI.
+  const statusMount=new MutationObserver(()=>{if($('#offline-status')){updateOfflineStatus();statusMount.disconnect();}});
+  statusMount.observe(document.body,{childList:true,subtree:true});
+  const prepare=()=>{
+    if(preparing||moduleReady||!navigator.serviceWorker.controller)return;
+    preparing=true;updateOfflineStatus();
+    navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,new URL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
+  };
+  navigator.serviceWorker.addEventListener('message',event=>{
+    if(event.source!==navigator.serviceWorker.controller||event.data?.type!=='MODULE_CACHE_STATUS'||event.data.module!=='governor')return;
+    preparing=false;moduleReady=event.data.ready===true;updateOfflineStatus();
+  });
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{preparing=false;moduleReady=false;prepare();});
+  window.addEventListener('online',prepare);
+  window.addEventListener('rudn:locale',updateOfflineStatus);
+  navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url))
+    .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
+}

@@ -374,7 +374,7 @@ class Suite:
         stored_a = switch.evaluate("key=>JSON.parse(localStorage.getItem(key))", a_saved["key"])
         assert stored_a == a_saved["save"]
         assert len(b_saved["save"]["state"]["history"]) == 2
-        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.2')).backend.user.uid") == "qa-native-shared-uid"
+        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.3')).backend.user.uid") == "qa-native-shared-uid"
         a.close()
         switch.goto(self.server.base, wait_until="networkidle")
         switch.evaluate("profile=>localStorage.setItem('rudn.profile.v1',JSON.stringify(profile))", STUDENT_A)
@@ -413,6 +413,35 @@ class Suite:
             self.screenshot(page, name + "-direct-link-gate")
             self.current[name + "_message"] = message
 
+    def offline_quiz(self):
+        context = self.context(width=390, height=844)
+        page = context.new_page()
+        page.goto(self.server.base + '#activity/seminar-1-classroom')
+        page.locator('#quizNext').wait_for()
+        questions = page.evaluate("() => window.RUDN_DATA.questions.filter(q=>q.category==='Семинар 1. Ветви и уровни власти').map(q=>({id:q.id,correct:q.classification_correct,media:q.media}))")
+        assert len(questions) == 50
+        page.wait_for_function('navigator.serviceWorker.controller!==null', timeout=30000)
+        # The module requests its entire media set before the connection disappears.
+        page.wait_for_function("""async() => {
+          const urls=window.RUDN_DATA.questions.filter(q=>q.category==='Семинар 1. Ветви и уровни власти').flatMap(q=>[q.media?.photo,q.media?.symbol]).filter(Boolean);
+          return urls.length>0 && (await Promise.all(urls.map(url=>caches.match(new URL(url,location.href).href)))).every(Boolean);
+        }""", timeout=60000)
+        for number, question in enumerate(questions):
+            if number == 11:
+                context.set_offline(True)
+                page.reload()
+                page.locator('#quizNext').wait_for()
+            page.locator('[data-matrix="'+question['correct']+'"]').click()
+            page.wait_for_function("() => [...document.querySelectorAll('.question-photo,.institution-heading-logo')].every(image=>image.complete&&image.naturalWidth>0)")
+            page.locator('#quizNext').click()
+        page.locator('.result-score').wait_for()
+        self.screenshot(page,'quiz-all-media-offline-50-result')
+        assert page.locator('.result-score').inner_text()=='50/50'
+        attempts=page.evaluate("async()=>(await import('./assets/js/durable-store.js')).durableStore.listAttempts({owner:'student:990000001'})")
+        assert len(attempts)==1 and attempts[0]['points']==50
+        assert attempts[0]['recordGrade'] is False
+        self.current['offline_questions_with_images']=39
+
     def offline_resume(self):
         context = self.context()
         page = context.new_page()
@@ -422,11 +451,13 @@ class Suite:
         saved = self.snapshot(page)
         page.evaluate("async()=>{await navigator.serviceWorker.ready}")
         page.wait_for_function("navigator.serviceWorker.controller!==null", timeout=30000)
+        page.wait_for_function("document.querySelector('#offline-status')?.dataset.platformOffline==='ready'", timeout=60000)
         worker = page.evaluate("async()=>({scope:(await navigator.serviceWorker.ready).scope,script:navigator.serviceWorker.controller.scriptURL,caches:await caches.keys()})")
         assert worker["scope"] == self.server.base
         assert worker["script"] == self.server.base + "service-worker.js"
-        assert len(worker["caches"]) == 1
-        cached = page.evaluate("async()=>{const c=await caches.open((await caches.keys())[0]);return (await c.keys()).map(r=>r.url)}")
+        release_caches = [name for name in worker["caches"] if name.startswith("rudn-gmu-pages:") and not name.endswith(":client-bindings")]
+        assert len(release_caches) == 1
+        cached = page.evaluate("async name=>{const c=await caches.open(name);return (await c.keys()).map(r=>r.url)}", release_caches[0])
         assert self.server.base + "apps/governor/src/app.js" in cached
         assert self.server.base + "apps/governor/index.html" in cached
         context.set_offline(True)
@@ -506,6 +537,7 @@ def main():
             ("teacher_preview_mocked_auth_no_outbox", suite.teacher_preview),
             ("direct_link_gates_mocked_identity", suite.direct_link_gates),
             ("offline_real_service_worker_and_resume", suite.offline_resume),
+            ("offline_full_quiz_with_all_images", suite.offline_quiz),
         ]
         for width, height in [(320, 740), (1366, 768), (768, 1024), (844, 390)]:
             tests.append((f"responsive_{width}x{height}", lambda w=width, h=height: suite.responsive(w, h)))

@@ -435,7 +435,7 @@ main { width: var(--content); margin: 0 auto; }
 .dialog-hero .authority-emblem { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.22); }
 .dialog-hero h1 { margin: 22px 55px 8px 0; font-family: Georgia, serif; font-size: 36px; line-height: 1.08; font-weight: 600; letter-spacing: -.03em; }
 .dialog-hero p { margin: 17px 0 0; max-width: 700px; color: rgba(255,255,255,.79); line-height: 1.6; }
-.dialog-.career-surface { padding: 34px 48px 48px; }
+.dialog-body { padding: 34px 48px 48px; }
 .dialog-meta { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 27px; }
 .dialog-meta div { padding: 15px; border-radius: 14px; background: var(--blue-050); }.dialog-meta span { display: block; color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }.dialog-meta strong { display: block; margin-top: 6px; color: var(--ink); font-size: 12px; }
 .dialog-section { padding: 24px 0; border-top: 1px solid var(--line); }.dialog-section h2 { margin: 0 0 15px; color: var(--ink); font-size: 19px; }
@@ -502,7 +502,7 @@ main { width: var(--content); margin: 0 auto; }
   .directory-toolbar { grid-template-columns: 1fr; }.search-field { grid-column: auto; }.directory-grid { grid-template-columns: 1fr; }
   .seminar-draw,.discussion-card { min-height: 430px; padding: 28px 23px; border-radius: 23px; }.seminar-orbit { margin-bottom: 45px; }.seminar-draw h2 { font-size: 30px; }
   .methodology-hero { grid-template-columns: 1fr; padding: 28px 23px; border-radius: 23px; }.methodology-hero h1 { font-size: 39px; }.methodology-grid { grid-template-columns: 1fr; }.methodology-grid article { min-height: 0; }.formula-panel { grid-template-columns: 1fr; }.methodology-details { grid-template-columns: 1fr; }
-  .authority-dialog { width: calc(100vw - 14px); max-height: 94vh; border-radius: 23px; }.dialog-hero { padding: 39px 22px 30px; }.dialog-hero h1 { font-size: 29px; }.dialog-.career-surface { padding: 25px 22px 34px; }.dialog-meta { grid-template-columns: 1fr; }
+  .authority-dialog { width: calc(100vw - 14px); max-height: 94vh; border-radius: 23px; }.dialog-hero { padding: 39px 22px 30px; }.dialog-hero h1 { font-size: 29px; }.dialog-body { padding: 25px 22px 34px; }.dialog-meta { grid-template-columns: 1fr; }
   .mobile-bottom-nav {
     position: fixed; display: grid; grid-template-columns: repeat(4,1fr); z-index: 45; bottom: 8px; left: 10px; right: 10px;
     height: 64px; padding: 5px; border: 1px solid rgba(205,225,241,.92); background: rgba(255,255,255,.94);
@@ -1624,6 +1624,19 @@ main, #main-content { width: 100%; min-width: 0; margin: 0; }
 .career-toolbar .nav-more button { min-height: 42px; text-align: left; }
 .session-strip { padding: 16px 0 0; }
 .session-actions { min-width: 0; }
+.session-tools { font-size:12px; }
+.session-tools>summary { min-height:44px;align-content:center;cursor:pointer;color:#315e85; }
+.session-tools .session-actions { padding-top:6px; }
+.test-view .workflow-shell { grid-template-columns:minmax(0,1fr);gap:12px;max-width:920px;margin-inline:auto; }
+.test-view .workflow-aside { padding:0;background:transparent;color:var(--ink);box-shadow:none;border:0; }
+.test-view .workflow-intro { padding:0 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#264d6c; }
+.test-view .workflow-intro>summary { min-height:44px;align-content:center;font-size:13px;font-weight:600;cursor:pointer; }
+.test-view .workflow-intro[open] { padding-bottom:14px; }
+.test-view .workflow-intro p { font-size:14px;line-height:1.5;margin:8px 0 0; }
+.test-view .workflow-intro h2 { font-size:20px; }
+.test-view .workflow-intro .step-kicker { color:#315e85;margin-top:12px;display:block; }
+.test-view .live-profile-disclosure { display:block; }
+.test-view .workflow-intro .aside-note { display:flex; color:#315e85; }
 .hero {
   min-height: 390px;
   grid-template-columns: minmax(0, 1.3fr) minmax(240px, .7fr);
@@ -1755,6 +1768,12 @@ main, #main-content { width: 100%; min-width: 0; margin: 0; }
   .workflow-aside { padding: 18px; }
   .workflow-intro h2 { display: none; }
   .workflow-intro p { margin: 8px 0 0; font-size: 14px; }
+  .test-view { padding-top:12px; }
+  .test-view .workflow-aside { padding:0; }
+  .test-view .question-card { padding:18px 16px; }
+  .test-view .question-card h1 { font-size:23px; }
+  .test-view .question-prompt { margin-bottom:10px; }
+  .test-view .answer-options { margin-top:18px; }
   .top-match-grid { grid-template-columns: minmax(0, 1fr); }
   .profile-panel { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .profile-strengths { width: 100%; }

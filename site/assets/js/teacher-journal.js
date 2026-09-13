@@ -1,5 +1,5 @@
-import {backend,groupOptions} from './backend.js?v=1.3.2';
-import {getLocale} from './i18n.js?v=1.3.2';
+import {backend,groupOptions} from './backend.js?v=1.3.3';
+import {getLocale} from './i18n.js?v=1.3.3';
 
 const COPY={
   ru:{title:'Электронный журнал',groups:'Учебные группы',search:'Поиск по ФИО или билету',name:'ФИО / билет',topic:'Тема',lecture:'Лекция',seminar:'Семинар',quiz:'Квиз',work:'Самостоятельная',exam:'Экзамен',total:'Итог',registered:'Зарегистрировано',results:'С результатами',average:'Средний итог',activityAverage:'Среднее',submitted:'С результатом',export:'Скачать CSV',refresh:'Обновить',edit:'Оценки',empty:'Нет студентов для выбранных условий',cached:'Сохранённая копия',updated:'Обновлено',settings:'Настройки курса'},
@@ -73,7 +73,8 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
   let selected=new Set(groupOptions());
   let allGroupsSelected=true;
   let query='';
-  let connected=Boolean(backend.connected);
+  const databaseAvailable=()=>typeof backend.databaseAvailable==='function'?backend.databaseAvailable():Boolean(backend.connected);
+  let connected=databaseAvailable();
 
   app.innerHTML=`<section class="page teacher-journal">
     <header class="page-head"><div><h1>${c.title}</h1>
@@ -94,7 +95,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
   const exportButton=root.querySelector('#journalExport');
   const current=()=>!disposed&&root.isConnected&&location.hash===route&&
     backend.isAdmin()&&backend.user?.uid===uid&&backend.generation===generation;
-  const canEdit=()=>current()&&Boolean(backend.connected)&&Boolean(snapshot)&&!snapshot.stale;
+  const canEdit=()=>current()&&databaseAvailable()&&Boolean(snapshot)&&!snapshot.stale;
   const filtered=()=>rows.filter(row=>selected.has(row.profile.group)&&
     `${row.profile.fullName} ${row.profile.ticket}`.toLocaleLowerCase().includes(query));
   const label=column=>`${c[column.kind]} /${column.max}`;
@@ -270,7 +271,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
       return;
     }
     const wasConnected=connected;
-    connected=Boolean(backend.connected);
+    connected=databaseAvailable();
     if(!connected&&snapshot)snapshot={...snapshot,stale:true};
     renderStatus();
     if(connected&&!wasConnected)refresh();

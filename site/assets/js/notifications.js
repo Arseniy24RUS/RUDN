@@ -1,4 +1,4 @@
-import {getLocale} from './i18n.js?v=1.3.2';
+import {getLocale} from './i18n.js?v=1.3.3';
 
 const COPY={
   ru:{network:'Нет соединения с сервером. Проверьте интернет и повторите попытку.',credentials:'Неверный email или пароль.',limited:'Слишком много попыток. Попробуйте немного позже.',disabled:'Доступ к этому аккаунту отключён.',permission:'Недостаточно прав для этой операции.',unknown:'Не удалось выполнить операцию. Повторите попытку.',unavailable:'Сервис временно недоступен.',storage:'Не удалось сохранить работу на устройстве. Не закрывайте задание. Скачайте резервную копию ответов.',slow:'Сервер отвечает медленно. Ожидаем соединения…',details:'Код ошибки',close:'Закрыть',export:'Скачать резервную копию',exporting:'Подготовка копии…',exportFailed:'Не удалось подготовить полную копию. Не закрывайте задание.',notifications:'Сообщения'},
@@ -22,6 +22,8 @@ export function errorText(error){
 
 const notices=new Map(),dialogHosts=new WeakMap(),recoveryProviders=new Set(),inlineErrors=new Map();
 let initialized=false,pageHost;
+let recoveryOwner=()=>null;
+export function setRecoveryOwnerProvider(provider){recoveryOwner=provider}
 
 // Providers may include the current in-memory answer when storage itself is unavailable.
 export function registerRecoveryProvider(provider){
@@ -32,13 +34,20 @@ function sanitized(value){
   return JSON.parse(JSON.stringify(value,(key,item)=>sensitiveKey(key)?undefined:item));
 }
 export async function exportRecovery(){
+  const owner=recoveryOwner(),studentKey=owner?.startsWith('student:')?owner.slice(8):null;
   const backup={format:'rudn-local-recovery',version:1,exportedAt:new Date().toISOString(),localStorage:{},work:[],incomplete:false};
   try{
     for(let i=0;i<localStorage.length;i++){
       const key=localStorage.key(i);
       // Teacher journal caches contain other people's records, not this device's unsent work.
       if(!key?.startsWith('rudn.')||sensitiveKey(key)||key.startsWith('rudn.teacher-cache.'))continue;
-      const raw=localStorage.getItem(key);try{backup.localStorage[key]=sanitized(JSON.parse(raw))}catch{if(key==='rudn.locale')backup.localStorage[key]=raw}
+      const raw=localStorage.getItem(key);try{
+        let value=JSON.parse(raw);
+        if(key==='rudn.grades.v2')value=studentKey&&value[studentKey]?{[studentKey]:value[studentKey]}:null;
+        else if(Array.isArray(value))value=value.filter(item=>studentKey&&item?.studentKey===studentKey||owner&&item?.owner===owner);
+        else if(value?.owner?value.owner!==owner:value?.studentKey?value.studentKey!==studentKey:!key.includes(owner||'no-owner'))continue;
+        if(value!=null)backup.localStorage[key]=sanitized(value);
+      }catch{if(key==='rudn.locale')backup.localStorage[key]=raw}
     }
   }catch{backup.incomplete=true}
   for(const provider of recoveryProviders){try{const value=await provider();if(value!=null)backup.work.push(sanitized(value))}catch{backup.incomplete=true}}

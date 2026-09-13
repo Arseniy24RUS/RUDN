@@ -76,7 +76,7 @@
     <main id="main-content" tabindex="-1">
       <div id="session-strip" class="session-strip" data-status="idle">
         <p id="session-status" role="status" aria-live="polite">Ответы остаются на Вашем устройстве</p>
-        <div class="session-actions"><button class="button button-ghost" type="button" id="session-export"><svg aria-hidden="true"><use href="#i-download"/></svg>Скачать ответы</button><label class="button button-ghost session-import"><svg aria-hidden="true"><use href="#i-upload"/></svg>Восстановить ответы<input type="file" id="session-import" aria-label="Восстановить ответы" accept=".json,application/json"></label></div>
+        <details class="session-tools"><summary>Скачать или восстановить ответы</summary><div class="session-actions"><button class="button button-ghost" type="button" id="session-export"><svg aria-hidden="true"><use href="#i-download"/></svg>Скачать ответы</button><label class="button button-ghost session-import"><svg aria-hidden="true"><use href="#i-upload"/></svg>Восстановить ответы<input type="file" id="session-import" aria-label="Восстановить ответы" accept=".json,application/json"></label></div></details>
       </div>
       <div id="storage-warning" class="storage-warning" role="status" hidden>Браузер не сохраняет ответы. Не закрывайте вкладку до выгрузки результата.</div>
       <section id="view-home" class="view home-view">
@@ -145,13 +145,14 @@
       <section id="view-test" class="view test-view" hidden>
         <div class="workflow-shell">
           <aside class="workflow-aside">
-            <div class="workflow-intro">
+            <details class="workflow-intro">
+              <summary>Как отвечать на вопросы</summary>
               <span class="step-kicker">Этап 1 из 3</span>
               <h2>Виды профессиональной работы</h2>
               <p>Оценивайте не собственные навыки, а то, насколько Вам было бы интересно регулярно выполнять описанную задачу.</p>
-            </div>
-            <details class="live-profile-disclosure"><summary>Посмотреть текущие ответы по шкалам</summary><div id="live-profile" class="live-profile"></div></details>
-            <div class="aside-note"><svg><use href="#i-info"/></svg><span>Правильных и неправильных ответов нет. Можно изменить любой ответ до расчёта результата.</span></div>
+              <details class="live-profile-disclosure"><summary>Посмотреть текущие ответы по шкалам</summary><div id="live-profile" class="live-profile"></div></details>
+              <div class="aside-note"><svg><use href="#i-info"/></svg><span>Правильных и неправильных ответов нет. Можно изменить любой ответ до расчёта результата.</span></div>
+            </details>
           </aside>
           <div class="question-stage">
             <div class="workflow-topline">

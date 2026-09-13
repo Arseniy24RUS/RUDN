@@ -1,7 +1,12 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.2-reliability-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.3-durable`;
+const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
+const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
+const clientBindings=new Map();
+const isReleaseCache=name=>name!==CLIENT_CACHE&&name.startsWith(CACHE_PREFIX);
+const releaseVersion=name=>name.slice(CACHE_PREFIX.length).match(/^v(\d+\.\d+\.\d+)(?:-|$)/)?.[1];
 const LEGACY_CACHES=new Set(['rudn-gmu-pages-v1.2.2','rudn-gmu-pages-v1.3.0-career']);
 const CAREER_SHELL=[
   './apps/career/entry.mjs',
@@ -72,27 +77,31 @@ const SHELL=[
   './apps/reception/style.css?v=1.0.1',
   './apps/reception/platform.css?v=1.0.1',
   './','./index.html','./apps/puzzle.html',
-  './assets/css/site.css?v=1.3.2',
+  './assets/css/site.css?v=1.3.3',
   './assets/css/puzzle.css?v=1.2.2',
-  './assets/js/main.js?v=1.3.2',
+  './assets/js/main.js?v=1.3.3',
   './assets/js/career-course.js',
-  './assets/js/backend.js?v=1.3.2',
-  './assets/js/session.js?v=1.3.2',
-  './assets/js/attempt-session.js?v=1.3.2',
-  './assets/js/notifications.js?v=1.3.2',
-  './assets/js/account.js?v=1.3.2',
-  './assets/js/teacher-journal.js?v=1.3.2',
+  './assets/js/durable-store.js',
+  './assets/js/checkpoint-sync.js',
+  './assets/js/firebase-rest.js',
+  './assets/js/form-draft.js',
+  './assets/js/backend.js?v=1.3.3',
+  './assets/js/session.js?v=1.3.3',
+  './assets/js/attempt-session.js?v=1.3.3',
+  './assets/js/notifications.js?v=1.3.3',
+  './assets/js/account.js?v=1.3.3',
+  './assets/js/teacher-journal.js?v=1.3.3',
   './assets/vendor/firebase/firebase-core.js',
   './assets/vendor/firebase/firebase-storage.js',
   './assets/vendor/firebase/firebase-shared.js',
-  './assets/js/grading-revisions.js?v=1.3.2',
-  './assets/js/config.js?v=1.3.2',
-  './assets/js/i18n.js?v=1.3.2',
-  './assets/js/quiz.js?v=1.3.2',
-  './assets/js/adaptive-quiz.js?v=1.3.2',
-  './assets/js/access.js?v=1.3.2',
-  './assets/js/puzzle-bootstrap.js?v=1.3.2',
-  './assets/js/puzzle-engine.js?v=1.3.2',
+  './assets/js/grading-revisions.js?v=1.3.3',
+  './assets/js/config.js?v=1.3.3',
+  './assets/js/i18n.js?v=1.3.3',
+  './assets/js/quiz.js?v=1.3.3',
+  './assets/js/adaptive-quiz.js?v=1.3.3',
+  './assets/js/access.js?v=1.3.3',
+  './assets/js/puzzle-bootstrap.js?v=1.3.3',
+  './assets/js/puzzle-engine.js?v=1.3.3',
   './assets/puzzle/vendor/d3.v7.9.0.min.js',
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
@@ -342,23 +351,84 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/world.css"
 ];
 const PRECACHE=[...SHELL,...CAREER_SHELL,...GOVERNOR_ASSETS];
+// Optional modules must not delay an install or invalidate the basic platform.
+const CORE_SHELL=SHELL.filter(path=>!/^\.\/apps\//.test(path)&&!path.includes('/calendars/')&&!path.includes('/calendar-')&&!path.includes('/legal-calendar')&&!path.includes('/previews/')&&!path.includes('firebase-storage'));
+
+async function fetchWithDeadline(request,timeout=12000){
+  const controller=new AbortController();
+  let timer;
+  try{
+    return await Promise.race([
+      fetch(request,{signal:controller.signal}),
+      new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(new Error('network/timeout'))},timeout)})
+    ]);
+  }finally{clearTimeout(timer)}
+}
+
+async function prepareResources(paths,{required=false,cacheName=CACHE}={}){
+  const cache=await caches.open(cacheName);const pending=[...new Set(paths)];let failed=0;
+  await Promise.all(Array.from({length:Math.min(4,pending.length)},async()=>{
+    while(pending.length){
+      const url=new URL(pending.shift(),SCOPE);
+      if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname)){failed++;continue}
+      try{
+        if(!required&&await cache.match(url.href))continue;
+        // The deployed URL no longer supplies missing files from an older release.
+        if(cacheName!==CACHE)throw new Error('release/resource-unavailable');
+        const request=new Request(url,{cache:'reload'}),response=await fetchWithDeadline(request);
+        if(!response.ok)throw new Error('resource/unavailable');
+        await cache.put(request,response);
+      }catch(error){failed++;if(required)throw error}
+    }
+  }));
+  return {ready:failed===0,failed};
+}
 
 self.addEventListener('install',event=>{
   event.waitUntil(
-    caches.open(CACHE)
-      .then(cache=>cache.addAll(PRECACHE.map(path=>new Request(new URL(path,SCOPE),{cache:'reload'}))))
+    prepareResources(CORE_SHELL,{required:true})
       .then(()=>self.skipWaiting())
   );
 });
-self.addEventListener('activate',event=>{
-  event.waitUntil(
-    caches.keys()
-      .then(keys=>Promise.all(keys
-        .filter(key=>key!==CACHE&&(key.startsWith(CACHE_PREFIX)||LEGACY_CACHES.has(key)))
-        .map(key=>caches.delete(key))))
-      .then(()=>self.clients.claim())
-  );
-});
+self.addEventListener('activate',event=>event.waitUntil(activateRelease()));
+
+function inScopeClient(client){
+  if(!client?.id||!client.url)return false;
+  try{const url=new URL(client.url);return url.origin===SCOPE.origin&&url.pathname.startsWith(SCOPE.pathname)}catch{return false}
+}
+const clientKey=id=>new URL(`.release-clients/client/${encodeURIComponent(id)}`,SCOPE).href;
+async function clientRelease(id){
+  if(!id)return null;
+  if(clientBindings.has(id))return clientBindings.get(id);
+  try{
+    const response=await (await caches.open(CLIENT_CACHE)).match(clientKey(id));
+    const name=response&&await response.text();
+    if(name&&isReleaseCache(name)){clientBindings.set(id,name);return name}
+  }catch{}
+  return null;
+}
+async function bindClient(id,name){
+  if(!id)return;
+  clientBindings.set(id,name);
+  try{await (await caches.open(CLIENT_CACHE)).put(clientKey(id),new Response(name))}catch{}
+}
+async function activateRelease(){
+  const clients=(await self.clients.matchAll({type:'window',includeUncontrolled:true})).filter(inScopeClient);
+  const names=await caches.keys();
+  const metadata=await caches.open(CLIENT_CACHE);
+  const prior=await metadata.match(ACTIVE_RELEASE);
+  const active=prior&&await prior.text();
+  const previous=names.includes(active)&&isReleaseCache(active)?active:names.filter(name=>name!==CACHE&&isReleaseCache(name)).at(-1)||CACHE;
+  // Migrate tabs opened before the release handshake existed; later workers read
+  // their exact persisted binding instead of guessing from cache insertion order.
+  await Promise.all(clients.map(async client=>{if(!await clientRelease(client.id))await bindClient(client.id,previous)}));
+  const used=new Set([CACHE,...await Promise.all(clients.map(client=>clientRelease(client.id)))]);
+  await Promise.all(names.filter(name=>isReleaseCache(name)?!used.has(name):!clients.length&&LEGACY_CACHES.has(name)).map(name=>caches.delete(name)));
+  const liveKeys=new Set(clients.map(client=>clientKey(client.id)));
+  for(const request of await metadata.keys())if(request.url!==ACTIVE_RELEASE&&!liveKeys.has(request.url))await metadata.delete(request);
+  await metadata.put(ACTIVE_RELEASE,new Response(CACHE));
+  await self.clients.claim();
+}
 
 async function matchOwnCache(cache,request){
   const cached=await cache.match(request);
@@ -368,18 +438,36 @@ async function matchOwnCache(cache,request){
     const url=new URL(request.url);
     url.search='';
     url.hash='';
-    return cache.match(url.href);
+    const clean=await cache.match(url.href);if(clean)return clean;
   }
 }
 
-async function serveRequest(request,networkFirst){
-  const cache=await caches.open(CACHE);
-  if(!networkFirst){
+async function unavailableRelease(clientId){
+  const client=clientId&&await self.clients.get(clientId);
+  if(inScopeClient(client))client.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
+  return Response.error();
+}
+async function serveRequest(event,networkFirst){
+  const request=event.request;
+  // A navigation creates a new document. Its HTML and imports use the installed
+  // release even if a deployment is already replacing files on the server.
+  const navigation=request.mode==='navigate';
+  if(navigation)await bindClient(event.resultingClientId,CACHE);
+  const cacheName=navigation?CACHE:await clientRelease(event.clientId)||CACHE;
+  if(!navigation&&event.clientId&&!await clientRelease(event.clientId))await bindClient(event.clientId,cacheName);
+  const url=new URL(request.url),version=url.searchParams.get('v');
+  if(version&&/^assets\/js\//.test(url.pathname.slice(SCOPE.pathname.length))&&releaseVersion(cacheName)&&version!==releaseVersion(cacheName))return unavailableRelease(event.clientId);
+  const cache=await caches.open(cacheName);
+  // This daily CI feed is mutable independently of the application release.
+  const mutableCalendar=cacheName===CACHE&&url.pathname===new URL('assets/data/calendars/current.json',SCOPE).pathname;
+  if(!mutableCalendar&&(navigation||event.clientId||!networkFirst)){
     const cached=await matchOwnCache(cache,request);
     if(cached)return cached;
   }
+  if(cacheName!==CACHE)return unavailableRelease(event.clientId);
   try{
-    const response=await fetch(request);
+    const available=await matchOwnCache(cache,request);
+    const response=await fetchWithDeadline(request,available?1800:12000);
     if(response.ok){
       // An unavailable/full cache must not turn a successful request into an error.
       try{await cache.put(request,response.clone())}catch{}
@@ -397,5 +485,39 @@ self.addEventListener('fetch',event=>{
   const url=new URL(event.request.url);
   if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))return;
   const networkFirst=event.request.mode==='navigate'||/\.(?:html|css|m?js|json|geojson|topojson|webmanifest)$/i.test(url.pathname);
-  event.respondWith(serveRequest(event.request,networkFirst));
+  event.respondWith(serveRequest(event,networkFirst));
+});
+
+self.addEventListener('message',event=>{
+  if(event.data?.type==='BIND_RELEASE'){
+    if(!inScopeClient(event.source)||!/^\d+\.\d+\.\d+$/.test(event.data.release))return;
+    event.waitUntil((async()=>{
+      const entry=new URL(`assets/js/main.js?v=${event.data.release}`,SCOPE).href;
+      const bound=await clientRelease(event.source.id);
+      if(bound&&releaseVersion(bound)===event.data.release&&await (await caches.open(bound)).match(entry)){
+        event.source.postMessage({type:'RELEASE_BOUND',release:event.data.release});return;
+      }
+      const names=(await caches.keys()).filter(name=>isReleaseCache(name)&&releaseVersion(name)===event.data.release).reverse();
+      for(const name of names){
+        if(await (await caches.open(name)).match(entry)){
+          await bindClient(event.source.id,name);
+          event.source.postMessage({type:'RELEASE_BOUND',release:event.data.release});return;
+        }
+      }
+      // Missing/evicted historical caches cannot be replaced with current code.
+      await bindClient(event.source.id,`${CACHE_PREFIX}unavailable-v${event.data.release}`);
+      event.source.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
+    })());
+    return;
+  }
+  if(event.data?.type!=='PREPARE_MODULE')return;
+  const module=event.data.module;
+  const paths=module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
+  const extras=Array.isArray(event.data.urls)?event.data.urls.slice(0,250).filter(url=>typeof url==='string'):[];
+  event.waitUntil((async()=>{
+    const cacheName=inScopeClient(event.source)?await clientRelease(event.source.id)||CACHE:CACHE;
+    const result=await prepareResources([...paths,...extras],{cacheName});
+    event.source?.postMessage({type:'MODULE_CACHE_STATUS',module,...result});
+    if(!result.ready&&cacheName!==CACHE)event.source?.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
+  })());
 });

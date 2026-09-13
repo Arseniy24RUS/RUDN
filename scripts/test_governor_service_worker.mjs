@@ -21,9 +21,8 @@ async function runtimeFiles(directory,prefix=''){
   return nested.flat().sort();
 }
 
-function makeWorker(workerScope=scope){
+function makeWorker(workerScope=scope,{stores=new Map(),source=workerSource}={}){
   const listeners=new Map();
-  const stores=new Map();
   const installedRequests=[];
   let networkCalls=0;
   let skipped=false;
@@ -37,6 +36,8 @@ function makeWorker(workerScope=scope){
           entries,
           async match(request){return entries.get(urlOf(request))?.clone()},
           async put(request,response){entries.set(urlOf(request),response.clone())},
+          async keys(){return [...entries.keys()].map(url=>new Request(url))},
+          async delete(request){return entries.delete(urlOf(request))},
           async addAll(requests){
             // Like browser addAll, installation fails if any response is unsuccessful.
             const pending=await Promise.all(requests.map(async request=>{
@@ -56,22 +57,24 @@ function makeWorker(workerScope=scope){
     // Deliberately no global match: fallback must use only the owned cache.
   };
   const context=vm.createContext({
-    URL,Request,Response,
+    URL,Request,Response,AbortController,setTimeout,clearTimeout,
     caches:cacheStorage,
-    fetch:request=>{networkCalls++;return harness.fetch(request)},
+    fetch:request=>{networkCalls++;if(request.cache==='reload')installedRequests.push(request);return harness.fetch(request)},
     self:{
       registration:{scope:workerScope},
       addEventListener:(name,callback)=>listeners.set(name,callback),
       skipWaiting:async()=>{skipped=true},
-      clients:{claim:async()=>{claimed=true}}
+      clients:{claim:async()=>{claimed=true},matchAll:async()=>harness.activeClients||[],get:async id=>harness.activeClients?.find(client=>client.id===id)}
     }
   });
-  vm.runInContext(workerSource,context,{filename:'service-worker.js'});
+  vm.runInContext(source,context,{filename:'service-worker.js'});
   const harness={
     stores,cacheStorage,installedRequests,
     get cacheName(){return vm.runInContext('CACHE',context)},
     get cachePrefix(){return vm.runInContext('CACHE_PREFIX',context)},
+    get clientCacheName(){return vm.runInContext('CLIENT_CACHE',context)},
     get precache(){return Array.from(vm.runInContext('PRECACHE',context))},
+    get core(){return Array.from(vm.runInContext('CORE_SHELL',context))},
     get networkCalls(){return networkCalls},
     get skipped(){return skipped},
     get claimed(){return claimed},
@@ -91,8 +94,10 @@ function makeWorker(workerScope=scope){
     },
     async request(relative,options={}){
       let response;
+      const {clientId='',resultingClientId='',...requestOptions}=options;
       await this.emit('fetch',{
-        request:{url:urlOf(relative),method:'GET',mode:'cors',...options},
+        clientId,resultingClientId,
+        request:{url:urlOf(relative),method:'GET',mode:'cors',...requestOptions},
         respondWith:promise=>{response=promise}
       });
       return response===undefined?undefined:await response;
@@ -101,7 +106,7 @@ function makeWorker(workerScope=scope){
   return harness;
 }
 
-test('install includes every native runtime file and both native entry URLs',async()=>{
+test('module manifest includes runtime files; only the minimal platform is installed',async()=>{
   const worker=makeWorker();
   await worker.emit('install');
   assert.equal(worker.skipped,true);
@@ -112,7 +117,7 @@ test('install includes every native runtime file and both native entry URLs',asy
   }
   for(const entry of ['./','./index.html','./apps/puzzle.html','./'+modulePath,'./'+modulePath+'index.html',
     './'+modulePath+'platform-bridge.js','./'+modulePath+'platform-contract.js','./'+modulePath+'platform.css',
-    './assets/js/main.js?v=1.3.2','./assets/js/teacher-journal.js?v=1.3.2','./assets/css/site.css?v=1.3.2',
+    './assets/js/main.js?v=1.3.3','./assets/js/teacher-journal.js?v=1.3.3','./assets/css/site.css?v=1.3.3',
     './assets/js/career-course.js','./apps/career/entry.mjs','./apps/career/runtime.bundle.mjs',
     './apps/career/surface.html','./apps/career/module.css','./apps/career/assets/fonts/noto-sans-sc.woff2',
     './apps/career/data/model-manifest.json','./apps/career/docs/TEACHER-GUIDE-STAGE8.md',
@@ -120,14 +125,15 @@ test('install includes every native runtime file and both native entry URLs',asy
     assert.ok(worker.precache.includes(entry),`Missing entry: ${entry}`);
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
+  assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')),'Optional modules cannot delay installation');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
-  assert.ok(worker.cacheName.endsWith(':v1.3.2-reliability-1'));
+  assert.ok(worker.cacheName.endsWith(':v1.3.3-durable'));
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{
   const worker=makeWorker();
   const rootWorker=makeWorker('https://example.test/');
-  const retained=[worker.cacheName,rootWorker.cacheName,
+  const retained=[worker.cacheName,worker.clientCacheName,rootWorker.cacheName,
     'rudn-governor-stage9','unrelated-site-v4','rudn-gmu-pages-v0.9.0','rudn-gmu-pages-v1.3.0-career-other'];
   const removed=[worker.cachePrefix+'v1.2.2','rudn-gmu-pages-v1.2.2','rudn-gmu-pages-v1.3.0-career'];
   for(const name of [...retained,...removed])await worker.cacheStorage.open(name);
@@ -137,11 +143,12 @@ test('activation deletes only this scope releases and the exact legacy platform 
   assert.notEqual(worker.cachePrefix,rootWorker.cachePrefix);
 });
 
-test('the complete installed runtime is available offline before its first visit',async()=>{
+test('opened module resource pack becomes available offline without caching other modules',async()=>{
   const worker=makeWorker();
   await worker.emit('install');
+  await worker.emit('message',{data:{type:'PREPARE_MODULE',module:'governor'}});
   worker.fetch=async()=>{throw new TypeError('Network unavailable')};
-  for(const entry of worker.precache){
+  for(const entry of [...worker.core,...worker.precache.filter(path=>path.startsWith('./apps/governor/'))]){
     const navigate=entry.endsWith('/')||entry.endsWith('.html');
     const response=await worker.request(entry,{mode:navigate?'navigate':'cors'});
     assert.equal(response?.status,200,`Offline response unavailable: ${entry}`);
@@ -203,4 +210,184 @@ test('a cache write failure still returns the successful network response',async
   cache.put=async()=>{throw new Error('Cache quota exceeded')};
   worker.fetch=async()=>new Response('successful network content');
   assert.equal(await (await worker.request('./'+modulePath+'src/engine.js')).text(),'successful network content');
+});
+
+test('an open task retains its own previous-release cache during activation',async()=>{
+  const worker=makeWorker();worker.activeClients=[{id:'open-task',url:scope,postMessage(){}}];
+  const previous=worker.cachePrefix+'previous';
+  const cache=await worker.cacheStorage.open(previous);await cache.put('./data/questions.json',new Response('previous valid questions'));
+  await worker.emit('activate');
+  assert.ok((await worker.cacheStorage.keys()).includes(previous));
+  worker.fetch=async()=>{throw new TypeError('offline')};
+  assert.equal(await (await worker.request('./data/questions.json',{clientId:'open-task'})).text(),'previous valid questions');
+});
+
+test('activation removes unused own releases while retaining each live binding and unrelated application caches',async()=>{
+  const worker=makeWorker();
+  const client={id:'active-old-tab',url:scope,postMessage(){}};
+  worker.activeClients=[client,{id:'another-app',url:'https://example.test/other-app/',postMessage(){}}];
+  const retained=worker.cachePrefix+'v1.3.1-old';
+  const unused=worker.cachePrefix+'v1.3.2-unused';
+  await (await worker.cacheStorage.open(retained)).put('./assets/js/main.js?v=1.3.1',new Response('active old main'));
+  await worker.cacheStorage.open(unused);
+  await worker.cacheStorage.open(worker.cacheName);
+  await worker.cacheStorage.open('unrelated-site-v4');
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.1'}});
+  await worker.emit('activate');
+  const names=await worker.cacheStorage.keys();
+  assert.ok(names.includes(retained));
+  assert.ok(names.includes(worker.cacheName));
+  assert.ok(names.includes(worker.clientCacheName));
+  assert.ok(names.includes('unrelated-site-v4'));
+  assert.ok(!names.includes(unused));
+});
+
+test('handshake preserves an existing compatible binding even when another cache reuses the version',async()=>{
+  const worker=makeWorker();
+  const client={id:'same-version-old-tab',url:scope,postMessage(){}};
+  worker.activeClients=[client];
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.3-earlier-build');
+  const current=await worker.cacheStorage.open(worker.cacheName);
+  for(const [cache,label] of [[old,'earlier'],[current,'current']]){
+    await cache.put('./assets/js/main.js?v=1.3.3',new Response(label+' main'));
+    await cache.put('./apps/career/entry.mjs',new Response(label+' lazy module'));
+  }
+  await worker.emit('activate');
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.3'}});
+  assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:client.id})).text(),'earlier lazy module');
+});
+
+test('current clients refresh the daily calendar while old clients keep their cached assignment data',async()=>{
+  const worker=makeWorker();
+  const client={id:'old-calendar-tab',url:scope,postMessage(){}};
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.2-reliability-1');
+  const current=await worker.cacheStorage.open(worker.cacheName);
+  const calendar='./assets/data/calendars/current.json';
+  await old.put('./assets/js/main.js?v=1.3.2',new Response('old main'));
+  await old.put(calendar,new Response('old assignment calendar'));
+  await current.put(calendar,new Response('yesterday calendar'));
+  worker.fetch=async()=>new Response('today calendar');
+  assert.equal(await (await worker.request(calendar,{clientId:'new-calendar-tab'})).text(),'today calendar');
+  assert.equal(await (await current.match(calendar)).text(),'today calendar');
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.2'}});
+  assert.equal(await (await worker.request(calendar,{clientId:client.id})).text(),'old assignment calendar');
+  assert.equal(worker.networkCalls,1);
+});
+
+test('open clients keep cached lazy modules and versioned core while a new navigation gets the installed release',async()=>{
+  const worker=makeWorker();
+  const messages=[];
+  const oldClient={id:'old-tab',url:scope,postMessage:message=>messages.push(message)};
+  worker.activeClients=[oldClient];
+  const previous=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.2-reliability-1');
+  const current=await worker.cacheStorage.open(worker.cacheName);
+  await previous.put('./assets/js/main.js?v=1.3.2',new Response('old main'));
+  await previous.put('./assets/js/backend.js?v=1.3.2',new Response('old singleton backend'));
+  await previous.put('./apps/career/entry.mjs',new Response('old lazy career'));
+  await current.put('./index.html',new Response('current document'));
+  await current.put('./assets/js/main.js?v=1.3.3',new Response('current main'));
+  await current.put('./assets/js/backend.js?v=1.3.3',new Response('current singleton backend'));
+  await current.put('./apps/career/entry.mjs',new Response('current lazy career'));
+  await worker.emit('activate');
+  worker.fetch=async()=>new Response('new code served even for an old URL');
+  for(const [file,expected] of [
+    ['./apps/career/entry.mjs','old lazy career'],
+    ['./assets/js/backend.js?v=1.3.2','old singleton backend']
+  ])assert.equal(await (await worker.request(file,{clientId:oldClient.id})).text(),expected);
+  assert.equal(await (await worker.request('./index.html',{mode:'navigate',clientId:oldClient.id,resultingClientId:'new-tab'})).text(),'current document');
+  assert.equal(await (await worker.request('./assets/js/backend.js?v=1.3.3',{clientId:'new-tab'})).text(),'current singleton backend');
+  assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:'new-tab'})).text(),'current lazy career');
+  assert.equal((await worker.request('./assets/js/backend.js?v=1.3.2',{clientId:'new-tab'})).type,'error','A current tab cannot cache fresh code under an old version URL');
+  assert.equal(await current.match('./assets/js/backend.js?v=1.3.2'),undefined);
+  assert.equal(worker.networkCalls,0,'Cached releases must not be overwritten by the deployment');
+  assert.equal((await worker.request('./apps/career/uncached-old-module.mjs',{clientId:oldClient.id})).type,'error');
+  assert.equal(messages.at(-1).type,'RELEASE_RESOURCE_UNAVAILABLE');
+  assert.equal(worker.networkCalls,0,'Missing old code must not be replaced with current code');
+  assert.equal(await previous.match('./apps/career/uncached-old-module.mjs'),undefined);
+});
+
+test('client bindings survive worker restarts and a second update without moving old tabs forward',async()=>{
+  const worker=makeWorker();
+  const clients=[{id:'old-tab',url:scope,postMessage(){}},{id:'middle-tab',url:scope,postMessage(){}}];
+  worker.activeClients=[clients[0]];
+  const oldName=worker.cachePrefix+'v1.3.2-reliability-1';
+  await (await worker.cacheStorage.open(oldName)).put('./apps/career/entry.mjs',new Response('1.3.2 career'));
+  await (await worker.cacheStorage.open(worker.cacheName)).put('./apps/career/entry.mjs',new Response('1.3.3 career'));
+  await worker.emit('activate');
+  await worker.request('./index.html',{mode:'navigate',resultingClientId:clients[1].id});
+  const restarted=makeWorker(scope,{stores:worker.stores});
+  restarted.fetch=async()=>new Response('wrong fresh code');
+  assert.equal(await (await restarted.request('./apps/career/entry.mjs',{clientId:clients[0].id})).text(),'1.3.2 career');
+  const next=makeWorker(scope,{stores:worker.stores,source:workerSource.replaceAll('1.3.3','1.3.4')});
+  next.activeClients=clients;
+  const nextCache=await next.cacheStorage.open(next.cacheName);
+  await nextCache.put('./apps/career/entry.mjs',new Response('1.3.4 career'));
+  await nextCache.put('./index.html',new Response('1.3.4 document'));
+  await next.emit('activate');
+  next.fetch=async()=>new Response('wrong fresh code');
+  for(const [clientId,expected] of [['old-tab','1.3.2 career'],['middle-tab','1.3.3 career']]){
+    assert.equal(await (await next.request('./apps/career/entry.mjs',{clientId})).text(),expected);
+  }
+  assert.equal(await (await next.request('./index.html',{mode:'navigate',resultingClientId:'new-tab'})).text(),'1.3.4 document');
+  assert.equal(await (await next.request('./apps/career/entry.mjs',{clientId:'new-tab'})).text(),'1.3.4 career');
+  assert.equal(next.networkCalls,0);
+});
+
+test('release handshake binds only its own in-scope client and module preparation cannot fetch into old releases',async()=>{
+  const worker=makeWorker();
+  const messages=[];
+  const client={id:'announcing-tab',url:scope,postMessage:message=>messages.push(message)};
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.2-reliability-1');
+  const current=await worker.cacheStorage.open(worker.cacheName);
+  await old.put('./assets/js/main.js?v=1.3.2',new Response('old main'));
+  await old.put('./apps/career/entry.mjs',new Response('old career'));
+  await current.put('./apps/career/entry.mjs',new Response('current career'));
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.2',clientId:'forged-client'}});
+  assert.equal(messages.at(-1).type,'RELEASE_BOUND');
+  assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:client.id})).text(),'old career');
+  assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:'forged-client'})).text(),'current career');
+  await worker.emit('message',{source:{...client,id:'outside',url:'https://example.test/other-app/'},data:{type:'BIND_RELEASE',release:'1.3.2'}});
+  assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:'outside'})).text(),'current career');
+  await worker.emit('message',{source:client,data:{type:'PREPARE_MODULE',module:'career'}});
+  assert.equal(messages.find(message=>message.type==='MODULE_CACHE_STATUS').ready,false);
+  assert.equal(messages.at(-1).type,'RELEASE_RESOURCE_UNAVAILABLE');
+  assert.equal(worker.networkCalls,0);
+  assert.equal(await old.match('./apps/career/runtime.bundle.mjs'),undefined);
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'0.0.1'}});
+  assert.equal(messages.at(-1).type,'RELEASE_RESOURCE_UNAVAILABLE');
+  assert.equal((await worker.request('./apps/career/entry.mjs',{clientId:client.id})).type,'error');
+  assert.equal(worker.networkCalls,0,'A missing historical release must not inherit the current module');
+});
+
+test('page boot announces its loaded version after a controller change and only trusts that worker for update notices',async()=>{
+  const main=await readFile(path.join(siteRoot,'assets/js/main.js'),'utf8');
+  const helper=main.slice(main.indexOf('function connectPageRelease(){'),main.indexOf('async function bootstrap(){'));
+  assert.ok(helper.startsWith('function connectPageRelease(){'));
+  const listeners=new Map(),sent=[],notices=[];
+  const original={postMessage:message=>sent.push(message)};
+  const updated={postMessage:message=>sent.push(message)};
+  const workers={controller:original,ready:Promise.resolve(),addEventListener:(type,handler)=>listeners.set(type,handler)};
+  vm.runInNewContext(helper.replace('import.meta.url',JSON.stringify(scope+'assets/js/main.js?v=1.3.2'))+'\nconnectPageRelease();',{
+    URL,navigator:{serviceWorker:workers},CONFIG:{version:'1.3.3'},getLocale:()=> 'en',toast:(...args)=>notices.push(args)
+  });
+  await Promise.resolve();
+  assert.ok(sent.length>=1);
+  assert.ok(sent.every(message=>message.type==='BIND_RELEASE'&&message.release==='1.3.2'));
+  workers.controller=updated;
+  listeners.get('controllerchange')();
+  assert.equal(sent.at(-1).release,'1.3.2');
+  listeners.get('message')({source:original,data:{type:'RELEASE_RESOURCE_UNAVAILABLE'}});
+  assert.equal(notices.length,0);
+  listeners.get('message')({source:updated,data:{type:'RELEASE_RESOURCE_UNAVAILABLE'}});
+  assert.equal(notices.length,1);
+  assert.match(notices[0][0],/refresh the page after finishing or saving/i);
+  assert.equal(notices[0][2],0,'The student can read and dismiss the notice without a countdown');
+});
+
+test('hung request falls back to the matching cached file within a finite deadline',async()=>{
+  const worker=makeWorker();const cache=await worker.cacheStorage.open(worker.cacheName);
+  await cache.put('./data/questions.json',new Response('local questions'));
+  worker.fetch=()=>new Promise(()=>{});
+  const started=Date.now();assert.equal(await (await worker.request('./data/questions.json')).text(),'local questions');
+  assert.ok(Date.now()-started<3000);
 });

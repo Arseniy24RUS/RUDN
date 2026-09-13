@@ -1,15 +1,17 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {CONFIG} from './config.js?v=1.3.2';
-import {backend,groupOptions} from './backend.js?v=1.3.2';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.2';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.2';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.2';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.2';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.2';
-import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.3.2';
-import {attemptOwner} from './attempt-session.js?v=1.3.2';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.2';
-import {openAccount,mountProfile} from './account.js?v=1.3.2';
+import {CONFIG} from './config.js?v=1.3.3';
+import {backend,groupOptions} from './backend.js?v=1.3.3';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.3';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.3';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.3';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.3';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.3';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.3';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.3';
+import {durableStore} from './durable-store.js';
+import {mountFormDraft,formDraft} from './form-draft.js';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.3';
+import {openAccount,mountProfile} from './account.js?v=1.3.3';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -178,8 +180,9 @@ initNotifications();
 
 let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{}};
 let currentCleanup=null;
+let formCleanups=[];
 let currentCareer=null;
-let renderedKey='';let dataReady=false;let renderRunning=false;let renderAgain=false;
+let renderedKey='';let renderedLocale='';let dataReady=false;let renderRunning=false;let renderAgain=false;
 let accessRefreshTimer=null;
 
 function scheduleAccessRefresh(){
@@ -250,12 +253,16 @@ async function render(){
   if(renderRunning){renderAgain=true;return}
   const nextKey=`${location.hash}:${attemptOwner()}`;
   const currentRoute=route();
+  // Background Auth/Database updates must not detach the form being edited.
+  if(renderedKey===nextKey&&renderedLocale===getLocale()&&formCleanups.length)return;
   if(currentCareer?.handle&&currentCareer.owner===attemptOwner()&&currentRoute.name==='activity'&&currentRoute.parts[0]==='seminar-6'&&backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow()))){
     renderedKey=nextKey;currentCleanup.refreshLocale();currentCareer.handle.navigate(careerRoute(currentRoute.parts[1]));return;
   }
   if(!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
-  const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;
-  if(currentCleanup){try{currentCleanup()}catch{} currentCleanup=null}
+  const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;renderedLocale=getLocale();
+  try{for(const controller of formCleanups)await controller.destroy();formCleanups=[];await durableStore.flush()}
+  catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return}
+  if(currentCleanup){try{await currentCleanup.flush?.();await currentCleanup()}catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return} currentCleanup=null}
   const r=route();setActiveNav(r.name);
   app.setAttribute('aria-busy','true');
   try{
@@ -270,19 +277,24 @@ async function render(){
     else if(r.name==='activity') await renderActivity(r.parts[0]);
     else location.hash='dashboard';
   }catch(error){console.error(error.code||error);app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
-  app.setAttribute('aria-busy','false');if(!document.querySelector('dialog[open]'))app.focus({preventScroll:true});translateDocument(app);
-  guardSubmissions();
+  if(!document.querySelector('dialog[open]'))app.focus({preventScroll:true});translateDocument(app);
+  await guardSubmissions();
+  app.setAttribute('aria-busy','false');
   if(resetScroll)window.scrollTo({top:0,left:0,behavior:'instant'});
   scheduleAccessRefresh();
   renderRunning=false;if(renderAgain){renderAgain=false;render()}
 }
-function guardSubmissions(){
-  app.querySelectorAll('#settlementForm,#appealForm,#civilForm,#simulatorForm').forEach(form=>{
-    const submit=form.onsubmit;if(!submit||form.dataset.guarded)return;form.dataset.guarded='true';
+async function guardSubmissions(){
+  for(const form of app.querySelectorAll('#settlementForm,#appealForm,#civilForm,#simulatorForm,#reflectionForm')){
+    const slug={settlementForm:'seminar-3',appealForm:'seminar-5',civilForm:'seminar-6',simulatorForm:'seminar-7',reflectionForm:'lecture-8'}[form.id];
+    const controller=await mountFormDraft(form,slug);if(controller&&!formCleanups.includes(controller))formCleanups.push(controller);
+    const submit=form.onsubmit;if(!submit||form.dataset.guarded)continue;form.dataset.guarded='true';
     form.onsubmit=async event=>{event.preventDefault();if(form.dataset.saving)return;form.dataset.saving='true';form.setAttribute('aria-busy','true');const button=form.querySelector('[type=submit]'),label=button.textContent;button.disabled=true;button.textContent=t('loading');
-      try{await submit.call(form,event)}catch(error){toast(error,'error')}finally{delete form.dataset.saving;form.setAttribute('aria-busy','false');button.disabled=false;button.textContent=label}
+      // Native currentTarget is cleared once dispatch returns, before IndexedDB finishes.
+      const submission={currentTarget:form,target:event.target,submitter:event.submitter,preventDefault:()=>event.preventDefault()};
+      try{await controller?.save();await submit.call(form,submission)}catch(error){toast(error,'error')}finally{delete form.dataset.saving;form.setAttribute('aria-busy','false');button.disabled=false;button.textContent=label}
     };
-  });
+  }
 }
 
 function bestCourseQuizAttempt(attempts=[]){
@@ -373,6 +385,8 @@ function renderProfile(){
   app.querySelector('#profileLogin')?.addEventListener('click',openAuthDialog);
 }
 async function renderActivity(slug){
+  const module={'seminar-5':'reception','seminar-6':'career','seminar-7':'governor'}[slug];
+  if(module)navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
   if(slug==='seminar-1'){location.hash='activity/seminar-1-classroom';return}
   if(slug==='seminar-1-classroom'||slug==='seminar-1-assessment'){await startQuiz(slug);return}
   const topic=data.course.topics.find(x=>x.lecture.slug===slug||x.seminar.slug===slug);
@@ -397,12 +411,14 @@ function renderLecture(topic){
     else container.innerHTML=`<iframe class="doc-frame" src="${esc(currentPresentation)}" title="${ui('presentation')}"></iframe>`;
   }));
   app.querySelector('#launchLectureTest')?.addEventListener('click',()=>startQuiz(lecture.slug));
-  app.querySelector('#reflectionForm')?.addEventListener('submit',async event=>{
+  const reflectionForm=app.querySelector('#reflectionForm');
+  if(reflectionForm)reflectionForm.onsubmit=async event=>{
     event.preventDefault();if(!requireProfile())return;
     const form=new FormData(event.currentTarget);const reflection=String(form.get('reflection')||'').trim();
     const result=String(form.get('result')||'').trim();if(reflection.length<120||!result){toast(ui('fillRequired'),'error');return}
-    await backend.saveAttempt({studentKey,type:'reflection',activitySlug:'lecture-8',title:loc(lecture,'title',lecture.title),points:5,maxPoints:5,result,reflection});toast(ui('saved'),'success');render();
-  });
+    const draft=formDraft(event.currentTarget);
+    await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',studentKey,type:'reflection',activitySlug:'lecture-8',title:loc(lecture,'title',lecture.title),points:5,maxPoints:5,result,reflection});toast(ui('saved'),'success');renderedKey='';render();
+  };
 }
 
 async function renderSeminar(topic){
@@ -463,6 +479,7 @@ async function startQuiz(activitySlug){
     return;
   }
   const assessment=activitySlug==='seminar-1-assessment';
+  await prepareQuizDraft(assessment?'seminar-1':activitySlug,{mode:assessment?'assessment':'default'});
   let session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
   const options={onExit:()=>returnTo('dashboard'),onSessionChange:next=>{session=next}};
   currentCleanup=()=>{};currentCleanup.refreshLocale=()=>renderQuiz(mount,session,options);
@@ -475,9 +492,10 @@ function renderSeminar3(topic){
     event.preventDefault();if(!requireProfile())return;const form=new FormData(event.currentTarget);
     const territory=String(form.get('territory')||'').trim(),indicators=String(form.get('indicators')||'').trim(),dynamics=String(form.get('dynamics')||'').trim(),conclusion=String(form.get('conclusion')||'').trim();
     if(!territory||!indicators||dynamics.length<180||conclusion.length<180){toast(ui('fillRequired'),'error');return}
-    let fileUrl='';const file=form.get('file');if(file instanceof File&&file.size){try{fileUrl=await backend.uploadFile('seminar-3',file)}catch(error){toast(error,'error')}}
+    const draft=formDraft(event.currentTarget),attachment=await draft?.attachment('file');
+    const fileUrl=attachment?.ref||'';
     const points=Math.min(5,(territory?1:0)+(indicators?1:0)+(dynamics.length>=180?1:0)+(conclusion.length>=180?1:0)+(dynamics.length+conclusion.length>=600||fileUrl?1:0));
-    await backend.saveAttempt({studentKey,type:'settlement-analysis',activitySlug:'seminar-3',title:loc(topic.seminar,'title'),points,maxPoints:5,territory,indicators,dynamics,conclusion,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');render();
+    await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',attachmentIds:attachment?[attachment.id]:[],studentKey,type:'settlement-analysis',activitySlug:'seminar-3',title:loc(topic.seminar,'title'),points,maxPoints:5,territory,indicators,dynamics,conclusion,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');renderedKey='';render();
   };
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
@@ -493,6 +511,7 @@ function renderSeminar5(topic){
   const controller=new AbortController(),owner=attemptOwner();
   let mountedCleanup=()=>{},locale=getLocale();
   const cleanup=()=>{controller.abort();mountedCleanup();};
+  cleanup.flush=()=>mountedCleanup.flush?.();
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()
     &&route().name==='activity'&&route().parts[0]==='seminar-5';
   cleanup.refreshLocale=()=>{
@@ -536,6 +555,7 @@ function renderSeminar6(topic){
   const mount=app.querySelector('#careerMount');
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&route().name==='activity'&&route().parts[0]==='seminar-6'&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow()));
   const cleanup=()=>{disposed=true;controller.abort();handle?.destroy();if(currentCareer===token)currentCareer=null;};
+  cleanup.flush=()=>handle?.flush?.();
   cleanup.refreshLocale=()=>{
     if(!active())return;
     app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
@@ -546,9 +566,10 @@ function renderSeminar6(topic){
   };
   currentCleanup=cleanup;
   app.querySelector('#civilForm').onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const score=String(fd.get('score')||'').trim();const file=fd.get('file');if(!score||!(file instanceof File)||!file.size){toast(ui('fillRequired'),'error');return}
-    let fileUrl='';try{fileUrl=await backend.uploadFile('seminar-6',file)}catch(error){toast(error,'error');return}
-    await backend.saveAttempt({studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');render();
+    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const score=String(fd.get('score')||'').trim();
+    const draft=formDraft(event.currentTarget),attachment=await draft?.attachment('file');
+    if(!score||!attachment){toast(ui('fillRequired'),'error');return}
+    await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',attachmentIds:[attachment.id],studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl:attachment.ref,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');renderedKey='';render();
   };
   void (async()=>{try{
     const {mountCareer}=await import('../../apps/career/entry.mjs');
@@ -689,6 +710,7 @@ async function renderAdmin(){
   });
 }
 function renderStudentGrades(studentKey,all){
+  currentCleanup?.();currentCleanup=null;
   const p=all.profiles[studentKey],grades=all.grades?.[studentKey]||{},items=gradeItems();
   app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${p.ticket} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
   app.querySelector('#gradeEditCancel').onclick=()=>renderGradebook();
@@ -852,15 +874,34 @@ languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(b
 window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
 window.addEventListener('rudn:identitychange',()=>{
-  if(currentCareer&&currentCareer.owner!==attemptOwner()){currentCleanup?.();currentCleanup=null;}
   updateTopProfile();document.getElementById('accountDialog')?.close();
   if(attemptOwner()==='guest'&&/:(student|teacher):/.test(renderedKey)){authDialog.close();location.hash='dashboard'}
   render();
 });
 
+function connectPageRelease(){
+  if(!('serviceWorker' in navigator))return;
+  const workers=navigator.serviceWorker;
+  // This is the document's loaded module version, not the newly active worker's.
+  const release=new URL(import.meta.url).searchParams.get('v')||CONFIG.version;
+  const announce=()=>workers.controller?.postMessage({type:'BIND_RELEASE',release});
+  workers.addEventListener('controllerchange',announce);
+  workers.addEventListener('message',event=>{
+    if(event.source!==workers.controller||event.data?.type!=='RELEASE_RESOURCE_UNAVAILABLE')return;
+    const message=getLocale()==='en'?'To open this activity, refresh the page after finishing or saving your current work.':getLocale()==='zh'?'请先完成或保存当前作业，然后刷新页面以打开此活动。':'Чтобы открыть это задание, обновите страницу после завершения или сохранения текущей работы.';
+    toast(message,'info',0);
+  });
+  announce();
+  workers.ready.then(announce).catch(()=>{});
+}
+
 async function bootstrap(){
+  connectPageRelease();
+  setRecoveryOwnerProvider(attemptOwner);
+  registerRecoveryProvider(()=>durableStore.exportBackup({owner:attemptOwner()}));
   translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
+  durableStore.subscribe(()=>updateQuizSaveStatus(app));
   backend.init().then(()=>render()).catch(error=>toast(error,'error'));
   await loadData();dataReady=true;
   updateTopProfile();await render();

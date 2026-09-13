@@ -1,7 +1,8 @@
-import {getLocale,localized,t} from './i18n.js?v=1.3.2';
-import {backend} from './backend.js?v=1.3.2';
-import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.3.2';
-import {readState,pendingStorageKey} from './session.js?v=1.3.2';
+import {getLocale,localized,t} from './i18n.js?v=1.3.3';
+import {backend} from './backend.js?v=1.3.3';
+import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.3.3';
+import {readState,pendingStorageKey} from './session.js?v=1.3.3';
+import {durableStore} from './durable-store.js';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -103,8 +104,27 @@ export function buildQuiz(questions,activitySlug,profile,options={}){
   }else if(activitySlug==='exam'){
     pool=byCategory('Итоговый тест по дисциплине');title=getLocale()==='en'?'Examination test':getLocale()==='zh'?'考试测验':'Экзаменационный тест';pointsMax=20;
   }
-  const {fresh,persist,...buildOptions}=options;
-  return restoreQuiz({id:uuid(),activitySlug:resultActivitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt:recordAttempt&&!backend.isAdmin(),recordGrade,buildOptions},{fresh,persist});
+const {fresh,persist,...buildOptions}=options;
+  const session=restoreQuiz({id:uuid(),activitySlug:resultActivitySlug,title,pointsMax,questions:pool,answers:{},index:0,startedAt:Date.now(),recordAttempt:recordAttempt&&!backend.isAdmin(),recordGrade,buildOptions},{fresh,persist});
+  prepareQuizResources(session.questions);
+  return session;
+}
+
+const preparedResources=new Set();
+function prepareQuizResources(questions){
+  if(typeof navigator==='undefined'||typeof document==='undefined'||!navigator.serviceWorker)return;
+  const urls=new Set();
+  for(const question of questions){
+    for(const value of [question.media?.photo,question.media?.symbol])if(value)urls.add(new URL(value,document.baseURI).href);
+    // Some multiple-choice tasks keep illustrations inside localized HTML.
+    for(const value of Object.values(question).filter(value=>typeof value==='string')){
+      for(const match of value.matchAll(/<(?:img|source)\b[^>]*\bsrc=["']([^"']+)["']/gi))urls.add(new URL(match[1],document.baseURI).href);
+    }
+  }
+  const fresh=[...urls].filter(url=>!preparedResources.has(url));if(!fresh.length)return;
+  const send=worker=>{if(!worker)return;fresh.forEach(url=>preparedResources.add(url));worker.postMessage({type:'PREPARE_MODULE',module:'quiz',urls:fresh})};
+  if(navigator.serviceWorker?.controller)send(navigator.serviceWorker.controller);
+  else if(navigator.serviceWorker)void navigator.serviceWorker.ready.then(registration=>send(registration.active)).catch(()=>{});
 }
 
 export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
@@ -189,8 +209,14 @@ export function renderQuiz(container,session,options={}){
   container.querySelectorAll('[data-quiz-index]').forEach(button=>button.onclick=()=>{session.index=Number(button.dataset.quizIndex);session.navOpen=false;persistQuiz(session);renderQuiz(container,session,options)});
   container.onkeydown=event=>{if(q.type!=='matrix_single'||event.altKey||event.ctrlKey||event.metaKey)return;const n=Number(event.key);if(n>=1&&n<=9){event.preventDefault();container.querySelector(`[aria-keyshortcuts="${n}"]`)?.click()}};
   const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>{session.answers[q.id]=short.value;persistQuiz(session)});short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(console.warn))}
-  container.querySelector('#quizPrev').onclick=()=>{session.index=Math.max(0,session.index-1);persistQuiz(session);renderQuiz(container,session,options)};
-  container.querySelector('#quizNext').onclick=()=>{if(!hasAnswer(q,session.answers[q.id])){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:t('selectAnswer'),type:'error'}}));return}if(session.index<session.questions.length-1){session.index++;persistQuiz(session);renderQuiz(container,session,options)}else finishQuiz(container,session,options).catch(error=>window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:error,type:'error'}})))};
+  container.querySelector('#quizPrev').onclick=async()=>{session.index=Math.max(0,session.index-1);await persistQuiz(session);renderQuiz(container,session,options)};
+  container.querySelector('#quizNext').onclick=async event=>{
+    if(event.currentTarget.disabled)return;
+    if(!hasAnswer(q,session.answers[q.id])){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:t('selectAnswer'),type:'error'}}));return}
+    event.currentTarget.disabled=true;
+    if(session.index<session.questions.length-1){session.index++;await persistQuiz(session);renderQuiz(container,session,options)}
+    else finishQuiz(container,session,options).catch(error=>window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:error,type:'error'}})));
+  };
 }
 function hasAnswer(q,value){if(q.type==='multichoice'&&!q.single)return Array.isArray(value)&&value.length>0;return value!==undefined&&value!==null&&String(value).trim()!==''}
 
@@ -226,6 +252,7 @@ export async function finishQuiz(container,session,options={}){
     const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
     const ratio=results.length?results.reduce((sum,result)=>sum+result.fraction,0)/results.length:0;
     const attempt={id:session.id,type:'quiz',activitySlug:session.activitySlug,title:session.title,points:Math.round(ratio*session.pointsMax*100)/100,maxPoints:session.pointsMax,ratio,recordGrade:session.recordGrade!==false,answers:{...session.answers},questionIds:session.questions.map(q=>q.id),durationMs:Date.now()-session.startedAt,createdAt:new Date().toISOString()};
+    attempt.draftMode=session.buildOptions?.mode||'default';
     session.resultAttempt=session.recordAttempt!==false?await backend.saveAttempt(attempt):attempt;
     session.phase='completed';persistQuiz(session);
     await Promise.resolve(options.onFinish?.({attempt:session.resultAttempt,results,session}));
@@ -240,19 +267,29 @@ function renderQuizResult(container,session,options={}){
   const {onExit}=options;const results=session.questions.map(q=>({q,value:session.answers[q.id],...gradeQuestion(q,session.answers[q.id])}));
   const raw=results.reduce((s,r)=>s+r.fraction,0);const ratio=results.length?raw/results.length:0;const points=Math.round(ratio*session.pointsMax*100)/100;
   const showReview=session.buildOptions?.mode!=='assessment';
+  const locale=getLocale(),copy=(ru,en,zh)=>locale==='en'?en:locale==='zh'?zh:ru;
+  let activityTitle=localized(session.questions[0]||{},'block_title',session.title);
+  if(/^seminar-1(?:-classroom)?$/.test(session.activitySlug))activityTitle=showReview?copy('Квиз · Ветви и уровни власти','Quiz · Branches and levels of authority','测验 · 权力分支与层级'):copy('Самостоятельная работа · Ветви и уровни власти','Independent work · Branches and levels of authority','自主作业 · 权力分支与层级');
+  else if(/^lecture-[1-7]$/.test(session.activitySlug))activityTitle=`${t('test')} · ${t('lecture')} ${session.activitySlug.split('-')[1]}`;
+  else if(session.activitySlug==='seminar-8')activityTitle=copy('Итоговый тест по дисциплине','Final course test','课程期末测验');
+  else if(session.activitySlug==='exam')activityTitle=copy('Экзаменационный тест','Examination test','考试测验');
   const summary=showReview?`<p class="muted">${Math.round(ratio*100)}% · ${results.filter(r=>r.fraction>=.999).length}/${results.length}</p>`:'';
   const review=showReview?`<div class="panel"><h2>${t('review')}</h2><div class="review-list">${results.map(renderReviewItem).join('')}</div></div>`:'';
-  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1>${summary}<div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div>${review}</div>`;
+  container.innerHTML=`<div class="quiz-shell"><div class="panel result-hero"><div class="result-score">${points}/${session.pointsMax}</div><h1>${t('quizResult')}</h1><p class="muted result-activity-title">${escapeHtml(activityTitle)}</p>${summary}<div class="page-actions" style="justify-content:center"><button class="btn btn-primary" id="quizRetry">${t('retry')}</button><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div></div>${review}</div>`;
   if(session.resultAttempt?.studentKey){
     const status=document.createElement('p');status.className='quiz-save-status muted';status.setAttribute('role','status');status.dataset.attemptId=session.id;status.dataset.studentKey=session.resultAttempt.studentKey;
+    status.dataset.activitySlug=session.activitySlug;status.dataset.mode=session.buildOptions?.mode||'default';
     container.querySelector('.result-hero h1').after(status);updateQuizSaveStatus(container);
   }
   container.querySelector('#quizRetry').onclick=()=>{const next=buildQuiz(window.RUDN_DATA.questions,session.activitySlug,backend.getProfile(),{...session.buildOptions,fresh:true});renderQuiz(container,next,options)};
   container.querySelector('#quizExit').onclick=onExit||(()=>location.hash='dashboard');
 }
 export function updateQuizSaveStatus(container=document){
-  container.querySelectorAll('.quiz-save-status').forEach(element=>{
-    const pending=readState(pendingStorageKey({studentKey:element.dataset.studentKey,id:element.dataset.attemptId}),null);
+  container.querySelectorAll('.quiz-save-status').forEach(async element=>{
+    const legacyPending=readState(pendingStorageKey({studentKey:element.dataset.studentKey,id:element.dataset.attemptId}),null);
+    const status=await durableStore.getSaveStatus({owner:`student:${element.dataset.studentKey}`,activitySlug:element.dataset.activitySlug,mode:element.dataset.mode,attemptId:element.dataset.attemptId});
+    if(!element.isConnected)return;
+    const pending=legacyPending||status.pending||status.state==='unsafe'||status.state==='conflict';
     const copy={ru:['Результат сохранён','Результат сохранён на устройстве. Отправим его при восстановлении соединения.'],en:['Result saved','Saved on this device. Your result will be sent when the connection returns.'],zh:['结果已保存','结果已保存在此设备上，恢复连接后将自动上传。']};element.textContent=(copy[getLocale()]||copy.ru)[pending?1:0];
   });
 }

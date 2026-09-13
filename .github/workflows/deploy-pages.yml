@@ -55,6 +55,13 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Test native Governor on desktop and mobile
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
+      - name: Verify durable local queue and attachment replay
+        shell: bash
+        env:
+          DURABLE_TEST_BROWSERS: chromium
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test_durable_store.mjs
       - name: Save native browser evidence
         if: always()
         uses: actions/upload-artifact@v4

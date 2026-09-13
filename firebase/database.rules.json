@@ -12,6 +12,26 @@
     },
     "rudn-platform": {
       "v1": {
+        "checkpoints": {
+          ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+          "$studentKey": {
+            ".read": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true)",
+            "$activitySlug": {
+              "$attemptId": {
+                ".write": "auth != null && (auth.token.email === 'omnistat@yandex.ru' || ((root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child($studentKey).child('ownerUids').child(auth.uid).val() === true) && newData.exists() && newData.child('ownerUid').val() === auth.uid))",
+                ".validate": "(!newData.exists() && auth.token.email === 'omnistat@yandex.ru') || (newData.hasChildren(['schemaVersion','studentKey','activitySlug','mode','attemptId','ownerUid','updatedAt','revision','current']) && newData.child('schemaVersion').val() === 1 && newData.child('studentKey').val() === $studentKey && newData.child('activitySlug').val() === $activitySlug && newData.child('attemptId').val() === $attemptId && newData.child('mode').isString() && newData.child('mode').val().length <= 100 && newData.child('revision').isNumber() && newData.child('revision').val() >= 1 && (!data.exists() || (newData.child('revision').val() >= data.child('revision').val() && newData.child('mode').val() === data.child('mode').val())) && newData.child('updatedAt').isNumber())",
+                "current": {
+                  ".validate": "newData.hasChildren(['id','owner','studentKey','activitySlug','attemptId','mode','state','revision','localRevision','lastIntentId','deviceId','ownerUid']) && newData.child('owner').val() === 'student:' + $studentKey && newData.child('studentKey').val() === $studentKey && newData.child('activitySlug').val() === $activitySlug && newData.child('attemptId').val() === $attemptId && newData.child('mode').val() === newData.parent().child('mode').val() && newData.child('localRevision').isNumber() && newData.child('localRevision').val() >= 1 && newData.child('lastIntentId').isString() && newData.child('lastIntentId').val().length <= 150 && newData.child('deviceId').isString() && newData.child('deviceId').val().length <= 100 && newData.child('ownerUid').isString()"
+                },
+                "conflicts": {
+                  "$intentId": {
+                    ".validate": "newData.hasChildren(['id','owner','studentKey','activitySlug','attemptId','mode','state','revision','localRevision','lastIntentId','deviceId','ownerUid']) && newData.child('owner').val() === 'student:' + $studentKey && newData.child('studentKey').val() === $studentKey && newData.child('activitySlug').val() === $activitySlug && newData.child('attemptId').val() === $attemptId && newData.child('mode').val() === newData.parent().parent().child('mode').val() && newData.child('lastIntentId').val() === $intentId && newData.child('localRevision').isNumber() && newData.child('localRevision').val() >= 1 && newData.child('deviceId').isString() && newData.child('deviceId').val().length <= 100 && newData.child('ownerUid').isString()"
+                  }
+                }
+              }
+            }
+          }
+        },
         "access": {
           ".read": "auth != null",
           "overrides": {

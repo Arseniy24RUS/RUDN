@@ -1,4 +1,45 @@
 import {restoreShift,academicPeriod} from './engine.js';
+import {durableStore} from '../../../assets/js/durable-store.js?v=1.3.3';
+
+/** Async adapter for the platform; the pure legacy helpers below remain compatible. */
+export function createReceptionStorage({owner,period=academicPeriod(),backend}){
+ const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:reception';
+ const revisions=new Map(),observed=new Map();
+ const scope=mode=>({owner:durableOwner,activitySlug:'seminar-5',mode:`${period}:${mode}`});
+ const raw=mode=>{try{return localStorage.getItem(storeKey(owner,mode,period));}catch{return null;}};
+ return {
+  async read(mode){
+   const legacy=readDraftResult(owner,mode,period);observed.set(mode,raw(mode));
+   const draft=await (backend?.loadDraft?.(scope(mode))||durableStore.loadDraft(scope(mode)));
+   const restored=draft?.state&&restoreShift(draft.state,owner,mode,period);
+   if(draft)revisions.set(draft.attemptId,draft.revision);
+   if(restored&&(!legacy.state||restored.id===legacy.state.id&&Number(restored.revision)>=Number(legacy.state.revision)))return {state:restored,status:'ready',saveStatus:draft.saveStatus};
+   if(legacy.state){
+    const saved=await (backend?.checkpoint?.({...scope(mode),attemptId:legacy.state.id,state:legacy.state,contentVersion:'reception-v16',phase:legacy.state.completed?'completed':'answering'},{queue:owner.startsWith('student:')})||durableStore.checkpoint({...scope(mode),attemptId:legacy.state.id,state:legacy.state,contentVersion:'reception-v16'},{queue:false}));
+    revisions.set(legacy.state.id,saved.revision);
+   }
+   return legacy;
+  },
+  async write(state,{replace=false}={}){
+   const currentRaw=raw(state.mode);
+   if(!replace&&observed.has(state.mode)&&currentRaw!==observed.get(state.mode))return {ok:false,conflict:true};
+   const next={...state,revision:Number(state.revision||0)+1,savedAt:new Date().toISOString()};
+   const input={...scope(state.mode),attemptId:state.id,state:next,contentVersion:'reception-v16',baseRevision:revisions.get(state.id),phase:state.completed?'completed':'answering'};
+   try{
+    const saved=await (backend?.checkpoint?.(input,{queue:owner.startsWith('student:')})||durableStore.checkpoint(input,{queue:false}));
+    revisions.set(state.id,saved.revision);
+    let legacySaved=false;
+    try{
+     if(raw(state.mode)!==currentRaw)return {ok:false,conflict:true};
+     localStorage.setItem(storeKey(owner,state.mode,period),JSON.stringify(next));observed.set(state.mode,JSON.stringify(next));legacySaved=true;
+    }catch{}
+    Object.assign(state,next);
+    return {ok:saved.saveStatus.durable||legacySaved,conflict:false,saveStatus:saved.saveStatus};
+   }catch(error){return {ok:false,conflict:error?.code==='storage/conflict',error:String(error)};}
+  },
+  flush:()=>durableStore.flush(),
+ };
+}
 export function storeKey(owner,mode,period=academicPeriod()){return `rudn.reception.v16:${encodeURIComponent(owner)}:${period}:${mode}`;}
 export function readDraftResult(owner,mode,period=academicPeriod(),storage){
  let text=null;

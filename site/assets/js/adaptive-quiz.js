@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.3.2';
-import {backend,groupOptions} from './backend.js?v=1.3.2';
+import {CONFIG} from './config.js?v=1.3.3';
+import {backend,groupOptions} from './backend.js?v=1.3.3';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -11,9 +11,9 @@ import {
   renderQuestionMedia,
   renderQuiz,
   reviewNoteText
-} from './quiz.js?v=1.3.2';
-import {getLocale} from './i18n.js?v=1.3.2';
-import {attemptOwner} from './attempt-session.js?v=1.3.2';
+} from './quiz.js?v=1.3.3';
+import {getLocale} from './i18n.js?v=1.3.3';
+import {attemptOwner,prepareQuizDraft,persistQuiz} from './attempt-session.js?v=1.3.3';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -24,21 +24,21 @@ const COPY={
     group:'Учебная группа',online:'Сейчас в квизе',participants:'участников',unique:'ответили хотя бы раз',
     waiting:'Ожидаем ответы студентов…',answered:'Ответили на этот вопрос',
     revealed:'Результаты открыты автоматически',accuracy:'Точность группы',commonError:'Частая ошибка',
-    cloudRequired:'Общая доска временно недоступна: нет соединения с Firebase.',
+    cloudRequired:'Ответы сохраняются на устройстве. Продолжайте работу.',
     question:'Вопрос',questionList:'Список вопросов',autoGroup:'определяется автоматически',waitingGroup:'Ждём студентов'
   },
   en:{
     group:'Study group',online:'Currently in the quiz',participants:'participants',unique:'answered at least once',
     waiting:'Waiting for student responses…',answered:'Responses to this question',
     revealed:'Results revealed automatically',accuracy:'Class accuracy',commonError:'Most common misconception',
-    cloudRequired:'The shared board is temporarily unavailable because Firebase cannot be reached.',
+    cloudRequired:'Answers are saved on this device. You can keep working.',
     question:'Question',questionList:'Question list',autoGroup:'detected automatically',waitingGroup:'Waiting for students'
   },
   zh:{
     group:'班级',online:'当前参加测验',participants:'名学生',unique:'至少回答过一次',
     waiting:'正在等待学生作答……',answered:'本题已作答',
     revealed:'结果已自动显示',accuracy:'班级正确率',commonError:'最常见误区',
-    cloudRequired:'因无法连接 Firebase，共享大屏暂不可用。',
+    cloudRequired:'答案已保存在此设备上，您可以继续作答。',
     question:'题目',questionList:'题目列表',autoGroup:'自动识别',waitingGroup:'等待学生加入'
   }
 };
@@ -112,7 +112,9 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   const profile=backend.getProfile();
   const group=groupOptions().includes(requestedGroup)?requestedGroup:profile?.group;
   if(participateLive&&!groupOptions().includes(group))throw new Error('Выберите учебную группу');
+  await prepareQuizDraft('seminar-1-classroom');
   let {roomKey,session}=roomQuestionSet(group,{persist:true});
+  roomKey=session.liveRoomKey||roomKey;session.liveRoomKey=roomKey;persistQuiz(session);
   session.recordAttempt=recordAttempt??!backend.isAdmin();
   let leave=()=>{};
   let unsubPresence=()=>{};
@@ -169,7 +171,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
     if(closed||connected||connecting||backend.mode!=='cloud'||session.owner!==attemptOwner())return;
     connecting=true;
     try{
-      if(participateLive){({leave}=await backend.joinAutomaticQuizRoom(group));joined=true}
+      if(participateLive&&roomKey===backend.automaticRoomKey(group)){({leave}=await backend.joinAutomaticQuizRoom(group));joined=true}
       if(closed){leave();return}
       unsubPresence=backend.subscribeAutomaticPresence(roomKey,(value)=>{presence=value;updateLiveState()});
       unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
@@ -179,7 +181,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
     finally{connecting=false;updateLiveState()}
   };
   stopStatus=backend.onStatus(()=>{updateLiveState();connect()});
-  await connect();
+  void connect();
   render();
   cleanup.refreshLocale=render;
   return cleanup;

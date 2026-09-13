@@ -1,6 +1,9 @@
-import {CONFIG} from './config.js?v=1.3.2';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.2';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.2';
+import {CONFIG} from './config.js?v=1.3.3';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.3';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.3';
+import {durableStore} from './durable-store.js';
+import {createFirebaseRestTransport} from './firebase-rest.js';
+import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -116,7 +119,7 @@ class Backend{
   }
   handleAuthUser(user){
     const previous=this.user;const oldRole=this.lastRole;this.user=user;this.authReady=true;this.error=null;
-    if(previous?.uid!==user?.uid)this.generation++;
+    if(previous?.uid!==user?.uid){this.generation++;this.restAvailableAt=0;this.checkpointSync?.stop()}
     if(this.isAdmin()){this.profile=null;localStorage.removeItem(PROFILE_KEY)}
     if(oldRole==='teacher'&&!this.isAdmin()){for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key?.startsWith('rudn.teacher-cache.'))localStorage.removeItem(key)}}
     this.lastRole=this.isAdmin()?'teacher':this.profile?'student':'guest';this.emitStatus();
@@ -124,7 +127,8 @@ class Backend{
     else {this.accessUnsubscribe?.();this.timeUnsubscribe?.()}
     if(previous?.uid!==user?.uid||oldRole!==this.lastRole)window.dispatchEvent(new Event('rudn:identitychange'));
   }
-  status(){return {mode:this.mode,error:this.error,user:this.user,profile:this.getProfile(),admin:this.isAdmin(),...this.session.value}}
+  status(){return {mode:this.mode,error:this.error,user:this.user,profile:this.getProfile(),admin:this.isAdmin(),databaseAvailable:this.databaseAvailable(),...this.session.value}}
+  databaseAvailable(){return Boolean(this.user&&navigator.onLine!==false&&(this.connected||this.restAvailableAt))}
   onStatus(listener){this.listeners.push(listener);listener(this.status());return()=>{this.listeners=this.listeners.filter(x=>x!==listener)}}
   emitStatus(){
     this.mode=this.connected&&this.user?'cloud':'local';
@@ -173,23 +177,122 @@ class Backend{
   }
   async adminSignOut(){return this.signOut()}
   async signOut(){
+    this.checkpointSync?.stop();
+    this.restAvailableAt=0;
+    clearTimeout(this.syncRetryTimer);
     this.generation++;this.profile=null;localStorage.removeItem(PROFILE_KEY);
     if(this.isAdmin()){for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key?.startsWith('rudn.teacher-cache.'))localStorage.removeItem(key)}await this.auth.signOut(this.authClient);this.user=null;}
     this.emitStatus();window.dispatchEvent(new Event('rudn:identitychange'));
   }
   async updateTeacherName(fullName){if(!this.isAdmin())throw serviceError('auth/admin-required');if(!this.connected)throw serviceError('network/offline');await this.auth.updateProfile(this.authClient.currentUser,{displayName:normalizeFullName(fullName)});this.user=this.authClient.currentUser;this.emitStatus()}
   getProfile(){return !this.authReady||this.isAdmin()?null:this.profile}
+  restTransport(){
+    if(!this.restClient){
+      this.restClient=createFirebaseRestTransport({
+        databaseURL:CONFIG.emulators?`http://${CONFIG.emulators.host}:${CONFIG.emulators.databasePort}`:CONFIG.firebase.databaseURL,
+        namespace:CONFIG.emulators?'demo-rudn-default-rtdb':null,
+        rootPath:CONFIG.rootPath,
+        getUser:()=>this.user,
+        getGeneration:()=>this.generation
+      });
+    }
+    return this.restClient;
+  }
+  async readCloud(path,{authoritative=false}={}){
+    const uid=this.user?.uid;
+    const generation=this.generation;
+    if(!uid)throw serviceError('auth/profile-required');
+    const active=()=>this.user?.uid===uid&&this.generation===generation;
+    if(!authoritative&&this.connected&&this.db&&this.database){
+      try{
+        const snapshot=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/${path}`)),4000);
+        if(!active())throw serviceError('auth/profile-changed');
+        if(this.connected)return snapshot.val();
+      }catch(error){if(!active()||error.code==='auth/profile-changed')throw serviceError('auth/profile-changed')}
+    }
+    try{
+      const response=await this.restTransport().get(path);
+      if(!active())throw serviceError('auth/profile-changed');
+      this.restAvailableAt=Date.now();
+      return response.value;
+    }catch(error){
+      if(active()&&String(error.code||'').startsWith('network/'))this.restAvailableAt=0;
+      throw error;
+    }
+  }
+  durableSync(){
+    if(!this.checkpointSync){
+      this.checkpointSync=createCheckpointSync({
+        store:durableStore,transport:this.restTransport(),
+        getIdentity:()=>this.profile&&!this.isAdmin()&&this.user?{
+          owner:`student:${this.profile.studentKey}`,studentKey:this.profile.studentKey,
+          uid:this.user.uid,generation:this.generation
+        }:null,
+        commitAttempt:async(attempt,{operation,attachments,signal,active})=>{
+          const result=await commitStudentAttempt(this.restTransport(),attempt,{
+            studentKey:operation.studentKey,uid:this.user.uid,activityMax:CONFIG.activityMax,
+            active,signal,attachments
+          });
+          if(!active())throw serviceError('auth/profile-changed');
+          try{
+            storeAttempt(result);
+            deleteState(pendingStorageKey(result));
+            if(result.recordGrade!==false&&result.activitySlug!=='seminar-1-classroom'){
+              this.updateLocalBestGrade(result.studentKey,result.activitySlug,result.points,result);
+            }
+          }catch{/* IndexedDB already retains the complete immutable attempt. */}
+          window.dispatchEvent(new Event('rudn:gradechange'));
+          return result;
+        },
+        uploadAttachment:(record,options)=>this.uploadDurableAttachment(record,options),
+        onStatus:stats=>{
+          this.session.update({saving:stats.remaining||stats.deferred||stats.quarantined?'pending':'saved'});
+          this.emitStatus();
+        }
+      });
+    }
+    return this.checkpointSync;
+  }
+  async checkpoint(input,options={}){
+    const result=await durableStore.checkpoint(input,{...options,queue:input.owner.startsWith('student:')&&options.queue!==false});
+    if(input.owner===`student:${this.profile?.studentKey}`)this.syncLocalToCloud().catch(()=>{});
+    return result;
+  }
+  async loadDraft(scope){
+    const local=await durableStore.loadDraft(scope);
+    if(local)return local;
+    if(scope.owner!==`student:${this.profile?.studentKey}`||!this.user||this.isAdmin()||navigator.onLine===false)return null;
+    try{
+      return await this.durableSync().restore(scope,{timeoutMs:3000});
+    }catch{return null}
+  }
+  async ensureCloudProfile(){
+    if(!this.profile||this.isAdmin()||!this.user)throw serviceError('auth/profile-required');
+    const profile={...this.profile};
+    const uid=this.user.uid;
+    const generation=this.generation;
+    const active=()=>this.profile?.studentKey===profile.studentKey&&this.user?.uid===uid&&this.generation===generation&&!this.isAdmin();
+    const result=await this.restTransport().transaction(`profiles/${profile.studentKey}`,remote=>{
+      if(!active())throw serviceError('auth/profile-changed');
+      const latest=remote&&String(remote.updatedAt||'')>String(profile.updatedAt||'')?{...profile,...remote}:profile;
+      const owned=this.ownedProfile(latest,remote||{});
+      if(remote&&remote.ownerUids?.[uid]&&remote.ownerUid===uid&&JSON.stringify(remote)===JSON.stringify(owned))return undefined;
+      return owned;
+    });
+    if(!active())throw serviceError('auth/profile-changed');
+    this.profile=result.value;
+    try{writeLocal(PROFILE_KEY,result.value);writeState(`profile-cache.v1:${profile.studentKey}`,result.value)}catch{}
+    return result.value;
+  }
   async ensureStudentCloud(){
     await this.init();if(!this.authClient)throw serviceError('network/unavailable');if(this.isAdmin())throw serviceError('auth/admin-required');
     if(!this.authClient.currentUser){if(!this.anonymousPending)this.anonymousPending=this.auth.signInAnonymously(this.authClient).finally(()=>this.anonymousPending=null);const result=await this.anonymousPending;this.handleAuthUser(result.user)}
     return this.user;
   }
   async lookupRoster(identifier){
-    if(!this.db||!this.database)throw serviceError('network/offline');
     const identity=normalizeIdentifier(identifier);
     const ticketHash=await sha256(identity.ticket);
-    const snapshot=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/roster/${ticketHash}`)));
-    const record=snapshot.val();
+    const record=await this.readCloud(`roster/${ticketHash}`,{authoritative:true});
     if(!record||typeof record.fullName!=='string'||typeof record.group!=='string')return null;
     return {...identity,fullName:normalizeFullName(record.fullName),group:normalizeGroup(record.group)};
   }
@@ -197,14 +300,11 @@ class Backend{
     const input=normalizeIdentifier(identifier);
     const cacheKey=`identity-alias.v1:${input.ticket}`;
     try{
-      if(!this.db||!this.database||!this.user)throw serviceError('network/offline');
-      const snapshot=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/studentAliases/${input.ticket}`)));
-      const alias=snapshot.val();
+      const alias=await this.readCloud(`studentAliases/${input.ticket}`,{authoritative:true});
       if(alias!==null&&(typeof alias!=='string'||!/^\d{5,20}$/.test(alias)))throw serviceError('auth/invalid-identifier');
       const identity=alias?normalizeIdentifier(alias):input;
       // A failed/offline lookup must never turn an alias into a new student.
-      if(!this.connected&&!readState(`profile-cache.v1:${identity.studentKey}`,null)&&this.profile?.studentKey!==identity.studentKey)throw serviceError('network/offline');
-      writeState(cacheKey,identity.studentKey);
+      try{writeState(cacheKey,identity.studentKey)}catch{}
       return identity;
     }catch(error){
       const cachedKey=readState(cacheKey,null);
@@ -217,10 +317,8 @@ class Backend{
     let identity=normalizeIdentifier(identifier);
     try{await bounded(this.ensureStudentCloud());
     identity=await this.resolveStudentIdentity(identifier);
-    if(this.db&&this.database){
-      const profileRef=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${identity.studentKey}`);
-      const snapshot=await bounded(this.db.get(profileRef));
-      const record=snapshot.val();
+    if(this.user){
+      const record=await this.readCloud(`profiles/${identity.studentKey}`,{authoritative:true});
       if(record&&typeof record.fullName==='string'&&typeof record.group==='string'){
         const found={
           ...identity,
@@ -229,10 +327,9 @@ class Backend{
           createdAt:record.createdAt||null,
           updatedAt:record.updatedAt||null,
           source:'profile'
-        };writeState(`profile-cache.v1:${identity.studentKey}`,found);return found;
+        };try{writeState(`profile-cache.v1:${identity.studentKey}`,found)}catch{};return found;
       }
     }
-    if(!this.connected)throw serviceError('network/offline');
     const roster=await this.lookupRoster(identity.ticket);
     return roster?{...roster,source:'roster'}:{...identity,fullName:'',group:'',source:'new'};
     }catch(error){const cached=readState(`profile-cache.v1:${identity.studentKey}`,null)||(this.profile?.studentKey===identity.studentKey?this.profile:null);if(cached)return {...cached,...identity,source:'profile',offline:true};throw error}
@@ -257,18 +354,17 @@ class Backend{
       displayName:fullName,fullName,
       schemaVersion:2,updatedAt:timestamp,createdAt:existing?.createdAt||timestamp
     };
-    if(this.mode==='cloud'){
-      const ref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${profile.studentKey}`);
+    if(this.user){
       try{
-        const snapshot=await bounded(this.db.get(ref));const remote=snapshot.val()||{};
-        if(generation!==this.generation||uid!==this.user?.uid||this.isAdmin())throw serviceError('auth/profile-changed');
-        profile={...profile,createdAt:existing?.createdAt||remote.createdAt||timestamp};
-        await bounded(this.db.set(ref,this.ownedProfile(profile,remote)));
+        const result=await this.restTransport().transaction(`profiles/${profile.studentKey}`,remote=>{
+          if(generation!==this.generation||uid!==this.user?.uid||this.isAdmin())throw serviceError('auth/profile-changed');
+          profile={...profile,createdAt:existing?.createdAt||remote?.createdAt||timestamp};
+          return this.ownedProfile(profile,remote||{});
+        });
+        profile=result.value;
       }
       catch(error){
-        const message=String(error?.message||error);
-        if(/permission|denied/i.test(message))throw new Error('Не удалось сохранить профиль. Примените обновлённые правила Firebase из патча.');
-        throw error;
+        if(!existing||!String(error.code||'').startsWith('network/'))throw error;
       }
     }else if(!existing&&!readState(`profile-cache.v1:${identity.studentKey}`,null))throw serviceError('network/offline');
     if(generation!==this.generation||uid!==this.user?.uid||this.isAdmin())throw serviceError('auth/profile-changed');
@@ -305,13 +401,37 @@ class Backend{
     if(this.isAdmin())return {...attempt,preview:true};
     const profile=this.getProfile();
     if(!profile)throw serviceError('auth/profile-required');
+    const generation=this.generation;
     if(attempt.studentKey&&attempt.studentKey!==profile.studentKey)throw serviceError('auth/profile-changed');
     const record={...attempt,id:attempt.id||uuid(),studentKey:profile.studentKey,ownerUid:this.user?.uid||null,createdAt:attempt.createdAt||now()};
-    // The durable outbox is written before acknowledging completion to the UI.
-    storeAttempt(record,{pending:true});
-    if(record.recordGrade!==false&&Number.isFinite(Number(record.points))&&record.activitySlug)this.updateLocalBestGrade(record.studentKey,record.activitySlug,record.points,record);
+    const owner=`student:${profile.studentKey}`;
+    const scope={owner,activitySlug:record.activitySlug,attemptId:record.id,mode:record.draftMode||record.mode||'default'};
+    const previous=await durableStore.loadDraft(scope);
+    const attachmentIds=new Set([...(previous?.attachmentIds||[]),...(record.attachmentIds||[])]);
+    const collect=value=>{
+      if(typeof value==='string'&&value.startsWith('pending-attachment:'))attachmentIds.add(value.slice('pending-attachment:'.length));
+      else if(typeof value==='string'&&value.startsWith('rudn-attachment:'))attachmentIds.add(value.slice('rudn-attachment:'.length));
+      else if(value&&typeof value==='object')Object.values(value).forEach(collect);
+    };
+    collect(record);
+    const saved=await durableStore.complete({
+      ...scope,state:{...(previous?.state||{}),phase:'completed',resultAttempt:record},attempt:record,
+      contentVersion:previous?.contentVersion||CONFIG.version,attachmentIds:[...attachmentIds]
+    });
+    if(this.generation!==generation||this.profile?.studentKey!==profile.studentKey||this.isAdmin()){
+      throw serviceError('auth/profile-changed');
+    }
+    // A legacy mirror is best effort only after the durable transaction commits.
+    // A full localStorage must not reject a safely persisted IndexedDB attempt.
+    try{
+      storeAttempt(record,{pending:true});
+      if(record.recordGrade!==false&&Number.isFinite(Number(record.points))&&record.activitySlug){
+        this.updateLocalBestGrade(record.studentKey,record.activitySlug,record.points,record);
+      }
+    }catch{}
     this.session.update({saving:'pending'});this.syncLocalToCloud().catch(()=>{});
-    window.dispatchEvent(new CustomEvent('rudn:gradechange',{detail:{activitySlug:record.activitySlug}}));return record;
+    window.dispatchEvent(new CustomEvent('rudn:gradechange',{detail:{activitySlug:record.activitySlug}}));
+    return {...record,saveStatus:saved?.saveStatus};
   }
   updateLocalBestGrade(studentKey,activitySlug,points,source={}){
     const max=CONFIG.activityMax[activitySlug]??5;const bounded=Math.max(0,Math.min(max,Number(points)||0));
@@ -328,29 +448,57 @@ class Backend{
   }
   async setManualGrade(studentKey,activitySlug,points,note=''){
     if(!this.isAdmin())throw new Error('Требуются права преподавателя');
-    if(!this.connected)throw serviceError('network/offline');
+    if(!this.databaseAvailable())throw serviceError('network/offline');
     if(activitySlug==='seminar-1-classroom')throw serviceError('database/read-only');
     const max=CONFIG.activityMax[activitySlug]??5;const boundedScore=Math.max(0,Math.min(max,Number(points)||0));
-    const ref=this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}/${activitySlug}`);
     const candidate={points:boundedScore,max,note,manual:true,updatedAt:now(),teacherUid:this.user.uid};
-    await bounded(this.db.runTransaction(ref,current=>!current||boundedScore>Number(current.points||0)?candidate:undefined,{applyLocally:false}));
+    await this.restTransport().transaction(`grades/${studentKey}/${activitySlug}`,current=>
+      !current||boundedScore>Number(current.points||0)?candidate:undefined);
+    this.restAvailableAt=Date.now();
   }
   async getAttempts(studentKey=this.profile?.studentKey){
     if(!studentKey)return [];
-    let items=this.localAttempts().filter(x=>x.studentKey===studentKey);
-    if(this.mode==='cloud'){try{const snap=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${studentKey}`)));const remote=Object.values(snap.val()||{});for(const item of remote)storeAttempt(item,{pending:Boolean(readState(pendingStorageKey(item),null))});const map=new Map([...items,...remote].map(x=>[x.id,x]));items=[...map.values()]}catch(e){console.warn(e.code||'attempts-unavailable')}}
+    const durable=await durableStore.listAttempts({owner:`student:${studentKey}`});
+    let items=[...new Map([...this.localAttempts().filter(x=>x.studentKey===studentKey),...durable].map(item=>[item.id,item])).values()];
+    if(this.user){try{
+      const remote=Object.values(await this.readCloud(`attempts/${studentKey}`)||{});
+      for(const item of remote){try{storeAttempt(item,{pending:Boolean(readState(pendingStorageKey(item),null))})}catch{}}
+      items=[...new Map([...items,...remote].map(item=>[item.id,item])).values()];
+    }catch{/* Existing device results remain usable while Firebase is unavailable. */}}
     items=await this.reconcileQuizAttempts(items);
     return items.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
   }
   async getGrades(studentKey=this.profile?.studentKey){
     let grades=this.localGrades(studentKey);
-    if(this.mode==='cloud'&&studentKey){try{const snap=await bounded(this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/grades/${studentKey}`)));for(const [slug,grade] of Object.entries(snap.val()||{}))if(!grades[slug]||Number(grade.points)>=Number(grades[slug].points))grades[slug]=grade;this.writeLocalGrades(studentKey,grades)}catch(e){console.warn(e.code||'grades-unavailable')}}
+    if(studentKey){
+      const attempts=await durableStore.listAttempts({owner:`student:${studentKey}`});
+      for(const attempt of attempts){
+        if(attempt.recordGrade===false||attempt.activitySlug==='seminar-1-classroom'||!Number.isFinite(Number(attempt.points)))continue;
+        const max=CONFIG.activityMax[attempt.activitySlug]??5;
+        const points=Math.max(0,Math.min(max,Number(attempt.points)));
+        if(!grades[attempt.activitySlug]||points>Number(grades[attempt.activitySlug].points)){
+          grades[attempt.activitySlug]={points,max,sourceAttemptId:attempt.id,updatedAt:attempt.createdAt};
+        }
+      }
+    }
+    if(this.user&&studentKey){try{
+      const remote=await this.readCloud(`grades/${studentKey}`)||{};
+      for(const [slug,grade] of Object.entries(remote))if(!grades[slug]||Number(grade.points)>=Number(grades[slug].points))grades[slug]=grade;
+      try{this.writeLocalGrades(studentKey,grades)}catch{}
+    }catch{/* Do not clear grades because a request failed. */}}
     return grades;
   }
-  async uploadFile(activitySlug,file){
+  async uploadFile(activitySlug,file,{attemptId}={}){
+    if(attemptId){
+      if(!this.profile||this.isAdmin())throw serviceError('auth/profile-required');
+      const attachment=await durableStore.putAttachment({
+        owner:`student:${this.profile.studentKey}`,attemptId,blob:file,name:file.name,type:file.type
+      });
+      return `pending-attachment:${attachment.id}`;
+    }
     if(this.mode!=='cloud'||!this.profile)throw serviceError('network/offline');
     const profile=this.profile;const uid=this.user.uid;const generation=this.generation;
-    if(!this.storage){this.storageMod=await import('../vendor/firebase/firebase-storage.js');this.storage=this.storageMod.getStorage(this.firebase)}
+    await this.ensureStorage();
     if(generation!==this.generation)throw serviceError('auth/profile-changed');
     const safe=String(file.name||'file').replace(/[^a-zа-яё0-9._-]/gi,'_');
     const path=`${CONFIG.rootPath}/submissions/${uid}/${profile.studentKey}/${activitySlug}/${Date.now()}-${safe}`;
@@ -358,45 +506,68 @@ class Backend{
     const metadata={contentType:file.type||'application/octet-stream',customMetadata:{ownerUid:this.user.uid,studentKey:this.profile.studentKey,activitySlug}};
     const snapshot=await this.storageMod.uploadBytes(storageRef,file,metadata);if(generation!==this.generation)throw serviceError('auth/profile-changed');return this.storageMod.getDownloadURL(snapshot.ref);
   }
+  async queueAttachment(activitySlug,file,{attemptId}={}){
+    if(!this.profile||this.isAdmin())throw serviceError('auth/profile-required');
+    if(!attemptId)throw serviceError('storage/attempt-required');
+    const attachment=await durableStore.putAttachment({
+      owner:`student:${this.profile.studentKey}`,attemptId,blob:file,name:file.name,type:file.type
+    });
+    return {id:attachment.id,ref:`rudn-attachment:${attachment.id}`,name:attachment.name,size:attachment.size};
+  }
+  async ensureStorage(){
+    if(CONFIG.emulators&&!CONFIG.emulators.storagePort)throw serviceError('storage/emulator-unavailable');
+    if(!this.storage){
+      this.storageMod=await bounded(import('../vendor/firebase/firebase-storage.js'));
+      this.storage=this.storageMod.getStorage(this.firebase);
+      if(CONFIG.emulators)this.storageMod.connectStorageEmulator(this.storage,CONFIG.emulators.host,CONFIG.emulators.storagePort);
+    }
+    return this.storage;
+  }
+  async uploadDurableAttachment(record,{operation,signal,active}){
+    if(!active())throw serviceError('auth/profile-changed');
+    if(record.remoteUrl)return {url:record.remoteUrl,name:record.name,type:record.type,size:record.size};
+    if(record.size>=12*1024*1024)throw serviceError('storage/file-too-large');
+    await this.ensureStorage();
+    if(!active())throw serviceError('auth/profile-changed');
+    const hash=await sha256(record.id);
+    const safe=String(record.name||'file').replace(/[^a-zа-яё0-9._-]/gi,'_').slice(-120);
+    const path=`${CONFIG.rootPath}/submissions/${this.user.uid}/${operation.studentKey}/${operation.activitySlug}/${hash}-${safe}`;
+    const storageRef=this.storageMod.ref(this.storage,path);
+    const metadata={contentType:record.type||'application/octet-stream',customMetadata:{
+      ownerUid:this.user.uid,studentKey:operation.studentKey,activitySlug:operation.activitySlug
+    }};
+    if(signal?.aborted)throw serviceError('network/aborted');
+    const uploaded=await bounded(this.storageMod.uploadBytes(storageRef,record.blob,metadata),30000);
+    if(!active())throw serviceError('auth/profile-changed');
+    const url=await bounded(this.storageMod.getDownloadURL(uploaded.ref));
+    if(!active())throw serviceError('auth/profile-changed');
+    return {url,path,name:record.name,type:record.type,size:record.size};
+  }
   async syncLocalToCloud(){
     if(this.flushing)return this.flushing;
-    if(this.mode!=='cloud'||!this.profile||this.isAdmin())return;
+    if(!this.profile||this.isAdmin()||!this.user)return;
     const profile={...this.profile};const uid=this.user.uid;const generation=this.generation;
     const active=()=>generation===this.generation&&this.user?.uid===uid&&this.profile?.studentKey===profile.studentKey&&!this.isAdmin();
     this.flushing=(async()=>{try{
-      const pref=this.db.ref(this.database,`${CONFIG.rootPath}/profiles/${profile.studentKey}`);
-      const remote=(await bounded(this.db.get(pref))).val();if(!active())return;
-      const latest=remote&&String(remote.updatedAt||'')>String(profile.updatedAt||'')?{...profile,...remote}:profile;
-      if(!remote||!remote.ownerUids?.[uid]||String(profile.updatedAt||'')>String(remote.updatedAt||''))await bounded(this.db.set(pref,this.ownedProfile(latest,remote||{})));
+      const owner=`student:${profile.studentKey}`;
+      await durableStore.importLegacy({owner});
       if(!active())return;
-      this.profile=latest;writeLocal(PROFILE_KEY,latest);writeState(`profile-cache.v1:${profile.studentKey}`,latest);
-      for(const attempt of this.localAttempts().filter(a=>a.studentKey===profile.studentKey&&(readState(pendingStorageKey(a),null)||!readState(`attempt.v2:${a.studentKey}:${a.id}`,null)))){
-        if(!active()||!this.connected)return;
-        const ref=this.db.ref(this.database,`${CONFIG.rootPath}/attempts/${profile.studentKey}/${attempt.id}`);
-        const snap=await bounded(this.db.get(ref));if(!active())return;
-        const record=snap.exists()?snap.val():{...attempt,ownerUid:uid};
-        if(!snap.exists())await bounded(this.db.set(ref,record));
-        if(!active())return;
-        if(record.recordGrade!==false&&Number.isFinite(Number(record.points))&&record.activitySlug){
-          const slug=record.activitySlug;const max=CONFIG.activityMax[slug]??5;const points=Math.max(0,Math.min(max,Number(record.points)));
-          const gradeRef=this.db.ref(this.database,`${CONFIG.rootPath}/grades/${profile.studentKey}/${slug}`);
-          const prior=(await bounded(this.db.get(gradeRef))).val();if(!active())return;
-          if(!prior||points>Number(prior.points)){
-            // Rules verify the immutable source attempt in this student's branch,
-            // including after a new anonymous transport has joined the profile.
-            const candidate={points,max,updatedAt:now(),sourceAttemptId:record.id,ownerUid:uid};
-            await bounded(this.db.runTransaction(gradeRef,current=>!current||points>Number(current.points)?candidate:undefined,{applyLocally:false}));
-          }
-          this.updateLocalBestGrade(profile.studentKey,slug,points,record);
-        }
-        storeAttempt(record);deleteState(pendingStorageKey(attempt));
+      await this.ensureCloudProfile();
+      if(!active())return;
+      const sync=this.durableSync();
+      sync.start();
+      await sync.flush();
+      if(active())this.error=null;
+    }catch(error){
+      if(active()){
+        this.session.update({saving:'pending'});
+        clearTimeout(this.syncRetryTimer);
+        this.syncRetryTimer=setTimeout(()=>this.syncLocalToCloud().catch(()=>{}),15000);
       }
-      if(active()){this.error=null;this.session.update({saving:'saved'});window.dispatchEvent(new Event('rudn:gradechange'))}
-    }catch(error){if(active()){this.session.update({saving:'pending'});this.error=error;this.emitStatus()}}
+    }
     })().finally(()=>{
-      this.flushing=null;clearTimeout(this.syncRetryTimer);
+      this.flushing=null;
       if(!active()&&this.profile&&!this.isAdmin())this.syncLocalToCloud().catch(()=>{});
-      else if(active()&&listState('pending.v1:').some(a=>a.studentKey===profile.studentKey))this.syncRetryTimer=setTimeout(()=>this.syncLocalToCloud().catch(()=>{}),this.error?15000:50);
     });
     return this.flushing;
   }
@@ -419,29 +590,17 @@ class Backend{
       pending.promise=(async()=>{
         // .info/connected is an observation of the persistent connection, not
         // permission to attempt a read. It may still be false during startup.
-        if(!this.db||!this.database)await bounded(this.init());
         if(!active())throw serviceError('auth/profile-changed');
-        if(!this.db||!this.database)throw serviceError('network/unavailable');
 
-        const values=await bounded(Promise.all(
-          ['profiles','attempts','grades'].map(path=>
-            this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/${path}`))
-          )
-        ));
+        const values=await Promise.all(['profiles','attempts','grades'].map(path=>this.readCloud(path)));
         if(!active())throw serviceError('auth/profile-changed');
         const snapshot={
-          profiles:values[0].val()||{},
-          attempts:values[1].val()||{},
-          grades:values[2].val()||{},
+          profiles:values[0]||{},
+          attempts:values[1]||{},
+          grades:values[2]||{},
           cachedAt:now(),
-          stale:!this.connected
+          stale:false
         };
-        // Firebase may satisfy get() from its own cache while disconnected.
-        // Never label that data as freshly synchronized or enable editing.
-        if(snapshot.stale){
-          const cached=this.adminCachedSnapshot();
-          if(cached)snapshot.cachedAt=cached.cachedAt;
-        }
         try{writeState(cacheKey,snapshot)}catch{}
         return snapshot;
       })().finally(()=>{
@@ -519,13 +678,27 @@ class Backend{
     const ref=this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses`);return this.db.onValue(ref,snap=>callback(snap.val()||{}));
   }
   async submitAutomaticQuizResponse(roomKey,questionId,answer,questionIndex,group=this.profile?.group){
-    if(this.mode!=='cloud'||!this.user)return false;
+    if(!this.user)return false;
     const participantGroup=normalizeGroup(group);
     const participantUid=this.user.uid;
-    await this.db.set(this.db.ref(this.database,`${CONFIG.rootPath}/live/autoRooms/${roomKey}/responses/${questionId}/${participantUid}`),{
+    this.lastLiveSubmittedAt=Math.max(Date.now(),Number(this.lastLiveSubmittedAt||0)+1);
+    const record={
       participantUid,questionId,questionIndex:Number(questionIndex)||0,answer,group:participantGroup,
-      submittedAt:this.db.serverTimestamp(),clientSubmittedAt:Date.now()
+      clientSubmittedAt:this.lastLiveSubmittedAt
+    };
+    if(this.isAdmin()){
+      await this.restTransport().put(`live/autoRooms/${roomKey}/responses/${questionId}/${participantUid}`,{
+        ...record,submittedAt:{'.sv':'timestamp'}
+      });
+      return true;
+    }
+    if(!this.profile)return false;
+    await durableStore.checkpoint({
+      owner:`student:${this.profile.studentKey}`,activitySlug:'seminar-1-classroom-live',mode:'live-answer',
+      attemptId:`live-${roomKey}-${questionId}-${participantUid}`,contentVersion:'1',
+      state:{...record,roomKey}
     });
+    this.syncLocalToCloud().catch(()=>{});
     return true;
   }
 

@@ -1,4 +1,6 @@
 import { createCareerRuntime } from './runtime.bundle.mjs';
+import {backend} from '../../assets/js/backend.js?v=1.3.3';
+import {durableStore} from '../../assets/js/durable-store.js?v=1.3.3';
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const VALID_ROUTES = new Set(['home','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
@@ -16,15 +18,27 @@ export async function mountCareer(container, {owner = 'guest', lang = 'ru', onRe
   const hostDocument = container.ownerDocument;
   const controller = new AbortController();
   const abortFromHost = () => api.destroy();
+  const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:career';
+  const progressScope={owner:durableOwner,activitySlug:'career-workspace',mode:'diagnostic',attemptId:'workspace-v1'};
+  const values=new Map(),observedLegacy=new Map(),pendingSaves=new Set();
+  try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
+  const saveCopy={ru:{pending:'Сохранено на устройстве · ожидает отправки',saved:'Сохранено',unsafe:'Не удалось сохранить. Скачайте ответы перед закрытием.'},en:{pending:'Saved on this device · awaiting upload',saved:'Saved',unsafe:'Could not save. Download your answers before closing.'},'zh-Hans':{pending:'已保存在此设备 · 等待上传',saved:'已保存',unsafe:'无法保存。关闭前请下载答案。'}};
+  const track=promise=>{pendingSaves.add(promise);promise.finally(()=>pendingSaves.delete(promise)).catch(()=>{});return promise;};
+  const persistWorkspace=()=>track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:{values:Object.fromEntries(values),route}},{queue:durableOwner.startsWith('student:')}).then(saved=>{
+    const label=shadow.querySelector('#session-status');if(label&&!disposed)label.textContent=saveCopy[language][!saved.saveStatus.durable?'unsafe':saved.saveStatus.state==='saved'?'saved':'pending'];return saved;
+  }).catch(error=>{hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}));return null;}));
 
   const api = {
     destroy() {
       if (disposed) return;
+      const flushed=api.flush();
       disposed = true; generation += 1; controller.abort(); current?.cleanup(); current = null;
       signal?.removeEventListener('abort',abortFromHost);
       shadow.replaceChildren(); activeMounts.delete(container);
       container.removeAttribute('data-career-ready');
+      return flushed;
     },
+    async flush(){await Promise.allSettled([...pendingSaves]);await durableStore.flush();},
     async setLocale(value) {
       language = locale(value);
       if (current && !disposed) await current.runtime.setLocale(language, {persist:false});
@@ -38,6 +52,10 @@ export async function mountCareer(container, {owner = 'guest', lang = 'ru', onRe
   activeMounts.set(container, api);
   signal?.addEventListener('abort',abortFromHost,{once:true});
   if(signal?.aborted){api.destroy();throw new DOMException('Career mount aborted.','AbortError');}
+  const restored=await backend.loadDraft(progressScope);
+  const legacyTime=Math.max(0,...[...values.values()].map(value=>{try{return Date.parse(JSON.parse(value)?.updatedAt)||0;}catch{return 0;}}));
+  if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
+  else if(values.size)await persistWorkspace();
   let markup, css;
   try {
     const [surfaceResponse, styleResponse] = await Promise.all([
@@ -104,9 +122,15 @@ export async function mountCareer(container, {owner = 'guest', lang = 'ru', onRe
       static revokeObjectURL(url) {objectURLs.delete(url);URL.revokeObjectURL(url);}
     }
     const scopedStorage = {
-      getItem(key) {if(destroyed)throw new Error('Career instance closed.');if(!key.startsWith(ownerKey))return null;return hostWindow.localStorage.getItem(key);},
-      setItem(key,value) {if(destroyed||!key.startsWith(ownerKey))throw new Error('Career storage scope rejected.');hostWindow.localStorage.setItem(key,value);},
-      removeItem(key) {if(destroyed||!key.startsWith(ownerKey))throw new Error('Career storage scope rejected.');hostWindow.localStorage.removeItem(key);}
+      getItem(key) {if(destroyed)throw new Error('Career instance closed.');if(!key.startsWith(ownerKey))return null;return values.get(key.slice(ownerKey.length))??null;},
+      setItem(key,value) {
+        if(destroyed||!key.startsWith(ownerKey))throw new Error('Career storage scope rejected.');
+        let actual;try{actual=hostWindow.localStorage.getItem(key);}catch{actual=observedLegacy.get(key)??null;}
+        if(actual!==(observedLegacy.get(key)??null))throw Object.assign(new Error('storage-conflict'),{code:'storage/conflict'});
+        values.set(key.slice(ownerKey.length),String(value));persistWorkspace();
+        try{hostWindow.localStorage.setItem(key,String(value));observedLegacy.set(key,String(value));}catch{/* IndexedDB checkpoint owns durability; its warning remains visible if both stores fail. */}
+      },
+      removeItem(key) {if(destroyed||!key.startsWith(ownerKey))throw new Error('Career storage scope rejected.');values.delete(key.slice(ownerKey.length));persistWorkspace();try{hostWindow.localStorage.removeItem(key);observedLegacy.set(key,null);}catch{}}
     };
     const context = {
       document:scopedDocument,
@@ -135,12 +159,20 @@ export async function mountCareer(container, {owner = 'guest', lang = 'ru', onRe
       routeChanged(value, {replace=false} = {}) {
         if(destroyed || !VALID_ROUTES.has(value))return;
         route=value;
+        persistWorkspace();
         if (typeof onRouteChange === 'function') onRouteChange(value,{replace});
       },
       resultCalculated(record) {
         if(destroyed || resultsSent.has(record.recordId))return;
         resultsSent.add(record.recordId);
-        if(typeof onResult === 'function') Promise.resolve().then(() => !destroyed && onResult(structuredClone(record))).catch(error => console.error('Career result callback failed:',error));
+        const captured=structuredClone(record);
+        if(durableOwner.startsWith('student:')){
+          const attempt={id:captured.recordId,studentKey:durableOwner.slice(8),activitySlug:'career-diagnostic',draftMode:'diagnostic',type:'career-diagnostic',recordGrade:false,createdAt:captured.createdAt,title:'Career diagnostic',career:captured};
+          track(durableStore.complete({owner:durableOwner,activitySlug:attempt.activitySlug,mode:'diagnostic',attemptId:attempt.id,state:{record:captured},attempt},{queue:true}).then(()=>{
+            if(!backend.isAdmin()&&backend.getProfile()?.studentKey===attempt.studentKey)return backend.saveAttempt(attempt);
+          }).catch(error=>hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}))));
+        }
+        if(typeof onResult === 'function') track(Promise.resolve().then(() => onResult(captured)).catch(error => console.error('Career result callback failed:',error)));
       }
     };
     const cleanup = () => {

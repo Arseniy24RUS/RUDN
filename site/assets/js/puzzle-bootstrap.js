@@ -1,7 +1,8 @@
-import {backend,groupOptions} from './backend.js?v=1.3.2';
-import {getLocale} from './i18n.js?v=1.3.2';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.2';
-import {initNotifications} from './notifications.js?v=1.3.2';
+import {backend,groupOptions} from './backend.js?v=1.3.3';
+import {getLocale} from './i18n.js?v=1.3.3';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.3';
+import {initNotifications} from './notifications.js?v=1.3.3';
+import {durableStore} from './durable-store.js?v=1.3.3';
 
 export async function mountPuzzlePage(options={}){
 const root=document.getElementById('geoPuzzleApp');
@@ -75,13 +76,15 @@ window.fetch=async(input,options={})=>{
     if(pathname.endsWith('/start')){const body=JSON.parse(options.body||'{}');const id=crypto.randomUUID();const seed=Math.floor(Math.random()*0xffffffff);activeAttempts.set(id,{...body,id,seed,startedAt:Date.now()});return jsonResponse({attempt_id:id,seed})}
     if(pathname.endsWith('/complete')){
       const body=JSON.parse(options.body||'{}');const started=activeAttempts.get(body.attempt_id)||{};
-      const signedIn=Boolean(backend.getProfile());const russian89=body.mode==='russia-subjects'&&Number(body.placed)===89&&Number(body.total)===89;
+      const signedIn=progressOwner.startsWith('student:');const sameStudent=signedIn&&!backend.isAdmin()&&`student:${backend.getProfile()?.studentKey}`===progressOwner;const russian89=body.mode==='russia-subjects'&&Number(body.placed)===89&&Number(body.total)===89;
       const gradeEligible=context==='seminar'&&russian89;const points=gradeEligible?({easy:3,medium:4,hard:5}[body.difficulty]||0):0;const practicePoints=({easy:3,medium:4,hard:5}[body.difficulty]||0);const title=started.dataset_title||body.dataset_id||body.mode;
       if(signedIn){
-        const record={id:body.attempt_id,type:'map-puzzle',activitySlug:gradeEligible?'seminar-2':'maps-freeplay',title,practicePoints,gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
+        const record={id:body.attempt_id,studentKey:progressOwner.slice(8),createdAt:new Date(started.startedAt||Date.now()).toISOString(),type:'map-puzzle',activitySlug:gradeEligible?'seminar-2':'maps-freeplay',draftMode:context,title,practicePoints,gradeEligible,recordGrade:gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
         if(gradeEligible)Object.assign(record,{points,maxPoints:5});
-        await backend.saveAttempt(record);
-        if(russian89){try{await backend.savePuzzleLeaderboardResult({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total})}catch(error){console.warn('Leaderboard write failed',error)}}
+        const saved=await durableStore.loadDraft({...progressScope,attemptId:record.id});
+        await durableStore.complete({...progressScope,attemptId:record.id,state:saved?.state||body,attempt:record});
+        if(sameStudent)await backend.saveAttempt(record);
+        if(russian89&&sameStudent){try{await backend.savePuzzleLeaderboardResult({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total})}catch(error){console.warn('Leaderboard write failed',error)}}
       }
       const best=gradeEligible?(await backend.getGrades())['seminar-2']?.points||0:0;void renderLeaderboard();
       const message=!signedIn?(locale==='zh'?'地图已完成。登录后可保存成绩。':locale==='en'?'Map completed. Sign in to save results.':'Карта собрана. Войдите, чтобы сохранять результаты.'):gradeEligible?(locale==='zh'?'成绩已写入电子成绩册。':locale==='en'?'The result was saved to the electronic gradebook.':'Результат сохранён в электронном журнале.'):(locale==='zh'?'自由游戏结果已保存。':locale==='en'?'Free-play result saved.':'Результат свободной игры сохранён.');
@@ -147,6 +150,14 @@ if(context==='seminar'){
   document.getElementById('puzzleMode').value='russia-subjects';
 }
 await backend.init();
+const progressOwner=backend.isAdmin()?`teacher:${backend.user.uid}`:backend.getProfile()?.studentKey?`student:${backend.getProfile().studentKey}`:'guest:puzzle';
+const progressScope={owner:progressOwner,activitySlug:context==='seminar'?'seminar-2':'maps-freeplay',mode:context};
+const savedPuzzle=await backend.loadDraft(progressScope);
+root.puzzleProgress={
+ restore:savedPuzzle?.state||null,
+ save:snapshot=>backend.checkpoint({...progressScope,attemptId:snapshot.attemptId,contentVersion:'puzzle-v2',phase:snapshot.finished?'completed':'answering',state:snapshot},{queue:progressOwner.startsWith('student:')}),
+ flush:()=>durableStore.flush(),
+};
 const profile=backend.getProfile();
 const accessNow=backend.globalNow(),accessContext=academicContext(accessNow),accessGate=topicGate(2,backend.getAccessOverrides(accessContext.startYear),accessNow);
 if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
@@ -162,10 +173,13 @@ if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
 }
 await loadLegacy();
 const engineCleanup=native?window.mountRudnPuzzle?.():null;
-return ()=>{
+const cleanup=()=>{
   engineCleanup?.();
   if(window.fetch!==nativeFetch)window.fetch=nativeFetch;
+  return durableStore.flush();
 };
+cleanup.flush=async()=>{await root.puzzleProgress?.capture?.();await durableStore.flush();};
+return cleanup;
 }
 
 const standaloneRoot=document.getElementById('geoPuzzleApp');

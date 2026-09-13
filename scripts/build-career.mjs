@@ -13,7 +13,9 @@ const cssFiles=['styles.css','workspace.css','classroom.css','decision-lab.css',
 let css=(await Promise.all(cssFiles.map(file=>fs.readFile(path.join(root,'assets',file),'utf8')))).join('\n');
 css=css.replace(/url\((['"]?)\.\/fonts\//g,'url($1assets/fonts/');
 css=css.replace(/html(:lang\([^)]*\)|\[lang=[^\]]*\])\s+body/g,'.career-surface$1');
-css=css.replace(/:root\b/g,'.career-surface').replace(/\bhtml\b/g,'.career-surface').replace(/\bbody\b/g,'.career-surface');
+// Only element selectors are replaced. Word boundaries also match `.dialog-body`
+// and would silently break dossier layout inside the Shadow DOM.
+css=css.replace(/:root\b/g,'.career-surface').replace(/(?<![\w.#-])(?:html|body)(?![\w-])/g,'.career-surface');
 // The containing course column, rather than viewport width, controls the component layout.
 css=css.replace(/@media\s*(\((?:max|min)-width\s*:[^)]*\))/g,'@container career $1');
 css+='\n'+await fs.readFile(path.join(root,'embedded.css'),'utf8');

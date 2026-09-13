@@ -5,6 +5,8 @@
   const initialisePuzzle = () => {
   const root = document.getElementById("geoPuzzleApp");
   if (!root) return;
+  // Keep this mount's API bridge alive until its last local completion has drained.
+  const scopedFetch=window.fetch.bind(window);
 
   const locale = window.RUDNI18N?.locale || document.documentElement.dataset.locale || "en";
   const htmlLocale = locale === "zh" ? "zh-Hans" : locale;
@@ -194,7 +196,28 @@
     drawFrame: 0,
     staticDirty: true,
     resizeTimer: 0,
+    lastCheckpointAt: 0,
   };
+
+  function checkpoint() {
+    if (!state.ready || !state.attemptId || !root.puzzleProgress?.save) return Promise.resolve();
+    const worldCentre=screenToWorld(state.cssWidth / 2,state.mapBottom / 2);
+    const centre = state.projection?.invert([worldCentre.x,worldCentre.y]);
+    const snapshot = {
+      attemptId:state.attemptId,seed:state.seed,mode:state.mode,selection:state.selection,difficulty:state.difficulty,
+      wrapper:{dataset:state.wrapper?.dataset},featureIds:state.features.map(feature=>feature.properties._puzzleId),
+      order:[...state.order],cursor:state.cursor,current:state.current,placed:state.placed,errors:state.errors,hints:state.hints,
+      finished:state.finished,started:state.started,elapsedMs:Math.round(elapsedMs()),timerStarted:Boolean(state.startedAt||state.elapsedBeforeStart),
+      view:{k:state.view.k,centre},pieces:state.pieces.map(piece=>{
+        const anchor=state.anchors[piece.index];
+        const point=!piece.locked&&!piece.inTray&&anchor?state.projection?.invert([anchor[0]+piece.dx,anchor[1]+piece.dy]):null;
+        return {index:piece.index,locked:piece.locked,inTray:piece.inTray,point,dx:piece.dx/state.cssWidth,dy:piece.dy/state.cssHeight};
+      }),
+    };
+    state.lastCheckpointAt=performance.now();
+    return root.puzzleProgress.save(snapshot).catch(error=>window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{errorCode:error.code||'storage/unavailable'}})));
+  }
+  if(root.puzzleProgress)root.puzzleProgress.capture=checkpoint;
 
   function toast(message, type = "info", ms = 3000) {
     if(document.getElementById('toastStack')){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message,type}}));return}
@@ -266,7 +289,7 @@
   }
 
   async function fetchJson(url, options = {}) {
-    const response = await fetch(url, {
+    const response = await scopedFetch(url, {
       credentials: "same-origin",
       ...options,
       headers: {
@@ -563,24 +586,29 @@
     });
   }
 
-  async function startGame({ reuseDataset = false } = {}) {
+  async function startGame({ reuseDataset = false, resume = null } = {}) {
     if (state.loading) return;
     if (state.started && !state.finished && state.placed > 0 && !window.confirm(tr("Текущая попытка будет прервана. Начать заново?"))) return;
 
-    const mode = seminarContext ? "russia-subjects" : els.mode.value;
-    const difficulty = els.difficulty.value;
+    const mode = seminarContext ? "russia-subjects" : resume?.mode || els.mode.value;
+    const difficulty = resume?.difficulty || els.difficulty.value;
+    els.mode.value=mode;els.difficulty.value=difficulty;
     setLoading(true, "Подготавливаем карту", mode === "russia-municipalities" ? "Муниципальный слой крупнее обычного; первая загрузка может занять некоторое время." : "Геометрия проверяется и подготавливается для сенсорного управления.");
     els.empty.hidden = true;
 
     try {
       let resolved;
-      if (reuseDataset && state.wrapper && state.collection && state.mode === mode && state.difficulty === difficulty) {
+      if (resume?.wrapper?.dataset?.geometry_url) {
+        const wrapper=await ensureGeometry(resume.wrapper,`resume-${resume.wrapper.dataset.id}`);
+        resolved={wrapper,collection:geometryToCollection(wrapper.geometry),selection:resume.selection};
+      } else if (reuseDataset && state.wrapper && state.collection && state.mode === mode && state.difficulty === difficulty) {
         resolved = { wrapper: state.wrapper, collection: state.collection, selection: state.selection };
       } else {
         resolved = await resolveDataset(mode);
       }
       const collection = normalizeCollection(resolved.collection, mode);
-      const attempt = await startAttempt(
+      if(resume&&JSON.stringify(collection.features.map(feature=>feature.properties._puzzleId))!==JSON.stringify(resume.featureIds))throw new Error(tr('Набор карты изменился. Сохранённая попытка не перезаписана.'));
+      const attempt = resume?{attempt_id:resume.attemptId,seed:resume.seed}:await startAttempt(
         mode,
         resolved.selection,
         difficulty,
@@ -614,7 +642,19 @@
 
       fitCanvas();
       rebuildGeometry();
-      setCurrentPiece(state.current);
+      if(resume){
+        const count=state.features.length;
+        if(!Array.isArray(resume.order)||resume.order.length!==count||new Set(resume.order).size!==count||resume.order.some(index=>!Number.isInteger(index)||index<0||index>=count)||!Array.isArray(resume.pieces)||resume.pieces.length!==count)throw new Error(tr('Сохранённая попытка несовместима с картой.'));
+        state.order=[...resume.order];state.cursor=resume.cursor;state.current=resume.current;state.errors=resume.errors;state.hints=resume.hints;
+        state.elapsedBeforeStart=Math.max(0,Number(resume.elapsedMs)||0);state.startedAt=resume.timerStarted?performance.now():null;
+        state.pieces=resume.pieces.map((piece,index)=>{
+          const point=piece.point&&state.projection(piece.point),anchor=state.anchors[index];
+          return {index,locked:Boolean(piece.locked),inTray:Boolean(piece.inTray),dx:piece.locked?0:point?point[0]-anchor[0]:Number(piece.dx||0)*state.cssWidth,dy:piece.locked?0:point?point[1]-anchor[1]:Number(piece.dy||0)*state.cssHeight};
+        });
+        state.placed=state.pieces.filter(piece=>piece.locked).length;
+        if(resume.view?.centre?.every(Number.isFinite)){const point=state.projection(resume.view.centre);const k=clamp(Number(resume.view.k)||state.view.k,state.viewMin,state.viewMax);if(point.every(Number.isFinite))state.view={k,x:state.cssWidth/2-point[0]*k,y:state.mapBottom/2-point[1]*k};}
+        if(state.current>=0&&state.pieces[state.current]?.inTray)placePieceInTray(state.current);
+      }else setCurrentPiece(state.current);
       updateUi();
       updateDatasetMeta();
       setControlsEnabled(true);
@@ -626,6 +666,7 @@
       setLoading(false);
       drawAll(true);
       els.canvas.focus({ preventScroll: true });
+      if(resume?.finished)void completeGame();else await checkpoint();
     } catch (error) {
       setLoading(false);
       state.started = false;
@@ -1281,6 +1322,7 @@
 
   function tick() {
     if (state.started && !state.finished) els.time.textContent = formatTime(elapsedMs());
+    if(state.startedAt&&!state.finished&&performance.now()-state.lastCheckpointAt>10000)void checkpoint();
     if (state.ready && Date.now() <= state.hintUntil) requestDraw();
     state.animationFrame = requestAnimationFrame(tick);
   }
@@ -1428,6 +1470,7 @@
     state.draggingFromTray = false;
     state.draggingPan = false;
     try { els.canvas.releasePointerCapture(event.pointerId); } catch (_) { /* no-op */ }
+    void checkpoint();
   }
 
   function attemptSnap() {
@@ -1471,6 +1514,7 @@
     // maps a genuine expert attempt can finish in under one second, therefore
     // clamp only the transmitted value while retaining the measured UI time.
     const duration = Math.max(1000, Math.round(state.elapsedBeforeStart));
+    await checkpoint();
     const payload = {
       csrf,
       activity_slug: root.dataset.activitySlug,
@@ -1561,6 +1605,7 @@
     state.hintUntil = Date.now() + 2200;
     drawAll();
     toast(tr("Правильное место подсвечено жёлтым контуром."), "success", 2200);
+    void checkpoint();
   }
 
   function returnCurrentPiece() {
@@ -1568,6 +1613,7 @@
     if (!piece || piece.locked) return;
     placePieceInTray(piece.index);
     drawAll();
+    void checkpoint();
   }
 
   function wheel(event) {
@@ -1613,6 +1659,7 @@
       event.preventDefault();
       showHint();
     }
+    void checkpoint();
   }
 
   async function toggleFullscreen() {
@@ -1692,17 +1739,21 @@
   });
   window.addEventListener("resize", handleResize);
   document.addEventListener("fullscreenchange", handleResize);
+  window.addEventListener('pagehide',checkpoint);
 
   updateDependentFields();
   updateUi();
   state.animationFrame = requestAnimationFrame(tick);
+  if(root.puzzleProgress?.restore?.started)void startGame({resume:root.puzzleProgress.restore});
   return () => {
+    void checkpoint();
     cancelAnimationFrame(state.animationFrame);
     cancelAnimationFrame(state.drawFrame);
     window.clearTimeout(state.resizeTimer);
     window.clearTimeout(toast.timer);
     window.removeEventListener("resize", handleResize);
     document.removeEventListener("fullscreenchange", handleResize);
+    window.removeEventListener('pagehide',checkpoint);
     if (document.fullscreenElement?.closest?.(".puzzle-stage-card")) void document.exitFullscreen().catch(() => {});
   };
   };

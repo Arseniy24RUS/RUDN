@@ -16,7 +16,7 @@ import {SHIFT_PROFILE,SHIFT_PROFILES,getShiftProfile} from './assignment.js';
 import {filterCaseCatalog,catalogTopics} from './catalog.js';
 import {RECEPTION_SETTINGS} from './settings.js';
 import {buildPilotReport,pilotCSV} from './pilot.js';
-import {readDraftResult,writeDraft,storeKey,archiveDraft,legacyDrafts,recentCaseIds,exportJSON} from './storage.js';
+import {createReceptionStorage,storeKey,archiveDraft,legacyDrafts,recentCaseIds,exportJSON} from './storage.js';
 import {icon,esc} from './icons.js';
 import {parseDateOnly,formatDateOnly,durationLabel,monthDays,moveMonth,CALENDAR_SOURCES} from '../../../assets/js/legal-calendar.js';
 const media=path=>new URL('../'+path,import.meta.url).href;
@@ -36,6 +36,9 @@ export async function mountReception(root,options={}){
  const backend=options.backend||null;
  const ownerNow=()=>backend?.isAdmin?.()?`teacher:${backend.user?.uid||'preview'}`:backend?.getProfile?.()?`student:${backend.getProfile().studentKey}`:'preview';
  const owner=ownerNow(),period=options.period||academicPeriod();
+ const repository=createReceptionStorage({owner,period,backend});
+ const readDraftResult=(_owner,mode)=>repository.read(mode);
+ const writeDraft=(draft,_storage,settings)=>repository.write(draft,settings);
  const assessmentProfile=options.assessmentProfile||RECEPTION_SETTINGS.assessmentProfile;getShiftProfile(assessmentProfile);
  let practiceProfile='balanced-six',pilotReport=null,pilotOpen=false,pilotStatus='';
  let sourceMonitorObservations=[],sourceReportNote='',sourceMonitorOpen=false,sourceQuery='',sourceFilter='all',sourceExpanded='',sourceAsOf='';
@@ -51,7 +54,7 @@ export async function mountReception(root,options={}){
   const fresh=newShift(owner,mode,{period,profileId:assignedProfile(mode),recentCaseIds:recentCaseIds(owner,period),...selection,calendarYear:prepared.year,calendarSnapshot:prepared.snapshot,calendarStatus:{stale:prepared.stale,origins:prepared.origins,unavailableYears:prepared.unavailableYears,loadedAt:prepared.loadedAt}});ensureVisualCast(fresh);return fresh;
  };
  let selectedMode='practice';try{const last=localStorage.getItem(`rudn.reception.lastmode.v16:${owner}:${period}`);if(modes.includes(last))selectedMode=last;}catch{}
- let loaded=readDraftResult(owner,selectedMode,period),state=loaded.state;
+ let loaded=await readDraftResult(owner,selectedMode,period),state=loaded.state;
  if(!state){
   root.innerHTML='<section class="boot" role="status"><h1>Приёмная</h1><p>Проверяем календарь текущего года…</p></section>';
   try{state=await makeFresh(selectedMode);}catch(error){
@@ -73,9 +76,9 @@ export async function mountReception(root,options={}){
  const pageSize=12;
  const displayTitle=c=>state.mode==='practice'?c.title:`Обращение: ${c.topic}`;
  const focusPanel=()=>{const el=root.querySelector(state.screen==='work'?'.rx-panel h2':state.screen==='summary'?'.rx-summary h1':'.rx-hero h1');if(el){el.tabIndex=-1;el.focus({preventScroll:true});el.scrollIntoView({block:'start',behavior:'instant'});}};
- let disposed=false,busy=false,calendarLoading=false,queue=Promise.resolve(),notice='',tab='talk',month='',dayLabel='',showCalculation=false,activeDoc='',lastAnswer='',previewText=false;
+ let disposed=false,closing=false,busy=false,calendarLoading=false,queue=Promise.resolve(),notice='',tab='talk',month='',dayLabel='',showCalculation=false,activeDoc='',lastAnswer='',previewText=false;
  const legacy=legacyDrafts(owner,undefined,period);
- if(loaded.status==='empty'){const firstSave=writeDraft(state);if(!firstSave.ok)problem='Не удалось закрепить назначенную смену на устройстве. Разрешите сохранение данных сайта.';}
+ if(loaded.status==='empty'){const firstSave=await writeDraft(state);if(!firstSave.ok)problem='Не удалось закрепить назначенную смену на устройстве. Разрешите сохранение данных сайта.';}
  tab=state.cases[state.caseIds[state.active]].phase||'talk';
  const cleanupEvents=[];
  root.classList.add('reception-root');
@@ -136,8 +139,9 @@ export async function mountReception(root,options={}){
   const c=current(),p=progress(),selected=c.documents.find(x=>x.id===(activeDoc||p.activeDoc))||c.documents[0];
   const comparison=p.comparison||[],paired=Boolean(c.factTask.evidenceSets);
   const grounds=paired?`<fieldset class="rx-choice-group rx-doc-evidence"><legend>Какие материалы вместе обосновывают выбранный вывод?</legend><p class="rx-small">Отметьте только необходимые основания. Открытие и сопоставление документов не заполняют этот ответ.</p>${opts(c.documents,'doc-grounds').map(d=>`<label class="rx-choice"><input type="checkbox" data-doc-evidence="${esc(d.id)}" ${p.factEvidenceIds.includes(d.id)?'checked':''} ${locked()?'disabled':''}><span>${esc(d.title)}</span></label>`).join('')}</fieldset>`:choices('factEvidence','Какой материал непосредственно обосновывает выбранный вывод?',c.documents.map(d=>({id:d.id,text:d.title})),p.factEvidence);
-  return `<section class="rx-panel">${section('folder','Материалы дела','Откройте документ или выберите два материала для сопоставления.')}<div class="rx-doc-grid">${c.documents.map(d=>`<div class="rx-doc-item">${button(d.title,'document','rx-doc-button '+(selected.id===d.id?'selected':''),`data-id="${d.id}"`,'doc')}${button(comparison.includes(d.id)?'Убрать из сравнения':'Сопоставить','compare-document','small ghost',`data-id="${d.id}" aria-pressed="${comparison.includes(d.id)}" aria-label="${esc((comparison.includes(d.id)?'Убрать из сравнения: ':'Сопоставить: ')+d.title)}"`,'folder')}</div>`).join('')}</div>
-  <div class="rx-compare-tools"><p class="rx-small" role="status">${comparison.length?`Для сопоставления выбрано ${comparison.length} из 2. При выборе третьего заменяется первый.`:'Сравнение помогает изучить материалы; само по себе оно не оценивается.'}</p>${comparison.length?button('Вернуться к одному документу','clear-comparison','small ghost'):''}</div>
+  return `<section class="rx-panel">${section('folder','Материалы дела','Откройте документ или выберите два материала для сопоставления.')}
+  <div class="rx-compare-tools"><p class="rx-small" role="status" aria-live="polite"><strong>Выбрано ${comparison.length} из 2</strong>${comparison.length===1?' · Выберите второй документ.':comparison.length===2?' · При выборе третьего заменяется первый.':' · Сопоставление само по себе не оценивается.'}</p>${comparison.length?button('Сбросить выбор','clear-comparison','small ghost'):''}</div>
+  <div class="rx-doc-grid">${c.documents.map(d=>`<div class="rx-doc-item">${button(d.title,'document','rx-doc-button '+(selected.id===d.id?'selected':''),`data-id="${d.id}"`,'doc')}${button(comparison.includes(d.id)?'Выбран · убрать':'Сопоставить','compare-document','small ghost',`data-id="${d.id}" aria-pressed="${comparison.includes(d.id)}" aria-label="${esc((comparison.includes(d.id)?'Убрать из сравнения: ':'Сопоставить: ')+d.title)}"`,'folder')}</div>`).join('')}</div>
   ${comparison.length===2?`<div class="rx-comparison-grid" role="region" aria-label="Сопоставление двух документов">${comparison.map(id=>documentArticle(c.documents.find(d=>d.id===id))).join('')}</div>`:documentArticle(selected)}
   ${coach('docs')}${choices('fact',c.factTask.prompt,c.factTask.options,p.fact)}${grounds}<div class="rx-actions-footer">${button('Перейти к источникам','tab','primary','data-tab="research"','arrow')}</div></section>`;
  }
@@ -189,15 +193,16 @@ export async function mountReception(root,options={}){
  function finalScreen(){const s=summary(state);return `<section class="rx-summary"><div class="rx-result-head">${icon('flag')}<div><h1>${policy().score?'Смена завершена':'Обучение завершено'}</h1><p>${policy().score?'Все основные и контрольные решения подтверждены.':'Вы завершили выбранные истории из общего банка. Оценка не выставлялась.'}</p></div></div>${policy().score?`<div class="rx-final-score" aria-label="Итоговый балл"><strong>${String(s.points).replace('.',',')}</strong><span>из 5</span></div>`:''}<div class="rx-save-message" role="status">${policy().grade?(state.submitted?'Результат принят платформой и поставлен в её очередь сохранения. Облачная синхронизация выполняется механизмом курса.':busy?'Передаём результат платформе…':'Автоматическая передача ещё не подтверждена. Ответы сохранены на этом устройстве; повторная отправка использует тот же номер попытки.'):(policy().score?'Результат сохранён на этом устройстве. Вы можете скачать свои ответы или начать новую смену.':'Учебный режим не создаёт оценку и не меняет журнал.')}</div><p class="rx-small">${policy().score?'Разбор ошибок и правильные ответы в самостоятельном режиме не показываются.':''}</p><div class="rx-actions-footer">${policy().grade&&!state.submitted?button(busy?'Сохраняем…':'Повторить передачу','retry','primary',busy?'disabled':'','reset'):''}${button('Мои ответы','export','soft','','download')}${button('К выбору режима','home','soft','','home')}${button('Новая смена','restart','ghost',busy?'disabled':'','reset')}</div><p class="rx-small">Завершённая попытка сохраняется в локальном архиве при запуске новой.${policy().grade?' Общая платформа учитывает лучший балл семинара.':''}</p></section>`;}
  function render(){if(disposed)return;const focused=document.activeElement;const focusData=focused&&root.contains(focused)&&focused.dataset.action?{...focused.dataset}:null;root.innerHTML=top()+`<div class="rx-global-status" role="status">${esc(notice|| (state.savedAt?'Черновик сохранён на этом устройстве':'Новая смена. Сохранение начнётся при первом действии.'))}</div>`+(problem?`<section class="rx-blocker" role="alert"><h2>Работа приостановлена</h2><p>${esc(problem)}</p>${button('Выгрузить доступные ответы','export','soft','','download')}${button('Загрузить сохранённое состояние','reload','primary','','reset')}${(loaded.status==='incompatible'||loaded.rawText)?button('Начать заново, сохранив прежнюю работу','new-version','ghost'):''}</section>`:(state.screen==='home'?home():state.screen==='summary'?finalScreen():work()))+(legacy.length?`<div class="rx-legacy">На устройстве обнаружены работы прежних версий. Они не изменяются и не пересчитываются. ${button('Экспорт старых работ','legacy','small ghost','','download')}</div>`:'');root.querySelectorAll('img[data-art-fallback]').forEach(img=>{img.onerror=()=>{img.onerror=null;img.closest('picture')?.querySelectorAll('source').forEach(s=>s.remove());img.removeAttribute('srcset');img.src=img.dataset.artFallback;};});if(busy)root.querySelectorAll('[data-mode]').forEach(e=>e.disabled=true);if(calendarLoading)root.querySelectorAll('button,input,select,textarea').forEach(e=>e.disabled=true);if(focusData){const keys=['action','id','tab','date','delta','page','fragment'];const candidate=[...root.querySelectorAll('[data-action]')].find(el=>keys.every(k=>!focusData[k]||el.dataset[k]===focusData[k]));if(candidate&&!candidate.disabled)candidate.focus({preventScroll:true});}}
  async function mutate(fn,{redraw=true}={}){
-  const job=async()=>{if(disposed||problem)return false;if(ownerNow()!==owner){problem='Профиль изменился. Перейдите в семинар заново, чтобы не продолжить чужую работу.';render();return false;}
-   const perform=()=>{const draft=clone(state);fn(draft);const saved=writeDraft(draft);if(!saved.ok){problem=saved.conflict?'В другой вкладке изменена эта смена. Загрузите сохранённое состояние, не перезаписывая чужие изменения.':'Не удалось сохранить черновик. Освободите место или разрешите хранилище браузера.';render();return false;}state=draft;notice='Черновик сохранён на этом устройстве';if(redraw)render();else{const status=root.querySelector('.rx-global-status');if(status)status.textContent=notice;}return true;};
+  if(closing||disposed||ownerNow()!==owner)return false;
+  const job=async()=>{if(problem)return false;
+   const perform=async()=>{const draft=clone(state);fn(draft);const saved=await writeDraft(draft);if(!saved.ok){problem=saved.conflict?'В другой вкладке изменена эта смена. Загрузите сохранённое состояние, не перезаписывая чужие изменения.':'Не удалось сохранить черновик. Освободите место или разрешите хранилище браузера.';render();return false;}state=draft;notice='Черновик сохранён на этом устройстве';if(redraw)render();else{const status=root.querySelector('.rx-global-status');if(status)status.textContent=notice;}return true;};
    return globalThis.navigator?.locks?.request?await navigator.locks.request(storeKey(owner,state.mode,period),perform):perform();};
   queue=queue.then(job,job);return queue;
  }
  async function sendResult(){if(disposed||busy||!policy().grade||state.submitted||!state.completed)return;if(!canGrade()){notice='Передача остановлена: проверьте профиль и доступность семинара. Сохранённая попытка не удалена.';render();return;}
   busy=true;render();const captured=clone(state);
-  try{const result=await backend.saveAttempt(makeAttempt(captured,backend.getProfile().studentKey));if(result?.preview)throw Error('Платформа вернула режим предварительного просмотра вместо сохранения.');
-   const saved=readDraftResult(owner,captured.mode,period).state;if(saved?.id===captured.id){saved.submitted=true;saved.submittedAt=new Date().toISOString();const marked=writeDraft(saved);if(!marked.ok)throw Error('Платформа приняла попытку, но отметку об этом не удалось сохранить. Повторная передача безопасна.');if(state.id===saved.id)state=saved;}
+  try{const result=await backend.saveAttempt({...makeAttempt(captured,backend.getProfile().studentKey),draftMode:`${period}:${captured.mode}`});if(result?.preview)throw Error('Платформа вернула режим предварительного просмотра вместо сохранения.');
+   const saved=(await readDraftResult(owner,captured.mode,period)).state;if(saved?.id===captured.id){saved.submitted=true;saved.submittedAt=new Date().toISOString();const marked=await writeDraft(saved);if(!marked.ok)throw Error('Платформа приняла попытку, но отметку об этом не удалось сохранить. Повторная передача безопасна.');if(state.id===saved.id)state=saved;}
    notice='Автоматический результат принят платформой. Повторная проверка преподавателем не требуется.';
   }catch(error){notice=`Не удалось подтвердить передачу: ${error.message||'ошибка соединения'}. Повторите её без создания новой попытки.`;}
   finally{busy=false;render();}
@@ -207,10 +212,10 @@ export async function mountReception(root,options={}){
   if(mode==='assessment'&&!canGrade()){notice='Самостоятельная работа сейчас закрыта расписанием. Обучение остаётся доступным.';render();return;}
   busy=true;calendarLoading=true;notice='Проверяем календарь и сохранённую смену…';render();
   try{
-   const nextLoaded=readDraftResult(owner,mode,period),next=nextLoaded.state||await makeFresh(mode);if(disposed)return;
+   const nextLoaded=await readDraftResult(owner,mode,period),next=nextLoaded.state||await makeFresh(mode);if(disposed)return;
    loaded=nextLoaded;state=next;ensureVisualCast(state);problem=loaded.status==='incompatible'?'Сохранённая работа относится к другой версии. Она не будет перезаписана.':loaded.status==='unavailable'?'Недоступно хранилище браузера.':'';
    tab=state.cases[state.caseIds[state.active]].phase||'talk';month='';dayLabel='';activeDoc='';lastAnswer='';showCalculation=false;
-   if(loaded.status==='empty'&&!writeDraft(state).ok)problem='Не удалось сохранить назначенную смену.';
+   if(loaded.status==='empty'&&!(await writeDraft(state)).ok)problem='Не удалось сохранить назначенную смену.';
    try{localStorage.setItem(`rudn.reception.lastmode.v16:${owner}:${period}`,mode);}catch{}notice='';
   }catch(error){notice=error.message||'Не удалось получить календарь новой смены. Предыдущая работа сохранена.';}
   finally{busy=false;calendarLoading=false;render();}
@@ -223,12 +228,12 @@ export async function mountReception(root,options={}){
   if((selection.templateId||selection.level)&&!policy().feedback)return;
   if(state.events.length&&!await confirm('Открыть новую смену? Текущая работа останется в локальном архиве. Ответы в новую смену не переносятся.'))return;
   const run=async()=>{
-   const currentSaved=readDraftResult(owner,state.mode,period).state;
+   const currentSaved=(await readDraftResult(owner,state.mode,period)).state;
    if(currentSaved&&(currentSaved.id!==state.id||Number(currentSaved.revision)!==Number(state.revision))){problem='Другая вкладка изменила смену. Загрузите сохранённое состояние.';render();return;}
    if(state.events.length&&!archiveDraft(state)){notice='Не удалось создать архив. Новая смена не начата.';render();return;}
    const next=await makeFresh(state.mode,selection);if(disposed)return;
-   if(!writeDraft(next,undefined,{replace:true}).ok){notice='Не удалось сохранить новую смену.';render();return;}
-   if(selection.templateId){next.screen='work';event(next,'opened',next.caseIds[0]);if(!writeDraft(next).ok)throw Error('Не удалось закрепить выбранное дело.');}
+   if(!(await writeDraft(next,undefined,{replace:true})).ok){notice='Не удалось сохранить новую смену.';render();return;}
+   if(selection.templateId){next.screen='work';event(next,'opened',next.caseIds[0]);if(!(await writeDraft(next)).ok)throw Error('Не удалось закрепить выбранное дело.');}
    state=next;loaded={state:next,status:'ready'};tab='talk';month='';dayLabel='';showCalculation=false;lastAnswer='';activeDoc='';previewText=false;
    render();
   };
@@ -241,8 +246,8 @@ export async function mountReception(root,options={}){
  if(action.startsWith('source-monitor-')){if(!canInspectSources()||ownerNow()!==owner)return;sourceAsOf=root.querySelector('[data-source-asof]')?.value||sourceAsOf||currentClock().toISOString().slice(0,10);sourceQuery=root.querySelector('[data-source-query]')?.value.trim()||'';sourceFilter=root.querySelector('[data-source-filter]')?.value||'all';if(action==='source-monitor-toggle')sourceMonitorOpen=!sourceMonitorOpen;if(action==='source-monitor-jump')sourceMonitorOpen=true;if(action==='source-monitor-detail')sourceExpanded=sourceExpanded===target.dataset.id?'':target.dataset.id;if(action==='source-monitor-export'){exportJSON(sourceHealthReport({asOf:sourceAsOf,query:sourceQuery,filter:sourceFilter,observations:sourceMonitorObservations}),'reception-source-inventory.json');return;}render();if(action==='source-monitor-jump')root.querySelector('[data-source-monitor]')?.scrollIntoView({block:'start'});return;}
   try{
    if(action==='bank-page'){bankPage+=Number(target.dataset.delta);render();const heading=root.querySelector('.rx-bank-heading h2');heading.tabIndex=-1;heading.focus();heading.scrollIntoView({block:'start'});return;}if(action==='help'){options.onHelp?.();return;}if(action==='search-bank'){bankPage=0;bankQuery=root.querySelector('[data-bank-search]')?.value.trim()||'';render();return;}if(action==='reset-bank'){bankPage=0;bankQuery='';bankTopic='all';bankFilter='all';render();return;}if(action==='pilot-load'){await loadPilot();return;}if(action==='pilot-export'&&backend?.isAdmin?.()&&ownerNow()===owner&&pilotReport){const url=URL.createObjectURL(new Blob([pilotCSV(pilotReport)],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='reception-pilot.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}if(action==='exit'){options.onExit?.();return;}if(action==='export'){exportJSON(loaded.rawText?{preservedCorruptDraft:loaded.rawText}:loaded.status==='incompatible'?loaded.raw:publicExport(state),`reception-${state.id}.json`);return;}
-   if(action==='legacy'){exportJSON(legacy,'reception-legacy-unmodified.json');return;}if(action==='reload'){loaded=readDraftResult(owner,state.mode,period);if(loaded.state){state=loaded.state;ensureVisualCast(state);tab=state.cases[state.caseIds[state.active]].phase||'talk';month='';activeDoc='';lastAnswer='';showCalculation=false;problem='';notice='Сохранённое состояние загружено.';}else if(loaded.status==='empty'){problem='';notice='Хранилище доступно. Повторите действие.';}render();return;}
-   if(action==='new-version'){if(!await confirm('Старая работа будет сохранена отдельным архивом. Начать новую версию без переноса оценок?'))return;if(!archiveDraft({...loaded.raw,preservedCorruptDraft:loaded.rawText||undefined,owner,id:loaded.raw?.id||`legacy-${Date.now()}`})){notice='Не удалось сохранить прежнюю работу. Освободите место и повторите.';render();return;}const n=await makeFresh(state.mode);if(writeDraft(n,undefined,{replace:true}).ok){state=n;loaded={status:'ready',state:n};problem='';render();}return;}
+   if(action==='legacy'){exportJSON(legacy,'reception-legacy-unmodified.json');return;}if(action==='reload'){loaded=await readDraftResult(owner,state.mode,period);if(loaded.state){state=loaded.state;ensureVisualCast(state);tab=state.cases[state.caseIds[state.active]].phase||'talk';month='';activeDoc='';lastAnswer='';showCalculation=false;problem='';notice='Сохранённое состояние загружено.';}else if(loaded.status==='empty'){problem='';notice='Хранилище доступно. Повторите действие.';}render();return;}
+   if(action==='new-version'){if(!await confirm('Старая работа будет сохранена отдельным архивом. Начать новую версию без переноса оценок?'))return;if(!archiveDraft({...loaded.raw,preservedCorruptDraft:loaded.rawText||undefined,owner,id:loaded.raw?.id||`legacy-${Date.now()}`})){notice='Не удалось сохранить прежнюю работу. Освободите место и повторите.';render();return;}const n=await makeFresh(state.mode);if((await writeDraft(n,undefined,{replace:true})).ok){state=n;loaded={status:'ready',state:n};problem='';render();}return;}
    if(problem)return;if(action==='family-catalog'&&policy().feedback&&progress().followupConfirmed){bankQuery=current().curriculumId;bankTopic='all';bankFilter='all';await mutate(s=>s.screen='home');focusPanel();return;}if(action==='choose-case'){await restart({templateId:target.dataset.template});return;}if(action==='level-practice'){await restart({level:Number(target.dataset.level)});return;}if(action==='random-practice'){await restart();return;}if(action==='retry'){await sendResult();return;}if(action==='restart'){await restart();return;}
    if(action==='start'){if(state.mode==='assessment'&&!canGrade()){notice='Семинар закрыт расписанием.';render();return;}await mutate(s=>{s.screen=s.completed?'summary':'work';event(s,'opened',s.caseIds[s.active]);});focusPanel();if(state.completed)sendResult();return;}
    if(action==='home'){await mutate(s=>s.screen='home');focusPanel();return;}
@@ -287,7 +292,10 @@ export async function mountReception(root,options={}){
  const storage=e=>{if(e.key==='rudn.profile.v1'){identity();return;}if(e.key===storeKey(owner,state.mode,period)&&e.newValue){try{const other=JSON.parse(e.newValue);if(other.id!==state.id||other.revision!==state.revision){problem='Смена обновлена в другой вкладке. Загрузите сохранённое состояние перед продолжением.';render();}}catch{problem='Сохранённое состояние повреждено. Экспортируйте доступные ответы.';render();}}};
  window.addEventListener('rudn:identitychange',identity);window.addEventListener('storage',storage);
  render();if(state.completed&&!state.submitted&&policy().grade)sendResult();
- const cleanup=()=>{if(disposed)return;disposed=true;release();cleanupEvents.forEach(fn=>fn());root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',onInput);window.removeEventListener('rudn:identitychange',identity);window.removeEventListener('storage',storage);};
+ let cleanupPromise;
+ const flush=async()=>{await queue;await repository.flush();};
+ const cleanup=()=>{if(cleanupPromise)return cleanupPromise;closing=true;cleanupEvents.forEach(fn=>fn());root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',onInput);window.removeEventListener('rudn:identitychange',identity);window.removeEventListener('storage',storage);cleanupPromise=flush().finally(()=>{disposed=true;release();});return cleanupPromise;};
+ cleanup.flush=flush;
  lifetime.signal.addEventListener('abort',cleanup,{once:true});
  cleanup.refreshLocale=()=>{notice='Эта глава пока доступна на русском языке. Переключение языка платформы не сбрасывает работу.';render();};return cleanup;
 }
