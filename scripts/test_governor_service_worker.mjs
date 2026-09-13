@@ -112,7 +112,7 @@ test('install includes every native runtime file and both native entry URLs',asy
   }
   for(const entry of ['./','./index.html','./apps/puzzle.html','./'+modulePath,'./'+modulePath+'index.html',
     './'+modulePath+'platform-bridge.js','./'+modulePath+'platform-contract.js','./'+modulePath+'platform.css',
-    './assets/js/main.js?v=1.3.1','./assets/js/teacher-journal.js?v=1.3.1','./assets/css/site.css?v=1.3.0',
+    './assets/js/main.js?v=1.3.2','./assets/js/teacher-journal.js?v=1.3.2','./assets/css/site.css?v=1.3.2',
     './assets/js/career-course.js','./apps/career/entry.mjs','./apps/career/runtime.bundle.mjs',
     './apps/career/surface.html','./apps/career/module.css','./apps/career/assets/fonts/noto-sans-sc.woff2',
     './apps/career/data/model-manifest.json','./apps/career/docs/TEACHER-GUIDE-STAGE8.md',
@@ -121,7 +121,7 @@ test('install includes every native runtime file and both native entry URLs',asy
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
-  assert.ok(worker.cacheName.endsWith(':v1.3.1-reception-1.0.1'));
+  assert.ok(worker.cacheName.endsWith(':v1.3.2-reliability-1'));
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{

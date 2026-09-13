@@ -1,6 +1,6 @@
-import {CONFIG} from './config.js?v=1.2.2';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.2.2';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.2.2';
+import {CONFIG} from './config.js?v=1.3.2';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.2';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.2';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -400,16 +400,64 @@ class Backend{
     });
     return this.flushing;
   }
-  async adminAll(){
-    if(!this.isAdmin())throw new Error('Требуются права преподавателя');
-    const uid=this.user.uid;const generation=this.generation;const key=`teacher-cache.v1:${uid}`;const cached=readState(key,null);
+  adminCachedSnapshot(){
+    if(!this.isAdmin())return null;
+    const cached=readState(`teacher-cache.v1:${this.user.uid}`,null);
+    if(!cached||!cached.cachedAt||!cached.profiles||!cached.attempts||!cached.grades)return null;
+    return {...cached,stale:true};
+  }
+  async adminAll({allowCached=true}={}){
+    if(!this.isAdmin())throw serviceError('auth/admin-required');
+    const uid=this.user.uid;
+    const generation=this.generation;
+    const active=()=>this.isAdmin()&&this.user?.uid===uid&&this.generation===generation;
+    const cacheKey=`teacher-cache.v1:${uid}`;
+    let pending=this.adminReadPending;
+
+    if(!pending||pending.uid!==uid||pending.generation!==generation){
+      pending={uid,generation,promise:null};
+      pending.promise=(async()=>{
+        // .info/connected is an observation of the persistent connection, not
+        // permission to attempt a read. It may still be false during startup.
+        if(!this.db||!this.database)await bounded(this.init());
+        if(!active())throw serviceError('auth/profile-changed');
+        if(!this.db||!this.database)throw serviceError('network/unavailable');
+
+        const values=await bounded(Promise.all(
+          ['profiles','attempts','grades'].map(path=>
+            this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/${path}`))
+          )
+        ));
+        if(!active())throw serviceError('auth/profile-changed');
+        const snapshot={
+          profiles:values[0].val()||{},
+          attempts:values[1].val()||{},
+          grades:values[2].val()||{},
+          cachedAt:now(),
+          stale:!this.connected
+        };
+        // Firebase may satisfy get() from its own cache while disconnected.
+        // Never label that data as freshly synchronized or enable editing.
+        if(snapshot.stale){
+          const cached=this.adminCachedSnapshot();
+          if(cached)snapshot.cachedAt=cached.cachedAt;
+        }
+        try{writeState(cacheKey,snapshot)}catch{}
+        return snapshot;
+      })().finally(()=>{
+        if(this.adminReadPending===pending)this.adminReadPending=null;
+      });
+      this.adminReadPending=pending;
+    }
+
     try{
-      if(!this.connected)throw serviceError('network/offline');
-      const [p,a,g]=await bounded(Promise.all(['profiles','attempts','grades'].map(path=>this.db.get(this.db.ref(this.database,`${CONFIG.rootPath}/${path}`)))));
-      if(!this.isAdmin()||this.user.uid!==uid||generation!==this.generation)throw serviceError('auth/profile-changed');
-      const snapshot={profiles:p.val()||{},attempts:a.val()||{},grades:g.val()||{},cachedAt:now(),stale:false};
-      writeState(key,snapshot);return snapshot;
-    }catch(error){if(cached&&this.isAdmin()&&this.user.uid===uid&&generation===this.generation)return {...cached,stale:true};throw error}
+      return await pending.promise;
+    }catch(error){
+      if(!active())throw serviceError('auth/profile-changed');
+      const cached=allowCached?this.adminCachedSnapshot():null;
+      if(cached)return cached;
+      throw error;
+    }
   }
 
   async savePuzzleLeaderboardResult({difficulty,timeMs,placed,total}){

@@ -1,5 +1,5 @@
-import {backend,groupOptions} from './backend.js?v=1.2.2';
-import {getLocale} from './i18n.js?v=1.2.2';
+import {backend,groupOptions} from './backend.js?v=1.3.2';
+import {getLocale} from './i18n.js?v=1.3.2';
 
 const COPY={
   ru:{title:'Электронный журнал',groups:'Учебные группы',search:'Поиск по ФИО или билету',name:'ФИО / билет',topic:'Тема',lecture:'Лекция',seminar:'Семинар',quiz:'Квиз',work:'Самостоятельная',exam:'Экзамен',total:'Итог',registered:'Зарегистрировано',results:'С результатами',average:'Средний итог',activityAverage:'Среднее',submitted:'С результатом',export:'Скачать CSV',refresh:'Обновить',edit:'Оценки',empty:'Нет студентов для выбранных условий',cached:'Сохранённая копия',updated:'Обновлено',settings:'Настройки курса'},
@@ -9,9 +9,30 @@ const COPY={
 Object.assign(COPY.ru,{reportPresent:'Есть отчёт',viewReports:'Открыть отчёты симулятора'});
 Object.assign(COPY.en,{reportPresent:'Report available',viewReports:'Read simulator reports'});
 Object.assign(COPY.zh,{reportPresent:'有报告',viewReports:'查看模拟器报告'});
+Object.assign(COPY.ru,{
+  loading:'Загружаем журнал…',updating:'Обновляем журнал…',
+  waiting:'Журнал обновится автоматически после восстановления соединения.',
+  unavailable:'Журнал пока не загрузился. Повторим автоматически; можно также нажать «Обновить».',
+  readonly:'Редактирование будет доступно после обновления данных.',
+  retry:'Повторить загрузку'
+});
+Object.assign(COPY.en,{
+  loading:'Loading the gradebook…',updating:'Refreshing the gradebook…',
+  waiting:'The gradebook will refresh automatically when the connection returns.',
+  unavailable:'The gradebook has not loaded yet. We will retry automatically, or you can select Refresh.',
+  readonly:'Editing will be available after the data has refreshed.',
+  retry:'Retry loading'
+});
+Object.assign(COPY.zh,{
+  loading:'正在加载成绩册…',updating:'正在更新成绩册…',
+  waiting:'连接恢复后，成绩册将自动更新。',
+  unavailable:'成绩册尚未加载。系统会自动重试，也可点击“刷新”。',
+  readonly:'数据更新后即可编辑。',
+  retry:'重新加载'
+});
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const numeric=value=>Math.round(Number(value||0)*100)/100;
-let requestVersion=0;
+let disposeCurrentJournal=null;
 export function journalModel(snapshot,topics){
   const columns=topics.flatMap(topic=>[
     {slug:topic.lecture.slug,kind:'lecture',max:5,topic:topic.number},
@@ -29,32 +50,233 @@ export function journalModel(snapshot,topics){
   }).sort((a,b)=>String(a.profile.group).localeCompare(String(b.profile.group))||String(a.profile.fullName).localeCompare(String(b.profile.fullName),'ru'));
   return {columns,rows};
 }
-export async function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
-  const request=++requestVersion,route=location.hash,uid=backend.user.uid;const snapshot=await backend.adminAll();
-  if(request!==requestVersion||route!==location.hash||!backend.isAdmin()||backend.user.uid!==uid)return;
-  const {columns,rows}=journalModel(snapshot,topics);const c=COPY[getLocale()]||COPY.ru;
-  const groups=[...new Set([...groupOptions(),...rows.map(row=>row.profile.group)])].filter(Boolean).sort();
-  let selected=new Set(groups);let query='';
+export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
+  disposeCurrentJournal?.();
+  if(!backend.isAdmin())return ()=>{};
+
+  const route=location.hash;
+  const uid=backend.user.uid;
+  const generation=backend.generation;
+  const c=COPY[getLocale()]||COPY.ru;
+  let disposed=false;
+  let unsubscribe=()=>{};
+  let retryTimer=null;
+  let failures=0;
+  let requestVersion=0;
+  let pending=null;
+  let loading=false;
+  let loadFailed=false;
+  let snapshot=backend.adminCachedSnapshot();
+  let columns=[];
+  let rows=[];
+  let groups=[];
+  let selected=new Set(groupOptions());
+  let allGroupsSelected=true;
+  let query='';
+  let connected=Boolean(backend.connected);
+
+  app.innerHTML=`<section class="page teacher-journal">
+    <header class="page-head"><div><h1>${c.title}</h1>
+      <p id="journalStatus" role="status" aria-live="polite"></p>
+    </div><a class="btn btn-neutral" href="#admin">${c.settings}</a></header>
+    <section class="panel journal-filters">
+      <fieldset><legend>${c.groups}</legend><div class="journal-groups"></div></fieldset>
+      <label><span>${c.search}</span><input id="journalSearch" type="search" placeholder="${c.search}"></label>
+      <div class="page-actions"><button class="btn btn-primary" id="journalExport">${c.export}</button>
+        <button class="btn btn-neutral" id="journalRefresh">${c.refresh}</button></div>
+    </section><div id="journalGroups"></div>
+  </section>`;
+  const root=app.querySelector('.teacher-journal');
+  const groupControls=root.querySelector('.journal-groups');
+  const rowsHost=root.querySelector('#journalGroups');
+  const statusHost=root.querySelector('#journalStatus');
+  const refreshButton=root.querySelector('#journalRefresh');
+  const exportButton=root.querySelector('#journalExport');
+  const current=()=>!disposed&&root.isConnected&&location.hash===route&&
+    backend.isAdmin()&&backend.user?.uid===uid&&backend.generation===generation;
+  const canEdit=()=>current()&&Boolean(backend.connected)&&Boolean(snapshot)&&!snapshot.stale;
+  const filtered=()=>rows.filter(row=>selected.has(row.profile.group)&&
+    `${row.profile.fullName} ${row.profile.ticket}`.toLocaleLowerCase().includes(query));
   const label=column=>`${c[column.kind]} /${column.max}`;
-  app.innerHTML=`<section class="page teacher-journal"><header class="page-head"><div><h1>${c.title}</h1><p>${c[snapshot.stale?'cached':'updated']}: ${esc(new Date(snapshot.cachedAt).toLocaleString(getLocale()==='zh'?'zh-CN':getLocale()))}</p></div><a class="btn btn-neutral" href="#admin">${c.settings}</a></header><section class="panel journal-filters"><fieldset><legend>${c.groups}</legend><div class="journal-groups">${groups.map(group=>`<button class="btn btn-neutral selected" type="button" data-journal-group="${esc(group)}" aria-pressed="true">${esc(group)}</button>`).join('')}</div></fieldset><label><span>${c.search}</span><input id="journalSearch" type="search" placeholder="${c.search}"></label><div class="page-actions"><button class="btn btn-primary" id="journalExport">${c.export}</button><button class="btn btn-neutral" id="journalRefresh">${c.refresh}</button></div></section><div id="journalGroups"></div></section>`;
-  const filtered=()=>rows.filter(row=>selected.has(row.profile.group)&&`${row.profile.fullName} ${row.profile.ticket}`.toLocaleLowerCase().includes(query));
-  const renderRows=()=>{
-    const visible=filtered();const groupNames=groups.filter(group=>selected.has(group)&&visible.some(row=>row.profile.group===group));
-    app.querySelector('#journalGroups').innerHTML=groupNames.map(group=>{
-      const groupRows=visible.filter(row=>row.profile.group===group);const withResults=groupRows.filter(row=>row.hasResults);
+
+  function renderStatus(){
+    if(!current())return;
+    const text=[];
+    if(snapshot){
+      const date=new Date(snapshot.cachedAt).toLocaleString(getLocale()==='zh'?'zh-CN':getLocale());
+      text.push(`${c[snapshot.stale?'cached':'updated']}: ${date}`);
+    }
+    if(loading)text.push(snapshot?c.updating:c.loading);
+    else if(!snapshot)text.push(c.unavailable);
+    else if(snapshot.stale)text.push(connected&&loadFailed?c.unavailable:c.waiting);
+    if(snapshot&&!canEdit())text.push(c.readonly);
+    statusHost.textContent=text.join(' ');
+    statusHost.dataset.state=loading?'loading':snapshot?.stale?'cached':snapshot?'ready':'unavailable';
+    refreshButton.disabled=loading;
+    refreshButton.setAttribute('aria-busy',String(loading));
+    refreshButton.textContent=loading?c.updating:c.refresh;
+    exportButton.disabled=!snapshot;
+    root.querySelectorAll('[data-grade-edit]').forEach(button=>{
+      button.disabled=!canEdit();
+    });
+  }
+
+  function renderRows(){
+    if(!current())return;
+    if(!snapshot){
+      rowsHost.innerHTML=`<div class="panel empty-state">${loading?c.loading:c.unavailable}</div>`;
+      return;
+    }
+    const scrollPositions=new Map([...rowsHost.querySelectorAll('[data-journal-table]')].map(table=>
+      [table.dataset.journalTable,{left:table.scrollLeft,top:table.scrollTop}]
+    ));
+    const visible=filtered();
+    const groupNames=groups.filter(group=>selected.has(group)&&visible.some(row=>row.profile.group===group));
+    rowsHost.innerHTML=groupNames.map(group=>{
+      const groupRows=visible.filter(row=>row.profile.group===group);
+      const withResults=groupRows.filter(row=>row.hasResults);
       const average=withResults.length?numeric(withResults.reduce((sum,row)=>sum+row.total,0)/withResults.length):'—';
-      const statistics=columns.map(column=>{const values=groupRows.map(row=>row.values[column.slug]).filter(value=>value!==null);return {count:values.length,mean:values.length?numeric(values.reduce((sum,value)=>sum+value,0)/values.length):'—'}});
-      return `<section class="panel journal-group"><h2>${esc(group)}</h2><div class="journal-summary"><span>${c.registered}: <b>${groupRows.length}</b></span><span>${c.results}: <b>${withResults.length}</b></span><span>${c.average}: <b>${average}</b></span></div><div class="teacher-table-scroll" tabindex="0" role="region" aria-label="${esc(group)}"><table class="teacher-gradebook"><thead><tr><th rowspan="2" class="student-sticky">${c.name}</th>${topics.map(topic=>`<th colspan="${topic.number===1?3:2}">${c.topic} ${topic.number}</th>`).join('')}<th rowspan="2">${c.exam} /20</th><th rowspan="2">${c.total} /100</th><th rowspan="2">${c.edit}</th></tr><tr>${columns.filter(column=>column.topic).map(column=>`<th class="${column.ungraded?'ungraded':''}">${label(column)}</th>`).join('')}</tr></thead><tbody>${groupRows.map(row=>`<tr data-student-key="${esc(row.profile.studentKey)}"><th scope="row" class="student-sticky">${esc(row.profile.fullName||row.profile.ticket)}<small>${esc(row.profile.ticket)}</small></th>${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}<td class="journal-total">${row.total}</td><td><button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${snapshot.stale?'disabled':''}>${c.edit}</button></td></tr>`).join('')}<tr class="journal-statistics"><th class="student-sticky">${c.submitted}</th>${statistics.map(stat=>`<td>${stat.count}</td>`).join('')}<td>${withResults.length}</td><td></td></tr><tr class="journal-statistics"><th class="student-sticky">${c.activityAverage}</th>${statistics.map(stat=>`<td>${stat.mean}</td>`).join('')}<td>${average}</td><td></td></tr></tbody></table></div></section>`;
+      const statistics=columns.map(column=>{
+        const values=groupRows.map(row=>row.values[column.slug]).filter(value=>value!==null);
+        return {count:values.length,mean:values.length?numeric(values.reduce((sum,value)=>sum+value,0)/values.length):'—'};
+      });
+      return `<section class="panel journal-group"><h2>${esc(group)}</h2>
+        <div class="journal-summary"><span>${c.registered}: <b>${groupRows.length}</b></span>
+          <span>${c.results}: <b>${withResults.length}</b></span><span>${c.average}: <b>${average}</b></span></div>
+        <div class="teacher-table-scroll" data-journal-table="${esc(group)}" tabindex="0" role="region" aria-label="${esc(group)}">
+          <table class="teacher-gradebook"><thead><tr><th rowspan="2" class="student-sticky">${c.name}</th>
+            ${topics.map(topic=>`<th colspan="${topic.number===1?3:2}">${c.topic} ${topic.number}</th>`).join('')}
+            <th rowspan="2">${c.exam} /20</th><th rowspan="2">${c.total} /100</th><th rowspan="2">${c.edit}</th></tr>
+            <tr>${columns.filter(column=>column.topic).map(column=>`<th class="${column.ungraded?'ungraded':''}">${label(column)}</th>`).join('')}</tr></thead>
+          <tbody>${groupRows.map(row=>`<tr data-student-key="${esc(row.profile.studentKey)}">
+            <th scope="row" class="student-sticky">${esc(row.profile.fullName||row.profile.ticket)}<small>${esc(row.profile.ticket)}</small></th>
+            ${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}
+            <td class="journal-total">${row.total}</td><td><button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button></td></tr>`).join('')}
+            <tr class="journal-statistics"><th class="student-sticky">${c.submitted}</th>${statistics.map(stat=>`<td>${stat.count}</td>`).join('')}<td>${withResults.length}</td><td></td></tr>
+            <tr class="journal-statistics"><th class="student-sticky">${c.activityAverage}</th>${statistics.map(stat=>`<td>${stat.mean}</td>`).join('')}<td>${average}</td><td></td></tr>
+          </tbody></table></div></section>`;
     }).join('')||`<div class="panel empty-state">${c.empty}</div>`;
-    app.querySelectorAll('[data-grade-edit]').forEach(button=>button.onclick=()=>onEdit(button.dataset.gradeEdit,snapshot));
-    app.querySelectorAll('[data-governor-review]').forEach(button=>button.onclick=()=>onEdit(button.dataset.governorReview,snapshot));
+    rowsHost.querySelectorAll('[data-journal-table]').forEach(table=>{
+      const position=scrollPositions.get(table.dataset.journalTable);
+      if(position){table.scrollLeft=position.left;table.scrollTop=position.top}
+    });
+    rowsHost.querySelectorAll('[data-grade-edit]').forEach(button=>{
+      button.onclick=()=>{if(canEdit())onEdit(button.dataset.gradeEdit,snapshot)};
+    });
+    rowsHost.querySelectorAll('[data-governor-review]').forEach(button=>{
+      button.onclick=()=>{if(current())onEdit(button.dataset.governorReview,snapshot)};
+    });
+  }
+
+  function renderData(){
+    if(!current())return;
+    ({columns,rows}=journalModel(snapshot||{},topics));
+    groups=[...new Set([...groupOptions(),...rows.map(row=>row.profile.group)])].filter(Boolean).sort();
+    if(allGroupsSelected)selected=new Set(groups);
+    groupControls.innerHTML=groups.map(group=>{
+      const checked=selected.has(group);
+      return `<button class="btn btn-neutral ${checked?'selected':''}" type="button" data-journal-group="${esc(group)}" aria-pressed="${checked}">${esc(group)}</button>`;
+    }).join('');
+    groupControls.querySelectorAll('[data-journal-group]').forEach(button=>{
+      button.onclick=()=>{
+        const group=button.dataset.journalGroup;
+        selected.has(group)?selected.delete(group):selected.add(group);
+        allGroupsSelected=groups.every(item=>selected.has(item));
+        button.classList.toggle('selected',selected.has(group));
+        button.setAttribute('aria-pressed',String(selected.has(group)));
+        renderRows();
+      };
+    });
+    renderRows();
+    renderStatus();
+  }
+
+  function scheduleRetry(){
+    clearTimeout(retryTimer);
+    if(!current())return;
+    const delay=Math.min(60000,5000*2**Math.min(failures,4));
+    retryTimer=setTimeout(()=>{
+      if(navigator.onLine===false)scheduleRetry();
+      else refresh();
+    },delay);
+  }
+
+  function refresh(){
+    if(!current())return Promise.resolve();
+    if(pending)return pending;
+    clearTimeout(retryTimer);
+    const request=++requestVersion;
+    loading=true;
+    renderStatus();
+    if(!snapshot)renderRows();
+    pending=backend.adminAll({allowCached:false}).then(next=>{
+      if(!current()||request!==requestVersion)return;
+      snapshot=next;
+      loadFailed=false;
+      failures=next.stale?failures+1:0;
+      renderData();
+    }).catch(()=>{
+      if(!current()||request!==requestVersion)return;
+      loadFailed=true;
+      failures++;
+      if(snapshot)snapshot={...snapshot,stale:true};
+    }).finally(()=>{
+      if(!current()||request!==requestVersion)return;
+      pending=null;
+      loading=false;
+      renderStatus();
+      if(!snapshot)renderRows();
+      if(loadFailed||snapshot?.stale)scheduleRetry();
+    });
+    return pending;
+  }
+
+  function reconnect(){
+    if(current()&&(!snapshot||snapshot.stale||loadFailed))refresh();
+  }
+  function visibilityChanged(){
+    if(document.visibilityState==='visible')reconnect();
+  }
+  function cleanup(){
+    if(disposed)return;
+    disposed=true;
+    requestVersion++;
+    clearTimeout(retryTimer);
+    unsubscribe();
+    window.removeEventListener('online',reconnect);
+    document.removeEventListener('visibilitychange',visibilityChanged);
+    if(disposeCurrentJournal===cleanup)disposeCurrentJournal=null;
+  }
+
+  root.querySelector('#journalSearch').oninput=event=>{
+    query=event.target.value.trim().toLocaleLowerCase();
+    renderRows();
   };
-  app.querySelectorAll('[data-journal-group]').forEach(button=>button.onclick=()=>{const group=button.dataset.journalGroup;selected.has(group)?selected.delete(group):selected.add(group);button.classList.toggle('selected',selected.has(group));button.setAttribute('aria-pressed',String(selected.has(group)));renderRows()});
-  app.querySelector('#journalSearch').oninput=event=>{query=event.target.value.trim().toLocaleLowerCase();renderRows()};
-  app.querySelector('#journalRefresh').onclick=()=>mountTeacherJournal(app,{topics,onEdit,downloadCsv});
-  app.querySelector('#journalExport').onclick=()=>downloadCsv('rudn-gradebook.csv',[
-    ['student_id','full_name','group',...columns.map(column=>column.slug),'total'],
-    ...filtered().map(row=>[row.profile.ticket,row.profile.fullName,row.profile.group,...columns.map(column=>row.values[column.slug]??''),row.total])
-  ]);
-  renderRows();
+  refreshButton.onclick=refresh;
+  exportButton.onclick=()=>{
+    if(!current()||!snapshot)return;
+    downloadCsv('rudn-gradebook.csv',[
+      ['student_id','full_name','group',...columns.map(column=>column.slug),'total'],
+      ...filtered().map(row=>[row.profile.ticket,row.profile.fullName,row.profile.group,
+        ...columns.map(column=>row.values[column.slug]??''),row.total])
+    ]);
+  };
+  renderData();
+  disposeCurrentJournal=cleanup;
+  unsubscribe=backend.onStatus(()=>{
+    if(!current()){
+      cleanup();
+      if(root.isConnected&&(!backend.isAdmin()||backend.user?.uid!==uid||backend.generation!==generation))root.remove();
+      return;
+    }
+    const wasConnected=connected;
+    connected=Boolean(backend.connected);
+    if(!connected&&snapshot)snapshot={...snapshot,stale:true};
+    renderStatus();
+    if(connected&&!wasConnected)refresh();
+  });
+  window.addEventListener('online',reconnect);
+  document.addEventListener('visibilitychange',visibilityChanged);
+  refresh();
+  return cleanup;
 }

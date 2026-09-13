@@ -1,15 +1,15 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {CONFIG} from './config.js?v=1.2.2';
-import {backend,groupOptions} from './backend.js?v=1.2.2';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.2.2';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.2.2';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.2.2';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.2.2';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.2.2';
-import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.2.2';
-import {attemptOwner} from './attempt-session.js?v=1.2.2';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.1';
-import {openAccount,mountProfile} from './account.js?v=1.2.2';
+import {CONFIG} from './config.js?v=1.3.2';
+import {backend,groupOptions} from './backend.js?v=1.3.2';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.2';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.2';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.2';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.2';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.2';
+import {toast,formError,errorText,initNotifications} from './notifications.js?v=1.3.2';
+import {attemptOwner} from './attempt-session.js?v=1.3.2';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.2';
+import {openAccount,mountProfile} from './account.js?v=1.3.2';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -270,7 +270,7 @@ async function render(){
     else if(r.name==='activity') await renderActivity(r.parts[0]);
     else location.hash='dashboard';
   }catch(error){console.error(error.code||error);app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
-  app.setAttribute('aria-busy','false');app.focus({preventScroll:true});translateDocument(app);
+  app.setAttribute('aria-busy','false');if(!document.querySelector('dialog[open]'))app.focus({preventScroll:true});translateDocument(app);
   guardSubmissions();
   if(resetScroll)window.scrollTo({top:0,left:0,behavior:'instant'});
   scheduleAccessRefresh();
@@ -336,9 +336,7 @@ const gradeItems=()=>[
 ];
 async function renderGradebook(){
   if(backend.isAdmin()){
-    const hash=location.hash,uid=backend.user.uid;
-    app.innerHTML=contentPage(ui('gradebookTitle'),'',`<div class="panel" role="status">${t('loading')}</div>`);
-    mountTeacherJournal(app,{topics:data.course.topics,onEdit:renderStudentGrades,downloadCsv}).catch(error=>{if(location.hash===hash&&backend.user?.uid===uid&&backend.isAdmin()){app.innerHTML=contentPage(ui('gradebookTitle'),'',`<div class="panel notice danger">${esc(errorText(error))}</div>`);toast(error,'error')}});
+    currentCleanup=mountTeacherJournal(app,{topics:data.course.topics,onEdit:renderStudentGrades,downloadCsv});
     return;
   }
   const owner=attemptOwner();
@@ -748,36 +746,47 @@ function setAuthStage(stage,source=''){
 let rosterLookupTimer=null;
 let rosterLookupRequest=0;
 let resolvedIdentifier='';
-async function resolveIdentifier(){
+const identifierRequests=new Map();
+const completeStudentIdentifier=value=>/^(?:\d{5,20}|\d{5,20}@(rudn|pfur)\.ru)$/i.test(value);
+async function resolveIdentifier({explicit=false}={}){
   const identifier=authIdentifier.value.trim();
   const key=authKey(identifier);
   const request=++rosterLookupRequest;
-  if(!identifier){setAuthStage('identifier');rosterStatus.textContent=t('authHint');return false}
+  const current=()=>request===rosterLookupRequest&&key===authKey(authIdentifier.value)&&authDialog.open;
+  if(!identifier){setAuthStage('identifier');return false}
   if(key===resolvedIdentifier)return true;
   if(isAdminIdentifier(identifier)){
     resolvedIdentifier=key;
     setAuthStage('admin','admin');
     rosterStatus.textContent=t('adminPasswordHint');
-    authPassword.focus();
     return true;
   }
-  setAuthStage('identifier');
-  rosterStatus.textContent=t('rosterChecking');
+  if(!completeStudentIdentifier(identifier)){
+    if(explicit)formError(document.getElementById('authError'),{code:'auth/invalid-identifier'});
+    return false;
+  }
+  if(explicit)rosterStatus.textContent=t('rosterChecking');
   try{
-    const match=await backend.lookupStudent(identifier);
-    if(request!==rosterLookupRequest)return false;
+    // Share requests, but never let an old response modify the current input.
+    if(!identifierRequests.has(key)){
+      const pending=backend.lookupStudent(identifier);
+      identifierRequests.set(key,pending);
+      pending.finally(()=>{if(identifierRequests.get(key)===pending)identifierRequests.delete(key)}).catch(()=>{});
+    }
+    const match=await identifierRequests.get(key);
+    if(!current())return false;
+    if(!explicit&&!['profile','roster'].includes(match.source))return false;
     authFullName.value=match.fullName||'';
     selectAuthGroup(match.group||'');
     resolvedIdentifier=key;
     setAuthStage('student',match.source);
     rosterStatus.textContent=t(match.source==='profile'?'profileFound':match.source==='roster'?'rosterFound':'rosterMissing');
-    if(!match.fullName)authFullName.focus();
     return true;
   }catch(error){
-    if(request===rosterLookupRequest){
+    if(current()&&explicit){
       resolvedIdentifier='';
       setAuthStage('identifier');
-      rosterStatus.textContent=errorText(error);formError(document.getElementById('authError'),error);
+      rosterStatus.textContent=t('authHint');formError(document.getElementById('authError'),error);
     }
     return false;
   }
@@ -785,6 +794,7 @@ async function resolveIdentifier(){
 function openAuthDialog(){
   if(!backend.authReady){toast(t('loading'));return}
   if(backend.isAdmin()){location.hash='profile';return}
+  clearTimeout(rosterLookupTimer);rosterLookupRequest++;
   document.getElementById('authError').hidden=true;
   const p=backend.isAdmin()?null:backend.getProfile();
   authIdentifier.value=backend.isAdmin()?backend.user.email:(p?.email||p?.ticket||'');
@@ -801,21 +811,29 @@ function openAuthDialog(){
   authDialog.showModal();
   if(!p&&!backend.isAdmin())authIdentifier.focus();
 }
-authIdentifier.addEventListener('input',()=>{
+authIdentifier.addEventListener('input',event=>{
+  // Invalidate immediately, not when the debounce expires.
+  rosterLookupRequest++;
   resolvedIdentifier='';
+  document.getElementById('authError').hidden=true;
   authFullName.value='';authPassword.value='';selectAuthGroup('');setAuthStage('identifier');
   rosterStatus.textContent=t('authHint');
   clearTimeout(rosterLookupTimer);
-  rosterLookupTimer=setTimeout(resolveIdentifier,450);
+  if(!event.isComposing)rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700);
 });
-authIdentifier.addEventListener('blur',()=>{clearTimeout(rosterLookupTimer);if(!resolvedIdentifier)resolveIdentifier()});
+authIdentifier.addEventListener('compositionend',()=>{clearTimeout(rosterLookupTimer);rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700)});
+authDialog.addEventListener('close',()=>{clearTimeout(rosterLookupTimer);rosterLookupRequest++});
 document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
 profileButton.addEventListener('click',()=>openAccount(openAuthDialog));
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
   if(authSubmit.disabled)return;
   const identifier=authIdentifier.value.trim();
-  if(resolvedIdentifier!==authKey(identifier)){await resolveIdentifier();return}
+  if(resolvedIdentifier!==authKey(identifier)){
+    clearTimeout(rosterLookupTimer);authSubmit.disabled=true;
+    try{await resolveIdentifier({explicit:true})}finally{authSubmit.disabled=false}
+    return;
+  }
   authSubmit.disabled=true;const priorText=authSubmit.textContent;
   const slow=setTimeout(()=>{rosterStatus.textContent=getLocale()==='en'?'Still connecting. Please wait…':getLocale()==='zh'?'正在连接，请稍候……':'Подключение занимает больше времени. Подождите…'},4000);
   try{

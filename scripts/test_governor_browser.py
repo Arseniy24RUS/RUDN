@@ -71,7 +71,7 @@ class LocalFixtureServer:
                     return
                 self.path = self.path[len("/RUDN"):]
                 if self.path.split("?")[0] == "/assets/js/backend.js":
-                    body = ((REPO / "site/assets/js/backend.js").read_text() + LOCAL_FIXTURE).encode()
+                    body = ((REPO / "site/assets/js/backend.js").read_text(encoding="utf-8") + LOCAL_FIXTURE).encode()
                     self.send_response(200)
                     self.send_header("Content-Type", "text/javascript; charset=utf-8")
                     self.send_header("Content-Length", str(len(body)))
@@ -374,7 +374,7 @@ class Suite:
         stored_a = switch.evaluate("key=>JSON.parse(localStorage.getItem(key))", a_saved["key"])
         assert stored_a == a_saved["save"]
         assert len(b_saved["save"]["state"]["history"]) == 2
-        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.2.2')).backend.user.uid") == "qa-native-shared-uid"
+        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.2')).backend.user.uid") == "qa-native-shared-uid"
         a.close()
         switch.goto(self.server.base, wait_until="networkidle")
         switch.evaluate("profile=>localStorage.setItem('rudn.profile.v1',JSON.stringify(profile))", STUDENT_A)
