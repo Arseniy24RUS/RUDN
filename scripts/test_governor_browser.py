@@ -374,7 +374,7 @@ class Suite:
         stored_a = switch.evaluate("key=>JSON.parse(localStorage.getItem(key))", a_saved["key"])
         assert stored_a == a_saved["save"]
         assert len(b_saved["save"]["state"]["history"]) == 2
-        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.4')).backend.user.uid") == "qa-native-shared-uid"
+        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.5')).backend.user.uid") == "qa-native-shared-uid"
         a.close()
         switch.goto(self.server.base, wait_until="networkidle")
         switch.evaluate("profile=>localStorage.setItem('rudn.profile.v1',JSON.stringify(profile))", STUDENT_A)

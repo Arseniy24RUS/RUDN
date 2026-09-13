@@ -1,5 +1,7 @@
 const dictionaries = {
   ru: {
+    receptionOpening:'Открываем приёмную…', receptionUnavailable:'Не удалось открыть приёмную', answersOnDevice:'Сохранённые ответы остаются на устройстве.', retryLoading:'Повторить загрузку',
+    courseHome:'Главная страница курса', languageChoice:'Выбор языка интерфейса', navigation:'Навигация', mobileNavigation:'Мобильная навигация', close:'Закрыть', identifierExample:'1234567890 или 1234567890@rudn.ru',
     courseShort:'Введение в специальность', programmeShort:'Государственное и муниципальное управление',
     navDashboard:'Курс', navGradebook:'Журнал', navLive:'Общая доска', navPuzzle:'Карты', navMaterials:'Материалы', navProfile:'Профиль', navTeacher:'Преподавателю',
     localMode:'Локальный режим', cloudMode:'Данные синхронизируются', connectionError:'Нет связи с базой', loading:'Загрузка платформы…', signIn:'Войти', signOut:'Выйти',
@@ -17,6 +19,8 @@ const dictionaries = {
     submissionSaved:'Работа сохранена', synced:'Синхронизировано', localSaved:'Сохранено на устройстве', error:'Ошибка',
   },
   en: {
+    receptionOpening:'Opening public reception…', receptionUnavailable:'Unable to open public reception', answersOnDevice:'Your saved answers remain on this device.', retryLoading:'Retry loading',
+    courseHome:'Course home', languageChoice:'Interface language', navigation:'Navigation', mobileNavigation:'Mobile navigation', close:'Close', identifierExample:'1234567890 or 1234567890@rudn.ru',
     courseShort:'Introduction to the Profession', programmeShort:'State and Municipal Administration',
     navDashboard:'Course', navGradebook:'Gradebook', navLive:'Shared board', navPuzzle:'Maps', navMaterials:'Materials', navProfile:'Profile', navTeacher:'Instructor',
     localMode:'Local mode', cloudMode:'Cloud sync active', connectionError:'Database unavailable', loading:'Loading the platform…', signIn:'Sign in', signOut:'Sign out',
@@ -34,6 +38,8 @@ const dictionaries = {
     submissionSaved:'Submission saved', synced:'Synchronized', localSaved:'Saved on this device', error:'Error',
   },
   zh: {
+    receptionOpening:'正在打开公众接待室…', receptionUnavailable:'无法打开公众接待室', answersOnDevice:'已保存的答案仍保留在本设备上。', retryLoading:'重新加载',
+    courseHome:'课程首页', languageChoice:'界面语言', navigation:'导航', mobileNavigation:'移动端导航', close:'关闭', identifierExample:'1234567890 或 1234567890@rudn.ru',
     courseShort:'专业导论', programmeShort:'国家与市政管理',
     navDashboard:'课程', navGradebook:'成绩册', navLive:'共享大屏', navPuzzle:'地图', navMaterials:'资料', navProfile:'个人资料', navTeacher:'教师端',
     localMode:'本地模式', cloudMode:'云端同步已开启', connectionError:'无法连接数据库', loading:'正在加载平台…', signIn:'登录', signOut:'退出',
@@ -90,6 +96,8 @@ export function translateDocument(root=document){
   document.documentElement.lang = locale === 'zh' ? 'zh-Hans' : locale;
   document.documentElement.dataset.locale = locale;
   root.querySelectorAll?.('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n,el.textContent); });
+  root.querySelectorAll?.('[data-i18n-aria-label]').forEach(el=>{ el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel,el.getAttribute('aria-label'))); });
+  root.querySelectorAll?.('[data-i18n-placeholder]').forEach(el=>{ el.setAttribute('placeholder',t(el.dataset.i18nPlaceholder,el.getAttribute('placeholder'))); });
   const flagEl=document.getElementById('languageFlag'); if(flagEl) flagEl.textContent=flag();
 }
 

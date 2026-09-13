@@ -1,0 +1,517 @@
+[
+  {
+    "id": "71214cba45d7caa6",
+    "ru": "Работы на участке Т-4 разрешены на текущую стадию. Прямой проход закрыт в согласованных границах, предусмотрен обход. Разрешение и схема действуют на дату наблюдения в дату события. Сведения синтетические. Уполномоченный технический специалист осмотрел именно Т-4 в дату события. Обход соответствует приложенной схеме и требованиям доступности, выхода на полосу движения не требует. Жалоба не содержит указания на иной фактический дефект.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-safe-detour].fragments[material].text"
+    ]
+  },
+  {
+    "id": "bbababa90a7bcc85",
+    "ru": "Длиннее — не значит незаконно · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-safe-detour].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-sidewalk-safe-detour].title"
+    ]
+  },
+  {
+    "id": "0add2a89c584599e",
+    "ru": "На стенде показано первоначальное решение по Т-9 без дополнений. Снимок сделан в дату события. По этому документу первоначальный срок окончен. Подлинность учебной выписки проверена в условиях дела. До окончания первоначального срока принято решение о продлении именно Т-9 на текущую стадию. На дату снимка продление действует. Осмотр подтвердил соответствие текущих границ и прохода.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-updated-permit].fragments[material].text"
+    ]
+  },
+  {
+    "id": "efa3748c92999ed6",
+    "ru": "Старое разрешение на новом стенде · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-updated-permit].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-sidewalk-updated-permit].title"
+    ]
+  },
+  {
+    "id": "0cbfa9253882bbfb",
+    "ru": "Указан интервал после 23:00 перед датой в дату события и сторона перехода. Сообщение о периодическом исчезновении сигнала не является техническим заключением о причине. Акт подтверждает исправность в 12:00 следующего дня. Ночной режим не проверен. Компетентная служба может сопоставить записи контроллера с указанным в карточке интервалом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-night-fault].fragments[material].text"
+    ]
+  },
+  {
+    "id": "fd38eb0a8f626ac8",
+    "ru": "Днём исправен, ночью пропадает · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-night-fault].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-signal-night-fault].title"
+    ]
+  },
+  {
+    "id": "fcc99d133b781e5b",
+    "ru": "Для П-7 утверждена определённая схема фаз. Проверка подтвердила её фактическое исполнение. В материалах нет установления оптимальности схемы для всех групп пешеходов. Предложено увеличить одну фазу на десять секунд. Расчёт влияния на другие фазы отсутствует. Уполномоченное подразделение организации движения оценивает предложение; приёмная готовит материалы и ответ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-timing-proposal].fragments[material].text"
+    ]
+  },
+  {
+    "id": "6cf0f61eaf23e389",
+    "ru": "Добавьте десять секунд зелёного · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-timing-proposal].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-signal-timing-proposal].title"
+    ]
+  },
+  {
+    "id": "a1ad9a3f59c451b2",
+    "ru": "Питание и переключение исправны. Акт относится к переходу П-3. Оценки видимости сигнала со стороны библиотеки в нём нет. Специалист подтвердил перекрытие обзора ветвями со стороны библиотеки. В учебной карточке указаны два компетентных исполнителя: содержание технического средства и уход за насаждениями. Самостоятельная вырубка не предусмотрена.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-visibility].fragments[material].text"
+    ]
+  },
+  {
+    "id": "216a25212a37807d",
+    "ru": "Сигнал горит, но его не видно · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-signal-visibility].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-signal-visibility].title"
+    ]
+  },
+  {
+    "id": "94f26b2ce1475db6",
+    "ru": "На дереве Д-31 после ветра повреждена крупная ветка над используемым проходом. Карточка дежурного подтверждает актуальность сообщения. Граница опасного участка и меры определяются ответственными специалистами, не студентом. Определены дежурный по территории и профильная служба осмотра насаждений. Организуются безопасное ограничение подхода и профессиональная оценка. Игра моделирует сообщения, не направляет их в реальные службы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-current-danger].fragments[material].text"
+    ]
+  },
+  {
+    "id": "d32c1c6b473e632b",
+    "ru": "Ветка над проходом · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-current-danger].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-trees-current-danger].title"
+    ]
+  },
+  {
+    "id": "3eceb1ab0b2ac189",
+    "ru": "В обращении оспаривается удаление двух деревьев Д-14 и Д-15. Место и номера подтверждены принятым комплектом, а не определены по виду породы. Уполномоченный отдел подтвердил действующее основание на удаление Д-14 и Д-15; заключение и акт относятся к ним. Отклонений по этим работам в условии не установлено. Это синтетические материалы, не сообщение о реальном объекте.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-permit-matches].fragments[material].text"
+    ]
+  },
+  {
+    "id": "027fc9c1adcf06da",
+    "ru": "Номера деревьев совпали · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-permit-matches].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-trees-permit-matches].title"
+    ]
+  },
+  {
+    "id": "c676894433a40437",
+    "ru": "Действующий документ на Д-22 допускает санитарную обрезку указанных ветвей. Удаление ствола в объём этого документа не включено. Порядок выдачи задан учебным комплектом, а не универсализирован для России. Уполномоченный специалист зафиксировал удаление ствола Д-22. Номер и участок совпадают. Сведений о дополнительном основании в комплекте нет; его наличие необходимо проверить.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-pruning-scope].fragments[material].text"
+    ]
+  },
+  {
+    "id": "83b2767628a143d8",
+    "ru": "Разрешили обрезку, убрали ствол · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-trees-pruning-scope].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-trees-pruning-scope].title"
+    ]
+  },
+  {
+    "id": "e1eb63c32ad33490",
+    "ru": "Перечень согласованных каналов: В отдельном подтверждённом согласии отмечена только электронная почта. SMS прямо исключены, поле телефонного рекламного канала не выбрано. Номер предоставлен для конкретного сервисного взаимодействия.\n\nСпорная рекламная рассылка: Журнал фиксирует SMS с рекламой на номер заявителя. Электронное письмо в этот момент не отправлялось; текст продвигает новые товары. Иного согласия на SMS в проверенном комплекте нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-channel-scope].fragments[material].text"
+    ]
+  },
+  {
+    "id": "3f8fad0a6e6d73e8",
+    "ru": "Факты и документы относятся только к вымышленной ситуации ads-channel-scope",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-channel-scope].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-channel-scope].scope"
+    ]
+  },
+  {
+    "id": "8110a1665bc6454f",
+    "ru": "Согласие на письма, сообщение на телефон · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-channel-scope].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-channel-scope].title"
+    ]
+  },
+  {
+    "id": "a75d95feedbbb24d",
+    "ru": "Текст спорного сообщения: Сообщение адресовано покупателю заказа Z-18: «Оплаченный заказ готов к выдаче. Пункт выдачи и часы работы указаны в заказе». Скидок, предложения новых товаров, рекомендаций и рекламных ссылок нет. Содержание полностью приведено в деле.\n\nКарточка заказа Z-18: Заказ оформил сам заявитель, номер телефона указан для связи по его исполнению. Оператор и отправитель установлены; вопрос законности иной обработки данных не входит в вывод об этом единственном сообщении.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-service-message].fragments[material].text"
+    ]
+  },
+  {
+    "id": "397a34a58661607d",
+    "ru": "Факты и документы относятся только к вымышленной ситуации ads-service-message",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-service-message].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-service-message].scope"
+    ]
+  },
+  {
+    "id": "f34135498298b60a",
+    "ru": "Уведомление о заказе или реклама? · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-service-message].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-service-message].title"
+    ]
+  },
+  {
+    "id": "39bcf77fdbec2264",
+    "ru": "Согласие и адресат: В отдельном действующем согласии указаны рекламные SMS этой организации на номер заявительницы. Для сообщений до требования факт и объём предварительного согласия по условию подтверждены.\n\nЖурнал требования и отправки: Рекламораспространитель получил требование прекратить SMS в 10:15. Следующее спорное рекламное сообщение отправлено в 14:20 того же дня. Задержка доставки исключена: сравнивается именно время отправки. Канал подачи требования и получатель подтверждены.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-withdrawal-time].fragments[material].text"
+    ]
+  },
+  {
+    "id": "847749f2082d58e7",
+    "ru": "Факты и документы относятся только к вымышленной ситуации ads-withdrawal-time",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-withdrawal-time].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-withdrawal-time].scope"
+    ]
+  },
+  {
+    "id": "170757fddd1a65b5",
+    "ru": "Согласие было до требования прекратить · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-withdrawal-time].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-ads-withdrawal-time].title"
+    ]
+  },
+  {
+    "id": "e3143f0720fc786c",
+    "ru": "Сведения о посреднике: Сайт «Учебный билет» — независимый продавец. По представленному договору он не уполномочен получать претензии от имени перевозчика. Получение им письма {{agent}} не являлось получением перевозчиком. Его собственные обязательства по передаче рассматриваются отдельно.\n\nУведомление перевозчика: Надлежащая претензия получена перевозчиком {{carrier}}. Это подтверждённое исходное событие для его рассмотрения. Ответ сайта-посредника касается только регистрации у самого посредника, а не удовлетворения или отклонения перевозчиком.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-agent-receipt].fragments[material].text"
+    ]
+  },
+  {
+    "id": "403c99c387b989b0",
+    "ru": "Факты и документы относятся только к вымышленной ситуации flight-agent-receipt",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-agent-receipt].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-agent-receipt].scope"
+    ]
+  },
+  {
+    "id": "56844a7d94c26455",
+    "ru": "Письмо принял продавец билета · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-agent-receipt].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-agent-receipt].title"
+    ]
+  },
+  {
+    "id": "f97d1e6d63ea202e",
+    "ru": "Билет и уведомление об отмене: Прямой внутренний рейс, полностью неиспользованный билет. Отмена перевозчиком подтверждена. Другие участки перевозки, медицинские основания и особый режим статьи 107.2 Воздушного кодекса по условию отсутствуют.\n\nЗаявление пассажира и предложение: Пассажир заявил вынужденный отказ именно вследствие отмены. Соглашение о замене возврата ваучером не заключалось. Получение надлежащей претензии перевозчиком {{carrier}} подтверждено. Реквизиты платежа доступны уполномоченному получателю, не публикуются в игре.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-cancel-nonrefundable].fragments[material].text"
+    ]
+  },
+  {
+    "id": "a8f0fd9bbb9a003a",
+    "ru": "Факты и документы относятся только к вымышленной ситуации flight-cancel-nonrefundable",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-cancel-nonrefundable].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-cancel-nonrefundable].scope"
+    ]
+  },
+  {
+    "id": "dd984383639f568f",
+    "ru": "Невозвратный тариф, отменённый рейс · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-cancel-nonrefundable].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-cancel-nonrefundable].title"
+    ]
+  },
+  {
+    "id": "0221ffd6fccacddf",
+    "ru": "Билет и журнал посадки: Прямой внутренний рейс вымышленного перевозчика. В билете отправление в 08:00. Посадка до 15:00 не начиналась; семь часов ожидания полностью приходятся на дневное время. Причина задержки — подтверждённая неблагоприятная погода. Особые режимы ограничения перевозок по условию не применяются.\n\nЖурнал обслуживания: Вода предоставлена в 10:30. Горячее питание и напитки к 15:00 не организованы; сведения о выдаче ваучеров или альтернативном предоставлении отсутствуют. Комната матери и ребёнка, гостиница и повторные интервалы не являются предметом данного задания.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-weather-care].fragments[material].text"
+    ]
+  },
+  {
+    "id": "9fbd3e441c4e2789",
+    "ru": "Факты и документы относятся только к вымышленной ситуации flight-weather-care",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-weather-care].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-weather-care].scope"
+    ]
+  },
+  {
+    "id": "244c092abdf49147",
+    "ru": "Непогода не отменяет помощь при ожидании · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-weather-care].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-flight-weather-care].title"
+    ]
+  },
+  {
+    "id": "f458e9767027641f",
+    "ru": "Карточка оперативного сообщения: Сообщение зарегистрировано диспетчером под учебным номером G-16. В карточке указаны дом 7, корпус 2. Факт принятия вызова подтверждён, но прибытие по нужному корпусу не подтверждено.\n\nУточнение заявителя: Текущее сообщение относится к дому 7, корпусу 3. Заявитель сейчас вне опасной зоны, сообщает о сохраняющемся признаке опасности; самостоятельно обследовать объект ему не предлагается. Расхождение в корпусе подтверждено повторным уточнением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-address-correction].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2f91d06960c5d166",
+    "ru": "Факты и документы относятся только к вымышленной ситуации gas-address-correction",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-address-correction].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-address-correction].scope"
+    ]
+  },
+  {
+    "id": "b7e1420810d37dcc",
+    "ru": "Службу вызвали, адрес записан другой · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-address-correction].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-address-correction].title"
+    ]
+  },
+  {
+    "id": "09d61c9669cabfdd",
+    "ru": "Акт по заявке G-25: Уполномоченные специалисты обследовали именно указанный объект по заявке G-25, выполнили описанные в акте меры и зафиксировали результат на момент обследования. Акт не является бессрочной гарантией безопасности объекта.\n\nПодтверждение заявителя: Заявитель подтверждает: текущего запаха, шипения и иных новых признаков опасности сейчас не сообщает. Его просьба относится к содержанию выполненных действий и получению понятного ответа по прежней заявке.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-past-incident].fragments[material].text"
+    ]
+  },
+  {
+    "id": "01f81915962dc2d1",
+    "ru": "Факты и документы относятся только к вымышленной ситуации gas-past-incident",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-past-incident].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-past-incident].scope"
+    ]
+  },
+  {
+    "id": "7f3978715020e0db",
+    "ru": "Аварийная заявка закрыта, вопрос к ответу остался · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-past-incident].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-past-incident].title"
+    ]
+  },
+  {
+    "id": "9c17ecc7bd57ebaf",
+    "ru": "Объявление о плановых работах: Указаны объект G-31 и плановое отключение на часть дня. Объявление подтверждает план, но не содержит оценки конкретного текущего сообщения о запахе и не утверждает, что всякий запах безопасен.\n\nТекущее сообщение снаружи объекта: Посетительница сообщает о запахе сейчас, находясь в безопасном месте вне предполагаемой опасной зоны. Самостоятельная проверка не выполнялась. По данным приёмной подтверждения передачи именно этого сообщения диспетчеру пока нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-planned-outage].fragments[material].text"
+    ]
+  },
+  {
+    "id": "05d971d57ed1c176",
+    "ru": "Факты и документы относятся только к вымышленной ситуации gas-planned-outage",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-planned-outage].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-planned-outage].scope"
+    ]
+  },
+  {
+    "id": "d06718c231df1ea1",
+    "ru": "Объявление об отключении не объясняет запах · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-gas-planned-outage].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-gas-planned-outage].title"
+    ]
+  },
+  {
+    "id": "03745c5ae8161cbc",
+    "ru": "Разрешение и согласованный фрагмент проекта: Для объекта H-21 подтверждён действующий комплект документов на сохранение: разрешение, соответствующая проектная документация и предусмотренный надзор. Проект допускает временное снятие элементов E-3 и E-4 для реставрации с учётом, хранением и возвращением. Конструктивные характеристики по условию не затрагиваются; иные необходимые условия выполнены.\n\nЖурнал передачи элементов: Сняты E-3 и E-4 с объекта H-21, указаны маркировка, место хранения и ответственный реставратор. В журнале нет списания или уничтожения; подтверждений выхода за согласованный объём в материалах нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-approved-restoration].fragments[material].text"
+    ]
+  },
+  {
+    "id": "773c1587b440cd0a",
+    "ru": "Факты и документы относятся только к вымышленной ситуации heritage-approved-restoration",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-approved-restoration].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-approved-restoration].scope"
+    ]
+  },
+  {
+    "id": "6c51ed6daee578a1",
+    "ru": "Сняли для реставрации, а не уничтожили · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-approved-restoration].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-approved-restoration].title"
+    ]
+  },
+  {
+    "id": "cfef8c227e8977b6",
+    "ru": "Ответ органа об охранном статусе: Орган подтвердил: здание H-32 включено в действующий перечень выявленных объектов культурного наследия. Идентификатор, адрес и границы совпадают с местом работ. Включение в реестр пока не завершено.\n\nСведения о проводимых работах: На H-32 проводят именно работы по сохранению фасада. Подрядчик представляет только согласие собственника и ссылается на отсутствие записи в реестре. Разрешительный комплект на работы в материалах не подтверждён.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-identified-status].fragments[material].text"
+    ]
+  },
+  {
+    "id": "e1d6cb7e1cf99843",
+    "ru": "Факты и документы относятся только к вымышленной ситуации heritage-identified-status",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-identified-status].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-identified-status].scope"
+    ]
+  },
+  {
+    "id": "eff3ccc28f61086e",
+    "ru": "В реестре ещё нет, в перечне уже есть · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-identified-status].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-identified-status].title"
+    ]
+  },
+  {
+    "id": "d72a7cafff7bad0f",
+    "ru": "Лицензионная выписка: Организация «Учебная реставрация» имеет действующую лицензию на указанную в документе деятельность. Выписка относится к организации; объект H-44, виды конкретных работ на нём и проект в ней не указаны.\n\nПроверка комплекта по H-44: Уполномоченное подразделение подтверждает охранный статус H-44 и проведение работ по сохранению. В проверенном комплекте на данном этапе представлены лицензия и письмо собственника; разрешение на конкретные работы отсутствует. Отдельный применимый упрощённый режим по условию не установлен.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-license-not-permit].fragments[material].text"
+    ]
+  },
+  {
+    "id": "77a027dd70843b00",
+    "ru": "Факты и документы относятся только к вымышленной ситуации heritage-license-not-permit",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-license-not-permit].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-license-not-permit].scope"
+    ]
+  },
+  {
+    "id": "40f33f22c86368f6",
+    "ru": "Лицензия подрядчика — не разрешение на этот фасад · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-heritage-license-not-permit].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-heritage-license-not-permit].title"
+    ]
+  },
+  {
+    "id": "4477adc134868589",
+    "ru": "Акт отключения подсветки S-23: По объекту S-23 ночная подсветка отключена. Акт относится к освещению; шум и вибрация в нём не оценивались.\n\nУточнение заявительницы: Заявительница подтверждает отсутствие мешающего света после указанной меры. Одновременно впервые сообщает о гуле в комнате; источник звука по её предположению находится на фасаде. Замеров и заключения о причине гула нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].fragments[material].text"
+    ]
+  },
+  {
+    "id": "21e5736faf0321ce",
+    "ru": "Факты и документы относятся только к вымышленной ситуации sign-light-restored",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-light-restored].scope"
+    ]
+  },
+  {
+    "id": "175a9e2bc21e0f9b",
+    "ru": "Свет погас, звук остался · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-light-restored].title"
+    ]
+  },
+  {
+    "id": "d2118d6ced91bec0",
+    "ru": "Акт обследования L-08: Объект L-08 осмотрен в 11:30 при выключенной подсветке. В акте описано только это состояние; измерений при ночной работе и вывода о ней нет.\n\nПисьмо владельца о графике: Владелец подтверждает автоматическое включение L-08 с 22:00 до 06:00. Содержание — название и режим работы без предложений товаров. В условии орган компетентен организовать рассмотрение светового воздействия в установленном порядке.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].fragments[material].text"
+    ]
+  },
+  {
+    "id": "21bb067475f785c5",
+    "ru": "Факты и документы относятся только к вымышленной ситуации sign-night-measurement",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-night-measurement].scope"
+    ]
+  },
+  {
+    "id": "b8d0ccebf347e195",
+    "ru": "Днём экран был выключен · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-night-measurement].title"
+    ]
+  },
+  {
+    "id": "8df66f0dd00bd5a8",
+    "ru": "Связанные материалы дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].fragments[material].label"
+    ]
+  },
+  {
+    "id": "98ad0cb6f20f5e4a",
+    "ru": "Запись вечернего цикла экрана: На записи {{observed}} идентификатор конструкции S-14. Между названием магазина появляются сменяющиеся предложения товаров со скидкой, ценой и приглашением купить. Запись охватывает полный цикл. Ночная яркость инструментально не измерялась.\n\nПредыдущая карточка конструкции: Карточка S-14 описывает старую статичную табличку с названием и временем работы. Владелец называет новый экран вывеской; изменения содержания в прежней карточке нет. Компетенция рекламного и светотехнического рассмотрения в данном учебном органе распределена между разными подразделениями.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].fragments[material].text"
+    ]
+  },
+  {
+    "id": "b55eee6e41b8688c",
+    "ru": "Учебные материалы; внешняя ссылка ведёт к правовой основе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].kind"
+    ]
+  },
+  {
+    "id": "0b68d125b1073256",
+    "ru": "Первый фрагмент — авторский материал вымышленного дела, не опубликованный акт реальной организации. Второй — краткое изложение нормы. Ссылка на источник нормы не подтверждает вымышленные события.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-night-measurement].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-light-restored].representation"
+    ]
+  },
+  {
+    "id": "2f0d9dce1499db56",
+    "ru": "Факты и документы относятся только к вымышленной ситуации sign-promotion",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-promotion].scope"
+    ]
+  },
+  {
+    "id": "e566dcfdf66926b7",
+    "ru": "Название магазина и скидка на весь экран · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v11-sign-promotion].title"
+    ]
+  },
+  {
+    "id": "335e89746eee6958",
+    "ru": "Протокол размещения Р-18: Подтверждены признаки рекламы пива и её размещение на странице интернет-сайта. Материал доступен через интернет; это не фотография внутреннего прейскуранта в обращении.\n\nПояснение распространителя: Распространитель указывает на отметку 18+ и предупреждение. Эти элементы действительно есть; других обстоятельств, меняющих квалификацию или канал, не приведено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-online-agegate].fragments[material].text"
+    ]
+  },
+  {
+    "id": "e1f2ec35f3321dc6",
+    "ru": "Только вымышленное дело beer-online-agegate",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-online-agegate].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-online-agegate].scope"
+    ]
+  },
+  {
+    "id": "987ca1deb4f5d491",
+    "ru": "Возрастная отметка не меняет канал · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-online-agegate].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-online-agegate].title"
+    ]
+  }
+]

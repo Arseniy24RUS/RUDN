@@ -1,0 +1,1162 @@
+[
+  {
+    "id": "82fec71b8f1e536e",
+    "ru": "Карточка проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d1].title"
+    ]
+  },
+  {
+    "id": "6cf2bee4fc5e1541",
+    "ru": "Письмо направлено {{sent}} и зарегистрировано {{registered}}. Оно не является декларацией и не подтверждает перечисление денег.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d2].text"
+    ]
+  },
+  {
+    "id": "6a6d72be2f199fcf",
+    "ru": "Письмо с вопросом о возврате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0392ef326137c499",
+    "ru": "Д-1 представлена {{declaration}}, Д-2 — {{amended}}. Письмо отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[dates].text"
+    ]
+  },
+  {
+    "id": "a63578fab7ee6ee5",
+    "ru": "Представлена уточнённая декларация до окончания прежней проверки; срок новой проверки связан с Д-2. В базовом деле была одна первоначальная декларация. Здесь новая проверка связана с принятой уточнённой декларацией, а не с дополнительным письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.explain"
+    ]
+  },
+  {
+    "id": "559ad54acb67aab4",
+    "ru": "Представлена уточнённая декларация до окончания прежней проверки; срок новой проверки связан с Д-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "496f5d2ca245a3b8",
+    "ru": "Любая последующая декларация не влияет на незавершённую первоначальную проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "7bd41ef33345df46",
+    "ru": "Каждое письмо в приёмную начинает ещё три месяца проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b1fa887938a297c8",
+    "ru": "Название документа не компенсирует неправильное исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].followup.explain"
+    ]
+  },
+  {
+    "id": "80270b5dedd898f7",
+    "ru": "В проекте ответа правильно названа Д-2, но срок вычислен по квитанции Д-1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].followup.intro"
+    ]
+  },
+  {
+    "id": "ce0000dd885de17a",
+    "ru": "Исправить основание расчёта на дату представления Д-2 и перепроверить ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d59dc808f16fec9c",
+    "ru": "Оставить, потому что обе декларации принадлежат одному человеку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "dadc33c4c9a5e793",
+    "ru": "Изменить дату квитанции Д-1 задним числом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "c47a5495bdb30c1d",
+    "ru": "Налоговый кодекс РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.codeName",
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.codeName",
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.codeName"
+    ]
+  },
+  {
+    "id": "350d2aa8c5adf560",
+    "ru": "Пункт 2 статьи 88 НК РФ задаёт общий трёхмесячный срок проверки обычной декларации. По пункту 9.1 представление уточнённой декларации до окончания прежней проверки прекращает её и запускает проверку уточнённой. Пояснения и подтверждающие документы по пунктам 3–5 сами по себе не являются уточнённой декларацией. Для заявления по пункту 2 статьи 221.1 предусмотрены 30 календарных дней; закон допускает специальное продление при соответствующих условиях. Дата завершения проверки не является автоматически датой зачисления возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.explain",
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.explain",
+      "cases:SOURCES[n12-tax88].text"
+    ]
+  },
+  {
+    "id": "f2cc5435e5b6fcb6",
+    "ru": "При уточнённой декларации до окончания проверки применять пункт 9.1 статьи 88.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "7ef40c3e87b3f36b",
+    "ru": "Перезапускать проверку после любых пояснений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ff0b6c0247ff73f0",
+    "ru": "Считать три месяца от обращения в банк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "5a2558a9f9528b5d",
+    "ru": "Найдите норму: Камеральная проверка: декларация, уточнение и пояснения. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].knowledge.prompt",
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "328f95fbc505a03e",
+    "ru": "Прошло почти три месяца после первой декларации. Но я потом менял сумму и подавал уточнённую. Всё равно считайте от первой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].opening"
+    ]
+  },
+  {
+    "id": "4f72d27974e040cf",
+    "ru": "Камеральная проверка уточнённой декларации по статье 88 НК РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].procedures[0].text"
+    ]
+  },
+  {
+    "id": "622d9e881cfdf54e",
+    "ru": "Общий ответ по 59-ФЗ вместо определения срока проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].procedures[1].text"
+    ]
+  },
+  {
+    "id": "36faf58865be40a6",
+    "ru": "Проверка упрощённого заявления за тридцать дней вместо обычной декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].procedures[2].text"
+    ]
+  },
+  {
+    "id": "8e10a648bb863f68",
+    "ru": "По квитанции {{declaration}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a9750ed21714c303",
+    "ru": "Есть первоначальная декларация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "c340aa1a77cfdf74",
+    "ru": "Когда представлена первоначальная декларация?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f2a9b730c751e3cd",
+    "ru": "Квитанция {{amended}} подтверждает именно уточнённую декларацию, не пояснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "82f7b4f113be4861",
+    "ru": "Новая декларация отличается от пояснений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "4142974aa64dd18d",
+    "ru": "Что представлено позднее?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d8fdf195cefa2938",
+    "ru": "Нет, уточнённая поступила до её окончания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "57598329e228a054",
+    "ru": "Применим специальный порядок прекращения прежней проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "af8eb920618a5810",
+    "ru": "Первоначальная проверка была завершена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q2].text"
+    ]
+  },
+  {
+    "id": "27e97d8c4d6e0472",
+    "ru": "Нет; письмо в приёмную подано уже {{received}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "491546e9823c79cb",
+    "ru": "Поступление обычного письма не запускает новый срок проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "1a17a9463eafe0b3",
+    "ru": "Есть другие изменения после уточнения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].questions[q3].text"
+    ]
+  },
+  {
+    "id": "0795228978f4ba92",
+    "ru": "Специалист подготовки разъяснений налогоплательщику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].role.title",
+      "cases:CASE_TEMPLATES[tax-explanations-only].role.title"
+    ]
+  },
+  {
+    "id": "51f65744a41968f6",
+    "ru": "Налоговый орган, в котором проводится соответствующая проверка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].routes[0].text"
+    ]
+  },
+  {
+    "id": "a2ab8afc587a3354",
+    "ru": "Банк как орган, устанавливающий срок камеральной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].routes[1].text"
+    ]
+  },
+  {
+    "id": "ef45fc3907157c37",
+    "ru": "МФЦ как орган, пересчитывающий налоговый вычет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].routes[2].text"
+    ]
+  },
+  {
+    "id": "1871163389733663",
+    "ru": "Появилась уточнённая декларация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[tax-amended-declaration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[tax-amended-declaration].title"
+    ]
+  },
+  {
+    "id": "77dbc81952068ecc",
+    "ru": "Для уточнённой действует пункт 9.1 статьи 88; пояснения сами по себе не являются новой декларацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].trap.explain"
+    ]
+  },
+  {
+    "id": "bcc2a92e837e97c1",
+    "ru": "Уточнённая декларация и пояснение к прежней декларации всегда одинаково перезапускают проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].trap.text"
+    ]
+  },
+  {
+    "id": "6d9a0578987424fa",
+    "ru": "Установить вид декларации и наличие уточнений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[a0].title"
+    ]
+  },
+  {
+    "id": "34295a413ce910e1",
+    "ru": "Проверить дату её представления по квитанции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7f1725182548fd4b",
+    "ru": "Рассчитать окончание в месяцах, затем проверить нерабочий последний день",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[a2].title"
+    ]
+  },
+  {
+    "id": "5c55d4a2303ca842",
+    "ru": "Разъяснить разницу между окончанием проверки и возвратом без неподтверждённых обещаний",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[a3].title"
+    ]
+  },
+  {
+    "id": "eaa9ce313481e095",
+    "ru": "Сопоставить сообщение об окончании проверки с данной декларацией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b6df8e3d936b42ce",
+    "ru": "Выдать гарантированную дату поступления денег без проверки отдельной процедуры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[b0].title",
+      "cases:CASE_TEMPLATES[tax-calendar-months].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "453289103498af00",
+    "ru": "Заменить три месяца девяноста днями",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].actions[b1].title"
+    ]
+  },
+  {
+    "id": "b3d129ce754a6e2a",
+    "ru": "По условию применяется общий трёхмесячный срок обычной первоначальной 3-НДФЛ без уточнений. Исчисление по статье 6.1 НК РФ. Требуется окончание проверки, не день возврата денег. Это не декларация по НДС и не упрощённая процедура получения вычета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.context"
+    ]
+  },
+  {
+    "id": "17422f628d5effb9",
+    "ru": "Представлена декларация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.events[declaration].label",
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.events[declaration].label"
+    ]
+  },
+  {
+    "id": "80e9ada65520a09b",
+    "ru": "90 календарных дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.ruleOptions[calendar90].text"
+    ]
+  },
+  {
+    "id": "feb15c870ed75b70",
+    "ru": "3 календарных месяца",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.ruleOptions[months3].text",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.ruleOptions[months3].text",
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.ruleOptions[months3].text"
+    ]
+  },
+  {
+    "id": "af6e975dcb70ceaa",
+    "ru": "Только заданная обычная проверка. Упрощённые вычеты, НДС, уточнённые декларации и срок возврата здесь не рассчитываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.scope"
+    ]
+  },
+  {
+    "id": "8ba920b13bd2683a",
+    "ru": "НК РФ, статья 88, пункт 2; статья 6.1, пункты 2, 5, 7.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.source"
+    ]
+  },
+  {
+    "id": "09fef86dba2a5d64",
+    "ru": "Крайний день обычной камеральной проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].calendar.title"
+    ]
+  },
+  {
+    "id": "3f74e70c9f4b81cd",
+    "ru": "Обычная первоначальная 3-НДФЛ представлена {{declaration}}. Уточнённых деклараций нет. Рассчитывается предельное окончание общей камеральной проверки, а не возврат средств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b06a362c48c6878b",
+    "ru": "Квитанция декларации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].documents[d0].title"
+    ]
+  },
+  {
+    "id": "877819a579e622a5",
+    "ru": "Обращение поступило {{received}} и зарегистрировано {{registered}}. Оно не является новой декларацией и не запускает проверку заново.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].documents[d1].text"
+    ]
+  },
+  {
+    "id": "bfb0fb92d70f8307",
+    "ru": "Письмо в приёмную",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].documents[d1].title"
+    ]
+  },
+  {
+    "id": "bcd95976b3beec48",
+    "ru": "Трёхмесячный срок проверки связан с представлением декларации; его нельзя заменить 90 днями или датой позднего письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].factTask.explain",
+      "cases:CASE_TEMPLATES[tax-calendar-months].outcomes.good"
+    ]
+  },
+  {
+    "id": "e16b72e12cf12602",
+    "ru": "Любое новое письмо перезапускает три месяца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "cbc842dbd5256eb6",
+    "ru": "90 дней всегда равны трём календарным месяцам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "eb93dd373bab7191",
+    "ru": "Инспекция сообщает, что проверка завершена. Заявительница считает это подтверждением уже совершённого перевода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].followup.intro"
+    ]
+  },
+  {
+    "id": "49f3fcad7c7b3502",
+    "ru": "Проверить отдельные сведения о возврате; окончание проверки не доказывает зачисление на счёт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].followup.options[0].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].followup.explain"
+    ]
+  },
+  {
+    "id": "1f8ad64cb967e813",
+    "ru": "Сказать, что деньги уже получены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "619350d52fa08cce",
+    "ru": "Начать новую проверку из-за вопроса о переводе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "061cde4ca2542f11",
+    "ru": "Пункт 2 статьи 88 НК РФ задаёт для указанной обычной камеральной проверки трёхмесячный срок. Статья 6.1 описывает срок в месяцах, соответствующее число и окончание в месяце без такого числа. Три календарных месяца не заменяются 90 днями. Эта задача не распространяет общий срок на НДС или упрощённый вычет и не определяет дату возврата денег.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].knowledge.explain"
+    ]
+  },
+  {
+    "id": "bf3065e9b5844173",
+    "ru": "Найдите общий срок обычной камеральной проверки декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "16b1c226ee2957f3",
+    "ru": "Подала обычную декларацию 3-НДФЛ на вычет. В приложении отсчитала 90 дней, но в инспекции назвали другую дату. А дата обращения в приёмную вообще позже – от какой считать?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].opening"
+    ]
+  },
+  {
+    "id": "705ffffa1b14c018",
+    "ru": "Обычная камеральная проверка первоначальной декларации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].procedures[0].text"
+    ]
+  },
+  {
+    "id": "5dddaa0c217d3dd8",
+    "ru": "Упрощённый порядок вычета без декларации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].procedures[1].text"
+    ]
+  },
+  {
+    "id": "3aa109b75858ff1b",
+    "ru": "Обычный 30-дневный ответ вместо срока проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e40439d93300b48e",
+    "ru": "Первоначальная обычная декларация 3-НДФЛ. Не упрощённый порядок, не НДС.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "7f322de89c8375b5",
+    "ru": "В деле применим общий трёхмесячный срок проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q0].fact",
+      "cases:CASE_TEMPLATES[tax-calendar-months].coach.talk"
+    ]
+  },
+  {
+    "id": "26282954004b3e0f",
+    "ru": "Какая процедура выбрана?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q0].text"
+    ]
+  },
+  {
+    "id": "119943bb6f6dd697",
+    "ru": "Да, подтверждено представление {{declaration}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "62137ffd703a586c",
+    "ru": "Дата декларации отличается от даты последующего письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "95a5a16538b1f773",
+    "ru": "Есть ли квитанция о представлении декларации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q1].text"
+    ]
+  },
+  {
+    "id": "5691672945c5a5c8",
+    "ru": "Нет. Условия, меняющие течение срока, в данном эпизоде отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "69024d44e1d7e227",
+    "ru": "Не нужно придумывать перезапуск проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "48923c1398264f1d",
+    "ru": "Подавалась уточнённая декларация?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q2].text"
+    ]
+  },
+  {
+    "id": "f2a040e15da32f93",
+    "ru": "Последний день камеральной проверки, а не зачисление денег на счёт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "143489d475fc9fef",
+    "ru": "Проверка и возврат денег – отдельные события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "27f90469b7d63d7d",
+    "ru": "Что именно требуется вычислить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].questions[q3].text"
+    ]
+  },
+  {
+    "id": "4600cdfba1252ee7",
+    "ru": "Разъясняет предел срока обычной камеральной проверки и проверяет факты поступления. Не обещает возврат денег к дате окончания проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].role.text"
+    ]
+  },
+  {
+    "id": "cc4ebf1503d996ab",
+    "ru": "Специалист приёмной налогового органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].role.title"
+    ]
+  },
+  {
+    "id": "88afb92b355dd300",
+    "ru": "Применить общий срок статьи 88 и исчисление месяцев по статье 6.1 НК РФ, отделив проверку от возврата средств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].routes[0].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].coach.plan",
+      "cases:CASE_TEMPLATES[tax-calendar-months].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "de48b6c0299ea158",
+    "ru": "Пообещать зачисление средств строго на 90-й день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].routes[1].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "8d215f20d35a2432",
+    "ru": "Считать три месяца от регистрации письма в приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].routes[2].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "0f8c0350197796a4",
+    "ru": "Три месяца – не девяносто дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[tax-calendar-months].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[tax-calendar-months].title"
+    ]
+  },
+  {
+    "id": "52031cb407002ff6",
+    "ru": "Налоговый вычет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].topic",
+      "cases:CASE_TEMPLATES[tax-calendar-months].tag",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].topic"
+    ]
+  },
+  {
+    "id": "f6a684629e3c650a",
+    "ru": "Использовать соответствующее число последнего месяца, а при его отсутствии – последний день этого месяца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].trap.options[0].text",
+      "cases:CASE_TEMPLATES[tax-calendar-months].trap.explain"
+    ]
+  },
+  {
+    "id": "3240174de2d5ab4a",
+    "ru": "Умножить 30 на 3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "86b6922ac58a54b0",
+    "ru": "Помощник: «Для календаря месяц – это всегда 30 дней».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-calendar-months].trap.text"
+    ]
+  },
+  {
+    "id": "b7ac3642f8de157a",
+    "ru": "Сопоставить тип поздней отправки с квитанцией декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a9e942445a0fdc7d",
+    "ru": "Установить отсутствие уточнённой декларации в проверенном составе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[a1].title"
+    ]
+  },
+  {
+    "id": "bec1774a07ba8b9b",
+    "ru": "Подготовить расчёт от исходной декларации и исправить необоснованный новый отсчёт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[a2].title"
+    ]
+  },
+  {
+    "id": "131b7d1dc787e045",
+    "ru": "Не обещать ни автоматическое одобрение вычета, ни дату поступления денег.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ce627c5056478326",
+    "ru": "Проверить окончательный ответ по исходной дате и нужному периоду.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[a4].title"
+    ]
+  },
+  {
+    "id": "7a17c1a439e33444",
+    "ru": "Исключить все пояснения из дела, потому что это не декларация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[b0].title"
+    ]
+  },
+  {
+    "id": "b1d1e2527289f18a",
+    "ru": "Гарантировать одобрение суммы только из-за своевременной отправки пояснений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].actions[b1].title",
+      "cases:CASE_TEMPLATES[tax-explanations-only].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "6580f31b604dfed7",
+    "ru": "Все участники и документы дела вымышлены. Обычная первоначальная 3-НДФЛ принята; уточнённой декларации нет. Приложенные пояснения не изменяют декларацию и не включают другую декларацию. Специальные основания иных сроков в условиях отсутствуют. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Рассчитывается окончание камеральной проверки исходной декларации, не срок ответа на письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].brief"
+    ]
+  },
+  {
+    "id": "6e3a55fb195fab9d",
+    "ru": "Обычная первоначальная 3-НДФЛ; уточнённая не представлялась. Дополнительные пояснения не перезапускают срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.context"
+    ]
+  },
+  {
+    "id": "1f867946c0a7fa28",
+    "ru": "Представлены пояснения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.events[explanation].label"
+    ]
+  },
+  {
+    "id": "1f8ab4e30eb7b8bb",
+    "ru": "Обычная первоначальная 3-НДФЛ; уточнённая не представлялась. Дополнительные пояснения не перезапускают срок. Профиль счёта этого упражнения: со следующего дня после события; нерабочее окончание переносится вперёд; федеральная пятидневная неделя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.scope"
+    ]
+  },
+  {
+    "id": "82cbab2c215cef79",
+    "ru": "Статья 88, пункты 2–5 НК РФ; статья 6.1 НК РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.source"
+    ]
+  },
+  {
+    "id": "601e43ed83a8c222",
+    "ru": "Крайний день проверки исходной декларации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.title"
+    ]
+  },
+  {
+    "id": "2e7ab85904c250cf",
+    "ru": "В соседней истории действительно представлена уточнённая декларация. Здесь есть только пояснения; следствие для начала срока другое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].coach.plan",
+      "cases:CASE_TEMPLATES[tax-explanations-only].contrast.difference"
+    ]
+  },
+  {
+    "id": "a58c628a206ff535",
+    "ru": "Поступил {{explanation}} как пояснения с приложениями по той же декларации. Квитанции принятия новой декларации нет; показатели декларации не менялись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ff3cf0be516f55ef",
+    "ru": "Пакет пояснений П-8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d0].title"
+    ]
+  },
+  {
+    "id": "9ddf62be8c77734b",
+    "ru": "Автор проекта предлагает считать новые три месяца после любого полученного файла; ссылки на основание не приведены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f20d1b42be7e9aa3",
+    "ru": "Проект краткого сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f77d001f873a0228",
+    "ru": "Первоначальная обычная 3-НДФЛ представлена {{declaration}}. Уточнённые декларации не поступали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d2].text"
+    ]
+  },
+  {
+    "id": "5c6d89f726ac40fb",
+    "ru": "Квитанция Д-3",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4a33b025d7ea78e6",
+    "ru": "Декларация представлена {{declaration}}; пояснения — {{explanation}}. Письмо поступило {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].documents[dates].text"
+    ]
+  },
+  {
+    "id": "b3300e75ec0d8903",
+    "ru": "Пояснения не являются уточнённой декларацией; новый трёхмесячный отсчёт по ним не подтверждён. В соседней истории действительно представлена уточнённая декларация. Здесь есть только пояснения; следствие для начала срока другое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.explain"
+    ]
+  },
+  {
+    "id": "b2806fd301b9719e",
+    "ru": "Пояснения не являются уточнённой декларацией; новый трёхмесячный отсчёт по ним не подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[tax-explanations-only].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "81884ab7e929abb5",
+    "ru": "Каждый файл налогоплательщика запускает новую проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "e7280cc90f3613a8",
+    "ru": "После пояснений проверка должна закончиться немедленно независимо от исходного срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1c5d0b62acca5ed1",
+    "ru": "Контроль документа включает период и идентификатор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].followup.explain"
+    ]
+  },
+  {
+    "id": "ab7e36a91dd5af04",
+    "ru": "Пришло уведомление о результате проверки, но налоговый период в нём другой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].followup.intro"
+    ]
+  },
+  {
+    "id": "af31cb6a62d5a729",
+    "ru": "Сопоставить период и запросить ответ по Д-3, не закрывая вопрос чужим результатом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "6c0a08ac0a4c2ca3",
+    "ru": "Считать любой результат проверки решением по нужной декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a42a28727d3b3d8e",
+    "ru": "Поменять период декларации под полученное уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "047ef1e758547eb8",
+    "ru": "Отделять пояснения по статье 88 от уточнённой декларации по пункту 9.1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "c20efd2c8e01c4b0",
+    "ru": "Считать повторной декларацией любое дополнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e6f6e604f969d957",
+    "ru": "Считать запрос инспекции безусловным отказом в вычете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "cb9237b05a972fbb",
+    "ru": "Я отправил пояснения и скан подтверждения. В справке мне написали, что теперь опять надо ждать три месяца. Это точно так?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].opening"
+    ]
+  },
+  {
+    "id": "49a14797f5395e59",
+    "ru": "Камеральная проверка первоначальной декларации с учётом пояснений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].procedures[0].text"
+    ]
+  },
+  {
+    "id": "fceace6b3f054a9b",
+    "ru": "Новая проверка уточнённой декларации, которой нет в деле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].procedures[1].text"
+    ]
+  },
+  {
+    "id": "0555d0013aa8559c",
+    "ru": "Тридцатидневное рассмотрение упрощённого заявления вместо декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].procedures[2].text"
+    ]
+  },
+  {
+    "id": "f946311baf671530",
+    "ru": "«Пояснения и подтверждающие документы», не «Уточнённая декларация».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c11f7565a644c45d",
+    "ru": "Важен тип представленного материала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b7d93619e065aa33",
+    "ru": "Что написано в типе поздней отправки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q0].text"
+    ]
+  },
+  {
+    "id": "030909cee5e8231c",
+    "ru": "Нет, я объяснил уже указанные суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "d0bb83902ed47845",
+    "ru": "Новой декларации нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "e1893152ba87310d",
+    "ru": "Изменились показатели декларации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q1].text"
+    ]
+  },
+  {
+    "id": "32ec64412d31a05a",
+    "ru": "Известно исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "26752d74daa589bc",
+    "ru": "Какая дата стоит в квитанции декларации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q2].text"
+    ]
+  },
+  {
+    "id": "b804b28a59d22b1b",
+    "ru": "В проекте справки; правовое основание там не указали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "66ce17a1c5e47234",
+    "ru": "Предположение в справке требует проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "513e636d90238585",
+    "ru": "Где появилась новая дата ожидания?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e4d508b93b30e8e1",
+    "ru": "Подразделение налогового органа, рассматривающее декларацию и пояснения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].routes[0].text"
+    ]
+  },
+  {
+    "id": "8a2ef62efbfa11b9",
+    "ru": "Оператор электронной почты как орган определения срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].routes[1].text"
+    ]
+  },
+  {
+    "id": "678635035c83ebcd",
+    "ru": "Продавец подтверждающего документа вместо налогового органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].routes[2].text"
+    ]
+  },
+  {
+    "id": "aff42dbe7cc66816",
+    "ru": "Пояснения — не новая декларация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[tax-explanations-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[tax-explanations-only].title"
+    ]
+  },
+  {
+    "id": "19aabc126cf51581",
+    "ru": "Содержательная работа с пояснениями не равна новому событию представления декларации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].trap.explain"
+    ]
+  },
+  {
+    "id": "03aec8cec98545d4",
+    "ru": "Пояснения учитываются при проверке, но сами по себе не становятся уточнённой декларацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-explanations-only].trap.text"
+    ]
+  },
+  {
+    "id": "ae0374c7873f34ab",
+    "ru": "Сопоставить статус черновика и квитанцию представления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[a0].title"
+    ]
+  },
+  {
+    "id": "db6c6be2895577d7",
+    "ru": "Установить применимый упрощённый порядок и отсутствие продления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[a1].title"
+    ]
+  },
+  {
+    "id": "83e7bdf3473a6e4d",
+    "ru": "Подготовить расчёт от даты представленного заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[a2].title"
+    ]
+  },
+  {
+    "id": "2b646c6dfeff83a8",
+    "ru": "Не обещать автоматическую выплату в последний день проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[a3].title"
+    ]
+  },
+  {
+    "id": "976c095f0e011228",
+    "ru": "Проверить результат именно по заявлению У-4 и дальнейший разъяснённый шаг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[a4].title"
+    ]
+  },
+  {
+    "id": "06851432d104cc5d",
+    "ru": "Начать срок от дня первого показа неподписанного черновика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[b0].title"
+    ]
+  },
+  {
+    "id": "42622106144210dc",
+    "ru": "Объявить весь размер вычета одобренным по факту появления формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].actions[b1].title",
+      "cases:CASE_TEMPLATES[tax-simplified-statement].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "ef1709848a535a0d",
+    "ru": "Все участники и документы дела вымышлены. Установлено применение упрощённого порядка статьи 221.1 НК РФ. Допустимое заявление подписано и представлено, сведения достаточны. Решения о продлении проверки нет; исключения из стандартного срока не применяются. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Рассчитывается тридцатидневная проверка представленного заявления; срок перечисления денег отдельно не вычисляется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].brief"
+    ]
+  },
+  {
+    "id": "094ba963b9463385",
+    "ru": "Представленное заявление по упрощённому порядку. Продление и специальные исключения отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.context"
+    ]
+  },
+  {
+    "id": "38d5063a95bc086f",
+    "ru": "Сформирован черновик",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.events[draft].label"
+    ]
+  },
+  {
+    "id": "233d7e55c5f19a96",
+    "ru": "Заявление представлено",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.events[statement].label"
+    ]
+  }
+]

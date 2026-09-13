@@ -9,18 +9,18 @@
   <title>Введение в специальность · РУДН</title>
   <link rel="icon" href="assets/img/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/css/site.css?v=1.3.4">
+  <link rel="stylesheet" href="assets/css/site.css?v=1.3.5">
   <link rel="stylesheet" href="assets/css/puzzle.css?v=1.2.2">
 </head>
 <body>
   <div class="app-shell" id="appShell">
     <header class="topbar">
-      <a class="brand" href="#dashboard" aria-label="Главная страница курса">
+      <a class="brand" href="#dashboard" aria-label="Главная страница курса" data-i18n-aria-label="courseHome">
         <img src="assets/img/rudn-logo.png" alt="РУДН" data-rudn-logo>
         <span class="brand-copy"><strong data-i18n="courseShort">Введение в специальность</strong><small data-i18n="programmeShort">Государственное и муниципальное управление</small></span>
       </a>
       <div class="topbar-actions">
-        <div class="language-switcher" role="group" aria-label="Выбор языка интерфейса">
+        <div class="language-switcher" role="group" aria-label="Выбор языка интерфейса" data-i18n-aria-label="languageChoice">
           <button class="language-option" type="button" data-lang="ru" aria-label="Русский" title="Русский">
             <svg class="country-flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><rect y="6.667" width="30" height="6.667" fill="#0039a6"/><rect y="13.333" width="30" height="6.667" fill="#d52b1e"/></svg>
           </button>
@@ -35,7 +35,7 @@
       </div>
     </header>
 
-    <aside class="sidebar" id="sidebar" aria-label="Навигация">
+    <aside class="sidebar" id="sidebar" aria-label="Навигация" data-i18n-aria-label="navigation">
       <nav>
         <a href="#dashboard" data-route="dashboard"><span>⌂</span><b data-i18n="navDashboard">Курс</b></a>
         <a href="#gradebook" data-route="gradebook"><span>▦</span><b data-i18n="navGradebook">Журнал</b></a>
@@ -53,7 +53,7 @@
       <div class="initial-loader"><div class="spinner"></div><p data-i18n="loading">Загрузка платформы…</p></div>
     </main>
 
-    <nav class="mobile-nav" aria-label="Мобильная навигация">
+    <nav class="mobile-nav" aria-label="Мобильная навигация" data-i18n-aria-label="mobileNavigation">
       <a href="#dashboard" data-route="dashboard"><span>⌂</span><small data-i18n="navDashboard">Курс</small></a>
       <a href="#gradebook" data-route="gradebook"><span>▦</span><small data-i18n="navGradebook">Журнал</small></a>
       <a href="#materials" data-route="materials"><span>▤</span><small data-i18n="navMaterials">Материалы</small></a>
@@ -64,14 +64,14 @@
 
   <dialog class="modal" id="authDialog">
     <form method="dialog" class="modal-card" id="authForm">
-      <button class="modal-close" type="button" value="cancel" aria-label="Закрыть">×</button>
+      <button class="modal-close" type="button" value="cancel" aria-label="Закрыть" data-i18n-aria-label="close">×</button>
       <div class="modal-brand"><img src="assets/img/rudn-logo.png" alt="РУДН" data-rudn-logo><div><strong data-i18n="authTitle">Вход студента</strong><span data-i18n="authSubtitle">Данные профиля можно изменить</span></div></div>
-      <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru"></label>
+      <label><span data-i18n="studentIdLabel">Номер студенческого билета или корпоративный email</span><input id="authIdentifier" autocomplete="username" required placeholder="1234567890 или 1234567890@rudn.ru" data-i18n-placeholder="identifierExample"></label>
       <div class="auth-details" id="authStudentDetails" hidden>
         <label><span data-i18n="fullNameLabel">Фамилия, имя, отчество</span><input id="authFullName" autocomplete="name" maxlength="150"></label>
         <fieldset class="auth-group-fieldset">
           <legend data-i18n="groupLabel">Учебная группа</legend>
-          <div class="auth-group-options" id="authGroupOptions" role="radiogroup" aria-label="Учебная группа"></div>
+          <div class="auth-group-options" id="authGroupOptions" role="radiogroup" aria-label="Учебная группа" data-i18n-aria-label="groupLabel"></div>
           <input id="authGroup" type="hidden">
         </fieldset>
       </div>
@@ -86,7 +86,7 @@
   <div class="toast-stack" id="toastStack" aria-live="polite"></div>
   <script src="assets/puzzle/vendor/d3.v7.9.0.min.js" defer></script>
   <script src="assets/puzzle/vendor/topojson-client.v3.1.0.min.js" defer></script>
-  <script src="assets/js/puzzle-engine.js?v=1.3.4" defer></script>
-  <script type="module" src="assets/js/main.js?v=1.3.4"></script>
+  <script src="assets/js/puzzle-engine.js?v=1.3.5" defer></script>
+  <script type="module" src="assets/js/main.js?v=1.3.5"></script>
 </body>
 </html>

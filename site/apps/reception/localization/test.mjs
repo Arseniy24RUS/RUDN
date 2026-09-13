@@ -1,0 +1,79 @@
+// Isolated rendering-contract checks. No Firebase, real profiles, or source-data writes.
+import assert from 'node:assert/strict';
+import {createServer} from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {createRequire} from 'node:module';
+const require = createRequire(import.meta.url);
+const playwright = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const files = Object.fromEntries(await Promise.all(['runtime.js', 'ui.js', 'catalog-loader.js', 'validation.js'].map(async name => [`/${name}`, await readFile(new URL(name, import.meta.url))])));
+const server = createServer((request, response) => {
+  response.setHeader('Cache-Control', 'no-store');
+  if (files[request.url]) { response.setHeader('Content-Type', 'text/javascript'); response.end(files[request.url]); }
+  else { response.setHeader('Content-Type', 'text/html'); response.end('<!doctype html><title>Reception localization contract tests</title><main id="fixture"></main>'); }
+});
+await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+try {
+  for (const engine of (process.env.DURABLE_TEST_BROWSERS || 'chromium,webkit').split(',')) {
+    const browser = await playwright[engine].launch({headless: true});
+    try {
+      const page = await browser.newPage({viewport: {width: 390, height: 844}});
+      const errors = []; page.on('pageerror', error => errors.push(error.message));
+      await page.goto(`http://127.0.0.1:${server.address().port}`);
+      const result = await page.evaluate(async () => {
+        const {createReceptionTranslator, loadReceptionTranslator} = await import('/runtime.js');
+        const check = (value, message) => { if (!value) throw Error(message); };
+        const root = document.querySelector('#fixture');
+        const state = {id: 'unchanged-attempt', seed: 'unchanged-order', active: 3, cases: {'case-3': {fact: 'a', text: 'Приёмная'}}, startedAt: 1, completed: false};
+        const before = JSON.stringify(state);
+        const source = '<h1>Приёмная</h1><p data-case>Получено {{received}}, зарегистрировано {{registered}}.</p><p data-counter>Выбрано 1 из 2</p><p data-user-name data-rx-user-content>Приёмная</p><input name="answer" value="Приёмная" placeholder="Найдите правовое основание"><textarea>Приёмная</textarea><select><option value="original-id">Документы</option><option>Источники</option></select><button data-action="Документы" aria-label="Документы">Документы</button>';
+        const languageText = {en: 'Received {{received}}, registered {{registered}}.', zh: '收到日期{{received}}，登记日期{{registered}}。'};
+        for (const locale of ['ru', 'en', 'zh', 'ru']) {
+          root.innerHTML = source.replace('{{received}}', '05.09.2026').replace('{{registered}}', '08.09.2026');
+          const translator = createReceptionTranslator({locale, catalog: {'Получено {{received}}, зарегистрировано {{registered}}.': languageText[locale]}});
+          translator.apply(root);
+          check(root.lang === (locale === 'zh' ? 'zh-Hans' : locale), 'accessibility language not restored');
+          check(root.querySelector('input').value === 'Приёмная', 'typed answer was translated');
+          check(root.querySelector('textarea').value === 'Приёмная', 'textarea was translated');
+          check(root.querySelector('[data-user-name]').textContent === 'Приёмная', 'profile text was translated');
+          check(root.querySelector('button').dataset.action === 'Документы', 'action ID was translated');
+          check(root.querySelector('select').options[0].value === 'original-id', 'explicit option ID changed');
+          check(root.querySelector('select').options[1].value === 'Источники', 'implicit option value changed');
+          check(JSON.stringify(state) === before, 'state, order or attempt changed');
+          if (locale !== 'ru') {
+            check(!/[А-Яа-яЁё]/.test(root.querySelector('h1').textContent), 'heading fallback');
+            check(!/[А-Яа-яЁё]/.test(root.querySelector('[data-case]').textContent), 'dated paragraph fallback');
+            check(!/[А-Яа-яЁё]/.test(root.querySelector('[data-counter]').textContent), 'counter fallback');
+            check(root.querySelector('[data-case]').textContent.includes('05.09.2026'), 'first date lost');
+            check(root.querySelector('[data-case]').textContent.includes('08.09.2026'), 'second date lost');
+            check(translator.missing().length === 0, 'unexpected missing fixture translation');
+          } else check(root.querySelector('h1').textContent === 'Приёмная', 'Russian not restored');
+        }
+        // Full WebKit shift regression: this evidence caption is not a level
+        // badge, despite ending in the same Russian word.
+        for(const locale of ['en','zh']){
+          const catalog=locale==='en'?{'Муниципальный округ Нижегородский':'Nizhegorodsky Municipal District','Наименование и уровень':'Name and level'}:{'Муниципальный округ Нижегородский':'下诺夫哥罗德市镇区','Наименование и уровень':'名称与层级'};
+          const translator=createReceptionTranslator({locale,catalog});
+          check(translator.translate('Муниципальный округ Нижегородский · Наименование и уровень')===catalog['Муниципальный округ Нижегородский']+' · '+catalog['Наименование и уровень'],'Evidence caption mistaken for difficulty template');
+          for(const level of ['Базовый','Средний','Сложный'])check(!/[А-Яа-яЁё]/.test(translator.translate('Документы · '+level+' уровень')),'Known difficulty label no longer translates');
+          check(translator.missing().length===0,'False missing caption or level translation');
+        }
+        let missingCalls = 0;
+        const unknown = createReceptionTranslator({locale: 'en', onMissing: () => missingCalls++});
+        check(unknown.translate('Неизвестный авторский абзац') === 'Неизвестный авторский абзац', 'unknown content silently fabricated');
+        unknown.translate('Неизвестный авторский абзац'); check(missingCalls === 1, 'missing diagnostics not deduplicated');
+        let rejected = false;
+        try { await loadReceptionTranslator('en', {fetch: async () => ({ok: true, json: async () => ({locale: 'en', complete: false, strings: {}})})}); } catch { rejected = true; }
+        check(rejected, 'incomplete catalog accepted as complete');
+        const pack={schema:2,locale:'en',id:'common',complete:true,contentVersion:'fixture',sourceVersion:'a'.repeat(64),count:1,strings:{'Полный абзац':'Full paragraph'}};
+        const checksum=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(pack))))].map(v=>v.toString(16).padStart(2,'0')).join('');
+        const entry={path:'en/common.'+checksum.slice(0,16)+'.json',sha256:checksum,count:1};
+        const manifest={schema:2,locale:'en',complete:true,contentVersion:'fixture',sourceVersion:'a'.repeat(64),templates:[],entries:{common:entry,catalog:{},'source-index':{}}};
+        const loaded = await loadReceptionTranslator('en', {fetch: async url => ({ok: true, json: async () => String(url).includes('.manifest.json')?manifest:pack})});
+        check(loaded.translate('Полный абзац') === 'Full paragraph', 'catalog failed after incomplete load retry');
+        return {languages: 4, immutableState: true, userContentPreserved: true, datesPreserved: true, incompleteCatalogRejected: true};
+      });
+      assert.equal(errors.length, 0, errors.join('\n'));
+      console.log(`${engine}: ${JSON.stringify(result)}`);
+    } finally { await browser.close(); }
+  }
+} finally { server.close(); }

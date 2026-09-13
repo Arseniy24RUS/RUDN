@@ -1,0 +1,1188 @@
+[
+  {
+    "id": "a277778f1bc27487",
+    "ru": "Наблюдение или исходное событие {{observed}}. Письмо отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[dates].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[dates].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[dates].text"
+    ]
+  },
+  {
+    "id": "ceac68e6debfbd97",
+    "ru": "Голосовой вызов не обеспечил доступность; письменный способ уже доступен и согласован. Исходный вариант касался физического прохода. Здесь препятствие информационное; помощь должна учитывать выбранный человеком способ связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.explain"
+    ]
+  },
+  {
+    "id": "cbbfac0b0a7d5189",
+    "ru": "Голосовой вызов не обеспечил доступность; письменный способ уже доступен и согласован.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7ba22c2b09497f66",
+    "ru": "Талон был вызван, поэтому обязанность обеспечить доступ выполнена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c80a65a3f6b63518",
+    "ru": "Невозможность услышать вызов означает обязательность представителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "49cd4ba36f079c55",
+    "ru": "Какой вывод подтверждён сопоставлением материалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].factTask.prompt",
+      "cases:CASE_TEMPLATES[access-guide-dog].factTask.prompt",
+      "cases:CASE_TEMPLATES[access-reading-choice].factTask.prompt"
+    ]
+  },
+  {
+    "id": "58a17e50a8e2a6fc",
+    "ru": "Согласовать доступное письменное уведомление и проверить его настройку. Исходный вариант касался физического прохода. Здесь препятствие информационное; помощь должна учитывать выбранный человеком способ связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.explain"
+    ]
+  },
+  {
+    "id": "01b7b226193a3c96",
+    "ru": "Сопоставьте новое сообщение с подтверждёнными условиями и документами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.failure",
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.failure",
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.failure"
+    ]
+  },
+  {
+    "id": "cba526cd90d594e1",
+    "ru": "Приём состоялся, но уведомление о готовности результата настроено только телефонным звонком. Письменного сообщения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.intro"
+    ]
+  },
+  {
+    "id": "ea7e918ce02849d4",
+    "ru": "Согласовать доступное письменное уведомление и проверить его настройку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f7fd2352df511b34",
+    "ru": "Закрыть вопрос, поскольку первичный приём уже состоялся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "e34555feb85937d9",
+    "ru": "Назначить родственника получателем без согласования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "92329531f61ed0fa",
+    "ru": "Требовать родственника вместо письменной связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "5f3a0bb9f4217e90",
+    "ru": "Отложить всю помощь до письменного ответа на жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2e2fc10d4c996cb8",
+    "ru": "Найдите нормативное основание следующего действия: Обеспечить согласованный письменный диалог и доступ к очереди без навязывания представителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "b72b3044e0c914f1",
+    "ru": "Я не слышу объявления. На табло мой талон не появился. Мне предложили вернуться с родственником, а я хочу сама оформить документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].opening"
+    ]
+  },
+  {
+    "id": "b0a0e6a155ec4b66",
+    "ru": "Проверьте фактическое основание и пределы каждого выбранного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].outcomes.bad",
+      "cases:CASE_TEMPLATES[access-guide-dog].outcomes.bad",
+      "cases:CASE_TEMPLATES[access-reading-choice].outcomes.bad"
+    ]
+  },
+  {
+    "id": "46f7d51cf72aa56f",
+    "ru": "План связывает установленные факты, полномочия и контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].outcomes.good",
+      "cases:CASE_TEMPLATES[access-guide-dog].outcomes.good",
+      "cases:CASE_TEMPLATES[access-reading-choice].outcomes.good"
+    ]
+  },
+  {
+    "id": "fbfcc440bf4d7152",
+    "ru": "Рассмотрение обращения в установленной компетенции с проверкой материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].procedures[0].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].procedures[0].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].procedures[0].text"
+    ]
+  },
+  {
+    "id": "79fc291aed153ab2",
+    "ru": "Закрытие по формальному сообщению без проверки предмета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].procedures[1].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].procedures[1].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].procedures[1].text"
+    ]
+  },
+  {
+    "id": "4c136bbc6feef56b",
+    "ru": "Новая регистрация вместо исполнения первоначально принятого обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].procedures[2].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].procedures[2].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].procedures[2].text"
+    ]
+  },
+  {
+    "id": "a71f6df78c69be03",
+    "ru": "Письменно, я читаю и отвечаю сама.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q0].answer",
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "053fbaefad150521",
+    "ru": "Как вам удобно общаться?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5278e2d82348345e",
+    "ru": "Нет, сектор табло не работал; я не уходила из зала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q1].answer",
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6d4c3cdcf98c2f32",
+    "ru": "Видели ли вы номер на табло?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q1].text"
+    ]
+  },
+  {
+    "id": "44db8480d2babf52",
+    "ru": "Сотрудник показал исправный планшет П-3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q2].answer",
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "99970b4720e3d669",
+    "ru": "Есть ли устройство для письменного общения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q2].text"
+    ]
+  },
+  {
+    "id": "03d787231ed25a86",
+    "ru": "Нет, я хочу самостоятельно принять решение и подписать документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q3].answer",
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "ca465cebc4ac70d0",
+    "ru": "Нужен ли вам представитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].questions[q3].text"
+    ]
+  },
+  {
+    "id": "395ce21c90fd5534",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Посетительница с нарушением слуха просит общаться письменно. Самостоятельно принимает решения; представитель не требуется. В данном отделении уже есть исправный планшет для письменного диалога и доступное отдельное место. Проблема касается помощи сейчас и отдельного письменного обращения об организации приёма, не решения о назначении льготы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].role.text"
+    ]
+  },
+  {
+    "id": "1a66d8aa8c73eb46",
+    "ru": "Уполномоченное подразделение органа по предмету обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].routes[0].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].routes[0].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].routes[0].text"
+    ]
+  },
+  {
+    "id": "2d4613b0b4fe4a94",
+    "ru": "Случайный орган только по знакомому названию темы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].routes[1].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].routes[1].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].routes[1].text"
+    ]
+  },
+  {
+    "id": "b96e3543a29aea9a",
+    "ru": "Обжалуемый исполнитель для единоличного окончательного решения без проверки полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].routes[2].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].routes[2].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].routes[2].text"
+    ]
+  },
+  {
+    "id": "2bc481fcb257762f",
+    "ru": "Обеспечить согласованный письменный диалог и доступ к очереди без навязывания представителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[access-written-dialogue].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[access-written-dialogue].contrast.decision"
+    ]
+  },
+  {
+    "id": "24e5dfb0c318c8fc",
+    "ru": "Меня вызвали только голосом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[access-written-dialogue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[access-written-dialogue].title"
+    ]
+  },
+  {
+    "id": "a14bdf40074c766d",
+    "ru": "Обеспечить согласованный письменный диалог и доступ к очереди без навязывания представителя. Исходный вариант касался физического прохода. Здесь препятствие информационное; помощь должна учитывать выбранный человеком способ связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].trap.explain"
+    ]
+  },
+  {
+    "id": "46c5861f71640bf4",
+    "ru": "Исправный письменный канал позволяет оказать помощь без обязательного родственника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].trap.text"
+    ]
+  },
+  {
+    "id": "44b3f5d4ac6d3dac",
+    "ru": "Проверить принадлежность согласия заявителю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[a0].title"
+    ]
+  },
+  {
+    "id": "774d13cb24245bd7",
+    "ru": "Сопоставить согласованный канал и фактическое SMS",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[a1].title"
+    ]
+  },
+  {
+    "id": "133e927460950bf0",
+    "ru": "Отдельно оценить наличие основания для данного канала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[a2].title"
+    ]
+  },
+  {
+    "id": "23ff7b630ce68368",
+    "ru": "Разъяснить пределы вывода без домысла о продаже данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[a3].title"
+    ]
+  },
+  {
+    "id": "08982fd1a8328007",
+    "ru": "Контролировать прекращение спорного канала и раздельный ответ на иные требования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[a4].title"
+    ]
+  },
+  {
+    "id": "5563d2b94acd4c33",
+    "ru": "Принять чужое согласие как доказательство за заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[b0].title"
+    ]
+  },
+  {
+    "id": "a8123b80de5929c4",
+    "ru": "Передать полный набор личных данных не относящимся к вопросу адресатам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].actions[b1].title",
+      "cases:CASE_TEMPLATES[ads-channel-scope].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b8e10b522bff219f",
+    "ru": "План должен следовать установленным фактам. Реквизиты и содержание согласия рассматриваются вместе; нельзя расширять выраженный выбор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].coach.plan"
+    ]
+  },
+  {
+    "id": "d5f8f2537431e057",
+    "ru": "Уточняйте предмет, объект, время и получателя. В исходной ситуации спорят о наличии согласия вообще; здесь нужно проверить его предел по каналу. Отличаются документальный вывод и предмет запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].coach.talk"
+    ]
+  },
+  {
+    "id": "6842689a26f0820c",
+    "ru": "В исходной ситуации спорят о наличии согласия вообще; здесь нужно проверить его предел по каналу. Отличаются документальный вывод и предмет запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].contrast.difference"
+    ]
+  },
+  {
+    "id": "ba48b902229a2da5",
+    "ru": "В образце другого клиента отмечены оба канала. Совпадение формы не распространяет его выбор на заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3be473ac2b9fa662",
+    "ru": "Согласие другого клиента",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d7c37a0f98b4e0ac",
+    "ru": "В отдельном подтверждённом согласии отмечена только электронная почта. SMS прямо исключены, поле телефонного рекламного канала не выбрано. Номер предоставлен для конкретного сервисного взаимодействия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d5ea5c590faceefd",
+    "ru": "Перечень согласованных каналов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c39ebb7e02be4c55",
+    "ru": "Журнал фиксирует SMS с рекламой на номер заявителя. Электронное письмо в этот момент не отправлялось; текст продвигает новые товары. Иного согласия на SMS в проверенном комплекте нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d2].text"
+    ]
+  },
+  {
+    "id": "d71930865ede5a5b",
+    "ru": "Спорная рекламная рассылка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].documents[d2].title"
+    ]
+  },
+  {
+    "id": "094be23bdc6032df",
+    "ru": "Подтверждённое согласие на электронные письма не охватывает исключённые из него рекламные SMS. В исходной ситуации спорят о наличии согласия вообще; здесь нужно проверить его предел по каналу. Отличаются документальный вывод и предмет запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.explain"
+    ]
+  },
+  {
+    "id": "1712a7f9508b0635",
+    "ru": "Подтверждённое согласие на электронные письма не охватывает исключённые из него рекламные SMS.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[ads-channel-scope].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "77b586dd49a5f821",
+    "ru": "Любое согласие с организацией охватывает все способы связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "0a7223c2fe59c949",
+    "ru": "Отсутствие согласия на SMS доказывает отсутствие согласия на почтовую рекламу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "5a378a64972ad29e",
+    "ru": "Запросить ответ по SMS: сведения о почте не подтверждают исполнение по другому каналу. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].followup.explain"
+    ]
+  },
+  {
+    "id": "28919c2466b89325",
+    "ru": "В ответ прислана выгрузка почтовой рассылки; спорные SMS в ней не отражены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].followup.intro"
+    ]
+  },
+  {
+    "id": "1bc6e74af89c78fd",
+    "ru": "Запросить ответ по SMS: сведения о почте не подтверждают исполнение по другому каналу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "8aa2246199798c3b",
+    "ru": "Закрыть дело, раз представлены любые сведения о рассылках.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "bdfb205694172ac7",
+    "ru": "Расширить исходное согласие, вписав телефон за заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "730d9acea4d3d202",
+    "ru": "Сопоставить конкретный рекламный канал с разрешённым в согласии способом связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "4d3d538c95ad66f0",
+    "ru": "Считать согласие на один рекламный канал разрешением всех каналов той же организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "825260c952371a6c",
+    "ru": "Использовать заполненный бланк другого клиента вместо проверки согласия заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "836178c312dffcdd",
+    "ru": "Я согласился получать письма с акциями на электронную почту. А мне начали слать SMS. В магазине говорят, что согласие всё равно одно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].opening"
+    ]
+  },
+  {
+    "id": "00f5db82aa4fa3d8",
+    "ru": "Сопоставить рекламный канал с конкретным объёмом согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].procedures[0].text"
+    ]
+  },
+  {
+    "id": "bcb58c2d1b16442a",
+    "ru": "Оценивать только наличие подписи независимо от содержания бланка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].procedures[1].text"
+    ]
+  },
+  {
+    "id": "f5ff7ae5406a0135",
+    "ru": "Рассмотреть исключительно жалобу на качество мобильного интернета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].procedures[2].text"
+    ]
+  },
+  {
+    "id": "ce4d9c3147e68b15",
+    "ru": "Только почту, SMS исключены в тексте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c422e5e953cac2e8",
+    "ru": "Предел согласия задан явно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0dcc798a6a6b7b40",
+    "ru": "Какие каналы вы выбрали?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a1f457f94776c467",
+    "ru": "SMS с рекламой новых товаров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f9d8fac815647b19",
+    "ru": "Это не сервисное уведомление по заказу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "c42e46ff85f2a8b2",
+    "ru": "Что направлено на номер?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q1].text"
+    ]
+  },
+  {
+    "id": "a8586cd588f2f78d",
+    "ru": "В проверенном комплекте его нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "f5d438c17200ded0",
+    "ru": "Нужно оценить представленные основания адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "8bca55122fedcd29",
+    "ru": "Есть ли другое согласие именно на SMS?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q2].text"
+    ]
+  },
+  {
+    "id": "67a844658914322c",
+    "ru": "Другому клиенту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "f6734c329814b83f",
+    "ru": "Чужой выбор не подтверждает волю заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "16a3bd7278a86df7",
+    "ru": "Кому относится бланк с двумя отметками?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e5fea3065b23f462",
+    "ru": "Подготовить сведения компетентному подразделению по рекламному каналу и получателю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].routes[0].text"
+    ]
+  },
+  {
+    "id": "b8dfbf00fecbf9ef",
+    "ru": "Направить жалобу человеку из чужого образца согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].routes[1].text"
+    ]
+  },
+  {
+    "id": "f36173885f9a049b",
+    "ru": "Объявить недействительным весь договор с магазином решением приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].routes[2].text"
+    ]
+  },
+  {
+    "id": "93b3357425faf709",
+    "ru": "Согласие на письма, сообщение на телефон",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[ads-channel-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[ads-channel-scope].title"
+    ]
+  },
+  {
+    "id": "a98539d54966ae5d",
+    "ru": "Реквизиты и содержание согласия рассматриваются вместе; нельзя расширять выраженный выбор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].trap.explain"
+    ]
+  },
+  {
+    "id": "736707753c4c3b7a",
+    "ru": "Подпись на согласии важнее перечисленных в нём разрешённых и исключённых каналов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-channel-scope].trap.text"
+    ]
+  },
+  {
+    "id": "784b998f91ba9bab",
+    "ru": "Зафиксировать сообщения, даты и отказ от рассылки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[a0].title"
+    ]
+  },
+  {
+    "id": "7f0b0e6abfbcf7b7",
+    "ru": "Установить отправителя и запросить подтверждение согласия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[a1].title"
+    ]
+  },
+  {
+    "id": "98a983ef68926d54",
+    "ru": "Разделить материалы по вопросам рекламы и персональных данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c98884bd58367544",
+    "ru": "Не распространять телефон и переписку сверх необходимого круга",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[a3].title"
+    ]
+  },
+  {
+    "id": "9475600ae9534d02",
+    "ru": "Проверить, прекращены ли сообщения после получения отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[a4].title"
+    ]
+  },
+  {
+    "id": "93a450df8c68c532",
+    "ru": "Опубликовать номер заявителя и переписку в открытом доступе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[b0].title",
+      "cases:CASE_TEMPLATES[ads-consent].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "972623f513274565",
+    "ru": "Объявить источник утечки доказанным только по времени покупки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].actions[b1].title"
+    ]
+  },
+  {
+    "id": "2e6f1775fabd9384",
+    "ru": "Сохранены рекламное содержание и отказ от получения сообщений. Передача номера конкретным магазином не установлена; совпадение по времени – версия заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].documents[d0].text"
+    ]
+  },
+  {
+    "id": "64baaeee13478d74",
+    "ru": "Переписка и запрос об отказе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e8db2c36237383cb",
+    "ru": "Подтверждение предварительного согласия в деле отсутствует; его необходимо запросить у соответствующего лица.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e5e400b892c61aa3",
+    "ru": "Материалы отправителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].documents[d1].title"
+    ]
+  },
+  {
+    "id": "d97f525ad29bfc39",
+    "ru": "Ориентир: 12–16 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].duration",
+      "cases:CASE_TEMPLATES[tax-calendar-months].duration",
+      "cases:CASE_TEMPLATES[noise-two-subjects].duration"
+    ]
+  },
+  {
+    "id": "c6ed595690f5cfd5",
+    "ru": "Есть материалы для проверки рассылки; источник передачи номера пока не доказан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[ads-consent].factTask.explain",
+      "cases:CASE_TEMPLATES[ads-consent].outcomes.good"
+    ]
+  },
+  {
+    "id": "04b2fe454de3804c",
+    "ru": "Магазин точно продал базу, потому что сообщения пришли позже покупки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "a164dc5d9e584f9e",
+    "ru": "Для рекламы достаточно знать номер телефона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "64c4a0c8bf611334",
+    "ru": "Отправитель предъявил согласие с другой датой и другим номером телефона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].followup.intro"
+    ]
+  },
+  {
+    "id": "e22512eb1aa345f6",
+    "ru": "Сопоставить документ с данным адресатом и каналом; чужое согласие не подтверждает эту рассылку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].followup.options[0].text",
+      "cases:CASE_TEMPLATES[ads-consent].followup.explain"
+    ]
+  },
+  {
+    "id": "5937642d39ed1907",
+    "ru": "Зачесть любое согласие из базы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6f7c79d4bcdefc44",
+    "ru": "Удалить все сведения до окончания проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "427ba5040d1097e2",
+    "ru": "Статья 18 закона № 38-ФЗ требует предварительного согласия адресата на рекламу по сетям электросвязи; его наличие доказывает рекламораспространитель. Доказанная рассылка сама по себе не доказывает продажу базы определённым магазином. Эти факты и правовые вопросы нельзя смешивать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].knowledge.explain"
+    ]
+  },
+  {
+    "id": "c776e625e8199806",
+    "ru": "Найдите правило предварительного согласия на рекламу по сетям электросвязи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "709901d1de98d822",
+    "ru": "Оставил номер в магазине, а теперь приходят рекламные сообщения. Уверен, это они продали базу. Хочу, чтобы виновных наказали и сообщения прекратились.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].opening"
+    ]
+  },
+  {
+    "id": "dea9d21261a5c312",
+    "ru": "Проверка рекламной рассылки и отдельно оснований обработки/передачи данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].procedures[0].text"
+    ]
+  },
+  {
+    "id": "1f2a3b49683d92a7",
+    "ru": "Автоматическое признание утечки базы магазином",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].procedures[1].text"
+    ]
+  },
+  {
+    "id": "92050d5113568f9b",
+    "ru": "Прекращение всех договоров заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e63de2731f879ffc",
+    "ru": "Сохранены сообщения с предложением покупки, датами и идентификатором отправителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "4d6914904814e6ce",
+    "ru": "Рекламные сообщения можно предъявить как конкретный материал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q0].fact",
+      "cases:CASE_TEMPLATES[ads-consent].coach.talk"
+    ]
+  },
+  {
+    "id": "fffc9e9fab1f2c10",
+    "ru": "Есть ли содержание и отправитель сообщений?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q0].text"
+    ]
+  },
+  {
+    "id": "36c5e4f99228d7b5",
+    "ru": "Заявитель не помнит согласия; магазин пока не предоставил подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "73ee672a31c25e8d",
+    "ru": "Отсутствие воспоминания не заменяет проверку основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "97ef7e23f5035dba",
+    "ru": "Что известно о согласии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q1].text"
+    ]
+  },
+  {
+    "id": "68575f870f9c53bc",
+    "ru": "Рассылка началась после покупки; других доказательств передачи нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "a00d1679595becdb",
+    "ru": "Последовательность событий не доказывает источник утечки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "78b61220ed6e3061",
+    "ru": "Почему предполагается передача магазином?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8d477ad5563d3820",
+    "ru": "Да, сохранил запрос об отказе; позже пришла новая реклама.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "d22800b04f475f4b",
+    "ru": "Нужно проверить получение отказа и последующее распространение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "e5460812380b8fd0",
+    "ru": "Просил прекратить сообщения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].questions[q3].text"
+    ]
+  },
+  {
+    "id": "762e36093ea216f3",
+    "ru": "Разделяет доказательства рекламной рассылки и предположение о передаче данных. Готовит материалы по компетенции, не признаёт утечку доказанной по совпадению времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].role.text"
+    ]
+  },
+  {
+    "id": "f6afcb878ebc1961",
+    "ru": "Сотрудник приёмной надзорного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].role.title"
+    ]
+  },
+  {
+    "id": "2fddcd3ce1c8e2a8",
+    "ru": "Разделить рекламный эпизод и обработку данных; проверить согласие и прекращение рассылки по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].routes[0].text",
+      "cases:CASE_TEMPLATES[ads-consent].coach.plan",
+      "cases:CASE_TEMPLATES[ads-consent].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "38ed0f1218c2b765",
+    "ru": "Назвать магазин доказанным источником утечки без дополнительных материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].routes[1].text",
+      "cases:CASE_TEMPLATES[ads-consent].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "a7f05856dd4b5fb6",
+    "ru": "Попросить заявителя просто сменить номер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].routes[2].text",
+      "cases:CASE_TEMPLATES[ads-consent].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "4c515beeb5fe98bc",
+    "ru": "Номер знали только они?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[ads-consent].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[ads-consent].title"
+    ]
+  },
+  {
+    "id": "8f0b16da824917f6",
+    "ru": "Данные и рекламные сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].topic",
+      "cases:CASE_TEMPLATES[ads-consent].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].scope"
+    ]
+  },
+  {
+    "id": "a40d42e5f2b54e8d",
+    "ru": "Проверить предусмотренное законом доказывание предварительного согласия рекламораспространителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].trap.options[0].text",
+      "cases:CASE_TEMPLATES[ads-consent].trap.explain"
+    ]
+  },
+  {
+    "id": "7012ea4330955185",
+    "ru": "Полностью переложить доказательство отсутствия согласия на заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "32fb385716e2c548",
+    "ru": "Помощник: «Пусть заявитель докажет, что никогда не соглашался».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-consent].trap.text"
+    ]
+  },
+  {
+    "id": "746a25ad429b3975",
+    "ru": "Сопоставить сообщение с заказом Z-18",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[a0].title"
+    ]
+  },
+  {
+    "id": "141bc8b47a453bf5",
+    "ru": "Проверить полный текст, а не только название отправителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[a1].title"
+    ]
+  },
+  {
+    "id": "0d1bdf62c5cc247d",
+    "ru": "Отделить сервисное уведомление от продвижения товаров",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[a2].title"
+    ]
+  },
+  {
+    "id": "74ea70c4b822e5ed",
+    "ru": "Разъяснить ограниченный вывод без признания всей обработки данных законной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d8c085aee9147ad5",
+    "ru": "Сохранить возможность рассмотрения новых сообщений и самостоятельных вопросов о данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3605934812fbcbcc",
+    "ru": "Признать рекламу доказанной одним названием магазина",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[b0].title"
+    ]
+  },
+  {
+    "id": "f47d9ed97e96592d",
+    "ru": "Признать законными все будущие рекламные рассылки после этого сервисного уведомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].actions[b1].title",
+      "cases:CASE_TEMPLATES[ads-service-message].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "be4ab9eceec4f193",
+    "ru": "План должен следовать установленным фактам. В задании подтверждена связь с конкретным заказом и отсутствие продвижения других товаров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].coach.plan"
+    ]
+  },
+  {
+    "id": "1c026669b97d057c",
+    "ru": "Уточняйте предмет, объект, время и получателя. В исходном деле сообщение действительно рекламное. Здесь первоначальная ошибка заявителя в квалификации самого содержания; это не оправдание любых следующих сообщений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].coach.talk"
+    ]
+  },
+  {
+    "id": "5d335b27626bfb0a",
+    "ru": "В исходном деле сообщение действительно рекламное. Здесь первоначальная ошибка заявителя в квалификации самого содержания; это не оправдание любых следующих сообщений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].contrast.difference"
+    ]
+  },
+  {
+    "id": "889b4ebeba761b01",
+    "ru": "Сообщение адресовано покупателю заказа Z-18: «Оплаченный заказ готов к выдаче. Пункт выдачи и часы работы указаны в заказе». Скидок, предложения новых товаров, рекомендаций и рекламных ссылок нет. Содержание полностью приведено в деле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0a49132f1e3db843",
+    "ru": "Текст спорного сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d0].title"
+    ]
+  },
+  {
+    "id": "7c2b563ff2fab5b0",
+    "ru": "Заказ оформил сам заявитель, номер телефона указан для связи по его исполнению. Оператор и отправитель установлены; вопрос законности иной обработки данных не входит в вывод об этом единственном сообщении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d1].text"
+    ]
+  },
+  {
+    "id": "10085f8b897d7cb7",
+    "ru": "Карточка заказа Z-18",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d1].title"
+    ]
+  },
+  {
+    "id": "22879002235e9d35",
+    "ru": "В приложенном примере из интернета есть купон на будущую покупку. Он направлен другому человеку, номер заказа и отправитель не совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d2].text"
+    ]
+  },
+  {
+    "id": "9cfed58e30b12150",
+    "ru": "Чужой рекламный скриншот",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0b2b5379d0d4c661",
+    "ru": "Представленный текст информирует об исполнении конкретного заказа; рекламный характер этого сообщения по материалам не подтверждён. В исходном деле сообщение действительно рекламное. Здесь первоначальная ошибка заявителя в квалификации самого содержания; это не оправдание любых следующих сообщений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.explain"
+    ]
+  },
+  {
+    "id": "a24959fb565cbfda",
+    "ru": "Представленный текст информирует об исполнении конкретного заказа; рекламный характер этого сообщения по материалам не подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[ads-service-message].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7918979c84fec417",
+    "ru": "Любое сообщение от магазина автоматически является рекламой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "611bbe063e16ac5d",
+    "ru": "Отсутствие рекламы доказывает законность любой обработки номера в прошлом и будущем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2b33bfa1125b4fd9",
+    "ru": "Исследовать новое рекламное сообщение и основание его направления отдельно. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].followup.explain"
+    ]
+  },
+  {
+    "id": "f0998b3283667c85",
+    "ru": "После выдачи заказа пришло другое SMS: предложение приобрести новый товар со скидкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].followup.intro"
+    ]
+  },
+  {
+    "id": "528e340fbcc84164",
+    "ru": "Исследовать новое рекламное сообщение и основание его направления отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "51852e10f73276ea",
+    "ru": "Считать его сервисным, потому что первое сообщение было сервисным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "928ba16a12664522",
+    "ru": "Изменить сохранённый текст первого сообщения на рекламу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "c0b189c6a2201af1",
+    "ru": "Оценка рекламного характера опирается на содержание, адресованность неопределённому кругу лиц и направленность на привлечение внимания, интерес и продвижение объекта. Не каждое уведомление об исполнении конкретного заказа имеет такие признаки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].knowledge.explain",
+      "cases:SOURCES[norm11-ad3].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-ads-service-message].fragments[norm].text"
+    ]
+  }
+]

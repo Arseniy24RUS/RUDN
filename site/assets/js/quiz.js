@@ -1,7 +1,7 @@
-import {getLocale,localized,t} from './i18n.js?v=1.3.4';
-import {backend} from './backend.js?v=1.3.4';
-import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.3.4';
-import {readState,pendingStorageKey} from './session.js?v=1.3.4';
+import {getLocale,localized,t} from './i18n.js?v=1.3.5';
+import {backend} from './backend.js?v=1.3.5';
+import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.3.5';
+import {readState,pendingStorageKey} from './session.js?v=1.3.5';
 import {durableStore} from './durable-store.js';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}

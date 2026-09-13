@@ -1,5 +1,42 @@
 /** Task-specific legal identifiers. Parsing never substitutes the type of instrument. */
 const refText=value=>String(value??'').normalize('NFKC').toLowerCase().trim();
+/** Localised spellings of the same instrument, never a bag of extracted digits.
+ * Return undefined for legacy RU input so its historical parser stays unchanged.
+ */
+function localizedInstrument(raw,knowledge) {
+ const value=raw.replace(/[–—−]/g,'-'),type=knowledge.actType||'federal';
+ const number=n=>n.replace(/^0+(?=\d)/,'');
+ const finish=(kind,n)=>kind==='federal'?(type==='federal'||type==='code'?number(n):''):type===kind?number(n):'';
+ const numeric='(\\d+)',mark='(?:no\\.?|n°|number|№)?\\s*';
+ let match;
+ // Federal law names and the transliterated suffix shown by translated hints.
+ match=value.match(new RegExp('^(?:russian federal law|federal law(?: of (?:the )?russian federation)?)\\s*'+mark+numeric+'(?:\\s*-\\s*(?:fz|фз))?$'))||
+   value.match(/^(?:俄罗斯(?:联邦)?)?联邦法律\s*第?\s*(\d+)\s*号?$/)||value.match(/^(?:俄罗斯(?:联邦)?)?第\s*(\d+)\s*号联邦法律$/)||value.match(/^(\d+)\s*-\s*fz$/);
+ if(match)return finish('federal',match[1]);
+ match=value.match(/^(?:law of (?:the )?russian federation|russian federation law|rf law|russian law)\s*(?:no\.?|n°|number|№)?\s*(\d+\s*-\s*(?:\d+|i))$/)||
+   value.match(/^(?:俄罗斯联邦法律|俄罗斯法律)\s*第?\s*(\d+\s*-\s*\d+)\s*号?$/)||value.match(/^俄罗斯(?:联邦)?第\s*(\d+\s*-\s*\d+)\s*号法律$/);
+ if(match)return finish('rfLaw',match[1].replace(/\s/g,'').replace(/-i$/,'-1'));
+ match=value.match(new RegExp('^(?:government resolution|russian government resolution|resolution of (?:the )?(?:russian (?:federation )?government|government of (?:the )?russian federation))\\s*'+mark+numeric+'$'))||
+   value.match(/^(?:俄罗斯(?:联邦)?)?政府(?:决议|决定)\s*第?\s*(\d+)\s*号?$/)||value.match(/^(?:俄罗斯(?:联邦)?)?政府第\s*(\d+)\s*号(?:决议|决定)$/);
+ if(match)return finish('resolution',match[1]);
+ match=value.match(new RegExp('^(?:order|russian ministry of transport order|order of (?:the )?(?:russian ministry of transport|ministry of transport of (?:the )?russian federation))\\s*'+mark+numeric+'$'))||
+   value.match(/^(?:俄罗斯(?:联邦)?)?(?:交通部)?(?:命令|令)\s*第?\s*(\d+)\s*号?$/)||value.match(/^(?:俄罗斯(?:联邦)?)?(?:交通部)?第\s*(\d+)\s*号(?:命令|令)$/);
+ if(match)return finish('order',match[1]);
+ const tax='(?:(?:russian (?:federation )?)?tax code(?: of (?:the )?russian federation)?)';
+ match=value.match(new RegExp('^'+tax+'\\s*,?\\s*(?:part)\\s*(1|2|i|ii|first|second)$'))||value.match(new RegExp('^part\\s*(1|2|i|ii|first|second)\\s+of\\s+(?:the )?'+tax+'$'))||
+   value.match(/^(?:俄罗斯(?:联邦)?)?税法典\s*第?\s*(1|2|一|二)\s*(?:部分|部)$/);
+ if(match){const part=/^(?:1|i|first|一)$/.test(match[1])?1:2;return type==='code'&&knowledge.codeName==='Налоговый кодекс РФ'&&Number(knowledge.codePart)===part?String(knowledge.number):'';}
+ if(/^(?:(?:russian (?:federation )?)?(?:civil procedure code|code of civil procedure)(?: of (?:the )?russian federation)?|(?:俄罗斯(?:联邦)?)?民事诉讼法典)$/.test(value))return type==='code'&&!knowledge.codePart&&(knowledge.codeName==='Гражданский процессуальный кодекс Российской Федерации'||knowledge.codeName==='Гражданский процессуальный кодекс РФ')?String(knowledge.number):'';
+ match=value.match(/^(?:no\.?|n°|number)\s*(\d+(?:\s*-\s*(?:\d+|i))?)(?:\s*-\s*(fz|фз))?$/);
+ if(match){const n=match[1].replace(/\s/g,'').replace(/-i$/,'-1');if(match[2])return /^\d+$/.test(n)?finish('federal',n):'';return type==='rfLaw'?(/^\d+-\d+$/.test(n)?number(n):''):(/^\d+$/.test(n)?number(n):'');}
+ // Unrecognised localised citations, wrong types, extra words and extra IDs are
+ // invalid, not silently shortened to a convenient matching number.
+ // NFKC turns the Russian number sign into Latin "No". Keep the full original
+ // RU path (including its non-matching return values), not just its successes.
+ if(/[а-яё]/i.test(value))return undefined;
+ if(/[a-hj-z\u3400-\u9fff]/i.test(value))return '';
+ return undefined;
+}
 export function referenceFields(knowledge={}){
  const order=knowledge.actType==='order',rf=knowledge.actType==='rfLaw',code=knowledge.actType==='code',clause=knowledge.unitKind==='clause',resolution=knowledge.actType==='resolution';
  return {number:resolution?'Номер постановления':order?'Номер приказа':rf?'Номер Закона РФ':code?(knowledge.codePart?'Часть кодекса или номер закона о её принятии':'Кодекс или номер закона о его принятии'):'Номер федерального закона',
@@ -8,6 +45,7 @@ export function referenceFields(knowledge={}){
 }
 export function referenceNumber(value,knowledge={}){
  const raw=refText(value);
+ const localized=localizedInstrument(raw,knowledge);if(localized!==undefined)return localized;
  if(knowledge.actType==='rfLaw'){
   // The Russian Federation Law No.2300-1 predates the modern -ФЗ naming form.
   // Historical Roman I is accepted, but a fabricated -ФЗ suffix is not.
@@ -49,11 +87,12 @@ export function referenceNumber(value,knowledge={}){
 export function referenceUnit(value,knowledge={}){
  let s=refText(value).replace(',', '.');
  if(knowledge.unitKind==='clause'){
-  s=s.replace(/^(?:пункт|пункта|п\.)\s*/,'').replace(/^(\d+)\s*\(\s*(\d+)\s*\)$/,'$1.$2');
+  s=s.replace(/^(?:пункт|пункта|п\.|clause|paragraph|para\.)\s*/,'').replace(/^第\s*(\d+(?:\.\d+)*)\s*项$/,'$1').replace(/^(\d+)\s*\(\s*(\d+)\s*\)$/,'$1.$2');
   return /^\d+(?:\.\d+)*$/.test(s)?s:'';
  }
  const explicit=s.match(/(?:статья|статьи|ст\.)\s*(\d+(?:\.\d+)?)/);
- return explicit?explicit[1]:/^\d+(?:\.\d+)?$/.test(s)?s:'';
+ const localized=s.match(/^(?:article|art\.)\s*(\d+(?:\.\d+)?)$/)||s.match(/^第\s*(\d+(?:\.\d+)?)\s*条$/);
+ return explicit?explicit[1]:localized?localized[1]:/^\d+(?:\.\d+)?$/.test(s)?s:'';
 }
 export function formatReference(knowledge={}){
  const date=/^\d{4}-\d{2}-\d{2}$/.test(knowledge.actDate||'')?knowledge.actDate.split('-').reverse().join('.'):String(knowledge.actDate||'');

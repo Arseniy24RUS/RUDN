@@ -1,0 +1,1070 @@
+[
+  {
+    "id": "d502626af7323cf3",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Применяется общий порядок обращений, не специальное процессуальное обжалование. В одном документе содержатся просьба о ремонте и жалоба на действия конкретного должностного лица И-7. Надлежащий независимый маршрут по жалобе задан. Исполнитель технических работ может получить относимую заявку; окончательное рассмотрение жалобы И-7 не поручается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].role.text"
+    ]
+  },
+  {
+    "id": "72e90ed0cefd34d6",
+    "ru": "Организовать ремонтный маршрут отдельно от надлежащего рассмотрения жалобы, запросив относимые материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].contrast.decision"
+    ]
+  },
+  {
+    "id": "9be5c6c44b5bcc1f",
+    "ru": "Исправить объект и проверить прежний ответ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[several-repair-and-complaint].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[several-repair-and-complaint].title"
+    ]
+  },
+  {
+    "id": "01bb71fa09ce045f",
+    "ru": "Организовать ремонтный маршрут отдельно от надлежащего рассмотрения жалобы, запросив относимые материалы. Совпадение объекта не делает техническую заявку и жалобу на должностное лицо одним предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].trap.explain"
+    ]
+  },
+  {
+    "id": "395ff41bff73617e",
+    "ru": "Поручить окончательное решение по жалобе самому И-7.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].trap.text",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "9f8753b75e30ce99",
+    "ru": "Определить причину нетрудоспособности по документу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6cafb2f8efe3bace",
+    "ru": "Исключить применение расчёта по другому случаю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[a1].title"
+    ]
+  },
+  {
+    "id": "11c98059040fc6cf",
+    "ru": "Проверить сведения и маршрут назначения страховщиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[a2].title"
+    ]
+  },
+  {
+    "id": "d36a437dec9928b4",
+    "ru": "Разъяснить распределение без обещания неподтверждённой суммы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e5745bda25b265a1",
+    "ru": "Сверить период и причину в итоговом расчёте",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[a4].title"
+    ]
+  },
+  {
+    "id": "4b152684c45744af",
+    "ru": "Внести в сообщение ложную причину нетрудоспособности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[b0].title"
+    ]
+  },
+  {
+    "id": "30d36d780c68f0bb",
+    "ru": "Публично распространять сведения о здоровье ребёнка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].actions[b1].title",
+      "cases:CASE_TEMPLATES[sickpay-child-care].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "a3d6cd932e51fa23",
+    "ru": "Все люди, документы и события этого дела вымышлены. Случай — уход за больным ребёнком, а не собственная болезнь работника. Право на пособие и отсутствие ограничений для выбранного периода по условиям подтверждены; расчёт размера не выполняется. Необходимые сведения получены СФР {{info}}. Особые исключения из применимого общего порядка не заданы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].brief"
+    ]
+  },
+  {
+    "id": "fbd2d9a91d7dad05",
+    "ru": "Различается причина страхового случая; прежний документ другого периода не заменяет текущего основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].coach.plan",
+      "cases:CASE_TEMPLATES[sickpay-child-care].contrast.difference"
+    ]
+  },
+  {
+    "id": "8878a06e9006c539",
+    "ru": "Старый расчёт",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2019eb82d9ef68c9",
+    "ru": "Сведения о страховом случае",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d1].title"
+    ]
+  },
+  {
+    "id": "aab40ecf190daf4a",
+    "ru": "План выплаты и приём данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d2].title"
+    ]
+  },
+  {
+    "id": "d818d6a10f665fe1",
+    "ru": "Шаблон собственной болезни не подходит к установленному случаю ухода за ребёнком. Различается причина страхового случая; прежний документ другого периода не заменяет текущего основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.explain"
+    ]
+  },
+  {
+    "id": "4647bdcad4a21b86",
+    "ru": "Шаблон собственной болезни не подходит к установленному случаю ухода за ребёнком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "9c0f3bc0ed25361c",
+    "ru": "Все причины нетрудоспособности имеют одинаковую схему первых трёх дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "0f9457d508717fdb",
+    "ru": "Нужно оплачивать по старому случаю, раз работник тот же.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "e1a4eb6f8f49aff8",
+    "ru": "Исправить основание и проверить расчёт по установленной причине через компетентное подразделение. Различается причина страхового случая; прежний документ другого периода не заменяет текущего основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].followup.explain"
+    ]
+  },
+  {
+    "id": "cf473633b83c7f9a",
+    "ru": "В проекте выплаты снова указана собственная болезнь работника, хотя номер случая относится к уходу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].followup.intro"
+    ]
+  },
+  {
+    "id": "76f191fae30e493e",
+    "ru": "Исправить основание и проверить расчёт по установленной причине через компетентное подразделение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "03d240cc9a4ca429",
+    "ru": "Согласовать только потому, что номер работника совпадает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "0bfa54ad1eb5b9b7",
+    "ru": "Предложить работнику оформить фиктивную собственную болезнь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "21242e758b51bb95",
+    "ru": "Механически перенести распределение своей болезни на уход.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ae3d854b9f6b2130",
+    "ru": "Считать пособие недопустимым из-за того, что болел не работник.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "8c8cdf581178c4fb",
+    "ru": "Найдите нормативное основание следующего действия: Проверить финансирование пособия по уходу страховщиком с первого дня в заданных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "b0eda53ea04e4e40",
+    "ru": "Мне оформили больничный по уходу за ребёнком. В отделе кадров сказали, что три дня заплатят сами, как при моей болезни. Так ли это?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].opening",
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q2].answer",
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5eee5ecdc8e5bb33",
+    "ru": "Причина нетрудоспособности — уход за больным ребёнком. Собственная болезнь работника не зарегистрирована. Право на соответствующий период подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q0].answer",
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q0].fact",
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c5f14d8f59afe95e",
+    "ru": "Кадры применили шаблон «первые три дня за счёт работодателя». Страховщик получил все необходимые сведения {{info}}; выплаты по этому случаю ещё не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q1].answer",
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q1].fact",
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d2].text"
+    ]
+  },
+  {
+    "id": "48337241cb5ac4ea",
+    "ru": "Приложен прошлогодний расчёт при собственной болезни работника. Он относится к другой причине нетрудоспособности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q3].answer",
+      "cases:CASE_TEMPLATES[sickpay-child-care].questions[q3].fact",
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[d0].text"
+    ]
+  },
+  {
+    "id": "2f2f5aaeedb63bc1",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Случай — уход за больным ребёнком, а не собственная болезнь работника. Право на пособие и отсутствие ограничений для выбранного периода по условиям подтверждены; расчёт размера не выполняется. Необходимые сведения получены СФР {{info}}. Особые исключения из применимого общего порядка не заданы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].role.text"
+    ]
+  },
+  {
+    "id": "18f82ae61611a23c",
+    "ru": "Проверить финансирование пособия по уходу страховщиком с первого дня в заданных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[sickpay-child-care].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-child-care].contrast.decision"
+    ]
+  },
+  {
+    "id": "b921b06cf8d80d56",
+    "ru": "Уход за ребёнком — другой источник выплаты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sickpay-child-care].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sickpay-child-care].title"
+    ]
+  },
+  {
+    "id": "dc669ccd208f5a5d",
+    "ru": "Проверить финансирование пособия по уходу страховщиком с первого дня в заданных условиях. Различается причина страхового случая; прежний документ другого периода не заменяет текущего основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].trap.explain"
+    ]
+  },
+  {
+    "id": "b2182ba921e2ebbe",
+    "ru": "Причина нетрудоспособности определяет применимую схему финансирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-child-care].trap.text"
+    ]
+  },
+  {
+    "id": "20d74c0db3f60464",
+    "ru": "Сверить страховой случай и часть пособия, относящуюся к СФР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a2d709fc34cfcd37",
+    "ru": "Установить получение полного набора необходимых сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5ee9204041631598",
+    "ru": "Рассчитать специальный срок от надлежащего события",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6703b146ad734d34",
+    "ru": "Разъяснить заявительнице различие дат без запроса лишних медицинских сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[a3].title"
+    ]
+  },
+  {
+    "id": "15860d21aa7adeb9",
+    "ru": "Проверить выплату именно по данному страховому случаю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[a4].title"
+    ]
+  },
+  {
+    "id": "ee5019b9c12e3c54",
+    "ru": "Передать банковские и медицинские сведения в открытый чат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[b0].title",
+      "cases:CASE_TEMPLATES[sickpay-data].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "c05af334c4112380",
+    "ru": "Перезапустить срок от даты нового письма без правового основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].actions[b1].title"
+    ]
+  },
+  {
+    "id": "2b2243488189487a",
+    "ru": "Рассчитайте крайний день указанного в заголовке действия. Это не универсальный срок устранения проблемы. В данном упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день. Журнал поступления полных сведений и регистрация письма имеют разные даты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].calendar.context"
+    ]
+  },
+  {
+    "id": "755fbebc7d0a2705",
+    "ru": "Больничный закрыт",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].calendar.events[closed].label"
+    ]
+  },
+  {
+    "id": "5cda8210e90715c4",
+    "ru": "Полные сведения получены СФР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].calendar.events[info].label"
+    ]
+  },
+  {
+    "id": "0e42f3d298c7da61",
+    "ru": "Основание предметного срока: закон № 255-ФЗ, статья 15; для общего обращения – 59-ФЗ. Правило счёта явно задано в упражнении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].calendar.source"
+    ]
+  },
+  {
+    "id": "e743461a2062dc1c",
+    "ru": "Крайний день назначения и выплаты СФР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].calendar.title"
+    ]
+  },
+  {
+    "id": "61e920fadd904593",
+    "ru": "Получательница пособия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].citizen.description"
+    ]
+  },
+  {
+    "id": "541b7bf58bc29cae",
+    "ru": "Больничный закрыт {{observed}}. Полный необходимый набор для СФР получен {{info}}. Набор принят без запроса уточнения, один страховой случай, выплата в календарном задании относится к СФР.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9471c6f9eff5592f",
+    "ru": "Журнал поступления сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e061a052e3bae137",
+    "ru": "Учебная временная линия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d0].type",
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[dates].type",
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[dates].type"
+    ]
+  },
+  {
+    "id": "662c88efc52da3ab",
+    "ru": "Заявительница просит проверить ожидаемый срок и сведения по одному страховому случаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d1].text"
+    ]
+  },
+  {
+    "id": "dd38a0a374cbfaac",
+    "ru": "Письменный вопрос",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d1].type"
+    ]
+  },
+  {
+    "id": "6878eeea9e34d277",
+    "ru": "Для специального срока значимо получение необходимых сведений СФР, а не одно закрытие больничного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-data].factTask.explain",
+      "cases:CASE_TEMPLATES[sickpay-data].outcomes.good"
+    ]
+  },
+  {
+    "id": "943992cf7c713b30",
+    "ru": "Десять дней всегда считаются от закрытия больничного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "012da2a5c1d34d71",
+    "ru": "Дата любого письма автоматически перезапускает выплату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "97eed4b780b83dd0",
+    "ru": "Учебное продолжение. В подтверждении указан платёж по другому больничному.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].followup.intro"
+    ]
+  },
+  {
+    "id": "bd7f34c55457a9ce",
+    "ru": "Сопоставить идентификатор страхового случая и запросить ответ по нужной выплате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].followup.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-data].followup.explain"
+    ]
+  },
+  {
+    "id": "11e14f8dcf21a885",
+    "ru": "Признать любой платёж исполнением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d87a25d5215dc1f3",
+    "ru": "Опубликовать личные данные для поиска получателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8102d390d3263554",
+    "ru": "Найдите норму о сроках назначения и выплаты страхового обеспечения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "eec4bfd4ef9918fa",
+    "ru": "Больничный закрыли, но выплаты нет. Мне называют десять дней, а я считаю от даты закрытия. В кабинете вижу, что сведения отправлены работодателем позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].opening"
+    ]
+  },
+  {
+    "id": "3ed05a8f717d8af2",
+    "ru": "Специальный срок выплаты пособия СФР и отдельная работа с обращением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].procedures[0].text"
+    ]
+  },
+  {
+    "id": "8cc059af01ab71a9",
+    "ru": "Расчёт всех выплат одной приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].procedures[1].text"
+    ]
+  },
+  {
+    "id": "504c58173021e4ee",
+    "ru": "Обычные 30 дней вместо срока пособия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e14328f45bc89dc4",
+    "ru": "Только о части, которую назначает и выплачивает СФР; расчёт первых дней работодателя в эту задачу не входит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c9f8c233339be8da",
+    "ru": "Разделена компетенция выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0a097302a154730b",
+    "ru": "О какой части пособия речь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q0].text"
+    ]
+  },
+  {
+    "id": "009bb828c1f6fa69",
+    "ru": "В учебном журнале получено {{info}}; необходимые сведения полные, уточнение не запрашивалось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "718aa8a84fdd01d4",
+    "ru": "Установлено специальное исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "fe4360dcb451022e",
+    "ru": "Когда полный комплект получил СФР?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d824b685640c610d",
+    "ru": "{{observed}}. Это раньше поступления полного набора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "65b0a25d3d5d62eb",
+    "ru": "Дата закрытия отличается от даты получения сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "83033b1905cb4136",
+    "ru": "Когда закрыт больничный?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q2].text"
+    ]
+  },
+  {
+    "id": "94a765646c5c334b",
+    "ru": "В журнале все записи относятся к одному учебному номеру; банковские реквизиты подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "28b187ceb0d714d4",
+    "ru": "Сверен предмет сопоставления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "34f2b7fb76b92adf",
+    "ru": "Не смешаны ли разные страховые случаи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].questions[q3].text"
+    ]
+  },
+  {
+    "id": "17284dd9b26d8e0a",
+    "ru": "Учебная проверка сведений и срока выплаты части пособия СФР; самостоятельно медицинские данные и банковские реквизиты не изменяете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].role.text"
+    ]
+  },
+  {
+    "id": "a0ad63d70fa347b1",
+    "ru": "Специалист клиентской службы СФР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].role.title"
+    ]
+  },
+  {
+    "id": "c620e4cb13c9bd59",
+    "ru": "Проверить полноту и дату получения сведений СФР; рассчитать специальный срок и объяснить разграничение событий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].routes[0].text",
+      "cases:CASE_TEMPLATES[sickpay-data].coach.plan",
+      "cases:CASE_TEMPLATES[sickpay-data].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "e3191fd7f95c6b14",
+    "ru": "Изменить банковские реквизиты без заявления и проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].routes[1].text",
+      "cases:CASE_TEMPLATES[sickpay-data].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "366895399e930f1b",
+    "ru": "Обещать выплату в день закрытия больничного независимо от сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].routes[2].text",
+      "cases:CASE_TEMPLATES[sickpay-data].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dfe801e42d0ed8cb",
+    "ru": "Больничный закрыт, сведения поступили позже",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sickpay-data].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sickpay-data].title"
+    ]
+  },
+  {
+    "id": "6491e74df6fd9736",
+    "ru": "Социальное страхование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].topic",
+      "cases:CASE_TEMPLATES[sickpay-data].tag",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].topic"
+    ]
+  },
+  {
+    "id": "c4557285d066043a",
+    "ru": "Проверить журнал передачи и полноту сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].trap.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-data].trap.explain"
+    ]
+  },
+  {
+    "id": "0f8d32f68ff12d6b",
+    "ru": "Не смотреть журнал, считать по закрытию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "50d0ae87b19f1ac6",
+    "ru": "Помощник: «Дата закрытия и дата получения сведений всегда совпадают».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-data].trap.text"
+    ]
+  },
+  {
+    "id": "689ba7afb6da8839",
+    "ru": "Установить дату принятия и идентификатор отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[a0].title"
+    ]
+  },
+  {
+    "id": "e8ddfd6819b42b4a",
+    "ru": "Проверить отдельное направление каждому предусмотренному адресату",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[a1].title"
+    ]
+  },
+  {
+    "id": "bf6659be39e15ac2",
+    "ru": "Обеспечить направление застрахованному лицу по надлежащему каналу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6da645d9764691d8",
+    "ru": "Сохранить конфиденциальность и разъяснить предусмотренный порядок обжалования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[a3].title"
+    ]
+  },
+  {
+    "id": "6bbe7e8a5ce0222b",
+    "ru": "Проверить отправленное содержание и адресата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[a4].title"
+    ]
+  },
+  {
+    "id": "ef5e0188a137c0ea",
+    "ru": "Скрыть от работника мотивированное решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[b0].title"
+    ]
+  },
+  {
+    "id": "d681597e0c8d3833",
+    "ru": "Выдать чужой отказ вместо относящегося к текущему случаю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].actions[b1].title",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "711ed234267d9518",
+    "ru": "Все люди, документы и события этого дела вымышлены. Мотивированное решение страховщика об отказе принято {{decision}}. Основания самого отказа в упражнении не пересматриваются: оцениваются адресаты и срок направления решения. Страхователь получил его, а застрахованному лицу оно не направлялось. Все необходимые для уведомления сведения имелись. Не смешивать эту задачу с десятидневным сроком назначения и выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].brief"
+    ]
+  },
+  {
+    "id": "13f7b6a04132302d",
+    "ru": "№ 255-ФЗ, статья 15, часть 2 В учебном профиле исходный день не включается, нерабочее окончание переносится на следующий рабочий. Продление по условию не применяется. Определите событие и крайний день именно названного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].calendar.context"
+    ]
+  },
+  {
+    "id": "09d9e0eb7eaf361d",
+    "ru": "Принято мотивированное решение об отказе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].calendar.events[decision].label"
+    ]
+  },
+  {
+    "id": "348edf16c861ac88",
+    "ru": "№ 255-ФЗ, статья 15, часть 2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].calendar.source"
+    ]
+  },
+  {
+    "id": "73d10f20dd7b7b7c",
+    "ru": "Крайний день направления отказа обоим адресатам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].calendar.title"
+    ]
+  },
+  {
+    "id": "36a3332d6ba5cf09",
+    "ru": "Здесь решение уже принято. Проверяется его направление обоим адресатам, а не срок расчёта и выплаты пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].coach.plan",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].contrast.difference"
+    ]
+  },
+  {
+    "id": "2491507a1455e7f3",
+    "ru": "Статья 15 закона № 255-ФЗ связывает назначение и выплату страховщиком с получением необходимых документов и сведений: не более десяти рабочих дней. По части 2 мотивированное решение об отказе направляется и страхователю, и застрахованному лицу в течение одного рабочего дня со дня принятия. Уведомление работодателя не заменяет уведомление работника, а дата закрытия больничного не всегда совпадает с получением полного комплекта сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].coach.research",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].knowledge.explain",
+      "cases:SOURCES[v16-norm-sfrterm].text"
+    ]
+  },
+  {
+    "id": "8c02fe775f733b52",
+    "ru": "Пояснение сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fab2ed10acd285bb",
+    "ru": "Решение Р-29",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f726f7fdcad164cf",
+    "ru": "Журнал исходящих сообщений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d2].title"
+    ]
+  },
+  {
+    "id": "52071038b4253e70",
+    "ru": "Наблюдение или исходное событие {{observed}}. Письмо отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Мотивированное решение об отказе принято {{decision}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[dates].text"
+    ]
+  },
+  {
+    "id": "7c06bd67413a54ee",
+    "ru": "Уведомление страхователя не заменило предусмотренное направление самому застрахованному. Здесь решение уже принято. Проверяется его направление обоим адресатам, а не срок расчёта и выплаты пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.explain"
+    ]
+  },
+  {
+    "id": "1ad0fc5534324fad",
+    "ru": "Уведомление страхователя не заменило предусмотренное направление самому застрахованному.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "703dba4d75d79c4e",
+    "ru": "Направление работодателю всегда освобождает СФР от уведомления работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f3fbbfd5e6bb1b71",
+    "ru": "Срок направления решения равен сроку назначения пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "ec27d18980dfade8",
+    "ru": "Исправить вложение и подтвердить направление именно Р-29; техническое сообщение без нужного решения недостаточно. Здесь решение уже принято. Проверяется его направление обоим адресатам, а не срок расчёта и выплаты пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].followup.explain"
+    ]
+  },
+  {
+    "id": "1c17946533efbca3",
+    "ru": "Сообщение работнику появилось, но приложен отказ по другому страховому случаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].followup.intro"
+    ]
+  },
+  {
+    "id": "ecf760149d841a79",
+    "ru": "Исправить вложение и подтвердить направление именно Р-29; техническое сообщение без нужного решения недостаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "c3fbe89254665c85",
+    "ru": "Считать любое вложение исполнением обязанности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "ebd2224b829b3bc5",
+    "ru": "Отклонить право на обжалование, раз документ уже отправляли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "49e9347ec66eb314",
+    "ru": "Считать неуведомление автоматическим назначением пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "3abb5fab7b507ca9",
+    "ru": "Найдите нормативное основание следующего действия: Обеспечить направление мотивированного решения обоим адресатам в однодневный рабочий срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "b6720897fbcf9244",
+    "ru": "Работодатель получил отказ по пособию, а я узнал об этом случайно. В личном кабинете решения нет. Мне должны его направить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].opening",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q2].answer",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5678e65eb93a2859",
+    "ru": "Мотивированный отказ принят страховщиком {{decision}}. Указан конкретный страховой случай и работник; данные для направления обоим адресатам полные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q0].answer",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q0].fact",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d1].text"
+    ]
+  },
+  {
+    "id": "3ceba951db52e40c",
+    "ru": "Р-29 направлено страхователю. Записи о направлении застрахованному лицу нет; сообщение в личный кабинет не формировалось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q1].answer",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q1].fact",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d2].text"
+    ]
+  },
+  {
+    "id": "2950baf3430f6261",
+    "ru": "Сотрудник полагал, что работодатель сам передаст документ, поэтому отдельное направление работнику не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q3].answer",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].questions[q3].fact",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].documents[d0].text"
+    ]
+  },
+  {
+    "id": "abdcd635b8b5ce37",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Мотивированное решение страховщика об отказе принято {{decision}}. Основания самого отказа в упражнении не пересматриваются: оцениваются адресаты и срок направления решения. Страхователь получил его, а застрахованному лицу оно не направлялось. Все необходимые для уведомления сведения имелись. Не смешивать эту задачу с десятидневным сроком назначения и выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].role.text"
+    ]
+  },
+  {
+    "id": "fb8330f952942dc1",
+    "ru": "Специалист подразделения страховщика по обращениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].role.title"
+    ]
+  },
+  {
+    "id": "882bf72092db9fe5",
+    "ru": "Обеспечить направление мотивированного решения обоим адресатам в однодневный рабочий срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].contrast.decision"
+    ]
+  },
+  {
+    "id": "07df5be9ad82870f",
+    "ru": "Решение есть, работника не известили",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sickpay-refusal-notice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sickpay-refusal-notice].title"
+    ]
+  },
+  {
+    "id": "4b7cb1a9a0602855",
+    "ru": "Обеспечить направление мотивированного решения обоим адресатам в однодневный рабочий срок. Здесь решение уже принято. Проверяется его направление обоим адресатам, а не срок расчёта и выплаты пособия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].trap.explain"
+    ]
+  },
+  {
+    "id": "60054867d66f78f0",
+    "ru": "Ждать десять рабочих дней после решения прежде чем уведомить работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].trap.text",
+      "cases:CASE_TEMPLATES[sickpay-refusal-notice].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "8d2e80e7d36448df",
+    "ru": "Установить вид случая и статус работника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[a0].title"
+    ]
+  },
+  {
+    "id": "7e40effaf3407dab",
+    "ru": "Сопоставить период с назначением платежа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[a1].title"
+    ]
+  },
+  {
+    "id": "f15a965313f97030",
+    "ru": "Проверить получение полного комплекта страховщиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[a2].title"
+    ]
+  },
+  {
+    "id": "2db7982242c12538",
+    "ru": "Не требовать от гражданина повторять уже имеющиеся в обмене сведения без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[a3].title"
+    ]
+  },
+  {
+    "id": "481e4b303d9a37d2",
+    "ru": "Проверить выплату части СФР по соответствующему случаю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[a4].title"
+    ]
+  },
+  {
+    "id": "8cf5a07b54cf8e8b",
+    "ru": "Закрыть вопрос по одному переводу за три дня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[b0].title"
+    ]
+  },
+  {
+    "id": "054d5038fa3cdf79",
+    "ru": "Обещать конкретную сумму без необходимых расчётных данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].actions[b1].title",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "88fe2c042c457a21",
+    "ru": "Все люди, документы и события этого дела вымышлены. Обычный застрахованный работник болел сам, случай не связан с производственной травмой. Особые категории и исключения не применяются. Работодатель оплатил именно первые три дня, размер этой части не оспаривается. Полные необходимые сведения приняты СФР {{info}}. Календарная задача относится к назначению и выплате страховщиком его части, а не к сроку работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].brief"
+    ]
+  },
+  {
+    "id": "3fee322db86a37e5",
+    "ru": "№ 255-ФЗ, статья 15, часть 1 В учебном профиле исходный день не включается, нерабочее окончание переносится на следующий рабочий. Продление по условию не применяется. Определите событие и крайний день именно названного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].calendar.context",
+      "cases:CASE_TEMPLATES[sickpay-child-care].calendar.context"
+    ]
+  },
+  {
+    "id": "9db951ed2ef83c74",
+    "ru": "Получены необходимые сведения СФР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].calendar.events[info].label",
+      "cases:CASE_TEMPLATES[sickpay-child-care].calendar.events[info].label"
+    ]
+  },
+  {
+    "id": "29950a135f16954a",
+    "ru": "№ 255-ФЗ, статья 15, часть 1",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].calendar.source",
+      "cases:CASE_TEMPLATES[sickpay-child-care].calendar.source"
+    ]
+  },
+  {
+    "id": "c263dc44cb335f25",
+    "ru": "Крайний день назначения и выплаты страховщиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].calendar.title",
+      "cases:CASE_TEMPLATES[sickpay-child-care].calendar.title"
+    ]
+  },
+  {
+    "id": "86b1d143a6ff17f9",
+    "ru": "Первый вариант семейства проверял поступление данных. Здесь нужно сначала отделить две части финансирования, а затем срок конкретной части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].coach.plan",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].contrast.difference"
+    ]
+  },
+  {
+    "id": "06805cf864afa208",
+    "ru": "Статья 3 закона № 255-ФЗ: в заданном обычном случае болезни или травмы работающего застрахованного первые три дня финансирует работодатель, последующие — страховщик. Для ухода за больным членом семьи пособие финансируется страховщиком с первого дня. Условия об обычном работнике, страховом случае и отсутствии специальных исключений в упражнении установлены; они не выводятся из одного названия больничного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].coach.research",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].knowledge.explain",
+      "cases:CASE_TEMPLATES[sickpay-child-care].coach.research"
+    ]
+  }
+]

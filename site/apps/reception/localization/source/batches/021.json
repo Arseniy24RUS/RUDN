@@ -1,0 +1,1168 @@
+[
+  {
+    "id": "7389a85965330f05",
+    "ru": "Охрану объекта оказывает организация с идентификатором О-17. Вид услуги указан; она относится к установленным охранным услугам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2ddd2fb3a42872e8",
+    "ru": "Договор О-17",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d1].title"
+    ]
+  },
+  {
+    "id": "639b9a5aef517bd8",
+    "ru": "На дату {{observed}} запись действительна для соответствующей услуги. Документ подтверждает организацию О-17, но не содержит сведений об удостоверении работника К-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d2].text"
+    ]
+  },
+  {
+    "id": "ef6a7e9c1a6de733",
+    "ru": "Ответ по реестру О-17",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ab4acfbbd2b966cc",
+    "ru": "Лицензия организации О-17 подтверждена; документы и действия К-4 требуют отдельной проверки. В базовом деле подрядчик требовал установления. Здесь организация установлена и лицензия подтверждена, но это не ответ на вопрос о работнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.explain"
+    ]
+  },
+  {
+    "id": "519ba47f3c551b33",
+    "ru": "Лицензия организации О-17 подтверждена; документы и действия К-4 требуют отдельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[guard-current-register].trap.explain",
+      "cases:CASE_TEMPLATES[guard-current-register].contrast.decision"
+    ]
+  },
+  {
+    "id": "c060d79e10e479ac",
+    "ru": "Старая копия на стенде доказывает отсутствие действующей лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "57b6c2350baf9c5b",
+    "ru": "Лицензия организации заменяет удостоверение любого её работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "8e96571f72dd1269",
+    "ru": "Направлено удостоверение К-7, который в спорную смену не работал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].followup.intro"
+    ]
+  },
+  {
+    "id": "a56cad9d6b4e522c",
+    "ru": "Запросить относимое подтверждение по К-4 и спорной смене.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].followup.options[0].text",
+      "cases:CASE_TEMPLATES[guard-current-register].followup.explain"
+    ]
+  },
+  {
+    "id": "021591eef607f823",
+    "ru": "Зачесть любое удостоверение той же организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c8d7ea3a5c902f91",
+    "ru": "Объявить все удостоверения поддельными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "66050ad0198091b7",
+    "ru": "Статья 20 закона № 427-ФЗ предусматривает ведение реестра лицензий и предоставление сведений из него в установленном Правительством порядке. Проверяются юридическое лицо, виды деятельности и действительный статус на нужную дату. Наличие старой бумажной копии не заменяет этих сведений. Лицензия организации не подтверждает автоматически статус конкретного работника или законность отдельного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].knowledge.explain",
+      "cases:SOURCES[n13-guard20].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-current-register].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "18b79a143762d8b1",
+    "ru": "Проверять реестр по идентификатору и сохранять отдельную проверку работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "41ea12f2067ccdd4",
+    "ru": "Оценивать действительность только по старой копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "bfbf073840d62185",
+    "ru": "Переносить лицензию организации на статус каждого сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6d0de2cc2c79b919",
+    "ru": "Найдите норму «Реестр лицензий частной охранной деятельности». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "c5461c17b4408565",
+    "ru": "Новые сценарии F20 применяют 427-ФЗ только к событиям после его вступления в силу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[guard-property-inspection].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[guard-identification-request].legalApplicability.scope"
+    ]
+  },
+  {
+    "id": "45c195bca9557a18",
+    "ru": "На стенде старая копия лицензии. Я решил, что охрана уже работает незаконно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].opening"
+    ]
+  },
+  {
+    "id": "7d810e0c04a0914b",
+    "ru": "Раздельная проверка записи организации и статуса работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].procedures[0].text"
+    ]
+  },
+  {
+    "id": "1c87bc3d34b09d1e",
+    "ru": "Признание всех действий работника законными по записи организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].procedures[1].text"
+    ]
+  },
+  {
+    "id": "1b056a130a3e5ba0",
+    "ru": "Аннулирование лицензии приёмной по фотографии стенда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].procedures[2].text"
+    ]
+  },
+  {
+    "id": "261bfccce097ccf1",
+    "ru": "По договору охраны и регистрационному идентификатору О-17.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "f91ea4c29caf566b",
+    "ru": "Определён именно исполнитель.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "313f21af2ad0f0a4",
+    "ru": "Как установлено юридическое лицо?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5b38be1909451587",
+    "ru": "Да, в деле проверенный ответ лицензирующего органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0e059b4b8cb3f97d",
+    "ru": "Старая копия не единственное доказательство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "cce122d0c38b150e",
+    "ru": "Проверена ли актуальная запись?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3de6f5e563987f8d",
+    "ru": "Представлены только документы организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ba76fabdf5a6b790",
+    "ru": "Статус работника остаётся отдельным вопросом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "405e7d04951545ba",
+    "ru": "Что с документами охранника?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q2].text"
+    ]
+  },
+  {
+    "id": "5eb59c34639bf72f",
+    "ru": "Проверить право работать и разобраться с отказом показать документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "b3c5c8a7d21bbb98",
+    "ru": "Предметы не сводятся к одной лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "b84c8627e23b3fb0",
+    "ru": "Каковы ваши требования?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].questions[q3].text"
+    ]
+  },
+  {
+    "id": "d290489ce254d2bc",
+    "ru": "Территориальный орган Росгвардии: профильное подразделение по охранной деятельности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].routes[0].text"
+    ]
+  },
+  {
+    "id": "d1d7c9f21bbb3940",
+    "ru": "Орган регистрации юридических лиц вместо лицензирующего подразделения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].routes[1].text"
+    ]
+  },
+  {
+    "id": "fbc5cc914714afb2",
+    "ru": "Администрация клуба как единственный окончательный проверяющий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].routes[2].text"
+    ]
+  },
+  {
+    "id": "b796bbde3098549d",
+    "ru": "Лицензия организации и документы работника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[guard-current-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[guard-current-register].title"
+    ]
+  },
+  {
+    "id": "44bc9be3d9787c86",
+    "ru": "Лицензия организации сама по себе не удостоверяет статус К-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].trap.text"
+    ]
+  },
+  {
+    "id": "75b8aa446bdfcea3",
+    "ru": "Сопоставить разговор со статусом К-9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[a0].title"
+    ]
+  },
+  {
+    "id": "d9cd65137d11bd4c",
+    "ru": "Выделить предъявление документов как самостоятельный предмет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e60cca609ad3a1ba",
+    "ru": "Подготовить материалы по обязанности, установленной частью 11 статьи 15.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c96e829935f475c0",
+    "ru": "Не требовать передачи или публичного размещения оригиналов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b5d08e46b32ed619",
+    "ru": "Проверить ответ именно по зафиксированному отказу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[a4].title"
+    ]
+  },
+  {
+    "id": "69156230ba42e6bc",
+    "ru": "Считать обязанность исполненной только из-за наличия действительных документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[b0].title"
+    ]
+  },
+  {
+    "id": "bc7ee222c6d1bde8",
+    "ru": "Опубликовать неотредактированные документы работника в общем доступе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].actions[b1].title",
+      "cases:CASE_TEMPLATES[guard-identification-request].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "7939f63eaac98234",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. События после 1 сентября 2026 года; статус частного охранника, а не контролёра билетов, установлен. Зафиксированы его обращение к посетителю и последующее требование предъявить удостоверение и личную карточку. Вопрос касается предъявления, не передачи оригиналов в руки или их копирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].brief"
+    ]
+  },
+  {
+    "id": "68c422e6b4089987",
+    "ru": "В базовом деле сведения о работнике отсутствовали. Здесь статус подтверждён, а проверяется конкретная обязанность предъявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].coach.plan",
+      "cases:CASE_TEMPLATES[guard-identification-request].contrast.difference"
+    ]
+  },
+  {
+    "id": "1b24840ad6c8e1bb",
+    "ru": "Посетитель другой смены пишет, что форма не понравилась. Нужного требования и отказа запись не содержит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d0].text"
+    ]
+  },
+  {
+    "id": "e6f392337db26c1c",
+    "ru": "Жалоба на внешний вид",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d0].title"
+    ]
+  },
+  {
+    "id": "21da862c00f0b5d1",
+    "ru": "Охранник К-9 обратился к посетителю с требованием. В ответ на просьбу предъявить удостоверение и личную карточку отказал, сославшись на обязанность только перед полицией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1d199b56ae67001d",
+    "ru": "Расшифровка разговора К-9",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4237ae03f23de4fe",
+    "ru": "Принадлежность К-9 к частной охране установлена, документы действительны. Требование передать их посетителю в руки или разрешить копирование не заявлялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d2].text"
+    ]
+  },
+  {
+    "id": "45d699df9eabe872",
+    "ru": "Документы и сменное задание К-9",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].documents[d2].title"
+    ]
+  },
+  {
+    "id": "1debe416c066ee5c",
+    "ru": "Установлено требование о предъявлении в предусмотренном контексте; наличие действительных документов не разрешает отказывать в их предъявлении. В базовом деле сведения о работнике отсутствовали. Здесь статус подтверждён, а проверяется конкретная обязанность предъявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.explain"
+    ]
+  },
+  {
+    "id": "408cbada7add2aed",
+    "ru": "Установлено требование о предъявлении в предусмотренном контексте; наличие действительных документов не разрешает отказывать в их предъявлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[guard-identification-request].trap.explain",
+      "cases:CASE_TEMPLATES[guard-identification-request].contrast.decision"
+    ]
+  },
+  {
+    "id": "782d861196e67037",
+    "ru": "Перед любым посетителем предъявлять документы никогда не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d5b614ce9640595f",
+    "ru": "Просьба предъявить автоматически включает право забрать оригинал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "bd9245294bdc5462",
+    "ru": "Работник впоследствии предъявил документы, но в ответе отрицается сам первоначальный отказ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].followup.intro"
+    ]
+  },
+  {
+    "id": "9f9dd4ddb0a8390c",
+    "ru": "Разделить последующее предъявление и оценку исходного эпизода по записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].followup.options[0].text",
+      "cases:CASE_TEMPLATES[guard-identification-request].followup.explain"
+    ]
+  },
+  {
+    "id": "4f62e5a852e04477",
+    "ru": "Считать запись исходного эпизода несуществующей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "14d4514a74f9bb78",
+    "ru": "Объявить последующее предъявление незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "82c1315f6f00ba7c",
+    "ru": "Проверить предусмотренное предъявление по требованию лица, к которому обратился охранник.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "7dacf7666f68f0e7",
+    "ru": "Ограничить обязанность предъявлением исключительно полиции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "fb0c779179c9e49a",
+    "ru": "Приравнять предъявление к передаче оригиналов посетителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "945548a2406ef807",
+    "ru": "Охранник предъявил мне требование, но отказался показать удостоверение: сказал, что посетителям не обязан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].opening"
+    ]
+  },
+  {
+    "id": "817036e008ad822e",
+    "ru": "Проверка исполнения обязанности предъявления с учётом обстоятельств обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e9405a07b76542ab",
+    "ru": "Аннулирование статуса за любую жалобу на форму одежды.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5699c3f1c2d06681",
+    "ru": "Проверка только существования удостоверения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].procedures[2].text"
+    ]
+  },
+  {
+    "id": "ba8044c6329f266f",
+    "ru": "Охранник потребовал выполнить условие пропускного режима.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "44aa134218a72b50",
+    "ru": "Он обратился к посетителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f5ede756a0110925",
+    "ru": "Кто первым предъявил требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q0].text"
+    ]
+  },
+  {
+    "id": "61b34e60a43de304",
+    "ru": "Предъявить удостоверение и личную карточку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "69b4ff15c4fc78a1",
+    "ru": "Задан предусмотренный предмет требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "2b05c619d586507a",
+    "ru": "О чём попросил посетитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q1].text"
+    ]
+  },
+  {
+    "id": "feb6f03a962b59a9",
+    "ru": "Да: «Покажу только полиции».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ceb0cb5b315e67cd",
+    "ru": "Отказ зафиксирован.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "386705e4854852f6",
+    "ru": "Есть ли запись ответа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q2].text"
+    ]
+  },
+  {
+    "id": "6ca951df61bc92af",
+    "ru": "В деле есть действительные документы; спор о предъявлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "743ec837213b95ca",
+    "ru": "Нельзя объявлять работника нелицензированным автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "165ab1e3de0e64d8",
+    "ru": "Известно, имеет ли он удостоверение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e11a73e5ac7601d3",
+    "ru": "Профильное территориальное подразделение Росгвардии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].routes[0].text"
+    ]
+  },
+  {
+    "id": "13e001fbbe842df5",
+    "ru": "Любой сотрудник клуба вместо компетентного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].routes[1].text"
+    ]
+  },
+  {
+    "id": "ecc1d04b6a75f656",
+    "ru": "Автор записи как уполномоченный аннулировать удостоверение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].routes[2].text"
+    ]
+  },
+  {
+    "id": "53e8cfa4035e2d1e",
+    "ru": "К охраннику обратились после его требования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[guard-identification-request].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[guard-identification-request].title"
+    ]
+  },
+  {
+    "id": "15fd30bfc1e142fb",
+    "ru": "Наличие удостоверения и исполнение обязанности предъявить его – разные проверяемые факты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-identification-request].trap.text"
+    ]
+  },
+  {
+    "id": "fe1fc699e9b96e9b",
+    "ru": "Установить вид режима и зафиксировать относимую запись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[a0].title"
+    ]
+  },
+  {
+    "id": "1ae400c373595f03",
+    "ru": "Отделить условия допуска имущества от оснований задержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[a1].title"
+    ]
+  },
+  {
+    "id": "6023542ab78574f6",
+    "ru": "Подготовить передачу материалов по обеим компетенциям без избыточных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[a2].title"
+    ]
+  },
+  {
+    "id": "022fede1d845e5fd",
+    "ru": "Не объявлять человека правонарушителем по одному отказу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[a3].title"
+    ]
+  },
+  {
+    "id": "92db5dc73abacca3",
+    "ru": "Проверить результаты рассмотрения конкретного эпизода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[a4].title"
+    ]
+  },
+  {
+    "id": "76ce7766db5a6a86",
+    "ru": "Оправдать удержание одним условием о сумке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[b0].title"
+    ]
+  },
+  {
+    "id": "c0f90e97dff6fe3b",
+    "ru": "Предложить посетителю самостоятельно отнять имущество силой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].actions[b1].title",
+      "cases:CASE_TEMPLATES[guard-property-inspection].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "acb31de1812172e6",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Частный охранник действует на обычном охраняемом объекте с пропускным режимом, не в особом режиме совместного осмотра на мероприятии. Признаки посягательства, преступления или административного правонарушения по материалам не установлены. Вы готовите передачу сведений компетентным органам, а не заменяете их окончательную квалификацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].brief"
+    ]
+  },
+  {
+    "id": "ada811194cf5d091",
+    "ru": "Вопрос не относится к компетенции получившей приёмной. Рассчитайте крайний день направления по компетенции со дня регистрации по указанному профилю. Это не срок фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].calendar.context",
+      "cases:CASE_TEMPLATES[noise-ventilation].calendar.context",
+      "cases:CASE_TEMPLATES[noise-other-region].calendar.context"
+    ]
+  },
+  {
+    "id": "841a16ea0a95b329",
+    "ru": "59-ФЗ, статья 8. Счёт со следующего дня и перенос нерабочего окончания заданы профилем упражнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].calendar.source",
+      "cases:CASE_TEMPLATES[noise-ventilation].calendar.source",
+      "cases:CASE_TEMPLATES[noise-other-region].calendar.source"
+    ]
+  },
+  {
+    "id": "a8bb5378a07510e0",
+    "ru": "Крайний день направления по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].calendar.title",
+      "cases:CASE_TEMPLATES[noise-ventilation].calendar.title",
+      "cases:CASE_TEMPLATES[noise-other-region].calendar.title"
+    ]
+  },
+  {
+    "id": "126f5cde20dddbbf",
+    "ru": "Наличие удостоверения или правила входа не отвечает на отдельный вопрос о пределах конкретного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].coach.plan",
+      "cases:CASE_TEMPLATES[guard-property-inspection].contrast.difference"
+    ]
+  },
+  {
+    "id": "4d854283a1ded834",
+    "ru": "Описывает совместный осмотр с полицией на другом мероприятии. Не относится к текущему объекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d0].text"
+    ]
+  },
+  {
+    "id": "71d7b7e7a9aee106",
+    "ru": "Инструкция другого мероприятия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d5b8375fed343b28",
+    "ru": "Установлен пропускной режим и осмотр вносимого имущества в пределах закона. Принудительное удержание за один отказ правилом не предусмотрено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d1].text"
+    ]
+  },
+  {
+    "id": "4e15784d206bd409",
+    "ru": "Правила объекта О-5",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d1].title"
+    ]
+  },
+  {
+    "id": "887f6672ff881f46",
+    "ru": "{{observed}} охранник связал удержание посетителя только с отказом предъявить сумку. Признаки самостоятельного правонарушения в доступных материалах не установлены; эпизод завершён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d2].text"
+    ]
+  },
+  {
+    "id": "64f015b2fad93677",
+    "ru": "Запись эпизода О-5",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0996159d0537c171",
+    "ru": "Последствия отказа предъявить имущество не дают автоматического основания удерживать человека без иных установленных условий. Наличие удостоверения или правила входа не отвечает на отдельный вопрос о пределах конкретного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.explain"
+    ]
+  },
+  {
+    "id": "7c035df542a4e166",
+    "ru": "Последствия отказа предъявить имущество не дают автоматического основания удерживать человека без иных установленных условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[guard-property-inspection].trap.explain",
+      "cases:CASE_TEMPLATES[guard-property-inspection].contrast.decision"
+    ]
+  },
+  {
+    "id": "923fcb9923049901",
+    "ru": "Любое правило входа автоматически разрешает задержание на усмотрение охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f157b344d41b0868",
+    "ru": "Отказ от осмотра отменяет любые условия допуска имущества.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "907736987687bb7e",
+    "ru": "Ответ касается только действующей лицензии подрядчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].followup.intro"
+    ]
+  },
+  {
+    "id": "4d2b94d1c3691e02",
+    "ru": "Проверить полноту ответа: конкретные действия по удержанию остались без оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].followup.options[0].text",
+      "cases:CASE_TEMPLATES[guard-property-inspection].followup.explain"
+    ]
+  },
+  {
+    "id": "8a3f9f775a4fe732",
+    "ru": "Закрыть жалобу как полностью разрешённую.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2581b244247d26a4",
+    "ru": "Самостоятельно назначить охраннику уголовное наказание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "6056db2296668891",
+    "ru": "Закон № 427-ФЗ действует с 1 сентября 2026 года. Статья 15 разграничивает полномочия при пропускном режиме, основания задержания и обязанности по соблюдению прав. Осмотр имущества не равен неограниченному принудительному досмотру. Предъявление имущества для осмотра не является обязанностью; отказ может иметь предусмотренные законом последствия для допуска имущества. Задержание требует отдельных оснований и мер к незамедлительной передаче полиции. При обращении охранника к другому лицу удостоверение и личная карточка предъявляются по требованию этого лица. Конкретные обстоятельства и полномочия проверяются, а не предполагаются по внешности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].knowledge.explain",
+      "cases:CASE_TEMPLATES[guard-identification-request].knowledge.explain",
+      "cases:SOURCES[n13-guard15].text"
+    ]
+  },
+  {
+    "id": "34d15814bce31310",
+    "ru": "Разграничить осмотр имущества, отказ в допуске и основания задержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "96dcad49c0be5844",
+    "ru": "Приравнять любое условие входа к праву задержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "5d438a7d28693579",
+    "ru": "Признать любые требования пропускного режима необязательными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "e6991fe2167311bd",
+    "ru": "Найдите норму «Полномочия и обязанности частного охранника». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].knowledge.prompt",
+      "cases:CASE_TEMPLATES[guard-identification-request].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "329cb56dc7fb66f0",
+    "ru": "На входе я отказался открыть сумку. Охранник сказал, что теперь вправе удерживать меня, пока я не соглашусь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].opening"
+    ]
+  },
+  {
+    "id": "5aea4e8066e36383",
+    "ru": "Проверка границ пропускного режима и отдельного основания задержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].procedures[0].text"
+    ]
+  },
+  {
+    "id": "81f6b86dbb1c4d7a",
+    "ru": "Оценка только наличия лицензии без анализа действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].procedures[1].text"
+    ]
+  },
+  {
+    "id": "0497d2b9134ffc32",
+    "ru": "Смешение обычного объекта с иным режимом мероприятия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].procedures[2].text"
+    ]
+  },
+  {
+    "id": "1c214afa8306b782",
+    "ru": "Да, речь шла о предъявлении вносимой вещи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "32b81abb1a8fcf80",
+    "ru": "Осмотр связан с пропускным режимом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0de854f4d7bf5f36",
+    "ru": "Правила осмотра были доведены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q0].text"
+    ]
+  },
+  {
+    "id": "53f1d49085e451ce",
+    "ru": "В записи назван только отказ открыть сумку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f53c47efe27b3115",
+    "ru": "Другого основания материалами не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "12759532d5cd06d9",
+    "ru": "Почему вас удерживали?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d2c14f1af7039c8a",
+    "ru": "Представленные материалы их не содержат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "13461e09139f361d",
+    "ru": "Нельзя додумывать основания задержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "669d3e83381980cc",
+    "ru": "Есть признаки посягательства?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a7f22108aeae83fe",
+    "ru": "Нет, речь о завершённом эпизоде; опасности сейчас не сообщается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9a673cc38bba7869",
+    "ru": "Ретроспективная жалоба не требует вымышленного экстренного вызова.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "96cec2d6add9b0a6",
+    "ru": "Ситуация продолжается сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].questions[q3].text"
+    ]
+  },
+  {
+    "id": "bd33a6447d4ddd9e",
+    "ru": "Росгвардия по охранной деятельности; сведения о возможном противоправном удержании – компетентному органу внутренних дел.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].routes[0].text"
+    ]
+  },
+  {
+    "id": "ef979d88cf4e0f18",
+    "ru": "Только директор объекта как окончательный орган рассмотрения правомерности удержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].routes[1].text"
+    ]
+  },
+  {
+    "id": "9137764d155174f5",
+    "ru": "Сам охранник как окончательный проверяющий своей жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].routes[2].text"
+    ]
+  },
+  {
+    "id": "09dbbd9e48c88f8a",
+    "ru": "Осмотр вещи не даёт неограниченных полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[guard-property-inspection].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[guard-property-inspection].title"
+    ]
+  },
+  {
+    "id": "0a275f98b64d1062",
+    "ru": "Любой отказ открыть сумку автоматически создаёт основание задержать посетителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-property-inspection].trap.text"
+    ]
+  },
+  {
+    "id": "23019c2dcd3ce216",
+    "ru": "Передать дежурному сведения о текущем препятствии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[alert].title"
+    ]
+  },
+  {
+    "id": "864d23a032966f42",
+    "ru": "Закрыть вопрос только по фотографии установленной крышки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[closed].title"
+    ]
+  },
+  {
+    "id": "145384aa5965187e",
+    "ru": "Попросить гражданина самостоятельно переставить ограждение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[fix].title"
+    ]
+  },
+  {
+    "id": "cf191c8b71b33708",
+    "ru": "Объяснить заявителю дальнейший порядок без обещания неподтверждённой даты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[notify].title"
+    ]
+  },
+  {
+    "id": "516f1cf245477602",
+    "ru": "Сопоставить новое обращение с прежней заявкой",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[register].title"
+    ]
+  },
+  {
+    "id": "c7acdcd129cdce1b",
+    "ru": "Передать уточнение указанному исполнителю через уполномоченного сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[route].title"
+    ]
+  },
+  {
+    "id": "e53a7b008703a6c2",
+    "ru": "Проверить подтверждение безопасного прохода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].actions[track].title"
+    ]
+  },
+  {
+    "id": "7f7cce15c42bd407",
+    "ru": "Приёмная получила новое письменное обращение после отчёта об устранении прежней неисправности. Сравните текущую жалобу с сообщением исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].brief"
+    ]
+  },
+  {
+    "id": "a83b21267f3ff078",
+    "ru": "Письменное обращение зарегистрировано. Продление срока по условию не применялось. Найдите последний допустимый день ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].calendar.context",
+      "cases:CASE_TEMPLATES[proposal-bench].calendar.context",
+      "cases:CASE_TEMPLATES[repeat-new-facts].calendar.context"
+    ]
+  },
+  {
+    "id": "cb6c3b1b0f2afdcf",
+    "ru": "Срок ответа на обращение не заменяет действий при обнаруженной угрозе безопасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].coach.research",
+      "cases:CASE_TEMPLATES[hatch-barrier].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[hatch-barrier].knowledge.explain"
+    ]
+  },
+  {
+    "id": "62dcc98c32054250",
+    "ru": "Колодец уже ограждён, но обход создаёт новую опасность. Подтверждение первой меры не завершает проверку безопасности прохода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].contrast.difference"
+    ]
+  },
+  {
+    "id": "465c0757519249e5",
+    "ru": "Перенос потенциально опасных работ на заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].criticalRules[fix].message"
+    ]
+  },
+  {
+    "id": "6dee178e9eb943ef",
+    "ru": "Учебное описание снимка от {{observed}}: крышка установлена, ограждение перекрывает дорожку. Видимого безопасного прохода нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[photo].text"
+    ]
+  },
+  {
+    "id": "d3d2f8484ff6bf25",
+    "ru": "Свежая фотография",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[photo].title"
+    ]
+  },
+  {
+    "id": "68b08c8b0a3abe42",
+    "ru": "Сетевая организация сообщает: «Заявка по отсутствующей крышке выполнена». О проходе в сообщении ничего не сказано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[report].text"
+    ]
+  },
+  {
+    "id": "814a2d84df5ebacb",
+    "ru": "Сообщение исполнителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[report].title"
+    ]
+  },
+  {
+    "id": "576578dea102bcbe",
+    "ru": "Новая жалоба относится к оставленному ограждению. Нельзя подменить её прежним предметом обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].factTask.explain",
+      "cases:CASE_TEMPLATES[hatch-barrier].coach.docs"
+    ]
+  },
+  {
+    "id": "dbd27aeb4f42374a",
+    "ru": "Новых обстоятельств нет, дело закрывается автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].factTask.options[closed].text"
+    ]
+  },
+  {
+    "id": "e7ccb74ed6f5608d",
+    "ru": "Повторное отсутствие крышки, как в старой жалобе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].factTask.options[hole].text"
+    ]
+  },
+  {
+    "id": "ab043064e3a31dd4",
+    "ru": "Безопасность прохода после выполнения прежней заявки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].factTask.options[passage].text"
+    ]
+  },
+  {
+    "id": "1ec3576be00beb4a",
+    "ru": "Что требуется проверить теперь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].factTask.prompt"
+    ]
+  },
+  {
+    "id": "71cb0d83d7e145cb",
+    "ru": "Проверяется заявленный результат, без возложения опасных проверок на гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-barrier].followup.explain"
+    ]
+  }
+]

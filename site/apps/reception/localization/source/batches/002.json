@@ -1,0 +1,1154 @@
+[
+  {
+    "id": "a0b0889ce5d08087",
+    "ru": "Оценить содержание уведомления по конкретному заказу, не квалифицируя его только по отправителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "cd842b18ae1c88e4",
+    "ru": "Считать сообщение рекламным уже потому, что отправитель ведёт коммерческую деятельность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e5edabcaacf817ab",
+    "ru": "Считать отсутствие рекламы в этом тексте подтверждением законности любой обработки номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b5523ea33d63b16f",
+    "ru": "Найдите норму: Содержание сообщения и признаки рекламы. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "41d311ae9e5915c5",
+    "ru": "Я не разрешал рекламу, но магазин прислал сообщение: мой оплаченный заказ готов к выдаче. Хочу пожаловаться именно на эту рассылку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].opening"
+    ]
+  },
+  {
+    "id": "80d2dddf3a4744fe",
+    "ru": "Оценить содержание спорного сообщения и разъяснить пределы вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].procedures[0].text"
+    ]
+  },
+  {
+    "id": "bdee798a06a88e21",
+    "ru": "Потребовать доказать согласие на рекламу для любого уведомления о заказе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].procedures[1].text"
+    ]
+  },
+  {
+    "id": "6cb8f92035a7becb",
+    "ru": "Рассматривать чужой рекламный скриншот вместо спорного текста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].procedures[2].text"
+    ]
+  },
+  {
+    "id": "39d972cea2f4392e",
+    "ru": "Да, Z-18 уже оплачен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "6886add5b1a4fae2",
+    "ru": "Сообщение связано с конкретным обязательством.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "4d95b55bf634d0c7",
+    "ru": "Это ваш существующий заказ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a94aa387963eaa5c",
+    "ru": "Нет, только уведомление о готовности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "eff451baadeaa843",
+    "ru": "Рекламное содержание не подтверждается по представленному тексту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "47c8532694c81b0d",
+    "ru": "Есть ли в полном тексте приглашение к новой покупке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q1].text"
+    ]
+  },
+  {
+    "id": "2561d94d1eb669cc",
+    "ru": "Не мне, я взял его как пример из интернета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "a53aa14e2844e08e",
+    "ru": "Он не доказывает содержание спорного сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "185740839f71da64",
+    "ru": "Кому относится скриншот с купоном?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8bfe779b6544b37c",
+    "ru": "Нет, проверяем сначала конкретное сообщение; другие вопросы требуют собственных оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "fd5d5bb495c300b8",
+    "ru": "Квалификация сообщения ограничена его предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "aef9476b248f981b",
+    "ru": "Это вывод о всей обработке номера?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].questions[q3].text"
+    ]
+  },
+  {
+    "id": "809eb46d573037a0",
+    "ru": "Специалист приёмной территориального антимонопольного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].role.title",
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].role.title",
+      "cases:CASE_TEMPLATES[ads-channel-scope].role.title"
+    ]
+  },
+  {
+    "id": "4dea91e988ff04ac",
+    "ru": "Подготовить предметный ответ по конкретному сообщению, не закрывая иные возможные вопросы о данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].routes[0].text"
+    ]
+  },
+  {
+    "id": "cbe341731bc4ab8c",
+    "ru": "Направить требование прекратить все сообщения об исполнении заказа без разбора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].routes[1].text"
+    ]
+  },
+  {
+    "id": "28b7fbbaa46c21e6",
+    "ru": "Возложить нарушение на автора чужого скриншота.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].routes[2].text"
+    ]
+  },
+  {
+    "id": "92a0f1a0d6272aa0",
+    "ru": "Уведомление о заказе или реклама?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[ads-service-message].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[ads-service-message].title"
+    ]
+  },
+  {
+    "id": "8b1298ffe3caa63d",
+    "ru": "Рекламные сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].topic",
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].topic",
+      "cases:CASE_TEMPLATES[ads-channel-scope].topic"
+    ]
+  },
+  {
+    "id": "eca52d7de0dedfb0",
+    "ru": "В задании подтверждена связь с конкретным заказом и отсутствие продвижения других товаров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].trap.explain"
+    ]
+  },
+  {
+    "id": "df7adbf13ed8d84c",
+    "ru": "Для квалификации важны содержание и назначение сообщения, а не только коммерческий статус отправителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-service-message].trap.text"
+    ]
+  },
+  {
+    "id": "c399fc42a43e40c3",
+    "ru": "Сопоставить объём первоначального согласия с данным каналом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a055123cecc832eb",
+    "ru": "Зафиксировать получение требования в 10:15 и отправку в 14:20",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[a1].title"
+    ]
+  },
+  {
+    "id": "796ae9d8161cd3b8",
+    "ru": "Проверить исполнение требования немедленно прекратить рекламу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[a2].title"
+    ]
+  },
+  {
+    "id": "04b33d02ab75aa50",
+    "ru": "Разъяснить различие первоначального согласия и последующего прекращения без обвинения в продаже базы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[a3].title"
+    ]
+  },
+  {
+    "id": "0de38a2f29c2e8f0",
+    "ru": "Проверить фактическое прекращение последующих отправок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3dc7f623b7638de8",
+    "ru": "Считать прежнюю подпись бессрочным разрешением вопреки требованию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[b0].title"
+    ]
+  },
+  {
+    "id": "d04966de59a7d7e2",
+    "ru": "Распространить сведения о номере и согласии публично для давления на отправителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].actions[b1].title",
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "05f16d93174a9f57",
+    "ru": "План должен следовать установленным фактам. Статья 18 отдельно предусматривает немедленное прекращение после требования адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].coach.plan"
+    ]
+  },
+  {
+    "id": "9dc89095e85a72c8",
+    "ru": "Уточняйте предмет, объект, время и получателя. В базовой ситуации предварительное согласие не подтверждено. Здесь оно есть; ключевой вопрос — отправка после требования, а не дефект исходного согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].coach.talk"
+    ]
+  },
+  {
+    "id": "4b6a80025024b3e1",
+    "ru": "В базовой ситуации предварительное согласие не подтверждено. Здесь оно есть; ключевой вопрос — отправка после требования, а не дефект исходного согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].contrast.difference"
+    ]
+  },
+  {
+    "id": "e41101664376c91a",
+    "ru": "Рекламораспространитель получил требование прекратить SMS в 10:15. Следующее спорное рекламное сообщение отправлено в 14:20 того же дня. Задержка доставки исключена: сравнивается именно время отправки. Канал подачи требования и получатель подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0e641fc4d24ab976",
+    "ru": "Журнал требования и отправки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6d80f2aee0950c06",
+    "ru": "Реклама отправлена за неделю до требования прекратить; для того периода согласие действовало. Этот выпуск не подтверждает соблюдение требования после 10:15.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d1].text"
+    ]
+  },
+  {
+    "id": "be2dac9910be5064",
+    "ru": "Первый рекламный выпуск",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d1].title"
+    ]
+  },
+  {
+    "id": "67972b4a7226e275",
+    "ru": "В отдельном действующем согласии указаны рекламные SMS этой организации на номер заявительницы. Для сообщений до требования факт и объём предварительного согласия по условию подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d2].text"
+    ]
+  },
+  {
+    "id": "e24cadf9848d8567",
+    "ru": "Согласие и адресат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0738c7edcd5e9469",
+    "ru": "Первоначальное согласие подтверждено, но спорное SMS отправлено после полученного требования о прекращении рекламы. В базовой ситуации предварительное согласие не подтверждено. Здесь оно есть; ключевой вопрос — отправка после требования, а не дефект исходного согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.explain"
+    ]
+  },
+  {
+    "id": "65de5144cc9a1ee4",
+    "ru": "Первоначальное согласие подтверждено, но спорное SMS отправлено после полученного требования о прекращении рекламы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "487cd1afd871b543",
+    "ru": "Наличие подписи навсегда исключает право прекратить рекламу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "fc99f8b7e60ee9dd",
+    "ru": "Требование сегодня делает все прежние согласованные SMS незаконными задним числом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "79066efff40b7489",
+    "ru": "Проверить прекращение рекламы адресату в целом, а не только очистку одного списка. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].followup.explain"
+    ]
+  },
+  {
+    "id": "b37ea17655bb1404",
+    "ru": "Организация сообщает об исключении из одного списка, но её журнал показывает новые отправки из второй рекламной кампании на тот же номер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].followup.intro"
+    ]
+  },
+  {
+    "id": "3fed4ee3ab123a7e",
+    "ru": "Проверить прекращение рекламы адресату в целом, а не только очистку одного списка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "5d3f7ca42c7fceb3",
+    "ru": "Засчитать исполнение по факту изменения одного списка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6b5c3a11b0629415",
+    "ru": "Считать новые сообщения сервисными без просмотра содержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "ffe37bab0d83ce76",
+    "ru": "Для рекламы по сетям электросвязи требуется предварительное согласие абонента или адресата; его наличие доказывает рекламораспространитель. После требования адресата распространение рекламы ему должно быть прекращено немедленно. Важно содержание согласия и время отправки, а не просто факт наличия подписи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].knowledge.explain",
+      "cases:CASE_TEMPLATES[ads-channel-scope].knowledge.explain",
+      "cases:SOURCES[norm11-ad18].text"
+    ]
+  },
+  {
+    "id": "a7b26f4de7803e80",
+    "ru": "Отдельно оценить рекламную отправку после полученного требования прекратить сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "895eac3e907ae9ff",
+    "ru": "Проверить только наличие прежнего согласия, не сравнивая время получения требования и отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "dcbf254e7511a0bb",
+    "ru": "Распространить последующее требование на все ранее согласованные отправки задним числом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d1fff8895ebc854c",
+    "ru": "Найдите норму: Предварительное согласие на рекламу и прекращение рассылки. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].knowledge.prompt",
+      "cases:CASE_TEMPLATES[ads-channel-scope].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "d02737b259a447cc",
+    "ru": "Когда оформляла карту, я отдельно согласилась на SMS с акциями. Потом попросила их прекратить. Мне ответили: подпись уже есть, сообщения будут идти дальше.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].opening"
+    ]
+  },
+  {
+    "id": "8a7899ca894bd9a2",
+    "ru": "Рассмотреть не первоначальное отсутствие согласия, а исполнение требования о прекращении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].procedures[0].text"
+    ]
+  },
+  {
+    "id": "ab62575138004d90",
+    "ru": "Отказать в рассмотрении из-за когда-либо поставленной подписи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].procedures[1].text"
+    ]
+  },
+  {
+    "id": "6d62fc9b41683c3f",
+    "ru": "Аннулировать все сообщения прошлого периода без проверки времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].procedures[2].text"
+    ]
+  },
+  {
+    "id": "05227df7ee47f716",
+    "ru": "На рекламные SMS этой организации на мой номер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "111c1ebdcf649e94",
+    "ru": "Нельзя объявлять согласие отсутствовавшим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "769723317277bf93",
+    "ru": "На что было первоначальное согласие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q0].text"
+    ]
+  },
+  {
+    "id": "629e59ddbb74bf7d",
+    "ru": "В 10:15, есть подтверждение адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "b3e40c46b111353a",
+    "ru": "Исходное событие установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "3f54577526e66db0",
+    "ru": "Когда получено требование прекратить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e2a4049cab1f2022",
+    "ru": "В журнале отправка; запоздалую доставку условие исключает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0e86c142c0d1e011",
+    "ru": "Нужно сравнивать относящиеся события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "40434b449f3b8741",
+    "ru": "14:20 — это отправка или получение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q2].text"
+    ]
+  },
+  {
+    "id": "d1c8714b815faf84",
+    "ru": "Нет, спорное отправлено после требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "1966aa37b35896b1",
+    "ru": "Прежняя подпись не отвечает на новый период.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "444e76498ff713ec",
+    "ru": "Прекратились ли сообщения фактически?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].questions[q3].text"
+    ]
+  },
+  {
+    "id": "643e042d632ca140",
+    "ru": "Подготовить материалы компетентному антимонопольному подразделению по факту рекламы после требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].routes[0].text"
+    ]
+  },
+  {
+    "id": "3fc549b3fe4e8d4c",
+    "ru": "Отправить вопрос только в банк, если банковские услуги не являются предметом дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].routes[1].text"
+    ]
+  },
+  {
+    "id": "10a0e6413646d8a4",
+    "ru": "Признать доказанной продажу базы всем третьим лицам по одному SMS.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].routes[2].text"
+    ]
+  },
+  {
+    "id": "ca770e9af26d5172",
+    "ru": "Согласие было до требования прекратить",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[ads-withdrawal-time].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[ads-withdrawal-time].title"
+    ]
+  },
+  {
+    "id": "fbf6c46d874d0e6c",
+    "ru": "Статья 18 отдельно предусматривает немедленное прекращение после требования адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].trap.explain"
+    ]
+  },
+  {
+    "id": "7daf387e3d0dd411",
+    "ru": "Подтверждённое прежнее согласие позволяет не исполнять последующее требование прекратить рекламу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[ads-withdrawal-time].trap.text"
+    ]
+  },
+  {
+    "id": "79aa869c17777900",
+    "ru": "Зафиксировать содержание, отсутствие реквизитов и дату поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[a0].title"
+    ]
+  },
+  {
+    "id": "de06bf88b9eeb4ac",
+    "ru": "Выделить сведения о возможном деянии, лице и текущем риске",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[a1].title"
+    ]
+  },
+  {
+    "id": "66368945ff94a8ad",
+    "ru": "Передать материалы надлежащему адресату и оперативно сообщить об угрозе в пределах роли",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[a2].title"
+    ]
+  },
+  {
+    "id": "1198bc479e04a87f",
+    "ru": "Сохранить конфиденциальность, не выдумывая автора и канал индивидуального ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a802794c9a8be149",
+    "ru": "Проверить факт передачи, а не факт неосуществимой доставки ответа автору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[a4].title"
+    ]
+  },
+  {
+    "id": "1eb46af7bfc5fbd5",
+    "ru": "Опубликовать непроверенное обвинение и сведения о лице вместо передачи по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[b0].title",
+      "cases:CASE_TEMPLATES[anonymous-danger].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "5dd5ebfa619df9cb",
+    "ru": "Уничтожить материал только из-за анонимности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].actions[b1].title"
+    ]
+  },
+  {
+    "id": "8edd221ad380b78a",
+    "ru": "59-ФЗ, статья 8, часть 2: регистрация. Отсутствие индивидуального ответа – статья 11, часть 1; эти действия не смешиваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].calendar.source"
+    ]
+  },
+  {
+    "id": "e96c0422ece58c20",
+    "ru": "Крайний день регистрации поступившего материала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].calendar.title"
+    ]
+  },
+  {
+    "id": "82fb803268af9fdd",
+    "ru": "Комментирует материалы; личность автора обращения не установлена",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].citizen.description"
+    ]
+  },
+  {
+    "id": "2b694c44691ec24f",
+    "ru": "Дежурный приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].citizen.name"
+    ]
+  },
+  {
+    "id": "2ac16be0dab24efc",
+    "ru": "Это чтение материалов вместе с дежурным, а не беседа с неизвестным автором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].coach.talk"
+    ]
+  },
+  {
+    "id": "1bdb593c987e8cc8",
+    "ru": "Содержание сообщения об опасности известно, но необходимые сведения об авторе отсутствуют. Это отличается от известного адресата при нечитаемом тексте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].contrast.difference"
+    ]
+  },
+  {
+    "id": "7cfa9fb7207e0fdf",
+    "ru": "Нет фамилии и адреса для ответа. Приведены место, время и сведения о лице, которому приписывается возможное противоправное действие. Непроверенные утверждения не признаны доказанными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].documents[d0].text"
+    ]
+  },
+  {
+    "id": "eced313b14c2416b",
+    "ru": "Поступивший лист",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].documents[d0].title"
+    ]
+  },
+  {
+    "id": "018aa4a79183ac44",
+    "ru": "Поступление {{received}}. Регистрация в календарном эпизоде ещё не выполнена; вычислите её крайний день, а не несуществующую дату индивидуального ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].documents[d1].text"
+    ]
+  },
+  {
+    "id": "0988fd8507f8bbb2",
+    "ru": "Карточка дежурного",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].documents[d1].title"
+    ]
+  },
+  {
+    "id": "61046a2f392273d9",
+    "ru": "Материал поступил {{received}}. Регистрация ещё не выполнена. Фамилия, контакт и адрес для индивидуального ответа не установлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].documents[dates].text"
+    ]
+  },
+  {
+    "id": "c78830473bd23697",
+    "ru": "Отсутствие реквизитов исключает индивидуальный ответ, но не позволяет удалить сведения о предполагаемом деянии и лице.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].factTask.explain",
+      "cases:CASE_TEMPLATES[anonymous-danger].outcomes.good"
+    ]
+  },
+  {
+    "id": "909f7790fed2dd67",
+    "ru": "Любой анонимный лист немедленно уничтожается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "4922d9384a2365ad",
+    "ru": "Дежурный должен придумать адрес для ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "5cc00f0499b31c70",
+    "ru": "В карточке исполнителя появилась отметка «ответ направлен заявителю», но адреса по-прежнему нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].followup.intro"
+    ]
+  },
+  {
+    "id": "513e653dcf69fcf6",
+    "ru": "Исправить недостоверную отметку и проверить реальную передачу сведений компетентному органу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].followup.options[0].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].followup.explain"
+    ]
+  },
+  {
+    "id": "809d6c016be375cf",
+    "ru": "Зачесть отметку как успешную отправку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "36f8fa0205fe2291",
+    "ru": "Сгенерировать имя и адрес автора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "c1e807666bd66852",
+    "ru": "Часть 1 статьи 11 закона № 59-ФЗ разграничивает индивидуальный ответ и направление сведений о предполагаемом противоправном деянии по компетенции. Отсутствие фамилии или адреса для ответа не разрешает автоматически удалить такой материал. Регистрация поступления, проверка риска и возможное направление сведений не требуют выдумывать личность автора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].knowledge.explain"
+    ]
+  },
+  {
+    "id": "c02071c66ed5335b",
+    "ru": "Найдите правило для письменного обращения без фамилии или адреса с конкретными сведениями о предполагаемом деянии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "fe20f6b9a79a23b2",
+    "ru": "В приёмную поступил бумажный лист без фамилии и адреса для ответа. В нём указаны место, время предполагаемого опасного действия и сведения о лице, которое его совершает. В этом деле вы задаёте вопросы дежурному по материалам, а не неизвестному автору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].opening"
+    ]
+  },
+  {
+    "id": "51efd0d3a33f36f6",
+    "ru": "Особенности неполного письменного обращения и передача сведений о предполагаемом противоправном деянии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].procedures[0].text"
+    ]
+  },
+  {
+    "id": "a7526503f373ab47",
+    "ru": "Обязательный персональный ответ по вымышленному адресу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].procedures[1].text"
+    ]
+  },
+  {
+    "id": "644afd8e573511fc",
+    "ru": "Автоматическое признание указанного лица виновным",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e772d0ae3b9604ca",
+    "ru": "Нет ни фамилии, ни почтового адреса; других идентифицирующих автора сведений не дано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "9ba672efc3990ba6",
+    "ru": "Индивидуальный ответ отправить по этим материалам нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f25261dd8767bd2d",
+    "ru": "Указаны фамилия и адрес для ответа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q0].text"
+    ]
+  },
+  {
+    "id": "7299a98016efa06e",
+    "ru": "Да: место, время и сведения о предполагаемом лице. Истинность пока не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "e210d0666aa7a6d3",
+    "ru": "Отсутствие реквизитов автора не устраняет специальное правило передачи информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "95bb901870580952",
+    "ru": "Есть конкретные сведения о возможном деянии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q1].text"
+    ]
+  },
+  {
+    "id": "16678fa3f51cd3b0",
+    "ru": "В описании есть признаки продолжающейся опасности. Дежурный не проводил проверку на месте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "630a7033b817836d",
+    "ru": "Нужно передать информацию по установленному оперативному маршруту, не ждать письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "30d2ba66c98ab583",
+    "ru": "Есть текущая угроза?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e0ea2c90e48d0e72",
+    "ru": "Нет, контакта нет. Все ответы здесь взяты из листа и служебной карточки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "496f75cc901169c5",
+    "ru": "Нельзя считать несуществующий разговор состоявшимся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8f048ce428402076",
+    "ru": "Можно ли спросить автора дополнительно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].questions[q3].text"
+    ]
+  },
+  {
+    "id": "1f483f59d7943d3b",
+    "ru": "Проверяет поступивший письменный материал. Не выдумывает личность автора, не обещает индивидуальный ответ по отсутствующему адресу. Оперативный риск и передача сообщения о предполагаемом противоправном деянии рассматриваются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].role.text"
+    ]
+  },
+  {
+    "id": "d5bf2c0993f101e4",
+    "ru": "Дежурный специалист приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].role.title"
+    ]
+  },
+  {
+    "id": "8bb409c66e45408a",
+    "ru": "Зафиксировать поступление, передать сведения по установленной компетенции и оперативному маршруту; не имитировать индивидуальный ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].routes[0].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].coach.plan",
+      "cases:CASE_TEMPLATES[anonymous-danger].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "dc5500846ca87862",
+    "ru": "Удалить лист из-за отсутствия фамилии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].routes[1].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ee1103b852464b30",
+    "ru": "Опубликовать неподтверждённое обвинение и персональные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].routes[2].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b0a702d26753f33a",
+    "ru": "Без фамилии – не без значения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[anonymous-danger].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[anonymous-danger].title"
+    ]
+  },
+  {
+    "id": "b77b57125af02a8a",
+    "ru": "Неполные сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].topic",
+      "cases:CASE_TEMPLATES[anonymous-danger].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-anonymous-danger].scope"
+    ]
+  },
+  {
+    "id": "ddc7fda9d09b62bf",
+    "ru": "Отделить отсутствие индивидуального ответа от передачи конкретной информации по части 1 статьи 11.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].trap.options[0].text",
+      "cases:CASE_TEMPLATES[anonymous-danger].trap.explain"
+    ]
+  },
+  {
+    "id": "46b263bbe8200169",
+    "ru": "Удалить материал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "8f7e5edf3f3d0c63",
+    "ru": "Помощник: «Нет адреса – нет никаких дальнейших действий».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[anonymous-danger].trap.text"
+    ]
+  },
+  {
+    "id": "7fe4db0c8019ddd6",
+    "ru": "Лично назначить надзорную проверку от имени стажёра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[inspect].title"
+    ]
+  },
+  {
+    "id": "5f1c01d01e97a0b0",
+    "ru": "Уведомить заявителя о направлении обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[notify].title"
+    ]
+  },
+  {
+    "id": "1f5a7c955798820d",
+    "ru": "Заменить переадресацию звонком по любому опубликованному номеру",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[phone].title"
+    ]
+  },
+  {
+    "id": "408f470ea0c49d34",
+    "ru": "Зафиксировать обращение и приложенные сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[register].title"
+    ]
+  },
+  {
+    "id": "bbe27922386114f8",
+    "ru": "Сопоставить место объекта, вид надзора и территорию органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[scope].title"
+    ]
+  },
+  {
+    "id": "7c0f0ce0853ae1ab",
+    "ru": "Сохранить подтверждение передачи и выбранного адресата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].actions[track].title"
+    ]
+  },
+  {
+    "id": "c337144200e3aa2f",
+    "ru": "По условиям установлены адрес в городе Москве и принадлежность объекта к федеральному надзору. Острой текущей угрозы, требующей экстренного реагирования, не установлено. Уровень надзора не выводится из одного названия территории. Нужен проект переадресации по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].brief"
+    ]
+  },
+  {
+    "id": "46e1a21d133f5c6b",
+    "ru": "Рассчитайте крайний день направления зарегистрированного письменного обращения компетентному органу. Не определяйте по этому сроку дату окончания надзорной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].calendar.context"
+    ]
+  },
+  {
+    "id": "46054ea69e3d074e",
+    "ru": "Житель Москвы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].citizen.description"
+    ]
+  },
+  {
+    "id": "c19a22f641f46080",
+    "ru": "Стажёр приёмной не уполномочен самостоятельно назначать надзорную проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].criticalRules[inspect].message"
+    ]
+  },
+  {
+    "id": "660c2fe3525449fb",
+    "ru": "Вымышленная выписка: объект расположен в городе Москве и отнесён к федеральному экологическому надзору. Сведения даны как установленное условие сценария; это не реальная выписка реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[register].text"
+    ]
+  },
+  {
+    "id": "7adb8d49ff476961",
+    "ru": "Карточка объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[register].title"
+    ]
+  },
+  {
+    "id": "b1f51aa0caa9cd06",
+    "ru": "Предложено выбрать управление по Московской и Смоленской областям на основании совпадения слова «Московской».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[routing].text"
+    ]
+  },
+  {
+    "id": "a66e42c751f85e5f",
+    "ru": "Черновик адресования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[routing].title"
+    ]
+  },
+  {
+    "id": "04de09aefc6e800f",
+    "ru": "В учебном деле нет подтверждения непосредственной текущей опасности. Обращение требует проверки доводов компетентным органом, а не автоматического назначения проверки стажёром.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[situation].text"
+    ]
+  },
+  {
+    "id": "4d03fd46174766e1",
+    "ru": "Описание обстановки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].documents[situation].title"
+    ]
+  },
+  {
+    "id": "51d2c65c9d882212",
+    "ru": "Адрес и установленный вид надзора используются совместно. По одному слову в наименовании орган не выбирают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].factTask.explain",
+      "cases:CASE_TEMPLATES[authority-contact].coach.docs"
+    ]
+  },
+  {
+    "id": "ef667b7c6769b547",
+    "ru": "Наличие письма устанавливает виновность предприятия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].factTask.options[guilty].text"
+    ]
+  },
+  {
+    "id": "6108317a6c41b237",
+    "ru": "Москва и Московская область образуют одну территорию для любого управления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].factTask.options[oblast].text"
+    ]
+  },
+  {
+    "id": "245f07439920e22e",
+    "ru": "В деле установлены город Москва и федеральный уровень надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].factTask.options[scope].text"
+    ]
+  },
+  {
+    "id": "d69fb3960b0fd815",
+    "ru": "Каких данных достаточно для дальнейшего поиска территориального органа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].factTask.prompt"
+    ]
+  },
+  {
+    "id": "64ade10efecf660a",
+    "ru": "Подтверждение передачи должно относиться к выбранному компетентному адресату; факт любой отправки недостаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].followup.explain"
+    ]
+  },
+  {
+    "id": "d52492e52a01480a",
+    "ru": "В контрольном эпизоде пришла квитанция о доставке. В ней указан адресат по Московской и Смоленской областям, хотя в подтверждённом проекте был выбран орган по городу Москве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].followup.intro"
+    ]
+  },
+  {
+    "id": "55a7c776c38ba00d",
+    "ru": "Считать любую квитанцию подтверждением доставки правильному органу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "fd9b1300a2e37b1f",
+    "ru": "Заявить гражданину, что ошибка адресата не имеет значения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].followup.options[ignore].text"
+    ]
+  },
+  {
+    "id": "8f66e92a7db786d7",
+    "ru": "Сопоставить проект и квитанцию, исправить технический маршрут в пределах полномочий и уточнить уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].followup.options[verify].text"
+    ]
+  },
+  {
+    "id": "1c8d0215222a5182",
+    "ru": "Направление определяется полномочиями; территориальная принадлежность адресата проверяется по установленным обстоятельствам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[authority-contact].knowledge.explain"
+    ]
+  }
+]

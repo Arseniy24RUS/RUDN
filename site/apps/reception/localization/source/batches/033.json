@@ -1,0 +1,1157 @@
+[
+  {
+    "id": "a3c97c5b48ca3e2c",
+    "ru": "Бесплатный маршрут по этому случаю подтверждён; нужно разъяснить его и проверить понятность сообщения, а не утверждать отсутствие бесплатных мест.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "864f43c70094aab2",
+    "ru": "Любая платная ссылка доказывает незаконность работы учреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "7c0ae3a9c7878327",
+    "ru": "Наличие бесплатного вложения исключает необходимость ответить на вопрос заявительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "9cd19a3edaadf7b4",
+    "ru": "Проверить новое условие: оно противоречит ранее подтверждённой бесплатной записи и требует отдельной реакции. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].followup.explain"
+    ]
+  },
+  {
+    "id": "b5b70d124e25fd7d",
+    "ru": "Заявительница нажала «подтвердить», но форма потребовала банковскую карту для обязательного списания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].followup.intro"
+    ]
+  },
+  {
+    "id": "9acac7f140bbece9",
+    "ru": "Проверить новое условие: оно противоречит ранее подтверждённой бесплатной записи и требует отдельной реакции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "34ac9015abacda88",
+    "ru": "Не рассматривать сообщение, потому что предыдущий ответ был признан достаточным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d37030bb8c7a883f",
+    "ru": "Посоветовать оплатить и не сохранять подтверждение операции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "821de2f4c0c20de2",
+    "ru": "Мне прислали ссылку на платную запись. Наверное, бесплатных мест вообще нет. Но в письме есть ещё какое-то вложение, я его не открыла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].opening"
+    ]
+  },
+  {
+    "id": "c3293ffcd81b6f33",
+    "ru": "Квалифицировать всю ситуацию по первой платной ссылке, не рассматривая вложение о бесплатном приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].procedures[1].text"
+    ]
+  },
+  {
+    "id": "08815292cb2bbb3b",
+    "ru": "Считать вопрос заявительницы разрешённым самим фактом доставки письма, не объясняя порядок записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].procedures[2].text"
+    ]
+  },
+  {
+    "id": "8796316734585785",
+    "ru": "Подтверждение бесплатного планового приёма по моему направлению. Профиль и дата указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "6d738995dba2337b",
+    "ru": "Нельзя оценивать весь ответ по одному рекламному блоку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b466b5c54250f3a4",
+    "ru": "Что находится во вложении к письму?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q0].text"
+    ]
+  },
+  {
+    "id": "6ae1bf5f8e491d2a",
+    "ru": "В учебной карточке медицинской организации подтверждено: предложенный срок находится в пределах применимого для этого случая ожидания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "134f9deff6ace6c3",
+    "ru": "Универсальное число дней не предполагается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a4e6327025f70329",
+    "ru": "Срок ожидания проверен по программе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3d393bb0442d868b",
+    "ru": "Да, совпадают направление и пациент. Платный вариант отдельно обозначен как добровольный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "2c621945fdf94eb7",
+    "ru": "Бесплатный маршрут относится к этому делу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "73918629318a6f5f",
+    "ru": "Приём предлагается именно вам?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q2].text"
+    ]
+  },
+  {
+    "id": "9e58f7abe60c0520",
+    "ru": "Как подтвердить бесплатную запись и почему письмо было устроено так, что я увидела только платную ссылку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2853b900d12feaee",
+    "ru": "Вопрос о понятности информации сохраняется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "fe66c145a110199c",
+    "ru": "Что остаётся непонятным?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8dc2937cdacd09f4",
+    "ru": "Разъяснить подтверждённую бесплатную запись и устранить неясность информирования; не объявлять необследованные нарушения установленными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].routes[0].text"
+    ]
+  },
+  {
+    "id": "9cabc370f0fa6f81",
+    "ru": "Потребовать устранить отказ в бесплатном приёме, не сопоставив подтверждённую бесплатную запись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].routes[1].text"
+    ]
+  },
+  {
+    "id": "8a6dfdbc453bde6e",
+    "ru": "Сообщить только стоимость платного варианта, не указав доступный маршрут по ОМС.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].routes[2].text"
+    ]
+  },
+  {
+    "id": "cc4e02c8a4c878ee",
+    "ru": "Бесплатное время уже предложили",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[oms-free-slot].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[oms-free-slot].title"
+    ]
+  },
+  {
+    "id": "03d0cf4af75c410a",
+    "ru": "В исходной истории бесплатный маршрут не подтверждён. Здесь он уже предложен на установленных условиях, поэтому первоначальный вывод меняется; новые платёжные условия проверяются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].trap.explain",
+      "cases:CASE_TEMPLATES[oms-free-slot].coach.plan",
+      "cases:CASE_TEMPLATES[oms-free-slot].contrast.difference"
+    ]
+  },
+  {
+    "id": "5f6495c0f8e54cc0",
+    "ru": "Помощник: «Подтверждённый бесплатный маршрут нужно объяснить; новое требование оплаты проверяется отдельно».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].trap.text"
+    ]
+  },
+  {
+    "id": "ea0503780195b7a1",
+    "ru": "Сопоставить направление, профиль организации и объём базовой программы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[a0].title"
+    ]
+  },
+  {
+    "id": "854a9d4151e227f6",
+    "ru": "Зафиксировать указанное основание отказа без медицинской квалификации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[a1].title"
+    ]
+  },
+  {
+    "id": "2bd6eb8b139600e3",
+    "ru": "Подготовить рассмотрение организацией здравоохранения и маршрут защиты прав по ОМС",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6609a07148af313a",
+    "ru": "Сообщить заявительнице доступный следующий шаг без требования сменить регион полиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[a3].title"
+    ]
+  },
+  {
+    "id": "fb45b66fdce22424",
+    "ru": "Проверить, что предложенная запись соответствует направлению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c8d83e803bbe8b9a",
+    "ru": "Потребовать переоформить полис в регионе как обязательное условие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[b0].title"
+    ]
+  },
+  {
+    "id": "0f82814fbcebcb78",
+    "ru": "Гарантировать любую услугу в любой клинике по одному наличию полиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].actions[b1].title"
+    ]
+  },
+  {
+    "id": "a3b5813f673bac2e",
+    "ru": "Посетительница приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].citizen.description",
+      "cases:CASE_TEMPLATES[oms-free-slot].citizen.description",
+      "cases:CASE_TEMPLATES[oms-urgent-now].citizen.description"
+    ]
+  },
+  {
+    "id": "cf30ac6dbd449a2a",
+    "ru": "Застрахованное лицо имеет право на бесплатную помощь по базовой программе ОМС на всей территории России и на достоверную информацию об условиях её предоставления. Наличие направления, участие организации в программе и характер помощи устанавливаются по материалам, а не предполагаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].coach.research",
+      "cases:CASE_TEMPLATES[oms-other-region].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[oms-other-region].knowledge.explain"
+    ]
+  },
+  {
+    "id": "733d12bad6265acb",
+    "ru": "Гарантировать любую услугу в любой клинике по одному наличию полиса: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1a0842faef80038e",
+    "ru": "Направление действительно. Вид плановой помощи включён в базовую программу ОМС, организация участвует по соответствующему профилю. Эти условия установлены для учебного дела, а не для любой клиники.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d0].text"
+    ]
+  },
+  {
+    "id": "bde7fd67f1913b69",
+    "ru": "Направление и карточка программы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a5f9e785d95c8a1f",
+    "ru": "Отказ обоснован исключительно оформлением действующего полиса в другом субъекте РФ. Вместо рассмотрения направления предлагается платный приём. Сообщение получено {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d1].text"
+    ]
+  },
+  {
+    "id": "5e1d4df2ac969207",
+    "ru": "Сообщение регистратуры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d1].title"
+    ]
+  },
+  {
+    "id": "2a97fc8d7909ac93",
+    "ru": "Другая организация предлагает сходную консультацию на платной основе. Это не отменяет условия программы учреждения, куда поступило направление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d2].text"
+    ]
+  },
+  {
+    "id": "3496386be23f60c3",
+    "ru": "Реклама частного центра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f350f4c7edb75de7",
+    "ru": "При установленных условиях регион выдачи полиса не является достаточным основанием отказа в помощи по базовой программе. Исходное предложение платного приёма требовало установления условий. Здесь они подтверждены, а причина отказа прямо связана с другим регионом оформления полиса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.explain"
+    ]
+  },
+  {
+    "id": "7d28070c22a97b6e",
+    "ru": "При установленных условиях регион выдачи полиса не является достаточным основанием отказа в помощи по базовой программе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "2760b52807ac9e72",
+    "ru": "Любая частная реклама означает отсутствие бесплатного маршрута в районе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "3d4b85ed1393100f",
+    "ru": "Любой полис гарантирует приём в любой выбранной организации без проверки программы и направления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "b326c3beb864cef9",
+    "ru": "Сопоставить профиль записи с направлением; статус «бесплатно» не подтверждает предоставление нужной помощи. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].followup.explain"
+    ]
+  },
+  {
+    "id": "abcff1aa4a222fc3",
+    "ru": "Регистратура прислала подтверждение бесплатной записи, но к специалисту другого профиля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].followup.intro"
+    ]
+  },
+  {
+    "id": "56f8857390887207",
+    "ru": "Сопоставить профиль записи с направлением; статус «бесплатно» не подтверждает предоставление нужной помощи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "c43578d5c2923013",
+    "ru": "Считать любой бесплатный приём исполнением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9857e3fdd5ac35f7",
+    "ru": "Самостоятельно изменить направление на другой профиль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "85f089624e8871b0",
+    "ru": "Найдите норму: ОМС: права застрахованных лиц. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].knowledge.prompt",
+      "cases:CASE_TEMPLATES[oms-free-slot].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "0b1520afc2221c9f",
+    "ru": "С направлением я пришла в поликлинику, участвующую в ОМС. Мне сказали, что полис другого региона здесь не подходит, и предложили платный приём.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].opening"
+    ]
+  },
+  {
+    "id": "3d07dd99ce18c5b4",
+    "ru": "Проверить только регион выдачи полиса, не учитывая базовую программу и условия направления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].procedures[1].text"
+    ]
+  },
+  {
+    "id": "66775f2f4e113f3c",
+    "ru": "Предложить платную запись как единственный вариант до оформления полиса по месту приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].procedures[2].text"
+    ]
+  },
+  {
+    "id": "412668f16a00cc45",
+    "ru": "Да. В материалах есть действующее направление и выписка о включении организации в программу по нужному профилю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "6f685bc3e0a88dc6",
+    "ru": "Не предполагается безусловный приём в любой клинике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "372c4dfa6dd30d97",
+    "ru": "Есть ли направление и подтверждение участия организации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q0].text"
+    ]
+  },
+  {
+    "id": "187ef7b602fa372c",
+    "ru": "По представленной выписке — в базовую программу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "48541767353b148e",
+    "ru": "Определён объём права на территории России.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f68d80fd99001dbf",
+    "ru": "Услуга входит в базовую программу или только в региональное дополнение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e9c61b48121f05a9",
+    "ru": "Нет, по направлению приём плановый.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "32d4cd42682c0bf8",
+    "ru": "Ситуация не является экстренным клиническим эпизодом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "42834566caad21dc",
+    "ru": "Есть признаки необходимости немедленной помощи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q2].text"
+    ]
+  },
+  {
+    "id": "299f1ecbe184d0e9",
+    "ru": "В сообщении только регион оформления полиса. Замечаний к направлению и профилю услуги нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9854611d3d070a9e",
+    "ru": "Выделено единственное подтверждённое основание отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "b4edde2304395014",
+    "ru": "Что указано причиной отказа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].questions[q3].text"
+    ]
+  },
+  {
+    "id": "c01a78071ce7f227",
+    "ru": "Специалист приёмной регионального органа здравоохранения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].role.title",
+      "cases:CASE_TEMPLATES[oms-free-slot].role.title"
+    ]
+  },
+  {
+    "id": "61c8327698f3729e",
+    "ru": "Рассмотреть отказ по установленным условиям базовой программы и обеспечить компетентный маршрут защиты прав; не назначать лечение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].routes[0].text"
+    ]
+  },
+  {
+    "id": "767f6cca8699bd1b",
+    "ru": "Направить человека за помощью только в регион полиса, не рассматривая заданное направление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].routes[1].text"
+    ]
+  },
+  {
+    "id": "346d79527f12bc48",
+    "ru": "Обсудить замену страховой организации, но оставить установленную причину отказа без оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].routes[2].text"
+    ]
+  },
+  {
+    "id": "3a033a934e3d2d1d",
+    "ru": "Полис выдан не здесь",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[oms-other-region].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[oms-other-region].title"
+    ]
+  },
+  {
+    "id": "11aa15a5fee58937",
+    "ru": "Исходное предложение платного приёма требовало установления условий. Здесь они подтверждены, а причина отказа прямо связана с другим регионом оформления полиса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].trap.explain",
+      "cases:CASE_TEMPLATES[oms-other-region].coach.plan",
+      "cases:CASE_TEMPLATES[oms-other-region].contrast.difference"
+    ]
+  },
+  {
+    "id": "bd7098f4b2a46ac6",
+    "ru": "Помощник: «Права по базовой программе действуют только в регионе выдачи полиса».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-other-region].trap.text"
+    ]
+  },
+  {
+    "id": "500467bb05fcc3b5",
+    "ru": "Установить услугу, направление и содержание отказа в записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6367e5d76663cea7",
+    "ru": "Проверить страховую организацию и надлежащий маршрут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[a1].title"
+    ]
+  },
+  {
+    "id": "f0605313c462601b",
+    "ru": "Подготовить рассмотрение доступности помощи без медицинских назначений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[a2].title"
+    ]
+  },
+  {
+    "id": "2824e2384fcd49c8",
+    "ru": "Объяснить следующий шаг и не обещать неподтверждённую дату приёма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a201c849f64a0a65",
+    "ru": "Проверить, дан ли гражданину действующий маршрут получения помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[a4].title"
+    ]
+  },
+  {
+    "id": "9477fcd39d367629",
+    "ru": "Опубликовать медицинские документы заявительницы в общем чате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[b0].title",
+      "cases:CASE_TEMPLATES[oms-paid-offer].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "9649ee9f0b632b69",
+    "ru": "Объявить платную услугу единственным допустимым вариантом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].actions[b1].title"
+    ]
+  },
+  {
+    "id": "896ce4e96f651475",
+    "ru": "Застрахованная по ОМС",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].citizen.description"
+    ]
+  },
+  {
+    "id": "a3e4bfed59dcca7e",
+    "ru": "Направление на плановое обследование по ОМС действующее по условиям дела. В регистратуре устно предложен платный вариант; отсутствие права на ОМС документально не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d0].text"
+    ]
+  },
+  {
+    "id": "54f887dbf33a285c",
+    "ru": "Направление и отметка регистратуры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d0].title"
+    ]
+  },
+  {
+    "id": "78ec173eab2c3327",
+    "ru": "Учебные материалы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d0].type",
+      "cases:CASE_TEMPLATES[fire-key].documents[d0].type"
+    ]
+  },
+  {
+    "id": "d4551b41d277921d",
+    "ru": "Страховая медицинская организация указана, но документ не содержит паролей, диагнозов и реальных персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d1].text"
+    ]
+  },
+  {
+    "id": "a79d5f84810183b8",
+    "ru": "Выписка из полиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d1].title"
+    ]
+  },
+  {
+    "id": "bd38d43cf415886c",
+    "ru": "Сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[d1].type"
+    ]
+  },
+  {
+    "id": "f18c6b95176246ba",
+    "ru": "Нужно проверить доступность плановой помощи по ОМС; платное предложение не прекращает прав застрахованного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].factTask.explain",
+      "cases:CASE_TEMPLATES[oms-paid-offer].outcomes.good"
+    ]
+  },
+  {
+    "id": "9cad0838884340d1",
+    "ru": "Платная запись автоматически отменяет право на помощь по полису.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "3cfe7f9227452c2d",
+    "ru": "Администратор приёмной должен назначить обследование самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "4a168f0d6ecab786",
+    "ru": "Учебное продолжение. В ответе указали другой кабинет, но там оказывают иную услугу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.intro"
+    ]
+  },
+  {
+    "id": "15a1604f4ac93088",
+    "ru": "Сопоставить предложенную услугу с направлением и запросить исправление маршрута.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.options[0].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.explain"
+    ]
+  },
+  {
+    "id": "a79c5283f7041478",
+    "ru": "Считать вопрос решённым, раз назван кабинет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "44285e3bf7f7f44f",
+    "ru": "Изменить направление без участия медицинского специалиста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "5f4458e34d05be75",
+    "ru": "Найдите норму о правах застрахованного по ОМС.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "e81b6c28efb2b60e",
+    "ru": "Мне дали направление, но сказали: мест нет, записывайтесь платно. Я не прошу вас лечить меня, хочу понять, как получить помощь по полису.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].opening"
+    ]
+  },
+  {
+    "id": "67533672a5695853",
+    "ru": "Обращение о доступности помощи по ОМС с проверкой профильных полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c2e111e377f7140a",
+    "ru": "Жалоба на постановление суда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].procedures[1].text"
+    ]
+  },
+  {
+    "id": "8a863a2325ddd6c6",
+    "ru": "Предоставление налоговой льготы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].procedures[2].text"
+    ]
+  },
+  {
+    "id": "33b1c3ef7ead8b00",
+    "ru": "Направление на плановое обследование приложено. На нём есть дата и наименование услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "28d5ca599e271371",
+    "ru": "Предмет вопроса – организация плановой помощи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "bed29c45cbd8cabf",
+    "ru": "Есть ли направление и о какой услуге идёт речь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q0].text"
+    ]
+  },
+  {
+    "id": "6a15a463b7dcf1f7",
+    "ru": "Устно предложили платный вариант; письменного разъяснения порядка записи не дали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0200b4abeb505ab3",
+    "ru": "Право на помощь не опровергнуто устным предложением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d11a097dca7db84b",
+    "ru": "Что именно ответила медицинская организация?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q1].text"
+    ]
+  },
+  {
+    "id": "8f7cd567b93aa073",
+    "ru": "В выписке указан мой страховщик. Контакты можно проверить по его официальному ресурсу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "23a45251ffb1d840",
+    "ru": "Есть маршрут через страховую организацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9dc603dcebd37869",
+    "ru": "Какая страховая организация указана в полисе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bd3c164999d04cb8",
+    "ru": "В этой учебной ситуации признаков неотложного состояния не сообщается; я спрашиваю о плановом маршруте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "eafe86b27e3b0392",
+    "ru": "Приёмная не заменяет медицинскую оценку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c86360663d37163e",
+    "ru": "Изменилось ли состояние так, что требуется срочная медицинская помощь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5c5fef176ab627ba",
+    "ru": "Уточнить медицинскую и страховую организацию, передать вопрос по профильной компетенции и объяснить обращение в СМО.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].routes[0].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].coach.plan",
+      "cases:CASE_TEMPLATES[oms-paid-offer].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "a053d7a1e6477b77",
+    "ru": "Окончательно отказать из-за отсутствия свободных слотов на одном экране.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].routes[1].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "db3cc32cf32da0f7",
+    "ru": "Выписать медицинское назначение от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].routes[2].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "66d0aa2e4fb0a0c7",
+    "ru": "Платно есть, по полису нет?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[oms-paid-offer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[oms-paid-offer].title"
+    ]
+  },
+  {
+    "id": "3943e4759fc3fb62",
+    "ru": "Доступность помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].topic",
+      "cases:CASE_TEMPLATES[oms-paid-offer].tag",
+      "cases:CASE_TEMPLATES[oms-other-region].topic"
+    ]
+  },
+  {
+    "id": "8565ab177be2f56f",
+    "ru": "Проверить программу и организационный маршрут, а не выводить право из одного экрана записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].trap.options[0].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].trap.explain"
+    ]
+  },
+  {
+    "id": "68c265ab42a6077c",
+    "ru": "Признать отсутствие записи достаточным доказательством.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "679cc6cd02f2e39f",
+    "ru": "Помощник: «Нет записи на сайте – значит бесплатное обследование не положено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-paid-offer].trap.text"
+    ]
+  },
+  {
+    "id": "cb4e05365f274de1",
+    "ru": "Немедленно организовать учебную передачу сообщения для медицинской помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0bfcb19025d8444d",
+    "ru": "Обеспечить доступ медицинских работников и передачу необходимой информации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[a1].title"
+    ]
+  },
+  {
+    "id": "2f344ea9f0b27437",
+    "ru": "Сохранить прежнюю жалобу и продолжить её разбор после организации помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[a2].title"
+    ]
+  },
+  {
+    "id": "d82d9e8752134af6",
+    "ru": "Не требовать полис или оплату как условие вызова помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[a3].title"
+    ]
+  },
+  {
+    "id": "5e4cb7ebf3080cf8",
+    "ru": "Отдельно зафиксировать организацию помощи и последующее рассмотрение жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[a4].title"
+    ]
+  },
+  {
+    "id": "615d47e1a52a97f2",
+    "ru": "Продолжить подробный опрос до обращения к медицинским специалистам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[b0].title"
+    ]
+  },
+  {
+    "id": "cddb8aceb75e6fb2",
+    "ru": "Самостоятельно выбрать лекарство по предполагаемому диагнозу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].actions[b1].title"
+    ]
+  },
+  {
+    "id": "1f7ac8af9996c103",
+    "ru": "Экстренная медицинская помощь оказывается медицинскими организациями и медицинскими работниками безотлагательно и бесплатно. Сотрудник приёмной не определяет диагноз: он обеспечивает связь с медицинскими работниками, не заменяя её перепиской.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].coach.research",
+      "cases:CASE_TEMPLATES[oms-urgent-now].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[oms-urgent-now].knowledge.explain"
+    ]
+  },
+  {
+    "id": "46768c78411bed60",
+    "ru": "Самостоятельно выбрать лекарство по предполагаемому диагнозу: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "f0187636917b9808",
+    "ru": "Заявительница сообщает о резком текущем ухудшении состояния; дежурный фиксирует, что продолжать обычный разговор затруднительно. Клинический диагноз не установлен и не является задачей студента.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d0].text"
+    ]
+  },
+  {
+    "id": "968451714f3c4d95",
+    "ru": "Сообщение и наблюдение дежурного",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e1f3445712472881",
+    "ru": "Организовать связь с медицинской помощью и доступ специалистов; действовать по указаниям медицинского диспетчера в пределах роли. Учебная кнопка передачи сообщения не совершает настоящего вызова. Не требовать оплаты или полиса до вызова, не назначать лекарства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d1].text"
+    ]
+  },
+  {
+    "id": "55dc4a4a2cb6a0f8",
+    "ru": "Памятка дежурного",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d1].title"
+    ]
+  },
+  {
+    "id": "764de93433bc9ac5",
+    "ru": "Талон относится к плановому приёму в будущем. Он не определяет порядок реакции на новое ухудшение сейчас.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d2].text"
+    ]
+  },
+  {
+    "id": "a30e2d8db503daa6",
+    "ru": "Предыдущий талон на консультацию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].documents[d2].title"
+    ]
+  },
+  {
+    "id": "78278b06d8d61ed6",
+    "ru": "Текущее ухудшение требует немедленно организовать связь с медицинской помощью, не дожидаясь завершения жалобы. Исходная история была плановой. Теперь появились признаки текущего ухудшения: приоритет меняется, хотя обычная жалоба остаётся самостоятельным делом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.explain"
+    ]
+  },
+  {
+    "id": "4b4e45c686a91c48",
+    "ru": "Текущее ухудшение требует немедленно организовать связь с медицинской помощью, не дожидаясь завершения жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "2e5554ed05d24565",
+    "ru": "Будущая плановая запись подтверждает возможность спокойно дождаться своей даты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "09030256362ab70a",
+    "ru": "Сотрудник приёмной может по описанию определить диагноз и назначить препарат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "18a9b20e77c7d7f6",
+    "ru": "Восстановить отдельный контроль первоначальной жалобы: оказание помощи не является ответом по её существу. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].followup.explain"
+    ]
+  },
+  {
+    "id": "5264496895a0e515",
+    "ru": "Помощь организована. В журнале появился статус «помощь передана специалистам», но прежний вопрос о записи автоматически закрыт без рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].followup.intro"
+    ]
+  },
+  {
+    "id": "03503149a6118f94",
+    "ru": "Восстановить отдельный контроль первоначальной жалобы: оказание помощи не является ответом по её существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "e76f894c111e9c51",
+    "ru": "Считать медицинское событие ответом на все прежние вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "7b98559f8a1823d4",
+    "ru": "Заново требовать подтверждения оплаты до чтения жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "9a24e51c7cca952f",
+    "ru": "Найдите норму: Охрана здоровья: недопустимость отказа. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "088220f9d55a4208",
+    "ru": "Я пришла пожаловаться на запись к врачу, но сейчас мне резко стало хуже. Трудно дышать. Можно я сначала закончу рассказ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].opening"
+    ]
+  },
+  {
+    "id": "ae986d9f59b3c6ff",
+    "ru": "Сначала завершить рассмотрение прежней жалобы на запись, затем реагировать на текущее ухудшение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5a946f3a146f044d",
+    "ru": "Передать только вопрос бесплатной записи страховой организации, не сообщая медикам о текущем состоянии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].procedures[2].text"
+    ]
+  },
+  {
+    "id": "238cfb88b7da2e34",
+    "ru": "Прямо сейчас. Дежурный также видит, что мне тяжело продолжать разговор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a0b015f6c54fdb48",
+    "ru": "Обычный сбор сведений не должен задерживать вызов помощи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "6993b5f85c36f00c",
+    "ru": "Состояние изменилось сейчас или это описание прежнего события?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q0].text"
+    ]
+  },
+  {
+    "id": "b3ecea54cc89fb3d",
+    "ru": "В учебной памятке дежурного есть вызов медицинской помощи через 112 и взаимодействие с прибывшими специалистами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "561494568ac8befa",
+    "ru": "Все вызовы моделируются, реальных звонков нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "08d39e9544324083",
+    "ru": "Что предусмотрено для связи с медицинской помощью?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q1].text"
+    ]
+  },
+  {
+    "id": "9059080088a9fb13",
+    "ru": "Да, прежняя жалоба уже сохранена. Полис я сейчас не могу достать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "45daa05fed46c3e8",
+    "ru": "Отсутствие предъявленного полиса не основание откладывать связь с помощью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "346f0a2df3657574",
+    "ru": "Можно ли отложить уточнение документов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q2].text"
+    ]
+  }
+]

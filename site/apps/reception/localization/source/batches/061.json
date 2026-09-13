@@ -1,0 +1,1113 @@
+[
+  {
+    "id": "d9eb7ab521e83f39",
+    "ru": "Сведения об объекте Э-30: Объект Э-30 находится вне Москвы в обозначенном регионе. Учебная выписка подтверждает федеральный уровень экологического надзора.\n\nТерриториальная схема: Э-30 относится к указанному территориальному органу федерального надзора по месту объекта. Московская приёмная не обладает этой предметной территориальной компетенцией.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-registry-scope].fragments[material].text"
+    ]
+  },
+  {
+    "id": "de45ee020ffc3036",
+    "ru": "Только дело landfill-registry-scope",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-registry-scope].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-registry-scope].scope"
+    ]
+  },
+  {
+    "id": "d88b6c46d95a5c9e",
+    "ru": "Регистрация объекта важнее адреса отправителя · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-registry-scope].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-registry-scope].title"
+    ]
+  },
+  {
+    "id": "b6e5ab4401cfa04e",
+    "ru": "Письмо П-39: Индивидуальное предложение о скамейке с местом и пояснением потребности. Подпись и необходимые реквизиты имеются. Формальной заявки в специальную бюджетную процедуру нет.\n\nПамятка формы участия: Обычное предложение отличается от специально оформленного инициативного проекта и решения собрания. Оно подлежит рассмотрению, но само по себе не означает выделения средств.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-one-resident].fragments[material].text"
+    ]
+  },
+  {
+    "id": "4b9939ed0923524f",
+    "ru": "Только дело proposal-one-resident",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-one-resident].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-one-resident].scope"
+    ]
+  },
+  {
+    "id": "123651e77c635d80",
+    "ru": "Предложение одного жителя · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-one-resident].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-one-resident].title"
+    ]
+  },
+  {
+    "id": "c7bf9d86abac739f",
+    "ru": "Полномочие представителя: Группа уполномочила гражданина передать предложение об улучшении доступности входа и получить ответ по нему. Разрешения получать медицинские сведения участников нет.\n\nСостав запроса: Помимо предложения гражданин просит сведения о здоровье всех соседей. Эти сведения не открыты, согласия на раскрытие или иного основания не представлено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-representative-limits].fragments[material].text"
+    ]
+  },
+  {
+    "id": "634ca7d52662f42f",
+    "ru": "Только дело proposal-representative-limits",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-representative-limits].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-representative-limits].scope"
+    ]
+  },
+  {
+    "id": "1fb5b87d03a7c958",
+    "ru": "Поддержать идею — не выдать чужие сведения · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-representative-limits].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-representative-limits].title"
+    ]
+  },
+  {
+    "id": "641fff87ef770263",
+    "ru": "Протокол встречи: Участники поддержали идею навеса. В протоколе нет решения уполномоченного бюджетного органа, утверждённой сметы или заключённого договора.\n\nСтатус проекта: Предложение ещё не проходило оценку места, полномочий и финансирования. Компетентное подразделение может рассмотреть вариант реализации и сообщить результат.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-vote-not-budget].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2f05cc4318b3abf3",
+    "ru": "Только дело proposal-vote-not-budget",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-vote-not-budget].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-vote-not-budget].scope"
+    ]
+  },
+  {
+    "id": "b91b4083a2ae1e26",
+    "ru": "Голосование прошло, решение о расходах — нет · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-proposal-vote-not-budget].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-proposal-vote-not-budget].title"
+    ]
+  },
+  {
+    "id": "945e8bdb75986b9c",
+    "ru": "Опись обращения Д-37: Вопрос 1: отсутствие остановки маршрута М-4. Приложение А: схема маршрута. Вопрос 2: распространение медицинских сведений ребёнка. Приложение Б: подтверждающий материал с чувствительными данными.\n\nСхема компетенции: Транспортное подразделение рассматривает вопрос 1 по приложению А. Вопрос 2 направляется уполномоченному по соответствующей компетенции с необходимыми материалами; транспортникам приложение Б не требуется.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-minimum-attachments].fragments[material].text"
+    ]
+  },
+  {
+    "id": "ddcb0e5ef7ffeab0",
+    "ru": "Только дело several-minimum-attachments",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-minimum-attachments].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-minimum-attachments].scope"
+    ]
+  },
+  {
+    "id": "38dabc4970a18c78",
+    "ru": "Две проблемы, разные приложения · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-minimum-attachments].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-minimum-attachments].title"
+    ]
+  },
+  {
+    "id": "0930b0e8a3b05c34",
+    "ru": "Обращение О-37: Два самостоятельных вопроса: яма у дома и отсутствие освещения на подходе. Оба содержат достаточное описание места.\n\nОтвет и акт ремонта: Акт относится к заделке ямы. В ответе описан только дорожный ремонт; сведений об освещении нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-partial-response].fragments[material].text"
+    ]
+  },
+  {
+    "id": "43d6595acd5b51d0",
+    "ru": "Только дело several-partial-response",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-partial-response].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-partial-response].scope"
+    ]
+  },
+  {
+    "id": "5b1ea04f55da461e",
+    "ru": "Ответ на первый вопрос — не на всё письмо · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-partial-response].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-partial-response].title"
+    ]
+  },
+  {
+    "id": "cb7e62438cd210dc",
+    "ru": "Письмо Д-38: Вопрос А: повреждённая дорожка. Вопрос Б: достоверность прежнего ответа должностного лица И-7 о завершении работ.\n\nМатериалы прежнего ответа: И-7 сообщил об исполнении. Датированные материалы показывают, что объект не был восстановлен на указанную дату; окончательные причины и ответственность ещё не установлены.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-repair-and-complaint].fragments[material].text"
+    ]
+  },
+  {
+    "id": "598c36f58d8295b8",
+    "ru": "Только дело several-repair-and-complaint",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-repair-and-complaint].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-repair-and-complaint].scope"
+    ]
+  },
+  {
+    "id": "a60023c9230d0f78",
+    "ru": "Исправить объект и проверить прежний ответ · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-several-repair-and-complaint].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-several-repair-and-complaint].title"
+    ]
+  },
+  {
+    "id": "7278a7f24f169b44",
+    "ru": "Сведения о страховом случае: Причина нетрудоспособности — уход за больным ребёнком. Собственная болезнь работника не зарегистрирована. Право на соответствующий период подтверждено.\n\nПлан выплаты и приём данных: Кадры применили шаблон «первые три дня за счёт работодателя». Страховщик получил все необходимые сведения {{info}}; выплаты по этому случаю ещё не было.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-child-care].fragments[material].text"
+    ]
+  },
+  {
+    "id": "4a05b246f71d6a44",
+    "ru": "Только дело sickpay-child-care",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-child-care].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-child-care].scope"
+    ]
+  },
+  {
+    "id": "72aacc44b141a34b",
+    "ru": "Уход за ребёнком — другой источник выплаты · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-child-care].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-child-care].title"
+    ]
+  },
+  {
+    "id": "3bc2ea5afcde3114",
+    "ru": "Решение Р-29: Мотивированный отказ принят страховщиком {{decision}}. Указан конкретный страховой случай и работник; данные для направления обоим адресатам полные.\n\nЖурнал исходящих сообщений: Р-29 направлено страхователю. Записи о направлении застрахованному лицу нет; сообщение в личный кабинет не формировалось.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-refusal-notice].fragments[material].text"
+    ]
+  },
+  {
+    "id": "515de80400d07d18",
+    "ru": "Только дело sickpay-refusal-notice",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-refusal-notice].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-refusal-notice].scope"
+    ]
+  },
+  {
+    "id": "5b597e7e0d79472d",
+    "ru": "Решение есть, работника не известили · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-refusal-notice].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-refusal-notice].title"
+    ]
+  },
+  {
+    "id": "54d53ead1fd9465e",
+    "ru": "Период и основание нетрудоспособности: Болезнь самого работника, восемь календарных дней. Не уход за членом семьи, не производственная травма. Данные о статусе работника и основании подтверждены.\n\nПлатёж и журнал сведений: Платёж работодателя помечен «первые три дня». За остальные дни выплаты СФР не было. Полный комплект необходимых сведений принят страховщиком {{info}}.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-two-payers].fragments[material].text"
+    ]
+  },
+  {
+    "id": "daa797fefda30e05",
+    "ru": "Только дело sickpay-two-payers",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-two-payers].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-two-payers].scope"
+    ]
+  },
+  {
+    "id": "d3c7c7169bfc236f",
+    "ru": "Перевод пришёл, но за какие дни? · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-sickpay-two-payers].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-sickpay-two-payers].title"
+    ]
+  },
+  {
+    "id": "40ee5043996f5579",
+    "ru": "Организовать согласованный доступный приём и отдельно рассмотреть причину барьера. Предмет доступности включает не только вход в здание, но и фактическое получение услуги. В учебном деле человеку недоступно рабочее место на втором этаже, однако есть возможность организовать приём в доступном помещении первого этажа. Способ помощи согласуется с человеком.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.explain"
+    ]
+  },
+  {
+    "id": "174eba873846e62d",
+    "ru": "первом",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "123b030778ccaa87",
+    "ru": "первый",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a5483ea3eb971f9c",
+    "ru": "первый этаж",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "795f85c43bb94208",
+    "ru": "на первом этаже",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.extracted.accepted[4]"
+    ]
+  },
+  {
+    "id": "789b32b95daaa2ed",
+    "ru": "На каком этаже по условиям доступно помещение для приёма?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.extracted.label"
+    ]
+  },
+  {
+    "id": "51c4353b9b709667",
+    "ru": "Организовать согласованный доступный приём и отдельно рассмотреть причину барьера.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "75ee7d7797d0cf96",
+    "ru": "Считать наличие кнопки достаточным независимо от получения услуги.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a2fb91b22ab6f651",
+    "ru": "Переносить человека против его воли.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "75f7a541bb69f73d",
+    "ru": "На каком этаже по условиям доступно помещение для приёма? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.access-service.prompt"
+    ]
+  },
+  {
+    "id": "463613c9fce17778",
+    "ru": "Часть 6 статьи 8 запрещает направление жалобы на рассмотрение обжалуемому адресату, но не делает любое получение у него материалов недопустимым.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.explain"
+    ]
+  },
+  {
+    "id": "a913f02c49cc8280",
+    "ru": "Номер части статьи 8 закона 59-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.extracted.label"
+    ]
+  },
+  {
+    "id": "1653997fd839e9cf",
+    "ru": "Нельзя даже запрашивать у обжалуемого лица необходимые материалы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.findingOptions[ban].text"
+    ]
+  },
+  {
+    "id": "208cbab0ee86c3c0",
+    "ru": "Если сотрудник лучше знает обстоятельства, он всегда должен сам окончательно рассмотреть жалобу на себя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.findingOptions[same].text"
+    ]
+  },
+  {
+    "id": "06cc28454631ee03",
+    "ru": "Запрос материалов у обжалуемого лица не равен поручению ему окончательно рассмотреть жалобу на себя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.findingOptions[separate].text"
+    ]
+  },
+  {
+    "id": "80ea9d3170afc329",
+    "ru": "Найдите запрет направления жалобы тому, чьи действия обжалуются. Введите номер соответствующей части статьи 8.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.prompt"
+    ]
+  },
+  {
+    "id": "946fb825bc23a2d3",
+    "ru": "Адресат, чьи действия обжалованы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.complained.title",
+      "evidence-catalog:EVIDENCE_TASKS.complained.searchHint"
+    ]
+  },
+  {
+    "id": "21f7fd5ff7adc3ff",
+    "ru": "Раскрыть заинтересованность и обеспечить независимое распределение рассмотрения, сохранив срок обращения. При личной заинтересованности, которая приводит или может привести к конфликту интересов, гражданский служащий уведомляет представителя нанимателя в установленном порядке, как только ему стало об этом известно. Самоуверенность в собственной честности не заменяет уведомление. Рассмотрение обращения не прекращается: организуется надлежащее распределение работы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.explain"
+    ]
+  },
+  {
+    "id": "09f4e21e72bc3ab3",
+    "ru": "представителя нанимателя",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "dc7bce421711d44d",
+    "ru": "представитель нанимателя",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "bcf6b688ba3a241c",
+    "ru": "Кого уведомляет гражданский служащий в установленном порядке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.extracted.label"
+    ]
+  },
+  {
+    "id": "deaa5924542ce751",
+    "ru": "Раскрыть заинтересованность и обеспечить независимое распределение рассмотрения, сохранив срок обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "772d18646560f804",
+    "ru": "Скрыть связь и сослаться на личную честность.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f6022945d5366bef",
+    "ru": "Удалить жалобу, чтобы не возникло конфликта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "7ba72818414c18c2",
+    "ru": "Кого уведомляет гражданский служащий в установленном порядке? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.prompt"
+    ]
+  },
+  {
+    "id": "bddf8f10041c7031",
+    "ru": "Разъяснить судебный порядок и выполнить установленное действие по обращению, не пересматривая решение суда. Для обращения, в котором обжалуется судебное решение, часть 2 статьи 11 предусматривает возврат с разъяснением порядка обжалования в течение семи дней со дня регистрации. Приёмная органа исполнительной власти не отменяет судебные постановления. Этот срок не является процессуальным сроком подачи апелляции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.explain"
+    ]
+  },
+  {
+    "id": "a1789e79f44fec12",
+    "ru": "часть 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "34cd649857314a94",
+    "ru": "ч. 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "f71a3ca40348c87f",
+    "ru": "Укажите номер части статьи 11 о таком обращении",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.extracted.label"
+    ]
+  },
+  {
+    "id": "4bc9546e6acda68c",
+    "ru": "Разъяснить судебный порядок и выполнить установленное действие по обращению, не пересматривая решение суда.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8db9589f19004f00",
+    "ru": "Отменить судебное решение обычным ответным письмом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "542b1c512bb7ec29",
+    "ru": "Выдать семь дней за универсальный срок апелляции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "75bf72d45c64477f",
+    "ru": "Укажите номер части статьи 11 о таком обращении Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.court-return.prompt"
+    ]
+  },
+  {
+    "id": "561fef9fdbddb950",
+    "ru": "Проверить подтверждение согласия у распространителя, не объявляя утечку уже доказанной. Для рекламы по сетям электросвязи необходимо предварительное согласие абонента или адресата. Наличие такого согласия доказывает рекламораспространитель. После требования адресата распространение в его адрес должно быть прекращено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.explain"
+    ]
+  },
+  {
+    "id": "d2eb319066cc55dc",
+    "ru": "рекламораспространитель",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "e289dc0bf84b12e8",
+    "ru": "рекламораспространителем",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1dbbbd03af3b63a1",
+    "ru": "Проверить подтверждение согласия у распространителя, не объявляя утечку уже доказанной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "d4e2b87371c4bee3",
+    "ru": "Считать знание номера согласием.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b4f3fe639eb6f004",
+    "ru": "Требовать доказать отрицательный факт только от гражданина.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a263a7d185559a25",
+    "ru": "Кто должен доказать наличие предварительного согласия?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.extracted.label"
+    ]
+  },
+  {
+    "id": "fc5eb0ae45664b71",
+    "ru": "Передать сведения и не создавать фиктивный индивидуальный ответ. Часть 1 статьи 11 закона № 59-ФЗ предусматривает отсутствие ответа при неуказании фамилии либо адреса для ответа в письменном обращении. При сведениях о предполагаемом противоправном деянии и лице, его совершающем, предусмотрено направление в государственный орган по компетенции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.explain"
+    ]
+  },
+  {
+    "id": "9fbdc06cde606dc1",
+    "ru": "направление по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "07e2f172f3dbe416",
+    "ru": "направление в государственный орган по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "e47910ed391ff49b",
+    "ru": "передача по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "70956cd73a07d764",
+    "ru": "направить по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "0a2feb84198052cb",
+    "ru": "Передать сведения и не создавать фиктивный индивидуальный ответ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "36c4d280f7756e80",
+    "ru": "Уничтожить лист.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "6132e3ad85036ff8",
+    "ru": "Сгенерировать данные автора.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "90de196539a18e32",
+    "ru": "Какое действие с конкретными сведениями предусмотрено вместо их удаления?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.extracted.label"
+    ]
+  },
+  {
+    "id": "c2162b93dcb08eea",
+    "ru": "Исключить нерабочие дни при исчислении десятидневного срока. Статья 15 закона № 229-ФЗ исключает нерабочие дни из сроков, исчисляемых днями. Течение начинается на следующий день после исходного события. Для срока статьи 126 нужно учитывать эту общую норму вместе с датой поступления правомочному лицу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.explain"
+    ]
+  },
+  {
+    "id": "a20ab7efea8df60d",
+    "ru": "нерабочие дни",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "dbd92b0a851f7b72",
+    "ru": "нерабочие",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "820314b93f119d85",
+    "ru": "Исключить нерабочие дни при исчислении десятидневного срока.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "67ec7e1bf33988df",
+    "ru": "Считать десять календарных без статьи 15.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "9da53b295b89eb7f",
+    "ru": "Перенести начало на дату удобного прочтения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2c6a0972268c2de6",
+    "ru": "Какие дни не включаются в такой срок?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.extracted.label"
+    ]
+  },
+  {
+    "id": "f721cfba5baae2bf",
+    "ru": "Проверить самостоятельное ограничение по рекламной конструкции. Пункт 5 части 2 статьи 21 регулирует использование наружных рекламных конструкций. Условие о расстоянии до образовательных организаций содержится отдельно. Указанная в этом деле реклама пива на щите не является специальным случаем рекламы винодельческого хозяйства.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.explain"
+    ]
+  },
+  {
+    "id": "191fdb596f7360f7",
+    "ru": "пункт 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "193e18b777ab76ea",
+    "ru": "п. 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "dd252d1e6ed0d5ba",
+    "ru": "п5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "69ca79e29efc12f1",
+    "ru": "Проверить самостоятельное ограничение по рекламной конструкции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a84a94a2f4439a28",
+    "ru": "Ограничиться расстоянием до школы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "6f7dc0b68020fd0d",
+    "ru": "Считать частичную переделку автоматическим устранением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "6013ca4a85ac8e33",
+    "ru": "Какой пункт части 2 относится к наружным рекламным конструкциям?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.extracted.label"
+    ]
+  },
+  {
+    "id": "5e8852e9d25f4975",
+    "ru": "Сопоставить сведения по конкретным водителям и дню. Организации и индивидуальные предприниматели, осуществляющие эксплуатацию транспортных средств, обязаны соблюдать установленный режим труда и отдыха водителей. Проверка графика и фактической работы не заменяется наблюдением длительности использования машины.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.explain"
+    ]
+  },
+  {
+    "id": "e553cee7cde85c0e",
+    "ru": "водителей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "fdcac9671e0c515e",
+    "ru": "водителя",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1ada494a1ccfd477",
+    "ru": "режим водителей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "8ea83cd204ec807a",
+    "ru": "Сопоставить сведения по конкретным водителям и дню.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "25962ba14d498d5a",
+    "ru": "Приравнять время автобуса к смене человека.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "aef7584c1bff1776",
+    "ru": "Зачесть документ за другой период.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "9fb1185bb501cd07",
+    "ru": "Чей режим труда и отдыха должен быть проверен?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.extracted.label"
+    ]
+  },
+  {
+    "id": "bfe3157f7c26821e",
+    "ru": "Проверить дату получения перевозчиком и содержание решения. Статья 127.1 Воздушного кодекса связывает 30-дневное рассмотрение претензии с её поступлением перевозчику. Дата отправки и последующая регистрация письма в ином органе не заменяют это событие.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.explain"
+    ]
+  },
+  {
+    "id": "a987f4e1519f6edf",
+    "ru": "поступление претензии перевозчику",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "720b09633f1b5ac8",
+    "ru": "поступления претензии перевозчику",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "cf8168e2e32914b2",
+    "ru": "получение претензии перевозчиком",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.extracted.accepted[2]",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "7d49fb2795d57c07",
+    "ru": "получения претензии перевозчиком",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "19ae44accf69345e",
+    "ru": "Проверить дату получения перевозчиком и содержание решения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "63d578a5f06170d3",
+    "ru": "Считать от открытия дела в приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "083b3865b6ae87d2",
+    "ru": "Продлить срок автоматическим ответом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1b59d5a74a8c065e",
+    "ru": "От какого события исчисляется указанный срок?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.extracted.label"
+    ]
+  },
+  {
+    "id": "a51f13b3c5a275c9",
+    "ru": "Проверять организацию и работника раздельно, сохраняя вопросы об инциденте. Официальные материалы Росгвардии разграничивают документы лицензирования охранной организации и документы частного охранника. Лицензия организации не подменяет удостоверение конкретного частного охранника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.explain"
+    ]
+  },
+  {
+    "id": "eb64681932608e22",
+    "ru": "удостоверение частного охранника",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "72b00441221f82e8",
+    "ru": "удостоверение охранника",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "70b5783ec4be05ec",
+    "ru": "Проверять организацию и работника раздельно, сохраняя вопросы об инциденте.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c095c85afd796193",
+    "ru": "Считать эмблему клуба удостоверением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d13b75230aa18bc3",
+    "ru": "Подменить документ работника лицензией организации.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "538deb859fd9ebe1",
+    "ru": "Как называется документ статуса конкретного частного охранника?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.extracted.label"
+    ]
+  },
+  {
+    "id": "ae8ff7b7f8301c37",
+    "ru": "Проверить дату получения кредитором и специальный возврат. При коллективном страховании, в котором кредитор выступает страхователем, отказ заёмщика адресуется кредитору. Для условий части 2.5 статьи 7 закона № 353-ФЗ возврат производится в срок не более семи рабочих дней со дня получения заявления; остальные условия прямо заданы в деле.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.explain"
+    ]
+  },
+  {
+    "id": "1662b1b4e0345e11",
+    "ru": "кредитору",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "92f2b1f60a959ce2",
+    "ru": "банк",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1f8111c9335f1b58",
+    "ru": "банку",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "fbdc6d21608b5294",
+    "ru": "кредитор",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "035fb46f2fe72440",
+    "ru": "Проверить дату получения кредитором и специальный возврат.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8d512d282b203b43",
+    "ru": "Всегда перенаправлять к страховщику.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "ef3f0d0b20ef4666",
+    "ru": "Зачесть автоответ вместо денег.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "c6df54f928200550",
+    "ru": "Кому адресуется заявление при указанной коллективной страховке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.extracted.label"
+    ]
+  },
+  {
+    "id": "65cb659051b707d8",
+    "ru": "Выбрать надлежащий орган по Тверской области и заданному виду контроля. Учебная карточка: объект расположен в Тверской области и неаварийный вопрос отнесён к региональной экологической компетенции. Московский адрес автора используется для связи и не меняет местонахождение объекта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.explain"
+    ]
+  },
+  {
+    "id": "4fd159be169a72ce",
+    "ru": "Тверская область",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "d0fbcc41cda409de",
+    "ru": "Тверской области",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2c176be265a10460",
+    "ru": "Выбрать надлежащий орган по Тверской области и заданному виду контроля.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "412ef38163fa2f5a",
+    "ru": "Выбрать московский орган по прописке автора.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "e811020a76f725c0",
+    "ru": "Не проверять вид контроля.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "3d7bd39557860c5a",
+    "ru": "Какой субъект определяет территориальный маршрут в этом деле?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.extracted.label"
+    ]
+  },
+  {
+    "id": "adbccfcd02176f7d",
+    "ru": "Запросить материалы, сохранив независимое окончательное рассмотрение. Статья 8 закона № 59-ФЗ запрещает направлять жалобу на рассмотрение органу или должностному лицу, чьи решения или действия обжалуются. Сбор объяснений для рассмотрения уполномоченным лицом не тождественен передаче окончательного разрешения жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.explain"
+    ]
+  },
+  {
+    "id": "47501ef3fae1cd38",
+    "ru": "собственные действия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "ce971785df79d6a7",
+    "ru": "свои действия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "c5a921ec3122049f",
+    "ru": "его собственные действия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "1f4735a3b2367e12",
+    "ru": "Запросить материалы, сохранив независимое окончательное рассмотрение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "43792b1cc505081b",
+    "ru": "Назначить обжалуемого окончательным исполнителем жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "bb4d3826e6183240",
+    "ru": "Запретить сбор любых объяснений.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "67779082643d70fb",
+    "ru": "Чьи действия нельзя поручать этому же лицу окончательно рассматривать по жалобе?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.extracted.label"
+    ]
+  },
+  {
+    "id": "983185131e7b3d54",
+    "ru": "Проверить специальный порядок и не обещать универсальную дату доставки. Для претензий по розыску международных почтовых отправлений используются законодательство Российской Федерации и международные договоры. Сроки внутренних отправлений нельзя автоматически переносить на любой международный розыск.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.explain"
+    ]
+  },
+  {
+    "id": "10ba5e6b5b4810eb",
+    "ru": "международные договоры",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "161d0b116e17f6ec",
+    "ru": "международные договоры Российской Федерации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5a28425d8f32ce6c",
+    "ru": "Проверить специальный порядок и не обещать универсальную дату доставки.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "38f89f446155fe95",
+    "ru": "Всегда считать только 30 дней.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "330e1c494b4b7e67",
+    "ru": "Заменить розыск отменой выпуска.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "7453e1974ab9ea50",
+    "ru": "Какие акты учитываются наряду с законодательством РФ?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.extracted.label"
+    ]
+  },
+  {
+    "id": "158baa7df8918ef1",
+    "ru": "Проверить документ С-24 в совокупности с условиями и маршрутом. Учебная карточка поставки: С-24 вывезена из установленной карантинной фитосанитарной зоны при ограничениях, распространяющихся на данный вид продукции. Предъявлен сертификат С-18. Нужен документ, относящийся к С-24, а не к соседней партии.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.explain"
+    ]
+  },
+  {
+    "id": "12e54eec5de6fbbf",
+    "ru": "С-24",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "7c569678957d393a",
+    "ru": "С24",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "4ac6153433b87d58",
+    "ru": "Проверить документ С-24 в совокупности с условиями и маршрутом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "3be603f490600129",
+    "ru": "Принять сертификат С-18.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.findingOptions[1].text"
+    ]
+  }
+]

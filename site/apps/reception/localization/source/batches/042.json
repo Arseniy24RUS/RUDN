@@ -1,0 +1,1228 @@
+[
+  {
+    "id": "81f9e3bd027c83fb",
+    "ru": "Помощник: «После перечисления всей зарплаты остальные требования исчезают автоматически».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].trap.text"
+    ]
+  },
+  {
+    "id": "ee89e3c87da785ca",
+    "ru": "Сопоставить начисление и фактические поступления за один период",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[a0].title"
+    ]
+  },
+  {
+    "id": "f4f62d739709fac3",
+    "ru": "Уточнить работодателя и компетенцию трудовой инспекции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5928f5e6374b5b6e",
+    "ru": "Подготовить материалы уполномоченному специалисту без обещания конкретной санкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6fb8634c89440948",
+    "ru": "Объяснить гражданину выбранный порядок и пределы полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[a3].title"
+    ]
+  },
+  {
+    "id": "1ddf71f527754712",
+    "ru": "Проверить ответ по остатку начисленной суммы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2709066e1f6797cc",
+    "ru": "Самостоятельно взыскать деньги от имени приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[b0].title",
+      "cases:CASE_TEMPLATES[salary-partial].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "983dbcf7979b1271",
+    "ru": "Потребовать отозвать жалобу после частичного перевода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].actions[b1].title"
+    ]
+  },
+  {
+    "id": "9664899dd7c5308f",
+    "ru": "Личные истории, документы и организации-участники инцидента вымышлены. Даты дела закреплены в карточке. Общий порядок обращения и профильная процедура различаются; продление срока по условию не оформлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].brief",
+      "cases:CASE_TEMPLATES[oms-paid-offer].brief",
+      "cases:CASE_TEMPLATES[trees-other-site].brief"
+    ]
+  },
+  {
+    "id": "64362acb71d02c7b",
+    "ru": "Рассчитайте крайний день указанного в заголовке действия. Это не универсальный срок устранения проблемы. В данном упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].calendar.context",
+      "cases:CASE_TEMPLATES[oms-paid-offer].calendar.context",
+      "cases:CASE_TEMPLATES[heritage-stair].calendar.context"
+    ]
+  },
+  {
+    "id": "6d85b33e6b3ab145",
+    "ru": "10 рабочих дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].calendar.ruleOptions[working10].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].calendar.ruleOptions[working10].text",
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.ruleOptions[working10].text"
+    ]
+  },
+  {
+    "id": "7d189b6bf4de5290",
+    "ru": "3 рабочих дня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].calendar.ruleOptions[working3].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].calendar.ruleOptions[working3].text",
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.ruleOptions[working3].text"
+    ]
+  },
+  {
+    "id": "cb482fad87463bd1",
+    "ru": "Для этого упражнения закреплён профиль исчисления: со следующего дня после исходного события, перенос окончания вперёд, федеральная пятидневная неделя. Не переносите его автоматически на иные процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].calendar.scope",
+      "cases:CASE_TEMPLATES[oms-paid-offer].calendar.scope",
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.scope"
+    ]
+  },
+  {
+    "id": "a9d98aec68b101e6",
+    "ru": "Предметный срок действия по обращению: 59-ФЗ, статья 12. Иные отраслевые нормы используются для решения по существу, а не как источник этого срока. Профиль исчисления задан отдельно в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].calendar.source",
+      "cases:CASE_TEMPLATES[oms-paid-offer].calendar.source",
+      "cases:CASE_TEMPLATES[heritage-stair].calendar.source"
+    ]
+  },
+  {
+    "id": "d935c01ea5ef3305",
+    "ru": "Работник организации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].citizen.description"
+    ]
+  },
+  {
+    "id": "bb951366b15c7801",
+    "ru": "Различайте поступление, регистрацию и специальное событие; затем определите тип дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].coach.calendar",
+      "cases:CASE_TEMPLATES[oms-paid-offer].coach.calendar",
+      "cases:CASE_TEMPLATES[trees-other-site].coach.calendar"
+    ]
+  },
+  {
+    "id": "2c018ce14eeda132",
+    "ru": "Не путайте общий порядок обращения со специальным правовым основанием; источник должен подтверждать именно выбранное действие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].coach.research",
+      "cases:CASE_TEMPLATES[oms-paid-offer].coach.research",
+      "cases:CASE_TEMPLATES[trees-other-site].coach.research"
+    ]
+  },
+  {
+    "id": "110100136d70a7f6",
+    "ru": "Уточните предмет требования и сведения, от которых зависит дальнейшее действие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].coach.talk",
+      "cases:CASE_TEMPLATES[oms-paid-offer].coach.talk",
+      "cases:CASE_TEMPLATES[trees-other-site].coach.talk"
+    ]
+  },
+  {
+    "id": "5e4ec0786b84e627",
+    "ru": "Начислено к выплате: 48 000 руб. Поступление: 30 000 руб. Остаток в представленном наборе: 18 000 руб. Сведения вымышлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[d0].text"
+    ]
+  },
+  {
+    "id": "39ee96d8f69bb923",
+    "ru": "Сверка начисления и поступлений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[d0].title"
+    ]
+  },
+  {
+    "id": "864d1c6accd0fa0c",
+    "ru": "Работодатель ссылается на факт перевода 30 000 руб., но не объясняет разницу с расчётным листком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[d1].text"
+    ]
+  },
+  {
+    "id": "bcb1bde6a4969064",
+    "ru": "Ответ работодателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[d1].title",
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8b51c6b02530d6fe",
+    "ru": "Письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[d1].type",
+      "cases:CASE_TEMPLATES[fire-key].documents[d1].type"
+    ]
+  },
+  {
+    "id": "ed7cd10ab816bdab",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Дата последнего наблюдения / события в приложении: {{observed}}. В календарном задании уточняется, от какого события исчислять именно требуемый срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[dates].text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[dates].text",
+      "cases:CASE_TEMPLATES[trees-other-site].documents[dates].text"
+    ]
+  },
+  {
+    "id": "cfa04a9d9c4b1848",
+    "ru": "Временная линия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[dates].title",
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[dates].title",
+      "cases:CASE_TEMPLATES[trees-other-site].documents[dates].title"
+    ]
+  },
+  {
+    "id": "b7a5fbff717c29a1",
+    "ru": "Карточка событий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].documents[dates].type",
+      "cases:CASE_TEMPLATES[oms-paid-offer].documents[dates].type",
+      "cases:CASE_TEMPLATES[trees-other-site].documents[dates].type"
+    ]
+  },
+  {
+    "id": "24c71a93398cd39d",
+    "ru": "Ориентир: 9–12 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].duration",
+      "cases:CASE_TEMPLATES[oms-paid-offer].duration",
+      "cases:CASE_TEMPLATES[trees-other-site].duration"
+    ]
+  },
+  {
+    "id": "a6554a3156461230",
+    "ru": "Частичный перевод не подтверждает полного исполнения обязательства; остаток требует проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[salary-partial].factTask.explain",
+      "cases:CASE_TEMPLATES[salary-partial].outcomes.good"
+    ]
+  },
+  {
+    "id": "437fcccd19652c14",
+    "ru": "Любой перевод закрывает жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "0b5591604e91d7ac",
+    "ru": "Приёмная вправе сама списать 18 000 рублей со счёта работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "67d3981be8f87617",
+    "ru": "Какой вывод подтверждают материалы дела?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].factTask.prompt",
+      "cases:CASE_TEMPLATES[oms-paid-offer].factTask.prompt",
+      "cases:CASE_TEMPLATES[trees-other-site].factTask.prompt"
+    ]
+  },
+  {
+    "id": "781053cd6c18a7e9",
+    "ru": "Последующее действие оставило существенное обстоятельство без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.failure",
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.failure",
+      "cases:CASE_TEMPLATES[trees-other-site].followup.failure"
+    ]
+  },
+  {
+    "id": "a553322b3593727d",
+    "ru": "Учебное продолжение. В ответе упомянуты 30 000 рублей, но вопрос об остатке не рассмотрен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.intro"
+    ]
+  },
+  {
+    "id": "762fdbca34fa20f1",
+    "ru": "Указать, какой вопрос остался неразрешённым, и организовать его рассмотрение компетентным специалистом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.options[0].text",
+      "cases:CASE_TEMPLATES[salary-partial].followup.explain"
+    ]
+  },
+  {
+    "id": "d9fc65be5a890f95",
+    "ru": "Принять ответ как полный, потому что в нём есть сумма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "e3084d31e482b475",
+    "ru": "Объявить штраф работодателю без решения уполномоченного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f8c07b4226e49220",
+    "ru": "Новое обстоятельство учтено; содержание результата сопоставлено с задачей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].followup.success",
+      "cases:CASE_TEMPLATES[oms-paid-offer].followup.success",
+      "cases:CASE_TEMPLATES[trees-other-site].followup.success"
+    ]
+  },
+  {
+    "id": "36e772e7704156c6",
+    "ru": "Найдите статью ТК РФ о полномочиях государственного инспектора труда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "84beebcbce1302ce",
+    "ru": "Зарплату задержали. Вчера пришёл перевод, а работодатель сказал: теперь жаловаться не на что. Но по расчётному листку сумма больше.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].opening"
+    ]
+  },
+  {
+    "id": "ce0bd497fa1c122d",
+    "ru": "Проверьте основания, полномочия и последовательность действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].outcomes.bad",
+      "cases:CASE_TEMPLATES[oms-paid-offer].outcomes.bad",
+      "cases:CASE_TEMPLATES[trees-other-site].outcomes.bad"
+    ]
+  },
+  {
+    "id": "69a65b45c38d8c73",
+    "ru": "Обращение о соблюдении трудовых прав и профильное реагирование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].procedures[0].text"
+    ]
+  },
+  {
+    "id": "5f55df9a73c84cb4",
+    "ru": "Запрос бюджетных документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].procedures[1].text"
+    ]
+  },
+  {
+    "id": "b97ec0de82fe7191",
+    "ru": "Запись на муниципальную услугу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].procedures[2].text"
+    ]
+  },
+  {
+    "id": "8c890c8546309006",
+    "ru": "В листке начислено 48 000 рублей после удержаний, на счёт перечислено 30 000. Других выплат по этому периоду нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "136553c0e9252374",
+    "ru": "Необходимо проверить разницу начисления и выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "bac6965a9f854330",
+    "ru": "Какие суммы можно сопоставить по документам?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q0].text"
+    ]
+  },
+  {
+    "id": "bbf47d3cf49f54a1",
+    "ru": "Оклад за отработанный месяц. В листке сумма уже начислена; спорных условий премирования здесь нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "cb9b76b64fc69b36",
+    "ru": "Выделен предмет требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "76547518e63a3467",
+    "ru": "Это заработная плата или спор о размере премии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0986ca76df245068",
+    "ru": "В Москве; юридическое лицо и адрес есть в трудовом договоре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "476d03f61a8b68fb",
+    "ru": "Установлена территория работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b5eaabc460cf7b5f",
+    "ru": "Где находится работодатель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q2].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q2].text"
+    ]
+  },
+  {
+    "id": "da677a30247acb04",
+    "ru": "Проверку соблюдения моих трудовых прав и разъяснение действий по невыплаченному остатку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "4523d7cba2605718",
+    "ru": "Жалоба не отозвана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8a5de8b0411a1b6d",
+    "ru": "Что вы хотите получить от инспекции?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].questions[q3].text"
+    ]
+  },
+  {
+    "id": "79cbfbf4fa2be72a",
+    "ru": "Учебная ситуация. Готовите проекты документов и организационные действия только в пределах указанной компетенции. Реальные обращения и звонки не отправляются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].role.text",
+      "cases:CASE_TEMPLATES[oms-paid-offer].role.text",
+      "cases:CASE_TEMPLATES[trees-other-site].role.text"
+    ]
+  },
+  {
+    "id": "d8ee1873e5406698",
+    "ru": "Специалист приёмной органа публичной власти",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].role.title",
+      "cases:CASE_TEMPLATES[oms-paid-offer].role.title",
+      "cases:CASE_TEMPLATES[trees-other-site].role.title"
+    ]
+  },
+  {
+    "id": "31f66dad6443da55",
+    "ru": "Подготовить рассмотрение трудовой инспекцией по установленному работодателю, различая контроль и судебное взыскание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].routes[0].text",
+      "cases:CASE_TEMPLATES[salary-partial].coach.plan",
+      "cases:CASE_TEMPLATES[salary-partial].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "fa1424f0c6a52e75",
+    "ru": "Отправить работодателю для окончательного рассмотрения жалобы на него.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].routes[1].text",
+      "cases:CASE_TEMPLATES[salary-partial].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "223467ae8733f0a1",
+    "ru": "Закрыть дело на основании любого банковского перевода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].routes[2].text",
+      "cases:CASE_TEMPLATES[salary-partial].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b9eccba640b6bac1",
+    "ru": "Проверьте реквизиты нормы и предмет её регулирования; затем подтвердите решение конкретным найденным сведением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].sourceTask",
+      "cases:CASE_TEMPLATES[oms-paid-offer].sourceTask",
+      "cases:CASE_TEMPLATES[trees-other-site].sourceTask"
+    ]
+  },
+  {
+    "id": "35076b97500d779a",
+    "ru": "Деньги пришли. Но все ли?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[salary-partial].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[salary-partial].title"
+    ]
+  },
+  {
+    "id": "98d0a09e74da308f",
+    "ru": "Трудовые права",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].topic",
+      "cases:CASE_TEMPLATES[salary-partial].tag",
+      "cases:CASE_TEMPLATES[salary-late-compensation].topic"
+    ]
+  },
+  {
+    "id": "20ef5a2c9a267907",
+    "ru": "Проверить период и полноту выплаты по документам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].trap.options[0].text",
+      "cases:CASE_TEMPLATES[salary-partial].trap.explain"
+    ]
+  },
+  {
+    "id": "eeb8ed589caf1eb1",
+    "ru": "Согласиться, не сопоставляя суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "dc4c1fe22581b543",
+    "ru": "Помощник: «Если перевод был, нарушение уже исключено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-partial].trap.text"
+    ]
+  },
+  {
+    "id": "59267a5b9d578cc6",
+    "ru": "Сопоставить накладную, партию и реквизиты сертификата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[a0].title"
+    ]
+  },
+  {
+    "id": "bb6746c30c3b68c8",
+    "ru": "Проверить применимость установленных карантинных условий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[a1].title"
+    ]
+  },
+  {
+    "id": "41193f61dee24727",
+    "ru": "Передать материалы уполномоченному специалисту для предметной проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[a2].title"
+    ]
+  },
+  {
+    "id": "1c1fff58b0c7c042",
+    "ru": "Не распространять неподтверждённое обвинение о заражении и разъяснить дальнейшие действия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[a3].title"
+    ]
+  },
+  {
+    "id": "dc27e60e0b49668a",
+    "ru": "Сверить последующий документ с С-24 и условиями перевозки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[a4].title"
+    ]
+  },
+  {
+    "id": "bd31cf4fe4b2890f",
+    "ru": "Самостоятельно распорядиться об уничтожении без полномочий и проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[b0].title",
+      "cases:CASE_TEMPLATES[seedlings-batch].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "f0a35bd1b6cba39a",
+    "ru": "Принять документ на другую партию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].actions[b1].title"
+    ]
+  },
+  {
+    "id": "27589a7b1f293b39",
+    "ru": "Накладная: С-24. Сертификат: С-18. Условия вывоза из карантинной зоны для данной продукции по материалам дела требуют карантинного сертификата. Документы вымышлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].documents[d0].text"
+    ]
+  },
+  {
+    "id": "72f46918ea86850e",
+    "ru": "Накладная и сертификат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2612e840e9771e6b",
+    "ru": "Наличие зоны, ограничений и восприимчивости продукции прямо задано. Упражнение не утверждает обязательность такого сертификата для каждого саженца при любой продаже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d19a0f7dd21edcca",
+    "ru": "Условия поставки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].documents[d1].title"
+    ]
+  },
+  {
+    "id": "1a5524b17939dd64",
+    "ru": "Нужно проверить подтверждение именно партии С-24; документ С-18 не доказывает соответствие этой поставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].factTask.explain",
+      "cases:CASE_TEMPLATES[seedlings-batch].outcomes.good"
+    ]
+  },
+  {
+    "id": "d08328dc1709061a",
+    "ru": "Один сертификат всегда распространяется на все партии питомника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "4d195253da302a8d",
+    "ru": "Несовпадение номера доказывает заражение растений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "68b158f99358caff",
+    "ru": "Прислана новая копия с С-24, но она относится к другому отправителю и маршруту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].followup.intro"
+    ]
+  },
+  {
+    "id": "768abc476f9c336e",
+    "ru": "Сопоставить весь набор существенных реквизитов, а не только исправленный номер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].followup.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].followup.explain"
+    ]
+  },
+  {
+    "id": "283cee23dca36069",
+    "ru": "Принять по совпадению С-24.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2ffab2c95bf12cce",
+    "ru": "Считать исправление номера доказательством заражения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "e6eae7c63968a4f4",
+    "ru": "Статья 21 закона № 206-ФЗ связывает вывоз соответствующей подкарантинной продукции из карантинной фитосанитарной зоны с установленными условиями и карантинным сертификатом. Эти условия прямо заданы в деле. Документ на партию С-18 не доказывает соблюдение требований для С-24; требование не распространяется автоматически на любые саженцы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].knowledge.explain"
+    ]
+  },
+  {
+    "id": "9ccc22a87589923d",
+    "ru": "Найдите условия вывоза подкарантинной продукции из карантинной зоны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "6c2e66390cdb5d9b",
+    "ru": "Купили саженцы из питомника. Продавец показал сертификат, но номер партии не совпадает с накладной. Он говорит, что одного документа на весь сезон достаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].opening"
+    ]
+  },
+  {
+    "id": "f993deb78fa983c5",
+    "ru": "Проверка соблюдения заданных карантинных условий вывоза конкретной партии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].procedures[0].text"
+    ]
+  },
+  {
+    "id": "6f77a7d26980f419",
+    "ru": "Универсальная сертификация любых комнатных растений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].procedures[1].text"
+    ]
+  },
+  {
+    "id": "81d4bc142e5a1d7d",
+    "ru": "Автоматическое уничтожение покупки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].procedures[2].text"
+    ]
+  },
+  {
+    "id": "fd581398f15b8fd9",
+    "ru": "В материалах прямо указаны карантинная фитосанитарная зона, введённые ограничения и восприимчивость этой продукции к соответствующему объекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "27ca3b9617b3dc6b",
+    "ru": "Проверка документа основана на конкретных условиях, а не на названии товара.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q0].fact",
+      "cases:CASE_TEMPLATES[seedlings-batch].coach.talk"
+    ]
+  },
+  {
+    "id": "e7073c2bcbb878ea",
+    "ru": "Какие условия вывоза установлены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f697ae7dd7eb6b8a",
+    "ru": "Партия С-24. В предъявленном сертификате значится С-18.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "9d420dc839522b69",
+    "ru": "Документ не совпадает с поставкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0fe4170cb32ca225",
+    "ru": "Какая партия в накладной?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0a390a80f1ebb06b",
+    "ru": "Нет; продавец обещает выяснить у питомника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "7d0f1d3572fe385d",
+    "ru": "Правильный документ ещё не представлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "35027dd17cd46123",
+    "ru": "Есть ли другие подтверждения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q2].text"
+    ]
+  },
+  {
+    "id": "fd09ab532960a27f",
+    "ru": "Нет, внешний вид без экспертного заключения не даёт такого вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "4c2a7cb42b30d4a8",
+    "ru": "Несоответствие реквизитов не доказывает заражение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "a868b523b6bb6f33",
+    "ru": "Признаки заражения установлены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].questions[q3].text"
+    ]
+  },
+  {
+    "id": "269dcebf76c943a2",
+    "ru": "Сопоставляет партию и действующие условия вывоза. Не объявляет любые саженцы заражёнными и не уничтожает продукцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].role.text"
+    ]
+  },
+  {
+    "id": "1383d09504651088",
+    "ru": "Специалист приёмной территориального органа фитосанитарного надзора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].role.title",
+      "cases:CASE_TEMPLATES[seedlings-electronic].role.title",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].role.title"
+    ]
+  },
+  {
+    "id": "676aaf93850361c3",
+    "ru": "Передать сведения фитосанитарному надзору для проверки партии и документов в рамках установленных условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].routes[0].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].coach.plan",
+      "cases:CASE_TEMPLATES[seedlings-batch].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "317afb37d0551087",
+    "ru": "Признать сертификат С-18 достаточным для всего сезона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].routes[1].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "4603cfb6428ebbd3",
+    "ru": "Объявить заражение по одному несовпадению номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].routes[2].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "02aa5f52e9cd72f9",
+    "ru": "Сертификат от соседней партии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[seedlings-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[seedlings-batch].title"
+    ]
+  },
+  {
+    "id": "0027d8928cefb16d",
+    "ru": "Карантин растений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].topic",
+      "cases:CASE_TEMPLATES[seedlings-batch].tag",
+      "cases:CASE_TEMPLATES[seedlings-electronic].topic"
+    ]
+  },
+  {
+    "id": "9d30ed14c464bf26",
+    "ru": "Проверить относимость документа к данной продукции и поставке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].trap.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-batch].trap.explain"
+    ]
+  },
+  {
+    "id": "528323c4f37ff1a4",
+    "ru": "Не смотреть реквизиты партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "6dbbadfe40ab1a9f",
+    "ru": "Помощник: «Раз сертификат настоящий, любой номер партии сойдёт».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-batch].trap.text"
+    ]
+  },
+  {
+    "id": "2b23fc0e3617e6b3",
+    "ru": "Сопоставить накладную С-41 с ЭК-41.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[a0].title"
+    ]
+  },
+  {
+    "id": "06ba01ab1f5ef93c",
+    "ru": "Учесть проверку подписи и статуса на дату вывоза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[a1].title"
+    ]
+  },
+  {
+    "id": "83fdc2ac01865afd",
+    "ru": "Подготовить ответ о подтверждённом документе по данной партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[a2].title"
+    ]
+  },
+  {
+    "id": "116790e19354939f",
+    "ru": "Не объявлять отсутствие бумаги доказательством заражения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7168caa363db1b05",
+    "ru": "Сохранить сведения об объекте проверки для контроля следующей поставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3296d361d2fcb5de",
+    "ru": "Потребовать новое оформление только на бумаге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[b0].title"
+    ]
+  },
+  {
+    "id": "15a8a494f19c06ed",
+    "ru": "Самостоятельно распорядиться уничтожить растения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].actions[b1].title",
+      "cases:CASE_TEMPLATES[seedlings-electronic].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "dcb43a9f2a587d05",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. По материалам профильного органа для данной партии требуется карантинный сертификат: режим, ограничения и соответствие продукции прямо установлены. Ввоз из-за границы и фитосанитарный экспортный сертификат не рассматриваются. Проверка подписи электронного документа выполнена уполномоченным специалистом в материалах дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].brief"
+    ]
+  },
+  {
+    "id": "39461d23977d2dac",
+    "ru": "Определите действие и исходное событие; срок переписки не является сроком устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].coach.calendar",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].coach.calendar",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].coach.calendar"
+    ]
+  },
+  {
+    "id": "c514d1fd69016712",
+    "ru": "Сравните материалы и отметьте достаточные основания для своего вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].coach.docs",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].coach.docs",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].coach.docs"
+    ]
+  },
+  {
+    "id": "b814425169761919",
+    "ru": "В базовом деле документ был на другую партию. Здесь электронный документ относится к нужной партии, а претензия касается только формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].coach.plan",
+      "cases:CASE_TEMPLATES[seedlings-electronic].contrast.difference"
+    ]
+  },
+  {
+    "id": "1a2cbefcee3e83f7",
+    "ru": "Свяжите содержание нормы с фактом, который она позволяет оценить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].coach.research",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].coach.research",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].coach.research"
+    ]
+  },
+  {
+    "id": "e01a4e4b2ebafae4",
+    "ru": "Уточняйте существенное обстоятельство, а не только название темы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].coach.talk",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].coach.talk",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].coach.talk"
+    ]
+  },
+  {
+    "id": "80d4782a8c98186e",
+    "ru": "Изменены предметное обстоятельство, документы, действие и дальнейшее событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "5f546fd77310876e",
+    "ru": "Бумажная копия С-14 относится к другому получателю и не использовалась в этой перевозке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d0].text"
+    ]
+  },
+  {
+    "id": "cc19fa5b00e6977a",
+    "ru": "Сертификат другой партии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d0].title"
+    ]
+  },
+  {
+    "id": "986523c613f8071d",
+    "ru": "Перевозка {{observed}}: саженцы С-41, 180 единиц, из установленной зоны в питомник-получатель П-8. Условия необходимости сертификата подтверждены профильным органом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d1].text"
+    ]
+  },
+  {
+    "id": "51de8ba9432c74b5",
+    "ru": "Накладная С-41",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d1].title"
+    ]
+  },
+  {
+    "id": "08583c007d57ef3f",
+    "ru": "Карантинный сертификат ЭК-41 на С-41, 180 единиц, маршрут и получатель П-8 совпадают. Электронная подпись проверена; действительность документа на момент вывоза подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d2].text"
+    ]
+  },
+  {
+    "id": "0bc0008cc9015451",
+    "ru": "Проверенная электронная выписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4ad1638128e3aae9",
+    "ru": "Событие {{observed}}, отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Даты нормативных актов не заменяются годом события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[dates].text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[dates].text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[dates].text"
+    ]
+  },
+  {
+    "id": "8b2c6b5577910958",
+    "ru": "События обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].documents[dates].title",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[dates].title",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[dates].title"
+    ]
+  },
+  {
+    "id": "b7eb2fc6b07b2e61",
+    "ru": "ЭК-41 подтверждает требуемый документ по С-41; отсутствие бумажной копии не доказывает его отсутствие. В базовом деле документ был на другую партию. Здесь электронный документ относится к нужной партии, а претензия касается только формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.explain"
+    ]
+  },
+  {
+    "id": "fe7bca21ebc77c16",
+    "ru": "ЭК-41 подтверждает требуемый документ по С-41; отсутствие бумажной копии не доказывает его отсутствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-electronic].trap.explain",
+      "cases:CASE_TEMPLATES[seedlings-electronic].contrast.decision"
+    ]
+  },
+  {
+    "id": "b54ea50e232f15fb",
+    "ru": "Следует запросить именно бумажный сертификат, не учитывая электронный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "91059035c7a5f06f",
+    "ru": "Достаточно любой бумажной копии на похожую продукцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "c75440dc22068f9c",
+    "ru": "Сопоставьте новый материал с предметом завершённого этапа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.failure",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.failure",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.failure"
+    ]
+  },
+  {
+    "id": "289ff452c034eff4",
+    "ru": "Поступила следующая поставка С-42, а продавец снова показывает ЭК-41.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.intro"
+    ]
+  },
+  {
+    "id": "64ed693cbd2fb28a",
+    "ru": "Проверить документ именно на С-42; прежний вывод относился к С-41.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.explain"
+    ]
+  },
+  {
+    "id": "e2029242f7cc90c5",
+    "ru": "Признать ЭК-41 достаточным на все последующие поставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "62637aa617f7b67b",
+    "ru": "Считать прежний документ поддельным из-за появления новой партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "605fa01c63509b0f",
+    "ru": "Контрольное действие учитывает новое обстоятельство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].followup.success",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.success",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.success"
+    ]
+  },
+  {
+    "id": "4d82301342d4a5b0",
+    "ru": "Статья 21 закона № 206-ФЗ связывает карантинный сертификат с вывозом из установленной карантинной фитосанитарной зоны, введённым режимом и временными ограничениями, а также соответствующей подкарантинной продукцией. Сертификат имеет форму электронного документа с усиленной квалифицированной электронной подписью. Наличие требования проверяется по совокупности условий, а не по одному слову «рассада». Протокол лаборатории и сертификат имеют разное назначение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].knowledge.explain",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].knowledge.explain",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].knowledge.explain"
+    ]
+  },
+  {
+    "id": "cfe3717732ebd363",
+    "ru": "Учитывать электронную форму и проверять документ по конкретной партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "dd824df00847d0d8",
+    "ru": "Требовать бумажную форму независимо от электронной записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "1c246b466802acef",
+    "ru": "Переносить один сертификат на весь ассортимент.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dbc14683e6057aec",
+    "ru": "Найдите норму «Вывоз продукции из карантинной фитосанитарной зоны». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].knowledge.prompt",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].knowledge.prompt",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "919715a81b2f1cc8",
+    "ru": "У продавца не оказалось бумажного карантинного сертификата. Разве электронная запись может его заменить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].opening"
+    ]
+  },
+  {
+    "id": "c7a9533a630c602b",
+    "ru": "Нужно проверить связь вывода с документами и пределами полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].outcomes.bad",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].outcomes.bad",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].outcomes.bad"
+    ]
+  },
+  {
+    "id": "ea9030ea04498b02",
+    "ru": "Подготовлены обоснованные действия по установленным обстоятельствам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].outcomes.good",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].outcomes.good",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].outcomes.good"
+    ]
+  },
+  {
+    "id": "4344a4c1de1cfc91",
+    "ru": "Проверка относимости и действительности электронного документа по установленным условиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e0738ab3aa82a2c4",
+    "ru": "Повторная выдача сертификата только ради бумажной формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].procedures[1].text"
+    ]
+  },
+  {
+    "id": "a27b935c267c5a4e",
+    "ru": "Установление заражения по отсутствию бумаги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].procedures[2].text"
+    ]
+  },
+  {
+    "id": "c50fe8e67e5e7696",
+    "ru": "Саженцы С-41, 180 единиц. Номер указан на упаковке и в накладной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "3d219efe35e371e5",
+    "ru": "Партия идентифицирована.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0c5fa1132c86384f",
+    "ru": "Какая партия доставлена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q0].text"
+    ]
+  },
+  {
+    "id": "e4d09ea527d6e1e8",
+    "ru": "Продавец дал реквизиты электронного документа; проверенная выписка есть в деле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "6dca4834253959c8",
+    "ru": "Отсутствует только бумажный экземпляр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q1].fact"
+    ]
+  }
+]

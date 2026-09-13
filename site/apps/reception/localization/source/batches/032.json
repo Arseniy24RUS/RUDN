@@ -1,0 +1,1167 @@
+[
+  {
+    "id": "9e1647e438047a93",
+    "ru": "Подрядчик как единственный окончательный орган проверки собственной жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].routes[2].text"
+    ]
+  },
+  {
+    "id": "f29441d43901a988",
+    "ru": "Ночная работа устраняла аварию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[noise-emergency-work].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[noise-emergency-work].title"
+    ]
+  },
+  {
+    "id": "7711041dc0c0c4de",
+    "ru": "Доказанное исключение по А-22 разрешает любые работы той же бригады на следующую ночь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].trap.text"
+    ]
+  },
+  {
+    "id": "bd5bdc07848f443c",
+    "ru": "Разделить адрес для ответа и адрес события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[a0].title"
+    ]
+  },
+  {
+    "id": "747933eb7074e768",
+    "ru": "Проверить надлежащего территориального адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[a1].title"
+    ]
+  },
+  {
+    "id": "3325bd9626653468",
+    "ru": "Подготовить направление вопроса по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[a2].title"
+    ]
+  },
+  {
+    "id": "aff587049be308e9",
+    "ru": "Уведомить заявителя, не требуя написать всё заново только из-за территориальности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e5ca2d7799ac8816",
+    "ru": "Сопоставить подтверждение получения с указанным объектом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fbcf0b7bb89e5f00",
+    "ru": "Определить нарушение по московской памятке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[b0].title"
+    ]
+  },
+  {
+    "id": "689cfca19aed9230",
+    "ru": "Удалить обращение как чужой территории без предусмотренного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].actions[b1].title",
+      "cases:CASE_TEMPLATES[noise-other-region].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "77aaa7944c099279",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Место события – Московская область, адрес для ответа – Москва. Иные данные о нарушении региональных временных интервалов ещё требуют проверки. Задача касается территории применимого режима и компетенции, не вычисления штрафа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].brief"
+    ]
+  },
+  {
+    "id": "5d653dd8100448d5",
+    "ru": "В базовом деле возникали два предмета. Здесь ключевое различие – территория события и адрес корреспонденции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].coach.plan",
+      "cases:CASE_TEMPLATES[noise-other-region].contrast.difference"
+    ]
+  },
+  {
+    "id": "afc4f5af9cf11853",
+    "ru": "Описывает законодательство города Москвы и прямо обозначает территориальную область применения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d0].text"
+    ]
+  },
+  {
+    "id": "962845c62301e0e4",
+    "ru": "Московская памятка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d0].title"
+    ]
+  },
+  {
+    "id": "9b7f2be2fd11773e",
+    "ru": "Адрес объекта Ш-24 – Московская область. Для корреспонденции заявитель указал квартиру в Москве. Сведения о точном месте события согласованы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d4ef16f6d83ab0e7",
+    "ru": "Обращение и схема Ш-24",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7ff210d7b4b81778",
+    "ru": "Вопрос относится к органу соответствующей территории Московской области. Московские часы тишины не устанавливают нарушение на Ш-24; нужен применимый региональный режим и обстоятельства события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d2].text"
+    ]
+  },
+  {
+    "id": "05d73ba6cffb94df",
+    "ru": "Карточка территориального маршрута",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].documents[d2].title"
+    ]
+  },
+  {
+    "id": "7372f134819e403c",
+    "ru": "Компетенция и региональный режим определяются по месту события Ш-24, а не по московскому адресу для ответа. В базовом деле возникали два предмета. Здесь ключевое различие – территория события и адрес корреспонденции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.explain"
+    ]
+  },
+  {
+    "id": "c63747c17b8c6205",
+    "ru": "Компетенция и региональный режим определяются по месту события Ш-24, а не по московскому адресу для ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[noise-other-region].trap.explain",
+      "cases:CASE_TEMPLATES[noise-other-region].contrast.decision"
+    ]
+  },
+  {
+    "id": "74c6a105141be943",
+    "ru": "Регион регистрации заявителя определяет закон о тишине для любого места.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "6ee87af17f2a9818",
+    "ru": "Федеральный порядок обращений делает региональные интервалы одинаковыми.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "5f01687005f23590",
+    "ru": "Подтверждение пришло от подразделения, обслуживающего другое одноимённое поселение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].followup.intro"
+    ]
+  },
+  {
+    "id": "60aac3be0e0fc306",
+    "ru": "Уточнить территориальную ошибку по полному адресу и проконтролировать надлежащую передачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].followup.options[0].text",
+      "cases:CASE_TEMPLATES[noise-other-region].followup.explain"
+    ]
+  },
+  {
+    "id": "66f9fe0f2c1b2aae",
+    "ru": "Считать любое одноимённое поселение правильным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c7cd8285786b38ce",
+    "ru": "Потребовать от заявителя отказаться от обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "eff39bf3d37daee4",
+    "ru": "Проверять надлежащую компетенцию по месту события и уведомлять о направлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "97120c7e837bf458",
+    "ru": "Выбирать территорию по адресу для ответа независимо от события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "0af2458ad5bbb9c7",
+    "ru": "Не различать несколько одноимённых населённых пунктов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "feeafa7481d216ae",
+    "ru": "Я живу в Москве, а шум слышала на даче в Московской области. В заявлении указала свой московский адрес.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].opening"
+    ]
+  },
+  {
+    "id": "93d75aad82ea3b64",
+    "ru": "Направление по установленной территориальной компетенции с уведомлением заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e02aab50be5c5f48",
+    "ru": "Рассмотрение по московскому режиму из-за адреса для ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].procedures[1].text"
+    ]
+  },
+  {
+    "id": "77fbf0a84e72670c",
+    "ru": "Отказ принять обращение только из-за места за пределами Москвы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].procedures[2].text"
+    ]
+  },
+  {
+    "id": "a1a5644a41c60467",
+    "ru": "На участке Ш-24 в Московской области.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c663b26f87364f77",
+    "ru": "Место события установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "d82b6dce48677d86",
+    "ru": "Где находится объект?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q0].text"
+    ]
+  },
+  {
+    "id": "1f253aa8712adb47",
+    "ru": "Это адрес для корреспонденции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f06b8fa1af6ffc01",
+    "ru": "Адрес ответа не определяет территорию нормы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0612775fb83afed3",
+    "ru": "Почему указан московский адрес?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q1].text"
+    ]
+  },
+  {
+    "id": "472bee84ee307c23",
+    "ru": "Памятка о Законе города Москвы №42.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "a96a70f276cbe1ba",
+    "ru": "Памятка другого субъекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5efa064e89e39d1d",
+    "ru": "Какая норма приложена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q2].text"
+    ]
+  },
+  {
+    "id": "b7129fc1783d0e5b",
+    "ru": "Нет, только сообщение об объекте в области.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "6e3758a37e7225a9",
+    "ru": "Не требуется вымышленная проверка бездействия Москвы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "7ff780074f5d25f3",
+    "ru": "Есть ли прежняя жалоба на московского сотрудника?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].questions[q3].text"
+    ]
+  },
+  {
+    "id": "4ef0b2a0a7c5d1ca",
+    "ru": "Уполномоченный орган по месту объекта в Московской области.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].routes[0].text"
+    ]
+  },
+  {
+    "id": "b2fcc098652a74b9",
+    "ru": "Московский орган только по адресу квартиры заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].routes[1].text"
+    ]
+  },
+  {
+    "id": "2b5277131708e9cf",
+    "ru": "Любой региональный орган по выбору студента.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].routes[2].text"
+    ]
+  },
+  {
+    "id": "71356ee583ebf9f8",
+    "ru": "Адрес заявителя и место ночного шума",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[noise-other-region].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[noise-other-region].title"
+    ]
+  },
+  {
+    "id": "4d4465b3cfa1f6e9",
+    "ru": "Московский почтовый адрес заявителя сам по себе не делает Закон Москвы применимым к Ш-24.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-other-region].trap.text"
+    ]
+  },
+  {
+    "id": "20cbb06d84e63fc9",
+    "ru": "Выделить требования и сопоставить новые и прежние даты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[a0].title"
+    ]
+  },
+  {
+    "id": "8dc04f144a1f2ddc",
+    "ru": "Определить независимое надлежащее лицо по жалобе и маршрут по новому событию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[a1].title"
+    ]
+  },
+  {
+    "id": "ed4b1be1f13f37bc",
+    "ru": "Передать материалы раздельно с сохранением взаимной связи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ab20b5c9618d8bc7",
+    "ru": "Уведомить заявителя, какие вопросы и кому переданы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[a3].title"
+    ]
+  },
+  {
+    "id": "42a4bb0bc1b74e79",
+    "ru": "Проверить результаты по обоим пунктам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2b31826e2bacb9bc",
+    "ru": "Поручить окончательное разрешение жалобы на себя обжалуемому сотруднику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[b0].title",
+      "cases:CASE_TEMPLATES[noise-two-subjects].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "9594ec3778b0894b",
+    "ru": "Удалить новую запись как повтор",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].actions[b1].title"
+    ]
+  },
+  {
+    "id": "d05672da8724f7ea",
+    "ru": "Пункт 1: новое ночное событие по конкретному адресу. Пункт 2: проверка порядка рассмотрения прежнего сообщения конкретным сотрудником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a1e2c811242cd43d",
+    "ru": "Текст требований",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6bd3ed38397c3f68",
+    "ru": "Подписан тем сотрудником, действия которого обжалуются. Новая запись сделана позже; она ещё не рассматривалась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c70dce53ea08b380",
+    "ru": "Прежний ответ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].documents[d1].title"
+    ]
+  },
+  {
+    "id": "475894f70f33153b",
+    "ru": "Текущий шум и жалоба на прежнее рассмотрение требуют раздельной работы и надлежащего распределения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].factTask.explain",
+      "cases:CASE_TEMPLATES[noise-two-subjects].outcomes.good"
+    ]
+  },
+  {
+    "id": "f4846b7c48e150cd",
+    "ru": "Любой повторный шум позволяет удалить жалобу на сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "e12c58337a71203f",
+    "ru": "Сотрудник должен окончательно разрешить жалобу на самого себя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "9470c8c617a574b4",
+    "ru": "Получено объяснение сотрудника; руководитель ещё не принял решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].followup.intro"
+    ]
+  },
+  {
+    "id": "c44d497d9a88ca32",
+    "ru": "Продолжить рассмотрение уполномоченным лицом; объяснение – материал, не итог.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].followup.options[0].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].followup.explain"
+    ]
+  },
+  {
+    "id": "1a4c0d93894b391a",
+    "ru": "Объявить объяснение окончательным решением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "df76d9fd263fabcf",
+    "ru": "Считать запрос объяснения автоматически незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "55429ab0b4a3ecfd",
+    "ru": "По части 6 статьи 8 закона № 59-ФЗ жалобу нельзя направлять для окончательного рассмотрения тому, чьи действия обжалуются. Получение его объяснений возможно в рамках проверки. Новый шумовой эпизод и доводы о прежней работе сотрудника требуют отдельных вопросов и подходящих исполнителей; региональные часы тишины здесь не выдумываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].knowledge.explain"
+    ]
+  },
+  {
+    "id": "a68bd09b1fd31e7f",
+    "ru": "Найдите запрет передачи жалобы для рассмотрения тому, чьи действия обжалуются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "73c5bc82d157cb4f",
+    "ru": "Ночью шумят у кафе. Я уже сообщал, но теперь жалуюсь ещё и на то, как рассмотрели прошлый вызов. Боюсь, что всё просто отдадут тому же сотруднику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].opening"
+    ]
+  },
+  {
+    "id": "8c221c5c40b7046b",
+    "ru": "Раздельное рассмотрение нового сообщения и жалобы на действия исполнителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].procedures[0].text"
+    ]
+  },
+  {
+    "id": "1dd1bfb222262902",
+    "ru": "Единое поручение обжалуемому сотруднику разрешить всё",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].procedures[1].text"
+    ]
+  },
+  {
+    "id": "05290f6e5272b467",
+    "ru": "Замена московских обстоятельств правилами другого региона",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].procedures[2].text"
+    ]
+  },
+  {
+    "id": "bb4431ca3acb3df3",
+    "ru": "В городе Москве, не в Московской области.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b86b8eb53938fcd9",
+    "ru": "Регион нельзя определять по похожему названию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q0].fact",
+      "cases:CASE_TEMPLATES[noise-two-subjects].coach.talk"
+    ]
+  },
+  {
+    "id": "086a20e4026d9173",
+    "ru": "Где происходит событие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q0].text"
+    ]
+  },
+  {
+    "id": "8ac86dbbf47ea623",
+    "ru": "Рассмотреть ночной шум и проверить действия исполнителя предыдущего сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "160fe8c86bfad2c1",
+    "ru": "Имеются два самостоятельных предмета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "7a48dc705235a00c",
+    "ru": "Какие требования заявлены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q1].text"
+    ]
+  },
+  {
+    "id": "429b6a5e53a62891",
+    "ru": "На сотрудника, чьи имя и ответ указаны в приложении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c8e308a96acb50b9",
+    "ru": "Его можно опросить, но нельзя поручить ему окончательно разрешить жалобу на себя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5755b688ee36b303",
+    "ru": "На кого подана жалоба?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q2].text",
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.title",
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.searchHint"
+    ]
+  },
+  {
+    "id": "c20803417380c4ef",
+    "ru": "Да, новая запись и дата {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "e709f306b1cfc7a6",
+    "ru": "Новые обстоятельства не заменяются старым ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "574400f9dddd36ed",
+    "ru": "Есть новое событие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].questions[q3].text"
+    ]
+  },
+  {
+    "id": "6c6ccea087bad4bb",
+    "ru": "В условиях дело о порядке рассмотрения сообщения находится в компетенции вышестоящего должностного лица. Оперативное сообщение о текущем шуме обрабатывается отдельно; окончательное рассмотрение жалобы не передаётся обжалуемому сотруднику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].role.text"
+    ]
+  },
+  {
+    "id": "47c507fcf5c65461",
+    "ru": "Специалист приёмной органа, рассматривающего жалобу на действия своего сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].role.title",
+      "cases:CASE_TEMPLATES[noise-ventilation].role.title",
+      "cases:CASE_TEMPLATES[noise-emergency-work].role.title"
+    ]
+  },
+  {
+    "id": "4f0cb984f7f1450d",
+    "ru": "Выделить вопросы, обеспечить оперативный маршрут по новому событию и рассмотрение служебной жалобы уполномоченным вышестоящим лицом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].routes[0].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].coach.plan",
+      "cases:CASE_TEMPLATES[noise-two-subjects].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "35dc2e67310dfe46",
+    "ru": "Передать окончательное рассмотрение жалобы самому обжалуемому сотруднику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].routes[1].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "59c6904c6c708e3f",
+    "ru": "Отказать из-за наличия прежнего ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].routes[2].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "c0b10b786e3b33b6",
+    "ru": "Две жалобы в одной записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[noise-two-subjects].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[noise-two-subjects].title"
+    ]
+  },
+  {
+    "id": "b58b29bcf79bbc80",
+    "ru": "Тишина и рассмотрение жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].topic",
+      "cases:CASE_TEMPLATES[noise-two-subjects].tag",
+      "cases:CASE_TEMPLATES[noise-ventilation].topic"
+    ]
+  },
+  {
+    "id": "758859846e637946",
+    "ru": "Отличать получение объяснений от окончательного разрешения жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].trap.options[0].text",
+      "cases:CASE_TEMPLATES[noise-two-subjects].trap.explain"
+    ]
+  },
+  {
+    "id": "f0643891bfd3fc90",
+    "ru": "Запретить любые объяснения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "0b406c3e46ee3cf1",
+    "ru": "Помощник: «Если нельзя передать жалобу, нельзя и запросить объяснение сотрудника».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-two-subjects].trap.text"
+    ]
+  },
+  {
+    "id": "ce42ba9d9b54967c",
+    "ru": "Сопоставить предмет первого ответа с остающимся воздействием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[a0].title"
+    ]
+  },
+  {
+    "id": "12848d27c3d915cc",
+    "ru": "Выделить сведения о В-3 без подмены измерения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[a1].title"
+    ]
+  },
+  {
+    "id": "fce4a111e2dfeb1b",
+    "ru": "Подготовить передачу по санитарной компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[a2].title"
+    ]
+  },
+  {
+    "id": "540ea1d17c8a35cf",
+    "ru": "Не отправлять заявителя самостоятельно обследовать оборудование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[a3].title"
+    ]
+  },
+  {
+    "id": "50592433648a161b",
+    "ru": "Проверить, в каких условиях выполнено последующее измерение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b100cc36a09e2611",
+    "ru": "Закрыть вопрос по акту отключения музыки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[b0].title"
+    ]
+  },
+  {
+    "id": "e03a4cd2a1afec3e",
+    "ru": "Потребовать самостоятельно отключить оборудование кафе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].actions[b1].title",
+      "cases:CASE_TEMPLATES[noise-ventilation].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "4d58e4b3c15597e3",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Место – город Москва. Санитарный уровень и источник воздействия окончательно не установлены. Материалы указывают на стационарное инженерное оборудование; это повод для компетентной проверки, а не готовое экспертное заключение. Часы тишины иных регионов не применяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].brief"
+    ]
+  },
+  {
+    "id": "07a359310f5b62b9",
+    "ru": "В базовом деле соединялись шум и жалоба на сотрудника. Здесь меняется предполагаемый источник и предмет компетентной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].coach.plan",
+      "cases:CASE_TEMPLATES[noise-ventilation].contrast.difference"
+    ]
+  },
+  {
+    "id": "eaff3a4d196f71dd",
+    "ru": "После замечания акустическая система зала выключена; ответ не оценивает вентиляционное оборудование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d0].text"
+    ]
+  },
+  {
+    "id": "386d54781910ce88",
+    "ru": "Ответ о музыке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d0].title"
+    ]
+  },
+  {
+    "id": "155aab212b294fc0",
+    "ru": "{{observed}} музыка выключена, устойчивый гул сохранялся. Во время согласованной краткой остановки В-3 гул исчез. Самостоятельного опасного обследования не проводилось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d1].text"
+    ]
+  },
+  {
+    "id": "6f528d8b5aceeefc",
+    "ru": "Наблюдение в квартире",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d1].title"
+    ]
+  },
+  {
+    "id": "97caf632cccc8fff",
+    "ru": "В-3 – стационарное вентиляционное оборудование кафе. В деле нет протокола санитарных измерений или заключения о превышении нормативов; сведения должны оцениваться специалистами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d2].text"
+    ]
+  },
+  {
+    "id": "b004291319e4ddd9",
+    "ru": "Схема оборудования и границы вывода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].documents[d2].title"
+    ]
+  },
+  {
+    "id": "336167f2fec45e9b",
+    "ru": "Отключение музыки не разрешило вопрос о гуле оборудования; требуется проверка по санитарной компетенции без готового вывода о превышении. В базовом деле соединялись шум и жалоба на сотрудника. Здесь меняется предполагаемый источник и предмет компетентной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.explain"
+    ]
+  },
+  {
+    "id": "571bad25834d35c8",
+    "ru": "Отключение музыки не разрешило вопрос о гуле оборудования; требуется проверка по санитарной компетенции без готового вывода о превышении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[noise-ventilation].trap.explain",
+      "cases:CASE_TEMPLATES[noise-ventilation].contrast.decision"
+    ]
+  },
+  {
+    "id": "29b84c9185d32862",
+    "ru": "Любой акт об отключении музыки доказывает отсутствие любого шума.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "6b0d6737f89607e7",
+    "ru": "Бытовая запись автоматически равна заключению о превышении санитарной нормы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "fb021de397ed4bf5",
+    "ru": "Получен нормальный результат измерения, но В-3 во время него не работал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].followup.intro"
+    ]
+  },
+  {
+    "id": "ff14cdee92449dac",
+    "ru": "Уточнить условия и относимость измерения к заявленному режиму работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].followup.options[0].text",
+      "cases:CASE_TEMPLATES[noise-ventilation].followup.explain"
+    ]
+  },
+  {
+    "id": "d33da7e42b07702b",
+    "ru": "Считать вопрос решённым при любом численном результате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "3d4ab83364122dbb",
+    "ru": "Объявить измерения поддельными по одному замечанию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "30762cca1c1cc4eb",
+    "ru": "Статья 8 закона № 59-ФЗ требует направлять не относящиеся к компетенции вопросы надлежащему органу в течение семи дней со дня регистрации и уведомлять заявителя; несколько вопросов могут потребовать разных адресатов. Жалобу на действия сотрудника нельзя отдавать ему для окончательного рассмотрения. Эти положения не устанавливают часы тишины для всех регионов и не заменяют специальное производство. Календарный профиль упражнения задан отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].knowledge.explain",
+      "cases:CASE_TEMPLATES[noise-emergency-work].knowledge.explain",
+      "cases:CASE_TEMPLATES[noise-other-region].knowledge.explain"
+    ]
+  },
+  {
+    "id": "a11de70ad44d3afa",
+    "ru": "Направлять оставшийся предмет тому, кто компетентен оценивать оборудование и условия проживания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "88020348e5625e0e",
+    "ru": "Считать первоначальную тему жалобы неизменной после новых данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "4984c9fe847c46bd",
+    "ru": "Направить все материалы прежнему исполнителю без разбора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dd929ca577a5aff4",
+    "ru": "Найдите норму «Компетенция и переадресация обращения». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].knowledge.prompt",
+      "cases:CASE_TEMPLATES[noise-emergency-work].knowledge.prompt",
+      "cases:CASE_TEMPLATES[noise-other-region].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "027893bc5a5550a6",
+    "ru": "Кафе отключило музыку, но дома по-прежнему гудит. В ответе пишут: нарушения тишины больше нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].opening"
+    ]
+  },
+  {
+    "id": "3ee3fdb9733f2e26",
+    "ru": "Выделение неразрешённого вопроса и передача сведений по надлежащей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].procedures[0].text"
+    ]
+  },
+  {
+    "id": "d10beac1411bb4a9",
+    "ru": "Повторный ответ только об акустической системе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].procedures[1].text"
+    ]
+  },
+  {
+    "id": "0c3935bce62ba581",
+    "ru": "Назначение приёмной технической модернизации вентилятора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].procedures[2].text"
+    ]
+  },
+  {
+    "id": "2ececc399930740c",
+    "ru": "Музыка исчезла, устойчивый гул сохранился.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "9e35d726e19c6ff0",
+    "ru": "Жалоба не исчерпана музыкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "33b4036384ddd1bf",
+    "ru": "Что изменилось после отключения музыки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q0].text"
+    ]
+  },
+  {
+    "id": "094a60e0983db2f8",
+    "ru": "В согласованном наблюдении гул исчез при остановке вентилятора В-3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "d67f6af648fe95b7",
+    "ru": "Есть связь, требующая профессиональной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "995ea3f54ba8bdac",
+    "ru": "Есть ли сравнение работы оборудования?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q1].text"
+    ]
+  },
+  {
+    "id": "a1a5394061c2b71e",
+    "ru": "Житель записал наблюдения; лабораторного протокола нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "5d6b3674c2795ce6",
+    "ru": "Запись не заменяет санитарное измерение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "56dcd1cb73a3b627",
+    "ru": "Кто сделал измерение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bd2e08f66586a606",
+    "ru": "Только на музыку из зала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "99b9a0c0b561cecb",
+    "ru": "Оставшаяся часть требует другого компетентного маршрута.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "37cf4d1fdf76afee",
+    "ru": "На что ответил первый исполнитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a4065fc857ec939a",
+    "ru": "Территориальное управление Роспотребнадзора по вопросу воздействия оборудования; остальные вопросы – по предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].routes[0].text"
+    ]
+  },
+  {
+    "id": "d8c84d4a6f3148d8",
+    "ru": "Только участник музыкального выступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].routes[1].text"
+    ]
+  },
+  {
+    "id": "9196a366595b1498",
+    "ru": "Прежний исполнитель как окончательный эксперт по всем физическим факторам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].routes[2].text"
+    ]
+  },
+  {
+    "id": "3b1505b35053157e",
+    "ru": "Музыка выключена, гул продолжается",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[noise-ventilation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[noise-ventilation].title"
+    ]
+  },
+  {
+    "id": "bf4bd8a3f3befc11",
+    "ru": "Бытовая запись сама по себе не заменяет санитарного заключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-ventilation].trap.text"
+    ]
+  },
+  {
+    "id": "374d50154db33fa4",
+    "ru": "Проверить получателя, профиль и срок бесплатной записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[a0].title"
+    ]
+  },
+  {
+    "id": "c3b34ee3c9eae8ef",
+    "ru": "Разделить добровольный платный вариант и подтверждённую помощь по ОМС",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e6cb06097265e03a",
+    "ru": "Подготовить ответ с понятным порядком подтверждения бесплатного приёма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6aab15becb8b11ac",
+    "ru": "Передать замечание о неясном информировании ответственному подразделению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[a3].title"
+    ]
+  },
+  {
+    "id": "01db3ce1c918c29c",
+    "ru": "Убедиться, что подтверждение записи не требует оплаты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[a4].title"
+    ]
+  },
+  {
+    "id": "04584548702d69e9",
+    "ru": "Объявить установленным отказ в бесплатной помощи по одной рекламной ссылке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[b0].title"
+    ]
+  },
+  {
+    "id": "76496326c46929e6",
+    "ru": "Навязать оплату вместо уже предложенной бесплатной записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].actions[b1].title"
+    ]
+  },
+  {
+    "id": "74fc3ff77b06e839",
+    "ru": "Навязать оплату вместо уже предложенной бесплатной записи: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5ed66f6d079e084f",
+    "ru": "Предложен бесплатный плановый приём по действующему направлению заявительницы. Карточка профильного специалиста подтверждает соответствие применимому сроку ожидания. Это отдельное условие данного вымышленного дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d0].text"
+    ]
+  },
+  {
+    "id": "98bc7557a7058b16",
+    "ru": "Подтверждение бесплатной записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d0].title"
+    ]
+  },
+  {
+    "id": "559782ca2efa5ee1",
+    "ru": "Платная ссылка расположена первой; во вложении — бесплатный маршрут по ОМС. Оплата не поставлена условием бесплатного приёма. Заявительница письмо получила, но вложение не открыла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2af20cd5b5158cf7",
+    "ru": "Письмо о двух способах записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d1].title"
+    ]
+  },
+  {
+    "id": "0ac12c687c46c96a",
+    "ru": "В соседнем отделении свободного времени нет. Оно не относится к подтверждённой записи заявительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d2].text"
+    ]
+  },
+  {
+    "id": "16af94431b415597",
+    "ru": "Расписание соседнего отделения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].documents[d2].title"
+    ]
+  },
+  {
+    "id": "2121b87ea8d91af0",
+    "ru": "Бесплатный маршрут по этому случаю подтверждён; нужно разъяснить его и проверить понятность сообщения, а не утверждать отсутствие бесплатных мест. В исходной истории бесплатный маршрут не подтверждён. Здесь он уже предложен на установленных условиях, поэтому первоначальный вывод меняется; новые платёжные условия проверяются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-free-slot].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.explain"
+    ]
+  }
+]

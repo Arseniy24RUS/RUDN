@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "b992e1502b3303de",
+    "ru": "Закрыть обращение в архиве как повторное без рассмотрения новых сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].routes[archive].text"
+    ]
+  },
+  {
+    "id": "7f973d2217dab2e4",
+    "ru": "Предложить гражданину проверить напряжение и только затем принять материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "e7e046b130173deb",
+    "ru": "Передать новые сведения на рассмотрение в пределах компетенции и оперативно сообщить дежурному о возможной опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].routes[review].text",
+      "cases:CASE_TEMPLATES[repeat-new-facts].contrast.decision"
+    ]
+  },
+  {
+    "id": "607663dccb7f73d1",
+    "ru": "Вы мне уже отвечали. Но изменилось вот что",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-new-facts].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-new-facts].title"
+    ]
+  },
+  {
+    "id": "bb2b1bc5f2f13d88",
+    "ru": "Повторное обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].topic",
+      "cases:CASE_TEMPLATES[repeat-new-facts].tag",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].topic"
+    ]
+  },
+  {
+    "id": "a313af1660fde640",
+    "ru": "Статья 11 требует совокупности условий; число прошлых ответов не заменяет их проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].trap.explain"
+    ]
+  },
+  {
+    "id": "a80ffbdc3c877946",
+    "ru": "Согласиться и убрать новый снимок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "4204cfc0154e2329",
+    "ru": "Гарантировать устранение повреждения лично от имени стажёра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].trap.options[promise].text"
+    ]
+  },
+  {
+    "id": "9626fd78e9f45275",
+    "ru": "Проверить новые обстоятельства и полномочия на принятие решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].trap.options[scope].text"
+    ]
+  },
+  {
+    "id": "e24ceebe7fb2dd74",
+    "ru": "Помощник: «Два прежних ответа автоматически отменяют обязанность оценить новый снимок».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].trap.text"
+    ]
+  },
+  {
+    "id": "9f38849cb9e4e234",
+    "ru": "Допустимый путь при неприменении права на прекращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[answer].detail"
+    ]
+  },
+  {
+    "id": "08178c44276c3cac",
+    "ru": "Подготовить очередной ответ по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[answer].title"
+    ]
+  },
+  {
+    "id": "10e03f777d0370be",
+    "ru": "Самостоятельно прекратить переписку от имени руководителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[auto-stop].title"
+    ]
+  },
+  {
+    "id": "cff733b55cb421c0",
+    "ru": "Заблокировать все новые обращения этого гражданина",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[blacklist].title"
+    ]
+  },
+  {
+    "id": "ab0313e4dfc64de9",
+    "ru": "Не опираться только на счётчик.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[compare].detail"
+    ]
+  },
+  {
+    "id": "74743ba0cc664ee9",
+    "ru": "Проверить вопрос, адресата, содержание прежних ответов и отсутствие нового",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[compare].title"
+    ]
+  },
+  {
+    "id": "3d29135935096271",
+    "ru": "По конкретному вопросу, не запрет всех будущих обращений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[notice-draft].detail"
+    ]
+  },
+  {
+    "id": "8f5fc2afad18f364",
+    "ru": "Подготовить уведомление на случай принятия решения о прекращении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[notice-draft].title"
+    ]
+  },
+  {
+    "id": "dace86a7a49b429a",
+    "ru": "Решение о переписке не отменяет учёт поступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[register].detail"
+    ]
+  },
+  {
+    "id": "5df3e9dca9959c6e",
+    "ru": "Зарегистрировать новое письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[register].title"
+    ]
+  },
+  {
+    "id": "a8d3c368d083d566",
+    "ru": "Сохранить доступ к подаче других вопросов и новых обстоятельств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[rights].title"
+    ]
+  },
+  {
+    "id": "a6582b7dffa484ef",
+    "ru": "Не объявлять решение уже состоявшимся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[submit].detail"
+    ]
+  },
+  {
+    "id": "af1e1d7806eaa8b9",
+    "ru": "Подготовить материалы для решения уполномоченного лица",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[submit].title"
+    ]
+  },
+  {
+    "id": "e3461ac8f3d604d6",
+    "ru": "Зафиксировать фактически принятое решение и его доведение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].actions[track].title"
+    ]
+  },
+  {
+    "id": "4cd85aac365d15ca",
+    "ru": "Один и тот же орган неоднократно дал письменные ответы по существу именно этого вопроса. Сопоставлением подтверждено отсутствие новых доводов и обстоятельств. Решения о прекращении переписки пока нет. Уполномоченный руководитель вправе рассмотреть такой вариант, но закон не делает его обязательным. Стажёр только готовит материалы. Для календаря требуется крайний день регистрации нового письма, а не вымышленный специальный срок уведомления о прекращении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].brief"
+    ]
+  },
+  {
+    "id": "39ca85bbe2c094d8",
+    "ru": "Новое письмо поступило, но ещё не зарегистрировано. Рассчитайте срок регистрации. Вопрос дальнейшей переписки решается отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].calendar.context"
+    ]
+  },
+  {
+    "id": "9e70c32246ba0a8a",
+    "ru": "Крайняя дата регистрации письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].calendar.title"
+    ]
+  },
+  {
+    "id": "f1a212ee1d5687c7",
+    "ru": "Запрет всех последующих обращений выходит за пределы решения по конкретному вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].criticalRules[blacklist].message"
+    ]
+  },
+  {
+    "id": "6e8d53921e70d38a",
+    "ru": "Метка отражает число записей. Сама по себе не проверяет совпадение вопроса, содержание ответов и наличие нового материала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[counter].text"
+    ]
+  },
+  {
+    "id": "05164dcded799ed2",
+    "ru": "Автоматическая метка «третье письмо»",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[counter].title"
+    ]
+  },
+  {
+    "id": "3d036c3ee19838b3",
+    "ru": "В орган А повторно направлены тот же вопрос и те же приложения. Сопоставление содержания подтверждает отсутствие новых доводов или обстоятельств. Решения о прекращении пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[current].text"
+    ]
+  },
+  {
+    "id": "759a5ca9cbe31c6d",
+    "ru": "Новое обращение и приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[current].title"
+    ]
+  },
+  {
+    "id": "50a183026df2e94a",
+    "ru": "Орган А дважды рассмотрел вопрос о порядке работ на участке и дал мотивированные ответы по всем доводам с подтверждением направления. Разные отделы подписали их от одного и того же органа А.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[old].text"
+    ]
+  },
+  {
+    "id": "0629c7d6e6d61025",
+    "ru": "Прежние ответы по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].documents[old].title"
+    ]
+  },
+  {
+    "id": "7b3fdb11c063d5b1",
+    "ru": "Норма предоставляет право при совокупности условий, а не обязанность автоматического прекращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-no-new].contrast.difference"
+    ]
+  },
+  {
+    "id": "aaf6ffec55358906",
+    "ru": "Закон всегда запрещает рассматривать возможность прекращения даже при всех условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "55b804c15c7c12d1",
+    "ru": "Третье письмо автоматически прекращает всю переписку гражданина с органом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "165b92eacacab415",
+    "ru": "Подтверждены условия для возможного решения о прекращении переписки по этому вопросу; оно не обязательно и не принимается стажёром автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "4f14d6e63caae71a",
+    "ru": "Как квалифицировать полномочие уполномоченного лица в этом деле?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].factTask.prompt"
+    ]
+  },
+  {
+    "id": "5e868760e6d2a4e1",
+    "ru": "Новые факты требуют самостоятельной оценки; метка прежнего дела не заменяет её.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].followup.explain"
+    ]
+  },
+  {
+    "id": "cf609d05fcb19484",
+    "ru": "В следующем письме гражданин сообщил о новом повреждении на том же участке и приложил свежий материал, отсутствовавший прежде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].followup.intro"
+    ]
+  },
+  {
+    "id": "dccf403fe08db700",
+    "ru": "Оценить новое обстоятельство отдельно; прежние действия по старому вопросу не означают блокировку всех новых материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "5d0607d3b2f991da",
+    "ru": "Удалить новое письмо без чтения из-за старой истории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "9a0a377c85323171",
+    "ru": "Потребовать сначала отказаться от права на обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "f411942242c7ac90",
+    "ru": "Уполномоченное лицо вправе принять такое решение; требуется уведомление гражданина и соблюдение границ конкретного вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[repeat-no-new].knowledge.explain"
+    ]
+  },
+  {
+    "id": "d7cd644af37d1703",
+    "ru": "Любой сотрудник обязан автоматически прекратить всю переписку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "5634655f4dfe74e1",
+    "ru": "Отметка информационной системы заменяет решение уполномоченного лица.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "ddd52f3f23c72cdd",
+    "ru": "Найдите, является ли прекращение переписки обязательным при выполнении условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "2beced6d49343b6e",
+    "ru": "Я снова направил прежний вопрос и те же приложения. С содержанием двух ответов знаком, но по-прежнему не согласен. Новых сведений сейчас у меня нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].opening"
+    ]
+  },
+  {
+    "id": "bdbf35c3923d9bfb",
+    "ru": "Да, я повторяю те же доводы. С текстами ответов знаком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[answers].answer"
+    ]
+  },
+  {
+    "id": "30a8f3273b01d179",
+    "ru": "Прежние ответы по существу совпадающего вопроса есть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[answers].fact"
+    ]
+  },
+  {
+    "id": "6340090d64192300",
+    "ru": "Ответы касались всех нынешних доводов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[answers].text"
+    ]
+  },
+  {
+    "id": "37277e40c65c56fe",
+    "ru": "Нет. Я выражаю несогласие с уже изложенными ответами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[new].answer"
+    ]
+  },
+  {
+    "id": "ed2e27073b07f1aa",
+    "ru": "Новых обстоятельств по условию нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[new].fact"
+    ]
+  },
+  {
+    "id": "c8e17cdf5a078d1d",
+    "ru": "Есть ли новый факт или новое обстоятельство?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[new].text"
+    ]
+  },
+  {
+    "id": "d09a1e931120a24d",
+    "ru": "Да, реквизиты одинаковые.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[same].answer"
+    ]
+  },
+  {
+    "id": "032237cdf5913e58",
+    "ru": "Условие адресата подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[same].fact"
+    ]
+  },
+  {
+    "id": "45f7f51867e9be9c",
+    "ru": "Все обращения направлялись одному органу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].questions[same].text"
+    ]
+  },
+  {
+    "id": "50f02f6ef700ed17",
+    "ru": "Самостоятельно заблокировать приём всех будущих писем гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].routes[auto-stop].text"
+    ]
+  },
+  {
+    "id": "4a64c642e6a2a910",
+    "ru": "Продолжить рассмотрение и подготовить очередной ответ по существу; прекращение не является обязательным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].routes[continue-answer].text"
+    ]
+  },
+  {
+    "id": "32a4a34200855f6b",
+    "ru": "Подготовить материалы уполномоченному руководителю для решения вопроса о возможном прекращении переписки по конкретному вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].routes[review-termination].text"
+    ]
+  },
+  {
+    "id": "1b61252d4fac5dd7",
+    "ru": "Тот же вопрос, те же доводы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-no-new].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-no-new].title"
+    ]
+  },
+  {
+    "id": "cea0b073bbdc0804",
+    "ru": "Считать только прекращение правильным независимо от полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "7e224ba3d6e7e222",
+    "ru": "Право на прекращение не означает обязанности его применить; оценивается согласованность выбранного пути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[repeat-no-new].trap.explain"
+    ]
+  },
+  {
+    "id": "2708389e8328041b",
+    "ru": "Помощник: «Если прекращение допускается, любой иной законный путь уже ошибка».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].trap.text"
+    ]
+  },
+  {
+    "id": "d300027eceb157fe",
+    "ru": "Все условия возможного прекращения подтверждены",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "76e2658d5be8481b",
+    "ru": "Это право уполномоченного лица, а не автоматизм",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "e791fd8cd7e37c2f",
+    "ru": "Допускаются два согласованных правомерных маршрута; план проверяется относительно выбранного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-no-new].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "4f2262d715c2a854",
+    "ru": "Проверить авторов прежних ответов и историю обращений именно к нам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[a0].title"
+    ]
+  },
+  {
+    "id": "efe094e4e5254f7f",
+    "ru": "Сопоставить нынешний предмет с установленной компетенцией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[a1].title"
+    ]
+  },
+  {
+    "id": "3862452bcb8c000a",
+    "ru": "Подготовить рассмотрение собственного вопроса по материалам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ed3d34516167e072",
+    "ru": "Объяснить заявителю границы решения нашего органа без требования отказаться от прежних писем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[a3].title"
+    ]
+  },
+  {
+    "id": "63a35f0c3ada13fe",
+    "ru": "Проверить, что окончательный ответ действительно относится к нынешнему предмету",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[a4].title"
+    ]
+  },
+  {
+    "id": "80e6d2b0787c4407",
+    "ru": "Приписать своему органу чужие ответы как основание прекращения переписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[b0].title",
+      "cases:CASE_TEMPLATES[repeat-other-authority].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "0905950dbe2e806a",
+    "ru": "Отказать в рассмотрении только потому, что заявитель обращался в несколько организаций",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].actions[b1].title"
+    ]
+  },
+  {
+    "id": "0e564524412f8efd",
+    "ru": "Проверка новых доводов недостаточна: в данном варианте меняется субъект прежних ответов. Первое обращение к компетентному органу нельзя закрыть по истории других органов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].contrast.difference"
+    ]
+  },
+  {
+    "id": "3d5cb00490e39f45",
+    "ru": "Учебные документы подтверждают ответы двух иных органов. В текущий компетентный орган заявитель обращается впервые. Вопрос относится к его полномочиям; обязанности повторно направлять его по компетенции нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].documents[d0].text"
+    ]
+  },
+  {
+    "id": "8a3cc81591787c9b",
+    "ru": "Адресаты и предмет прежних писем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].documents[d0].title"
+    ]
+  },
+  {
+    "id": "38e3c4ffb732e3c8",
+    "ru": "Конкретный предмет указан в полномочиях текущего органа. Прежние ответы приложены для сопоставления. Нельзя объявить любое письмо на знакомую тему собственной многократной перепиской.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].documents[d1].text"
+    ]
+  },
+  {
+    "id": "4bdba9fd785c9633",
+    "ru": "Прежние ответы других органов не подтверждают условие об обращениях в тот же орган для прекращения собственной переписки по части 5 статьи 11.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-other-authority].outcomes.good"
+    ]
+  },
+  {
+    "id": "a57308a65208fd54",
+    "ru": "Ответ любого органа освобождает все остальные от рассмотрения вопросов их компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "812b07e23d8d3e1c",
+    "ru": "Все органы составляют единую приёмную, поэтому автор прежнего ответа значения не имеет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "3e4e2e5c204b94df",
+    "ru": "Учебное продолжение. При подготовке проекта обнаружен старый ответ нашего органа, но по другой проблеме, указанной в соседнем абзаце прежнего письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].followup.intro"
+    ]
+  },
+  {
+    "id": "af5744546423fefd",
+    "ru": "Сопоставить предметы: собственный ответ по другой проблеме не подтверждает неоднократных ответов по нынешнему вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].followup.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].followup.explain"
+    ]
+  },
+  {
+    "id": "6f4006d826a575b1",
+    "ru": "Прекратить любую переписку: теперь наш исходящий номер найден.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "5540844731949165",
+    "ru": "Удалить старый документ, чтобы не разбираться в различиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a6a393b03299139f",
+    "ru": "Не прекращать собственное рассмотрение на основании чужой переписки; оценить установленный предмет своей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].knowledge.explain",
+      "cases:CASE_TEMPLATES[repeat-other-authority].coach.research"
+    ]
+  },
+  {
+    "id": "2dfd668de1204022",
+    "ru": "Мне уже отвечали две организации. Сейчас я обратился в ваш орган, потому что прежние письма относятся к другим полномочиям. Здесь говорят: раз по этой теме уже была переписка, нового ответа не будет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].opening"
+    ]
+  },
+  {
+    "id": "fe73c380bbd16bb6",
+    "ru": "Двумя другими органами, не вашим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "2382fdb6c33bbefe",
+    "ru": "Нужно установить субъекта прежнего рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "9ce0408afb141edf",
+    "ru": "Кем направлены прежние ответы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q0].text"
+    ]
+  },
+  {
+    "id": "2418c67a53b94bc9",
+    "ru": "Нет, это первое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0070ce4d18b65c32",
+    "ru": "У текущего органа не было неоднократной переписки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d876813b4ac83150",
+    "ru": "Были ли обращения раньше в наш орган?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0c5e8b7c910754a1",
+    "ru": "О действии, которое входит именно в полномочия вашего органа; это подтверждено карточкой компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "4fe885c146c3dbdc",
+    "ru": "Наш орган должен оценить свой предмет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "d60096d246bbeaeb",
+    "ru": "О чём нынешний вопрос?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q2].text"
+    ]
+  },
+  {
+    "id": "f104fbcefbc0c58a",
+    "ru": "Да, они помогают увидеть, что уже разъяснили и какие вопросы остались.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "f7cff1c87d1671fa",
+    "ru": "Их можно использовать как материалы, не приписывая себе чужую переписку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "7965e1086bc103a8",
+    "ru": "Прежние ответы приложены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].questions[q3].text"
+    ]
+  },
+  {
+    "id": "244d585d7d22ff29",
+    "ru": "Рассмотреть вопрос в пределах собственной компетенции, используя прежние ответы как материалы, а не автоматическое основание прекращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].routes[0].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].coach.plan"
+    ]
+  },
+  {
+    "id": "252867491e2e16d5",
+    "ru": "Закрыть первое обращение в наш орган как многократную переписку других органов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].routes[1].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "07164abde31159f2",
+    "ru": "Переадресовать обратно вопрос, который относится к нашим установленным полномочиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].routes[2].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "8219233a19f16f37",
+    "ru": "Ответы были, но у другого органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-other-authority].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-other-authority].title"
+    ]
+  },
+  {
+    "id": "66d586930f22c4bd",
+    "ru": "Проверяются орган, вопрос, содержание прежних ответов, повторность и наличие новых доводов, а не один реквизит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].trap.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-other-authority].trap.explain"
+    ]
+  },
+  {
+    "id": "320bcbba969e75d1",
+    "ru": "Главное — наличие любого номера в базе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "424d062934ceb1f4",
+    "ru": "Помощник: «Один найденный исходящий номер доказывает все условия для прекращения переписки».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-other-authority].trap.text"
+    ]
+  },
+  {
+    "id": "7e3a8f4a3ededb9c",
+    "ru": "Сопоставить содержание всех прежних сообщений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[a0].title"
+    ]
+  },
+  {
+    "id": "ab8b8db3448b959a",
+    "ru": "Установить, был ли вопрос рассмотрен по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[a1].title"
+    ]
+  },
+  {
+    "id": "2c3db448156a6b72",
+    "ru": "Подготовить надлежащее рассмотрение и оценку незавершённого предыдущего дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[a2].title"
+    ]
+  },
+  {
+    "id": "df545d39115f6ea1",
+    "ru": "Объяснить заявителю, какие вопросы будут рассмотрены, без требования выдумывать новые доводы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7698311e62773bd2",
+    "ru": "Проверить полноту последующего ответа и состояние первоначальных обязательств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[a4].title"
+    ]
+  },
+  {
+    "id": "175da7632f9baa1d",
+    "ru": "Считать уведомление о регистрации окончательным ответом по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[b0].title",
+      "cases:CASE_TEMPLATES[repeat-routing-only].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "edd2c1063c9122c2",
+    "ru": "Начать новый срок так, будто предыдущего незавершённого обращения не существовало",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].actions[b1].title"
+    ]
+  },
+  {
+    "id": "5493bfed6cdb4463",
+    "ru": "В варианте без новых доводов прежние ответы действительно разрешают вопрос по существу; здесь это лишь уведомления, поэтому количество писем не даёт того же основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].contrast.difference"
+    ]
+  },
+  {
+    "id": "f5ab51fc682c212e",
+    "ru": "Учебная подборка содержит подтверждение регистрации, уведомление о направлении и сообщение о текущем статусе. Ни в одном не рассмотрен поставленный вопрос по существу. Текущий орган компетентен; решение по вопросу не принято.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].documents[d0].text"
+    ]
+  },
+  {
+    "id": "7daba2fa1ea5f568",
+    "ru": "Три исходящих сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a0d3e19aa7276551",
+    "ru": "Заявитель повторяет тот же вопрос и просит дать ответ. В календарном упражнении рассчитывается срок нового зарегистрированного обращения. Это не обнуляет обязанностей и возможного нарушения сроков по предыдущему материалу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].documents[d1].text"
+    ]
+  },
+  {
+    "id": "25b9b73f9477ed6c",
+    "ru": "Содержание нового письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].documents[d1].title"
+    ]
+  },
+  {
+    "id": "28dc6316a6b2dd04",
+    "ru": "Предыдущие уведомления не подтверждают наличие неоднократных письменных ответов по существу; основание для прекращения переписки по этому признаку не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-routing-only].outcomes.good"
+    ]
+  },
+  {
+    "id": "12a0c1cec0566922",
+    "ru": "Три исходящих номера автоматически дают право прекратить переписку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "0723cae971cb29bf",
+    "ru": "Заявитель обязан представить новый факт, иначе любое письмо удаляется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "179eb95682ee54c6",
+    "ru": "Учебное продолжение. Исполнитель подготовил ответ, но в нём опять указан только регистрационный номер и дата передачи в свой отдел.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].followup.intro"
+    ]
+  },
+  {
+    "id": "602f6608cb0e4c9a",
+    "ru": "Проверить отсутствие ответа на поставленный вопрос и вернуть проект на содержательное рассмотрение в пределах компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].followup.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].followup.explain"
+    ]
+  },
+  {
+    "id": "26b7a3bcae4fc8c1",
+    "ru": "Завершить дело: теперь исходящих писем четыре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b7f9beb8d9b0ec06",
+    "ru": "Обвинить заявителя в повторности, не читая проект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "9d828fe1e662cd1a",
+    "ru": "Продолжить надлежащее рассмотрение: условие о неоднократных письменных ответах по существу не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].knowledge.explain",
+      "cases:CASE_TEMPLATES[repeat-routing-only].coach.research"
+    ]
+  },
+  {
+    "id": "d67d9462fa151c97",
+    "ru": "Найдите статью о порядке рассмотрения отдельных обращений: сопоставьте нужную часть с обстоятельствами дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].knowledge.prompt",
+      "cases:CASE_TEMPLATES[repeat-other-authority].knowledge.prompt",
+      "cases:CASE_TEMPLATES[unreadable-body].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "8ea22788293fb2bb",
+    "ru": "Мне говорят, что на мой вопрос уже трижды ответили. Но в первом письме только входящий номер, во втором — куда переслали, а в третьем — что дело ещё рассматривают. Где ответ на сам вопрос?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].opening"
+    ]
+  },
+  {
+    "id": "40fb1dbb8cd5aa9b",
+    "ru": "Только подтверждение регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "dfc4c9f663b4864d",
+    "ru": "Регистрация не является решением вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "03fe1ef78f2db2e4",
+    "ru": "Что содержится в первом письме?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q0].text"
+    ]
+  },
+  {
+    "id": "8cbb18b228065db7",
+    "ru": "Материал передали по компетенции, выводов по проблеме нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f34ce0c0c4a9cf9b",
+    "ru": "Переадресация не заменяет ответ по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "546f0d36b61e6bfa",
+    "ru": "Что сообщено во втором?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q1].text"
+    ]
+  },
+  {
+    "id": "2cdd764b44efbe6f",
+    "ru": "Промежуточный статус без оценки обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "075db358e729de3c",
+    "ru": "Количество сообщений не равно количеству ответов по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e0a53bb8c018a512",
+    "ru": "Что есть в третьем?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q2].text"
+    ]
+  },
+  {
+    "id": "353b8958b1f30633",
+    "ru": "Наш орган получил материал и уполномочен рассмотреть вопрос. Не нужно вновь направлять его другому адресату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "69603e9798685d2b",
+    "ru": "Компетенция текущего органа установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "5cad71c20d6c9b34",
+    "ru": "В чьей компетенции находится вопрос сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5273a22bbaf6b465",
+    "ru": "Подготовить рассмотрение вопроса компетентным органом и проверить судьбу предыдущего обращения, не объявляя уведомления ответами по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].routes[0].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].coach.plan"
+    ]
+  },
+  {
+    "id": "e2a4758dbbec5f37",
+    "ru": "Подготовить прекращение переписки, сославшись только на число исходящих писем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].routes[1].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b2e9d557650c2570",
+    "ru": "Повторно переадресовать вопрос, хотя компетенция нашего органа установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].routes[2].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "f94d2e9fe2712eeb",
+    "ru": "Три письма — ни одного ответа по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-routing-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-routing-only].title"
+    ]
+  },
+  {
+    "id": "f0d1d92e9fe953db",
+    "ru": "Для этого основания нужны неоднократные письменные ответы по существу и остальные установленные условия, а не любое число уведомлений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].trap.options[0].text",
+      "cases:CASE_TEMPLATES[repeat-routing-only].trap.explain"
+    ]
+  },
+  {
+    "id": "254c6985d3b4e6da",
+    "ru": "Любые три письма равнозначны ответам по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "7e545772299f15f5",
+    "ru": "Помощник: «В части 5 статьи 11 важно число писем, а не их содержание».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-routing-only].trap.text"
+    ]
+  },
+  {
+    "id": "9b8478d3db564e7d",
+    "ru": "Заблокировать любые последующие обращения этого гражданина",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[ban].title"
+    ]
+  },
+  {
+    "id": "74b3b82b3722ab42",
+    "ru": "Подтвердить совпадение вопроса и отсутствие новых доводов по материалам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[compare].title"
+    ]
+  },
+  {
+    "id": "5f74ab617f6fdbc3",
+    "ru": "Обеспечить уведомление гражданина, если уполномоченное лицо примет решение о прекращении переписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[notify].title"
+    ]
+  },
+  {
+    "id": "36a8fb4571de6479",
+    "ru": "Зарегистрировать поступившее обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[register].title"
+    ]
+  },
+  {
+    "id": "39addd58675b8153",
+    "ru": "Представить руководителю основания и пределы возможного решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[route].title"
+    ]
+  },
+  {
+    "id": "79b19656e7941cd5",
+    "ru": "Прекратить переписку самостоятельно только по порядковому номеру письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[terminate].title"
+    ]
+  },
+  {
+    "id": "04c202662ff0e289",
+    "ru": "Сохранить решение и его предмет, не распространяя его на новые вопросы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].actions[track].title"
+    ]
+  },
+  {
+    "id": "e099e8ec06d252d3",
+    "ru": "В учебном деле есть три письменных ответа по существу от одного и того же органа. Сверка подтверждает: новое письмо повторяет тот же вопрос без новых доводов и обстоятельств. Решение о прекращении переписки ещё не принято. Вы готовите материалы руководителю, а не принимаете такое решение самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].brief"
+    ]
+  },
+  {
+    "id": "87ddf1f638f39084",
+    "ru": "Новое письмо поступило, регистрация ещё не выполнена. Рассчитайте последний день регистрации, а не срок принятия решения о прекращении переписки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].calendar.context"
+    ]
+  },
+  {
+    "id": "0c0d6ad2f525ad07",
+    "ru": "59-ФЗ, статья 8, часть 2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].calendar.source",
+      "cases:CASE_TEMPLATES[repeat-no-new].calendar.source"
+    ]
+  },
+  {
+    "id": "23668dd65fc24a07",
+    "ru": "Крайняя дата регистрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].calendar.title"
+    ]
+  },
+  {
+    "id": "a9aef39e6183e2f5",
+    "ru": "При выполнении совокупности условий уполномоченное лицо вправе принять решение о прекращении переписки по вопросу с уведомлением гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].coach.research",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].knowledge.explain"
+    ]
+  }
+]

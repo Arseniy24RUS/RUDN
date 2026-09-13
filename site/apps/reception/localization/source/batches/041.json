@@ -1,0 +1,1133 @@
+[
+  {
+    "id": "f36cda646cd3bbfc",
+    "ru": "Заявление о документах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d0].title"
+    ]
+  },
+  {
+    "id": "9bded35036259075",
+    "ru": "Для выдачи названных копий предложено оплатить «услугу заверения». Ответ относится к заявлению и получен {{observed}}. По условиям дела материалы ещё не выданы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7779417abd4102b7",
+    "ru": "Платные услуги стороннего архива не устанавливают условия исполнения работодателем обязанностей перед своим работником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d2].text"
+    ]
+  },
+  {
+    "id": "2794542e4ef814d4",
+    "ru": "Прейскурант внешнего архива",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d2].title"
+    ]
+  },
+  {
+    "id": "7a18414596f6c65f",
+    "ru": "Требование платы относится к документам о собственной работе заявителя; его нужно оценить по статье 62 ТК РФ. Основной предмет здесь не сумма зарплатного долга, а препятствие в получении документов. Срок ответа на жалобу и срок обязанности работодателя различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.explain"
+    ]
+  },
+  {
+    "id": "71c802c3d34374d1",
+    "ru": "Требование платы относится к документам о собственной работе заявителя; его нужно оценить по статье 62 ТК РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7ccb3c660f1a1066",
+    "ru": "Любая плата за копии допустима, если у стороннего архива есть прейскурант.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "7d53ef2c69ea21d4",
+    "ru": "Работодатель обязан по этому заявлению выдать общую ведомость зарплат всего коллектива.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "ca228c527377b64a",
+    "ru": "Сверить период и состав исполнения; бесплатная выдача одного неподходящего документа не закрывает запрос. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.explain"
+    ]
+  },
+  {
+    "id": "80e5bf7854e8e7fc",
+    "ru": "Работодатель прислал бесплатно справку о зарплате, но за другой год и без запрошенной копии приказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.intro"
+    ]
+  },
+  {
+    "id": "3f195120014f86cf",
+    "ru": "Сверить период и состав исполнения; бесплатная выдача одного неподходящего документа не закрывает запрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "6a3ea3f098c06a7b",
+    "ru": "Закрыть дело, поскольку требование платы снято.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "14f95b6cd5eacd15",
+    "ru": "Запросить вместо приказа личные документы всех коллег.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "90a6ea746f5f61a0",
+    "ru": "Найдите норму: Трудовой кодекс РФ: документы о работе. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "46abc8cd289da5c9",
+    "ru": "Я письменно попросил справку о своей зарплате и заверенную копию приказа о приёме. Мне предложили сначала оплатить подготовку копий. Без них трудно разобраться с расчётом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].opening"
+    ]
+  },
+  {
+    "id": "3f67b270827c76b2",
+    "ru": "Рассмотреть только размер зарплаты, оставив требование оплаты копий вне ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e4ecc36cfecac21e",
+    "ru": "Применить к выдаче работодателем копий общий срок ответа органа на обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5fc530349c349234",
+    "ru": "Справка о моей зарплате за конкретный период и копия моего приказа о приёме. Общую ведомость всех работников я не запрашивал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "7d654aed72f3d0d9",
+    "ru": "Запрошены документы о собственной работе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "4f7ae15d2c000406",
+    "ru": "Что перечислено в письменном заявлении работодателю?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q0].text"
+    ]
+  },
+  {
+    "id": "edaa1f5b8d10e409",
+    "ru": "На копии заявления есть отметка работодателя; письменный ответ требует плату за заверение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f80e329eaca0abc7",
+    "ru": "Это не неподтверждённая устная просьба.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "b19274492a765e97",
+    "ru": "Подача подтверждается?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q1].text"
+    ]
+  },
+  {
+    "id": "9be2d28ab7ef4474",
+    "ru": "Юридическое лицо и место работы в Москве указаны в договоре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c691d1213a9e1801",
+    "ru": "Установлена территориальность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c45e51db260370eb",
+    "ru": "Нет, документы находятся у работодателя. Прошу рассмотреть отказ и объяснить порядок защиты права.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9ead520ed91b5d9d",
+    "ru": "Сотрудник приёмной не заменяет работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "5dca8bcc4f64576b",
+    "ru": "Вы просите приёмную выдать сами документы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].questions[q3].text"
+    ]
+  },
+  {
+    "id": "280b76090ef10644",
+    "ru": "Рассмотреть отказ работодателя в пределах компетенции инспекции; не переносить общий срок ответа на обязанность работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].routes[0].text"
+    ]
+  },
+  {
+    "id": "295993f0cd3a5012",
+    "ru": "Разъяснить оплату копирования как обязательное предварительное условие получения документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].routes[1].text"
+    ]
+  },
+  {
+    "id": "e422976877003257",
+    "ru": "Предложить получить собственные кадровые документы у банка, не рассматривая отказ работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].routes[2].text"
+    ]
+  },
+  {
+    "id": "e13f44988bdb6bad",
+    "ru": "Сначала заплатите за копии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[salary-documents-request].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[salary-documents-request].title"
+    ]
+  },
+  {
+    "id": "b28207d73da5a193",
+    "ru": "Основной предмет здесь не сумма зарплатного долга, а препятствие в получении документов. Срок ответа на жалобу и срок обязанности работодателя различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].trap.explain",
+      "cases:CASE_TEMPLATES[salary-documents-request].coach.plan",
+      "cases:CASE_TEMPLATES[salary-documents-request].contrast.difference"
+    ]
+  },
+  {
+    "id": "5dc226fa30c9a0b7",
+    "ru": "Помощник: «Требование работодателя выдать бесплатные копии и срок ответа инспекции на жалобу — разные обязанности».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].trap.text"
+    ]
+  },
+  {
+    "id": "07c430d1f0273402",
+    "ru": "Установить единый период и назначение обоих платежей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[a0].title"
+    ]
+  },
+  {
+    "id": "e79aecfbb966a4fb",
+    "ru": "Сопоставить начисление, удержание и итог к выплате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[a1].title"
+    ]
+  },
+  {
+    "id": "37792fac3090db53",
+    "ru": "Подготовить ответ с ограниченным выводом по указанному периоду",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a604b17dcebb86b0",
+    "ru": "Объяснить заявителю состав расчёта без раскрытия данных коллег",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d54beffa156525d6",
+    "ru": "Сохранить возможность рассмотрения других самостоятельных требований",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[a4].title"
+    ]
+  },
+  {
+    "id": "d9f087fb72d9dc61",
+    "ru": "Объявить задолженностью разницу между начислением и одним переводом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[b0].title"
+    ]
+  },
+  {
+    "id": "462ffc8e1776d1d0",
+    "ru": "Объявить все возможные удержания законными без проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].actions[b1].title"
+    ]
+  },
+  {
+    "id": "2dfe2354517d47d3",
+    "ru": "Расчётное извещение содержит состав начисленной заработной платы, иные суммы, размеры и основания удержаний и общую сумму к выплате. Сравнивать начисление до удержаний только с одним переводом недостаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].coach.research",
+      "cases:CASE_TEMPLATES[salary-gross-net].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[salary-gross-net].knowledge.explain"
+    ]
+  },
+  {
+    "id": "cb9a62e500599475",
+    "ru": "Объявить все возможные удержания законными без проверки: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "d64e49affc82e1bd",
+    "ru": "Период один. Начислено: 60 000 рублей. Удержано по указанному в листке основанию: 7 800 рублей. К выплате: 52 200 рублей. Законность основания удержания не является предметом этого арифметического упражнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d0].text"
+    ]
+  },
+  {
+    "id": "82f26e7ffcf05585",
+    "ru": "Расчётный листок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e6a03b93cd2cd22f",
+    "ru": "Работник получил 20 000 и 32 200 рублей. Назначение платежей связывает их с тем же расчётным месяцем. Своевременность обоих поступлений установлена условиями дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d1].text"
+    ]
+  },
+  {
+    "id": "64a7e9a628fb9cfc",
+    "ru": "Два платежа одного периода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c4d343103f8f694e",
+    "ru": "В объявлении другого подразделения указан диапазон окладов. Оно не заменяет расчёт по периоду заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d2].text"
+    ]
+  },
+  {
+    "id": "89562da8e7c52139",
+    "ru": "Объявление о вакансии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[d2].title"
+    ]
+  },
+  {
+    "id": "1203e99ff59190dc",
+    "ru": "По представленному периоду сумма обоих переводов совпадает с суммой к выплате; расхождение по одному платежу не доказывает долг. В исходном деле перевод действительно частичный. Здесь сотрудник сначала не учёл вторую выплату и удержание: изменились установленные факты, а не права работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.explain"
+    ]
+  },
+  {
+    "id": "d3c775af02d05d4e",
+    "ru": "По представленному периоду сумма обоих переводов совпадает с суммой к выплате; расхождение по одному платежу не доказывает долг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "57d308d871db6210",
+    "ru": "Разница между начислением 60 000 и последним переводом полностью является задолженностью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "51a22211ceeb66e3",
+    "ru": "Арифметическое совпадение доказывает правильность всех удержаний и всех выплат за любые месяцы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "47a7b09620254cde",
+    "ru": "Открыть проверку нового периода, не распространять прежнее арифметическое совпадение на премию. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.explain"
+    ]
+  },
+  {
+    "id": "48c094595f7d9745",
+    "ru": "Заявитель прислал листок за следующий месяц: в нём есть премия, но выплаты этой премии в приложении нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.intro"
+    ]
+  },
+  {
+    "id": "6dc47aac0758d73c",
+    "ru": "Открыть проверку нового периода, не распространять прежнее арифметическое совпадение на премию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "56f6dd99515c4f7e",
+    "ru": "Ответить, что правильность зарплаты уже однажды подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c2cd26c125c2e92f",
+    "ru": "Прибавить премию к прежнему месяцу и изменить его расчёт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "c2cec9c3dc621c80",
+    "ru": "Найдите норму: Трудовой кодекс РФ: состав начисления и выплаты. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "bea09dabcf0edd49",
+    "ru": "В листке стоит 60 тысяч, а последний перевод — чуть больше 32 тысяч. Значит, мне недоплатили почти половину?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].opening"
+    ]
+  },
+  {
+    "id": "8bdca199a5cf41ce",
+    "ru": "Сравнить начисление с последним переводом, не объединяя платежи расчётного месяца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].procedures[1].text"
+    ]
+  },
+  {
+    "id": "6bed08013c8e6d56",
+    "ru": "Распространить совпадение итоговой суммы этого месяца на расчёты за все периоды.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].procedures[2].text"
+    ]
+  },
+  {
+    "id": "d981bcc88c14127b",
+    "ru": "Начислено. Отдельно указаны удержания 7 800 и итог к выплате 52 200 рублей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "615990f18ea11365",
+    "ru": "Начисление до удержаний и сумма к выплате различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "04099b0a22f80ea4",
+    "ru": "В листке 60 тысяч — начислено или подлежит выдаче?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a57728306344fa77",
+    "ru": "Ещё 20 тысяч перечислили за первую половину месяца. Я сначала не учёл этот перевод.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "43bd511e9175a9e2",
+    "ru": "Нужно учитывать оба платежа одного периода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "9707243a811b7ede",
+    "ru": "Были ли другие выплаты за этот же месяц?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q1].text"
+    ]
+  },
+  {
+    "id": "37fe4e8a7c59ca1e",
+    "ru": "Нет, сейчас я спрашиваю только о расхождении суммы листка с последним переводом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "1a946d30ae80c7a2",
+    "ru": "Законность удержания не устанавливается по одному арифметическому совпадению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9d219a3f1387cf78",
+    "ru": "Вы оспариваете основание удержания?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a375916efcce78ce",
+    "ru": "Да, это подтверждается назначением обоих платежей. По документам они своевременные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2167bb30e79eb3e8",
+    "ru": "Границы вывода ограничены данным периодом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8351ec7caa27b18e",
+    "ru": "Переводы относятся к одному работнику и месяцу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b571caf6dddd33d6",
+    "ru": "Подготовить мотивированное разъяснение по проверенной арифметике; иные требования оценивать отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].routes[0].text"
+    ]
+  },
+  {
+    "id": "5d27176dfbd24401",
+    "ru": "Принять за долг разницу между начислением и последним переводом, не учитывая первый платёж.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].routes[1].text"
+    ]
+  },
+  {
+    "id": "866205206be08e57",
+    "ru": "Признать все удержания законными на основании одного арифметического совпадения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].routes[2].text"
+    ]
+  },
+  {
+    "id": "118e57b682870b03",
+    "ru": "Один перевод и весь расчётный месяц",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[salary-gross-net].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[salary-gross-net].title"
+    ]
+  },
+  {
+    "id": "d45cde7e19dbf0cb",
+    "ru": "В исходном деле перевод действительно частичный. Здесь сотрудник сначала не учёл вторую выплату и удержание: изменились установленные факты, а не права работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].trap.explain",
+      "cases:CASE_TEMPLATES[salary-gross-net].coach.plan",
+      "cases:CASE_TEMPLATES[salary-gross-net].contrast.difference"
+    ]
+  },
+  {
+    "id": "7d78fd97f743fd2a",
+    "ru": "Не согласен: сформулированное различие несущественно для выбора действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].trap.options[0].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].trap.options[0].text",
+      "cases:CASE_TEMPLATES[oms-free-slot].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "b4caccf9e5f14f0a",
+    "ru": "Согласен: это соответствует установленным условиям и пределам вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].trap.options[1].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].trap.options[1].text",
+      "cases:CASE_TEMPLATES[oms-free-slot].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "1683f2de854f2e16",
+    "ru": "Помощник: «Прежде чем говорить о долге за месяц, нужно сопоставить итог к выплате и оба платежа этого периода».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-gross-net].trap.text"
+    ]
+  },
+  {
+    "id": "2e98a25cf85e54e3",
+    "ru": "Разделить проверку основной выплаты и компенсации за задержку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[a0].title"
+    ]
+  },
+  {
+    "id": "445d5d94c9ac7a4b",
+    "ru": "Сопоставить признание задержки, расчётный листок и назначение платежа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[a1].title"
+    ]
+  },
+  {
+    "id": "1f25d0fad8b9aec6",
+    "ru": "Подготовить рассмотрение вопроса о компенсации уполномоченным инспектором",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f5fbf59fa77977ad",
+    "ru": "Сообщить заявителю подтверждённые обстоятельства и дальнейший порядок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[a3].title"
+    ]
+  },
+  {
+    "id": "cbebf98cbde04d8a",
+    "ru": "Поставить на контроль ответ именно по компенсации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[a4].title"
+    ]
+  },
+  {
+    "id": "0011cbbde5b4cbce",
+    "ru": "Закрыть весь вопрос только по поступлению зарплаты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[b0].title"
+    ]
+  },
+  {
+    "id": "a220e20727076c70",
+    "ru": "Самостоятельно взыскать произвольно рассчитанную компенсацию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].actions[b1].title"
+    ]
+  },
+  {
+    "id": "6bce34e32d135ad3",
+    "ru": "Учебная ситуация. Люди, организации-участники, документы и события вымышлены. Подтверждённые в условии факты не заменяют установление аналогичных фактов в реальной работе. Срок календарного задания касается ответа органа, не срока ремонта, лечения или выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].brief",
+      "cases:CASE_TEMPLATES[salary-gross-net].brief",
+      "cases:CASE_TEMPLATES[salary-documents-request].brief"
+    ]
+  },
+  {
+    "id": "764349724a794705",
+    "ru": "Определите общий срок ответа органа на зарегистрированное обращение в этом упражнении. Продление по условию не применяется; специальные сроки обязанностей работодателя, медорганизации или исполнителя не являются предметом этой календарной задачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].calendar.context",
+      "cases:CASE_TEMPLATES[salary-gross-net].calendar.context",
+      "cases:CASE_TEMPLATES[salary-documents-request].calendar.context"
+    ]
+  },
+  {
+    "id": "bc87b3585a89eb89",
+    "ru": "Крайний день ответа на обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].calendar.title",
+      "cases:CASE_TEMPLATES[salary-gross-net].calendar.title",
+      "cases:CASE_TEMPLATES[salary-documents-request].calendar.title"
+    ]
+  },
+  {
+    "id": "4648eacb804bcf4d",
+    "ru": "Заявитель по трудовому вопросу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].citizen.description",
+      "cases:CASE_TEMPLATES[salary-gross-net].citizen.description",
+      "cases:CASE_TEMPLATES[salary-documents-request].citizen.description"
+    ]
+  },
+  {
+    "id": "95f10194c5b36393",
+    "ru": "Календарь считает отдельный срок ответа органа. Не переносите его на лечение, работы или выплаты исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].coach.calendar",
+      "cases:CASE_TEMPLATES[salary-gross-net].coach.calendar",
+      "cases:CASE_TEMPLATES[salary-documents-request].coach.calendar"
+    ]
+  },
+  {
+    "id": "b79a3a219947c36d",
+    "ru": "Сопоставьте два материала: идентификатор, период, объём или вид действия. Выберите основания отдельно от самого просмотра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].coach.docs",
+      "cases:CASE_TEMPLATES[salary-gross-net].coach.docs",
+      "cases:CASE_TEMPLATES[salary-documents-request].coach.docs"
+    ]
+  },
+  {
+    "id": "58f9fa77751bb59e",
+    "ru": "Задержка начисленной суммы создаёт обязанность работодателя выплатить денежную компенсацию; погашение основной суммы не доказывает её выплату. В этом задании размер компенсации не рассчитывается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].coach.research",
+      "cases:CASE_TEMPLATES[salary-late-compensation].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[salary-late-compensation].knowledge.explain"
+    ]
+  },
+  {
+    "id": "5f23dbb826d7e185",
+    "ru": "Отделяйте слова заявителя от подтверждённых обстоятельств. Нужные сведения можно уточнить, не требуя ненужных личных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].coach.talk",
+      "cases:CASE_TEMPLATES[salary-gross-net].coach.talk",
+      "cases:CASE_TEMPLATES[salary-documents-request].coach.talk"
+    ]
+  },
+  {
+    "id": "150828e0ba330f52",
+    "ru": "Меняются доказательная связь, допустимое действие и контрольное продолжение. Имена и даты не считаются самостоятельным содержательным вариантом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[salary-gross-net].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[salary-documents-request].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "ea7d79a77db3e414",
+    "ru": "Самостоятельно взыскать произвольно рассчитанную компенсацию: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "22cd586ace72048d",
+    "ru": "Начисленная зарплата к выплате — 52 200 рублей. Работодатель письменно признал задержку на десять календарных дней. В представленном расчётном листке компенсация за задержку не начислена. Все сведения относятся к одному работнику и периоду.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d0].text"
+    ]
+  },
+  {
+    "id": "227780c219321c15",
+    "ru": "Начисление и ответ бухгалтерии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d0].title"
+    ]
+  },
+  {
+    "id": "4500802f7b7008b5",
+    "ru": "Поступило 52 200 рублей; назначение — заработная плата за тот же период. Других поступлений, включая компенсацию, в представленном отрезке выписки нет. Последний платёж и письмо работодателя получены {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d1].text"
+    ]
+  },
+  {
+    "id": "6759b53c56fa651b",
+    "ru": "Выписка по поступлению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c807f2f41bd1ee3c",
+    "ru": "График последующих выплат утверждён. Он не подтверждает расчёт за прежнюю задержку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d2].text"
+    ]
+  },
+  {
+    "id": "1bf9f4d3ff178d87",
+    "ru": "График на будущий месяц",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[d2].title"
+    ]
+  },
+  {
+    "id": "09f95e24f3b49af6",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Последнее относящееся к делу событие / наблюдение: {{observed}}. Эти даты не заменяют названные в источниках даты законов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[dates].text",
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[dates].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[dates].text"
+    ]
+  },
+  {
+    "id": "cff4878454eeb6d3",
+    "ru": "Временная линия обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[dates].title",
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[dates].title",
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[dates].title"
+    ]
+  },
+  {
+    "id": "8ff3a16f4427b5e7",
+    "ru": "Учебные события",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].documents[dates].type",
+      "cases:CASE_TEMPLATES[salary-gross-net].documents[dates].type",
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[dates].type"
+    ]
+  },
+  {
+    "id": "3db60d17aa6662d7",
+    "ru": "Погашение зарплаты подтверждено; вопрос о компенсации по представленным материалам не разрешён. В исходном варианте не погашена часть зарплаты. Здесь основная сумма перечислена полностью, но это не отвечает на самостоятельный вопрос о компенсации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.explain"
+    ]
+  },
+  {
+    "id": "045ddbc2b45630a8",
+    "ru": "Погашение зарплаты подтверждено; вопрос о компенсации по представленным материалам не разрешён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "233baaa59c0fdc65",
+    "ru": "Вся первоначальная сумма зарплаты всё ещё числится невыплаченной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "f298cf8ed9f028dc",
+    "ru": "Совпадение зарплатной суммы с переводом подтверждает исполнение и по компенсации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "d96dc5a6d5c8339d",
+    "ru": "Какой вывод следует из сопоставления материалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].factTask.prompt",
+      "cases:CASE_TEMPLATES[salary-gross-net].factTask.prompt",
+      "cases:CASE_TEMPLATES[salary-documents-request].factTask.prompt"
+    ]
+  },
+  {
+    "id": "a27871e8c5fcfa41",
+    "ru": "Проверить получателя и запросить подтверждение исполнения именно по заявителю. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.explain"
+    ]
+  },
+  {
+    "id": "fde49a21e883ba29",
+    "ru": "Выбранный следующий шаг не заменяет подтверждение исполнения по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.failure",
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.failure",
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.failure"
+    ]
+  },
+  {
+    "id": "f345e06114a4f579",
+    "ru": "Работодатель прислал расчёт компенсации, но банковский документ относится к другому работнику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.intro"
+    ]
+  },
+  {
+    "id": "e6fa956015ce1fe6",
+    "ru": "Проверить получателя и запросить подтверждение исполнения именно по заявителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "8689305602c7a07e",
+    "ru": "Считать любой платёж по компенсации достаточным подтверждением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "27e5f054c2a0f55d",
+    "ru": "Повторно требовать уже выплаченную основную зарплату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "1a2913ddb0571c13",
+    "ru": "Учебный контроль продолжается по конкретному объекту, периоду и предмету. Внешнее исполнение не гарантируется решением приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].followup.success",
+      "cases:CASE_TEMPLATES[salary-gross-net].followup.success",
+      "cases:CASE_TEMPLATES[salary-documents-request].followup.success"
+    ]
+  },
+  {
+    "id": "d4452401adb6f53f",
+    "ru": "Норма даёт сотруднику приёмной право принять любое решение независимо от компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].knowledge.options[1].text",
+      "cases:CASE_TEMPLATES[salary-gross-net].knowledge.options[1].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f41ea43544acd614",
+    "ru": "Норма освобождает от ответа по существу при наличии любого сообщения исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].knowledge.options[2].text",
+      "cases:CASE_TEMPLATES[salary-gross-net].knowledge.options[2].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "54348b15dd601fbc",
+    "ru": "Найдите норму: Трудовой кодекс РФ: компенсация за задержку выплаты. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "42fea9303aae4182",
+    "ru": "Теперь всю задержанную зарплату перевели. В бухгалтерии говорят: долг закрыт, писать больше не о чем. Но у меня был вопрос и о компенсации за задержку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].opening"
+    ]
+  },
+  {
+    "id": "8a61aecfec0e40a0",
+    "ru": "В плане остались необоснованные действия или пропущенные связи между материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].outcomes.bad",
+      "cases:CASE_TEMPLATES[salary-gross-net].outcomes.bad",
+      "cases:CASE_TEMPLATES[salary-documents-request].outcomes.bad"
+    ]
+  },
+  {
+    "id": "272fd05311676836",
+    "ru": "Подготовлен обоснованный маршрут по установленным обстоятельствам. Дальнейшее исполнение проверяется отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].outcomes.good",
+      "cases:CASE_TEMPLATES[salary-gross-net].outcomes.good",
+      "cases:CASE_TEMPLATES[salary-documents-request].outcomes.good"
+    ]
+  },
+  {
+    "id": "ad2ec32391c47576",
+    "ru": "Рассмотрение обращения органом по существу в пределах его полномочий; специальные обязанности исполнителя оцениваются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].procedures[0].text",
+      "cases:CASE_TEMPLATES[salary-gross-net].procedures[0].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].procedures[0].text"
+    ]
+  },
+  {
+    "id": "8a91d1854eca436b",
+    "ru": "Проверить только погашение основной суммы: последующий перевод завершает предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e91f255f02d633b6",
+    "ru": "Рассмотреть только право на будущие выплаты, не сопоставляя даты уже состоявшейся задержки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].procedures[2].text"
+    ]
+  },
+  {
+    "id": "87766b315fb9297c",
+    "ru": "Да. В ответе он признаёт, что начисленная зарплата выплачена на десять календарных дней позже установленной даты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "75191061193777f6",
+    "ru": "Факт задержки в этом деле не спорный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b2f4e1872ae7c2ec",
+    "ru": "Работодатель признаёт сам факт задержки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q0].text"
+    ]
+  },
+  {
+    "id": "81d004351c9876a6",
+    "ru": "Полностью сумма зарплаты к выплате за указанный месяц. Другого перевода в представленной выписке нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "81824c690227f7de",
+    "ru": "Основная сумма погашена, отдельная компенсация не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "ea27dca142b9cecc",
+    "ru": "Что именно перечислено на счёт?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q1].text"
+    ]
+  },
+  {
+    "id": "59dbb1db0204c109",
+    "ru": "В расчётном листке соответствующей строки нет, а письмо бухгалтерии говорит только о зарплате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0b2c060998d2f077",
+    "ru": "Проверяются два самостоятельных компонента исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c9157e155cef534f",
+    "ru": "Есть ли расчёт компенсации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q2].text"
+    ]
+  },
+  {
+    "id": "7fd43e46ef07865b",
+    "ru": "Я прошу инспекцию рассмотреть соблюдение моих прав. Не прошу сотрудника приёмной списывать деньги со счёта организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "d1e47d321686f193",
+    "ru": "Пределы роли сохраняются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "18447afab5a2cbdd",
+    "ru": "Кто должен принять правовое решение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].questions[q3].text"
+    ]
+  },
+  {
+    "id": "912b9c861778039b",
+    "ru": "Вы готовите материалы и проект действий в пределах обозначенной компетенции. Решения о проверке, санкциях, техническом режиме или лечении принимают уполномоченные лица. Реальные запросы и звонки игра не выполняет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].role.text",
+      "cases:CASE_TEMPLATES[salary-gross-net].role.text",
+      "cases:CASE_TEMPLATES[salary-documents-request].role.text"
+    ]
+  },
+  {
+    "id": "7d4b0872ca29b0c1",
+    "ru": "Специалист приёмной территориальной государственной инспекции труда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].role.title",
+      "cases:CASE_TEMPLATES[salary-gross-net].role.title",
+      "cases:CASE_TEMPLATES[salary-documents-request].role.title"
+    ]
+  },
+  {
+    "id": "485dd005e0a0a989",
+    "ru": "Передать материалы по оставшемуся вопросу уполномоченному инспектору; не назначать взыскание от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].routes[0].text"
+    ]
+  },
+  {
+    "id": "c530c1e3a58de6cd",
+    "ru": "Подтвердить закрытие вопроса по платежу основной зарплаты и не включать компенсацию в подготовленный ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].routes[1].text"
+    ]
+  },
+  {
+    "id": "89d760492ff394e2",
+    "ru": "Передать весь вопрос банку как спор о зачислении, хотя факт и дата зачисления подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].routes[2].text"
+    ]
+  },
+  {
+    "id": "c688760ab7605983",
+    "ru": "Найдите названное положение, проверьте реквизиты и сопоставьте с материалами дела. Внешний поиск не подменяется фактом открытия карточки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].sourceTask",
+      "cases:CASE_TEMPLATES[salary-gross-net].sourceTask",
+      "cases:CASE_TEMPLATES[salary-documents-request].sourceTask"
+    ]
+  },
+  {
+    "id": "dc7e418a41544365",
+    "ru": "Зарплата пришла. Компенсация — нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[salary-late-compensation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[salary-late-compensation].title"
+    ]
+  },
+  {
+    "id": "8b115987c921f726",
+    "ru": "В исходном варианте не погашена часть зарплаты. Здесь основная сумма перечислена полностью, но это не отвечает на самостоятельный вопрос о компенсации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].trap.explain",
+      "cases:CASE_TEMPLATES[salary-late-compensation].coach.plan",
+      "cases:CASE_TEMPLATES[salary-late-compensation].contrast.difference"
+    ]
+  },
+  {
+    "id": "0fc8babed05274b1",
+    "ru": "Не согласен: утверждение не учитывает установленные обстоятельства и пределы полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].trap.options[0].text",
+      "cases:CASE_TEMPLATES[oms-other-region].trap.options[0].text",
+      "cases:CASE_TEMPLATES[oms-urgent-now].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "cf33aab46317aa74",
+    "ru": "Согласен: можно действовать по нему без дополнительного сопоставления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-late-compensation].trap.options[1].text",
+      "cases:CASE_TEMPLATES[oms-other-region].trap.options[1].text",
+      "cases:CASE_TEMPLATES[oms-urgent-now].trap.options[1].text"
+    ]
+  }
+]

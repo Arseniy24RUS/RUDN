@@ -1,0 +1,1217 @@
+[
+  {
+    "id": "c62ded603460b654",
+    "ru": "Пункт 26",
+    "contexts": [
+      "cases:SOURCES[n14-fire26].article"
+    ]
+  },
+  {
+    "id": "3650efe8f95081a6",
+    "ru": "Постановление Правительства РФ от 2020-09-16 № 1479",
+    "contexts": [
+      "cases:SOURCES[n14-fire26].number",
+      "cases:SOURCES[n14-fire27].number"
+    ]
+  },
+  {
+    "id": "0848478fa3d30631",
+    "ru": "Открывание эвакуационного выхода изнутри",
+    "contexts": [
+      "cases:SOURCES[n14-fire26].title",
+      "cases:SOURCES[n14-fire26].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-fire26].title"
+    ]
+  },
+  {
+    "id": "0df92c36364f55cc",
+    "ru": "Пункт 27",
+    "contexts": [
+      "cases:SOURCES[n14-fire27].article"
+    ]
+  },
+  {
+    "id": "8a95c4bd592dc582",
+    "ru": "Предметы на пути эвакуации",
+    "contexts": [
+      "cases:SOURCES[n14-fire27].title",
+      "cases:SOURCES[n14-fire27].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-fire27].title"
+    ]
+  },
+  {
+    "id": "8fac50a51c3544a6",
+    "ru": "Статья 129",
+    "contexts": [
+      "cases:SOURCES[n14-gpk129].article"
+    ]
+  },
+  {
+    "id": "1b63d56211efb2e6",
+    "ru": "Возражения относительно судебного приказа",
+    "contexts": [
+      "cases:SOURCES[n14-gpk129].title",
+      "cases:SOURCES[n14-gpk129].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-gpk129].title"
+    ]
+  },
+  {
+    "id": "ed8e7f94750c15a3",
+    "ru": "Статья 200",
+    "contexts": [
+      "cases:SOURCES[n14-gpk200].article"
+    ]
+  },
+  {
+    "id": "d050e2a2beca4e8a",
+    "ru": "Гражданский процессуальный кодекс Российской Федерации от 2002-11-14 № 138-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-gpk200].number",
+      "cases:SOURCES[n14-gpk203].number",
+      "cases:SOURCES[n14-gpk129].number"
+    ]
+  },
+  {
+    "id": "81d3cd668268be3f",
+    "ru": "Учебный профиль, сверка 07.09.2026. Самостоятельная внешняя экспертиза не проведена.",
+    "contexts": [
+      "cases:SOURCES[n14-gpk200].revision",
+      "cases:SOURCES[n14-gpk203].revision",
+      "cases:SOURCES[n14-gpk129].revision"
+    ]
+  },
+  {
+    "id": "8f1ccc8559d146af",
+    "ru": "138-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-gpk200].short",
+      "cases:SOURCES[n14-gpk203].short",
+      "cases:SOURCES[n14-gpk129].short"
+    ]
+  },
+  {
+    "id": "ee0bef7925c31813",
+    "ru": "Описка в решении суда",
+    "contexts": [
+      "cases:SOURCES[n14-gpk200].title",
+      "cases:SOURCES[n14-gpk200].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-gpk200].title"
+    ]
+  },
+  {
+    "id": "cb3aa183eb475a6f",
+    "ru": "Статья 203",
+    "contexts": [
+      "cases:SOURCES[n14-gpk203].article"
+    ]
+  },
+  {
+    "id": "e60007b7a6027cd5",
+    "ru": "Рассрочка исполнения решения суда",
+    "contexts": [
+      "cases:SOURCES[n14-gpk203].title",
+      "cases:SOURCES[n14-gpk203].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-gpk203].title"
+    ]
+  },
+  {
+    "id": "607f66e30e3e7b79",
+    "ru": "Статья 11",
+    "contexts": [
+      "cases:SOURCES[n14-insurance11].article",
+      "cases:SOURCES[v16-norm-settlement].article"
+    ]
+  },
+  {
+    "id": "3b1a43503978b020",
+    "ru": "Федеральный закон от 2013-12-21 № 353-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-insurance11].number"
+    ]
+  },
+  {
+    "id": "ef3a9cc97d03cebb",
+    "ru": "353-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-insurance11].short"
+    ]
+  },
+  {
+    "id": "8ba620b0344f9e87",
+    "ru": "Страхование при потребительском кредите: адресат и основание возврата",
+    "contexts": [
+      "cases:SOURCES[n14-insurance11].title",
+      "cases:SOURCES[n14-insurance11].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-insurance11].title"
+    ]
+  },
+  {
+    "id": "276915b83642b0ca",
+    "ru": "Трудовой кодекс РФ: состав начисления и выплаты",
+    "contexts": [
+      "cases:SOURCES[norm10-136].title",
+      "cases:SOURCES[norm10-136].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-136].title"
+    ]
+  },
+  {
+    "id": "745883a5f12b7a10",
+    "ru": "Норма",
+    "contexts": [
+      "cases:SOURCES[norm10-236].kind",
+      "cases:SOURCES[norm10-136].kind",
+      "cases:SOURCES[norm10-62].kind"
+    ]
+  },
+  {
+    "id": "8349695adb64ff4a",
+    "ru": "Правовая основа проверена 07.09.2026; авторское изложение. Историческая дата акта не меняется с годом игры.",
+    "contexts": [
+      "cases:SOURCES[norm10-236].revision",
+      "cases:SOURCES[norm10-136].revision",
+      "cases:SOURCES[norm10-62].revision"
+    ]
+  },
+  {
+    "id": "ae05e0168f6c72f3",
+    "ru": "Авторское изложение проверенной статьи; не полный текст акта и не сведения о реальном инциденте.",
+    "contexts": [
+      "cases:SOURCES[norm10-236].scope",
+      "cases:SOURCES[norm10-136].scope",
+      "cases:SOURCES[norm10-62].scope"
+    ]
+  },
+  {
+    "id": "9b5712d320d206a6",
+    "ru": "Трудовой кодекс РФ: компенсация за задержку выплаты",
+    "contexts": [
+      "cases:SOURCES[norm10-236].title",
+      "cases:SOURCES[norm10-236].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-236].title"
+    ]
+  },
+  {
+    "id": "3c9bcb726b228839",
+    "ru": "Трудовой кодекс РФ: документы о работе",
+    "contexts": [
+      "cases:SOURCES[norm10-62].title",
+      "cases:SOURCES[norm10-62].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-62].title"
+    ]
+  },
+  {
+    "id": "102a2e5773b6e89f",
+    "ru": "Обращения: рассмотрение по существу",
+    "contexts": [
+      "cases:SOURCES[norm10-appeal].title",
+      "cases:SOURCES[norm10-appeal].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-appeal].title"
+    ]
+  },
+  {
+    "id": "a7cede627ff1b479",
+    "ru": "Охрана окружающей среды: зелёный фонд",
+    "contexts": [
+      "cases:SOURCES[norm10-green].title",
+      "cases:SOURCES[norm10-green].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-green].title"
+    ]
+  },
+  {
+    "id": "5616704515ddb030",
+    "ru": "ОМС: права застрахованных лиц",
+    "contexts": [
+      "cases:SOURCES[norm10-oms].title",
+      "cases:SOURCES[norm10-oms].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-oms].title"
+    ]
+  },
+  {
+    "id": "11008b9bbffeb2f7",
+    "ru": "Безопасность дорожного движения: ремонт и содержание",
+    "contexts": [
+      "cases:SOURCES[norm10-road].title",
+      "cases:SOURCES[norm10-road].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-road].title"
+    ]
+  },
+  {
+    "id": "f4583df5427d75f8",
+    "ru": "Охрана здоровья: недопустимость отказа",
+    "contexts": [
+      "cases:SOURCES[norm10-urgent].title",
+      "cases:SOURCES[norm10-urgent].number",
+      "source-index:SOURCE_INDEX.entries[shelf:norm10-urgent].title"
+    ]
+  },
+  {
+    "id": "0938a5fc61e63594",
+    "ru": "Предварительное согласие на рекламу и прекращение рассылки",
+    "contexts": [
+      "cases:SOURCES[norm11-ad18].short",
+      "cases:SOURCES[norm11-ad18].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-ad18].title"
+    ]
+  },
+  {
+    "id": "fa3d0761c2c567cc",
+    "ru": "Авторское изложение; источники проверены 07.09.2026. Условия упражнения ограничены описанным предметом.",
+    "contexts": [
+      "cases:SOURCES[norm11-ad2].revision",
+      "cases:SOURCES[norm11-ad3].revision",
+      "cases:SOURCES[norm11-ad18].revision"
+    ]
+  },
+  {
+    "id": "d6a45959c4836ca4",
+    "ru": "Вывески без рекламных сведений и пределы исключения",
+    "contexts": [
+      "cases:SOURCES[norm11-ad2].short",
+      "cases:SOURCES[norm11-ad2].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-ad2].title"
+    ]
+  },
+  {
+    "id": "ab3c149c3c1c1845",
+    "ru": "норма",
+    "contexts": [
+      "cases:SOURCES[norm11-ad2].tags[0]",
+      "cases:SOURCES[norm11-ad3].tags[0]",
+      "cases:SOURCES[norm11-ad18].tags[0]"
+    ]
+  },
+  {
+    "id": "e134a3e43e29e447",
+    "ru": "вариант",
+    "contexts": [
+      "cases:SOURCES[norm11-ad2].tags[1]",
+      "cases:SOURCES[norm11-ad3].tags[1]",
+      "cases:SOURCES[norm11-ad18].tags[1]"
+    ]
+  },
+  {
+    "id": "d68586f4f55a3e25",
+    "ru": "Содержание сообщения и признаки рекламы",
+    "contexts": [
+      "cases:SOURCES[norm11-ad3].short",
+      "cases:SOURCES[norm11-ad3].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-ad3].title"
+    ]
+  },
+  {
+    "id": "634b3ebbf9a914dd",
+    "ru": "Обслуживание пассажиров при ожидании посадки",
+    "contexts": [
+      "cases:SOURCES[norm11-flight-care].short",
+      "cases:SOURCES[norm11-flight-care].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-flight-care].title"
+    ]
+  },
+  {
+    "id": "1cdc7504e8e627c6",
+    "ru": "Получение претензии перевозчиком",
+    "contexts": [
+      "cases:SOURCES[norm11-flight-claim].short",
+      "cases:SOURCES[norm11-flight-claim].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-flight-claim].title"
+    ]
+  },
+  {
+    "id": "73ae225bdacc5694",
+    "ru": "Вынужденный отказ и невозвратный тариф",
+    "contexts": [
+      "cases:SOURCES[norm11-flight-refund].short",
+      "cases:SOURCES[norm11-flight-refund].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-flight-refund].title"
+    ]
+  },
+  {
+    "id": "df67ea53c3306c50",
+    "ru": "Краткое авторское изложение официальной информации, проверено 07.09.2026.",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].revision"
+    ]
+  },
+  {
+    "id": "90308891b21db11e",
+    "ru": "Безопасная передача сообщения",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].short"
+    ]
+  },
+  {
+    "id": "4d5248fd6bfeb2a8",
+    "ru": "безопасность",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].tags[0]"
+    ]
+  },
+  {
+    "id": "ace57e06ae7e2373",
+    "ru": "газ",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].tags[1]"
+    ]
+  },
+  {
+    "id": "1ec4a865b5adf159",
+    "ru": "При сообщении о запахе газа используют аварийную связь 104 или 112 из безопасного места. Диспетчеру передают адрес и обстоятельства, не проводят самостоятельное обследование опасного объекта. В тренажёре звонки не выполняются.",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].text"
+    ]
+  },
+  {
+    "id": "354715607b6685e6",
+    "ru": "Официальная информация АО «МОСГАЗ» об аварийной связи",
+    "contexts": [
+      "cases:SOURCES[norm11-gas-safety].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-gas-safety].title"
+    ]
+  },
+  {
+    "id": "030c27b3727328dc",
+    "ru": "Обнаружены изменения по 180-ФЗ от 10.06.2026, вступающие 01.03.2027. Задания проверяют сохраняющееся различие статуса объекта, лицензии и разрешения; не проверяют меняющиеся сроки выдачи, состав заявлений или новую процедуру советов. Повторная предметная проверка P3 нужна до заявления об актуальности всего профиля на будущую дату.",
+    "contexts": [
+      "cases:SOURCES[norm11-heritage].reviewNote"
+    ]
+  },
+  {
+    "id": "055df508d35213c5",
+    "ru": "Документы на конкретные работы по сохранению наследия",
+    "contexts": [
+      "cases:SOURCES[norm11-heritage].short",
+      "cases:SOURCES[norm11-heritage].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-heritage].title"
+    ]
+  },
+  {
+    "id": "baa631ad69a25e65",
+    "ru": "Рассмотрение всех существенных обстоятельств обращения",
+    "contexts": [
+      "cases:SOURCES[norm11-review].short",
+      "cases:SOURCES[norm11-review].title",
+      "source-index:SOURCE_INDEX.entries[shelf:norm11-review].title"
+    ]
+  },
+  {
+    "id": "040894de7d0c829b",
+    "ru": "Предложение, заявление, жалоба",
+    "contexts": [
+      "cases:SOURCES[proposal].article"
+    ]
+  },
+  {
+    "id": "09041356e89ad4bc",
+    "ru": "59-ФЗ, статья 4",
+    "contexts": [
+      "cases:SOURCES[proposal].number"
+    ]
+  },
+  {
+    "id": "c89eba90f1d8c201",
+    "ru": "Предложение",
+    "contexts": [
+      "cases:SOURCES[proposal].short"
+    ]
+  },
+  {
+    "id": "90f6a6eac3827d8a",
+    "ru": "предложение",
+    "contexts": [
+      "cases:SOURCES[proposal].tags[0]"
+    ]
+  },
+  {
+    "id": "0493cfbe28051c2a",
+    "ru": "вид обращения",
+    "contexts": [
+      "cases:SOURCES[proposal].tags[1]"
+    ]
+  },
+  {
+    "id": "4cf1fd0ac1423f36",
+    "ru": "Закон различает предложения, заявления и жалобы. Предложение направлено на совершенствование деятельности или улучшение различных сфер жизни; оно не требует обязательного указания уже причинённого вреда.",
+    "contexts": [
+      "cases:SOURCES[proposal].text"
+    ]
+  },
+  {
+    "id": "5aa9aff9ef4d2b82",
+    "ru": "Виды обращений",
+    "contexts": [
+      "cases:SOURCES[proposal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:proposal].title"
+    ]
+  },
+  {
+    "id": "fe70eee1a76120d8",
+    "ru": "Условия и полномочия",
+    "contexts": [
+      "cases:SOURCES[repeat].article"
+    ]
+  },
+  {
+    "id": "290cf9e70d728cab",
+    "ru": "59-ФЗ, статья 11, часть 5",
+    "contexts": [
+      "cases:SOURCES[repeat].number"
+    ]
+  },
+  {
+    "id": "29529b50afd05983",
+    "ru": "Проверено 06.09.2026",
+    "contexts": [
+      "cases:SOURCES[repeat].revision",
+      "cases:SOURCES[proposal].revision"
+    ]
+  },
+  {
+    "id": "ac5127cf2b23d9ef",
+    "ru": "повторное",
+    "contexts": [
+      "cases:SOURCES[repeat].tags[0]"
+    ]
+  },
+  {
+    "id": "cb25f1807d5de1a8",
+    "ru": "новые доводы",
+    "contexts": [
+      "cases:SOURCES[repeat].tags[1]"
+    ]
+  },
+  {
+    "id": "81c4a8c74818e7d0",
+    "ru": "Прекращение переписки по повторному вопросу требует предусмотренных законом условий, в том числе отсутствия новых доводов и обстоятельств и неоднократных прежних ответов по существу. Решение принимает уполномоченное лицо; гражданин уведомляется. Автоматический отказ после второго письма из этой нормы не следует.",
+    "contexts": [
+      "cases:SOURCES[repeat].text"
+    ]
+  },
+  {
+    "id": "aa6ea97d1efadde7",
+    "ru": "Новые доводы и прекращение переписки",
+    "contexts": [
+      "cases:SOURCES[repeat].title",
+      "source-index:SOURCE_INDEX.entries[shelf:repeat].title"
+    ]
+  },
+  {
+    "id": "a92ca7076619c22d",
+    "ru": "Компетенция и территориальные органы",
+    "contexts": [
+      "cases:SOURCES[rkn].article"
+    ]
+  },
+  {
+    "id": "407eed9c0e9f2082",
+    "ru": "Федеральная служба по надзору в сфере связи, информационных технологий и массовых коммуникаций",
+    "contexts": [
+      "cases:SOURCES[rkn].number"
+    ]
+  },
+  {
+    "id": "909f6156807a3693",
+    "ru": "Роскомнадзор",
+    "contexts": [
+      "cases:SOURCES[rkn].short"
+    ]
+  },
+  {
+    "id": "ec85411831b5328c",
+    "ru": "роскомнадзор",
+    "contexts": [
+      "cases:SOURCES[rkn].tags[1]"
+    ]
+  },
+  {
+    "id": "55e364608109d7e3",
+    "ru": "Найдите на официальном сайте подразделение или территориальный орган, работающий с защитой прав субъектов персональных данных. Проверьте официальный канал обращения. Игровая приёмная готовит материалы к направлению, но не принимает решения о санкциях от имени Роскомнадзора.",
+    "contexts": [
+      "cases:SOURCES[rkn].text"
+    ]
+  },
+  {
+    "id": "6ac15e065ea326fa",
+    "ru": "Защита прав субъектов персональных данных",
+    "contexts": [
+      "cases:SOURCES[rkn].title",
+      "source-index:SOURCE_INDEX.entries[shelf:rkn].title"
+    ]
+  },
+  {
+    "id": "e69d0c410228ccdf",
+    "ru": "Раздел V; условия конкретного задания",
+    "contexts": [
+      "cases:SOURCES[rules].article"
+    ]
+  },
+  {
+    "id": "7292b734347e9d7c",
+    "ru": "Правила делопроизводства, приказ Росархива от 22.05.2019 № 71",
+    "contexts": [
+      "cases:SOURCES[rules].number"
+    ]
+  },
+  {
+    "id": "199d71a98c5f69ac",
+    "ru": "Профиль упражнения, не универсальная юридическая консультация",
+    "contexts": [
+      "cases:SOURCES[rules].revision"
+    ]
+  },
+  {
+    "id": "cd51d9abd2a13d19",
+    "ru": "Счёт дней",
+    "contexts": [
+      "cases:SOURCES[rules].short"
+    ]
+  },
+  {
+    "id": "25c5ee9e379e5cff",
+    "ru": "календарь",
+    "contexts": [
+      "cases:SOURCES[rules].tags[1]"
+    ]
+  },
+  {
+    "id": "f37d57be5330eb62",
+    "ru": "В этих календарных упражнениях порядок счёта задан явно: начальный день не включается, календарные дни внутри срока не пропускаются; нерабочее окончание переносится на следующий рабочий день. Для иной процедуры правило переноса нельзя принимать автоматически. Срок ответа не является сроком ремонта.",
+    "contexts": [
+      "cases:SOURCES[rules].text"
+    ]
+  },
+  {
+    "id": "d4cb077cf9391b85",
+    "ru": "Правило учебного календарного эпизода",
+    "contexts": [
+      "cases:SOURCES[rules].title",
+      "source-index:SOURCE_INDEX.entries[shelf:rules].title"
+    ]
+  },
+  {
+    "id": "6fd9f45e4771e54a",
+    "ru": "Федеральный закон от 24.11.1995 № 181-ФЗ",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].number"
+    ]
+  },
+  {
+    "id": "1322f7a9a4ae971c",
+    "ru": "Авторская сверка 2026-09-08; не независимая экспертиза.",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].revision",
+      "cases:SOURCES[v16-norm-interest].revision",
+      "cases:SOURCES[v16-norm-settlement].revision"
+    ]
+  },
+  {
+    "id": "ba841d509ac017c9",
+    "ru": "181-ФЗ",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].short"
+    ]
+  },
+  {
+    "id": "e69b694e3ce20067",
+    "ru": "доступность",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].tags[1]",
+      "cases:SOURCES[v16-norm-interest].tags[1]",
+      "cases:SOURCES[v16-norm-settlement].tags[1]"
+    ]
+  },
+  {
+    "id": "d39b679b45e599ad",
+    "ru": "компетенция",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].tags[2]",
+      "cases:SOURCES[v16-norm-interest].tags[2]",
+      "cases:SOURCES[v16-norm-settlement].tags[2]"
+    ]
+  },
+  {
+    "id": "4985fdcd92e6cbab",
+    "ru": "Доступность услуг и помощь при преодолении барьеров",
+    "contexts": [
+      "cases:SOURCES[v16-norm-access].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-access].title"
+    ]
+  },
+  {
+    "id": "0d0d0e828f378935",
+    "ru": "Статья 5",
+    "contexts": [
+      "cases:SOURCES[v16-norm-caseaccess].article"
+    ]
+  },
+  {
+    "id": "b1ab832bbab8449d",
+    "ru": "Ознакомление с материалами рассмотрения обращения",
+    "contexts": [
+      "cases:SOURCES[v16-norm-caseaccess].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-caseaccess].title"
+    ]
+  },
+  {
+    "id": "eb2cb0d1e76e2ef7",
+    "ru": "Статья 6",
+    "contexts": [
+      "cases:SOURCES[v16-norm-confidential].article"
+    ]
+  },
+  {
+    "id": "7f719744a43b57b6",
+    "ru": "Конфиденциальность сведений обращения",
+    "contexts": [
+      "cases:SOURCES[v16-norm-confidential].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-confidential].title"
+    ]
+  },
+  {
+    "id": "f53faa3fe18f9ba3",
+    "ru": "Статья 4",
+    "contexts": [
+      "cases:SOURCES[v16-norm-electronic].article"
+    ]
+  },
+  {
+    "id": "c83a9e8b12da8dd3",
+    "ru": "Электронное обращение и событие поступления",
+    "contexts": [
+      "cases:SOURCES[v16-norm-electronic].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-electronic].title"
+    ]
+  },
+  {
+    "id": "0c525e9ef34a967a",
+    "ru": "Статья 10",
+    "contexts": [
+      "cases:SOURCES[v16-norm-interest].article",
+      "cases:SOURCES[v16-norm-review].article",
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article10].label"
+    ]
+  },
+  {
+    "id": "29fe33bbbacb0314",
+    "ru": "Федеральный закон от 25.12.2008 № 273-ФЗ",
+    "contexts": [
+      "cases:SOURCES[v16-norm-interest].number",
+      "cases:SOURCES[v16-norm-settlement].number"
+    ]
+  },
+  {
+    "id": "e6506a460c51e7d9",
+    "ru": "Личная заинтересованность и конфликт интересов",
+    "contexts": [
+      "cases:SOURCES[v16-norm-interest].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-interest].title"
+    ]
+  },
+  {
+    "id": "304e470debecacd6",
+    "ru": "Статья 11.2",
+    "contexts": [
+      "cases:SOURCES[v16-norm-mfc].article"
+    ]
+  },
+  {
+    "id": "9ec4160b6b75528f",
+    "ru": "Статья 2",
+    "contexts": [
+      "cases:SOURCES[v16-norm-petition].article"
+    ]
+  },
+  {
+    "id": "2636d853cc08b2c7",
+    "ru": "Право граждан на обращение",
+    "contexts": [
+      "cases:SOURCES[v16-norm-petition].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-petition].title"
+    ]
+  },
+  {
+    "id": "b279215a6ba4b629",
+    "ru": "Объективное рассмотрение и меры защиты прав",
+    "contexts": [
+      "cases:SOURCES[v16-norm-review].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-review].title"
+    ]
+  },
+  {
+    "id": "dbd5539453821ee1",
+    "ru": "Регистрация, направление и запрет рассмотрения жалобы на себя",
+    "contexts": [
+      "cases:SOURCES[v16-norm-routing].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-routing].title"
+    ]
+  },
+  {
+    "id": "b262a1d0b04b3dda",
+    "ru": "Уведомление и урегулирование конфликта интересов",
+    "contexts": [
+      "cases:SOURCES[v16-norm-settlement].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-settlement].title"
+    ]
+  },
+  {
+    "id": "d54f0ac0f3ff992c",
+    "ru": "Статья 3",
+    "contexts": [
+      "cases:SOURCES[v16-norm-sfrpayer].article"
+    ]
+  },
+  {
+    "id": "d3f10d0cb67d392b",
+    "ru": "Федеральный закон от 29.12.2006 № 255-ФЗ",
+    "contexts": [
+      "cases:SOURCES[v16-norm-sfrpayer].number",
+      "cases:SOURCES[v16-norm-sfrterm].number"
+    ]
+  },
+  {
+    "id": "80419477291317c0",
+    "ru": "255-ФЗ",
+    "contexts": [
+      "cases:SOURCES[v16-norm-sfrpayer].short",
+      "cases:SOURCES[v16-norm-sfrterm].short"
+    ]
+  },
+  {
+    "id": "26f6c34fb05bf9f8",
+    "ru": "Источник финансирования пособия",
+    "contexts": [
+      "cases:SOURCES[v16-norm-sfrpayer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-sfrpayer].title"
+    ]
+  },
+  {
+    "id": "d431246294f8ba89",
+    "ru": "Назначение пособия и уведомление об отказе",
+    "contexts": [
+      "cases:SOURCES[v16-norm-sfrterm].title",
+      "source-index:SOURCE_INDEX.entries[shelf:v16-norm-sfrterm].title"
+    ]
+  },
+  {
+    "id": "3e1afe4196ba58cb",
+    "ru": "В плане отсутствует:",
+    "contexts": [
+      "engine.js:100"
+    ]
+  },
+  {
+    "id": "1033aa52974dce8f",
+    "ru": "Остались неподтверждённые дела или контрольные эпизоды.",
+    "contexts": [
+      "engine.js:110"
+    ]
+  },
+  {
+    "id": "7b2d929ba589aca2",
+    "ru": "Этот режим не записывает оценку.",
+    "contexts": [
+      "engine.js:112"
+    ]
+  },
+  {
+    "id": "f348a31cc800ca87",
+    "ru": "Смена принадлежит другому профилю.",
+    "contexts": [
+      "engine.js:113"
+    ]
+  },
+  {
+    "id": "538e22d32dce1e36",
+    "ru": "Смена ещё не подтверждена целиком.",
+    "contexts": [
+      "engine.js:114"
+    ]
+  },
+  {
+    "id": "008a8b945633029c",
+    "ru": "Приёмная. Первая смена",
+    "contexts": [
+      "engine.js:115"
+    ]
+  },
+  {
+    "id": "3958b61dbf2151f5",
+    "ru": "Учебный проект сообщения по делу «",
+    "contexts": [
+      "engine.js:144"
+    ]
+  },
+  {
+    "id": "150edb207f8ba18b",
+    "ru": "Выбран порядок:",
+    "contexts": [
+      "engine.js:145"
+    ]
+  },
+  {
+    "id": "5147b41da9c2dc45",
+    "ru": "Выбран маршрут:",
+    "contexts": [
+      "engine.js:146"
+    ]
+  },
+  {
+    "id": "58be4ec338651a80",
+    "ru": "Указанная вами крайняя дата:",
+    "contexts": [
+      "engine.js:147"
+    ]
+  },
+  {
+    "id": "98d1f8d8853c0e12",
+    "ru": "В проект включено:",
+    "contexts": [
+      "engine.js:148"
+    ]
+  },
+  {
+    "id": "9af1846c78fd6028",
+    "ru": "Проект воспроизводит ваш выбор и не исправляет его автоматически. Реальная отправка не производится.",
+    "contexts": [
+      "engine.js:149"
+    ]
+  },
+  {
+    "id": "a90caa5abd3c2b3d",
+    "ru": "Дело не найдено.",
+    "contexts": [
+      "engine.js:18"
+    ]
+  },
+  {
+    "id": "868343e1ab697fb9",
+    "ru": "Дело не назначено этой смене.",
+    "contexts": [
+      "engine.js:20"
+    ]
+  },
+  {
+    "id": "5ecaace9b7c4194e",
+    "ru": "Дата в календаре не существует. Используйте ДД.ММ.ГГГГ или выберите день.",
+    "contexts": [
+      "engine.js:45"
+    ]
+  },
+  {
+    "id": "979d14eb6828b954",
+    "ru": "Дата правового акта не существует. Используйте ДД.ММ.ГГГГ.",
+    "contexts": [
+      "engine.js:46"
+    ]
+  },
+  {
+    "id": "a8a8982d363de8d6",
+    "ru": "Укажите публичный http(s)-адрес дополнительного источника без логина и пароля.",
+    "contexts": [
+      "engine.js:47"
+    ]
+  },
+  {
+    "id": "0c17db44ab0da985",
+    "ru": "Укажите публичный http(s)-адрес источника без логина и пароля.",
+    "contexts": [
+      "engine.js:48"
+    ]
+  },
+  {
+    "id": "04c1d8e557aa34c0",
+    "ru": "фрагмент источника",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "17b1ac83f75c35c3",
+    "ru": "событие для отсчёта",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "1a2a9c6e1b4d75f5",
+    "ru": "процедура",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "2c8bbe8019551766",
+    "ru": "дата правового акта",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "4838c5ce0cda1c61",
+    "ru": "оценка утверждения помощника",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "595285382d7117eb",
+    "ru": "план действий",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "5a0b543a431d865e",
+    "ru": "продолжительность",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "8f215472d1dfb55d",
+    "ru": "маршрут",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "954af4d98eca48ce",
+    "ru": "источник для проверки",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "99c773a4875ab96f",
+    "ru": "извлечённое сведение",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "9fd90596ad492c28",
+    "ru": "структурная единица нормы",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "a18054dbe7314ae0",
+    "ru": "вывод из источника",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "a930134ed48a3f3d",
+    "ru": "номер правового акта",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "a943817112d6d4ff",
+    "ru": "крайняя дата",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "b0ae00b5cf77de84",
+    "ru": "начало счёта",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "bc0c34c802458dc4",
+    "ru": "материал-основание",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "c3ab4f430cf2f18d",
+    "ru": "вывод из фактов",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "c70d5adbd2b0ad7a",
+    "ru": "применение нормы",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "d49e63e13061ff59",
+    "ru": "правило окончания",
+    "contexts": [
+      "engine.js:51"
+    ]
+  },
+  {
+    "id": "b22180897a4978a8",
+    "ru": "Дело не назначено.",
+    "contexts": [
+      "engine.js:53"
+    ]
+  },
+  {
+    "id": "ddd1a97d04630d74",
+    "ru": "Смена уже завершена.",
+    "contexts": [
+      "engine.js:54",
+      "engine.js:64"
+    ]
+  },
+  {
+    "id": "2d779ee5253879d7",
+    "ru": "Подтверждённое решение менять нельзя.",
+    "contexts": [
+      "engine.js:55"
+    ]
+  },
+  {
+    "id": "115e6196cb1a4544",
+    "ru": "Сначала подтвердите основное решение.",
+    "contexts": [
+      "engine.js:65"
+    ]
+  },
+  {
+    "id": "149f907e639f3d95",
+    "ru": "Контрольное решение уже зафиксировано.",
+    "contexts": [
+      "engine.js:66"
+    ]
+  },
+  {
+    "id": "ecd54779b7ed93d5",
+    "ru": "Выберите действие или явно пропустите эпизод.",
+    "contexts": [
+      "engine.js:67"
+    ]
+  },
+  {
+    "id": "1cf19901a9494f23",
+    "ru": "Выберите достаточный набор материалов, подтверждающий именно выбранный вывод. Нужны связанные основания, а не отметка всех документов. Открытие и сравнение сами по себе не оцениваются.",
+    "contexts": [
+      "engine.js:92"
+    ]
+  },
+  {
+    "id": "9256d226b3450c97",
+    "ru": "Сопоставьте вывод с материалом «",
+    "contexts": [
+      "engine.js:92"
+    ]
+  },
+  {
+    "id": "ab8ce77bd341ee2b",
+    "ru": "». Открытие всех файлов само по себе не подтверждает этот навык.",
+    "contexts": [
+      "engine.js:92"
+    ]
+  },
+  {
+    "id": "64f1d3b2d7881afd",
+    "ru": "Правовое основание этого задания:",
+    "contexts": [
+      "engine.js:93"
+    ]
+  },
+  {
+    "id": "efc5ec5f7286424a",
+    "ru": "Выбранная процедура не соответствует содержанию обращения. Сопоставьте предмет просьбы с применимым законом.",
+    "contexts": [
+      "engine.js:95"
+    ]
+  },
+  {
+    "id": "ac7f764f8539969a",
+    "ru": "Маршрут не соответствует установленным обстоятельствам и вашей роли.",
+    "contexts": [
+      "engine.js:96"
+    ]
+  },
+  {
+    "id": "21415778976a9453",
+    "ru": "; крайняя дата",
+    "contexts": [
+      "engine.js:97"
+    ]
+  },
+  {
+    "id": "cd2d7ff117a88461",
+    "ru": "В этом упражнении исходное событие –",
+    "contexts": [
+      "engine.js:97"
+    ]
+  },
+  {
+    "id": "951fea66de396a6d",
+    "ru": "Поменяйте порядок зависимых действий: сначала необходимая предпосылка, затем опирающееся на неё действие.",
+    "contexts": [
+      "engine.js:98"
+    ]
+  },
+  {
+    "id": "42b6b0f2961a9084",
+    "ru": "Необоснованные действия:",
+    "contexts": [
+      "engine.js:99"
+    ]
+  },
+  {
+    "id": "3e9a5a5893a5ac79",
+    "ru": "Наименование и уровень",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].fragments[identity].label"
+    ]
+  },
+  {
+    "id": "9a812b89d1f68af1",
+    "ru": "Это официальный сайт муниципального округа Нижегородский в городе Москве. Он не является сайтом Нижегородской области и не тождествен сайту управы района.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].fragments[identity].text"
+    ]
+  },
+  {
+    "id": "23851fa758a96379",
+    "ru": "Разделы сайта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].fragments[navigation].label"
+    ]
+  },
+  {
+    "id": "62a0e5b0eac8035d",
+    "ru": "Поиск принятых муниципальных документов начинают с решений Совета депутатов и раздела бюджета. Страница с названием «Проект» не подтверждает принятие решения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].fragments[navigation].text"
+    ]
+  },
+  {
+    "id": "dff2ca45f841ff50",
+    "ru": "Официальный сайт",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:council-site].originalKind"
+    ]
+  },
+  {
+    "id": "0511295a75d3d76c",
+    "ru": "Муниципальный округ Нижегородский, Москва",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:council-site].scope"
+    ]
+  },
+  {
+    "id": "5a9d20b27cdb56bf",
+    "ru": "Предмет доступности включает не только вход в здание, но и фактическое получение услуги. В учебном деле человеку недоступно рабочее место на втором этаже, однако есть возможность организовать приём в доступном помещении первого этажа. Способ помощи согласуется с человеком.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].fragments[relevant].text"
+    ]
+  }
+]

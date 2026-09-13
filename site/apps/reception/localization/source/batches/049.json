@@ -1,0 +1,1156 @@
+[
+  {
+    "id": "470f3f735a92389d",
+    "ru": "Подтвердить отсутствие неисправности по проверке в другое время суток.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].routes[1].text"
+    ]
+  },
+  {
+    "id": "164ff5d5f942ba92",
+    "ru": "Требовать от заявителя личного ночного обследования как условия передачи сообщения исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].routes[2].text"
+    ]
+  },
+  {
+    "id": "816976670b274ffe",
+    "ru": "Днём исправен, ночью пропадает",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[signal-night-fault].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[signal-night-fault].title"
+    ]
+  },
+  {
+    "id": "d24c334bd459c31d",
+    "ru": "В предыдущем деле отличался номер перехода. Здесь место совпадает, но условия наблюдения и проверки различаются по времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].trap.explain",
+      "cases:CASE_TEMPLATES[signal-night-fault].coach.plan",
+      "cases:CASE_TEMPLATES[signal-night-fault].contrast.difference"
+    ]
+  },
+  {
+    "id": "45abee17408adbcb",
+    "ru": "Помощник: «Дневной акт не проверяет автоматически ночной интервал, но и само сообщение ещё не устанавливает причину события».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].trap.text"
+    ]
+  },
+  {
+    "id": "af81dbb50d14b142",
+    "ru": "Сопоставить схему обращения с идентификатором в ответе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[a0].title"
+    ]
+  },
+  {
+    "id": "237b829a5e40c808",
+    "ru": "Передать диспетчеру данные по П-2 и времени наблюдения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e843e29dc7355286",
+    "ru": "Запросить результат проверки нужного устройства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[a2].title"
+    ]
+  },
+  {
+    "id": "97b657d3a04f97ba",
+    "ru": "Сообщить заявителю, какое расхождение выявлено и что сделано",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[a3].title"
+    ]
+  },
+  {
+    "id": "83eca2f25a5f1990",
+    "ru": "Сверить последующий акт с П-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[a4].title"
+    ]
+  },
+  {
+    "id": "4d881ab7d0cdeb16",
+    "ru": "Самостоятельно отключить светофор без полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[b0].title",
+      "cases:CASE_TEMPLATES[signal-other-crossing].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "e872f5eccb12b193",
+    "ru": "Признать фото П-1 достаточным для П-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].actions[b1].title"
+    ]
+  },
+  {
+    "id": "53024869675b9a76",
+    "ru": "Заявитель отмечает П-2 на восточном переходе. В ответе исполнителя указана проверка П-1. Адрес перекрёстка общий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[d0].text"
+    ]
+  },
+  {
+    "id": "694cafc0e1de0be0",
+    "ru": "Схема П-1 и П-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[d0].title"
+    ]
+  },
+  {
+    "id": "bae881362ed2506e",
+    "ru": "Запись {{observed}} относится к кнопке П-2. Причина неисправности на записи не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1cb22348eb932f96",
+    "ru": "Снимок наблюдения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[d1].title"
+    ]
+  },
+  {
+    "id": "42e6df62c4ea8b19",
+    "ru": "Ориентир: 7–10 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].duration",
+      "cases:CASE_TEMPLATES[separate-waste-chain].duration"
+    ]
+  },
+  {
+    "id": "1d1cdfef1fced47b",
+    "ru": "Ответ о П-1 не подтверждает исправность П-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].factTask.explain",
+      "cases:CASE_TEMPLATES[signal-other-crossing].outcomes.good"
+    ]
+  },
+  {
+    "id": "25a9fc5c50e4765d",
+    "ru": "Все устройства одного перекрёстка считаются одной кнопкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "5e942a1e16c6a5c2",
+    "ru": "Фотография доказывает умышленное бездействие диспетчера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "231d38e6b2d67d28",
+    "ru": "Пришёл акт по П-2, но время испытания предшествует сообщению о новом отказе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.intro"
+    ]
+  },
+  {
+    "id": "f87721ce973e32c9",
+    "ru": "Проверить, охватывает ли акт новое наблюдение, и организовать актуальную проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.options[0].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.explain"
+    ]
+  },
+  {
+    "id": "075ca10d7b79a9e5",
+    "ru": "Считать любой акт с П-2 окончательным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9ababa449302b704",
+    "ru": "Обвинить заявителя в ложном сообщении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "3c1c78d82e8ead47",
+    "ru": "Требование безопасности дорожного движения относится к фактическому состоянию конкретного объекта. Общий адрес перекрёстка не делает результат испытания П-1 доказательством исправности П-2. Нужны относимая проверка и оперативная передача сведений, а не самостоятельное переключение сигналов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].knowledge.explain"
+    ]
+  },
+  {
+    "id": "5cdddf7c6b6be19f",
+    "ru": "Найдите норму о безопасности дорожного движения при содержании дорог.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "ba05606da0edd3bd",
+    "ru": "Кнопка у школы снова не работает. Мне прислали фотографию зелёного сигнала, но там другой угол перекрёстка. У нас дети всё ещё переходят наугад.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].opening"
+    ]
+  },
+  {
+    "id": "47b6c36e79a6e1ea",
+    "ru": "Проверка исполнения обращения о конкретном объекте дорожной инфраструктуры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].procedures[0].text"
+    ]
+  },
+  {
+    "id": "b3274da4ea956432",
+    "ru": "Пересчёт штрафов водителям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].procedures[1].text"
+    ]
+  },
+  {
+    "id": "adb3d0ee3ce03600",
+    "ru": "Жалоба на оценку в школе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].procedures[2].text"
+    ]
+  },
+  {
+    "id": "cfca8e6399a6d2cb",
+    "ru": "На восточной стороне; в схеме она обозначена П-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b0aaf81e73dc8870",
+    "ru": "Один перекрёсток может содержать несколько разных устройств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q0].fact",
+      "cases:CASE_TEMPLATES[signal-other-crossing].coach.talk"
+    ]
+  },
+  {
+    "id": "4c133d6d06ca10bb",
+    "ru": "Где стоит кнопка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q0].text"
+    ]
+  },
+  {
+    "id": "df1c4c84dec5f787",
+    "ru": "На снимке западный переход П-1; адрес улицы тот же.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "73a015d5d6c94177",
+    "ru": "Совпадения адреса недостаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d5ae5cbbed41e7f2",
+    "ru": "Что видно в ответе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q1].text"
+    ]
+  },
+  {
+    "id": "6cab82069ae2e605",
+    "ru": "На {{observed}} кнопка П-2 не реагировала в течение нескольких циклов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ab3a14e32fa330c7",
+    "ru": "Нужны время и наблюдаемый признак, а не догадка о причине.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "612f3fe33211abae",
+    "ru": "Когда наблюдалась неисправность?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q2].text"
+    ]
+  },
+  {
+    "id": "dffa011716ccf734",
+    "ru": "Да, люди обходят очередь и выходят на дорогу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9be9e8aa318ea6f7",
+    "ru": "Оперативная передача не ждёт общего срока письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "a953ff31de532ee3",
+    "ru": "Есть ли текущая опасность?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b3a9def56eb28e45",
+    "ru": "Уточняет идентификатор объекта и передаёт сведения диспетчеру. Не меняет режим сигналов самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].role.text"
+    ]
+  },
+  {
+    "id": "5d7cf3f0b2373b87",
+    "ru": "Сотрудник приёмной транспортного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].role.title"
+    ]
+  },
+  {
+    "id": "0f45eff6fb0681ab",
+    "ru": "Передать точный идентификатор П-2 диспетчеру и организовать проверку результата по этому устройству.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].routes[0].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].coach.plan",
+      "cases:CASE_TEMPLATES[signal-other-crossing].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "454ac3afa191849e",
+    "ru": "Повторно направить ответ о П-1 как достаточный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].routes[1].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "1b0d9334779f5faa",
+    "ru": "Самостоятельно отключить весь светофор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].routes[2].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2d3ddd524f0d7066",
+    "ru": "Починили соседний переход",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[signal-other-crossing].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[signal-other-crossing].title"
+    ]
+  },
+  {
+    "id": "df129819f85a527d",
+    "ru": "Дорожная безопасность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].topic",
+      "cases:CASE_TEMPLATES[signal-other-crossing].tag",
+      "cases:CASE_TEMPLATES[signal-visibility].topic"
+    ]
+  },
+  {
+    "id": "8c2f2a28a1d7cfc7",
+    "ru": "Для исполнения нужен тот же объект, а не только название улицы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].trap.options[0].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].trap.explain"
+    ]
+  },
+  {
+    "id": "a0e1d180cd9646de",
+    "ru": "Закрыть по совпадению адреса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "86b771ec4536c76b",
+    "ru": "Помощник: «Адрес совпал, значит исполнено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-other-crossing].trap.text"
+    ]
+  },
+  {
+    "id": "38ddf7db42b69a94",
+    "ru": "Различить предложение о режиме и сообщение о неисправности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a62aace5b6a56ec9",
+    "ru": "Сопоставить действующий план и фактическую работу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[a1].title"
+    ]
+  },
+  {
+    "id": "ae37b62363ead170",
+    "ru": "Передать предложение на оценку уполномоченному профильному подразделению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a0ad4c8e48bf554c",
+    "ru": "Сообщить порядок рассмотрения без обещания конкретного изменения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[a3].title"
+    ]
+  },
+  {
+    "id": "9159069fc013c12a",
+    "ru": "Проверить, что ответ касается удобства и режима, а не только исправности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[a4].title"
+    ]
+  },
+  {
+    "id": "956af8ed3f2fe0db",
+    "ru": "Самостоятельно увеличить фазу на предложенное число секунд",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[b0].title"
+    ]
+  },
+  {
+    "id": "8f790fe45bfeee19",
+    "ru": "Отказать без рассмотрения только из-за отсутствия технической поломки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].actions[b1].title"
+    ]
+  },
+  {
+    "id": "2c47071bbaa5baab",
+    "ru": "Отказать без рассмотрения только из-за отсутствия технической поломки: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "fe01aadbddf9c3d1",
+    "ru": "Для П-7 утверждена определённая схема фаз. Проверка подтвердила её фактическое исполнение. В материалах нет установления оптимальности схемы для всех групп пешеходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d0].text"
+    ]
+  },
+  {
+    "id": "73bc939533abed58",
+    "ru": "Действующий план регулирования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d0].title"
+    ]
+  },
+  {
+    "id": "eb9f53b006ae4a1c",
+    "ru": "Предложено увеличить одну фазу на десять секунд. Расчёт влияния на другие фазы отсутствует. Уполномоченное подразделение организации движения оценивает предложение; приёмная готовит материалы и ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d1].text"
+    ]
+  },
+  {
+    "id": "52c33968415a9b4b",
+    "ru": "Предложение жителя и компетенция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d1].title"
+    ]
+  },
+  {
+    "id": "89f84142a98d023a",
+    "ru": "На соседнем перекрёстке другая схема и потоки. Её длительность нельзя копировать без оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d2].text"
+    ]
+  },
+  {
+    "id": "013be2d2539df0e2",
+    "ru": "План соседнего перекрёстка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d2].title"
+    ]
+  },
+  {
+    "id": "030cb930778a0dee",
+    "ru": "Нужно рассмотреть предложение о режиме движения; неисправность не установлена, а изменение требует компетентной оценки. В исходном сюжете требовалась проверка неисправности. Здесь предмет — улучшение режима, поэтому ответ о работающих лампах недостаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.explain"
+    ]
+  },
+  {
+    "id": "2064f943cbcbe05f",
+    "ru": "Нужно рассмотреть предложение о режиме движения; неисправность не установлена, а изменение требует компетентной оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "e1b764d9a1e3d157",
+    "ru": "Раз оборудование исполняет текущий план, предложение можно не рассматривать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "e3d09c0664b93655",
+    "ru": "Предложенная жителем длительность достаточна для самостоятельного изменения контроллера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "4e6c7ae05a1d138a",
+    "ru": "Вернуть на содержательное рассмотрение именно предложение о режиме и его обосновании. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].followup.explain"
+    ]
+  },
+  {
+    "id": "36c97453e2281650",
+    "ru": "Профильное подразделение ответило только: «Лампы исправны», не рассмотрев предложение о длительности фазы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].followup.intro"
+    ]
+  },
+  {
+    "id": "32ae6d03c3cb76a6",
+    "ru": "Вернуть на содержательное рассмотрение именно предложение о режиме и его обосновании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "3e1bfeafe832f520",
+    "ru": "Закрыть вопрос, поскольку техническая проверка проведена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "387e6a9c2c709a50",
+    "ru": "Самостоятельно вычислить оптимальные фазы без исходных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "e26b57f4d9f37a1f",
+    "ru": "Светофор работает, но мне кажется, зелёный слишком короткий. Прошу сразу добавить десять секунд. Можно это сделать вашим распоряжением?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].opening"
+    ]
+  },
+  {
+    "id": "5fcb69a7b3198179",
+    "ru": "Квалифицировать неудобную длительность фазы как доказанную поломку оборудования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].procedures[1].text"
+    ]
+  },
+  {
+    "id": "08659c486197204e",
+    "ru": "Рассмотреть пожелание как готовое техническое решение, не требующее проверки конфликтующих потоков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].procedures[2].text"
+    ]
+  },
+  {
+    "id": "3f617e1a69716fb0",
+    "ru": "Нет. Меня беспокоит удобство перехода, а не погасшая секция.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "f2148b6e0d5108bc",
+    "ru": "Это предложение изменить организацию движения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "ae37c4810fed14bf",
+    "ru": "Есть ли сообщение о неисправности?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q0].text"
+    ]
+  },
+  {
+    "id": "d339051bce8da66b",
+    "ru": "Выписка и техническая проверка подтверждают работу по действующему плану.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "dcb8d2f88f2d7dde",
+    "ru": "Соответствие плану не доказывает оптимальность для всех пользователей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f2f9ebdd625f39e7",
+    "ru": "Что известно о действующем режиме?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q1].text"
+    ]
+  },
+  {
+    "id": "cfba37359d0277f1",
+    "ru": "Это моя оценка. Измерений потока и расчёта влияния на соседние фазы у меня нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "e80670fce3996171",
+    "ru": "Число не является готовым техническим обоснованием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "d34568e7e3e0c9ce",
+    "ru": "Почему предлагаются именно десять секунд?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e9dc3319a60f8b77",
+    "ru": "По условиям дела профильное подразделение после необходимой оценки, не сотрудник приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "3c35810c53c2fb71",
+    "ru": "Роль игрока ограничена подготовкой рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "df9063aa8d5aec94",
+    "ru": "Кто вправе изменять режим?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].questions[q3].text"
+    ]
+  },
+  {
+    "id": "ed7b632404e0ad3d",
+    "ru": "Специалист приёмной органа, отвечающего за организацию движения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].role.title"
+    ]
+  },
+  {
+    "id": "08d9a48190549ecd",
+    "ru": "Подготовить рассмотрение предложения профильным подразделением; не обещать заранее конкретный режим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].routes[0].text"
+    ]
+  },
+  {
+    "id": "08c63eb163749afc",
+    "ru": "Увеличить указанную фазу на желаемое число секунд по решению сотрудника приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].routes[1].text"
+    ]
+  },
+  {
+    "id": "0921f39e4aad5983",
+    "ru": "Отклонить инициативу только потому, что оборудование исправно, без рассмотрения режима движения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].routes[2].text"
+    ]
+  },
+  {
+    "id": "6d5c19d5dd2906d7",
+    "ru": "Добавьте десять секунд зелёного",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[signal-timing-proposal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[signal-timing-proposal].title"
+    ]
+  },
+  {
+    "id": "fd8f3ec88a7eb1c9",
+    "ru": "В исходном сюжете требовалась проверка неисправности. Здесь предмет — улучшение режима, поэтому ответ о работающих лампах недостаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].trap.explain",
+      "cases:CASE_TEMPLATES[signal-timing-proposal].coach.plan",
+      "cases:CASE_TEMPLATES[signal-timing-proposal].contrast.difference"
+    ]
+  },
+  {
+    "id": "a6f4ec06309382a0",
+    "ru": "Помощник: «Предложение о режиме требует ответа по существу, даже если лампы и контроллер исправны».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-timing-proposal].trap.text"
+    ]
+  },
+  {
+    "id": "f227079a5a34fc02",
+    "ru": "Сопоставить предмет электрической проверки и осмотр видимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a10d46beb75cb2c4",
+    "ru": "Уточнить сторону подхода и идентификатор перехода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7d68be4c337346c0",
+    "ru": "Подготовить согласованные действия назначенных компетентных исполнителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[a2].title"
+    ]
+  },
+  {
+    "id": "28d918f75a8dd607",
+    "ru": "Сообщить заявителю, какой дефект остаётся на контроле",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[a3].title"
+    ]
+  },
+  {
+    "id": "544b96ed05ac5eee",
+    "ru": "Проверить видимость именно с указанной стороны после выполнения работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[a4].title"
+    ]
+  },
+  {
+    "id": "17d06ac422356ff0",
+    "ru": "Закрыть жалобу по одному акту исправности электроники",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[b0].title"
+    ]
+  },
+  {
+    "id": "3832798869396985",
+    "ru": "Попросить заявителя самому срезать ветви у дороги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].actions[b1].title"
+    ]
+  },
+  {
+    "id": "aa8c26a43535c67f",
+    "ru": "Попросить заявителя самому срезать ветви у дороги: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1d4612df6871e439",
+    "ru": "Питание и переключение исправны. Акт относится к переходу П-3. Оценки видимости сигнала со стороны библиотеки в нём нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d0].text"
+    ]
+  },
+  {
+    "id": "60f1dbfdc1c75cd9",
+    "ru": "Акт электрической проверки П-3",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fe5f13916377347c",
+    "ru": "Специалист подтвердил перекрытие обзора ветвями со стороны библиотеки. В учебной карточке указаны два компетентных исполнителя: содержание технического средства и уход за насаждениями. Самостоятельная вырубка не предусмотрена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f20dffbcdd088911",
+    "ru": "Осмотр видимости и разграничение задач",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d1].title"
+    ]
+  },
+  {
+    "id": "b03e2f6129d76a56",
+    "ru": "С противоположного подхода сигнал виден. Этот снимок не подтверждает видимость со стороны библиотеки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d2].text"
+    ]
+  },
+  {
+    "id": "ec990a8daa4e2a7e",
+    "ru": "Фото обратной стороны",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].documents[d2].title"
+    ]
+  },
+  {
+    "id": "161575aef844d6ca",
+    "ru": "Электрическая исправность подтверждена, но установленный дефект видимости не устранён. В первоначальном деле прислали акт другого перехода. Здесь объект тот же, но проверен не тот аспект его работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.explain"
+    ]
+  },
+  {
+    "id": "49669e5d2e7cc0e3",
+    "ru": "Электрическая исправность подтверждена, но установленный дефект видимости не устранён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8c1dc53233e35502",
+    "ru": "Исправный контроллер означает безопасность обзора со всех подходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "027d875c10e8cb3a",
+    "ru": "Любое перекрытие ветвями позволяет сотруднику приёмной распорядиться о вырубке всех деревьев.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "34ed7a3eee929ed6",
+    "ru": "Запросить проверку видимости с подхода к библиотеке, не считать другое направление доказательством. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].followup.explain"
+    ]
+  },
+  {
+    "id": "dfb69cea173606fb",
+    "ru": "Прислано фото после работ: оно опять сделано с противоположной стороны перехода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].followup.intro"
+    ]
+  },
+  {
+    "id": "2a9a90ed2b611c36",
+    "ru": "Запросить проверку видимости с подхода к библиотеке, не считать другое направление доказательством.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "1b68c65ebca860d2",
+    "ru": "Признать исполнение, потому что на фото есть зелёный сигнал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "4948fc35e0c9ed18",
+    "ru": "Поручить жителю фотографировать сигнал с проезжей части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "aace22d3bcb12ae1",
+    "ru": "У перехода не видно зелёного сигнала. Служба ответила, что электроника исправна, и закрыла заявку. Но ветви по-прежнему закрывают светофор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].opening"
+    ]
+  },
+  {
+    "id": "32ae0d582106125f",
+    "ru": "Проверить только питание и исправность лампы, не оценивая видимость сигнала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].procedures[1].text"
+    ]
+  },
+  {
+    "id": "22d0fe907013351e",
+    "ru": "Рассмотреть вопрос как предложение о новом светофоре, не анализируя существующий объект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].procedures[2].text"
+    ]
+  },
+  {
+    "id": "0f9c8b91943290f6",
+    "ru": "Питание, переключение и связь с контроллером. Видимость с подхода там не описана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "134b26d9def9e55b",
+    "ru": "Электрическая исправность не исчерпывает доступность сигнала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "88ffc4e5b4e85e60",
+    "ru": "В акте проверяли питание или видимость?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q0].text"
+    ]
+  },
+  {
+    "id": "cc183d3e7a2d4a67",
+    "ru": "Переход П-3, сторона подхода к библиотеке. Акт и фотография относятся к нему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "8e7305bc05b5a3cd",
+    "ru": "Идентификатор объекта совпадает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "306d14e017f2c371",
+    "ru": "Место точно установлено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e0adff6a8dd16d76",
+    "ru": "По отдельной карточке специалиста обзор с указанного подхода закрыт ветвями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "060691cc062c7dd1",
+    "ru": "Причина не выводится только из предположения жителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "80f7d2962f13897a",
+    "ru": "Есть ли документальная проверка видимости?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q2].text"
+    ]
+  },
+  {
+    "id": "fae1044d2eb23758",
+    "ru": "В карточке разграничения указаны содержание светофора и уход за насаждениями. Они должны согласовать действия по месту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "abbc1e23f65f2cff",
+    "ru": "Не надо назначать владельца по общему названию района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "04fc791ba24a59cc",
+    "ru": "Известны ответственные подразделения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].questions[q3].text"
+    ]
+  },
+  {
+    "id": "03e48cc30264ef5a",
+    "ru": "Специалист подразделения безопасности дорожного движения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].role.title",
+      "cases:CASE_TEMPLATES[signal-night-fault].role.title"
+    ]
+  },
+  {
+    "id": "f823e687ac04cb30",
+    "ru": "Передать установленную проблему видимости по разграниченным функциям; не вмешиваться самостоятельно в насаждения или схему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].routes[0].text"
+    ]
+  },
+  {
+    "id": "ee92dc89f3725bf7",
+    "ru": "Закрыть сообщение по электротехническому акту без оценки препятствия обзору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].routes[1].text"
+    ]
+  },
+  {
+    "id": "6e1c708e1b46a142",
+    "ru": "Поручить заявителю самому убрать препятствие, не обращаясь к ответственному исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].routes[2].text"
+    ]
+  },
+  {
+    "id": "8919d7184e55e0b8",
+    "ru": "Сигнал горит, но его не видно",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[signal-visibility].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[signal-visibility].title"
+    ]
+  },
+  {
+    "id": "ad289daf171b6269",
+    "ru": "В первоначальном деле прислали акт другого перехода. Здесь объект тот же, но проверен не тот аспект его работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].trap.explain",
+      "cases:CASE_TEMPLATES[signal-visibility].coach.plan",
+      "cases:CASE_TEMPLATES[signal-visibility].contrast.difference"
+    ]
+  },
+  {
+    "id": "fb62b4ab15337e3e",
+    "ru": "Помощник: «При исправной электронике больше нечего проверять по этому светофору».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-visibility].trap.text"
+    ]
+  },
+  {
+    "id": "0b97716be521a579",
+    "ru": "Сопоставить тип и квитанции обеих деклараций.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[a0].title"
+    ]
+  },
+  {
+    "id": "cd110356ff5ccb0f",
+    "ru": "Установить представление уточнённой до окончания прежней проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[a1].title"
+    ]
+  },
+  {
+    "id": "cbb27dd8f16b85b6",
+    "ru": "Подготовить расчёт и разъяснение от даты Д-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[a2].title"
+    ]
+  },
+  {
+    "id": "73f4d137c4618e0c",
+    "ru": "Разграничить окончание проверки и возможное перечисление возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[a3].title"
+    ]
+  },
+  {
+    "id": "2f3751915c31b308",
+    "ru": "Проверить ответ по нужной декларации и отсутствие подмены её даты письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[a4].title"
+    ]
+  },
+  {
+    "id": "d35f6c38a81ef4e6",
+    "ru": "Считать срок от дня регистрации обычного вопроса в приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[b0].title"
+    ]
+  },
+  {
+    "id": "659709c0c95a7660",
+    "ru": "Гарантировать зачисление заявленной суммы точно в день окончания проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].actions[b1].title",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "0894c4a02a8cbcac",
+    "ru": "Все участники и документы дела вымышлены. Речь об обычной 3-НДФЛ, не декларации по НДС и не упрощённом заявлении. До окончания первоначальной проверки представлена надлежащая уточнённая декларация за тот же период; после неё новых уточнённых деклараций нет. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Определите крайний день проверки уточнённой декларации, а не дату перечисления возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].brief"
+    ]
+  },
+  {
+    "id": "d7a43b3d8f21094a",
+    "ru": "Обычная 3-НДФЛ. Уточнённая представлена до окончания прежней проверки. Требуется срок новой проверки, не срок возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.context"
+    ]
+  },
+  {
+    "id": "a6663d577b86c75f",
+    "ru": "Уточнённая декларация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.events[amended].label"
+    ]
+  },
+  {
+    "id": "71285e7db5e9adb9",
+    "ru": "Первоначальная декларация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.events[declaration].label"
+    ]
+  },
+  {
+    "id": "d0cf219a47abdee8",
+    "ru": "Обычная 3-НДФЛ. Уточнённая представлена до окончания прежней проверки. Требуется срок новой проверки, не срок возврата. Профиль счёта этого упражнения: со следующего дня после события; нерабочее окончание переносится вперёд; федеральная пятидневная неделя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.scope"
+    ]
+  },
+  {
+    "id": "5c0be6d72961e9be",
+    "ru": "Статья 88, пункты 2 и 9.1 НК РФ; статья 6.1 НК РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.source"
+    ]
+  },
+  {
+    "id": "da487b369fba5beb",
+    "ru": "Крайний день проверки уточнённой декларации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.title"
+    ]
+  },
+  {
+    "id": "a12496ef294e3c09",
+    "ru": "В базовом деле была одна первоначальная декларация. Здесь новая проверка связана с принятой уточнённой декларацией, а не с дополнительным письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].coach.plan",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].contrast.difference"
+    ]
+  },
+  {
+    "id": "7153fcca01e87581",
+    "ru": "Обычная первоначальная 3-НДФЛ Д-1 представлена {{declaration}}. До завершения её проверки представлена уточнённая Д-2 {{amended}}. Оба документа за один налоговый период; Д-2 принята.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d0].text"
+    ]
+  },
+  {
+    "id": "e20525c035adf779",
+    "ru": "Квитанции деклараций",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d0].title"
+    ]
+  },
+  {
+    "id": "bc6aeff9957dd0ea",
+    "ru": "Предыдущая проверка не завершена к представлению Д-2. Уточнённая декларация заменяет исходные данные; после Д-2 другие уточнения не поступали. Обращение в приёмную получено {{received}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-amended-declaration].documents[d1].text"
+    ]
+  }
+]

@@ -1,0 +1,1167 @@
+[
+  {
+    "id": "348d8fada7709e58",
+    "ru": "Какое оборудование связано с описанным режимом воздействия?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.extracted.label"
+    ]
+  },
+  {
+    "id": "825d9e4b72a6e34c",
+    "ru": "Компетенция и переадресация обращения 59 статья 8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.searchHint"
+    ]
+  },
+  {
+    "id": "c3ba092df96cf38b",
+    "ru": "ЭК-41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "99d473b26ef84f2b",
+    "ru": "ЭК 41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "7c246900ab10e639",
+    "ru": "Каков номер подтверждённого электронного сертификата?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.extracted.label"
+    ]
+  },
+  {
+    "id": "ec080e4258e1f07f",
+    "ru": "Вывоз продукции из карантинной фитосанитарной зоны 206 статья 21",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.searchHint"
+    ]
+  },
+  {
+    "id": "6d42a0451b262c67",
+    "ru": "Подтвердите найденное сведение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-electronic.title",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.title",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.title"
+    ]
+  },
+  {
+    "id": "c4b4704fc8e864bc",
+    "ru": "ПЛ-31",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "d7fb757a4157fe51",
+    "ru": "ПЛ 31",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "8cb3ee518d9faa9e",
+    "ru": "Как обозначен представленный лабораторный протокол?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.extracted.label"
+    ]
+  },
+  {
+    "id": "bd922ec377dba958",
+    "ru": "П-12",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f43afee03b446a4c",
+    "ru": "П 12",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "f296220f24959e36",
+    "ru": "Какой участок сопоставлен с границей зоны?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.extracted.label"
+    ]
+  },
+  {
+    "id": "c08ac1e3121a220f",
+    "ru": "М-23",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "2edc6d2d4d01ec18",
+    "ru": "М 23",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b4f075c7e57ca287",
+    "ru": "Какой маршрут относится к П-23?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.extracted.label"
+    ]
+  },
+  {
+    "id": "a611e5daa0794db3",
+    "ru": "Места и порядок раздельного накопления отходов 89 статья 13.4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.searchHint"
+    ]
+  },
+  {
+    "id": "4e68e50d9c047eab",
+    "ru": "Р-5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "40dcb9dbcd48b238",
+    "ru": "Р 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "cb8ee28dc46df2a5",
+    "ru": "Какой отдельный пункт указан для исключённых предметов?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.extracted.label"
+    ]
+  },
+  {
+    "id": "4d77b487cca36804",
+    "ru": "П-9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4fb1e7bc7f8a8d23",
+    "ru": "П 9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "44052a4774d0b2cb",
+    "ru": "Какая площадка указана в подтверждённой реестровой записи?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.extracted.label"
+    ]
+  },
+  {
+    "id": "7d540873504643be",
+    "ru": "П-73",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "0b6feb841afc32c6",
+    "ru": "П73",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5bc057fe8bc81cd9",
+    "ru": "Какое постановление должно быть направлено?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.extracted.label"
+    ]
+  },
+  {
+    "id": "3a03f8d6dfce4964",
+    "ru": "Х-51",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "29e9fbea23e5fec5",
+    "ru": "Х51",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "37b53a5fe0f81a5f",
+    "ru": "Укажите номер ходатайства, переданного правомочному приставу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.extracted.label"
+    ]
+  },
+  {
+    "id": "2668e02ca0ac9fc3",
+    "ru": "Ходатайство и копия постановления 229 64.1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.searchHint"
+    ]
+  },
+  {
+    "id": "f8ca2049856d54c4",
+    "ru": "Ж-84",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "31fcbe8075243b77",
+    "ru": "Ж84",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "bc837222a11fc07b",
+    "ru": "Как обозначена бумажная жалоба без подписи?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.extracted.label"
+    ]
+  },
+  {
+    "id": "0645f139d7b15736",
+    "ru": "Неподписанная жалоба в порядке подчинённости 229 125",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.searchHint"
+    ]
+  },
+  {
+    "id": "1a1b9ccacd44dbd3",
+    "ru": "обращение и предложенный график",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "d5730a032bed9200",
+    "ru": "предложенный график",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "227ec4bfd885180f",
+    "ru": "Какой документ содержит только предложенный, а не утверждённый график?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.extracted.label"
+    ]
+  },
+  {
+    "id": "bbe91206b9e4a260",
+    "ru": "Рассрочка исполнения решения суда 138 203",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.searchHint"
+    ]
+  },
+  {
+    "id": "72c975df2f7f5191",
+    "ru": "СП-41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b5d5390f340211cf",
+    "ru": "СП41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1245280c320c2f50",
+    "ru": "Укажите идентификатор акта, относительно которого нужны возражения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.extracted.label"
+    ]
+  },
+  {
+    "id": "a1ab2c84f0883abc",
+    "ru": "Возражения относительно судебного приказа 138 129",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.searchHint"
+    ]
+  },
+  {
+    "id": "d9fe91426cbda992",
+    "ru": "Д-24",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "9a10c6d743eb0baa",
+    "ru": "Д24",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3e6c0fe463f60cf1",
+    "ru": "Как обозначен проверенный судебный документ?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.extracted.label"
+    ]
+  },
+  {
+    "id": "dc789e9fd78591de",
+    "ru": "Описка в решении суда 138 200",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.searchHint"
+    ]
+  },
+  {
+    "id": "6ce97216d69178a5",
+    "ru": "Г-11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "856719309c454143",
+    "ru": "Г11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3545b26d6d32bd99",
+    "ru": "Укажите идентификатор проверяемого планового графика.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.extracted.label"
+    ]
+  },
+  {
+    "id": "cecbc38d3882fb23",
+    "ru": "Отступление не является плановым графиком 160 9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.searchHint"
+    ]
+  },
+  {
+    "id": "0d04b8fda627a842",
+    "ru": "30 минут",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "80fb751ee4b925f1",
+    "ru": "тридцать минут",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0ec700019128c26c",
+    "ru": "Какова длительность последней части подтверждённого специального перерыва?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.extracted.label"
+    ]
+  },
+  {
+    "id": "a76a69f54c1fd11e",
+    "ru": "Специальный перерыв водителя 160 11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.searchHint"
+    ]
+  },
+  {
+    "id": "5ed5fcea972d181f",
+    "ru": "В-25",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "54f3f8de8babf97e",
+    "ru": "В25",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a5cdaccc8f738694",
+    "ru": "Как обозначена относящаяся к водителю сменная запись?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.extracted.label"
+    ]
+  },
+  {
+    "id": "d2a19fa6220dd215",
+    "ru": "Стоянка в ожидании посадки и рабочее время 160 13",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.searchHint"
+    ]
+  },
+  {
+    "id": "6d8549eee7a744d5",
+    "ru": "К-3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "6933f0dbae599c83",
+    "ru": "К3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3a4ad6acecc0ec60",
+    "ru": "Укажите коридор с подтверждённым препятствием.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.extracted.label"
+    ]
+  },
+  {
+    "id": "2617160ce401d8b7",
+    "ru": "Предметы на пути эвакуации 1479 27",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.searchHint"
+    ]
+  },
+  {
+    "id": "8c5cbca0d7e20a56",
+    "ru": "Э-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "086c871d942e0865",
+    "ru": "Э2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a040c1e5c3796484",
+    "ru": "Какой выход проверен изнутри?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.extracted.label"
+    ]
+  },
+  {
+    "id": "868e46a6f083f60f",
+    "ru": "Открывание эвакуационного выхода изнутри 1479 26",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.searchHint"
+    ]
+  },
+  {
+    "id": "73f73a5063a91737",
+    "ru": "Э-5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "8e407bd6ceefd67f",
+    "ru": "Э5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "e267af076aaca2ae",
+    "ru": "Укажите выход, исполнение по которому ещё не подтверждено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.extracted.label"
+    ]
+  },
+  {
+    "id": "d668ff7bf8358b8b",
+    "ru": "30 000 рублей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "35fe9840022e1e4b",
+    "ru": "30000 рублей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "d34839d6a594c131",
+    "ru": "Какова премия страховщику в отношении этой заёмщицы до вычета использованного периода?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.extracted.label"
+    ]
+  },
+  {
+    "id": "e331907fc169c102",
+    "ru": "К-27",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "72d8ba1edd839e10",
+    "ru": "К27",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3424d081449710ac",
+    "ru": "Какой номер кредита подтверждён справкой о полном исполнении?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.extracted.label"
+    ]
+  },
+  {
+    "id": "a172aa0012329dea",
+    "ru": "ИС-11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "7eea4ace74b6afef",
+    "ru": "ИС11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5afad5b023f72971",
+    "ru": "Укажите номер индивидуального полиса.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.extracted.label"
+    ]
+  },
+  {
+    "id": "7d0e4815950b3fe8",
+    "ru": "Страхование при потребительском кредите: адресат и основание возврата 353 11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.searchHint"
+    ]
+  },
+  {
+    "id": "c19193383907b361",
+    "ru": "П-82",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "5f56d83987df5253",
+    "ru": "П82",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b5ad9aafbfc1fc69",
+    "ru": "Какой документ подтверждает специальное обучение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.extracted.label"
+    ]
+  },
+  {
+    "id": "388f7bd0c03408fc",
+    "ru": "К-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "3467f6f0bcbbfe00",
+    "ru": "кабинет К-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "19b9ac5b2b0a5b1b",
+    "ru": "К2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "c175feba1c04641b",
+    "ru": "Какое место согласовано для чтения?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.extracted.label"
+    ]
+  },
+  {
+    "id": "cc06f4bc4ebb2ad6",
+    "ru": "письменный диалог",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f59c394fd530d431",
+    "ru": "письменно",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "0b836162ed5a12c2",
+    "ru": "письменная связь",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d287d7ec49ceb4b0",
+    "ru": "Какой доступный способ общения согласован?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.extracted.label"
+    ]
+  },
+  {
+    "id": "98f9d4d4d0d8740c",
+    "ru": "Сопоставьте материалы и прикрепите фрагмент, который позволяет проверить выбранный вывод.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.prompt"
+    ]
+  },
+  {
+    "id": "5e7d1aed2292cc10",
+    "ru": "Доступность услуг и помощь при преодолении барьеров 181 статья 15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-written-dialogue.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.searchHint"
+    ]
+  },
+  {
+    "id": "a295a6a1bed027d1",
+    "ru": "А-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "96a8974299a681c7",
+    "ru": "акт А-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "54420d09debf7658",
+    "ru": "А4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0c2f38e20b3ac5bf",
+    "ru": "Какой акт доступен для ознакомления?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.extracted.label"
+    ]
+  },
+  {
+    "id": "2fc82fad19603ca7",
+    "ru": "Ознакомление с материалами рассмотрения обращения 59 статья 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.searchHint"
+    ]
+  },
+  {
+    "id": "2a383d1c83a4e7f6",
+    "ru": "С-8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "aa82eeb2998cb313",
+    "ru": "С8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "43948d92229cac59",
+    "ru": "Кто указан как обжалуемое должностное лицо?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.extracted.label"
+    ]
+  },
+  {
+    "id": "59a03e6530960836",
+    "ru": "Регистрация, направление и запрет рассмотрения жалобы на себя 59 статья 8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.searchHint"
+    ]
+  },
+  {
+    "id": "9e15b778e6096f17",
+    "ru": "отказ в приёме документов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-wrong-procedure.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "eec8f1eab8d95baa",
+    "ru": "отказ принять документы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-wrong-procedure.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "f1fa741fe8872825",
+    "ru": "отказ в приеме документов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-wrong-procedure.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0e30ce31c521a17f",
+    "ru": "Какой предмет указан в Ж-18?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-wrong-procedure.extracted.label"
+    ]
+  },
+  {
+    "id": "f6e9dad24d9ca206",
+    "ru": "Досудебная жалоба при предоставлении услуги 210 статья 11.2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-wrong-procedure.searchHint"
+    ]
+  },
+  {
+    "id": "75ea68e7ce306a77",
+    "ru": "личный заём",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "1536f962d31f1b16",
+    "ru": "заем",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "55b574681b5e8159",
+    "ru": "долговое обязательство",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "268c789555e45ebf",
+    "ru": "долг по займу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "547f7fd5b0ba8d9e",
+    "ru": "Какая связь существует с организацией?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.extracted.label"
+    ]
+  },
+  {
+    "id": "d969642df449e80f",
+    "ru": "Уведомление и урегулирование конфликта интересов 273 статья 11",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-creditor.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.searchHint"
+    ]
+  },
+  {
+    "id": "b7b0d964bc7c954d",
+    "ru": "совпадение фамилии",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-namesake.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "490c17cc170c0487",
+    "ru": "одинаковая фамилия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-namesake.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "9be70a4ea41ec789",
+    "ru": "фамилия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-namesake.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "021fae1487feadfb",
+    "ru": "Какой единственный довод первоначально приводил коллега?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-namesake.extracted.label"
+    ]
+  },
+  {
+    "id": "57fda04232e28239",
+    "ru": "Личная заинтересованность и конфликт интересов 273 статья 10",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-namesake.searchHint"
+    ]
+  },
+  {
+    "id": "a86904a5b7b41fa9",
+    "ru": "С-1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f5af9af41905f81c",
+    "ru": "С1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1a42119d4c31fc36",
+    "ru": "Кто отведён от подготовки и согласования?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.extracted.label"
+    ]
+  },
+  {
+    "id": "314e57c66dc0ec6d",
+    "ru": "О-381",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f50b887ceb646dc4",
+    "ru": "О381",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "0812467bb3b89de7",
+    "ru": "Какой идентификатор присвоен поступлению?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.extracted.label"
+    ]
+  },
+  {
+    "id": "d2afcfb1635d93bf",
+    "ru": "Электронное обращение и событие поступления 59 статья 4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.searchHint"
+    ]
+  },
+  {
+    "id": "3f61623a4a368942",
+    "ru": "Какой файл не открывается?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-optional-attachment.extracted.label"
+    ]
+  },
+  {
+    "id": "b47d6369db5b00f5",
+    "ru": "поступление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "682556de90120338",
+    "ru": "доставка",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "fa93b562e835b4cd",
+    "ru": "доставку обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "daf4363fcc23bc99",
+    "ru": "Что именно подтверждает квитанция?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.extracted.label"
+    ]
+  },
+  {
+    "id": "3d921bbf95d19a59",
+    "ru": "прекращение горения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "88c591b9925fded6",
+    "ru": "прекращение эпизода горения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b895db4b1700495a",
+    "ru": "тушение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "958cea188281702b",
+    "ru": "Что подтверждено актом У-32?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.extracted.label"
+    ]
+  },
+  {
+    "id": "57276fef26c5e9af",
+    "ru": "У-30",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "3af5c081fdd21f4c",
+    "ru": "У30",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "27e9893f48c53768",
+    "ru": "К какой точке относится сообщение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.extracted.label"
+    ]
+  },
+  {
+    "id": "0a7075b560d3c454",
+    "ru": "Объективное рассмотрение и меры защиты прав 59 статья 10",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.searchHint"
+    ]
+  },
+  {
+    "id": "61841569f81b6490",
+    "ru": "федеральный",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b2c5ecfa70540cfb",
+    "ru": "федеральный экологический надзор",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "af45e8e9455bf43c",
+    "ru": "Какой уровень надзора установлен для Э-30?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.extracted.label"
+    ]
+  },
+  {
+    "id": "bead2780bdc965d7",
+    "ru": "от собственного имени",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "97d5d9af4fbc4516",
+    "ru": "от себя",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "6d68d60120e5d7de",
+    "ru": "индивидуально",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "f9489f178f372ff3",
+    "ru": "В каком качестве действует заявитель?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.extracted.label"
+    ]
+  },
+  {
+    "id": "5a07f64d1c599d62",
+    "ru": "Право граждан на обращение 59 статья 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.searchHint"
+    ]
+  },
+  {
+    "id": "6580626c018afa91",
+    "ru": "передать предложение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b6e96971728bc9c5",
+    "ru": "передача предложения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "c025ce73601eefa6",
+    "ru": "передать коллективное предложение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d6072e7bd1935b21",
+    "ru": "На что дано подтверждённое полномочие?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.extracted.label"
+    ]
+  },
+  {
+    "id": "0ab7fc3f7a571dd1",
+    "ru": "поддержку идеи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "dd3d4241962a1c17",
+    "ru": "поддержка предложения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a593fc1dccc209fc",
+    "ru": "поддержку предложения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "9f9c6b3c9fac7434",
+    "ru": "Что подтверждает протокол?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.extracted.label"
+    ]
+  },
+  {
+    "id": "1d15dbf70d129544",
+    "ru": "А",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "c236f030c4521c9a",
+    "ru": "приложение А",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2489dcce148d2d58",
+    "ru": "Какое приложение относится к маршруту?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.extracted.label"
+    ]
+  },
+  {
+    "id": "589455b39902455e",
+    "ru": "Конфиденциальность сведений обращения 59 статья 6",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.searchHint"
+    ]
+  },
+  {
+    "id": "235c8a2406f83369",
+    "ru": "освещение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "10107b42c36d9730",
+    "ru": "освещение на подходе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5232b643cc72c46a",
+    "ru": "свет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.extracted.accepted[2]"
+    ]
+  }
+]

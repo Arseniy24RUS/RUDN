@@ -1,0 +1,1164 @@
+[
+  {
+    "id": "19ee3f6b65706011",
+    "ru": "Применить специальный порядок претензии перевозчику с установленным получателем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].procedures[0].text"
+    ]
+  },
+  {
+    "id": "b780279a508c393d",
+    "ru": "Считать срок от первого упоминания ситуации в любой переписке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].procedures[1].text"
+    ]
+  },
+  {
+    "id": "c8cb45c16c3327e1",
+    "ru": "Подменить претензию перевозчику заявлением об отмене судебного акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].procedures[2].text"
+    ]
+  },
+  {
+    "id": "7556c8e5f2323596",
+    "ru": "В этом договоре такого полномочия нет, это установлено в материалах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "dd441d431ccdd9b5",
+    "ru": "Статус посредника нельзя предполагать для всех сайтов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1f7da1deec7ae3bd",
+    "ru": "Продавец принимает претензии от имени перевозчика?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q0].text"
+    ]
+  },
+  {
+    "id": "ed0a6fb1c71d7032",
+    "ru": "{{carrier}}, есть его уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "29aa4b7cde9fbc4a",
+    "ru": "Исходное событие специального срока подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "68d16fd0b75adca2",
+    "ru": "Когда письмо получил сам перевозчик?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q1].text"
+    ]
+  },
+  {
+    "id": "6983dc9dd89e6b4a",
+    "ru": "Только о собственной регистрации письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "bce7314c5c1bcaab",
+    "ru": "Это не решение перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "a1bbb8e7924a1dbd",
+    "ru": "Какой ответ дал сайт?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bfcc01b63d12753f",
+    "ru": "Нет, ответа по существу пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a11e3023258fee5e",
+    "ru": "Нужно отличать получение и результат рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9d88cc10494d734d",
+    "ru": "Все требования уже разрешены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].questions[q3].text"
+    ]
+  },
+  {
+    "id": "727f40fb67ddadb4",
+    "ru": "Разграничить ответ перевозчика и отдельный вопрос о действиях продавца билета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].routes[0].text"
+    ]
+  },
+  {
+    "id": "f8b5df23d2d9b4dc",
+    "ru": "Потребовать решение только от посредника вместо перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].routes[1].text"
+    ]
+  },
+  {
+    "id": "5ebb06dcac071980",
+    "ru": "Направить письмо другому перевозчику по совпадению номера рейса без договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].routes[2].text"
+    ]
+  },
+  {
+    "id": "f4734e8d341f24ee",
+    "ru": "Письмо принял продавец билета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[flight-agent-receipt].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[flight-agent-receipt].title"
+    ]
+  },
+  {
+    "id": "19891abbdc391d6b",
+    "ru": "Получатель, полномочие, исходная дата и результат рассмотрения — разные факты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].trap.explain"
+    ]
+  },
+  {
+    "id": "5e6632203bb86ad0",
+    "ru": "Автоматическое сообщение продавца о получении письма равно решению перевозчика об удовлетворении претензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].trap.text"
+    ]
+  },
+  {
+    "id": "c21c7b6a165cc452",
+    "ru": "Сопоставить отмену и основание отказа с билетом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[a0].title"
+    ]
+  },
+  {
+    "id": "4b17a65aa518a3b5",
+    "ru": "Установить полный неиспользованный объём и отсутствие согласия на ваучер",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[a1].title"
+    ]
+  },
+  {
+    "id": "063713659d86f822",
+    "ru": "Применить правило вынужденного отказа к данному комплекту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[a2].title"
+    ]
+  },
+  {
+    "id": "3e1df412f3367db2",
+    "ru": "Разъяснить требование и дальнейший маршрут без обещания произвольных штрафов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a94dc05743c90dd6",
+    "ru": "Контролировать содержательный ответ и фактическое исполнение отдельно",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[a4].title"
+    ]
+  },
+  {
+    "id": "bc0998f0af725f77",
+    "ru": "Отказать только по слову «невозвратный» без оценки основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[b0].title"
+    ]
+  },
+  {
+    "id": "27ea1ea93495320c",
+    "ru": "Оформить согласие на ваучер вместо пассажира",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].actions[b1].title",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5bf1a0f270dc2ed1",
+    "ru": "План должен следовать установленным фактам. В материалах установлен вынужденный отказ; автоматическое изменение требования его не заменяет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].coach.plan"
+    ]
+  },
+  {
+    "id": "e371dd7e0b8964da",
+    "ru": "Уточняйте предмет, объект, время и получателя. В базовом деле спорят о полноте ответа на задержку. Здесь отмена и вынужденный отказ делают неприменимым обычный аргумент о невозвратном тарифе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].coach.talk"
+    ]
+  },
+  {
+    "id": "4871bf84d009f6aa",
+    "ru": "В базовом деле спорят о полноте ответа на задержку. Здесь отмена и вынужденный отказ делают неприменимым обычный аргумент о невозвратном тарифе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].contrast.difference"
+    ]
+  },
+  {
+    "id": "69983db756711ff5",
+    "ru": "В тарифной памятке описано правило обычного добровольного отказа от невозвратного билета. Оно не устанавливает, что отмена перевозчиком является добровольной инициативой пассажира.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d0].text"
+    ]
+  },
+  {
+    "id": "d188b7f617914188",
+    "ru": "Описание добровольного отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d0].title"
+    ]
+  },
+  {
+    "id": "f9c9c7ebd4c15baf",
+    "ru": "Прямой внутренний рейс, полностью неиспользованный билет. Отмена перевозчиком подтверждена. Другие участки перевозки, медицинские основания и особый режим статьи 107.2 Воздушного кодекса по условию отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d1].text"
+    ]
+  },
+  {
+    "id": "51a38916478e1620",
+    "ru": "Билет и уведомление об отмене",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d1].title"
+    ]
+  },
+  {
+    "id": "917c0f8487ec5326",
+    "ru": "Пассажир заявил вынужденный отказ именно вследствие отмены. Соглашение о замене возврата ваучером не заключалось. Получение надлежащей претензии перевозчиком {{carrier}} подтверждено. Реквизиты платежа доступны уполномоченному получателю, не публикуются в игре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d2].text"
+    ]
+  },
+  {
+    "id": "087aaff976b98ab9",
+    "ru": "Заявление пассажира и предложение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a4ec510283f2c7ed",
+    "ru": "Претензия получена перевозчиком {{carrier}}. Письмо поступило в публичную приёмную {{received}} и зарегистрировано {{registered}}. Эти события не совпадают и относятся к разным процедурам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].documents[dates].text"
+    ]
+  },
+  {
+    "id": "bfba5770f4d5c293",
+    "ru": "Условие о невозвратном тарифе для добровольного отказа не разрешает автоматически отказать в возврате при подтверждённой отмене и вынужденном отказе в условиях этого дела. В базовом деле спорят о полноте ответа на задержку. Здесь отмена и вынужденный отказ делают неприменимым обычный аргумент о невозвратном тарифе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.explain"
+    ]
+  },
+  {
+    "id": "d665877e8239c2cd",
+    "ru": "Условие о невозвратном тарифе для добровольного отказа не разрешает автоматически отказать в возврате при подтверждённой отмене и вынужденном отказе в условиях этого дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8be8335d00dbe1ce",
+    "ru": "Невозвратный тариф исключает возврат при любых действиях перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f6169f34ea5f150a",
+    "ru": "Одно предложение ваучера доказывает согласие пассажира изменить требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "4f3ba090a555635d",
+    "ru": "Различить решение и выплату, запросить сведения об исполнении по надлежащему каналу. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].followup.explain"
+    ]
+  },
+  {
+    "id": "8d7cb8858a13a5a0",
+    "ru": "Перевозчик сообщил «возврат согласован», но подтверждения исполнения платежа пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].followup.intro"
+    ]
+  },
+  {
+    "id": "15746f37e9a6db49",
+    "ru": "Различить решение и выплату, запросить сведения об исполнении по надлежащему каналу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "ee92402add3a8d02",
+    "ru": "Отметить деньги полученными по фразе о согласовании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a1e07ce3353aea7d",
+    "ru": "Считать согласование добровольным согласием на ваучер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "580518dc6ddb6507",
+    "ru": "Условие о невозврате провозной платы при обычном добровольном отказе не исключает её возврат в предусмотренных случаях вынужденного отказа. В деле перевозчик отменил единственный внутренний рейс, перевозка полностью не использована, отказ заявлен именно по причине отмены; особый режим статьи 107.2 по условию не применяется. Пункт 2 статьи 108 и авиационные правила используются совместно; медицинские основания в этом задании не рассматриваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].knowledge.explain",
+      "cases:SOURCES[norm11-flight-refund].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-cancel-nonrefundable].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "747c3175d4b602b4",
+    "ru": "Разграничить добровольный отказ по тарифу и вынужденный отказ вследствие подтверждённой отмены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "95080000b88c7434",
+    "ru": "Применить условие невозвратности независимо от причины прекращения перевозки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "6be41d14d37f506a",
+    "ru": "Принять предложение ваучера за согласованное изменение требования без ответа пассажира.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "33601eae89e0f98b",
+    "ru": "Найдите норму: Вынужденный отказ и невозвратный тариф. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "18762b9ee1c455fa",
+    "ru": "Авиакомпания отменила единственный рейс в моём билете. Я отказался лететь из-за отмены, но мне сказали: тариф невозвратный, получите только ваучер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].opening"
+    ]
+  },
+  {
+    "id": "091e662820436f71",
+    "ru": "Рассмотреть вынужденный отказ и ответ на претензию отдельно от общего условия добровольного отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].procedures[0].text"
+    ]
+  },
+  {
+    "id": "f805a4948c5d10b1",
+    "ru": "Применить к отмене правило личной перемены планов пассажира.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].procedures[1].text"
+    ]
+  },
+  {
+    "id": "78d1d89bb0b0e804",
+    "ru": "Признать ваучер принятым без выраженной воли заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b48a658057aca29e",
+    "ru": "Сам перевозчик, это подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "97cb352e097aeb41",
+    "ru": "Основание отказа не личная перемена планов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "c2467a25982049b3",
+    "ru": "Кто отменил перевозку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5fb394ed9d4cb986",
+    "ru": "Нет, рейс один и билет не использован совсем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "b146ca71f9e7f718",
+    "ru": "Объём требования задан явно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6144b445f4c654fd",
+    "ru": "Часть билета использована?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ad47fec69c28286b",
+    "ru": "Нет, я его не давал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d7eb4cb3ef05f02f",
+    "ru": "Предложение и соглашение различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "d3f04bc4710b82b5",
+    "ru": "Есть ли согласие вместо денег принять ваучер?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q2].text"
+    ]
+  },
+  {
+    "id": "586b8ea034c2a4e6",
+    "ru": "Условие задачи их исключает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "18948d0990ba6331",
+    "ru": "Нельзя переносить вывод на любые исключительные режимы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "af9a96179842323b",
+    "ru": "Применимы особые правила ограничения возврата?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].questions[q3].text"
+    ]
+  },
+  {
+    "id": "ce8807988ae8631d",
+    "ru": "Подготовить обоснованное обращение к перевозчику по возврату и предусмотренный дальнейший маршрут защиты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].routes[0].text"
+    ]
+  },
+  {
+    "id": "41bc3780b2d1fb4f",
+    "ru": "Назначить выплату распоряжением неуполномоченного сотрудника приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].routes[1].text"
+    ]
+  },
+  {
+    "id": "bc7d2cb6d7fe40ef",
+    "ru": "Отправить требование изготовителю самолёта вместо стороны перевозки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].routes[2].text"
+    ]
+  },
+  {
+    "id": "e86e16cac71e602f",
+    "ru": "Невозвратный тариф, отменённый рейс",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[flight-cancel-nonrefundable].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[flight-cancel-nonrefundable].title"
+    ]
+  },
+  {
+    "id": "c2e87c701472fe73",
+    "ru": "В материалах установлен вынужденный отказ; автоматическое изменение требования его не заменяет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].trap.explain"
+    ]
+  },
+  {
+    "id": "f796ac21b19ed969",
+    "ru": "В данном деле предложенный ваучер нельзя считать выбранным пассажиром способом урегулирования без его согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].trap.text"
+    ]
+  },
+  {
+    "id": "23a2b6c3d2dcc2b9",
+    "ru": "Отделить претензию перевозчику от письма в приёмную",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[a0].title"
+    ]
+  },
+  {
+    "id": "928439df6be07b22",
+    "ru": "Установить подтверждённую дату получения перевозчиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[a1].title"
+    ]
+  },
+  {
+    "id": "c8314bbfd1f2d0e7",
+    "ru": "Подготовить объяснение срока и способа контроля решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f0ec6f97c6fcfb64",
+    "ru": "Не выдавать предварительное предположение о возмещении за принятое решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[a3].title"
+    ]
+  },
+  {
+    "id": "310521a0b29ed4af",
+    "ru": "Проверить наличие содержательного ответа по всем требованиям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[a4].title"
+    ]
+  },
+  {
+    "id": "0a81b9e1f07252c9",
+    "ru": "Подменить рассмотрение обещанием гарантированного возмещения без полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[b0].title",
+      "cases:CASE_TEMPLATES[flight-claim].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "164cf4e78595e389",
+    "ru": "Считать автоответ окончательным решением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].actions[b1].title"
+    ]
+  },
+  {
+    "id": "b79c7d9c030a3dc4",
+    "ru": "Получено перевозчиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].calendar.events[carrier].label",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].calendar.events[carrier].label",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].calendar.events[carrier].label"
+    ]
+  },
+  {
+    "id": "12047899be03af4f",
+    "ru": "Воздушный кодекс РФ, статья 127.1. Перенос окончания и начало счёта закреплены как профиль этого упражнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].calendar.source",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].calendar.source",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].calendar.source"
+    ]
+  },
+  {
+    "id": "d52308285ec65e0c",
+    "ru": "Крайняя дата рассмотрения претензии перевозчиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].calendar.title",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].calendar.title",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].calendar.title"
+    ]
+  },
+  {
+    "id": "f0fedb299bb61830",
+    "ru": "Претензия поступила перевозчику {{carrier}}. Автоответ подтверждает приём, но не содержит решения. Материалы направлены в публичную приёмную позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].documents[d0].text"
+    ]
+  },
+  {
+    "id": "04b9b13fac217fc1",
+    "ru": "Квитанция и уведомление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].documents[d0].title"
+    ]
+  },
+  {
+    "id": "c63db892a409bf4e",
+    "ru": "Просит рассмотреть расходы из-за задержки. Размер ответственности в упражнении не определяется; спорные обстоятельства требуют проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c74dd0eb8e38fec7",
+    "ru": "Требования пассажирки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f577c91be3f76e8c",
+    "ru": "Получено перевозчиком {{carrier}}. В публичную приёмную отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Это отдельная временная линия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].documents[dates].text"
+    ]
+  },
+  {
+    "id": "2f948846910c2391",
+    "ru": "Срок претензии перевозчику связан с подтверждённым поступлением; автоответ не заменяет решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[flight-claim].factTask.explain",
+      "cases:CASE_TEMPLATES[flight-claim].outcomes.good"
+    ]
+  },
+  {
+    "id": "6b42032209a32a2a",
+    "ru": "Срок начинается только после личного прочтения директором авиакомпании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "6ceaab75983c897b",
+    "ru": "Номер регистрации означает полное удовлетворение претензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "8a8f386f89ec938f",
+    "ru": "В ответе перевозчик разобрал задержку, но не упомянул приложенные расходы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].followup.intro"
+    ]
+  },
+  {
+    "id": "4933110f6ffac4ff",
+    "ru": "Сопоставить ответ со всеми требованиями и разъяснить дальнейший порядок по нерассмотренному пункту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].followup.options[0].text",
+      "cases:CASE_TEMPLATES[flight-claim].followup.explain"
+    ]
+  },
+  {
+    "id": "773f6579f6b24fa2",
+    "ru": "Считать наличие любого письма полным ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "76922495be34f952",
+    "ru": "Приёмной автоматически списать деньги со счёта перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "e53f04c6927e5458",
+    "ru": "По статье 127.1 Воздушного кодекса перевозчик рассматривает претензию в течение 30 дней со дня поступления. Исходное событие подтверждается получением именно перевозчиком, а не регистрацией в публичной приёмной. Автоматическое уведомление о доставке письма не заменяет решения по претензии и не определяет размер возмещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].knowledge.explain"
+    ]
+  },
+  {
+    "id": "e300eeb2a1cb003a",
+    "ru": "Найдите срок рассмотрения претензии воздушным перевозчиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "59a74db75717bacf",
+    "ru": "Рейс задержали. Претензию отправила раньше, чем авиакомпания её получила. Ещё прислали автоматический ответ – разве это уже решение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].opening"
+    ]
+  },
+  {
+    "id": "30b5baa956385fb4",
+    "ru": "Претензионный порядок к воздушному перевозчику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].procedures[0].text"
+    ]
+  },
+  {
+    "id": "41ab05afef3a7202",
+    "ru": "Обычное обращение к приёмной как единственная процедура",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e71f4690b72cac62",
+    "ru": "Автоматическое взыскание приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].procedures[2].text"
+    ]
+  },
+  {
+    "id": "be577de2e6adcbc3",
+    "ru": "Непосредственно воздушному перевозчику по подтверждённому каналу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "0fcc9a8b31da7b02",
+    "ru": "Нужен срок перевозчика, а не приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q0].fact",
+      "cases:CASE_TEMPLATES[flight-claim].coach.talk"
+    ]
+  },
+  {
+    "id": "8466120b79a1c304",
+    "ru": "Кому направлялась претензия?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q0].text"
+    ]
+  },
+  {
+    "id": "18e74149bad4ba55",
+    "ru": "Есть квитанция сервиса с датой {{carrier}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "caf91bd24b3b69bd",
+    "ru": "Срок связан с поступлением перевозчику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a08033a0dcc02bb8",
+    "ru": "Чем подтверждено получение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q1].text"
+    ]
+  },
+  {
+    "id": "347f90dc30a8cf4e",
+    "ru": "Только номер и сообщение о регистрации без решения по требованиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "90ca397b7ec0b2e0",
+    "ru": "Квитанция не является решением по претензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1b2c505f4c8f5658",
+    "ru": "Что написано в автоматическом ответе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q2].text"
+    ]
+  },
+  {
+    "id": "0e0d1980ec40b8d5",
+    "ru": "Пассажир располагает уведомлением о задержке; спор о её причине ещё не разрешён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "976c9af9f7a88404",
+    "ru": "Нельзя заранее рассчитать обязательное возмещение без необходимых обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "548acd96020fd816",
+    "ru": "Причина задержки доказана?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].questions[q3].text"
+    ]
+  },
+  {
+    "id": "4a51ae365e26ddeb",
+    "ru": "Помогает определить адресата и срок претензии перевозчику. Сам не является авиакомпанией и не назначает возмещение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].role.text"
+    ]
+  },
+  {
+    "id": "1dce92cfa23e8abb",
+    "ru": "Консультант публичной приёмной по защите прав пассажиров",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].role.title"
+    ]
+  },
+  {
+    "id": "8db8ad7e61462d1a",
+    "ru": "Использовать подтверждение поступления перевозчику, разъяснить пределы его срока и дальнейший законный маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].routes[0].text",
+      "cases:CASE_TEMPLATES[flight-claim].coach.plan",
+      "cases:CASE_TEMPLATES[flight-claim].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "d287c50cef8a4c15",
+    "ru": "Назначить перевозчику произвольные 30 рабочих дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].routes[1].text",
+      "cases:CASE_TEMPLATES[flight-claim].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f29f9521ed75bec5",
+    "ru": "Обещать конкретное возмещение без проверки причин задержки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].routes[2].text",
+      "cases:CASE_TEMPLATES[flight-claim].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "f4844f8e597f4362",
+    "ru": "Претензию получили позже",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[flight-claim].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[flight-claim].title"
+    ]
+  },
+  {
+    "id": "b13ae9bb415cbf4c",
+    "ru": "Воздушная перевозка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].topic",
+      "cases:CASE_TEMPLATES[flight-claim].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-flight-claim].scope"
+    ]
+  },
+  {
+    "id": "3c2af24ed05c09d8",
+    "ru": "Найти специальное основание Воздушного кодекса и точное событие начала срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].trap.options[0].text",
+      "cases:CASE_TEMPLATES[flight-claim].trap.explain"
+    ]
+  },
+  {
+    "id": "b74db15862172750",
+    "ru": "Использовать общий закон без квалификации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "076ca8b1000184a9",
+    "ru": "Помощник: «Авиакомпания тоже организация – поставим 30 дней по 59-ФЗ».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-claim].trap.text"
+    ]
+  },
+  {
+    "id": "46ac8eefd7c5e3f1",
+    "ru": "Сопоставить билет и отсутствие начала посадки до 15:00",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0266bad31c04fe02",
+    "ru": "Проверить фактически предоставленные услуги по журналу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[a1].title"
+    ]
+  },
+  {
+    "id": "87f24beb61b367cd",
+    "ru": "Выделить обязанность горячего питания и напитков по применимой норме",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a6974ec522c954a3",
+    "ru": "Разъяснить отличие обслуживания от вины, компенсации и решения о безопасности вылета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[a3].title"
+    ]
+  },
+  {
+    "id": "f42b851398ec5490",
+    "ru": "Проверить ответ именно по необеспеченному питанию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[a4].title"
+    ]
+  },
+  {
+    "id": "e2b1a5db3e28d557",
+    "ru": "Считать воду полным исполнением всех обязанностей при любой длительности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[b0].title"
+    ]
+  },
+  {
+    "id": "b73f67206f0a18ca",
+    "ru": "Требовать небезопасного вылета как способа прекратить ожидание",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].actions[b1].title",
+      "cases:CASE_TEMPLATES[flight-weather-care].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "956cd0fac651de7e",
+    "ru": "План должен следовать установленным фактам. Пункты 99–99.2 ФАП включают задержки по погодным условиям; статья о денежной ответственности — отдельный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].coach.plan"
+    ]
+  },
+  {
+    "id": "553f15178b5a1fdc",
+    "ru": "Уточняйте предмет, объект, время и получателя. Исходное дело касается срока ответа на претензию. Здесь нужно применить авиационные правила к содержанию обслуживания, не смешивая погодную причину, безопасность и денежную ответственность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].coach.talk"
+    ]
+  },
+  {
+    "id": "76d7e0f8167e1bb4",
+    "ru": "Исходное дело касается срока ответа на претензию. Здесь нужно применить авиационные правила к содержанию обслуживания, не смешивая погодную причину, безопасность и денежную ответственность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].contrast.difference"
+    ]
+  },
+  {
+    "id": "994d47be996d20af",
+    "ru": "Прямой внутренний рейс вымышленного перевозчика. В билете отправление в 08:00. Посадка до 15:00 не начиналась; семь часов ожидания полностью приходятся на дневное время. Причина задержки — подтверждённая неблагоприятная погода. Особые режимы ограничения перевозок по условию не применяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d0].text"
+    ]
+  },
+  {
+    "id": "cfa8148eb4876459",
+    "ru": "Билет и журнал посадки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d0].title"
+    ]
+  },
+  {
+    "id": "0be3dfcb968e4c4b",
+    "ru": "Вода предоставлена в 10:30. Горячее питание и напитки к 15:00 не организованы; сведения о выдаче ваучеров или альтернативном предоставлении отсутствуют. Комната матери и ребёнка, гостиница и повторные интервалы не являются предметом данного задания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d1].text"
+    ]
+  },
+  {
+    "id": "173019ce23bc0706",
+    "ru": "Журнал обслуживания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d1].title"
+    ]
+  },
+  {
+    "id": "9d197c46a0e7dac4",
+    "ru": "Квитанция принадлежит пассажиру другого рейса и описывает питание на борту. Она не подтверждает обслуживание во время рассматриваемого ожидания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d2].text"
+    ]
+  },
+  {
+    "id": "07064a6bb0a47402",
+    "ru": "Квитанция о другом рейсе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f42821f679f870a7",
+    "ru": "При семи часах дневного ожидания начала посадки отсутствие горячего питания не оправдывается одним фактом неблагоприятной погоды. Исходное дело касается срока ответа на претензию. Здесь нужно применить авиационные правила к содержанию обслуживания, не смешивая погодную причину, безопасность и денежную ответственность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.explain"
+    ]
+  },
+  {
+    "id": "e541486d98ada922",
+    "ru": "При семи часах дневного ожидания начала посадки отсутствие горячего питания не оправдывается одним фактом неблагоприятной погоды.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[flight-weather-care].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c9833c32ed37afe4",
+    "ru": "При подтверждённой непогоде все обязанности обслуживания пассажиров отменяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "fd672f27b172e34f",
+    "ru": "Факт отсутствия питания доказывает обязанность немедленно выполнить небезопасный вылет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "ae353221fe007fd9",
+    "ru": "Продолжить рассмотрение по питанию, не принимать воду за ответ на весь перечень требований. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].followup.explain"
+    ]
+  },
+  {
+    "id": "9a95185ada03f0a4",
+    "ru": "Перевозчик подтвердил выдачу воды, но вопрос горячего питания в ответе отсутствует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].followup.intro"
+    ]
+  },
+  {
+    "id": "136589862f26d036",
+    "ru": "Продолжить рассмотрение по питанию, не принимать воду за ответ на весь перечень требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "51f3561d1f12c6a4",
+    "ru": "Закрыть вопрос по квитанции о воде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9388ca538ffbf5fd",
+    "ru": "Потребовать компенсацию за гостиницу, которая не являлась предметом данного эпизода, без установления условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8ee11bfa7b3c6b43",
+    "ru": "По пунктам 99, 99.1 и 99.2 ФАП, утверждённых приказом Минтранса России от 28.06.2007 № 82, обслуживание при задержке предусмотрено в том числе при неблагоприятной погоде. В редакции с 01.03.2026 горячее питание и напитки организуются не позднее двух часов после первых четырёх часов ожидания начала посадки. Начало ожидания связано с указанным в билете временем отправления, а не с появлением объявления о задержке. В данном деле семь часов дневного ожидания прошли без начала посадки; гостиница и размер денежных требований не оцениваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.explain",
+      "cases:SOURCES[norm11-flight-care].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-weather-care].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "bc11b5c7f27423a2",
+    "ru": "Минтранс России",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.issuer",
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.issuer",
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.issuer"
+    ]
+  },
+  {
+    "id": "e84180bcb4f2508a",
+    "ru": "Отделить обслуживание при погодной задержке от вины перевозчика и размера денежных требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "cd34d49391d02789",
+    "ru": "Проверять обязанность питания только после установления вины перевозчика в задержке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e4dc6015b3c3457f",
+    "ru": "Считать выдачу воды достаточным исполнением после семи часов дневного ожидания без посадки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d5da00ef9e72f9a1",
+    "ru": "Найдите норму: Обслуживание пассажиров при ожидании посадки. Укажите реквизиты акта и пункт, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "402de00116fef313",
+    "ru": "Семь часов ждали посадки. Воду дали, горячего питания не было. Представитель сказал: задержка из-за погоды, поэтому авиакомпания ничего нам не должна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].opening"
+    ]
+  },
+  {
+    "id": "73a22da1a9fd025c",
+    "ru": "Раздельно рассмотреть соблюдение обязанностей обслуживания и иные возможные требования пассажира.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c3c58e09e8e93a9b",
+    "ru": "Считать любые претензии необоснованными из-за погодной причины.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].procedures[1].text"
+    ]
+  },
+  {
+    "id": "576dd53c910c42b4",
+    "ru": "Приказать выполнить вылет независимо от условий безопасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].procedures[2].text"
+    ]
+  },
+  {
+    "id": "3e0afd65d6fa76a4",
+    "ru": "От 08:00 в билете до начала посадки, которого к 15:00 не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q0].answer"
+    ]
+  }
+]

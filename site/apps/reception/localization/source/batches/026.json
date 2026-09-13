@@ -1,0 +1,935 @@
+[
+  {
+    "id": "eee0748b00de21d9",
+    "ru": "Применить часть 12 статьи 11: возврат страховщиком с вычетом пропорциональной действовавшему периоду части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].contrast.decision"
+    ]
+  },
+  {
+    "id": "9d197809f7f08c0e",
+    "ru": "Кредит погашен, тридцать дней давно прошли",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[insurance-individual-payoff].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[insurance-individual-payoff].title"
+    ]
+  },
+  {
+    "id": "b25b77f49fedbc3c",
+    "ru": "Применить часть 12 статьи 11: возврат страховщиком с вычетом пропорциональной действовавшему периоду части. Истечение первых тридцати дней не отвечает на вопрос о возврате после полного досрочного исполнения. Отличаются основание и объём возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].trap.explain"
+    ]
+  },
+  {
+    "id": "9056bb2b20315908",
+    "ru": "Часть 12 статьи 11 автоматически требует всей премии без вычета действовавшего страхования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].trap.text"
+    ]
+  },
+  {
+    "id": "ab60e2d4e769039b",
+    "ru": "Сверить стороны полиса, цель страхования и условия отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[a0].title"
+    ]
+  },
+  {
+    "id": "63aa91caa14ed1e8",
+    "ru": "Установить дату получения письменного заявления страховщиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d919df0089e775c4",
+    "ru": "Подготовить обоснованный маршрут полного возврата премии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b74a48de45967307",
+    "ru": "Отдельно разъяснить, что условия кредита и ставки требуют самостоятельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d2f8955c46def03e",
+    "ru": "Проверить возврат по ИС-11, а не только отметку о прекращении договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[a4].title"
+    ]
+  },
+  {
+    "id": "060a33506eaf90a2",
+    "ru": "Гарантировать неизменность кредитной ставки без проверки договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[b0].title"
+    ]
+  },
+  {
+    "id": "5ea95a4611adf5d3",
+    "ru": "Отказать только потому, что прошло четырнадцать дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].actions[b1].title",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "96d8c84f12d68f31",
+    "ru": "Все люди, документы и события этого дела вымышлены. Индивидуальное добровольное страхование направлено на обеспечение потребительского кредита. Заёмщица – страхователь. Письменный отказ надлежащим образом получен страховщиком в пределах 30 календарных дней от заключения; обязательное ипотечное страхование отсутствует. Событий с признаками страхового случая нет. Первое уведомление банку предшествовало получению страховщиком, но банк не был уполномочен принимать этот отказ за страховщика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].brief"
+    ]
+  },
+  {
+    "id": "179d3f974d8eae18",
+    "ru": "Часть 11 статьи 11 закона №353-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].calendar.context"
+    ]
+  },
+  {
+    "id": "672529052d0efdf2",
+    "ru": "Получено заявление страховщиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].calendar.events[recipientReceived].label",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].calendar.events[recipientReceived].label"
+    ]
+  },
+  {
+    "id": "c1e6d95cfb28912c",
+    "ru": "Часть 11 статьи 11 закона №353-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].calendar.source"
+    ]
+  },
+  {
+    "id": "2035bebfd26747f1",
+    "ru": "Крайняя дата возврата премии страховщиком по заявлению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].calendar.title",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].calendar.title"
+    ]
+  },
+  {
+    "id": "872fcbecc79b55c0",
+    "ru": "В базовом варианте страхователем был банк. Здесь заёмщица сама страхователь: меняется адресат требования, при этом дата получения определяется отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].coach.plan",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].contrast.difference"
+    ]
+  },
+  {
+    "id": "16193c74981ef236",
+    "ru": "Часть 11: своевременный отказ заёмщика-страхователя от обеспечивающего кредит добровольного страхования в пределах 30 календарных дней даёт право на полную премию с возвратом страховщиком не позднее семи рабочих дней от письменного заявления. Часть 12: при полном досрочном исполнении кредита страховщик возвращает премию за вычетом пропорциональной действовавшему страхованию части в тот же срок от заявления. Часть 10: для указанного законом коллективного личного страхования возврат выполняет кредитор или действующее в его интересах лицо; база – уплачиваемая страховщику премия по данному заёмщику за вычетом использованного времени. Во всех трёх упражнениях отсутствие событий с признаками страхового случая задано явно. Не всякая услуга банка равна страховой премии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].coach.research",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].knowledge.explain",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].coach.research"
+    ]
+  },
+  {
+    "id": "b9e92be7a71c8ec0",
+    "ru": "В ответе упомянуты четырнадцать дней и согласование с банком. Доказательств изменения страхового договора или иного применимого режима не приведено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d0].text"
+    ]
+  },
+  {
+    "id": "1633783f49762ff2",
+    "ru": "Старый шаблон банка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d0].title"
+    ]
+  },
+  {
+    "id": "0a857b1259c3f234",
+    "ru": "В поле «страхователь» указана Мария. Премия уплачена страховщику; страхование обеспечивает потребительский кредит. Это не включение в договор, где страхователем выступает банк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d1].text"
+    ]
+  },
+  {
+    "id": "6aae20af6cc1bed2",
+    "ru": "Индивидуальный полис ИС-11",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c506425f832a37ba",
+    "ru": "Страховщик получил подписанное заявление {{recipientReceived}} на двадцатый календарный день после заключения. Отсутствие событий с признаками страхового случая подтверждено. Более раннее письмо в банк получено {{received}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d2].text"
+    ]
+  },
+  {
+    "id": "3b0142399a0048b6",
+    "ru": "Подтверждение получения отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[d2].title"
+    ]
+  },
+  {
+    "id": "027ac2e75ba0f0ce",
+    "ru": "Событие {{observed}}. Письмо отправлено {{sent}}, поступило в указанную приёмную или подразделение {{received}}, зарегистрировано {{registered}}. Страховщик получил надлежащее заявление {{recipientReceived}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].documents[dates].text",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[dates].text"
+    ]
+  },
+  {
+    "id": "dd6b856db04e2451",
+    "ru": "Заёмщица – страхователь; своевременный отказ получен надлежащим адресатом – страховщиком. В базовом варианте страхователем был банк. Здесь заёмщица сама страхователь: меняется адресат требования, при этом дата получения определяется отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.explain"
+    ]
+  },
+  {
+    "id": "0f7aadb2aa11cb7b",
+    "ru": "Заёмщица – страхователь; своевременный отказ получен надлежащим адресатом – страховщиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "0cc0d74298aca747",
+    "ru": "Любой связанный с кредитом полис делает банк страхователем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c120c4f93f9761ea",
+    "ru": "После четырнадцатого дня во всех случаях отсутствует право на возврат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-refusal.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1d6baa266024bd25",
+    "ru": "Страховщик подтвердил прекращение договора, но в платёжном поручении стоит номер другого полиса ИС-12.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].followup.intro"
+    ]
+  },
+  {
+    "id": "7076b8ef73bed962",
+    "ru": "Проверить реальный возврат по ИС-11; прекращение договора и чужой платёж не доказывают исполнение требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].followup.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].followup.explain"
+    ]
+  },
+  {
+    "id": "e92e144498cea9ad",
+    "ru": "Закрыть дело по любому платёжному поручению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "91188062c0391bb5",
+    "ru": "Объявить кредит прекращённым вместе со страхованием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "0bb7077aadc37e0f",
+    "ru": "Отсчитать возврат от любого раннего письма банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "652aefce7052e578",
+    "ru": "Применить четырнадцать дней как безусловный предел этого отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "618d04b796012158",
+    "ru": "Найдите нормативное основание следующего действия: Применить часть 11 статьи 11: полный возврат премии страховщиком по своевременному отказу при заданных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "975abce07e18382d",
+    "ru": "Банк продал мне полис вместе с кредитом. Страхователь в договоре – я. Отказалась на двадцатый день, но мне отвечают про старые четырнадцать дней и ждут решения банка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].opening"
+    ]
+  },
+  {
+    "id": "254f2ab11c6245a6",
+    "ru": "Анализ исполнения требования о возврате по части 11 статьи 11 закона № 353-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].procedures[0].text"
+    ]
+  },
+  {
+    "id": "2451e123589cda9b",
+    "ru": "В полисе указана я.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q0].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1487f857acea0ca5",
+    "ru": "Кто указан страхователем?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a01c712f63bb0922",
+    "ru": "{{recipientReceived}}, в пределах тридцати дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q1].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "ea1cebf3f22fcbb3",
+    "ru": "Когда получен отказ страховщиком?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q1].text"
+    ]
+  },
+  {
+    "id": "71d4204bfb0b2507",
+    "ru": "Были ли события с признаками страхового случая?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q2].text"
+    ]
+  },
+  {
+    "id": "b673916442557979",
+    "ru": "Нет, первое письмо было только банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q3].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "beec04d5672775c6",
+    "ru": "Банк принимал заявления от имени страховщика?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q3].text"
+    ]
+  },
+  {
+    "id": "c292f9cb0c40725f",
+    "ru": "Специалист приёмной по защите прав потребителей финансовых услуг",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].role.title"
+    ]
+  },
+  {
+    "id": "4c6651d117cf915d",
+    "ru": "Страховщик по индивидуальному договору ИС-11, получивший письменный отказ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].routes[0].text"
+    ]
+  },
+  {
+    "id": "e22281df3f5539de",
+    "ru": "Применить часть 11 статьи 11: полный возврат премии страховщиком по своевременному отказу при заданных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].contrast.decision"
+    ]
+  },
+  {
+    "id": "e499b1701da0aa27",
+    "ru": "Полис мой, заявление получено страховщиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[insurance-individual-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[insurance-individual-refusal].title"
+    ]
+  },
+  {
+    "id": "a2d05e0b51c25e20",
+    "ru": "Кредитное страхование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].topic",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].topic",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].topic"
+    ]
+  },
+  {
+    "id": "5d1f0da67f2fc54f",
+    "ru": "Применить часть 11 статьи 11: полный возврат премии страховщиком по своевременному отказу при заданных условиях. В базовом варианте страхователем был банк. Здесь заёмщица сама страхователь: меняется адресат требования, при этом дата получения определяется отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].trap.explain"
+    ]
+  },
+  {
+    "id": "dd5b44d54ee1c0d0",
+    "ru": "Своевременный отказ в этом индивидуальном договоре требует возврата страховщиком, а не ожидания одобрения банка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].trap.text"
+    ]
+  },
+  {
+    "id": "85d6b9c4644fe343",
+    "ru": "Сверить акт с эпизодом и местом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[a0].title"
+    ]
+  },
+  {
+    "id": "e5b5bdc453b0acf4",
+    "ru": "Выделить оставшуюся часть обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[a1].title"
+    ]
+  },
+  {
+    "id": "49692b0c0a5f0d35",
+    "ru": "Определить надлежащий маршрут работы по отходам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[a2].title"
+    ]
+  },
+  {
+    "id": "af07f14d2c67a201",
+    "ru": "Сообщить гражданину фактический, а не преувеличенный результат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a5e8f687670dafe7",
+    "ru": "Проверить дальнейшее подтверждение по той же точке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fa90ec7718e7af82",
+    "ru": "Закрыть нерассмотренную часть о свалке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[b0].title"
+    ]
+  },
+  {
+    "id": "6db9d4bc3faeb844",
+    "ru": "Назвать территорию безопасной без соответствующего основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].actions[b1].title",
+      "cases:CASE_TEMPLATES[landfill-after-fire].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "3330095259af06db",
+    "ru": "Все люди, документы и события этого дела вымышлены. Акт профессиональной службы подтверждает прекращение того эпизода горения. Текущих признаков опасности по материалам нет. Письменное обращение содержит также вопрос об оставшихся отходах; статус и маршрут по отходам требуют проверки. Студент не выдаёт заключение о полной экологической безопасности и не организует работы самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].brief"
+    ]
+  },
+  {
+    "id": "fdcb8085d4ffb8ed",
+    "ru": "Текущая авария не предполагается из прошлого. Но устранение одной проблемы не погашает второй предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].coach.plan",
+      "cases:CASE_TEMPLATES[landfill-after-fire].contrast.difference"
+    ]
+  },
+  {
+    "id": "bf043c6fe7a3310a",
+    "ru": "Акт по точке У-32",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].documents[d1].title"
+    ]
+  },
+  {
+    "id": "483582da22dcb194",
+    "ru": "Подтверждено прекращение эпизода горения, но не разрешён вопрос об оставшихся отходах. Текущая авария не предполагается из прошлого. Но устранение одной проблемы не погашает второй предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.explain"
+    ]
+  },
+  {
+    "id": "302c8c68592d3bea",
+    "ru": "Подтверждено прекращение эпизода горения, но не разрешён вопрос об оставшихся отходах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "10e77b9d8afe1676",
+    "ru": "Тушение автоматически подтверждает вывоз всего мусора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "492df9a09dcec6a3",
+    "ru": "Старая фотография огня доказывает продолжающееся горение сейчас.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-after-fire.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "c6f37a7456dcb40f",
+    "ru": "Проверить исполнение по У-32; соседний участок не подтверждает результат по обращению. Текущая авария не предполагается из прошлого. Но устранение одной проблемы не погашает второй предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].followup.explain"
+    ]
+  },
+  {
+    "id": "6daaa2a213a22644",
+    "ru": "В дальнейшем исполнитель прислал акт вывоза с точки У-33, расположенной рядом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].followup.intro"
+    ]
+  },
+  {
+    "id": "f8c98e2ad5b50143",
+    "ru": "Проверить исполнение по У-32; соседний участок не подтверждает результат по обращению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "0bd81fe481518197",
+    "ru": "Принять любой акт вывоза из того же района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "028feb65130278cd",
+    "ru": "Повторить гражданину, что пожар когда-то уже потушили.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "59b4544957b271dc",
+    "ru": "Объявить всю территорию очищенной по акту тушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "4657ef0a553c8891",
+    "ru": "Каждый раз повторять экстренное сообщение без новых признаков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "e8159941c3561a77",
+    "ru": "Найдите нормативное основание следующего действия: Разделить завершённое оперативное действие и дальнейшее рассмотрение оставшегося вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5a0c308bcd35fe83",
+    "ru": "Раньше тут горел мусор. Сейчас дыма нет, но свалка осталась. Можно ли закрыть моё обращение по справке о тушении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].opening",
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q2].answer",
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "69aecee470f01a85",
+    "ru": "Профессиональная служба завершила действия по указанному эпизоду горения. Акт относится к У-32 и не содержит сведений о вывозе отходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q0].answer",
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q0].fact",
+      "cases:CASE_TEMPLATES[landfill-after-fire].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e5fc5dca7de8a85e",
+    "ru": "В обращении два связанных вопроса: ранее происходившее горение и оставшаяся куча отходов. Фотографии после прекращения горения показывают отходы в той же точке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q1].answer",
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q1].fact",
+      "cases:CASE_TEMPLATES[landfill-after-fire].documents[d2].text"
+    ]
+  },
+  {
+    "id": "c1a1d3612142c563",
+    "ru": "Предложено закрыть оба вопроса одной ссылкой на акт о прекращении горения. Материалов об устранении оставшихся отходов нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q3].answer",
+      "cases:CASE_TEMPLATES[landfill-after-fire].questions[q3].fact",
+      "cases:CASE_TEMPLATES[landfill-after-fire].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a9fb634cc910ea7b",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Акт профессиональной службы подтверждает прекращение того эпизода горения. Текущих признаков опасности по материалам нет. Письменное обращение содержит также вопрос об оставшихся отходах; статус и маршрут по отходам требуют проверки. Студент не выдаёт заключение о полной экологической безопасности и не организует работы самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].role.text"
+    ]
+  },
+  {
+    "id": "1e922ec27632ef9f",
+    "ru": "Разделить завершённое оперативное действие и дальнейшее рассмотрение оставшегося вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[landfill-after-fire].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-after-fire].contrast.decision"
+    ]
+  },
+  {
+    "id": "b1a69991229b94ed",
+    "ru": "Горение прекратилось, отходы остались",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[landfill-after-fire].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[landfill-after-fire].title"
+    ]
+  },
+  {
+    "id": "f12796d468e476a3",
+    "ru": "Разделить завершённое оперативное действие и дальнейшее рассмотрение оставшегося вопроса. Текущая авария не предполагается из прошлого. Но устранение одной проблемы не погашает второй предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].trap.explain"
+    ]
+  },
+  {
+    "id": "67ea2eac684f79c0",
+    "ru": "Акт о прекращении горения сам по себе не подтверждает вывоз отходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-after-fire].trap.text"
+    ]
+  },
+  {
+    "id": "da6715e65e0adba9",
+    "ru": "Уточнить место по имеющимся безопасным сведениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[a0].title"
+    ]
+  },
+  {
+    "id": "600ba89e5a853e98",
+    "ru": "Передать сообщение профессиональной дежурной службе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a56c9912d7b5cb2f",
+    "ru": "Зафиксировать связь оперативного сообщения с письменным обращением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[a2].title"
+    ]
+  },
+  {
+    "id": "660fa3c532704c18",
+    "ru": "Не требовать опасного обследования от гражданина",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[a3].title"
+    ]
+  },
+  {
+    "id": "f78f961d64a3da68",
+    "ru": "Проверить относимое подтверждение и дальнейший неаварийный маршрут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[a4].title"
+    ]
+  },
+  {
+    "id": "716247225bd5e6c5",
+    "ru": "Просить гражданина приблизиться к горению ради снимка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[b0].title"
+    ]
+  },
+  {
+    "id": "825c20d51e55372e",
+    "ru": "Оставить текущее сообщение без передачи только из-за неизвестного собственника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].actions[b1].title",
+      "cases:CASE_TEMPLATES[landfill-current-burning].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "7367dce0b4635cac",
+    "ru": "Все люди, документы и события этого дела вымышлены. Гражданин находится в безопасном месте и сообщает о продолжающемся горении. Местоположение по предоставленным координатам проверено без направления гражданина к огню. Приёмная имеет установленный оперативный канал передачи сведений профессиональной дежурной службе. Экологическая и земельная квалификация ещё не завершены; студент не определяет методы тушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].brief"
+    ]
+  },
+  {
+    "id": "9ab70f289cffe4f4",
+    "ru": "В исходной истории определялся территориальный адресат. Здесь установлена текущая опасность, поэтому оперативное сообщение отделяется от последующей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].coach.plan",
+      "cases:CASE_TEMPLATES[landfill-current-burning].contrast.difference"
+    ]
+  },
+  {
+    "id": "1b046f715c734939",
+    "ru": "Статья 10 закона № 59-ФЗ предусматривает объективное, всестороннее и своевременное рассмотрение, получение необходимых материалов в пределах полномочий и меры по защите нарушенных прав. Ответ по одному пункту не подтверждает рассмотрение других самостоятельных вопросов. Срок письменного ответа не служит основанием отложить передачу сообщения о текущей опасности профессиональной службе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].coach.research",
+      "cases:CASE_TEMPLATES[landfill-current-burning].knowledge.explain",
+      "cases:CASE_TEMPLATES[landfill-after-fire].coach.research"
+    ]
+  },
+  {
+    "id": "e42de875dc943f92",
+    "ru": "Черновик маршрута",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d0].title"
+    ]
+  },
+  {
+    "id": "0714b1297a68f781",
+    "ru": "Сообщение и время",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d1].title"
+    ]
+  },
+  {
+    "id": "0606a44fbcd51bee",
+    "ru": "Карточка территории",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f2f94b0563cda48c",
+    "ru": "Неустановленный собственник не препятствует оперативной передаче текущего сообщения с установленным местом. В исходной истории определялся территориальный адресат. Здесь установлена текущая опасность, поэтому оперативное сообщение отделяется от последующей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.explain"
+    ]
+  },
+  {
+    "id": "36caa826b6bd686c",
+    "ru": "Неустановленный собственник не препятствует оперативной передаче текущего сообщения с установленным местом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "4bf47f7e6281c7c1",
+    "ru": "Нельзя сообщать о горении, пока не найден собственник участка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "80088c711dc0061f",
+    "ru": "Для уточнения нужно отправить заявителя к месту пожара.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-current-burning.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "fbc28cc523a471e8",
+    "ru": "Оперативно уточнить место и связать исправление с первоначальным сообщением. В исходной истории определялся территориальный адресат. Здесь установлена текущая опасность, поэтому оперативное сообщение отделяется от последующей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].followup.explain"
+    ]
+  },
+  {
+    "id": "8da14eff1158cfb6",
+    "ru": "Дежурная служба подтвердила выезд к другой точке У-31. По У-30 подтверждения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].followup.intro"
+    ]
+  },
+  {
+    "id": "1f3f6e47668adf7b",
+    "ru": "Оперативно уточнить место и связать исправление с первоначальным сообщением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "a61064846abbac84",
+    "ru": "Закрыть дело по факту любого выезда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6832acf8c8f5b87d",
+    "ru": "Просить гражданина самому проверить обе точки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "48dc2dd8da247199",
+    "ru": "Самостоятельно выбрать способ тушения по фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "aca0503389ff3d46",
+    "ru": "Найдите нормативное основание следующего действия: Немедленно передать имеющиеся сведения профессиональной службе и отдельно продолжить работу по обращению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "e5881c362d338ce1",
+    "ru": "На пустыре сейчас горит мусор. Я видел это из дома. Не знаю, чья земля. Нужно сначала найти собственника?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].opening",
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q2].answer",
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ab06fe6bcd71f860",
+    "ru": "Сообщение о продолжающемся горении в точке У-30. Связь с очевидцем сохранена; новых фото с опасного места не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q0].answer",
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q0].fact",
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d1].text"
+    ]
+  },
+  {
+    "id": "74512dfb2f2a5bb2",
+    "ru": "Координаты У-30 относятся к территории данного муниципального образования. Собственник участка пока не установлен; дежурная профессиональная служба принимает сообщения с этими координатами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q1].answer",
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q1].fact",
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d2].text"
+    ]
+  },
+  {
+    "id": "814dac9280213799",
+    "ru": "Сотрудник предложил сначала завершить поиск собственника и ответить в обычный срок. Передачи оперативного сообщения пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q3].answer",
+      "cases:CASE_TEMPLATES[landfill-current-burning].questions[q3].fact",
+      "cases:CASE_TEMPLATES[landfill-current-burning].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f0f8b68fb045729f",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Гражданин находится в безопасном месте и сообщает о продолжающемся горении. Местоположение по предоставленным координатам проверено без направления гражданина к огню. Приёмная имеет установленный оперативный канал передачи сведений профессиональной дежурной службе. Экологическая и земельная квалификация ещё не завершены; студент не определяет методы тушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].role.text"
+    ]
+  },
+  {
+    "id": "46bf1f25d059adab",
+    "ru": "Немедленно передать имеющиеся сведения профессиональной службе и отдельно продолжить работу по обращению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[landfill-current-burning].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-current-burning].contrast.decision"
+    ]
+  },
+  {
+    "id": "3ae531c71e67d500",
+    "ru": "Сначала точное место сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[landfill-current-burning].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[landfill-current-burning].title"
+    ]
+  },
+  {
+    "id": "51b7c3e31c53a7b9",
+    "ru": "Немедленно передать имеющиеся сведения профессиональной службе и отдельно продолжить работу по обращению. В исходной истории определялся территориальный адресат. Здесь установлена текущая опасность, поэтому оперативное сообщение отделяется от последующей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].trap.explain"
+    ]
+  },
+  {
+    "id": "050ed4b202396970",
+    "ru": "Отложить оперативную передачу до окончания письменного срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-current-burning].trap.text",
+      "cases:CASE_TEMPLATES[landfill-current-burning].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "85a8bcd9ccc62726",
+    "ru": "Сопоставить идентификатор, место и сведения реестра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[a0].title"
+    ]
+  },
+  {
+    "id": "c69c8a909f01bfe3",
+    "ru": "Определить надлежащую территориальную компетенцию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d2bfd1b671b95f1c",
+    "ru": "Направить необходимые материалы по проверенному маршруту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[a2].title"
+    ]
+  },
+  {
+    "id": "053c994265043c5f",
+    "ru": "Уведомить гражданина и сохранить его обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b1ec21866bda68fc",
+    "ru": "Сверить подтверждение доставки с назначенным адресатом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b2cc0abbea70a481",
+    "ru": "Сообщить заявителю ложное направление в компетентный орган",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[b0].title"
+    ]
+  },
+  {
+    "id": "c3c5173f2e173470",
+    "ru": "Передать полное досье случайным адресатам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].actions[b1].title",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "c53fb50653303824",
+    "ru": "Все люди, документы и события этого дела вымышлены. Рассматривается неаварийный вопрос по конкретному объекту. Место и режим надзора подтверждены полной учебной выпиской: объект отнесён к федеральному экологическому надзору, точная территориальная компетенция установлена. Текущего горения нет. Реальные контактные данные студент проверяет по справке; вымышленные нарушения реальным организациям не приписываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].brief"
+    ]
+  }
+]

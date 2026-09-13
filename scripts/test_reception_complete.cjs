@@ -6,6 +6,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {chromium, webkit} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const base = process.env.MODULE_TEST_URL || 'http://127.0.0.1:8765/';
+if(!['127.0.0.1','localhost'].includes(new URL(base).hostname))throw Error('Reception QA requires an isolated localhost server');
+const locale=process.env.RECEPTION_LOCALE||'ru';
+assert(['ru','en','zh'].includes(locale));
 const output = process.env.QA_OUT || path.join(require('node:os').tmpdir(), 'rudn-reception-positive');
 fs.mkdirSync(output, {recursive:true});
 const owner = 'student:9909134008';
@@ -19,13 +22,16 @@ const previous=await store.loadDraft(draftScope);await store.complete({...draftS
 const fixture = '<!doctype html><html lang="ru"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reception positive UI QA</title><body style="margin:0"><div id="module"></div></body></html>';
 const attr = value => JSON.stringify(String(value));
 async function mount(page) {
-  await page.evaluate(async () => {
-    const {backend}=await import('/assets/js/backend.js?v=1.3.4');
+  await page.evaluate(async locale => {
+    window.qaLocale=locale;window.localeMissing=[];
+    const {backend}=await import('/assets/js/backend.js?v=1.3.5');
     const {mountReception}=await import('/apps/reception/js/app.js');
     const {BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');
     window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',assessmentAllowed:true,
+      locale,getLocale:()=>window.qaLocale,onMissingTranslation:text=>window.localeMissing.push({locale:window.qaLocale,text}),
       calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()})});
-  });
+  },locale);
+  await page.waitForFunction(()=>window.moduleHandle.getLocale()===window.qaLocale&&document.querySelector('.rx-global-status')&&!document.querySelector('.boot.rx-locale-status'));
 }
 async function flush(page) {await page.evaluate(async()=>{await window.moduleHandle.flush();await (await import('/assets/js/durable-store.js')).durableStore.flush();});}
 async function draft(page) {return page.evaluate(async scope=>(await import('/assets/js/durable-store.js')).durableStore.loadDraft(scope),scope);}
@@ -47,25 +53,46 @@ async function oracle(page) {
     const engine=await import('/apps/reception/js/engine.js');
     const c=engine.caseById(state.caseIds[state.active],state);
     const task=(await import('/apps/reception/js/evidence.js')).evidenceTask(c);
+    const translator=await (await import('/apps/reception/localization/runtime.js')).loadReceptionTranslator(window.qaLocale,{templateIds:state.assignment.manifest.map(row=>row.templateId),contentVersion:state.contentVersion});
+    let extracted=translator.translate(task.extracted.accepted[0]);
+    if(window.qaLocale!=='ru'&&['part','article'].includes(task.extracted.normalize)){
+      const number=(await import('/apps/reception/js/evidence.js')).normalizeEvidence(task.extracted.accepted[0],task.extracted.normalize);
+      extracted=window.qaLocale==='zh'?'第'+number+(task.extracted.normalize==='part'?'款':'条'):(task.extracted.normalize==='part'?'Part ':'Article ')+number;
+    }
     const plan=(await import('/apps/reception/js/documents.js')).requiredActionPlan(c,c.correctRoutes[0]);
     const left=new Set(plan.requiredActions),actions=[];
     while(left.size){const next=[...left].find(id=>!plan.order.some(([before,after])=>after===id&&left.has(before)));if(!next)throw Error('Cyclic canonical action plan');actions.push(next);left.delete(next);}
     return {id:c.id,templateId:c.templateId,questions:c.questions.map(q=>q.id),documents:c.documents.map(d=>d.id),
       fact:c.factTask.correct[0],grounds:c.factTask.evidenceSets?.[0]||null,ground:c.factTask.evidence?.[0]||c.documents[0].id,
       law:c.knowledge.number,actDate:c.knowledge.actDate.split('-').reverse().join('.'),article:c.knowledge.articles[0],application:c.knowledge.correct,
-      evidence:{...task.bindings[0],extracted:task.extracted.accepted[0],finding:task.correctFinding},
+      evidence:{...task.bindings[0],extracted,finding:task.correctFinding},
       calendar:{anchor:c.calendar.anchor,rule:c.calendar.correctRule,start:c.calendar.startPolicy,shift:c.calendar.lastDayPolicy,date:engine.deadlineFor(c).finalDate},
       procedure:c.correctProcedure[0],route:c.correctRoutes[0],actions,trap:c.trap.correct,followup:c.followup.correct};
   },scope);
 }
 async function health(page, errors) {
   assert.deepEqual(errors,[], 'No JavaScript or console errors');
+  assert.deepEqual(await page.evaluate(()=>window.localeMissing),[],'No untranslated authored UI or case text');
   assert.equal(await page.locator('.rx-blocker,[data-nextjs-dialog],vite-error-overlay,webpack-dev-server-client-overlay').count(),0);
   const status=await page.locator('.rx-global-status').innerText();
   assert.doesNotMatch(status,/не удалось|ошибка|приостановлена|другой вкладке/i,'No inline action/storage errors');
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'No horizontal page overflow');
 }
-async function screenshot(page,name){await page.screenshot({path:path.join(output,name+'.png'),fullPage:false});}
+async function screenshot(page,name){await page.screenshot({path:path.join(output,locale+'-'+name+'.png'),fullPage:false});}
+async function switchLanguages(page){
+ const before=await draft(page);
+ const field=page.locator('[data-field="evidence.extracted"]');await field.focus();
+ await field.evaluate(el=>el.setSelectionRange(0,Math.min(2,el.value.length)));
+ const selection=await field.evaluate(el=>[el.selectionStart,el.selectionEnd]);
+ for(const language of ['ru','en','zh',locale]){
+  await page.evaluate(language=>{window.qaLocale=language;window.moduleHandle.refreshLocale(language);},language);
+  await page.waitForFunction(language=>window.moduleHandle.getLocale()===language&&document.querySelector('#module').lang===(language==='zh'?'zh-Hans':language),language);
+  await flush(page);
+  assert.deepEqual((await draft(page)).state,before.state,'Locale changes preserve all answers, revision, assignment, timer and stage');
+  assert.equal(await field.evaluate(el=>document.activeElement===el),true,`Language change to ${language} preserves field focus`);
+  assert.deepEqual(await field.evaluate(el=>[el.selectionStart,el.selectionEnd]),selection,'Language change preserves text selection');
+ }
+}
 (async()=>{
   for(const name of (process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').split(',')){
     const browser=await ({chromium,webkit}[name]).launch({headless:true});
@@ -107,6 +134,7 @@ async function screenshot(page,name){await page.screenshot({path:path.join(outpu
         await fill(page,'evidence.extracted',key.evidence.extracted,index===3);
         await choose(page,'evidence.finding',key.evidence.finding);
         if(index===3){
+          await switchLanguages(page);
           await screenshot(page,name+'-middle-evidence');
           const before=await draft(page);await page.reload();await mount(page);await flush(page);const after=await draft(page);
           assert.equal(after.attemptId,before.attemptId);assert.equal(after.state.startedAt,before.state.startedAt);
@@ -159,7 +187,9 @@ async function screenshot(page,name){await page.screenshot({path:path.join(outpu
       assert.equal((await page.evaluate(async owner=>(await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner}),owner)).length,1);
       assert.equal(requests.some(url=>new URL(url).origin!==new URL(base).origin),false);
       await health(page,errors);
-      fs.writeFileSync(path.join(output,name+'-result.json'),JSON.stringify({browser:name,viewport:'390x844',attemptId:initial.attemptId,caseIds:initial.state.caseIds,results,score:5,errors,productionAccess:false},null,2));
+      const missing=await page.evaluate(()=>window.localeMissing);
+      fs.writeFileSync(path.join(output,locale+'-'+name+'-result.json'),JSON.stringify({browser:name,locale,viewport:'390x844',attemptId:initial.attemptId,caseIds:initial.state.caseIds,results,score:5,errors,missingTranslations:missing,productionAccess:false},null,2));
+      assert.deepEqual(missing,[],'No untranslated authored UI or case text');
       console.log(`PASS ${name}: complete eight-case positive shift 5/5, reload preserved answers, one immutable attempt`);
     }catch(error){await screenshot(page,name+'-failure');console.error('Visible status:',await page.locator('.rx-global-status').textContent().catch(()=>''));throw error;}
     finally{await context.close();await browser.close();}

@@ -1,0 +1,1160 @@
+[
+  {
+    "id": "1e05ad346e6171ff",
+    "ru": "Предмет относится к муниципальному округу, но письмо поступило в управу. Ключевой факт — компетенция, а не недостаточная настойчивость гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].contrast.difference"
+    ]
+  },
+  {
+    "id": "fc927df6b2526d54",
+    "ru": "Адресат: управа района. Прошу предоставить принятое решение о бюджете муниципального округа и приложения за {{caseYear}} год. Требуются имеющиеся документы, без новой аналитики.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[request].text"
+    ]
+  },
+  {
+    "id": "fa516143977a623b",
+    "ru": "Направление запроса и уведомление пользователя – разные действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].followup.explain"
+    ]
+  },
+  {
+    "id": "085aa158c2144e9d",
+    "ru": "Аппарат Совета депутатов сообщил о получении запроса. В журнале отсутствует подтверждение уведомления пользователя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].followup.intro"
+    ]
+  },
+  {
+    "id": "611136f1a6c05141",
+    "ru": "Получение запроса другим органом заменяет уведомление пользователя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].followup.options[enough].text"
+    ]
+  },
+  {
+    "id": "98009c857cdf5444",
+    "ru": "Проверить уведомление пользователя и завершить пропущенное действие в пределах полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].followup.options[notify].text"
+    ]
+  },
+  {
+    "id": "17ff1d895489bb7d",
+    "ru": "Попросить гражданина направить третье заявление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].followup.options[resubmit].text"
+    ]
+  },
+  {
+    "id": "0d41c7bda3b72922",
+    "ru": "Пользователь в любом случае обязан подавать запрос заново.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "15ab2100fba95275",
+    "ru": "Первоначальный получатель вправе создать отсутствующее решение вместо запрошенного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "253202d85c689a84",
+    "ru": "Найдите правило направления запроса, если информация не относится к деятельности его получателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "2401722dc8137206",
+    "ru": "Я направил запрос бюджета муниципального округа в управу: у неё знакомое название района. В ответе сказали, что это не их документы. Мне нужно разобраться, кто действительно должен предоставить принятое решение и приложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].opening"
+    ]
+  },
+  {
+    "id": "c5f39eef3af9e67c",
+    "ru": "В управу. Я думал, что управа и Совет депутатов – одна организация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[receiver].answer"
+    ]
+  },
+  {
+    "id": "1cd136c6969c55c0",
+    "ru": "Первоначальный получатель – управа района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[receiver].fact"
+    ]
+  },
+  {
+    "id": "9e196d22aaf229ab",
+    "ru": "Куда направили запрос?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[receiver].text"
+    ]
+  },
+  {
+    "id": "f83735f2dfc0d16c",
+    "ru": "Запрос поступил в управу района. По условиям дела запрошенные документы относятся к деятельности аппарата Совета депутатов муниципального округа; управа ими не располагает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].role.text"
+    ]
+  },
+  {
+    "id": "78ee14dadeb1d8a9",
+    "ru": "Приёмная управы района Москвы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].role.title"
+    ]
+  },
+  {
+    "id": "53c328b37c4a95c5",
+    "ru": "Подготовить вымышленные документы от имени управы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].routes[answer].text"
+    ]
+  },
+  {
+    "id": "2236ca6026125ae1",
+    "ru": "Передать обычный информационный запрос в полицию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].routes[police].text"
+    ]
+  },
+  {
+    "id": "653c835ee97286e3",
+    "ru": "Направить запрос в компетентный орган и уведомить пользователя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].routes[redirect].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].contrast.decision"
+    ]
+  },
+  {
+    "id": "523cf0110811ca79",
+    "ru": "Кто располагает документом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].tag"
+    ]
+  },
+  {
+    "id": "f5961e74c782f8ee",
+    "ru": "Бюджет не того уровня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[budget-misdirected].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].cases[budget-misdirected].title"
+    ]
+  },
+  {
+    "id": "bdb0508b235b8c27",
+    "ru": "Указать применимое правовое основание исключений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[answer].detail"
+    ]
+  },
+  {
+    "id": "afe228d2096fb5a8",
+    "ru": "Подготовить открытые сведения и мотивировку ограничения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[answer].title"
+    ]
+  },
+  {
+    "id": "e594518a0829dca2",
+    "ru": "Проверить отсутствие скрытых закрытых листов и служебных вложений в выдаваемой копии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[check].title"
+    ]
+  },
+  {
+    "id": "32c633f8b6473b05",
+    "ru": "Направить понятный ответ в надлежащем порядке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[notify].title"
+    ]
+  },
+  {
+    "id": "34de0180731dc819",
+    "ru": "Исходная ведомость сохраняется неизменной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[protect].detail"
+    ]
+  },
+  {
+    "id": "30565834b14c4db5",
+    "ru": "Подготовить копию без закрытых реквизитов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[protect].title"
+    ]
+  },
+  {
+    "id": "b5a0c53ad78f03a5",
+    "ru": "Выдать частные банковские счета и телефоны без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[publish-all].title"
+    ]
+  },
+  {
+    "id": "05d3d983919222b8",
+    "ru": "Отказать во всех сведениях только из-за закрытой графы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[refuse-all].title"
+    ]
+  },
+  {
+    "id": "8b6abd564609c8e4",
+    "ru": "Проверить регистрацию и предмет запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[register].title"
+    ]
+  },
+  {
+    "id": "50f7ca3e6ed3dd5a",
+    "ru": "Не скрывать общие суммы без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[separate].detail"
+    ]
+  },
+  {
+    "id": "5fd309cb176bc80a",
+    "ru": "Разделить общедоступные и ограниченные сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].actions[separate].title"
+    ]
+  },
+  {
+    "id": "3109218e0c137961",
+    "ru": "Запрос поступил в орган местного самоуправления, располагающий нужными материалами. Общедоступны агрегированные расходы и назначения платежей без идентификаторов граждан. Отдельные строки содержат частные контактные и банковские реквизиты; законного основания раскрывать их заявителю в условиях нет. Реальные данные не используются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].brief"
+    ]
+  },
+  {
+    "id": "9818dcc538f894ed",
+    "ru": "Найдите положение, которое подходит к установленным обстоятельствам, а не только к теме обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].coach.research",
+      "cases:CASE_TEMPLATES[privacy-aggregate].coach.research",
+      "cases:CASE_TEMPLATES[privacy-own-record].coach.research"
+    ]
+  },
+  {
+    "id": "bf33305bf406afaf",
+    "ru": "Передача закрытых реквизитов без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].criticalRules[publish-all].message"
+    ]
+  },
+  {
+    "id": "5256294efb03ec3b",
+    "ru": "Открытая часть: мероприятие, общая сумма, вид работ. Ограниченная часть по условиям дела: частные телефоны и банковские счета физических лиц без основания для их раскрытия. Реальных записей нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[inventory].text"
+    ]
+  },
+  {
+    "id": "f3400d8ad177b807",
+    "ru": "Опись полей ведомости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[inventory].title"
+    ]
+  },
+  {
+    "id": "6b049d3746c28f2d",
+    "ru": "«Ведомость содержит персональные данные. В предоставлении всего документа отказано». Ссылка на акт об ограничении доступа не приведена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[refusal].text"
+    ]
+  },
+  {
+    "id": "dc9babfc655ce26f",
+    "ru": "Предыдущий ответ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[refusal].title"
+    ]
+  },
+  {
+    "id": "d4f97bc98118edad",
+    "ru": "Запрошены расходы бюджета {{caseYear}} по мероприятиям и описание работ. Фамилии, личные телефоны и банковские реквизиты граждан не запрашиваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[request].text"
+    ]
+  },
+  {
+    "id": "eee6c93fcd7a4dff",
+    "ru": "Текст запроса о расходах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].documents[request].title"
+    ]
+  },
+  {
+    "id": "c1e2a7fd317e513a",
+    "ru": "Категории доступа различаются внутри документа; наличие закрытой части не отменяет предоставление открытой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].factTask.explain",
+      "cases:CASE_TEMPLATES[budget-partial].contrast.difference"
+    ]
+  },
+  {
+    "id": "4cb8328111ed5469",
+    "ru": "Раз документ связан с бюджетом, банковские счета граждан тоже открыты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "15d8cd8f9ad2ddfa",
+    "ru": "Любая закрытая графа запрещает предоставлять все сведения документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "01a27dbdb2131b1c",
+    "ru": "Следует предоставить общедоступную часть, исключив ограниченные сведения и обосновав соответствующее ограничение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "54abff0c752c9f1a",
+    "ru": "Какой вывод следует из запроса и состава ведомости?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].factTask.prompt"
+    ]
+  },
+  {
+    "id": "757e4a0f60be7e56",
+    "ru": "Скрытие отображения не равно исключению закрытой информации из передаваемого файла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].followup.explain"
+    ]
+  },
+  {
+    "id": "4d609fb6b2a7c142",
+    "ru": "В открытой копии столбцы скрыты визуально, но исходный файл позволяет их показать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].followup.intro"
+    ]
+  },
+  {
+    "id": "89bf3efdd9545b1d",
+    "ru": "Подготовить безопасную копию без передаваемых закрытых значений, проверить её перед выдачей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "c772b77791685a56",
+    "ru": "Отправить файл: столбцы изначально не видны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "60741931618121e3",
+    "ru": "Удалить исходную ведомость из учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "dc7c65256ddebf2d",
+    "ru": "Предоставляется общедоступная часть; ограничение остальной обосновывается актом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[budget-partial].knowledge.explain"
+    ]
+  },
+  {
+    "id": "2c193cbe0d40da6e",
+    "ru": "Закрытая графа делает весь документ непредоставляемым.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "6e5322abd3e94c32",
+    "ru": "Можно открыть все реквизиты ради полноты ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "616023b83321f2bf",
+    "ru": "Найдите правило предоставления информации, когда часть сведений имеет ограниченный доступ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "d5a94b09239fddc0",
+    "ru": "Я просил исполнение бюджета по программе и перечень расходов. Мне ответили, что в исходной ведомости есть личные данные, поэтому ничего предоставить нельзя. Но мне не нужны чужие телефоны и банковские счета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].opening"
+    ]
+  },
+  {
+    "id": "512a42c9eabf3f31",
+    "ru": "Есть общие расходы по мероприятиям и отдельные столбцы телефонов и счетов граждан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[file].answer"
+    ]
+  },
+  {
+    "id": "ef190f5354b26b95",
+    "ru": "В одном документе совмещены разные категории доступа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[file].fact"
+    ]
+  },
+  {
+    "id": "f07b24cd64f7a4aa",
+    "ru": "Что в ведомости открыто и что закрыто?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[file].text"
+    ]
+  },
+  {
+    "id": "e1c787412d162f26",
+    "ru": "Только фразой «документ содержит персональные данные». Конкретные основания и открытая часть не приведены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[reply].answer"
+    ]
+  },
+  {
+    "id": "e66110f315eeb009",
+    "ru": "Полный отказ не разграничивает части информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[reply].fact"
+    ]
+  },
+  {
+    "id": "1ef72ce115ad4505",
+    "ru": "Как мотивирован полный отказ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[reply].text"
+    ]
+  },
+  {
+    "id": "586524ba96ee316e",
+    "ru": "Суммы по мероприятиям программы и описание выполненных работ, без сведений о конкретных получателях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[request].answer"
+    ]
+  },
+  {
+    "id": "2bc1643e248c1841",
+    "ru": "Запрошена публичная часть сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[request].fact"
+    ]
+  },
+  {
+    "id": "dc8f4164a0baa1cc",
+    "ru": "Какие сведения вы запросили?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].questions[request].text"
+    ]
+  },
+  {
+    "id": "c26194b495f0ee3f",
+    "ru": "Предложить заявителю получить согласие каждого получателя расходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "e1b4c6b2cd75e938",
+    "ru": "Подготовить ответ самого располагающего информацией органа: открытая часть и мотивировка исключённых сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].routes[proper].text"
+    ]
+  },
+  {
+    "id": "d64dc642556efd50",
+    "ru": "Переадресовать всё в Роскомнадзор вместо ответа на запрос о бюджете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].routes[shortcut].text"
+    ]
+  },
+  {
+    "id": "4b38e2c945038d3f",
+    "ru": "Ведомость с закрытыми строками",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[budget-partial].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].cases[budget-partial].title"
+    ]
+  },
+  {
+    "id": "f14241c54b993c31",
+    "ru": "Отказываем во всём документе без разделения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "12bd1f07fb9893f9",
+    "ru": "Проверяем части информации и предоставляем общедоступные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[budget-partial].trap.explain"
+    ]
+  },
+  {
+    "id": "db9c7515dad8fb60",
+    "ru": "Помощник: «Одна строка ограниченного доступа закрывает весь бюджетный документ».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].trap.text"
+    ]
+  },
+  {
+    "id": "b788ecf4142ef4eb",
+    "ru": "Есть общедоступная и ограниченная части",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "6e397852fb713e55",
+    "ru": "Орган располагает документом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "7dbcc711fdd358d7",
+    "ru": "Частичное предоставление вместо полного отказа или безусловного раскрытия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-partial].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "6c5d168c613d9aa1",
+    "ru": "Проверить доступность выбранного способа получения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[access].title"
+    ]
+  },
+  {
+    "id": "a9ad5b616b1948a0",
+    "ru": "Потребовать объяснить цель получения общедоступного бюджета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[demand].title"
+    ]
+  },
+  {
+    "id": "073aa3b67656ed6c",
+    "ru": "Подготовить полный ответ: место официальной публикации или электронные документы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[notify].title"
+    ]
+  },
+  {
+    "id": "ae60008f88ba79cc",
+    "ru": "Зафиксировать, какие материалы и каким способом доступны заявителю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[record].title"
+    ]
+  },
+  {
+    "id": "665b814a1eff2bce",
+    "ru": "Проверить предмет запроса и указанную форму",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[scope].title"
+    ]
+  },
+  {
+    "id": "0b7f7c9a0583599c",
+    "ru": "Оставить запрос без ответа, поскольку документы уже есть в интернете",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[silent].title"
+    ]
+  },
+  {
+    "id": "2493544d18bbd86e",
+    "ru": "Сопоставить реквизиты, редакцию и оба приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].actions[verify].title"
+    ]
+  },
+  {
+    "id": "bb703422220af87e",
+    "ru": "В учебном деле гражданин запросил текст принятого решения и два приложения в электронной форме, без требования заверенной копии. Все три документа доступны на официальном сайте. Вы проверяете совпадение редакции, комплектность и доступность до ответа. Реальному органу нарушения не приписываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].brief"
+    ]
+  },
+  {
+    "id": "da5093cd38fb5d7a",
+    "ru": "Запрос зарегистрирован, относится к деятельности получателя; отсрочка не применялась. Определите крайний день ответа. Уже выполненная публикация сама по себе не создаёт новой даты поступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].calendar.context"
+    ]
+  },
+  {
+    "id": "4ee1ce7dd2f477cf",
+    "ru": "Здесь принятый документ и все запрошенные приложения действительно опубликованы и доступны. Это позволяет иной ответ, чем ссылка на проект или закрытый файл.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].contrast.difference"
+    ]
+  },
+  {
+    "id": "84efe73febb5dc2a",
+    "ru": "Проект А предлагает указать адрес официальной публикации, названия файлов и путь к приложениям. Проект Б объявляет направление любых ссылок незаконным и предлагает вместо готовых документов изготовить заверенные копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[draft].text"
+    ]
+  },
+  {
+    "id": "68f587d522becfb0",
+    "ru": "Два проекта ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[draft].title"
+    ]
+  },
+  {
+    "id": "6382039c3234d778",
+    "ru": "В вымышленном разделе «Бюджет {{caseYear}}» опубликованы принятое решение и приложения 1 и 2. Номер, дата, редакция и состав совпадают с запросом и архивной описью. Проверка с внешнего подключения: все три файла доступны без служебного входа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[inventory].text"
+    ]
+  },
+  {
+    "id": "724c4a12b5183ac5",
+    "ru": "Сверка публикации и архива",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[inventory].title"
+    ]
+  },
+  {
+    "id": "9c971ed9f7576515",
+    "ru": "Прошу предоставить в электронной форме принятое решение о бюджете на {{caseYear}} год с приложениями 1 и 2. Заверенная копия и бумажная форма не запрошены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[request].text"
+    ]
+  },
+  {
+    "id": "1bc56f154a267f4f",
+    "ru": "Зарегистрированный запрос",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].documents[request].title"
+    ]
+  },
+  {
+    "id": "b694355d9c0cc1b7",
+    "ru": "В отличие от истории с одним проектом бюджета, здесь подтверждены именно запрошенные документы и доступ к приложениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].factTask.explain",
+      "cases:CASE_TEMPLATES[budget-published].coach.docs"
+    ]
+  },
+  {
+    "id": "4db3bc2ac3a4b981",
+    "ru": "Запрошенные документы действительно опубликованы и доступны; ответ может содержать указание места публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].factTask.options[available].text"
+    ]
+  },
+  {
+    "id": "43ad13070bfc6a1e",
+    "ru": "Даже при согласованной электронной форме закон всегда требует изготовить заверенные сканы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].factTask.options[copies].text"
+    ]
+  },
+  {
+    "id": "f2a7d42f322ba548",
+    "ru": "Любая ссылка означает, что документов у органа нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].factTask.options[missing].text"
+    ]
+  },
+  {
+    "id": "08d83a1884bcb4ce",
+    "ru": "Какой вывод следует из сверки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].factTask.prompt"
+    ]
+  },
+  {
+    "id": "2e84c3da6d0eec60",
+    "ru": "Техническое изменение адреса не означает исчезновения документов; выбранный способ ответа должен оставаться работоспособным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.explain"
+    ]
+  },
+  {
+    "id": "ce20426b4d75d003",
+    "ru": "Сопоставьте состояние публикации с подготовленным ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.failure"
+    ]
+  },
+  {
+    "id": "e3edf890b9847a3d",
+    "ru": "После подготовки ответа раздел сайта перенесли. Старая ссылка теперь ведёт на страницу ошибки, а сами документы остались в новом разделе. Ответ ещё не направлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.intro"
+    ]
+  },
+  {
+    "id": "811e06b67fb0ebba",
+    "ru": "Сообщить об отсутствии документов, потому что изменилась ссылка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.options[deny].text"
+    ]
+  },
+  {
+    "id": "4996960a165669b2",
+    "ru": "Отправить старую ссылку: она работала при первом просмотре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.options[send].text"
+    ]
+  },
+  {
+    "id": "df6f4da614da9330",
+    "ru": "Обновить путь к публикации либо приложить документы; повторно проверить доступность и комплектность перед отправкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].followup.options[update].text"
+    ]
+  },
+  {
+    "id": "0147ae6c1296899e",
+    "ru": "Мне нужны решение о бюджете на {{caseYear}} год и приложения. Сосед говорит, что чиновники обязаны всегда присылать заверенные сканы, а ссылкой отвечать нельзя. Я пока написал обычный запрос по электронной форме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].opening"
+    ]
+  },
+  {
+    "id": "8b4151cd8ba4d089",
+    "ru": "Да. Старую ссылку нашёл в сообщении соседа, но не знаю, куда смотреть после обновления раздела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[access].answer"
+    ]
+  },
+  {
+    "id": "47300d4dcd7dca17",
+    "ru": "Нужен доступный путь к нужным документам; запрета на электронное ознакомление нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[access].fact"
+    ]
+  },
+  {
+    "id": "66b05939a332a24f",
+    "ru": "Есть ли доступ к сайту с вашего устройства?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[access].text"
+    ]
+  },
+  {
+    "id": "ec1457b447b0f560",
+    "ru": "Текст решения о бюджете на {{caseYear}} год и оба приложения; подойдёт электронный способ. Заверенную копию я не заказывал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[request].answer"
+    ]
+  },
+  {
+    "id": "3111f494dbc4727b",
+    "ru": "Предмет и форма запроса определены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[request].fact"
+    ]
+  },
+  {
+    "id": "345609bdc3b4f7b7",
+    "ru": "Какие документы и в какой форме вы запросили?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[request].text"
+    ]
+  },
+  {
+    "id": "822d62401fe7cf6e",
+    "ru": "Принятое решение в редакции, указанной в запросе, а не материалы обсуждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[version].answer"
+    ]
+  },
+  {
+    "id": "2f80037a4195c56f",
+    "ru": "Важно сопоставить реквизиты и редакцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[version].fact"
+    ]
+  },
+  {
+    "id": "6f079e49046d395e",
+    "ru": "Какое решение вы ищете: проект или принятое?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].questions[version].text"
+    ]
+  },
+  {
+    "id": "b4e700bcb7af5b11",
+    "ru": "Не отвечать, поскольку информацию уже опубликовали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].routes[archive].text"
+    ]
+  },
+  {
+    "id": "9c4c1ada94bbd092",
+    "ru": "Подготовить ответ у обладателя информации с указанием официальной публикации либо предоставить электронные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].routes[holder].text",
+      "cases:CASE_TEMPLATES[budget-published].contrast.decision"
+    ]
+  },
+  {
+    "id": "a82d95ce4b5ec0de",
+    "ru": "Направить запрос в министерство, на сайте которого найден текст 8-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].routes[ministry].text"
+    ]
+  },
+  {
+    "id": "d1824170c98b4e1c",
+    "ru": "Документы уже опубликованы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].cases[budget-published].title",
+      "source-index:SOURCE_INDEX.entries[shelf:council].cases[budget-published].title"
+    ]
+  },
+  {
+    "id": "d586a1c64aef8d81",
+    "ru": "Размещение информации даёт допустимый способ ответа, а не повод безусловно игнорировать поступивший запрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].trap.explain"
+    ]
+  },
+  {
+    "id": "84437e24b6171c84",
+    "ru": "Закрыть без ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].trap.options[close].text"
+    ]
+  },
+  {
+    "id": "ec4bd18d10fce5ce",
+    "ru": "Признать любое использование ссылки незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].trap.options[never].text"
+    ]
+  },
+  {
+    "id": "fffa496c44baaf8d",
+    "ru": "Подготовить ответ с указанием, где размещена именно запрошенная информация, либо предоставить её другим допустимым способом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].trap.options[reply].text"
+    ]
+  },
+  {
+    "id": "f1b0470ab283f925",
+    "ru": "Помощник: «После публикации документов можно просто закрыть входящий запрос, ничего не отвечая».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-published].trap.text"
+    ]
+  },
+  {
+    "id": "6aa2790f980b762e",
+    "ru": "Пусть заявитель сам найдёт остальные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[delay].detail"
+    ]
+  },
+  {
+    "id": "ea8656e896b34bca",
+    "ru": "Закрыть запрос ссылкой на главную страницу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[delay].title"
+    ]
+  },
+  {
+    "id": "17a636477029b739",
+    "ru": "Не проверять дату и последующие изменения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[draft].detail"
+    ]
+  },
+  {
+    "id": "630525ae0e2232b2",
+    "ru": "Выдать найденный проект за принятый бюджет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[draft].title",
+      "cases:CASE_TEMPLATES[budget].criticalRules[draft].message"
+    ]
+  },
+  {
+    "id": "6d53fa7e8ef1b4e0",
+    "ru": "Без этого общедоступные документы не выдавать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[motive].detail"
+    ]
+  },
+  {
+    "id": "d18bd00ae6995ec4",
+    "ru": "Потребовать доказать личную заинтересованность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[motive].title",
+      "cases:CASE_TEMPLATES[budget].criticalRules[motive].message"
+    ]
+  },
+  {
+    "id": "9bbe32ea74da6b33",
+    "ru": "Не требовать объяснения мотива и не подменять ответ общей ссылкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "ee9e7728f7e7091d",
+    "ru": "Подготовить понятный ответ с конкретными документами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[notify].title"
+    ]
+  },
+  {
+    "id": "5e6ccfe59414462a",
+    "ru": "Применить специальный порядок, а не автоматически назвать запрос жалобой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[register].detail"
+    ]
+  },
+  {
+    "id": "db823929f39e0e00",
+    "ru": "Проверить регистрацию запроса информации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[register].title"
+    ]
+  },
+  {
+    "id": "960b78d8ac9ea9c4",
+    "ru": "Передать уполномоченному сотруднику принятое решение, приложения и запрошенные материалы обсуждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[route].detail"
+    ]
+  },
+  {
+    "id": "bc36844b56ddf6ef",
+    "ru": "Подготовить комплект ответа у текущего получателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[route].title"
+    ]
+  },
+  {
+    "id": "78a53c8f215e7900",
+    "ru": "Ссылка на главную страницу не равна предоставлению всех запрошенных материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[track].detail"
+    ]
+  },
+  {
+    "id": "1728623f7b8ee571",
+    "ru": "Проконтролировать, что вопрос о приложениях не потерялся",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[track].title"
+    ]
+  },
+  {
+    "id": "fd339627b264e320",
+    "ru": "Отличить проект от принятого решения и последующих изменений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[version].detail"
+    ]
+  },
+  {
+    "id": "536e48648eb7bc7a",
+    "ru": "Проверить период и редакцию документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].actions[version].title"
+    ]
+  },
+  {
+    "id": "dd26716f90643e54",
+    "ru": "Адаптация исходного варианта 5. Орган местного самоуправления располагает принятым бюджетом и материалами обсуждения. Запрос с необходимыми контактами уже поступил. Учебные документы и заявитель вымышлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].brief"
+    ]
+  },
+  {
+    "id": "733ca6c15c813500",
+    "ru": "Запрос зарегистрирован органом, располагающим документами. Отсрочка по условию не применялась. Рассчитайте крайнюю дату предоставления ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].calendar.context"
+    ]
+  },
+  {
+    "id": "7f8be465466f42b8",
+    "ru": "8-ФЗ от 09.02.2009, статья 18, часть 6",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].calendar.source",
+      "cases:CASE_TEMPLATES[budget-link].calendar.source",
+      "cases:CASE_TEMPLATES[budget-published].calendar.source"
+    ]
+  },
+  {
+    "id": "659d80928baecc69",
+    "ru": "Житель муниципального округа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].citizen.description",
+      "cases:CASE_TEMPLATES[budget-misdirected].citizen.description",
+      "cases:CASE_TEMPLATES[several-issues].citizen.description"
+    ]
+  },
+  {
+    "id": "6a3a1ecc8fc08302",
+    "ru": "Илья Андреевич",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].citizen.name",
+      "cases:CASE_TEMPLATES[budget-misdirected].citizen.name",
+      "cases:CASE_TEMPLATES[several-issues].citizen.name"
+    ]
+  },
+  {
+    "id": "76f98ed58b1dcd4b",
+    "ru": "Пользователь не обязан доказывать личную заинтересованность в общедоступных бюджетных документах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].coach.research",
+      "cases:CASE_TEMPLATES[budget].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[budget].knowledge.explain"
+    ]
+  },
+  {
+    "id": "5966695f006c71ca",
+    "ru": "Запрошены принятый бюджет и приложения. Нужно установить состав и надлежащего адресата; сам факт существования проекта не отвечает на запрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].contrast.difference"
+    ]
+  },
+  {
+    "id": "8cd1587b9b71dcf3",
+    "ru": "Учебная выдержка: в заголовке указано «Проект». Отметки о принятии решения нет. Этот документ нельзя считать окончательным бюджетом без сопоставления с опубликованным решением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[draft].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[draft].text"
+    ]
+  },
+  {
+    "id": "93a0ee5a42ca7aa2",
+    "ru": "Сохранённая страница «Проект бюджета»",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[draft].title",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[draft].title"
+    ]
+  },
+  {
+    "id": "c407721d8af8ba64",
+    "ru": "Проверка версии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[draft].type",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[draft].type"
+    ]
+  },
+  {
+    "id": "6d03c58490fd218d",
+    "ru": "Официальный сайт муниципального округа Нижегородский: раздел «Бюджет». Важно проверить дату решения и последующие изменения, а не просто найти документ с похожим названием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[official].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[official].text"
+    ]
+  },
+  {
+    "id": "5340745b18e58f3d",
+    "ru": "Где искать опубликованные документы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[official].title",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[official].title"
+    ]
+  },
+  {
+    "id": "ae3a70b2b325dc4e",
+    "ru": "Официальный источник",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[official].type",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[official].type"
+    ]
+  },
+  {
+    "id": "6e2b58e28322640e",
+    "ru": "Прошу предоставить принятое решение о бюджете муниципального округа Нижегородский на {{caseYear}} год, приложения и опубликованные материалы обсуждения. Требуются документы в действующей на дату запроса редакции. Не прошу создавать новые аналитические материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[request].text"
+    ]
+  },
+  {
+    "id": "a962ae38b774f97a",
+    "ru": "Запрос жителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[request].title",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[request].title"
+    ]
+  },
+  {
+    "id": "c467ca5d1b55d962",
+    "ru": "Запрос информации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].documents[request].type",
+      "cases:CASE_TEMPLATES[budget-misdirected].documents[request].type"
+    ]
+  },
+  {
+    "id": "a5f36045ac15b7b2",
+    "ru": "Содержание запроса – доступ к существующим документам. Оно определяет выбор специальной процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].factTask.explain",
+      "cases:CASE_TEMPLATES[budget].coach.docs",
+      "cases:CASE_TEMPLATES[budget-misdirected].factTask.explain"
+    ]
+  },
+  {
+    "id": "a7e3fa1cf687cecf",
+    "ru": "Жалоба на исполнение бюджета, хотя нарушения заявитель не описал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].factTask.options[complaint].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].factTask.options[complaint].text"
+    ]
+  },
+  {
+    "id": "df0f9b0269371f79",
+    "ru": "Запрос существующей информации о деятельности органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].factTask.options[information].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].factTask.options[information].text"
+    ]
+  },
+  {
+    "id": "cb21ea9e8fd6498a",
+    "ru": "Поручение приёмной создать новый финансовый прогноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].factTask.options[newanalysis].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].factTask.options[newanalysis].text"
+    ]
+  },
+  {
+    "id": "534a66173e183fd6",
+    "ru": "Как квалифицировать содержание просьбы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].factTask.prompt",
+      "cases:CASE_TEMPLATES[budget-misdirected].factTask.prompt"
+    ]
+  },
+  {
+    "id": "d03767d114e26f47",
+    "ru": "Проверяется полнота ответа на конкретный запрос. Возможное отсутствие документа должно быть объяснено, а не замолчано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.explain"
+    ]
+  },
+  {
+    "id": "f7f4872f74e92d5f",
+    "ru": "Один из пунктов запроса остался без ответа. Формальное наличие письма не означает полноту предоставленной информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.failure"
+    ]
+  }
+]

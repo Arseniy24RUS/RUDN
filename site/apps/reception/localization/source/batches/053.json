@@ -1,0 +1,1160 @@
+[
+  {
+    "id": "39b9713406338021",
+    "ru": "Помощник: «Если нет возможности ответить по существу, никакое уведомление не нужно».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].trap.text"
+    ]
+  },
+  {
+    "id": "25c4780e7f1b1f06",
+    "ru": "Сопоставить старую записку с актуальным комплектом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[a0].title"
+    ]
+  },
+  {
+    "id": "1b8ef3fe34c8c489",
+    "ru": "Установить оставшийся организационный шаг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[a1].title"
+    ]
+  },
+  {
+    "id": "62cc7249d1dcba86",
+    "ru": "Подготовить доведение правил и графика до жителей через ответственного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[a2].title"
+    ]
+  },
+  {
+    "id": "9180c8769a9c738e",
+    "ru": "Не принимать новые бюджетные обязательства от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3b28ee52462b7e4b",
+    "ru": "Проверить выполнение первого обслуживания и соответствие маршруту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[a4].title"
+    ]
+  },
+  {
+    "id": "9ddbf9127d9bda10",
+    "ru": "Повторить отказ из старой записки без анализа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[b0].title"
+    ]
+  },
+  {
+    "id": "02eb8a8c01703985",
+    "ru": "Пообещать новые расходы сверх согласованного бюджета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].actions[b1].title",
+      "cases:CASE_TEMPLATES[waste-chain-ready].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b6bf0abac75cba38",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Вымышленная площадка и документы; территориальная компетенция закреплена за данным подразделением. Действительность площадки, договора, маршрута и предусмотренного финансирования подтверждена. Студент не утверждает новые расходы и не гарантирует переработку по одному цвету контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].brief"
+    ]
+  },
+  {
+    "id": "3a553e90ffdb9160",
+    "ru": "В исходной инициативе цепочка отсутствовала. Здесь она готова, и профессиональное действие меняется на организацию исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].coach.plan",
+      "cases:CASE_TEMPLATES[waste-chain-ready].contrast.difference"
+    ]
+  },
+  {
+    "id": "cce0c4abe4a3b612",
+    "ru": "До заключения договора отсутствовал маршрут вывоза. Дата записки предшествует актуальному комплекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d0].text"
+    ]
+  },
+  {
+    "id": "39ce86308e510b94",
+    "ru": "Старая первичная записка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ba36f543715395b1",
+    "ru": "Площадка учтена, соглашение предусматривает раздельное накопление и отдельный график, финансовые условия утверждены компетентным субъектом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e21f6c97213c4ce4",
+    "ru": "Актуальный комплект П-23",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a98737493c70fc79",
+    "ru": "Перевозчик и получатель подтвердили обслуживание П-23 по составу фракций. Не выполнено информирование жильцов о составе принимаемого и днях обслуживания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d2].text"
+    ]
+  },
+  {
+    "id": "9b36196613b403b0",
+    "ru": "Маршрут М-23",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].documents[d2].title"
+    ]
+  },
+  {
+    "id": "00a212026fed9c52",
+    "ru": "Условия площадки и дальнейшего маршрута подтверждены; старый довод об отсутствии вывоза не отвечает на текущую стадию. В исходной инициативе цепочка отсутствовала. Здесь она готова, и профессиональное действие меняется на организацию исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.explain"
+    ]
+  },
+  {
+    "id": "e8dd6086b3a6e8d1",
+    "ru": "Условия площадки и дальнейшего маршрута подтверждены; старый довод об отсутствии вывоза не отвечает на текущую стадию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[waste-chain-ready].trap.explain",
+      "cases:CASE_TEMPLATES[waste-chain-ready].contrast.decision"
+    ]
+  },
+  {
+    "id": "37f9d40d911c7284",
+    "ru": "Старую записку нужно повторять независимо от более поздних документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "1cfc7472b551b1f0",
+    "ru": "Подтверждение маршрута освобождает от информирования и контроля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-chain-ready.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b2b3aa41ee91765c",
+    "ru": "Первый рейс прошёл, но подтверждение относится к П-32.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].followup.intro"
+    ]
+  },
+  {
+    "id": "ae4fee5596de5dad",
+    "ru": "Проверить выполнение по П-23 и исправить адресную ошибку контроля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].followup.options[0].text",
+      "cases:CASE_TEMPLATES[waste-chain-ready].followup.explain"
+    ]
+  },
+  {
+    "id": "2a46413979816428",
+    "ru": "Закрыть задачу по любому рейсу перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "123a77bfd6cd2f7c",
+    "ru": "Отменить всю систему из-за одного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "42f89aa18f5aac4c",
+    "ru": "Статья 13.4 закона № 89-ФЗ связывает накопление с соответствующими требованиям площадками, предусматривает раздельное складирование и ведение схемы и реестра мест накопления ТКО. Вопросы размещения и порядка определяются с учётом федеральных правил и порядка, установленного субъектом. Цвет контейнера сам по себе не устанавливает состав принимаемых отходов и дальнейший маршрут. Сотрудник приёмной не утверждает финансирование и не заменяет полномочия собственника площадки или оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].knowledge.explain",
+      "cases:CASE_TEMPLATES[waste-container-fractions].knowledge.explain",
+      "cases:CASE_TEMPLATES[waste-site-register].knowledge.explain"
+    ]
+  },
+  {
+    "id": "0e3b78928bbdf6af",
+    "ru": "Учитывать подтверждённые место, порядок и маршрут, а не только внешний вид контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "fa8d9d733bf7936e",
+    "ru": "Считать размещение контейнера достаточным без дальнейшей организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "3b6a46523f7c1f38",
+    "ru": "Игнорировать готовую схему по устаревшей записке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b564c78c6c075221",
+    "ru": "Найдите норму «Места и порядок раздельного накопления отходов». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].knowledge.prompt",
+      "cases:CASE_TEMPLATES[waste-container-fractions].knowledge.prompt",
+      "cases:CASE_TEMPLATES[waste-site-register].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5cb4ef4c91ea1f65",
+    "ru": "Мы просили поставить контейнеры. Нам ответили, что без вывоза это бессмысленно, хотя договор и маршрут уже есть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].opening"
+    ]
+  },
+  {
+    "id": "e5e3bef1a60e7579",
+    "ru": "Подготовка организационного исполнения уже согласованных условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].procedures[0].text"
+    ]
+  },
+  {
+    "id": "de33bffad8bef911",
+    "ru": "Новое обещание финансирования сотрудником приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].procedures[1].text"
+    ]
+  },
+  {
+    "id": "133dce6f8301864f",
+    "ru": "Отказ по устаревшей стадии без проверки комплекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].procedures[2].text"
+    ]
+  },
+  {
+    "id": "13375b0db4b25738",
+    "ru": "Да, запись П-23 входит в применимую схему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "42bee6f1f6eb1fb6",
+    "ru": "Место установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "fcb8b3e4eb9efffa",
+    "ru": "Площадка согласована?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q0].text"
+    ]
+  },
+  {
+    "id": "e6ececb3c0cdfdb2",
+    "ru": "Договор предусматривает отдельные фракции и конкретный график.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "05ac90ee8ac571f1",
+    "ru": "Дальнейший маршрут не отсутствует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "43c640c675116651",
+    "ru": "Что с вывозом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q1].text"
+    ]
+  },
+  {
+    "id": "c19f6676dfacfd17",
+    "ru": "В документах указан получатель и подтверждение готовности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ccf27dc413a5fae3",
+    "ru": "Цепочка описана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "6467bf2f710b3cc0",
+    "ru": "Куда передаётся материал?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q2].text"
+    ]
+  },
+  {
+    "id": "f8585bdccb5f23cf",
+    "ru": "Готовую схему не довели до жильцов; запуск организационно задержан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "39705b226819d0b4",
+    "ru": "Предмет не в поиске несуществующего финансирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "b68372e3a7bd2b95",
+    "ru": "Какая часть ещё не выполнена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].questions[q3].text"
+    ]
+  },
+  {
+    "id": "c5d8b847b2ed2e3a",
+    "ru": "Компетентный организатор площадки совместно с установленными оператором и перевозчиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].routes[0].text"
+    ]
+  },
+  {
+    "id": "b50898895a948d4c",
+    "ru": "Любая фирма по цвету мусоровоза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].routes[1].text"
+    ]
+  },
+  {
+    "id": "ef28e3d823518d58",
+    "ru": "Сотрудник приёмной как самостоятельный распорядитель нового бюджета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].routes[2].text"
+    ]
+  },
+  {
+    "id": "669773897a179c76",
+    "ru": "Схема уже работает, нужна другая оценка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[waste-chain-ready].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[waste-chain-ready].title"
+    ]
+  },
+  {
+    "id": "2f46856213566d9f",
+    "ru": "Подтверждённый маршрут позволяет не проверять адрес первого обслуживания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-chain-ready].trap.text"
+    ]
+  },
+  {
+    "id": "2055d3e10af94d97",
+    "ru": "Сопоставить наклейку с согласованным перечнем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[a0].title"
+    ]
+  },
+  {
+    "id": "30968bc2af2f58c9",
+    "ru": "Подготовить исправление инструкции у контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7870535ed4df7464",
+    "ru": "Указать жителям предусмотренный маршрут Р-5 и условия приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8650009fabba6c89",
+    "ru": "Не поручать непрофессиональный разбор потенциально опасных предметов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[a3].title"
+    ]
+  },
+  {
+    "id": "4e13ab7928a10394",
+    "ru": "Проверить актуальность вывески и доступность отдельного приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[a4].title"
+    ]
+  },
+  {
+    "id": "1256717b25f65538",
+    "ru": "Считать слово «вторсырьё» разрешением на любой состав.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[b0].title"
+    ]
+  },
+  {
+    "id": "95e2acb95b0a7c33",
+    "ru": "Отправить заявителя самостоятельно разбирать контейнер.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].actions[b1].title",
+      "cases:CASE_TEMPLATES[waste-container-fractions].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "f0d1f49a9bc1cbc4",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Состав принимаемого установлен вымышленным, явно обозначенным порядком конкретной схемы: чистая сухая упаковка по перечню. Для названных ламп и батареек предусмотрен отдельный безопасный маршрут; универсальная классификация всех таких изделий по классу опасности не предлагается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].brief"
+    ]
+  },
+  {
+    "id": "9f73e4eedf53b2f6",
+    "ru": "В исходном деле не хватало всей цепочки. Здесь цепочка есть для определённой фракции, а ошибка касается состава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].coach.plan",
+      "cases:CASE_TEMPLATES[waste-container-fractions].contrast.difference"
+    ]
+  },
+  {
+    "id": "2eb5f88560bdbe43",
+    "ru": "«Любое вторсырьё». Нет перечня и исключений; автор наклейки не указан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6939858b394bc8ce",
+    "ru": "Новая наклейка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d0].title"
+    ]
+  },
+  {
+    "id": "dc0036f4feb820ae",
+    "ru": "Принимается перечисленная чистая сухая упаковка. Названные лампы и батарейки исключены; смешивать их с данной фракцией не предусмотрено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d1].text"
+    ]
+  },
+  {
+    "id": "50cadc184b7121b1",
+    "ru": "Порядок контейнера К-23",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d1].title"
+    ]
+  },
+  {
+    "id": "70409c4d346ec2c5",
+    "ru": "Для исключённых предметов действует пункт приёма Р-5 с подтверждёнными условиями. Работа с уже попавшими предметами поручается подготовленному исполнителю; жильцы не должны разбирать содержимое самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d2].text"
+    ]
+  },
+  {
+    "id": "0891fc17a68cda90",
+    "ru": "Отдельный маршрут и ответственный",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].documents[d2].title"
+    ]
+  },
+  {
+    "id": "b3d8ff51163cd8e5",
+    "ru": "Надпись «любое вторсырьё» противоречит перечню К-23; нужны исправление информации и отдельный предусмотренный маршрут. В исходном деле не хватало всей цепочки. Здесь цепочка есть для определённой фракции, а ошибка касается состава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.explain"
+    ]
+  },
+  {
+    "id": "a502116e315cf570",
+    "ru": "Надпись «любое вторсырьё» противоречит перечню К-23; нужны исправление информации и отдельный предусмотренный маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[waste-container-fractions].trap.explain",
+      "cases:CASE_TEMPLATES[waste-container-fractions].contrast.decision"
+    ]
+  },
+  {
+    "id": "809bbe3e06c1b9f3",
+    "ru": "Любой потенциально перерабатываемый предмет подходит для этого контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "bfed3df82264fb35",
+    "ru": "Для исправления ошибки нужно обязать жителей разобрать всё содержимое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-container-fractions.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "fa88c977c8f59fae",
+    "ru": "Выяснилось, что Р-5 перестал принимать один из названных видов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].followup.intro"
+    ]
+  },
+  {
+    "id": "a087dcbe8a34d1c5",
+    "ru": "Уточнить действующий безопасный маршрут; не продолжать ссылаться на недоступную услугу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].followup.options[0].text",
+      "cases:CASE_TEMPLATES[waste-container-fractions].followup.explain"
+    ]
+  },
+  {
+    "id": "a4bff2d373098dd2",
+    "ru": "Оставить прежнюю инструкцию без изменений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "163d8d61958f0146",
+    "ru": "Вернуть исключённый вид в общий контейнер без изменения порядка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "3d06bf66fe6592e4",
+    "ru": "Разделять виды по применимому порядку и проверять фактические условия отдельного маршрута.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "96351024dd030d5b",
+    "ru": "Определять принимаемое только по цвету контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "031445aae54f562f",
+    "ru": "Приравнивать все отходы к одной фракции вторсырья.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2e3d4e364e173c89",
+    "ru": "На площадке стоит контейнер для вторсырья. Жители предлагают класть туда лампы и батарейки вместе с упаковкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].opening"
+    ]
+  },
+  {
+    "id": "cee263771b8bbfd7",
+    "ru": "Уточнение состава фракции и безопасной организации исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].procedures[0].text"
+    ]
+  },
+  {
+    "id": "63baf152cc9cee96",
+    "ru": "Смешение всех видов отходов под общим названием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e99742562e597d42",
+    "ru": "Самостоятельное опасное обследование силами заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].procedures[2].text"
+    ]
+  },
+  {
+    "id": "085b0c4c152f3d36",
+    "ru": "Чистую сухую упаковку по размещённому перечню.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c76785c97f4bad62",
+    "ru": "Состав не выводится только из цвета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "547d0f02b69e4a78",
+    "ru": "Что принимает контейнер?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5f6c7a41aead300c",
+    "ru": "В перечне исключённых предметов с отдельным пунктом приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "dc94d04e0b4cfe25",
+    "ru": "Есть другой маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "fc724d900ad61ab7",
+    "ru": "Где указаны лампы и батарейки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q1].text"
+    ]
+  },
+  {
+    "id": "06c6e1f6f731933b",
+    "ru": "На новой наклейке написано «любое вторсырьё».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "43377ca4084de9d4",
+    "ru": "Инструкция противоречит согласованной схеме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b6c45bac88f7445d",
+    "ru": "Почему возникла путаница?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a825546779c12afc",
+    "ru": "Нет, извлечение опасных предметов поручается подготовленному исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "33da88d4294bf088",
+    "ru": "Помощь не должна создавать опасное задание гражданину.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "f70913b3643f6697",
+    "ru": "Нужно ли жильцам сортировать содержимое вручную?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].questions[q3].text"
+    ]
+  },
+  {
+    "id": "d0b7dfdfb7a146a0",
+    "ru": "Ответственный за площадку и установленный оператор; исключённые предметы – по предусмотренному отдельному маршруту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].routes[0].text"
+    ]
+  },
+  {
+    "id": "4894d261e1a54dec",
+    "ru": "Любой покупатель вторсырья без проверки состава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].routes[1].text"
+    ]
+  },
+  {
+    "id": "e0ca467b29a01548",
+    "ru": "Житель как обязательный исполнитель опасной сортировки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].routes[2].text"
+    ]
+  },
+  {
+    "id": "6d76f25dad838b03",
+    "ru": "В синий контейнер попадает не всё",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[waste-container-fractions].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[waste-container-fractions].title"
+    ]
+  },
+  {
+    "id": "091ea38d24a49f34",
+    "ru": "Состав конкретной фракции определяется не только цветом контейнера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-container-fractions].trap.text"
+    ]
+  },
+  {
+    "id": "886456760983b841",
+    "ru": "Сопоставить координаты реестра и акта размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[a0].title"
+    ]
+  },
+  {
+    "id": "68e728c4c331c47d",
+    "ru": "Установить ответственного за площадку и изменение схемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[a1].title"
+    ]
+  },
+  {
+    "id": "78867168b6d8601a",
+    "ru": "Подготовить проверку и предусмотренное исправление размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[a2].title"
+    ]
+  },
+  {
+    "id": "12b1d994f22ae147",
+    "ru": "Не предлагать жителям самовольно перемещать контейнеры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e651fbbd138af434",
+    "ru": "Проверить новый акт по правильному месту, а не количеству контейнеров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[a4].title"
+    ]
+  },
+  {
+    "id": "0765d03417eb2b3f",
+    "ru": "Зачесть П-9 как подтверждение для П-10.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[b0].title"
+    ]
+  },
+  {
+    "id": "7405ff36bde02a6a",
+    "ru": "Потребовать от граждан немедленно перенести контейнеры собственными силами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].actions[b1].title",
+      "cases:CASE_TEMPLATES[waste-site-register].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "83f046562eff7f57",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Территория – обычный муниципальный округ, не город федерального значения; обязанности по месту накопления закреплены материалами. Вымышленные идентификаторы П-9 и П-10 не обозначают реальные площадки. Студент не определяет санитарные расстояния по рисунку и не переносит оборудование самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].brief"
+    ]
+  },
+  {
+    "id": "bfe53fa8b16e4ede",
+    "ru": "Здесь готовы контейнеры и вывоз, но действительность размещения привязана к конкретной площадке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].coach.plan",
+      "cases:CASE_TEMPLATES[waste-site-register].contrast.difference"
+    ]
+  },
+  {
+    "id": "7e7be83ad4fd3c37",
+    "ru": "Сообщает только о доставке двух контейнеров, без координат площадки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d0].text"
+    ]
+  },
+  {
+    "id": "46156cc73b9bc85e",
+    "ru": "Место накопления П-9 указано с координатами, составом и ответственным. На П-10 запись не распространяется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d1].text"
+    ]
+  },
+  {
+    "id": "188538c26068e662",
+    "ru": "Запись реестра П-9",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7256f55603a08f31",
+    "ru": "Контейнеры установлены {{observed}} на П-10. Изменение схемы и проверка соответствия этого места требованиям не подтверждены; факт отклонения места установлен, конкретные санитарные нарушения – нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d2].text"
+    ]
+  },
+  {
+    "id": "21671b55fc8a2ab0",
+    "ru": "Акт размещения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4efd63f3b9e4dd07",
+    "ru": "Запись П-9 не подтверждает правомерность размещения на П-10; нужно проверить и привести фактическое место в соответствие установленному порядку. Здесь готовы контейнеры и вывоз, но действительность размещения привязана к конкретной площадке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.explain"
+    ]
+  },
+  {
+    "id": "307dee4cfaa912d0",
+    "ru": "Запись П-9 не подтверждает правомерность размещения на П-10; нужно проверить и привести фактическое место в соответствие установленному порядку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[waste-site-register].trap.explain",
+      "cases:CASE_TEMPLATES[waste-site-register].contrast.decision"
+    ]
+  },
+  {
+    "id": "ee448e71e32a91f5",
+    "ru": "Любой соседний участок покрывается записью ближайшей площадки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "0746e19e4bd7a9d3",
+    "ru": "Одно отклонение координат доказывает все санитарные нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-waste-site-register.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a66bcb47c96d2a9a",
+    "ru": "В отчёте исправлено название площадки, но координаты и фото остались прежними.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].followup.intro"
+    ]
+  },
+  {
+    "id": "dadd38572ccc16eb",
+    "ru": "Проверить фактическое исправление, а не только замену подписи отчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].followup.options[0].text",
+      "cases:CASE_TEMPLATES[waste-site-register].followup.explain"
+    ]
+  },
+  {
+    "id": "216d03453ee027cb",
+    "ru": "Признать исправление по новому заголовку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b2ef74d06daa38ba",
+    "ru": "Удалить прежние материалы, чтобы отчёты не противоречили.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b96bd9bf5eed1238",
+    "ru": "Сопоставлять место и реестровую запись; изменение подписи не заменяет фактического исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "9a9ba7769c92bdd0",
+    "ru": "Распространять запись на соседние участки без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "fee3b56d6e2b0972",
+    "ru": "Оценивать площадку только по числу поставленных контейнеров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6fc0af388a84c9c5",
+    "ru": "Контейнеры обещали у дома, а поставили на соседнем участке. В ответе написано, что площадка уже есть в реестре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].opening"
+    ]
+  },
+  {
+    "id": "abc63640ab63ff93",
+    "ru": "Проверка места накопления, схемы и установленной процедуры исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].procedures[0].text"
+    ]
+  },
+  {
+    "id": "118917a4773cabfb",
+    "ru": "Закрытие вопроса только по факту доставки контейнеров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].procedures[1].text"
+    ]
+  },
+  {
+    "id": "0e6246e0758704e3",
+    "ru": "Самовольный перенос гражданами на выбранное место.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].procedures[2].text"
+    ]
+  },
+  {
+    "id": "689cb3ab7a221d87",
+    "ru": "П-9 с конкретными координатами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "5c6706f76ab1171a",
+    "ru": "Запись привязана к месту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "af5e4a16e6fd941c",
+    "ru": "Какая площадка согласована?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q0].text"
+    ]
+  },
+  {
+    "id": "cc77eb2bc536882f",
+    "ru": "На П-10, рядом, но за границей согласованного участка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c83ae4ed9921105e",
+    "ru": "Соседство не тождество.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "3fdf503ad25a9f3a",
+    "ru": "Куда фактически привезли?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q1].text"
+    ]
+  },
+  {
+    "id": "841170784a9536b1",
+    "ru": "В деле его не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "a889fc3ed9e61808",
+    "ru": "Требуется проверка фактического размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e7b3683414f437f8",
+    "ru": "Есть ли изменение схемы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q2].text"
+    ]
+  },
+  {
+    "id": "4e53017ae3ece6d3",
+    "ru": "Заключения нет; заявитель показывает только различие места.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2303b3a3a4534683",
+    "ru": "Нет основания самостоятельно утверждать конкретное превышение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "86fd785d1a4c386d",
+    "ru": "Нарушены ли санитарные нормативы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].questions[q3].text"
+    ]
+  },
+  {
+    "id": "28d6f12f8b426b3a",
+    "ru": "Уполномоченный муниципальный организатор места накопления с ответственными за размещение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].routes[0].text"
+    ]
+  },
+  {
+    "id": "560b48aa1093d745",
+    "ru": "Только водитель, доставивший контейнеры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].routes[1].text"
+    ]
+  },
+  {
+    "id": "4b61a248c2082de4",
+    "ru": "Любой житель как орган изменения схемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].routes[2].text"
+    ]
+  },
+  {
+    "id": "517bdb53d5ed9186",
+    "ru": "Контейнер привезли на соседний участок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[waste-site-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[waste-site-register].title"
+    ]
+  },
+  {
+    "id": "74b4346b6b08b15e",
+    "ru": "Наличие записи на П-9 само по себе не подтверждает размещение на П-10.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[waste-site-register].trap.text"
+    ]
+  },
+  {
+    "id": "201fdf69e4e7b6ae",
+    "ru": "Все граждане, обращения и служебные материалы вымышлены. Учебные документы не являются настоящими регламентами. Реальная отправка сообщений и звонки не выполняются.",
+    "contexts": [
+      "cases:ROLE.notice"
+    ]
+  },
+  {
+    "id": "30a2897ebafe90d4",
+    "ru": "Одна и та же история доступна в двух режимах. В обучении наставник объясняет решения. В самостоятельной работе фиксируется ваш выбор, а оценка рассчитывается после смены. Роль сотрудника указана отдельно в каждом деле.",
+    "contexts": [
+      "cases:ROLE.text"
+    ]
+  },
+  {
+    "id": "08d63a2859eb3ebc",
+    "ru": "Действия и контроль",
+    "contexts": [
+      "cases:RUBRIC[actions].label"
+    ]
+  },
+  {
+    "id": "8dc6d009b6133645",
+    "ru": "Сроки и точная дата",
+    "contexts": [
+      "cases:RUBRIC[calendar].label"
+    ]
+  },
+  {
+    "id": "8bd13b646206e2cc",
+    "ru": "Факты и документы",
+    "contexts": [
+      "cases:RUBRIC[facts].label"
+    ]
+  },
+  {
+    "id": "297a3b99eb390644",
+    "ru": "Основание и применение",
+    "contexts": [
+      "cases:RUBRIC[research].label"
+    ]
+  },
+  {
+    "id": "c191c41c64cbd85d",
+    "ru": "Права и коммуникация",
+    "contexts": [
+      "cases:RUBRIC[rights].label"
+    ]
+  },
+  {
+    "id": "7ece6e19632c532e",
+    "ru": "Компетенция и процедура",
+    "contexts": [
+      "cases:RUBRIC[routing].label"
+    ]
+  },
+  {
+    "id": "38dfc88155db226a",
+    "ru": "Налоговый кодекс: проверка и исчисление сроков",
+    "contexts": [
+      "cases:SOURCES[146].short",
+      "cases:SOURCES[146].title",
+      "cases:SOURCES[146].tags[0]"
+    ]
+  },
+  {
+    "id": "7b62511deefd43da",
+    "ru": "Для обычной камеральной проверки первоначальной декларации по общему правилу установлен трёхмесячный срок. Специальные режимы и уточнённые декларации рассматриваются отдельно. Месяцы не заменяются 90 днями; окончание определяется по статье 6.1.",
+    "contexts": [
+      "cases:SOURCES[146].text"
+    ]
+  },
+  {
+    "id": "8408fd66e4a247fb",
+    "ru": "Статьи 5, 7, 10, 10.1, 17, 23",
+    "contexts": [
+      "cases:SOURCES[152].article"
+    ]
+  },
+  {
+    "id": "7421d0d07ac44e85",
+    "ru": "Федеральный закон от 27.07.2006 № 152-ФЗ",
+    "contexts": [
+      "cases:SOURCES[152].number",
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].publisher"
+    ]
+  },
+  {
+    "id": "98f7fcd46988eae4",
+    "ru": "Учебная выдержка: статьи 10 и 10.1. Проверяйте редакцию по дате дела.",
+    "contexts": [
+      "cases:SOURCES[152].revision"
+    ]
+  },
+  {
+    "id": "94e8942291b547e2",
+    "ru": "152-ФЗ",
+    "contexts": [
+      "cases:SOURCES[152].short"
+    ]
+  },
+  {
+    "id": "74a74a049b5911ad",
+    "ru": "ребёнок",
+    "contexts": [
+      "cases:SOURCES[152].tags[0]"
+    ]
+  },
+  {
+    "id": "8881619f8e538f39",
+    "ru": "здоровье",
+    "contexts": [
+      "cases:SOURCES[152].tags[1]"
+    ]
+  },
+  {
+    "id": "f399e8caebdfc855",
+    "ru": "школа",
+    "contexts": [
+      "cases:SOURCES[152].tags[2]",
+      "cases:SOURCES[rkn].tags[2]"
+    ]
+  }
+]

@@ -4,6 +4,7 @@ import {prepareCalendars} from '../../../assets/js/calendar-repository.js';
 import {restoreShift} from './engine.js';
 import {exportJSON} from './storage.js';
 import {esc} from './icons.js';
+import {hydrateSavedShift} from './content-library.js';
 
 const LOCAL_BACKUP_FORMAT='rudn-reception-local-backup-1';
 const localKey=key=>/^rudn\.reception\.(?:v16:preview:\d{4}-\d{4}:(?:practice|demo)|archive\.v16:preview:[\w-]+|lastmode\.v16:preview:\d{4}-\d{4})$/.test(key);
@@ -12,7 +13,7 @@ export function makeLocalBackup(storage=localStorage){
  for(let i=0;i<storage.length;i++){const key=storage.key(i);if(localKey(key))entries.push({key,value:storage.getItem(key)});}
  return {format:LOCAL_BACKUP_FORMAT,createdAt:new Date().toISOString(),entries};
 }
-export function parseLocalBackup(text){
+function readLocalBackupEnvelope(text){
  if(typeof text!=='string'||text.length>15000000)throw Error('Размер копии превышает 15 МБ.');
  const data=JSON.parse(text);
  if(data?.format!==LOCAL_BACKUP_FORMAT||!Array.isArray(data.entries)||data.entries.length>1000)throw Error('Это не резервная копия автономной версии.');
@@ -22,11 +23,31 @@ export function parseLocalBackup(text){
   seen.add(e.key);
   if(e.key.includes('.lastmode.')){if(!['practice','demo'].includes(e.value))throw Error('Неизвестный режим.');continue;}
   const s=JSON.parse(e.value);
-  if(s?.owner!=='preview'||(!e.key.includes('.archive.')&&(!['practice','demo'].includes(s.mode)||!restoreShift(s,'preview',s.mode,s.period))))throw Error('Копия содержит повреждённую или несовместимую смену.');
+  if(s?.owner!=='preview'||(!e.key.includes('.archive.')&&!['practice','demo'].includes(s.mode)))throw Error('Копия содержит повреждённую или несовместимую смену.');
   const expected=e.key.includes('.archive.')?`rudn.reception.archive.v16:preview:${s.id}`:`rudn.reception.v16:preview:${s.period}:${s.mode}`;
   if(e.key!==expected)throw Error('Смена не соответствует записи в копии.');
  }
  return data;
+}
+export function parseLocalBackup(text){
+ const data=readLocalBackupEnvelope(text);
+ for(const entry of data.entries){
+  if(entry.key.includes('.archive.')||entry.key.includes('.lastmode.'))continue;
+  const state=JSON.parse(entry.value);
+  if(!restoreShift(state,'preview',state.mode,state.period))throw Error('Копия содержит повреждённую или несовместимую смену.');
+ }
+ return data;
+}
+/** Validate the envelope first; hydrate only the exact active saved assignments.
+ * No local profile/draft writes occur until the existing restore transaction.
+ */
+export async function prepareLocalBackup(text,options={}){
+ const data=readLocalBackupEnvelope(text);
+ for(const entry of data.entries){
+  if(entry.key.includes('.archive.')||entry.key.includes('.lastmode.'))continue;
+  await hydrateSavedShift(JSON.parse(entry.value),options);
+ }
+ return parseLocalBackup(text);
 }
 export function restoreLocalBackup(data,storage=localStorage){
  // Validate again at the write boundary. Back up replaced drafts, never touch platform profiles.
@@ -65,6 +86,7 @@ export async function standaloneCalendar(options={}){
 }
 
 export async function mountStandalone(root){
+ const lifetime=new AbortController();let importing=false;
  const dialog=document.createElement('dialog');dialog.className='rx-help-dialog';dialog.setAttribute('aria-labelledby','rxHelpTitle');
  dialog.innerHTML=`<form method="dialog"><header><h2 id="rxHelpTitle">Работа с тренажёром</h2><button class="rx-help-close" aria-label="Закрыть справку">×</button></header></form>
  <p>Вы — сотрудник приёмной. Уточните обстоятельства, сопоставьте документы, найдите норму, рассчитайте срок и составьте план. После подтверждения решения прочитайте продолжение дела.</p>
@@ -79,16 +101,21 @@ export async function mountStandalone(root){
  const status=message=>dialog.querySelector('.rx-help-status').textContent=message;
  dialog.querySelector('[data-local-backup]').addEventListener('click',()=>{try{const data=makeLocalBackup();exportJSON(data,`reception-backup-${new Date().toISOString().slice(0,10)}.json`);status('Резервная копия подготовлена для скачивания.');}catch{status('Не удалось прочитать локальное хранилище.');}});
  dialog.querySelector('[data-local-restore]').addEventListener('change',async e=>{
-  try{const file=e.target.files?.[0];if(!file)return;if(file.size>15000000)throw Error('Размер копии превышает 15 МБ.');const data=parseLocalBackup(await file.text());
+  if(importing||lifetime.signal.aborted)return;
+  try{const file=e.target.files?.[0];if(!file)return;if(file.size>15000000)throw Error('Размер копии превышает 15 МБ.');
+   importing=true;e.target.disabled=true;status('Проверяем материалы сохранённой смены…');
+   const data=await prepareLocalBackup(await file.text(),{signal:lifetime.signal});
+   if(lifetime.signal.aborted)return;
    if(!data.entries.length)throw Error('Копия не содержит работ.');
-   if(!await confirmAction(`Восстановить записи из резервной копии (${data.entries.length})? Текущие смены будут сохранены в локальном архиве.`))return;
+   if(!await confirmAction(`Восстановить записи из резервной копии (${data.entries.length})? Текущие смены будут сохранены в локальном архиве.`,{signal:lifetime.signal}))return;
+   if(lifetime.signal.aborted)return;
    restoreLocalBackup(data);location.reload();
-  }catch(error){status('Копия не загружена: '+error.message);}finally{e.target.value='';}
+  }catch(error){if(!lifetime.signal.aborted)status('Копия не загружена: '+error.message);}finally{importing=false;e.target.disabled=false;e.target.value='';}
  });
  dialog.querySelector('[data-local-calendar]').addEventListener('click',async e=>{e.target.disabled=true;status('Проверяем опубликованные календари…');try{const r=await prepareCalendars();status(`Календарь ${r.year}: ${r.stale?'используется сохранённая копия':'доступен'}. Новые данные применятся при запуске следующей смены.`);}catch(error){status(error.message);}finally{e.target.disabled=false;}});
  dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
  try{
   const cleanup=await mountReception(root,{standalone:true,editorTools:false,profileLabel:'Автономная работа',assessmentAllowed:false,calendarLoader:standaloneCalendar,onHelp:()=>dialog.showModal()});
-  return ()=>{cleanup?.();dialog.remove();};
+  return async()=>{lifetime.abort();dialog.remove();await cleanup?.();};
  }catch(error){root.innerHTML=`<section class="boot" role="alert"><h1>Не удалось открыть тренажёр</h1><p>${esc(error.message)}</p><p>Распакуйте весь архив и откройте START_HERE.html. Сохранённые работы не удалены.</p><button type="button" id="rxBootReload">Повторить</button></section>`;root.querySelector('#rxBootReload').onclick=()=>location.reload();}
 }

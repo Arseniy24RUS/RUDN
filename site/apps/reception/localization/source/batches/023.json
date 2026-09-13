@@ -1,0 +1,1179 @@
+[
+  {
+    "id": "257e3082ed46ff2f",
+    "ru": "Карточка осмотра К-17",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].documents[inspection].title"
+    ]
+  },
+  {
+    "id": "a9915298c92e623f",
+    "ru": "Колодец К-17: обслуживание – условная сетевая организация «Сеть Б». Соседний К-18 относится к другой сети. Выписка относится к дате события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].documents[registry].text"
+    ]
+  },
+  {
+    "id": "a911690be15cce73",
+    "ru": "Выписка из учебного реестра сетей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].documents[registry].title"
+    ]
+  },
+  {
+    "id": "c4a6a202bc78f304",
+    "ru": "Условная управляющая организация обслуживает покрытие двора. Обслуживание подземных сетей и колодца К-17 в приведённый перечень не включено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].documents[yard].text"
+    ]
+  },
+  {
+    "id": "6954391233c958c9",
+    "ru": "Договор обслуживания двора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].documents[yard].title"
+    ]
+  },
+  {
+    "id": "cd2113ffe890e914",
+    "ru": "Совпадение идентификатора объекта связывает наблюдение и реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].factTask.explain",
+      "cases:CASE_TEMPLATES[hatch-network].contrast.difference"
+    ]
+  },
+  {
+    "id": "866ac40cfdabf5b9",
+    "ru": "Соседний колодец К-18 автоматически определяет владельца К-17.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "2bd4272ed9657331",
+    "ru": "Все объекты во дворе обслуживает одна управляющая организация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "35931925775a6498",
+    "ru": "Номер К-17 в осмотре совпадает с объектом сетевого реестра; принадлежность сети нельзя вывести из договора на покрытие двора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "9b8de6086fcf37e8",
+    "ru": "Какое сопоставление обосновывает технический маршрут?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].factTask.prompt"
+    ]
+  },
+  {
+    "id": "c14f346c882881f8",
+    "ru": "Результаты разных действий и объектов проверяются раздельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].followup.explain"
+    ]
+  },
+  {
+    "id": "fe7dbea4ca3d54b8",
+    "ru": "Сетевая организация подтвердила ограждение К-17. К письму приложен акт замены крышки К-18.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].followup.intro"
+    ]
+  },
+  {
+    "id": "34fe63bd3a62b745",
+    "ru": "Разделить подтверждённое ограждение К-17 и неподтверждённую замену его крышки; запросить результат по К-17.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "004b47086390259a",
+    "ru": "Закрыть дело, поскольку номера отличаются всего одной цифрой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "456de38ee6114881",
+    "ru": "Отменить сообщение об ограждении, не разбираясь в двух документах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "4a2b1a8e2d702b7f",
+    "ru": "Сотрудник сказал, что двор относится к управляющей компании. Но диспетчер прислал схему: этот колодец находится на другой сети. Крышка всё ещё лежит рядом, пройти нормально нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].opening"
+    ]
+  },
+  {
+    "id": "043e6d35a77b5581",
+    "ru": "Да, К-17. Он совпадает с номером в карточке осмотра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[id].answer"
+    ]
+  },
+  {
+    "id": "e2b751bf9dea5d6a",
+    "ru": "Объект можно сопоставить по идентификатору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[id].fact"
+    ]
+  },
+  {
+    "id": "40bb1ec88d1793d3",
+    "ru": "Есть ли на схеме номер нужного колодца?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[id].text"
+    ]
+  },
+  {
+    "id": "aefa5c76eee57619",
+    "ru": "В акте указаны тротуар и покрытие двора. Сети в перечне нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[owner].answer"
+    ]
+  },
+  {
+    "id": "d2f3b49137812e11",
+    "ru": "Содержание покрытия не подтверждает обслуживание колодца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[owner].fact"
+    ]
+  },
+  {
+    "id": "fd4bdf40a2d8f917",
+    "ru": "Что именно обслуживает управляющая компания?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[owner].text"
+    ]
+  },
+  {
+    "id": "87c8d2c393a20fb8",
+    "ru": "По карточке осмотра от {{observed}} крышка не установлена, проход не защищён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[safety].answer"
+    ]
+  },
+  {
+    "id": "39887a9cb5b1725a",
+    "ru": "Сохраняется сообщённая опасность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[safety].fact"
+    ]
+  },
+  {
+    "id": "1983cd59bb5aaf55",
+    "ru": "Что сообщается о текущем состоянии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].questions[safety].text"
+    ]
+  },
+  {
+    "id": "2bc7642e3964690d",
+    "ru": "Поручить заявителю установить крышку до ответа сетевой службы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "5a5ea4356048acce",
+    "ru": "Передать оперативную информацию по подтверждённой сетевой принадлежности через уполномоченного дежурного; вести обращение в своём порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].routes[proper].text"
+    ]
+  },
+  {
+    "id": "8c5caa59e09bd77c",
+    "ru": "Направить только организации, обслуживающей покрытие, поскольку колодец расположен во дворе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].routes[shortcut].text"
+    ]
+  },
+  {
+    "id": "2f25836404b10042",
+    "ru": "Покрытие общее, сеть другая",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[hatch-network].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[hatch-network].title"
+    ]
+  },
+  {
+    "id": "30a70225964d9b5d",
+    "ru": "Договор на уборку двора заменяет реестр сетей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "bc91cc19e39f0daf",
+    "ru": "Принадлежность конкретной сети проверяют по относящимся к объекту сведениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[hatch-network].trap.explain"
+    ]
+  },
+  {
+    "id": "fda23d9c421046c4",
+    "ru": "Помощник: «По месту расположения можно сразу определить владельца сети».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].trap.text"
+    ]
+  },
+  {
+    "id": "f9150a903f57fcfe",
+    "ru": "Принадлежность конкретной сети подтверждена",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "89694fab8df35591",
+    "ru": "Договор по двору имеет другой предмет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "2e5a8f9bd1f64ca0",
+    "ru": "Выбирается подтверждённый сетевой маршрут, а не организация по признаку расположения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-network].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "2ea3bec3e8894202",
+    "ru": "Сверить место и время исходного снимка с актом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[a0].title"
+    ]
+  },
+  {
+    "id": "7e5c7925c152c9c8",
+    "ru": "Установить, остались ли нерассмотренные требования заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[a1].title"
+    ]
+  },
+  {
+    "id": "9469ae28eee42666",
+    "ru": "Подготовить ответ о подтверждённом результате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[a2].title"
+    ]
+  },
+  {
+    "id": "d1aa2d82c5469b5e",
+    "ru": "Направить понятное сообщение без обвинений заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3a51d5bc2aa2c10c",
+    "ru": "Завершить текущий контроль после отправки ответа, сохранив материалы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[a4].title"
+    ]
+  },
+  {
+    "id": "72078883a358a778",
+    "ru": "Удалить обращение и не сообщать результат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[b0].title",
+      "cases:CASE_TEMPLATES[hatch-restored].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "519fdc25ccb56a0e",
+    "ru": "Объявить повторное обращение запрещённым навсегда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].actions[b1].title"
+    ]
+  },
+  {
+    "id": "f97d14355e9267b1",
+    "ru": "В отличие от первого люка открытая опасность не сохраняется; повторная аварийная заявка не является обязательным правильным действием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].contrast.difference"
+    ]
+  },
+  {
+    "id": "869470a27e960bb5",
+    "ru": "В учебном деле исходная фотография сделана до ремонта. Акт и снимок после ремонта относятся к тому же колодцу: совпадают номер и ориентиры, крышка закреплена, проход свободен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9df0f75146e48dc4",
+    "ru": "Сопоставление до и после",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].documents[d0].title"
+    ]
+  },
+  {
+    "id": "913a0e81ba17dba8",
+    "ru": "Заявитель просил устранить отсутствие крышки и сообщить о выполненном. Требования о возмещении вреда или иной сохраняющейся неисправности отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].documents[d1].text"
+    ]
+  },
+  {
+    "id": "02089384b2168fdb",
+    "ru": "Предмет обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].documents[d1].title"
+    ]
+  },
+  {
+    "id": "cb3bd12297db08c1",
+    "ru": "Устранение подтверждено по тому же объекту; нужен ответ о фактическом результате, а не новая аварийная заявка по старому фото.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[hatch-restored].factTask.explain",
+      "cases:CASE_TEMPLATES[hatch-restored].outcomes.good"
+    ]
+  },
+  {
+    "id": "dff0ebf1443e8f4f",
+    "ru": "Раз нарушение устранено, поступившее обращение можно стереть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "50fbb9243c045b4f",
+    "ru": "Ремонт не мог состояться, пока заявитель хранит прежнюю фотографию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "f2ea0ee1f4b593b3",
+    "ru": "Учебное продолжение. После отправки ответа поступило новое сообщение: крышка на этом месте снова повреждена, приложен более поздний снимок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].followup.intro"
+    ]
+  },
+  {
+    "id": "2d48cf40c1fe4794",
+    "ru": "Рассмотреть новое состояние объекта и передать информацию о возобновившемся риске; прежний ремонт не опровергает новые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].followup.options[0].text",
+      "cases:CASE_TEMPLATES[hatch-restored].followup.explain"
+    ]
+  },
+  {
+    "id": "405e87043c215c08",
+    "ru": "Отклонить сообщение, потому что однажды уже отремонтировали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6f2d77189bbb463e",
+    "ru": "Исправить старый акт задним числом вместо новой проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "26a1c383527e749b",
+    "ru": "Сообщить о подтверждённом устранении и завершить контроль только по рассмотренному предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[hatch-restored].knowledge.explain",
+      "cases:CASE_TEMPLATES[hatch-restored].coach.research"
+    ]
+  },
+  {
+    "id": "991ba69da7a6bd6b",
+    "ru": "Я пожаловался на открытый люк. Сегодня сосед говорит, что всё уже закрыли. Но у меня в телефоне по-прежнему та фотография. Получается, я зря написал?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].opening"
+    ]
+  },
+  {
+    "id": "6547bd0f873ab270",
+    "ru": "До ремонта; в карточке стоит {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c64d9a6fc84c0f32",
+    "ru": "Фотография описывает прежнее состояние.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f3e911ea355f2133",
+    "ru": "Когда сделан ваш снимок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q0].text"
+    ]
+  },
+  {
+    "id": "8b7cc18d55b5c734",
+    "ru": "Есть акт после ремонта и фотография того же входа с номером колодца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "d59ea1f92cb0b674",
+    "ru": "Новый материал относится к тому же объекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "ee8b6f15cf62bd1b",
+    "ru": "Чем подтверждено нынешнее состояние?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ccf57e94bbd4b4aa",
+    "ru": "Закрыть люк и объяснить, что сделано. Компенсацию я не требовал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "91db83dfb3ae3d49",
+    "ru": "Предмет обращения ограничен ремонтом и информацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "749f965970040891",
+    "ru": "Что вы просили в обращении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q2].text"
+    ]
+  },
+  {
+    "id": "7cfb423cd00fc1e0",
+    "ru": "По приложенному свежему акту крышка закреплена, проход свободен; иных замечаний в деле нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "b1505f33c0e0bcaf",
+    "ru": "Нет основания повторять аварийную меру без новых данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "2da2158734ca67df",
+    "ru": "Есть ли данные о сохраняющейся опасности?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e9d50b9d8cdd9090",
+    "ru": "В этой смене вы готовите проект решения уполномоченного руководителя и организационные действия указанного органа. Вы не назначаете проверки или санкции от имени другого ведомства. Реальные сообщения не отправляются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].role.text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].role.text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].role.text"
+    ]
+  },
+  {
+    "id": "56ae2b434fc1bbc9",
+    "ru": "Специалист подразделения по работе с обращениями",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].role.title",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].role.title",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].role.title"
+    ]
+  },
+  {
+    "id": "2beeb476e930052b",
+    "ru": "Подготовить содержательный ответ профильного отдела с подтверждением выполненного и завершить текущий контроль по этому предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].routes[0].text",
+      "cases:CASE_TEMPLATES[hatch-restored].coach.plan"
+    ]
+  },
+  {
+    "id": "0700d38e30f51c54",
+    "ru": "Обвинить заявителя в заведомо ложном обращении только из-за старого снимка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].routes[1].text",
+      "cases:CASE_TEMPLATES[hatch-restored].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "981722f69a751447",
+    "ru": "Снова требовать ремонт без сопоставления свежего акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].routes[2].text",
+      "cases:CASE_TEMPLATES[hatch-restored].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "e05f9d3a67dce241",
+    "ru": "Фотография была сделана до ремонта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[hatch-restored].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[hatch-restored].title"
+    ]
+  },
+  {
+    "id": "ec3c55ff7347eaa4",
+    "ru": "Действия зависят от актуального состояния: подтверждённое устранение требует ответа, а не дублирующей заявки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].trap.options[0].text",
+      "cases:CASE_TEMPLATES[hatch-restored].trap.explain"
+    ]
+  },
+  {
+    "id": "1ad2bda5ae1610c0",
+    "ru": "Чтобы получить баллы, всегда назначайте повторный ремонт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "414f54ac0e2833e6",
+    "ru": "Помощник: «Верный ответ всегда должен содержать новую заявку на ремонт».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch-restored].trap.text"
+    ]
+  },
+  {
+    "id": "c58b87195c5491f3",
+    "ru": "По учебному внутреннему регламенту – без ожидания письменного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[alert].detail"
+    ]
+  },
+  {
+    "id": "86e5d8572fe2e37a",
+    "ru": "Передать сведения ответственному дежурному сейчас",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[alert].title"
+    ]
+  },
+  {
+    "id": "ab976e62c5ca22ff",
+    "ru": "Найти доски и устранить опасность своими силами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[fix].detail"
+    ]
+  },
+  {
+    "id": "da032125e2df526b",
+    "ru": "Предложить жителю самому закрыть отверстие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[fix].title",
+      "cases:CASE_TEMPLATES[hatch].criticalRules[fix].message"
+    ]
+  },
+  {
+    "id": "22caf0e41d98278e",
+    "ru": "Не обещать дату ремонта, которая ещё не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "b04f98997bef6369",
+    "ru": "Объяснить заявителю ближайшие действия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[notify].title"
+    ]
+  },
+  {
+    "id": "9e25ce759c899f09",
+    "ru": "Не назначать ответственного по одному внешнему признаку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[owner].detail"
+    ]
+  },
+  {
+    "id": "b0ef6f18c613a0a7",
+    "ru": "Уточнить владельца сети и исполнителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[owner].title"
+    ]
+  },
+  {
+    "id": "b49f3ba7ad48f1c5",
+    "ru": "Зафиксировать поступление; не откладывать оперативное сообщение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[register].detail"
+    ]
+  },
+  {
+    "id": "bf3c1debb2de087d",
+    "ru": "Проверить регистрацию обращения и состав материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[register].title"
+    ]
+  },
+  {
+    "id": "8ffa62e61806de7e",
+    "ru": "С необходимыми материалами и уведомлением о переадресации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[route].detail"
+    ]
+  },
+  {
+    "id": "02a314d92a4e808c",
+    "ru": "Подготовить направление по установленной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[route].title"
+    ]
+  },
+  {
+    "id": "af6190a11573a3cc",
+    "ru": "Убедиться, что срочное сообщение принято ответственным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[track].detail"
+    ]
+  },
+  {
+    "id": "a41a13ac227a5b18",
+    "ru": "Поставить проверку обратной связи на контроль",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[track].title"
+    ]
+  },
+  {
+    "id": "92522d19c2394118",
+    "ru": "Вернуться к опасному участку через месяц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[wait].detail"
+    ]
+  },
+  {
+    "id": "a0ca22093e5453eb",
+    "ru": "Пока ограничиться стандартным письмом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].actions[wait].title",
+      "cases:CASE_TEMPLATES[hatch].criticalRules[wait].message"
+    ]
+  },
+  {
+    "id": "ea367c3ef748b507",
+    "ru": "Принято письменное обращение с контактами. Точное место отмечено на приложенной учебной схеме. Дата и личная подпись есть. Вы уточняете обстоятельства; паспорт и домашний адрес не нужно публиковать на игровой доске.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].brief"
+    ]
+  },
+  {
+    "id": "53d3c9c461dd9c41",
+    "ru": "Компетентный адресат будет установлен по результатам проверки. Сейчас рассчитайте предельную дату направления обращения по компетенции. Это не срок устранения опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].calendar.context",
+      "cases:CASE_TEMPLATES[hatch-location].calendar.context",
+      "cases:CASE_TEMPLATES[hatch-network].calendar.context"
+    ]
+  },
+  {
+    "id": "630afa792b089678",
+    "ru": "59-ФЗ, статья 8, часть 3",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].calendar.source",
+      "cases:CASE_TEMPLATES[authority-contact].calendar.source",
+      "cases:CASE_TEMPLATES[hatch-location].calendar.source"
+    ]
+  },
+  {
+    "id": "b639f456bca28b70",
+    "ru": "Крайняя дата переадресации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].calendar.title",
+      "cases:CASE_TEMPLATES[hatch-location].calendar.title",
+      "cases:CASE_TEMPLATES[hatch-network].calendar.title"
+    ]
+  },
+  {
+    "id": "ab1c6187ae845f78",
+    "ru": "Сначала установите событие и единицы счёта. Затем найдите точную дату. Календарь не выбирает применимый закон за вас.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].coach.calendar",
+      "cases:CASE_TEMPLATES[privacy].coach.calendar",
+      "cases:CASE_TEMPLATES[budget].coach.calendar"
+    ]
+  },
+  {
+    "id": "0cb25b3cffc191d0",
+    "ru": "При переадресации по компетенции гражданина уведомляют; это не означает, что проблема уже устранена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].coach.research",
+      "cases:CASE_TEMPLATES[hatch].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[hatch].knowledge.explain"
+    ]
+  },
+  {
+    "id": "f33e1ec266721040",
+    "ru": "В этой истории владелец ещё не установлен, а опасность сохраняется. Нельзя переносить сюда маршрут из варианта с подтверждённым исполнителем или вывод о завершённом ремонте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].contrast.difference"
+    ]
+  },
+  {
+    "id": "430a6a8ce71d6108",
+    "ru": "При установленной текущей опасности отсутствует оперативная передача.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].criticalRules[alert].message"
+    ]
+  },
+  {
+    "id": "f48ddaefd6b2ff54",
+    "ru": "Прошу принять меры из-за открытого люка на участке А. Прилагаю схему и фотографию. Обращение поступило сегодня в письменном виде, необходимые контактные сведения и подпись проверены при приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].documents[appeal].text"
+    ]
+  },
+  {
+    "id": "f0f2dcfb1475a5e4",
+    "ru": "Принятое обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].documents[appeal].title"
+    ]
+  },
+  {
+    "id": "c1b39557b6aadba1",
+    "ru": "Обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].documents[appeal].type",
+      "cases:CASE_TEMPLATES[gas-smell].documents[d1].type"
+    ]
+  },
+  {
+    "id": "eff63bdc111a7e87",
+    "ru": "Учебное описание фотографии: на пешеходной дорожке открытый колодец без ограждения. На снимке нельзя прочитать принадлежность сети. Время: сегодня, 08:40. Фото подтверждает видимое состояние, но не устанавливает балансодержателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].documents[photo].text"
+    ]
+  },
+  {
+    "id": "8d9b5784835341ad",
+    "ru": "Фотография участка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].documents[photo].title"
+    ]
+  },
+  {
+    "id": "f2f0aabc8c3ef71b",
+    "ru": "Ориентир: 10–12 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].duration",
+      "cases:CASE_TEMPLATES[privacy].duration",
+      "cases:CASE_TEMPLATES[budget].duration"
+    ]
+  },
+  {
+    "id": "52a990951549b28a",
+    "ru": "В разговоре установлено текущее состояние. Нельзя выводить принадлежность сети только из близости жилого дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].factTask.explain",
+      "cases:CASE_TEMPLATES[hatch].coach.docs"
+    ]
+  },
+  {
+    "id": "4d3ac308bbad39c4",
+    "ru": "Опасность сохраняется, принадлежность сети нужно выяснить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].factTask.options[danger].text"
+    ]
+  },
+  {
+    "id": "badc1934acf12b9f",
+    "ru": "За люк точно отвечает управляющая компания дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].factTask.options[housing].text"
+    ]
+  },
+  {
+    "id": "3025a77c6f029256",
+    "ru": "Опасность не требует действий до окончания срока ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].factTask.options[wait].text"
+    ]
+  },
+  {
+    "id": "43ba90776d0568e0",
+    "ru": "Какой вывод уже подтверждён?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].factTask.prompt"
+    ]
+  },
+  {
+    "id": "91cd1b08e91ec9df",
+    "ru": "Временная мера не равна окончательному устранению проблемы. Новые обстоятельства требуют оценки; стажёр не руководит работой бригады.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.explain"
+    ]
+  },
+  {
+    "id": "229507c175628ebe",
+    "ru": "Сообщение об ограждении само по себе не доказывает безопасность прохода. Контроль закрыт преждевременно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.failure"
+    ]
+  },
+  {
+    "id": "b0eaf2d5b0a21549",
+    "ru": "В модели прошло два часа. Ответственный сообщил: «Участок ограждён». Сергей Петрович прислал уточнение: ограждение перекрыло всю дорожку, пешеходы выходят на проезжую часть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.intro"
+    ]
+  },
+  {
+    "id": "200f076fcec41966",
+    "ru": "Закрыть дело: ограждение установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "0305af97b9c8164b",
+    "ru": "Попросить жителей самостоятельно переставить ограждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.options[self].text"
+    ]
+  },
+  {
+    "id": "c7ef2b85cb181014",
+    "ru": "Уточнить безопасность обхода и передать новые сведения ответственному; сохранить контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.options[verify].text"
+    ]
+  },
+  {
+    "id": "5ed7e0a6e60783a4",
+    "ru": "Ответственный подтвердил, что сведения об обходе приняты. Вопрос безопасного прохода и восстановления крышки остаётся на контроле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].followup.success"
+    ]
+  },
+  {
+    "id": "d8fb2d4b11d59674",
+    "ru": "При переадресации гражданина можно не уведомлять.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].knowledge.options[broad].text",
+      "cases:CASE_TEMPLATES[hatch-location].knowledge.options[broad].text",
+      "cases:CASE_TEMPLATES[hatch-network].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "dbe9259d19774c89",
+    "ru": "Уведомление автоматически подтверждает завершение ремонта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].knowledge.options[none].text",
+      "cases:CASE_TEMPLATES[hatch-location].knowledge.options[none].text",
+      "cases:CASE_TEMPLATES[hatch-network].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "7715a5e5475c167f",
+    "ru": "Найдите положение об обязательном уведомлении гражданина при переадресации письменного обращения по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].knowledge.prompt",
+      "cases:CASE_TEMPLATES[hatch-location].knowledge.prompt",
+      "cases:CASE_TEMPLATES[hatch-network].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "bb23c2f8a771efe9",
+    "ru": "{{observed}} у остановки чуть не провалился в открытый люк. Сегодня утром крышки всё ещё нет. По этой дорожке дети идут в школу. Мне сказали: «Обращение рассмотрят в течение месяца». А до этого что делать?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].opening"
+    ]
+  },
+  {
+    "id": "faf383e3ea6f94b0",
+    "ru": "Одного формального ответа оказалось недостаточно: оперативная информация могла не попасть ответственному. Прежде чем продолжить смену, исправьте небезопасный план.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].outcomes.bad",
+      "cases:CASE_TEMPLATES[hatch-barrier].outcomes.bad"
+    ]
+  },
+  {
+    "id": "9b2f8fb255b6f5bb",
+    "ru": "Ответственный дежурный принял информацию об опасности. Уточнение сети и подготовка маршрута идут параллельно. Дата ремонта пока не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].outcomes.good",
+      "cases:CASE_TEMPLATES[hatch-barrier].outcomes.good"
+    ]
+  },
+  {
+    "id": "56f1940a8fd2359a",
+    "ru": "Нет. Двадцать минут назад сосед проходил мимо: отверстие открыто, ленты и ограждения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[current].answer"
+    ]
+  },
+  {
+    "id": "9ce2c2aededb866d",
+    "ru": "Опасность сохраняется сейчас.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[current].fact"
+    ]
+  },
+  {
+    "id": "5931a036938557bb",
+    "ru": "Опасный участок сейчас ограждён?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[current].text"
+    ]
+  },
+  {
+    "id": "9841187e62939bb9",
+    "ru": "К счастью, нет. Я только споткнулся и успел отойти.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[injured].answer"
+    ]
+  },
+  {
+    "id": "a00fa6016e112df3",
+    "ru": "На момент разговора о пострадавших не известно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[injured].fact"
+    ]
+  },
+  {
+    "id": "2d258b5be9e5eaa1",
+    "ru": "Есть ли пострадавшие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[injured].text",
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q3].text"
+    ]
+  },
+  {
+    "id": "57960a9eecb8abc7",
+    "ru": "Вчера позвонил в управляющую компанию. Номер заявки не дали. Кто обслуживает эту сеть, я не знаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[previous].answer"
+    ]
+  },
+  {
+    "id": "5e59772186f16de0",
+    "ru": "Подтверждённого исполнителя и номера заявки пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[previous].fact"
+    ]
+  },
+  {
+    "id": "0905d1fe8f00499b",
+    "ru": "Куда вы уже сообщали об этом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[previous].text"
+    ]
+  },
+  {
+    "id": "9b0ec0b077a9580a",
+    "ru": "У остановки, на пешеходной дорожке. На схеме я отметил участок А. Это не двор нашего многоквартирного дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[where].answer"
+    ]
+  },
+  {
+    "id": "1201e103aa5763bd",
+    "ru": "Люк на пешеходной дорожке; принадлежность сети ещё не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[where].fact"
+    ]
+  },
+  {
+    "id": "f2b817edfd2f6a5b",
+    "ru": "Где именно находится люк?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].questions[where].text"
+    ]
+  },
+  {
+    "id": "acde8b4b6f3e5b4a",
+    "ru": "Оставить в приёмной до истечения общего срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].routes[close].text"
+    ]
+  },
+  {
+    "id": "83bf1b1818fda7c5",
+    "ru": "В Совет депутатов для назначения ремонта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].routes[council].text"
+    ]
+  },
+  {
+    "id": "0b5feece66a9ba06",
+    "ru": "Ответственному дежурному; далее профильному исполнителю после уточнения сети",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].routes[duty].text",
+      "cases:CASE_TEMPLATES[hatch].contrast.decision"
+    ]
+  },
+  {
+    "id": "8f1a2bfd0fea5482",
+    "ru": "Сразу только управляющей компании ближайшего дома",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].routes[housing].text"
+    ]
+  },
+  {
+    "id": "fc5a1ba23964a943",
+    "ru": "Первое дело",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].tag"
+    ]
+  },
+  {
+    "id": "089a415290ae83e6",
+    "ru": "По дороге в школу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[hatch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[hatch].title"
+    ]
+  },
+  {
+    "id": "24fa323c4fda8056",
+    "ru": "Безопасность городской среды",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].topic",
+      "cases:CASE_TEMPLATES[hatch-barrier].topic",
+      "cases:CASE_TEMPLATES[hatch-location].topic"
+    ]
+  },
+  {
+    "id": "8f403afbec4ddaa2",
+    "ru": "Общий срок рассмотрения не является универсальной отсрочкой действий при текущей опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].trap.explain",
+      "cases:CASE_TEMPLATES[hatch-barrier].trap.explain"
+    ]
+  },
+  {
+    "id": "9f8dc3a8ef8866c5",
+    "ru": "Верно: срок рассмотрения и срок ремонта совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].trap.options[agree].text",
+      "cases:CASE_TEMPLATES[hatch-barrier].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "2ca492c23f50935b",
+    "ru": "Нет: срок ответа не заменяет оперативное реагирование на опасность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].trap.options[separate].text",
+      "cases:CASE_TEMPLATES[hatch-barrier].trap.options[separate].text"
+    ]
+  },
+  {
+    "id": "414f4998edeb98bf",
+    "ru": "Электронный помощник: «По 59-ФЗ на ремонт даётся 30 дней, поэтому до конца срока ничего передавать не нужно».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[hatch].trap.text",
+      "cases:CASE_TEMPLATES[hatch-barrier].trap.text"
+    ]
+  },
+  {
+    "id": "929728bbf75753a7",
+    "ru": "Проверить связь разрешительного комплекта с H-21",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[a0].title"
+    ]
+  },
+  {
+    "id": "f66cde4e39da262a",
+    "ru": "Сопоставить E-3 и E-4 в проекте и журнале",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[a1].title"
+    ]
+  },
+  {
+    "id": "17ff6dbbece49c33",
+    "ru": "Разграничить временное снятие и неподтверждённое уничтожение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[a2].title"
+    ]
+  },
+  {
+    "id": "d7b756e704b78bf4",
+    "ru": "Разъяснить заявителю установленный объём без объявления всех будущих работ законными",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3456fb044821e6ee",
+    "ru": "Запросить подтверждение сохранности и возвращения предусмотренных элементов в надлежащий момент",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[a4].title"
+    ]
+  },
+  {
+    "id": "64be615aeff6be33",
+    "ru": "Объявить незаконным любое действие на охраняемом фасаде",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[b0].title"
+    ]
+  },
+  {
+    "id": "c291052c30173e1b",
+    "ru": "Разрешить подрядчику любые последующие работы на основании этого этапа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].actions[b1].title",
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "30a7326e1cb3a1a4",
+    "ru": "План должен следовать установленным фактам. Подтверждённый этап ограничен конкретными элементами и видом работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].coach.plan"
+    ]
+  },
+  {
+    "id": "ff7d2ab0583b888f",
+    "ru": "Уточняйте предмет, объект, время и получателя. В исходной истории разрешение не охватывает спорную лестницу; здесь комплект относится к снятым элементам. Смена решения основана на совпадении объекта, объёма и фактического этапа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].coach.talk"
+    ]
+  },
+  {
+    "id": "5ac169c8cbb9d33e",
+    "ru": "В исходной истории разрешение не охватывает спорную лестницу; здесь комплект относится к снятым элементам. Смена решения основана на совпадении объекта, объёма и фактического этапа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].contrast.difference"
+    ]
+  },
+  {
+    "id": "afa061b7033640d8",
+    "ru": "Для объекта H-21 подтверждён действующий комплект документов на сохранение: разрешение, соответствующая проектная документация и предусмотренный надзор. Проект допускает временное снятие элементов E-3 и E-4 для реставрации с учётом, хранением и возвращением. Конструктивные характеристики по условию не затрагиваются; иные необходимые условия выполнены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d0].text"
+    ]
+  },
+  {
+    "id": "70da0535a336c7e8",
+    "ru": "Разрешение и согласованный фрагмент проекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d0].title"
+    ]
+  }
+]

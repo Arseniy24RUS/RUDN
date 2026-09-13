@@ -1,0 +1,1168 @@
+[
+  {
+    "id": "1f92418832f0be0b",
+    "ru": "Означает ли старый акт безопасность навсегда?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q3].text"
+    ]
+  },
+  {
+    "id": "616928e7ca66b8e1",
+    "ru": "Запросить доступные сведения о действиях по G-25 и подготовить предметный ответ в пределах компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].routes[0].text"
+    ]
+  },
+  {
+    "id": "c604e2fc30079a6a",
+    "ru": "Направить заявителя лично испытывать оборудование для уточнения старого акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].routes[1].text"
+    ]
+  },
+  {
+    "id": "e077286a4522f323",
+    "ru": "Отказать в объяснении, так как служебный статус всегда достаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].routes[2].text"
+    ]
+  },
+  {
+    "id": "40e152eb41258734",
+    "ru": "Аварийная заявка закрыта, вопрос к ответу остался",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[gas-past-incident].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[gas-past-incident].title"
+    ]
+  },
+  {
+    "id": "43a79227594c4d7d",
+    "ru": "Прошлый результат ограничен временем и объёмом проведённой проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].trap.explain"
+    ]
+  },
+  {
+    "id": "60b2fd617099f615",
+    "ru": "Старый акт подтверждает состояние при обследовании, но не разрешает игнорировать новый признак опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].trap.text"
+    ]
+  },
+  {
+    "id": "0bedfce3087e0035",
+    "ru": "Без промедления передать актуальное сообщение по безопасному каналу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[a0].title"
+    ]
+  },
+  {
+    "id": "741eb6aa05cb5998",
+    "ru": "Указать объект и план работ как контекст, не как установленную причину",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[a1].title"
+    ]
+  },
+  {
+    "id": "804c33a0e40d083b",
+    "ru": "Зафиксировать факт передачи и дальнейшие подтверждения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[a2].title"
+    ]
+  },
+  {
+    "id": "71aa6a82acd9225a",
+    "ru": "Разъяснить, что ждать обычного письменного ответа для этой передачи не требуется",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[a3].title"
+    ]
+  },
+  {
+    "id": "69dc39aafb9da772",
+    "ru": "Продолжить формальную работу отдельно от технического вывода специалистов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[a4].title"
+    ]
+  },
+  {
+    "id": "1f04bfc1cddfaa5a",
+    "ru": "Признать запах безопасным только по объявлению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[b0].title"
+    ]
+  },
+  {
+    "id": "f2517b42e74cdcf2",
+    "ru": "Попросить посетительницу самостоятельно обследовать опасный объект",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].actions[b1].title",
+      "cases:CASE_TEMPLATES[gas-planned-outage].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "309d18e15fe8d800",
+    "ru": "План должен следовать установленным фактам. Планируемые работы и результат оценки конкретного сообщения — разные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].coach.plan"
+    ]
+  },
+  {
+    "id": "11f299801045e4cf",
+    "ru": "Уточняйте предмет, объект, время и получателя. В исходной истории нет объясняющего документа. Здесь официальный по форме план работ может создать ложное ощущение безопасности, но он не является оценкой текущего события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].coach.talk"
+    ]
+  },
+  {
+    "id": "58261356538322e2",
+    "ru": "В исходной истории нет объясняющего документа. Здесь официальный по форме план работ может создать ложное ощущение безопасности, но он не является оценкой текущего события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].contrast.difference"
+    ]
+  },
+  {
+    "id": "4fe834ed40bb658d",
+    "ru": "Сосед связывает запах с ремонтом по объявлению. Он не является специалистом, не обследовал объект и не располагает заключением о текущем событии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ec3c3c655ece2c4a",
+    "ru": "Рассказ соседа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d0].title"
+    ]
+  },
+  {
+    "id": "626af5ea1645413a",
+    "ru": "Указаны объект G-31 и плановое отключение на часть дня. Объявление подтверждает план, но не содержит оценки конкретного текущего сообщения о запахе и не утверждает, что всякий запах безопасен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d1].text"
+    ]
+  },
+  {
+    "id": "925690bab5f8aa8f",
+    "ru": "Объявление о плановых работах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a43a3c2537bcbf1f",
+    "ru": "Посетительница сообщает о запахе сейчас, находясь в безопасном месте вне предполагаемой опасной зоны. Самостоятельная проверка не выполнялась. По данным приёмной подтверждения передачи именно этого сообщения диспетчеру пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d2].text"
+    ]
+  },
+  {
+    "id": "53d1c06f911a5c8c",
+    "ru": "Текущее сообщение снаружи объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].documents[d2].title"
+    ]
+  },
+  {
+    "id": "2717171e31a1e1fc",
+    "ru": "Наличие планового отключения не устанавливает причину и безопасность текущего запаха; сообщение нужно оперативно передать специалистам. В исходной истории нет объясняющего документа. Здесь официальный по форме план работ может создать ложное ощущение безопасности, но он не является оценкой текущего события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.explain"
+    ]
+  },
+  {
+    "id": "09dd0eaaec5f5519",
+    "ru": "Наличие планового отключения не устанавливает причину и безопасность текущего запаха; сообщение нужно оперативно передать специалистам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[gas-planned-outage].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "91d51483245f2c3c",
+    "ru": "Любой запах в день работ заведомо безопасен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "cea1ae9e8cec3a52",
+    "ru": "Объявление о ремонте само доказывает фактическую утечку и виновное лицо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1676e07581782aa1",
+    "ru": "Уточнить результат обработки самого сообщения, не принять окончание плановых работ за его проверку. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].followup.explain"
+    ]
+  },
+  {
+    "id": "67585f252d805dce",
+    "ru": "Пришло подтверждение завершения планового отключения без сведений о принятом сообщении о запахе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].followup.intro"
+    ]
+  },
+  {
+    "id": "775954890a42d5ac",
+    "ru": "Уточнить результат обработки самого сообщения, не принять окончание плановых работ за его проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "6e681dbf8ca468df",
+    "ru": "Закрыть сообщение о запахе автоматически по графику окончания ремонта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "3acbdae4c4a7d66f",
+    "ru": "Дополнить технический акт собственным заключением об отсутствии опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "6c965bf18da9a4fd",
+    "ru": "Передать текущее сообщение специалистам, не считать план работ заключением о его безопасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "1ec2d429f85c8141",
+    "ru": "Отложить передачу любого запаха до окончания предусмотренных объявлением работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "65cc6bfffc8935ac",
+    "ru": "Принять сообщение о плановом отключении за подтверждение обработки текущего аварийного сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "3dbdd296a67287cb",
+    "ru": "На подъезде написано, что будут работы с отключением. Сегодня появился запах. Сосед говорит: это наверняка из-за ремонта, сообщать не нужно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].opening"
+    ]
+  },
+  {
+    "id": "24f3490b29a43a7a",
+    "ru": "Оперативная безопасная передача текущего сообщения параллельно письменной процедуре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].procedures[0].text"
+    ]
+  },
+  {
+    "id": "4a64fb960fb2d85f",
+    "ru": "Ждать окончания плановых работ до передачи любого сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].procedures[1].text"
+    ]
+  },
+  {
+    "id": "c68864a3d97feea7",
+    "ru": "Самостоятельно установить причину запаха по объявлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].procedures[2].text"
+    ]
+  },
+  {
+    "id": "0db68ed356ed58ca",
+    "ru": "Только план отключения и работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "e033c26cbc48151f",
+    "ru": "План не является заключением об опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "c771e38d1aaa75df",
+    "ru": "Что подтверждает объявление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q0].text"
+    ]
+  },
+  {
+    "id": "06bfa6e648ed6023",
+    "ru": "Да.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q1].answer",
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "5f3f3678ad1c3af0",
+    "ru": "Нужно оперативное реагирование на сообщение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "7d199cc982d74a49",
+    "ru": "Запах относится к текущему моменту?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ce7fc879ec570180",
+    "ru": "Нельзя требовать самостоятельного обследования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ca7dde4be5d0cf98",
+    "ru": "Вы вне предполагаемой опасной зоны?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q2].text"
+    ]
+  },
+  {
+    "id": "2d018aee4c09c975",
+    "ru": "Подтверждения ещё нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "e560c414aee29afe",
+    "ru": "Нужна передача, а не предположение о том, что служба всё знает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "02e8700553e33426",
+    "ru": "Диспетчер принял именно это сообщение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b88c87c873d77652",
+    "ru": "Передать текущее сообщение диспетчерской службе 104 или 112 из безопасного места; в игре это только симуляция.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].routes[0].text"
+    ]
+  },
+  {
+    "id": "610942fd1f0bab54",
+    "ru": "Поручить соседу техническую проверку на объекте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].routes[1].text"
+    ]
+  },
+  {
+    "id": "ea0c946c4f912f02",
+    "ru": "Отправить только очередное письмо о расписании ремонта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].routes[2].text"
+    ]
+  },
+  {
+    "id": "fd46bcfb839fe4ff",
+    "ru": "Объявление об отключении не объясняет запах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[gas-planned-outage].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[gas-planned-outage].title"
+    ]
+  },
+  {
+    "id": "155d38e53143f29e",
+    "ru": "Планируемые работы и результат оценки конкретного сообщения — разные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].trap.explain"
+    ]
+  },
+  {
+    "id": "ff1ae6e1840f5b02",
+    "ru": "Объявление о плановых работах позволяет считать любое текущее сообщение о запахе уже проверенным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-planned-outage].trap.text"
+    ]
+  },
+  {
+    "id": "0a130a7aa9359c5a",
+    "ru": "Зафиксировать место, время и наличие текущей опасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a69b1f12e63774ee",
+    "ru": "Смоделировать оперативную передачу диспетчеру 104/112 без реального звонка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[a1].title"
+    ]
+  },
+  {
+    "id": "98e5f75e84d2d379",
+    "ru": "Оформить направление письменной части по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[a2].title"
+    ]
+  },
+  {
+    "id": "13a75aa4e18e786c",
+    "ru": "Объяснить, что письменный срок не задерживает оперативное сообщение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e92d95172b377521",
+    "ru": "Зафиксировать подтверждение приёма сообщения, не обещая исход работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[a4].title"
+    ]
+  },
+  {
+    "id": "8197eee37e845a54",
+    "ru": "Предложить заявителю проверить утечку открытым огнём",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[b0].title",
+      "cases:CASE_TEMPLATES[gas-smell].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "836d89fffcbb46b4",
+    "ru": "Отложить передачу опасности на срок рассмотрения письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].actions[b1].title"
+    ]
+  },
+  {
+    "id": "90935656f03ac80d",
+    "ru": "Направление письменной части по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].calendar.title"
+    ]
+  },
+  {
+    "id": "9ab7a633a52e57dc",
+    "ru": "Посетитель приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].citizen.description",
+      "cases:CASE_TEMPLATES[sign-night-measurement].citizen.description",
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].citizen.description"
+    ]
+  },
+  {
+    "id": "01da6fd1e3090a72",
+    "ru": "Место отмечено на схеме; запах замечен несколько минут назад, сообщения диспетчеру ещё не было. Причина запаха не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].documents[d0].text"
+    ]
+  },
+  {
+    "id": "98abfeef5439a8e7",
+    "ru": "Карточка сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].documents[d0].title"
+    ]
+  },
+  {
+    "id": "98cc7dabc9eb0af2",
+    "ru": "Срочное наблюдение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].documents[d0].type"
+    ]
+  },
+  {
+    "id": "f4510c5430948879",
+    "ru": "Письменная часть зарегистрирована {{registered}}. Компетенция дальнейшего рассмотрения уточняется отдельно от оперативной информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].documents[d1].text"
+    ]
+  },
+  {
+    "id": "068abdba755b7134",
+    "ru": "Регистрационная запись",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].documents[d1].title",
+      "cases:CASE_TEMPLATES[court-cancel].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3bb14e852ab8ff2c",
+    "ru": "Ориентир: 7–9 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].duration",
+      "cases:CASE_TEMPLATES[food-other-batch].duration",
+      "cases:CASE_TEMPLATES[fire-key].duration"
+    ]
+  },
+  {
+    "id": "b31d38f90b4fd186",
+    "ru": "Сообщение о возможной текущей опасности требует оперативной передачи, а причина пока не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[gas-smell].factTask.explain",
+      "cases:CASE_TEMPLATES[gas-smell].outcomes.good"
+    ]
+  },
+  {
+    "id": "6129575d37661efe",
+    "ru": "Сначала нужно дождаться письменного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "5fd55a86da22f7d7",
+    "ru": "Запах уже доказывает неисправность конкретной детали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "26b802437539715d",
+    "ru": "Учебное продолжение. Диспетчер подтвердил приём учебного сообщения, но итог обследования ещё не получен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].followup.intro"
+    ]
+  },
+  {
+    "id": "e0f2a20f5fd95094",
+    "ru": "Различить подтверждение приёма и устранение причины; не сообщать об устранении без сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].followup.options[0].text",
+      "cases:CASE_TEMPLATES[gas-smell].followup.explain"
+    ]
+  },
+  {
+    "id": "5697f2c497076a67",
+    "ru": "Заявить, что опасность полностью устранена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "fffe1f9c18c2f516",
+    "ru": "Позвать посетителя самому проверить шкаф.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "bc99be957e66a655",
+    "ru": "Я шёл сюда мимо газового шкафа и почувствовал сильный запах. Хотел написать заявление. Может, сначала вы его зарегистрируете, а завтра кто-нибудь посмотрит?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].opening"
+    ]
+  },
+  {
+    "id": "11c9bf47c1020df4",
+    "ru": "Оперативное сообщение об опасности и отдельное оформление обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].procedures[0].text"
+    ]
+  },
+  {
+    "id": "576a483a2ab8337b",
+    "ru": "Только плановая переписка без оперативного действия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].procedures[1].text"
+    ]
+  },
+  {
+    "id": "9fbc477350489705",
+    "ru": "Самостоятельный ремонт сотрудником приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].procedures[2].text"
+    ]
+  },
+  {
+    "id": "a5c06a9710b1f03d",
+    "ru": "У газового шкафа рядом с проходом, несколько минут назад; точка отмечена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "51c209ebc7819fcf",
+    "ru": "Сообщение относится к текущей возможной опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "9410d388d8834d6c",
+    "ru": "Где и когда ощущался запах?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q0].text"
+    ]
+  },
+  {
+    "id": "91de68be0bad1693",
+    "ru": "Нет, сразу пошёл к вам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "ab17c23677266340",
+    "ru": "Оперативное сообщение ещё не передано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d446df4efe8a441c",
+    "ru": "Сообщали ли в аварийную службу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3f8269d800f4d01b",
+    "ru": "Обычный проход, идут люди. Я сейчас в приёмной, к шкафу не возвращаюсь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c53a5399bfa7756e",
+    "ru": "Нельзя направлять заявителя исследовать источник.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1cca279358d01e8e",
+    "ru": "Кто находится рядом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q2].text"
+    ]
+  },
+  {
+    "id": "7ce7587e8053235a",
+    "ru": "Оборудование не трогал и ничего не поджигал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "97f39451ce269c6e",
+    "ru": "Не нужно предлагать опасные действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9490b44bfab16f9d",
+    "ru": "Что уже делали?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e5c47e97aa302233",
+    "ru": "В учебной симуляции передать точные сведения аварийной службе 104/112 и оформить дальнейший маршрут обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].routes[0].text",
+      "cases:CASE_TEMPLATES[gas-smell].coach.plan",
+      "cases:CASE_TEMPLATES[gas-smell].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "a7426aca2de7d3d6",
+    "ru": "Попросить гражданина разобрать шкаф.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].routes[1].text",
+      "cases:CASE_TEMPLATES[gas-smell].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "a5360d938a08b26c",
+    "ru": "Назначить виновного без обследования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].routes[2].text",
+      "cases:CASE_TEMPLATES[gas-smell].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "37cfae7ea9b64b1f",
+    "ru": "Письмо завтра, запах сейчас",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[gas-smell].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[gas-smell].title"
+    ]
+  },
+  {
+    "id": "d90121745924a07f",
+    "ru": "Безопасность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].topic",
+      "cases:CASE_TEMPLATES[gas-smell].tag"
+    ]
+  },
+  {
+    "id": "8d2cb7062bc75483",
+    "ru": "Разделить оперативное сообщение и письменную процедуру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].trap.options[0].text",
+      "cases:CASE_TEMPLATES[gas-smell].trap.explain"
+    ]
+  },
+  {
+    "id": "8928c39a5dae59d9",
+    "ru": "Отложить все действия до окончания срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "fe32b4a6463c0fa2",
+    "ru": "Помощник: «На ответ есть срок, поэтому и с запахом можно подождать».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-smell].trap.text"
+    ]
+  },
+  {
+    "id": "e083cb6b310c28fe",
+    "ru": "Установить исполнителя услуг по договору и реквизитам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[a0].title"
+    ]
+  },
+  {
+    "id": "cc48ebe910aa6518",
+    "ru": "Проверить запись о лицензии и сведения, относящиеся к работнику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[a1].title"
+    ]
+  },
+  {
+    "id": "4c0ecf7929bb28ef",
+    "ru": "Разделить вопросы лицензирования и возможного нарушения при инциденте",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[a2].title"
+    ]
+  },
+  {
+    "id": "0a8d5ea014d0931d",
+    "ru": "Сохранить запись и данные участников без избыточного распространения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[a3].title"
+    ]
+  },
+  {
+    "id": "342e55e61bcd8097",
+    "ru": "Проверить, дан ли результат по каждому переданному вопросу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[a4].title"
+    ]
+  },
+  {
+    "id": "805a62d8c0cb710b",
+    "ru": "Считать лицензию оправданием любых действий с гражданином",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[b0].title",
+      "cases:CASE_TEMPLATES[guard-contractor].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "9a12c19d5bf04ed5",
+    "ru": "Объявить документ поддельным только из-за другого названия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].actions[b1].title"
+    ]
+  },
+  {
+    "id": "903a1f605e0b16b4",
+    "ru": "59-ФЗ, статья 12. Профиль исчисления отдельно закреплён условием; срок не означает срок ремонта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].calendar.source"
+    ]
+  },
+  {
+    "id": "6e2d95bce50dcccb",
+    "ru": "Клуб «Учебная сцена» заключил договор с ООО «Учебный пост». ИНН в договоре совпадает с копией лицензии. Статус лицензии и работника подлежит проверке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].documents[d0].text"
+    ]
+  },
+  {
+    "id": "d4621daeac08ba0e",
+    "ru": "Договор и копия лицензии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1d24c14e3d643cff",
+    "ru": "Время и пост указаны. Нарушение и пределы допустимых действий не установлены только по наличию формы или лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].documents[d1].text"
+    ]
+  },
+  {
+    "id": "9b2911f8b835d5c1",
+    "ru": "Запись инцидента",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].documents[d1].title"
+    ]
+  },
+  {
+    "id": "5123c62c6155ab33",
+    "ru": "Разные названия клуба и подрядчика сами по себе не доказывают подделку; нужны идентификация организации, работника и оценка инцидента.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[guard-contractor].factTask.explain",
+      "cases:CASE_TEMPLATES[guard-contractor].outcomes.good"
+    ]
+  },
+  {
+    "id": "898fe66913843243",
+    "ru": "Охранник всегда должен работать в одноимённой с клубом организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "c25a7910ab0a4c92",
+    "ru": "Лицензия автоматически оправдывает любые действия охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "4b5838308145d790",
+    "ru": "Ответ подтверждает лицензию организации, но о работнике и инциденте не содержит сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].followup.intro"
+    ]
+  },
+  {
+    "id": "fd9cd3e907b034a0",
+    "ru": "Проверить полноту рассмотрения остальных вопросов, не отрицая уже подтверждённый факт лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].followup.options[0].text",
+      "cases:CASE_TEMPLATES[guard-contractor].followup.explain"
+    ]
+  },
+  {
+    "id": "c28a96f6c4a23914",
+    "ru": "Закрыть всё обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "5ed58619b645d685",
+    "ru": "Признать лицензию недействительной из-за неполного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a7b67e2a3c272235",
+    "ru": "Официальные материалы лицензирования разграничивают лицензию частной охранной организации и удостоверение частного охранника. Название клуба не устанавливает юридическое лицо подрядчика. Проверка полномочий организации также не разрешает отдельный вопрос о правомерности конкретных действий охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].knowledge.explain"
+    ]
+  },
+  {
+    "id": "84b7e20da9a221ab",
+    "ru": "Найдите правило передачи не относящихся к компетенции вопросов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "022bf7e0a44cc4d4",
+    "ru": "У входа в клуб меня задержал охранник. На форме эмблема клуба, а администратор показал лицензию другой фирмы. Это точно подделка или такое возможно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].opening"
+    ]
+  },
+  {
+    "id": "03b5c08fb4f93d42",
+    "ru": "Разграничение проверки охранной организации, статуса работника и обстоятельств инцидента",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c5ad778402b6e914",
+    "ru": "Только проверка дизайна эмблемы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].procedures[1].text"
+    ]
+  },
+  {
+    "id": "84184aa3d2a03f13",
+    "ru": "Автоматическая отмена всех договоров клуба",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e00d55829c05759d",
+    "ru": "ООО «Учебный пост», отдельный подрядчик. Название клуба отличается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "69db63bdb4679183",
+    "ru": "Торговое название заведения не обязательно совпадает с охранной организацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q0].fact",
+      "cases:CASE_TEMPLATES[guard-contractor].coach.talk"
+    ]
+  },
+  {
+    "id": "884e68877017b58a",
+    "ru": "Кто назван в договоре охраны?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f699468ebbcb6d37",
+    "ru": "В копии тот же ИНН, что в договоре. Действительность записи требует проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "1f61fbf718e5f325",
+    "ru": "Совпадение реквизитов помогает идентификации, но копия не заменяет проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "87d24245133e9afb",
+    "ru": "Лицензия относится к подрядчику?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ca2d7898fb67564c",
+    "ru": "Есть описание, время дежурства и номер поста. Его статус ещё не подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "90b65a390eacb075",
+    "ru": "Организацию и конкретного работника проверяют отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "690b7b93bac99c9b",
+    "ru": "Как идентифицирован сотрудник?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q2].text"
+    ]
+  },
+  {
+    "id": "2eeed2b295f2ed7d",
+    "ru": "Да, заявитель описал действия и предоставил запись; правовая оценка ещё не дана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "7482a8fced02ec59",
+    "ru": "Нельзя свести всё дело только к наличию лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "49b8f47d9ddc1ec8",
+    "ru": "Есть ли жалоба на применение силы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].questions[q3].text"
+    ]
+  },
+  {
+    "id": "245bba0851cba4f3",
+    "ru": "Устанавливает исполнителя охранных услуг и предмет обращения. Сведения о возможном правонарушении передаются по соответствующей компетенции; вывод о законности применения силы заранее не делается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].role.text"
+    ]
+  },
+  {
+    "id": "f26bd83458bcb95d",
+    "ru": "Сотрудник приёмной Росгвардии по вопросу охранной деятельности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].role.title",
+      "cases:CASE_TEMPLATES[guard-current-register].role.title",
+      "cases:CASE_TEMPLATES[guard-property-inspection].role.title"
+    ]
+  },
+  {
+    "id": "2cdf8c2395e6231a",
+    "ru": "Проверить реквизиты реального подрядчика и сведения о работнике; вопросы инцидента передать по надлежащей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].routes[0].text",
+      "cases:CASE_TEMPLATES[guard-contractor].coach.plan",
+      "cases:CASE_TEMPLATES[guard-contractor].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "1c47aebfb1b55e52",
+    "ru": "Признать копию поддельной по различию названий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].routes[1].text",
+      "cases:CASE_TEMPLATES[guard-contractor].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "01a2d166fac664ac",
+    "ru": "Закрыть вопрос о действиях охранника при наличии лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].routes[2].text",
+      "cases:CASE_TEMPLATES[guard-contractor].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "f8b3e22e2539c037",
+    "ru": "На вывеске одно, в договоре другое",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[guard-contractor].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[guard-contractor].title"
+    ]
+  },
+  {
+    "id": "f8392b54fb443f91",
+    "ru": "Охранная деятельность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].topic",
+      "cases:CASE_TEMPLATES[guard-contractor].tag",
+      "cases:CASE_TEMPLATES[guard-current-register].topic"
+    ]
+  },
+  {
+    "id": "2281eb63e31568ec",
+    "ru": "Различать лицензию организации и документы конкретного работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].trap.options[0].text",
+      "cases:CASE_TEMPLATES[guard-contractor].trap.explain"
+    ]
+  },
+  {
+    "id": "2f56917680897f62",
+    "ru": "Не устанавливать, кто был на посту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "731c5ada93ca99e5",
+    "ru": "Помощник: «Есть лицензия фирмы – личность сотрудника уже не нужна».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-contractor].trap.text"
+    ]
+  },
+  {
+    "id": "2b0ce1d372fde031",
+    "ru": "Сопоставить идентификатор договора с ответом реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[a0].title"
+    ]
+  },
+  {
+    "id": "d2c31bf07648e4e1",
+    "ru": "Разделить подтверждённую лицензию и неустановленные документы К-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[a1].title"
+    ]
+  },
+  {
+    "id": "ac743aaa924f251f",
+    "ru": "Подготовить запрос и материалы по оставшейся части жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ff3fb6905cd24fd5",
+    "ru": "Не объявлять ни всю охрану незаконной, ни все действия разрешёнными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[a3].title"
+    ]
+  },
+  {
+    "id": "4a4f68124184642c",
+    "ru": "Проверить, относится ли последующее удостоверение именно к К-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b3ea12c24a666a8c",
+    "ru": "Закрыть все вопросы из-за действующей лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[b0].title"
+    ]
+  },
+  {
+    "id": "f65ab70779cb34d0",
+    "ru": "Самостоятельно аннулировать лицензию организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].actions[b1].title",
+      "cases:CASE_TEMPLATES[guard-current-register].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "82eadf4c75b9d3e3",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. События относятся к периоду действия закона № 427-ФЗ, после 1 сентября 2026 года. Подрядчик – частная охранная организация. Действительность записи и относимость разрешённых услуг подтверждены компетентным подразделением; переходные льготы не предполагаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].brief"
+    ]
+  },
+  {
+    "id": "0dc012241ca0bd01",
+    "ru": "В базовом деле подрядчик требовал установления. Здесь организация установлена и лицензия подтверждена, но это не ответ на вопрос о работнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].coach.plan",
+      "cases:CASE_TEMPLATES[guard-current-register].contrast.difference"
+    ]
+  },
+  {
+    "id": "f55514d4fd55daa5",
+    "ru": "Копия документа прежней редакции. На снимке нет текущего статуса записи или сведений о конкретном работнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d0].text"
+    ]
+  },
+  {
+    "id": "def1bafef45433d9",
+    "ru": "Фотография стенда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[guard-current-register].documents[d0].title"
+    ]
+  }
+]

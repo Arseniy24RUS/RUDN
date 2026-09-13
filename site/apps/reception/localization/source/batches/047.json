@@ -1,0 +1,1154 @@
+[
+  {
+    "id": "2d3b730dbb5357cb",
+    "ru": "Безопасность не выводится только из фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "eae6f365250e5972",
+    "ru": "Обход обследован специалистом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0da3460cb1a75126",
+    "ru": "Маршрут длиннее, но конкретного заблокированного участка по дороге в обход я не назвал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "76d7bab1e51e9900",
+    "ru": "Разделены неудобство и подтверждённое нарушение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "0c706fff9a97864c",
+    "ru": "В чём именно неудобство сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q2].text"
+    ]
+  },
+  {
+    "id": "05edf6f4a8403cd8",
+    "ru": "Срок окончания работ и точный путь обхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "4fb180361e456386",
+    "ru": "Запрос требует содержательного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9393c95c0ebd6c15",
+    "ru": "Что вы хотите узнать кроме снятия ограждения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5e6501710d35facb",
+    "ru": "Специалист подразделения городского хозяйства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].role.title"
+    ]
+  },
+  {
+    "id": "7301d2af67edd612",
+    "ru": "Рассмотреть обращение по существу и объяснить подтверждённый порядок работ; не снимать безопасное ограждение произвольно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].routes[0].text"
+    ]
+  },
+  {
+    "id": "c9818366d66359fd",
+    "ru": "Требовать немедленно прекратить все работы из-за удлинения пути, не оценив подтверждённый обход.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].routes[1].text"
+    ]
+  },
+  {
+    "id": "97aefb0011dc1b1f",
+    "ru": "Сослаться на разрешение без ответа о фактической доступности предусмотренного маршрута.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].routes[2].text"
+    ]
+  },
+  {
+    "id": "7f7231c7c426018a",
+    "ru": "Длиннее — не значит незаконно",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sidewalk-safe-detour].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sidewalk-safe-detour].title"
+    ]
+  },
+  {
+    "id": "d57c3403870bd705",
+    "ru": "В исходном деле обход не соответствовал плану. Здесь соответствие подтверждено; большего расстояния недостаточно для вывода о незаконности, но новая преграда меняет ситуацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].trap.explain",
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].coach.plan",
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].contrast.difference"
+    ]
+  },
+  {
+    "id": "83f2c7552b2de7e6",
+    "ru": "Помощник: «Безопасность однажды проверена — дальнейший контроль уже не нужен».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].trap.text"
+    ]
+  },
+  {
+    "id": "48c5b3c758f9743c",
+    "ru": "Сопоставить идентификатор и последовательность решений по Т-9",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[a0].title"
+    ]
+  },
+  {
+    "id": "213adbf5547850c9",
+    "ru": "Проверить действующее основание и соответствие фактической стадии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[a1].title"
+    ]
+  },
+  {
+    "id": "b00d43de0a8ce8b3",
+    "ru": "Подготовить ответ о текущем основании без голословного вывода о незаконности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[a2].title"
+    ]
+  },
+  {
+    "id": "11e8992e55351814",
+    "ru": "Передать требование актуализировать информацию на стенде по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[a3].title"
+    ]
+  },
+  {
+    "id": "bf4b01b1eeccf752",
+    "ru": "Проверить исполнение обновления именно по Т-9",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[a4].title"
+    ]
+  },
+  {
+    "id": "5e3ed9510f7f5ead",
+    "ru": "Самостоятельно отменить продление по фотографии стенда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[b0].title"
+    ]
+  },
+  {
+    "id": "e1ae20eedeef2c65",
+    "ru": "Оставить признанную неактуальность стенда без реакции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].actions[b1].title"
+    ]
+  },
+  {
+    "id": "785d85f57fca8c88",
+    "ru": "Орган обеспечивает объективное, всестороннее и своевременное рассмотрение обращения и в пределах компетенции принимает меры к восстановлению или защите прав. Для вывода необходимо сопоставить все относящиеся к вопросу сведения, а не ограничиться формальным наличием ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].coach.research",
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].knowledge.explain"
+    ]
+  },
+  {
+    "id": "d898d2492395603f",
+    "ru": "Оставить признанную неактуальность стенда без реакции: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "c44fa10898baac67",
+    "ru": "На стенде показано первоначальное решение по Т-9 без дополнений. Снимок сделан {{observed}}. По этому документу первоначальный срок окончен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d0].text"
+    ]
+  },
+  {
+    "id": "01d771e1952d1f66",
+    "ru": "Фото стенда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fe9591b892a0f763",
+    "ru": "Подлинность учебной выписки проверена в условиях дела. До окончания первоначального срока принято решение о продлении именно Т-9 на текущую стадию. На дату снимка продление действует. Осмотр подтвердил соответствие текущих границ и прохода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d1].text"
+    ]
+  },
+  {
+    "id": "11ebb227cab799dd",
+    "ru": "Актуальная выписка уполномоченного отдела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d1].title"
+    ]
+  },
+  {
+    "id": "d08ba361c4f0ed8d",
+    "ru": "В уведомлении по соседнему Т-8 продления нет. Оно не определяет статус работ на Т-9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d2].text"
+    ]
+  },
+  {
+    "id": "0ec240aa224c0e09",
+    "ru": "Уведомление по Т-8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d2].title"
+    ]
+  },
+  {
+    "id": "d4d634959d8e72b2",
+    "ru": "Проверенное продление относится к Т-9 и действует; старый стенд требует обновления, но не доказывает отсутствия основания работ. В первом варианте разрешённые и фактические границы расходились. Здесь основание обновлено, а старой осталась информация для жителей; это другой предмет необходимого действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.explain"
+    ]
+  },
+  {
+    "id": "9025a70c35920f4d",
+    "ru": "Проверенное продление относится к Т-9 и действует; старый стенд требует обновления, но не доказывает отсутствия основания работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "da2485bd9c58cc9b",
+    "ru": "Старый лист на стенде отменяет более позднее решение уполномоченного отдела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "69c7c34511e2a773",
+    "ru": "Любой документ о продлении можно применить к соседнему участку без сверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "c792f4297d638aae",
+    "ru": "Сверить объект исполнения и запросить актуальную информацию для Т-9. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].followup.explain"
+    ]
+  },
+  {
+    "id": "25c53b365000006f",
+    "ru": "Исполнитель прислал фото обновлённого стенда, но номер участка на нём Т-8.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].followup.intro"
+    ]
+  },
+  {
+    "id": "f93efe015f9263ac",
+    "ru": "Сверить объект исполнения и запросить актуальную информацию для Т-9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "dc502cae1bac180f",
+    "ru": "Закрыть вопрос по факту получения любого нового фото.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "ac3f6d2ada200dc3",
+    "ru": "Изменить в обращении номер участка на присланный исполнителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "4fdb394397ac264a",
+    "ru": "Найдите норму: Обращения: рассмотрение по существу. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].knowledge.prompt",
+      "cases:CASE_TEMPLATES[signal-timing-proposal].knowledge.prompt",
+      "cases:CASE_TEMPLATES[trees-permit-matches].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "dc9eb994644adf6f",
+    "ru": "На стенде срок работ уже закончился. А люди ещё работают. Я сфотографировал старый листок — прошу немедленно всё остановить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].opening"
+    ]
+  },
+  {
+    "id": "c2b7709c3cd6a1f3",
+    "ru": "Определить просрочку по плакату на ограждении, не сопоставляя действующее продление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].procedures[1].text"
+    ]
+  },
+  {
+    "id": "a6d32469b003246d",
+    "ru": "Проверить только продление и не учитывать действующие условия безопасности работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].procedures[2].text"
+    ]
+  },
+  {
+    "id": "dc69bf887a78e700",
+    "ru": "В полученной от уполномоченного отдела выписке есть более позднее решение о продлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "892458b2c100716a",
+    "ru": "Старый стенд не является единственным источником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "e051d119d07e9b52",
+    "ru": "Проверялись ли актуальные сведения по разрешению?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q0].text"
+    ]
+  },
+  {
+    "id": "32fbcabb0d53d8d9",
+    "ru": "Да, совпадают номер разрешения, участок и состав текущей стадии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "fdfc8da563c7ab46",
+    "ru": "Нельзя использовать любое продление другого объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "ef287a35c5d3d095",
+    "ru": "Продление относится к этому участку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q1].text"
+    ]
+  },
+  {
+    "id": "4e11b5ddb7258ccb",
+    "ru": "По приложенному акту текущий проход соответствует продлённой схеме; непосредственного нарушения не зафиксировано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "4c972328b1d4297c",
+    "ru": "Претензия здесь касается срока и неактуальной информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2f33a77c499eca66",
+    "ru": "Что показывает осмотр самого прохода?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q2].text"
+    ]
+  },
+  {
+    "id": "88d8dd2fa333779b",
+    "ru": "Исполнитель признал, что стенд не обновлял.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9dab7e59b940929b",
+    "ru": "Снятие обвинения в отсутствии продления не снимает проблему информирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "55e8cc27b8cd08f4",
+    "ru": "Почему старый листок остался?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].questions[q3].text"
+    ]
+  },
+  {
+    "id": "2f87d0098754425d",
+    "ru": "Специалист подразделения по обращениям городского хозяйства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].role.title"
+    ]
+  },
+  {
+    "id": "74ea60b6fb4d972b",
+    "ru": "Рассмотреть установленное информационное нарушение и объяснить действующие сведения; решение о прекращении работ не подменять ответом приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].routes[0].text"
+    ]
+  },
+  {
+    "id": "69138bda46b6e7ed",
+    "ru": "Сообщить о завершении действия разрешения, опираясь на старую табличку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].routes[1].text"
+    ]
+  },
+  {
+    "id": "0a148c0a5c67ef85",
+    "ru": "Считать продление автоматическим подтверждением безопасности любой фактической схемы ограждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].routes[2].text"
+    ]
+  },
+  {
+    "id": "312ed1cc8c72be4e",
+    "ru": "Старое разрешение на новом стенде",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sidewalk-updated-permit].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sidewalk-updated-permit].title"
+    ]
+  },
+  {
+    "id": "7b341d3c395bf91a",
+    "ru": "В первом варианте разрешённые и фактические границы расходились. Здесь основание обновлено, а старой осталась информация для жителей; это другой предмет необходимого действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].trap.explain",
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].coach.plan",
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].contrast.difference"
+    ]
+  },
+  {
+    "id": "169310dea7e67586",
+    "ru": "Помощник: «Старый стенд и проверенное более позднее разрешение нужно сопоставить по одному объекту, не объявляя работы незаконными заранее».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].trap.text"
+    ]
+  },
+  {
+    "id": "ae70fef47a9b2dab",
+    "ru": "Сопоставить акт с подтверждением заявительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[a0].title"
+    ]
+  },
+  {
+    "id": "d8db8c6b2358fa08",
+    "ru": "Отделить новое сообщение о гуле от устранённого освещения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[a1].title"
+    ]
+  },
+  {
+    "id": "428515047d087226",
+    "ru": "Уточнить период и место звукового воздействия для компетентного рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a4efc4e0d41972af",
+    "ru": "Дать раздельное объяснение результата и следующего шага",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[a3].title"
+    ]
+  },
+  {
+    "id": "45621080a8b408ff",
+    "ru": "Контролировать отдельный ответ по гулу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[a4].title"
+    ]
+  },
+  {
+    "id": "d4553c201599f545",
+    "ru": "Объявить источник гула и нарушение установленными без проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[b0].title"
+    ]
+  },
+  {
+    "id": "ac43072a697b8d9f",
+    "ru": "Закрыть новый вопрос одной ссылкой на отключение света",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].actions[b1].title",
+      "cases:CASE_TEMPLATES[sign-light-restored].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "82b81a83d944b4a4",
+    "ru": "План должен следовать установленным фактам. Предмет нового сообщения не охвачен актом об освещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].coach.plan"
+    ]
+  },
+  {
+    "id": "cb1b96f8575fa13b",
+    "ru": "Уточняйте предмет, объект, время и получателя. В отличие от исходной световой жалобы результат по свету подтверждён самим заявителем. Продолжение нужно по новому предмету, а не для повторения уже выполненной меры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].coach.talk"
+    ]
+  },
+  {
+    "id": "79c3e6b53444691c",
+    "ru": "В отличие от исходной световой жалобы результат по свету подтверждён самим заявителем. Продолжение нужно по новому предмету, а не для повторения уже выполненной меры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].contrast.difference"
+    ]
+  },
+  {
+    "id": "63212561de18ca65",
+    "ru": "Фотография сделана до отключения. Она показывает прежнее освещение и не опровергает согласованное сообщение об устранении света.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d0].text"
+    ]
+  },
+  {
+    "id": "24d5aa3907f5997b",
+    "ru": "Старый кадр экрана",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1baad11161653eee",
+    "ru": "По объекту S-23 ночная подсветка отключена. Акт относится к освещению; шум и вибрация в нём не оценивались.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2dd4719d935efa2a",
+    "ru": "Акт отключения подсветки S-23",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d1].title"
+    ]
+  },
+  {
+    "id": "61f56f9d02dccdc5",
+    "ru": "Заявительница подтверждает отсутствие мешающего света после указанной меры. Одновременно впервые сообщает о гуле в комнате; источник звука по её предположению находится на фасаде. Замеров и заключения о причине гула нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d2].text"
+    ]
+  },
+  {
+    "id": "39a4680516a06bd1",
+    "ru": "Уточнение заявительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4f8747169a7b72b9",
+    "ru": "Устранение светового воздействия подтверждено, но вопрос о гуле остаётся самостоятельным и пока не исследованным. В отличие от исходной световой жалобы результат по свету подтверждён самим заявителем. Продолжение нужно по новому предмету, а не для повторения уже выполненной меры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.explain"
+    ]
+  },
+  {
+    "id": "84950fc939999fc6",
+    "ru": "Устранение светового воздействия подтверждено, но вопрос о гуле остаётся самостоятельным и пока не исследованным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sign-light-restored].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "e18264cd92401ab3",
+    "ru": "Старый светящийся снимок доказывает, что отключения не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "e3890a486e8c9417",
+    "ru": "Отключение подсветки подтверждает устранение любого шума на фасаде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "9f9a9480372d7038",
+    "ru": "Вернуть вопрос на предметное рассмотрение: акт о свете не отвечает на сообщение о гуле. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.explain"
+    ]
+  },
+  {
+    "id": "0c3ea1633291f8ff",
+    "ru": "Ответ по гулу содержит только ссылку на акт отключения света без новых сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.intro"
+    ]
+  },
+  {
+    "id": "47f8b1a882170a4b",
+    "ru": "Вернуть вопрос на предметное рассмотрение: акт о свете не отвечает на сообщение о гуле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "b29000f3cfc3022e",
+    "ru": "Признать отсутствие шума доказанным тем же актом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "892fbc33cc3f31cf",
+    "ru": "Заново объявить свет неустранённым, отменив подтверждение заявительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8a882a3ae54c3f4c",
+    "ru": "Зафиксировать подтверждённое устранение света и отдельно рассмотреть новое сообщение о гуле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b718bb743cde4508",
+    "ru": "Вернуть световой вопрос в исходное состояние только по старой фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d136cbeda68d703d",
+    "ru": "Распространить акт отключения подсветки на все возможные воздействия оборудования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "fc62c7dca3b2768a",
+    "ru": "После моей жалобы подсветку отключили. Свет уже не мешает, но от блока на стене теперь слышен постоянный гул. Не закрывайте всё письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].opening"
+    ]
+  },
+  {
+    "id": "faaed13b5accf93e",
+    "ru": "Отразить результат по свету и рассмотреть новое сообщение о звуке по его предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].procedures[0].text"
+    ]
+  },
+  {
+    "id": "52a31b35b77c1566",
+    "ru": "Повторно требовать отключения уже отключённого света без новых сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].procedures[1].text"
+    ]
+  },
+  {
+    "id": "76d7069f88513440",
+    "ru": "Прекратить приём любых писем о данном фасаде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5a82fff7395e8806",
+    "ru": "Нет, я это подтверждаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "437e3d6036cdba21",
+    "ru": "Прежний световой эпизод устранён в описанной части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "9f50c7a596141dec",
+    "ru": "Мешает ли свет сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q0].text"
+    ]
+  },
+  {
+    "id": "3cdbd616908f25e8",
+    "ru": "Нет, только отключение подсветки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "b9e040cbe8089b9a",
+    "ru": "Акт не отвечает на новый вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "3b82fc8c13467e3f",
+    "ru": "Гул исследовали в акте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q1].text"
+    ]
+  },
+  {
+    "id": "5c106685a80ac2c5",
+    "ru": "Это моё предположение, заключения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "6726ddd239f42820",
+    "ru": "Причина не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "7cd18ff93cbeb9a2",
+    "ru": "Связь гула с блоком подтверждена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q2].text"
+    ]
+  },
+  {
+    "id": "aa5fbdbfb90063a1",
+    "ru": "До отключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "deeff473f963140f",
+    "ru": "Старое изображение не доказывает текущее освещение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "f397f05c45e10242",
+    "ru": "Когда сделан приложенный снимок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].questions[q3].text"
+    ]
+  },
+  {
+    "id": "11637301cc5f4401",
+    "ru": "Сохранить подтверждение по освещению и подготовить шумовой вопрос компетентному подразделению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].routes[0].text"
+    ]
+  },
+  {
+    "id": "246d74886214ab03",
+    "ru": "Направить только прежнему электрику просьбу подтвердить всё сразу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].routes[1].text"
+    ]
+  },
+  {
+    "id": "fe75151a8478928e",
+    "ru": "Передать исключительно в орган охраны наследия без установления соответствующего статуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].routes[2].text"
+    ]
+  },
+  {
+    "id": "ebc3cafecd971724",
+    "ru": "Свет погас, звук остался",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sign-light-restored].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sign-light-restored].title"
+    ]
+  },
+  {
+    "id": "0d817266066a9901",
+    "ru": "Предмет нового сообщения не охвачен актом об освещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].trap.explain"
+    ]
+  },
+  {
+    "id": "2092394123c01d23",
+    "ru": "Положительный результат по подсветке можно зафиксировать, не выдавая его за решение вопроса о гуле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-light-restored].trap.text"
+    ]
+  },
+  {
+    "id": "fd9d3d7c8ba9727c",
+    "ru": "Установить объект и ночной период из обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[a0].title"
+    ]
+  },
+  {
+    "id": "ecf2017605efaa73",
+    "ru": "Сопоставить условия акта с графиком работы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[a1].title"
+    ]
+  },
+  {
+    "id": "3801e3b196e60758",
+    "ru": "Подготовить получение относимых сведений в пределах установленной процедуры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[a2].title"
+    ]
+  },
+  {
+    "id": "74bb911dba862c5c",
+    "ru": "Разъяснить заявителю пределы дневного акта без преждевременного вывода о нарушении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[a3].title"
+    ]
+  },
+  {
+    "id": "4ce4b8d00e0d9357",
+    "ru": "Проверить, охватывает ли последующий ответ именно ночной режим",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[a4].title"
+    ]
+  },
+  {
+    "id": "5fe98acec321d582",
+    "ru": "Считать превышение установленным только по несовпадению часов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[b0].title"
+    ]
+  },
+  {
+    "id": "e9555c1ea9fa3137",
+    "ru": "Поручить гражданину техническое обследование фасадного оборудования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].actions[b1].title",
+      "cases:CASE_TEMPLATES[sign-night-measurement].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "893e4eb2b0656e20",
+    "ru": "План должен следовать установленным фактам. Нужно различать недостаточность доказательства и уже доказанное нарушение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].coach.plan"
+    ]
+  },
+  {
+    "id": "0d28f6cf0a6bad2b",
+    "ru": "Уточняйте предмет, объект, время и получателя. Вопрос не в классификации вывески: здесь установлен иной временной режим. Действие меняется из-за неотносимости дневного подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].coach.talk"
+    ]
+  },
+  {
+    "id": "e490238dc3a53b57",
+    "ru": "Вопрос не в классификации вывески: здесь установлен иной временной режим. Действие меняется из-за неотносимости дневного подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].contrast.difference"
+    ]
+  },
+  {
+    "id": "cd54cda00343d86c",
+    "ru": "Владелец подтверждает автоматическое включение L-08 с 22:00 до 06:00. Содержание — название и режим работы без предложений товаров. В условии орган компетентен организовать рассмотрение светового воздействия в установленном порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d0].text"
+    ]
+  },
+  {
+    "id": "72bc7d3382c065e3",
+    "ru": "Письмо владельца о графике",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3cf2b3a98232c15d",
+    "ru": "Сергей Петрович указал адрес для ответа и жалуется на период 00:00–02:00. Возраст заявителя не является основанием оценивать точность его сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d1].text"
+    ]
+  },
+  {
+    "id": "fbef557b980b159e",
+    "ru": "Сведения об авторе обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7fd38676a525fec1",
+    "ru": "Объект L-08 осмотрен в 11:30 при выключенной подсветке. В акте описано только это состояние; измерений при ночной работе и вывода о ней нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d2].text"
+    ]
+  },
+  {
+    "id": "cfc1cfa11e25f86a",
+    "ru": "Акт обследования L-08",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f6a2174aaf76b9f2",
+    "ru": "Дневной акт при выключенной подсветке не подтверждает состояние объекта во время, указанное в жалобе. Вопрос не в классификации вывески: здесь установлен иной временной режим. Действие меняется из-за неотносимости дневного подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.explain"
+    ]
+  },
+  {
+    "id": "68b3405d54f4b2a3",
+    "ru": "Дневной акт при выключенной подсветке не подтверждает состояние объекта во время, указанное в жалобе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sign-night-measurement].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "135278d1c749126b",
+    "ru": "Любой акт без нарушений разрешает спор о работе объекта в любое время.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "1e8b208c41a4514c",
+    "ru": "Несовпадение времени само доказывает превышение допустимой освещённости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "172e866d6efc8b38",
+    "ru": "Уточнить идентификатор и получить вывод по L-08, не переносить данные соседнего объекта. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.explain"
+    ]
+  },
+  {
+    "id": "af388a2e024492e4",
+    "ru": "Специалисты прислали новое заключение, но в нём указан L-09 — соседний экран.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.intro"
+    ]
+  },
+  {
+    "id": "97fa4353d1fe2768",
+    "ru": "Уточнить идентификатор и получить вывод по L-08, не переносить данные соседнего объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "ab2021407650e928",
+    "ru": "Принять любой ночной замер на этой улице как достаточный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9d742351de473bb8",
+    "ru": "Изменить номер объекта в заключении собственноручно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "ae6beab18c755c23",
+    "ru": "Обращение рассматривается объективно, всесторонне и своевременно; необходимые документы запрашиваются в предусмотренном порядке, принимаются меры в пределах компетенции и даётся ответ по существу. Прежнее заключение не заменяет проверки новых обстоятельств и другого предмета обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].knowledge.explain",
+      "cases:CASE_TEMPLATES[sign-light-restored].knowledge.explain",
+      "cases:CASE_TEMPLATES[gas-address-correction].knowledge.explain"
+    ]
+  },
+  {
+    "id": "9e98aa877dd9e163",
+    "ru": "Сопоставить время и режим обследования с периодом жалобы, затем получить относимые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "ee7469dcafe245ac",
+    "ru": "Принять дневной акт за подтверждение соблюдения требований во все часы работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "1ee5ed630acea113",
+    "ru": "Считать превышение установленным только потому, что обследование проводилось в другое время.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d338a48309724fed",
+    "ru": "Найдите норму: Рассмотрение всех существенных обстоятельств обращения. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].knowledge.prompt",
+      "cases:CASE_TEMPLATES[sign-light-restored].knowledge.prompt",
+      "cases:CASE_TEMPLATES[gas-address-correction].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7b59ba257c7c748e",
+    "ru": "Утром мне показали акт: нарушений нет. Но я жаловался на свет после полуночи, а утром экран всегда выключают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].opening"
+    ]
+  },
+  {
+    "id": "fbf15aea8346d431",
+    "ru": "Рассмотреть относимость имеющегося акта к ночному эпизоду и необходимые дополнительные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].procedures[0].text"
+    ]
+  },
+  {
+    "id": "6e8c8da0626b26ce",
+    "ru": "Отказать потому, что акт уже однажды составлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].procedures[1].text"
+    ]
+  },
+  {
+    "id": "751e8eda770d3365",
+    "ru": "Перевести вопрос освещения в судебную отмену рекламного договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].procedures[2].text"
+    ]
+  },
+  {
+    "id": "2e8260cf50f2ce43",
+    "ru": "Подсветка не работала, время в акте — 11:30.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "29577944bfe2791e",
+    "ru": "Акт подтверждает дневное выключенное состояние.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "c8936b8b2d4f5f96",
+    "ru": "В каком состоянии был объект во время обследования?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q0].text"
+    ]
+  },
+  {
+    "id": "cfe4a5494bec473d",
+    "ru": "Между полуночью и двумя часами ночи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "88068f0187e9fd9a",
+    "ru": "Проверяемый период не совпадает с обследованием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "099e623439eed78c",
+    "ru": "Какой период назван в жалобе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q1].text"
+    ]
+  },
+  {
+    "id": "bba6bc4b3cd47e78",
+    "ru": "Сам владелец в приложенном письме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "26e3410e0084d683",
+    "ru": "Ночной режим — не только предположение заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2221b06cf0f7afc4",
+    "ru": "Кто подтверждает ночной график?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q2].text"
+    ]
+  },
+  {
+    "id": "376001ad660ed924",
+    "ru": "Нет; материалы передаются специалистам, обследование проводит не заявитель.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "962505e954fb2bd7",
+    "ru": "Приёмная не поручает технические проверки посетителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8c4e0f48dffcd821",
+    "ru": "Нужно ли самостоятельно идти к оборудованию?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].questions[q3].text"
+    ]
+  },
+  {
+    "id": "4f1de6e16bfe3fa4",
+    "ru": "Подготовить материалы компетентным специалистам для оценки ночного режима.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].routes[0].text"
+    ]
+  },
+  {
+    "id": "3c3e4a728f0ef7a1",
+    "ru": "Отправить заявителя самостоятельно измерять оборудование на фасаде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].routes[1].text"
+    ]
+  }
+]

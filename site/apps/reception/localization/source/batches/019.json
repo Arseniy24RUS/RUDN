@@ -1,0 +1,1161 @@
+[
+  {
+    "id": "75f8a987af6d5250",
+    "ru": "Видны ли партия и маркировка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ddf6c2dc9effc95e",
+    "ru": "На новую партию, поступившую позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c35b1052b4583700",
+    "ru": "Документ не отвечает на вопрос о старой партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "73937f77ff959026",
+    "ru": "На какую партию документ магазина?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8f90c752e39747e1",
+    "ru": "О пострадавших по условиям дела не сообщается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "f0a2f8c3ee6c54d3",
+    "ru": "Не следует выдумывать отравление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "fb9d7bc5a05d631e",
+    "ru": "Передать сведения территориальному органу Роспотребнадзора по месту торговли для решения вопроса о реагировании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].routes[0].text",
+      "cases:CASE_TEMPLATES[food-other-batch].coach.plan",
+      "cases:CASE_TEMPLATES[food-other-batch].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "63253fbd79e57599",
+    "ru": "Сразу объявить магазин закрытым от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].routes[1].text",
+      "cases:CASE_TEMPLATES[food-other-batch].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "2f45650c006e8b3b",
+    "ru": "Заменить сведения партии А документом партии Б.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].routes[2].text",
+      "cases:CASE_TEMPLATES[food-other-batch].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "3ad16ff060035654",
+    "ru": "Сертификат на другую партию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[food-other-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[food-other-batch].title"
+    ]
+  },
+  {
+    "id": "09c060b47e1e3384",
+    "ru": "Защита потребителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].topic",
+      "cases:CASE_TEMPLATES[food-other-batch].tag",
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].topic"
+    ]
+  },
+  {
+    "id": "5b265f3cadbbfae8",
+    "ru": "Уточнить сохраняющийся предмет сообщения о продаже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].trap.options[0].text",
+      "cases:CASE_TEMPLATES[food-other-batch].trap.explain"
+    ]
+  },
+  {
+    "id": "60f194ca7f3a1320",
+    "ru": "Закрыть сообщение без рассмотрения содержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "d2716e5dde79853b",
+    "ru": "Помощник: «Деньги вернули – обращения больше нет».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].trap.text"
+    ]
+  },
+  {
+    "id": "a87131f5f57894b0",
+    "ru": "Сопоставить сообщение, маркировку и акт по номерам партий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[a0].title"
+    ]
+  },
+  {
+    "id": "038804a6ce6ee91a",
+    "ru": "Зафиксировать отсутствие подтверждения по Д-72.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[a1].title"
+    ]
+  },
+  {
+    "id": "1889ec87a6fe02a9",
+    "ru": "Передать предметное уточнение компетентному лицу для предусмотренных действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[a2].title"
+    ]
+  },
+  {
+    "id": "e5d82f5db02b153f",
+    "ru": "Не советовать употребление и не публиковать избыточные данные покупателей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a6f76ac8b2fb824a",
+    "ru": "Проверить новый акт именно по Д-72 и отражение результата в ответе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3d114268bf253abd",
+    "ru": "Отметить исполнение только по наличию печати на акте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[b0].title"
+    ]
+  },
+  {
+    "id": "49d5e680be45a04e",
+    "ru": "Предложить заявителю самостоятельно отбирать и пробовать продукцию для установления опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].actions[b1].title",
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "945169cd5b4bb9b6",
+    "ru": "Все участники и документы дела вымышлены. В вымышленном деле подтверждены сообщение о необходимости мер по партии Д-72 и относящиеся к ней остатки. Акт изъятия касается Д-27. Медицинских симптомов у заявителя не описано; основание и объём надзорных мер определяет уполномоченное лицо, не сама игра. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].brief"
+    ]
+  },
+  {
+    "id": "ffae69b65e8739f8",
+    "ru": "Базовая история проверяла документ на другую партию до решения. Здесь проверяется исполнение уже предметно определённых мер и полнота подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].coach.plan",
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].contrast.difference"
+    ]
+  },
+  {
+    "id": "641e0dffd39f184f",
+    "ru": "Справка говорит об улучшении контроля качества без перечня партий и выполненных действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d0].text"
+    ]
+  },
+  {
+    "id": "64c4d41b9fb05209",
+    "ru": "Общая справка магазина",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d0].title"
+    ]
+  },
+  {
+    "id": "847271207f4499f8",
+    "ru": "Материалы компетентного подразделения указывают на необходимость соответствующих мер именно по партии Д-72. Снимок маркировки остатка относится к этому номеру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d1].text"
+    ]
+  },
+  {
+    "id": "3d6bbdaea5085229",
+    "ru": "Сообщение по партии Д-72",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d1].title"
+    ]
+  },
+  {
+    "id": "cb87e365047c769a",
+    "ru": "Акт подтверждает изъятие партии Д-27. Номер Д-72 и действия по нему в акте отсутствуют; это не опечатка, исправленная приложением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d2].text"
+    ]
+  },
+  {
+    "id": "9b65d6d88deaca61",
+    "ru": "Акт изъятия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].documents[d2].title"
+    ]
+  },
+  {
+    "id": "08ccd7feee143b62",
+    "ru": "Исполнение по партии Д-72 не подтверждено актом по Д-27. Базовая история проверяла документ на другую партию до решения. Здесь проверяется исполнение уже предметно определённых мер и полнота подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.explain"
+    ]
+  },
+  {
+    "id": "aebc8c28b731a99c",
+    "ru": "Исполнение по партии Д-72 не подтверждено актом по Д-27.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8f9d1b66abb264e6",
+    "ru": "Любой акт изъятия доказывает устранение вопроса по всему ассортименту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d10a2f284d2f6e05",
+    "ru": "Отсутствие нужного акта автоматически устанавливает причину всех заболеваний покупателей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a53e4f4be0c25001",
+    "ru": "Совпадение партии не заменяет проверку полного объёма принятого предмета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].followup.explain"
+    ]
+  },
+  {
+    "id": "524bbd1f9c316668",
+    "ru": "Получен акт по Д-72, но только по одному из двух указанных в материалах мест хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].followup.intro"
+    ]
+  },
+  {
+    "id": "53c29d2e0b042faa",
+    "ru": "Уточнить объём исполненных мер и оставшуюся часть; не объявлять всю работу завершённой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "cd70754182d94901",
+    "ru": "Признать все места проверенными по совпадению номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "e5c4d1eaa7966a1b",
+    "ru": "Удалить из исходного обращения второе место хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8c31e5ebcf09e179",
+    "ru": "Статья 7 Закона РФ № 2300-1 устанавливает требования безопасности товара и обязанности по принятию необходимых мер при выявлении опасности. Сотрудник приёмной передаёт конкретные сведения компетентным лицам; он не объявляет недоказанной любую продукцию опасной и не назначает медицинское лечение. Подтверждение изъятия одной партии не подтверждает действия по другой партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].knowledge.explain",
+      "cases:SOURCES[n12-consumer7].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-recall-wrong-batch].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "34c682ca86663321",
+    "ru": "Соотносить меры безопасности с подтверждённой продукцией и полномочиями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "2563f2c01d8cd4c0",
+    "ru": "Распространять любой акт на весь ассортимент без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "717393bbd6258e11",
+    "ru": "Подменять профессиональные мероприятия домашним употреблением продукта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6f5b70bfc46a87e4",
+    "ru": "Найдите норму: Безопасность товара и меры при выявлении опасности. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "606e864a4253f220",
+    "ru": "Мне прислали акт, что опасную партию убрали. Но на полке и в моём обращении другой номер. Можно считать вопрос решённым?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].opening"
+    ]
+  },
+  {
+    "id": "aa9dea5703932203",
+    "ru": "Проверить исполнение предметных мер по конкретной партии в установленном порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].procedures[0].text"
+    ]
+  },
+  {
+    "id": "a660aad240a70304",
+    "ru": "Закрыть обращение по общему улучшению качества.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].procedures[1].text"
+    ]
+  },
+  {
+    "id": "d53d7f0881607960",
+    "ru": "Назначить все проверки и запреты без полномочий и основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].procedures[2].text"
+    ]
+  },
+  {
+    "id": "930cda0c1c232e0b",
+    "ru": "Д-72, номер виден на маркировке и в сообщении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "f752e561c34181a5",
+    "ru": "Нужно сопоставить конкретную партию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "5f25b11a482ed6fc",
+    "ru": "Какую партию касается первоначальный материал?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f781173676bc5eeb",
+    "ru": "Д-27.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "ea900e43f1633054",
+    "ru": "Ответ относится к другой партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "81f847e12860d57b",
+    "ru": "Какую партию изъяли по акту?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q1].text"
+    ]
+  },
+  {
+    "id": "6845eeb04f3b362f",
+    "ru": "Нет; представлен снимок маркировки остатка именно Д-72.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "672f5a650dd37f6d",
+    "ru": "Исполнение по нужной партии не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e3b817f3dd07f5df",
+    "ru": "Есть ли подтверждение по Д-72?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q2].text"
+    ]
+  },
+  {
+    "id": "9bfaddce35193fae",
+    "ru": "Нет, нужны относимые сведения и действия компетентных лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "0d8f4a011cfe9606",
+    "ru": "Масштаб вывода нельзя расширять без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "350a404ea54090ad",
+    "ru": "Может ли приёмная объявить все товары опасными?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].questions[q3].text"
+    ]
+  },
+  {
+    "id": "888bf01be1e4ca3c",
+    "ru": "Специалист подготовки материалов по потребительскому обращению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].role.title"
+    ]
+  },
+  {
+    "id": "e684e930428d90d5",
+    "ru": "Передать уточнённые материалы уполномоченному подразделению по безопасности продукции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].routes[0].text"
+    ]
+  },
+  {
+    "id": "42273a14826d914c",
+    "ru": "Поручить заявителю изъять товар из магазина самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].routes[1].text"
+    ]
+  },
+  {
+    "id": "90c84aa7345bd10a",
+    "ru": "Объявить продавца виновным в любых последствиях без рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].routes[2].text"
+    ]
+  },
+  {
+    "id": "7983cb68e8566794",
+    "ru": "Изъяли партию, но не ту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[food-recall-wrong-batch].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[food-recall-wrong-batch].title"
+    ]
+  },
+  {
+    "id": "9b1a8df69c2dea10",
+    "ru": "Связь объекта меры с доказательством результата обязательна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].trap.explain"
+    ]
+  },
+  {
+    "id": "198e86e3f62111d3",
+    "ru": "Акт по другой партии не подтверждает исполнение по той, которая является предметом дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-recall-wrong-batch].trap.text"
+    ]
+  },
+  {
+    "id": "92a532e9151261c3",
+    "ru": "Без промедления передать уточнение правильного корпуса и номер G-16",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[a0].title"
+    ]
+  },
+  {
+    "id": "10389968aff36992",
+    "ru": "Зафиксировать полученное уточнение без самостоятельной технической диагностики",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a2ddbc40b16bf029",
+    "ru": "Проверить подтверждение корректного адреса диспетчерской записью",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[a2].title"
+    ]
+  },
+  {
+    "id": "e4e2d672ad4f516e",
+    "ru": "Разъяснить, что формальный срок ответа не является временем ожидания помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3cfb1dce870cd115",
+    "ru": "Отдельно продолжить письменное рассмотрение и контроль подтверждений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[a4].title"
+    ]
+  },
+  {
+    "id": "bf9dffd9ef0b5463",
+    "ru": "Отложить передачу до окончания срока письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[b0].title"
+    ]
+  },
+  {
+    "id": "7c741d01dd8cb3e3",
+    "ru": "Направить заявителя в опасную зону для самостоятельной проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].actions[b1].title",
+      "cases:CASE_TEMPLATES[gas-address-correction].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "affb90c25117b131",
+    "ru": "План должен следовать установленным фактам. Ошибочный корпус требует оперативного уточнения; связь с номером сообщения предотвращает потерю контекста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].coach.plan"
+    ]
+  },
+  {
+    "id": "17c826d021d0c1cd",
+    "ru": "Уточняйте предмет, объект, время и получателя. В исходном деле служба ещё не уведомлена. Здесь вызов есть, но неверная адресация требует связанного уточнения, а не формальной отметки «уже вызвали».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].coach.talk"
+    ]
+  },
+  {
+    "id": "03a35444cd182703",
+    "ru": "В исходном деле служба ещё не уведомлена. Здесь вызов есть, но неверная адресация требует связанного уточнения, а не формальной отметки «уже вызвали».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].contrast.difference"
+    ]
+  },
+  {
+    "id": "c76129a828895ccb",
+    "ru": "Оперативное сообщение не передано после установления текущего обстоятельства. Формальная переписка его не заменяет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].criticalRules[a0].message",
+      "cases:CASE_TEMPLATES[gas-planned-outage].criticalRules[a0].message"
+    ]
+  },
+  {
+    "id": "d3a028dbb297e997",
+    "ru": "Сообщение зарегистрировано диспетчером под учебным номером G-16. В карточке указаны дом 7, корпус 2. Факт принятия вызова подтверждён, но прибытие по нужному корпусу не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6c681c1dd7dfce34",
+    "ru": "Текущее сообщение относится к дому 7, корпусу 3. Заявитель сейчас вне опасной зоны, сообщает о сохраняющемся признаке опасности; самостоятельно обследовать объект ему не предлагается. Расхождение в корпусе подтверждено повторным уточнением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d51b511af2f0710c",
+    "ru": "Уточнение заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d1].title"
+    ]
+  },
+  {
+    "id": "71b162a928f4b6ad",
+    "ru": "Письменное обращение получено {{received}}, зарегистрировано {{registered}}. Эти даты относятся к формальной переписке и не задают время ожидания аварийной передачи. Игра не совершает реальных вызовов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d2].text"
+    ]
+  },
+  {
+    "id": "cb78678c84a14512",
+    "ru": "Регистрация письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d2].title"
+    ]
+  },
+  {
+    "id": "fef7cc05a23ca32f",
+    "ru": "Оперативное сообщение принято, но указан другой корпус; необходимо немедленно передать уточнение адреса с привязкой к G-16. В исходном деле служба ещё не уведомлена. Здесь вызов есть, но неверная адресация требует связанного уточнения, а не формальной отметки «уже вызвали».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.explain"
+    ]
+  },
+  {
+    "id": "c3ef6d612215ac9c",
+    "ru": "Оперативное сообщение принято, но указан другой корпус; необходимо немедленно передать уточнение адреса с привязкой к G-16.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[gas-address-correction].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "d3fdd021dd97e353",
+    "ru": "Регистрация любого вызова доказывает, что правильный объект обследован.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "2dce3d212b68a946",
+    "ru": "Нужно дождаться письменного ответа, прежде чем исправить корпус.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "c51f4206c027917d",
+    "ru": "Уточнить относимость акта и состояние сообщения по корпусу 3; не закрывать его актом другого объекта. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].followup.explain"
+    ]
+  },
+  {
+    "id": "7a7ec91e818e2a74",
+    "ru": "Получено подтверждение, в котором корпус исправлен, но в последующем акте снова фигурирует корпус 2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].followup.intro"
+    ]
+  },
+  {
+    "id": "e4ef043f926f775c",
+    "ru": "Уточнить относимость акта и состояние сообщения по корпусу 3; не закрывать его актом другого объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "e43346dbafdc536d",
+    "ru": "Считать вопрос исполненным после любого акта газовой службы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c93623b158deeeba",
+    "ru": "Самостоятельно переписать корпус в техническом акте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2ba353260f8e7afb",
+    "ru": "Оперативно передать уточнение правильного корпуса, связав его с принятой диспетчерской записью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "35f12193e863023d",
+    "ru": "Считать принятие записи по любому корпусу достаточным подтверждением обработки нужного адреса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "571ddb7b1f04e3bd",
+    "ru": "Отложить уточнение корпуса до подготовки окончательного ответа на письменное обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "ba3a1108a42dcd26",
+    "ru": "Я сообщил о запахе по 104 из безопасного места. В подтверждении оказалось: корпус 2, а я говорил про корпус 3. Пока исправлял, пришёл к вам с письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].opening"
+    ]
+  },
+  {
+    "id": "d3319a22d1e81703",
+    "ru": "Параллельно формальной переписке оперативно передать адресное уточнение по предусмотренному каналу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].procedures[0].text"
+    ]
+  },
+  {
+    "id": "95607946fe51eefb",
+    "ru": "Сначала завершить полный письменный ответ, затем уточнять адрес вызова.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].procedures[1].text"
+    ]
+  },
+  {
+    "id": "640a87fac9d62eb5",
+    "ru": "Отменить чужую диспетчерскую карточку собственным решением приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].procedures[2].text"
+    ]
+  },
+  {
+    "id": "99c84f86c94f98ce",
+    "ru": "Да, сообщение передано извне опасного пространства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "0aa394d4d280c4e9",
+    "ru": "Нельзя требовать возвращения для подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0506b60c77e97ef0",
+    "ru": "Вы сейчас в безопасном месте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q0].text"
+    ]
+  },
+  {
+    "id": "057934889b74c1b3",
+    "ru": "Третий, а в карточке второй.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "9a5417662c9ba02b",
+    "ru": "Адресная ошибка влияет на реагирование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "19c9b24664336be8",
+    "ru": "Какой корпус относится к событию?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e888865bcc6a6880",
+    "ru": "Да, G-16.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "23590fc614e9e3e8",
+    "ru": "Уточнение можно связать с существующей записью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c27a4fec23c9aeef",
+    "ru": "Есть ли номер принятого сообщения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q2].text"
+    ]
+  },
+  {
+    "id": "47a750e2bdafa387",
+    "ru": "Сам факт регистрации не доказывает нужный адрес.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d55df24b970b94b7",
+    "ru": "Подтверждено прибытие по правильному адресу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].questions[q3].text"
+    ]
+  },
+  {
+    "id": "dc95b3be2efa7e4c",
+    "ru": "Дежурный специалист публичной приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].role.title",
+      "cases:CASE_TEMPLATES[gas-past-incident].role.title",
+      "cases:CASE_TEMPLATES[gas-planned-outage].role.title"
+    ]
+  },
+  {
+    "id": "7027aa8e5ce1ac07",
+    "ru": "Передать уточнение диспетчерской службе по связанному номеру, используя безопасный канал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].routes[0].text"
+    ]
+  },
+  {
+    "id": "61cfdf79556786c3",
+    "ru": "Попросить гражданина вернуться в опасную зону и проверить, куда прибыла бригада.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].routes[1].text"
+    ]
+  },
+  {
+    "id": "8036e133be2141cb",
+    "ru": "Направить исключительно почтовое письмо в архив учреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].routes[2].text"
+    ]
+  },
+  {
+    "id": "a6602729d65e41ca",
+    "ru": "Службу вызвали, адрес записан другой",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[gas-address-correction].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[gas-address-correction].title"
+    ]
+  },
+  {
+    "id": "8abb63c5a68db9d9",
+    "ru": "Сообщения об опасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].topic",
+      "cases:CASE_TEMPLATES[gas-past-incident].topic",
+      "cases:CASE_TEMPLATES[gas-planned-outage].topic"
+    ]
+  },
+  {
+    "id": "7d8d22204e4ab309",
+    "ru": "Ошибочный корпус требует оперативного уточнения; связь с номером сообщения предотвращает потерю контекста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].trap.explain"
+    ]
+  },
+  {
+    "id": "88c14c0089653f1a",
+    "ru": "Нужно связать уточнение с принятым сообщением, но не задерживать передачу из-за оформления письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-address-correction].trap.text"
+    ]
+  },
+  {
+    "id": "8ed684392d1a9af0",
+    "ru": "Сопоставить акт G-25 и уточнение о текущем состоянии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b297803d43a09c5a",
+    "ru": "Выделить просьбу объяснить действия по прошлой заявке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[a1].title"
+    ]
+  },
+  {
+    "id": "b7bba851f64bf33a",
+    "ru": "Получить относимые сведения в установленном порядке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[a2].title"
+    ]
+  },
+  {
+    "id": "27e93b0516a316e2",
+    "ru": "Дать понятный ответ без бессрочной гарантии безопасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[a3].title"
+    ]
+  },
+  {
+    "id": "1239089e455dc7f2",
+    "ru": "Отдельно учитывать последующие сообщения о новых признаках",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2582971fa60d6281",
+    "ru": "Создать сообщение о доказанной текущей утечке без такого сообщения или фактов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[b0].title"
+    ]
+  },
+  {
+    "id": "6cf9d679a82ee922",
+    "ru": "Объявить, что новые обращения об опасности больше не принимаются",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].actions[b1].title",
+      "cases:CASE_TEMPLATES[gas-past-incident].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "da233d0080d9cc27",
+    "ru": "План должен следовать установленным фактам. Прошлый результат ограничен временем и объёмом проведённой проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].coach.plan"
+    ]
+  },
+  {
+    "id": "828e51166b1a917d",
+    "ru": "Уточняйте предмет, объект, время и получателя. В отличие от базового дела текущих признаков не сообщается и имеется относимый акт. Первоначальное решение касается полноты ответа, а при новом сообщении меняется на оперативную передачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].coach.talk"
+    ]
+  },
+  {
+    "id": "ee054e0fa4bc0228",
+    "ru": "В отличие от базового дела текущих признаков не сообщается и имеется относимый акт. Первоначальное решение касается полноты ответа, а при новом сообщении меняется на оперативную передачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].contrast.difference"
+    ]
+  },
+  {
+    "id": "a4cd8186af2a2b28",
+    "ru": "Заявитель подтверждает: текущего запаха, шипения и иных новых признаков опасности сейчас не сообщает. Его просьба относится к содержанию выполненных действий и получению понятного ответа по прежней заявке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ca808dcb974e5205",
+    "ru": "Подтверждение заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1c4c81d2ac5a4be8",
+    "ru": "В ответе стоит только «закрыто». В нём нет объяснения действий по G-25. Фотография из первого сообщения относится к периоду до выезда специалистов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c1c5464040aef94e",
+    "ru": "Короткий ответ о статусе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8b8f42405bea2d9c",
+    "ru": "Уполномоченные специалисты обследовали именно указанный объект по заявке G-25, выполнили описанные в акте меры и зафиксировали результат на момент обследования. Акт не является бессрочной гарантией безопасности объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d2].text"
+    ]
+  },
+  {
+    "id": "f7a6b837dc9cf140",
+    "ru": "Акт по заявке G-25",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].documents[d2].title"
+    ]
+  },
+  {
+    "id": "6b194321d1ea2c57",
+    "ru": "Текущая опасность по сообщению не заявлена; требуется содержательное объяснение уже выполненных действий, а не автоматический новый аварийный вызов. В отличие от базового дела текущих признаков не сообщается и имеется относимый акт. Первоначальное решение касается полноты ответа, а при новом сообщении меняется на оперативную передачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.explain"
+    ]
+  },
+  {
+    "id": "a62af02945cf888a",
+    "ru": "Текущая опасность по сообщению не заявлена; требуется содержательное объяснение уже выполненных действий, а не автоматический новый аварийный вызов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[gas-past-incident].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "de3606da6fa463e3",
+    "ru": "Закрытая старая заявка позволяет игнорировать любые будущие запахи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c1ce11f7a9e5a9b0",
+    "ru": "Любое упоминание газа требует создать новый вызов независимо от содержания и времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "94f3570bbabe859e",
+    "ru": "Передать новое текущее сообщение оперативно безопасным способом, не ссылаться вместо этого только на старый акт. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].followup.explain"
+    ]
+  },
+  {
+    "id": "e41470e7f34dca99",
+    "ru": "Пришло новое сообщение от того же жителя: запах появился вновь прямо сейчас.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].followup.intro"
+    ]
+  },
+  {
+    "id": "caff4337d7caf36d",
+    "ru": "Передать новое текущее сообщение оперативно безопасным способом, не ссылаться вместо этого только на старый акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f9344c53f68f37be",
+    "ru": "Оставить без действия, поскольку G-25 закрыта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "10ac7058f2cc2b3a",
+    "ru": "Попросить жителя самому локализовать источник внутри объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2ffb041b93e870f2",
+    "ru": "Разъяснить действия по завершённому эпизоду и отдельно учитывать сообщения о новых признаках.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "8ce0021b7ab61734",
+    "ru": "Считать статус закрытой заявки достаточным ответом без объяснения выполненных действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "736412288f769417",
+    "ru": "Повторно сообщить о текущей опасности только из-за упоминания газа в письме о прошлом событии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "9a55dd2bf2e7275e",
+    "ru": "Тогда специалисты уже приезжали. Сейчас запаха нет. Я хочу узнать, что сделали по моей заявке: в ответе только написано, что она закрыта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].opening"
+    ]
+  },
+  {
+    "id": "6004e29d461f5644",
+    "ru": "Рассмотреть полноту ответа по прошлому событию, сохраняя отдельный порядок для возможных новых признаков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].procedures[0].text"
+    ]
+  },
+  {
+    "id": "297ce740994d108e",
+    "ru": "Повторно сообщить о текущей утечке, которой заявитель не описывает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].procedures[1].text"
+    ]
+  },
+  {
+    "id": "78674777a17216ad",
+    "ru": "Прекратить переписку только из-за статуса «закрыто».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].procedures[2].text"
+    ]
+  },
+  {
+    "id": "66cce32b1e328390",
+    "ru": "Нет, именно сейчас такого сообщения у меня нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "aad36ebfe1856bca",
+    "ru": "Предмет не текущий аварийный эпизод.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "c24cb6e8b7500235",
+    "ru": "Есть ли новый признак опасности сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q0].text"
+    ]
+  },
+  {
+    "id": "7aa3d4035188cf3a",
+    "ru": "Да, номер и объект совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "db680e45e9dc74fa",
+    "ru": "Выезд подтверждён относимым материалом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "1be8f198e0aa7e82",
+    "ru": "Акт относится к вашей заявке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q1].text"
+    ]
+  },
+  {
+    "id": "1a05bad644c88521",
+    "ru": "Что фактически сделали, кроме смены статуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9a895e6d59370a2b",
+    "ru": "Нужен предметный ответ по прежним действиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1dc4ee3ca141d564",
+    "ru": "Что непонятно в ответе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q2].text"
+    ]
+  },
+  {
+    "id": "cf71bdb986bc0a2c",
+    "ru": "Нет, он относится к времени обследования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "3b767edc422daf9a",
+    "ru": "Новый эпизод нужно оценивать отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[gas-past-incident].questions[q3].fact"
+    ]
+  }
+]

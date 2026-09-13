@@ -1,0 +1,307 @@
+{
+ "987d769ce2a90534":{"en":"Materials being compared","zh":"比对材料"},
+ "6713d7853f4b6d6e":{"en":"Legal basis and its limits","zh":"法律依据及其范围"},
+ "d3e49eda7d542d5c":{"en":"The first excerpt is material from a fictional case, not a real organisation’s publication. The second is the author’s concise summary of the legal provision.","zh":"第一段是虚构案件材料，并非真实机构的公开内容。第二段是作者对法律规定的简要概述。"},
+ "3967f7acd4ef239c":{"en":"Declaration receipts: The ordinary initial 3-NDFL declaration Д-1 was submitted on {{declaration}}. Before its review ended, amended declaration Д-2 was submitted on {{amended}}. Both cover the same tax period; Д-2 was accepted.\n\nReview record: The previous review was unfinished when Д-2 was submitted. The amended declaration replaces the source data; no further amendments followed Д-2. The reception office received the appeal on {{received}}.","zh":"申报回执：普通首次个人所得税3-NDFL申报Д-1于{{declaration}}提交。在其核查结束前，于{{amended}}提交更正申报Д-2。两份文件对应同一纳税期间；Д-2已受理。\n\n核查卡：提交Д-2时，前次核查尚未完成。更正申报替代原始数据；Д-2之后未再提交更正。接待处于{{received}}收到诉求。"},
+ "30837333dcee9589":{"en":"An amended declaration has appeared · materials and legal basis","zh":"提交了更正申报 · 材料与依据"},
+ "ee89575098dadc9e":{"en":"Explanation package П-8: Received on {{explanation}} as explanations with attachments for the same declaration. There is no receipt accepting a new declaration; the declared figures did not change.\n\nReceipt Д-3: The initial ordinary 3-NDFL declaration was submitted on {{declaration}}. No amended declarations were received.","zh":"说明材料包П-8：于{{explanation}}收到，属于同一申报的说明及附件。没有新申报受理回执，申报数值未改变。\n\n回执Д-3：首次普通个人所得税3-NDFL申报于{{declaration}}提交，未收到更正申报。"},
+ "21cc617ad1a6cb2d":{"en":"Explanations are not a new declaration · materials and legal basis","zh":"说明不是新申报 · 材料与依据"},
+ "1f18bec3d925228a":{"en":"Draft У-4: The prefilled document was generated on {{draft}}. It was neither signed nor submitted before {{statement}}.\n\nApplication receipt У-4: A valid application under Article 221.1 was signed and submitted on {{statement}}. This is not a 3-NDFL declaration. No review extension applies in this case.","zh":"草稿У-4：预填文件于{{draft}}生成。在{{statement}}之前未签署、未提交。\n\n申请回执У-4：符合第221.1条程序的申请于{{statement}}签署并提交。这不是个人所得税3-NDFL申报。本案未适用核查延期。"},
+ "c4fe46626051dd00":{"en":"The draft preceded the application · materials and legal basis","zh":"草稿早于申请出现 · 材料与依据"},
+ "b2a1dfa74ddd25db":{"en":"Materials for comparison","zh":"供比对的材料"},
+ "93eb230af3e6e992":{"en":"Legal provision and limits of the conclusion","zh":"法律规定及结论范围"},
+ "b7422c2bf973d84b":{"en":"Training material; the external link supplies the legal basis","zh":"教学材料；外部链接提供法律依据"},
+ "71fc956dddd97ebc":{"en":"Author-created fictional case package","zh":"作者编写的虚构案件材料包"},
+ "e109f02f597d82db":{"en":"The material excerpt contains fictional facts. The norm excerpt is the author’s concise summary of a verified provision. The source does not authenticate the fictional incident.","zh":"material段包含虚构事实。norm段是作者对已核实规定的简要概述。来源并不证明虚构事件真实发生。"},
+ "7160a62ab31df4e5":{"en":"No paper copy, but an electronic document exists · materials to verify","zh":"没有纸质副本，但有电子文件 · 待核查材料"},
+ "d88ba680b59b882d":{"en":"Consignment note Л-31 and removal conditions: Removal on {{observed}} of batch Л-31, 240 units, from zone З-3. The regime, temporary restriction and the product’s susceptibility to the relevant quarantine organism are confirmed.\n\nReport ПЛ-31 and registry check: The laboratory examined sample Л-31; no quarantine organism was detected. The document is labelled a laboratory report. A quarantine certificate for this transport was not confirmed in the checked registry.","zh":"运单Л-31及运出条件：{{observed}}从З-3区运出Л-31批次，共240件。已确认适用制度、临时限制，以及产品对相应检疫性有害生物的易感性。\n\n报告ПЛ-31及登记簿核查：实验室检验了Л-31样本，未发现检疫性有害生物。文件标明为实验室报告。核查的登记簿未确认本次运输具备检疫证书。"},
+ "30d5a3f1575118e0":{"en":"Laboratory report and authorising document · materials to verify","zh":"实验室报告与许可文件 · 待核查材料"},
+ "489d5a91078fdaa9":{"en":"Act establishing zone З-7: Restrictions apply within the coordinates of З-7, not across the whole district. The affected product list is stated separately.\n\nPlot and route comparison: Batch Р-12 was grown on П-12; a specialist compared the coordinates and confirmed both location and route outside З-7. No other grounds are established within the task.","zh":"З-7区设立文件：限制适用于З-7坐标范围，而非整个行政区。另列受影响产品清单。\n\n地块与路线比对：Р-12批次种植于П-12；专业人员比对坐标，确认地点及路线均在З-7之外。任务范围内未确立其他依据。"},
+ "8951fa52e37146fc":{"en":"The zone does not cover the entire district · materials to verify","zh":"区域边界并不覆盖整个行政区 · 待核查材料"},
+ "b773c5eb913036e7":{"en":"Current package П-23: The collection site is registered; the agreement provides for separate collection and a separate schedule, and the competent decision-maker has approved the financial terms.\n\nRoute М-23: The carrier and recipient confirmed service for П-23 by waste fraction. Residents have not yet been informed which materials are accepted and on which service days.","zh":"现行材料包П-23：收集点已登记，协议规定分类收集和单独时间表，财务条件已由有权主体批准。\n\n路线М-23：承运方及接收方确认按废物类别为П-23提供服务。尚未告知居民可投放材料范围和服务日期。"},
+ "04c85555d18abbb7":{"en":"The arrangement already works; a different assessment is needed · materials to verify","zh":"方案已运行，需要不同的评估 · 待核查材料"},
+ "25e2ee5006efc663":{"en":"Container К-23 rules: The listed clean, dry packaging is accepted. The specified lamps and batteries are excluded; mixing them with this fraction is not allowed.\n\nSeparate route and responsible party: Collection point Р-5 accepts the excluded items under confirmed conditions. Trained personnel handle items already deposited incorrectly; residents must not sort through the contents themselves.","zh":"К-23容器规则：接收清单所列的清洁干燥包装。指定灯具和电池不在接收范围，不能与该类废物混放。\n\n单独渠道及责任人：Р-5回收点按已确认条件接收排除物品。已经误投的物品由受过培训的人员处理，居民不得自行翻拣内容物。"},
+ "d7ccf5be2f455e55":{"en":"Not everything belongs in the blue container · materials to verify","zh":"并非所有东西都能投入蓝色容器 · 待核查材料"},
+ "7d3fee63dc47ffc5":{"en":"Registry entry П-9: Collection site П-9 is recorded with coordinates, accepted fractions and a responsible party. The entry does not cover П-10.\n\nPlacement record: Containers were installed on {{observed}} at П-10. A change to the arrangement and a compliance check of that location are not confirmed; the location deviation is established, but specific sanitary violations are not.","zh":"登记记录П-9：收集点П-9登记了坐标、收集类别和责任人。记录不涵盖П-10。\n\n设置记录：容器于{{observed}}安装在П-10。未确认方案变更，也未确认对该地点合规性进行核查；已确定地点偏离，但尚未确定具体卫生违法问题。"},
+ "3a2fbc45e4f84282":{"en":"The container went to the neighbouring site · materials to verify","zh":"容器运到了相邻地块 · 待核查材料"},
+  "7918113a69704772": {
+    "en": "Context record И-6: The list is at the service location and informs consumers. Under the scenario, it is neither outdoor nor internet advertising.\n\nContents of list И-6: Mandatory information about the range and prices is provided. All lines use the same formatting; there are no promotional messages or emphasis on a particular product.",
+    "zh": "背景记录 И-6：清单位于服务场所，用于向消费者提供信息。按题设，该材料既非户外广告，也非互联网广告。\n\n清单 И-6 的内容：提供的是商品范围和价格的必备信息。所有条目采用相同格式，没有广告号召或突出某一商品。"
+  },
+  "5c23527f539c7a24": {
+    "en": "Only fictional case beer-required-menu",
+    "zh": "仅适用于虚构案件 beer-required-menu"
+  },
+  "146089f5806f3fe3": {
+    "en": "Mandatory information without promotional emphasis · materials and legal basis",
+    "zh": "没有广告性突出展示的必备信息 · 材料与依据"
+  },
+  "2f8c25af38772846": {
+    "en": "Measurement of advertisement Р-10: The total advertising space is 1000 cm². The warning about harm from excessive consumption is 50 cm²; its wording was checked separately.\n\nElement layout of Р-10: Another 100 cm² contains only the 18+ mark. This area is not part of the health warning. For the task, the location and other placement conditions are accepted as permissible.",
+    "zh": "广告 Р-10 的测量：全部广告空间为 1000 cm²。过量饮用危害警示占 50 cm²；警示文字已另行核查。\n\nР-10 元素分区：另有 100 cm² 仅为 18+ 标识。该区域不属于危害警示。本题已认定地点及其他发布条件允许。"
+  },
+  "a95be6913934c460": {
+    "en": "Only fictional case beer-warning-area",
+    "zh": "仅适用于虚构案件 beer-warning-area"
+  },
+  "33405b2edb53e94e": {
+    "en": "The warning is there, but its area is insufficient · materials and legal basis",
+    "zh": "有警示，但面积不足 · 材料与依据"
+  },
+  "fbd325074cd6fd03": {
+    "en": "Display test record: The outline mismatch appears only on background S-2. On S-1, with the same coordinates, there is no mismatch. The service operator still needs to investigate the display cause.\n\nExtract and control export: For property U-11, the coordinate tables in the extract and control export match. The specialist's finding is that no change to the entry's values was detected.",
+    "zh": "显示核查记录：轮廓不重合仅出现在 S-2 底图上；使用相同坐标的 S-1 没有该问题。服务运营方仍需核查显示原因。\n\n摘录与核查导出：对于 U-11 对象，摘录与核查导出中的坐标表一致。专员结论为：未发现登记数值变化。"
+  },
+  "0237f4bb7ae7b299": {
+    "en": "Only fictional case egrn-map-layer",
+    "zh": "仅适用于虚构案件 egrn-map-layer"
+  },
+  "ba2999118e3e77c3": {
+    "en": "The layer shifted, not the entry · materials and legal basis",
+    "zh": "偏移的是图层，不是记录 · 材料与依据"
+  },
+  "b44d0b2ba9ab0e05": {
+    "en": "Assessment of the proposed correction: Changing Z-7 may harm the lawful interests of the neighbouring plot's rights holder, who relied on EGRN information. This is not an undisputed replacement of a letter in a name.\n\nObjection and case contents: The objection concerns the change to Z-7 specifically. The materials contain no court judgment ordering correction; only a draft application has been submitted.",
+    "zh": "拟议更正评估意见：变更 Z-7 可能损害相邻地块权利人的合法利益，该权利人信赖了不动产登记信息。这不是无争议地替换姓名中的一个字母。\n\n异议与案卷材料：异议专门针对 Z-7 的变更。材料中没有法院关于更正的判决，仅提交了申请草案。"
+  },
+  "1b16f725fb1816ae": {
+    "en": "Only fictional case egrn-rights-dispute",
+    "zh": "仅适用于虚构案件 egrn-rights-dispute"
+  },
+  "60fe58c9001f5d64": {
+    "en": "The correction affects another person's right · materials and legal basis",
+    "zh": "更正影响他人的权利 · 材料与依据"
+  },
+  "bb32043936d13dc0": {
+    "en": "Plan and EGRN entry: Plan TP-41 contains an incorrect characteristic: premises number 18 instead of 81. The EGRN data was reproduced exactly from this plan; the registrar did not swap the digits.\n\nTP-41 correction documents: The proper corrected plan and supporting documents arrived on {{received}}. All necessary information is present; registered rights and the lawful interests of third parties do not change.",
+    "zh": "图纸与不动产登记记录：TP-41 图纸包含错误特征：房间编号写成 18，而不是 81。不动产登记信息完全照图纸录入，登记员没有调换数字。\n\nTP-41 更正材料：合规更正图纸及证明文件于 {{received}} 收到。必要信息齐全，已登记权利和第三方合法利益不发生变化。"
+  },
+  "a105fb9877a6a963": {
+    "en": "Only fictional case egrn-source-plan",
+    "zh": "仅适用于虚构案件 egrn-source-plan"
+  },
+  "ec3604e2065772c6": {
+    "en": "The error came from the original plan · materials and legal basis",
+    "zh": "错误来自原始图纸 · 材料与依据"
+  },
+  "c5e862dd3c7838f1": {
+    "en": "Purchase and first appeal: A product from batch M-8 was bought on {{purchase}}. The complaint mistakes the manufacture date for the expiry date. The first appeal contains no information about other defects.\n\nComplete label for batch M-8: Manufactured on {{manufactured}}. Use by {{expiry}}. The field labels are clearly readable; this is the label on the package in the appeal.",
+    "zh": "购买及首次诉求：M-8 批次商品于 {{purchase}} 购买。投诉源于把生产日期误认为到期日期。首次诉求没有关于其他缺陷的信息。\n\nM-8 批次完整标签：生产日期为 {{manufactured}}，有效期至 {{expiry}}。字段名称清晰可读，确属诉求所涉包装的标签。"
+  },
+  "b64fe26eb823abb7": {
+    "en": "Only fictional case food-manufactured-date",
+    "zh": "仅适用于虚构案件 food-manufactured-date"
+  },
+  "8c9480d64ac0ffa7": {
+    "en": "Manufacture date mistaken for expiry · materials and legal basis",
+    "zh": "把生产日期当成到期日期 · 材料与依据"
+  },
+  "0f05c80c11bedddd": {
+    "en": "Confirmation of purchase and defect: Purchase of batch P-61 from this seller on {{purchase}} is confirmed by the seller and payment records. Comparison of the label shows expiry before purchase. Only the paper receipt is missing.\n\nReceived demand: On {{seller}}, the seller received a demand to refund the amount paid for defective goods. Refusal is based solely on the missing receipt. The demand has not been replaced by a request for replacement goods.",
+    "zh": "购买及缺陷证明：销售方及付款记录确认，{{purchase}} 向该销售方购买了 P-61 批次商品。对照标签表明购买前已过期。仅缺少纸质收据。\n\n收到的请求：销售方于 {{seller}} 收到缺陷商品退款请求，拒绝理由仅为没有收据。请求未被改为换货。"
+  },
+  "3b824bac2145c10e": {
+    "en": "Only fictional case food-no-receipt-refund",
+    "zh": "仅适用于虚构案件 food-no-receipt-refund"
+  },
+  "8f6ea76d7f56fd89": {
+    "en": "Receipt lost, purchase confirmed · materials and legal basis",
+    "zh": "收据丢了，购买仍能证实 · 材料与依据"
+  },
+  "ca7dc9c86580c550": {
+    "en": "Report concerning batch D-72: The competent unit's materials identify a need for the relevant measures specifically for batch D-72. The photograph of the remaining stock's label shows that number.\n\nWithdrawal record: The record confirms the withdrawal of batch D-27. It contains neither the number D-72 nor any actions concerning that batch; this is not a typographical error corrected in an annex.",
+    "zh": "关于 D-72 批次的报告：主管部门的材料指出，应当专门对 D-72 批次采取相应措施。余货标签的照片显示的正是这个编号。\n\n撤出销售记录：记录确认撤出销售的是 D-27 批次。记录中没有 D-72 编号，也没有针对该批次的行动；这并非已通过附件更正的笔误。"
+  },
+  "b2ec124680d3e351": {
+    "en": "Only fictional case food-recall-wrong-batch",
+    "zh": "仅适用于虚构案件 food-recall-wrong-batch"
+  },
+  "387cf621f8c75375": {
+    "en": "A batch was withdrawn, but the wrong one · materials and legal basis",
+    "zh": "撤下了批次，却撤错了 · 材料与依据"
+  },
+  "d82bb703afe0e6eb": {
+    "en": "Shipment record МПО-71: The shipment has arrived for customs processing. There is no release entry. The identifier in the record is МПО-71.\n\nNotification МПО-71: The conditions confirm authenticity and a link to the shipment. Further details of the contents are requested; the reply channel is in the unit's official record.",
+    "zh": "邮件登记卡МПО-71：邮件已到达海关办理环节，没有放行记录。登记卡中的标识为МПО-71。\n\n通知МПО-71：案情确认通知真实且与该邮件相关。要求补充内件信息；回复渠道列在该部门官方资料卡中。"
+  },
+  "443642b255c83673": {
+    "en": "Only fictional case parcel-customs-notice",
+    "zh": "仅适用于虚构案件 parcel-customs-notice"
+  },
+  "8b4614b568231d29": {
+    "en": "Release has not happened yet · materials and legal basis",
+    "zh": "尚未放行 · 材料与依据"
+  },
+  "00a50186ddd8853e": {
+    "en": "Delivery report МПО-93: The shipment was delivered. Packaging damage was recorded at delivery; the report identifies МПО-93 and includes an inventory of the contents found.\n\nRelease and applicant's claim: The customs unit's response confirms release of МПО-93. The new claim concerns damage and missing contents during delivery, not cancellation of release.",
+    "zh": "投递记录МПО-93：邮件已妥投。投递时记录了包装损坏；记录标明МПО-93，并附有发现的内件清单。\n\n放行及申请人请求：海关部门回复确认МПО-93已放行。新请求涉及投递中的损坏和短少，而非撤销放行。"
+  },
+  "49b4ae515e12e4f8": {
+    "en": "Only fictional case parcel-damaged-delivery",
+    "zh": "仅适用于虚构案件 parcel-damaged-delivery"
+  },
+  "92b9570e05013423": {
+    "en": "Parcel arrived, issue remains · materials and legal basis",
+    "zh": "包裹到了，问题还在 · 材料与依据"
+  },
+  "d3a4938ac7ac14d4": {
+    "en": "Status printout: Query for МПО-418: “Delivered”. This is not the receipt number; the record has not been linked to the applicant.\n\nDispatch receipt: Number МПО-481. The recipient’s address and date relate to the applicant’s training order.",
+    "zh": "状态打印件：查询МПО-418的结果为“已投递”。该编号与收据不符，尚未确认此记录属于申请人。\n\n寄件收据：编号МПО-481。收件人地址和日期对应申请人的教学订单。"
+  },
+  "00fa908d73ac3fb4": {
+    "en": "Only fictional case parcel-wrong-tracking",
+    "zh": "仅适用于虚构案件 parcel-wrong-tracking"
+  },
+  "1c3cd0a4801cb2bc": {
+    "en": "One digit in the shipment number · materials and legal basis",
+    "zh": "邮件编号中的一个数字 · 材料与依据"
+  },
+  "09756be097b51f06": {
+    "en": "Only fictional case tax-amended-declaration",
+    "zh": "仅适用于虚构案件 tax-amended-declaration"
+  },
+  "d8b156455d968c71": {
+    "en": "Only fictional case tax-explanations-only",
+    "zh": "仅适用于虚构案件 tax-explanations-only"
+  },
+  "d71c6eb064459bd8": {
+    "en": "Only fictional case tax-simplified-statement",
+    "zh": "仅适用于虚构案件 tax-simplified-statement"
+  },
+  "5b0063616ffd6340": {
+    "en": "Contract B-21 and licence: Programme 38.03.04, bachelor's level. The licensing conditions for this provision are confirmed; the dispute concerns the accreditation claim.\n\nExtract and scope clarification: The entry for this organisation covers only 09.03.03; extension to the broader programme group or all programmes is not provided. No confirmation for 38.03.04 has been obtained.",
+    "zh": "B-21 合同及许可证：38.03.04 项目，本科层次。该项目的许可条件已确认；争议涉及有关认证的说法。\n\n摘录及范围说明：该机构的记录仅涉及 09.03.03，未规定可扩展到整个专业大类或所有项目。尚未取得 38.03.04 的确认。"
+  },
+  "de1c30cbf163968a": {
+    "en": "Only fictional case education-accreditation-scope",
+    "zh": "仅适用于虚构案件 education-accreditation-scope"
+  },
+  "ab5b9a6ba3443cc1": {
+    "en": "The extract concerns a different programme · materials to verify",
+    "zh": "摘录涉及另一个项目 · 待核查材料"
+  },
+  "eafae399ef99d14f": {
+    "en": "Contract DPO-26: Provider Ts-21. A continuing professional development programme; a certificate is issued upon meeting the conditions. No main higher education programme is claimed.\n\nVerified extract for Ts-21: The licence entry is valid on {{observed}} for the relevant subtype of supplementary education. State accreditation of course DPO-26 is not listed.",
+    "zh": "DPO-26 合同：服务提供方 Ts-21。项目属于继续职业能力提升培训，满足条件后颁发证书。未宣称实施高等教育基本项目。\n\n经核实的 Ts-21 摘录：截至 {{observed}}，相应补充教育子类型的许可记录有效。未列出 DPO-26 课程的国家认证。"
+  },
+  "2da8561e1af5d7d6": {
+    "en": "Only fictional case education-dpo-accreditation",
+    "zh": "仅适用于虚构案件 education-dpo-accreditation"
+  },
+  "938351c2b5447806": {
+    "en": "Professional development is not a bachelor's degree · materials to verify",
+    "zh": "职业能力提升培训不是本科教育 · 待核查材料"
+  },
+  "4a49cf4b86d4cfc3": {
+    "en": "U-2 contract and payment: The teaching provider and payment recipient are legal entity U-2. Under the stipulated conditions, the educational programme requires a licence.\n\nU-1 licensing details: The presented entry belongs to U-1. The case contains no document confirming U-2's right to provide this service or a special cooperation arrangement.",
+    "zh": "U-2 合同及付款记录：教学服务提供方和收款人均为法人 U-2。按题设条件，该教育项目需要许可。\n\nU-1 许可信息：出示的记录属于 U-1。案卷没有文件证明 U-2 有权提供该服务，也未证明存在特殊合作安排。"
+  },
+  "73fdeeb441787013": {
+    "en": "Only fictional case education-provider-identity",
+    "zh": "仅适用于虚构案件 education-provider-identity"
+  },
+  "8388fb2a3818952d": {
+    "en": "One name, two providers · materials to verify",
+    "zh": "同一名称，两个服务提供方 · 待核查材料"
+  },
+  "990f30a885e6a8e8": {
+    "en": "Contract O-17: Security at the site is provided by the organisation identified as O-17. The type of service is specified and falls within the recognised security services.\n\nRegistry reply for O-17: As of {{observed}}, the entry is valid for the relevant service. The document confirms organisation O-17, but contains no information about worker K-4's certificate.",
+    "zh": "O-17 合同：现场保安服务由识别编号为 O-17 的机构提供。服务类型已注明，属于规定的保安服务。\n\nO-17 登记簿查询答复：截至 {{observed}}，登记记录对相关服务有效。文件确认了 O-17 机构的情况，但没有关于工作人员 K-4 个人证件的信息。"
+  },
+  "29a6bd69eea1de11": {
+    "en": "Only fictional case guard-current-register",
+    "zh": "仅适用于虚构案件 guard-current-register"
+  },
+  "cb791e80b0cce1c0": {
+    "en": "The organisation's licence and the worker's documents · materials to verify",
+    "zh": "机构许可证与工作人员证件 · 待核查材料"
+  },
+  "0019f9b7a6105fee": {
+    "en": "Transcript of the conversation with K-9: Guard K-9 made a demand of the visitor. When asked to show his certificate and personal card, he refused, claiming that he had that duty only towards the police.\n\nK-9's documents and shift assignment: K-9's employment in private security is established and his documents are valid. No request was made for him to hand the documents to the visitor or permit copying.",
+    "zh": "K-9 谈话文字记录：保安 K-9 向来访者提出要求。对方请他出示保安员证和个人卡时，他拒绝了，声称只对警察负有该义务。\n\nK-9 的证件与班次任务单：已确认 K-9 属于私人保安人员，且证件有效。来访者并未要求他将证件交到自己手中，也没有要求允许复制。"
+  },
+  "e62071b48b808537": {
+    "en": "Only fictional case guard-identification-request",
+    "zh": "仅适用于虚构案件 guard-identification-request"
+  },
+  "5a05e1f4b4a56a06": {
+    "en": "The guard was asked after making his own demand · materials to verify",
+    "zh": "在保安先提出要求之后，向其提出请求 · 待核查材料"
+  },
+  "1562c23836102931": {
+    "en": "Rules for site O-5: Access control and inspection of property brought onto the site are established within legal limits. The rule does not provide for forcible detention solely because of a refusal.\n\nRecording of incident O-5: On {{observed}}, the guard linked the visitor's detention solely to refusal to show a bag. The available materials establish no signs of a separate offence; the incident has ended.",
+    "zh": "O-5 场所规则：规定了在法律范围内实施出入管理和检查带入物品。规则并未授权仅因拒绝检查就强行扣留人员。\n\nO-5 事件记录：{{observed}}，保安将扣留来访者仅归因于其拒绝出示包。现有材料未确认存在其他独立违法行为的迹象；该事件已经结束。"
+  },
+  "2972cfea43e61386": {
+    "en": "Only fictional case guard-property-inspection",
+    "zh": "仅适用于虚构案件 guard-property-inspection"
+  },
+  "8b140ede2fd46426": {
+    "en": "Inspecting an item does not grant unlimited powers · materials to verify",
+    "zh": "检查物品不意味着权限不受限制 · 待核查材料"
+  },
+  "e5a9acb8fdd1e894": {
+    "en": "Emergency record А-22: {{observed}}, 00:20: utility-line rupture, threat of flooding electrical equipment. Urgent response until 02:10. The address and location match the submission.\n\nWork report and applicable exception: Pipe cutting from 00:40 to 01:20 was necessary to contain incident А-22 specifically. Clause 2 of Article 2 of Moscow Law No. 42 excludes from its regime actions to prevent and address the consequences of emergencies and the specified urgent work; this does not exempt any later work.",
+    "zh": "事故记录А-22：{{observed}}，00:20：管线破裂，存在淹没电气设备的危险。紧急处置持续至02:10。地址和地点与来函一致。\n\n作业记录及适用例外：00:40至01:20的切管作业是控制本次А-22事故所必需的。莫斯科第42号法律第2条第2项，将预防事故及消除其后果的行动和规定的紧急作业排除在该法管理范围之外；这并不豁免之后的任何工程。"
+  },
+  "17502920769f922b": {
+    "en": "Only fictional case noise-emergency-work",
+    "zh": "仅适用于虚构案件 noise-emergency-work"
+  },
+  "825a1bb8013bc82d": {
+    "en": "The night work addressed an emergency · materials to verify",
+    "zh": "夜间作业是在处置事故 · 待核查材料"
+  },
+  "9e843fde9faba591": {
+    "en": "Submission and diagram Ш-24: Site Ш-24 is in Moscow Oblast. The applicant gave a Moscow city flat as the correspondence address. The precise incident location is consistently identified.\n\nTerritorial routing record: The matter falls to the authority for the relevant territory in Moscow Oblast. Moscow city quiet hours do not establish a violation at Ш-24; the applicable regional rules and incident circumstances are needed.",
+    "zh": "来函及示意图Ш-24：地点Ш-24位于莫斯科州。申请人填写的通信地址是莫斯科市的一套住房。有关准确事发地点的信息一致。\n\n属地办理路径记录：事项属于莫斯科州相应地区机关的权限。莫斯科市安静时段不能用于认定Ш-24发生违规；需要适用的地区规则及事件事实。"
+  },
+  "23ed220d97510241": {
+    "en": "Only fictional case noise-other-region",
+    "zh": "仅适用于虚构案件 noise-other-region"
+  },
+  "49b93c33d8d0f497": {
+    "en": "Applicant's address and nighttime noise location · materials to verify",
+    "zh": "申请人地址与夜间噪声地点 · 待核查材料"
+  },
+  "211a0f4fdac57d19": {
+    "en": "Observation in the flat: On {{observed}}, the music was off, but a steady hum persisted. During an agreed brief shutdown of В-3, the hum disappeared. No dangerous independent inspection was carried out.\n\nEquipment diagram and limits of the conclusion: В-3 is the café's fixed ventilation equipment. The case contains no sanitary measurement report or conclusion that limits were exceeded; specialists must assess the information.",
+    "zh": "住宅内的观察记录：{{observed}}，音乐已关闭，但持续的嗡鸣仍在。在协商后短暂关闭В-3期间，嗡鸣消失。未进行危险的自行检查。\n\n设备示意图及结论的边界：В-3是咖啡馆的固定通风设备。案卷没有卫生指标测量报告或超标结论；相关信息须由专业人员评估。"
+  },
+  "c11903187c829af6": {
+    "en": "Only fictional case noise-ventilation",
+    "zh": "仅适用于虚构案件 noise-ventilation"
+  },
+  "730116687e0c596d": {
+    "en": "Music off, hum continues · materials to verify",
+    "zh": "音乐关了，嗡鸣仍在 · 待核查材料"
+  },
+  "ef53a07138f68519": {
+    "en": "Consignment note S-41: Shipment on {{observed}}: saplings S-41, 180 units, from the designated zone to receiving nursery P-8. The specialist authority has confirmed the conditions requiring a certificate.\n\nVerified electronic extract: Quarantine certificate EK-41 for S-41, 180 units; the route and recipient P-8 match. The electronic signature has been verified and the document's validity at the time of removal confirmed.",
+    "zh": "S-41 运单：{{observed}} 运输：S-41 苗木，180 株，从指定区域运往收货苗圃 P-8。主管机关已确认需要证书的条件。\n\n已核实的电子摘录：针对 S-41 的检疫证书 EK-41，共 180 株；路线和收货方 P-8 一致。电子签名已核验，文件在运出时有效的事实已获确认。"
+  },
+  "c765a0e1374310c3": {
+    "en": "Only fictional case seedlings-electronic",
+    "zh": "仅适用于虚构案件 seedlings-electronic"
+  },
+  "07d623377f42ca9c": {
+    "en": "Only fictional case seedlings-lab-not-certificate",
+    "zh": "仅适用于虚构案件 seedlings-lab-not-certificate"
+  },
+  "fc6af32d52a0a2a8": {
+    "en": "Only fictional case seedlings-outside-zone",
+    "zh": "仅适用于虚构案件 seedlings-outside-zone"
+  },
+  "9a74fef501080e4e": {
+    "en": "Only fictional case waste-chain-ready",
+    "zh": "仅适用于虚构案件 waste-chain-ready"
+  },
+  "dabe1a17d5d8772b": {
+    "en": "Only fictional case waste-container-fractions",
+    "zh": "仅适用于虚构案件 waste-container-fractions"
+  },
+  "9029403bb718c77e": {
+    "en": "Only fictional case waste-site-register",
+    "zh": "仅适用于虚构案件 waste-site-register"
+  }
+}

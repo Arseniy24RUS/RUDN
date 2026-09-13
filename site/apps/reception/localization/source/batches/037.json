@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "5d932b48fe3e0af5",
+    "ru": "Какой вопрос нельзя считать уже решённым?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].factTask.prompt"
+    ]
+  },
+  {
+    "id": "02d7b9f65ab519b6",
+    "ru": "Удаление страницы не всегда означает прекращение доступа к файлу. Новые сведения передают с соблюдением конфиденциальности, без публичного тиражирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.explain"
+    ]
+  },
+  {
+    "id": "3b8be8d354b94a05",
+    "ru": "Доступность файла осталась без проверки. Полное устранение нарушения ещё не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.failure"
+    ]
+  },
+  {
+    "id": "2a9eb76b150f3b3b",
+    "ru": "В модели прошло несколько дней. Школа сообщает, что публикация удалена. Мария Викторовна уточняет: ссылка на файл из поисковой выдачи ещё открывается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.intro"
+    ]
+  },
+  {
+    "id": "7ae5f0fd5b286022",
+    "ru": "Закрыть дело: сообщение школы достаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.options[closed].text"
+    ]
+  },
+  {
+    "id": "dadb244a8eb1f459",
+    "ru": "Разослать файл всем родителям для проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.options[download].text"
+    ]
+  },
+  {
+    "id": "e3831fb044580071",
+    "ru": "Зафиксировать новый доступный адрес без распространения содержимого, передать уточнение уполномоченному адресату и сохранить контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.options[repeat].text"
+    ]
+  },
+  {
+    "id": "334516cc6d4bae62",
+    "ru": "Уточнение приобщено к делу. Заявительнице объяснён дальнейший порядок; окончательный результат не объявлен до подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].followup.success"
+    ]
+  },
+  {
+    "id": "ed303810732a6328",
+    "ru": "Сведения о здоровье всегда являются общедоступными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "0ec8a96cadcbaba8",
+    "ru": "Публикация в интернете отменяет требования к обработке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "418460193e1bee95",
+    "ru": "Найдите статью, которая относит сведения о состоянии здоровья к специальным категориям персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "e9c1a9298516ece5",
+    "ru": "На школьном сайте выложили список детей – с фамилиями и сведениями о здоровье. На мою просьбу убрать ответили: «Вы же подписывали согласие». Мне предлагают обсудить это в общем родительском чате. Я не хочу, чтобы данные распространялись дальше.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].opening"
+    ]
+  },
+  {
+    "id": "2e6fc360b54edc99",
+    "ru": "План создаёт риск дальнейшего распространения данных либо выходит за полномочия приёмной. Сначала нужно исправить обращение с материалами и маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].outcomes.bad"
+    ]
+  },
+  {
+    "id": "a8eb8ca17a8a08b3",
+    "ru": "Материалы подготовлены к направлению по компетенции; доступ к чувствительным приложениям ограничен. Наличие нарушения и конкретные меры оценивает уполномоченный орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].outcomes.good"
+    ]
+  },
+  {
+    "id": "46ad2d89bfbedf0e",
+    "ru": "Обычная государственная услуга МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].procedures[210].text",
+      "cases:CASE_TEMPLATES[privacy-aggregate].procedures[210].text"
+    ]
+  },
+  {
+    "id": "b254ca6b53b7adbe",
+    "ru": "Жалоба по 59-ФЗ с оценкой специальных требований 152-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].procedures[59+152].text",
+      "cases:CASE_TEMPLATES[privacy-aggregate].procedures[59+152].text"
+    ]
+  },
+  {
+    "id": "2adc84f77204e7c0",
+    "ru": "На публикацию и отказ ответственного сотрудника школы её убрать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[complaint].answer"
+    ]
+  },
+  {
+    "id": "a01b2013c7a8ed17",
+    "ru": "Жалоба касается действий самой школы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[complaint].fact"
+    ]
+  },
+  {
+    "id": "6bf65980b1f8ed48",
+    "ru": "На чьи действия вы жалуетесь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[complaint].text"
+    ]
+  },
+  {
+    "id": "ee77342eb224d18a",
+    "ru": "На общее согласие при зачислении. Отдельного согласия на распространение мне не показали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[consent].answer"
+    ]
+  },
+  {
+    "id": "302713f23d59c91c",
+    "ru": "Наличие надлежащего основания распространения не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[consent].fact"
+    ]
+  },
+  {
+    "id": "595e4d3cba475b18",
+    "ru": "На какое согласие ссылается школа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[consent].text"
+    ]
+  },
+  {
+    "id": "595c997160f4171b",
+    "ru": "Фамилии детей и отметки о прививках и медицинских группах. Я принесла условную копию с закрытыми именами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[content].answer"
+    ]
+  },
+  {
+    "id": "ecd28f25490cd5cd",
+    "ru": "Опубликованы сведения о здоровье – специальная категория данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[content].fact"
+    ]
+  },
+  {
+    "id": "f4144abbac8e7f3e",
+    "ru": "Какие сведения были опубликованы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[content].text"
+    ]
+  },
+  {
+    "id": "dff4d8b38214464e",
+    "ru": "Любой человек, даже без входа на школьный сайт. Публикация ещё доступна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[public].answer"
+    ]
+  },
+  {
+    "id": "40f8afe04905eaeb",
+    "ru": "Публикация доступна неопределённому кругу лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[public].fact"
+    ]
+  },
+  {
+    "id": "b7cd9270777e1fe9",
+    "ru": "Кто может открыть эту страницу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].questions[public].text"
+    ]
+  },
+  {
+    "id": "487083efa390a603",
+    "ru": "В родительский чат для коллективного голосования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].routes[chat].text"
+    ]
+  },
+  {
+    "id": "cee535487ab41fa8",
+    "ru": "Роскомнадзор; при необходимости отдельно орган управления образованием по его полномочиям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].routes[parallel].text"
+    ]
+  },
+  {
+    "id": "864ec0b6e50e3c91",
+    "ru": "Роскомнадзор по компетенции защиты персональных данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].routes[rkn].text",
+      "cases:CASE_TEMPLATES[privacy].contrast.decision"
+    ]
+  },
+  {
+    "id": "cf24a07d6cf8ee62",
+    "ru": "Только в школу, на чьи действия поступила жалоба, для рассмотрения этой же жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].routes[school].text"
+    ]
+  },
+  {
+    "id": "844499b2b5b2a1bc",
+    "ru": "Самостоятельное дело",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].tag"
+    ]
+  },
+  {
+    "id": "b99ae0c9cfec4b06",
+    "ru": "Это же данные моего ребёнка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[privacy].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy].title"
+    ]
+  },
+  {
+    "id": "d573a0383e61da7c",
+    "ru": "Персональные данные",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].topic",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].topic",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].tag"
+    ]
+  },
+  {
+    "id": "1c692d8476e75da9",
+    "ru": "Содержание согласия, категория данных и действия оператора имеют значение. Вывод помощника слишком общий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].trap.explain"
+    ]
+  },
+  {
+    "id": "d82aa50e68b8e3e3",
+    "ru": "Нет: проверяем основание, цели и отдельные требования к распространению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].trap.options[check].text"
+    ]
+  },
+  {
+    "id": "8728fe5e819f344c",
+    "ru": "Да: любое согласие разрешает любую последующую публикацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].trap.options[yes].text"
+    ]
+  },
+  {
+    "id": "f43e1ff20876f1de",
+    "ru": "Электронный помощник: «Если родители подписали согласие при зачислении, то фамилии и медицинские сведения можно публиковать без отдельной проверки».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].trap.text"
+    ]
+  },
+  {
+    "id": "92e472d3816d13d6",
+    "ru": "Подготовить проверку территории, полномочий и условий реализации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[feasibility].title"
+    ]
+  },
+  {
+    "id": "98ae2be3d7c06f54",
+    "ru": "Сообщить результат рассмотрения без обещания неутверждённого финансирования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[notify].title"
+    ]
+  },
+  {
+    "id": "9c2a50907c78f653",
+    "ru": "Гарантировать установку до конца месяца за счёт неутверждённого бюджета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[promise].title"
+    ]
+  },
+  {
+    "id": "5726fa38242180bc",
+    "ru": "Зафиксировать предложение и приложенную схему",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[register].title"
+    ]
+  },
+  {
+    "id": "5cba70f5772a6117",
+    "ru": "Не рассматривать обращение, потому что права ещё не нарушены",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[reject].title"
+    ]
+  },
+  {
+    "id": "d36fe37628dc2ca1",
+    "ru": "Передать материалы уполномоченному сотруднику для рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[route].title"
+    ]
+  },
+  {
+    "id": "3b95380d609b8770",
+    "ru": "Поставить подготовку ответа на контроль",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].actions[track].title"
+    ]
+  },
+  {
+    "id": "9c1e4e0222cf4bca",
+    "ru": "Письменное обращение со схемой принято. Сведений о травмах и текущей аварии нет. Вы готовите материалы для рассмотрения предложения в пределах полномочий получателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].brief"
+    ]
+  },
+  {
+    "id": "89247503a746d944",
+    "ru": "Рекомендация по улучшению социальной среды может быть предложением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].coach.research",
+      "cases:CASE_TEMPLATES[proposal-bench].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[proposal-bench].knowledge.explain"
+    ]
+  },
+  {
+    "id": "a96add7dfb7e30f4",
+    "ru": "Сохранён самостоятельный ранее поставленный сценарий, а не новый вариант этого выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[several-issues].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[complaint-routing].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "1e941c9188d15604",
+    "ru": "Обещание бюджетного обязательства вне полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].criticalRules[promise].message"
+    ]
+  },
+  {
+    "id": "a3566f01b465e254",
+    "ru": "По материалам дела финансирование этой инициативы ещё не утверждено. Стажёр не уполномочен принимать бюджетные обязательства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].documents[budget-note].text"
+    ]
+  },
+  {
+    "id": "1a9236f64ada4418",
+    "ru": "Служебная отметка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].documents[budget-note].title"
+    ]
+  },
+  {
+    "id": "6bda0b09ab9e463d",
+    "ru": "Предлагаю рассмотреть установку двух скамеек и навеса в точках А и Б. Прошу сообщить результат рассмотрения. Не указываю конкретного нарушителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].documents[proposal].text"
+    ]
+  },
+  {
+    "id": "27a41a70463415fe",
+    "ru": "Текст и схема предложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].documents[proposal].title"
+    ]
+  },
+  {
+    "id": "6a1727ee6b15bdbc",
+    "ru": "Инициатива может рассматриваться как предложение; отсутствие нарушения не является основанием игнорировать обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].factTask.explain",
+      "cases:CASE_TEMPLATES[proposal-bench].coach.docs",
+      "cases:CASE_TEMPLATES[proposal-bench].contrast.difference"
+    ]
+  },
+  {
+    "id": "19d0409dd9d290a4",
+    "ru": "Уже заключённый договор на установку скамеек.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].factTask.options[contract].text"
+    ]
+  },
+  {
+    "id": "0b9d3b3b6d31abcd",
+    "ru": "Рекомендация по улучшению территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].factTask.options[proposal].text"
+    ]
+  },
+  {
+    "id": "d8c67940e705c855",
+    "ru": "Требование назначить конкретному лицу штраф.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].factTask.options[sanction].text"
+    ]
+  },
+  {
+    "id": "0e2658579a2ef334",
+    "ru": "Каков предмет этого обращения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].factTask.prompt"
+    ]
+  },
+  {
+    "id": "b1d17e89230527d4",
+    "ru": "Частичное ограничение не является результатом рассмотрения всей инициативы. Продолжается проверка другой точки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].followup.explain"
+    ]
+  },
+  {
+    "id": "3d8582247038f520",
+    "ru": "Подразделение сообщило, что одна из предложенных точек занята подземными коммуникациями. По второй точке данных пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].followup.intro"
+    ]
+  },
+  {
+    "id": "855a7f46642cc27e",
+    "ru": "Объявить обе точки невозможными без проверки второй.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].followup.options[all].text"
+    ]
+  },
+  {
+    "id": "4e65ee642ba2b3a9",
+    "ru": "Установить скамейку над коммуникациями вопреки полученным сведениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].followup.options[build].text"
+    ]
+  },
+  {
+    "id": "c1b1c9063d0b823a",
+    "ru": "Отразить установленное ограничение и уточнить возможность второй точки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].followup.options[partial].text"
+    ]
+  },
+  {
+    "id": "c9d944560c011799",
+    "ru": "Рассматриваются только жалобы на уже причинённый вред.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "c1e5c6a56f8e602c",
+    "ru": "Предложение автоматически обязывает утвердить расходы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "730edfd77c8a5910",
+    "ru": "Найдите норму, определяющую предложение гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "acf0e2c6126d5f4c",
+    "ru": "По дороге к поликлинике негде присесть. Я нарисовала места для двух скамеек и небольшого навеса. Никого наказывать не прошу. Можно ли рассмотреть такую идею?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].opening"
+    ]
+  },
+  {
+    "id": "4682ead940e3d077",
+    "ru": "Общий порядок обращений граждан",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].procedures[appeal].text",
+      "cases:CASE_TEMPLATES[mfc-refusal].procedures[appeal].text",
+      "cases:CASE_TEMPLATES[mfc-delay].procedures[appeal].text"
+    ]
+  },
+  {
+    "id": "16556b6e444a2d38",
+    "ru": "Запрос информации о деятельности власти",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].procedures[info].text",
+      "cases:CASE_TEMPLATES[mfc-refusal].procedures[info].text",
+      "cases:CASE_TEMPLATES[mfc-delay].procedures[info].text"
+    ]
+  },
+  {
+    "id": "69ea83384711410a",
+    "ru": "Досудебная жалоба при предоставлении услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].procedures[service].text",
+      "cases:CASE_TEMPLATES[mfc-refusal].procedures[service].text",
+      "cases:CASE_TEMPLATES[mfc-delay].procedures[service].text"
+    ]
+  },
+  {
+    "id": "a1fcc4f70eff9f17",
+    "ru": "Хочу, чтобы рассмотрели возможность поставить скамейки. Я понимаю, что место и деньги ещё нужно обсудить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[goal].answer"
+    ]
+  },
+  {
+    "id": "d6cc342a682adbab",
+    "ru": "Рекомендация по улучшению территории, а не требование назначить наказание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[goal].fact"
+    ]
+  },
+  {
+    "id": "6eb59050c7e2ed32",
+    "ru": "Какого результата вы ожидаете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[goal].text"
+    ]
+  },
+  {
+    "id": "8ae85dc487c3be4e",
+    "ru": "На приложенной схеме: рядом с маршрутом к поликлинике, не на проезжей части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[place].answer"
+    ]
+  },
+  {
+    "id": "359dd04f79e120f2",
+    "ru": "Места обозначены на схеме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[place].fact"
+    ]
+  },
+  {
+    "id": "abf0f03c775bbbb4",
+    "ru": "Где предложены места?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[place].text"
+    ]
+  },
+  {
+    "id": "29930bd8fb019a14",
+    "ru": "Нет. Это предложение для будущего благоустройства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[status].answer"
+    ]
+  },
+  {
+    "id": "7c5ccf4c5386ee5a",
+    "ru": "Текущая авария не заявлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[status].fact"
+    ]
+  },
+  {
+    "id": "abfe04f8d510504d",
+    "ru": "Это просьба о немедленном устранении опасности?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].questions[status].text"
+    ]
+  },
+  {
+    "id": "ef72a2c4ef9659b6",
+    "ru": "Вернуть гражданину до самостоятельного сбора бюджета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "5abaa762b1cfa337",
+    "ru": "Передать предложение уполномоченному подразделению по благоустройству у получателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].routes[competent].text"
+    ]
+  },
+  {
+    "id": "6053bce77dfd068a",
+    "ru": "Направить в полицию, поскольку все обращения являются жалобами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].routes[police].text"
+    ]
+  },
+  {
+    "id": "ddbbfb7c6837d5f6",
+    "ru": "Найдите норму и проверьте её применимость. Страница источника не подменяет обоснование решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].sourceTask",
+      "cases:CASE_TEMPLATES[mfc-refusal].sourceTask",
+      "cases:CASE_TEMPLATES[mfc-delay].sourceTask"
+    ]
+  },
+  {
+    "id": "951be2ab8d9c2390",
+    "ru": "Место, где можно отдохнуть",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[proposal-bench].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[proposal-bench].title"
+    ]
+  },
+  {
+    "id": "b45b8b2662977f18",
+    "ru": "Инициатива жителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].topic",
+      "cases:CASE_TEMPLATES[proposal-bench].tag",
+      "cases:CASE_TEMPLATES[proposal-one-resident].topic"
+    ]
+  },
+  {
+    "id": "e25fa78835733142",
+    "ru": "Обращение может содержать предложение, а его рассмотрение не равнозначно обязательному одобрению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].trap.explain"
+    ]
+  },
+  {
+    "id": "c255dcb1bc8c4d39",
+    "ru": "Согласиться и не рассматривать инициативу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "a4422573bf8494d2",
+    "ru": "Вместо рассмотрения сразу гарантировать финансирование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].trap.options[promise].text"
+    ]
+  },
+  {
+    "id": "7324f5fa0eef7203",
+    "ru": "Проверить вид обращения: предложения также подлежат рассмотрению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].trap.options[scope].text"
+    ]
+  },
+  {
+    "id": "2a130c58b3171d56",
+    "ru": "Помощник: «Нет нарушенного права – нет и обращения».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-bench].trap.text"
+    ]
+  },
+  {
+    "id": "6f4c7855fe6b754a",
+    "ru": "Уточнить, в какой форме действует заявитель",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2e2e22edfa29b220",
+    "ru": "Принять предложение по надлежащему порядку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a563ba14b721ffb0",
+    "ru": "Направить на содержательную оценку компетентному подразделению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f501fb4105cce55d",
+    "ru": "Объяснить различие рассмотрения и утверждения проекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[a3].title"
+    ]
+  },
+  {
+    "id": "4e6efcf37f790c18",
+    "ru": "Проверить относимый ответ и отсутствие ложного обещания расходов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b881188aa66bbe99",
+    "ru": "Отказать в регистрации из-за отсутствия большинства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[b0].title"
+    ]
+  },
+  {
+    "id": "7939ec9440ff1063",
+    "ru": "Объявить одобрение бюджета от имени приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].actions[b1].title",
+      "cases:CASE_TEMPLATES[proposal-one-resident].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "51520655a039e8ef",
+    "ru": "Все люди, документы и события этого дела вымышлены. Это обычное индивидуальное предложение в порядке закона № 59-ФЗ. Гражданин не подаёт специальный инициативный проект, не утверждает решение общего собрания и не заявляет полномочий от всех жителей. Для рассмотрения предложения достаточно установленных обязательных реквизитов; решение о расходах принимает компетентный субъект отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].brief"
+    ]
+  },
+  {
+    "id": "6fd46cb04b8c664c",
+    "ru": "Форма участия определяется просьбой и документами. Обычное индивидуальное обращение нельзя превращать в обязательный сбор подписей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].coach.plan",
+      "cases:CASE_TEMPLATES[proposal-one-resident].contrast.difference"
+    ]
+  },
+  {
+    "id": "2dc6b1e1cd64d927",
+    "ru": "Статья 2 закона № 59-ФЗ закрепляет право на индивидуальные и коллективные обращения. Обычное предложение гражданина не требует автоматически подписей большинства жителей. Если заявитель добивается решения в специальной форме участия, применяются условия именно этой процедуры; письмо само по себе не утверждает бюджет и не создаёт полномочий представителя других лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].coach.research",
+      "cases:CASE_TEMPLATES[proposal-one-resident].knowledge.explain",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].coach.research"
+    ]
+  },
+  {
+    "id": "154bf35d196837aa",
+    "ru": "Требование приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8ab90d8e2cf41f2a",
+    "ru": "Письмо П-39",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a24960865e7494d0",
+    "ru": "Памятка формы участия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d2].title"
+    ]
+  },
+  {
+    "id": "2fe82bb769537fa5",
+    "ru": "Требование большинства перенесено на обычное индивидуальное предложение без основания. Форма участия определяется просьбой и документами. Обычное индивидуальное обращение нельзя превращать в обязательный сбор подписей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.explain"
+    ]
+  },
+  {
+    "id": "f020f1fc457a3ea7",
+    "ru": "Требование большинства перенесено на обычное индивидуальное предложение без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "cf03eb94fba6cdc8",
+    "ru": "Предложения вправе подавать только группы жителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "5d098d988d0d523c",
+    "ru": "Принятие письма сразу утверждает установку и бюджет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-one-resident.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "707a924684840caa",
+    "ru": "Уточнить фактический статус: учёт идеи не равен утверждению реализации. Форма участия определяется просьбой и документами. Обычное индивидуальное обращение нельзя превращать в обязательный сбор подписей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].followup.explain"
+    ]
+  },
+  {
+    "id": "6a22189188043b0f",
+    "ru": "Предложение включили в перечень поступивших идей. В ответе назвали это «проект утверждён», хотя решения о реализации нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].followup.intro"
+    ]
+  },
+  {
+    "id": "e637379e3d24e842",
+    "ru": "Уточнить фактический статус: учёт идеи не равен утверждению реализации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "3d704635468e6ad4",
+    "ru": "Оставить обещание, чтобы поддержать интерес жителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "5f08dce5e8fb2aea",
+    "ru": "Удалить предложение из учёта без рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "7082f92005ff54f7",
+    "ru": "Требовать подписи большинства для любого письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "5890f744b9f221a5",
+    "ru": "Обещать финансирование только по факту регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "3c14b6e7a8682855",
+    "ru": "Найдите нормативное основание следующего действия: Принять и рассмотреть индивидуальное предложение без навязывания другой формы участия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "f2a849fa3f98809a",
+    "ru": "Хочу предложить скамейку у остановки. Мне сказали, что письмо примут только с подписями большинства жителей. Я пока обращаюсь от себя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].opening",
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q2].answer",
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "7a13874aaa5a3d4f",
+    "ru": "Индивидуальное предложение о скамейке с местом и пояснением потребности. Подпись и необходимые реквизиты имеются. Формальной заявки в специальную бюджетную процедуру нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q0].answer",
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q0].fact",
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7503998bd424a3f2",
+    "ru": "Обычное предложение отличается от специально оформленного инициативного проекта и решения собрания. Оно подлежит рассмотрению, но само по себе не означает выделения средств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q1].answer",
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q1].fact",
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d2].text"
+    ]
+  },
+  {
+    "id": "4a009e3e17aba8de",
+    "ru": "Сотрудник требует подписи большинства жителей для приёма любого предложения и отказывается зарегистрировать письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q3].answer",
+      "cases:CASE_TEMPLATES[proposal-one-resident].questions[q3].fact",
+      "cases:CASE_TEMPLATES[proposal-one-resident].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9fcc7bdee00ae5a7",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Это обычное индивидуальное предложение в порядке закона № 59-ФЗ. Гражданин не подаёт специальный инициативный проект, не утверждает решение общего собрания и не заявляет полномочий от всех жителей. Для рассмотрения предложения достаточно установленных обязательных реквизитов; решение о расходах принимает компетентный субъект отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].role.text"
+    ]
+  },
+  {
+    "id": "97f896a2a130518d",
+    "ru": "Принять и рассмотреть индивидуальное предложение без навязывания другой формы участия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[proposal-one-resident].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[proposal-one-resident].contrast.decision"
+    ]
+  },
+  {
+    "id": "26193090fb24ba8d",
+    "ru": "Предложение одного жителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[proposal-one-resident].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[proposal-one-resident].title"
+    ]
+  },
+  {
+    "id": "d0c9a756d33f5dc9",
+    "ru": "Принять и рассмотреть индивидуальное предложение без навязывания другой формы участия. Форма участия определяется просьбой и документами. Обычное индивидуальное обращение нельзя превращать в обязательный сбор подписей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].trap.explain"
+    ]
+  },
+  {
+    "id": "8a1e218d1f946151",
+    "ru": "Индивидуальное предложение может быть рассмотрено без обязательных подписей большинства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-one-resident].trap.text"
+    ]
+  },
+  {
+    "id": "27233c7ffa52430d",
+    "ru": "Проверить точный объём представительства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[a0].title"
+    ]
+  },
+  {
+    "id": "8582d330a9926d1a",
+    "ru": "Выделить предмет инициативы и отдельную просьбу о данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[a1].title"
+    ]
+  },
+  {
+    "id": "86c2b129c73c26a4",
+    "ru": "Продолжить рассмотрение доступных материалов инициативы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[a2].title"
+    ]
+  },
+  {
+    "id": "e3a33a08856e5c1e",
+    "ru": "Не раскрывать чужие защищённые сведения без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e8899bc1e8f3c489",
+    "ru": "Дать раздельное объяснение статуса предложения и ограничения доступа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[a4].title"
+    ]
+  },
+  {
+    "id": "15d83d32be6ffbe4",
+    "ru": "Раскрыть медицинские сведения без законного основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[b0].title"
+    ]
+  },
+  {
+    "id": "369369eddc5ddd7d",
+    "ru": "Обязать соседей предоставить диагнозы для приёма обычной идеи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].actions[b1].title",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "aaa62ef114602e2e",
+    "ru": "Все люди, документы и события этого дела вымышлены. Полномочие передать коллективное предложение подтверждено. Оно не включает получение медицинских или иных защищённых сведений соседей. Законного основания их раскрытия в деле нет. Само предложение достаточно описывает барьер и может рассматриваться без передачи этих сведений. Не следует требовать диагнозы от каждого жителя для обычного рассмотрения идеи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].brief"
+    ]
+  },
+  {
+    "id": "e6b8ec6b7a850978",
+    "ru": "Полномочие ограничено конкретным действием. Поддержка полезной инициативы не расширяет доступ к чужой частной жизни.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].coach.plan",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].contrast.difference"
+    ]
+  },
+  {
+    "id": "e40c196792bde5f3",
+    "ru": "Материалы предложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8d7e80685aaa9ad2",
+    "ru": "Полномочие представителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f4d567d67f3b725d",
+    "ru": "Состав запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d2].title"
+    ]
+  },
+  {
+    "id": "75a21e59cf74306c",
+    "ru": "Представительство по предложению не подтверждает право получить чужие медицинские данные. Полномочие ограничено конкретным действием. Поддержка полезной инициативы не расширяет доступ к чужой частной жизни.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.explain"
+    ]
+  },
+  {
+    "id": "06a3f383b43df2aa",
+    "ru": "Представительство по предложению не подтверждает право получить чужие медицинские данные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "37600ed5ea58c72f",
+    "ru": "Передача коллективного письма открывает представителю любые сведения участников.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "8b34743e148fc4b2",
+    "ru": "Нельзя рассматривать предложение без диагнозов всех соседей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-representative-limits.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1d12e28c0c649bcb",
+    "ru": "Не считать такую замену полноценным обезличиванием; исключить неправомерное раскрытие и продолжить рассмотрение идеи. Полномочие ограничено конкретным действием. Поддержка полезной инициативы не расширяет доступ к чужой частной жизни.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].followup.explain"
+    ]
+  },
+  {
+    "id": "98f7c7974e9de2df",
+    "ru": "Подготовлена таблица без имён, но с квартирами и диагнозами, позволяющими установить конкретных соседей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].followup.intro"
+    ]
+  },
+  {
+    "id": "2a7b6e9c420ae0e8",
+    "ru": "Не считать такую замену полноценным обезличиванием; исключить неправомерное раскрытие и продолжить рассмотрение идеи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "6cd36ce2d6d07cb3",
+    "ru": "Выдать таблицу, раз фамилии удалены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "652ae3a4739b3d25",
+    "ru": "Закрыть всю инициативу навсегда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "52702d8f4509c18e",
+    "ru": "Отказать во всей идее только из-за лишнего информационного требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "68b5fcbaf86457de",
+    "ru": "Найдите нормативное основание следующего действия: Разграничить рассмотрение инициативы и недопустимое раскрытие защищённой части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "41ec8cc1f45b16c7",
+    "ru": "Мы просим улучшить доступ к дому. Я представляю инициативную группу. Дайте ещё медицинские сведения всех соседей — приложим к нашему предложению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].opening",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q2].answer",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c6e6bfe1425d35d0",
+    "ru": "Группа уполномочила гражданина передать предложение об улучшении доступности входа и получить ответ по нему. Разрешения получать медицинские сведения участников нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q0].answer",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q0].fact",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d1].text"
+    ]
+  },
+  {
+    "id": "419dc861441e185d",
+    "ru": "Помимо предложения гражданин просит сведения о здоровье всех соседей. Эти сведения не открыты, согласия на раскрытие или иного основания не представлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q1].answer",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q1].fact",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d2].text"
+    ]
+  },
+  {
+    "id": "05e67ba05a5acafa",
+    "ru": "Схема входа и описание препятствия позволяют рассмотреть идею без медицинского списка. Конкретные способы реализации и финансирование ещё оцениваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q3].answer",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].questions[q3].fact",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ba36b0db1439498f",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Полномочие передать коллективное предложение подтверждено. Оно не включает получение медицинских или иных защищённых сведений соседей. Законного основания их раскрытия в деле нет. Само предложение достаточно описывает барьер и может рассматриваться без передачи этих сведений. Не следует требовать диагнозы от каждого жителя для обычного рассмотрения идеи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].role.text"
+    ]
+  },
+  {
+    "id": "1b6d99b73550c468",
+    "ru": "Разграничить рассмотрение инициативы и недопустимое раскрытие защищённой части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].contrast.decision"
+    ]
+  },
+  {
+    "id": "cf62f9d2ea53f1a4",
+    "ru": "Поддержать идею — не выдать чужие сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[proposal-representative-limits].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[proposal-representative-limits].title"
+    ]
+  },
+  {
+    "id": "f5c0703a763668e3",
+    "ru": "Разграничить рассмотрение инициативы и недопустимое раскрытие защищённой части. Полномочие ограничено конкретным действием. Поддержка полезной инициативы не расширяет доступ к чужой частной жизни.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].trap.explain"
+    ]
+  },
+  {
+    "id": "cf7d915b35c2e837",
+    "ru": "Выдать медицинский список по общему полномочию инициативной группы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-representative-limits].trap.text",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].knowledge.options[1].text"
+    ]
+  }
+]

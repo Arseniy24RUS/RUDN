@@ -1,0 +1,741 @@
+[
+  {
+    "id": "7918113a69704772",
+    "ru": "Протокол контекста И-6: Перечень находится в месте оказания услуги и используется для информирования потребителя. Наружной или интернет-рекламой данный материал в условиях не является.\n\nСостав перечня И-6: Представлена обязательная информация об ассортименте и ценах. Все строки одного оформления; рекламных обращений и выделения конкретного товара нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-required-menu].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5c23527f539c7a24",
+    "ru": "Только вымышленное дело beer-required-menu",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-required-menu].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-required-menu].scope"
+    ]
+  },
+  {
+    "id": "146089f5806f3fe3",
+    "ru": "Обязательная информация без рекламного выделения · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-required-menu].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-required-menu].title"
+    ]
+  },
+  {
+    "id": "2f8c25af38772846",
+    "ru": "Измерение рекламы Р-10: Полное рекламное пространство — 1000 см². Предупреждение о вреде чрезмерного потребления — 50 см²; подпись предупреждения проверена отдельно.\n\nРазметка элементов Р-10: Ещё 100 см² занимает только отметка 18+. Этот участок не относится к предупреждению о вреде. Для задачи место и прочие условия размещения признаны допустимыми.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-warning-area].fragments[material].text"
+    ]
+  },
+  {
+    "id": "a95be6913934c460",
+    "ru": "Только вымышленное дело beer-warning-area",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-warning-area].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-warning-area].scope"
+    ]
+  },
+  {
+    "id": "33405b2edb53e94e",
+    "ru": "Предупреждение есть, площади не хватает · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-warning-area].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-beer-warning-area].title"
+    ]
+  },
+  {
+    "id": "fbd325074cd6fd03",
+    "ru": "Протокол отображения: Несовпадение контура наблюдается только на подложке С-2. На С-1 при тех же координатах несовпадения нет. Причину отображения ещё должен проверить оператор сервиса.\n\nВыписка и контрольная выгрузка: Для объекта У-11 таблицы координат в выписке и контрольной выгрузке совпадают. Заключение специалиста: изменение значений записи не обнаружено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].fragments[material].text"
+    ]
+  },
+  {
+    "id": "0237f4bb7ae7b299",
+    "ru": "Только вымышленное дело egrn-map-layer",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-map-layer].scope"
+    ]
+  },
+  {
+    "id": "ba2999118e3e77c3",
+    "ru": "Сдвинулся слой, а не запись · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-map-layer].title"
+    ]
+  },
+  {
+    "id": "b44d0b2ba9ab0e05",
+    "ru": "Заключение по предлагаемой правке: Изменение З-7 может нарушить законные интересы правообладателя соседнего участка, полагавшегося на сведения ЕГРН. Это не бесспорная замена буквы в имени.\n\nВозражение и состав дела: Возражение касается именно изменения З-7. Решения суда об исправлении в материалах нет; подан лишь проект заявления.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].fragments[material].text"
+    ]
+  },
+  {
+    "id": "1b16f725fb1816ae",
+    "ru": "Только вымышленное дело egrn-rights-dispute",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-rights-dispute].scope"
+    ]
+  },
+  {
+    "id": "60fe58c9001f5d64",
+    "ru": "Исправление затрагивает чужое право · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-rights-dispute].title"
+    ]
+  },
+  {
+    "id": "987d769ce2a90534",
+    "ru": "Сопоставляемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].fragments[material].label"
+    ]
+  },
+  {
+    "id": "bb32043936d13dc0",
+    "ru": "План и запись ЕГРН: План ТП-41 содержит ошибочную характеристику: номер помещения 18 вместо 81. Сведения в ЕГРН воспроизведены точно по этому плану; регистратор не переставлял цифры.\n\nКомплект исправления ТП-41: Надлежащий исправленный план и подтверждающие документы поступили {{received}}. Необходимые сведения имеются полностью; зарегистрированные права и законные интересы третьих лиц не меняются.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].fragments[material].text"
+    ]
+  },
+  {
+    "id": "6713d7853f4b6d6e",
+    "ru": "Правовая основа и её пределы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].fragments[norm].label"
+    ]
+  },
+  {
+    "id": "d3e49eda7d542d5c",
+    "ru": "Первый фрагмент — материал вымышленного дела; это не публикация реальной организации. Второй — авторское краткое изложение нормы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-map-layer].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-rights-dispute].representation"
+    ]
+  },
+  {
+    "id": "a105fb9877a6a963",
+    "ru": "Только вымышленное дело egrn-source-plan",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-source-plan].scope"
+    ]
+  },
+  {
+    "id": "ec3604e2065772c6",
+    "ru": "Ошибка пришла из исходного плана · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-egrn-source-plan].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-egrn-source-plan].title"
+    ]
+  },
+  {
+    "id": "c5e862dd3c7838f1",
+    "ru": "Покупка и первое обращение: Товар партии М-8 куплен {{purchase}}. Жалоба основана на принятии даты изготовления за срок годности. Данных об иных недостатках в первом обращении нет.\n\nПолная маркировка партии М-8: Изготовлено {{manufactured}}. Годен до {{expiry}}. Названия полей хорошо читаемы; маркировка именно на упаковке из обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-manufactured-date].fragments[material].text"
+    ]
+  },
+  {
+    "id": "b64fe26eb823abb7",
+    "ru": "Только вымышленное дело food-manufactured-date",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-manufactured-date].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-manufactured-date].scope"
+    ]
+  },
+  {
+    "id": "8c9480d64ac0ffa7",
+    "ru": "Дата изготовления принята за срок годности · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-manufactured-date].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-manufactured-date].title"
+    ]
+  },
+  {
+    "id": "0f05c80c11bedddd",
+    "ru": "Подтверждение покупки и недостатка: Покупка партии П-61 у данного продавца {{purchase}} подтверждена им самим и платёжными данными. По сопоставлению маркировки срок истёк до покупки. Отсутствует только бумажный чек.\n\nПолученное требование: Продавец получил {{seller}} требование о возврате уплаченной суммы за некачественный товар. Отказ обоснован исключительно отсутствием чека. Подмены требования заменой товара нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-no-receipt-refund].fragments[material].text"
+    ]
+  },
+  {
+    "id": "3b824bac2145c10e",
+    "ru": "Только вымышленное дело food-no-receipt-refund",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-no-receipt-refund].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-no-receipt-refund].scope"
+    ]
+  },
+  {
+    "id": "8f6ea76d7f56fd89",
+    "ru": "Чек потерян, покупка подтверждается · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-no-receipt-refund].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-no-receipt-refund].title"
+    ]
+  },
+  {
+    "id": "ca7dc9c86580c550",
+    "ru": "Сообщение по партии Д-72: Материалы компетентного подразделения указывают на необходимость соответствующих мер именно по партии Д-72. Снимок маркировки остатка относится к этому номеру.\n\nАкт изъятия: Акт подтверждает изъятие партии Д-27. Номер Д-72 и действия по нему в акте отсутствуют; это не опечатка, исправленная приложением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-recall-wrong-batch].fragments[material].text"
+    ]
+  },
+  {
+    "id": "b2ec124680d3e351",
+    "ru": "Только вымышленное дело food-recall-wrong-batch",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-recall-wrong-batch].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-recall-wrong-batch].scope"
+    ]
+  },
+  {
+    "id": "387cf621f8c75375",
+    "ru": "Изъяли партию, но не ту · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-recall-wrong-batch].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-food-recall-wrong-batch].title"
+    ]
+  },
+  {
+    "id": "d82bb703afe0e6eb",
+    "ru": "Карточка отправления МПО-71: Отправление прибыло к таможенным операциям. Отметки о выпуске нет. Идентификатор в учётной карточке — МПО-71.\n\nУведомление МПО-71: В условии подтверждены подлинность и связь с отправлением. Запрошены уточняющие сведения о содержимом; канал ответа находится в официальной карточке подразделения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-customs-notice].fragments[material].text"
+    ]
+  },
+  {
+    "id": "443642b255c83673",
+    "ru": "Только вымышленное дело parcel-customs-notice",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-customs-notice].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-customs-notice].scope"
+    ]
+  },
+  {
+    "id": "8b4614b568231d29",
+    "ru": "Выпуска ещё не было · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-customs-notice].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-customs-notice].title"
+    ]
+  },
+  {
+    "id": "00a50186ddd8853e",
+    "ru": "Акт вручения МПО-93: Отправление вручено. При вручении зафиксировано повреждение упаковки; в акте указан МПО-93 и приложена опись обнаруженного содержимого.\n\nВыпуск и требование заявителя: Ответ таможенного подразделения подтверждает выпуск МПО-93. Новое требование касается повреждения и недостачи при доставке, а не отмены выпуска.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-damaged-delivery].fragments[material].text"
+    ]
+  },
+  {
+    "id": "49b4ae515e12e4f8",
+    "ru": "Только вымышленное дело parcel-damaged-delivery",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-damaged-delivery].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-damaged-delivery].scope"
+    ]
+  },
+  {
+    "id": "92b9570e05013423",
+    "ru": "Посылка пришла, вопрос остался · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-damaged-delivery].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-damaged-delivery].title"
+    ]
+  },
+  {
+    "id": "d3a4938ac7ac14d4",
+    "ru": "Распечатка статуса: Запрос по номеру МПО-418: «Вручено». Это не номер квитанции; принадлежность записи заявителю не установлена.\n\nКвитанция об отправке: Номер МПО-481. Адрес получателя и дата относятся к учебному заказу заявителя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-wrong-tracking].fragments[material].text"
+    ]
+  },
+  {
+    "id": "00fa908d73ac3fb4",
+    "ru": "Только вымышленное дело parcel-wrong-tracking",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-wrong-tracking].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-wrong-tracking].scope"
+    ]
+  },
+  {
+    "id": "1c3cd0a4801cb2bc",
+    "ru": "Одна цифра в номере отправления · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-parcel-wrong-tracking].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-parcel-wrong-tracking].title"
+    ]
+  },
+  {
+    "id": "3967f7acd4ef239c",
+    "ru": "Квитанции деклараций: Обычная первоначальная 3-НДФЛ Д-1 представлена {{declaration}}. До завершения её проверки представлена уточнённая Д-2 {{amended}}. Оба документа за один налоговый период; Д-2 принята.\n\nКарточка проверки: Предыдущая проверка не завершена к представлению Д-2. Уточнённая декларация заменяет исходные данные; после Д-2 другие уточнения не поступали. Обращение в приёмную получено {{received}}.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-amended-declaration].fragments[material].text"
+    ]
+  },
+  {
+    "id": "09756be097b51f06",
+    "ru": "Только вымышленное дело tax-amended-declaration",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-amended-declaration].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-amended-declaration].scope"
+    ]
+  },
+  {
+    "id": "30837333dcee9589",
+    "ru": "Появилась уточнённая декларация · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-amended-declaration].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-amended-declaration].title"
+    ]
+  },
+  {
+    "id": "ee89575098dadc9e",
+    "ru": "Пакет пояснений П-8: Поступил {{explanation}} как пояснения с приложениями по той же декларации. Квитанции принятия новой декларации нет; показатели декларации не менялись.\n\nКвитанция Д-3: Первоначальная обычная 3-НДФЛ представлена {{declaration}}. Уточнённые декларации не поступали.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-explanations-only].fragments[material].text"
+    ]
+  },
+  {
+    "id": "d8b156455d968c71",
+    "ru": "Только вымышленное дело tax-explanations-only",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-explanations-only].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-explanations-only].scope"
+    ]
+  },
+  {
+    "id": "21cc617ad1a6cb2d",
+    "ru": "Пояснения — не новая декларация · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-explanations-only].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-explanations-only].title"
+    ]
+  },
+  {
+    "id": "1f18bec3d925228a",
+    "ru": "Черновик У-4: Предзаполненный документ сформирован {{draft}}. До {{statement}} не подписан и не представлен.\n\nКвитанция заявления У-4: Допустимое заявление в порядке статьи 221.1 подписано и представлено {{statement}}. Это не декларация 3-НДФЛ. Продление проверки в данном деле не применяется.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-simplified-statement].fragments[material].text"
+    ]
+  },
+  {
+    "id": "d71c6eb064459bd8",
+    "ru": "Только вымышленное дело tax-simplified-statement",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-simplified-statement].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-simplified-statement].scope"
+    ]
+  },
+  {
+    "id": "c4fe46626051dd00",
+    "ru": "Черновик появился раньше заявления · материалы и основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-simplified-statement].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v12-tax-simplified-statement].title"
+    ]
+  },
+  {
+    "id": "5b0063616ffd6340",
+    "ru": "Договор Б-21 и лицензия: Программа 38.03.04, уровень – бакалавриат. Лицензионные условия этой реализации подтверждены; спор касается утверждения об аккредитации.\n\nВыписка и уточнение области: Запись по этой организации относится только к 09.03.03; распространение на укрупнённую группу или все программы не предусмотрено. По 38.03.04 подтверждения не получено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-accreditation-scope].fragments[material].text"
+    ]
+  },
+  {
+    "id": "de1c30cbf163968a",
+    "ru": "Только дело education-accreditation-scope",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-accreditation-scope].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-accreditation-scope].scope"
+    ]
+  },
+  {
+    "id": "ab5b9a6ba3443cc1",
+    "ru": "Выписка относится к другой программе · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-accreditation-scope].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-accreditation-scope].title"
+    ]
+  },
+  {
+    "id": "eafae399ef99d14f",
+    "ru": "Договор ДПО-26: Исполнитель Ц-21. Дополнительная профессиональная программа повышения квалификации; результат – удостоверение при выполнении условий. Основная программа высшего образования не заявлена.\n\nПроверенная выписка по Ц-21: Лицензионная запись действительна на дату {{observed}} для соответствующего подвида дополнительного образования. Государственная аккредитация курса ДПО-26 не указана.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-dpo-accreditation].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2da8561e1af5d7d6",
+    "ru": "Только дело education-dpo-accreditation",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-dpo-accreditation].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-dpo-accreditation].scope"
+    ]
+  },
+  {
+    "id": "938351c2b5447806",
+    "ru": "Повышение квалификации – не бакалавриат · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-dpo-accreditation].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-dpo-accreditation].title"
+    ]
+  },
+  {
+    "id": "4a49cf4b86d4cfc3",
+    "ru": "Договор и платёж У-2: Исполнитель обучения и получатель оплаты – юридическое лицо У-2. Образовательная программа подлежит лицензированию по заданным условиям.\n\nЛицензионные сведения У-1: Предъявленная запись относится к У-1. Документа, подтверждающего право У-2 оказывать данную услугу или особую форму взаимодействия, в деле нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-provider-identity].fragments[material].text"
+    ]
+  },
+  {
+    "id": "73fdeeb441787013",
+    "ru": "Только дело education-provider-identity",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-provider-identity].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-provider-identity].scope"
+    ]
+  },
+  {
+    "id": "8388fb2a3818952d",
+    "ru": "Одно название, два исполнителя · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-provider-identity].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-education-provider-identity].title"
+    ]
+  },
+  {
+    "id": "990f30a885e6a8e8",
+    "ru": "Договор О-17: Охрану объекта оказывает организация с идентификатором О-17. Вид услуги указан; она относится к установленным охранным услугам.\n\nОтвет по реестру О-17: На дату {{observed}} запись действительна для соответствующей услуги. Документ подтверждает организацию О-17, но не содержит сведений об удостоверении работника К-4.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-current-register].fragments[material].text"
+    ]
+  },
+  {
+    "id": "29a6bd69eea1de11",
+    "ru": "Только дело guard-current-register",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-current-register].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-current-register].scope"
+    ]
+  },
+  {
+    "id": "cb791e80b0cce1c0",
+    "ru": "Лицензия организации и документы работника · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-current-register].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-current-register].title"
+    ]
+  },
+  {
+    "id": "0019f9b7a6105fee",
+    "ru": "Расшифровка разговора К-9: Охранник К-9 обратился к посетителю с требованием. В ответ на просьбу предъявить удостоверение и личную карточку отказал, сославшись на обязанность только перед полицией.\n\nДокументы и сменное задание К-9: Принадлежность К-9 к частной охране установлена, документы действительны. Требование передать их посетителю в руки или разрешить копирование не заявлялось.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-identification-request].fragments[material].text"
+    ]
+  },
+  {
+    "id": "e62071b48b808537",
+    "ru": "Только дело guard-identification-request",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-identification-request].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-identification-request].scope"
+    ]
+  },
+  {
+    "id": "5a05e1f4b4a56a06",
+    "ru": "К охраннику обратились после его требования · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-identification-request].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-identification-request].title"
+    ]
+  },
+  {
+    "id": "1562c23836102931",
+    "ru": "Правила объекта О-5: Установлен пропускной режим и осмотр вносимого имущества в пределах закона. Принудительное удержание за один отказ правилом не предусмотрено.\n\nЗапись эпизода О-5: {{observed}} охранник связал удержание посетителя только с отказом предъявить сумку. Признаки самостоятельного правонарушения в доступных материалах не установлены; эпизод завершён.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-property-inspection].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2972cfea43e61386",
+    "ru": "Только дело guard-property-inspection",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-property-inspection].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-property-inspection].scope"
+    ]
+  },
+  {
+    "id": "8b140ede2fd46426",
+    "ru": "Осмотр вещи не даёт неограниченных полномочий · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-guard-property-inspection].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-guard-property-inspection].title"
+    ]
+  },
+  {
+    "id": "e5a9acb8fdd1e894",
+    "ru": "Карточка аварии А-22: {{observed}}, 00:20: прорыв сети, угроза затопления электрооборудования. Неотложное устранение до 02:10. Адрес и место совпадают с обращением.\n\nАкт работ и применимое исключение: Резка трубы с 00:40 до 01:20 необходима для локализации именно А-22. Пункт 2 статьи 2 Закона Москвы №42 исключает из своего режима действия по предотвращению и ликвидации последствий аварий и установленные неотложные работы; это не освобождение любых последующих работ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-emergency-work].fragments[material].text"
+    ]
+  },
+  {
+    "id": "17502920769f922b",
+    "ru": "Только дело noise-emergency-work",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-emergency-work].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-emergency-work].scope"
+    ]
+  },
+  {
+    "id": "825a1bb8013bc82d",
+    "ru": "Ночная работа устраняла аварию · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-emergency-work].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-emergency-work].title"
+    ]
+  },
+  {
+    "id": "9e843fde9faba591",
+    "ru": "Обращение и схема Ш-24: Адрес объекта Ш-24 – Московская область. Для корреспонденции заявитель указал квартиру в Москве. Сведения о точном месте события согласованы.\n\nКарточка территориального маршрута: Вопрос относится к органу соответствующей территории Московской области. Московские часы тишины не устанавливают нарушение на Ш-24; нужен применимый региональный режим и обстоятельства события.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-other-region].fragments[material].text"
+    ]
+  },
+  {
+    "id": "23ed220d97510241",
+    "ru": "Только дело noise-other-region",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-other-region].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-other-region].scope"
+    ]
+  },
+  {
+    "id": "49b93c33d8d0f497",
+    "ru": "Адрес заявителя и место ночного шума · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-other-region].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-other-region].title"
+    ]
+  },
+  {
+    "id": "211a0f4fdac57d19",
+    "ru": "Наблюдение в квартире: {{observed}} музыка выключена, устойчивый гул сохранялся. Во время согласованной краткой остановки В-3 гул исчез. Самостоятельного опасного обследования не проводилось.\n\nСхема оборудования и границы вывода: В-3 – стационарное вентиляционное оборудование кафе. В деле нет протокола санитарных измерений или заключения о превышении нормативов; сведения должны оцениваться специалистами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-ventilation].fragments[material].text"
+    ]
+  },
+  {
+    "id": "c11903187c829af6",
+    "ru": "Только дело noise-ventilation",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-ventilation].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-ventilation].scope"
+    ]
+  },
+  {
+    "id": "730116687e0c596d",
+    "ru": "Музыка выключена, гул продолжается · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-noise-ventilation].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-noise-ventilation].title"
+    ]
+  },
+  {
+    "id": "b2a1dfa74ddd25db",
+    "ru": "Материалы для сопоставления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].fragments[material].label"
+    ]
+  },
+  {
+    "id": "ef53a07138f68519",
+    "ru": "Накладная С-41: Перевозка {{observed}}: саженцы С-41, 180 единиц, из установленной зоны в питомник-получатель П-8. Условия необходимости сертификата подтверждены профильным органом.\n\nПроверенная электронная выписка: Карантинный сертификат ЭК-41 на С-41, 180 единиц, маршрут и получатель П-8 совпадают. Электронная подпись проверена; действительность документа на момент вывоза подтверждена.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].fragments[material].text"
+    ]
+  },
+  {
+    "id": "93eb230af3e6e992",
+    "ru": "Норма и пределы вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].fragments[norm].label"
+    ]
+  },
+  {
+    "id": "b7422c2bf973d84b",
+    "ru": "Учебный материал; внешняя ссылка – нормативная основа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].kind"
+    ]
+  },
+  {
+    "id": "71fc956dddd97ebc",
+    "ru": "Авторский пакет вымышленного дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].publisher"
+    ]
+  },
+  {
+    "id": "e109f02f597d82db",
+    "ru": "Фрагмент material – вымышленные факты. Фрагмент norm – авторское краткое изложение проверенной нормы. Источник не удостоверяет вымышленный инцидент.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].representation"
+    ]
+  },
+  {
+    "id": "c765a0e1374310c3",
+    "ru": "Только дело seedlings-electronic",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-electronic].scope"
+    ]
+  },
+  {
+    "id": "7160a62ab31df4e5",
+    "ru": "Бумажной копии нет, электронный документ есть · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-electronic].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-electronic].title"
+    ]
+  },
+  {
+    "id": "d88ba680b59b882d",
+    "ru": "Накладная Л-31 и условия вывоза: Вывоз {{observed}} партии Л-31, 240 единиц, из зоны З-3. Режим, временное ограничение и восприимчивость продукции к соответствующему объекту подтверждены.\n\nПротокол ПЛ-31 и проверка реестра: Лаборатория исследовала образец Л-31; карантинный объект не выявлен. Документ обозначен как лабораторный протокол. Карантинный сертификат на данную перевозку в проверенном реестре не подтверждён.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].fragments[material].text"
+    ]
+  },
+  {
+    "id": "07d623377f42ca9c",
+    "ru": "Только дело seedlings-lab-not-certificate",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-lab-not-certificate].scope"
+    ]
+  },
+  {
+    "id": "30d5a3f1575118e0",
+    "ru": "Протокол лаборатории и разрешающий документ · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-lab-not-certificate].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-lab-not-certificate].title"
+    ]
+  },
+  {
+    "id": "489d5a91078fdaa9",
+    "ru": "Акт установления зоны З-7: Ограничения действуют в координатах З-7, а не на всей территории района. Перечень затрагиваемой продукции указан отдельно.\n\nСопоставление участка и маршрута: Партия Р-12 выращена на П-12; профильный специалист сопоставил координаты и подтвердил расположение и маршрут вне З-7. Иных оснований в рамках задачи не установлено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].fragments[material].text"
+    ]
+  },
+  {
+    "id": "fc6af32d52a0a2a8",
+    "ru": "Только дело seedlings-outside-zone",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-outside-zone].scope"
+    ]
+  },
+  {
+    "id": "8951fa52e37146fc",
+    "ru": "Граница зоны проходит не по всему району · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-seedlings-outside-zone].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-seedlings-outside-zone].title"
+    ]
+  },
+  {
+    "id": "b773c5eb913036e7",
+    "ru": "Актуальный комплект П-23: Площадка учтена, соглашение предусматривает раздельное накопление и отдельный график, финансовые условия утверждены компетентным субъектом.\n\nМаршрут М-23: Перевозчик и получатель подтвердили обслуживание П-23 по составу фракций. Не выполнено информирование жильцов о составе принимаемого и днях обслуживания.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-chain-ready].fragments[material].text"
+    ]
+  },
+  {
+    "id": "9a74fef501080e4e",
+    "ru": "Только дело waste-chain-ready",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-chain-ready].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-chain-ready].scope"
+    ]
+  },
+  {
+    "id": "04c85555d18abbb7",
+    "ru": "Схема уже работает, нужна другая оценка · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-chain-ready].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-chain-ready].title"
+    ]
+  },
+  {
+    "id": "25e2ee5006efc663",
+    "ru": "Порядок контейнера К-23: Принимается перечисленная чистая сухая упаковка. Названные лампы и батарейки исключены; смешивать их с данной фракцией не предусмотрено.\n\nОтдельный маршрут и ответственный: Для исключённых предметов действует пункт приёма Р-5 с подтверждёнными условиями. Работа с уже попавшими предметами поручается подготовленному исполнителю; жильцы не должны разбирать содержимое самостоятельно.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-container-fractions].fragments[material].text"
+    ]
+  },
+  {
+    "id": "dabe1a17d5d8772b",
+    "ru": "Только дело waste-container-fractions",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-container-fractions].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-container-fractions].scope"
+    ]
+  },
+  {
+    "id": "d7ccf5be2f455e55",
+    "ru": "В синий контейнер попадает не всё · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-container-fractions].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-container-fractions].title"
+    ]
+  },
+  {
+    "id": "7d3fee63dc47ffc5",
+    "ru": "Запись реестра П-9: Место накопления П-9 указано с координатами, составом и ответственным. На П-10 запись не распространяется.\n\nАкт размещения: Контейнеры установлены {{observed}} на П-10. Изменение схемы и проверка соответствия этого места требованиям не подтверждены; факт отклонения места установлен, конкретные санитарные нарушения – нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-site-register].fragments[material].text"
+    ]
+  },
+  {
+    "id": "9029403bb718c77e",
+    "ru": "Только дело waste-site-register",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-site-register].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-site-register].scope"
+    ]
+  },
+  {
+    "id": "3a2fbc45e4f84282",
+    "ru": "Контейнер привезли на соседний участок · проверяемые материалы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v13-waste-site-register].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v13-waste-site-register].title"
+    ]
+  }
+]

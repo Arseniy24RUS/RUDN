@@ -1,0 +1,1006 @@
+[
+  {
+    "id": "c630f9df80605c06",
+    "ru": "В модели пришёл ответ: даны ссылки на решение и два приложения. Илья Андреевич пишет, что запрашивал также материалы обсуждения проекта, но о них в ответе ничего не сказано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.intro"
+    ]
+  },
+  {
+    "id": "336b786332c107b3",
+    "ru": "Сопоставить ответ с запросом; поставить вопрос о предоставлении недостающих материалов или мотивированном объяснении их отсутствия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.options[complete].text"
+    ]
+  },
+  {
+    "id": "f65852883f3dbe99",
+    "ru": "Закрыть запрос: основной документ предоставлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.options[enough].text"
+    ]
+  },
+  {
+    "id": "520ed5c1235293a4",
+    "ru": "Потребовать сначала объяснить, зачем нужны материалы обсуждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.options[motive].text"
+    ]
+  },
+  {
+    "id": "dc8ba40f0483094e",
+    "ru": "Вы выявили неполноту ответа. Уточнение направлено по компетенции, а дальнейшая работа поставлена на контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].followup.success"
+    ]
+  },
+  {
+    "id": "02484263abd82b34",
+    "ru": "Документы выдаются только жителям, доказавшим личную заинтересованность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "40fb6f55ece85b2c",
+    "ru": "Для ответа нужно создать новый финансовый прогноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "2b62b1ef29d051ca",
+    "ru": "Найдите статью о праве не обосновывать необходимость получения общедоступной информации о деятельности власти.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "1b2b5df0e3e3a99a",
+    "ru": "Я хочу прочитать решение о бюджете нашего муниципального округа и приложения. На сайте нашёл какой-то проект. Нужно ли объяснять, зачем мне эти документы? И кто их предоставляет – управа или Совет депутатов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].opening"
+    ]
+  },
+  {
+    "id": "5baa7e22f01d8dd9",
+    "ru": "Проверьте, что запрос рассматривает располагающий документами орган, а заявителю не предъявляются лишние условия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].outcomes.bad",
+      "cases:CASE_TEMPLATES[budget-misdirected].outcomes.bad"
+    ]
+  },
+  {
+    "id": "3467e491badcc598",
+    "ru": "Подготовлен проект ответа с полным комплектом документов. Принятый бюджет не подменяется проектом, мотив запроса не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].outcomes.good",
+      "cases:CASE_TEMPLATES[budget-misdirected].outcomes.good"
+    ]
+  },
+  {
+    "id": "000620f4cfe25ec7",
+    "ru": "Государственная услуга МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].procedures[210].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].procedures[210].text",
+      "cases:CASE_TEMPLATES[budget-link].procedures[210].text"
+    ]
+  },
+  {
+    "id": "bef7fa2221c35db2",
+    "ru": "Только общий порядок жалоб по 59-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].procedures[59].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].procedures[59].text",
+      "cases:CASE_TEMPLATES[budget-link].procedures[59].text"
+    ]
+  },
+  {
+    "id": "64f70f0eec31afe9",
+    "ru": "Специальный порядок запроса информации по 8-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].procedures[8].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].procedures[8].text",
+      "cases:CASE_TEMPLATES[budget-link].procedures[8].text"
+    ]
+  },
+  {
+    "id": "2750f68738b3b127",
+    "ru": "Электронно: ссылки на документы и приложения. Контакты я указал в запросе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[format].answer",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[format].answer"
+    ]
+  },
+  {
+    "id": "2f10070b1de2d6a8",
+    "ru": "Нужен электронный ответ с конкретными документами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[format].fact",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[format].fact"
+    ]
+  },
+  {
+    "id": "37df1b325e6dceed",
+    "ru": "В каком виде вам удобно получить ответ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[format].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[format].text"
+    ]
+  },
+  {
+    "id": "320c5aca4bc83940",
+    "ru": "Проект бюджета. Не уверен, что он совпадает с решением, которое приняли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[found].answer",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[found].answer"
+    ]
+  },
+  {
+    "id": "0500c283f50a1dee",
+    "ru": "Проект нельзя автоматически выдавать за принятое решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[found].fact",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[found].fact"
+    ]
+  },
+  {
+    "id": "262036e0a1931108",
+    "ru": "Что именно вы уже нашли на сайте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[found].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[found].text"
+    ]
+  },
+  {
+    "id": "fc6c94e5747476db",
+    "ru": "Нижегородский в Москве. Бюджет на {{caseYear}} год с изменениями, действующими на дату запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[period].answer",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[period].answer"
+    ]
+  },
+  {
+    "id": "42dee88671ee1ba4",
+    "ru": "Уточнены территория и требуемая редакция бюджета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[period].fact",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[period].fact"
+    ]
+  },
+  {
+    "id": "7116b78614a31777",
+    "ru": "О каком периоде и муниципальном округе идёт речь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[period].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[period].text"
+    ]
+  },
+  {
+    "id": "f59dc81512b380e0",
+    "ru": "Существующие: принятое решение, приложения и опубликованные материалы обсуждения проекта. Новую таблицу рассчитывать не прошу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[what].answer",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[what].answer"
+    ]
+  },
+  {
+    "id": "5662374540f0ce9a",
+    "ru": "Запрашиваются существующие документы о деятельности органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[what].fact",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[what].fact"
+    ]
+  },
+  {
+    "id": "6f1eed8b90d129cf",
+    "ru": "Нужны существующие документы или новый аналитический расчёт?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].questions[what].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].questions[what].text"
+    ]
+  },
+  {
+    "id": "f183a32f93749fb6",
+    "ru": "Учебная стажировка в подразделении, которое располагает запрошенными документами. Готовите ответ и комплект приложений для подписи уполномоченным сотрудником, а не пересылаете запрос самому себе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].role.text"
+    ]
+  },
+  {
+    "id": "74129b047a55401e",
+    "ru": "Аппарат Совета депутатов муниципального округа Нижегородский",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].role.title"
+    ]
+  },
+  {
+    "id": "4328de69073c0489",
+    "ru": "Уполномоченному сотруднику аппарата Совета депутатов для подготовки ответа с документами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].routes[council].text",
+      "cases:CASE_TEMPLATES[budget].contrast.decision"
+    ]
+  },
+  {
+    "id": "a20191147b870ee1",
+    "ru": "В Минфин России, хотя документы имеются в текущем органе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].routes[federal].text"
+    ]
+  },
+  {
+    "id": "22190269beb582fe",
+    "ru": "Отказать без доказательства личной заинтересованности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].routes[reject].text"
+    ]
+  },
+  {
+    "id": "eef43900d3b84228",
+    "ru": "Переслать весь запрос в управу района только из-за совпадения названия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].routes[uprava].text"
+    ]
+  },
+  {
+    "id": "48794f589ce8fd2f",
+    "ru": "Новая процедура",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].tag"
+    ]
+  },
+  {
+    "id": "edf7c94a026ba46a",
+    "ru": "Хочу посмотреть бюджет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[budget].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].cases[budget].title"
+    ]
+  },
+  {
+    "id": "bc59bfc705e41961",
+    "ru": "Информация о деятельности власти",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].topic",
+      "cases:CASE_TEMPLATES[budget-misdirected].topic",
+      "cases:CASE_TEMPLATES[budget-link].topic"
+    ]
+  },
+  {
+    "id": "1e4f81c42ddea935",
+    "ru": "Статья 8 закона от 09.02.2009 № 8-ФЗ закрепляет право не обосновывать необходимость получения общедоступной информации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].trap.explain",
+      "cases:CASE_TEMPLATES[budget-misdirected].trap.explain"
+    ]
+  },
+  {
+    "id": "0415de7ed0c5841f",
+    "ru": "Неверно: необходимость получения общедоступной информации обосновывать не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].trap.options[no].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].trap.options[no].text"
+    ]
+  },
+  {
+    "id": "9955bda935c8960e",
+    "ru": "Верно: сначала проверяем личную заинтересованность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].trap.options[require].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].trap.options[require].text"
+    ]
+  },
+  {
+    "id": "a974324b8c474bf6",
+    "ru": "Электронный помощник: «Общедоступную информацию о бюджете можно выдавать только после обоснования, зачем она понадобилась гражданину».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget].trap.text",
+      "cases:CASE_TEMPLATES[budget-misdirected].trap.text"
+    ]
+  },
+  {
+    "id": "029237110261ab98",
+    "ru": "Сопоставить просьбу с описью дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[a0].title"
+    ]
+  },
+  {
+    "id": "13bf951752b16279",
+    "ru": "Проверить ограничения по каждому материалу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7e1a6edfb739899d",
+    "ru": "Организовать ознакомление с доступной частью",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[a2].title"
+    ]
+  },
+  {
+    "id": "7ab33e144bcf0189",
+    "ru": "Исключить раскрытие чужих защищённых сведений без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b2782d1b3196f2dc",
+    "ru": "Проверить фактический состав выдаваемых файлов и полноту объяснения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[a4].title"
+    ]
+  },
+  {
+    "id": "110745f3944d5241",
+    "ru": "Отправить всё досье вместе с чужим медицинским приложением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[b0].title"
+    ]
+  },
+  {
+    "id": "ea98d293d1d93ea9",
+    "ru": "Отказать в открытом акте только из-за наличия другого приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].actions[b1].title",
+      "cases:CASE_TEMPLATES[complaint-access-materials].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "a9b3f7db66b78a6b",
+    "ru": "Все люди, документы и события этого дела вымышлены. Гражданин просит ознакомиться с материалами собственного рассмотренного обращения. Акт осмотра А-4 не содержит защищённых сведений; отдельное приложение содержит медицинские данные третьего лица. Никаких иных законных оснований их раскрытия нет. Данные доступа ограниченного приложения не влияют на возможность предоставить открытый акт. Это обращение по статье 5 закона № 59-ФЗ, не запрос медицинской документации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].brief"
+    ]
+  },
+  {
+    "id": "2bb1442dfc3b34f9",
+    "ru": "Спор идёт не о повторной оценке проблемы, а о доступе к материалам прежнего рассмотрения. Проверяются пределы доступа и конкретный состав копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].coach.plan",
+      "cases:CASE_TEMPLATES[complaint-access-materials].contrast.difference"
+    ]
+  },
+  {
+    "id": "8b9dc7f85de25c62",
+    "ru": "Статья 5 закона № 59-ФЗ предоставляет право знакомиться с материалами рассмотрения обращения, если это не затрагивает права и законные интересы других лиц и материалы не содержат защищаемой законом тайны. Наличие отдельного защищённого приложения не превращает все открытые материалы в секретные. В учебном деле допустимость ознакомления определяется составом каждого документа; иных законных оснований раскрывать данные третьего лица не задано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].coach.research",
+      "cases:CASE_TEMPLATES[complaint-access-materials].knowledge.explain",
+      "cases:CASE_TEMPLATES[proposal-representative-limits].coach.research"
+    ]
+  },
+  {
+    "id": "55c6fbf7b3f6bd33",
+    "ru": "Отказ сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d0].title"
+    ]
+  },
+  {
+    "id": "aef5fe7bb2638368",
+    "ru": "Опись материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d1].title"
+    ]
+  },
+  {
+    "id": "00aa2c7b72450a33",
+    "ru": "Заключение по доступу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d2].title"
+    ]
+  },
+  {
+    "id": "d3b6e269afd374f7",
+    "ru": "Защищённое отдельное приложение не исключает ознакомления с открытым актом и фотографиями. Спор идёт не о повторной оценке проблемы, а о доступе к материалам прежнего рассмотрения. Проверяются пределы доступа и конкретный состав копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.explain"
+    ]
+  },
+  {
+    "id": "6ee9add1d2c2bd77",
+    "ru": "Защищённое отдельное приложение не исключает ознакомления с открытым актом и фотографиями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "86e19b3e94797681",
+    "ru": "Нужно выдать всё досье, потому что обращение принадлежит гражданину.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4e467387551b8ed1",
+    "ru": "Любое личное сведение в одном приложении закрывает всю папку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-access-materials.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "da8002d0767ee757",
+    "ru": "Исправить предоставляемую копию, проверив её фактическое содержание до выдачи. Спор идёт не о повторной оценке проблемы, а о доступе к материалам прежнего рассмотрения. Проверяются пределы доступа и конкретный состав копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].followup.explain"
+    ]
+  },
+  {
+    "id": "4a92c170478ef828",
+    "ru": "В комплекте оставили только разрешённый акт, но скан последней страницы содержит оборот с медицинскими сведениями М-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].followup.intro"
+    ]
+  },
+  {
+    "id": "30a0fc44ced90718",
+    "ru": "Исправить предоставляемую копию, проверив её фактическое содержание до выдачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "4d718e536f713c8d",
+    "ru": "Считать копию безопасной только по имени файла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "8806c8ad56dda9f5",
+    "ru": "Вернуться к полному отказу во всех открытых материалах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a6d629b119ad23e7",
+    "ru": "Выдать чужие медицинские данные без законного основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "eac0ab4571720e77",
+    "ru": "Подменить рассмотрение состава общей фразой о закрытой папке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "1ba98ac7617a87fa",
+    "ru": "Найдите нормативное основание следующего действия: Предоставить доступные материалы и объяснить конкретное ограничение по защищённой части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "2076faefb445bb59",
+    "ru": "Мне написали, что площадку проверили. Хочу ознакомиться с актом. Отказали во всей папке: в ней якобы есть чужие личные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].opening",
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q2].answer",
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "cd6a61e832f549c2",
+    "ru": "Папка Д-42: акт А-4 о состоянии площадки, фотографии объекта без людей и приложение М-2 с медицинскими сведениями другого заявителя. Состав проверен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q0].answer",
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q0].fact",
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e5f702b2a7b6adb2",
+    "ru": "Акт А-4 и фотографии общедоступны для ознакомления по данному обращению. Медицинское приложение затрагивает права третьего лица, согласия или другого основания раскрытия нет. Его нельзя выдать целиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q1].answer",
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q1].fact",
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d2].text"
+    ]
+  },
+  {
+    "id": "4d7143dcade10648",
+    "ru": "Сотрудник отказал во всех материалах одной фразой: «В папке есть персональные данные». Состав документов отдельно не оценил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q3].answer",
+      "cases:CASE_TEMPLATES[complaint-access-materials].questions[q3].fact",
+      "cases:CASE_TEMPLATES[complaint-access-materials].documents[d0].text"
+    ]
+  },
+  {
+    "id": "32d1b0ce7fd7ae38",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Гражданин просит ознакомиться с материалами собственного рассмотренного обращения. Акт осмотра А-4 не содержит защищённых сведений; отдельное приложение содержит медицинские данные третьего лица. Никаких иных законных оснований их раскрытия нет. Данные доступа ограниченного приложения не влияют на возможность предоставить открытый акт. Это обращение по статье 5 закона № 59-ФЗ, не запрос медицинской документации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].role.text"
+    ]
+  },
+  {
+    "id": "58fa891e4b49eac7",
+    "ru": "Предоставить доступные материалы и объяснить конкретное ограничение по защищённой части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[complaint-access-materials].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[complaint-access-materials].contrast.decision"
+    ]
+  },
+  {
+    "id": "a25a717144655dc1",
+    "ru": "Покажите, на чём основан ответ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[complaint-access-materials].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[complaint-access-materials].title"
+    ]
+  },
+  {
+    "id": "a1e82fb2db268d1b",
+    "ru": "Предоставить доступные материалы и объяснить конкретное ограничение по защищённой части. Спор идёт не о повторной оценке проблемы, а о доступе к материалам прежнего рассмотрения. Проверяются пределы доступа и конкретный состав копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].trap.explain"
+    ]
+  },
+  {
+    "id": "a12a8697f201d81b",
+    "ru": "Открытый акт можно предоставить отдельно от защищённого приложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-access-materials].trap.text"
+    ]
+  },
+  {
+    "id": "eb132b9c285d5f41",
+    "ru": "Установить точный предмет и обжалуемое лицо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[a0].title"
+    ]
+  },
+  {
+    "id": "67a207f5eab36d10",
+    "ru": "Определить надлежащий маршрут независимого рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[a1].title"
+    ]
+  },
+  {
+    "id": "509a8bba89f09d3b",
+    "ru": "Запросить объяснение и необходимые материалы как доказательства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a3d34e706e3e8b04",
+    "ru": "Сообщить заявителю о порядке без необоснованных обвинений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[a3].title"
+    ]
+  },
+  {
+    "id": "4154e2166f78f8a6",
+    "ru": "Проверить, кем принято итоговое решение и рассмотрены ли доводы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b0e8c3866e236131",
+    "ru": "Оставить подпись по жалобе самому С-8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[b0].title"
+    ]
+  },
+  {
+    "id": "9bf81f312ca96926",
+    "ru": "Объявить нарушение доказанным до оценки материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].actions[b1].title",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "21f94df0473913f4",
+    "ru": "Все люди, документы и события этого дела вымышлены. Применяется общий порядок № 59-ФЗ, а не специальная досудебная процедура услуги. Обжалуются действия конкретного должностного лица С-8, а не решение органа в целом или его руководителя. Руководитель компетентен организовать независимое рассмотрение. Получение объяснения от С-8 допустимо как сбор материалов, но окончательное рассмотрение ему не передаётся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].brief"
+    ]
+  },
+  {
+    "id": "3f080f2aceaa5286",
+    "ru": "Нужно различать обжалуемое лицо и орган, который имеет компетенцию рассмотреть действия этого лица. Исключается рассмотрение жалобы на себя, а не любой запрос материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].coach.plan",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].contrast.difference"
+    ]
+  },
+  {
+    "id": "c8b2f04379a78d60",
+    "ru": "Статья 8 закона № 59-ФЗ: поступившее письменное обращение регистрируется в течение трёх дней. Вопросы вне компетенции направляются надлежащему адресату в течение семи дней со дня регистрации с уведомлением гражданина. При нескольких компетенциях копии направляются соответствующим органам. Жалобу нельзя направлять на рассмотрение органу или должностному лицу, чьи решения или действия обжалуются. Получить от такого лица сведения не равнозначно поручению ему окончательного рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].coach.research",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].knowledge.explain",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].coach.research"
+    ]
+  },
+  {
+    "id": "4e1a0c5b152c55d6",
+    "ru": "Схема полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d0].title"
+    ]
+  },
+  {
+    "id": "cce7134505465c3b",
+    "ru": "Резолюция руководителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ee87e91bb19012d5",
+    "ru": "Объяснение С-8 можно получить, но окончательное рассмотрение жалобы на него ему поручать нельзя. Нужно различать обжалуемое лицо и орган, который имеет компетенцию рассмотреть действия этого лица. Исключается рассмотрение жалобы на себя, а не любой запрос материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.explain"
+    ]
+  },
+  {
+    "id": "5de60003284938ce",
+    "ru": "Объяснение С-8 можно получить, но окончательное рассмотрение жалобы на него ему поручать нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "5212fabd44fe26e2",
+    "ru": "Запрет исключает даже получение фактических пояснений от С-8.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f3b3b59c49f86880",
+    "ru": "Любая жалоба на сотрудника обязательно уходит только в суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-complaint-officer-not-organ.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "ef7fbc306d66dd31",
+    "ru": "Провести независимое рассмотрение доводов; переименование объяснения не заменяет решение. Нужно различать обжалуемое лицо и орган, который имеет компетенцию рассмотреть действия этого лица. Исключается рассмотрение жалобы на себя, а не любой запрос материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].followup.explain"
+    ]
+  },
+  {
+    "id": "bb93ffcbdcba4239",
+    "ru": "Объяснение С-8 поступило. В папке его переименовали в «ответ по жалобе», но независимого рассмотрения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].followup.intro"
+    ]
+  },
+  {
+    "id": "e4fb720f91bcb41f",
+    "ru": "Провести независимое рассмотрение доводов; переименование объяснения не заменяет решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d24f8c3eb9c36708",
+    "ru": "Закрыть дело по наличию файла с новым названием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "8d81f90fa0ccc14b",
+    "ru": "Переслать гражданину пояснение С-8 как окончательный ответ без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "d1f147cf2e9e29ff",
+    "ru": "Не собирать вообще никаких документов прежнего рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "ba4a6d8c39da0090",
+    "ru": "Найдите нормативное основание следующего действия: Разделить сбор пояснений и независимое рассмотрение в надлежащей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "ca9132dc555e6283",
+    "ru": "Я жалуюсь на сотрудника отдела. Руководитель предложил ему самому подготовить и подписать окончательный ответ. Но ведь я о его действиях и пишу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].opening",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q2].answer",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "688829443c1ad1d7",
+    "ru": "Гражданин оспаривает действия должностного лица С-8 при предыдущем рассмотрении. Действия руководителя и акт органа в целом предметом этой жалобы не являются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q0].answer",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q0].fact",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d1].text"
+    ]
+  },
+  {
+    "id": "61b8711f366551c6",
+    "ru": "С-8 поручено дать своё объяснение, затем самому окончательно рассмотреть жалобу и подписать ответ от собственного имени. Другой проверяющий не назначен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q1].answer",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q1].fact",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d2].text"
+    ]
+  },
+  {
+    "id": "5dc41813c157c265",
+    "ru": "Руководитель может поручить независимую проверку С-9 и запросить фактическое объяснение С-8. С-9 не участвовал в обжалуемых действиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q3].answer",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].questions[q3].fact",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d0].text"
+    ]
+  },
+  {
+    "id": "023d478020427680",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Применяется общий порядок № 59-ФЗ, а не специальная досудебная процедура услуги. Обжалуются действия конкретного должностного лица С-8, а не решение органа в целом или его руководителя. Руководитель компетентен организовать независимое рассмотрение. Получение объяснения от С-8 допустимо как сбор материалов, но окончательное рассмотрение ему не передаётся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].role.text"
+    ]
+  },
+  {
+    "id": "af68421d6e0d15ba",
+    "ru": "Руководитель и независимый уполномоченный исполнитель по жалобе на С-8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].routes[0].text"
+    ]
+  },
+  {
+    "id": "8b43a875df1a0105",
+    "ru": "Разделить сбор пояснений и независимое рассмотрение в надлежащей компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].contrast.decision"
+    ]
+  },
+  {
+    "id": "3233fd696a739b9c",
+    "ru": "Объяснение работника — не решение по жалобе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[complaint-officer-not-organ].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[complaint-officer-not-organ].title"
+    ]
+  },
+  {
+    "id": "cc1977a9e00fc320",
+    "ru": "Разделить сбор пояснений и независимое рассмотрение в надлежащей компетенции. Нужно различать обжалуемое лицо и орган, который имеет компетенцию рассмотреть действия этого лица. Исключается рассмотрение жалобы на себя, а не любой запрос материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].trap.explain"
+    ]
+  },
+  {
+    "id": "157a33c69fb435b5",
+    "ru": "Передать окончательное решение самому обжалуемому лицу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].trap.text",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "32f9b9f8cdb33061",
+    "ru": "Исключить неудобные документы из состава дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[destroy].title"
+    ]
+  },
+  {
+    "id": "35b12401dd2aa29e",
+    "ru": "Подготовить мотивированный ответ по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[notify].title"
+    ]
+  },
+  {
+    "id": "af6423e8f554e3ef",
+    "ru": "Зафиксировать предмет жалобы и обжалуемое лицо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[register].title"
+    ]
+  },
+  {
+    "id": "3c599a42ed5f7d33",
+    "ru": "Подготовить запрос необходимых служебных материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[request].title"
+    ]
+  },
+  {
+    "id": "d66363569ad1c709",
+    "ru": "Передать материалы для рассмотрения уполномоченным руководителем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[review].title"
+    ]
+  },
+  {
+    "id": "df1a8c60eccbc200",
+    "ru": "Поручить обжалуемому начальнику окончательно рассмотреть жалобу на себя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[same].title"
+    ]
+  },
+  {
+    "id": "6189dddb71038aa1",
+    "ru": "Проверить полномочия лица, организующего рассмотрение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[scope].title"
+    ]
+  },
+  {
+    "id": "d6a32e842af55608",
+    "ru": "Проверить, что ответ касается изложенных доводов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].actions[track].title"
+    ]
+  },
+  {
+    "id": "7e07a3f339a271b4",
+    "ru": "Письменная жалоба на бездействие начальника отдела поступила руководителю департамента. По условию полномочия руководителя на её рассмотрение установлены. Нужно организовать рассмотрение и подготовить ответ, а не определять наличие состава правонарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].brief"
+    ]
+  },
+  {
+    "id": "8ea1ff13e0b6b820",
+    "ru": "Предложено убрать существенные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].criticalRules[destroy].message"
+    ]
+  },
+  {
+    "id": "ad7c5e372304196b",
+    "ru": "Жалоба передана на окончательное рассмотрение самому обжалуемому лицу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].criticalRules[same].message"
+    ]
+  },
+  {
+    "id": "6e7f77e1c80c7d89",
+    "ru": "Руководитель департамента уполномочен рассмотреть эту жалобу. Отдел предоставляет документы по запросу руководителя; окончательное рассмотрение жалобы на начальника не поручается самому начальнику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[competence].text"
+    ]
+  },
+  {
+    "id": "bce792d4860389e0",
+    "ru": "Учебная схема полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[competence].title"
+    ]
+  },
+  {
+    "id": "beecb24f89a57c00",
+    "ru": "Обжалуется бездействие начальника отдела при рассмотрении доводов. Руководитель департамента не является обжалуемым лицом. Дело и все должности вымышлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[complaint].text"
+    ]
+  },
+  {
+    "id": "24cef62a09019198",
+    "ru": "Текст жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[complaint].title",
+      "cases:CASE_TEMPLATES[complaint-officer-not-organ].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3598f16385f32b5c",
+    "ru": "Предлагается направить жалобу начальнику отдела для окончательного рассмотрения и подготовки ответа от своего имени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[resolution].text"
+    ]
+  },
+  {
+    "id": "f00193ea5b10edda",
+    "ru": "Предложение по резолюции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].documents[resolution].title"
+    ]
+  },
+  {
+    "id": "660813d378cd2915",
+    "ru": "Получение объяснений и материалов не тождественно поручению обжалуемому лицу окончательно рассмотреть жалобу на себя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].factTask.explain",
+      "cases:CASE_TEMPLATES[complaint-routing].coach.docs",
+      "cases:CASE_TEMPLATES[complaint-routing].contrast.difference"
+    ]
+  },
+  {
+    "id": "e79f40fa01cfbdc2",
+    "ru": "Знание дела начальником автоматически исключает необходимость проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].factTask.options[expert].text"
+    ]
+  },
+  {
+    "id": "119b335d867ae764",
+    "ru": "Руководителю запрещено получать любые документы от отдела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].factTask.options[forbidden].text"
+    ]
+  },
+  {
+    "id": "cb5e300122cabb14",
+    "ru": "Предложенный окончательный исполнитель — лицо, чьё бездействие обжаловано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].factTask.options[same].text"
+    ]
+  },
+  {
+    "id": "c8e559d5f2cc0990",
+    "ru": "Что существенно для выбора исполнителя рассмотрения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].factTask.prompt"
+    ]
+  },
+  {
+    "id": "e2dd455fdcf73eff",
+    "ru": "Контроль относится к субъекту окончательного рассмотрения и полноте проверки, а не к запрету получить доказательства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].followup.explain"
+    ]
+  },
+  {
+    "id": "fa3a6a149f85604a",
+    "ru": "В контрольном эпизоде получена резолюция руководителя: начальник отдела должен представить документы и объяснение; рассмотрение и подпись ответа остаются за руководителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].followup.intro"
+    ]
+  },
+  {
+    "id": "7e0ff42a3d08f348",
+    "ru": "Считать жалобу удовлетворённой уже из-за получения объяснения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "74f1cf2b0d93f4de",
+    "ru": "Признать любой запрос документов у отдела незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].followup.options[ignore].text"
+    ]
+  },
+  {
+    "id": "7c00bd5d99ba6d4d",
+    "ru": "Сохранить материал как часть рассмотрения и проверить доводы независимо от объяснения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[complaint-routing].followup.options[verify].text"
+    ]
+  }
+]

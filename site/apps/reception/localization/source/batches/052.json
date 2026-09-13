@@ -1,0 +1,1175 @@
+[
+  {
+    "id": "d3938b34acbc1f28",
+    "ru": "Проверить новое дерево отдельно; разрешение на Д-14 и Д-15 не подтверждает основание для Д-16. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].followup.explain"
+    ]
+  },
+  {
+    "id": "12ca22b4d8bca7ce",
+    "ru": "Через неделю жительница сообщает об удалении Д-16. В прежней выписке этого номера нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].followup.intro"
+    ]
+  },
+  {
+    "id": "43597b7fc0cdbcbe",
+    "ru": "Проверить новое дерево отдельно; разрешение на Д-14 и Д-15 не подтверждает основание для Д-16.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f43291600f3ca584",
+    "ru": "Ответить, что законность работ по двору уже установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "5a589111a76ad5ec",
+    "ru": "Исправить номер в старом разрешении без решения уполномоченного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "88872b255f14ada0",
+    "ru": "У дома срубили два дерева. Мне разрешение не показывали, поэтому я уверена, что работали без него. Ведомство прислало документы, помогите разобраться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].opening"
+    ]
+  },
+  {
+    "id": "33e621bb2b27779e",
+    "ru": "Считать отсутствие разрешения у заявителя доказательством отсутствия самого разрешения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].procedures[1].text"
+    ]
+  },
+  {
+    "id": "2d65e78664785148",
+    "ru": "Проверить только номер документа, не сравнивая участок, объекты и виды работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].procedures[2].text"
+    ]
+  },
+  {
+    "id": "a0f29ca52e0562c7",
+    "ru": "Д-14 и Д-15. Эти номера есть в моей карточке места и на приложенном плане.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "acea18a28150b534",
+    "ru": "Объекты можно однозначно сопоставить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "64a6b00fdb4bf395",
+    "ru": "Как обозначены деревья на плане?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q0].text"
+    ]
+  },
+  {
+    "id": "0e5419f4fd7d97ce",
+    "ru": "Да. В учебной выписке подтверждены подлинность, действительность на дату и именно эти номера с видом работ «удаление».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "ae22d9fdcf14c910",
+    "ru": "Проверяется не только бумага, предъявленная подрядчиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "8c10b45cfa1a382b",
+    "ru": "Разрешение проверено у уполномоченного органа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q1].text"
+    ]
+  },
+  {
+    "id": "00fdd2b55f561fbb",
+    "ru": "Они относятся к тем же деревьям; в условиях дела не установлено отклонений от разрешённых работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "f93cf96647ffd194",
+    "ru": "Нельзя заменять подтверждённый факт отсутствием копии у заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "7eae32a0c9b73dcb",
+    "ru": "Есть ли акт выполнения и заключение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q2].text"
+    ]
+  },
+  {
+    "id": "05a85e0d0017ced4",
+    "ru": "Пока хочу объяснение основания. Порядок последующего восстановления указан отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a55095c7508261e8",
+    "ru": "Ответ должен охватывать конкретный вопрос и границы проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "cfc235509aacdb3d",
+    "ru": "Есть ли отдельные новые вопросы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].questions[q3].text"
+    ]
+  },
+  {
+    "id": "f9d64a2d6d538057",
+    "ru": "Специалист подразделения по обращениям в сфере городского озеленения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].role.title",
+      "cases:CASE_TEMPLATES[trees-pruning-scope].role.title"
+    ]
+  },
+  {
+    "id": "41e799448f2f36ab",
+    "ru": "Подготовить ответ по проверенному комплекту конкретных объектов; новые объекты требуют отдельной оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].routes[0].text"
+    ]
+  },
+  {
+    "id": "f19358c12d827a1b",
+    "ru": "Объявить работы незаконными, потому что копия разрешения не была приложена самим жителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].routes[1].text"
+    ]
+  },
+  {
+    "id": "82c3deb70f117b13",
+    "ru": "Считать совпадение перечня деревьев подтверждением любых работ на соседних участках.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].routes[2].text"
+    ]
+  },
+  {
+    "id": "76c83877540bd070",
+    "ru": "Номера деревьев совпали",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[trees-permit-matches].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[trees-permit-matches].title"
+    ]
+  },
+  {
+    "id": "d1bcd0d5adf688c2",
+    "ru": "В первоначальном варианте разрешение относилось к другому месту. Здесь оно подтверждено для нужных деревьев, и ответ по существу должен измениться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].trap.explain",
+      "cases:CASE_TEMPLATES[trees-permit-matches].coach.plan",
+      "cases:CASE_TEMPLATES[trees-permit-matches].contrast.difference"
+    ]
+  },
+  {
+    "id": "e2f78ba35c6b8821",
+    "ru": "Помощник: «Вывод по двум указанным деревьям не подтверждает разрешение на удаление третьего».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].trap.text"
+    ]
+  },
+  {
+    "id": "b654b6f2b7288ebe",
+    "ru": "Сопоставить вид разрешённой и фактически выполненной работы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b8c15824824fd833",
+    "ru": "Подготовить выяснение наличия иных действующих оснований по Д-22",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[a1].title"
+    ]
+  },
+  {
+    "id": "b7786dfb3d85bed0",
+    "ru": "Передать подтверждённое расхождение на оценку уполномоченному подразделению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8936e82b284cc513",
+    "ru": "Сообщить заявительнице установленное расхождение без преждевременного обвинения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ea25005c74d46e19",
+    "ru": "Проверить, что ответ относится к Д-22 и полному виду работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[a4].title"
+    ]
+  },
+  {
+    "id": "e43e6f4c0ff9e875",
+    "ru": "Закрыть обращение по факту существования любого документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[b0].title"
+    ]
+  },
+  {
+    "id": "45f49f0d8c2a1b0c",
+    "ru": "Назначить санкцию от имени приёмной до рассмотрения обстоятельств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].actions[b1].title"
+    ]
+  },
+  {
+    "id": "f728d51c06611e00",
+    "ru": "Охрана зелёного фонда включает меры по его сохранению и развитию; регулирование осуществляется в соответствии с законодательством. Статья не является готовым разрешением на удаление любого дерева и не устанавливает единый набор документов для всех территорий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].coach.research",
+      "cases:CASE_TEMPLATES[trees-pruning-scope].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[trees-pruning-scope].knowledge.explain"
+    ]
+  },
+  {
+    "id": "79d73027bf777027",
+    "ru": "Назначить санкцию от имени приёмной до рассмотрения обстоятельств: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "2a93cf650e484598",
+    "ru": "Действующий документ на Д-22 допускает санитарную обрезку указанных ветвей. Удаление ствола в объём этого документа не включено. Порядок выдачи задан учебным комплектом, а не универсализирован для России.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b3eae033dc43d321",
+    "ru": "Разрешённый объём Д-22",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d0].title"
+    ]
+  },
+  {
+    "id": "cdd0e1626b5706c6",
+    "ru": "Уполномоченный специалист зафиксировал удаление ствола Д-22. Номер и участок совпадают. Сведений о дополнительном основании в комплекте нет; его наличие необходимо проверить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e4c82f054ecc5369",
+    "ru": "Карточка профильного осмотра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a444c9563d05d5f6",
+    "ru": "Для Д-23 в другом месте разрешено удаление. Этот документ не расширяет объём по Д-22.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d2].text"
+    ]
+  },
+  {
+    "id": "4c26fbf67333c994",
+    "ru": "Разрешение на Д-23",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].documents[d2].title"
+    ]
+  },
+  {
+    "id": "6d337dfbabb8136f",
+    "ru": "Вид фактически выполненной работы не покрыт представленным основанием; нужно проверить иные основания и обстоятельства по компетенции. В исходном варианте не совпадал участок. Здесь участок и дерево совпадают, а решающее различие — разрешённый и фактически выполненный вид работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.explain"
+    ]
+  },
+  {
+    "id": "8a68cea18830ff84",
+    "ru": "Вид фактически выполненной работы не покрыт представленным основанием; нужно проверить иные основания и обстоятельства по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "661dfa4946af5315",
+    "ru": "Совпадение номера дерева достаточно: любой документ разрешает любой вид работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "4b15bfeaba46050b",
+    "ru": "Приёмная может немедленно назначить виновному штраф без выяснения иных оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "7a55477984297540",
+    "ru": "Сохранить вопрос по Д-22 на контроле и проверить надлежащее основание именно по нему. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].followup.explain"
+    ]
+  },
+  {
+    "id": "a78941560eede2c6",
+    "ru": "В ответ прислали дополнительное разрешение на удаление Д-23, а не Д-22.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].followup.intro"
+    ]
+  },
+  {
+    "id": "f89591c0214538bd",
+    "ru": "Сохранить вопрос по Д-22 на контроле и проверить надлежащее основание именно по нему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "0d0c7dc0bdba73cb",
+    "ru": "Принять любое разрешение на удаление как оправдание работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "267cc7f69a7ac8e4",
+    "ru": "Самостоятельно вписать Д-22 в предъявленный документ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "5146cf32d5860c6c",
+    "ru": "Найдите норму: Охрана окружающей среды: зелёный фонд. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].knowledge.prompt",
+      "cases:CASE_TEMPLATES[trees-current-danger].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5028cd821dd971bb",
+    "ru": "Подрядчик показывает разрешение на работы с деревом. Но в нём написана обрезка ветвей, а на месте остался пень. Получается, любой такой документ всё разрешает?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].opening"
+    ]
+  },
+  {
+    "id": "451fdd8011bb9a1c",
+    "ru": "Определить допустимость работ по совпадению номера дерева без проверки их вида.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].procedures[1].text"
+    ]
+  },
+  {
+    "id": "ed2ac1abdc0dbe4e",
+    "ru": "Считать любой документ на уход за деревом разрешением на удаление ствола.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].procedures[2].text"
+    ]
+  },
+  {
+    "id": "f91a7d5dfcb85bd2",
+    "ru": "Да, дерево Д-22 и участок указаны одинаково.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "2fd6ea55dfa1a62b",
+    "ru": "Различие не в адресе, а в виде работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "5e3b0134bc5bc497",
+    "ru": "Номер объекта совпадает?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q0].text"
+    ]
+  },
+  {
+    "id": "3c1dc3e20203415c",
+    "ru": "Санитарная обрезка определённых ветвей; удаление дерева в документе отсутствует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "7649b15218b3ebb1",
+    "ru": "Предел основания прямо указан в материалах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "86231e2583e71964",
+    "ru": "Какой вид работ разрешён?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q1].text"
+    ]
+  },
+  {
+    "id": "982838d39dc6af09",
+    "ru": "Профильный специалист составил карточку: на Д-22 удалён ствол, сохранён пень.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "5b84cbf3e89d7d44",
+    "ru": "Вывод основан не только на любительском ракурсе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "cb71a42498b7ec89",
+    "ru": "Кто подтвердил фактический результат?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a642122b0a979d92",
+    "ru": "В имеющемся комплекте нет; необходимо выяснить у уполномоченного отдела, существовало ли другое основание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "f29cbcb2addc93da",
+    "ru": "Сотрудник не должен заранее назначать виновность и санкцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "dd1d5a1e2d13fd12",
+    "ru": "Есть ли подтверждённое дополнение к разрешению?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].questions[q3].text"
+    ]
+  },
+  {
+    "id": "50b96df5ae04e89c",
+    "ru": "Подготовить проверку расхождения по объекту и виду работ уполномоченным подразделением; не подменять его правовую оценку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].routes[0].text"
+    ]
+  },
+  {
+    "id": "638a32488ccf31b2",
+    "ru": "Подтвердить правомерность удаления только по документу на санитарную обрезку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].routes[1].text"
+    ]
+  },
+  {
+    "id": "b25fdc99223ebf3e",
+    "ru": "Назначить санкцию письмом приёмной без проверки дополнительных оснований и компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].routes[2].text"
+    ]
+  },
+  {
+    "id": "e4f9b62feaca14e5",
+    "ru": "Разрешили обрезку, убрали ствол",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[trees-pruning-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[trees-pruning-scope].title"
+    ]
+  },
+  {
+    "id": "4245097d7332a277",
+    "ru": "В исходном варианте не совпадал участок. Здесь участок и дерево совпадают, а решающее различие — разрешённый и фактически выполненный вид работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].trap.explain",
+      "cases:CASE_TEMPLATES[trees-pruning-scope].coach.plan",
+      "cases:CASE_TEMPLATES[trees-pruning-scope].contrast.difference"
+    ]
+  },
+  {
+    "id": "8cac3b13b385ccd6",
+    "ru": "Помощник: «Для законности достаточно совпадения адреса, вид работ в разрешении несущественен».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-pruning-scope].trap.text"
+    ]
+  },
+  {
+    "id": "3324399e3704777f",
+    "ru": "Проверить материал целиком, включая возможные приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[a0].title"
+    ]
+  },
+  {
+    "id": "43247900d343a5c5",
+    "ru": "Зафиксировать отсутствие определимого предмета без оценки взглядов автора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[a1].title"
+    ]
+  },
+  {
+    "id": "92e2d447073ec1d6",
+    "ru": "Подготовить предусмотренное сообщение по правильному основанию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f9cbc3239c096133",
+    "ru": "Разъяснить необходимость указать конкретный вопрос без требования юридической терминологии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[a3].title"
+    ]
+  },
+  {
+    "id": "2b99d603e0119bb5",
+    "ru": "Сохранить подтверждение направления уведомления и учесть возможное уточнение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[a4].title"
+    ]
+  },
+  {
+    "id": "a2462eab0131271f",
+    "ru": "Отклонять любые неюридические формулировки как не имеющие смысла",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[b0].title",
+      "cases:CASE_TEMPLATES[unclear-subject].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "32c91b08f65fae3b",
+    "ru": "Приписать автору непроизнесённое требование и направить его по случайной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].actions[b1].title"
+    ]
+  },
+  {
+    "id": "53645029b90627f3",
+    "ru": "Крайний день уведомления о неопределимости сути",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].calendar.title"
+    ]
+  },
+  {
+    "id": "e99dfbf263d93ec1",
+    "ru": "В предыдущем варианте текст физически не читается; здесь он читаем, но предмет не определяется. Основания уведомления различны, хотя продолжительность срока совпадает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].contrast.difference"
+    ]
+  },
+  {
+    "id": "4ae0a694cefde429",
+    "ru": "Учебное условие: весь текст читаем, однако не позволяет определить суть предложения, заявления или жалобы. Нет содержательных приложений, ссылок на прежние обращения или отдельного определимого требования. Вывод не основан на эмоциональности или несогласии с автором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3a47df9bb3328d72",
+    "ru": "Проверка полного материала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].documents[d0].title"
+    ]
+  },
+  {
+    "id": "076e0a2a89ba0518",
+    "ru": "Фамилия и почтовый адрес читаются. Материал зарегистрирован {{registered}}. Нужно подготовить сообщение по установленному для этой ситуации порядку, а не самостоятельно конструировать требование автора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].documents[d1].text"
+    ]
+  },
+  {
+    "id": "8c5d4555fd6f3835",
+    "ru": "Адрес и регистрация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3732703be3748886",
+    "ru": "Здесь не определяется суть обращения, хотя текст читаем; нужно уведомление по соответствующему основанию, а не признание любого эмоционального письма непонятным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[unclear-subject].factTask.explain",
+      "cases:CASE_TEMPLATES[unclear-subject].outcomes.good"
+    ]
+  },
+  {
+    "id": "4da6892b1cbd440d",
+    "ru": "Любое эмоциональное или грамматически несовершенное письмо относится к этому случаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "de8b9943b92cf230",
+    "ru": "Сотрудник должен сам придумать требование автора и исполнить его.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "979a520d485d335e",
+    "ru": "Учебное продолжение. Пришло уточнение: автор назвал конкретный отказ, организацию и желаемое действие, приложил документ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].followup.intro"
+    ]
+  },
+  {
+    "id": "ce74bb32cefbdfec",
+    "ru": "Рассмотреть определимый вопрос по уточнённому материалу, не переносить на него прежний вывод о неопределённости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].followup.options[0].text",
+      "cases:CASE_TEMPLATES[unclear-subject].followup.explain"
+    ]
+  },
+  {
+    "id": "de2036911aef6f86",
+    "ru": "Продолжать отказывать из-за прежнего письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "23fa4e090e8747b2",
+    "ru": "Требовать ещё один текст, обязательно составленный юристом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2aaecec780901694",
+    "ru": "Уведомить о неопределимости сути, не смешивая это основание с плохим почерком или непрофессиональной речью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[unclear-subject].knowledge.explain",
+      "cases:CASE_TEMPLATES[unclear-subject].coach.research"
+    ]
+  },
+  {
+    "id": "dc3fc417a0e4110a",
+    "ru": "Дежурный передаёт письмо: текст напечатан разборчиво, фамилия и адрес есть, но из материала нельзя определить, какое предложение, заявление или жалоба поданы. Приложений и ссылок на другое дело нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].opening"
+    ]
+  },
+  {
+    "id": "2914bae45e0944da",
+    "ru": "Да, качество текста хорошее.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b680c6efd5d9ccee",
+    "ru": "Это не случай физической нечитаемости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "a066387d6a0d7aa9",
+    "ru": "Можно ли прочитать слова?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f1995fc0c09d421e",
+    "ru": "Нет: проверили весь текст, обращения к конкретному решению, событию или предложению нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "4ac64a86c1b75b13",
+    "ru": "Невозможность определить суть задана материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "5776638a7f7ea31c",
+    "ru": "Удаётся ли определить предмет после чтения всего материала?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0626c93c026b05ab",
+    "ru": "Нет, вложений и понятной ссылки на прежнее дело не указано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0cc7195e82ec030d",
+    "ru": "Не игнорируем возможные контекстные сведения: их здесь нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "4640c7d06ce63bbb",
+    "ru": "Есть ли ссылка или приложение, раскрывающие вопрос?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q2].text"
+    ]
+  },
+  {
+    "id": "73cc1d952840dcec",
+    "ru": "Да, фамилия и почтовый адрес указаны разборчиво.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "b9eeb58321879b82",
+    "ru": "Уведомление имеет установленного адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "3137d5f883239951",
+    "ru": "Можно ли направить сообщение автору?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8835477971173573",
+    "ru": "Подготовить сообщение по части 4.1 статьи 11 о невозможности определить суть обращения, указав возможность изложить конкретный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].routes[0].text",
+      "cases:CASE_TEMPLATES[unclear-subject].coach.plan"
+    ]
+  },
+  {
+    "id": "55fa6d9e20388c38",
+    "ru": "Направить всем органам по отдельному случайному слову из текста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].routes[1].text",
+      "cases:CASE_TEMPLATES[unclear-subject].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "9832f5358e3a9b06",
+    "ru": "Назвать текст нечитаемым, хотя все слова разборчивы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].routes[2].text",
+      "cases:CASE_TEMPLATES[unclear-subject].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "281f84d3f74299c6",
+    "ru": "Все слова читаются, вопрос не определяется",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[unclear-subject].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[unclear-subject].title"
+    ]
+  },
+  {
+    "id": "645b56cd75e7da84",
+    "ru": "Определимость сути не равна профессиональному стилю: понятный бытовой вопрос нельзя отклонить лишь за формулировку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].trap.options[0].text",
+      "cases:CASE_TEMPLATES[unclear-subject].trap.explain"
+    ]
+  },
+  {
+    "id": "baaa0078b2d3a518",
+    "ru": "Любое непрофессиональное изложение не имеет определимой сути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "5bb81c0a95f35e79",
+    "ru": "Помощник: «Автор обязан писать юридическими терминами, иначе вопрос не рассматривают».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unclear-subject].trap.text"
+    ]
+  },
+  {
+    "id": "c6260b38fce89c0c",
+    "ru": "Зафиксировать результат проверки оригинала и приложений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[a0].title"
+    ]
+  },
+  {
+    "id": "7651516d2dcfa659",
+    "ru": "Подтвердить читаемость фамилии и адреса уведомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[a1].title"
+    ]
+  },
+  {
+    "id": "12fca2438344a4cd",
+    "ru": "Подготовить сообщение о невозможности прочитать текст по установленному порядку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[a2].title"
+    ]
+  },
+  {
+    "id": "30e8bbe1e743abe3",
+    "ru": "Понятно объяснить возможность направить читаемый материал без требования неустановленных документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3d7ea6390493ba77",
+    "ru": "Сохранить регистрацию и подтверждение направления уведомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[a4].title"
+    ]
+  },
+  {
+    "id": "999cd82d872a35ae",
+    "ru": "Придумать содержание и переадресовать по догадке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[b0].title",
+      "cases:CASE_TEMPLATES[unreadable-body].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "fc40d719f5d137cc",
+    "ru": "Удалить письмо без уведомления при читаемых фамилии и адресе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].actions[b1].title"
+    ]
+  },
+  {
+    "id": "c20695136ab682d8",
+    "ru": "59-ФЗ, статья 11, части 4 и 4.1: уведомление по указанному предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].calendar.source",
+      "cases:CASE_TEMPLATES[unclear-subject].calendar.source"
+    ]
+  },
+  {
+    "id": "05356f06d0e6cf3d",
+    "ru": "Крайний день уведомления о нечитаемости текста",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].calendar.title"
+    ]
+  },
+  {
+    "id": "c338ac2e334366e5",
+    "ru": "Дежурный по входящей корреспонденции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].citizen.description",
+      "cases:CASE_TEMPLATES[unclear-subject].citizen.description",
+      "cases:CASE_TEMPLATES[readable-attachment].citizen.description"
+    ]
+  },
+  {
+    "id": "240993454d2940f3",
+    "ru": "Дежурный специалист",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].citizen.name",
+      "cases:CASE_TEMPLATES[unclear-subject].citizen.name",
+      "cases:CASE_TEMPLATES[readable-attachment].citizen.name"
+    ]
+  },
+  {
+    "id": "982b38d45dbfc17f",
+    "ru": "В исходном анонимном сообщении содержание известно, но автор не установлен. Здесь автор известен, а содержание прочитать нельзя: меняются действие и срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].contrast.difference"
+    ]
+  },
+  {
+    "id": "5841c189511505fa",
+    "ru": "В вымышленном деле исходный лист и копия не позволяют прочитать содержание. Фамилия и почтовый адрес установлены и читаемы. Приложений, позволяющих определить вопрос, нет. Это не анонимное письмо: проблема состоит именно в нечитаемом тексте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].documents[d0].text"
+    ]
+  },
+  {
+    "id": "1d233c4f66173a81",
+    "ru": "Результат осмотра письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].documents[d0].title"
+    ]
+  },
+  {
+    "id": "43968067f9586a41",
+    "ru": "Письмо зарегистрировано {{registered}}. В учебной задаче нужно определить крайнюю дату сообщения о невозможности прочитать текст. Восстанавливать смысл по догадке или адресовать письмо предполагаемому ведомству не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].documents[d1].text"
+    ]
+  },
+  {
+    "id": "0e54886934545f00",
+    "ru": "Регистрационная карточка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].documents[d1].title"
+    ]
+  },
+  {
+    "id": "db1f5df1f2425f1f",
+    "ru": "При установленной нечитаемости содержания и читаемых фамилии и адресе требуется предусмотренное уведомление, а не ответ по существу или догадочная переадресация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[unreadable-body].factTask.explain",
+      "cases:CASE_TEMPLATES[unreadable-body].outcomes.good"
+    ]
+  },
+  {
+    "id": "409df5b910b92383",
+    "ru": "Наличие адреса позволяет придумать тему письма и направить по усмотрению сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "7f9e7c4eb3e12a9b",
+    "ru": "Любой нечитаемый текст нужно молча удалить вместе с регистрационной карточкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "53c6a465472bec13",
+    "ru": "Учебное продолжение. Автор прислал читаемую копию с конкретным вопросом и указал номер прежнего уведомления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].followup.intro"
+    ]
+  },
+  {
+    "id": "6a46f2f53e013daf",
+    "ru": "Рассмотреть вновь поступивший читаемый материал по его содержанию и применимому порядку; прежняя нечитаемость не запрещает новое обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].followup.options[0].text",
+      "cases:CASE_TEMPLATES[unreadable-body].followup.explain"
+    ]
+  },
+  {
+    "id": "fdbe1f23a3e2e57e",
+    "ru": "Вернуть копию, потому что по прежнему письму уже отправлено уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c2673cf287cc1981",
+    "ru": "Автоматически удовлетворить любое требование без чтения новой копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "0f7c52109f1b8008",
+    "ru": "Уведомить автора о нечитаемости текста, не подменяя отсутствующее содержание догадкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[unreadable-body].knowledge.explain",
+      "cases:CASE_TEMPLATES[unreadable-body].coach.research"
+    ]
+  },
+  {
+    "id": "2779f82db4f6100c",
+    "ru": "В канцелярии поступило бумажное письмо: лист промок, основной текст не удаётся прочитать. На конверте и в шапке разборчивы фамилия и почтовый адрес. Дежурный показывает оригинал и качественную копию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].opening"
+    ]
+  },
+  {
+    "id": "aed7b81b237e1c92",
+    "ru": "Нет: проверили оригинал и копию, восстановить текст по ним нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "418dd501f584c73a",
+    "ru": "Невозможность чтения установлена по материалу, а не по неудобному почерку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "df3848e82bbd5a10",
+    "ru": "Читается ли само содержание?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q0].text"
+    ]
+  },
+  {
+    "id": "eceb992c58c11317",
+    "ru": "Фамилия и почтовый адрес разборчивы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "9fb0d1026d4a58cc",
+    "ru": "Есть адресат для уведомления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "edb7f92e84827ecb",
+    "ru": "Какие сведения об авторе известны?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q1].text"
+    ]
+  },
+  {
+    "id": "826d7f03a1737059",
+    "ru": "Нет, дополнительного материала с содержанием вопроса не поступило.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9632ee913bfdd65f",
+    "ru": "Нельзя восстановить предмет из приложений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "a430ee4d8727de59",
+    "ru": "Есть ли читаемые приложения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q2].text"
+    ]
+  },
+  {
+    "id": "405fe1f9267cccb4",
+    "ru": "Нет: никто не смог прочитать содержание. Отдельных подтверждений опасности нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "9f3c69998d971e23",
+    "ru": "Не приписываем неизвестному тексту предполагаемый смысл.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c09a7637692b27dd",
+    "ru": "Есть ли конкретные сведения об опасности?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].questions[q3].text"
+    ]
+  },
+  {
+    "id": "506c21054f46e30b",
+    "ru": "Перед вами письменный материал, а не личный приём автора. Дежурный сообщает только то, что установлено по конверту, тексту и приложениям. Не восстанавливайте неизвестные обстоятельства по догадке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].role.text",
+      "cases:CASE_TEMPLATES[unclear-subject].role.text",
+      "cases:CASE_TEMPLATES[readable-attachment].role.text"
+    ]
+  },
+  {
+    "id": "07339c3ee202bef2",
+    "ru": "Специалист канцелярии органа власти",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].role.title",
+      "cases:CASE_TEMPLATES[unclear-subject].role.title",
+      "cases:CASE_TEMPLATES[readable-attachment].role.title"
+    ]
+  },
+  {
+    "id": "38f819139fa221ce",
+    "ru": "Подготовить уведомление автору о нечитаемости текста по части 4 статьи 11; не направлять материал на рассмотрение по предполагаемой компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].routes[0].text",
+      "cases:CASE_TEMPLATES[unreadable-body].coach.plan"
+    ]
+  },
+  {
+    "id": "58712e132aafe631",
+    "ru": "Разослать полный лист всем ведомствам с просьбой угадать содержание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].routes[1].text",
+      "cases:CASE_TEMPLATES[unreadable-body].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "25ad2ec8884ed705",
+    "ru": "Считать письмо анонимным, хотя фамилия и адрес читаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].routes[2].text",
+      "cases:CASE_TEMPLATES[unreadable-body].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a2703c099e3fe9e5",
+    "ru": "Адрес читается, текст — нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[unreadable-body].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[unreadable-body].title"
+    ]
+  },
+  {
+    "id": "78efee87df61f451",
+    "ru": "Обращения граждан",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].topic",
+      "cases:CASE_TEMPLATES[unreadable-body].tag",
+      "cases:CASE_TEMPLATES[unclear-subject].topic"
+    ]
+  },
+  {
+    "id": "a985afe34c09e60b",
+    "ru": "В этом случае читаемые фамилия и адрес позволяют направить предусмотренное сообщение в семидневный срок со дня регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].trap.options[0].text",
+      "cases:CASE_TEMPLATES[unreadable-body].trap.explain"
+    ]
+  },
+  {
+    "id": "ea476746b8673908",
+    "ru": "Невозможность чтения отменяет любые организационные действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[unreadable-body].trap.options[1].text"
+    ]
+  }
+]

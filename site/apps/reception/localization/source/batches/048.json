@@ -1,0 +1,1188 @@
+[
+  {
+    "id": "b3dae4e7d77e863a",
+    "ru": "Передать в подразделение рекламы без вопроса о свете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].routes[2].text"
+    ]
+  },
+  {
+    "id": "b53a5e6378961772",
+    "ru": "Днём экран был выключен",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sign-night-measurement].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sign-night-measurement].title"
+    ]
+  },
+  {
+    "id": "9f205d8200f627ec",
+    "ru": "Нужно различать недостаточность доказательства и уже доказанное нарушение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].trap.explain"
+    ]
+  },
+  {
+    "id": "69880478943b27a3",
+    "ru": "Ночное нарушение ещё нужно установить; дневной акт при выключенном экране для этого недостаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-night-measurement].trap.text"
+    ]
+  },
+  {
+    "id": "0c98b89dcd996bcc",
+    "ru": "Зафиксировать содержание конструкции и отдельный предмет жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6f8ecbcc355b97cc",
+    "ru": "Установить компетенцию по размещению и воздействию света",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[a1].title"
+    ]
+  },
+  {
+    "id": "31dab0c9a1a96447",
+    "ru": "Подготовить передачу соответствующих вопросов без заранее объявленного нарушения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[a2].title"
+    ]
+  },
+  {
+    "id": "885ab5ef8937afe3",
+    "ru": "Сообщить заявительнице о разграничении вопросов понятным языком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[a3].title"
+    ]
+  },
+  {
+    "id": "a3be27686d86e134",
+    "ru": "Проверить, охвачен ли ночной режим в результате рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[a4].title"
+    ]
+  },
+  {
+    "id": "210c1ecf4b74c072",
+    "ru": "Оставить вопрос о воздействии света без рассмотрения только из-за нерекламного содержания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[b0].title",
+      "cases:CASE_TEMPLATES[sign-not-ad].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "87b68b9b90a23a28",
+    "ru": "Признать превышение установленным по одной фотографии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].actions[b1].title"
+    ]
+  },
+  {
+    "id": "e2388284548bc8d4",
+    "ru": "Предмет: свет в окнах по ночам. Ответ: конструкция содержит название и режим работы, рекламного содержания не установлено. Режим эксплуатации и воздействие на помещения не рассмотрены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a9fbf60b276abe75",
+    "ru": "Обращение и прежний ответ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1de773468275746e",
+    "ru": "Название и режим работы без цены и предложения товара. Снимок не заменяет проверку параметров освещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c821f20ae7185e29",
+    "ru": "Фото вывески",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a1bca76220718581",
+    "ru": "Вывод о нерекламной вывеске не отвечает на вопрос о допустимости её эксплуатации и воздействии света.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].factTask.explain",
+      "cases:CASE_TEMPLATES[sign-not-ad].outcomes.good"
+    ]
+  },
+  {
+    "id": "882f7f13248ad595",
+    "ru": "Нерекламная вывеска освобождается от любых требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "08a86cf6d619e666",
+    "ru": "Любое название магазина является рекламой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "73596f6fcddbb8d8",
+    "ru": "Прислан акт дневного осмотра: конструкция выключена. О ночном режиме ничего нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.intro"
+    ]
+  },
+  {
+    "id": "0efe5b61dcf1df1e",
+    "ru": "Уточнить, проверялись ли заявленные часы и воздействие на окна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.options[0].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.explain"
+    ]
+  },
+  {
+    "id": "09f32b3b94218190",
+    "ru": "Признать дневной осмотр исчерпывающим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "539b27264ea825c9",
+    "ru": "Самостоятельно запретить работу магазина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "c018d83b53810104",
+    "ru": "Пункт 5 части 2 статьи 2 закона № 38-ФЗ исключает из его применения вывески и указатели без рекламных сведений. Это исключение не устанавливает допустимость любого размещения и ночного освещения. Остальные доводы проверяются по соответствующим нормам и компетенции без вымышленного результата измерений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].knowledge.explain"
+    ]
+  },
+  {
+    "id": "3b171c6b36a920ec",
+    "ru": "Найдите границу применения закона о рекламе к нерекламным вывескам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7258d4acfa57af3d",
+    "ru": "Над входом в магазин светятся название и часы работы. Ночью в детской комнате светло, как днём. Мне ответили, что это вывеска, а не реклама, поэтому вопросов быть не может.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].opening"
+    ]
+  },
+  {
+    "id": "84328b7479855d02",
+    "ru": "Разграничение рекламы и обращения об условиях эксплуатации вывески",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].procedures[0].text"
+    ]
+  },
+  {
+    "id": "102bec78b26396d8",
+    "ru": "Автоматическое дело о рекламе независимо от содержания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].procedures[1].text"
+    ]
+  },
+  {
+    "id": "556d0a60c322ac56",
+    "ru": "Отказ в приёме обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].procedures[2].text"
+    ]
+  },
+  {
+    "id": "8fc83c1a0cb59589",
+    "ru": "Только название организации и часы работы; товарных предложений и призывов нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "8ac6f7764102fff7",
+    "ru": "Нельзя автоматически квалифицировать любую световую конструкцию как рекламу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q0].fact",
+      "cases:CASE_TEMPLATES[sign-not-ad].coach.talk"
+    ]
+  },
+  {
+    "id": "60a461ecb7146ea7",
+    "ru": "Что написано на конструкции?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q0].text"
+    ]
+  },
+  {
+    "id": "badef847930df3c4",
+    "ru": "В направлении света в окна, а не в содержании названия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0bda1213176c82b4",
+    "ru": "Предмет обращения остаётся даже при нерекламной вывеске.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "fe46a3a8162eb1cf",
+    "ru": "В чём жалоба?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q1].text"
+    ]
+  },
+  {
+    "id": "17aa9dcb69652719",
+    "ru": "Только вывод о неприменении рекламного законодательства. Измерений и проверки режима нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9103b37a8bf08a34",
+    "ru": "Ответ не охватывает заявленное неудобство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "41d412076fe971de",
+    "ru": "Что содержит прежний ответ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bd80ee9110d67ce6",
+    "ru": "Нет, только фотографии из комнаты с датой {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a0586f615162d597",
+    "ru": "Превышение норм нельзя объявлять установленным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "fd93844bd73c097b",
+    "ru": "Есть ли измеренные показатели?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8ed83e5c4e4b65a2",
+    "ru": "Разграничивает рекламную квалификацию и условия размещения/эксплуатации конструкции. Не принимает окончательное решение о нарушении без компетентной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].role.text"
+    ]
+  },
+  {
+    "id": "e15a0cedd327108c",
+    "ru": "Специалист городской приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].role.title"
+    ]
+  },
+  {
+    "id": "7fa69bf9fe55f166",
+    "ru": "Передать вопросы размещения и воздействия света профильным подразделениям, сохранив границу с рекламной квалификацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].routes[0].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].coach.plan",
+      "cases:CASE_TEMPLATES[sign-not-ad].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "04228b14f518a650",
+    "ru": "Отказать только потому, что это не реклама.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].routes[1].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "077670c73f7bda43",
+    "ru": "Без проверки назначить штраф за превышение освещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].routes[2].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2a485694ce473bbe",
+    "ru": "Не реклама – значит, можно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sign-not-ad].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sign-not-ad].title"
+    ]
+  },
+  {
+    "id": "5897cecce51e0e4c",
+    "ru": "Вывески и освещение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].topic",
+      "cases:CASE_TEMPLATES[sign-not-ad].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].scope"
+    ]
+  },
+  {
+    "id": "189eb82c9ef81a36",
+    "ru": "Проверить иной предмет и применимые требования; неприменение одного закона не означает отсутствия регулирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].trap.options[0].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].trap.explain"
+    ]
+  },
+  {
+    "id": "212f6243b19a1a41",
+    "ru": "Согласиться и закрыть дело.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "35ad2405605d5b1d",
+    "ru": "Помощник: «Если закон о рекламе не применяется, других оснований не бывает».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-not-ad].trap.text"
+    ]
+  },
+  {
+    "id": "eff9074e13b81cb6",
+    "ru": "Зафиксировать текущий цикл и номер S-14",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[a0].title"
+    ]
+  },
+  {
+    "id": "bbf0b6cb8f629d84",
+    "ru": "Сопоставить текущее содержание с прежней карточкой",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[a1].title"
+    ]
+  },
+  {
+    "id": "71b3111c3c2a7e0a",
+    "ru": "Разделить рекламный вопрос и проверку светового воздействия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8dc4a532545b937f",
+    "ru": "Сообщить заявительнице маршруты без обещания немедленного демонтажа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[a3].title"
+    ]
+  },
+  {
+    "id": "46488d96b21c7383",
+    "ru": "Поставить на контроль ответы по обоим аспектам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[a4].title"
+    ]
+  },
+  {
+    "id": "105c12c6ff565d0b",
+    "ru": "Признать нарушения освещения доказанными по рекламному тексту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[b0].title"
+    ]
+  },
+  {
+    "id": "b7590d69a9dc1db1",
+    "ru": "Подготовить безусловное предписание о демонтаже от имени приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].actions[b1].title",
+      "cases:CASE_TEMPLATES[sign-promotion].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "e20d275002b18939",
+    "ru": "Учебная ситуация: граждане, участники событий, учреждения-нарушители и служебные материалы вымышлены. Правовые сведения отделены от фактов дела. Вы готовите решение в пределах указанной роли, а не проводите экспертизу или реальную проверку. Календарная задача касается формального ответа органа, а не срока ремонта, аварийного выезда или выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].brief",
+      "cases:CASE_TEMPLATES[sign-night-measurement].brief",
+      "cases:CASE_TEMPLATES[sign-light-restored].brief"
+    ]
+  },
+  {
+    "id": "12254237ab7d783e",
+    "ru": "Различайте срок формального ответа и действия по существу. Для календарного задания используйте ровно указанное событие и профиль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].coach.calendar",
+      "cases:CASE_TEMPLATES[sign-night-measurement].coach.calendar",
+      "cases:CASE_TEMPLATES[sign-light-restored].coach.calendar"
+    ]
+  },
+  {
+    "id": "8a0335f75eefa65a",
+    "ru": "Сравните документы. Материалы могут относиться к разным периодам или иметь разное назначение; открытая пара не равна выбранному ответу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].coach.docs",
+      "cases:CASE_TEMPLATES[sign-night-measurement].coach.docs",
+      "cases:CASE_TEMPLATES[sign-light-restored].coach.docs"
+    ]
+  },
+  {
+    "id": "9963767920c5957f",
+    "ru": "План должен следовать установленным фактам. Квалификация прежнего состояния не заменяет анализа появившихся рекламных сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].coach.plan"
+    ]
+  },
+  {
+    "id": "e9a056d9e294cb89",
+    "ru": "Найдите реквизиты применимого акта и структурную единицу. Название приказа нельзя превращать в федеральный закон.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].coach.research",
+      "cases:CASE_TEMPLATES[sign-night-measurement].coach.research",
+      "cases:CASE_TEMPLATES[sign-light-restored].coach.research"
+    ]
+  },
+  {
+    "id": "8f451f24cdfabc17",
+    "ru": "Уточняйте предмет, объект, время и получателя. В базовой истории рекламного содержания нет; здесь подтверждено появление продвижения товаров. Различаются предмет рассмотрения и маршруты, а не только яркость картинки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].coach.talk"
+    ]
+  },
+  {
+    "id": "a1e11ef058dd7bb0",
+    "ru": "В базовой истории рекламного содержания нет; здесь подтверждено появление продвижения товаров. Различаются предмет рассмотрения и маршруты, а не только яркость картинки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].contrast.difference"
+    ]
+  },
+  {
+    "id": "7d6cd47869d6945b",
+    "ru": "Изменены определяющие факты, назначение материалов, правовое применение и контрольное событие; даты и имена отдельно вариантами не считаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[sign-night-measurement].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[sign-light-restored].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "386f8958a3535808",
+    "ru": "На записи {{observed}} идентификатор конструкции S-14. Между названием магазина появляются сменяющиеся предложения товаров со скидкой, ценой и приглашением купить. Запись охватывает полный цикл. Ночная яркость инструментально не измерялась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d0].text"
+    ]
+  },
+  {
+    "id": "fa540f5eaa538c74",
+    "ru": "Запись вечернего цикла экрана",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d0].title"
+    ]
+  },
+  {
+    "id": "4f15d798c48bb5b4",
+    "ru": "Карточка S-14 описывает старую статичную табличку с названием и временем работы. Владелец называет новый экран вывеской; изменения содержания в прежней карточке нет. Компетенция рекламного и светотехнического рассмотрения в данном учебном органе распределена между разными подразделениями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1a7d6aca126d780d",
+    "ru": "Предыдущая карточка конструкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d1].title"
+    ]
+  },
+  {
+    "id": "2d2df3024817e77e",
+    "ru": "У конструкции S-19 иные адрес и владелец; она содержит только режим работы. Она не относится к экрану S-14.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d2].text"
+    ]
+  },
+  {
+    "id": "d41010bebd2c27ef",
+    "ru": "Фотография соседней аптеки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[d2].title"
+    ]
+  },
+  {
+    "id": "17ee1d0862b321bd",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Эти события не меняют даты принятия нормативных актов. Текущее оперативное сообщение, если оно есть в условии, передаётся без ожидания срока письменного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[dates].text",
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[dates].text",
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[dates].text"
+    ]
+  },
+  {
+    "id": "33bf2930a64ea68b",
+    "ru": "Временная линия переписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].documents[dates].title",
+      "cases:CASE_TEMPLATES[sign-night-measurement].documents[dates].title",
+      "cases:CASE_TEMPLATES[sign-light-restored].documents[dates].title"
+    ]
+  },
+  {
+    "id": "2e6309b5fb9e5a5e",
+    "ru": "10–12 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].duration",
+      "cases:CASE_TEMPLATES[sign-night-measurement].duration",
+      "cases:CASE_TEMPLATES[sign-light-restored].duration"
+    ]
+  },
+  {
+    "id": "3c5fb7a75da237b9",
+    "ru": "Содержание S-14 изменилось: прежняя оценка статичной таблички не закрывает вопрос о рекламе и ночном освещении. В базовой истории рекламного содержания нет; здесь подтверждено появление продвижения товаров. Различаются предмет рассмотрения и маршруты, а не только яркость картинки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.explain"
+    ]
+  },
+  {
+    "id": "b8bbdf2ddbac6073",
+    "ru": "Содержание S-14 изменилось: прежняя оценка статичной таблички не закрывает вопрос о рекламе и ночном освещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sign-promotion].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a22818789037e651",
+    "ru": "Любая конструкция над магазином всегда исключена из закона о рекламе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d94da754917cc7a6",
+    "ru": "Реклама на экране сама по себе доказывает превышение нормы освещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "7b6df1bf9036383a",
+    "ru": "Какой вывод подтверждает сопоставление материалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].factTask.prompt",
+      "cases:CASE_TEMPLATES[sign-night-measurement].factTask.prompt",
+      "cases:CASE_TEMPLATES[sign-light-restored].factTask.prompt"
+    ]
+  },
+  {
+    "id": "4135cf241fb25adc",
+    "ru": "Продолжить контроль светового вопроса отдельно, сохранив ответ по рекламе. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.explain"
+    ]
+  },
+  {
+    "id": "7260216ad908bf77",
+    "ru": "Выбранный шаг не заменяет проверку нового обстоятельства или неполного результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.failure",
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.failure",
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.failure"
+    ]
+  },
+  {
+    "id": "b424c671a28e182e",
+    "ru": "Пришёл ответ только о рекламном содержании; вопрос ночного света в нём не рассмотрен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.intro"
+    ]
+  },
+  {
+    "id": "ca140bd4217ad011",
+    "ru": "Продолжить контроль светового вопроса отдельно, сохранив ответ по рекламе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "1912f9c74f1bbf87",
+    "ru": "Закрыть всё обращение после первого ведомственного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "f4e0bd4d18eb1090",
+    "ru": "Вычеркнуть вопрос освещения, поскольку реклама уже классифицирована.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "bb913dafc67073ef",
+    "ru": "Следующий шаг соответствует новым обстоятельствам. Реальное исполнение не гарантируется действием приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].followup.success",
+      "cases:CASE_TEMPLATES[sign-night-measurement].followup.success",
+      "cases:CASE_TEMPLATES[sign-light-restored].followup.success"
+    ]
+  },
+  {
+    "id": "9ae43c0f7e4f7a7b",
+    "ru": "Исключение для вывесок и указателей относится к конструкциям, не содержащим сведений рекламного характера. Название конструкции её владельцем не заменяет анализа содержания. Квалификация рекламы сама по себе не решает вопрос о допустимости освещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].knowledge.explain",
+      "cases:SOURCES[norm11-ad2].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-sign-promotion].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "a711844664f48262",
+    "ru": "Проверить новое содержание экрана отдельно от прежней таблички и отдельно от светового воздействия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "81b373fb8f5763a0",
+    "ru": "Распространить прежнее исключение для статичной вывески на любые новые предложения на экране.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "3244502cc9feda38",
+    "ru": "Ограничиться рекламной квалификацией и не рассматривать названный вопрос освещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2e635a2a56cd0e2e",
+    "ru": "Найдите норму: Вывески без рекламных сведений и пределы исключения. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "13b3d0fa2445c980",
+    "ru": "Мне ответили, что это просто вывеска. Но теперь на экране не только название магазина: там каждую минуту меняется акция. И ночью он светит в спальню.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].opening"
+    ]
+  },
+  {
+    "id": "00d0710c79ce2601",
+    "ru": "В решении остаются неподтверждённые выводы или пропущенные действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].outcomes.bad",
+      "cases:CASE_TEMPLATES[sign-night-measurement].outcomes.bad",
+      "cases:CASE_TEMPLATES[sign-light-restored].outcomes.bad"
+    ]
+  },
+  {
+    "id": "07cb947ef198f590",
+    "ru": "Подготовлен обоснованный проект действий по установленным обстоятельствам. Исполнение оценивается отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].outcomes.good",
+      "cases:CASE_TEMPLATES[sign-night-measurement].outcomes.good",
+      "cases:CASE_TEMPLATES[sign-light-restored].outcomes.good"
+    ]
+  },
+  {
+    "id": "97f11275114e9410",
+    "ru": "Рассмотреть новые рекламные сведения и вопрос освещения как разные аспекты обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].procedures[0].text"
+    ]
+  },
+  {
+    "id": "73c8136b2deede10",
+    "ru": "Применить прежний ответ к любому будущему содержанию экрана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].procedures[1].text"
+    ]
+  },
+  {
+    "id": "cbc34eba59a95aad",
+    "ru": "Считать жалобу только предложением изменить интерьер магазина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].procedures[2].text"
+    ]
+  },
+  {
+    "id": "454430b79c76fa75",
+    "ru": "В записи видны цена, скидка и приглашение купить определённые товары.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a4abc1eba1309f31",
+    "ru": "Нужен полный цикл, а не один кадр названия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1f4026e35ab6e6f0",
+    "ru": "Что именно показывается между названием и режимом работы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q0].text"
+    ]
+  },
+  {
+    "id": "4d22e4e9016efc8f",
+    "ru": "Старой статичной табличке; экран сменили позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "af000ad406cea4a6",
+    "ru": "Объект изменился после прежней оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f4df21cdf93e0550",
+    "ru": "Чему относился прежний ответ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q1].text"
+    ]
+  },
+  {
+    "id": "2ae3d02b06a8f8a5",
+    "ru": "Нет, пока есть запись и сообщение о свете в окне.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9680d7737918bf48",
+    "ru": "Световое воздействие требует отдельного установления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1260cefab7b49e9c",
+    "ru": "Есть ли измерение ночного освещения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q2].text"
+    ]
+  },
+  {
+    "id": "fe12ce03725efeb8",
+    "ru": "Нет, у неё другой номер и другой адрес.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "36928c45bd832c02",
+    "ru": "Соседний объект не подтверждает состояние S-14.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "16de12663191fb48",
+    "ru": "Конструкция на фотографии аптеки та же?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].questions[q3].text"
+    ]
+  },
+  {
+    "id": "cef0cce6836eb20d",
+    "ru": "Вы готовите материалы и проект действий. Проверки, санкции, разрешения, технические заключения и фактические выплаты выполняют только уполномоченные лица. Реальные запросы и звонки из игры не производятся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].role.text",
+      "cases:CASE_TEMPLATES[sign-night-measurement].role.text",
+      "cases:CASE_TEMPLATES[sign-light-restored].role.text"
+    ]
+  },
+  {
+    "id": "5b3b78f8447e71c3",
+    "ru": "Специалист подразделения городского хозяйства по обращениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].role.title",
+      "cases:CASE_TEMPLATES[sign-night-measurement].role.title",
+      "cases:CASE_TEMPLATES[sign-light-restored].role.title"
+    ]
+  },
+  {
+    "id": "7457faeaf5cddc92",
+    "ru": "Подготовить раздельные материалы для компетентного рекламного и городского подразделений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].routes[0].text"
+    ]
+  },
+  {
+    "id": "ace0f48bdec4812e",
+    "ru": "Передать весь вопрос исключительно организации, выполняющей электромонтаж.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].routes[1].text"
+    ]
+  },
+  {
+    "id": "8a3b81973f04f3d0",
+    "ru": "Направить только владельцу аптеки с ближайшей фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].routes[2].text"
+    ]
+  },
+  {
+    "id": "46cc479ed52ea949",
+    "ru": "Проверьте названное положение акта, сопоставьте его с материалами и областью своей компетенции. Источник не подтверждает вымышленные события сам по себе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].sourceTask",
+      "cases:CASE_TEMPLATES[sign-night-measurement].sourceTask",
+      "cases:CASE_TEMPLATES[sign-light-restored].sourceTask"
+    ]
+  },
+  {
+    "id": "4c7395ea268c2cb7",
+    "ru": "Название магазина и скидка на весь экран",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sign-promotion].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sign-promotion].title"
+    ]
+  },
+  {
+    "id": "5dd51bc2b553ca67",
+    "ru": "Световые вывески",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].topic",
+      "cases:CASE_TEMPLATES[sign-night-measurement].topic",
+      "cases:CASE_TEMPLATES[sign-light-restored].topic"
+    ]
+  },
+  {
+    "id": "7c7441b13dbf17d6",
+    "ru": "Квалификация прежнего состояния не заменяет анализа появившихся рекламных сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].trap.explain"
+    ]
+  },
+  {
+    "id": "3e30673e03fe87ff",
+    "ru": "Не подтверждается; необходимо иное решение по материалам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].trap.options[0].text",
+      "cases:CASE_TEMPLATES[sign-night-measurement].trap.options[0].text",
+      "cases:CASE_TEMPLATES[sign-light-restored].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "56f084db6efa9f9b",
+    "ru": "Подтверждается в пределах описанных обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].trap.options[1].text",
+      "cases:CASE_TEMPLATES[sign-night-measurement].trap.options[1].text",
+      "cases:CASE_TEMPLATES[sign-light-restored].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "941bb8b8a56bc95b",
+    "ru": "Раз прежняя табличка не считалась рекламой, анализ нового содержания не нужен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sign-promotion].trap.text"
+    ]
+  },
+  {
+    "id": "10b7687151162b65",
+    "ru": "Сопоставить идентификатор, сторону и время сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[a0].title"
+    ]
+  },
+  {
+    "id": "cb0bc12b28f0a414",
+    "ru": "Установить пределы дневного акта без готового диагноза неисправности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7a761ccc204754f8",
+    "ru": "Подготовить запрос технических журналов нужного интервала по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[a2].title"
+    ]
+  },
+  {
+    "id": "0276ae138f773e9c",
+    "ru": "Не требовать опасной ночной съёмки от заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7d11e310a07cf25f",
+    "ru": "Проверить совпадение даты, времени и объекта в полученном подтверждении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[a4].title"
+    ]
+  },
+  {
+    "id": "702598368c02cbeb",
+    "ru": "Закрыть сообщение на основании дневного осмотра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[b0].title"
+    ]
+  },
+  {
+    "id": "935b4664a0a6e8dc",
+    "ru": "Потребовать от заявителя выйти на проезжую часть для доказательства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].actions[b1].title"
+    ]
+  },
+  {
+    "id": "c702e4e89cc5c81a",
+    "ru": "Потребовать от заявителя выйти на проезжую часть для доказательства: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5c3492ef130e5f9f",
+    "ru": "Указан интервал после 23:00 перед датой {{observed}} и сторона перехода. Сообщение о периодическом исчезновении сигнала не является техническим заключением о причине.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d0].text"
+    ]
+  },
+  {
+    "id": "54a6681db5c1fd42",
+    "ru": "Карточка сообщения по П-11",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2d387e88d1b14316",
+    "ru": "Акт подтверждает исправность в 12:00 следующего дня. Ночной режим не проверен. Компетентная служба может сопоставить записи контроллера с указанным в карточке интервалом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d1].text"
+    ]
+  },
+  {
+    "id": "620f91ef46c9f5ea",
+    "ru": "Акт и доступность журнала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d1].title"
+    ]
+  },
+  {
+    "id": "908e5f3828a9159d",
+    "ru": "В выгрузке за другую ночь сбоев нет. Она не подтверждает состояние в интервале обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d2].text"
+    ]
+  },
+  {
+    "id": "d1a1166e80169974",
+    "ru": "Журнал соседнего дня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].documents[d2].title"
+    ]
+  },
+  {
+    "id": "87b58fcc20d19883",
+    "ru": "Нужно проверить именно ночной интервал и режим; дневной акт сам по себе не опровергает сообщение и не устанавливает причину. В предыдущем деле отличался номер перехода. Здесь место совпадает, но условия наблюдения и проверки различаются по времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.explain"
+    ]
+  },
+  {
+    "id": "948989e2dba2054c",
+    "ru": "Нужно проверить именно ночной интервал и режим; дневной акт сам по себе не опровергает сообщение и не устанавливает причину.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a28924dd45095f09",
+    "ru": "Дневная исправность исключает любые вечерние события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "be9a818fc914ec77",
+    "ru": "Сообщение жителя автоматически доказывает технический сбой и виновность исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "57567ce2a633ef0d",
+    "ru": "Проверить временной диапазон и запросить относящийся к обращению журнал. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].followup.explain"
+    ]
+  },
+  {
+    "id": "db2f8207a3fbe919",
+    "ru": "Исполнитель выгрузил журнал П-11, но за неделю до указанного события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].followup.intro"
+    ]
+  },
+  {
+    "id": "70e59b18fb0bfb32",
+    "ru": "Проверить временной диапазон и запросить относящийся к обращению журнал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "22c9669dd5cd2e2c",
+    "ru": "Закрыть вопрос, потому что номер контроллера совпадает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "81be36b5f0955bb6",
+    "ru": "Изменить время обращения так, чтобы оно подошло к выгрузке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "615b47a6dcfe981d",
+    "ru": "Сигнал несколько вечеров пропадает после одиннадцати. В ответе пишут: всё проверили в полдень, исправно. Мне опять нужно идти ночью снимать?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].opening"
+    ]
+  },
+  {
+    "id": "bae862899543477b",
+    "ru": "Считать дневную исправность достаточным ответом на сведения о ночных сбоях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].procedures[1].text"
+    ]
+  },
+  {
+    "id": "81797dffcb4ad75e",
+    "ru": "Передать только предложение увеличить длительность фазы, не рассматривая сообщения о пропадании сигнала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].procedures[2].text"
+    ]
+  },
+  {
+    "id": "28ff85373355b9b5",
+    "ru": "После 23:00 на П-11; в журнале сообщения есть конкретный интервал последнего наблюдения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "cb6ca896db17a9c0",
+    "ru": "Важны место и время проявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "be0c1684f94f9ffa",
+    "ru": "Какой промежуток указан в обращении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q0].text"
+    ]
+  },
+  {
+    "id": "c46ccb742c744d53",
+    "ru": "В 12:00 следующего дня. В нём нет анализа ночного режима.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "7d0e188757e9c58c",
+    "ru": "Дневная проверка не воспроизводит описанные условия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "68fb9085225eb555",
+    "ru": "Когда составлен акт?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e7bbe212f9e11526",
+    "ru": "По карточке исполнения уполномоченная служба имеет журнал событий контроллера за нужный интервал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "5045924b13abe546",
+    "ru": "Подтверждение можно получать без опасного задания гражданину.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b3b3221e8d3e9d30",
+    "ru": "Можно получить технические журналы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q2].text"
+    ]
+  },
+  {
+    "id": "93953b821cdf9b9c",
+    "ru": "Не установлено: нужна проверка режима и журнала. Я не знаю, это сбой или предусмотренное переключение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "8fa648f96a4d8cda",
+    "ru": "Не следует заранее объявлять неисправность доказанной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "5de4435a5eb021c9",
+    "ru": "Что известно о природе события?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].questions[q3].text"
+    ]
+  },
+  {
+    "id": "eb6eb1c9b4fc5290",
+    "ru": "Организовать профильную проверку описанного интервала безопасными средствами исполнителя; не назначать причину по предположению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[signal-night-fault].routes[0].text"
+    ]
+  }
+]

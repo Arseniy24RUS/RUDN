@@ -1,0 +1,1226 @@
+[
+  {
+    "id": "4a587dc29f8a26ce",
+    "ru": "Условия отсутствия новых доводов и прежних ответов по существу заданы материалами. Решение не заменяется механическим подсчётом регистрационных уведомлений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].contrast.difference"
+    ]
+  },
+  {
+    "id": "bcb222eeeecbbe27",
+    "ru": "Предложен общий запрет на обращения вместо решения по конкретному вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].criticalRules[ban].message"
+    ]
+  },
+  {
+    "id": "1506dceb995a3aef",
+    "ru": "Решение о безосновательности очередного обращения и прекращении переписки вправе принять руководитель либо предусмотренное законом должностное лицо. Решение не принято. Ваше рабочее место предназначено для регистрации и подготовки материалов, без этого полномочия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[authority].text"
+    ]
+  },
+  {
+    "id": "81cd1f9df810ef31",
+    "ru": "Полномочия и состояние дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[authority].title"
+    ]
+  },
+  {
+    "id": "d007b8fa56b28570",
+    "ru": "Материалы одного органа: три прежних письменных ответа по существу того же вопроса, затем четвёртое письмо. Новых доводов и обстоятельств нет. Сверка выполнена; вопрос об их наличии в данном упражнении не спорный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[comparison].text"
+    ]
+  },
+  {
+    "id": "0c98d09600263b5f",
+    "ru": "Сопоставление четырёх обращений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[comparison].title"
+    ]
+  },
+  {
+    "id": "1d775d3f036a40ea",
+    "ru": "Письмо поступило {{received}}. Автор повторяет прежние доводы, приложенные снимки совпадают с прежними. Подпись и адрес для ответа имеются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[letter].text"
+    ]
+  },
+  {
+    "id": "57b60d95aeb4014f",
+    "ru": "Новое письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].documents[letter].title"
+    ]
+  },
+  {
+    "id": "eb1b53311c8ef517",
+    "ru": "Закон предоставляет уполномоченному лицу право принять решение при совокупности условий; сотрудник регистрации не заменяет это решение счётчиком писем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].coach.docs"
+    ]
+  },
+  {
+    "id": "33cad89f18b65b03",
+    "ru": "Условия для рассмотрения вопроса о прекращении переписки представлены, но само прекращение не является автоматическим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].factTask.options[conditions].text"
+    ]
+  },
+  {
+    "id": "dea8af625387e6e2",
+    "ru": "Четвёртое письмо уже считается удалённым по закону.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].factTask.options[deleted].text"
+    ]
+  },
+  {
+    "id": "a9867bc3c4816e7e",
+    "ru": "Любое изменение даты письма всегда является новым существенным обстоятельством.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].factTask.options[new].text"
+    ]
+  },
+  {
+    "id": "cde2611d42ac46ef",
+    "ru": "Что установлено и что ещё не следует из материалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].factTask.prompt"
+    ]
+  },
+  {
+    "id": "258f7adda12ddfcd",
+    "ru": "Прекращение переписки по прежнему вопросу не является бессрочным запретом на иные обращения или новые обстоятельства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.explain"
+    ]
+  },
+  {
+    "id": "14956f97a1add35d",
+    "ru": "Проверьте предмет и пределы ранее принятого решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.failure"
+    ]
+  },
+  {
+    "id": "57d6a813c325c900",
+    "ru": "После решения руководителя о прекращении переписки по прежнему вопросу тот же гражданин сообщает о новом повреждении опоры на другом участке. Новый снимок и участок в прежних материалах отсутствовали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.intro"
+    ]
+  },
+  {
+    "id": "7c7e886f30334725",
+    "ru": "Удалить новое сообщение из-за ранее принятого решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.options[ban].text"
+    ]
+  },
+  {
+    "id": "eb92b96ce70b25fe",
+    "ru": "Зарегистрировать и оценить новое сообщение; прежнее решение относится к определённому вопросу и не заменяет проверки новых обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.options[newcase].text"
+    ]
+  },
+  {
+    "id": "0e49b9140771fc24",
+    "ru": "Приложить старое уведомление как доказательство исправности другой опоры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].followup.options[old].text"
+    ]
+  },
+  {
+    "id": "63ea1100bf6121d9",
+    "ru": "Любой сотрудник обязан автоматически прекратить переписку после четвёртого письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "d917f336b4b04f00",
+    "ru": "Число прежних ответов даёт бессрочный запрет на все обращения гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "53b33662c79aadb5",
+    "ru": "Пишу снова про те же светильники. Новых снимков у меня нет, но с прежними ответами я не согласен. В приёмной сказали: раз письмо четвёртое, его можно сразу удалить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].opening"
+    ]
+  },
+  {
+    "id": "9e07ec0a50f7f041",
+    "ru": "Нет. В имеющихся ответах такого решения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[decision].answer"
+    ]
+  },
+  {
+    "id": "2153d3e082820399",
+    "ru": "Наличие письменного решения ещё нужно проверить, оно не возникает автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[decision].fact"
+    ]
+  },
+  {
+    "id": "31bc3914682ff72f",
+    "ru": "Получали ли вы уведомление о прекращении переписки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[decision].text"
+    ]
+  },
+  {
+    "id": "c5d751f70ea72a55",
+    "ru": "Новых обстоятельств нет. Прошу ещё раз пересмотреть те же доводы; дату на старом снимке не менял.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[new].answer"
+    ]
+  },
+  {
+    "id": "51010740dec496dc",
+    "ru": "По условиям дела новых доводов или обстоятельств нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[new].fact"
+    ]
+  },
+  {
+    "id": "37f182ba359f999e",
+    "ru": "Какие новые обстоятельства вы сообщаете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[new].text"
+    ]
+  },
+  {
+    "id": "792e56900f02ea87",
+    "ru": "Все три ответа получены из того же органа. Копии приложил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[old].answer"
+    ]
+  },
+  {
+    "id": "b8ca23a696e81a50",
+    "ru": "Для сверки доступны ответы одного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[old].fact"
+    ]
+  },
+  {
+    "id": "7b3125da702d68fe",
+    "ru": "Кто отвечал на предыдущие обращения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].questions[old].text"
+    ]
+  },
+  {
+    "id": "f873220230144337",
+    "ru": "Удалить письмо автоматически без решения и уведомления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].routes[automatic].text"
+    ]
+  },
+  {
+    "id": "82f9bc5781055c6a",
+    "ru": "Запретить гражданину впредь направлять любые обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].routes[ban].text"
+    ]
+  },
+  {
+    "id": "2efa28e4eb90da8e",
+    "ru": "Зарегистрировать материал и представить сопоставление уполномоченному лицу для решения о дальнейшем рассмотрении или прекращении переписки по этому вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].routes[head].text",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].contrast.decision"
+    ]
+  },
+  {
+    "id": "ec98325d4baf7b17",
+    "ru": "То же самое — кто решает?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-same-arguments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-same-arguments].title"
+    ]
+  },
+  {
+    "id": "c825c4150f8200c4",
+    "ru": "Нужно различать наличие основания, полномочие принять решение и уведомление о принятом решении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].trap.explain"
+    ]
+  },
+  {
+    "id": "2493186c0b357b03",
+    "ru": "Выполнить предложение помощника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].trap.options[automatic].text"
+    ]
+  },
+  {
+    "id": "303a1aed01a500f6",
+    "ru": "Проверить условия и представить материал уполномоченному лицу: право принять решение не равно автоматической обязанности каждого сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].trap.options[discretion].text"
+    ]
+  },
+  {
+    "id": "017831a6d102dc99",
+    "ru": "Не регистрировать материал и не сохранять прежние ответы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].trap.options[ignore].text"
+    ]
+  },
+  {
+    "id": "e95428cbbfbb34b9",
+    "ru": "Помощник: «Если условия части 5 статьи 11 выполнены, сотрудник регистрации обязан самостоятельно прекратить переписку».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-same-arguments].trap.text"
+    ]
+  },
+  {
+    "id": "a67e28027bcd5bf3",
+    "ru": "Исходя только из расположения здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[fine].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[fine].detail"
+    ]
+  },
+  {
+    "id": "a88841507d1af921",
+    "ru": "Сразу оштрафовать соседнее предприятие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[fine].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[fine].title"
+    ]
+  },
+  {
+    "id": "75cfe973483839a5",
+    "ru": "Не объявлять виновность установленной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[notify].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "2f507efec46d2dbb",
+    "ru": "Уведомить о дальнейших действиях",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[notify].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[notify].title"
+    ]
+  },
+  {
+    "id": "44ee2b987cf3f4d3",
+    "ru": "Выбор конкретного надзорного органа зависит от проверенных обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[owner].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[owner].detail"
+    ]
+  },
+  {
+    "id": "5f571e76912dd864",
+    "ru": "Уточнить выпуск и разграничение компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[owner].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[owner].title"
+    ]
+  },
+  {
+    "id": "19ea6888659d7cf9",
+    "ru": "Различать факты наблюдения и предположение о предприятии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[register].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[register].detail"
+    ]
+  },
+  {
+    "id": "e0556ffdc53d43dd",
+    "ru": "Зафиксировать обращение и обстоятельства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[register].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[register].title"
+    ]
+  },
+  {
+    "id": "2ec58a950c4d4c1b",
+    "ru": "Самостоятельно устанавливать такие дополнительные условия нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[reject].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[reject].detail"
+    ]
+  },
+  {
+    "id": "45671052a4cb0fed",
+    "ru": "Отказать, пока гражданин не оплатит лабораторную экспертизу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[reject].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[reject].title"
+    ]
+  },
+  {
+    "id": "665d85c0020da445",
+    "ru": "Не обещать проверку и санкции от имени чужого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[route].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[route].detail"
+    ]
+  },
+  {
+    "id": "c971c0f4943db1d5",
+    "ru": "Подготовить передачу по установленной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[route].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[route].title",
+      "cases:CASE_TEMPLATES[authority-contact].actions[route].title"
+    ]
+  },
+  {
+    "id": "2c35cef06b8726ef",
+    "ru": "Факт передачи материалов ещё не устраняет проблему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[track].detail",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[track].detail"
+    ]
+  },
+  {
+    "id": "3df314e574a71f01",
+    "ru": "Сохранить контроль получения результата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].actions[track].title",
+      "cases:CASE_TEMPLATES[river-old-photo].actions[track].title"
+    ]
+  },
+  {
+    "id": "bf2e062eff6f501f",
+    "ru": "Письменное обращение принято. Фотография и схема приложены. В карточке указаны даты поступления и регистрации. Вы готовите проект ответа; продление не применялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].brief"
+    ]
+  },
+  {
+    "id": "ae1bf13388af5b5c",
+    "ru": "Рассчитайте последний допустимый день ответа на зарегистрированное письменное обращение. Продление по условию не оформлялось. Используйте события и даты именно этого экземпляра дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.context",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.context"
+    ]
+  },
+  {
+    "id": "04d56a390d75b010",
+    "ru": "Поступило",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[hatch].calendar.events[received].label"
+    ]
+  },
+  {
+    "id": "2aca67047ce35022",
+    "ru": "Зарегистрировано",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.events[registered].label",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.events[registered].label",
+      "cases:CASE_TEMPLATES[hatch].calendar.events[registered].label"
+    ]
+  },
+  {
+    "id": "13b9719ae180bfba",
+    "ru": "Отправлено",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[hatch].calendar.events[sent].label"
+    ]
+  },
+  {
+    "id": "fcbf25b3d51440da",
+    "ru": "3 календарных дня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[calendar3].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[calendar3].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[calendar3].text"
+    ]
+  },
+  {
+    "id": "7e561da2b5b8d189",
+    "ru": "30 календарных дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[calendar30].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[calendar30].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[calendar30].text"
+    ]
+  },
+  {
+    "id": "254cee83309bd175",
+    "ru": "7 календарных дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[calendar7].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[calendar7].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[calendar7].text"
+    ]
+  },
+  {
+    "id": "494914ecff3bb0ed",
+    "ru": "15 рабочих дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[working15].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[working15].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[working15].text"
+    ]
+  },
+  {
+    "id": "2bd043ced2ee99ff",
+    "ru": "30 рабочих дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[working30].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[working30].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[working30].text"
+    ]
+  },
+  {
+    "id": "c003cc3d9314eba7",
+    "ru": "5 рабочих дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.ruleOptions[working5].text",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.ruleOptions[working5].text",
+      "cases:CASE_TEMPLATES[hatch].calendar.ruleOptions[working5].text"
+    ]
+  },
+  {
+    "id": "fa3c6c55981f51ff",
+    "ru": "Правило исчисления в этом учебном деле: исходный день не включается. Считаются все календарные дни, нерабочее окончание переносится на следующий рабочий день. Этот профиль задан условием, а не распространяется автоматически на любую процедуру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.scope",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.scope",
+      "cases:CASE_TEMPLATES[hatch].calendar.scope"
+    ]
+  },
+  {
+    "id": "29de8ff609f0533b",
+    "ru": "59-ФЗ, статья 12",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.source",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.source",
+      "cases:CASE_TEMPLATES[privacy].calendar.source"
+    ]
+  },
+  {
+    "id": "8c614a19c6ec5be0",
+    "ru": "Крайняя дата ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].calendar.title",
+      "cases:CASE_TEMPLATES[river-old-photo].calendar.title",
+      "cases:CASE_TEMPLATES[privacy].calendar.title"
+    ]
+  },
+  {
+    "id": "0959e11e1d8c96b3",
+    "ru": "Житель района",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].citizen.description",
+      "cases:CASE_TEMPLATES[river-old-photo].citizen.description",
+      "cases:CASE_TEMPLATES[hatch].citizen.description"
+    ]
+  },
+  {
+    "id": "7cc9823a02a34ee4",
+    "ru": "Сергей Петрович",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].citizen.name",
+      "cases:CASE_TEMPLATES[river-old-photo].citizen.name",
+      "cases:CASE_TEMPLATES[hatch].citizen.name"
+    ]
+  },
+  {
+    "id": "5374c53f45297946",
+    "ru": "Установите исходное событие и единицы счёта; затем рассчитайте дату для своего набора событий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].coach.calendar",
+      "cases:CASE_TEMPLATES[river-old-photo].coach.calendar"
+    ]
+  },
+  {
+    "id": "af573fe9f5a8ffec",
+    "ru": "Выполняйте действия в пределах своей роли. Там, где действия независимы, их порядок может различаться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].coach.plan",
+      "cases:CASE_TEMPLATES[river-old-photo].coach.plan",
+      "cases:CASE_TEMPLATES[hatch].coach.plan"
+    ]
+  },
+  {
+    "id": "4426b8522c5cc14e",
+    "ru": "Общий срок ответа считается от регистрации; его нельзя считать гарантированным сроком устранения загрязнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].coach.research",
+      "cases:CASE_TEMPLATES[river-observation].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[river-observation].knowledge.explain"
+    ]
+  },
+  {
+    "id": "04366c7d43ace1c8",
+    "ru": "Выслушайте обращение и уточните факты. Название дела не определяет, какие действия будут правильными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].coach.talk",
+      "cases:CASE_TEMPLATES[river-old-photo].coach.talk",
+      "cases:CASE_TEMPLATES[hatch].coach.talk"
+    ]
+  },
+  {
+    "id": "fdca44d4a74ddea2",
+    "ru": "Выход за полномочия и санкция без установленных обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].criticalRules[fine].message",
+      "cases:CASE_TEMPLATES[river-old-photo].criticalRules[fine].message"
+    ]
+  },
+  {
+    "id": "f7629f4c5cb416a0",
+    "ru": "Учебная фотография от {{observed}}: у выпуска трубы видна вода тёмного цвета. Владелец выпуска в материалах не указан; результатов отбора проб нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[observation].text"
+    ]
+  },
+  {
+    "id": "60d5227c3f10bf0e",
+    "ru": "Описание снимка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[observation].title"
+    ]
+  },
+  {
+    "id": "574d43b44984e7bd",
+    "ru": "Наблюдение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[observation].type",
+      "cases:CASE_TEMPLATES[hatch].documents[photo].type",
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d1].type"
+    ]
+  },
+  {
+    "id": "2a1f426983b37210",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Обращение поступило получателю, готовящему ответ. Продление срока не оформлялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[registration].text"
+    ]
+  },
+  {
+    "id": "c3a0be2a5a43ccd0",
+    "ru": "Карточка поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[registration].title"
+    ]
+  },
+  {
+    "id": "57749e5de5ddefca",
+    "ru": "Даты событий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].documents[registration].type"
+    ]
+  },
+  {
+    "id": "4e174064cf36dd02",
+    "ru": "Ориентир: 8–10 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].duration",
+      "cases:CASE_TEMPLATES[river-old-photo].duration"
+    ]
+  },
+  {
+    "id": "9a2ca773918f7563",
+    "ru": "Наблюдение и фотография дают повод организовать рассмотрение, но не доказывают состав воды и виновность. Уточняются источник и применимая компетенция.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].factTask.explain",
+      "cases:CASE_TEMPLATES[river-observation].coach.docs"
+    ]
+  },
+  {
+    "id": "139cfc69f6ff7297",
+    "ru": "Соседнее предприятие уже доказанно виновно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].factTask.options[factory].text",
+      "cases:CASE_TEMPLATES[river-old-photo].factTask.options[factory].text"
+    ]
+  },
+  {
+    "id": "a5a1c9e0c09b4216",
+    "ru": "При отсутствии анализов обращение можно не рассматривать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].factTask.options[nothing].text",
+      "cases:CASE_TEMPLATES[river-old-photo].factTask.options[nothing].text"
+    ]
+  },
+  {
+    "id": "f0abc37b989dab59",
+    "ru": "Есть сообщение о внешних признаках возможного загрязнения; источник и состав ещё не установлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].factTask.options[observation].text"
+    ]
+  },
+  {
+    "id": "f687d4fad1c6673f",
+    "ru": "Что можно утверждать на имеющихся материалах?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].factTask.prompt",
+      "cases:CASE_TEMPLATES[river-old-photo].factTask.prompt"
+    ]
+  },
+  {
+    "id": "e6e37fad7e9d93af",
+    "ru": "Контроль относится к содержанию ответа: неразрешённый вопрос о выпуске сохраняется, а фотография сама по себе не доказывает виновность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.explain",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.explain"
+    ]
+  },
+  {
+    "id": "b389b2d3559df196",
+    "ru": "Вопрос о выпуске остался без содержательной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.failure",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.failure"
+    ]
+  },
+  {
+    "id": "83c9d83028bc2a7b",
+    "ru": "Учебное продолжение: профильный орган ответил только о соседнем предприятии, но не указал, кому принадлежит выпуск трубы. Гражданин прислал новую фотографию того же места.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.intro",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.intro"
+    ]
+  },
+  {
+    "id": "2a46cd3f4d3c21a0",
+    "ru": "Сопоставить ответ с обращением и направить уточнение по неразрешённому вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.options[clarify].text",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.options[clarify].text"
+    ]
+  },
+  {
+    "id": "e28e1ad9b8a14086",
+    "ru": "Закрыть дело, поскольку любое письмо считается полным ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.options[closed].text",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.options[closed].text"
+    ]
+  },
+  {
+    "id": "d5386a4cd4ab35ea",
+    "ru": "Признать предприятие виновным по новой фотографии без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.options[fine].text",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.options[fine].text"
+    ]
+  },
+  {
+    "id": "d1a1c90a7e9aa113",
+    "ru": "Уточнение подготовлено без подмены доказательств предположениями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].followup.success",
+      "cases:CASE_TEMPLATES[river-old-photo].followup.success"
+    ]
+  },
+  {
+    "id": "c3cbf81cdde33c43",
+    "ru": "Любой ремонт и устранение загрязнения гарантированы через 30 дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].knowledge.options[broad].text",
+      "cases:CASE_TEMPLATES[river-old-photo].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "f0ee95a779ece49e",
+    "ru": "Срок начинает течь только после выявления виновного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].knowledge.options[none].text",
+      "cases:CASE_TEMPLATES[river-old-photo].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "9f1b117c2c6a58b2",
+    "ru": "Найдите норму о сроке рассмотрения письменного обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].knowledge.prompt",
+      "cases:CASE_TEMPLATES[river-old-photo].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "586f4033d6a2b7f8",
+    "ru": "У Коломенского заметил тёмную воду у трубы и резкий запах. Рядом предприятие, наверное, это оно всё сливает. Прошу сразу наказать виновных. Я принёс фотографию и отметил место на схеме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].opening"
+    ]
+  },
+  {
+    "id": "bf2c63a03dd1d88c",
+    "ru": "ПРИМЕР",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].originVariant",
+      "cases:CASE_TEMPLATES[river-old-photo].originVariant"
+    ]
+  },
+  {
+    "id": "99e727e7fc99c57d",
+    "ru": "Проверьте, не выдали ли вы предположение за доказанный факт и не вышли ли за полномочия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].outcomes.bad"
+    ]
+  },
+  {
+    "id": "cc7e50c39cd5cb70",
+    "ru": "План различает наблюдение, предположение и дальнейшую проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].outcomes.good"
+    ]
+  },
+  {
+    "id": "77eb9f8dda031bd7",
+    "ru": "Предоставление государственной услуги через МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].procedures[210].text",
+      "cases:CASE_TEMPLATES[river-old-photo].procedures[210].text",
+      "cases:CASE_TEMPLATES[hatch].procedures[210].text"
+    ]
+  },
+  {
+    "id": "13269188e2ac5f54",
+    "ru": "Обращение по 59-ФЗ + оперативная передача сведений об опасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].procedures[59].text",
+      "cases:CASE_TEMPLATES[river-old-photo].procedures[59].text",
+      "cases:CASE_TEMPLATES[hatch].procedures[59].text"
+    ]
+  },
+  {
+    "id": "553937920a6dfe43",
+    "ru": "Запрос общедоступной информации по 8-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].procedures[8].text",
+      "cases:CASE_TEMPLATES[river-old-photo].procedures[8].text",
+      "cases:CASE_TEMPLATES[hatch].procedures[8].text"
+    ]
+  },
+  {
+    "id": "06d8537058135de5",
+    "ru": "О пострадавших не знаю. Сегодня к реке не ходил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[current].answer"
+    ]
+  },
+  {
+    "id": "c310b57d5f75f0c4",
+    "ru": "Текущая обстановка требует уточнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[current].fact"
+    ]
+  },
+  {
+    "id": "b3a64c9bf7e7bcc8",
+    "ru": "Есть ли сведения о текущей угрозе людям?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[current].text"
+    ]
+  },
+  {
+    "id": "3126239a48319cf2",
+    "ru": "Никак. Оно просто стоит рядом. Я не видел, откуда в трубу поступает вода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[proof].answer"
+    ]
+  },
+  {
+    "id": "1477f9ce236d3c92",
+    "ru": "Связь предприятия со сбросом – предположение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[proof].fact"
+    ]
+  },
+  {
+    "id": "641d8b777f8f1e1d",
+    "ru": "Как вы установили, что сброс сделало именно предприятие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[proof].text"
+    ]
+  },
+  {
+    "id": "c469b4c2540798c6",
+    "ru": "У реки рядом с Коломенским. Снимок сделан {{observed}}; место отметил на схеме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[where].answer"
+    ]
+  },
+  {
+    "id": "69b0b8bc1085241b",
+    "ru": "Установлены место и дата наблюдения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[where].fact"
+    ]
+  },
+  {
+    "id": "2183fe68ffd28443",
+    "ru": "Где находится труба и когда сделан снимок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].questions[where].text"
+    ]
+  },
+  {
+    "id": "e2d6bd2f4f37d135",
+    "ru": "Учебная модель. Принимаете обращение и готовите проекты передачи по компетенции и уведомлений. Исполнение чужих полномочий не допускается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].role.text",
+      "cases:CASE_TEMPLATES[river-old-photo].role.text",
+      "cases:CASE_TEMPLATES[hatch].role.text"
+    ]
+  },
+  {
+    "id": "6c37ce1dc3a9eecd",
+    "ru": "Приёмная органа исполнительной власти Москвы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].role.title",
+      "cases:CASE_TEMPLATES[river-old-photo].role.title",
+      "cases:CASE_TEMPLATES[hatch].role.title"
+    ]
+  },
+  {
+    "id": "b3b0df26b703633d",
+    "ru": "Уточнить выпуск и компетенцию, затем подготовить материалы надлежащему природоохранному органу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].routes[clarify].text",
+      "cases:CASE_TEMPLATES[river-old-photo].routes[clarify].text"
+    ]
+  },
+  {
+    "id": "758ac270abfff0ea",
+    "ru": "Направить жалобу самому предполагаемому виновнику для окончательного разрешения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].routes[factory].text",
+      "cases:CASE_TEMPLATES[river-old-photo].routes[factory].text"
+    ]
+  },
+  {
+    "id": "0d33ebc55a71b2a9",
+    "ru": "Назначить штраф от имени приёмной без установления обстоятельств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].routes[fine].text",
+      "cases:CASE_TEMPLATES[river-old-photo].routes[fine].text"
+    ]
+  },
+  {
+    "id": "26d0e1766f360463",
+    "ru": "Найдите норму и проверьте её применимость. Сведения из внешних источников не заменяются количеством кликов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].sourceTask",
+      "cases:CASE_TEMPLATES[river-old-photo].sourceTask",
+      "cases:CASE_TEMPLATES[hatch].sourceTask"
+    ]
+  },
+  {
+    "id": "8e7abe10f01e1214",
+    "ru": "Факты и предположения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].tag"
+    ]
+  },
+  {
+    "id": "30866832cefde337",
+    "ru": "Что произошло у реки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[river-observation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[river-observation].title"
+    ]
+  },
+  {
+    "id": "a61e91c152db40a1",
+    "ru": "Экология",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].topic",
+      "cases:CASE_TEMPLATES[river-old-photo].topic"
+    ]
+  },
+  {
+    "id": "34056b5385b295bd",
+    "ru": "Расположение здания не доказывает источник, состав и факт нарушения. Приёмная не назначает санкции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].trap.explain",
+      "cases:CASE_TEMPLATES[river-old-photo].trap.explain"
+    ]
+  },
+  {
+    "id": "6a6e1d37083165e7",
+    "ru": "Различить наблюдение и предположение; установить источник и основание дальнейших действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].trap.options[check].text",
+      "cases:CASE_TEMPLATES[river-old-photo].trap.options[check].text"
+    ]
+  },
+  {
+    "id": "fda0dc4f92b96130",
+    "ru": "Согласиться и назначить санкцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].trap.options[yes].text",
+      "cases:CASE_TEMPLATES[river-old-photo].trap.options[yes].text"
+    ]
+  },
+  {
+    "id": "ecf4f61ccdebf5ad",
+    "ru": "Помощник утверждает: «Если рядом с выпуском есть предприятие, его виновность уже установлена фотографией».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-observation].trap.text",
+      "cases:CASE_TEMPLATES[river-old-photo].trap.text"
+    ]
+  },
+  {
+    "id": "7fa19446fa85146f",
+    "ru": "Отметить возраст фотографии и запросить доступные сведения о текущем состоянии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].actions[date-check].title"
+    ]
+  },
+  {
+    "id": "8bbb8e407ca0d0d5",
+    "ru": "Повторное письмо сопровождается фотографией. Дата исходного файла указана в материалах, а дата регистрации – в календарной карточке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].brief"
+    ]
+  },
+  {
+    "id": "fe8fe281d6753f4a",
+    "ru": "Дата исходного файла: {{observed}}. Письмо получено {{received}}. Заявитель переслал исходный файл без нового снимка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[photo-date].text"
+    ]
+  },
+  {
+    "id": "98196cc8e3c2ed54",
+    "ru": "Метаданные снимка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[photo-date].title"
+    ]
+  },
+  {
+    "id": "33426090bc38033c",
+    "ru": "Дата наблюдения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[photo-date].type"
+    ]
+  },
+  {
+    "id": "a621eff2c8af6c1f",
+    "ru": "Поступило {{received}}, зарегистрировано {{registered}}. Новых фотографий на момент регистрации нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[registration].text"
+    ]
+  },
+  {
+    "id": "7b49ee182c810535",
+    "ru": "Карточка обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[registration].title",
+      "cases:CASE_TEMPLATES[sickpay-data].documents[d1].title"
+    ]
+  },
+  {
+    "id": "e4efde1f106ec7ed",
+    "ru": "Учебный документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].documents[registration].type",
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[photo].type",
+      "cases:CASE_TEMPLATES[hatch-barrier].documents[report].type"
+    ]
+  },
+  {
+    "id": "768418beb829f589",
+    "ru": "Возраст источника существенен. Старый снимок нельзя подписать как текущее наблюдение, но обращение нужно рассмотреть в применимом порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].factTask.explain",
+      "cases:CASE_TEMPLATES[river-old-photo].coach.docs"
+    ]
+  },
+  {
+    "id": "ffd74901743d2b39",
+    "ru": "Есть историческое наблюдение; текущее состояние нужно уточнить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].factTask.options[observation].text"
+    ]
+  },
+  {
+    "id": "1454e3b7f397d30e",
+    "ru": "Снова пишу о той трубе. Знакомый прислал фотографию, и я переслал её вам как сегодняшнюю. Только сейчас заметил, что файл, кажется, сделан в прошлом году.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].opening"
+    ]
+  },
+  {
+    "id": "cd84e055e12e592a",
+    "ru": "Вернитесь к датам и проверьте, что действительно следует из старого снимка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].outcomes.bad"
+    ]
+  },
+  {
+    "id": "fd56e86998f8905d",
+    "ru": "Дата наблюдения учтена; текущее состояние не выдано за подтверждённое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].outcomes.good"
+    ]
+  },
+  {
+    "id": "dbc1427dd09ae956",
+    "ru": "В свойствах файла указано {{observed}}. Свежего снимка у меня нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[date].answer"
+    ]
+  },
+  {
+    "id": "6fbb369ccf49508a",
+    "ru": "Текущее состояние по этому снимку не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[date].fact"
+    ]
+  },
+  {
+    "id": "b1d9ec6e16c8e305",
+    "ru": "Какая дата указана в исходном файле?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[date].text"
+    ]
+  },
+  {
+    "id": "cfbf45d525289219",
+    "ru": "Пока нет. Прошу разобраться, а не утверждаю, что это точно происходит сегодня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[new].answer"
+    ]
+  },
+  {
+    "id": "4dfa8cc9c0e1d921",
+    "ru": "Заявитель уточняет сообщение, а не предоставляет доказательство текущего состояния.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[new].fact"
+    ]
+  },
+  {
+    "id": "10b15660254481a7",
+    "ru": "Есть ли другое наблюдение за текущий период?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[new].text"
+    ]
+  },
+  {
+    "id": "6ef2f4f9861f269c",
+    "ru": "Новое письмо я написал после пересылки снимка знакомым. Других новых наблюдений пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[prior].answer"
+    ]
+  },
+  {
+    "id": "28998b15d46c8c57",
+    "ru": "Повторное письмо не сопровождается свежим наблюдением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[prior].fact"
+    ]
+  },
+  {
+    "id": "bd116edd9dfe6ab0",
+    "ru": "Что изменилось после прежнего обращения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].questions[prior].text"
+    ]
+  },
+  {
+    "id": "42a976021487f793",
+    "ru": "Актуальность материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].tag"
+    ]
+  },
+  {
+    "id": "28e09036675796bc",
+    "ru": "Старая фотография, новое письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[river-old-photo].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[river-old-photo].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[river-old-photo].title"
+    ]
+  },
+  {
+    "id": "d5b7ca6e114baaaa",
+    "ru": "Сопоставить перечень запроса с документами о работе заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6cc43e2a2ba83097",
+    "ru": "Проверить подтверждение подачи и письменное требование платы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[a1].title"
+    ]
+  },
+  {
+    "id": "302353a3c11baf27",
+    "ru": "Подготовить рассмотрение отказа уполномоченным должностным лицом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c1e723085580a578",
+    "ru": "Разъяснить бесплатность надлежащих копий и отдельный срок работодателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d6033647638dd1ab",
+    "ru": "Проверить фактическую выдачу именно запрошенных документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[a4].title"
+    ]
+  },
+  {
+    "id": "cce04f17f66224cb",
+    "ru": "Предложить оплатить копии как обязательное условие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[b0].title"
+    ]
+  },
+  {
+    "id": "a076d107679528ee",
+    "ru": "Обязать заявителя принести ведомости всех сотрудников",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].actions[b1].title"
+    ]
+  },
+  {
+    "id": "fd9a3746edc05dc8",
+    "ru": "По письменному заявлению работника документы, связанные с его работой, и их надлежащим образом заверенные копии выдаются работодателем бесплатно не позднее трёх рабочих дней со дня подачи заявления. Это не общий срок ответа инспекции на жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].coach.research",
+      "cases:CASE_TEMPLATES[salary-documents-request].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[salary-documents-request].knowledge.explain"
+    ]
+  },
+  {
+    "id": "51871e071c1fe3b7",
+    "ru": "Обязать заявителя принести ведомости всех сотрудников: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "c4aadbc60b674f70",
+    "ru": "Запрошены справка о зарплате заявителя за один период и заверенная копия его приказа о приёме. Подача письменного заявления подтверждена. Других работников и их зарплаты заявление не касается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[salary-documents-request].documents[d0].text"
+    ]
+  }
+]

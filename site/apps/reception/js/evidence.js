@@ -1,4 +1,5 @@
 import {EVIDENCE_RECORDS,EVIDENCE_TASKS,EVIDENCE_VERSION} from './content-library.js';
+import {evidenceLocaleAliases} from './evidence-locale-aliases.js';
 
 /** A frozen reference task, not an AI verdict about an arbitrary webpage. */
 function evidenceContext(value,c){
@@ -28,9 +29,10 @@ export function normalizeEvidence(value,kind='text'){
   return '';
  }
  if(kind==='part'||kind==='article'){
-  const prefix=kind==='part'?'(?:часть|части|ч\\.)':'(?:статья|статьи|ст\\.)';
+  const prefix=kind==='part'?'(?:часть|части|ч\\.|part|pt\\.)':'(?:статья|статьи|ст\\.|article|art\\.)';
   const m=s.match(new RegExp('^'+prefix+'\\s*(\\d+(?:[.,]\\d+)?)$'));
-  const n=(m?m[1]:s).replace(',','.');return /^\d+(?:\.\d+)?$/.test(n)?n.replace(/^0+(?=\d)/,''):'';
+  const chinese=s.match(new RegExp('^第\\s*(\\d+(?:[.,]\\d+)?)\\s*'+(kind==='part'?'款':'条')+'$'));
+  const n=(m?m[1]:chinese?chinese[1]:s).replace(',','.');return /^\d+(?:\.\d+)?$/.test(n)?n.replace(/^0+(?=\d)/,''):'';
  }
  return s.replace(/[«»"'.,:;()]/g,' ').replace(/\s+/g,' ').trim();
 }
@@ -38,7 +40,10 @@ export function evidenceChecks(c,answer){
  const t=evidenceTask(c),e=answer||newEvidence();
  const binding=t.bindings.some(b=>b.recordId===e.recordId&&b.fragmentId===e.fragmentId);
  const normalized=normalizeEvidence(e.extracted,t.extracted.normalize);
- const extracted=Boolean(normalized)&&t.extracted.accepted.some(v=>normalizeEvidence(v,t.extracted.normalize)===normalized);
+ const canonical=Boolean(normalized)&&t.extracted.accepted.some(v=>normalizeEvidence(v,t.extracted.normalize)===normalized);
+ const translatedText=normalizeEvidence(e.extracted,'text');
+ const translated=Boolean(translatedText)&&['text','role'].includes(t.extracted.normalize||'text')&&evidenceLocaleAliases(t).some(value=>translatedText===normalizeEvidence(value,'text'));
+ const extracted=canonical||translated;
  const application=e.finding===t.correctFinding;
  // Facts and their application must be attached to the supporting fragment.
  // Arbitrary URL, its official domain and opening every card award nothing.

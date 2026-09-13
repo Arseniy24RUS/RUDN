@@ -1,0 +1,1183 @@
+[
+  {
+    "id": "58f5d5c3cb94fead",
+    "ru": "В ежедневную плановую норму внесены 11 часов управления. Девять часов обозначены основной работой, ещё два – обязательным доездом, повторяющимся в нескольких сменах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d1].text"
+    ]
+  },
+  {
+    "id": "a755b3935609d425",
+    "ru": "План работодателя Г-11",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d1].title"
+    ]
+  },
+  {
+    "id": "5003323a6c5c5586",
+    "ru": "Автор графика ссылается исключительно на отступление пункта 9 приказа № 160. Неожиданных обстоятельств нет: дополнительные два часа известны до начала смены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d2].text"
+    ]
+  },
+  {
+    "id": "2737cd107cfb7c21",
+    "ru": "Пояснение работодателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4640e0168fbc12f7",
+    "ru": "12–15 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].duration",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].duration",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].duration"
+    ]
+  },
+  {
+    "id": "99ef17e344890944",
+    "ru": "Отступление для водителя использовано как заранее планируемая работодателем норма управления. Исходная тема касалась достоверности записи о конкретной смене. Здесь ключевое различие – плановое использование исключения до возникновения обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.explain"
+    ]
+  },
+  {
+    "id": "2b513d884fdc128c",
+    "ru": "Отступление для водителя использовано как заранее планируемая работодателем норма управления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "e67888be8d739d97",
+    "ru": "Название «доезд» автоматически превращает два часа управления в отдых.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "04f3ad3a1080c46b",
+    "ru": "Любое продление до стоянки разрешено заранее включать в график без ограничений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-planned-extension.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "68ef2948eed66713",
+    "ru": "В исправленном Г-11 оставлены те же одиннадцать часов управления, но последний блок переименован в «технологический перерыв».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].followup.intro"
+    ]
+  },
+  {
+    "id": "9141f0591954b358",
+    "ru": "Проверить фактическое содержание интервала: новое название не превращает управление в перерыв.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].followup.options[0].text",
+      "cases:CASE_TEMPLATES[driver-planned-extension].followup.explain"
+    ]
+  },
+  {
+    "id": "a6a760358362b4b0",
+    "ru": "Считать нарушение устранённым по изменению названия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "f6bfe6a017531808",
+    "ru": "Автоматически запретить любое управление автомобилем этой организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "49e9be6e3e6e34fb",
+    "ru": "Засчитать плановый доезд как ежедневный отдых.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "9f97565e60cf16fc",
+    "ru": "Одобрить график по факту наличия ссылки на пункт 9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "614172722e5007db",
+    "ru": "Найдите нормативное основание следующего действия: Проверить запрет работодателю планировать управление с учётом отступления пункта 9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "32e12dfa1e6e3214",
+    "ru": "Нам поставили по одиннадцать часов за рулём заранее. Последние два часа в графике назвали «доездом до стоянки» и сослались на право водителя продлить управление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].opening"
+    ]
+  },
+  {
+    "id": "b91721fcb42d7ddf",
+    "ru": "Рассмотрение обращения о планировании режима труда, а не автоматическая санкция.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].procedures[0].text"
+    ]
+  },
+  {
+    "id": "05a79a144225f763",
+    "ru": "План, который нам дали до начала работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q0].answer",
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "a45c34cd6d2f2bee",
+    "ru": "Это уже случившаяся задержка или план?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q0].text"
+    ]
+  },
+  {
+    "id": "64ba9a98f814c2d5",
+    "ru": "Работодатель, а не я после возникновения препятствия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q1].answer",
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "b105330ac22f6053",
+    "ru": "Кто включил два часа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q1].text"
+    ]
+  },
+  {
+    "id": "0217390c5f95d878",
+    "ru": "Пункт 9 приказа № 160.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q2].answer",
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9905a8b079190626",
+    "ru": "Какая норма приведена в пояснении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q2].text"
+    ]
+  },
+  {
+    "id": "ce5a7cfc9b5811a5",
+    "ru": "Нет, прошлое перекрытие было на другом рейсе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q3].answer",
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "f59df21bf3c96d19",
+    "ru": "Есть ли сведения об исключительной обстановке именно на этой смене?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].questions[q3].text"
+    ]
+  },
+  {
+    "id": "eb68144722786909",
+    "ru": "Специалист приёмной территориального органа трудового надзора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].role.title"
+    ]
+  },
+  {
+    "id": "4e4e03d4109d5268",
+    "ru": "Государственная инспекция труда по компетенции в отношении работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].routes[0].text"
+    ]
+  },
+  {
+    "id": "00d89ea00d8dcd7f",
+    "ru": "Проверить запрет работодателю планировать управление с учётом отступления пункта 9.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[driver-planned-extension].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[driver-planned-extension].contrast.decision"
+    ]
+  },
+  {
+    "id": "c81635c4601364fd",
+    "ru": "Исключение заранее внесли в график",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[driver-planned-extension].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[driver-planned-extension].title"
+    ]
+  },
+  {
+    "id": "4b704ffe367ceccf",
+    "ru": "Проверить запрет работодателю планировать управление с учётом отступления пункта 9. Исходная тема касалась достоверности записи о конкретной смене. Здесь ключевое различие – плановое использование исключения до возникновения обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].trap.explain"
+    ]
+  },
+  {
+    "id": "cb67489735387d87",
+    "ru": "Запрет планировать отступление и право водителя при возникших обстоятельствах – разные положения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].trap.text"
+    ]
+  },
+  {
+    "id": "cea4aef7e59e127d",
+    "ru": "Зафиксировать машину, маршрут и день наблюдения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[a0].title"
+    ]
+  },
+  {
+    "id": "260d194298ed8bcf",
+    "ru": "Установить перевозчика и относимых водителей по документам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[a1].title"
+    ]
+  },
+  {
+    "id": "4059f354803cf32c",
+    "ru": "Подготовить проверку графика и фактических записей режима",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b34337f6752065b4",
+    "ru": "Не публиковать личные данные и не объявлять нарушение заранее",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3bea6c188d5e9ea2",
+    "ru": "Сопоставить результат с нужной датой и людьми",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b702becede6c7867",
+    "ru": "Публично обвинить конкретного водителя без подтверждения его смены",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[b0].title",
+      "cases:CASE_TEMPLATES[driver-shifts].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "685fd532f87a12b6",
+    "ru": "Заменить фактические записи одним графиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].actions[b1].title"
+    ]
+  },
+  {
+    "id": "291ba0ca277180eb",
+    "ru": "На линии один автобус, но в сменной ведомости указаны два водителя. Факт непрерывной работы одного человека не подтверждён. Нужны относимые записи за указанный день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].documents[d0].text"
+    ]
+  },
+  {
+    "id": "e5110efffc73d4e5",
+    "ru": "Наблюдение и выписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].documents[d0].title"
+    ]
+  },
+  {
+    "id": "472cc9682da6a077",
+    "ru": "Номер машины, маршрут и день совпадают. Вопрос относится к организации перевозки и фактическому режиму, а не к цвету автобуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7c99fc6c89df5768",
+    "ru": "Карточка маршрута",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].documents[d1].title"
+    ]
+  },
+  {
+    "id": "60fc01cde4a4700f",
+    "ru": "Нужно сопоставить смены конкретных водителей и фактические записи; длительность работы автобуса недостаточна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[driver-shifts].factTask.explain",
+      "cases:CASE_TEMPLATES[driver-shifts].outcomes.good"
+    ]
+  },
+  {
+    "id": "afe19e8e5881c722",
+    "ru": "Один автобус всегда означает одного водителя на весь день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "726c68b8d754f9a1",
+    "ru": "Наличие двух фамилий доказывает соблюдение всех требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "0e59545962f01e6d",
+    "ru": "Пришёл правильный график, но за следующую неделю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].followup.intro"
+    ]
+  },
+  {
+    "id": "818458bb09d9335a",
+    "ru": "Запросить относимые сведения за день обращения и сопоставить фактическую работу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].followup.options[0].text",
+      "cases:CASE_TEMPLATES[driver-shifts].followup.explain"
+    ]
+  },
+  {
+    "id": "73555823d3d80bcd",
+    "ru": "Зачесть любой график этого перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6535280a8e7adceb",
+    "ru": "Предписать отпуск всему предприятию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "973c7f0f898dbc73",
+    "ru": "Статья 20 закона № 196-ФЗ предусматривает обязанности по организации режима труда и отдыха водителей. Продолжительность нахождения автобуса на линии не равна смене одного человека. Для вывода нужны относимые документы о фактическом режиме конкретных водителей за нужный день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].knowledge.explain"
+    ]
+  },
+  {
+    "id": "33edc5a41e81c1c8",
+    "ru": "Найдите обязанность организовать режим труда и отдыха водителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "0715ddf4fbf5c0c1",
+    "ru": "Вижу один автобус с раннего утра до позднего вечера. Думаю, водитель работает без отдыха. Отправил номер машины – разве этого мало для штрафа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].opening"
+    ]
+  },
+  {
+    "id": "657cabc1a1851715",
+    "ru": "Проверка организации режима труда и отдыха водителей перевозчиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c0a9ce158cd56495",
+    "ru": "Автоматический штраф по длительности маршрута автобуса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].procedures[1].text"
+    ]
+  },
+  {
+    "id": "822f5f4c4c6a9269",
+    "ru": "Назначение отпуска сотрудником приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].procedures[2].text"
+    ]
+  },
+  {
+    "id": "9801d9b6e44ba4e4",
+    "ru": "Заявитель уверен только в номере автобуса; смену водителей не видел.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "0c1ca78e6a580c14",
+    "ru": "Длительность эксплуатации машины не равна смене одного работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q0].fact",
+      "cases:CASE_TEMPLATES[driver-shifts].coach.talk"
+    ]
+  },
+  {
+    "id": "17d12fb4d3944eaa",
+    "ru": "Один ли водитель наблюдался?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q0].text"
+    ]
+  },
+  {
+    "id": "8c8097124b346c30",
+    "ru": "В приложенной выписке две фамилии водителей, но график и фактические записи требуют проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "78fc695b0ec8a09e",
+    "ru": "Наличие графика не доказывает фактическое соблюдение режима.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a8a5eb24589c6125",
+    "ru": "Есть ли документы перевозчика?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q1].text"
+    ]
+  },
+  {
+    "id": "26ebb4df50537e40",
+    "ru": "Конкретный день {{observed}} и маршрут указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "3d0d8c7ec902288f",
+    "ru": "Проверка должна относиться к тому же дню.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "6a5f6ec0e29d39b8",
+    "ru": "Какой период жалобы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8711b1df74691cd4",
+    "ru": "Проверить безопасность перевозки и режим труда, не раскрывая лишние личные сведения водителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "ddd3d1692e25ce08",
+    "ru": "Предмет можно проверить без публикации персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "a0aa8b153ca303b0",
+    "ru": "Какое требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].questions[q3].text"
+    ]
+  },
+  {
+    "id": "9fa5a9bd4b104aa8",
+    "ru": "Уточняет обстоятельства работы перевозчика и передаёт вопрос по компетенции. Не устанавливает нарушение режима труда по одному наблюдению автобуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].role.text"
+    ]
+  },
+  {
+    "id": "94742387e36438ff",
+    "ru": "Специалист приёмной транспортного надзорного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].role.title"
+    ]
+  },
+  {
+    "id": "ef4a98d14767d73c",
+    "ru": "Установить конкретный день и перевозчика, направить материалы для проверки фактического режима по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].routes[0].text",
+      "cases:CASE_TEMPLATES[driver-shifts].coach.plan",
+      "cases:CASE_TEMPLATES[driver-shifts].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "2170bf7d5cf7039c",
+    "ru": "Сразу объявить водителя нарушителем по номеру автобуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].routes[1].text",
+      "cases:CASE_TEMPLATES[driver-shifts].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "12549950a392a44d",
+    "ru": "Закрыть дело лишь по двум фамилиям в графике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].routes[2].text",
+      "cases:CASE_TEMPLATES[driver-shifts].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "947d461a169ef1d6",
+    "ru": "Автобус тот же. А водитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[driver-shifts].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[driver-shifts].title"
+    ]
+  },
+  {
+    "id": "d417f21d729398ce",
+    "ru": "Транспорт и труд",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].topic",
+      "cases:CASE_TEMPLATES[driver-shifts].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-driver-shifts].scope"
+    ]
+  },
+  {
+    "id": "d09567219a53e9c1",
+    "ru": "Проверить выполнение графика, а не только его наличие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].trap.options[0].text",
+      "cases:CASE_TEMPLATES[driver-shifts].trap.explain"
+    ]
+  },
+  {
+    "id": "03d0e5f74ddfddbb",
+    "ru": "Ограничиться графиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "402406d9c1338896",
+    "ru": "Помощник: «Если график правильный, фактические данные не нужны».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-shifts].trap.text"
+    ]
+  },
+  {
+    "id": "91ee8c9babdf3ae1",
+    "ru": "Установить вид перевозки и применимый профиль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[a0].title"
+    ]
+  },
+  {
+    "id": "3f92f4c85e1f417b",
+    "ru": "Сопоставить управление, перерывы и обязанности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[a1].title"
+    ]
+  },
+  {
+    "id": "8dfdcbedb4467c3f",
+    "ru": "Подготовить ограниченный вывод о подтверждённом фрагменте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[a2].title"
+    ]
+  },
+  {
+    "id": "fe4380587b58c9af",
+    "ru": "Не выдавать этот вывод за подтверждение соблюдения режима за все дни.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[a3].title"
+    ]
+  },
+  {
+    "id": "2654cdac703a92d3",
+    "ru": "При новых материалах проверить именно изменившиеся интервалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[a4].title"
+    ]
+  },
+  {
+    "id": "14047aabbdf50ddd",
+    "ru": "Выдать безусловную справку о законности всех рейсов перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[b0].title"
+    ]
+  },
+  {
+    "id": "340adeda2b6469ed",
+    "ru": "Потребовать остановить движение ради обязательного единого перерыва, игнорируя материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].actions[b1].title",
+      "cases:CASE_TEMPLATES[driver-split-break].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "86949a21a0a10a32",
+    "ru": "Все люди, документы и события этого дела вымышлены. Перевозка междугородная, внутрироссийская, не регулярная городская или пригородная и не международная. Журнал подтверждён. После 2 часов 15 минут управления предоставлены 15 минут полноценного специального перерыва, затем ещё 2 часа 15 минут управления и 30 минут такого перерыва. В этих промежутках другой работы нет. Исключительное продление управления не применяется. Проверяется только этот фрагмент, не вся смена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].brief"
+    ]
+  },
+  {
+    "id": "3c21fdc8e6d65ff5",
+    "ru": "Первоначальное предположение основано на непрерывности перерыва. Разделение допускается, но только подтверждённые специальные перерывы нельзя смешивать с работой на стоянке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].coach.plan",
+      "cases:CASE_TEMPLATES[driver-split-break].contrast.difference"
+    ]
+  },
+  {
+    "id": "09908f657652ed72",
+    "ru": "После не более 4 часов 30 минут управления требуется специальный перерыв не менее 45 минут, если не применимо указанное в норме исключение. При разделении первая часть не менее 15 минут, последняя не менее 30 минут. Для регулярного городского и пригородного сообщения действует особенность: каждая часть не менее 10 минут. В данном упражнении перевозка междугородная и внутрироссийская.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].coach.research",
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.explain",
+      "cases:SOURCES[n14-driver11].text"
+    ]
+  },
+  {
+    "id": "bb8f928417aa0e2e",
+    "ru": "Илья ссылается только на отсутствие одного непрерывного сорокапятиминутного интервала. Иного нарушения в первоначальном сообщении не описывает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d0].text"
+    ]
+  },
+  {
+    "id": "5424b33192309fa4",
+    "ru": "Комментарий заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d0].title"
+    ]
+  },
+  {
+    "id": "f2f9372022cb32f0",
+    "ru": "Управление 2:15 → специальный перерыв 0:15 → управление 2:15 → специальный перерыв 0:30. После второго перерыва начинается следующий фрагмент управления. Время одного часового пояса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d1].text"
+    ]
+  },
+  {
+    "id": "a588250cdb0f39d5",
+    "ru": "Хронология рейса Р-17",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4ec26f8392bc6cff",
+    "ru": "Оба перерыва свободны от посадки, ремонта и иной работы. Это специальные перерывы от управления; выбранный рейс междугородный внутри России.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d2].text"
+    ]
+  },
+  {
+    "id": "204e9120d89fc47b",
+    "ru": "Журнал обязанностей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].documents[d2].title"
+    ]
+  },
+  {
+    "id": "eedbfe67521c0c0d",
+    "ru": "В заданном фрагменте есть допустимое разделение специального перерыва на 15 и 30 минут. Первоначальное предположение основано на непрерывности перерыва. Разделение допускается, но только подтверждённые специальные перерывы нельзя смешивать с работой на стоянке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.explain"
+    ]
+  },
+  {
+    "id": "51871faac5111923",
+    "ru": "В заданном фрагменте есть допустимое разделение специального перерыва на 15 и 30 минут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "5d30503defa7b5ca",
+    "ru": "Специальный перерыв всегда должен быть только одним интервалом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d53a611ed7813484",
+    "ru": "Любые две остановки независимо от работы в них автоматически дают 45 минут отдыха.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-split-break.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d86b4e93cacd78f0",
+    "ru": "Для другого дня представлен такой же график, но в первые пятнадцать минут водитель оформлял посадку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].followup.intro"
+    ]
+  },
+  {
+    "id": "bed4e47b1a0438d6",
+    "ru": "Повторно оценить новый фрагмент: время работы нельзя автоматически зачесть как тот же специальный перерыв.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].followup.options[0].text",
+      "cases:CASE_TEMPLATES[driver-split-break].followup.explain"
+    ]
+  },
+  {
+    "id": "41dd8606ee396645",
+    "ru": "Распространить прежний вывод на любую похожую схему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "fa86bf971c1dbbb0",
+    "ru": "Считать все остановки в новом дне временем управления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "e332f72cfb382fa4",
+    "ru": "Признать нарушение лишь из-за отсутствия единого интервала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "05477cb9fd93bfa5",
+    "ru": "Считать остановку отдыхом без проверки обязанностей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "e9cfcfbb516857f5",
+    "ru": "Найдите нормативное основание следующего действия: Проверить длительность, последовательность и отсутствие работы; не отвергать разрешённое разделение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "ccf36cbac88bfced",
+    "ru": "Водитель ни разу не отдыхал сорок пять минут подряд. Было пятнадцать минут, потом тридцать. Я считаю, что такие части никогда не засчитываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].opening"
+    ]
+  },
+  {
+    "id": "d3550a80a800157f",
+    "ru": "Проверка конкретного сообщения о режиме труда по установленной хронологии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].procedures[0].text"
+    ]
+  },
+  {
+    "id": "2a04e79b58286e0e",
+    "ru": "Междугородная поездка внутри России.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q0].answer",
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "188e39cc98d95259",
+    "ru": "Каков вид перевозки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q0].text"
+    ]
+  },
+  {
+    "id": "270b73fcec417c39",
+    "ru": "Дважды по два часа пятнадцать минут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q1].answer",
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a759a2693a715f20",
+    "ru": "Сколько управляли до каждой части?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q1].text"
+    ]
+  },
+  {
+    "id": "a428676a7dc31b16",
+    "ru": "По журналу никакой работы в эти интервалы не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q2].answer",
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e1b67899cfb4af3e",
+    "ru": "Работал ли водитель на остановках?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bc2fcdba0d0ea47c",
+    "ru": "Да, приложена хронология Р-17.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q3].answer",
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9efd741ef98fc5c9",
+    "ru": "Есть ли подтверждение порядка интервалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].questions[q3].text"
+    ]
+  },
+  {
+    "id": "d3eeacd2e8ed89f5",
+    "ru": "Специалист подразделения по обращениям о трудовых правах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].role.title"
+    ]
+  },
+  {
+    "id": "ed603f757e19fb73",
+    "ru": "Компетентное подразделение трудового надзора для рассмотрения обращения о режиме труда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].routes[0].text"
+    ]
+  },
+  {
+    "id": "c8c81adb258dc890",
+    "ru": "Проверить длительность, последовательность и отсутствие работы; не отвергать разрешённое разделение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[driver-split-break].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[driver-split-break].contrast.decision"
+    ]
+  },
+  {
+    "id": "5ac70a50d396ffa7",
+    "ru": "Два перерыва вместо одного",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[driver-split-break].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[driver-split-break].title"
+    ]
+  },
+  {
+    "id": "18fb8b557e943bb0",
+    "ru": "Проверить длительность, последовательность и отсутствие работы; не отвергать разрешённое разделение. Первоначальное предположение основано на непрерывности перерыва. Разделение допускается, но только подтверждённые специальные перерывы нельзя смешивать с работой на стоянке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].trap.explain"
+    ]
+  },
+  {
+    "id": "b5baf7d0fd233d6f",
+    "ru": "Достаточно сложить любые остановки до сорока пяти минут, не проверяя работу водителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-split-break].trap.text"
+    ]
+  },
+  {
+    "id": "7c0a69697818ab92",
+    "ru": "Сопоставить журнал и диспетчерское задание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[a0].title"
+    ]
+  },
+  {
+    "id": "5037f69a89a44d6c",
+    "ru": "Разделить время управления и иную работу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[a1].title"
+    ]
+  },
+  {
+    "id": "cc0dbdd5d1e2bbdc",
+    "ru": "Подготовить материалы проверки исключённого из табеля периода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b2396a722c218fff",
+    "ru": "Не устанавливать задолженность и санкцию без необходимых данных и полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7f110b143e5301c9",
+    "ru": "Проверить исправленный табель по записи В-25.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[a4].title"
+    ]
+  },
+  {
+    "id": "ca241c374d2c7c1c",
+    "ru": "Пересчитать весь день как непрерывное управление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[b0].title"
+    ]
+  },
+  {
+    "id": "8c80139d80e50f81",
+    "ru": "Закрыть вопрос, поскольку автобус физически не двигался.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].actions[b1].title",
+      "cases:CASE_TEMPLATES[driver-waiting-work].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "a7e6bc9526c68821",
+    "ru": "Все люди, документы и события этого дела вымышлены. Работник управляет междугородным автобусом во внутрироссийском сообщении. Трудовой договор действует, исключения из сферы приказа № 160 не применяются. В рассмотренном фрагменте четыре часа управления и два часа стоянки в ожидании посадки. Во время стоянки водитель обязан выполнять распоряжения, свободного перерыва не предоставлено. Полная проверка смены и сумма зарплаты в задании не рассчитываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].brief"
+    ]
+  },
+  {
+    "id": "48a873045ef171ac",
+    "ru": "Здесь не впечатление пассажира о долгой поездке, а подтверждённая работа при стоянке. Учёт управления и рабочего времени даёт разные показатели.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].coach.plan",
+      "cases:CASE_TEMPLATES[driver-waiting-work].contrast.difference"
+    ]
+  },
+  {
+    "id": "568674ec866bb1a9",
+    "ru": "Пункт 13 Особенностей включает стоянку в ожидании посадки и высадки пассажиров в рабочее время, не связанное с управлением. Время без движения не всегда является отдыхом. В задании отдельно установлено, что водитель обязан оставаться для выполнения работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].coach.research",
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.explain",
+      "cases:SOURCES[n14-driver13].text"
+    ]
+  },
+  {
+    "id": "c2641e9a12a56be0",
+    "ru": "На стенде написано: «Простой транспорта не оплачивается». Вид простоя и обязанности конкретного водителя в объявлении не описаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a6178c971eedff7a",
+    "ru": "Общее объявление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a64e6e348f2f0ae9",
+    "ru": "Зафиксированы четыре часа управления и два часа стоянки автобуса в ожидании посадки. Запись относится к водителю Сергею, а не к сменщику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d1].text"
+    ]
+  },
+  {
+    "id": "653ed8aea1bd8a7a",
+    "ru": "Фрагмент сменного журнала В-25",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d1].title"
+    ]
+  },
+  {
+    "id": "d67267fc4421ab15",
+    "ru": "В двухчасовой промежуток водитель остаётся на рабочем месте, готовит посадку и ожидает указаний диспетчера. Работодатель обозначил этот промежуток как свободный отдых только в табеле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d2].text"
+    ]
+  },
+  {
+    "id": "45ff632bc865f58d",
+    "ru": "Диспетчерское задание",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].documents[d2].title"
+    ]
+  },
+  {
+    "id": "808b93f41b4db4b5",
+    "ru": "Стоянка в ожидании посадки в этих условиях относится к работе без управления, а не к свободному отдыху. Здесь не впечатление пассажира о долгой поездке, а подтверждённая работа при стоянке. Учёт управления и рабочего времени даёт разные показатели.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.explain"
+    ]
+  },
+  {
+    "id": "eed3d35d21602233",
+    "ru": "Стоянка в ожидании посадки в этих условиях относится к работе без управления, а не к свободному отдыху.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "486526a529bd84f5",
+    "ru": "Любая остановка автобуса автоматически является временем отдыха.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4de87f80a359510d",
+    "ru": "Два часа стоянки следует добавить именно к времени управления автомобилем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-driver-waiting-work.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d279ac447a5af3b2",
+    "ru": "Работодатель исправил два часа, но приложил табель сменщика за следующую дату вместо записи В-25.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].followup.intro"
+    ]
+  },
+  {
+    "id": "8ea8d65d453a2ccb",
+    "ru": "Запросить относящееся к В-25 подтверждение; исправление чужой смены не завершает этот вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].followup.options[0].text",
+      "cases:CASE_TEMPLATES[driver-waiting-work].followup.explain"
+    ]
+  },
+  {
+    "id": "b15845ca2a34673a",
+    "ru": "Закрыть дело по любому новому табелю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "75fe57865aa25182",
+    "ru": "Сразу признать долг за все смены без дальнейших сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "7727a4fea9cb7fee",
+    "ru": "Считать всё время без движения отдыхом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "8f2f8d5ea4c5079e",
+    "ru": "Приравнять ожидание к непрерывному управлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "73e76d86ae1015c9",
+    "ru": "Найдите нормативное основание следующего действия: Отнести установленное ожидание посадки к рабочему времени без управления; проверить табель отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "9fbd831ac5a64983",
+    "ru": "Норма проверена на дату подготовки. Учебные наборы начинаются после вступления в силу; обновление календаря не означает актуализацию закона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[driver-split-break].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[driver-planned-extension].legalApplicability.scope"
+    ]
+  },
+  {
+    "id": "9063d09b6b1f8017",
+    "ru": "Работодатель убрал из табеля два часа на конечной: автобус же стоял. Но я ждал посадки и оставался на работе. Получается, это отдых?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].opening"
+    ]
+  },
+  {
+    "id": "9380b2a5dd22b825",
+    "ru": "Рассмотрение обращения о соблюдении режима труда с проверкой фактической работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].procedures[0].text"
+    ]
+  },
+  {
+    "id": "791cc7101c0e6724",
+    "ru": "Оставаться готовым к посадке и выполнять задание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q0].answer",
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f427523523fca7ce",
+    "ru": "Что должны были делать во время стоянки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q0].text"
+    ]
+  },
+  {
+    "id": "2311f87d2d4be143",
+    "ru": "Нет, свободный перерыв не объявляли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q1].answer",
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "897d19a4d915e269",
+    "ru": "Можно было свободно уйти?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q1].text"
+    ]
+  },
+  {
+    "id": "7c4b1d9e7929765b",
+    "ru": "Это моя запись В-25.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q2].answer",
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "a23ab2f081889a9f",
+    "ru": "К какому водителю относится журнал?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e8e624be9180525a",
+    "ru": "Сначала хочу, чтобы верно учитывали время.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q3].answer",
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "690a5c6b0e56916a",
+    "ru": "Требуете сейчас установить сумму долга?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8bc0eb27a886dd45",
+    "ru": "Специалист подразделения по обращениям в государственную инспекцию труда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].role.title"
+    ]
+  }
+]

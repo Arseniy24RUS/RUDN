@@ -1,0 +1,1143 @@
+[
+  {
+    "id": "3c9f6c90d908d5c4",
+    "ru": "руководитель многофункционального центра",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[4]"
+    ]
+  },
+  {
+    "id": "fcc44343fb90ff24",
+    "ru": "руководителю многофункционального центра",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[5]"
+    ]
+  },
+  {
+    "id": "f4a1e735b1d79a58",
+    "ru": "директор многофункционального центра",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[6]"
+    ]
+  },
+  {
+    "id": "0b1cc596e21d52a9",
+    "ru": "Адресат жалобы на работника МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.label"
+    ]
+  },
+  {
+    "id": "5b200d96b15be587",
+    "ru": "Все жалобы на любого работника всегда направляются только учредителю.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.findingOptions[founder].text"
+    ]
+  },
+  {
+    "id": "af0a3839c242a8ca",
+    "ru": "Достаточно поручить окончательный ответ самому обжалуемому работнику.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.findingOptions[same].text"
+    ]
+  },
+  {
+    "id": "8ef060f3677077d3",
+    "ru": "Нужно отличать действие работника от решения самого центра. В этом деле жалоба адресуется руководителю МФЦ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.findingOptions[worker].text"
+    ]
+  },
+  {
+    "id": "9306045bf8fd632a",
+    "ru": "Изучите статью 11.2. По условиям дела обжалуются действия работника МФЦ. Введите должностную роль адресата, не фамилию.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.prompt"
+    ]
+  },
+  {
+    "id": "e460f4d0fb55e404",
+    "ru": "Уточнить страховую организацию по полису и предмет вопроса о доступности помощи по ОМС. При вопросах организации помощи по ОМС гражданин может обратиться в свою страховую медицинскую организацию. Наличие платного предложения само по себе не доказывает отсутствие права на бесплатную помощь. Приёмная не определяет клиническую срочность и лечение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.explain"
+    ]
+  },
+  {
+    "id": "a5bdb7f2ef44da5c",
+    "ru": "СМО",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "a5fac8dd26ea545b",
+    "ru": "страховая медицинская организация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "54f4b180d5cd871f",
+    "ru": "Укажите сокращение страховой медицинской организации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.extracted.label"
+    ]
+  },
+  {
+    "id": "9525a3a43c06548b",
+    "ru": "Уточнить страховую организацию по полису и предмет вопроса о доступности помощи по ОМС.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "af3fbcd101b2818d",
+    "ru": "Направить гражданина исключительно на платный приём.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a647294d57cd6d82",
+    "ru": "Установить диагноз по рассказу заявителя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a1a60e7c9c709a2f",
+    "ru": "Укажите сокращение страховой медицинской организации Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.oms.prompt"
+    ]
+  },
+  {
+    "id": "f3036fd08f2b7dae",
+    "ru": "Часть 3 статьи 8 связывает направление обращения с компетенцией. Статья 12 описывает другой вопрос — срок рассмотрения. Владелец сети не устанавливается по названию района.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.explain"
+    ]
+  },
+  {
+    "id": "66ac00b698f09812",
+    "ru": "Номер части статьи 8, обосновывающей направление по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.extracted.label"
+    ]
+  },
+  {
+    "id": "a36aa3f64840479a",
+    "ru": "Официальное происхождение позволяет применить материал к любому вопросу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.findingOptions[any].text",
+      "evidence-catalog:EVIDENCE_TASKS.personal.findingOptions[any].text",
+      "evidence-catalog:EVIDENCE_TASKS.split.findingOptions[any].text"
+    ]
+  },
+  {
+    "id": "0300a5b786cd4205",
+    "ru": "Найденная страница заменяет проверку обстоятельств дела.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.findingOptions[replace].text",
+      "evidence-catalog:EVIDENCE_TASKS.personal.findingOptions[replace].text",
+      "evidence-catalog:EVIDENCE_TASKS.split.findingOptions[replace].text"
+    ]
+  },
+  {
+    "id": "4551c7c4951cad6a",
+    "ru": "Источник подтверждает именно выбранное действие.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.personal.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.split.findingOptions[support].text"
+    ]
+  },
+  {
+    "id": "20a0147aba53082d",
+    "ru": "Выберите положение, обосновывающее проверку компетенции и последующую переадресацию. Нужна не просто общая длительность рассмотрения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.prompt"
+    ]
+  },
+  {
+    "id": "a3015e45dd240b02",
+    "ru": "Когда адресат ещё не установлен",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.ownership.title",
+      "evidence-catalog:EVIDENCE_TASKS.ownership.searchHint"
+    ]
+  },
+  {
+    "id": "ab286d149a049c12",
+    "ru": "Статья 23 посвящена уполномоченному органу. Школа, разместившая сведения, отвечает за свою обработку, но не подменяет независимый контроль.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.personal.explain"
+    ]
+  },
+  {
+    "id": "2bc3ba1f1658accb",
+    "ru": "Статья закона 152-ФЗ об уполномоченном органе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.personal.extracted.label"
+    ]
+  },
+  {
+    "id": "655423036ce1074c",
+    "ru": "Найдите положение, которое отличает уполномоченный орган по защите прав субъектов данных от школы-оператора. Назовите номер статьи.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.personal.prompt"
+    ]
+  },
+  {
+    "id": "e58ded9ac85e25f5",
+    "ru": "Оператор и орган защиты прав",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.personal.title",
+      "evidence-catalog:EVIDENCE_TASKS.personal.searchHint"
+    ]
+  },
+  {
+    "id": "f680ce03db65bd31",
+    "ru": "Часть 3 статьи 19 допускает указание места опубликования. Нужно установить, что там действительно находится запрошенная информация.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.explain"
+    ]
+  },
+  {
+    "id": "ab16a6bbd1afeac6",
+    "ru": "Номер части статьи 19 закона 8-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.extracted.label"
+    ]
+  },
+  {
+    "id": "d64560a8f9e70d56",
+    "ru": "Ссылка позволяет получить именно запрошенную опубликованную информацию; необходимо проверить приложения и доступность.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.findingOptions[exact].text"
+    ]
+  },
+  {
+    "id": "9fa0beaa444a77db",
+    "ru": "Главная страница любого официального сайта достаточна для любого запроса.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.findingOptions[home].text"
+    ]
+  },
+  {
+    "id": "a4bd8be60996f5f2",
+    "ru": "Закон вообще запрещает отвечать ссылкой на опубликованную информацию.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.findingOptions[never].text"
+    ]
+  },
+  {
+    "id": "6e4501b429617729",
+    "ru": "Проверьте основание ответа ссылкой на уже опубликованную информацию. Введите номер части статьи 19 и выберите, чего должна достигать такая ссылка.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.prompt"
+    ]
+  },
+  {
+    "id": "a3727feee4a12efb",
+    "ru": "Главная страница или конкретный документ?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.published.title",
+      "evidence-catalog:EVIDENCE_TASKS.published.searchHint"
+    ]
+  },
+  {
+    "id": "71c13d37fdea0b17",
+    "ru": "Часть 5 статьи 11 предусматривает право уполномоченного лица и уведомление, а не автоматическое удаление повторных писем.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.explain"
+    ]
+  },
+  {
+    "id": "46eb346f42af68c2",
+    "ru": "Количество писем автоматически заменяет решение руководителя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.findingOptions[auto].text"
+    ]
+  },
+  {
+    "id": "5cff613d1dbfc0bb",
+    "ru": "Прекращение переписки даёт запрет на любые будущие вопросы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.findingOptions[ban].text"
+    ]
+  },
+  {
+    "id": "0cb67c259a0a1a42",
+    "ru": "Решение принимает уполномоченное лицо при совокупности условий; гражданина уведомляют. Прекращение относится к вопросу, а не ко всем будущим обращениям.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.findingOptions[head].text"
+    ]
+  },
+  {
+    "id": "40766f9d9ff91d3d",
+    "ru": "Найдите часть статьи 11, которая определяет условия прекращения переписки. Проверьте, превращается ли право руководителя в автоматическую обязанность работника приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.prompt"
+    ]
+  },
+  {
+    "id": "f31475aea0b7d64a",
+    "ru": "59-ФЗ статья 11 часть 5 вправе руководитель уведомляется",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.searchHint"
+    ]
+  },
+  {
+    "id": "eada800fd8c8b561",
+    "ru": "Основание и полномочие",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.title"
+    ]
+  },
+  {
+    "id": "0d68975762432ce3",
+    "ru": "В части 5 статьи 11 существенны условия, включая отсутствие новых доводов. Новые материалы нельзя отбросить автоматически.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.explain"
+    ]
+  },
+  {
+    "id": "2fbf0f32b6dcd6d3",
+    "ru": "Номер части статьи 11 об условиях прекращения переписки",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.extracted.label",
+      "evidence-catalog:EVIDENCE_TASKS.repeat-conditions.extracted.label"
+    ]
+  },
+  {
+    "id": "87f3f154fe4415ae",
+    "ru": "Наличие прежнего ответа означает, что новых обстоятельств быть не может.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.findingOptions[all].text"
+    ]
+  },
+  {
+    "id": "9a3575c42df78e95",
+    "ru": "После трёх писем любые новые доводы можно игнорировать.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.findingOptions[count].text"
+    ]
+  },
+  {
+    "id": "3b4c024de0888496",
+    "ru": "Новые существенные сведения необходимо сопоставить с прежними ответами. Число писем само по себе не основание прекращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.findingOptions[new].text"
+    ]
+  },
+  {
+    "id": "86bffd6dbcdae230",
+    "ru": "Выберите положение об условиях прекращения переписки. Для данного задания необходимо найти часть нормы, а не оценить письмо по числу повторов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.prompt"
+    ]
+  },
+  {
+    "id": "b2d5d3827569565c",
+    "ru": "Повторное — не значит тождественное",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.repeat.title",
+      "evidence-catalog:EVIDENCE_TASKS.repeat.searchHint"
+    ]
+  },
+  {
+    "id": "3df61ddf0f722ef7",
+    "ru": "Контакт-центр и НТС решают разные задачи. Нужен номер для входящей корреспонденции: 8 (499) 254-50-72. Звонок не заменяет подачу обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.explain"
+    ]
+  },
+  {
+    "id": "429b4f6652b3b775",
+    "ru": "Справочный телефон из материала",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.extracted.label"
+    ]
+  },
+  {
+    "id": "e20c8d809e6e4a87",
+    "ru": "Все контакты одного ведомства имеют одинаковое назначение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.findingOptions[nts].text"
+    ]
+  },
+  {
+    "id": "a4f90098c902707b",
+    "ru": "Телефон подходит для справки по корреспонденции; вопрос о надзоре и официальный способ подачи обращения проверяются отдельно.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.findingOptions[reference].text"
+    ]
+  },
+  {
+    "id": "9f375410283c250a",
+    "ru": "Телефонный разговор автоматически заменяет письменное обращение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.findingOptions[submission].text"
+    ]
+  },
+  {
+    "id": "f91ac0141a97a0e0",
+    "ru": "Найдите справочный телефон центрального контакт-центра Росприроднадзора по входящей корреспонденции. Не номер НТС, не региональную приёмную и не экстренный контакт. Сведения проверяются по версии справочного пакета, указанной ниже, отдельно от исторической даты обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.prompt"
+    ]
+  },
+  {
+    "id": "eb49022e733f4855",
+    "ru": "Росприроднадзор входящая корреспонденция контакты",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.searchHint"
+    ]
+  },
+  {
+    "id": "10ff2fee3e0e3c6f",
+    "ru": "Номер найден. А для чего он?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.rpn-help.title"
+    ]
+  },
+  {
+    "id": "ee344362fab45821",
+    "ru": "Считать срок СФР от установленного получения полного набора сведений. Для рассматриваемой выплаты пособия СФР отсчитывает десять рабочих дней от получения необходимых сведений и документов. Дата закрытия больничного и дата регистрации жалобы сами по себе это событие не заменяют. В упражнении полные сведения получены позже закрытия больничного.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.explain"
+    ]
+  },
+  {
+    "id": "ee43b960e3ac74f5",
+    "ru": "получение необходимых сведений и документов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "8238a3a146955ad7",
+    "ru": "получение полного комплекта сведений",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ebba7fc0111bfcf5",
+    "ru": "получение необходимых сведений",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "c03b3f246be6aaa3",
+    "ru": "полные сведения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "6a3aabef5d166d76",
+    "ru": "Назовите событие, от которого начинается указанный срок",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.extracted.label"
+    ]
+  },
+  {
+    "id": "f83f1d29f1dfcb85",
+    "ru": "Считать срок СФР от установленного получения полного набора сведений.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "4089c320158f6702",
+    "ru": "Считать от любого обращения гражданина.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "428d87dbe5aa42df",
+    "ru": "Считать от даты закрытия больничного без проверки передачи сведений.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "ff9e27034e4a23ac",
+    "ru": "Назовите событие, от которого начинается указанный срок Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.prompt"
+    ]
+  },
+  {
+    "id": "5b75f8388c9d1ded",
+    "ru": "Часть 4 статьи 8 относится к нескольким компетенциям. Часть 3 — к направлению по компетенции, но не содержит именно этого правила о копиях.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.split.explain"
+    ]
+  },
+  {
+    "id": "442ff961a259d081",
+    "ru": "Номер части статьи 8 для нескольких компетенций",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.split.extracted.label"
+    ]
+  },
+  {
+    "id": "7cc1a43296b3a24d",
+    "ru": "Найдите основание направления копий разным компетентным органам. Нельзя заставлять гражданина переписывать каждую просьбу отдельно только ради удобства приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.split.prompt"
+    ]
+  },
+  {
+    "id": "19967b3ce4e53c8b",
+    "ru": "Одно письмо — несколько компетенций",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.split.title",
+      "evidence-catalog:EVIDENCE_TASKS.split.searchHint"
+    ]
+  },
+  {
+    "id": "de45168ff5315df3",
+    "ru": "В справочном пакете Москва указана вместе с Калужской областью. Адрес и положение должны соответствовать территории и предмету.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.explain"
+    ]
+  },
+  {
+    "id": "49a589e9b33ee4bb",
+    "ru": "Калужская область",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "d5e708450807aa34",
+    "ru": "Калужская",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "d074f9e8e7c38f01",
+    "ru": "Калужской области",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "64eee6157051a4f6",
+    "ru": "Калужской",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "6cb3600bfa7a403f",
+    "ru": "Какая область входит в название нужного управления вместе с Москвой?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.extracted.label"
+    ]
+  },
+  {
+    "id": "71f3ba9f4ff2cecb",
+    "ru": "Для любого федерального объекта подходит научно-технический совет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.findingOptions[nts].text"
+    ]
+  },
+  {
+    "id": "382541431fbe93d2",
+    "ru": "Москва всегда относится к управлению по Московской области.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.findingOptions[oblast].text"
+    ]
+  },
+  {
+    "id": "a38ce68084c71b68",
+    "ru": "Подходит управление по городу Москве и Калужской области; назначение и вид надзора должны соответствовать установленным обстоятельствам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.findingOptions[territory].text"
+    ]
+  },
+  {
+    "id": "11f01b47a2022d44",
+    "ru": "В учебном деле подтверждено, что объект расположен в городе Москве и отнесён к федеральному надзору. По справочному пакету найдите территориальный орган, а не центральный аппарат или управление соседнего субъекта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.prompt"
+    ]
+  },
+  {
+    "id": "8231c5063407b0cf",
+    "ru": "Город Москва и Московская область",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.title",
+      "evidence-catalog:EVIDENCE_TASKS.territory-rpn.searchHint"
+    ]
+  },
+  {
+    "id": "e273b1019c6251af",
+    "ru": "Проверить документ именно для участка наблюдения и передать вопрос по установленной компетенции. Нельзя отождествлять участки только по похожему адресу. В деле разрешительный документ относится к участку Б, а фотографии – к участку А. Это несоответствие требует уточнения; само по себе оно ещё не устанавливает незаконность работ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.explain"
+    ]
+  },
+  {
+    "id": "c78364c5d0f27706",
+    "ru": "Б",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "a15f68f82bcb22fd",
+    "ru": "участок Б",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "aac322684299f207",
+    "ru": "Какой участок указан в приложенном разрешительном документе?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.extracted.label"
+    ]
+  },
+  {
+    "id": "ad7c0d83a713b43c",
+    "ru": "Проверить документ именно для участка наблюдения и передать вопрос по установленной компетенции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7ef20af1b6b255f6",
+    "ru": "Признать любые работы в квартале разрешёнными одним документом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "18b37321090bff2d",
+    "ru": "Объявить незаконность до проверки объекта и оснований.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "09e40b4bf77e80a8",
+    "ru": "Какой участок указан в приложенном разрешительном документе? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.prompt"
+    ]
+  },
+  {
+    "id": "54ac74866d7dae4d",
+    "ru": "Номер части / пункта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.extracted.label",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.extracted.label",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.extracted.label"
+    ]
+  },
+  {
+    "id": "f61dd67a296bd0ba",
+    "ru": "Применить правило независимо от обстоятельств.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.findingOptions[any].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.findingOptions[any].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.findingOptions[any].text"
+    ]
+  },
+  {
+    "id": "9a574b71d390dbbe",
+    "ru": "Заменить проверку документов названием источника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.findingOptions[replace].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.findingOptions[replace].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.findingOptions[replace].text"
+    ]
+  },
+  {
+    "id": "bb97cb070d05271d",
+    "ru": "Найдите часть статьи, устанавливающую порядок предоставления общедоступной части, и укажите её номер. Свяжите правило с установленными обстоятельствами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.prompt"
+    ]
+  },
+  {
+    "id": "939c90dbb8d1d12a",
+    "ru": "8-ФЗ статья 19 часть статьи, устанавливающая частичное предоставление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.searchHint"
+    ]
+  },
+  {
+    "id": "08462821eea5d2c2",
+    "ru": "Использовать подтверждённую идентификацию для адресной передачи и проверки результата. В отличие от исходного люка владелец и канал установлены; требуется исполнение по ним, а не неопределённая рассылка.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.explain"
+    ]
+  },
+  {
+    "id": "8a37b9a5a77ff4db",
+    "ru": "К-17",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "9de204992703a94e",
+    "ru": "К 17",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2a0af5156e30319b",
+    "ru": "К17",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "55265840ac2126f4",
+    "ru": "Какой идентификатор объекта нужно сохранить при передаче?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.extracted.label"
+    ]
+  },
+  {
+    "id": "2e2f84b56e196d5b",
+    "ru": "Какой идентификатор объекта нужно сохранить при передаче? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.prompt"
+    ]
+  },
+  {
+    "id": "a6a83e0d53873ced",
+    "ru": "59-ФЗ статья 12 Теперь известно, чья сеть",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.searchHint"
+    ]
+  },
+  {
+    "id": "b050620980390304",
+    "ru": "Что подтверждает источник?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-known-owner.title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.title"
+    ]
+  },
+  {
+    "id": "d42bc31ca25c2e8f",
+    "ru": "Сообщить о подтверждённом устранении и завершить контроль только по рассмотренному предмету. В отличие от первого люка открытая опасность не сохраняется; повторная аварийная заявка не является обязательным правильным действием.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.explain"
+    ]
+  },
+  {
+    "id": "83e89a404c4f3a5d",
+    "ru": "ремонт завершён",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "54e731f3ab775c54",
+    "ru": "ремонт завершен",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "f9d73f324a9b17da",
+    "ru": "крышка закреплена",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "73b733df77ad4534",
+    "ru": "проход свободен",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "acc897a2c548d1df",
+    "ru": "Какое состояние подтверждено последними материалами?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.extracted.label"
+    ]
+  },
+  {
+    "id": "ad1caf78525de789",
+    "ru": "Какое состояние подтверждено последними материалами? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.prompt"
+    ]
+  },
+  {
+    "id": "f577df2de1ab0e66",
+    "ru": "59-ФЗ статья 12 Фотография была сделана до ремонта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-hatch-restored.searchHint"
+    ]
+  },
+  {
+    "id": "7cb6af3776058e1e",
+    "ru": "Рассмотреть жалобу в пятидневном рабочем сроке и разъяснить обновление данных, не признавая несуществующую исходную ошибку. В исходной истории ошибка присутствовала в момент выдачи. Здесь сведения стали другими позже, поэтому итог по существу меняется, но предметный срок жалобы сохраняется.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.explain"
+    ]
+  },
+  {
+    "id": "08b53b736f8700d5",
+    "ru": "после выдачи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "042592102ce77eb6",
+    "ru": "позднее выдачи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "28921232e2b05555",
+    "ru": "после получения результата",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "80e1260e54138bb3",
+    "ru": "Когда изменились сведения относительно выдачи?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.extracted.label"
+    ]
+  },
+  {
+    "id": "cf582849936ebe0d",
+    "ru": "Когда изменились сведения относительно выдачи? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.prompt"
+    ]
+  },
+  {
+    "id": "9547cdf1e5c9c56d",
+    "ru": "210-ФЗ статья 11.2 Данные изменились уже после выдачи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.searchHint"
+    ]
+  },
+  {
+    "id": "f57c1a6c896b3cd5",
+    "ru": "Рассмотреть жалобу на просрочку исправления в предусмотренном пятидневном рабочем сроке и отдельно проверить выдачу результата. Опечатка не оспаривается и отказа нет; действие меняется из-за просроченного исполнения уже признанного исправления.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.explain"
+    ]
+  },
+  {
+    "id": "eb2b49d13c7e3841",
+    "ru": "нарушение срока исправления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "32201a5c0edadcf0",
+    "ru": "просрочка исправления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "72d06e02f17c4e01",
+    "ru": "срок исправления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d771aa9bc387dd24",
+    "ru": "Какой предмет жалобы указан в материалах?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.extracted.label"
+    ]
+  },
+  {
+    "id": "5208b84125e0b23f",
+    "ru": "Какой предмет жалобы указан в материалах? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.prompt"
+    ]
+  },
+  {
+    "id": "6bda98c797edb207",
+    "ru": "210-ФЗ статья 11.2 Исправление обещали, срок прошёл",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.searchHint"
+    ]
+  },
+  {
+    "id": "08da0f6ac6203786",
+    "ru": "Различить обязательную идентификацию и дополнительную справку, одновременно сохранить разрешённые альтернативные способы. В исходном деле справка не предусмотрена и доступна межведомственно; здесь подтверждение личности прямо требуется для выбранной операции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.explain"
+    ]
+  },
+  {
+    "id": "eaabb3267931bbef",
+    "ru": "подтверждение личности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f819bbdbd0a05d26",
+    "ru": "установление личности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "abe8a15854acf525",
+    "ru": "идентификация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "ba72582a2351e3b0",
+    "ru": "Какой обязательный элемент проверяется в деле?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.extracted.label"
+    ]
+  },
+  {
+    "id": "9490348465aa2179",
+    "ru": "Какой обязательный элемент проверяется в деле? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.prompt"
+    ]
+  },
+  {
+    "id": "d9d6c21edf5a248b",
+    "ru": "210-ФЗ статья 7 Фото паспорта и способ подтверждения личности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.searchHint"
+    ]
+  },
+  {
+    "id": "3c2020b6b8319b46",
+    "ru": "Проверить необоснованность отказа по причине межведомственного сбоя и восстановление надлежащего рассмотрения. Задержка возникла после передачи в орган и привела к отказу из-за обмена сведениями. Это не просроченная курьерская передача МФЦ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.explain"
+    ]
+  },
+  {
+    "id": "a665dea21ba204ac",
+    "ru": "межведомственный",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "623e65e27c1cb802",
+    "ru": "межведомственное взаимодействие",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "ec62ddbf3c4b3195",
+    "ru": "Какой обмен не был завершён?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.extracted.label"
+    ]
+  },
+  {
+    "id": "b55c1f365224b06c",
+    "ru": "Какой обмен не был завершён? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.prompt"
+    ]
+  },
+  {
+    "id": "042df3d081706463",
+    "ru": "210-ФЗ статья 7.1 Не ответило другое ведомство",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.searchHint"
+    ]
+  },
+  {
+    "id": "9c6d26918eb48715",
+    "ru": "Адресовать жалобу по задержке на стадии выдачи, не перезапуская уже завершённое рассмотрение услуги. В исходном деле МФЦ задержал передачу пакета до решения; здесь решение и доставка состоялись, задержана выдача заявителю.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.explain"
+    ]
+  },
+  {
+    "id": "d3deb78b180f0864",
+    "ru": "выдача результата",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "78c9d213bba1431b",
+    "ru": "уведомление и выдача",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3563f0d0708b047d",
+    "ru": "на стадии выдачи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "abae4f28fa180465",
+    "ru": "На какой стадии находится установленная задержка?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.extracted.label"
+    ]
+  },
+  {
+    "id": "a78238bdf0926551",
+    "ru": "На какой стадии находится установленная задержка? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.prompt"
+    ]
+  },
+  {
+    "id": "ed7e29158e9b9c26",
+    "ru": "210-ФЗ статья 11.2 Готовый результат лежит в центре",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-ready-not-issued.searchHint"
+    ]
+  },
+  {
+    "id": "0d94f973fd0495cb",
+    "ru": "Сопоставить новое требование с первым отказом и проверить конкретное исключение, не подменяя его усмотрением сотрудника. В отличие от первой лишней справки нужно сравнить два этапа приёма и исключения для последующего требования, а не только перечень документов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.explain"
+    ]
+  },
+  {
+    "id": "a23cc392e158d5a0",
+    "ru": "отсутствие подписи",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4ddbf8c53de96fc4",
+    "ru": "подпись на заявлении",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "403d22639a5f4b40",
+    "ru": "подпись",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "7ecc0e063adefb01",
+    "ru": "Какой первоначальный недостаток был устранён?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.extracted.label"
+    ]
+  },
+  {
+    "id": "c9610ac558896c54",
+    "ru": "Какой первоначальный недостаток был устранён? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.prompt"
+    ]
+  },
+  {
+    "id": "583b581f01bdbb0c",
+    "ru": "210-ФЗ статья 7 Каждый раз не хватает нового документа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.searchHint"
+    ]
+  },
+  {
+    "id": "b81aef2d44036310",
+    "ru": "Разделить срок услуги и срок жалобы, оценив предполагаемую просрочку от надлежащего исходного события. В исходной задержке срок передачи нарушен. Здесь приём и передача своевременны, а вывод меняется из-за другого исходного события.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.explain"
+    ]
+  },
+  {
+    "id": "e2bcc68d182d7e17",
+    "ru": "поступление полного заявления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "5e52ed19b268f2b0",
+    "ru": "полное заявление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3b9cf2c8fffc13db",
+    "ru": "подача полного заявления",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0d8499cfeed28322",
+    "ru": "Что названо исходным событием срока услуги?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.extracted.label"
+    ]
+  },
+  {
+    "id": "29e2cdb8fc5fb4fb",
+    "ru": "Что названо исходным событием срока услуги? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.prompt"
+    ]
+  },
+  {
+    "id": "b1fd371d7955b84e",
+    "ru": "210-ФЗ статья 11.2 Срок посчитали от записи на приём",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.searchHint"
+    ]
+  },
+  {
+    "id": "0450ac4257835c4b",
+    "ru": "Выбрать адресата решения об услуге и отличить общий срок жалобы от сокращённого срока по отказу в приёме. В двух исходных вариантах пакет не принимали. Здесь приём и передача состоялись: меняются предмет, адресат и срок.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.explain"
+    ]
+  },
+  {
+    "id": "9b52080b66ef5925",
+    "ru": "предоставление услуги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.extracted.accepted[0]"
+    ]
+  }
+]

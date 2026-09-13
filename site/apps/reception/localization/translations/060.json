@@ -1,0 +1,362 @@
+{
+  "c17b22d0075f1b01": {
+    "en": "material contains fictional circumstances; norm is the author’s summary of a verified act. The source does not confirm a real incident.",
+    "zh": "material包含虚构情况；norm是作者对已核实法律文件的概述。来源并不证明真实事件发生。"
+  },
+  "5811096b16cb0c64": {
+    "en": "Training material; the external link provides the legal basis",
+    "zh": "教学材料；外部链接提供法律依据"
+  },
+  "517fbfe34e84425a": {
+    "en": "material contains fictional circumstances; norm is the author’s account of the legal basis, not an automatically copied webpage.",
+    "zh": "material包含虚构情况；norm是作者对法律依据的表述，并非自动复制的网页。"
+  },
+  "8fd6af2c978593d1": {
+    "en": "Ruling P-73: An authorised bailiff issued a ruling on motion Kh-73 on {{decided}}. The enforcement proceedings and participants are identified. No new motion was filed.\n\nOutgoing correspondence log: Entry P-73 is marked “signed, not sent”. There is no dispatch entry for the prescribed recipients. The delivery entry for another document, P-72, does not relate to this ruling.",
+    "zh": "P-73 决定：有权执行员于 {{decided}} 就 Kh-73 申请作出决定。执行案件和参与人已明确，没有提交新的申请。\n\n发文日志：P-73 记录标记为“已签署，未发送”。对规定接收人没有发送记录。另一份文件 P-72 的送达记录不属于本决定。"
+  },
+  "0dec0649a2cfc362": {
+    "en": "Only fictional case bailiff-copy-decision",
+    "zh": "仅适用于虚构案件 bailiff-copy-decision"
+  },
+  "b4bf4a144e5c7081": {
+    "en": "Motion Kh-51: The motion identifies proceedings IP-51, a specific account known to the enforcement creditor, and a request to verify information for an enforcement action. Maria signed the motion; it is not a general enquiry about progress.\n\nIncoming document route: Kh-51 reached the unit on {{received}}, was registered on {{registered}}, and was handed to the authorised bailiff on {{officialReceived}}. The log confirms the handoff.",
+    "zh": "Kh-51 申请：申请列明了 IP-51 执行案件、申请执行人所知的具体账户，以及为采取执行行动核查信息的请求。玛丽亚已签署该申请；这不是一般的工作进度查询。\n\n来文流转路径：部门于 {{received}} 收到 Kh-51，于 {{registered}} 登记，并于 {{officialReceived}} 交给有权执行员。日志证实了该转交。"
+  },
+  "41ce7b3ac243dfd3": {
+    "en": "Only fictional case bailiff-specific-petition",
+    "zh": "仅适用于虚构案件 bailiff-specific-petition"
+  },
+  "bd716672d4a35e4b": {
+    "en": "Paper complaint Ж-84: The complaint identifies the bailiff, enforcement case, allegations and demands. The surname is printed, but the signature field is blank. There is no separate signed attachment.\n\nInventory of received documents: The unit received only the three pages of Ж-84 on {{received}}. No signed original, power of attorney accompanying the complaint, or electronic signature was received.",
+    "zh": "纸质申诉Ж-84：材料注明了被申诉的执行员、执行案件、申诉理由及要求。姓氏已经打印，但签名栏空白。没有另附已签名文件。\n\n已收材料清单：该部门于{{received}}仅收到Ж-84的三页材料。未收到已签名原件、随申诉提交的授权委托书或电子签名。"
+  },
+  "5be88569fb74710c": {
+    "en": "Only fictional case bailiff-unsigned-complaint",
+    "zh": "仅适用于虚构案件 bailiff-unsigned-complaint"
+  },
+  "b674c4816a095624": {
+    "en": "Judgment Р-63: A sum was awarded in a civil dispute. The judgment has entered into force; the court has not yet approved a separate enforcement schedule.\n\nSubmission and proposed schedule: Maria proposes monthly payments and attaches evidence of a temporary drop in income. She asks who can consider granting instalments and does not dispute the debt on its merits.",
+    "zh": "判决 Р-63：民事争议判令支付一笔款项。判决已生效；法院尚未批准单独的履行计划。\n\n来函与所提履行计划：玛丽娅提出按月付款，并附上收入暂时下降的证明。她询问谁有权审议分期履行，并不否认债务本身。"
+  },
+  "450c789e0d43e0d6": {
+    "en": "Only fictional case court-installments",
+    "zh": "仅适用于虚构案件 court-installments"
+  },
+  "c2bf2b5c55a88deb": {
+    "en": "Payment order СП-41: A justice of the peace issued an order for recovery of a monetary amount. No lawsuit was heard with examination of the parties' objections.\n\nLetter to the administration: Ilya demands that the administration cancel СП-41. He has not yet sent objections to the court and regards the municipal receipt as proof of filing them.",
+    "zh": "支付令 СП-41：治安法官签发了追偿金钱款项的支付令。未经过审查双方异议的诉讼审理。\n\n致行政机关的信函：伊利亚要求行政机关撤销 СП-41。他尚未向法院发送异议，却把市政回执视为已经提交异议的证明。"
+  },
+  "f83eb7c557265cba": {
+    "en": "Only fictional case court-order-objections",
+    "zh": "仅适用于虚构案件 court-order-objections"
+  },
+  "aabde23667e2c654": {
+    "en": "Copy of judgment Д-24: The district court awarded a specified amount. The debtor's surname appears once as “Соловёв” instead of “Соловьёв”. Passport details, date of birth, and the rest of the document are consistent; the amount contains no arithmetic discrepancy.\n\nParty identification materials: The case documents and the judgment's introductory section identify the same Sergei Solovyov. The citizen requests correction of a letter and separately asks whether the debt will then disappear.",
+    "zh": "判决 Д-24 副本：区法院判令支付确定金额。债务人姓氏有一处被写成“Соловёв”，而非“Соловьёв”。护照信息、出生日期及文件其余部分均一致；金额不存在算术差异。\n\n当事人身份核实材料：案卷文件和判决首部确认的是同一位谢尔盖·索洛维约夫。公民请求更正一个字母，并另行询问债务是否也会因此消失。"
+  },
+  "0d1d0e5fe30ab1fa": {
+    "en": "Only fictional case court-typo-not-merits",
+    "zh": "仅适用于虚构案件 court-typo-not-merits"
+  },
+  "91d95e0b25eb3d12": {
+    "en": "Employer's schedule Г-11: The planned daily allocation includes 11 hours of driving. Nine hours are labelled the main work and two more a mandatory final stretch, repeated across several shifts.\n\nEmployer's explanation: The schedule's author relies solely on the derogation in paragraph 9 of Order No. 160. There are no unexpected circumstances: the extra two hours are known before the shift starts.",
+    "zh": "用人单位排班 Г-11：每日计划定额包含 11 小时驾驶。九小时标为主要工作，另两小时标为必须完成的余程，并在多个班次中重复。\n\n用人单位说明：排班编制者仅引用第 160 号命令第 9 项的例外。没有突发情况：额外两小时在班次开始前就已确定。"
+  },
+  "652047ce381fbd1c": {
+    "en": "Only fictional case driver-planned-extension",
+    "zh": "仅适用于虚构案件 driver-planned-extension"
+  },
+  "8e4ff59f3ac61ea7": {
+    "en": "Trip Р-17 timeline: Driving 2:15 → special break 0:15 → driving 2:15 → special break 0:30. The next driving segment begins after the second break. All times use one time zone.\n\nDuties log: Both breaks are free of boarding, repairs, and other work. They are special breaks from driving; the selected trip is intercity within Russia.",
+    "zh": "行程 Р-17 时间线：驾驶 2:15 → 专项休息 0:15 → 驾驶 2:15 → 专项休息 0:30。第二次休息后开始下一段驾驶。所有时间采用同一时区。\n\n职责日志：两次休息均没有安排上下客、维修或其他工作，属于驾驶专项休息；所选行程是俄罗斯境内城际运输。"
+  },
+  "f24bc6c25119603b": {
+    "en": "Only fictional case driver-split-break",
+    "zh": "仅适用于虚构案件 driver-split-break"
+  },
+  "4a205deea4230b1c": {
+    "en": "Extract from shift log В-25: Four hours of driving and two hours of the bus being parked awaiting boarding are recorded. The record concerns driver Sergei, not his relief driver.\n\nDispatch assignment: During the two-hour interval, the driver remains at the workplace, prepares for boarding, and waits for the dispatcher's instructions. The employer labelled this interval as free rest only in the timesheet.",
+    "zh": "班次日志 В-25 摘录：记录了四小时驾驶及公交车停车等待上客的两小时。记录属于驾驶员谢尔盖，而不是接班驾驶员。\n\n调度任务：这两小时内，驾驶员留在工作岗位，准备上客并等待调度员指令。用人单位仅在工时表上将该时段标为自由休息。"
+  },
+  "f08a09f1435c40d0": {
+    "en": "Only fictional case driver-waiting-work",
+    "zh": "仅适用于虚构案件 driver-waiting-work"
+  },
+  "38efc86eafe803f0": {
+    "en": "Escape-route plan: Corridor K-3 leads to exit E-3. The specialist's report states that boxes and trolleys are placed across the passage; the permitted dimensions are not maintained.\n\nE-3 mechanism replacement report: The door mechanism works, and opening from inside without a key is confirmed. The report neither examined nor remedied storage in the corridor.",
+    "zh": "疏散路线图：K-3 走廊通往 E-3 出口。专员报告指出，箱子和手推车横挡通道，未保持允许的尺寸参数。\n\nE-3 机械装置更换报告：门的机械装置正常，已确认可从内部无钥匙开启。该报告未审查或解决走廊堆物问题。"
+  },
+  "7d666b9bb5adfc0c": {
+    "en": "Only fictional case fire-corridor-blocked",
+    "zh": "仅适用于虚构案件 fire-corridor-blocked"
+  },
+  "963c43979ba41baa": {
+    "en": "Plan of door Э-2: Door Э-2 leads from the lobby outside. Access from outside is restricted; a free-opening mechanism is installed inside. No special regime for the premises has been established.\n\nInspection record specifically for Э-2: The inspection on {{observed}} was conducted from inside with the lock in the same mode: the door opens without a key. Its identifier and location match the appeal.",
+    "zh": "Э-2门平面图：Э-2门从大厅通向室外。外侧进入受限，内侧安装了自由开启机构。该场所没有特殊管理制度。\n\n专门针对Э-2的检查记录：{{observed}}在相同锁闭状态下从内部进行了检查：无需钥匙即可开门。门的编号和位置与诉求一致。"
+  },
+  "06f36660c8733656": {
+    "en": "Only fictional case fire-inside-release",
+    "zh": "仅适用于虚构案件 fire-inside-release"
+  },
+  "552462e05caa37b5": {
+    "en": "Initial inspection record: On {{observed}}, a specialist inspected Э-5: it could not be opened freely from inside without a key. The premises have no special regime. The exit is marked on the evacuation plan.\n\nResponsible officer’s remedial-action report: The report shows door Э-4 and its marking. Opening of Э-4 was checked. The document contains no confirmation for Э-5, although the covering letter refers to Sergey’s complaint.",
+    "zh": "首次检查记录：{{observed}}专业人员检查了Э-5：无法从内部无需钥匙自由开启。该场所没有特殊管理制度。出口已在疏散平面图上标明。\n\n经办人员的整改报告：报告展示的是Э-4门及其标识，检查的也是Э-4的开启情况。虽然附函提到了谢尔盖的申诉，但文件没有对Э-5作出确认。"
+  },
+  "d4a4f028923caafe": {
+    "en": "Only fictional case fire-other-exit-report",
+    "zh": "仅适用于虚构案件 fire-other-exit-report"
+  },
+  "627cdb22a78b8396": {
+    "en": "Enrolment and charge breakdown under КС-18: The bank is the policyholder. Maria is included as an insured person under the loan-supporting contract. The total charge is 40 000 roubles: 30 000 is her premium paid to the insurer, and a bank charge of 10 000 is listed separately.\n\nRepayment and receipt of the application: The loan was repaid in full ahead of schedule on {{observed}}. The bank received the request for removal from coverage and a refund on {{recipientReceived}}. There have been no events bearing signs of an insured event.",
+    "zh": "КС-18的参保及收费构成：投保人为银行。玛丽亚作为被保险人加入与贷款保障有关的合同。总收费为40 000卢布：其中30 000为支付给保险公司的个人保费，另行列示银行收费10 000。\n\n贷款清偿及申请接收情况：贷款已于{{observed}}全部提前清偿。银行于{{recipientReceived}}收到退出保障及退款申请。未发生具有保险事故特征的事件。"
+  },
+  "a1ecac236769d45b": {
+    "en": "Only fictional case insurance-collective-payoff",
+    "zh": "仅适用于虚构案件 insurance-collective-payoff"
+  },
+  "7241c27916fa1960": {
+    "en": "Loan certificate for К-27: The loan obligations were fulfilled in full ahead of schedule on {{observed}}. This is not a partial reduction of the debt. Insurance contract ИС-27 supported that loan and was intended to continue.\n\nPolicy and application to the insurer: The borrower is named as policyholder. The insurer received the refund application on {{recipientReceived}}. The premium relates to this policy; no insured events with the specified characteristics have been established.",
+    "zh": "К-27贷款证明：贷款义务已于{{observed}}全部提前履行，并非仅部分减少债务。保险合同ИС-27保障的是该笔贷款，原本还应继续有效。\n\n保单及向保险公司提出的申请：保单载明借款人为投保人。保险公司于{{recipientReceived}}收到退款申请。保费对应本保单，未查明发生具备规定特征的保险事故。"
+  },
+  "cefdde87eac08c11": {
+    "en": "Only fictional case insurance-individual-payoff",
+    "zh": "仅适用于虚构案件 insurance-individual-payoff"
+  },
+  "f505409e540471bb": {
+    "en": "Individual policy ИС-11: The policyholder field names Maria. The premium was paid to the insurer; the insurance secures a consumer loan. This is not enrolment in a contract where the bank is the policyholder.\n\nConfirmation of receipt of cancellation: The insurer received the signed application on {{recipientReceived}}, the twentieth calendar day after conclusion. The absence of events indicating an insured event is confirmed. The earlier letter to the bank was received on {{received}}.",
+    "zh": "个人保单ИС-11：“投保人”栏填写的是玛丽亚。保费已支付给保险人，保险用于保障消费贷款。这并非加入以银行为投保人的保险合同。\n\n退保申请收件确认：保险人在{{recipientReceived}}收到已签署的申请，即合同订立后的第二十个日历日。已确认没有发生具有保险事故特征的事件。此前寄给银行的信于{{received}}收到。"
+  },
+  "90231e3bf8d038f0": {
+    "en": "Only fictional case insurance-individual-refusal",
+    "zh": "仅适用于虚构案件 insurance-individual-refusal"
+  },
+  "aed96b28696bf51e": {
+    "en": "Dog training document: Document P-82 confirms the guide dog’s special training; its identifier matches the dog presented. Authenticity and the prescribed format are confirmed by the teaching-case conditions.\n\nEntrance check report: Access to the hall was refused solely because of the general “No animals” sign. No other reason was given. The visitor and dog are at the entrance; the appointment has not begun.",
+    "zh": "导盲犬训练证明：P-82号文件证明该导盲犬接受过专项训练，识别编号与现场犬只相符。教学案件条件已确认文件真实且符合规定格式。\n\n入口检查记录：仅因“禁止动物入内”的一般告示而被拒绝进入大厅，未说明其他理由。来访者和犬仍在入口，尚未开始接待。"
+  },
+  "13f970e3fcff99c1": {
+    "en": "Only fictional case access-guide-dog",
+    "zh": "仅适用于虚构案件 access-guide-dog"
+  },
+  "0f56863d41a26350": {
+    "en": "Record of the request for assistance: The visitor asks for the document’s full content to be read aloud confidentially. She does not ask the employee to choose terms or sign on her behalf.\n\nAccessible-service conditions: Room K-2 is available; the employee can read the full text or provide a zoomable electronic copy. The visitor chooses to have it read aloud in the room.",
+    "zh": "求助请求记录：来访者请求在保障隐私的环境中听取文件完整内容，并未要求工作人员替她选择条件或签字。\n\n无障碍服务条件：K-2室空闲；工作人员可以朗读全文或提供可放大的电子副本。来访者选择在该房间听取朗读。"
+  },
+  "7fcff82b272567e9": {
+    "en": "Only fictional case access-reading-choice",
+    "zh": "仅适用于虚构案件 access-reading-choice"
+  },
+  "7539f4e1d55f0f9a": {
+    "en": "Queue log T-40: Ticket A-16 was called only over the loudspeaker. The visual display in this area does not show calls. The visitor was in the hall and could not know she had been called.\n\nAvailable communication methods card: Tablet P-3 is working and available. The visitor agrees to a written conversation. The staff instructions allow accompaniment to the service window and confidential written explanations.",
+    "zh": "T-40号排队记录：A-16号排队票仅通过广播叫号，该区域的电子显示屏不显示叫号信息。来访者当时在大厅内，却无法得知轮到自己。\n\n可用沟通方式卡片：P-3平板设备正常且可用。来访者同意书面交流。工作指引允许陪同至窗口，并以保障隐私的方式提供书面说明。"
+  },
+  "bf6bd89d13105253": {
+    "en": "Only fictional case access-written-dialogue",
+    "zh": "仅适用于虚构案件 access-written-dialogue"
+  },
+  "a15fc7ebf7e30eae": {
+    "en": "Inventory of materials: Folder Д-42: report А-4 on the condition of the site, photographs of the site with no people, and appendix М-2 containing another applicant's medical information. The contents have been checked.\n\nAccess assessment: Report А-4 and the photographs are accessible for inspection in connection with this submission. The medical appendix affects a third party's rights, and there is no consent or other basis for disclosure. It cannot be released in full.",
+    "zh": "材料清单：案卷Д-42：关于场地状况的检查记录А-4、没有人物的场地照片，以及包含另一名申请人医疗信息的附件М-2。材料构成已经核查。\n\n查阅权限评估意见：办理本来函时，可以查阅检查记录А-4和照片。医疗附件涉及第三人的权利，既无本人同意，也无其他披露依据，不能完整提供。"
+  },
+  "5c2e3957af881436": {
+    "en": "Only fictional case complaint-access-materials",
+    "zh": "仅适用于虚构案件 complaint-access-materials"
+  },
+  "7ed718cb22a11938": {
+    "en": "Complaint text: The citizen challenges official С-8's actions during the previous review. Neither the head's actions nor an act of the authority as a whole is the subject of this complaint.\n\nHead's instruction: С-8 was instructed to provide an explanation, then personally conduct the final review of the complaint and sign the response in their own name. No other reviewer was appointed.",
+    "zh": "投诉正文：公民对公职人员С-8在此前办理中的行为提出异议。本投诉的对象既不是负责人的行为，也不是整个机关作出的文件。\n\n负责人批示：С-8被要求先作出情况说明，再亲自对投诉进行最终审查，并以本人名义签署回复。未指定其他审查人员。"
+  },
+  "015e1ad9a69b3602": {
+    "en": "Only fictional case complaint-officer-not-organ",
+    "zh": "仅适用于虚构案件 complaint-officer-not-organ"
+  },
+  "630cb6b5d12bc580": {
+    "en": "Original complaint Ж-18: Registered on {{registered}}. It identifies the employee, service, date, and refusal to accept the package. All requirements for the special procedure are met.\n\nResponse about the procedure: Ж-18 was classified as a general submission under Law No. 59-ФЗ with a 30-day period. The case contains no examination of the refusal under the special procedure; there has been no new registration starting point.",
+    "zh": "原始投诉 Ж-18：于 {{registered}} 登记。已注明工作人员、服务、日期及拒收材料包的事实。特别程序的全部必要条件均已满足。\n\n关于程序的答复：Ж-18 被归类为第 59-ФЗ 号法律规定的一般来函，期限为 30 天。案卷中没有按特别程序审查拒收的记录；也未产生新的登记起算点。"
+  },
+  "81858215de4a3a26": {
+    "en": "Only fictional case complaint-wrong-procedure",
+    "zh": "仅适用于虚构案件 complaint-wrong-procedure"
+  },
+  "4b008895af05bd24": {
+    "en": "Personal loan agreement: Organization О-17 must repay a personal monetary loan to the employee. The obligation remains in force; the repayment timing is linked to the organization's financial position.\n\nOfficial assignment: The same employee is preparing a draft concerning О-17's application. In this case, a favorable outcome may make it easier for the organization to meet its financial obligation to him.",
+    "zh": "个人借款合同：组织 О-17 有义务向该公务人员偿还个人借款。债务仍然有效，偿还时间与该组织财务状况相关。\n\n公务任务：同一公务人员正在准备涉及 О-17 申请的草案。本案中，有利结果可能使该组织更容易履行对他的金钱债务。"
+  },
+  "cd5909377ca2c7be": {
+    "en": "Only fictional case conflict-creditor",
+    "zh": "仅适用于虚构案件 conflict-creditor"
+  },
+  "8cc70280dc54a208": {
+    "en": "Assignment record: Employee A. Sokolov has been assigned to draft a response to citizen B. Sokolov. The subject falls within the division's powers.\n\nInformation about relationships: The individuals are not related by blood or marriage and have no shared organizations, obligations, or close relationships. No possibility of private benefit has been established on the facts presented.",
+    "zh": "任务分配卡：公务人员 A. 索科洛夫被指定起草给公民 B. 索科洛夫的答复。事项属于该处权限。\n\n关系信息：双方没有血亲或姻亲关系，没有共同组织、债务义务或密切关系。根据所提供情况，尚未发现获取私人利益的可能性。"
+  },
+  "66632ad936d358e6": {
+    "en": "Only fictional case conflict-namesake",
+    "zh": "仅适用于虚构案件 conflict-namesake"
+  },
+  "28eddc38f4bd28b4": {
+    "en": "Conflict-resolution decision: Employee С-1 is recused from drafting and approval of submission Д-41. С-2, who has no established personal interest, is assigned to the case. The submission's examination period is preserved.\n\nDraft history: The record names С-2, but С-1 wrote the draft's main content and conclusions and sent the file outside the official workflow. С-2 intends only to sign the prepared text.",
+    "zh": "利益冲突处理决定：公务人员 С-1 须回避来函 Д-41 的起草和审核。已指定没有发现个人利害关系的 С-2 承办。来函审查期限保持不变。\n\n草案历史：登记卡写的是 С-2，但草案主要内容和结论由 С-1 撰写，并在公务流程外发送文件。С-2 只打算签署已写好的文本。"
+  },
+  "5bfb19a989f9bbf3": {
+    "en": "Only fictional case conflict-reassignment",
+    "zh": "仅适用于虚构案件 conflict-reassignment"
+  },
+  "8b1a681a22192f7d": {
+    "en": "User activity log: The draft was created on {{observed}} and remained “not sent”. Before the button was pressed, the authority had not received an appeal.\n\nReceipt K-38: After submission on {{received}}, the official service confirmed receipt by the authority. The appeal identifier is O-381; the earlier draft's time is shown separately.",
+    "zh": "用户操作日志：草稿于 {{observed}} 创建，一直处于“未发送”状态。点击按钮前，机关没有收到诉求。\n\nK-38 回执：于 {{received}} 提交后，官方服务确认机关收到。诉求标识为 O-381；先前草稿的时间另行标注。"
+  },
+  "2b96ad0fed5c942c": {
+    "en": "Only fictional case electronic-draft-only",
+    "zh": "仅适用于虚构案件 electronic-draft-only"
+  },
+  "b247cd6447f0ebe3": {
+    "en": "Text E-83: The property, location, observed circumstance and specific request are stated legibly. Required author details are present, and receipt is confirmed.\n\nAttachment test record: The supplementary file photo.jpg will not open. Its contents are unknown; there are no other defects in the main text. The substance of the appeal can be identified without the image.",
+    "zh": "E-83 文本：对象、地点、观察到的情况和具体请求均清楚可读。必要作者信息齐全，收件已确认。\n\n附件核查记录：补充文件 photo.jpg 无法打开，内容未知；主体文本没有其他缺陷。不借助图像也能确定诉求的实质内容。"
+  },
+  "2571c1fb74c6e5ac": {
+    "en": "Only fictional case electronic-optional-attachment",
+    "zh": "仅适用于虚构案件 electronic-optional-attachment"
+  },
+  "f83a9f7ef4cf92fc": {
+    "en": "Delivery receipt: Appeal E-72 was delivered on {{received}}. The receipt explicitly says it confirms arrival, not the outcome of consideration.\n\nIncoming-log check: There is no decision record for E-72. The material awaits registration, and no substantive reply has been prepared. The service has verified the sender's identity.",
+    "zh": "送达回执：E-72 诉求于 {{received}} 送达。回执明确说明，它是收件确认，不是审查结果。\n\n收文日志核查：E-72 没有决定记录。材料等待登记，未拟定实质答复。服务已确认发送人身份。"
+  },
+  "486a03a4dd898307": {
+    "en": "Only fictional case electronic-receipt-not-result",
+    "zh": "仅适用于虚构案件 electronic-receipt-not-result"
+  },
+  "f46816695fdef8af": {
+    "en": "Report for location У-32: The professional service completed its response to the specified fire incident. The report concerns У-32 and contains no information about waste removal.\n\nAppeal materials: The appeal raises two related issues: earlier burning and the remaining pile of waste. Photographs taken after the burning ended show waste at the same location.",
+    "zh": "地点У-32的报告：专业部门已完成对指定燃烧事件的处置。报告涉及У-32，但不包含清运废弃物的信息。\n\n诉求材料：申诉提出两个相关问题：此前的燃烧和残留的废弃物堆。燃烧结束后的照片显示，同一地点仍有废弃物。"
+  },
+  "0590228cde605b4d": {
+    "en": "Only fictional case landfill-after-fire",
+    "zh": "仅适用于虚构案件 landfill-after-fire"
+  },
+  "1903fc7135863982": {
+    "en": "Report and time: Report of ongoing burning at У-30. Contact with the eyewitness is maintained; no new photographs from the dangerous location are required.\n\nTerritory record: The У-30 coordinates fall within this municipality. The landowner has not yet been identified; the professional duty service accepts reports for these coordinates.",
+    "zh": "情况通报与时间：通报У-30地点仍在燃烧。与目击者保持联系；不要求其从危险地点补拍照片。\n\n区域信息卡：У-30坐标位于本市镇辖区。地块所有人尚未查明；专业值班部门受理这些坐标对应的情况通报。"
+  },
+  "7759ad6a359e1b93": {
+    "en": "Only fictional case landfill-current-burning",
+    "zh": "仅适用于虚构案件 landfill-current-burning"
+  },
+  "1d54604387ed7392": {
+    "en": "Ruling issued, copy not sent · supporting materials",
+    "zh": "决定已作出，副本未发送 · 依据材料"
+  },
+  "eaae568b036de212": {
+    "en": "A motion is not an information enquiry · supporting materials",
+    "zh": "申请不是信息咨询 · 依据材料"
+  },
+  "a79f0d3cb10cd6dd": {
+    "en": "Surname printed, signature missing · supporting materials",
+    "zh": "已打印姓氏，但缺少签名 · 依据材料"
+  },
+  "08187da1b19215b8": {
+    "en": "Paying in instalments does not overturn the judgment · supporting materials",
+    "zh": "分期付款不等于撤销判决 · 依据材料"
+  },
+  "770a0f3d2525e342": {
+    "en": "Payment order and the debtor's objections · supporting materials",
+    "zh": "支付令与债务人异议 · 依据材料"
+  },
+  "8ad73508712b0724": {
+    "en": "A typo in a surname does not cancel collection · supporting materials",
+    "zh": "姓氏笔误不等于取消追偿 · 依据材料"
+  },
+  "6cca62b2ff599808": {
+    "en": "The exception was scheduled in advance · supporting materials",
+    "zh": "例外被提前排进班表 · 依据材料"
+  },
+  "ef88f224119d0937": {
+    "en": "Two breaks instead of one · supporting materials",
+    "zh": "两次休息代替一次 · 依据材料"
+  },
+  "f0874ecd404cd914": {
+    "en": "The bus is stationary, but the driver is still working · supporting materials",
+    "zh": "公交车停着，司机仍在工作 · 依据材料"
+  },
+  "7ebf1ad1cdf8e6d6": {
+    "en": "The door works, but there is no clear path to it · supporting materials",
+    "zh": "门没坏，却走不到门前 · 依据材料"
+  },
+  "96c0d6a66aea4bbc": {
+    "en": "Locked outside, opens inside · supporting materials",
+    "zh": "外侧锁闭，内侧可开 · 依据材料"
+  },
+  "563d9d844131de93": {
+    "en": "The record identifies the neighbouring exit · supporting materials",
+    "zh": "记录指向相邻出口 · 依据材料"
+  },
+  "4103c2b54a37aa8b": {
+    "en": "Two components in the charge, a different party responsible for the refund · supporting materials",
+    "zh": "收费分两部分，退款责任方也不同 · 依据材料"
+  },
+  "191f50f6f02d4658": {
+    "en": "The loan is repaid; thirty days passed long ago · supporting materials",
+    "zh": "贷款已还清，三十天早已过去 · 依据材料"
+  },
+  "58783dfd56d78f79": {
+    "en": "The policy is mine; the insurer received the application · supporting materials",
+    "zh": "保单是我的，保险人已收到申请 · 依据材料"
+  },
+  "c04d07d588051e32": {
+    "en": "The guide dog was left at the entrance · supporting materials",
+    "zh": "导盲犬被拦在入口 · 依据材料"
+  },
+  "d09f5dcb32ad31b9": {
+    "en": "Help me read, not decide for me · supporting materials",
+    "zh": "帮我阅读，而不是替我决定 · 依据材料"
+  },
+  "c409e90b233e933e": {
+    "en": "They only called my number aloud · supporting materials",
+    "zh": "他们只用语音叫了我的号 · 依据材料"
+  },
+  "63a3b2efd73b855b": {
+    "en": "Show what the response is based on · supporting materials",
+    "zh": "请说明回复依据什么 · 依据材料"
+  },
+  "f13091250563cd70": {
+    "en": "An employee's explanation is not a decision on the complaint · supporting materials",
+    "zh": "工作人员的说明不等于对投诉作出的决定 · 依据材料"
+  },
+  "061373222348f33e": {
+    "en": "They replied: thirty days. But the subject matter is different · supporting materials",
+    "zh": "答复说三十天，但事项并不相同 · 依据材料"
+  },
+  "edb2bb1c8646cf74": {
+    "en": "Not a relative, but my debtor · supporting materials",
+    "zh": "不是亲属，却是我的债务人 · 依据材料"
+  },
+  "838e5a7f5f93d91d": {
+    "en": "Same surname, different people · supporting materials",
+    "zh": "姓氏相同，彼此无关 · 依据材料"
+  },
+  "c71353bc9edc8cc5": {
+    "en": "The case was transferred, but the influence remained · supporting materials",
+    "zh": "案件移交了，影响却还在 · 依据材料"
+  },
+  "b89d86c4f4c4bc5b": {
+    "en": "A draft exists, but no receipt · supporting materials",
+    "zh": "有草稿，没有回执 · 依据材料"
+  },
+  "35549f575c7e6601": {
+    "en": "Attachment inaccessible, text readable · supporting materials",
+    "zh": "附件打不开，文本可以读 · 依据材料"
+  },
+  "cdd8a97c3e935027": {
+    "en": "Accepted by the system—not yet considered · supporting materials",
+    "zh": "系统已接收，不代表已审查 · 依据材料"
+  },
+  "44e75c44786a6067": {
+    "en": "The fire has stopped; the waste remains · supporting materials",
+    "zh": "燃烧已停止，废弃物仍在 · 依据材料"
+  },
+  "c2b3cba4dac180ad": {
+    "en": "First establish the exact reported location · supporting materials",
+    "zh": "先确定通报的准确地点 · 依据材料"
+  }
+}

@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "14d59476c1a3f724",
+    "ru": "Медицинские работники. Я не прошу сотрудника приёмной ставить диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "520ed0b9b40f17f6",
+    "ru": "Профессиональные роли разделены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "7ab9d68e7b7bef2b",
+    "ru": "Кто определит характер необходимой помощи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5399616366333e26",
+    "ru": "Дежурный сотрудник приёмной органа здравоохранения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].role.title"
+    ]
+  },
+  {
+    "id": "3ec4039c32aabe84",
+    "ru": "Сначала связаться с медицинской помощью; после этого вести обычное обращение в пределах полномочий приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].routes[0].text"
+    ]
+  },
+  {
+    "id": "1a8d0ca45c5e198e",
+    "ru": "Организовать обычную плановую запись, оставив текущее ухудшение до назначенного дня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].routes[1].text"
+    ]
+  },
+  {
+    "id": "fedbfa29e66e848f",
+    "ru": "Проверить наличие полиса как предварительное условие передачи сообщения медикам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].routes[2].text"
+    ]
+  },
+  {
+    "id": "28d405224b78139f",
+    "ru": "Письмо потом, помощь сейчас",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[oms-urgent-now].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[oms-urgent-now].title"
+    ]
+  },
+  {
+    "id": "f2fc54648f619a84",
+    "ru": "Исходная история была плановой. Теперь появились признаки текущего ухудшения: приоритет меняется, хотя обычная жалоба остаётся самостоятельным делом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].trap.explain",
+      "cases:CASE_TEMPLATES[oms-urgent-now].coach.plan",
+      "cases:CASE_TEMPLATES[oms-urgent-now].contrast.difference"
+    ]
+  },
+  {
+    "id": "26c5de510dc7c63e",
+    "ru": "Помощник: «Без предъявленного полиса сначала нужно выяснить, оплатят ли оказание помощи».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[oms-urgent-now].trap.text"
+    ]
+  },
+  {
+    "id": "eea8a20491ba75b3",
+    "ru": "Сопоставить идентификаторы и статус по представленным материалам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[a0].title"
+    ]
+  },
+  {
+    "id": "256f64df9c4f3678",
+    "ru": "Отделить проверенный запрос от непроверенной ссылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5109d79aaa2c6b98",
+    "ru": "Разъяснить официальный порядок взаимодействия с ответственным подразделением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[a2].title"
+    ]
+  },
+  {
+    "id": "7daf1f677c330fe0",
+    "ru": "Не запрашивать реальные паспортные данные студента и не обещать выпуск без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[a3].title"
+    ]
+  },
+  {
+    "id": "510bd1bd59412697",
+    "ru": "Проверить ответ именно по МПО-71 и статус поступления необходимых сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fc2cb659af78b738",
+    "ru": "Гарантировать немедленный выпуск независимо от содержания сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[b0].title"
+    ]
+  },
+  {
+    "id": "5024da03a277b3b0",
+    "ru": "Предложить оплатить неподтверждённый сбор по личной ссылке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].actions[b1].title",
+      "cases:CASE_TEMPLATES[parcel-customs-notice].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "64f35f9808fa2a86",
+    "ru": "Все участники и документы дела вымышлены. Предъявлены совпадающие идентификаторы отправления и подлинность учебного уведомления проверена в условии. Таможенный выпуск ещё не выполнен; нужны уточняющие сведения о содержимом. Требования и суммы платежей в задаче не определяются. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].brief"
+    ]
+  },
+  {
+    "id": "1adeeebb0b60bd44",
+    "ru": "В базовой истории таможенный выпуск состоялся. Здесь его нет, поэтому ответ только о почтовой доставке был бы преждевременным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].coach.plan",
+      "cases:CASE_TEMPLATES[parcel-customs-notice].contrast.difference"
+    ]
+  },
+  {
+    "id": "b51c855309ad4929",
+    "ru": "Отправление прибыло к таможенным операциям. Отметки о выпуске нет. Идентификатор в учётной карточке — МПО-71.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d0].text"
+    ]
+  },
+  {
+    "id": "33e071310b811db7",
+    "ru": "Карточка отправления МПО-71",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d0].title"
+    ]
+  },
+  {
+    "id": "cdb671e54abc72c3",
+    "ru": "В условии подтверждены подлинность и связь с отправлением. Запрошены уточняющие сведения о содержимом; канал ответа находится в официальной карточке подразделения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c4f2be1840a638c2",
+    "ru": "Уведомление МПО-71",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d1].title"
+    ]
+  },
+  {
+    "id": "df82e5bff161b2a7",
+    "ru": "Сообщение без подтверждённого отправителя требует перевести деньги на личную карту «для ускорения». Связь с официальным запросом не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d2].text"
+    ]
+  },
+  {
+    "id": "82e0adfc14dc15b8",
+    "ru": "Непроверенная платёжная ссылка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ae02ac4b8f1fa021",
+    "ru": "По этому отправлению выпуск ещё не выполнен; нужно работать с проверенным таможенным уведомлением. В базовой истории таможенный выпуск состоялся. Здесь его нет, поэтому ответ только о почтовой доставке был бы преждевременным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.explain"
+    ]
+  },
+  {
+    "id": "4e5b41dc5ce6f96a",
+    "ru": "По этому отправлению выпуск ещё не выполнен; нужно работать с проверенным таможенным уведомлением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-customs-notice].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "105f51633d9016cb",
+    "ru": "Любое нахождение посылки на этом этапе означает утрату почтой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "07c49e9546aadfc8",
+    "ru": "Непроверенный перевод на личную карту гарантирует выпуск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "9c61a36df1606526",
+    "ru": "Соответствие идентификатора проверяется и на выходе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].followup.explain"
+    ]
+  },
+  {
+    "id": "a6804d96f672a3da",
+    "ru": "Пришёл ответ «выпущено», но в нём указан МПО-17 вместо МПО-71.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].followup.intro"
+    ]
+  },
+  {
+    "id": "79dde29921f73fa1",
+    "ru": "Уточнить идентификатор и состояние МПО-71; не закрывать вопрос по чужой записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f01c1fe93a6b985a",
+    "ru": "Объявить все отправления заявителя выпущенными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "bb571ed357315718",
+    "ru": "Потребовать повторно оплатить неподтверждённый сбор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "4f6e67c66294e6a9",
+    "ru": "Статья 37 закона № 176-ФЗ связывает претензии по розыску международных почтовых отправлений с законодательством Российской Федерации и международными договорами. Статус таможенного выпуска не подтверждает вручение, а запись по чужому идентификатору не подтверждает движение нужной посылки. Почтовый этап, таможенное действие и требование к продавцу различаются. В этих задачах рассчитывается только указанное действие публичного органа по обращению, а не универсальный срок международного розыска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].knowledge.explain",
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].knowledge.explain",
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].knowledge.explain"
+    ]
+  },
+  {
+    "id": "96b439a3d097813a",
+    "ru": "Разделять таможенную стадию и претензию почтовому оператору; не устанавливать универсальный срок международного розыска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "3c9f1574e778d395",
+    "ru": "Считать все международные задержки нарушением почтового оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "9c35dfa6f3dbb7d9",
+    "ru": "Приравнять отсутствие выпуска к доказанной утрате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "8766ffd62b44915b",
+    "ru": "Найдите норму: Претензии по международным почтовым отправлениям. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].knowledge.prompt",
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].knowledge.prompt",
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "05359a35d36c7571",
+    "ru": "Почта сказала, что всё у таможни. В прошлый раз вы советовали искать у оператора, но сейчас у меня другое уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].opening"
+    ]
+  },
+  {
+    "id": "35b8863b4d063115",
+    "ru": "Уточнить состояние и порядок представления сведений по таможенному уведомлению; дать ответ по обращению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].procedures[0].text"
+    ]
+  },
+  {
+    "id": "db1b313e4e27846d",
+    "ru": "Рассматривать только почтовый розыск уже выпущенного отправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].procedures[1].text"
+    ]
+  },
+  {
+    "id": "806edff1d61b5456",
+    "ru": "Признать личную платёжную ссылку обязательным государственным сбором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].procedures[2].text"
+    ]
+  },
+  {
+    "id": "fa486b3b686aff2c",
+    "ru": "Есть запрос уточняющих сведений, а не отметка выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "64a98ae641676717",
+    "ru": "Таможенное действие не завершено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "a779e1f70a8c3151",
+    "ru": "Что именно сообщает уведомление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q0].text"
+    ]
+  },
+  {
+    "id": "4a33377d50b81c4d",
+    "ru": "Да, посылка и запрос имеют код МПО-71.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "1c2515062af4d458",
+    "ru": "Уведомление относится к этому отправлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "da93e33cd3463cb5",
+    "ru": "Совпадает ли идентификатор?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q1].text"
+    ]
+  },
+  {
+    "id": "8ac401f16961f899",
+    "ru": "Он указан в проверенной карточке подразделения; стороннюю ссылку мне тоже прислали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "e6310ca54b75f19f",
+    "ru": "Нужно различить проверенный канал и посторонний запрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "25d98f3782f6a918",
+    "ru": "Есть ли официальный способ направить сведения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q2].text"
+    ]
+  },
+  {
+    "id": "faf4d872ed0a23fb",
+    "ru": "Нет, в учебном деле используются только вымышленные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2c199d92f60ab64e",
+    "ru": "Игра не собирает настоящие паспортные данные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9df7781c9e877dbb",
+    "ru": "Нужны реальные личные данные в игре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].questions[q3].text"
+    ]
+  },
+  {
+    "id": "85f61c0e41fe716b",
+    "ru": "Специалист приёмной таможенного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].role.title"
+    ]
+  },
+  {
+    "id": "cae78a9252c0967c",
+    "ru": "Проверенное таможенное подразделение, связанное с уведомлением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].routes[0].text"
+    ]
+  },
+  {
+    "id": "a0c45b8e04a9020b",
+    "ru": "Произвольный получатель платежа из сообщения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].routes[1].text"
+    ]
+  },
+  {
+    "id": "e701e53c8458d20f",
+    "ru": "Магазин соседнего города как орган таможенного выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].routes[2].text"
+    ]
+  },
+  {
+    "id": "c24ad1fb8acd3fcb",
+    "ru": "Выпуска ещё не было",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[parcel-customs-notice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[parcel-customs-notice].title"
+    ]
+  },
+  {
+    "id": "58fa5d797261d1ba",
+    "ru": "Стадия процесса и относимость документа меняют маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].trap.explain"
+    ]
+  },
+  {
+    "id": "5338f088e1f0a95a",
+    "ru": "Если выпуск не подтверждён, нельзя переносить сюда вывод из дела о посылке, уже переданной почтовому оператору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-customs-notice].trap.text"
+    ]
+  },
+  {
+    "id": "9540e34c572e77da",
+    "ru": "Сопоставить идентификатор, акт вручения и содержание требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b2353c3fe111192c",
+    "ru": "Отделить подтверждённое повреждение от ещё не установленной ответственности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5b1e81e6803a72a9",
+    "ru": "Подготовить правильный маршрут и перечень уже имеющихся материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[a2].title"
+    ]
+  },
+  {
+    "id": "28990872408eb03e",
+    "ru": "Не требовать повторной доставки как единственного способа заявить претензию и не обещать сумму.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[a3].title"
+    ]
+  },
+  {
+    "id": "70e2ccb6c5c752bc",
+    "ru": "Проверить, рассмотрены ли повреждение и недостача, а не только статус вручения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[a4].title"
+    ]
+  },
+  {
+    "id": "7490f50abe2c38ce",
+    "ru": "Закрыть вопрос только по отметке о выпуске.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[b0].title"
+    ]
+  },
+  {
+    "id": "48275aa17534fa7b",
+    "ru": "Признать виновным конкретного сотрудника без необходимых доказательств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].actions[b1].title",
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "3fa48cca61fdbc0f",
+    "ru": "Все участники и документы дела вымышлены. Таможенный выпуск и последующее вручение подтверждены. Имеются акт о повреждении при вручении и опись, но виновник и размер ответственности не установлены. Международный розыск не сводится к общим тридцати дням. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].brief"
+    ]
+  },
+  {
+    "id": "306af9f9eb9e5eb8",
+    "ru": "В базовой ситуации посылка ещё движется. Здесь доставка завершена, но возник иной предмет требования; старое объяснение не разрешает его.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].coach.plan",
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].contrast.difference"
+    ]
+  },
+  {
+    "id": "4363e607a0f53dd5",
+    "ru": "Старый ответ объясняет, когда отправление прибыло в страну. Состояние при вручении в нём не исследовано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d0].text"
+    ]
+  },
+  {
+    "id": "e4628d5acf700e9a",
+    "ru": "Итоги прошлой задержки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fc92a8230ff29ad1",
+    "ru": "Отправление вручено. При вручении зафиксировано повреждение упаковки; в акте указан МПО-93 и приложена опись обнаруженного содержимого.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d1].text"
+    ]
+  },
+  {
+    "id": "c1ec3118bb22b187",
+    "ru": "Акт вручения МПО-93",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d1].title"
+    ]
+  },
+  {
+    "id": "037dbd0630803e4a",
+    "ru": "Ответ таможенного подразделения подтверждает выпуск МПО-93. Новое требование касается повреждения и недостачи при доставке, а не отмены выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d2].text"
+    ]
+  },
+  {
+    "id": "78d802beea94154e",
+    "ru": "Выпуск и требование заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a77859c79dffd46a",
+    "ru": "Таможенный выпуск не отвечает на новое требование о повреждении и недостаче при вручении. В базовой ситуации посылка ещё движется. Здесь доставка завершена, но возник иной предмет требования; старое объяснение не разрешает его.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.explain"
+    ]
+  },
+  {
+    "id": "eae31beab2cb864e",
+    "ru": "Таможенный выпуск не отвечает на новое требование о повреждении и недостаче при вручении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c837c834458587d4",
+    "ru": "Факт выпуска доказывает безупречность дальнейшей доставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "2df29584be158f6a",
+    "ru": "Факт повреждения автоматически устанавливает виновность конкретного сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2199a46a4781c74a",
+    "ru": "Контроль касается полноты ответа по повреждению, а не повторного статуса доставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].followup.explain"
+    ]
+  },
+  {
+    "id": "d7f6342c2be5f693",
+    "ru": "Оператор ответил о сроке доставки, но акт повреждения и опись в ответе не упомянуты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].followup.intro"
+    ]
+  },
+  {
+    "id": "040abc6e20667463",
+    "ru": "Проверить полноту рассмотрения нового предмета и запросить предметное уточнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "3e41c6dbe59f63b8",
+    "ru": "Считать любой ответ оператора полным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "64fc38ce0739babe",
+    "ru": "Удалить акт, чтобы он не противоречил краткому ответу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "846ca20f36934b1a",
+    "ru": "Применять почтовую претензионную процедуру к конкретному предмету и международному отправлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b4c74f646c8d243c",
+    "ru": "Выводить отсутствие ответственности только из статуса выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "faca6807af3aeadf",
+    "ru": "Назначать единый тридцатидневный срок международного розыска без правового основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "f328398d9654e60b",
+    "ru": "Теперь посылка у меня, но упаковка повреждена и часть содержимого отсутствует. Мне отвечают только, что таможня всё выпустила.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].opening"
+    ]
+  },
+  {
+    "id": "ecd987865ca78784",
+    "ru": "Разграничить новый предмет претензии и применимый почтовый порядок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].procedures[0].text"
+    ]
+  },
+  {
+    "id": "5a54a48d5e9983af",
+    "ru": "Продолжать только выяснение причин уже завершённого таможенного выпуска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].procedures[1].text"
+    ]
+  },
+  {
+    "id": "474fb0af8fe8be25",
+    "ru": "Назначить компенсацию без проверки условий перевозки и ответственности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b13416bbbeb94d31",
+    "ru": "Да, подтверждение вручения есть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "9f5797bba35d1ac5",
+    "ru": "Предмет больше не просто отсутствие доставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "92f2e7f451e0458f",
+    "ru": "Посылку уже вручили?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q0].text"
+    ]
+  },
+  {
+    "id": "000b20b7bdb606bf",
+    "ru": "При вручении составили акт; он приложен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "81a3f847f00e2958",
+    "ru": "Имеются относимые материалы о состоянии упаковки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0bc4ed17b1783126",
+    "ru": "Когда зафиксировали повреждение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q1].text"
+    ]
+  },
+  {
+    "id": "fdeb28f216f438d7",
+    "ru": "Только завершение выпуска, не сохранность доставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "432db66911deeadb",
+    "ru": "Выпуск не разрешает требование о повреждении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "cd8e1545046901fc",
+    "ru": "Что подтверждает ответ таможни?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q2].text"
+    ]
+  },
+  {
+    "id": "ecddbc5158679604",
+    "ru": "Проверить повреждение и недостачу, разъяснить дальнейший порядок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a82486f102f7b139",
+    "ru": "Нужна предметная претензионная работа без заранее назначенной вины.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "866f74d6bd3c483b",
+    "ru": "Что вы требуете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].questions[q3].text"
+    ]
+  },
+  {
+    "id": "0c87da18a6ece970",
+    "ru": "Специалист приёмной по обращениям о почтовых услугах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].role.title"
+    ]
+  },
+  {
+    "id": "2dded4f6c60ad068",
+    "ru": "Разъяснить претензионный маршрут почтового оператора и пределы компетенции органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].routes[0].text"
+    ]
+  },
+  {
+    "id": "87b6a8845ef3d6fe",
+    "ru": "Потребовать от таможни самостоятельно возместить любую недостачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].routes[1].text"
+    ]
+  },
+  {
+    "id": "cb78600852726095",
+    "ru": "Обязать случайного курьера признать заявленную сумму.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].routes[2].text"
+    ]
+  },
+  {
+    "id": "3ff97f9c577e94d7",
+    "ru": "Посылка пришла, вопрос остался",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[parcel-damaged-delivery].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[parcel-damaged-delivery].title"
+    ]
+  },
+  {
+    "id": "7cdf8c70de63584a",
+    "ru": "Доставка, сохранность и ответственность — разные проверяемые вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].trap.explain"
+    ]
+  },
+  {
+    "id": "382f1c214aeb2146",
+    "ru": "Отметка «вручено» сама по себе не разрешает претензию о состоянии посылки при вручении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-damaged-delivery].trap.text"
+    ]
+  },
+  {
+    "id": "f2c36c30e7f030f1",
+    "ru": "Сопоставить последние события трекинга с предметом обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a7457e775bf139d6",
+    "ru": "Отделить почтовый вопрос от действий таможни",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[a1].title"
+    ]
+  },
+  {
+    "id": "33923b8cf4e0bf83",
+    "ru": "Подготовить передачу компетентному органу и разъяснение обращения к оператору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c5ed4992434e706f",
+    "ru": "Уведомить заявителя о передаче и не раскрывать лишние данные получателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d24becb451a8c199",
+    "ru": "Проверить, что передан вопрос почтовой задержки, а не иной спор",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c336222f03e437b3",
+    "ru": "Требовать дополнительную пошлину без установленного основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[b0].title",
+      "cases:CASE_TEMPLATES[parcel-release].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "202298f28d4d76e3",
+    "ru": "Назвать выпуск доказательством вручения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].actions[b1].title"
+    ]
+  },
+  {
+    "id": "031753fd31b5f14c",
+    "ru": "7 рабочих дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].calendar.ruleOptions[working7].text",
+      "cases:CASE_TEMPLATES[insurance-collective].calendar.ruleOptions[working7].text",
+      "cases:CASE_TEMPLATES[landfill-territory].calendar.ruleOptions[working7].text"
+    ]
+  },
+  {
+    "id": "49b638c8c792c720",
+    "ru": "59-ФЗ, статья 8. Профиль исчисления отдельно закреплён условием; срок не означает срок ремонта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].calendar.source",
+      "cases:CASE_TEMPLATES[landfill-territory].calendar.source"
+    ]
+  },
+  {
+    "id": "4217002ef700d99e",
+    "ru": "Крайний день переадресации надзорного вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].calendar.title"
+    ]
+  },
+  {
+    "id": "057efc69865037ef",
+    "ru": "Выпуск разрешён → поступило на почтовую обработку. Последующая задержка заявлена после выпуска. Временная линия не доказывает утрату и виновное лицо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ab2d82babb37eace",
+    "ru": "Последовательность трекинга",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e6ba60a01182bbe8",
+    "ru": "Международное отправление. Для розыска требуется проверка применимых правил и договора; универсальный срок всех внутренних отправлений к нему не приписан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].documents[d1].text"
+    ]
+  },
+  {
+    "id": "4e25ce7799b2cc64",
+    "ru": "Квитанция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3a5825eb52a63d26",
+    "ru": "Нужно проверить почтовый этап и порядок розыска; обвинение таможни не следует из трекинга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-release].factTask.explain",
+      "cases:CASE_TEMPLATES[parcel-release].outcomes.good"
+    ]
+  },
+  {
+    "id": "6631f5daecde0929",
+    "ru": "Любая международная задержка означает незаконное удержание таможней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "698764702d0b2ed6",
+    "ru": "Выпуск доказывает доставку адресату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "4cb4b42306f85d1d",
+    "ru": "Оператор сообщает о доставке, но указан иной номер отправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].followup.intro"
+    ]
+  },
+  {
+    "id": "8ececc67317f894c",
+    "ru": "Сопоставить идентификаторы; результат чужой посылки не закрывает этот вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].followup.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-release].followup.explain"
+    ]
+  },
+  {
+    "id": "857db3e46971c50a",
+    "ru": "Зачесть ответ оператора без сверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a7e28930efb82806",
+    "ru": "Отменить таможенный выпуск посылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a66be849a4550bbb",
+    "ru": "Статья 37 закона № 176-ФЗ отдельно указывает законодательство РФ и международные договоры для претензий по международным отправлениям. После подтверждённого выпуска нужно проверить почтовый этап. В календарном задании рассчитывается переадресация обращения органом, а не срок доставки посылки или срок любой международной претензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].knowledge.explain"
+    ]
+  },
+  {
+    "id": "7b8455668ced2b78",
+    "ru": "Найдите положение о претензиях по международным отправлениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5cfce90026bca32c",
+    "ru": "Посылка из-за границы не движется. На форуме написали, что таможня держит всё месяцами. В трекинге есть строка «выпуск разрешён», а потом – почтовая обработка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].opening"
+    ]
+  },
+  {
+    "id": "bd1a17b72e5f747f",
+    "ru": "Разграничение таможенного обращения и претензии по международной почтовой связи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c794514ca3c0f5db",
+    "ru": "Автоматическое применение 30 дней к любому международному розыску",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].procedures[1].text"
+    ]
+  },
+  {
+    "id": "99e6519c38dfbb9a",
+    "ru": "Аннулирование таможенного выпуска",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].procedures[2].text"
+    ]
+  },
+  {
+    "id": "0116c837921efa9a",
+    "ru": "Таможенный выпуск завершён, после него есть приём отправления почтовым оператором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "ed324ae8714e5a1c",
+    "ru": "Последняя установленная стадия относится не к таможенному решению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q0].fact",
+      "cases:CASE_TEMPLATES[parcel-release].coach.talk"
+    ]
+  },
+  {
+    "id": "01a3e129d996afca",
+    "ru": "Что показывает временная линия?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q0].text"
+    ]
+  },
+  {
+    "id": "9d1f88f2adad02bb",
+    "ru": "Нет, в приложенном трекинге такого события нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "aef6e6576f92dc39",
+    "ru": "Нельзя придумывать недостающие таможенные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "33c85f7005777dca",
+    "ru": "Есть уведомление о необходимости таможенных документов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q1].text"
+    ]
+  },
+  {
+    "id": "468092f47ebcafd2",
+    "ru": "Нет, заявитель до сих пор писал только в таможню.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9df4b75777fda5c2",
+    "ru": "Нужно разъяснить маршрут претензии/розыска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5d674c1aa03060b4",
+    "ru": "Начат розыск у оператора?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q2].text"
+    ]
+  },
+  {
+    "id": "639c6be8a0145a62",
+    "ru": "Да; вид и международный маршрут указаны в квитанции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "0896f3114cd466ea",
+    "ru": "Специальные условия нельзя заменить сроком любой внутренней посылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "09cecb6cd4212d10",
+    "ru": "Отправление международное?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].questions[q3].text"
+    ]
+  },
+  {
+    "id": "f823ca89896909fe",
+    "ru": "Проверяет наличие таможенного вопроса, не подменяет почтового оператора. В условиях дела установлено, что надзорный вопрос о задержке вне таможни относится к компетенции органа надзора в сфере связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].role.text"
+    ]
+  },
+  {
+    "id": "f20d02f71bb18eb0",
+    "ru": "Сотрудник приёмной таможенного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].role.title"
+    ]
+  },
+  {
+    "id": "fcf2249af4baccb7",
+    "ru": "Разъяснить обращение к оператору и передать находящийся вне компетенции надзорный вопрос по установленному адресу с уведомлением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].routes[0].text",
+      "cases:CASE_TEMPLATES[parcel-release].coach.plan",
+      "cases:CASE_TEMPLATES[parcel-release].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "566108a9f3d264a6",
+    "ru": "Потребовать таможенную пошлину без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].routes[1].text",
+      "cases:CASE_TEMPLATES[parcel-release].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "a52970a884cde176",
+    "ru": "Закрыть обращение как доказанную доставку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].routes[2].text",
+      "cases:CASE_TEMPLATES[parcel-release].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "845d023b252972f9",
+    "ru": "Таможня уже выпустила",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[parcel-release].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[parcel-release].title"
+    ]
+  },
+  {
+    "id": "e80115010b78f0e2",
+    "ru": "Международная почта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].topic",
+      "cases:CASE_TEMPLATES[parcel-release].tag",
+      "cases:CASE_TEMPLATES[parcel-customs-notice].topic"
+    ]
+  },
+  {
+    "id": "22539d2c256a5746",
+    "ru": "Проверить специальные правила международных претензий; не обещать срок доставки вместо срока процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].trap.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-release].trap.explain"
+    ]
+  },
+  {
+    "id": "1ed87ed4e1e33d15",
+    "ru": "Пообещать доставку за 30 дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].trap.options[1].text"
+    ]
+  }
+]

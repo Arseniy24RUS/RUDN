@@ -1,0 +1,1174 @@
+[
+  {
+    "id": "85229709cdc6f0eb",
+    "ru": "Чего требует заявитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q3].text"
+    ]
+  },
+  {
+    "id": "3ba297ecd61312ae",
+    "ru": "В условиях принята допустимая жалоба в порядке подчинённости; основания отказа отсутствуют. Рассчитывает срок рассмотрения, не обещает срок фактического взыскания долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].role.text"
+    ]
+  },
+  {
+    "id": "6142f44f614da8b8",
+    "ru": "Специалист службы судебных приставов, готовящий материалы правомочному руководителю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].role.title"
+    ]
+  },
+  {
+    "id": "f6dd734ef97e3907",
+    "ru": "Передать на рассмотрение правомочному руководителю с контролем специального срока и наличия оснований приостановления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].routes[0].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].coach.plan",
+      "cases:CASE_TEMPLATES[bailiff-subordination].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "21cf4981f949ac94",
+    "ru": "Назначить стандартные 30 календарных дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].routes[1].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "cbe630034c1eb294",
+    "ru": "Пообещать взыскание долга за десять дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].routes[2].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "23942df5a09a5d12",
+    "ru": "Жалоба – не обычное письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[bailiff-subordination].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[bailiff-subordination].title"
+    ]
+  },
+  {
+    "id": "99005bfb3e831901",
+    "ru": "Исполнительное производство",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].topic",
+      "cases:CASE_TEMPLATES[bailiff-subordination].tag",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].topic"
+    ]
+  },
+  {
+    "id": "f6cba15f14624243",
+    "ru": "Прочитать общее правило исчисления дней статьи 15 этого же закона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].trap.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].trap.explain"
+    ]
+  },
+  {
+    "id": "262fcc11b922c108",
+    "ru": "Считать все дни календарными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "6ec9471cf42af660",
+    "ru": "Помощник: «В статье 126 нет слова рабочих, значит десять календарных».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].trap.text"
+    ]
+  },
+  {
+    "id": "3397143cdc42eb08",
+    "ru": "Проверить весь принятый комплект и обязательную подпись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0f11d0ea277f0f45",
+    "ru": "Установить применимость специального порядка, а не общего удаления анонимных писем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[a1].title"
+    ]
+  },
+  {
+    "id": "50a91fd586f5a4b7",
+    "ru": "Подготовить мотивированное постановление по указанному недостатку формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8cd529950ee37371",
+    "ru": "Сообщить возможность надлежащей подачи и обжалования без обещания исхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[a3].title"
+    ]
+  },
+  {
+    "id": "dfeed452e41f1169",
+    "ru": "Отдельно учесть последующее поступление подписанного комплекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b23accbd66f07b02",
+    "ru": "Подписать жалобу вместо заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[b0].title"
+    ]
+  },
+  {
+    "id": "24c84810d6dcd488",
+    "ru": "Объявить доводы ложными и запретить будущую подачу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].actions[b1].title",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "ffb8defe07f16951",
+    "ru": "Все люди, документы и события этого дела вымышлены. Это бумажная жалоба в порядке подчинённости по закону № 229-ФЗ, не обращение через идентифицированный электронный сервис. Подписи заявителя или представителя нет ни на одном принятом листе. Личность и адрес заявителя известны, иных документов с подписью в комплекте нет. Внутри оцениваемого задания формат жалобы уже установлен; исправлять её за автора нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].brief"
+    ]
+  },
+  {
+    "id": "33bf968792395ef6",
+    "ru": "Часть 2 статьи 125 и статья 15 закона № 229-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].calendar.context"
+    ]
+  },
+  {
+    "id": "435a5e298ff20699",
+    "ru": "Часть 2 статьи 125 и статья 15 закона № 229-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].calendar.source"
+    ]
+  },
+  {
+    "id": "a8ac8ed05db5e4fe",
+    "ru": "Крайняя дата постановления об отказе в рассмотрении по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].calendar.title"
+    ]
+  },
+  {
+    "id": "8b449ac80e3cc3d3",
+    "ru": "В базовом деле форма жалобы была надлежащей. Здесь решается процессуальный вопрос формы со своим сроком, без оценки доказанности основного нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].coach.plan",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].contrast.difference"
+    ]
+  },
+  {
+    "id": "db93c89dbe179fe0",
+    "ru": "Несоблюдение требований частей 1 и 2 статьи 124, включая подпись бумажной жалобы, является основанием для постановления об отказе в рассмотрении по существу. Такое постановление выносится не позднее трёх дней от поступления жалобы. Оно не устанавливает правомерность действий пристава по существу и может быть обжаловано. Исчисление дней – по статье 15.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].coach.research",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].knowledge.explain",
+      "cases:SOURCES[n14-bailiff125].text"
+    ]
+  },
+  {
+    "id": "d61aa1bf24b5e49b",
+    "ru": "Сергей подтверждает, что подпись пропущена случайно. Он не поручал сотруднику приёмной подписывать жалобу от его имени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d0].text"
+    ]
+  },
+  {
+    "id": "d2f1f2ab3fbd7a10",
+    "ru": "Устное пояснение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d0].title"
+    ]
+  },
+  {
+    "id": "c28986d7263427b7",
+    "ru": "Указаны обжалуемый пристав, производство, доводы и требования. Фамилия напечатана, поле подписи пустое. Отдельного подписанного приложения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d1].text"
+    ]
+  },
+  {
+    "id": "0664591667c57cd4",
+    "ru": "Бумажная жалоба Ж-84",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d1].title"
+    ]
+  },
+  {
+    "id": "755d0578aae3decb",
+    "ru": "Подразделение приняло только три листа Ж-84 {{received}}. Подписанный оригинал, доверенность с жалобой или электронная подпись не поступали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d2].text"
+    ]
+  },
+  {
+    "id": "a78601a61839148b",
+    "ru": "Опись принятого комплекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0cb231f9e544fa80",
+    "ru": "У бумажной жалобы отсутствует обязательная подпись; это не вывод о правомерности действий пристава по существу. В базовом деле форма жалобы была надлежащей. Здесь решается процессуальный вопрос формы со своим сроком, без оценки доказанности основного нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.explain"
+    ]
+  },
+  {
+    "id": "8640934b5792696a",
+    "ru": "У бумажной жалобы отсутствует обязательная подпись; это не вывод о правомерности действий пристава по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "000879e238fd8226",
+    "ru": "Напечатанная фамилия во всех случаях заменяет подпись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b3777c8181d5cadd",
+    "ru": "Недостаток подписи подтверждает, что пристав правильно действовал по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-unsigned-complaint.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "73815733304e62ff",
+    "ru": "Позже поступил новый подписанный экземпляр. Сотрудник предлагает не открывать его, потому что по прошлой копии уже отказали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].followup.intro"
+    ]
+  },
+  {
+    "id": "9c63dd5c9f1fbc55",
+    "ru": "Рассмотреть новое поступление с проверкой срока, полномочий и формы; прежний дефект не переносится автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].followup.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].followup.explain"
+    ]
+  },
+  {
+    "id": "b5bf83a2549c965f",
+    "ru": "Навсегда прекратить приём жалоб этого гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a8a00b4afd95ca4a",
+    "ru": "Автоматически удовлетворить жалобу, раз подпись теперь появилась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b77d84a019c22723",
+    "ru": "Удалить все дальнейшие обращения заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "85170c2708573ac7",
+    "ru": "Вынести отказ в удовлетворении по существу только из-за формы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "bb4d24d0db34c4f6",
+    "ru": "Найдите нормативное основание следующего действия: Подготовить предусмотренное статьёй 125 постановление по недостатку формы, не решая жалобу по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "9f370422210db651",
+    "ru": "Мне сказали, что жалобу на пристава не рассмотрят по существу. Фамилия-то в конце напечатана! Я принёс бумажную копию, подписывать её забыл.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].opening"
+    ]
+  },
+  {
+    "id": "55c87acb6f20d296",
+    "ru": "Разрешение вопроса о рассмотрении жалобы в порядке подчинённости по статье 125.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].procedures[0].text"
+    ]
+  },
+  {
+    "id": "547a55d26fecaf84",
+    "ru": "На бумаге, не через электронный сервис.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q0].answer",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "32563bbc95c14c0d",
+    "ru": "Как жалоба подавалась?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q0].text"
+    ]
+  },
+  {
+    "id": "415781a4365fc660",
+    "ru": "В конце, но я не подписал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q1].answer",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "90e853e17497925f",
+    "ru": "Где должна находиться подпись?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q1].text"
+    ]
+  },
+  {
+    "id": "4ff1eb3fd4ab3c3b",
+    "ru": "Нет, опись полная.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q2].answer",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e8a2f81b4d99eda7",
+    "ru": "Есть ли другой подписанный лист?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8e50913a71588a7f",
+    "ru": "Нет, конечно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q3].answer",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "5493d0d6f07d70d5",
+    "ru": "Уполномочивали сотрудника подписать за вас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].questions[q3].text"
+    ]
+  },
+  {
+    "id": "24eab060516992b7",
+    "ru": "Специалист сопровождения рассмотрения жалоб в порядке подчинённости ФССП",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].role.title"
+    ]
+  },
+  {
+    "id": "9589b3b916cf00cd",
+    "ru": "Уполномоченное должностное лицо ФССП, рассматривающее жалобу в порядке подчинённости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].routes[0].text"
+    ]
+  },
+  {
+    "id": "9e01ae44f086f35b",
+    "ru": "Подготовить предусмотренное статьёй 125 постановление по недостатку формы, не решая жалобу по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].contrast.decision"
+    ]
+  },
+  {
+    "id": "4de5b7311aac7a9d",
+    "ru": "Фамилия напечатана, подписи нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[bailiff-unsigned-complaint].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[bailiff-unsigned-complaint].title"
+    ]
+  },
+  {
+    "id": "c4a86e47b7e1b5ed",
+    "ru": "Подготовить предусмотренное статьёй 125 постановление по недостатку формы, не решая жалобу по существу. В базовом деле форма жалобы была надлежащей. Здесь решается процессуальный вопрос формы со своим сроком, без оценки доказанности основного нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].trap.explain"
+    ]
+  },
+  {
+    "id": "a48f8b5fc772c1aa",
+    "ru": "Постановление об отказе в рассмотрении по существу не доказывает правильность действий пристава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-unsigned-complaint].trap.text"
+    ]
+  },
+  {
+    "id": "18d616d9efd8dba5",
+    "ru": "Зафиксировать содержание и вид рекламной конструкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[a0].title"
+    ]
+  },
+  {
+    "id": "c39e862103b0f374",
+    "ru": "Сопоставить несколько применимых ограничений, а не одно расстояние",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[a1].title"
+    ]
+  },
+  {
+    "id": "19c1ceb227a5a420",
+    "ru": "Подготовить материалы надлежащему уполномоченному исполнителю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c07ccc896ddf082e",
+    "ru": "Сообщить заявителю порядок проверки без преждевременного объявления санкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[a3].title"
+    ]
+  },
+  {
+    "id": "97431ac6b492ab84",
+    "ru": "Проверить, относится ли последующее сообщение к этой конструкции и материалу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[a4].title"
+    ]
+  },
+  {
+    "id": "a1103c805996270a",
+    "ru": "Самостоятельно лишить магазин лицензии без полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[b0].title",
+      "cases:CASE_TEMPLATES[beer-distance].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "39b36a9cde54c5ef",
+    "ru": "Признать рекламу правомерной только по расстоянию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].actions[b1].title"
+    ]
+  },
+  {
+    "id": "e267de0a5b200a5c",
+    "ru": "Отдельно стоящий наружный рекламный щит рекламирует пиво. Установленное расстояние до школы – 180 метров. Это не реклама винодельческого хозяйства и не вывеска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].documents[d0].text"
+    ]
+  },
+  {
+    "id": "494216f48dbdecb3",
+    "ru": "Описание конструкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3a2062da7300dce7",
+    "ru": "Проверено только расстояние. Другие требования статьи 21 в обосновании не рассмотрены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1107005a8407b802",
+    "ru": "Позиция владельца",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].documents[d1].title"
+    ]
+  },
+  {
+    "id": "fa660a93c9e1865e",
+    "ru": "Необходимо проверить ограничение по способу размещения; 180 метров не решают весь вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[beer-distance].factTask.explain",
+      "cases:CASE_TEMPLATES[beer-distance].outcomes.good"
+    ]
+  },
+  {
+    "id": "4068f0e0676ebc17",
+    "ru": "За пределами 100 метров любые формы рекламы алкоголя разрешены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "f1f9545e908cff68",
+    "ru": "Реклама пива не относится к алкогольной продукции ни при каких условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "02e182a946a446a7",
+    "ru": "Владелец снял крупное изображение, но оставил на том же щите товарное название и призыв купить пиво.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].followup.intro"
+    ]
+  },
+  {
+    "id": "074dfcd1a686cf37",
+    "ru": "Проверить оставшееся содержание, а не зачесть частичное изменение как полное устранение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].followup.options[0].text",
+      "cases:CASE_TEMPLATES[beer-distance].followup.explain"
+    ]
+  },
+  {
+    "id": "bfc0fa3581b83c7c",
+    "ru": "Закрыть по снятию изображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "8148ebc5bffae401",
+    "ru": "Объявить любое название магазина рекламой пива.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f98a022f8052f081",
+    "ru": "Статья 21 закона № 38-ФЗ содержит несколько самостоятельных ограничений алкогольной рекламы. Соблюдение одного расстояния не отменяет запрет размещения на наружных рекламных конструкциях; указанное в деле пиво не подпадает под специальное исключение для определённой винодельческой продукции. Решение о нарушении принимает компетентный орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].knowledge.explain"
+    ]
+  },
+  {
+    "id": "c018ff67c82ccd95",
+    "ru": "Найдите ограничения рекламы алкогольной продукции по способу размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5b50a6017f96c512",
+    "ru": "На отдельно стоящем щите реклама пива. До школы, по словам владельца, 180 метров. Он уверяет, что всё законно: ведь дальше ста. Больше никаких условий нет?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].opening"
+    ]
+  },
+  {
+    "id": "d18b1d3c91053c00",
+    "ru": "Проверка содержания и способа распространения рекламы алкогольной продукции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].procedures[0].text"
+    ]
+  },
+  {
+    "id": "aed4350a725b4c0f",
+    "ru": "Только измерение расстояния как единственный критерий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].procedures[1].text"
+    ]
+  },
+  {
+    "id": "b3edd55c225860fc",
+    "ru": "Отмена лицензии магазина сотрудником приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].procedures[2].text"
+    ]
+  },
+  {
+    "id": "274d5710ad27e175",
+    "ru": "Конкретное пиво с изображением упаковки и призывом приобрести; это не название магазина и не туристическая информация о винодельне.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "200053d263eab56f",
+    "ru": "Предмет рекламы установлен в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q0].fact",
+      "cases:CASE_TEMPLATES[beer-distance].coach.talk"
+    ]
+  },
+  {
+    "id": "1679e34b736efb8c",
+    "ru": "Что рекламируется?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q0].text"
+    ]
+  },
+  {
+    "id": "b692a85bbefda5cd",
+    "ru": "На отдельно стоящей наружной рекламной конструкции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "7363ca3f1c9016c8",
+    "ru": "Нужно проверить ограничение по способу размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "495949a49c625812",
+    "ru": "Как размещено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d8ea89fb3810fe1b",
+    "ru": "Для упражнения установлено 180 метров; спор об измерении исключён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d7ab8a3e3dc3bd62",
+    "ru": "Даже достаточное расстояние не отменяет другие ограничения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "017eab2841a2ffff",
+    "ru": "Расстояние подтверждено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q2].text"
+    ]
+  },
+  {
+    "id": "5758eba70a16c6ba",
+    "ru": "Сам владелец щита со ссылкой лишь на 100 метров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "d27036378b6bf3a8",
+    "ru": "Неполная ссылка не подтверждает правомерность размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "59b0cfeb06a9407d",
+    "ru": "Кто дал правовое заключение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].questions[q3].text"
+    ]
+  },
+  {
+    "id": "70f2b2f8f5869796",
+    "ru": "Проверяет содержание и способ размещения рекламы. Не заменяет установленное рассмотрение самостоятельным назначением санкции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].role.text"
+    ]
+  },
+  {
+    "id": "1c8f291d354206dd",
+    "ru": "Специалист приёмной антимонопольного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].role.title"
+    ]
+  },
+  {
+    "id": "71f4584503283724",
+    "ru": "Передать материалы на рассмотрение рекламного эпизода с проверкой пункта 5 части 2 статьи 21 применительно к данному щиту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].routes[0].text",
+      "cases:CASE_TEMPLATES[beer-distance].coach.plan",
+      "cases:CASE_TEMPLATES[beer-distance].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "df987a53ba9ba668",
+    "ru": "Закрыть по единственному признаку 180 метров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].routes[1].text",
+      "cases:CASE_TEMPLATES[beer-distance].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "eb0928c6beb4bbe5",
+    "ru": "Автоматически запретить торговлю в соседнем магазине.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].routes[2].text",
+      "cases:CASE_TEMPLATES[beer-distance].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "95c33073cb04e340",
+    "ru": "Сто метров – не единственное условие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[beer-distance].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[beer-distance].title"
+    ]
+  },
+  {
+    "id": "7da3ca58e733e6af",
+    "ru": "Проверка рекламы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].topic",
+      "cases:CASE_TEMPLATES[beer-distance].tag",
+      "cases:CASE_TEMPLATES[beer-online-agegate].topic"
+    ]
+  },
+  {
+    "id": "0af67df893eb3d1e",
+    "ru": "Проверить независимые ограничения по содержанию и месту размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].trap.options[0].text",
+      "cases:CASE_TEMPLATES[beer-distance].trap.explain"
+    ]
+  },
+  {
+    "id": "6318527f624b7171",
+    "ru": "Прекратить проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "a7eb830625d0c988",
+    "ru": "Помощник: «Проверили сто метров – больше закон читать не нужно».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-distance].trap.text"
+    ]
+  },
+  {
+    "id": "5b05efcaab242300",
+    "ru": "Сопоставить квалификацию материала и зафиксированный канал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[a0].title"
+    ]
+  },
+  {
+    "id": "32729fa9d0bed5c3",
+    "ru": "Разделить ограничения канала, возраста аудитории и предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d3d5c706149e2aa5",
+    "ru": "Подготовить относимые материалы для уполномоченного рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[a2].title"
+    ]
+  },
+  {
+    "id": "353c3faf643b9241",
+    "ru": "Не публиковать баннер как рекламу от имени игры и не назначать наказание самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d3754277e0ee3b21",
+    "ru": "Проверить результат по указанной интернет-публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[a4].title"
+    ]
+  },
+  {
+    "id": "6834c68747416a8b",
+    "ru": "Закрыть вопрос по одной отметке 18+.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[b0].title"
+    ]
+  },
+  {
+    "id": "61e6a3c50510b15b",
+    "ru": "Самостоятельно назначить и взыскать штраф без процедуры и полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].actions[b1].title",
+      "cases:CASE_TEMPLATES[beer-online-agegate].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "a98ec6f46ed451d8",
+    "ru": "Все участники и документы дела вымышлены. Материал квалифицирован в условиях как реклама пива, не нейтральный каталог и не специальная информация о винодельческом хозяйстве. Фиксация подтверждает интернет-размещение и дату. Реальные марки и привлекательные рекламные слоганы не используются. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].brief"
+    ]
+  },
+  {
+    "id": "6ee50a7802709cb5",
+    "ru": "Базовый вариант проверял место наружного размещения. Здесь самостоятельное значение имеет интернет-канал, а не расстояние до школы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].coach.plan",
+      "cases:CASE_TEMPLATES[beer-online-agegate].contrast.difference"
+    ]
+  },
+  {
+    "id": "07a7796f15ac81b0",
+    "ru": "Подтверждены признаки рекламы пива и её размещение на странице интернет-сайта. Материал доступен через интернет; это не фотография внутреннего прейскуранта в обращении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d0].text"
+    ]
+  },
+  {
+    "id": "506dbb5e8340ba8a",
+    "ru": "Протокол размещения Р-18",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fb61a606a1352e20",
+    "ru": "Распространитель указывает на отметку 18+ и предупреждение. Эти элементы действительно есть; других обстоятельств, меняющих квалификацию или канал, не приведено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e1feae3edc374e4d",
+    "ru": "Пояснение распространителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d1].title"
+    ]
+  },
+  {
+    "id": "1ac692d5aeb8de48",
+    "ru": "В справке указано расстояние до здания школы. Она не меняет установленный интернет-канал распространения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d2].text"
+    ]
+  },
+  {
+    "id": "d6b6c39dcf07fa68",
+    "ru": "Измерение расстояния до школы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4aafa1269d184abe",
+    "ru": "Возрастная отметка не отменяет самостоятельное ограничение рекламы алкоголя в интернете. Базовый вариант проверял место наружного размещения. Здесь самостоятельное значение имеет интернет-канал, а не расстояние до школы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.explain"
+    ]
+  },
+  {
+    "id": "5b35d98c5c365457",
+    "ru": "Возрастная отметка не отменяет самостоятельное ограничение рекламы алкоголя в интернете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[beer-online-agegate].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "3dcdb009c330b243",
+    "ru": "Любая отметка 18+ делает рекламу алкоголя допустимой во всех каналах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b754e9cdee568ae9",
+    "ru": "Расстояние до школы — единственное условие любой рекламы пива.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "670f981a05d72b0a",
+    "ru": "Контроль не сводится к одному адресу при установленной второй публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].followup.explain"
+    ]
+  },
+  {
+    "id": "19d9531e7016b6c2",
+    "ru": "Распространитель удалил баннер с одной страницы, но подтверждена его отдельная публикация по другому адресу того же сайта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].followup.intro"
+    ]
+  },
+  {
+    "id": "918d98ed0a0e9f9f",
+    "ru": "Сопоставить объём рассмотрения с оставшейся публикацией и передать уточнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "edb54c7c2413215b",
+    "ru": "Считать удаление одной копии доказательством отсутствия всех публикаций.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d2ce1cb594fb393f",
+    "ru": "Разместить копию баннера в публичной ленте игры для обсуждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a6fe3d499beb7534",
+    "ru": "Статья 21 закона № 38-ФЗ устанавливает разные ограничения содержания, способа и места рекламы алкоголя. Пункт 8 части 2 запрещает размещение такой рекламы в интернете; отметка 18+ не отменяет этот запрет. Часть 3 требует предупреждения о вреде чрезмерного потребления площадью не менее 10 процентов рекламного пространства. Выполнение одного условия не отменяет остальных. В задачах задано пиво, не специальная реклама винодельческих хозяйств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].knowledge.explain",
+      "cases:CASE_TEMPLATES[beer-warning-area].knowledge.explain",
+      "cases:SOURCES[n12-ad21].text"
+    ]
+  },
+  {
+    "id": "fff90025ddd5c590",
+    "ru": "Раздельно проверять запрет интернет-размещения и другие условия статьи 21.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "997a69cdf4c92e74",
+    "ru": "Ограничиваться возрастной пометкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ed401751f18b2004",
+    "ru": "Признавать расстояние до школы универсальным разрешением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d941ed623077b008",
+    "ru": "Найдите норму: Самостоятельные ограничения алкогольной рекламы. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].knowledge.prompt",
+      "cases:CASE_TEMPLATES[beer-warning-area].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "3608c82872170947",
+    "ru": "Рекламу пива разместили в интернете, но над ней стоит 18+. Представитель считает, что этого достаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].opening"
+    ]
+  },
+  {
+    "id": "08186319aeeeeb60",
+    "ru": "Подготовка рассмотрения по конкретному ограничению рекламного законодательства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].procedures[0].text"
+    ]
+  },
+  {
+    "id": "669a6393511a69d7",
+    "ru": "Проверка только расстояния до школы вместо установленного канала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5f3296dd2ca12b94",
+    "ru": "Автоматическое назначение штрафа специалистом приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].procedures[2].text"
+    ]
+  },
+  {
+    "id": "d11c838fba90acd3",
+    "ru": "Рекламный баннер с выделением конкретного пива и побуждением к покупке; квалификация задана материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "7722c0210021d245",
+    "ru": "Предмет — именно реклама алкогольной продукции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "265be2af9b45b30f",
+    "ru": "Что размещено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q0].text"
+    ]
+  },
+  {
+    "id": "ae023a8ba8776008",
+    "ru": "На странице интернет-сайта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c5c9bc9209a9c7ce",
+    "ru": "Канал размещения установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "27e67532657828dc",
+    "ru": "Где он доступен?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q1].text"
+    ]
+  },
+  {
+    "id": "4ed4fe30911754f1",
+    "ru": "Наличием обозначения 18+ и предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "87e867f55fddac2e",
+    "ru": "Другие элементы не отменяют ограничения канала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "241f3d6ab982c310",
+    "ru": "Чем обосновывают допустимость?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q2].text"
+    ]
+  },
+  {
+    "id": "aebb450230021893",
+    "ru": "Уполномоченный орган после установленной процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "b82669acbd4a814c",
+    "ru": "Приёмная готовит материалы, не назначает санкцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c7159f24fe3e9cbf",
+    "ru": "Кто принимает решение о нарушении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].questions[q3].text"
+    ]
+  },
+  {
+    "id": "84c2a5a25baf2cc9",
+    "ru": "Специалист подготовки материалов антимонопольного органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].role.title"
+    ]
+  },
+  {
+    "id": "30239091324b3d42",
+    "ru": "Компетентное подразделение антимонопольного органа по установленной процедуре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].routes[0].text"
+    ]
+  },
+  {
+    "id": "877287bbf7ed2f08",
+    "ru": "Школьный совет как орган разрешения интернет-рекламы алкоголя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].routes[1].text"
+    ]
+  },
+  {
+    "id": "f81dfa78d569342c",
+    "ru": "Оператор возрастной маркировки вместо надзорного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].routes[2].text"
+    ]
+  },
+  {
+    "id": "386deb8c4b86735d",
+    "ru": "Возрастная отметка не меняет канал",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[beer-online-agegate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[beer-online-agegate].title"
+    ]
+  },
+  {
+    "id": "788f5fe1dfee078d",
+    "ru": "Условия проверяются самостоятельно; наличие одного элемента не отменяет другое ограничение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].trap.explain"
+    ]
+  },
+  {
+    "id": "d1224d8ada23bd85",
+    "ru": "Предупреждение о вреде и отметка 18+ сами по себе снимают запрет конкретного канала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-online-agegate].trap.text"
+    ]
+  },
+  {
+    "id": "5d7a4c3c3c2bc985",
+    "ru": "Сопоставить содержание перечня и контекст размещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[a0].title"
+    ]
+  },
+  {
+    "id": "36dbec62738e8bf1",
+    "ru": "Зафиксировать обязательный информационный характер именно этого материала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d84146b4cf567881",
+    "ru": "Подготовить ответ о применимости рекламного законодательства без расширения вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[a2].title"
+    ]
+  },
+  {
+    "id": "a8ccae421e4a2ab7",
+    "ru": "Не обвинять заявителя и не обещать законность всех иных действий заведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[a3].title"
+    ]
+  },
+  {
+    "id": "139a7efc37c0bee5",
+    "ru": "Проверить, что ответ относится к перечню И-6, а не другому рекламному материалу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[a4].title"
+    ]
+  }
+]

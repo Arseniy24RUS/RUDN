@@ -1,0 +1,1151 @@
+[
+  {
+    "id": "57547ae3a4208158",
+    "ru": "Помощник: «В законе видел 30 дней – обещаем за 30 дней найти международную посылку».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-release].trap.text"
+    ]
+  },
+  {
+    "id": "f63b3928e8eb429f",
+    "ru": "Сопоставить квитанцию и параметры запроса отслеживания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[a0].title"
+    ]
+  },
+  {
+    "id": "fae938224f800ed8",
+    "ru": "Зафиксировать правильный номер МПО-481.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[a1].title"
+    ]
+  },
+  {
+    "id": "df53b08e25831709",
+    "ru": "Подготовить проверку состояния именно этого отправления у оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[a2].title"
+    ]
+  },
+  {
+    "id": "70e8adbc8ac82532",
+    "ru": "Пояснить неопределённость без обвинения получателя чужой посылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[a3].title"
+    ]
+  },
+  {
+    "id": "77fb11f7b394c86d",
+    "ru": "Сверить следующий ответ с номером принятого дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[a4].title"
+    ]
+  },
+  {
+    "id": "8738a0f8a54a53c0",
+    "ru": "Закрыть вопрос, не предложив проверки правильного номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[b0].title"
+    ]
+  },
+  {
+    "id": "73a6bbaf55101c39",
+    "ru": "Обвинить указанного в чужой записи человека в хищении без оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].actions[b1].title",
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5a13825a216860a1",
+    "ru": "Все участники и документы дела вымышлены. Квитанция содержит учебный идентификатор МПО-481, распечатка отслеживания — МПО-418. Иных сведений о вручении нужного отправления пока нет. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].brief"
+    ]
+  },
+  {
+    "id": "36e8e67a3852f7e3",
+    "ru": "Меняется не установленное местонахождение, а доказательная пригодность распечатки. Нельзя сделать вывод о судьбе нужного отправления по чужому номеру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].coach.plan",
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].contrast.difference"
+    ]
+  },
+  {
+    "id": "2ea29bcdc1e5e661",
+    "ru": "Запрос по номеру МПО-418: «Вручено». Это не номер квитанции; принадлежность записи заявителю не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0751880a4a0e4b82",
+    "ru": "Распечатка статуса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d0].title"
+    ]
+  },
+  {
+    "id": "416d458e52d7fc8c",
+    "ru": "На старой странице продавца написано «быстро». Оно не подтверждает вручение конкретного отправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e5b440d4b1360a7b",
+    "ru": "Рекламное обещание доставки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a19b6d0e6095e009",
+    "ru": "Номер МПО-481. Адрес получателя и дата относятся к учебному заказу заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d2].text"
+    ]
+  },
+  {
+    "id": "cf0b854bd51673da",
+    "ru": "Квитанция об отправке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a0ea7426eced7a34",
+    "ru": "Распечатка относится к другому номеру и не подтверждает вручение МПО-481. Меняется не установленное местонахождение, а доказательная пригодность распечатки. Нельзя сделать вывод о судьбе нужного отправления по чужому номеру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.explain"
+    ]
+  },
+  {
+    "id": "c0097aacefe7e650",
+    "ru": "Распечатка относится к другому номеру и не подтверждает вручение МПО-481.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "84357c81d518c10f",
+    "ru": "Любой статус «вручено» подтверждает утрату нужной посылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "1abfe1e2d097d83f",
+    "ru": "Ошибка номера отменяет право выяснять местонахождение своего отправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "34ceaa870a07189d",
+    "ru": "Контроль реквизита входит в проверку результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].followup.explain"
+    ]
+  },
+  {
+    "id": "45fff52952ad6894",
+    "ru": "По правильному номеру установлена передача в отделение, но готовое уведомление снова содержит МПО-418.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].followup.intro"
+    ]
+  },
+  {
+    "id": "3f1141e52ddfb1aa",
+    "ru": "Исправить реквизит проекта и проверить сведения МПО-481 перед передачей ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "ee9a90a4b3708e98",
+    "ru": "Отправить, поскольку общая тема письма верная.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2f261ca157d52ddf",
+    "ru": "Поменять квитанцию заявителя под номер ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "47de56e473cdea23",
+    "ru": "Проверять связь претензии и документов с конкретным отправлением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "f61520e6a2732737",
+    "ru": "Считать любой скриншот доказательством вручения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d41554562fbc0c29",
+    "ru": "Подставлять сроки обычного письма вместо специального почтового порядка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "566a36d53fd00b86",
+    "ru": "Сайт пишет «вручено», но я ничего не получил. Значит, посылку отдали чужому человеку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].opening"
+    ]
+  },
+  {
+    "id": "632ef0bc5e13a2fb",
+    "ru": "Проверка идентификатора и дальнейшего маршрута обращения по фактическому статусу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].procedures[0].text"
+    ]
+  },
+  {
+    "id": "1b07e51ccaec71a5",
+    "ru": "Окончательный вывод о противоправном вручении без проверки номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].procedures[1].text"
+    ]
+  },
+  {
+    "id": "7b09ea6fb0327d45",
+    "ru": "Удаление обращения из-за одной ошибки ввода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].procedures[2].text"
+    ]
+  },
+  {
+    "id": "61cbed395685c0a4",
+    "ru": "МПО-481.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b672cde60939f303",
+    "ru": "Квитанция определяет проверяемое отправление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "769ce670fe35b853",
+    "ru": "Какой номер указан в квитанции?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q0].text"
+    ]
+  },
+  {
+    "id": "6596ad4dbd996524",
+    "ru": "На распечатке МПО-418; похоже, переставил цифры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "e1ff283746ce4934",
+    "ru": "Распечатка относится к другому идентификатору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "64a94dc72bd21b3e",
+    "ru": "Какой номер вы ввели в поиск?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q1].text"
+    ]
+  },
+  {
+    "id": "67d2c5489856cd16",
+    "ru": "Нет, я ориентировался на эту распечатку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "78ef25d7329dd925",
+    "ru": "Вывод о неверном вручении пока не обоснован.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ba9c71e5f8bf94d5",
+    "ru": "Есть подтверждение вручения именно вашей посылки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q2].text"
+    ]
+  },
+  {
+    "id": "9b6ad0fb67f1a0d4",
+    "ru": "Да, через официальный сервис оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "896991806273f318",
+    "ru": "Есть проверяемый следующий шаг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "fa2365395a07e131",
+    "ru": "Можно проверить верный номер?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b3bc26c56c21b972",
+    "ru": "Специалист приёмной по обращениям о связи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].role.title"
+    ]
+  },
+  {
+    "id": "83fcd12b87a23dc8",
+    "ru": "Уточнить сведения у почтового оператора по правильному идентификатору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].routes[0].text"
+    ]
+  },
+  {
+    "id": "94a240182acf8f8a",
+    "ru": "Требовать у таможни отменить статус любого найденного номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].routes[1].text"
+    ]
+  },
+  {
+    "id": "9f1245a7108d8ca8",
+    "ru": "Передать незнакомому получателю обязанность возместить заказ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].routes[2].text"
+    ]
+  },
+  {
+    "id": "b31e4c57dd2d0cd2",
+    "ru": "Одна цифра в номере отправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[parcel-wrong-tracking].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[parcel-wrong-tracking].title"
+    ]
+  },
+  {
+    "id": "a663d8a56924b69b",
+    "ru": "Ошибка источника означает необходимость уточнения, а не автоматическое отсутствие проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].trap.explain"
+    ]
+  },
+  {
+    "id": "dd82e9e8e6954d3a",
+    "ru": "Если номер не совпал, жалоба автоматически ложная и её можно удалить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[parcel-wrong-tracking].trap.text"
+    ]
+  },
+  {
+    "id": "ede043a4d9e3f3d4",
+    "ru": "Подготовить мотивированное разъяснение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[answer].title"
+    ]
+  },
+  {
+    "id": "58aeec87febae016",
+    "ru": "Заранее оправдать любую обработку исходных данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[blanket].title"
+    ]
+  },
+  {
+    "id": "99271d25cef24a5f",
+    "ru": "Сопоставить таблицу и описание доступных связей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[inspect].title"
+    ]
+  },
+  {
+    "id": "2e1b77851aab619d",
+    "ru": "Попросить прислать списки всех детей в общий чат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[lists].title"
+    ]
+  },
+  {
+    "id": "9176bafbb349742e",
+    "ru": "Без требований принести списки чужих детей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "c738d45b0a27752e",
+    "ru": "Объяснить возможность сообщить новые сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[notify].title"
+    ]
+  },
+  {
+    "id": "c9238660c9ebd849",
+    "ru": "Проверить регистрацию обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[register].title"
+    ]
+  },
+  {
+    "id": "e7b630cb89439adb",
+    "ru": "Не давать заключение обо всей обработке данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[scope].detail"
+    ]
+  },
+  {
+    "id": "cb0ffb006ac40d6a",
+    "ru": "Ограничить вывод проверенной публикацией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[scope].title"
+    ]
+  },
+  {
+    "id": "1ff47e08ebd8c389",
+    "ru": "Сохранить материалы, на которых основан вывод",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].actions[track].title"
+    ]
+  },
+  {
+    "id": "a7c3939181f6be43",
+    "ru": "Рассматривается конкретная открытая таблица. По условию из неё и доступных сопоставимых сведений нельзя определить ни одного ребёнка: индивидуальных строк, кодов, малых групп и связующей таблицы нет. Это не общее утверждение о безопасности любых обезличенных наборов. Работу с исходными персональными данными отдельно не оценивали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].brief"
+    ]
+  },
+  {
+    "id": "873a77b28bcce602",
+    "ru": "Предложено ненужное массовое распространение данных детей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].criticalRules[lists].message"
+    ]
+  },
+  {
+    "id": "dca77a98933c53bf",
+    "ru": "Требование признать любую статистику о занятиях персональными данными и удалить таблицу только потому, что числа относятся к школе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[demand].text"
+    ]
+  },
+  {
+    "id": "d4f708d611bdb0db",
+    "ru": "Обращение родителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[demand].title"
+    ]
+  },
+  {
+    "id": "7a81061c1fb97804",
+    "ru": "По условиям вымышленного дела отсутствует доступная связующая информация; таблица не позволяет определить конкретного ребёнка прямо или косвенно. Исходная обработка внутренних списков не рассматривается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[method].text"
+    ]
+  },
+  {
+    "id": "421e6798279957dd",
+    "ru": "Описание состава опубликованных данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[method].title"
+    ]
+  },
+  {
+    "id": "09f4134cba3900f3",
+    "ru": "Большая школа, суммарные группы: технические кружки – 210, искусство – 175, спорт – 260. Нет ФИО, классов, кодов и строк по отдельным детям. Значения условные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[table].text"
+    ]
+  },
+  {
+    "id": "287acd1dbc2226c7",
+    "ru": "Макет опубликованной статистики",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].documents[table].title"
+    ]
+  },
+  {
+    "id": "cc403b9e3c34acb8",
+    "ru": "Оценивается конкретная публикация, а не все операции школы. Возможность идентификации проверена условиями дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy-aggregate].contrast.difference"
+    ]
+  },
+  {
+    "id": "07fc1886f98e4f0b",
+    "ru": "Раз таблица агрегирована, любая исходная обработка школы заведомо законна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "7b12ba6cd1b06027",
+    "ru": "Любое число об учащихся является персональными данными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "fff9562bdb497591",
+    "ru": "Для этой публикации не установлена определяемость конкретных лиц; сам факт школьной статистики ещё не доказывает распространение персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "72d66ac6fcffaa69",
+    "ru": "Какой вывод допустим в пределах установленных фактов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].factTask.prompt"
+    ]
+  },
+  {
+    "id": "55de9954415420c0",
+    "ru": "Изменение доступных связей меняет предмет оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].followup.explain"
+    ]
+  },
+  {
+    "id": "1797f1c77191e9bb",
+    "ru": "Позже появилась другая таблица: индивидуальные коды и открытая ссылка на соответствие кодов фамилиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].followup.intro"
+    ]
+  },
+  {
+    "id": "fa304318998d255a",
+    "ru": "Оценить новую публикацию отдельно; прежний вывод о суммарной таблице на неё не переносится.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "48889b2fd48792a9",
+    "ru": "Применить прежний вывод к новому набору без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "6e3d25d23c346591",
+    "ru": "Разместить таблицу соответствия в ответе всем родителям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "de505c92dcfca1ec",
+    "ru": "Нужно установить связь сведений с прямо или косвенно определяемым физическим лицом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[privacy-aggregate].knowledge.explain"
+    ]
+  },
+  {
+    "id": "f5849209fb7a8c48",
+    "ru": "Любые сведения о школе являются данными каждого ученика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "bf7342b4f3223256",
+    "ru": "Удаление имени всегда гарантирует отсутствие персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "5fec26561c6c5d7e",
+    "ru": "Найдите определение персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "fac060888f29b5ad",
+    "ru": "На сайте отчёт о занятиях: сколько учеников выбрали каждое направление. Я увидела таблицу и решила, что школа выложила данные детей. Можно ли потребовать удалить любую статистику?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].opening"
+    ]
+  },
+  {
+    "id": "92fcd0faceeac393",
+    "ru": "Название кружка и число участников по всей большой школе. Имена и классы не указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[fields].answer"
+    ]
+  },
+  {
+    "id": "555ab8aff137839e",
+    "ru": "В публикации нет индивидуальных строк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[fields].fact"
+    ]
+  },
+  {
+    "id": "4f99753eb94a4552",
+    "ru": "Какие поля видны в таблице?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[fields].text"
+    ]
+  },
+  {
+    "id": "be11fac5c9b66d54",
+    "ru": "Нет; в описании публикации указано, что таблиц соответствия и идентификаторов нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[links].answer"
+    ]
+  },
+  {
+    "id": "8fd4853cac6da9f3",
+    "ru": "Условия исключают прямую и косвенную определяемость.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[links].fact"
+    ]
+  },
+  {
+    "id": "7403ac27aac0b18b",
+    "ru": "Есть ли ссылка или код для сопоставления с детьми?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[links].text"
+    ]
+  },
+  {
+    "id": "c4c52eed164b55e1",
+    "ru": "Только эту опубликованную таблицу. Доступ к внутренним спискам мне не открывали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[scope].answer"
+    ]
+  },
+  {
+    "id": "cde45208a2eba84c",
+    "ru": "Нельзя переносить вывод на неизвестные исходные операции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[scope].fact"
+    ]
+  },
+  {
+    "id": "cfc0d2b2b607ca7b",
+    "ru": "Что именно вы просите проверить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].questions[scope].text"
+    ]
+  },
+  {
+    "id": "ab6f554228449d0b",
+    "ru": "Объявить законными любые неизвестные действия школы с исходными списками.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "abdac4fcddb3b96e",
+    "ru": "Подготовить разъяснение по конкретной публикации и указать возможность представить иные проверяемые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].routes[proper].text"
+    ]
+  },
+  {
+    "id": "98ee4e74de2ffdec",
+    "ru": "Немедленно признать все таблицы школы незаконными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].routes[shortcut].text"
+    ]
+  },
+  {
+    "id": "48e630e672cd9f02",
+    "ru": "Цифры без списка детей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[privacy-aggregate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy-aggregate].title"
+    ]
+  },
+  {
+    "id": "6ad448baecb8de28",
+    "ru": "Достаточно удалить один столбец с фамилией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "0513317231f610b6",
+    "ru": "Проверять и косвенную определяемость; вывод относится только к установленным условиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[privacy-aggregate].trap.explain"
+    ]
+  },
+  {
+    "id": "f8148a3faaece675",
+    "ru": "Помощник: «Убрали фамилию – значит набор всегда перестал быть персональными данными».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].trap.text"
+    ]
+  },
+  {
+    "id": "ce5d62c6459a84f1",
+    "ru": "Нет прямой или косвенной определяемости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "a814393dc33826b6",
+    "ru": "Проверяется только конкретная таблица",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "ad8bedc33ff950a5",
+    "ru": "Разъяснение без недоказанного признания нарушения и без оправдания неизвестной обработки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-aggregate].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "f8719595e5a6ea26",
+    "ru": "Сопоставить категории в согласии с опубликованной таблицей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[a0].title"
+    ]
+  },
+  {
+    "id": "62915eff00b03381",
+    "ru": "Зафиксировать способ доступа без новой открытой публикации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7d0dae40fe2bb9f8",
+    "ru": "Подготовить рассмотрение по распространению данных вне указанного объёма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8c0096d61e5f3e60",
+    "ru": "Сообщить представителю дальнейший порядок и защитить данные других детей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[a3].title"
+    ]
+  },
+  {
+    "id": "bfd4d58e458a1ad2",
+    "ru": "Проверить ограничение доступа к самой таблице, а не только к меню сайта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[a4].title"
+    ]
+  },
+  {
+    "id": "4fe49ed2dfced92a",
+    "ru": "Разместить таблицу в общем обсуждении родителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[b0].title",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "7c676a3898134837",
+    "ru": "Завершить проверку, не читая перечень в согласии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].actions[b1].title"
+    ]
+  },
+  {
+    "id": "293eedb4e07aab90",
+    "ru": "В исходной истории согласие было общим. Здесь оно отдельное, но ограничено другим перечнем; наличие документа само по себе не решает вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].contrast.difference"
+    ]
+  },
+  {
+    "id": "7cc6ac86aa644f8f",
+    "ru": "В вымышленном деле отдельное согласие разрешает имя и фотографию ребёнка с мероприятия. Открытая таблица дополнительно содержит ограничения по здоровью; они в перечне не названы. Иного основания распространения школа в материалах не указала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].documents[d0].text"
+    ]
+  },
+  {
+    "id": "7bfb2e1eabe03534",
+    "ru": "Согласие и перечень публикации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].documents[d0].title"
+    ]
+  },
+  {
+    "id": "4daf405aed0f7661",
+    "ru": "Проверена доступность таблицы без авторизации. Копия с данными других детей помещается в защищённую часть дела; открытая рассылка не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].documents[d1].text"
+    ]
+  },
+  {
+    "id": "ce781dc4e44a109c",
+    "ru": "Служебная фиксация доступа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4c01833128f45910",
+    "ru": "Отдельная форма согласия не покрывает данные вне его перечня; нужно проверить основание именно распространения сведений о здоровье.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].outcomes.good"
+    ]
+  },
+  {
+    "id": "73997cbdfcb0311e",
+    "ru": "Любая отдельная подпись разрешает публикацию любых сведений ребёнка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "aecf1bf5d743b51f",
+    "ru": "Для проверки нужно разослать таблицу всем родителям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "da01d28755b11d04",
+    "ru": "Учебное продолжение. Оператор удалил столбец с диагнозами, но оставил индивидуальные ограничения питания и занятий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].followup.intro"
+    ]
+  },
+  {
+    "id": "f40c1df389931c29",
+    "ru": "Проверить, содержатся ли оставшиеся сведения о здоровье и каким основанием охвачено их распространение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].followup.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].followup.explain"
+    ]
+  },
+  {
+    "id": "3e191bc9ec4ab20a",
+    "ru": "Считать любую оставшуюся таблицу безопасной после удаления названия диагноза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a22b00ec27b650aa",
+    "ru": "Требовать от родителя публично подтвердить диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "afa5c922893ef106",
+    "ru": "Проверить правовое основание для дополнительной категории данных, не распространяя доказательство повторно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].knowledge.explain",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].coach.research"
+    ]
+  },
+  {
+    "id": "0f8ad582fd7be102",
+    "ru": "Найдите статью об особенностях обработки персональных данных, разрешённых для распространения, и пределах соответствующего согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].knowledge.prompt",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "3438076ccec6f7b6",
+    "ru": "Мне показали отдельное согласие на публикацию фото с праздника. Но на сайте рядом с именами детей лежит таблица ограничений по здоровью. Разве подпись под фотографией разрешает и это?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].opening"
+    ]
+  },
+  {
+    "id": "850ee0b2cc1739e8",
+    "ru": "Имя и фотография с мероприятия. Про здоровье в перечне ничего нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "f8f6954e2e757295",
+    "ru": "Объём согласия ограничен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f47453763a8e05d5",
+    "ru": "Что именно перечислено в согласии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q0].text"
+    ]
+  },
+  {
+    "id": "18f1dbe45786a02d",
+    "ru": "По прямой ссылке без входа, я проверила с другого браузера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "ee19483d587e3673",
+    "ru": "Есть данные об открытом доступе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d07f40f26f2ebcb4",
+    "ru": "Как открывается таблица?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d7d4c5dcb1b496f9",
+    "ru": "Я законный представитель одного ребёнка; документы подтверждения передаю защищённо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "60c860ef0e62a115",
+    "ru": "Полномочия и минимизация данных проверяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2c176ab7c9dc608d",
+    "ru": "Кому относится ваше требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q2].text"
+    ]
+  },
+  {
+    "id": "1dc343f096c5569f",
+    "ru": "Ограничить распространение сведений о здоровье и объяснить основание публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "525a3cfd36a9a105",
+    "ru": "Задача не сводится к признанию любой обработки незаконной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "a04138c26596a284",
+    "ru": "Что просите сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].questions[q3].text"
+    ]
+  },
+  {
+    "id": "51cacd65c7cc4d79",
+    "ru": "Подготовить материалы для уполномоченного подразделения защиты персональных данных и сведения оператору об ограничении выявленного распространения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].routes[0].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].coach.plan"
+    ]
+  },
+  {
+    "id": "8f71b0f3a1143dc7",
+    "ru": "Признать всё опубликованное разрешённым из-за слова «согласие».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].routes[1].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "bae5bc2f60f992ae",
+    "ru": "Публично разместить таблицу в качестве доказательства нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].routes[2].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "3227f38d12633e5c",
+    "ru": "Согласие было на фотографию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[privacy-consent-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy-consent-scope].title"
+    ]
+  },
+  {
+    "id": "5e9692f125dfee87",
+    "ru": "Важны и отдельная форма, и конкретные категории, условия и объём распространения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].trap.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-consent-scope].trap.explain"
+    ]
+  },
+  {
+    "id": "0f51c92cd94d504a",
+    "ru": "Перечень внутри согласия можно не читать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "35621c2de82922df",
+    "ru": "Помощник: «Отдельность согласия важнее того, что в нём перечислено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-consent-scope].trap.text"
+    ]
+  },
+  {
+    "id": "0ac05ffd86b5aa53",
+    "ru": "Передать сведения всего класса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[all-class].title"
+    ]
+  },
+  {
+    "id": "b9c9f850dc08cd66",
+    "ru": "Не ограничиваться одной строкой при запросе целей и оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[answer].detail"
+    ]
+  },
+  {
+    "id": "621c099bf3a29629",
+    "ru": "Подготовить сведения об обработке и возможность ознакомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[answer].title"
+    ]
+  },
+  {
+    "id": "90cee273b5b1ed7a",
+    "ru": "Направить результат проверенному получателю надлежащим способом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[notify].title"
+    ]
+  },
+  {
+    "id": "098c2064d1abb790",
+    "ru": "Не уничтожать исходные законно хранящиеся записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[protect].detail"
+    ]
+  },
+  {
+    "id": "088a56fd8961891a",
+    "ru": "Исключить данные других детей без основания для раскрытия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[protect].title"
+    ]
+  },
+  {
+    "id": "cd3613ca8128ee60",
+    "ru": "Отказать во всём, сославшись только на конфиденциальность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[refuse].title"
+    ]
+  },
+  {
+    "id": "83c0215be1928189",
+    "ru": "Зафиксировать получение надлежащего запроса оператором",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[register].title"
+    ]
+  },
+  {
+    "id": "baf6832856ebf3c4",
+    "ru": "Сопоставить запрошенное и подготовленную выгрузку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[scope].title"
+    ]
+  },
+  {
+    "id": "da41ef848a373ebd",
+    "ru": "Проверить полноту исполнения всех пунктов запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].actions[track].title"
+    ]
+  },
+  {
+    "id": "5eb9078a017ccf7d",
+    "ru": "Учебная стажировка в приёмной муниципального органа – оператора данных образовательной системы. Запрос получен непосредственно оператором, соответствует требованиям закона; полномочия законного представителя уже проверены. Оснований отказа по условиям нет, продление не применялось. Данные других детей в примере обозначены только условно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].brief"
+    ]
+  },
+  {
+    "id": "61d5fb50f14bb793",
+    "ru": "Надлежащий запрос получен оператором. Продление не применялось. Найдите последний день исполнения запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].calendar.context"
+    ]
+  },
+  {
+    "id": "091ca59871eeacdd",
+    "ru": "Учебный профиль: получение оператором – исходное событие, счёт со следующего дня, нерабочие дни пропускаются; итог приходится на рабочий день. Срок относится к запросу субъекта, а не к надзорной проверке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].calendar.scope"
+    ]
+  },
+  {
+    "id": "1f23028642a6b5db",
+    "ru": "152-ФЗ, статья 20, часть 1",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].calendar.source"
+    ]
+  },
+  {
+    "id": "24ca73d80dfeee16",
+    "ru": "Крайняя дата исполнения запроса оператором",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].calendar.title"
+    ]
+  },
+  {
+    "id": "922ac35f916c6c43",
+    "ru": "Раскрытие данных посторонних детей без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].criticalRules[all-class].message"
+    ]
+  }
+]

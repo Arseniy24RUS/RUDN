@@ -1,0 +1,1113 @@
+[
+  {
+    "id": "51cd0859397c5be6",
+    "ru": "Первое письмо на общий контактный email: {{sent}}. Надлежащее обращение через официальный сервис поступило {{received}}. Регистрацию ещё предстоит выполнить; рассчитайте крайнюю дату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[dates].text"
+    ]
+  },
+  {
+    "id": "5c5de1c056728b9c",
+    "ru": "Дата надлежащего поступления известна из квитанции; общий email не заменяет установленный канал автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-email].factTask.explain",
+      "cases:CASE_TEMPLATES[electronic-email].outcomes.good"
+    ]
+  },
+  {
+    "id": "0dc3457e514d7657",
+    "ru": "Любое письмо на любой email создаёт одинаковую процедуру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "77933ea694d822cc",
+    "ru": "Для регистрации необходимо получить пароль заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "a0d99af7cbe1a123",
+    "ru": "Учебное продолжение. Уведомление содержит номер другого обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].followup.intro"
+    ]
+  },
+  {
+    "id": "7202a7cba3fe4ca6",
+    "ru": "Сопоставить квитанцию и регистрационную запись и устранить несоответствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].followup.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-email].followup.explain"
+    ]
+  },
+  {
+    "id": "28b99eadb395b258",
+    "ru": "Считать любой номер доказательством регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b9e4e35fae632b2c",
+    "ru": "Попросить пароль для проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a8b04e4ca7def55a",
+    "ru": "Сначала отправил вопрос на найденный email, а позже подал через официальный сервис с подтверждением личности. В подтверждении есть дата. От какой даты теперь считать регистрацию?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].opening"
+    ]
+  },
+  {
+    "id": "3cf4838b4f1a902b",
+    "ru": "Общий порядок регистрации надлежащего электронного обращения по 59-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].procedures[0].text"
+    ]
+  },
+  {
+    "id": "278bc9fff3130ef4",
+    "ru": "Получение полного доступа к аккаунту заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].procedures[1].text"
+    ]
+  },
+  {
+    "id": "097db2f881bc3a23",
+    "ru": "Регистрация судебного иска в приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5fe21c419a80ddda",
+    "ru": "В предусмотренном общим порядком официальном сервисе с подтверждением личности, {{received}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "78c5e37bb3cdbc0a",
+    "ru": "Есть надлежащий канал и дата поступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b8ab5a514e127e3d",
+    "ru": "Где получено подтверждение поступления?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q0].text"
+    ]
+  },
+  {
+    "id": "ac9a1261545219ca",
+    "ru": "Общий контактный адрес без признака электронной приёмной и идентификации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "48bd03f40c943a5d",
+    "ru": "Контакт не равен каналу по 59-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "c096cdc31ce24043",
+    "ru": "На что похож первый email?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q1].text"
+    ]
+  },
+  {
+    "id": "467ae95875cecd5c",
+    "ru": "Обычное обращение по 59-ФЗ; специальных правил в этом деле нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "6d7e633592f98edf",
+    "ru": "Ограничена область применимости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "e371076ee22e5cea",
+    "ru": "Это обычное обращение или специальный процессуальный документ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q2].text"
+    ]
+  },
+  {
+    "id": "ad0a7a293bdeff75",
+    "ru": "Нет, могу показать обезличенное подтверждение поступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "5e90a4b36377856a",
+    "ru": "Пароли и коды не требуются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "3ebc0de92fef0dc5",
+    "ru": "Нужно ли передать сотруднику доступ к аккаунту?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].questions[q3].text"
+    ]
+  },
+  {
+    "id": "cb56dc93ff540391",
+    "ru": "Использовать подтверждённый канал и фактическое поступление, объяснив различие с контактным email.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].routes[0].text",
+      "cases:CASE_TEMPLATES[electronic-email].coach.plan",
+      "cases:CASE_TEMPLATES[electronic-email].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "165beca5ef58a241",
+    "ru": "Попросить пароль и код подтверждения для входа вместо гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].routes[1].text",
+      "cases:CASE_TEMPLATES[electronic-email].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "8f22792bd7c9e41f",
+    "ru": "Отказать потому, что раньше было письмо на email.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].routes[2].text",
+      "cases:CASE_TEMPLATES[electronic-email].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "54b23e544e34d451",
+    "ru": "Контактный email и обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[electronic-email].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[electronic-email].title"
+    ]
+  },
+  {
+    "id": "6959f0a699be94ab",
+    "ru": "Цифровое взаимодействие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].topic",
+      "cases:CASE_TEMPLATES[electronic-email].tag",
+      "cases:CASE_TEMPLATES[electronic-draft-only].topic"
+    ]
+  },
+  {
+    "id": "e4e8999b32ba1db3",
+    "ru": "Проверить назначение и предусмотренный порядок электронного канала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].trap.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-email].trap.explain"
+    ]
+  },
+  {
+    "id": "af69cacbc2991129",
+    "ru": "Выбрать любой адрес по знакомому домену.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "897687fe86363677",
+    "ru": "Помощник: «Все опубликованные email предназначены для обращений граждан».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].trap.text"
+    ]
+  },
+  {
+    "id": "7f1f4c0b06913ea5",
+    "ru": "Проверить читаемый текст и необходимые сведения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[a0].title"
+    ]
+  },
+  {
+    "id": "664252b7470e1910",
+    "ru": "Отметить пределы доступного материала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[a1].title"
+    ]
+  },
+  {
+    "id": "f593fae62aff4ea6",
+    "ru": "Продолжить рассмотрение по существу и запросить дополнение при необходимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[a2].title"
+    ]
+  },
+  {
+    "id": "02d58c319b1c4fce",
+    "ru": "Сообщить о технической проблеме без необоснованного отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ee0cf2c817def7fa",
+    "ru": "Сопоставить позднее полученный файл с текущим объектом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c1d85d7cd8be2cce",
+    "ru": "Приписать приложению несуществующее доказательство",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[b0].title"
+    ]
+  },
+  {
+    "id": "55f5b780d653fa57",
+    "ru": "Оставить обращение без рассмотрения по неустановленному основанию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].actions[b1].title",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "82c4a69eced3a90d",
+    "ru": "Все люди, документы и события этого дела вымышлены. Надлежащий электронный канал и необходимые сведения автора подтверждены. Текст читается и позволяет установить конкретную просьбу, место и обстоятельства. Дополнительное фото полезно, но по условиям не является обязательным условием приёма или определения сути. Не открывающееся вложение не подменяется вымышленным содержимым.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].brief"
+    ]
+  },
+  {
+    "id": "4cecc07a2bd5c8a2",
+    "ru": "Отсутствие доступа к части материалов не равно невозможности определить суть всего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].coach.plan",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].contrast.difference"
+    ]
+  },
+  {
+    "id": "d1ca471c3720d133",
+    "ru": "Проект действия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e3bd79604ebc8279",
+    "ru": "Текст Е-83",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d1].title"
+    ]
+  },
+  {
+    "id": "b84375c1fb333a96",
+    "ru": "Протокол вложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d2].title"
+    ]
+  },
+  {
+    "id": "0b28ae696e1bec4c",
+    "ru": "Дефект дополнительного файла не делает читаемое содержательное обращение неопределимым. Отсутствие доступа к части материалов не равно невозможности определить суть всего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-optional-attachment.explain"
+    ]
+  },
+  {
+    "id": "2da13a0fae15875f",
+    "ru": "Дефект дополнительного файла не делает читаемое содержательное обращение неопределимым.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-optional-attachment.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c776148124e7a021",
+    "ru": "Любое неоткрывшееся вложение автоматически отменяет основное обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-optional-attachment.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f450fefc3fc21507",
+    "ru": "Содержимое фотографии можно достроить по предположению сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-optional-attachment.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "6dfad99f2960f0de",
+    "ru": "Уточнить относимость нового изображения и не считать другой адрес подтверждением текущего. Отсутствие доступа к части материалов не равно невозможности определить суть всего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].followup.explain"
+    ]
+  },
+  {
+    "id": "861dc6bb83810613",
+    "ru": "Заявитель повторно загрузил файл, но на нём указан другой адрес. Сотрудник хочет использовать его как подтверждение прежнего объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].followup.intro"
+    ]
+  },
+  {
+    "id": "a548eaf6c16811d8",
+    "ru": "Уточнить относимость нового изображения и не считать другой адрес подтверждением текущего.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "30190c1de52eed5c",
+    "ru": "Считать любое новое фото подходящим по факту загрузки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "30d6531b8d77b980",
+    "ru": "Отменить рассмотрение всех уже установленных сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8858268298d7e38f",
+    "ru": "Считать неподтверждённые детали фотографии установленными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6583e805a0664c8b",
+    "ru": "Найдите нормативное основание следующего действия: Рассмотреть имеющийся материал и при необходимости запросить доступную копию дополнения, не выдумывая его содержание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "45e6a02b4623b439",
+    "ru": "В личном кабинете подробно описал проблему. Дополнительное фото не открылось, и сотрудник предложил удалить всё письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].opening",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q2].answer",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "f67bd86e043996b3",
+    "ru": "Читаемо указаны объект, место, наблюдавшееся обстоятельство и конкретная просьба. Обязательные сведения автора имеются, поступление подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q0].answer",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q0].fact",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d1].text"
+    ]
+  },
+  {
+    "id": "621258fa9fa0cb15",
+    "ru": "Дополнительный файл photo.jpg не открывается. Содержание файла неизвестно; иных дефектов основного текста нет. Суть обращения определяется и без изображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q1].answer",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q1].fact",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d2].text"
+    ]
+  },
+  {
+    "id": "e43a88993091009b",
+    "ru": "Сотрудник предлагает не рассматривать весь материал только из-за фотографии, не оценивая доступный текст.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q3].answer",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].questions[q3].fact",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6f3b9b33f7b780c1",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Надлежащий электронный канал и необходимые сведения автора подтверждены. Текст читается и позволяет установить конкретную просьбу, место и обстоятельства. Дополнительное фото полезно, но по условиям не является обязательным условием приёма или определения сути. Не открывающееся вложение не подменяется вымышленным содержимым.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].role.text"
+    ]
+  },
+  {
+    "id": "f8f10204deef07cd",
+    "ru": "Рассмотреть имеющийся материал и при необходимости запросить доступную копию дополнения, не выдумывая его содержание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].contrast.decision"
+    ]
+  },
+  {
+    "id": "1539a32d1893e1d2",
+    "ru": "Вложение не открылось, текст прочитан",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[electronic-optional-attachment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[electronic-optional-attachment].title"
+    ]
+  },
+  {
+    "id": "ee9aa5a7b5cb434b",
+    "ru": "Рассмотреть имеющийся материал и при необходимости запросить доступную копию дополнения, не выдумывая его содержание. Отсутствие доступа к части материалов не равно невозможности определить суть всего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].trap.explain"
+    ]
+  },
+  {
+    "id": "9f68b528b8502c06",
+    "ru": "Удалить читаемый текст из-за необязательного вложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].trap.text",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "56a04b8a500faf7d",
+    "ru": "Проверить содержание квитанции, а не один заголовок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[a0].title"
+    ]
+  },
+  {
+    "id": "70c59abfb88f38e3",
+    "ru": "Сопоставить поступление с входящим журналом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[a1].title"
+    ]
+  },
+  {
+    "id": "88a965211ff8900d",
+    "ru": "Обеспечить регистрацию и надлежащий маршрут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[a2].title"
+    ]
+  },
+  {
+    "id": "98ce00ab2488ac24",
+    "ru": "Понятно объяснить заявителю подтверждённый статус",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[a3].title"
+    ]
+  },
+  {
+    "id": "316e2fcc650b4be9",
+    "ru": "Проверить, что дальнейший ответ относится к Е-72",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[a4].title"
+    ]
+  },
+  {
+    "id": "13f85fa1435df947",
+    "ru": "Обещать удовлетворение требования до рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[b0].title"
+    ]
+  },
+  {
+    "id": "0eccb89b6e00d185",
+    "ru": "Закрыть дело техническим уведомлением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].actions[b1].title",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "028a04215883e755",
+    "ru": "Все люди, документы и события этого дела вымышлены. Обращение надлежащим образом поступило через официальный идентифицированный сервис. Квитанция подтверждает доставку, но не регистрацию или решение по существу. Регистрация ещё предстоит; вопрос о её крайней дате поставлен отдельно. Нет фактов вынесенного решения или оказанной услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].brief"
+    ]
+  },
+  {
+    "id": "149a805b6b4d6cb8",
+    "ru": "Технический и правовой этапы различаются. Здесь канал действителен, спор касается значения подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].coach.plan",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].contrast.difference"
+    ]
+  },
+  {
+    "id": "d1ca46e86ab0bf48",
+    "ru": "Сообщение заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d0].title"
+    ]
+  },
+  {
+    "id": "0bbf3e0179e334c6",
+    "ru": "Квитанция доставки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d1].title"
+    ]
+  },
+  {
+    "id": "5d5967db04a8e5e3",
+    "ru": "Проверка входящего журнала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d2].title"
+    ]
+  },
+  {
+    "id": "2a7b93065c268883",
+    "ru": "Квитанция подтверждает поступление, но не результат по существу. Технический и правовой этапы различаются. Здесь канал действителен, спор касается значения подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.explain"
+    ]
+  },
+  {
+    "id": "968807ce206ae7fd",
+    "ru": "Квитанция подтверждает поступление, но не результат по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a35f7e66a091bf9b",
+    "ru": "Каждая успешная доставка равна удовлетворению требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "20778245dba435fc",
+    "ru": "Без готового ответа обращение можно не регистрировать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-receipt-not-result.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b8d2425ac6c23f54",
+    "ru": "Проверить наличие содержательного результата; повторная доставка уведомления его не заменяет. Технический и правовой этапы различаются. Здесь канал действителен, спор касается значения подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].followup.explain"
+    ]
+  },
+  {
+    "id": "1a9426354228ba41",
+    "ru": "Вместо решения заявителю повторно отправили ту же квитанцию и поставили статус «рассмотрено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].followup.intro"
+    ]
+  },
+  {
+    "id": "f97ee3e5c681740b",
+    "ru": "Проверить наличие содержательного результата; повторная доставка уведомления его не заменяет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f6d9147a8f12fe6d",
+    "ru": "Принять повторную квитанцию как окончательный ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a0527a705c754ccf",
+    "ru": "Потребовать от гражданина отказаться от первоначального требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "888ff08b93efbff1",
+    "ru": "Сообщить о выполнении требования без решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d6345274fc166746",
+    "ru": "Считать срок регистрации начавшимся только после подготовки ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d004ced06a488654",
+    "ru": "Найдите нормативное основание следующего действия: Разъяснить значение квитанции, зарегистрировать материал и обеспечить дальнейшее рассмотрение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "44a9b9beed4a880e",
+    "ru": "Пришло письмо «Ваше обращение доставлено». Значит, моё требование уже удовлетворили? В кабинете решения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].opening",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q2].answer",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "980be5fc43d503b2",
+    "ru": "Обращение Е-72 доставлено {{received}}. В квитанции явно указано: это подтверждение поступления, не результат рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q0].answer",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q0].fact",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d1].text"
+    ]
+  },
+  {
+    "id": "bd2a4ffd605aa6ff",
+    "ru": "Запись решения по Е-72 отсутствует. Материал ожидает регистрации, ответ по существу не готовился. Идентификация отправителя подтверждена сервисом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q1].answer",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q1].fact",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d2].text"
+    ]
+  },
+  {
+    "id": "421f91fb15bfdab7",
+    "ru": "Заявитель принял слово «принято» за удовлетворение требования, хотя иных подтверждающих документов не имеет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q3].answer",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].questions[q3].fact",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ae05b9927ab6853b",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Обращение надлежащим образом поступило через официальный идентифицированный сервис. Квитанция подтверждает доставку, но не регистрацию или решение по существу. Регистрация ещё предстоит; вопрос о её крайней дате поставлен отдельно. Нет фактов вынесенного решения или оказанной услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].role.text"
+    ]
+  },
+  {
+    "id": "b8d60826b72b6825",
+    "ru": "Разъяснить значение квитанции, зарегистрировать материал и обеспечить дальнейшее рассмотрение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].contrast.decision"
+    ]
+  },
+  {
+    "id": "089c60fed3e25e93",
+    "ru": "Принято системой — ещё не рассмотрено",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[electronic-receipt-not-result].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[electronic-receipt-not-result].title"
+    ]
+  },
+  {
+    "id": "330b865411ba0852",
+    "ru": "Разъяснить значение квитанции, зарегистрировать материал и обеспечить дальнейшее рассмотрение. Технический и правовой этапы различаются. Здесь канал действителен, спор касается значения подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].trap.explain"
+    ]
+  },
+  {
+    "id": "e942b497e3328b21",
+    "ru": "Квитанция доставки сама по себе не подтверждает удовлетворение требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].trap.text"
+    ]
+  },
+  {
+    "id": "d8f2c6de35fd15fd",
+    "ru": "Связать план К-3 с актом специалиста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[a0].title"
+    ]
+  },
+  {
+    "id": "090c2dba4a669dd0",
+    "ru": "Оперативно передать информацию ответственным за безопасное содержание объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a3fb2131a05a0b98",
+    "ru": "Подготовить контроль устранения именно загромождения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[a2].title"
+    ]
+  },
+  {
+    "id": "1a917d8051b6a5d1",
+    "ru": "Не поручать гражданину освобождать опасный проход самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[a3].title"
+    ]
+  },
+  {
+    "id": "646cf7d63fb3d6c1",
+    "ru": "Проверить подтверждение освобождения К-3 в рабочем режиме здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[a4].title"
+    ]
+  },
+  {
+    "id": "451392d72d13a5c4",
+    "ru": "Считать ремонт двери достаточным для закрытия обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[b0].title"
+    ]
+  },
+  {
+    "id": "8fcf4cabea9752ca",
+    "ru": "Советовать складировать всё у соседнего эвакуационного выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].actions[b1].title",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "c488dd9e1814dc70",
+    "ru": "Все люди, документы и события этого дела вымышлены. План и акт подтверждают эвакуационный путь через коридор К-3. Коробки и тележки перекрывают проход; это не оборудование, допускаемое нормой при соблюдении геометрических параметров. Дверь открывается изнутри без ключа. Признаков пожара сейчас нет. Студент не выполняет технические измерения и не предписывает проверку без полномочий; работает с подтверждёнными материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].brief"
+    ]
+  },
+  {
+    "id": "b590fa297a358fb2",
+    "ru": "Неисправность двери устранена, но другой элемент эвакуационного пути остаётся заблокированным. Меняются предмет контроля и достаточное подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].coach.plan",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].contrast.difference"
+    ]
+  },
+  {
+    "id": "74c29eb50a4bf06f",
+    "ru": "Подпункт «б» пункта 27 предусматривает ограничения размещения предметов на путях эвакуации; допустимость предусмотренного в норме оборудования связана с соблюдением геометрических параметров пути. Условия данного дела прямо фиксируют коробки и тележки, блокирующие проход, а не разрешённое проектом оборудование с сохранёнными параметрами. Открывающаяся дверь не устраняет препятствие в коридоре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].coach.research",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.explain",
+      "cases:SOURCES[n14-fire27].text"
+    ]
+  },
+  {
+    "id": "e70db92eeaee175f",
+    "ru": "Владелец считает завершённой всю работу после замены ручки. Документального подтверждения освобождения К-3 нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d0].text"
+    ]
+  },
+  {
+    "id": "95ce469a33c9a7a1",
+    "ru": "Записка владельца",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8e3f7e06e8c5ee7b",
+    "ru": "Коридор К-3 ведёт к выходу Э-3. По акту специалиста коробки и тележки размещены поперёк прохода; допустимые параметры не сохранены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d1].text"
+    ]
+  },
+  {
+    "id": "5628ae44ea27efc1",
+    "ru": "План эвакуационного пути",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d1].title"
+    ]
+  },
+  {
+    "id": "37a41f26a45f9886",
+    "ru": "Механизм двери исправен, открывание изнутри без ключа подтверждено. Складирование в коридоре этим актом не рассматривалось и не устранялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d2].text"
+    ]
+  },
+  {
+    "id": "98f6bd6745c3d5be",
+    "ru": "Акт замены механизма Э-3",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ff93e414ae364097",
+    "ru": "Работоспособная дверь не устраняет подтверждённое препятствие на эвакуационном пути. Неисправность двери устранена, но другой элемент эвакуационного пути остаётся заблокированным. Меняются предмет контроля и достаточное подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.explain"
+    ]
+  },
+  {
+    "id": "d254b42e70d4c7ff",
+    "ru": "Работоспособная дверь не устраняет подтверждённое препятствие на эвакуационном пути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "15fd3badba9c4874",
+    "ru": "Достаточно исправной ручки независимо от коридора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "97394268a49425b4",
+    "ru": "Любой предмет вне эвакуационного пути по этому акту автоматически запрещён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-corridor-blocked.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d7f6ef26cdf31b90",
+    "ru": "Представлена фотография пустого коридора после закрытия здания. Дневная запись показывает возврат тех же коробок в часы приёма посетителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].followup.intro"
+    ]
+  },
+  {
+    "id": "861eb18a1fc6afc6",
+    "ru": "Проверить устойчивое освобождение пути в период эксплуатации; ночная фотография не разрешает дневное загромождение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].followup.options[0].text",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].followup.explain"
+    ]
+  },
+  {
+    "id": "29400b2ebdf77abc",
+    "ru": "Засчитать любую фотографию свободного коридора как окончательное исполнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2e905771aa9b2476",
+    "ru": "Предложить посетителям пользоваться обходом, не предусмотренным материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "4b95e76646b2a543",
+    "ru": "Закрыть вопрос после ремонта замка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "95d35af0f4e812bc",
+    "ru": "Перенести коробки к другому эвакуационному выходу без оценки пути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dcc9025e76577b9b",
+    "ru": "Найдите нормативное основание следующего действия: Разделить исправность двери и доступность пути; проверить устранение именно загромождения К-3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "14b573d6151cd6f6",
+    "ru": "Замок заменили, но к выходу не пройти: весь коридор заставлен коробками и тележками. Мне отвечают только актом о новой дверной ручке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].opening"
+    ]
+  },
+  {
+    "id": "e2b3f5fc7fa022e4",
+    "ru": "Рассмотрение сообщения о подтверждённом препятствии эвакуации с оперативной передачей ответственным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].procedures[0].text"
+    ]
+  },
+  {
+    "id": "6a25338508eb5be4",
+    "ru": "В К-3, указанном на плане.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q0].answer",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b36b232ee9c5e22c",
+    "ru": "Где находится препятствие?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q0].text"
+    ]
+  },
+  {
+    "id": "e56c1d58d9c66e17",
+    "ru": "Только механизм Э-3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q1].answer",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "fb988a290d78f35f",
+    "ru": "Что именно проверено в акте двери?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3462a80615817d37",
+    "ru": "Нет, путь перекрыт коробками и тележками.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q2].answer",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "59b2a256ebf66356",
+    "ru": "Сохранён ли проход по заключению специалиста?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bdebf55859ad4abc",
+    "ru": "Нет, сообщаю о препятствии заранее.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q3].answer",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "14dfdb3b23b5f39b",
+    "ru": "Есть ли сейчас признаки горения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].questions[q3].text"
+    ]
+  },
+  {
+    "id": "9b497f3e6a9ff037",
+    "ru": "Специалист подразделения по обращениям о безопасности общественных объектов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].role.title"
+    ]
+  },
+  {
+    "id": "b4147e58d06225f0",
+    "ru": "Ответственный за безопасность объекта и компетентное подразделение пожарного надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].routes[0].text"
+    ]
+  },
+  {
+    "id": "9ab87b646ac3af99",
+    "ru": "Разделить исправность двери и доступность пути; проверить устранение именно загромождения К-3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].contrast.decision"
+    ]
+  },
+  {
+    "id": "35074b8884f8fc77",
+    "ru": "Дверь исправна, прохода к ней нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[fire-corridor-blocked].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[fire-corridor-blocked].title"
+    ]
+  },
+  {
+    "id": "3a9b94d041b2dca3",
+    "ru": "Разделить исправность двери и доступность пути; проверить устранение именно загромождения К-3. Неисправность двери устранена, но другой элемент эвакуационного пути остаётся заблокированным. Меняются предмет контроля и достаточное подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].trap.explain"
+    ]
+  },
+  {
+    "id": "db17845dbc929c81",
+    "ru": "Обычный срок письменного ответа разрешает оставить подтверждённое препятствие до последнего дня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].trap.text"
+    ]
+  },
+  {
+    "id": "c0aa558e238a5366",
+    "ru": "Сопоставить план, фотографию и идентификатор двери.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[a0].title"
+    ]
+  },
+  {
+    "id": "9b479730900246fe",
+    "ru": "Проверить относящийся к текущему режиму акт внутреннего открывания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[a1].title"
+    ]
+  },
+  {
+    "id": "23a5885382b369eb",
+    "ru": "Подготовить ограниченный вывод по заявленному обстоятельству.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[a2].title"
+    ]
+  },
+  {
+    "id": "feb22a27ad4d69af",
+    "ru": "Не поручать заявителю взламывать дверь или проводить опасную проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[a3].title"
+    ]
+  },
+  {
+    "id": "6ff96d26c97f6eb2",
+    "ru": "Рассматривать новые сведения о неисправности отдельно от прежнего акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[a4].title"
+    ]
+  },
+  {
+    "id": "bd31001c3fe45bd0",
+    "ru": "Рекомендовать самостоятельно сломать дверь в отсутствие текущей опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[b0].title"
+    ]
+  },
+  {
+    "id": "fb7b7df460358d47",
+    "ru": "Объявить всё здание безопасным без проверки остальных требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].actions[b1].title",
+      "cases:CASE_TEMPLATES[fire-inside-release].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "02714be0f7206885",
+    "ru": "Все люди, документы и события этого дела вымышлены. Обычное общественное здание, особого режима охраны помещений нет. Дверь Э-2 относится к предусмотренному эвакуационному выходу. Проверка уполномоченным ответственным подтверждает свободное открывание изнутри без ключа при положении наружного замка, которое видел гражданин. Дым, пожар и текущая угроза в сообщении отсутствуют. Оценивается только установленное свойство этой двери, не безопасность всего здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].brief"
+    ]
+  },
+  {
+    "id": "eeb2e0e39abe753c",
+    "ru": "В базовом деле для выхода требовался ключ. Здесь внутреннее открывание свободно; нельзя ставить знак равенства между ограничением входа и блокировкой выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].coach.plan",
+      "cases:CASE_TEMPLATES[fire-inside-release].contrast.difference"
+    ]
+  }
+]

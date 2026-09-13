@@ -1,0 +1,1163 @@
+[
+  {
+    "id": "51e8ea87fa3f96e8",
+    "ru": "Название Московская в любом органе означает компетенцию по городу Москве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "2f07e55c6d6aea7b",
+    "ru": "Справочный номер автоматически заменяет письменное направление обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "477e3574e19f2948",
+    "ru": "Найдите основание направления обращения по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "f235c7769389bd4e",
+    "ru": "В письме я указал московский адрес предприятия. Мне предложили направить его в управление по Московской области. Это точно тот орган? Я не хочу, чтобы письмо снова ходило по кругу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].opening"
+    ]
+  },
+  {
+    "id": "7e6c021bb620f7ed",
+    "ru": "В городе Москве. Адрес совпадает со служебной справкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[place].answer"
+    ]
+  },
+  {
+    "id": "69377ff72d91c445",
+    "ru": "Место — город Москва.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[place].fact"
+    ]
+  },
+  {
+    "id": "945ee32ffb1a1851",
+    "ru": "Объект находится в городе Москве или в области?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[place].text"
+    ]
+  },
+  {
+    "id": "a5f102381659e581",
+    "ru": "Рассмотрение письменного обращения. Контакты хочу проверить, чтобы выбрать правильный маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[purpose].answer"
+    ]
+  },
+  {
+    "id": "84de6c1d5f541f70",
+    "ru": "Справочный звонок не заменяет формальное направление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[purpose].fact"
+    ]
+  },
+  {
+    "id": "03a383f9abb7aedb",
+    "ru": "Вы просите справку по телефону или рассмотрение письма?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[purpose].text"
+    ]
+  },
+  {
+    "id": "3d1b2a94a8cc3342",
+    "ru": "В учебной выписке прямо указано: федеральный государственный экологический надзор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[status].answer"
+    ]
+  },
+  {
+    "id": "c9db0d3441f7accb",
+    "ru": "Федеральный уровень задан подтверждающим документом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[status].fact"
+    ]
+  },
+  {
+    "id": "1be1ec1381081b70",
+    "ru": "Есть ли сведения об уровне надзора?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].questions[status].text"
+    ]
+  },
+  {
+    "id": "cef951ad48327dda",
+    "ru": "Вымышленный учебный отдел зарегистрировал обращение. По приложенной служебной справке объект расположен в городе Москве и относится к федеральному экологическому надзору. Вы готовите передачу компетентному органу и уведомление. Самостоятельно не назначаете проверку и не устанавливаете виновность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].role.text"
+    ]
+  },
+  {
+    "id": "b5d6a4ec280f9aa4",
+    "ru": "Приёмная органа власти Москвы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].role.title"
+    ]
+  },
+  {
+    "id": "c56ba2d460c86a6f",
+    "ru": "Подготовить направление в управление Росприроднадзора по г. Москве и Калужской области.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].routes[moscow].text"
+    ]
+  },
+  {
+    "id": "74dc0a27750b246a",
+    "ru": "Направить в научно-технический совет, поскольку его телефон находится на официальном сайте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].routes[nts].text"
+    ]
+  },
+  {
+    "id": "873621171ae2ed5f",
+    "ru": "Направить в управление по Московской и Смоленской областям только из-за сходства названия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].routes[oblast].text"
+    ]
+  },
+  {
+    "id": "9df9e16e89986dfc",
+    "ru": "Москва — это не Московская область",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[authority-contact].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[authority-contact].title"
+    ]
+  },
+  {
+    "id": "0af91f9afc4f1a4e",
+    "ru": "Территориальная компетенция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].topic",
+      "cases:CASE_TEMPLATES[authority-contact].tag"
+    ]
+  },
+  {
+    "id": "7f8a2c2369410585",
+    "ru": "Официальность источника необходима для доверия к реквизитам, но не доказывает применимость конкретного контакта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].trap.explain"
+    ]
+  },
+  {
+    "id": "702fabe3a6f9c048",
+    "ru": "Выбрать самый короткий номер телефона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "85e4584be3cb46ba",
+    "ru": "Передать жалобу любому сотруднику ведомства без разграничения полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].trap.options[none].text"
+    ]
+  },
+  {
+    "id": "a702a99661dd7e61",
+    "ru": "Проверить функции подразделения и пределы территории, а не только официальный домен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].trap.options[scope].text"
+    ]
+  },
+  {
+    "id": "b36f93ccb46e2c36",
+    "ru": "Помощник: «НТС и территориальное управление находятся на одном сайте, значит это взаимозаменяемые адресаты».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[authority-contact].trap.text"
+    ]
+  },
+  {
+    "id": "05201f444d190fb2",
+    "ru": "Сопоставить дату вынесения и состояние исходящей отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[a0].title"
+    ]
+  },
+  {
+    "id": "28a8633221e5e3bc",
+    "ru": "Установить адресатов копии по применимой норме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[a1].title"
+    ]
+  },
+  {
+    "id": "8f25990cf454c76e",
+    "ru": "Подготовить передачу на направление копии, не переподписывая судебные акты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f063f63daf08b2bc",
+    "ru": "Защитить данные участников и использовать их надлежащие адреса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[a3].title"
+    ]
+  },
+  {
+    "id": "eceba9398f5ac98d",
+    "ru": "Проверить регистрационное подтверждение направления именно П-73.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[a4].title"
+    ]
+  },
+  {
+    "id": "af159cc860000416",
+    "ru": "Начать новые десять дней от звонка гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[b0].title"
+    ]
+  },
+  {
+    "id": "d6473b0214f354af",
+    "ru": "Разослать материалы всем посторонним кредиторам должника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].actions[b1].title",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "8530eb6c84718381",
+    "ru": "Все люди, документы и события этого дела вымышлены. Постановление по конкретному ходатайству стороны уже вынесено {{decided}}. Задание касается направления копии по части 7 статьи 64.1, не повторного рассмотрения и не поступления денег. Вымышленные материалы фиксируют отсутствие направления; специальных обстоятельств, меняющих этот порядок, нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].brief"
+    ]
+  },
+  {
+    "id": "78db2e6ed0af35cf",
+    "ru": "Часть 7 статьи 64.1 и статьи 15–16 закона № 229-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].calendar.context"
+    ]
+  },
+  {
+    "id": "5551f29639305bf1",
+    "ru": "Вынесено постановление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].calendar.events[decided].label"
+    ]
+  },
+  {
+    "id": "559b80f7111dfd6d",
+    "ru": "Часть 7 статьи 64.1 и статьи 15–16 закона № 229-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].calendar.source"
+    ]
+  },
+  {
+    "id": "d71368126f9d13f2",
+    "ru": "Крайняя дата направления копии вынесенного постановления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].calendar.title"
+    ]
+  },
+  {
+    "id": "577ae919ed875d1e",
+    "ru": "Ходатайство уже разрешено, поэтому нужны иная контрольная дата и другое действие. Срок принятия решения нельзя использовать как новый срок его отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].coach.plan",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].contrast.difference"
+    ]
+  },
+  {
+    "id": "4c7ff403bf11f7ba",
+    "ru": "Сотрудник предложил отсчитать новый десятидневный срок от звонка Ильи. Нормативное основание для этого не указано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d0].text"
+    ]
+  },
+  {
+    "id": "85900f59e11fbbe6",
+    "ru": "Ответ канцелярии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d0].title"
+    ]
+  },
+  {
+    "id": "59e2c0cec5166106",
+    "ru": "Правомочным приставом {{decided}} вынесено постановление по ходатайству Х-73. Производство и участники установлены. Нового ходатайства не подавалось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d1].text"
+    ]
+  },
+  {
+    "id": "010b5702246a8501",
+    "ru": "Постановление П-73",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d1].title"
+    ]
+  },
+  {
+    "id": "56505397e1c97b15",
+    "ru": "Запись П-73 помечена «подписано, не направлено». Запись о направлении отсутствует для предусмотренных получателей. Строка о доставке другого документа П-72 не относится к этому постановлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d2].text"
+    ]
+  },
+  {
+    "id": "c53c1bea58c30b00",
+    "ru": "Исходящий журнал",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ea58b50c0defa694",
+    "ru": "Событие {{observed}}. Письмо отправлено {{sent}}, поступило в указанную приёмную или подразделение {{received}}, зарегистрировано {{registered}}. Постановление вынесено {{decided}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].documents[dates].text"
+    ]
+  },
+  {
+    "id": "163769bbdac867e3",
+    "ru": "Решение уже принято; проверяется отдельное действие по направлению его копии. Ходатайство уже разрешено, поэтому нужны иная контрольная дата и другое действие. Срок принятия решения нельзя использовать как новый срок его отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.explain"
+    ]
+  },
+  {
+    "id": "593e72106bfe5499",
+    "ru": "Решение уже принято; проверяется отдельное действие по направлению его копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a87e213fe01bd945",
+    "ru": "После каждого звонка срок рассмотрения исходного ходатайства начинается заново.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "95707554704cffba",
+    "ru": "Подпись постановления автоматически подтверждает отправку всем получателям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-copy-decision.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "7409c8151f9f70cc",
+    "ru": "Канцелярия направила копию только заявителю, хотя перечень предусмотренных получателей включает также других установленных участников.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].followup.intro"
+    ]
+  },
+  {
+    "id": "bdcf68d9cff079f2",
+    "ru": "Проверить выполнение направления всем предусмотренным получателям, не раскрывая данные посторонним.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].followup.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].followup.explain"
+    ]
+  },
+  {
+    "id": "5f67568066d0ede0",
+    "ru": "Закрыть контроль по первой отправке независимо от адресатов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "99f9f11f6f3ed7bd",
+    "ru": "Опубликовать постановление в открытом доступе вместо надлежащего направления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "67d2bd76701c88f7",
+    "ru": "Повторно рассматривать то же ходатайство десять дней вместо отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "264fb331ab9d6be4",
+    "ru": "Считать подписание доказательством почтовой доставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "fc9cf8e5b711e180",
+    "ru": "Найдите нормативное основание следующего действия: Разделить вынесение постановления и направление копии не позднее следующего дня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7b2ba9ada9c22a30",
+    "ru": "Мне сказали, что ходатайство уже рассмотрено. В журнале есть постановление, но копию никому не отправили. Предлагают ждать ещё десять дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].opening"
+    ]
+  },
+  {
+    "id": "97154df39c317ed3",
+    "ru": "Контроль направления копии принятого постановления по части 7 статьи 64.1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].procedures[0].text"
+    ]
+  },
+  {
+    "id": "37670793d67d12d4",
+    "ru": "Да, П-73 вынесено {{decided}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q0].answer",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "31c51b6cbe6cdc24",
+    "ru": "Есть ли само постановление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5ad72e4a72aa0aba",
+    "ru": "Копия не направлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q1].answer",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a18396f85b68772a",
+    "ru": "В чём именно проблема?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q1].text"
+    ]
+  },
+  {
+    "id": "17d06e0595c36858",
+    "ru": "Подписание без отметки о направлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q2].answer",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "dc93555194e4eda7",
+    "ru": "Что подтверждает исходящий журнал?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q2].text"
+    ]
+  },
+  {
+    "id": "86c8d99d4c32ad68",
+    "ru": "Пока прошу выполнить именно направление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q3].answer",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "1c7b5cdb63832989",
+    "ru": "Оспариваете содержание постановления?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].questions[q3].text"
+    ]
+  },
+  {
+    "id": "7de5f3b0a4935919",
+    "ru": "Специалист контроля исходящих документов подразделения ФССП",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].role.title"
+    ]
+  },
+  {
+    "id": "68d6fce6a9c30344",
+    "ru": "Подразделение ФССП, обеспечивающее направление постановления правомочного пристава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].routes[0].text"
+    ]
+  },
+  {
+    "id": "601d8ff12e4ee019",
+    "ru": "Разделить вынесение постановления и направление копии не позднее следующего дня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].contrast.decision"
+    ]
+  },
+  {
+    "id": "15b8a2fd7cc74a1e",
+    "ru": "Постановление вынесено, копию не направили",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[bailiff-copy-decision].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[bailiff-copy-decision].title"
+    ]
+  },
+  {
+    "id": "9cd789d6a3e1fa50",
+    "ru": "Разделить вынесение постановления и направление копии не позднее следующего дня. Ходатайство уже разрешено, поэтому нужны иная контрольная дата и другое действие. Срок принятия решения нельзя использовать как новый срок его отправки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].trap.explain"
+    ]
+  },
+  {
+    "id": "641e832779f6ba51",
+    "ru": "Наличие подписи под постановлением достаточно для вывода, что его копия уже направлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].trap.text"
+    ]
+  },
+  {
+    "id": "4a6bb8b5c66b6d85",
+    "ru": "Проверить статус заявителя, подпись и конкретную просьбу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[a0].title"
+    ]
+  },
+  {
+    "id": "9b48fbded92590f2",
+    "ru": "Установить получение правомочным должностным лицом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[a1].title"
+    ]
+  },
+  {
+    "id": "888c7288f94d2686",
+    "ru": "Подготовить вопрос о рассмотрении ходатайства с оформлением постановления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c9c65bcacc1a70c9",
+    "ru": "Не гарантировать взыскание или применение меры без оценки оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7075b0fc2d8b00ac",
+    "ru": "Отдельно проконтролировать направление копии постановления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[a4].title"
+    ]
+  },
+  {
+    "id": "e456707431ef08e0",
+    "ru": "Отложить специальную процедуру на общий тридцатидневный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[b0].title"
+    ]
+  },
+  {
+    "id": "287ff15c810c180c",
+    "ru": "Немедленно списать средства от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].actions[b1].title",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "58e05f40d708e028",
+    "ru": "Все люди, документы и события этого дела вымышлены. Мария – взыскатель. Подписанное ходатайство содержит конкретную просьбу о совершении исполнительного действия в производстве ИП-51. Оно передано правомочному приставу позже поступления в подразделение. Специальный сокращённый срок и обстоятельства приостановления для этого ходатайства отсутствуют. Нужность и законность самой меры оценивает пристав, приёмная не обещает её обязательного применения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].brief"
+    ]
+  },
+  {
+    "id": "666dbce264e84b1f",
+    "ru": "Часть 5 статьи 64.1 и статья 15 закона № 229-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].calendar.context"
+    ]
+  },
+  {
+    "id": "d60ea3420e5e8def",
+    "ru": "Получено правомочным приставом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].calendar.events[officialReceived].label"
+    ]
+  },
+  {
+    "id": "81a49de43632f0d4",
+    "ru": "Часть 5 статьи 64.1 и статья 15 закона № 229-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].calendar.source"
+    ]
+  },
+  {
+    "id": "e1c4fe7cdb7023f4",
+    "ru": "Крайняя дата рассмотрения ходатайства правомочным приставом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].calendar.title"
+    ]
+  },
+  {
+    "id": "3df14f9377bb1e55",
+    "ru": "В базовом деле была жалоба в порядке подчинённости. Здесь конкретное ходатайство стороны: меняются процедура, результат и исходное событие срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].coach.plan",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].contrast.difference"
+    ]
+  },
+  {
+    "id": "106005178bd70da7",
+    "ru": "При отсутствии специального срока конкретное ходатайство о совершении исполнительных действий рассматривает правомочное должностное лицо в десятидневный срок от получения им ходатайства. Итог оформляется постановлением. Его копия направляется предусмотренным участникам не позднее следующего дня после вынесения. Обычный информационный запрос без конкретного исполнительного действия относится к иному порядку. Дни исчисляются с учётом статьи 15 закона № 229-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].coach.research",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].knowledge.explain",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].coach.research"
+    ]
+  },
+  {
+    "id": "c8e88caef804a879",
+    "ru": "В письме о тридцати днях не оценено содержание Х-51. Постановление об удовлетворении или отказе пока не вынесено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6d3f9fed547ad1f8",
+    "ru": "Шаблонное уведомление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3114e2213906eff0",
+    "ru": "Указаны производство ИП-51, известный взыскателю конкретный счёт и просьба проверить сведения для совершения исполнительного действия. Мария подписала ходатайство; это не общий запрос о ходе работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d1].text"
+    ]
+  },
+  {
+    "id": "8b74226ea0c8bc28",
+    "ru": "Ходатайство Х-51",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4969016991ec32c5",
+    "ru": "Х-51 поступило в подразделение {{received}}, зарегистрировано {{registered}}, передано правомочному приставу {{officialReceived}}. Факт передачи подтверждён журналом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d2].text"
+    ]
+  },
+  {
+    "id": "b93a36aa533b7aec",
+    "ru": "Маршрут входящего документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a6659b052a7a9071",
+    "ru": "Событие {{observed}}. Письмо отправлено {{sent}}, поступило в указанную приёмную или подразделение {{received}}, зарегистрировано {{registered}}. Правомочный пристав получил ходатайство {{officialReceived}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].documents[dates].text"
+    ]
+  },
+  {
+    "id": "a9aaa171b5e86aac",
+    "ru": "Это конкретное ходатайство об исполнительном действии; срок связывается с его получением правомочным приставом. В базовом деле была жалоба в порядке подчинённости. Здесь конкретное ходатайство стороны: меняются процедура, результат и исходное событие срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.explain"
+    ]
+  },
+  {
+    "id": "a846106a3afc224c",
+    "ru": "Это конкретное ходатайство об исполнительном действии; срок связывается с его получением правомочным приставом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "ab6ead2c06d4e626",
+    "ru": "Любое письмо взыскателя рассматривается только как общее обращение за тридцать дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "65752e17c0d78355",
+    "ru": "Передача ходатайства автоматически означает его удовлетворение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-bailiff-specific-petition.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "ae2921e3f678442c",
+    "ru": "Поступило постановление по Х-52 другого взыскателя; исполнитель считает это подтверждением рассмотрения Х-51.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].followup.intro"
+    ]
+  },
+  {
+    "id": "d7baf367cbcb6645",
+    "ru": "Проверить заявителя и номер ходатайства; постановление по Х-52 не подтверждает разрешение Х-51.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].followup.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].followup.explain"
+    ]
+  },
+  {
+    "id": "85254bef18a56469",
+    "ru": "Закрыть контроль по любому постановлению того же пристава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "112d4f1e6281196c",
+    "ru": "Объявить ходатайство удовлетворённым без относящегося решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a1744af91a0c67d2",
+    "ru": "Заменить постановление уведомлением по общей переписке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "8a2a249d06694227",
+    "ru": "Считать десять дней сроком гарантированного взыскания всей суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "420bedd35471c99c",
+    "ru": "Найдите нормативное основание следующего действия: Применить порядок конкретного ходатайства по статье 64.1, не обещая его удовлетворения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7c3fbf5f536b4938",
+    "ru": "Я попросила пристава проверить конкретный счёт должника в моём производстве. Мне прислали обычное уведомление о тридцати днях. Разве это просто просьба сообщить новости?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].opening"
+    ]
+  },
+  {
+    "id": "fff2b1b7d39e8a85",
+    "ru": "Рассмотрение конкретного ходатайства стороны исполнительного производства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].procedures[0].text"
+    ]
+  },
+  {
+    "id": "05781ff5faff5b3d",
+    "ru": "Я взыскатель по ИП-51.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q0].answer",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "2199f2282c2c98b1",
+    "ru": "Каков ваш статус в производстве?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q0].text"
+    ]
+  },
+  {
+    "id": "abd7c4a6950fa8e7",
+    "ru": "Проверить конкретные сведения для исполнительного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q1].answer",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "df19235a5bc92363",
+    "ru": "О каком действии просите?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q1].text"
+    ]
+  },
+  {
+    "id": "a3c64fdd8b3e786d",
+    "ru": "По журналу – правомочный пристав {{officialReceived}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q2].answer",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "cdd92622ed472de7",
+    "ru": "Кто и когда получил ходатайство?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q2].text"
+    ]
+  },
+  {
+    "id": "83dc488aa442defa",
+    "ru": "Нет, только уведомление со стандартной формулировкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q3].answer",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "f6b7923df913ca33",
+    "ru": "Есть ли постановление по результату?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].questions[q3].text"
+    ]
+  },
+  {
+    "id": "c4450a4594482e47",
+    "ru": "Специалист подразделения ФССП по сопровождению входящих документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].role.title"
+    ]
+  },
+  {
+    "id": "19bd591228f4d5e0",
+    "ru": "Правомочное должностное лицо ФССП, получившее ходатайство по ИП-51.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].routes[0].text"
+    ]
+  },
+  {
+    "id": "4281d3347c0d277a",
+    "ru": "Применить порядок конкретного ходатайства по статье 64.1, не обещая его удовлетворения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].contrast.decision"
+    ]
+  },
+  {
+    "id": "ed8c399e84d29582",
+    "ru": "Ходатайство — не справочный вопрос",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[bailiff-specific-petition].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[bailiff-specific-petition].title"
+    ]
+  },
+  {
+    "id": "ce876881cbc5a477",
+    "ru": "Применить порядок конкретного ходатайства по статье 64.1, не обещая его удовлетворения. В базовом деле была жалоба в порядке подчинённости. Здесь конкретное ходатайство стороны: меняются процедура, результат и исходное событие срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].trap.explain"
+    ]
+  },
+  {
+    "id": "438f0266b897a535",
+    "ru": "Конкретность исполнительного действия имеет значение для разграничения ходатайства и общего запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-specific-petition].trap.text"
+    ]
+  },
+  {
+    "id": "3cb8815359eb16f7",
+    "ru": "Установить вид жалобы и допустимость по условиям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[a0].title"
+    ]
+  },
+  {
+    "id": "bcd8e6dd1540a76d",
+    "ru": "Проверить поступление правомочному лицу и наличие судебного принятия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[a1].title"
+    ]
+  },
+  {
+    "id": "613c84c62e76a672",
+    "ru": "Рассчитать срок с исключением нерабочих дней и организовать контроль",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b2f899965c61565b",
+    "ru": "Разъяснить разницу между решением по жалобе и получением взысканных средств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[a3].title"
+    ]
+  },
+  {
+    "id": "14a07a718c755a52",
+    "ru": "Отдельно отслеживать новые процессуальные обстоятельства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[a4].title"
+    ]
+  },
+  {
+    "id": "58c3952762c91003",
+    "ru": "Обещать гарантированное взыскание долга к окончанию срока жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[b0].title",
+      "cases:CASE_TEMPLATES[bailiff-subordination].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "896006719fed6bb8",
+    "ru": "Приостановить жалобу по одному намерению обратиться в суд",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].actions[b1].title"
+    ]
+  },
+  {
+    "id": "2f5a4cb4f229b25e",
+    "ru": "Поступило правомочному лицу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].calendar.events[competent].label"
+    ]
+  },
+  {
+    "id": "714a78bc27fe684f",
+    "ru": "10 календарных дней",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].calendar.ruleOptions[calendar10].text",
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.ruleOptions[calendar10].text"
+    ]
+  },
+  {
+    "id": "9f323fa05c7198bc",
+    "ru": "Не срок взыскания и не срок ответа на любое письмо в ФССП.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].calendar.scope"
+    ]
+  },
+  {
+    "id": "21349adeed25dc8b",
+    "ru": "229-ФЗ, статьи 15, 16 и 126. В исходном эпизоде отсутствует приостановление; оно появляется только в продолжении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].calendar.source"
+    ]
+  },
+  {
+    "id": "170ab0554c96711a",
+    "ru": "Крайний день рассмотрения жалобы в порядке подчинённости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].calendar.title"
+    ]
+  },
+  {
+    "id": "6959d5c603e37380",
+    "ru": "Жалоба в порядке подчинённости поступила правомочному должностному лицу {{competent}}. В исходном эпизоде допустима к рассмотрению, не приостановлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6e62199cadd4e761",
+    "ru": "Жалоба и отметка поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].documents[d0].title"
+    ]
+  },
+  {
+    "id": "b55326bbf8e202de",
+    "ru": "На момент начала дела есть только намерение обратиться в суд. Принятого судом заявления ещё нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].documents[d1].text"
+    ]
+  },
+  {
+    "id": "4b5c9418d503ed79",
+    "ru": "Сведения о судебном обращении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].documents[d1].title"
+    ]
+  },
+  {
+    "id": "898fb5a653a84de9",
+    "ru": "Нужно применить специальный срок жалобы с правилами исчисления по закону об исполнительном производстве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].factTask.explain",
+      "cases:CASE_TEMPLATES[bailiff-subordination].outcomes.good"
+    ]
+  },
+  {
+    "id": "9037cbdf55b49c74",
+    "ru": "Любая жалоба на пристава всегда рассматривается только 30 календарных дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "e3b22519d8090941",
+    "ru": "Намерение подать в суд само приостанавливает рассмотрение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "98702a375001c071",
+    "ru": "Поступило определение суда о принятии к рассмотрению заявления об оспаривании того же бездействия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].followup.intro"
+    ]
+  },
+  {
+    "id": "9705c012c3666d28",
+    "ru": "Учесть предусмотренное статьёй 126 приостановление рассмотрения жалобы; не путать его с прекращением производства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].followup.options[0].text",
+      "cases:CASE_TEMPLATES[bailiff-subordination].followup.explain"
+    ]
+  },
+  {
+    "id": "bc5031a7be5e7196",
+    "ru": "Продолжать без учёта определения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "e3cbd5b94a8212d9",
+    "ru": "Автоматически прекратить взыскание долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "1fe3ed623e9993d5",
+    "ru": "Статьи 15 и 126 закона № 229-ФЗ дают десятидневный срок рассмотрения допустимой жалобы правомочным должностным лицом с исключением нерабочих дней. Это не срок взыскания долга. Приостановление рассмотрения связано с принятием судом соответствующего заявления, а не с намерением заявителя обратиться в суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].knowledge.explain"
+    ]
+  },
+  {
+    "id": "c53b443f72818d26",
+    "ru": "Найдите специальный срок рассмотрения жалобы в порядке подчинённости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7f7572626eddcf4a",
+    "ru": "Жалуюсь на бездействие пристава. В приёмной сказали ждать стандартные тридцать дней, но в законе я видел десять. Ещё подумываю обратиться в суд – это изменит дело?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].opening"
+    ]
+  },
+  {
+    "id": "25a1b6c75a0d977a",
+    "ru": "Жалоба в порядке подчинённости по закону № 229-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].procedures[0].text"
+    ]
+  },
+  {
+    "id": "7701cfa4e17e50d0",
+    "ru": "Только общий порядок № 59-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].procedures[1].text"
+    ]
+  },
+  {
+    "id": "b2e0d9829e7639a3",
+    "ru": "Автоматическое прекращение исполнительного производства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].procedures[2].text"
+    ]
+  },
+  {
+    "id": "90e3f184f252bb4a",
+    "ru": "Жалоба на бездействие в конкретном исполнительном производстве, поданная в порядке подчинённости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "be27aea8cd213376",
+    "ru": "Применяется специальная процедура.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q0].fact",
+      "cases:CASE_TEMPLATES[bailiff-subordination].coach.talk"
+    ]
+  },
+  {
+    "id": "2f978144030aae8a",
+    "ru": "Как оформлено обращение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q0].text"
+    ]
+  },
+  {
+    "id": "8469552fd2f380f8",
+    "ru": "Поступление подтверждено {{competent}}; позднее выполнена техническая регистрация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "d45117dc3844cc79",
+    "ru": "Исходное событие прямо указано законом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "8292b3fede788d15",
+    "ru": "Когда получил правомочный руководитель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q1].text"
+    ]
+  },
+  {
+    "id": "f6ae1b6eba780b06",
+    "ru": "В исходном эпизоде нет принятого судом заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "4a50c2744d27968a",
+    "ru": "Нет заданного основания приостановления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "828fe4f374c28940",
+    "ru": "Есть ли судебное производство по этому оспариванию?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q2].text"
+    ]
+  },
+  {
+    "id": "44f13aa63aa3406c",
+    "ru": "Рассмотреть бездействие; фактическое получение долга не гарантируется этим сроком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a679204645dd6eab",
+    "ru": "Срок рассмотрения и результат взыскания различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[bailiff-subordination].questions[q3].fact"
+    ]
+  }
+]

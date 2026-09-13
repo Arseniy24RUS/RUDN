@@ -1,0 +1,1080 @@
+[
+  {
+    "id": "dfe71fb11df4e72e",
+    "ru": "Доступность услуги и необходимая помощь",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].title",
+      "evidence-catalog:EVIDENCE_TASKS.access-service.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-access-service].title"
+    ]
+  },
+  {
+    "id": "b33f00d41be78ca4",
+    "ru": "При личной заинтересованности, которая приводит или может привести к конфликту интересов, гражданский служащий уведомляет представителя нанимателя в установленном порядке, как только ему стало об этом известно. Самоуверенность в собственной честности не заменяет уведомление. Рассмотрение обращения не прекращается: организуется надлежащее распределение работы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-conflict-notice].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "f8a4d92527ca2201",
+    "ru": "79-ФЗ, статья 19",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-conflict-notice].publisher"
+    ]
+  },
+  {
+    "id": "b2d83263804c4eb6",
+    "ru": "Личная заинтересованность гражданского служащего",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-conflict-notice].title",
+      "evidence-catalog:EVIDENCE_TASKS.conflict-notice.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-conflict-notice].title"
+    ]
+  },
+  {
+    "id": "5c97e959e91803f3",
+    "ru": "Для обращения, в котором обжалуется судебное решение, часть 2 статьи 11 предусматривает возврат с разъяснением порядка обжалования в течение семи дней со дня регистрации. Приёмная органа исполнительной власти не отменяет судебные постановления. Этот срок не является процессуальным сроком подачи апелляции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-court-return].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "0ae1cd5376fd9443",
+    "ru": "59-ФЗ, статья 11, часть 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-court-return].publisher"
+    ]
+  },
+  {
+    "id": "743798f449863030",
+    "ru": "Жалоба на судебное решение в обычном обращении",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-court-return].title",
+      "evidence-catalog:EVIDENCE_TASKS.court-return.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-court-return].title"
+    ]
+  },
+  {
+    "id": "35f051c0837b53c0",
+    "ru": "Реестр лицензий и реестр государственной аккредитации решают разные задачи. Отсутствие записи об аккредитации само по себе не доказывает отсутствие лицензии. В упражнении проверяется организация по её идентификатору и лицензия на обозначенный вид деятельности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-edu-register].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "e0368976d7fd5eb9",
+    "ru": "Официальный реестр и учебное пояснение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-edu-register].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-edu-register].originalKind"
+    ]
+  },
+  {
+    "id": "226927230bd35c1a",
+    "ru": "Рособрнадзор: реестр лицензий; авторское пояснение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-edu-register].publisher"
+    ]
+  },
+  {
+    "id": "3ea8e3bf50c78722",
+    "ru": "Реестр лицензий на образовательную деятельность",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-edu-register].title",
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-edu-register].title"
+    ]
+  },
+  {
+    "id": "8cf4d561229de1ed",
+    "ru": "Техническая ошибка допущена при внесении записи органом регистрации прав: исходный документ содержит верные сведения. По условиям упражнения исправление не меняет принадлежность права и не нарушает интересы третьих лиц. Применяется срок три рабочих дня; ошибка исходного документа требует иного анализа.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-egrn-technical].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "022a4b6f1161520b",
+    "ru": "218-ФЗ, статья 61",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-egrn-technical].publisher"
+    ]
+  },
+  {
+    "id": "462dd6d1379e4b69",
+    "ru": "ЕГРН: техническая или реестровая ошибка?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-egrn-technical].title",
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-egrn-technical].title"
+    ]
+  },
+  {
+    "id": "6f1579e4e4bbadb5",
+    "ru": "С 30.03.2025 общий порядок 59-ФЗ предусматривает электронное обращение через соответствующие системы или официальный сайт с идентификацией и/или аутентификацией. Произвольный email на странице контактов нельзя автоматически считать таким каналом. В учебном деле надлежащее обращение уже поступило через подтверждённый канал.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-electronic-channel].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "b47941cdeab06e78",
+    "ru": "ФНС России: разъяснение изменения 59-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-electronic-channel].publisher"
+    ]
+  },
+  {
+    "id": "fa806852198db157",
+    "ru": "Электронное обращение: надлежащий канал",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-electronic-channel].title",
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-electronic-channel].title"
+    ]
+  },
+  {
+    "id": "8d52149aec6cf9c6",
+    "ru": "Для обычного объекта без специального режима запор эвакуационной двери должен позволять открыть её изнутри без ключа. В кейсе прямо задано отсутствие специального режима. Наличие ключа на другом этаже у охранника не тождественно свободному открыванию изнутри.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-fire-egress].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "b37828823424b067",
+    "ru": "МЧС России: требования к эвакуационным выходам",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-fire-egress].publisher"
+    ]
+  },
+  {
+    "id": "ee4fbb875025463b",
+    "ru": "Эвакуационный выход и ключ у охраны",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-fire-egress].title",
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-fire-egress].title"
+    ]
+  },
+  {
+    "id": "e44c17e7ea744590",
+    "ru": "Срок годности и условия хранения проверяются по маркировке конкретного товара. Документ на свежую партию не подтверждает состояние другой партии на прилавке. В учебной ситуации речь о продукции с истёкшим сроком; требуется надлежащее рассмотрение, а не самостоятельное назначение санкции приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-food-label].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "58aa2ed9ef3bd535",
+    "ru": "Роспотребнадзор: потребительская информация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-food-label].publisher"
+    ]
+  },
+  {
+    "id": "6ccaba0340748e4b",
+    "ru": "Срок годности на маркировке",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-food-label].title",
+      "evidence-catalog:EVIDENCE_TASKS.food-label.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-food-label].title"
+    ]
+  },
+  {
+    "id": "3eacaac60b725a10",
+    "ru": "При запахе газа аварийная служба вызывается по 104 либо через единый номер 112. Нельзя предлагать проверять утечку огнём. В игре сообщение моделируется: реального звонка нет. Бумажный срок обращения не заменяет оперативного сообщения об опасности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "195bdde9e5da391b",
+    "ru": "АО «МОСГАЗ»: действия при аварийной ситуации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].publisher"
+    ]
+  },
+  {
+    "id": "4fc3f2756221fa81",
+    "ru": "Сообщение об аварийной ситуации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].title",
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-gas-number].title"
+    ]
+  },
+  {
+    "id": "3be5f27fac909c96",
+    "ru": "В учебной выписке объектом охраны названы фасад и историческая лестница здания. Предъявленный подрядчиком документ касается только кровли. Эти сведения требуют сопоставить предмет охраны и разрешённые работы, не приписывая документу более широкого действия.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "66ef934afa41ef08",
+    "ru": "Что именно охраняется?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].title",
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-heritage-object].title"
+    ]
+  },
+  {
+    "id": "7e2314fcfbff303e",
+    "ru": "Положение для проверки",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].fragments[relevant].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].fragments[relevant].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "8002bcd8915989ce",
+    "ru": "Статья 357 описывает полномочия государственного инспектора труда. Денежный спор и контрольное реагирование не превращают обычную приёмную в суд. Сопоставляются начисления, фактическая выплата и предмет жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "1a2858c215a14618",
+    "ru": "Граница применения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].fragments[scope].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].fragments[scope].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].fragments[scope].label"
+    ]
+  },
+  {
+    "id": "0df74b762dedc75a",
+    "ru": "Эта карточка не подтверждает факты конкретного обращения и не подменяет установление предметной и территориальной компетенции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].fragments[scope].text"
+    ]
+  },
+  {
+    "id": "8394688dca4ad47e",
+    "ru": "Норма / официальное разъяснение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].kind"
+    ]
+  },
+  {
+    "id": "c9209100a10378bc",
+    "ru": "Трудовой кодекс РФ, статья 357",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].publisher"
+    ]
+  },
+  {
+    "id": "dd6d6b6d1d7fadec",
+    "ru": "Авторское учебное изложение. Оригинал доступен по ссылке; не является автоматической копией сайта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].representation"
+    ]
+  },
+  {
+    "id": "5a39dee85c9ec6f0",
+    "ru": "Применимость определяется обстоятельствами дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-gas-number].scope"
+    ]
+  },
+  {
+    "id": "b65afe762033f672",
+    "ru": "Полномочия государственного инспектора труда",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-labour].title",
+      "evidence-catalog:EVIDENCE_TASKS.labour.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-labour].title"
+    ]
+  },
+  {
+    "id": "0bd7d0531926dc8d",
+    "ru": "В упражнении сведения доступны межведомственно; требование бумажной справки не предусмотрено правилами услуги и не относится к исключениям о личном представлении. Документы уже приняты, отказа в приёме и спора об исправлении опечатки нет. Нельзя автоматически применять сокращённый срок для иных предметов жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-mfc-extra].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "7235df54a0c71187",
+    "ru": "210-ФЗ: требования к услугам и рассмотрению жалоб",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-mfc-extra].publisher"
+    ]
+  },
+  {
+    "id": "80b0a4a9a99e4536",
+    "ru": "Дополнительная справка и межведомственный обмен",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-mfc-extra].title",
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-mfc-extra].title"
+    ]
+  },
+  {
+    "id": "9d5d8e6d97b29a31",
+    "ru": "Для предусмотренной законом жалобы на отказ в исправлении опечаток и ошибок в выданных документах либо нарушение установленного срока исправления применяется пять рабочих дней со дня регистрации жалобы. Это срок рассмотрения жалобы, а не универсальный срок любого технического исправления в любом реестре.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-mfc-typo].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "0009ba0c4ba06c8b",
+    "ru": "Отказ исправить опечатку в выданном документе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-mfc-typo].title",
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-mfc-typo].title"
+    ]
+  },
+  {
+    "id": "4957e2e4d3ed9282",
+    "ru": "При вопросах организации помощи по ОМС гражданин может обратиться в свою страховую медицинскую организацию. Наличие платного предложения само по себе не доказывает отсутствие права на бесплатную помощь. Приёмная не определяет клиническую срочность и лечение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "074258fce28191a0",
+    "ru": "Федеральный закон от 29.11.2010 № 326-ФЗ, статья 16",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].publisher"
+    ]
+  },
+  {
+    "id": "42561f27e537b497",
+    "ru": "Защита прав застрахованного по ОМС",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-oms].title",
+      "evidence-catalog:EVIDENCE_TASKS.oms.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-oms].title"
+    ]
+  },
+  {
+    "id": "87367300ad32b2db",
+    "ru": "Для рассматриваемой выплаты пособия СФР отсчитывает десять рабочих дней от получения необходимых сведений и документов. Дата закрытия больничного и дата регистрации жалобы сами по себе это событие не заменяют. В упражнении полные сведения получены позже закрытия больничного.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-sickpay-start].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "a1cb03dfce2c07bc",
+    "ru": "Отделение СФР по Москве и Московской области",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-sickpay-start].publisher"
+    ]
+  },
+  {
+    "id": "3753c9cecf23b5c5",
+    "ru": "Когда начинается срок выплаты СФР?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-sickpay-start].title",
+      "evidence-catalog:EVIDENCE_TASKS.sickpay-start.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-sickpay-start].title"
+    ]
+  },
+  {
+    "id": "76ae1996e96d4e2b",
+    "ru": "Нельзя отождествлять участки только по похожему адресу. В деле разрешительный документ относится к участку Б, а фотографии – к участку А. Это несоответствие требует уточнения; само по себе оно ещё не устанавливает незаконность работ.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "a63a3aaad85045f9",
+    "ru": "Учебная карточка, не официальный документ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].kind"
+    ]
+  },
+  {
+    "id": "9ddd46e971f66a4a",
+    "ru": "Материалы вымышленного учебного дела · RUDN Reception",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].publisher"
+    ]
+  },
+  {
+    "id": "9358698897e9f2b3",
+    "ru": "Авторский вымышленный материал дела. Числа и обстоятельства не заимствованы из правового акта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].representation"
+    ]
+  },
+  {
+    "id": "7d988d342acfa187",
+    "ru": "Только данное учебное дело",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-heritage-object].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[e5-access-service].scope"
+    ]
+  },
+  {
+    "id": "8c0344c48052c38f",
+    "ru": "Сопоставление объекта и документа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e5-tree-object].title",
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e5-tree-object].title"
+    ]
+  },
+  {
+    "id": "f8a46e15c751fa39",
+    "ru": "Общее и специальное",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].fragments[general].label"
+    ]
+  },
+  {
+    "id": "fb4b54267ee41f8e",
+    "ru": "Обращение рассматривается в пределах компетенции; наличие специального порядка требует отдельной проверки. Общие сроки письменного ответа не равны сроку ремонта, выплаты пособия или исправления реестра.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].fragments[general].text"
+    ]
+  },
+  {
+    "id": "df79928bd6960557",
+    "ru": "Общие процедурные положения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:e59-procedure].originalKind"
+    ]
+  },
+  {
+    "id": "dd39ea9c444ee6f0",
+    "ru": "Авторское учебное изложение закона",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].representation"
+    ]
+  },
+  {
+    "id": "60295bde23530861",
+    "ru": "Не заменяет специальную норму",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:e59-procedure].scope"
+    ]
+  },
+  {
+    "id": "2cead098f5da3fcd",
+    "ru": "Порядок работы с обращением",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e59-procedure].title",
+      "source-index:SOURCE_INDEX.entries[evidence:e59-procedure].title"
+    ]
+  },
+  {
+    "id": "9a0d6191db403ce1",
+    "ru": "Для рекламы по сетям электросвязи необходимо предварительное согласие абонента или адресата. Наличие такого согласия доказывает рекламораспространитель. После требования адресата распространение в его адрес должно быть прекращено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "c817d5ebba5b8173",
+    "ru": "Кто подтверждает согласие на рекламу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-ads-consent.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-ads-consent].title"
+    ]
+  },
+  {
+    "id": "2266dbe9884b1601",
+    "ru": "Часть 1 статьи 11 закона № 59-ФЗ предусматривает отсутствие ответа при неуказании фамилии либо адреса для ответа в письменном обращении. При сведениях о предполагаемом противоправном деянии и лице, его совершающем, предусмотрено направление в государственный орган по компетенции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-anonymous-danger].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "90f68b6f0432ac65",
+    "ru": "Неполные реквизиты и сведения о деянии",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-anonymous-danger].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-anonymous-danger.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-anonymous-danger].title"
+    ]
+  },
+  {
+    "id": "b34a49809a9d56dc",
+    "ru": "Статья 15 закона № 229-ФЗ исключает нерабочие дни из сроков, исчисляемых днями. Течение начинается на следующий день после исходного события. Для срока статьи 126 нужно учитывать эту общую норму вместе с датой поступления правомочному лицу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-bailiff-subordination].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "f1ebeeff1b3a4e88",
+    "ru": "Исчисление дней в исполнительном производстве",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-bailiff-subordination].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-bailiff-subordination.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-bailiff-subordination].title"
+    ]
+  },
+  {
+    "id": "fab1d35304336064",
+    "ru": "Пункт 5 части 2 статьи 21 регулирует использование наружных рекламных конструкций. Условие о расстоянии до образовательных организаций содержится отдельно. Указанная в этом деле реклама пива на щите не является специальным случаем рекламы винодельческого хозяйства.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-beer-distance].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "aa0647f81d798717",
+    "ru": "Наружная конструкция и реклама пива",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-beer-distance].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-beer-distance.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-beer-distance].title"
+    ]
+  },
+  {
+    "id": "c54100adbf3e57e7",
+    "ru": "Организации и индивидуальные предприниматели, осуществляющие эксплуатацию транспортных средств, обязаны соблюдать установленный режим труда и отдыха водителей. Проверка графика и фактической работы не заменяется наблюдением длительности использования машины.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-driver-shifts].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "3fb4ab4dec4995a8",
+    "ru": "Обязанности перевозчика по режиму труда",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-driver-shifts].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-driver-shifts.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-driver-shifts].title"
+    ]
+  },
+  {
+    "id": "56d2ce5256dd7102",
+    "ru": "Статья 127.1 Воздушного кодекса связывает 30-дневное рассмотрение претензии с её поступлением перевозчику. Дата отправки и последующая регистрация письма в ином органе не заменяют это событие.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-flight-claim].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "dfb0b3a553d8a7c9",
+    "ru": "Претензия перевозчику: событие начала",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-flight-claim].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-flight-claim.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-flight-claim].title"
+    ]
+  },
+  {
+    "id": "b223f7afd6c39fd7",
+    "ru": "Официальные материалы Росгвардии разграничивают документы лицензирования охранной организации и документы частного охранника. Лицензия организации не подменяет удостоверение конкретного частного охранника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-guard-contractor].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "08bf25e409706fa8",
+    "ru": "Разные документы в охранной деятельности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-guard-contractor].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-guard-contractor.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-guard-contractor].title"
+    ]
+  },
+  {
+    "id": "191d4115ff46bd17",
+    "ru": "При коллективном страховании, в котором кредитор выступает страхователем, отказ заёмщика адресуется кредитору. Для условий части 2.5 статьи 7 закона № 353-ФЗ возврат производится в срок не более семи рабочих дней со дня получения заявления; остальные условия прямо заданы в деле.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-insurance-collective].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "ad445a618f9c4ea6",
+    "ru": "Кредитное страхование: кто получает отказ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-insurance-collective].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-insurance-collective.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-insurance-collective].title"
+    ]
+  },
+  {
+    "id": "b959962e3eb2a118",
+    "ru": "Учебная карточка: объект расположен в Тверской области и неаварийный вопрос отнесён к региональной экологической компетенции. Московский адрес автора используется для связи и не меняет местонахождение объекта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-landfill-territory].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "05b4d6aaee41a652",
+    "ru": "Территория конкретного обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-landfill-territory].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-landfill-territory.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-landfill-territory].title"
+    ]
+  },
+  {
+    "id": "10169e3b5b56ea70",
+    "ru": "Статья 8 закона № 59-ФЗ запрещает направлять жалобу на рассмотрение органу или должностному лицу, чьи решения или действия обжалуются. Сбор объяснений для рассмотрения уполномоченным лицом не тождественен передаче окончательного разрешения жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-noise-two-subjects].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "c83f0f09ac5ffd0e",
+    "ru": "Объяснение и рассмотрение жалобы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-noise-two-subjects].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-noise-two-subjects.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-noise-two-subjects].title"
+    ]
+  },
+  {
+    "id": "d9f909f62b0d2b9a",
+    "ru": "Для претензий по розыску международных почтовых отправлений используются законодательство Российской Федерации и международные договоры. Сроки внутренних отправлений нельзя автоматически переносить на любой международный розыск.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-parcel-release].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "5f8f528d7adcf90e",
+    "ru": "Международный розыск и применимые правила",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-parcel-release].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-parcel-release.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-parcel-release].title"
+    ]
+  },
+  {
+    "id": "b1896a87eccb79c5",
+    "ru": "Учебная карточка поставки: С-24 вывезена из установленной карантинной фитосанитарной зоны при ограничениях, распространяющихся на данный вид продукции. Предъявлен сертификат С-18. Нужен документ, относящийся к С-24, а не к соседней партии.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-seedlings-batch].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "bb07d08630ce1874",
+    "ru": "Условия проверки партии",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-seedlings-batch].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-seedlings-batch].title"
+    ]
+  },
+  {
+    "id": "c894d0f99be8db4e",
+    "ru": "Полномочия субъекта РФ охватывают организацию деятельности с твёрдыми коммунальными отходами, включая накопление, в том числе раздельное. Конкретное предложение проверяется вместе с действующим порядком и дальнейшими звеньями, а не по цвету ёмкостей.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-separate-waste-chain].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "a7255043582c3cd5",
+    "ru": "Раздельное накопление в системе обращения с отходами",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-separate-waste-chain].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-separate-waste-chain].title"
+    ]
+  },
+  {
+    "id": "a29190800abc4f40",
+    "ru": "Существенное положение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].fragments[relevant].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].fragments[relevant].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "dffc83d41cfac27c",
+    "ru": "Соответствие состояния дороги требованиям безопасности обеспечивает лицо, осуществляющее содержание дороги. Наличие разрешения на работы не отменяет проверку безопасности фактического прохода; полномочия приёмной и владельца дороги различны.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "4b5ef4dc258e983d",
+    "ru": "Условия использования",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].fragments[scope].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].fragments[scope].label",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].fragments[scope].label"
+    ]
+  },
+  {
+    "id": "ebf7d92db6e5c542",
+    "ru": "Фрагмент используется вместе с обстоятельствами дела. Он не доказывает ещё не установленное нарушение и не наделяет специалиста дополнительными полномочиями.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].fragments[scope].text"
+    ]
+  },
+  {
+    "id": "cd3a657e9311d4ec",
+    "ru": "Нормативное основание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].kind"
+    ]
+  },
+  {
+    "id": "2d4b8b84a1cd410a",
+    "ru": "Учебное изложение нормы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].publisher"
+    ]
+  },
+  {
+    "id": "2e4a92958d472842",
+    "ru": "Авторское изложение; не является автоматической копией сайта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-ads-consent].representation"
+    ]
+  },
+  {
+    "id": "2a123547a9e22f59",
+    "ru": "Безопасность содержания дороги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sidewalk-boundary].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-sidewalk-boundary].title"
+    ]
+  },
+  {
+    "id": "7d012c38f3a175f8",
+    "ru": "Вывески и указатели без рекламной информации исключены из сферы действия закона о рекламе. Это разграничение относится к рекламному содержанию, а не ко всем условиям эксплуатации световой конструкции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "cef449d973cbd714",
+    "ru": "Вывеска и предмет регулирования",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-sign-not-ad].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-sign-not-ad].title"
+    ]
+  },
+  {
+    "id": "422dfc9b3cf54c3a",
+    "ru": "Учебная схема: П-1 – западный переход; П-2 – восточный переход у школы. Заявитель сообщает о П-2, прежний акт составлен по П-1.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "8800a212e956e689",
+    "ru": "Материалы вымышленного дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-seedlings-batch].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-landfill-territory].publisher"
+    ]
+  },
+  {
+    "id": "e9bfdcac184cc914",
+    "ru": "Полностью вымышленный документ для упражнения. Не опубликован реальным ведомством.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-seedlings-batch].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-landfill-territory].representation"
+    ]
+  },
+  {
+    "id": "950df0672084cd89",
+    "ru": "Идентификация устройства в деле",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-signal-other-crossing].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-signal-other-crossing].title"
+    ]
+  },
+  {
+    "id": "8ec967752713c763",
+    "ru": "Срок в месяцах истекает в соответствующее число последнего месяца. Если такого числа нет, используется последний день этого месяца. Нерабочее окончание переносится на ближайший следующий рабочий день. Это не прибавление фиксированных 90 дней.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-tax-calendar-months].fragments[relevant].text"
+    ]
+  },
+  {
+    "id": "ad6317f87e28a794",
+    "ru": "Месячный срок в Налоговом кодексе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[e6-tax-calendar-months].title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.searchHint",
+      "source-index:SOURCE_INDEX.entries[evidence:e6-tax-calendar-months].title"
+    ]
+  },
+  {
+    "id": "7feb4443e17cc188",
+    "ru": "Статья 17 · права субъекта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].fragments[article17].label"
+    ]
+  },
+  {
+    "id": "cdac88473a70f19a",
+    "ru": "Нарушение прав при обработке данных может обжаловаться в уполномоченный орган или суд. Обращение к оператору об удалении публикации не делает его независимым органом надзора.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].fragments[article17].text"
+    ]
+  },
+  {
+    "id": "8e4ff8bef6fc1c2a",
+    "ru": "Статья 23, части 1–2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].fragments[article23].label"
+    ]
+  },
+  {
+    "id": "1d28d1dc5bfad4fc",
+    "ru": "Обращения субъекта о соответствии обработки данных её целям рассматривает уполномоченный федеральный орган в области защиты прав субъектов персональных данных. Оператор данных и контролирующий орган — разные участники.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].fragments[article23].text"
+    ]
+  },
+  {
+    "id": "6c59cbd9213f2cc7",
+    "ru": "152-ФЗ · уполномоченный орган",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law152-control].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law152-control].title"
+    ]
+  },
+  {
+    "id": "325511117fc751f6",
+    "ru": "Статья 11.2, часть 8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[decision].label"
+    ]
+  },
+  {
+    "id": "87f6fd48be264b0a",
+    "ru": "После принятия решения заявителю направляют мотивированный ответ не позднее следующего дня. Это отдельное действие, а не новый полный срок рассмотрения жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[decision].text"
+    ]
+  },
+  {
+    "id": "f3fd720e63f131cf",
+    "ru": "Статья 11.2, часть 1 · работник",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[employee].label"
+    ]
+  },
+  {
+    "id": "c68b2f73471b11e9",
+    "ru": "Жалобу на решения и действия работника МФЦ подают руководителю этого МФЦ. Не следует путать работника центра с органом, предоставляющим услугу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[employee].text"
+    ]
+  },
+  {
+    "id": "05a8de3de86448f4",
+    "ru": "Статья 11.2, часть 1 · организация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[institution].label"
+    ]
+  },
+  {
+    "id": "f227da613d75e2b3",
+    "ru": "Жалобу на решения и действия самого МФЦ подают его учредителю либо должностному лицу, уполномоченному нормативным правовым актом субъекта Российской Федерации.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].fragments[institution].text"
+    ]
+  },
+  {
+    "id": "14f557e0efe93ece",
+    "ru": "210-ФЗ · жалобы при предоставлении услуг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law210-complaints].title"
+    ]
+  },
+  {
+    "id": "94ed914ca24d422e",
+    "ru": "Изменения с 30.03.2025",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].fragments[channel].label"
+    ]
+  },
+  {
+    "id": "b7d72520fa9767d5",
+    "ru": "Для электронного обращения по общему порядку 59-ФЗ используются Госуслуги, иная информационная система органа или официальный сайт с идентификацией и (или) аутентификацией. Опубликованный email сам по себе не подтверждает соответствие этим условиям.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].fragments[channel].text"
+    ]
+  },
+  {
+    "id": "c5c3afb54d3f7eba",
+    "ru": "Официальное разъяснение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:law59-digital].originalKind"
+    ]
+  },
+  {
+    "id": "4f54a7e80e5154be",
+    "ru": "Интернет-приёмная Западно-Балтийского ТУ Росрыболовства",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].publisher"
+    ]
+  },
+  {
+    "id": "d530ec645ddb32d9",
+    "ru": "Общий порядок 59-ФЗ; не переносить автоматически на специальные процедуры",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:law59-digital].scope"
+    ]
+  },
+  {
+    "id": "97778432346e1fb8",
+    "ru": "59-ФЗ · электронный канал",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-digital].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law59-digital].title"
+    ]
+  },
+  {
+    "id": "340f57636de023e3",
+    "ru": "Орган обеспечивает объективное, всестороннее и своевременное рассмотрение, в необходимых случаях запрашивает материалы и даёт ответ по существу. Обращение не заменяет бюджетного решения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article10].text"
+    ]
+  },
+  {
+    "id": "2ad148babb49ac91",
+    "ru": "Статья 11, часть 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article11-5].label"
+    ]
+  },
+  {
+    "id": "be3ff3caee388a86",
+    "ru": "Для решения о прекращении переписки учитываются ранее неоднократно направленные ответы по существу и отсутствие новых доводов или обстоятельств, а также предусмотренные законом условия. Число писем само по себе не достаточно.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article11-5].text"
+    ]
+  },
+  {
+    "id": "8e29cb8b352af166",
+    "ru": "Статья 12",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article12].label"
+    ]
+  },
+  {
+    "id": "dc57741b4f4679d9",
+    "ru": "Общий срок рассмотрения письменного обращения связан с его регистрацией. Это не универсальный срок строительства, ремонта или устранения загрязнения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].fragments[article12].text"
+    ]
+  },
+  {
+    "id": "fe35ddb068bce14c",
+    "ru": "59-ФЗ · рассмотрение и результат",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law59-review].title"
+    ]
+  },
+  {
+    "id": "433da494b9844964",
+    "ru": "Статья 8, часть 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part3].label"
+    ]
+  },
+  {
+    "id": "e80b6e0ff0f9e798",
+    "ru": "Если решение вопросов не относится к компетенции получателя, письменное обращение направляют компетентному органу или должностному лицу; гражданина уведомляют. Наличие адреса не устанавливает полномочия.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part3].text"
+    ]
+  },
+  {
+    "id": "1e0f74fb2457eb52",
+    "ru": "Статья 8, часть 4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part4].label"
+    ]
+  },
+  {
+    "id": "538193d9cdbcbc59",
+    "ru": "При нескольких вопросах, относящихся к разным органам, копии обращения направляют соответствующим адресатам. Следует сохранять различимость вопросов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part4].text"
+    ]
+  },
+  {
+    "id": "d94b1c07b6d48951",
+    "ru": "Статья 8, часть 6",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part6].label"
+    ]
+  },
+  {
+    "id": "508db74621b929cb",
+    "ru": "Жалобу нельзя направить на рассмотрение в тот орган или тому должностному лицу, чьё решение, действие либо бездействие обжалуется.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].fragments[part6].text"
+    ]
+  },
+  {
+    "id": "a23778c98fa0fc52",
+    "ru": "Правовой источник",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].kind"
+    ]
+  },
+  {
+    "id": "e2534409e4afcc0e",
+    "ru": "Авторское учебное изложение проверенных положений, не факсимиле сайта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].representation"
+    ]
+  },
+  {
+    "id": "76c2570bbdf32fbd",
+    "ru": "Российская Федерация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[law59-review].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].scope"
+    ]
+  },
+  {
+    "id": "c094036d81d40653",
+    "ru": "59-ФЗ · направление по компетенции",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law59-routing].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law59-routing].title"
+    ]
+  },
+  {
+    "id": "c2ffec914fb377e9",
+    "ru": "Статья 18",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article18].label"
+    ]
+  }
+]

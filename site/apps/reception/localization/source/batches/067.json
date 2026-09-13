@@ -1,0 +1,1124 @@
+[
+  {
+    "id": "1786750fac993804",
+    "ru": "По какому предмету нет подтверждения?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.extracted.label"
+    ]
+  },
+  {
+    "id": "6f4898a3e3e14267",
+    "ru": "И-7",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "bffab4b240205b77",
+    "ru": "И7",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "0e676e766b43c21d",
+    "ru": "Чьи действия обжалуются?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.extracted.label"
+    ]
+  },
+  {
+    "id": "bcc8b36a44ed4b02",
+    "ru": "с первого дня",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "81b49dc96c83757f",
+    "ru": "с 1 дня",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "3f8e95210d0a266b",
+    "ru": "первого",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0aa018b846ca0403",
+    "ru": "С какого дня в этом случае финансирует страховщик?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.extracted.label"
+    ]
+  },
+  {
+    "id": "c5ad5ad20433a486",
+    "ru": "застрахованному лицу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "9b23566d52773e5a",
+    "ru": "работнику",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2c94c9f275e1cda5",
+    "ru": "самому застрахованному",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "b9db894ec6e8651d",
+    "ru": "Кому, помимо страхователя, необходимо направить решение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.extracted.label"
+    ]
+  },
+  {
+    "id": "a101661910d76c67",
+    "ru": "Назначение пособия и уведомление об отказе 255 статья 15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-refusal-notice.searchHint"
+    ]
+  },
+  {
+    "id": "a16766b81e0972d6",
+    "ru": "первые три дня",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "2b0888111ddaf837",
+    "ru": "первые 3 дня",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "9bec96222d285f27",
+    "ru": "3 дня",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0d8b61f6e75e2fed",
+    "ru": "Какая часть оплачена работодателем?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.extracted.label"
+    ]
+  },
+  {
+    "id": "513ba2dd90d5b1d1",
+    "ru": "Источник финансирования пособия 255 статья 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-child-care.searchHint"
+    ]
+  },
+  {
+    "id": "82322d264bae4999",
+    "ru": "Не найдено задание по источникам.",
+    "contexts": [
+      "evidence.js:11"
+    ]
+  },
+  {
+    "id": "eae3e3643927d4c8",
+    "ru": "'.,:;()]/g,' ').replace(/s+/g,' ').trim();\r\n  const target='(?:(?:этого|данного|соответствующего|своего) )?(?:мфц|(?:многофункционального )?центра)';\r\n  if(new RegExp('^(?:руководитель|руководителя|руководителю|директор|директора|директору|генеральный директор|генеральному директору) '+target+'$').test(value))return 'mfc-head';\r\n  if(new RegExp('^(?:учредитель|учредителя|учредителю) '+target+'$').test(value))return 'mfc-founder';\r\n  return '';\r\n }\r\n if(kind==='part'||kind==='article'){\r\n  const prefix=kind==='part'?'(?:часть|части|ч\\.)':'(?:статья|статьи|ст\\.)';\r\n  const m=s.match(new RegExp('^'+prefix+'\\s*(\\d+(?:[.,]\\d+)?)$'));\r\n  const n=(m?m[1]:s).replace(',','.');return /^d+(?:.d+)?$/.test(n)?n.replace(/^0+(?=d)/,''):'';\r\n }\r\n return s.replace(/[«»",
+    "contexts": [
+      "evidence.js:24"
+    ]
+  },
+  {
+    "id": "8c3cacd019bb928c",
+    "ru": "Неизвестное событие в материале источника:",
+    "contexts": [
+      "evidence.js:9"
+    ]
+  },
+  {
+    "id": "b969959f2d2ebe5e",
+    "ru": "На пешеходной дорожке открыт круглый колодец; рядом нет ограждения.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E01__1].alt"
+    ]
+  },
+  {
+    "id": "801ec4554797738b",
+    "ru": "Крышка колодца установлена; металлические секции ограждения перекрывают дорожку.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E01__2].alt"
+    ]
+  },
+  {
+    "id": "b631020073b87b81",
+    "ru": "Крышка находится на уровне покрытия; дорожка перед ней свободна.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E01__3].alt"
+    ]
+  },
+  {
+    "id": "43fef049e379c03c",
+    "ru": "Материалы и строительное ограждение занимают тротуар рядом с проезжей частью.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E02__1].alt"
+    ]
+  },
+  {
+    "id": "78b8716b5e2ab91f",
+    "ru": "Вдоль строительного ограждения проходит отдельная ровная дорожка, отделённая от дороги барьером.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E02__2].alt"
+    ]
+  },
+  {
+    "id": "ebc8716d932f1395",
+    "ru": "Рядом с дорожкой остаются открытая траншея и строительные материалы.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E02__3].alt"
+    ]
+  },
+  {
+    "id": "b72955c2784b32f5",
+    "ru": "Ветви и листья частично закрывают пешеходный светофор у перехода.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E03__1].alt"
+    ]
+  },
+  {
+    "id": "04d1aeeb267e3965",
+    "ru": "С другого ракурса корпус и секции пешеходного светофора видны без перекрытия ветвями.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E03__2].alt"
+    ]
+  },
+  {
+    "id": "c27d7e77d67de2ad",
+    "ru": "Вечером секции пешеходного светофора тёмные; рядом горят уличные фонари.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E03__3].alt"
+    ]
+  },
+  {
+    "id": "e35c7cab9f7d548f",
+    "ru": "Два дерева с пустыми бирками стоят на озеленённом участке.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E04__1].alt"
+    ]
+  },
+  {
+    "id": "db7c43ced78198cd",
+    "ru": "На участке видны пень и лежащий спиленный ствол.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E04__2].alt"
+    ]
+  },
+  {
+    "id": "8e9aa11663f12246",
+    "ru": "Сломанная ветвь удерживается над дорожкой; под ней нет людей.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E04__3].alt"
+    ]
+  },
+  {
+    "id": "3511f17bdd1bd5dc",
+    "ru": "Над входом в магазин расположен узкий пустой носитель вывески.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E05__1].alt"
+    ]
+  },
+  {
+    "id": "71bea9c53ff26d86",
+    "ru": "За витриной установлен крупный светящийся экран без надписи.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E05__2].alt"
+    ]
+  },
+  {
+    "id": "3fe0e51afbf7d657",
+    "ru": "Вывеска над магазином светится в тёмное время суток.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E05__3].alt"
+    ]
+  },
+  {
+    "id": "03ce71f7d7051c99",
+    "ru": "На лестнице отсутствует часть декоративных элементов перил.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E06__1].alt"
+    ]
+  },
+  {
+    "id": "32744a296a0c12ea",
+    "ru": "Два декоративных фрагмента размещены на мягких подставках с пустыми бирками.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E06__2].alt"
+    ]
+  },
+  {
+    "id": "a794044b39ca6eac",
+    "ru": "Перед фасадом с декоративными элементами стоят строительные леса.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E06__3].alt"
+    ]
+  },
+  {
+    "id": "818a118b27f5304e",
+    "ru": "Пассажиры сидят в зале аэропорта; за окном дождь, табло без текста.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E07__1].alt"
+    ]
+  },
+  {
+    "id": "133d6f08301df98c",
+    "ru": "На столе стоят бутылки воды; готовая еда на столе не показана.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E07__2].alt"
+    ]
+  },
+  {
+    "id": "1fde2fe1afaa5752",
+    "ru": "На стойке лежат бланк посадочного документа и лист журнала с пустыми полями.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E07__3].alt"
+    ]
+  },
+  {
+    "id": "e35be9dcc1c3ab3a",
+    "ru": "Вид на вход в жилой дом; на табличке нет текста.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E08__1].alt"
+    ]
+  },
+  {
+    "id": "5fa000b61597dbf5",
+    "ru": "На фасаде видны два отдельных входа с пустыми табличками.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E08__2].alt"
+    ]
+  },
+  {
+    "id": "88ed0860e1fba854",
+    "ru": "На столе лежит планшет с листом осмотра; вход в дом виден на заднем плане.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E08__3].alt"
+    ]
+  },
+  {
+    "id": "50b23c12983b2336",
+    "ru": "На столе стоят целая посылка с пустой этикеткой и бланк квитанции.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E09__1].alt"
+    ]
+  },
+  {
+    "id": "d20250ea8419f63d",
+    "ru": "У картонной посылки смят и разорван угол; содержимое не показано.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E09__2].alt"
+    ]
+  },
+  {
+    "id": "3f489344c1fb7fb4",
+    "ru": "Рядом с повреждённой посылкой лежат листы осмотра с пустыми полями.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E09__3].alt"
+    ]
+  },
+  {
+    "id": "cae449d24ea7b6a0",
+    "ru": "На полке стоит закрытая стеклянная банка с пустой этикеткой.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E10__1].alt"
+    ]
+  },
+  {
+    "id": "f68ccd37354cc53a",
+    "ru": "На этикетке банки выделены два пустых прямоугольных поля.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E10__2].alt"
+    ]
+  },
+  {
+    "id": "488fc790c2397e93",
+    "ru": "Две группы банок стоят рядом с отдельными пустыми карточками.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E10__3].alt"
+    ]
+  },
+  {
+    "id": "ec8bed2903ee51db",
+    "ru": "На улице установлен рекламный носитель с пустой белой поверхностью.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E11__1].alt"
+    ]
+  },
+  {
+    "id": "4ce75cf19883e2d2",
+    "ru": "На столе открыт ноутбук с пустой областью страницы.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E11__2].alt"
+    ]
+  },
+  {
+    "id": "0f94cfca057aedf2",
+    "ru": "На стойке заведения стоит лист меню с незаполненными строками.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E11__3].alt"
+    ]
+  },
+  {
+    "id": "b175bdae1883f0c0",
+    "ru": "В лотке растут зелёные сеянцы; рядом пустая бирка.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E12__1].alt"
+    ]
+  },
+  {
+    "id": "1f2bf83015435988",
+    "ru": "Возле лотка с рассадой стоят планшет и незаполненный сопроводительный лист.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E12__2].alt"
+    ]
+  },
+  {
+    "id": "17e407535b24fc2c",
+    "ru": "Другой лоток растений расположен рядом с пустой карточкой партии.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E12__3].alt"
+    ]
+  },
+  {
+    "id": "e2468930a7ba424f",
+    "ru": "Входная зона с постом охраны. На информационном стенде размещена копия документа; её реквизиты на иллюстрации не читаются.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E13__1].alt"
+    ]
+  },
+  {
+    "id": "6de20fab1f4319ad",
+    "ru": "Изображение заменено предоставленным пользователем 11.09.2026. Соответствует фотографии стенда d0; действительность лицензии определяется по тексту d2.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E13__1].reason"
+    ]
+  },
+  {
+    "id": "b204bb6e9e224156",
+    "ru": "Открытая сумка с личными вещами стоит на стойке; руки посетителя лежат рядом.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E13__2].alt"
+    ]
+  },
+  {
+    "id": "9bef37884f5dab47",
+    "ru": "Посетительница разговаривает с сотрудником за стойкой; документ в руках сотрудника не показан.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E13__3].alt"
+    ]
+  },
+  {
+    "id": "20885a9a47b585a2",
+    "ru": "На стенде образовательного помещения размещены пустые рамки.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E14__1].alt"
+    ]
+  },
+  {
+    "id": "c9c6e1df29347815",
+    "ru": "На столе стоят информационный лист и стопка буклетов с пустыми полями.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E14__2].alt"
+    ]
+  },
+  {
+    "id": "a248a2c9f2247eaa",
+    "ru": "Рядом лежат две отдельные папки с похожими обложками и незаполненными полями.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E14__3].alt"
+    ]
+  },
+  {
+    "id": "1bd82161cf146553",
+    "ru": "В пустом кафе видны столики и настенные акустические колонки.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E15__1].alt"
+    ]
+  },
+  {
+    "id": "2ba408fed1c575ec",
+    "ru": "На наружной стене расположен вентиляционный агрегат с воздуховодом.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E15__2].alt"
+    ]
+  },
+  {
+    "id": "dcfecfa29832ec1e",
+    "ru": "Ночью на ограждённом участке работают люди и техника; рядом с траншеей видна вода.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E15__3].alt"
+    ]
+  },
+  {
+    "id": "5a8b8318815e0392",
+    "ru": "На подготовленной площадке стоят закрытые контейнеры с пустыми этикетками.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E16__1].alt"
+    ]
+  },
+  {
+    "id": "82c97eee4857900d",
+    "ru": "В синем контейнере видны бумага, картон и пластиковая тара; этикетка без текста.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E16__2].alt"
+    ]
+  },
+  {
+    "id": "a549b6e9eb347ce9",
+    "ru": "На другой площадке стоят два контейнера и пустой указатель.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E16__3].alt"
+    ]
+  },
+  {
+    "id": "02636c60208c7547",
+    "ru": "На остановочной площадке стоит автобус с пустой маршрутной табличкой.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E17__1].alt"
+    ]
+  },
+  {
+    "id": "390c3a2277352e19",
+    "ru": "Водитель находится на рабочем месте у открытой двери автобуса.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E17__2].alt"
+    ]
+  },
+  {
+    "id": "b3e1411b90a79db6",
+    "ru": "Водитель сидит на скамье отдельно от припаркованного автобуса.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E17__3].alt"
+    ]
+  },
+  {
+    "id": "c66164a16ee6eca0",
+    "ru": "У двери установлен замок с ключевым цилиндром; ключа и нажимной штанги не видно.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E18__1].alt"
+    ]
+  },
+  {
+    "id": "5f068a49cd5d79b8",
+    "ru": "По обеим сторонам узкого прохода стоят коробки и тележки; на двери видна нажимная штанга.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E18__2].alt"
+    ]
+  },
+  {
+    "id": "fe8757a616bac585",
+    "ru": "Перед другой дверью с нажимной штангой свободный участок; внизу виден лист осмотра.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E18__3].alt"
+    ]
+  },
+  {
+    "id": "3d1262f16337dea2",
+    "ru": "Над кучей отходов поднимается серый дым.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E19__1].alt"
+    ]
+  },
+  {
+    "id": "9320f6e020738fce",
+    "ru": "Общий вид участка с отходами и проходящей рядом дорогой.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E19__2].alt"
+    ]
+  },
+  {
+    "id": "6b8c6f504b381222",
+    "ru": "На участке остаётся куча отходов; дыма над ней не видно.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E19__3].alt"
+    ]
+  },
+  {
+    "id": "40cdfaac3bc4d171",
+    "ru": "Посетитель находится у стойки; перед сотрудником лежит стопка материалов во входящем лотке.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E20__1].alt"
+    ]
+  },
+  {
+    "id": "05b369a1fc743326",
+    "ru": "На рабочем столе стоит лоток с материалами и лежит незаполненный сопроводительный лист.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E20__2].alt"
+    ]
+  },
+  {
+    "id": "2223f87cfc2a8b8e",
+    "ru": "Сотрудник передаёт посетителю папку через окно обслуживания.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E20__3].alt"
+    ]
+  },
+  {
+    "id": "b08cddef07d68a5e",
+    "ru": "В руке посетителя пустой талон; в зале видны громкоговоритель и табло без текста.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E21__1].alt"
+    ]
+  },
+  {
+    "id": "bbd53cd8b77b14cd",
+    "ru": "На стойке расположен планшет с пустым светлым экраном и стилусом.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E21__2].alt"
+    ]
+  },
+  {
+    "id": "85e8ce81e7c22123",
+    "ru": "Возле планшета сотрудник передаёт посетителю небольшой лист.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E21__3].alt"
+    ]
+  },
+  {
+    "id": "a29af10bb74dc3b9",
+    "ru": "Человек с собакой в шлейке находится перед входом в здание.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E22__1].alt"
+    ]
+  },
+  {
+    "id": "34f7abfe8f2d344a",
+    "ru": "Собака в шлейке лежит у ног человека возле входа.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E22__2].alt"
+    ]
+  },
+  {
+    "id": "f2e5ab146a7d6942",
+    "ru": "От входа к стойке проходит свободный ровный путь.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E22__3].alt"
+    ]
+  },
+  {
+    "id": "8c229505d0862a56",
+    "ru": "На стойке общего зала лежит лист; рядом стоит кресло посетителя.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E23__1].alt"
+    ]
+  },
+  {
+    "id": "283ab55d0010978a",
+    "ru": "В отдельной комнате видны стол, два кресла посетителей и закрытая дверь.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E23__2].alt"
+    ]
+  },
+  {
+    "id": "64168f10687f5c6c",
+    "ru": "На столе разложены несколько листов и установлен планшет.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E23__3].alt"
+    ]
+  },
+  {
+    "id": "95d72900ac84530a",
+    "ru": "Из трубы у берега выходит тёмная вода.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E24__1].alt"
+    ]
+  },
+  {
+    "id": "d879db9989fbe69a",
+    "ru": "На планшете показан снимок трубы у реки; рядом оставлена пустая область метаданных.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E24__2].alt"
+    ]
+  },
+  {
+    "id": "e0d82fabfde375f1",
+    "ru": "Общий вид трубы, берега и реки; источник воды за трубой не показан.",
+    "contexts": [
+      "graphics-data:GFX_EVIDENCE[E24__3].alt"
+    ]
+  },
+  {
+    "id": "158ba01349a38136",
+    "ru": "Каштановые волнистые волосы, бежевое пальто, бордовый шарф",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C01.description"
+    ]
+  },
+  {
+    "id": "e761fa92cb81d46a",
+    "ru": "Седые волосы и борода, очки, тёмно-зелёная куртка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C02.description"
+    ]
+  },
+  {
+    "id": "3e2f9a174fb324b0",
+    "ru": "Короткие тёмные волосы, сине-серая повседневная куртка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C03.description"
+    ]
+  },
+  {
+    "id": "6ffedc85396c0f53",
+    "ru": "Короткая тёмная стрижка, синий кардиган, светлая блуза",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C04.description"
+    ]
+  },
+  {
+    "id": "56e3d015e5f0c0d0",
+    "ru": "Короткие волосы с сединой, щетина, серо-коричневая рубашка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C05.description"
+    ]
+  },
+  {
+    "id": "08b197a24537bd94",
+    "ru": "Серебристое каре, очки, голубой жакет",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C06.description"
+    ]
+  },
+  {
+    "id": "d751d7929b63b1f4",
+    "ru": "Кудрявые тёмные волосы, неброская толстовка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C07.description"
+    ]
+  },
+  {
+    "id": "6992f85645dd9875",
+    "ru": "Тёмное каре, оливковая куртка, сумка через плечо",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C08.description"
+    ]
+  },
+  {
+    "id": "a26c9ced5cb67a5f",
+    "ru": "Короткие седые волосы, синий жилет; согласованная сидячая композиция с креслом-коляской",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C09.description"
+    ]
+  },
+  {
+    "id": "d16ecf2e348f5257",
+    "ru": "Светло-каштановые волосы, прямоугольные очки, светлый свитер",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C10.description"
+    ]
+  },
+  {
+    "id": "ed2e73a1cbc2b09c",
+    "ru": "Редкие седые волосы, аккуратная борода, коричневый пиджак",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C11.description"
+    ]
+  },
+  {
+    "id": "5a443894f38198a5",
+    "ru": "Тёмные кудрявые волосы, тёплый средний оттенок кожи, кремовая куртка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C12.description"
+    ]
+  },
+  {
+    "id": "577423f293df0816",
+    "ru": "Тёмные прямые волосы, средний оттенок кожи, белая рубашка и тёмная куртка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C13.description"
+    ]
+  },
+  {
+    "id": "873e2e4191c471d7",
+    "ru": "Собранные волосы, мягкие возрастные черты, сливовый кардиган",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C14.description"
+    ]
+  },
+  {
+    "id": "d5d8813dc322c6ce",
+    "ru": "Широкое лицо, короткие волосы, серо-голубой свитер",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C15.description"
+    ]
+  },
+  {
+    "id": "c4cf9cf9a9d1544d",
+    "ru": "Короткая рыжеватая стрижка, тёмно-синий жакет",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C16.description"
+    ]
+  },
+  {
+    "id": "6944b989cb7ca3ed",
+    "ru": "Волнистые каштановые волосы, лёгкая борода, светлая рубашка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C17.description"
+    ]
+  },
+  {
+    "id": "a95bcc294556bcbc",
+    "ru": "Прямые чёрные волосы, средний оттенок кожи, песочный свитер",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C18.description"
+    ]
+  },
+  {
+    "id": "77c6909518a3efdf",
+    "ru": "Короткая серебристая стрижка, без бороды, графитовый пиджак",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C19.description"
+    ]
+  },
+  {
+    "id": "b6de059a1b471d32",
+    "ru": "Тёмные волосы с сединой, овальные очки, зелёный кардиган",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C20.description"
+    ]
+  },
+  {
+    "id": "3fc1b89750903d1d",
+    "ru": "Короткие седые волосы, светлая куртка; согласованная композиция с собакой-проводником",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C21.description"
+    ]
+  },
+  {
+    "id": "8c09e6947c040a3a",
+    "ru": "Короткие светлые волосы, бежевый плащ, мягко выраженные возрастные черты",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C22.description"
+    ]
+  },
+  {
+    "id": "be942aa7427cfcaa",
+    "ru": "Бритая голова, очки, тёмно-синяя рубашка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C23.description"
+    ]
+  },
+  {
+    "id": "958fc4d9618990e6",
+    "ru": "Вьющиеся светлые волосы, серая куртка и голубая рубашка",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.C24.description"
+    ]
+  },
+  {
+    "id": "ba90148cd2728d0c",
+    "ru": "Синий костюм, белая рубашка; образ последнего 3D-референса",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.S01.description"
+    ]
+  },
+  {
+    "id": "6419f8117ded4720",
+    "ru": "Синий жакет, короткие каштановые волосы, спокойная взрослая пластика",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.S02.description"
+    ]
+  },
+  {
+    "id": "3e9178bab75b6818",
+    "ru": "Седина, очки, рубашка с кардиганом, нейтральный служебный бейдж",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.S03.description"
+    ]
+  },
+  {
+    "id": "873940545f3a8a35",
+    "ru": "Короткие волосы, рубашка и неброский пиджак, отличие от S01",
+    "contexts": [
+      "graphics-data:GFX_ROSTER.S04.description"
+    ]
+  },
+  {
+    "id": "392a98b1f3f852d8",
+    "ru": "Номер приказа",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "3d75838445f4249e",
+    "ru": "Номер Закона РФ",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "6483a588cc02050b",
+    "ru": "Номер федерального закона",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "6afba5b13de40653",
+    "ru": "Кодекс или номер закона о его принятии",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "6e7b498b935b61e3",
+    "ru": "Часть кодекса или номер закона о её принятии",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "fad45cd741b9b3b7",
+    "ru": "Номер постановления",
+    "contexts": [
+      "legal-reference.js:5"
+    ]
+  },
+  {
+    "id": "057fd254984a26b7",
+    "ru": "Дата постановления",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "3f98d957b02d8abd",
+    "ru": "Дата приказа",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "5c680f2727b75a09",
+    "ru": "Дата принятия части кодекса",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "a98fd26dd4d0ff59",
+    "ru": "Дата принятия кодекса",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "c7c733818c0df962",
+    "ru": "Дата принятия закона",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "dabd591bd5e19474",
+    "ru": "Дата Закона РФ",
+    "contexts": [
+      "legal-reference.js:6"
+    ]
+  },
+  {
+    "id": "0b463e1b3bef54c1",
+    "ru": "Правительство РФ",
+    "contexts": [
+      "legal-reference.js:61"
+    ]
+  },
+  {
+    "id": "347dd08e652ec7ba",
+    "ru": "Правительства",
+    "contexts": [
+      "legal-reference.js:61"
+    ]
+  },
+  {
+    "id": "5f201355756a6245",
+    "ru": "от",
+    "contexts": [
+      "legal-reference.js:61",
+      "legal-reference.js:62"
+    ]
+  },
+  {
+    "id": "b2d0fd95bc0d716a",
+    "ru": "постановление",
+    "contexts": [
+      "legal-reference.js:61"
+    ]
+  },
+  {
+    "id": "35816053f93bcc0a",
+    "ru": "приказ №",
+    "contexts": [
+      "legal-reference.js:62"
+    ]
+  },
+  {
+    "id": "4ec6f3656a9b71b8",
+    "ru": "Закон РФ от",
+    "contexts": [
+      "legal-reference.js:63"
+    ]
+  },
+  {
+    "id": "0f169357b660eb18",
+    "ru": ", часть",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "13dfb9d8e4f16872",
+    "ru": "-ФЗ)",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "2a659e776eabbf6d",
+    "ru": "первая",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "4bd563058db85043",
+    "ru": "вторая",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "4f82d7b02e7f09cc",
+    "ru": "Кодекс",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "b3bb314eb397d311",
+    "ru": "(от",
+    "contexts": [
+      "legal-reference.js:64"
+    ]
+  },
+  {
+    "id": "04b3ae54c9afb438",
+    "ru": "федеральный закон №",
+    "contexts": [
+      "legal-reference.js:65"
+    ]
+  },
+  {
+    "id": "237ab60811ebc7ba",
+    "ru": "-ФЗ от",
+    "contexts": [
+      "legal-reference.js:65"
+    ]
+  },
+  {
+    "id": "1347fb28ec9e601a",
+    "ru": "статья",
+    "contexts": [
+      "legal-reference.js:66"
+    ]
+  },
+  {
+    "id": "bcacbff7a5638016",
+    "ru": "или",
+    "contexts": [
+      "legal-reference.js:66"
+    ]
+  },
+  {
+    "id": "bf350feb403483de",
+    "ru": "пункт",
+    "contexts": [
+      "legal-reference.js:66"
+    ]
+  },
+  {
+    "id": "2c378c3ee45923a5",
+    "ru": "Номер статьи",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "31306c5b653e33ca",
+    "ru": "Пункт",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "3f8d2268d6680e16",
+    "ru": "Название и часть кодекса либо номер закона",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "42b6b111c46390dc",
+    "ru": "Название кодекса либо номер закона о его принятии",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "45925e43c6272f94",
+    "ru": "Номер без суффикса ФЗ",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "4f0548d13284062e",
+    "ru": "Статья",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "628782fa943b139c",
+    "ru": "Например: 59-ФЗ",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "b1166a8923d7b137",
+    "ru": "Например: 2300-1",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  },
+  {
+    "id": "e14c0024dc41acad",
+    "ru": "Например: 99.2",
+    "contexts": [
+      "legal-reference.js:7"
+    ]
+  }
+]

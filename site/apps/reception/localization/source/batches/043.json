@@ -1,0 +1,1168 @@
+[
+  {
+    "id": "9db28aa07b144935",
+    "ru": "Где находится сертификат?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q1].text"
+    ]
+  },
+  {
+    "id": "c44b0d51f802f5fa",
+    "ru": "Номер партии, продукция, объём, происхождение и получатель совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c24325fda36f9bdb",
+    "ru": "Электронная запись относится к этой перевозке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ed04d1113dc13cca",
+    "ru": "Совпадают ли характеристики?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q2].text"
+    ]
+  },
+  {
+    "id": "fd7521a05b27808e",
+    "ru": "Нет; жалоба касается формы документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "af65337511c389aa",
+    "ru": "Не доказана опасность продукции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "26cd4218b6cb4840",
+    "ru": "Есть сведения о повреждении растений?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].questions[q3].text"
+    ]
+  },
+  {
+    "id": "114ffad2376fccaa",
+    "ru": "Вы выясняете обстоятельства и готовите проект действий в пределах указанной роли. Реальных звонков, отправки жалоб, выдачи разрешений, санкций и реестровых изменений игра не выполняет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].role.text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].role.text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].role.text"
+    ]
+  },
+  {
+    "id": "505b4f923eacfd20",
+    "ru": "Профильное подразделение территориального управления Россельхознадзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].routes[0].text"
+    ]
+  },
+  {
+    "id": "69ad0344b27bdf79",
+    "ru": "Только администрация рынка вместо органа фитосанитарного надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].routes[1].text"
+    ]
+  },
+  {
+    "id": "da1781bb5cc7085d",
+    "ru": "Любой получатель растений без проверки полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].routes[2].text"
+    ]
+  },
+  {
+    "id": "6c7f1ccbd0d5008b",
+    "ru": "Найдите указанное основание в правовом источнике. Отделите положения нормы от фактов вымышленного дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].sourceTask",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].sourceTask",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].sourceTask"
+    ]
+  },
+  {
+    "id": "447812ac9e740029",
+    "ru": "Бумажной копии нет, электронный документ есть",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[seedlings-electronic].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[seedlings-electronic].title"
+    ]
+  },
+  {
+    "id": "36443df8aaba5f36",
+    "ru": "Не подтверждается в данных обстоятельствах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].trap.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].trap.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "74d45efe8bbd063f",
+    "ru": "Подтверждается в данных обстоятельствах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].trap.options[1].text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].trap.options[1].text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "1004852f5df04f7f",
+    "ru": "Отсутствие бумаги само по себе ещё не доказывает отсутствие сертификата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-electronic].trap.text"
+    ]
+  },
+  {
+    "id": "4f750a29c94a5fe8",
+    "ru": "Связать протокол с Л-31 и проверить назначение документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[a0].title"
+    ]
+  },
+  {
+    "id": "5e6bc92b98a428c5",
+    "ru": "Зафиксировать отсутствие подтверждения сертификата по этой перевозке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[a1].title"
+    ]
+  },
+  {
+    "id": "32882df76ec13475",
+    "ru": "Подготовить материалы для действий уполномоченного подразделения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[a2].title"
+    ]
+  },
+  {
+    "id": "32931edaa3448cd3",
+    "ru": "Не объявлять лабораторный результат доказательством нарушения либо заражения сверх его содержания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[a3].title"
+    ]
+  },
+  {
+    "id": "f476b4d35ba4fb25",
+    "ru": "Отдельно проверить последующее оформление и дату его действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[a4].title"
+    ]
+  },
+  {
+    "id": "8c2e9dd7622a8082",
+    "ru": "Заменить сертификат собственным письмом приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[b0].title"
+    ]
+  },
+  {
+    "id": "464f504b3f8cd1f3",
+    "ru": "Потребовать уничтожения без компетенции и процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].actions[b1].title",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "497b7fb4807d1113",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Необходимость сертификата на конкретную перевозку установлена по всем условиям статьи 21. Предмет работы – назначение документов; заражение партии не предполагается. Вы не выдаёте сертификат вместо уполномоченного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].brief"
+    ]
+  },
+  {
+    "id": "28409c0b62360487",
+    "ru": "В базовой истории сертификат был на другую партию. Здесь предъявлен документ иного назначения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].coach.plan",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].contrast.difference"
+    ]
+  },
+  {
+    "id": "b44d9bcd1f6f52ad",
+    "ru": "Питомник пишет о регулярном лабораторном контроле. Конкретный сертификат не указан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d0].text"
+    ]
+  },
+  {
+    "id": "02906e21dffc4788",
+    "ru": "Рекламная справка питомника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ed4273c6e5417a82",
+    "ru": "Вывоз {{observed}} партии Л-31, 240 единиц, из зоны З-3. Режим, временное ограничение и восприимчивость продукции к соответствующему объекту подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d1].text"
+    ]
+  },
+  {
+    "id": "674c07bb1909625e",
+    "ru": "Накладная Л-31 и условия вывоза",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d1].title"
+    ]
+  },
+  {
+    "id": "06fe2a6bf5b5bce9",
+    "ru": "Лаборатория исследовала образец Л-31; карантинный объект не выявлен. Документ обозначен как лабораторный протокол. Карантинный сертификат на данную перевозку в проверенном реестре не подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d2].text"
+    ]
+  },
+  {
+    "id": "dc0cb02c112acac5",
+    "ru": "Протокол ПЛ-31 и проверка реестра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].documents[d2].title"
+    ]
+  },
+  {
+    "id": "87dbb531c9e6f4a5",
+    "ru": "Исследование образца не заменяет требуемый карантинный сертификат и само по себе не подтверждает заражение партии. В базовой истории сертификат был на другую партию. Здесь предъявлен документ иного назначения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.explain"
+    ]
+  },
+  {
+    "id": "50f04e75d63e4b3d",
+    "ru": "Исследование образца не заменяет требуемый карантинный сертификат и само по себе не подтверждает заражение партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].trap.explain",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].contrast.decision"
+    ]
+  },
+  {
+    "id": "9ae5e557b7bf34b0",
+    "ru": "Положительный лабораторный результат заменяет любой документ перевозки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "6893d1b5c9859fd3",
+    "ru": "Отсутствие сертификата доказывает наличие вредителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-lab-not-certificate.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "85252324817c32a9",
+    "ru": "Сертификат появился после даты вывоза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.intro"
+    ]
+  },
+  {
+    "id": "de2e5f048a7e4589",
+    "ru": "Проверить хронологию; поздний документ не доказывает наличие основания в момент прошлой перевозки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.explain"
+    ]
+  },
+  {
+    "id": "d028e88792038b08",
+    "ru": "Считать прошлую перевозку оформленной своевременно автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "3e11dc831f0a89a4",
+    "ru": "Отменить лабораторный результат из-за даты сертификата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f76cf495f45479d0",
+    "ru": "Различать карантинный сертификат и лабораторное заключение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "417ee57de331aa3d",
+    "ru": "Признать любой результат исследования сертификатом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "227c7526f224c796",
+    "ru": "Установить заражение только по отсутствию сертификата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "1749b456004a1c00",
+    "ru": "Лаборатория не нашла вредителя. Продавец считает, что этот протокол и есть карантинный сертификат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].opening"
+    ]
+  },
+  {
+    "id": "bf86f149efa5782f",
+    "ru": "Раздельная оценка исследования и обязательного документа по установленной перевозке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].procedures[0].text"
+    ]
+  },
+  {
+    "id": "6738157696e8c1d4",
+    "ru": "Признание лаборатории органом выдачи любых сертификатов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].procedures[1].text"
+    ]
+  },
+  {
+    "id": "571b17910cba3b67",
+    "ru": "Назначение уничтожения по отсутствию бумаги у покупателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5fe91a1879326eb3",
+    "ru": "Л-31, 240 единиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "43502a1683c88db1",
+    "ru": "Определены партия и количество.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "744bf967a0505b7d",
+    "ru": "Какая партия отгружена?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q0].text"
+    ]
+  },
+  {
+    "id": "82a8c7544c9c0cab",
+    "ru": "Протокол исследования образца Л-31.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "38761b98a8aa40c8",
+    "ru": "Это результат исследования, не сертификат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6fb9fab215acb5aa",
+    "ru": "Что выдала лаборатория?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q1].text"
+    ]
+  },
+  {
+    "id": "33f07d1f2275c51c",
+    "ru": "Проверка соответствующего реестра его не подтвердила.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "7fbe19bb4a00487f",
+    "ru": "Нет подтверждённого обязательного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "0b7fd63835733f12",
+    "ru": "Есть ли сертификат по этой перевозке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q2].text"
+    ]
+  },
+  {
+    "id": "814d553003390d08",
+    "ru": "Нет, по исследованному образцу объект не выявлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "c36f208bae169644",
+    "ru": "Нельзя подменять отсутствие документа выводом о заражении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c2baa916da295caf",
+    "ru": "Исследование показало заражение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b9f023bccb031bb1",
+    "ru": "Уполномоченное фитосанитарное подразделение с материалами конкретной перевозки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].routes[0].text"
+    ]
+  },
+  {
+    "id": "b23598ad1f4f02a1",
+    "ru": "Лаборатория как орган назначения административных санкций.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].routes[1].text"
+    ]
+  },
+  {
+    "id": "537e8e2f03af7ed2",
+    "ru": "Покупатель как уполномоченный уничтожить партию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].routes[2].text"
+    ]
+  },
+  {
+    "id": "08ab3c38e4725efd",
+    "ru": "Протокол лаборатории и разрешающий документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[seedlings-lab-not-certificate].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[seedlings-lab-not-certificate].title"
+    ]
+  },
+  {
+    "id": "32df509b0cda7392",
+    "ru": "Протокол исследования и карантинный сертификат имеют одинаковое назначение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-lab-not-certificate].trap.text"
+    ]
+  },
+  {
+    "id": "46e07528ba48b912",
+    "ru": "Сопоставить акт З-7 с участком П-12.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[a0].title"
+    ]
+  },
+  {
+    "id": "fbf108c60917c601",
+    "ru": "Учесть установленный маршрут партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[a1].title"
+    ]
+  },
+  {
+    "id": "73f7e243b15d8873",
+    "ru": "Подготовить ответ о неприменимости именно данного основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[a2].title"
+    ]
+  },
+  {
+    "id": "31c20cf2087bd6a7",
+    "ru": "Не расширять вывод до освобождения от всех требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[a3].title"
+    ]
+  },
+  {
+    "id": "684606a8216da305",
+    "ru": "Проверить новые материалы при изменении происхождения следующей партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[a4].title"
+    ]
+  },
+  {
+    "id": "931ffbf026f87601",
+    "ru": "Потребовать сертификат только по совпадению района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[b0].title"
+    ]
+  },
+  {
+    "id": "500044d09cac67f5",
+    "ru": "Разрешить любую будущую перевозку без проверки её условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].actions[b1].title",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b6368b04374f8be9",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Рассматривается только требование к вывозу из конкретной карантинной фитосанитарной зоны по статье 21. Импорт, экспорт и иные основания сертификации по условию отсутствуют; нельзя распространить вывод на все возможные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].brief"
+    ]
+  },
+  {
+    "id": "dfa5a3dba294ecb0",
+    "ru": "Базовое дело прямо задавало вывоз из зоны. Здесь одно из необходимых условий отсутствует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].coach.plan",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].contrast.difference"
+    ]
+  },
+  {
+    "id": "9444e7fce3f06990",
+    "ru": "Заголовок: «В районе установлен карантин». Границы и перечень участков в статье не приведены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d0].text"
+    ]
+  },
+  {
+    "id": "e6cb1348e20a26de",
+    "ru": "Новостное сообщение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d0].title"
+    ]
+  },
+  {
+    "id": "65efd2e0176b95f8",
+    "ru": "Ограничения действуют в координатах З-7, а не на всей территории района. Перечень затрагиваемой продукции указан отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d1].text"
+    ]
+  },
+  {
+    "id": "543624163438609f",
+    "ru": "Акт установления зоны З-7",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8caa62e7fcb5aa68",
+    "ru": "Партия Р-12 выращена на П-12; профильный специалист сопоставил координаты и подтвердил расположение и маршрут вне З-7. Иных оснований в рамках задачи не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d2].text"
+    ]
+  },
+  {
+    "id": "fe7d5e7ec3202c4f",
+    "ru": "Сопоставление участка и маршрута",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4c09596b3e4e4ede",
+    "ru": "Расположение в том же районе не подтверждает вывоз из зоны З-7; требование по этому основанию не установлено. Базовое дело прямо задавало вывоз из зоны. Здесь одно из необходимых условий отсутствует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.explain"
+    ]
+  },
+  {
+    "id": "64fb35692594ff1c",
+    "ru": "Расположение в том же районе не подтверждает вывоз из зоны З-7; требование по этому основанию не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].trap.explain",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].contrast.decision"
+    ]
+  },
+  {
+    "id": "01bbe740f80c052a",
+    "ru": "Название района достаточно для применения ограничения ко всей территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "fe3b4de0153f7ba7",
+    "ru": "Отсутствие одного основания отменяет любые фитосанитарные требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-seedlings-outside-zone.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "567e36c3d1255b6e",
+    "ru": "Для следующей партии в накладной указан склад внутри З-7.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.intro"
+    ]
+  },
+  {
+    "id": "20b9345ca161dea1",
+    "ru": "Заново проверить происхождение, режим и маршрут новой партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.options[0].text",
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.explain"
+    ]
+  },
+  {
+    "id": "3cfa257bf0fdba72",
+    "ru": "Применить прежний вывод без сопоставления документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "84c8a382f69f75c8",
+    "ru": "Признать обе партии заражёнными по названию склада.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "9c4f0af8a466f922",
+    "ru": "Проверять границы зоны и фактическое перемещение, а не название района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "af68fe5dd1f6b49a",
+    "ru": "Применять акт ко всему району по заголовку новости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "2f3c52abbbedced3",
+    "ru": "Считать проверку границ ненужной при любой продаже растений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "02184390f3031235",
+    "ru": "Питомник находится в районе, где объявили карантин. Значит у любого продавца должен быть такой сертификат?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].opening"
+    ]
+  },
+  {
+    "id": "72a9ab21f23ef19e",
+    "ru": "Проверка условий применимости нормы с ограниченным выводом по данному основанию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].procedures[0].text"
+    ]
+  },
+  {
+    "id": "6c784be348431e9d",
+    "ru": "Назначение сертификата по административному названию района.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].procedures[1].text"
+    ]
+  },
+  {
+    "id": "7f34b86826cec816",
+    "ru": "Освобождение продавца от всех проверок в будущем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].procedures[2].text"
+    ]
+  },
+  {
+    "id": "815ae5ca07bd1630",
+    "ru": "На участке П-12, указанном в накладной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a55d21272b6b6179",
+    "ru": "Известен участок происхождения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "90e291a42c2e80c3",
+    "ru": "Где выращена партия?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q0].text"
+    ]
+  },
+  {
+    "id": "2e66b8b87c845aae",
+    "ru": "Нет, акт содержит координаты части территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c1a429f741d02b7d",
+    "ru": "Административная граница не равна карантинной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "46bad2a8af349fde",
+    "ru": "Охватывает ли зона весь район?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q1].text"
+    ]
+  },
+  {
+    "id": "449bc5328774b656",
+    "ru": "Профильный специалист подтвердил: П-12 находится вне зоны З-7.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "3b570fdd4a6924af",
+    "ru": "Условие вывоза из зоны не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b735feef525d5cd9",
+    "ru": "Есть проверка местоположения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q2].text"
+    ]
+  },
+  {
+    "id": "5e796d456a7fbba4",
+    "ru": "В материалах подтверждён маршрут вне её границ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "89f1849986c16738",
+    "ru": "Нет скрытого перемещения из зоны по условию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "e0d95d19e5aece07",
+    "ru": "Продукция прошла через зону?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b6b669246bb3e305",
+    "ru": "Компетентное подразделение Россельхознадзора по месту рассматриваемого перемещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].routes[0].text"
+    ]
+  },
+  {
+    "id": "ae973127140a750e",
+    "ru": "Любой муниципальный отдел без фитосанитарной компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].routes[1].text"
+    ]
+  },
+  {
+    "id": "c33eeff86971c03c",
+    "ru": "Редактор новости как окончательный источник границ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].routes[2].text"
+    ]
+  },
+  {
+    "id": "ca932c9553257604",
+    "ru": "Граница зоны проходит не по всему району",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[seedlings-outside-zone].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[seedlings-outside-zone].title"
+    ]
+  },
+  {
+    "id": "4708f013629b7bfd",
+    "ru": "Карантинная зона обязательно совпадает со всем одноимённым районом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[seedlings-outside-zone].trap.text"
+    ]
+  },
+  {
+    "id": "0a5c550193e06b36",
+    "ru": "Зафиксировать цель инициативы и неполноту предложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[a0].title"
+    ]
+  },
+  {
+    "id": "74463e1ceac69150",
+    "ru": "Проверить действующий порядок, площадку и цепочку вывоза",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[a1].title"
+    ]
+  },
+  {
+    "id": "87c5c44a1746931b",
+    "ru": "Запросить сведения об операторе, графике и дальнейшем направлении фракций",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[a2].title"
+    ]
+  },
+  {
+    "id": "318a0364460ee100",
+    "ru": "Разъяснить жителям, что уже установлено и что ещё не утверждено",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[a3].title"
+    ]
+  },
+  {
+    "id": "f78a4ebaf0006703",
+    "ru": "Сопоставить окончательное предложение со всей цепочкой обслуживания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[a4].title"
+    ]
+  },
+  {
+    "id": "90f67c698059d905",
+    "ru": "Объявить гарантированное бюджетное обязательство без решения и полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[b0].title",
+      "cases:CASE_TEMPLATES[separate-waste-chain].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "93b0a92d59e2971b",
+    "ru": "Признать цвет контейнеров достаточным доказательством переработки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].actions[b1].title"
+    ]
+  },
+  {
+    "id": "74d55c892cd4d11a",
+    "ru": "Поставка и установка контейнеров. Порядок вывоза, ответственный оператор и место передачи раздельных фракций не указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a14fe29408604309",
+    "ru": "Предложение поставщика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].documents[d0].title"
+    ]
+  },
+  {
+    "id": "f23d9d369c9825da",
+    "ru": "Поддерживают идею при понятном графике и доступности площадки. Утверждённых обязательств органа власти нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d239707928d3aa8e",
+    "ru": "Протокол жителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].documents[d1].title"
+    ]
+  },
+  {
+    "id": "d6a3838e89e73f4f",
+    "ru": "Для решения необходимо проверить дальнейший вывоз и обработку; цвет контейнеров не доказывает раздельное обращение с отходами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].factTask.explain",
+      "cases:CASE_TEMPLATES[separate-waste-chain].outcomes.good"
+    ]
+  },
+  {
+    "id": "cf604d1e089f1b60",
+    "ru": "Бесплатные контейнеры означают бесплатный бессрочный вывоз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "45ed71f073d83756",
+    "ru": "Поддержка жителей сама утверждает бюджет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "50f148b46aa529c9",
+    "ru": "Представлен график вывоза, но все фракции по нему направляются как смешанные отходы; иных подтверждений нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].followup.intro"
+    ]
+  },
+  {
+    "id": "16fe73481659de92",
+    "ru": "Уточнить дальнейшую схему обращения и соответствие цели инициативы, не объявляя раздельный сбор обеспеченным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].followup.options[0].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].followup.explain"
+    ]
+  },
+  {
+    "id": "cec1f934cade1a26",
+    "ru": "Закрыть по наличию графика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d5779c0057414ce1",
+    "ru": "Утвердить финансирование самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8999449e4adab7c0",
+    "ru": "Статья 6 закона № 89-ФЗ относит к полномочиям субъекта РФ организацию деятельности с отходами, включая раздельное накопление. Цвет контейнеров не доказывает работоспособность всей схемы. Нужно выяснить порядок вывоза, участников и дальнейший маршрут, не обещая бюджетных обязательств от имени сотрудника приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].knowledge.explain"
+    ]
+  },
+  {
+    "id": "61cb97b6108e9377",
+    "ru": "Найдите полномочия субъекта РФ в организации обращения с отходами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "383b7e04228e2cc2",
+    "ru": "Мы хотим раздельный сбор во дворе. Представитель предложил бесплатно поставить цветные контейнеры, но ничего не сказал о вывозе. Соседи уже ждут объявления об открытии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].opening"
+    ]
+  },
+  {
+    "id": "c92070847caf2b74",
+    "ru": "Рассмотрение предложения об организации раздельного накопления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].procedures[0].text"
+    ]
+  },
+  {
+    "id": "27833954aa0920df",
+    "ru": "Разбирательство о уже доказанном нарушении подрядчика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].procedures[1].text"
+    ]
+  },
+  {
+    "id": "bcd067dd73e51f01",
+    "ru": "Автоматическое заключение договора от имени власти",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b2be88d4308cc81a",
+    "ru": "Только установку контейнеров. Вывоз, оператор и место дальнейшей обработки не определены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "5517aef22b9ddd5e",
+    "ru": "Контейнеры ещё не образуют работающий процесс.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q0].fact",
+      "cases:CASE_TEMPLATES[separate-waste-chain].coach.talk"
+    ]
+  },
+  {
+    "id": "e1900c1c79fdc552",
+    "ru": "Что включает предложение поставщика?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q0].text"
+    ]
+  },
+  {
+    "id": "91f07e86565f0f53",
+    "ru": "Место предложено жителями, но его согласование и схема обслуживания не проверены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "58a40ac7fc7797dc",
+    "ru": "Нужна проверка места, а не автоматическое обещание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "c59c375b8aba1560",
+    "ru": "Доступна ли площадка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q1].text"
+    ]
+  },
+  {
+    "id": "302a10d432fb4a68",
+    "ru": "Устойчивый раздельный сбор, а не разовую акцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "3cd327262afcb3d7",
+    "ru": "Нужно оценить всю цепочку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c408dc78e7818fd6",
+    "ru": "Что хотят жители?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q2].text"
+    ]
+  },
+  {
+    "id": "309c24cd8c2a0f6b",
+    "ru": "Нет; обсуждается проект предложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "bf9a2b0652df3e0e",
+    "ru": "Нельзя объявлять запуск принятым решением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9fdc6d108ebd08f6",
+    "ru": "Утверждено финансирование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].questions[q3].text"
+    ]
+  },
+  {
+    "id": "d844c0c7bb225f96",
+    "ru": "Рассматривает предложение и организует проверку совместимости с действующим порядком. Не утверждает финансирование и договоры без полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].role.text"
+    ]
+  },
+  {
+    "id": "dbf76dd3ba42099a",
+    "ru": "Специалист приёмной профильного органа субъекта РФ по обращению с отходами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].role.title",
+      "cases:CASE_TEMPLATES[waste-chain-ready].role.title",
+      "cases:CASE_TEMPLATES[waste-container-fractions].role.title"
+    ]
+  },
+  {
+    "id": "661b69caebe2e9bb",
+    "ru": "Оценить инициативу вместе с компетентными участниками системы обращения с отходами и дать обоснованный ответ о возможных действиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].routes[0].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].coach.plan",
+      "cases:CASE_TEMPLATES[separate-waste-chain].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "c2e012d1f246de7a",
+    "ru": "Объявить запуск без оператора и согласования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].routes[1].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "cb0a45692c8f2af3",
+    "ru": "Отклонить инициативу только потому, что она не жалоба.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].routes[2].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "611508e912605d9e",
+    "ru": "Контейнеры есть, куда повезут?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[separate-waste-chain].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[separate-waste-chain].title"
+    ]
+  },
+  {
+    "id": "74f6fcd85b85059b",
+    "ru": "Инициатива жителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].topic",
+      "cases:CASE_TEMPLATES[separate-waste-chain].tag",
+      "cases:CASE_TEMPLATES[waste-chain-ready].topic"
+    ]
+  },
+  {
+    "id": "0f7da8075763c1e1",
+    "ru": "Проверить организацию накопления, вывоза и дальнейшего обращения, а не один предмет оборудования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].trap.options[0].text",
+      "cases:CASE_TEMPLATES[separate-waste-chain].trap.explain"
+    ]
+  },
+  {
+    "id": "7dfa1c69045072cc",
+    "ru": "Ограничиться подсчётом ёмкостей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "ad40e0b997991bc6",
+    "ru": "Помощник: «Оценим только количество контейнеров».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[separate-waste-chain].trap.text"
+    ]
+  },
+  {
+    "id": "54cf0ee7cbfd835c",
+    "ru": "Разослать медицинское приложение всем адресатам без оценки необходимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[broadcast].title"
+    ]
+  },
+  {
+    "id": "057def92ae008ee1",
+    "ru": "Закрыть оба вопроса после первого ответа о транспорте",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[close].title"
+    ]
+  },
+  {
+    "id": "c29f1889707e930f",
+    "ru": "Уведомить заявителя о маршрутах рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[notify].title"
+    ]
+  },
+  {
+    "id": "f550fd984bb2add1",
+    "ru": "Разграничить доступ к чувствительным приложениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[protect].title"
+    ]
+  }
+]

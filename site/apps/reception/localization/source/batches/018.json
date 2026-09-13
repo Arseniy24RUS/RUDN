@@ -1,0 +1,1154 @@
+[
+  {
+    "id": "c5d57637984a8b1b",
+    "ru": "Объявление о задержке не заменяет событие в билете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "4475bc15b76fae7d",
+    "ru": "От какого события считаем ожидание?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a188b5c1284ab3fa",
+    "ru": "Да, это не спорная часть дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "b09c992d56470f37",
+    "ru": "Причина задержки не отменяет весь перечень обслуживания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "cdff61dbae4d22a6",
+    "ru": "Погода и причина подтверждены?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q1].text"
+    ]
+  },
+  {
+    "id": "a8515e4b5df7d011",
+    "ru": "По полному журналу и уточнению заявительницы — нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "b2129c656769ab66",
+    "ru": "Отсутствие услуги задано документально.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "bcd56214232e1299",
+    "ru": "Питание было организовано другим способом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q2].text"
+    ]
+  },
+  {
+    "id": "c1eb13838e09542d",
+    "ru": "Нет, сейчас устанавливаем обязанность обслуживания и маршрут рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "033bdbce2d02013c",
+    "ru": "Компенсация и вина требуют отдельного анализа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d5a235e8d5901ca5",
+    "ru": "Вы рассчитываете все денежные требования?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].questions[q3].text"
+    ]
+  },
+  {
+    "id": "539e3a4d5cde1ff5",
+    "ru": "Специалист приёмной органа надзора в сфере воздушного транспорта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].role.title",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].role.title",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].role.title"
+    ]
+  },
+  {
+    "id": "2eb80fa1f203e747",
+    "ru": "Подготовить обоснование для обращения к перевозчику и компетентного надзорного рассмотрения в пределах полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].routes[0].text"
+    ]
+  },
+  {
+    "id": "66533e2c80bd4b24",
+    "ru": "Направить заявление в метеослужбу как единственному обязанному кормить пассажиров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].routes[1].text"
+    ]
+  },
+  {
+    "id": "9ada36595ee906bb",
+    "ru": "Обязать сотрудника публичной приёмной выплатить всю заявленную сумму из личных средств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].routes[2].text"
+    ]
+  },
+  {
+    "id": "96165041201b85ab",
+    "ru": "Непогода не отменяет помощь при ожидании",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[flight-weather-care].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[flight-weather-care].title"
+    ]
+  },
+  {
+    "id": "d3d6116d8b30e334",
+    "ru": "Воздушные перевозки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].topic",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].topic",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].topic"
+    ]
+  },
+  {
+    "id": "2b20e3cb8197da5c",
+    "ru": "Пункты 99–99.2 ФАП включают задержки по погодным условиям; статья о денежной ответственности — отдельный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].trap.explain"
+    ]
+  },
+  {
+    "id": "cb2a329a00d0e65f",
+    "ru": "Неблагоприятная погода сама по себе не освобождает от предусмотренного обслуживания при ожидании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-weather-care].trap.text"
+    ]
+  },
+  {
+    "id": "5ab3032f60e85ea2",
+    "ru": "Сопоставить полную маркировку и идентификатор партии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[a0].title"
+    ]
+  },
+  {
+    "id": "07906e31e1777f69",
+    "ru": "Различить изготовление, годность и дату покупки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[a1].title"
+    ]
+  },
+  {
+    "id": "dbd79eb5da9bcecf",
+    "ru": "Подготовить ответ об установленном факте без неподтверждённой общей оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[a2].title"
+    ]
+  },
+  {
+    "id": "81ce6b3f4fb6d586",
+    "ru": "Пояснить возможность сообщить иные конкретные недостатки без обвинения заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e604e2cb79adb1df",
+    "ru": "Проверить полноту и точность разъяснения по представленным датам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[a4].title"
+    ]
+  },
+  {
+    "id": "8571973be103396f",
+    "ru": "Считать отсутствие просрочки доказательством надлежащего хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[b0].title"
+    ]
+  },
+  {
+    "id": "4c4e1211ffc0210a",
+    "ru": "Советовать попробовать сомнительный продукт для проверки безопасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].actions[b1].title",
+      "cases:CASE_TEMPLATES[food-manufactured-date].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "bcb6693203c01ff3",
+    "ru": "Все участники и документы дела вымышлены. Полная маркировка читаема и относится к той же упаковке. Сравниваются именно даты; лабораторного вывода о безопасности и проверки условий хранения в материалах нет. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].brief"
+    ]
+  },
+  {
+    "id": "570d34fc5dce5aeb",
+    "ru": "В других вариантах недостаток установлен. Здесь сначала нужно проверить чтение маркировки и не расширять вывод дальше доказанного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].coach.plan",
+      "cases:CASE_TEMPLATES[food-manufactured-date].contrast.difference"
+    ]
+  },
+  {
+    "id": "d9d495060663c3a7",
+    "ru": "Товар партии М-8 куплен {{purchase}}. Жалоба основана на принятии даты изготовления за срок годности. Данных об иных недостатках в первом обращении нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d0].text"
+    ]
+  },
+  {
+    "id": "8df82f8abd1592d5",
+    "ru": "Покупка и первое обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e8172a54f3b9f657",
+    "ru": "На первом снимке видна только дата изготовления без названия поля. Отдельное поле «Годен до» было обрезано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7e9fc07ba32414b6",
+    "ru": "Обрезанный снимок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d1].title"
+    ]
+  },
+  {
+    "id": "2387bd6390b1ca1c",
+    "ru": "Изготовлено {{manufactured}}. Годен до {{expiry}}. Названия полей хорошо читаемы; маркировка именно на упаковке из обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d2].text"
+    ]
+  },
+  {
+    "id": "78468cf1d78b286b",
+    "ru": "Полная маркировка партии М-8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].documents[d2].title"
+    ]
+  },
+  {
+    "id": "ac184dfa3a0b532d",
+    "ru": "Просрочка по проверенным датам не подтверждена: дата изготовления и срок годности различаются. В других вариантах недостаток установлен. Здесь сначала нужно проверить чтение маркировки и не расширять вывод дальше доказанного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.explain"
+    ]
+  },
+  {
+    "id": "7364712cf21e96df",
+    "ru": "Просрочка по проверенным датам не подтверждена: дата изготовления и срок годности различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[food-manufactured-date].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "ac8c0cef4a81df81",
+    "ru": "Любая дата раньше дня покупки означает просрочку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c3f1d4f8f5e70b53",
+    "ru": "Неистёкший срок по маркировке доказывает отсутствие всех недостатков товара.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "87e20d018dc126cb",
+    "ru": "Новое сообщение не опровергается правильным прежним выводом только о дате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].followup.explain"
+    ]
+  },
+  {
+    "id": "fa78808aabb7c202",
+    "ru": "Заявитель добавил снимок вздутой упаковки и сообщил о другой конкретной проблеме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].followup.intro"
+    ]
+  },
+  {
+    "id": "c90af32829e3d450",
+    "ru": "Отдельно принять новые сведения и определить компетентное действие; не ссылаться только на прежний расчёт даты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "68f30550f2b132d9",
+    "ru": "Игнорировать, потому что срок ещё не истёк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "3f631bed0b64e1c7",
+    "ru": "Попросить попробовать содержимое и описать вкус.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "cf1e34f9da2e09c8",
+    "ru": "Статья 10 Закона РФ № 2300-1 требует необходимой и достоверной информации о товаре, включая предусмотренные сведения о сроке годности и условиях использования. Дата изготовления не тождественна последнему допустимому дню использования. Из того, что срок по маркировке ещё не истёк, не следует вывод об отсутствии любых иных недостатков или нарушений хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].knowledge.explain",
+      "cases:SOURCES[n12-consumer10].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-manufactured-date].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "d7ed835f84c73384",
+    "ru": "Сопоставлять необходимую информацию о товаре и не смешивать виды дат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "eab8eb6ad3677de3",
+    "ru": "Признавать просроченной любую ранее изготовленную продукцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e5f427419131918a",
+    "ru": "Считать любое отсутствие просрочки медицинским заключением о безопасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "2388f17c516faf7b",
+    "ru": "Найдите норму: Информация о товаре и сроке годности. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "12d4703972c15e64",
+    "ru": "На упаковке старая дата. Я решил, что это срок годности, и написал, что магазин продаёт просроченное питание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].opening"
+    ]
+  },
+  {
+    "id": "a17f374b5653c39b",
+    "ru": "Ответ по проверенной информации о маркировке без вывода о любых иных недостатках.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e16b537d4b904407",
+    "ru": "Безусловное признание продажи просроченного товара по обрезанному снимку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].procedures[1].text"
+    ]
+  },
+  {
+    "id": "211d1f56af2346a8",
+    "ru": "Окончательное заключение о санитарной безопасности без исследования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].procedures[2].text"
+    ]
+  },
+  {
+    "id": "2a6ddf377e0666e5",
+    "ru": "Да, есть полный снимок той же упаковки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "740ece69c3e0ff6a",
+    "ru": "Можно различить названия дат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "e0d9445433093c09",
+    "ru": "Сохранена вся маркировка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q0].text"
+    ]
+  },
+  {
+    "id": "d41f1a87cb7d797d",
+    "ru": "«Изготовлено {{manufactured}}».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "19cfdb94f78571e2",
+    "ru": "Первая дата — дата изготовления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a2686b38e0739ba7",
+    "ru": "Как подписана первая дата?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d7919b0cff2865f5",
+    "ru": "Указано «Годен до {{expiry}}», покупка была {{purchase}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "cecc2a88e55f8752",
+    "ru": "Нужно сопоставить соответствующее поле и покупку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "603d94ce47f24a74",
+    "ru": "Есть отдельный срок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e8e371102f89b4f8",
+    "ru": "На момент первого обращения не описаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "1138e8c4919d52d1",
+    "ru": "Вывод ограничен представленными сведениями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "691d603fbbf97737",
+    "ru": "Были другие признаки недостатка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].questions[q3].text"
+    ]
+  },
+  {
+    "id": "48f51fafa3e217fb",
+    "ru": "Специалист приёмной по защите прав потребителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].role.title"
+    ]
+  },
+  {
+    "id": "2512ed6842d6a310",
+    "ru": "Профильное подразделение по обращению; при новых данных — соответствующий компетентный маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].routes[0].text"
+    ]
+  },
+  {
+    "id": "5fa86a458a1196b9",
+    "ru": "Передать магазину полномочие запретить любые последующие обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].routes[1].text"
+    ]
+  },
+  {
+    "id": "fb2fdbb1c9c22123",
+    "ru": "Поручить посетителю лабораторную проверку дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].routes[2].text"
+    ]
+  },
+  {
+    "id": "030eff2d13f4e88e",
+    "ru": "Дата изготовления принята за срок годности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[food-manufactured-date].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[food-manufactured-date].title"
+    ]
+  },
+  {
+    "id": "d1d59b2f9429473a",
+    "ru": "Срок маркировки не заменяет проверку иных признаков и условий хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].trap.explain"
+    ]
+  },
+  {
+    "id": "60150ddbcff7fbdf",
+    "ru": "Если дата «Годен до» ещё не наступила, продукт по определению не может иметь других недостатков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-manufactured-date].trap.text"
+    ]
+  },
+  {
+    "id": "b38d4ebcbda4c882",
+    "ru": "Сопоставить доказательства покупки, маркировку и заявленное требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[a0].title"
+    ]
+  },
+  {
+    "id": "36c72c6154851e7c",
+    "ru": "Установить подтверждённую дату получения требования продавцом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[a1].title"
+    ]
+  },
+  {
+    "id": "8219afd25fb3e0b1",
+    "ru": "Подготовить разъяснение по возврату и отдельный маршрут обращения в орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f6e1bd6da9e8da01",
+    "ru": "Не требовать единственно бумажный чек и не обещать неутверждённое взыскание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[a3].title"
+    ]
+  },
+  {
+    "id": "1e00eeb9572d2d25",
+    "ru": "Проверить ответ именно по возврату суммы и фактическому исполнению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[a4].title"
+    ]
+  },
+  {
+    "id": "eeb68394da5b33e5",
+    "ru": "Засчитать отказ по отсутствию чека независимо от установленных фактов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[b0].title"
+    ]
+  },
+  {
+    "id": "676b5c13ab7a6677",
+    "ru": "Предложить изменить дату покупки или изготовить недостающий чек.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].actions[b1].title",
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "ed58e4f0c1811616",
+    "ru": "Все участники и документы дела вымышлены. Факт покупки у этого продавца и недостаток установлены материалами. Покупатель заявил именно возврат уплаченной суммы, не замену. Ухудшения здоровья не сообщается. Сотрудник органа не проводит сам медицинских или лабораторных исследований. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Вычислите срок удовлетворения требования продавцом по статье 22, не срок ответа надзорного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].brief"
+    ]
+  },
+  {
+    "id": "a9d61ef4e1f52d4d",
+    "ru": "Возврат уплаченной суммы за товар ненадлежащего качества. Требование получено продавцом; это не замена и не письмо надзорному органу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.context"
+    ]
+  },
+  {
+    "id": "46d1c79ab0623f72",
+    "ru": "Покупка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.events[purchase].label"
+    ]
+  },
+  {
+    "id": "04e96158ae6322da",
+    "ru": "Продавец получил требование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.events[seller].label"
+    ]
+  },
+  {
+    "id": "575fd86477ba00b1",
+    "ru": "Возврат уплаченной суммы за товар ненадлежащего качества. Требование получено продавцом; это не замена и не письмо надзорному органу. Профиль счёта этого упражнения: со следующего дня после события; нерабочее окончание переносится вперёд; федеральная пятидневная неделя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.scope"
+    ]
+  },
+  {
+    "id": "c7fde19dd6e0a352",
+    "ru": "Статья 22 Закона РФ от 07.02.1992 № 2300-1",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.source"
+    ]
+  },
+  {
+    "id": "de4403e6fde24ebb",
+    "ru": "Крайний день удовлетворения требования о возврате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].calendar.title"
+    ]
+  },
+  {
+    "id": "57408c51f1c4937d",
+    "ru": "В исходной истории документ относился к другой партии. Здесь факт покупки и недостаток подтверждены; препятствием объявлено отсутствие только одного вида доказательства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].coach.plan",
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].contrast.difference"
+    ]
+  },
+  {
+    "id": "efff172c1afe25dc",
+    "ru": "Покупка партии П-61 у данного продавца {{purchase}} подтверждена им самим и платёжными данными. По сопоставлению маркировки срок истёк до покупки. Отсутствует только бумажный чек.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d0].text"
+    ]
+  },
+  {
+    "id": "cb27df5ff7985b3c",
+    "ru": "Подтверждение покупки и недостатка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d0].title"
+    ]
+  },
+  {
+    "id": "43c96348e3e8e697",
+    "ru": "Продавец получил {{seller}} требование о возврате уплаченной суммы за некачественный товар. Отказ обоснован исключительно отсутствием чека. Подмены требования заменой товара нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d1].text"
+    ]
+  },
+  {
+    "id": "3cd3a10465dae2b3",
+    "ru": "Полученное требование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c5ee33203cf0bb5c",
+    "ru": "В памятке обсуждается срок замены товара. Она не описывает заявленное денежное требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d2].text"
+    ]
+  },
+  {
+    "id": "ae4c246a74240086",
+    "ru": "Памятка об обмене",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[d2].title"
+    ]
+  },
+  {
+    "id": "3b151aa2e4518f39",
+    "ru": "Покупка {{purchase}}; продавец получил требование {{seller}}. Обращение в орган поступило {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].documents[dates].text"
+    ]
+  },
+  {
+    "id": "e27d2335862c97be",
+    "ru": "Отсутствие чека не является самостоятельным основанием отказа; заявлено денежное требование по подтверждённой покупке. В исходной истории документ относился к другой партии. Здесь факт покупки и недостаток подтверждены; препятствием объявлено отсутствие только одного вида доказательства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.explain"
+    ]
+  },
+  {
+    "id": "e9b892f9cf4b9da6",
+    "ru": "Отсутствие чека не является самостоятельным основанием отказа; заявлено денежное требование по подтверждённой покупке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "b4a3dc587d8ba573",
+    "ru": "Без бумажного чека любые другие доказательства покупки запрещены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f3cd576b13c07055",
+    "ru": "Возврат денег и замена товара всегда имеют один и тот же срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "4d685a562408cfe9",
+    "ru": "Правомерная альтернатива не навязывается вместо установленного требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].followup.explain"
+    ]
+  },
+  {
+    "id": "f45d023a75eb9d71",
+    "ru": "Магазин подтвердил «вопрос решён»: предложена замена баночки, но деньги по заявленному требованию не возвращены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].followup.intro"
+    ]
+  },
+  {
+    "id": "676bf12a6cdfa094",
+    "ru": "Сопоставить предложенную замену с выбранным денежным требованием и проверить его исполнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "179bf58c8c466616",
+    "ru": "Закрыть дело по любой предложенной замене.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "78f53c19931ca7a4",
+    "ru": "Переписать исходное требование покупателя на обмен без его волеизъявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "92a47cfd04c9f274",
+    "ru": "Статья 18 Закона РФ от 07.02.1992 № 2300-1 предусматривает требования при недостатках товара. Отсутствие кассового или товарного чека само по себе не служит основанием для отказа; обстоятельства покупки и недостатка всё равно устанавливаются. Проверка качества при необходимости не отменяется. Требование о возврате уплаченной суммы за ненадлежащий товар связано с десятидневным сроком статьи 22, а не с тридцатидневным сроком ответа публичного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].knowledge.explain",
+      "cases:SOURCES[n12-consumer18].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-food-no-receipt-refund].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "bcd9801520375719",
+    "ru": "Не отказывать только из-за отсутствия чека; различать выбранное требование и его срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "7eca13484ca0930a",
+    "ru": "Требовать только оригинал бумажного кассового чека.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ef777fd258f19157",
+    "ru": "Автоматически заменить возврат денег обменом по решению приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "bc1c30bcd00c7d2d",
+    "ru": "Найдите норму: Некачественный товар и подтверждение покупки. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "6388598ee751d26d",
+    "ru": "Детское питание оказалось просроченным уже при покупке. Бумажный чек потерялся, и магазин отказался обсуждать возврат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].opening"
+    ]
+  },
+  {
+    "id": "399e295bc049a411",
+    "ru": "Разграничить денежное требование к продавцу и ответ органа; применить статьи 18 и 22 Закона РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].procedures[0].text"
+    ]
+  },
+  {
+    "id": "f681961924f9eb59",
+    "ru": "Считать требование заявлением об обмене независимо от его текста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].procedures[1].text"
+    ]
+  },
+  {
+    "id": "c9aeb2ef58def4fe",
+    "ru": "Заменить срок продавца тридцатидневной перепиской органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].procedures[2].text"
+    ]
+  },
+  {
+    "id": "f01f01fc014b886e",
+    "ru": "Банковским платежом и подтверждением продавца; товар и упаковка сохранены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "6b55f212d5a37403",
+    "ru": "Нет бумажного чека, но покупка подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "88ab6187e6244cd1",
+    "ru": "Чем подтверждается покупка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q0].text"
+    ]
+  },
+  {
+    "id": "7c373480b20ddf92",
+    "ru": "Да, маркировка и дата покупки сопоставлены в акте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "e7177240625f56e7",
+    "ru": "Недостаток не предполагается только по словам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "aa5fc67690f82a53",
+    "ru": "Срок уже истёк при покупке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q1].text"
+    ]
+  },
+  {
+    "id": "2d03a10e283bef54",
+    "ru": "Возврат уплаченной суммы, не обмен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "f4c3d258b65afbf9",
+    "ru": "Срок зависит от предмета требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "fcc47de76bc8aa82",
+    "ru": "Какое требование заявлено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q2].text"
+    ]
+  },
+  {
+    "id": "1822c2ec009b4af7",
+    "ru": "{{seller}}, это подтверждено отметкой; в орган написал позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "85317fe44a34dcf4",
+    "ru": "Отсчёт не начинается от письма в орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "e573bb84eab426a4",
+    "ru": "Когда продавец получил требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5601f488cd39f609",
+    "ru": "Специалист приёмной органа по защите прав потребителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].role.title"
+    ]
+  },
+  {
+    "id": "0cbd38b22d8a4545",
+    "ru": "Разъяснить требования к продавцу и подготовить действия компетентного органа в пределах полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].routes[0].text"
+    ]
+  },
+  {
+    "id": "fb9fcb5e9f9f1751",
+    "ru": "Обязать банк самостоятельно признать недостаток товара.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].routes[1].text"
+    ]
+  },
+  {
+    "id": "d53ad0a286031fd0",
+    "ru": "Предложить покупателю подделать утраченный чек.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].routes[2].text"
+    ]
+  },
+  {
+    "id": "c99dda90c9b0494a",
+    "ru": "Чек потерян, покупка подтверждается",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[food-no-receipt-refund].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[food-no-receipt-refund].title"
+    ]
+  },
+  {
+    "id": "c92d9f856b2621e6",
+    "ru": "Проверка покупки и недостатка остаётся, но обязательность единственного бумажного доказательства не вводится.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].trap.explain"
+    ]
+  },
+  {
+    "id": "3b751088296a960f",
+    "ru": "Отсутствие бумажного чека само по себе не отменяет право предъявить требование при установленных обстоятельствах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-no-receipt-refund].trap.text"
+    ]
+  },
+  {
+    "id": "30190c1bacbd4e33",
+    "ru": "Отделить возврат стоимости от сообщения о продолжающейся продаже",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0fc6d2ce4d94e4eb",
+    "ru": "Сопоставить партию, маркировку и место покупки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[a1].title"
+    ]
+  },
+  {
+    "id": "686c8be3408d6b12",
+    "ru": "Подготовить направление по компетенции без обещания обязательной проверки или санкции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[a2].title"
+    ]
+  },
+  {
+    "id": "2de63b9ccd47c92f",
+    "ru": "Уведомить о выбранном маршруте и предмете рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[a3].title"
+    ]
+  },
+  {
+    "id": "992b3c794bc9f0c7",
+    "ru": "Проверить ответ именно по партии А",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[a4].title"
+    ]
+  },
+  {
+    "id": "334c07c04820b506",
+    "ru": "Публично объявить виновность и санкцию от имени приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[b0].title",
+      "cases:CASE_TEMPLATES[food-other-batch].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "9672164badff61fa",
+    "ru": "Удалить сведения о старой партии как несущественные",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].actions[b1].title"
+    ]
+  },
+  {
+    "id": "b58efecb8f26c809",
+    "ru": "Покупательница",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].citizen.description"
+    ]
+  },
+  {
+    "id": "e7f29b6a05df1f5b",
+    "ru": "На упаковке и полке партия А с истёкшим к покупке сроком. Магазин приложил документ на партию Б с иным сроком. Возврат стоимости гражданке подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d0].text"
+    ]
+  },
+  {
+    "id": "4ded00aabbd293d2",
+    "ru": "Маркировка и документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d0].title"
+    ]
+  },
+  {
+    "id": "90b00cbffbf6a0a4",
+    "ru": "Учебный набор",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d0].type"
+    ]
+  },
+  {
+    "id": "586c0ef40e64b3a8",
+    "ru": "Просит рассмотреть продолжающуюся продажу партии А. Названия, партии и магазин вымышлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f3430a72de4b8469",
+    "ru": "Сообщение покупательницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8d2b14ab9e773994",
+    "ru": "Предмет просьбы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].documents[d1].type"
+    ]
+  },
+  {
+    "id": "eeb934cf61dd155a",
+    "ru": "Возврат денег не отвечает на сообщение о партии А; документ на Б не подтверждает её состояние.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[food-other-batch].factTask.explain",
+      "cases:CASE_TEMPLATES[food-other-batch].outcomes.good"
+    ]
+  },
+  {
+    "id": "9cf4464360d6d3c1",
+    "ru": "После возврата стоимости любые сведения о продаже теряют значение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "609b4c544c281b11",
+    "ru": "Номер партии не имеет значения для проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "4d2967cedb85005f",
+    "ru": "Учебное продолжение. Организация снова приложила документ только на Б.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].followup.intro"
+    ]
+  },
+  {
+    "id": "f97de9097d98e19f",
+    "ru": "Указать несоответствие партии и организовать рассмотрение оставшегося вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].followup.options[0].text",
+      "cases:CASE_TEMPLATES[food-other-batch].followup.explain"
+    ]
+  },
+  {
+    "id": "6e40561d5fdd4bcc",
+    "ru": "Признать любой документ о товаре достаточным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "99654f0d02e77bea",
+    "ru": "Самостоятельно определить лабораторный состав товара.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "d1c8a8f64907dcf8",
+    "ru": "Купила продукт, а срок на упаковке уже закончился. Магазин показывает документ на товар, но номер партии другой. Деньги мне вернули; я сообщаю о товаре, который остался в продаже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].opening"
+    ]
+  },
+  {
+    "id": "33111792f3c3621e",
+    "ru": "Обращение о соблюдении требований к товарам с передачей по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].procedures[0].text"
+    ]
+  },
+  {
+    "id": "660f9d25f33ac56b",
+    "ru": "Повторная выплата цены товара приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].procedures[1].text"
+    ]
+  },
+  {
+    "id": "082bdf70ee641050",
+    "ru": "Обжалование решения суда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b7f3dd82b50d5d22",
+    "ru": "Проверить сообщение о такой же партии на полке, а не повторно вернуть мне стоимость.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "96109b341c5818d9",
+    "ru": "Личный возврат и сообщение о продаже – разные вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "ae56d912dd6bf975",
+    "ru": "Чего вы просите после возврата денег?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5a28c6e00502c337",
+    "ru": "Да, на фотографиях упаковки и полки номер партии совпадает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f359ba3485dad469",
+    "ru": "Есть предметное сопоставление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[food-other-batch].questions[q1].fact"
+    ]
+  }
+]

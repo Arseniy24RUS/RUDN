@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "de495e443cbde950",
+    "ru": "Пакет содержит условные строки «ребёнок А» (по запросу), «ребёнок Б» и «ребёнок В». Оснований выдачи данных Б и В этому заявителю нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[export].text"
+    ]
+  },
+  {
+    "id": "4a6145279d45c8d9",
+    "ru": "Опись подготовленной выгрузки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[export].title"
+    ]
+  },
+  {
+    "id": "ff9098624caf75bc",
+    "ru": "Получено оператором {{received}}. Запрос касается одного ребёнка; полномочия представителя и реквизиты обращения проверены. Запрошены сведения об обработке и ознакомление с относящимися к ребёнку данными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[request].text"
+    ]
+  },
+  {
+    "id": "15292a8bdebe34f3",
+    "ru": "Карточка надлежащего запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[request].title"
+    ]
+  },
+  {
+    "id": "1ca8cbf118680d26",
+    "ru": "Проверка представительства завершена. Эта отметка подтверждает личность получателя, но не разрешает раскрытие сведений о других детях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[verification].text"
+    ]
+  },
+  {
+    "id": "e9e21bdea5026fde",
+    "ru": "Служебная отметка проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].documents[verification].title"
+    ]
+  },
+  {
+    "id": "1cdac61cadcc01c4",
+    "ru": "Право доступа к своим данным и защита чужих сведений должны соблюдаться одновременно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy-own-record].contrast.difference"
+    ]
+  },
+  {
+    "id": "8e2dd56c96f503cb",
+    "ru": "Отказать в индивидуальных данных, потому что весь файл конфиденциален.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "408e53a062a34792",
+    "ru": "Выдать весь файл, поскольку полномочия представителя подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "bc5f4370be961699",
+    "ru": "Предоставить сведения и ознакомление в отношении ребёнка А, не включая данные других детей без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "ee93148929a02eeb",
+    "ru": "Как подготовить надлежащий индивидуальный ответ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].factTask.prompt"
+    ]
+  },
+  {
+    "id": "179027b4492234be",
+    "ru": "Конфиденциальность и полнота ответа – разные требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].followup.explain"
+    ]
+  },
+  {
+    "id": "67e9573bcacc52b4",
+    "ru": "Пришла выгрузка только ребёнка А, но без запрошенных сведений о целях и правовых основаниях обработки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].followup.intro"
+    ]
+  },
+  {
+    "id": "cc466308aabcb446",
+    "ru": "Проверить и дополнить оставшиеся пункты; выдача строки не означает полного исполнения запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "34b9e272c2d906b1",
+    "ru": "Закрыть запрос по факту удаления чужих строк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "1aaa526569a31641",
+    "ru": "Вернуть чужие строки как замену правовым основаниям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "ae15690798b44fe5",
+    "ru": "Для такого запроса предусмотрено десять рабочих дней с получения оператором; предмет ответа ограничен правами представляемого лица.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[privacy-own-record].knowledge.explain"
+    ]
+  },
+  {
+    "id": "3e4ea97c7b9c3352",
+    "ru": "Любой вопрос о данных рассматривается только тридцать календарных дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "9f1aeda99a1b4910",
+    "ru": "Регистрация в журнале запускает новый независимый срок после получения запроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "a64e8dd6ec970b89",
+    "ru": "Найдите срок исполнения оператором надлежащего запроса представителя, если продление не применяется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "7d0675936458cb32",
+    "ru": "Я направила запрос о том, какие сведения о моём ребёнке обрабатываются и для чего. В ответ хотят прислать общую таблицу класса. Я ведь просила данные своего ребёнка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].opening"
+    ]
+  },
+  {
+    "id": "5dc5989469d0cd28",
+    "ru": "Обычная жалоба по 59-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].procedures[appeal].text"
+    ]
+  },
+  {
+    "id": "2801aca919829106",
+    "ru": "Общедоступный запрос по 8-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].procedures[open-info].text"
+    ]
+  },
+  {
+    "id": "9e8e1e5244595ed3",
+    "ru": "Запрос субъекта данных или его представителя к оператору по 152-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].procedures[subject-access].text"
+    ]
+  },
+  {
+    "id": "3feea15f3e5bbb89",
+    "ru": "Да, подтверждение уже находится в закрытой служебной части дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[identity].answer"
+    ]
+  },
+  {
+    "id": "2a35928d79ff2ac1",
+    "ru": "Не требуется повторно просить документы в публичном чате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[identity].fact"
+    ]
+  },
+  {
+    "id": "64454ee2649c1bb1",
+    "ru": "Проверено ли законное представительство?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[identity].text"
+    ]
+  },
+  {
+    "id": "82b8a9378bbf61b6",
+    "ru": "Одна строка моего ребёнка и строки остальных детей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[package].answer"
+    ]
+  },
+  {
+    "id": "f49a93086a5ad808",
+    "ru": "Общий файл содержит данные посторонних субъектов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[package].fact"
+    ]
+  },
+  {
+    "id": "698f741d5a45db8f",
+    "ru": "Что входит в подготовленную выгрузку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[package].text"
+    ]
+  },
+  {
+    "id": "14d8238bc5f6ca20",
+    "ru": "Цели и основания обработки, мои запрошенные сведения о ребёнке и возможность ознакомиться с его данными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[request].answer"
+    ]
+  },
+  {
+    "id": "f93c66029c6baf3d",
+    "ru": "Предмет запроса индивидуален.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[request].fact"
+    ]
+  },
+  {
+    "id": "8d196ba580b980b2",
+    "ru": "Что требуется предоставить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].questions[request].text"
+    ]
+  },
+  {
+    "id": "a88f08975fb3c5e0",
+    "ru": "Готовите ответ оператора на запрос проверенного законного представителя. Не выступаете надзорным органом; не направляете запрос в Роскомнадзор вместо исполнения обязанности оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].role.text"
+    ]
+  },
+  {
+    "id": "8e900c7114d4c026",
+    "ru": "Приёмная муниципального органа – оператора данных",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].role.title"
+    ]
+  },
+  {
+    "id": "4118c3d29bdd0989",
+    "ru": "Выдать общую таблицу представителю как всем родителям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "b3603a869033e096",
+    "ru": "Подготовить исполнение запроса самим оператором через уполномоченного сотрудника и защищённый канал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].routes[proper].text"
+    ]
+  },
+  {
+    "id": "111529e0f63ec40e",
+    "ru": "Передать всё в Роскомнадзор вместо ответа оператора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].routes[shortcut].text"
+    ]
+  },
+  {
+    "id": "bdc4f0081425a3bc",
+    "ru": "Сведения о ребёнке, не о всём классе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy-own-record].title",
+      "source-index:SOURCE_INDEX.entries[shelf:rkn].cases[privacy-own-record].title"
+    ]
+  },
+  {
+    "id": "72f8f712aad4970e",
+    "ru": "Выдать таблицу целиком ради удобства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "b4d9fc2174b3eb0a",
+    "ru": "Представительство определяет круг прав, но не открывает данные остальных детей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[privacy-own-record].trap.explain"
+    ]
+  },
+  {
+    "id": "10c539072fb6629f",
+    "ru": "Помощник: «Проверенное представительство разрешает выдать все записи из той же таблицы».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].trap.text"
+    ]
+  },
+  {
+    "id": "0e385c79539f3681",
+    "ru": "Надлежащий запрос поступил оператору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "19730fb9709e0f7b",
+    "ru": "Представительство подтверждено",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "14f68dcaa26c5853",
+    "ru": "Подготовлена избыточная выгрузка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].variantContrast.changedFacts[2]"
+    ]
+  },
+  {
+    "id": "b282a752366df728",
+    "ru": "Индивидуальный ответ оператора в специальный срок, без перенаправления вместо исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-own-record].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "c73d0677d6580225",
+    "ru": "Сопоставить режим без входа и после входа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[a0].title"
+    ]
+  },
+  {
+    "id": "865ee4d1a4d3b155",
+    "ru": "Проверить подтверждённый перечень получателей и основание обработки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[a1].title"
+    ]
+  },
+  {
+    "id": "9df9098141c03aef",
+    "ru": "Ограничить вывод конкретным проверенным сервисом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[a2].title"
+    ]
+  },
+  {
+    "id": "4e378da1d7151528",
+    "ru": "Разъяснить представителю фактические условия и порядок сообщения о сбое",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[a3].title"
+    ]
+  },
+  {
+    "id": "50a79e97618e54ae",
+    "ru": "Сохранить материалы проверки и реагировать на новые сведения о доступе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[a4].title"
+    ]
+  },
+  {
+    "id": "39a043dbc04bb58b",
+    "ru": "Попросить прислать пароль для проверки чужим сотрудникам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[b0].title",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "aeab6f7992d4415f",
+    "ru": "Публиковать запись ребёнка для проверки реакции пользователей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].actions[b1].title"
+    ]
+  },
+  {
+    "id": "7c0da42b0f7abe6c",
+    "ru": "Похожий экран на сайте не равен открытой публикации: режим доступа и получатели меняют вывод.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].contrast.difference"
+    ]
+  },
+  {
+    "id": "071fdb352050ecce",
+    "ru": "Учебная проверка: без авторизации запись недоступна; законный представитель видит только своего ребёнка; перечень уполномоченных сотрудников ограничен служебной задачей. Основание обработки и соразмерность цели в материалах проверены. Неограниченный круг получателей не установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].documents[d0].text"
+    ]
+  },
+  {
+    "id": "35f94b08fc0dcfcf",
+    "ru": "Протокол проверки доступа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].documents[d0].title"
+    ]
+  },
+  {
+    "id": "9d9a9efb32bd45ef",
+    "ru": "Наличие веб-адреса не означает доступ без авторизации. Протокол относится к конкретной записи; вывод не распространяется на все сервисы организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].documents[d1].text"
+    ]
+  },
+  {
+    "id": "dd54a2bf4f953a83",
+    "ru": "Описание сервиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].documents[d1].title"
+    ]
+  },
+  {
+    "id": "6c0cc64a0ef34c00",
+    "ru": "По данным дела подтверждён ограниченный доступ, а не распространение неопределённому кругу; нужен ответ по установленным условиям обработки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].outcomes.good"
+    ]
+  },
+  {
+    "id": "2236a1da0fc70b99",
+    "ru": "Любая информация с веб-адресом является публичной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "3ce3affeb770ef91",
+    "ru": "Авторизация освобождает оператора от любых обязанностей по защите данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "2cd1ecb68440e525",
+    "ru": "Учебное продолжение. На следующий день представитель сообщает: после входа появилась запись другого ребёнка, приложено защищённое подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].followup.intro"
+    ]
+  },
+  {
+    "id": "203cd0a0e765260e",
+    "ru": "Зафиксировать новый сбой разграничения доступа и передать оператору и уполномоченному подразделению минимально необходимые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].followup.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].followup.explain"
+    ]
+  },
+  {
+    "id": "5a6fb45451b88adf",
+    "ru": "Отклонить новые данные из-за вчерашнего исправного протокола.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "4c79ad189457d0cd",
+    "ru": "Предложить обсудить чужую запись в общем чате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "444b34f7d26d6fe1",
+    "ru": "Не квалифицировать ограниченный доступ как доказанную публичную публикацию; проверять основания и границы фактической обработки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].knowledge.explain",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].coach.research"
+    ]
+  },
+  {
+    "id": "65d2bc1a650c9461",
+    "ru": "Найдите статью, в которой различаются предоставление данных определённым лицам и распространение неопределённому кругу лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "eefac672d7c68e9b",
+    "ru": "Я увидела сведения о здоровье ребёнка на экране школьного сервиса и решила, что их видит весь интернет. Адрес страницы скопировала, но соседка открыть его не смогла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].opening"
+    ]
+  },
+  {
+    "id": "10ce81e6dd98e13a",
+    "ru": "Появляется форма авторизации, таблица не видна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "06183bb664afedc9",
+    "ru": "Открытый доступ не установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1f6f9be2081d8873",
+    "ru": "Что происходит без входа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5be951025a95609a",
+    "ru": "Только моего ребёнка. В служебном протоколе это подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "81f06e9b2f163934",
+    "ru": "Нужно различать собственную запись и доступ к чужой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a3ecae4d980a9ad4",
+    "ru": "Чьи записи видны в вашем кабинете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q1].text"
+    ]
+  },
+  {
+    "id": "25416af8d101210b",
+    "ru": "Только названные сотрудники с необходимыми для работы правами. Правовое основание и цель приложены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "fa22534584101760",
+    "ru": "Основание обработки не сводится к публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "65fc1c087b41698f",
+    "ru": "Кто ещё имеет доступ по протоколу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a89cb9e19f3892dd",
+    "ru": "Хочу понять, кто видит запись и что делать, если попадётся чужая.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a6063392c17714a3",
+    "ru": "Требуется разъяснение и проверка границ доступа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "47673ffbf37293ff",
+    "ru": "Какая претензия остаётся?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b283d9a70e63c925",
+    "ru": "Подготовить ответ уполномоченного подразделения о проверенном режиме доступа и порядке обращения при обнаружении чужих записей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].routes[0].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].coach.plan"
+    ]
+  },
+  {
+    "id": "ca57ff722973cbd4",
+    "ru": "Объявить публичную утечку без подтверждения доступности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].routes[1].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "0a3d59f10cc39181",
+    "ru": "Отказать в любых объяснениях, потому что установлен пароль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].routes[2].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "9cf65f8aaff2d83b",
+    "ru": "Таблица оказалась в моём кабинете",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[privacy-restricted-access].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy-restricted-access].title"
+    ]
+  },
+  {
+    "id": "327ba02b390c110b",
+    "ru": "Ограниченный доступ не исключает ошибки прав доступа; новые сведения оцениваются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].trap.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-restricted-access].trap.explain"
+    ]
+  },
+  {
+    "id": "72cb1f72999de09e",
+    "ru": "Пароль подтверждает законность любой последующей операции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "c93539d4668e7db6",
+    "ru": "Помощник: «Нет публичного доступа — значит жалобы о данных больше невозможны».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-restricted-access].trap.text"
+    ]
+  },
+  {
+    "id": "7c7cdf1a245e4686",
+    "ru": "Сопоставить перечень данных в согласии и новом требовании",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[a0].title"
+    ]
+  },
+  {
+    "id": "5da943b690d0e287",
+    "ru": "Проверить получение требования и сохранение открытого доступа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[a1].title"
+    ]
+  },
+  {
+    "id": "0ad70437a8e4c800",
+    "ru": "Подготовить оценку именно продолжающегося распространения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[a2].title"
+    ]
+  },
+  {
+    "id": "330ae98800a305ea",
+    "ru": "Разъяснить отличие открытой публикации от обработки на иных законных основаниях",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[a3].title"
+    ]
+  },
+  {
+    "id": "40dc609035c4b767",
+    "ru": "Проверить удаление публичных копий в сфере контроля оператора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c55c89cf3477ac32",
+    "ru": "Распространить копию альбома в общем обсуждении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[b0].title",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "9add55fb163efaaf",
+    "ru": "Потребовать уничтожить все документы об обучении без разбора оснований",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].actions[b1].title"
+    ]
+  },
+  {
+    "id": "f422c4c378b452d4",
+    "ru": "Изначальное согласие было корректным; решение меняется из-за полученного требования о прекращении, а не из-за дефекта исходной подписи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].contrast.difference"
+    ]
+  },
+  {
+    "id": "d1a449128599e3d6",
+    "ru": "Первоначальное отдельное согласие охватывало имя и фото в альбоме. Надлежащее требование представителя о прекращении распространения тех же данных получено оператором. В материалах не установлено иного основания открытой публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].documents[d0].text"
+    ]
+  },
+  {
+    "id": "8a6cc755e3c0d8b5",
+    "ru": "Согласие и требование о прекращении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].documents[d0].title"
+    ]
+  },
+  {
+    "id": "16c02d2a411ade2d",
+    "ru": "После получения требования файл продолжает открываться без авторизации. Служебные записи об обучении не являются предметом требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f4475bccff9a0aa5",
+    "ru": "Проверка альбома",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8487e8967545376e",
+    "ru": "Нужно проверить продолжающееся распространение после надлежащего требования, не приравнивая его к удалению всех законных служебных записей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].outcomes.good"
+    ]
+  },
+  {
+    "id": "9be1b132bd34ff5f",
+    "ru": "Однажды данное согласие невозможно прекратить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "9eb01248b225f970",
+    "ru": "Прекращение публикации требует немедленно уничтожить весь личный архив ученика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "0796ae497696df3b",
+    "ru": "Учебное продолжение. Оператор закрыл исходный альбом, но тот же файл остался в его другом открытом разделе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].followup.intro"
+    ]
+  },
+  {
+    "id": "8a393386880008ea",
+    "ru": "Проверить вторую публичную копию и распространение тех же данных; закрытие одного адреса не исчерпывает требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].followup.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].followup.explain"
+    ]
+  },
+  {
+    "id": "5f4e3495b7ae935c",
+    "ru": "Считать требование выполненным при любом удалённом URL.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "4ac228eeb81f54ef",
+    "ru": "Потребовать у представителя новое согласие на уже прекращённое распространение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2b86d77f98d9f20a",
+    "ru": "Проверить выполнение требования о прекращении распространения в указанном объёме и не подменять его уничтожением всего учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].knowledge.explain",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].coach.research"
+    ]
+  },
+  {
+    "id": "3aec38d5767d5037",
+    "ru": "Раньше я отдельно разрешала публикацию имени и фото ребёнка. Потом попросила прекратить распространение, школа получила обращение, но фотография осталась в открытом альбоме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].opening"
+    ]
+  },
+  {
+    "id": "a9d3f350c69f2b3e",
+    "ru": "Отдельное, на имя и фото. Изначальную публикацию я не оспариваю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "f2e12848341a6356",
+    "ru": "Проверяется изменение основания, а не исходная форма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "71a823a5f5f8cca7",
+    "ru": "Какое согласие было дано?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q0].text"
+    ]
+  },
+  {
+    "id": "4190bc856efadef8",
+    "ru": "Указала себя, связь с ребёнком, контакт и какие данные больше нельзя распространять. Получение подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "d57a7a7fb382cbd0",
+    "ru": "Предмет прекращения определён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "76b9ec162d285541",
+    "ru": "Как оформлено новое требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q1].text"
+    ]
+  },
+  {
+    "id": "246c7873c02dd839",
+    "ru": "В материалах оператор ссылается только на прежнее согласие; другое основание не приведено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "123271746bb192bc",
+    "ru": "Старая подпись не заменяет оценку нового требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "12e065cb780d9c88",
+    "ru": "Есть ли другое основание публикации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q2].text"
+    ]
+  },
+  {
+    "id": "2e00fe7c1edd4778",
+    "ru": "Нет, только распространение имени и фото в открытом альбоме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "1325f731a786dedc",
+    "ru": "Прекращение распространения не тождественно уничтожению любого учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "9449206b85dce927",
+    "ru": "Просите удалить все записи школы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].questions[q3].text"
+    ]
+  },
+  {
+    "id": "bf9a89b369950a2a",
+    "ru": "Подготовить рассмотрение продолжающегося распространения уполномоченным подразделением; отдельно сообщить оператору предмет требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].routes[0].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].coach.plan"
+    ]
+  },
+  {
+    "id": "23195158b8106ec4",
+    "ru": "Сослаться только на первоначальную подпись и закончить работу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].routes[1].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "e66a851bb0ad1749",
+    "ru": "Распорядиться уничтожить весь школьный учёт независимо от оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].routes[2].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "8b2c6e424d967566",
+    "ru": "Разрешение больше не действует",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[privacy-withdrawal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:152].cases[privacy-withdrawal].title"
+    ]
+  },
+  {
+    "id": "642d87bac37d4c6e",
+    "ru": "Для иных целей и законных оснований обработка оценивается отдельно от публичного распространения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].trap.options[0].text",
+      "cases:CASE_TEMPLATES[privacy-withdrawal].trap.explain"
+    ]
+  },
+  {
+    "id": "c88d8fddb26f8490",
+    "ru": "Уничтожить все данные проще, чем разделять основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "3551f6331fe3bb33",
+    "ru": "Помощник: «Прекращение распространения означает, что школе запрещено хранить любые данные ребёнка».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy-withdrawal].trap.text"
+    ]
+  },
+  {
+    "id": "fda6a41aa7a693ab",
+    "ru": "Общее согласие и согласие на распространение не тождественны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[basis].detail"
+    ]
+  },
+  {
+    "id": "678a949099a5cd3a",
+    "ru": "Поставить вопрос о проверке основания распространения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[basis].title"
+    ]
+  },
+  {
+    "id": "a8297631b450dc8a",
+    "ru": "Чтобы родители сами проверили сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[broadcast].detail"
+    ]
+  },
+  {
+    "id": "3858f1460d1ea558",
+    "ru": "Разместить оригинал списка в общем чате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[broadcast].title",
+      "cases:CASE_TEMPLATES[privacy].criticalRules[broadcast].message"
+    ]
+  },
+  {
+    "id": "beea491c71fb221c",
+    "ru": "Без рассмотрения уполномоченным органом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[fine].detail"
+    ]
+  },
+  {
+    "id": "0ab6262b27dec03e",
+    "ru": "От имени приёмной назначить школе штраф",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[fine].title",
+      "cases:CASE_TEMPLATES[privacy].criticalRules[fine].message"
+    ]
+  },
+  {
+    "id": "dbe20ab21c7909e1",
+    "ru": "Не обещать санкции и удаление всех копий от имени других органов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "b144084ca1ebc41e",
+    "ru": "Объяснить заявительнице дальнейший порядок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[notify].title"
+    ]
+  },
+  {
+    "id": "56df7ad103f32223",
+    "ru": "Использовать обезличенную рабочую копию; необходимые оригиналы – только уполномоченным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[protect].detail"
+    ]
+  },
+  {
+    "id": "b921b2f759d658e0",
+    "ru": "Ограничить доступ к чувствительным приложениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[protect].title"
+    ]
+  },
+  {
+    "id": "e03d6318fc129394",
+    "ru": "Не публиковать её приложения в общедоступной карточке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[register].detail"
+    ]
+  },
+  {
+    "id": "a98a9268355fbb76",
+    "ru": "Проверить регистрацию жалобы и состав материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[register].title"
+    ]
+  },
+  {
+    "id": "5046b06180e0d456",
+    "ru": "Не направлять жалобу только тому, чьи действия обжалуются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[route].detail"
+    ]
+  },
+  {
+    "id": "db488fbc40430857",
+    "ru": "Подготовить передачу по надлежащей компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[route].title"
+    ]
+  },
+  {
+    "id": "cc561889a8fd2cc7",
+    "ru": "Фиксировать подтверждённые действия, а не считать дело решённым по факту пересылки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[track].detail"
+    ]
+  },
+  {
+    "id": "a5974b1607ed2f25",
+    "ru": "Сохранить контроль уведомления и получения материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].actions[track].title"
+    ]
+  },
+  {
+    "id": "5368b139e7b9894b",
+    "ru": "Письменная жалоба принята. «Школа Северная» – вымышленная организация. В документах показаны только условные поля, без реальных сведений о детях. Игрок не загружает настоящие медицинские документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].brief"
+    ]
+  },
+  {
+    "id": "81814ed5f4ad1038",
+    "ru": "Жалоба зарегистрирована. Рассчитайте крайний день общего ответа; продление в условиях не применялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].calendar.context",
+      "cases:CASE_TEMPLATES[privacy-aggregate].calendar.context"
+    ]
+  },
+  {
+    "id": "7b588dd9f64978b2",
+    "ru": "Мама школьницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].citizen.description",
+      "cases:CASE_TEMPLATES[proposal-bench].citizen.description",
+      "cases:CASE_TEMPLATES[mfc-refusal].citizen.description"
+    ]
+  },
+  {
+    "id": "aa2c50de10722270",
+    "ru": "Мария Викторовна",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].citizen.name",
+      "cases:CASE_TEMPLATES[proposal-bench].citizen.name",
+      "cases:CASE_TEMPLATES[mfc-refusal].citizen.name"
+    ]
+  },
+  {
+    "id": "71bfb9329cb07a7e",
+    "ru": "Для сведений о здоровье необходимо проверить специальные основания обработки; общая ссылка на согласие недостаточна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].coach.research",
+      "cases:CASE_TEMPLATES[privacy].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[privacy].knowledge.explain"
+    ]
+  },
+  {
+    "id": "6248cd7fec6df056",
+    "ru": "Публично доступны сведения о здоровье ребёнка. Общий бланк согласия не подтверждает любое распространение; необходимо проверить основание и объём.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].contrast.difference"
+    ]
+  },
+  {
+    "id": "f1bf67525db47782",
+    "ru": "План передачи чувствительного приложения не ограничивает доступ к нему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].criticalRules[protect].message"
+    ]
+  },
+  {
+    "id": "c0f3c9a9eaf79a75",
+    "ru": "Учебная реплика: «Согласие на обработку подписывали при зачислении; отдельный документ на распространение не предоставляем». Это позиция участника, а не доказательство законности публикации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[consent].text"
+    ]
+  },
+  {
+    "id": "6dae0aa563ffa3b1",
+    "ru": "Ответ школьного сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[consent].title"
+    ]
+  },
+  {
+    "id": "18e6c60b719a5502",
+    "ru": "Переписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[consent].type"
+    ]
+  },
+  {
+    "id": "b4a6cdc17c7b3076",
+    "ru": "Учебный макет: «Ученик А. – сведения о медицинской группе»; «Ученик Б. – сведения о профилактической прививке». Никаких реальных ФИО и диагнозов здесь нет. Оригиналы в действительном делопроизводстве передаются по защищённому служебному каналу только уполномоченному адресату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[screen].text"
+    ]
+  },
+  {
+    "id": "848e1d07d4d963d4",
+    "ru": "Условная копия публикации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[screen].title"
+    ]
+  },
+  {
+    "id": "1b104d6e9fd0b8a2",
+    "ru": "Ограниченный доступ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].documents[screen].type"
+    ]
+  },
+  {
+    "id": "f590496c8be943fe",
+    "ru": "Нужно проверить конкретное основание обработки и распространения. Общее согласие не подменяет отдельное согласие на распространение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].factTask.explain",
+      "cases:CASE_TEMPLATES[privacy].coach.docs"
+    ]
+  },
+  {
+    "id": "89f161f93896e730",
+    "ru": "Раз общее согласие подписано, публикация точно законна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].factTask.options[automatic].text"
+    ]
+  },
+  {
+    "id": "30ef7347726e6974",
+    "ru": "Есть ли надлежащее правовое основание именно для распространения этих данных?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].factTask.options[basis].text"
+    ]
+  },
+  {
+    "id": "b7d3e14af87eefc5",
+    "ru": "После публикации медицинские сведения перестают быть персональными данными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[privacy].factTask.options[public].text"
+    ]
+  }
+]

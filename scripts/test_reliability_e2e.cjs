@@ -1,11 +1,12 @@
 // Browser integration against demo-rudn ONLY. No production Firebase requests allowed.
-const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{randomInt}=require('node:crypto');
 const {chromium,webkit}=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const base='http://127.0.0.1:8765/',root='rudn-platform/v1',key=process.env.QA_STUDENT||'9909132001';
+const base='http://127.0.0.1:8765/',root='rudn-platform/v1',key=process.env.QA_STUDENT||'99'+randomInt(10000000,100000000);
+assert.match(key,/^\d{10,15}$/,'QA_STUDENT must be a synthetic numeric ticket');
 const out=process.env.QA_OUT||path.join(require('node:os').tmpdir(),'rudn-reliability-e2e');fs.mkdirSync(out,{recursive:true});
 const bank=JSON.parse(fs.readFileSync('site/data/questions.json','utf8'));
 const config=fs.readFileSync('site/assets/js/config.js','utf8').replace(/export const CONFIG\s*=\s*\{/,'export const CONFIG = {emulators:{auth:"http://127.0.0.1:9099",host:"127.0.0.1",databasePort:9000},');
-const version='1.3.4';
+const version=JSON.parse(fs.readFileSync('package.json','utf8')).version;
 async function db(p,method='GET',body){const r=await fetch(`http://127.0.0.1:9000/${p}.json?ns=demo-rudn-default-rtdb`,{method,headers:{Authorization:'Bearer owner','Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const value=await r.json();assert(r.ok,JSON.stringify(value));return value}
 async function poll(fn,message){for(let i=0;i<80;i++){if(await fn())return;await new Promise(r=>setTimeout(r,250))}throw Error(message)}
 async function backend(page,method,...args){return page.evaluate(async({method,args,version})=>(await import(`/assets/js/backend.js?v=${version}`)).backend[method](...args),{method,args,version})}
@@ -13,6 +14,12 @@ async function ready(page){await backend(page,'init');await page.locator('#app[a
 async function draft(page,slug='seminar-1-classroom',mode='default'){return page.evaluate(async({key,slug,mode})=>(await import('/assets/js/durable-store.js')).durableStore.loadDraft({owner:'student:'+key,activitySlug:slug,mode}),{key,slug,mode})}
 async function shot(page,name){await page.screenshot({path:path.join(out,name+'.png')});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'Horizontal overflow: '+name)}
 (async()=>{
+  // Never overwrite an existing fixture: completed cloud checkpoints correctly
+  // reopen their result page, rather than a blank quiz with a Next button.
+  for(const collection of ['profiles','attempts','grades','checkpoints','studentAliases']){
+    assert.equal(await db(`${root}/${collection}/${key}`),null,`QA_STUDENT ${key} is occupied in ${collection}; use a fresh synthetic ticket (or omit QA_STUDENT). Existing work is not cleared.`);
+  }
+  console.log('Isolated emulator fixture:',{studentKey:key,version});
   await db(`${root}/profiles/${key}`,'PUT',{studentKey:key,ticket:key,email:key+'@rudn.ru',fullName:'Синтетический Студент Надёжность',group:'ГГУбд-02-26',createdAt:'2026-09-13T10:00:00Z',ownerUid:'qa-preserved-owner',ownerUids:{'qa-preserved-owner':true}});
   const browser=await (process.env.QA_ENGINE==='webkit'?webkit:chromium).launch({headless:true});
   const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block',locale:'ru-RU'});let offline=false;const errors=[];

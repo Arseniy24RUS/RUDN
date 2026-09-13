@@ -1,0 +1,1184 @@
+[
+  {
+    "id": "c7798e865239212a",
+    "ru": "Немедленно исправить границу по определению о принятии иска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "388b68557d1458df",
+    "ru": "Удалить обращение, потому что любое общение с судом запрещает ответы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "1151b98f83631f26",
+    "ru": "При установленном риске нарушения законных интересов учитывать судебный порядок части 4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b6e897051dea0fe4",
+    "ru": "Считать все реестровые изменения техническими описками.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "1fca18499e9158fe",
+    "ru": "Разрешать имущественный спор только на основании слов первого посетителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "a11d2d6835d87294",
+    "ru": "Назовите это опечаткой и перенесите границу. Сосед не согласен, но мне так будет удобнее.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].opening"
+    ]
+  },
+  {
+    "id": "fc9633c4b0a83984",
+    "ru": "Разъяснить специальное ограничение части 4 статьи 61 и судебный порядок для описанного случая.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e5bc0f005e13a845",
+    "ru": "Исправить сведения по общему письму без учёта интересов третьих лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].procedures[1].text"
+    ]
+  },
+  {
+    "id": "8202ce119dc0ec7d",
+    "ru": "Назначить приёмную арбитром спора о праве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].procedures[2].text"
+    ]
+  },
+  {
+    "id": "c4f6e38430e2ce42",
+    "ru": "Да, заключение описывает изменение границы и затрагиваемую часть соседнего участка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a62dde267e230319",
+    "ru": "Изменения затрагивают другого правообладателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "e18d1aeb16ad088d",
+    "ru": "Есть документ о предлагаемых изменениях?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q0].text"
+    ]
+  },
+  {
+    "id": "9befb87b3975b56c",
+    "ru": "Есть письменное возражение с документами о пользовании зарегистрированными сведениями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "bda45ebbb060b979",
+    "ru": "Спор нельзя устранить названием «опечатка».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "b1748ab99f02e5bd",
+    "ru": "Какова позиция соседа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ab3be5c500dddf81",
+    "ru": "Нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q2].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q2].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-refusal].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "844d0214438fb7de",
+    "ru": "Основание для спорной правки не представлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ef1ffef65316da46",
+    "ru": "Есть вступившее в силу решение суда?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bcfbf2063a701b44",
+    "ru": "Я хочу, чтобы сотрудник сразу изменил границу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "fc6d85671b5bf07d",
+    "ru": "Просьба выходит за полномочия приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "53b118201dabb3a5",
+    "ru": "Чего вы просите приёмную?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].questions[q3].text"
+    ]
+  },
+  {
+    "id": "261a09c1ddf565e5",
+    "ru": "Специалист подготовки ответа органа регистрации прав",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].role.title"
+    ]
+  },
+  {
+    "id": "c23210c503353fb5",
+    "ru": "Подготовить ответ уполномоченного подразделения о пределах административного исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].routes[0].text"
+    ]
+  },
+  {
+    "id": "c25d622dd61bbad3",
+    "ru": "Поручить заявителю самому заменить сведения в реестре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].routes[1].text"
+    ]
+  },
+  {
+    "id": "d01095b9a38093ff",
+    "ru": "Передать соседу полномочие отменить государственную запись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].routes[2].text"
+    ]
+  },
+  {
+    "id": "5429f060234fc0ab",
+    "ru": "Исправление затрагивает чужое право",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[egrn-rights-dispute].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[egrn-rights-dispute].title"
+    ]
+  },
+  {
+    "id": "b7ab5cb37f478036",
+    "ru": "Решение зависит от последствий правки и материалов, а не формулировки просьбы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].trap.explain"
+    ]
+  },
+  {
+    "id": "c22c1b870f1f4aba",
+    "ru": "Одно переименование спорного изменения в «опечатку» не устраняет условия части 4 статьи 61.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].trap.text"
+    ]
+  },
+  {
+    "id": "b05d0877bf5cd9fa",
+    "ru": "Сопоставить исходный план, запись и исправленный комплект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[a0].title"
+    ]
+  },
+  {
+    "id": "fd2a1d9608a3864c",
+    "ru": "Зафиксировать получение всех необходимых документов и отсутствие препятствий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[a1].title"
+    ]
+  },
+  {
+    "id": "94c721123d9ac212",
+    "ru": "Передать подготовленные материалы регистратору по специальному порядку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6f29b0f14cf774d7",
+    "ru": "Сообщить заявителю предмет процедуры без обещания самостоятельной правки записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[a3].title"
+    ]
+  },
+  {
+    "id": "0d487ecd1daf2818",
+    "ru": "Проверить решение и соответствие исправления принятому комплекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[a4].title"
+    ]
+  },
+  {
+    "id": "1a4ac46d0ff614fc",
+    "ru": "Перезапустить срок от более поздней внутренней регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[b0].title"
+    ]
+  },
+  {
+    "id": "7a12b5097a87ceeb",
+    "ru": "Самостоятельно изменить запись в реестре без решения регистратора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].actions[b1].title",
+      "cases:CASE_TEMPLATES[egrn-source-plan].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b07ad7232ea821a2",
+    "ru": "Все участники и документы дела вымышлены. Установлена ошибка исходного технического плана, точно воспроизведённая в ЕГРН. Полный надлежащий комплект для исправления уже принят. Исправление не прекращает, не создаёт и не переводит зарегистрированное право, не затрагивает интересы третьих лиц; специальных исключений нет. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Вычислите срок исправления реестровой ошибки по части 3 статьи 61, не срок ответа на обычное письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].brief"
+    ]
+  },
+  {
+    "id": "eda200a4d1bda69e",
+    "ru": "Полный надлежащий комплект получен в указанную дату. Специальная процедура не заменяется обычным обращением; условия части 4 отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.context"
+    ]
+  },
+  {
+    "id": "9b59051cf443dd34",
+    "ru": "Поступило в орган",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.events[received].label"
+    ]
+  },
+  {
+    "id": "919b07ba6beeb575",
+    "ru": "Отправлено в орган",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[tax-amended-declaration].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[tax-explanations-only].calendar.events[sent].label"
+    ]
+  },
+  {
+    "id": "9604ec75f80352ae",
+    "ru": "Полный надлежащий комплект получен в указанную дату. Специальная процедура не заменяется обычным обращением; условия части 4 отсутствуют. Профиль счёта этого упражнения: со следующего дня после события; нерабочее окончание переносится вперёд; федеральная пятидневная неделя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.scope"
+    ]
+  },
+  {
+    "id": "995fef32fe27fc9e",
+    "ru": "Статья 61, часть 3 закона № 218-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.source"
+    ]
+  },
+  {
+    "id": "f3b70234480c7242",
+    "ru": "Крайний день исправления реестровой ошибки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].calendar.title"
+    ]
+  },
+  {
+    "id": "dfe258c18be34c1e",
+    "ru": "Посетитель приёмной · учебная история",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].citizen.description",
+      "cases:CASE_TEMPLATES[egrn-map-layer].citizen.description",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].citizen.description"
+    ]
+  },
+  {
+    "id": "5e738213a7b82818",
+    "ru": "Прочитайте, срок какого действия требуется найти. Не заменяйте специальный срок общими тридцатью днями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].coach.calendar",
+      "cases:CASE_TEMPLATES[egrn-map-layer].coach.calendar",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].coach.calendar"
+    ]
+  },
+  {
+    "id": "054de824275e731a",
+    "ru": "Сопоставьте материалы, затем выберите вывод и достаточный набор его оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].coach.docs",
+      "cases:CASE_TEMPLATES[egrn-map-layer].coach.docs",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].coach.docs"
+    ]
+  },
+  {
+    "id": "3f172094a3b31f25",
+    "ru": "В исходной истории неправильную запись внёс орган; здесь неправильным был сам план. Это меняет правовой профиль и срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].coach.plan",
+      "cases:CASE_TEMPLATES[egrn-source-plan].contrast.difference"
+    ]
+  },
+  {
+    "id": "2609804eb5f56860",
+    "ru": "Различайте федеральный закон, Закон РФ и соответствующую часть кодекса. Дата нормы не равна дате события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].coach.research",
+      "cases:CASE_TEMPLATES[egrn-map-layer].coach.research",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].coach.research"
+    ]
+  },
+  {
+    "id": "63cdcb3a2e809ec7",
+    "ru": "Выясните, к какому объекту, документу и событию относится вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].coach.talk",
+      "cases:CASE_TEMPLATES[egrn-map-layer].coach.talk",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].coach.talk"
+    ]
+  },
+  {
+    "id": "d4a92f2d36ede47d",
+    "ru": "Изменены существенные обстоятельства, материалы, правовое применение и контрольный эпизод. Даты и имена не считаются новыми вариантами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[egrn-map-layer].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "57423e31b0f084b9",
+    "ru": "План ТП-41 содержит ошибочную характеристику: номер помещения 18 вместо 81. Сведения в ЕГРН воспроизведены точно по этому плану; регистратор не переставлял цифры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d0].text"
+    ]
+  },
+  {
+    "id": "14d88d3bd0709c22",
+    "ru": "План и запись ЕГРН",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ff4413dcf657888a",
+    "ru": "Надлежащий исправленный план и подтверждающие документы поступили {{received}}. Необходимые сведения имеются полностью; зарегистрированные права и законные интересы третьих лиц не меняются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d1].text"
+    ]
+  },
+  {
+    "id": "8c51797e5a225630",
+    "ru": "Комплект исправления ТП-41",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d1].title"
+    ]
+  },
+  {
+    "id": "cdd6f34dc9a91d25",
+    "ru": "В другом деле регистратор ошибся при наборе правильного документа. Для того случая использовали порядок технической ошибки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d2].text"
+    ]
+  },
+  {
+    "id": "d5bbd25b912cfa66",
+    "ru": "Образец исправления описки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[d2].title"
+    ]
+  },
+  {
+    "id": "df72762c44db70df",
+    "ru": "Отправлено {{sent}}, поступило в орган {{received}}, зарегистрировано {{registered}}. Даты принятия нормативных актов не меняются вместе с годом дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[dates].text",
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[dates].text",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[dates].text"
+    ]
+  },
+  {
+    "id": "fb1a5918bfffd85e",
+    "ru": "События получения и регистрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].documents[dates].title",
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[dates].title",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[dates].title"
+    ]
+  },
+  {
+    "id": "a52461fbeacafdfd",
+    "ru": "Подтверждена реестровая ошибка исходного плана, а не техническая описка регистратора. В исходной истории неправильную запись внёс орган; здесь неправильным был сам план. Это меняет правовой профиль и срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.explain"
+    ]
+  },
+  {
+    "id": "860ebb9fd39bbcdd",
+    "ru": "Подтверждена реестровая ошибка исходного плана, а не техническая описка регистратора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-source-plan].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8fcc111553688779",
+    "ru": "Всякая перестановка цифр в ЕГРН является технической ошибкой органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "146ce98933732775",
+    "ru": "Достаточно желания заявителя; исходный план изучать не нужно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "cfc13e047cc57450",
+    "ru": "Какой вывод обосновывается совокупностью материалов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].factTask.prompt",
+      "cases:CASE_TEMPLATES[egrn-map-layer].factTask.prompt",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].factTask.prompt"
+    ]
+  },
+  {
+    "id": "442926576f5dcaad",
+    "ru": "Проверяется результат именно по принятому комплекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.explain"
+    ]
+  },
+  {
+    "id": "81ac53c81f21dc10",
+    "ru": "Проверьте, какое именно обстоятельство изменилось и что подтверждает новый документ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.failure",
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.failure",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.failure"
+    ]
+  },
+  {
+    "id": "25f168d7a6136128",
+    "ru": "Пришло подтверждение исправления по плану ТП-42, но принятое дело относится к ТП-41.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.intro"
+    ]
+  },
+  {
+    "id": "69c2e97c6b9cb50c",
+    "ru": "Уточнить соответствие документа нужному объекту и плану; не закрывать дело по ТП-42.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d14bc955ebcfca19",
+    "ru": "Закрыть дело: любое подтверждение исправления достаточно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "cc9aa7d3da4d63bb",
+    "ru": "Попросить заявителя считать оба плана одним документом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "3ad0af7872bbf6d8",
+    "ru": "Контрольное действие соответствует новым обстоятельствам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].followup.success",
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.success",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.success"
+    ]
+  },
+  {
+    "id": "dee6beefbf378374",
+    "ru": "Статья 61 закона № 218-ФЗ разграничивает ошибку органа при внесении записи и ошибку исходного документа, воспроизведённую в ЕГРН. Для предусмотренного частью 3 исправления реестровой ошибки установлен срок пять рабочих дней с получения документов, свидетельствующих об ошибке и содержащих необходимые сведения. Это не правило исправлять любое расхождение на карте. При риске вреда или нарушения законных интересов правообладателей и третьих лиц применяется часть 4: исправление только по решению суда. Приёмная не разрешает спор о праве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].knowledge.explain",
+      "cases:CASE_TEMPLATES[egrn-map-layer].knowledge.explain",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].knowledge.explain"
+    ]
+  },
+  {
+    "id": "70074240c13d3735",
+    "ru": "Различать техническую и реестровую ошибки по происхождению; применять условия части 3.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "0555f3b5c88efb52",
+    "ru": "Применять три рабочих дня ко всем неправильным числам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d46fbbb39e9612fc",
+    "ru": "Считать любой исправленный план безусловным основанием изменить чужое право.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "e86e71c42b0b2e3e",
+    "ru": "Найдите норму: Техническая и реестровая ошибки: разные основания. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].knowledge.prompt",
+      "cases:CASE_TEMPLATES[egrn-map-layer].knowledge.prompt",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "1d3a0820d21b46e0",
+    "ru": "В выписке неправильная характеристика. Мне сказали, что любую такую ошибку исправляют за три дня. Я принёс исправленный план.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].opening"
+    ]
+  },
+  {
+    "id": "2eef6da2fdfe994e",
+    "ru": "Подтверждение одного факта не заменяет разбор остальных условий дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].outcomes.bad",
+      "cases:CASE_TEMPLATES[egrn-map-layer].outcomes.bad",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].outcomes.bad"
+    ]
+  },
+  {
+    "id": "c22e51a1667101cb",
+    "ru": "Подготовлены обоснованные действия по установленным обстоятельствам. Исполнение проверяется в следующем эпизоде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].outcomes.good",
+      "cases:CASE_TEMPLATES[egrn-map-layer].outcomes.good",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].outcomes.good"
+    ]
+  },
+  {
+    "id": "925943c9949d5136",
+    "ru": "Специальное исправление реестровой ошибки по статье 61 закона № 218-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].procedures[0].text"
+    ]
+  },
+  {
+    "id": "3937c2e2a1260a24",
+    "ru": "Обычная переписка по 59-ФЗ вместо принятой процедуры исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e2d0414ead7c56b4",
+    "ru": "Исправление технической описки без проверки исходного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].procedures[2].text"
+    ]
+  },
+  {
+    "id": "aee15ad1e6885b8a",
+    "ru": "В нём была та же неправильная характеристика, что попала в выписку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "301681d8c72a7dc7",
+    "ru": "Ошибка содержалась в исходном документе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "77d7c5eb1281979e",
+    "ru": "Что содержал первоначальный план?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q0].text"
+    ]
+  },
+  {
+    "id": "50803c841574a84c",
+    "ru": "Приёмная подтвердила получение полного комплекта {{received}}; внутреннюю регистрацию выполнили {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "072d857ca4568cd9",
+    "ru": "Получение полного комплекта и регистрация различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d6bf8c490621b4c5",
+    "ru": "Когда получен комплект для исправления?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q1].text"
+    ]
+  },
+  {
+    "id": "70fe41ff3f923eff",
+    "ru": "По проверенным материалам нет; исправление права не изменяет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0de3bd34a6805a62",
+    "ru": "Ограничения для спорного исправления в условиях отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b0030991d35fbf0a",
+    "ru": "Есть спор о праве или возражения третьих лиц?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q2].text"
+    ]
+  },
+  {
+    "id": "2bcdd4dbcaa2f85b",
+    "ru": "Государственный регистратор, а не специалист окна приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "328c8c0a7f4a0ffa",
+    "ru": "Роль игрока ограничена подготовкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "4b6360b31d1449f8",
+    "ru": "Кто принимает решение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].questions[q3].text"
+    ]
+  },
+  {
+    "id": "815e25dd492b46d2",
+    "ru": "Вы устанавливаете обстоятельства, находите основания и готовите проект действий в пределах роли. Реальные отправления, звонки, проверки, списания и изменения реестров из игры не выполняются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].role.text",
+      "cases:CASE_TEMPLATES[egrn-map-layer].role.text",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].role.text"
+    ]
+  },
+  {
+    "id": "873152ec331a8cf2",
+    "ru": "Специалист подготовки материалов государственному регистратору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].role.title"
+    ]
+  },
+  {
+    "id": "3b7d990a35e6c477",
+    "ru": "Подготовить комплект государственному регистратору прав.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].routes[0].text"
+    ]
+  },
+  {
+    "id": "f2a84a7e25e663a9",
+    "ru": "Поручить инженеру напрямую изменить запись ЕГРН.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].routes[1].text"
+    ]
+  },
+  {
+    "id": "62b63055d823c908",
+    "ru": "Направить соседу для окончательного решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].routes[2].text"
+    ]
+  },
+  {
+    "id": "c0cff3990a5ed095",
+    "ru": "Найдите указанную норму во внешнем источнике. Сопоставьте её с материалами, не выдавая правовой источник за подтверждение вымышленного события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].sourceTask",
+      "cases:CASE_TEMPLATES[egrn-map-layer].sourceTask",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].sourceTask"
+    ]
+  },
+  {
+    "id": "0e8ebccd8f9c2e32",
+    "ru": "Ошибка пришла из исходного плана",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[egrn-source-plan].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[egrn-source-plan].title"
+    ]
+  },
+  {
+    "id": "0f9fe2621fc9c48f",
+    "ru": "Вид ошибки определяется происхождением, а не внешним видом неверного числа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].trap.explain"
+    ]
+  },
+  {
+    "id": "0b6cb3362bc6e2b0",
+    "ru": "Не подтверждается в описанных обстоятельствах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].trap.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-map-layer].trap.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "b7b2c2ce21fd745d",
+    "ru": "Подтверждается в описанных обстоятельствах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].trap.options[1].text",
+      "cases:CASE_TEMPLATES[egrn-map-layer].trap.options[1].text",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "b887cb5b6cb5c547",
+    "ru": "Если ошибка уже была в исходном плане, её нельзя считать опиской регистратора только из-за переставленных цифр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-source-plan].trap.text"
+    ]
+  },
+  {
+    "id": "208c24f3abc21988",
+    "ru": "Различить состояния черновика и отправленного обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[a0].title"
+    ]
+  },
+  {
+    "id": "21230be7ed5a27d8",
+    "ru": "Проверить квитанцию и идентификатор поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e3f48fd782a55694",
+    "ru": "Обеспечить регистрацию поступившего материала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[a2].title"
+    ]
+  },
+  {
+    "id": "1af52c3b7641923e",
+    "ru": "Разъяснить событие начала срока без оценки содержания заранее",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[a3].title"
+    ]
+  },
+  {
+    "id": "218a8d078205278f",
+    "ru": "Проверить связь регистрации с той же квитанцией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fe95f56eed43e4e1",
+    "ru": "Сфальсифицировать дату поступления под ожидание заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[b0].title"
+    ]
+  },
+  {
+    "id": "fc4d1e38ccefec1b",
+    "ru": "Удалить поступившее обращение как несуществующее",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].actions[b1].title",
+      "cases:CASE_TEMPLATES[electronic-draft-only].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "711428421e969054",
+    "ru": "Все люди, документы и события этого дела вымышлены. Сервис является предусмотренным законом официальным каналом с необходимой идентификацией. До нажатия «Отправить» данные хранились только как личный черновик и не поступали органу. Реальное поступление подтверждено квитанцией {{received}}. Считается срок регистрации этого поступления; регистрация ещё не выполнена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].brief"
+    ]
+  },
+  {
+    "id": "e14f447a39b5e93c",
+    "ru": "№ 59-ФЗ, статья 8. Регистрацию ещё предстоит выполнить. В учебном профиле исходный день не включается, нерабочее окончание переносится на следующий рабочий. Продление по условию не применяется. Определите событие и крайний день именно названного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].calendar.context",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].calendar.context"
+    ]
+  },
+  {
+    "id": "a645b95921a2da55",
+    "ru": "№ 59-ФЗ, статья 8. Регистрацию ещё предстоит выполнить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].calendar.source",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].calendar.source"
+    ]
+  },
+  {
+    "id": "65ab9196bcf8892c",
+    "ru": "Крайний день регистрации поступившего обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].calendar.title",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].calendar.title"
+    ]
+  },
+  {
+    "id": "3b88ae2715b4a367",
+    "ru": "В отличие от спора о канале здесь надлежащий канал установлен. Нужно отличить сохранение текста от факта его отправки и получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].coach.plan",
+      "cases:CASE_TEMPLATES[electronic-draft-only].contrast.difference"
+    ]
+  },
+  {
+    "id": "1d2d1a7785403a71",
+    "ru": "Статья 4 закона № 59-ФЗ предусматривает электронное обращение через установленную информационную систему или официальный сайт с идентификацией и (или) аутентификацией. Сохранённый пользователем черновик ещё не является поступившим обращением. В этом упражнении надлежащий сервис и личность установлены; дату фактического поступления подтверждает квитанция. Другие специальные электронные процедуры не объявляются недопустимыми.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].coach.research",
+      "cases:CASE_TEMPLATES[electronic-draft-only].knowledge.explain",
+      "cases:SOURCES[v16-norm-electronic].text"
+    ]
+  },
+  {
+    "id": "5dbe49db691b7334",
+    "ru": "Предположение заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d76d8a3429b073a7",
+    "ru": "Журнал пользователя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d1].title"
+    ]
+  },
+  {
+    "id": "48831401439f10f7",
+    "ru": "Квитанция К-38",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d2].title"
+    ]
+  },
+  {
+    "id": "5fb15dfab9fd3a8a",
+    "ru": "Черновик или исходное событие {{observed}}. Отправление {{sent}}, подтверждённое поступление {{received}}. Регистрация ещё не выполнена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[dates].text",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].documents[dates].text"
+    ]
+  },
+  {
+    "id": "c42755d9ed6d5be6",
+    "ru": "Подтверждено поступление после отправки, а не в момент создания черновика. В отличие от спора о канале здесь надлежащий канал установлен. Нужно отличить сохранение текста от факта его отправки и получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.explain"
+    ]
+  },
+  {
+    "id": "3997e765d1c18b11",
+    "ru": "Подтверждено поступление после отправки, а не в момент создания черновика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "3c6b7c735f2f1c18",
+    "ru": "Создание любого черновика автоматически регистрирует обращение в органе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "61fd89a7fd5aef82",
+    "ru": "Квитанция всегда означает, что итоговое решение уже принято.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-electronic-draft-only.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "fdab110b76c4dad2",
+    "ru": "Проверить дублирование уведомления и сохранить одну запись поступления, если идентификатор и событие совпадают. В отличие от спора о канале здесь надлежащий канал установлен. Нужно отличить сохранение текста от факта его отправки и получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].followup.explain"
+    ]
+  },
+  {
+    "id": "dad0c61fb0961af2",
+    "ru": "Гражданин получает вторую квитанцию с тем же идентификатором: система повторила уведомление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].followup.intro"
+    ]
+  },
+  {
+    "id": "08f56aa9ecad4ec8",
+    "ru": "Проверить дублирование уведомления и сохранить одну запись поступления, если идентификатор и событие совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d83e7a2f2178cd7c",
+    "ru": "Автоматически зарегистрировать вторую независимую жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "79a278ad0cf277ff",
+    "ru": "Удалить обе квитанции как ошибку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "206207421acf5050",
+    "ru": "Не регистрировать обращение из-за того, что черновик был создан раньше.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "0638b94e0d005e89",
+    "ru": "Найдите нормативное основание следующего действия: Отсчитывать регистрацию от подтверждённого поступления через надлежащий канал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "6bc871a2b6d4752e",
+    "ru": "Общий электронный порядок после изменения № 59-ФЗ; специальные процедуры не объявляются недопустимыми.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[electronic-receipt-not-result].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[electronic-optional-attachment].legalApplicability.scope"
+    ]
+  },
+  {
+    "id": "305467bbf3052aa6",
+    "ru": "Я написал всё в личном кабинете неделю назад. Сегодня увидел кнопку «Отправить» и нажал её. Срок уже идёт с прошлой недели?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].opening",
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q2].answer",
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "47c170911a698a45",
+    "ru": "Черновик создан {{observed}} и оставался в статусе «не отправлен». До нажатия кнопки у органа не было поступившего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q0].answer",
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q0].fact",
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d1].text"
+    ]
+  },
+  {
+    "id": "cde4301fb34d52ba",
+    "ru": "После отправки {{received}} официальный сервис подтвердил поступление органу. Идентификатор обращения О-381; время предыдущего черновика отдельно обозначено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q1].answer",
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q1].fact",
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d2].text"
+    ]
+  },
+  {
+    "id": "296d072268b1e191",
+    "ru": "Заявитель считает началом срока дату набора текста. Другой квитанции или входящего подтверждения за раннюю дату нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q3].answer",
+      "cases:CASE_TEMPLATES[electronic-draft-only].questions[q3].fact",
+      "cases:CASE_TEMPLATES[electronic-draft-only].documents[d0].text"
+    ]
+  },
+  {
+    "id": "da64779bf46fb967",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Сервис является предусмотренным законом официальным каналом с необходимой идентификацией. До нажатия «Отправить» данные хранились только как личный черновик и не поступали органу. Реальное поступление подтверждено квитанцией {{received}}. Считается срок регистрации этого поступления; регистрация ещё не выполнена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].role.text"
+    ]
+  },
+  {
+    "id": "76cdff21fb0ce433",
+    "ru": "Отсчитывать регистрацию от подтверждённого поступления через надлежащий канал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[electronic-draft-only].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[electronic-draft-only].contrast.decision"
+    ]
+  },
+  {
+    "id": "e757fdc55de02d23",
+    "ru": "Черновик есть, квитанции нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[electronic-draft-only].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[electronic-draft-only].title"
+    ]
+  },
+  {
+    "id": "a021723bd1070d03",
+    "ru": "Отсчитывать регистрацию от подтверждённого поступления через надлежащий канал. В отличие от спора о канале здесь надлежащий канал установлен. Нужно отличить сохранение текста от факта его отправки и получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].trap.explain"
+    ]
+  },
+  {
+    "id": "344e265f0db6adc5",
+    "ru": "Взять дату черновика вместо поступления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-draft-only].trap.text",
+      "cases:CASE_TEMPLATES[electronic-draft-only].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f99a90988b928174",
+    "ru": "Сопоставить подтверждение, канал и дату фактического поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[a0].title"
+    ]
+  },
+  {
+    "id": "e0b719959ace62c7",
+    "ru": "Установить применимость общего порядка 59-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[a1].title"
+    ]
+  },
+  {
+    "id": "7bb7e6c2ce907e4b",
+    "ru": "Оформить регистрацию надлежащего поступления по правилам срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[a2].title"
+    ]
+  },
+  {
+    "id": "96a7ee903f183f68",
+    "ru": "Объяснить маршрут без запроса паролей и кодов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[a3].title"
+    ]
+  },
+  {
+    "id": "23e8ab0202b374f8",
+    "ru": "Проверить связность номера регистрации и обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[a4].title"
+    ]
+  },
+  {
+    "id": "e4d8e82ce6586914",
+    "ru": "Запросить пароль или одноразовый код аккаунта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[b0].title",
+      "cases:CASE_TEMPLATES[electronic-email].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "a7709a2d4d8384a0",
+    "ru": "Присвоить случайный номер вместо регистрации записи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].actions[b1].title"
+    ]
+  },
+  {
+    "id": "5e9034c7d266165d",
+    "ru": "Рассчитайте крайний день регистрации поступившего через надлежащий официальный сервис обращения. Регистрацию ещё предстоит выполнить. Ранее отправленное письмо на общий контактный email не является исходным событием этой записи. Это не универсальный срок устранения проблемы. В этом упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].calendar.context"
+    ]
+  },
+  {
+    "id": "b9a1a0c03af160ec",
+    "ru": "Крайний день регистрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].calendar.title"
+    ]
+  },
+  {
+    "id": "ecb990370ab68153",
+    "ru": "Пользователь электронных услуг",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].citizen.description"
+    ]
+  },
+  {
+    "id": "cc383fb1dcc4ca54",
+    "ru": "Надлежащее электронное обращение поступило {{received}} через соответствующий официальный сервис. Более раннее письмо на общий email не использовано как событие поступления этой записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f3faa65f4530fef2",
+    "ru": "Подтверждение сервиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d0].title"
+    ]
+  },
+  {
+    "id": "cf0f8bdcf3d52786",
+    "ru": "Учебная квитанция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d0].type"
+    ]
+  },
+  {
+    "id": "b9cba5f2183cfdbd",
+    "ru": "Адрес электронной почты подписан «общие организационные вопросы»; идентифицированная электронная приёмная указана отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d1].text"
+    ]
+  },
+  {
+    "id": "63cc743ac2f9fc91",
+    "ru": "Страница контактов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d1].title"
+    ]
+  },
+  {
+    "id": "85c9e371ff811c49",
+    "ru": "Учебная выдержка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[electronic-email].documents[d1].type"
+    ]
+  }
+]

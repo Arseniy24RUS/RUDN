@@ -1,0 +1,1192 @@
+[
+  {
+    "id": "07a78bbcfa8bb1ca",
+    "ru": "Письмо работодателя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d0].title"
+    ]
+  },
+  {
+    "id": "7c88a400a4be8440",
+    "ru": "Период и основание нетрудоспособности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4f2d389e7573ec26",
+    "ru": "Платёж и журнал сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f62809be0c6c21a2",
+    "ru": "Наблюдение или исходное событие {{observed}}. Письмо отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Полные необходимые сведения получены страховщиком {{info}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[dates].text",
+      "cases:CASE_TEMPLATES[sickpay-child-care].documents[dates].text"
+    ]
+  },
+  {
+    "id": "4e549863fe788130",
+    "ru": "Платёж работодателя за первые три дня не подтверждает выплату части страховщика. Первый вариант семейства проверял поступление данных. Здесь нужно сначала отделить две части финансирования, а затем срок конкретной части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.explain"
+    ]
+  },
+  {
+    "id": "5ad74ab6a419c2a7",
+    "ru": "Платёж работодателя за первые три дня не подтверждает выплату части страховщика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "1c43821e300ca321",
+    "ru": "Работодатель должен оплатить все дни в любом страховом случае.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c6641e6464dc9cfc",
+    "ru": "Закрытие больничного всегда совпадает с получением сведений страховщиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-sickpay-two-payers.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b10ebb04d17818d6",
+    "ru": "Сопоставить идентификаторы и запросить подтверждение именно по текущему случаю. Первый вариант семейства проверял поступление данных. Здесь нужно сначала отделить две части финансирования, а затем срок конкретной части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].followup.explain"
+    ]
+  },
+  {
+    "id": "8fe03de8828ab827",
+    "ru": "СФР сообщил о выплате, но в подтверждении стоит номер другого листка нетрудоспособности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].followup.intro"
+    ]
+  },
+  {
+    "id": "45b7d20e4b9a2998",
+    "ru": "Сопоставить идентификаторы и запросить подтверждение именно по текущему случаю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "7e994705b92e3892",
+    "ru": "Закрыть дело по любому платёжному подтверждению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c19f0491e725f886",
+    "ru": "Прибавить обе выплаты без проверки периодов и номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "1ac941e40b099f4b",
+    "ru": "Начать срок СФР от даты обращения в муниципальную приёмную.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "963af6a12b014547",
+    "ru": "Найдите нормативное основание следующего действия: Разделить источники выплаты по установленному виду случая и проверить получение данных для части СФР.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "822688341e7e92a5",
+    "ru": "Я болел восемь дней. Работодатель перевёл деньги за три дня и говорит, что всё оплачено. Где остальные?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].opening",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q2].answer",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "39d2d8c71588812c",
+    "ru": "Болезнь самого работника, восемь календарных дней. Не уход за членом семьи, не производственная травма. Данные о статусе работника и основании подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q0].answer",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q0].fact",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d1].text"
+    ]
+  },
+  {
+    "id": "228aee3852e88c1e",
+    "ru": "Платёж работодателя помечен «первые три дня». За остальные дни выплаты СФР не было. Полный комплект необходимых сведений принят страховщиком {{info}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q1].answer",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q1].fact",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d2].text"
+    ]
+  },
+  {
+    "id": "ac0289ad7a8d7c02",
+    "ru": "Работодатель назвал свой платёж полной оплатой всего случая, но в расчётном листке указал только первые три дня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q3].answer",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].questions[q3].fact",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].documents[d0].text"
+    ]
+  },
+  {
+    "id": "4f407d164be86b07",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Обычный застрахованный работник болел сам, случай не связан с производственной травмой. Особые категории и исключения не применяются. Работодатель оплатил именно первые три дня, размер этой части не оспаривается. Полные необходимые сведения приняты СФР {{info}}. Календарная задача относится к назначению и выплате страховщиком его части, а не к сроку работодателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].role.text"
+    ]
+  },
+  {
+    "id": "251e82c68a804a5f",
+    "ru": "Разделить источники выплаты по установленному виду случая и проверить получение данных для части СФР.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].contrast.decision"
+    ]
+  },
+  {
+    "id": "0f87410ddceac2fc",
+    "ru": "Перевод пришёл, но за какие дни?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sickpay-two-payers].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sickpay-two-payers].title"
+    ]
+  },
+  {
+    "id": "d787270cee86b4cc",
+    "ru": "Разделить источники выплаты по установленному виду случая и проверить получение данных для части СФР. Первый вариант семейства проверял поступление данных. Здесь нужно сначала отделить две части финансирования, а затем срок конкретной части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].trap.explain"
+    ]
+  },
+  {
+    "id": "7157f33a19ec1836",
+    "ru": "Считать любой первый перевод полной оплатой больничного.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sickpay-two-payers].trap.text",
+      "cases:CASE_TEMPLATES[sickpay-two-payers].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "90aada8e7a5663ce",
+    "ru": "Установить точное место и сопоставить фото со схемой",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[a0].title"
+    ]
+  },
+  {
+    "id": "335c02a9674a77b0",
+    "ru": "Передать сведения о текущем риске по установленному оперативному маршруту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[a1].title"
+    ]
+  },
+  {
+    "id": "dd5d7ff8b76f0baa",
+    "ru": "Подготовить запрос о безопасном проходе и проверке условий работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[a2].title"
+    ]
+  },
+  {
+    "id": "7edc190b382278b7",
+    "ru": "Уведомить заявительницу о действиях без обещания неутверждённого решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[a3].title"
+    ]
+  },
+  {
+    "id": "0b2de05da4381941",
+    "ru": "Проверить, появился ли фактически доступный проход",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c14f27e329fe85ee",
+    "ru": "Разрешить пешеходам выходить на проезжую часть вместо проверки безопасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[b0].title",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "99a00a7a2aa5d349",
+    "ru": "Закрыть дело только по наличию разрешения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].actions[b1].title"
+    ]
+  },
+  {
+    "id": "58444fad3785907b",
+    "ru": "Гражданин, организации-участники инцидента и материалы дела вымышлены. Нормативные источники реальны. Даты и существенные условия зафиксированы; неизвестные обстоятельства нельзя считать доказанными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].brief",
+      "cases:CASE_TEMPLATES[signal-other-crossing].brief",
+      "cases:CASE_TEMPLATES[sign-not-ad].brief"
+    ]
+  },
+  {
+    "id": "88b6d4ccedb63188",
+    "ru": "Персонаж вымышленного учебного дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].citizen.description",
+      "cases:CASE_TEMPLATES[signal-other-crossing].citizen.description",
+      "cases:CASE_TEMPLATES[sign-not-ad].citizen.description"
+    ]
+  },
+  {
+    "id": "302dbe7ec6344734",
+    "ru": "Не подменяйте специальное событие регистрацией письма. Выберите единицу срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].coach.calendar",
+      "cases:CASE_TEMPLATES[signal-other-crossing].coach.calendar",
+      "cases:CASE_TEMPLATES[sign-not-ad].coach.calendar"
+    ]
+  },
+  {
+    "id": "8546bd8aeaf7bf61",
+    "ru": "Сначала проверьте предмет и применимость источника. Ссылка сама по себе не подтверждает ваш вывод.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].coach.research",
+      "cases:CASE_TEMPLATES[signal-other-crossing].coach.research",
+      "cases:CASE_TEMPLATES[sign-not-ad].coach.research"
+    ]
+  },
+  {
+    "id": "68306f347946abdc",
+    "ru": "План предусматривает коридор вдоль ограждения. Фото {{observed}} показывает материалы поперёк этого коридора и пешеходов на дороге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6db70339eb0ad171",
+    "ru": "Схема и фотография",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6ef11d5d31cfadbd",
+    "ru": "Вымышленный учебный документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d0].type",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d1].type",
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[d0].type"
+    ]
+  },
+  {
+    "id": "2d287668af35af67",
+    "ru": "Разрешение на этот участок действительно; сведений о согласованном закрытии временного прохода нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d1].text"
+    ]
+  },
+  {
+    "id": "ea4cf98c824ad6f3",
+    "ru": "Карточка работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[d1].title"
+    ]
+  },
+  {
+    "id": "b2be81e9d94a82c4",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Событие в приложении: {{observed}}. Для специального срока смотрите отдельную дату в календарном задании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[dates].text",
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[dates].text",
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[dates].text"
+    ]
+  },
+  {
+    "id": "1c088ea9d97a316f",
+    "ru": "Даты поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].documents[dates].title",
+      "cases:CASE_TEMPLATES[signal-other-crossing].documents[dates].title",
+      "cases:CASE_TEMPLATES[sign-not-ad].documents[dates].title"
+    ]
+  },
+  {
+    "id": "5242bd790ee9f1df",
+    "ru": "Ориентир: 10–13 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].duration",
+      "cases:CASE_TEMPLATES[sign-not-ad].duration",
+      "cases:CASE_TEMPLATES[flight-claim].duration"
+    ]
+  },
+  {
+    "id": "9303a83ff18f4a4d",
+    "ru": "Нужно проверить отклонение фактического прохода от безопасной схемы, не объявляя все работы незаконными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].factTask.explain",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].outcomes.good"
+    ]
+  },
+  {
+    "id": "a0643313612cf924",
+    "ru": "Любое разрешение позволяет перекрыть весь пешеходный путь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "37f909e0c11695db",
+    "ru": "Фотография сама отменяет строительное разрешение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "68c089ea16ced6c9",
+    "ru": "Какое заключение подтверждено материалами?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].factTask.prompt",
+      "cases:CASE_TEMPLATES[signal-other-crossing].factTask.prompt",
+      "cases:CASE_TEMPLATES[sign-not-ad].factTask.prompt"
+    ]
+  },
+  {
+    "id": "7feb4cc2e8d1ad36",
+    "ru": "В продолжении осталось непроверенное обстоятельство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.failure",
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.failure",
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.failure"
+    ]
+  },
+  {
+    "id": "1084c937b8b9c35e",
+    "ru": "В ответе приложен снимок снятой ленты. Под ней всё ещё лежат материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.intro"
+    ]
+  },
+  {
+    "id": "d6e5b6fe2d965fde",
+    "ru": "Сопоставить доступность маршрута с задачей; запросить устранение оставшегося препятствия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.options[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.explain"
+    ]
+  },
+  {
+    "id": "4dbcc3da3f354e08",
+    "ru": "Закрыть дело, поскольку лента снята.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a1d88af48ada0b33",
+    "ru": "Самостоятельно отменить все разрешения подрядчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "d3802e5f3c670779",
+    "ru": "Результат сопоставлен с обстоятельствами; новое сообщение не осталось формальностью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].followup.success",
+      "cases:CASE_TEMPLATES[signal-other-crossing].followup.success",
+      "cases:CASE_TEMPLATES[sign-not-ad].followup.success"
+    ]
+  },
+  {
+    "id": "e52fcdd643b21cbe",
+    "ru": "Статья 12 закона № 196-ФЗ связывает содержание дороги с безопасностью движения. Само разрешение на работы не подтверждает безопасность фактически оставленного прохода. Поэтому проверяются реальное ограждение и согласованная схема; сотрудник приёмной не подменяет инспектора и не назначает штраф.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].knowledge.explain"
+    ]
+  },
+  {
+    "id": "87a4ff487a8135f9",
+    "ru": "Найдите основание требований безопасности при содержании дорог.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "57a7d4674f0e83da",
+    "ru": "Между нашим домом и остановкой раскопали тротуар. На заборе висит разрешение, но с коляской остался путь только по дороге. Значит, с разрешением так можно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].opening"
+    ]
+  },
+  {
+    "id": "8ebd6c13bfd9b862",
+    "ru": "Не все действия подтверждены обстоятельствами и применимыми правилами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].outcomes.bad",
+      "cases:CASE_TEMPLATES[signal-other-crossing].outcomes.bad",
+      "cases:CASE_TEMPLATES[sign-not-ad].outcomes.bad"
+    ]
+  },
+  {
+    "id": "7a13b6682c2f465b",
+    "ru": "Обращение о безопасности движения и соблюдении условий работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].procedures[0].text"
+    ]
+  },
+  {
+    "id": "21f29a4c7e2d0d26",
+    "ru": "Автоматическая отмена разрешения специалистом приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].procedures[1].text"
+    ]
+  },
+  {
+    "id": "c294da00e92c69b1",
+    "ru": "Спор о собственности на квартиры",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].procedures[2].text"
+    ]
+  },
+  {
+    "id": "f95e9274d10f771b",
+    "ru": "На плане нарисован временный пешеходный коридор. На сегодняшнем снимке его перекрывает склад материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "cda4d385bc9845f7",
+    "ru": "Разрешённые работы и фактическая безопасность прохода – разные вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q0].fact",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].coach.talk"
+    ]
+  },
+  {
+    "id": "136a7b9ecfc96ba1",
+    "ru": "Как устроен обход?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q0].text"
+    ]
+  },
+  {
+    "id": "3a78aba018f25623",
+    "ru": "Адрес и границы совпадают; срок работ ещё не истёк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "ea2deaa9bfe42706",
+    "ru": "Нельзя объявить разрешение чужим без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "068dac22dc8956bd",
+    "ru": "Разрешение относится к этому участку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q1].text"
+    ]
+  },
+  {
+    "id": "b2a2159e8b84be02",
+    "ru": "Это единственный подход к остановке с этой стороны. Выход на проезжую часть виден на фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "362fd9a80d21bc7c",
+    "ru": "Нужно проверить фактический маршрут пешеходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "f9bb49a4f87af33d",
+    "ru": "Кто использует проход?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q2].text"
+    ]
+  },
+  {
+    "id": "1634680b0de69291",
+    "ru": "Бригадир ответил, что разрешение закрывает любые претензии. Письменного ответа нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "3dcadec6d83ce574",
+    "ru": "Утверждение подрядчика не подтверждает безопасность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c7e245447791e031",
+    "ru": "Сообщали ли подрядчику?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].questions[q3].text"
+    ]
+  },
+  {
+    "id": "3912ef45a2dbe2e3",
+    "ru": "Проверяет предмет обращения, передаёт сведения о небезопасном проходе и готовит запрос уполномоченному подразделению. Не отменяет разрешение и не управляет стройкой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].role.text"
+    ]
+  },
+  {
+    "id": "a8d167c2b87ab6d4",
+    "ru": "Специалист районной приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].role.title"
+    ]
+  },
+  {
+    "id": "e9f6b823a0cb179d",
+    "ru": "Оперативно передать сведения о риске и направить материалы владельцу дороги / уполномоченному контролирующему подразделению в пределах их компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].routes[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].coach.plan",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "ade328cde9454ce4",
+    "ru": "Предложить всем ходить по проезжей части до конца стройки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].routes[1].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "429c1e251687514b",
+    "ru": "Единолично признать подрядчика виновным и назначить штраф.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].routes[2].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d2e5529f184a8823",
+    "ru": "Разрешение есть. А проход?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sidewalk-boundary].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sidewalk-boundary].title"
+    ]
+  },
+  {
+    "id": "2f6a4223a4410350",
+    "ru": "Строительство и проход",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].topic",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].tag",
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].topic"
+    ]
+  },
+  {
+    "id": "8a2b2da41234a06d",
+    "ru": "Подлинность разрешения не подтверждает соблюдение условий на месте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].trap.options[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-boundary].trap.explain"
+    ]
+  },
+  {
+    "id": "0672ce2ac807959f",
+    "ru": "Согласиться: документ заменяет проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "15d474a45829378b",
+    "ru": "Помощник: «Документ настоящий, значит и проход соответствует требованиям».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-boundary].trap.text"
+    ]
+  },
+  {
+    "id": "eb637925006b856b",
+    "ru": "Сопоставить состав обязательств и предмет акта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[a0].title"
+    ]
+  },
+  {
+    "id": "361397a016d3c83f",
+    "ru": "Разделить выполненный инженерный этап и оставшееся восстановление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e9b714155ed748fb",
+    "ru": "Подготовить контрольный запрос по незавершённым работам и графику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[a2].title"
+    ]
+  },
+  {
+    "id": "56c05d4a4daa10b3",
+    "ru": "Сообщить заявителю реальное состояние этапов без обещания произвольной даты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ce0b39b8c777fac5",
+    "ru": "Проверить подтверждение покрытия и вывоза материалов до полного закрытия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[a4].title"
+    ]
+  },
+  {
+    "id": "18bbf109ad41d7d2",
+    "ru": "Закрыть весь объект по акту испытания трубы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[b0].title"
+    ]
+  },
+  {
+    "id": "63d9c3e9de65ca0c",
+    "ru": "Объявить общие 30 дней обязательным сроком ремонта для подрядчика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].actions[b1].title"
+    ]
+  },
+  {
+    "id": "bd323224bf14c027",
+    "ru": "Объявить общие 30 дней обязательным сроком ремонта для подрядчика: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "d2788870bb81fe9e",
+    "ru": "В учебном задании по Т-12 предусмотрены замена трубопровода, восстановление покрытия и вывоз материалов. Временный обход проверен и остаётся безопасным. Срок отдельной стадии определяется подтверждённым графиком исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d0].text"
+    ]
+  },
+  {
+    "id": "08499d33ef48fff9",
+    "ru": "Состав обязательств по участку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d0].title"
+    ]
+  },
+  {
+    "id": "426473159c01fc87",
+    "ru": "Принято испытание нового трубопровода. В акт не включены тротуарное покрытие и вывоз материалов. Сообщение исполнителя {{observed}} ошибочно называет завершённым весь комплекс.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d1].text"
+    ]
+  },
+  {
+    "id": "b019ad19c0a21493",
+    "ru": "Акт выполненного этапа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d1].title"
+    ]
+  },
+  {
+    "id": "60542e4cded0fc4d",
+    "ru": "План включает восстановление покрытия. Плановая строка не удостоверяет фактическую приёмку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d2].text"
+    ]
+  },
+  {
+    "id": "e11592c2d917f630",
+    "ru": "График будущих операций",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].documents[d2].title"
+    ]
+  },
+  {
+    "id": "c573115e4b16d3d6",
+    "ru": "Акт подтверждает инженерный этап, но не исполнение обязательств по покрытию и вывозу; общий статус завершения преждевременный. Исходное ограждение нарушало проход. Здесь обход безопасен, но сообщение о завершении не соответствует составу принятых работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.explain"
+    ]
+  },
+  {
+    "id": "25efc33065ecb7fa",
+    "ru": "Акт подтверждает инженерный этап, но не исполнение обязательств по покрытию и вывозу; общий статус завершения преждевременный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7faa59660fe2f5fa",
+    "ru": "Название «работы завершены» в письме важнее предмета подписанного акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "d6b39232eadca5f3",
+    "ru": "Любое незавершённое благоустройство доказывает аварийность трубопровода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "f2e1464e27073cfb",
+    "ru": "Проверить оставшиеся обязательства и соответствие закрывающего статуса полному исполнению. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].followup.explain"
+    ]
+  },
+  {
+    "id": "9c097deb6e10259c",
+    "ru": "Подрядчик предъявил акт укладки покрытия, но в нём отдельно исключены вывоз плит и восстановление подхода к входу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].followup.intro"
+    ]
+  },
+  {
+    "id": "ea2bc37ab3dd982b",
+    "ru": "Проверить оставшиеся обязательства и соответствие закрывающего статуса полному исполнению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "ae8735cfff5e4535",
+    "ru": "Закрыть дело только из-за появления слова «покрытие».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d6051ff16ebd0808",
+    "ru": "Признать недействительным уже выполненное испытание трубы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "107104af05ee97d0",
+    "ru": "Мне прислали акт: работы завершены. Но асфальта на тротуаре всё ещё нет, у дома остались плиты. Я не понимаю, что именно приняли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].opening"
+    ]
+  },
+  {
+    "id": "20b55c1aa8f2f5e9",
+    "ru": "Оценить завершение всего благоустройства по акту выполнения работ на трубе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].procedures[1].text"
+    ]
+  },
+  {
+    "id": "d8294c94dc4af584",
+    "ru": "Рассмотреть письмо как просьбу о новом благоустройстве, не проверяя обязательства по восстановлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].procedures[2].text"
+    ]
+  },
+  {
+    "id": "ebbaf59b592d82cb",
+    "ru": "Испытание и замена трубопровода. Восстановление покрытия перечислено отдельной стадией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "8425064039bc4216",
+    "ru": "Акт инженерных работ не равен приёмке всего объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "12f8f0aa72941c42",
+    "ru": "Какой вид работ указан в акте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f969dc8bd630cb30",
+    "ru": "Нет. А в перечне обязательств оно прямо включено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c120a82f496ab9a6",
+    "ru": "Нужен контроль незавершённой стадии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "8eeb7954b2883f63",
+    "ru": "Есть ли документ о восстановлении тротуара?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q1].text"
+    ]
+  },
+  {
+    "id": "1601d8f4df56a9ac",
+    "ru": "Временный обход по акту остаётся безопасным. Жалоба касается остаточных работ и неверного общего статуса «всё завершено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "e9b441ff79a4345c",
+    "ru": "Не нужно выдумывать непосредственную угрозу, если её нет в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "3aab25e6cf0e0c28",
+    "ru": "Проход сейчас сохраняется?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a5bb387bc7e66e78",
+    "ru": "Есть подтверждённый рабочий график, но он не является доказательством фактического выполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "8bf1e181229c095f",
+    "ru": "Срок ответа и график восстановления различаются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "fc734e6be9e5b0b0",
+    "ru": "Какая дата дана для стадии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].questions[q3].text"
+    ]
+  },
+  {
+    "id": "919b4fb025608135",
+    "ru": "Специалист профильного подразделения городского хозяйства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].role.title"
+    ]
+  },
+  {
+    "id": "b65cac0195848724",
+    "ru": "Организовать контроль оставшихся обязательств через уполномоченное подразделение; письменный срок не заменяет график работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].routes[0].text"
+    ]
+  },
+  {
+    "id": "581cacdacce20ffc",
+    "ru": "Закрыть вопрос по акту трубопроводного этапа, не проверив поверхность и безопасный проход.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].routes[1].text"
+    ]
+  },
+  {
+    "id": "7194cd77c5c7144a",
+    "ru": "Включить восстановление в новую долгосрочную инициативу, не рассмотрев обязанности по текущим работам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].routes[2].text"
+    ]
+  },
+  {
+    "id": "8bec2497feefcda4",
+    "ru": "Трубу заменили, тротуар не восстановили",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[sidewalk-restoration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[sidewalk-restoration].title"
+    ]
+  },
+  {
+    "id": "4b350356844868d5",
+    "ru": "Исходное ограждение нарушало проход. Здесь обход безопасен, но сообщение о завершении не соответствует составу принятых работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].trap.explain",
+      "cases:CASE_TEMPLATES[sidewalk-restoration].coach.plan",
+      "cases:CASE_TEMPLATES[sidewalk-restoration].contrast.difference"
+    ]
+  },
+  {
+    "id": "2c5e2b72d4f0b82e",
+    "ru": "Помощник: «Один акт о завершении любого этапа позволяет закрыть все вопросы по объекту».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-restoration].trap.text"
+    ]
+  },
+  {
+    "id": "bba4d3b68d0567ad",
+    "ru": "Сопоставить разрешение, текущую стадию и акт осмотра обхода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[a0].title"
+    ]
+  },
+  {
+    "id": "c28d1f572863fa88",
+    "ru": "Установить, есть ли в обращении новый конкретный дефект",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[a1].title"
+    ]
+  },
+  {
+    "id": "c6c0c44dc3219e03",
+    "ru": "Подготовить объяснение основания ограничения и доступного пути",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[a2].title"
+    ]
+  },
+  {
+    "id": "55402ec5febdd82b",
+    "ru": "Сообщить порядок получения информации о завершении работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[a3].title"
+    ]
+  },
+  {
+    "id": "00e957bfb3c3da61",
+    "ru": "Сохранить канал реакции на изменение безопасности прохода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[a4].title"
+    ]
+  },
+  {
+    "id": "ae585ee9710579b4",
+    "ru": "Поручить жителям самостоятельно убрать ограждение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[b0].title"
+    ]
+  },
+  {
+    "id": "aa48316ba51f9c53",
+    "ru": "Не рассматривать обращение из-за наличия разрешения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].actions[b1].title"
+    ]
+  },
+  {
+    "id": "5466567718cbc7de",
+    "ru": "Житель города",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].citizen.description",
+      "cases:CASE_TEMPLATES[sidewalk-updated-permit].citizen.description",
+      "cases:CASE_TEMPLATES[sidewalk-restoration].citizen.description"
+    ]
+  },
+  {
+    "id": "77b05c8b82c2d34a",
+    "ru": "Ремонт и содержание дорог должны обеспечивать безопасность движения; соответствующая обязанность возлагается на лиц, осуществляющих содержание. Конкретный исполнитель, объект и границы работ устанавливаются отдельно. Приёмная не меняет схему движения самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].coach.research",
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].knowledge.explain"
+    ]
+  },
+  {
+    "id": "e4a1369cfc36ba4b",
+    "ru": "Не рассматривать обращение из-за наличия разрешения: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "dc7046cdb92a966b",
+    "ru": "Работы на участке Т-4 разрешены на текущую стадию. Прямой проход закрыт в согласованных границах, предусмотрен обход. Разрешение и схема действуют на дату наблюдения {{observed}}. Сведения синтетические.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d0].text"
+    ]
+  },
+  {
+    "id": "dabdd1bae81394cb",
+    "ru": "Действующее разрешение и схема",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ef790d7c9a3cd40d",
+    "ru": "Уполномоченный технический специалист осмотрел именно Т-4 {{observed}}. Обход соответствует приложенной схеме и требованиям доступности, выхода на полосу движения не требует. Жалоба не содержит указания на иной фактический дефект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d1].text"
+    ]
+  },
+  {
+    "id": "511ed1bf7d3f0811",
+    "ru": "Акт осмотра временного прохода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d1].title"
+    ]
+  },
+  {
+    "id": "19adf5dfc8d553e2",
+    "ru": "Старый снимок показывает более короткий путь. Он не подтверждает безопасность прохода через текущую зону работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d2].text"
+    ]
+  },
+  {
+    "id": "f3888b43f692da98",
+    "ru": "Снимок прямого маршрута до работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].documents[d2].title"
+    ]
+  },
+  {
+    "id": "031a5ac05405591c",
+    "ru": "По данному комплекту нарушение границ или безопасности не подтверждено; нужно объяснить основание, обход и организацию контроля. В исходном деле обход не соответствовал плану. Здесь соответствие подтверждено; большего расстояния недостаточно для вывода о незаконности, но новая преграда меняет ситуацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.explain"
+    ]
+  },
+  {
+    "id": "8958ed11137fb070",
+    "ru": "По данному комплекту нарушение границ или безопасности не подтверждено; нужно объяснить основание, обход и организацию контроля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a98b2b5e60daba8b",
+    "ru": "Сам факт более длинного пути доказывает незаконность любого временного ограждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "a262f1ba3101371c",
+    "ru": "Раз работы согласованы, на вопросы жителей отвечать не нужно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "2e6d25b06bd9ab43",
+    "ru": "Проверить новое препятствие и организовать восстановление доступного прохода по компетенции. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].followup.explain"
+    ]
+  },
+  {
+    "id": "898676addc975c84",
+    "ru": "На следующий день на согласованном обходе поставили строительный контейнер. Новая фотография указывает место перекрытия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].followup.intro"
+    ]
+  },
+  {
+    "id": "e3de35b90500381c",
+    "ru": "Проверить новое препятствие и организовать восстановление доступного прохода по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "f156fe0887f12333",
+    "ru": "Сослаться на вчерашний акт и закрыть сообщение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "27594b58a09fae64",
+    "ru": "Предложить пройти через зону производства работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "adf63dca9b4d33de",
+    "ru": "Найдите норму: Безопасность дорожного движения: ремонт и содержание. Укажите реквизиты акта и статью, затем определите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].knowledge.prompt",
+      "cases:CASE_TEMPLATES[sidewalk-restoration].knowledge.prompt",
+      "cases:CASE_TEMPLATES[signal-visibility].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "cfa54e5624d947ba",
+    "ru": "Прямой тротуар перекрыли, теперь нужно обходить. Значит, ограждение установили незаконно? Хочу, чтобы его немедленно сняли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].opening"
+    ]
+  },
+  {
+    "id": "4712e49a7dafa741",
+    "ru": "Считать нарушение установленным только потому, что обход длиннее прежнего пути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].procedures[1].text"
+    ]
+  },
+  {
+    "id": "0a737e8c0618643c",
+    "ru": "Рассмотреть только наличие разрешения, без проверки действительности схемы прохода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].procedures[2].text"
+    ]
+  },
+  {
+    "id": "ab6ec66a5659b5d4",
+    "ru": "В приложении есть действующее разрешение и схема: границы совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "0cac067b738c7b04",
+    "ru": "Наличие ограничения ещё не доказывает нарушение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "6580056cd324651a",
+    "ru": "Совпадает ли ограждение с действующей схемой работ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q0].text"
+    ]
+  },
+  {
+    "id": "54c8d08ef98aab7c",
+    "ru": "Да. В акте подтверждены доступный проход, отсутствие выхода на проезжую часть и соответствие временной схемы на дату осмотра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[sidewalk-safe-detour].questions[q1].answer"
+    ]
+  }
+]

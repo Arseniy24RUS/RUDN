@@ -1,0 +1,1171 @@
+[
+  {
+    "id": "1c454c30a5957e9e",
+    "ru": "Первоначальные документы содержат правильную фамилию. Опечатка возникла в результате услуги, оформленном другим органом. МФЦ принял и передал просьбу об исправлении. Обжалуется последующий отказ выдавшего органа; это не отказ МФЦ в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].documents[d0].text"
+    ]
+  },
+  {
+    "id": "56449786c17e6a2d",
+    "ru": "Заявление и отказ выдавшего органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].documents[d0].title"
+    ]
+  },
+  {
+    "id": "86c47d71bdd62acd",
+    "ru": "Для дела задан общий порядок главы 2.1 закона № 210-ФЗ. Жалоба может быть передана через МФЦ надлежащему адресату органа, выдавшего результат; МФЦ не меняет текст его акта самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].documents[d1].text"
+    ]
+  },
+  {
+    "id": "57b05d17f29dcc18",
+    "ru": "Обжалуется отказ выдавшего органа исправить подтверждённую опечатку; правильный маршрут не совпадает с местом получения документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].outcomes.good"
+    ]
+  },
+  {
+    "id": "4914417b5f5d2d1a",
+    "ru": "МФЦ обязан самостоятельно перепечатать акт любого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "23e14f7fbabb0eef",
+    "ru": "Если МФЦ выполнил свою работу, жалоба на другой орган не рассматривается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "ec74f7f23899ba5c",
+    "ru": "Учебное продолжение. Орган исправил фамилию, но выдал документ с прежним номером записи другого заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].followup.intro"
+    ]
+  },
+  {
+    "id": "dd150535e48312fa",
+    "ru": "Сверить весь исправленный результат с исходными реквизитами и передать сведения о новом несоответствии без раскрытия чужих данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].followup.explain"
+    ]
+  },
+  {
+    "id": "3af101149200989a",
+    "ru": "Принять результат, раз фамилия теперь верна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "07e39cdd9886f87b",
+    "ru": "Исправить номер ручкой и выдать заявителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "fba8aa73ac1885a7",
+    "ru": "Сохранить пятидневный предмет жалобы и направить её надлежащему адресату выдавшего органа, не исправляя чужой акт в МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].coach.research"
+    ]
+  },
+  {
+    "id": "291aeb134c182310",
+    "ru": "В готовом документе неверная буква в фамилии. МФЦ принял моё заявление об исправлении и передал его дальше. Потом орган, выдавший документ, отказал. Я принёс жалобу обратно в МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].opening"
+    ]
+  },
+  {
+    "id": "a074a5188db9f242",
+    "ru": "Органом, который принимает решение по услуге; МФЦ только выдал результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c3d5c97195e60167",
+    "ru": "Исправление акта не приписывается окну выдачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b89d5451e520cd41",
+    "ru": "Кем выдан ошибочный документ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q0].text"
+    ]
+  },
+  {
+    "id": "2e0dc71d47d02dc8",
+    "ru": "Принял и своевременно передал, это подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "66327895344bc1fc",
+    "ru": "Нет установленного отказа работника МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0277af2d71a2afe9",
+    "ru": "Что сделал МФЦ с заявлением об исправлении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q1].text"
+    ]
+  },
+  {
+    "id": "99034cfaacd16ff0",
+    "ru": "Тот же орган, который выдал документ; отказ подписан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0defe65c63703fae",
+    "ru": "Определяется обжалуемый субъект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "fa1896317380e9c2",
+    "ru": "Кто отказал исправить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q2].text"
+    ]
+  },
+  {
+    "id": "9deea4b1cf3c2d54",
+    "ru": "Нет, в первоначальном заявлении фамилия была указана правильно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "80e862bb1af8ba36",
+    "ru": "Материалы подтверждают именно опечатку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d9b32e337fd3b230",
+    "ru": "Есть ли спор об изменении ваших данных?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].questions[q3].text"
+    ]
+  },
+  {
+    "id": "ff634f5bc9573c2f",
+    "ru": "Подготовить передачу жалобы на отказ в исправлении уполномоченному адресату органа, выдавшего результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].coach.plan"
+    ]
+  },
+  {
+    "id": "af394270200d8aa6",
+    "ru": "Направить жалобу только директору МФЦ для отмены чужого акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "95417049a6b96eff",
+    "ru": "Попросить заявителя самостоятельно исправить букву в официальном документе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "18f73e3ce59c543b",
+    "ru": "Опечатка в акте другого органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-typo-issuer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-typo-issuer].title"
+    ]
+  },
+  {
+    "id": "5030d982b5604309",
+    "ru": "Автор акта и полномочия на исправление устанавливаются отдельно от места выдачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].trap.explain"
+    ]
+  },
+  {
+    "id": "50332f9344bdf527",
+    "ru": "Окно выдачи вправе менять любой результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "2f8fa27d4f635340",
+    "ru": "Помощник: «Место выдачи документа всегда является органом, который его исправляет».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].trap.text"
+    ]
+  },
+  {
+    "id": "ba38e3175814f47e",
+    "ru": "Сопоставить исходник и выданный документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6ad6941a64d53670",
+    "ru": "Установить полномочие исправления и предмет отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5f449178d211c231",
+    "ru": "Подготовить рассмотрение жалобы по специальному сроку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[a2].title"
+    ]
+  },
+  {
+    "id": "da8405da98a3de66",
+    "ru": "Уведомить заявительницу о решении и дальнейшем действии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[a3].title"
+    ]
+  },
+  {
+    "id": "0ca31b16ae985031",
+    "ru": "Проверить, что исправленный документ соответствует исходным сведениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[a4].title"
+    ]
+  },
+  {
+    "id": "90d752e9b6cbda03",
+    "ru": "Изменить существенное право заявительницы под видом опечатки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "1ad50d3ad6f4d333",
+    "ru": "Объявить подпись о получении отказом от права на жалобу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].actions[b1].title"
+    ]
+  },
+  {
+    "id": "1c6019fa3ba49824",
+    "ru": "Заявительница",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].citizen.description"
+    ]
+  },
+  {
+    "id": "bb66fd676d467ee7",
+    "ru": "Предмет — отказ исправить опечатку в результате. Это не новая личная информация, возникшая после выдачи, и не произвольная возможность МФЦ изменять чужой акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].contrast.difference"
+    ]
+  },
+  {
+    "id": "39a6501f8498e71d",
+    "ru": "Исходные сведения верны; в документе, выданном МФЦ в пределах его полномочий, опечатка. Работник отказал в её исправлении. Спора о содержании права нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d0].text"
+    ]
+  },
+  {
+    "id": "89653d329b62458d",
+    "ru": "Два документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1fc11ad15f465d24",
+    "ru": "Жалоба на отказ работника исправить опечатку зарегистрирована {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d1].text"
+    ]
+  },
+  {
+    "id": "26f48a93fa4fd593",
+    "ru": "Регистрация жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d1].title",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].documents[d1].title"
+    ]
+  },
+  {
+    "id": "13feb3feaa489e02",
+    "ru": "Обжалуется отказ исправить опечатку в документе, относящемся к полномочиям МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].outcomes.good"
+    ]
+  },
+  {
+    "id": "50b23aa1cd3c0d0b",
+    "ru": "Невнимательность при получении прекращает право обжаловать отказ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "c7847a32699943e6",
+    "ru": "В любом реестре всегда можно изменить права как опечатку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "7a0dc3b035f1fbb7",
+    "ru": "Учебное продолжение. Документ заменили, но исправили другую букву.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].followup.intro"
+    ]
+  },
+  {
+    "id": "0a9d88b42642c227",
+    "ru": "Сопоставить конкретную ошибку с исходником и потребовать надлежащего исполнения в пределах полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].followup.explain"
+    ]
+  },
+  {
+    "id": "fba53f9ff75ba65f",
+    "ru": "Закрыть дело из-за факта выдачи нового листа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "ad7c051b6eb8f338",
+    "ru": "Переделать все сведения произвольно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "34051f8f3dc88554",
+    "ru": "В документе, который выдал МФЦ в рамках своих полномочий, опечатка. Мои исходные сведения верные. Работник отказался исправлять: «Читайте внимательнее перед выдачей».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].opening"
+    ]
+  },
+  {
+    "id": "5d86bdd83e449490",
+    "ru": "Жалоба на отказ исправить опечатку по 210-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].procedures[0].text"
+    ]
+  },
+  {
+    "id": "840534572c12f330",
+    "ru": "Обычный ответ о бюджете",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].procedures[1].text"
+    ]
+  },
+  {
+    "id": "854dc9b787a9b365",
+    "ru": "Пересмотр судебного акта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b0af141384b89aff",
+    "ru": "По условиям этот документ оформляет МФЦ, вопрос относится к его полномочиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "ba0968ce5874c68e",
+    "ru": "Нельзя автоматически переносить задачу на чужой реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "e5b0e821425358cb",
+    "ru": "Кто выдал документ и вправе его исправить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f48550045ca4d7fd",
+    "ru": "Нет, приложены исходник и выданный документ с одной различающейся буквой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "567b845b0af726f0",
+    "ru": "Сопоставлена опечатка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a49e9dffed19f32a",
+    "ru": "Исходные сведения содержали ошибку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q1].text"
+    ]
+  },
+  {
+    "id": "409e1699fe5e573f",
+    "ru": "Отказ работника в исправлении опечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "136a13a9daecf26d",
+    "ru": "Определён специальный предмет жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "6b7dbb24f493e4c2",
+    "ru": "Что обжалуется сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q2].text"
+    ]
+  },
+  {
+    "id": "3e6038bcb7a8a28d",
+    "ru": "Руководителю МФЦ на работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "5b0bc6901bc5b6f1",
+    "ru": "Разграничен адресат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "f70aa5c7806b30d7",
+    "ru": "Кому адресована жалоба?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b1849a199eff28ec",
+    "ru": "Рассмотрение руководителем МФЦ жалобы на отказ работника в исправлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].coach.plan",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "3c7427efb2d49229",
+    "ru": "Повторно тому же работнику для окончательного разрешения жалобы на него.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "7e8452c0bbf846e9",
+    "ru": "Отказать из-за подписи о получении документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "0fadf5b1faf6b41b",
+    "ru": "В документе ошибка, в исходнике нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-typo-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-typo-refusal].title"
+    ]
+  },
+  {
+    "id": "deb1a310280d7400",
+    "ru": "Исправление документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].topic",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].tag"
+    ]
+  },
+  {
+    "id": "4c4953e7943d309a",
+    "ru": "Различить получение документа и право оспаривать отказ исправить ошибку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].trap.explain"
+    ]
+  },
+  {
+    "id": "2f73d98348750858",
+    "ru": "Отклонить жалобу по подписи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "b9131c2d3a699f84",
+    "ru": "Помощник: «Подписала получение – значит жалоба невозможна».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].trap.text"
+    ]
+  },
+  {
+    "id": "f58ae4c6afa42c42",
+    "ru": "Сверить предмет отказа и место приёма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[a0].title"
+    ]
+  },
+  {
+    "id": "5bea381fdb51ba29",
+    "ru": "Проверить, что документ надлежащий и допускается добровольное представление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5bd26e234dd5a364",
+    "ru": "Подготовить оценку отказа по соответствующей процедуре",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[a2].title"
+    ]
+  },
+  {
+    "id": "24aba601eb083a5d",
+    "ru": "Разъяснить право представить сведения по инициативе без превращения его в обязанность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[a3].title"
+    ]
+  },
+  {
+    "id": "8a412ff50183e0f2",
+    "ru": "Проверить принятие материала и сохранение межведомственного способа для остальных случаев",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[a4].title"
+    ]
+  },
+  {
+    "id": "75046f567f46d1e1",
+    "ru": "Требовать такую справку у всех заявителей после удовлетворения жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "f4bb067cb66e8ae7",
+    "ru": "Отказать повторно только из-за наличия межведомственного обмена",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].actions[b1].title"
+    ]
+  },
+  {
+    "id": "459960ab7c39e01b",
+    "ru": "Крайний день рассмотрения жалобы на отказ в приёме",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].calendar.title",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].calendar.title"
+    ]
+  },
+  {
+    "id": "fc00825905b85348",
+    "ru": "Заявителя не заставляют собирать справку: он сам предлагает допустимый документ; отказ в его приёме требует другого решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].contrast.difference"
+    ]
+  },
+  {
+    "id": "f0650cc1f5d7b246",
+    "ru": "В вымышленном деле гражданин добровольно представил надлежащий документ из числа получаемых межведомственно. Правила выбранной услуги допускают такое представление. Работник органа отказал только потому, что сведения можно получить без заявителя; иных оснований не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].documents[d0].text"
+    ]
+  },
+  {
+    "id": "680afa64b9480c84",
+    "ru": "Отказ и условия представления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6aee20a55f1b9cf8",
+    "ru": "Приём проводил орган, предоставляющий услугу, не сотрудник МФЦ. Жалоба зарегистрирована этим органом; специальная федеральная процедура вне главы 2.1 не применяется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].documents[d1].text"
+    ]
+  },
+  {
+    "id": "3d38f703ae81baeb",
+    "ru": "Подтверждение адресата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].documents[d1].title"
+    ]
+  },
+  {
+    "id": "eefb8e5019eba32f",
+    "ru": "Запрет требовать межведомственный документ не равен запрету принять его по инициативе заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].outcomes.good"
+    ]
+  },
+  {
+    "id": "0e8d950babee9745",
+    "ru": "Межведомственный обмен делает любое добровольное представление незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "941ac85ec0c4ad8d",
+    "ru": "Приём добровольной справки позволяет сделать её обязательной для следующих заявителей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "c25c8d94dffc83f4",
+    "ru": "Учебное продолжение. Документ приняли, но в обновлённой памятке его назвали обязательным для всех.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].followup.intro"
+    ]
+  },
+  {
+    "id": "3223e11713033e4d",
+    "ru": "Исправить превращение добровольного способа в обязанность и сохранить возможность межведомственного получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].followup.explain"
+    ]
+  },
+  {
+    "id": "ba34ffa9a1913f51",
+    "ru": "Согласовать памятку, потому что так меньше работы у органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "964ada3f51082205",
+    "ru": "Запретить всем заявителям добровольно представлять сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "517255114da73f56",
+    "ru": "Рассмотреть отказ в приёме надлежащего добровольного документа и не вводить его обязательность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].coach.research"
+    ]
+  },
+  {
+    "id": "ef5b868be5e1a0c5",
+    "ru": "Справка не обязательна: орган может запросить её сам. Я уже получил её и принёс добровольно. В приёмной органа сказали, что раз существует межведомственный обмен, мой документ вообще не имеют права принять.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].opening"
+    ]
+  },
+  {
+    "id": "381b00675ac672be",
+    "ru": "В орган, предоставляющий услугу; МФЦ в этом приёме не участвовал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "bb36500b06058134",
+    "ru": "Устанавливается надлежащий адресат жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1a007ef8e21832c0",
+    "ru": "Куда вы принесли документ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q0].text"
+    ]
+  },
+  {
+    "id": "629a1d5219f61674",
+    "ru": "Да. Учебные условия допускают его добровольное представление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "3e1a5883adf7ab17",
+    "ru": "Добровольность отличается от обязательного требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "385a6b42d035d4e5",
+    "ru": "Документ включён в круг межведомственных сведений?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q1].text"
+    ]
+  },
+  {
+    "id": "645d9d161d483144",
+    "ru": "Отказали в его приёме, не рассматривая действительность. Подтверждение отказа есть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "540a4738209c757a",
+    "ru": "Предметом является отказ в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "6791e4c182b249cb",
+    "ru": "Что произошло с документом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q2].text"
+    ]
+  },
+  {
+    "id": "9fa6991f9f4559c2",
+    "ru": "В материалах указано только наличие межведомственного обмена; документ надлежащий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "4ae015c9f5288bf2",
+    "ru": "Не дописываем неизвестные основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "720cb9b1c6bab69d",
+    "ru": "Есть ли иная причина отказа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8fee04a7ff0e4665",
+    "ru": "Подготовить рассмотрение жалобы уполномоченным лицом органа, предоставляющего услугу, на отказ в приёме добровольно представленного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].coach.plan"
+    ]
+  },
+  {
+    "id": "9aa5a71dfb5d1d5b",
+    "ru": "Направить жалобу руководителю МФЦ, который в этом приёме не участвовал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "af566bb4941d68cf",
+    "ru": "Ввести для всех обязанность самостоятельно приносить такую справку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "13ef4443eabb8cdd",
+    "ru": "Сведения принёс сам заявитель",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-voluntary-document].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-voluntary-document].title"
+    ]
+  },
+  {
+    "id": "453272e0a30fa2ab",
+    "ru": "Добровольное представление и обязательное требование имеют разные правовые последствия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].trap.explain"
+    ]
+  },
+  {
+    "id": "269c348e5199da9f",
+    "ru": "Любой добровольный документ нужно вернуть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "7293866ac0d900a6",
+    "ru": "Помощник: «Нельзя требовать» означает «нельзя принять».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].trap.text"
+    ]
+  },
+  {
+    "id": "21d3f6a9e0f87aad",
+    "ru": "Сопоставить место, время и операции с карточкой А-22.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[a0].title"
+    ]
+  },
+  {
+    "id": "32c9f5c0a81ea1b5",
+    "ru": "Проверить необходимость аварийной операции по материалам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[a1].title"
+    ]
+  },
+  {
+    "id": "69bb6bcd36fc2eda",
+    "ru": "Подготовить мотивированный ответ о конкретном исключении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[a2].title"
+    ]
+  },
+  {
+    "id": "85fe4d775ca5c9f5",
+    "ru": "Не распространять исключение на любые будущие работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[a3].title"
+    ]
+  },
+  {
+    "id": "9127f8b8a4f36b9d",
+    "ru": "Оценивать дальнейшие эпизоды по их собственным обстоятельствам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c6331870b28385ff",
+    "ru": "Считать ночь достаточным основанием для штрафа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[b0].title"
+    ]
+  },
+  {
+    "id": "96d02d064b740e09",
+    "ru": "Выдать разрешение на любой последующий ночной ремонт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].actions[b1].title",
+      "cases:CASE_TEMPLATES[noise-emergency-work].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "4f3d716be8fa035c",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Город Москва, аварийный прорыв сети подтверждён. Шумные операции в исходном эпизоде были необходимой частью неотложных работ для предотвращения угрозы; это установлено документами, а не только заявлением подрядчика. Требования безопасности и оценка иных последствий сохраняются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].brief"
+    ]
+  },
+  {
+    "id": "546437f1a14f85fb",
+    "ru": "В отличие от бытового нарушения в исходных материалах подтверждены условия специального исключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].coach.plan",
+      "cases:CASE_TEMPLATES[noise-emergency-work].contrast.difference"
+    ]
+  },
+  {
+    "id": "f2ae4640faaecb56",
+    "ru": "На следующий месяц предусмотрена перекладка покрытия. Это не объяснение ночного аварийного эпизода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b60119c893da8637",
+    "ru": "Обычный план благоустройства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d0].title"
+    ]
+  },
+  {
+    "id": "63d9546c11c9e261",
+    "ru": "{{observed}}, 00:20: прорыв сети, угроза затопления электрооборудования. Неотложное устранение до 02:10. Адрес и место совпадают с обращением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7a1c75d389373be9",
+    "ru": "Карточка аварии А-22",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a34f61583cc37a9b",
+    "ru": "Резка трубы с 00:40 до 01:20 необходима для локализации именно А-22. Пункт 2 статьи 2 Закона Москвы №42 исключает из своего режима действия по предотвращению и ликвидации последствий аварий и установленные неотложные работы; это не освобождение любых последующих работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d2].text"
+    ]
+  },
+  {
+    "id": "659a328ff4d2512d",
+    "ru": "Акт работ и применимое исключение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].documents[d2].title"
+    ]
+  },
+  {
+    "id": "aaf14bd012b8cd54",
+    "ru": "В исходном эпизоде подтверждено применимое исключение для неотложной аварийной работы, а не общее право шуметь ночью. В отличие от бытового нарушения в исходных материалах подтверждены условия специального исключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.explain"
+    ]
+  },
+  {
+    "id": "f475b9c1cbbccda9",
+    "ru": "В исходном эпизоде подтверждено применимое исключение для неотложной аварийной работы, а не общее право шуметь ночью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[noise-emergency-work].trap.explain",
+      "cases:CASE_TEMPLATES[noise-emergency-work].contrast.decision"
+    ]
+  },
+  {
+    "id": "e3d068cb949e9ba6",
+    "ru": "Ночное время автоматически делает противоправной любую аварийную операцию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4b3681c5bede4861",
+    "ru": "Одно аварийное событие навсегда освобождает подрядчика от ограничений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "78194aff6518e9b7",
+    "ru": "На следующую ночь без аварии начали обычное восстановление покрытия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].followup.intro"
+    ]
+  },
+  {
+    "id": "5a972ea10866672c",
+    "ru": "Рассмотреть новый эпизод отдельно; прежнее аварийное исключение не переносится автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].followup.options[0].text",
+      "cases:CASE_TEMPLATES[noise-emergency-work].followup.explain"
+    ]
+  },
+  {
+    "id": "e03e6625aa2f5a26",
+    "ru": "Применить прежний акт к любому ремонту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "559f99dfacf84f0d",
+    "ru": "Игнорировать новое письмо из-за уже данного ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f127537caba5dd14",
+    "ru": "Разбирать предмет и компетенцию с учётом доказанного исключения, не выдавая приёмной полномочий назначать санкции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "11b00b0c0836bef2",
+    "ru": "Применять ночной запрет без проверки обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "7038c9da566e282f",
+    "ru": "Поручить окончательное рассмотрение жалобы самому обжалуемому исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "000d751bc2955e96",
+    "ru": "Ночью резали трубу. Прошу наказать работников за шум, ведь была ночь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].opening"
+    ]
+  },
+  {
+    "id": "e6d6c247e1a7ba64",
+    "ru": "Рассмотрение обращения с проверкой применимого исключения и мотивированным ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].procedures[0].text"
+    ]
+  },
+  {
+    "id": "7dff0d10da5dddb8",
+    "ru": "Назначение санкции только по времени суток.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].procedures[1].text"
+    ]
+  },
+  {
+    "id": "41b1e564847358eb",
+    "ru": "Полное прекращение контроля всех работ этого подрядчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].procedures[2].text"
+    ]
+  },
+  {
+    "id": "87c3b5bfaabfe9bb",
+    "ru": "Прорыв создал угрозу затопления электрооборудования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "947c331ede31d107",
+    "ru": "Есть аварийное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "49e34e8dbc62b8f3",
+    "ru": "Что произошло перед работами?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q0].text"
+    ]
+  },
+  {
+    "id": "b0f029dd806f5ad6",
+    "ru": "Диспетчерской карточкой и актом работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "a677400f0ec0f348",
+    "ru": "Срочность не просто названа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f4c67c9cbcf38770",
+    "ru": "Чем подтверждена срочность?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3c796ba9ddc53536",
+    "ru": "В интервале устранения аварии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "4b2396bfff2cf698",
+    "ru": "Предмет сопоставим с актом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "8ce1a12531a624a4",
+    "ru": "В какое время выполнялась шумная операция?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q2].text"
+    ]
+  },
+  {
+    "id": "8a6536298b3be0db",
+    "ru": "В исходном обращении речь только об аварийном эпизоде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "297270717d916752",
+    "ru": "Нельзя заранее освободить будущие работы от ограничений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "cf6a367c3cfa8e6e",
+    "ru": "Есть претензии к дальнейшему ремонту?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].questions[q3].text"
+    ]
+  },
+  {
+    "id": "0dd1bb39b73b051b",
+    "ru": "Компетентное городское подразделение по обращениям и обстоятельствам работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].routes[0].text"
+    ]
+  },
+  {
+    "id": "9f358b976e37813e",
+    "ru": "Приёмная как орган автоматического назначения штрафа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[noise-emergency-work].routes[1].text"
+    ]
+  }
+]

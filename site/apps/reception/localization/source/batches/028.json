@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "e78638417f66ee95",
+    "ru": "Расписка и выписка из журнала",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].documents[refusal].title"
+    ]
+  },
+  {
+    "id": "80efbb50ffcb3319",
+    "ru": "Данные о принятом пакете исключают автоматическую квалификацию этого эпизода как отказа в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-delay].coach.docs"
+    ]
+  },
+  {
+    "id": "18fbfd89223e6574",
+    "ru": "Отказ исправить опечатку в выданном результате.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].factTask.options[correction].text"
+    ]
+  },
+  {
+    "id": "38e22fa4f22d78b9",
+    "ru": "Задержка передачи уже принятых документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].factTask.options[delay].text"
+    ]
+  },
+  {
+    "id": "899eff8f0249bb34",
+    "ru": "Отказ в приёме документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].factTask.options[refusal].text"
+    ]
+  },
+  {
+    "id": "b47a5fb13b190c03",
+    "ru": "Документы приняли, расписку выдали. Но в органе говорят, что пакет от МФЦ не поступил. В выписке из журнала видно: срок передачи истёк. Я жалуюсь на задержку передачи работником центра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].opening"
+    ]
+  },
+  {
+    "id": "2c7a10716280e96b",
+    "ru": "Передача пакета из МФЦ. Итоговый срок самой услуги сейчас не обжалую.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[actor].answer"
+    ]
+  },
+  {
+    "id": "f8c2c717fdc82838",
+    "ru": "Предмет – передача пакета работником МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[actor].fact"
+    ]
+  },
+  {
+    "id": "f80a5529c6ed24dc",
+    "ru": "Что именно задержалось?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[actor].text"
+    ]
+  },
+  {
+    "id": "1c3cd5bdb70cb530",
+    "ru": "Приняли. У меня расписка с номером.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[object].answer"
+    ]
+  },
+  {
+    "id": "0af4f1314c7604d3",
+    "ru": "Документы были приняты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[object].fact"
+    ]
+  },
+  {
+    "id": "d9f555cbfdf08cee",
+    "ru": "Документы приняли или отказали в приёме?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[object].text"
+    ]
+  },
+  {
+    "id": "c2e4075161285b54",
+    "ru": "В журнале на момент жалобы отметки об отправке нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[proof].answer"
+    ]
+  },
+  {
+    "id": "55af1902bb45b8e5",
+    "ru": "Передача пока не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[proof].fact"
+    ]
+  },
+  {
+    "id": "d4790749d804adc5",
+    "ru": "Есть ли подтверждение передачи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].questions[proof].text"
+    ]
+  },
+  {
+    "id": "300bdf44ffbc5d06",
+    "ru": "Почему заявление осталось в МФЦ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-delay].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-delay].title"
+    ]
+  },
+  {
+    "id": "297f038143c7c8cc",
+    "ru": "Установить предмет жалобы и факт состоявшегося приёма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[a0].title"
+    ]
+  },
+  {
+    "id": "5b7e890debe02ec2",
+    "ru": "Проверить перечень документов и условия межведомственного обмена",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[a1].title"
+    ]
+  },
+  {
+    "id": "4d7d4040307f1833",
+    "ru": "Подготовить рассмотрение руководителем МФЦ по действиям работника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[a2].title"
+    ]
+  },
+  {
+    "id": "23fd4db430397ca5",
+    "ru": "Уведомить о порядке рассмотрения без навязывания необязательной справки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[a3].title"
+    ]
+  },
+  {
+    "id": "fcef6534b8337d21",
+    "ru": "Проверить, снято ли необоснованное требование в фактическом процессе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[a4].title"
+    ]
+  },
+  {
+    "id": "68c8676871d44bda",
+    "ru": "Отказать в жалобе до представления необязательного документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "341606eb7a3f6e49",
+    "ru": "Автоматически требовать справку только для удобства сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].actions[b1].title"
+    ]
+  },
+  {
+    "id": "5628da3af48fcfc2",
+    "ru": "Основание предметного срока: закон № 210-ФЗ, статья 11.2; для общего обращения – 59-ФЗ. Правило счёта явно задано в упражнении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].calendar.source",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].calendar.source"
+    ]
+  },
+  {
+    "id": "061c79ca9d44258b",
+    "ru": "Крайний день рассмотрения жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].calendar.title",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].calendar.title"
+    ]
+  },
+  {
+    "id": "a5c4197e70f43bc9",
+    "ru": "Заявитель государственной услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].citizen.description"
+    ]
+  },
+  {
+    "id": "57cde630448e306e",
+    "ru": "В этом деле требуют дополнительную справку, а не предусмотренную идентификацию. Нельзя переносить разрешённое обязательное условие одной услуги на все документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].contrast.difference"
+    ]
+  },
+  {
+    "id": "9cec1fa1ed369ad7",
+    "ru": "Документы приняты. Дополнительная бумажная справка не предусмотрена правилами; сведения доступны межведомственно; исключения о личном представлении исключены условиями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d0].text"
+    ]
+  },
+  {
+    "id": "de49b57c16b15335",
+    "ru": "Перечень и требование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e3f24ccf6aecb000",
+    "ru": "Учебный регламент",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d0].type"
+    ]
+  },
+  {
+    "id": "4c96e8386db39405",
+    "ru": "Пакет зарегистрирован; предмет жалобы – дополнительное требование работника после приёма, не отказ и не исправление ошибки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d1].text"
+    ]
+  },
+  {
+    "id": "06831001813ac04c",
+    "ru": "Расписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d1].title"
+    ]
+  },
+  {
+    "id": "8fe12b16bfd7e552",
+    "ru": "Подтверждение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].documents[d1].type"
+    ]
+  },
+  {
+    "id": "ec134db1b2d54775",
+    "ru": "Нужно проверить необоснованное дополнительное требование, не подменяя его жалобой на отказ в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].outcomes.good"
+    ]
+  },
+  {
+    "id": "e4b9a44402e45563",
+    "ru": "Любое удобство сотрудника разрешает требовать справку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "2fb14e683e9f55a5",
+    "ru": "Документы не приняты, раз возник дополнительный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "dd227341c2008387",
+    "ru": "Учебное продолжение. В письме требование отменено, но в личном кабинете всё ещё блокировка «нет справки».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].followup.intro"
+    ]
+  },
+  {
+    "id": "73bbb9e836d01d75",
+    "ru": "Проверить фактическое снятие блокировки, а не только формулировку письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].followup.explain"
+    ]
+  },
+  {
+    "id": "665485da50d94597",
+    "ru": "Завершить дело после обещания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "c4e6cd4a542768fb",
+    "ru": "Попросить всё-таки принести справку без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "185f0862231a4619",
+    "ru": "Документы приняли, но потом попросили принести бумажную справку. В перечне её нет. Сотрудник сказал, что так ему удобнее, чем делать межведомственный запрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].opening"
+    ]
+  },
+  {
+    "id": "28209c5b11534993",
+    "ru": "Досудебная жалоба по 210-ФЗ на дополнительное требование при услуге",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].procedures[0].text"
+    ]
+  },
+  {
+    "id": "106b661c5a11795e",
+    "ru": "Обычная просьба о благоустройстве",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].procedures[1].text"
+    ]
+  },
+  {
+    "id": "d4c95e441bd744d9",
+    "ru": "Судебная жалоба администрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b4706fac3bea327a",
+    "ru": "Приняли, расписка есть. Я обжалую дополнительное требование после приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "25da523f618d8540",
+    "ru": "Не смешиваем предмет с отказом в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "a9a9c9908303ebff",
+    "ru": "Пакет приняли или отказали в приёме?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q0].text"
+    ]
+  },
+  {
+    "id": "b5c4c4762373ad2e",
+    "ru": "В учебном регламенте не предусмотрена; исключения о личном представлении здесь не применяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "393eef9fb65e92d5",
+    "ru": "Задано отсутствие правового основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0c29d438c9f229ce",
+    "ru": "Есть ли справка в обязательном перечне?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q1].text"
+    ]
+  },
+  {
+    "id": "afde252173f0cd0d",
+    "ru": "В распоряжении другого органа; доступны межведомственно по условиям услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "04dc72bc43bc4e22",
+    "ru": "Проверяется надлежащий способ получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "b3948c20f250361b",
+    "ru": "Где находятся сведения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q2].text"
+    ]
+  },
+  {
+    "id": "26f570a66f33bd94",
+    "ru": "Работник МФЦ, не руководитель и не учредитель.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "82ebdc9371b3635f",
+    "ru": "Жалоба направляется по соответствующей роли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "bf0c2870b2a350c2",
+    "ru": "Кто предъявил требование?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].questions[q3].text"
+    ]
+  },
+  {
+    "id": "0d16a828fca67b09",
+    "ru": "Руководителю МФЦ по действиям работника; проверить требование и межведомственное получение сведений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].coach.plan",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "968194874fbf32da",
+    "ru": "Работнику, предъявившему требование, для окончательного рассмотрения его жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f51d36ebbfc6b562",
+    "ru": "Отказать заявителю, пока он не выполнит любое новое требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "5180b9b6739fc72f",
+    "ru": "Справка «на всякий случай»",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-extra-paper].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-extra-paper].title"
+    ]
+  },
+  {
+    "id": "4ae441fe31f1ad14",
+    "ru": "Государственные услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].topic",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].tag",
+      "cases:CASE_TEMPLATES[mfc-identity-required].topic"
+    ]
+  },
+  {
+    "id": "4bb82a59f7442b49",
+    "ru": "Сопоставить срок с предметом: здесь нет отказа в приёме или вопроса об исправлении опечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].trap.explain"
+    ]
+  },
+  {
+    "id": "092d1049fa4e82ed",
+    "ru": "Применять пять дней без различий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "d6990e8cedc2f1d7",
+    "ru": "Помощник: «Все жалобы МФЦ рассматриваются за пять рабочих дней».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-extra-paper].trap.text"
+    ]
+  },
+  {
+    "id": "c4e76392b3e6a327",
+    "ru": "Сверить перечень способов с конкретной операцией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[a0].title"
+    ]
+  },
+  {
+    "id": "489f106d9a51bb2e",
+    "ru": "Установить, использовал ли заявитель допустимый способ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[a1].title"
+    ]
+  },
+  {
+    "id": "54472d9dde1df27f",
+    "ru": "Подготовить мотивированный вывод по жалобе, не объявляя необоснованным предусмотренное условие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[a2].title"
+    ]
+  },
+  {
+    "id": "be03ac561a33c1bc",
+    "ru": "Разъяснить альтернативный предусмотренный способ и порядок обжалования решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ce4b785a996958a3",
+    "ru": "Проверить, что вместо идентификации не добавлены неустановленные копии и справки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2b017702e5983dc0",
+    "ru": "Принять случайный снимок как подтверждение личности вопреки условиям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-identity-required].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "a5c25bb415a18627",
+    "ru": "Не рассматривать жалобу до выполнения требования, которое оспаривается",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].actions[b1].title"
+    ]
+  },
+  {
+    "id": "dd99e04e68142dc1",
+    "ru": "210-ФЗ, статья 11.2, часть 6. Срок рассмотрения жалобы; направление мотивированного ответа имеет отдельный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].calendar.source",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].calendar.source",
+      "cases:CASE_TEMPLATES[mfc-second-demand].calendar.source"
+    ]
+  },
+  {
+    "id": "d8fc300caade7cf4",
+    "ru": "Крайний день рассмотрения жалобы на требование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].calendar.title"
+    ]
+  },
+  {
+    "id": "1667eaa8de68ea75",
+    "ru": "В исходном деле справка не предусмотрена и доступна межведомственно; здесь подтверждение личности прямо требуется для выбранной операции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].contrast.difference"
+    ]
+  },
+  {
+    "id": "8c8c0376fb74ad41",
+    "ru": "Учебное условие услуги: для указанной операции личность подтверждается предъявлением надлежащего документа или другим установленным способом идентификации. Простая фотография документа не названа таким способом. Перечень и исключение из межведомственного получения проверены в условиях; дополнительные копии и справки не требуются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].documents[d0].text"
+    ]
+  },
+  {
+    "id": "99eadf90b4cb48d7",
+    "ru": "Перечень способов идентификации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ebbff3ee3ad6c0b4",
+    "ru": "Заявление принято. Оспаривается требование подтвердить личность при последующей операции. Отказ в приёме документов или исправлении ошибок предметом жалобы не является.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].documents[d1].text"
+    ]
+  },
+  {
+    "id": "14a18323d1ae1a89",
+    "ru": "Подтверждение личности предусмотрено условиями; нельзя объявлять его лишней справкой, но следует разъяснить все допустимые способы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-identity-required].outcomes.good"
+    ]
+  },
+  {
+    "id": "f1cd1ca7e23ca76e",
+    "ru": "Все документы личного хранения обязан запрашивать только сам МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "a45dc002ac251593",
+    "ru": "Раз личность не подтверждена, можно не регистрировать жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "9805a4b6fd3d4a75",
+    "ru": "Учебное продолжение. Заявитель подтвердил личность разрешённым цифровым способом, но сотрудник всё равно требует бумажную копию всех страниц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].followup.intro"
+    ]
+  },
+  {
+    "id": "a6a07e54cf83b95e",
+    "ru": "Проверить новое требование отдельно: выполненная идентификация не обосновывает неустановленные копии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].followup.explain"
+    ]
+  },
+  {
+    "id": "3951b81c0c1717c9",
+    "ru": "Засчитать любые последующие требования, раз первое признано обоснованным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a12598942e60b480",
+    "ru": "Отменить уже выполненную цифровую идентификацию без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "715d9dad4f05a108",
+    "ru": "Различить обязательную идентификацию и дополнительную справку, одновременно сохранить разрешённые альтернативные способы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-identity-required].coach.research"
+    ]
+  },
+  {
+    "id": "a5c83e4f8347a623",
+    "ru": "Найдите статью об ограничениях на истребование документов и предусмотренных способах их представления. Срок жалобы рассчитывается отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].knowledge.prompt",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].knowledge.prompt",
+      "cases:CASE_TEMPLATES[mfc-second-demand].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "a931f8f14ca178b6",
+    "ru": "Я отправил заявление, а на приёме попросили подтвердить личность. Сказал, что паспорт есть на фотографии в телефоне. Мне объяснили, что для этого способа обращения снимка недостаточно. Я считаю это лишним требованием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].opening"
+    ]
+  },
+  {
+    "id": "b0be9786cd6d2644",
+    "ru": "Досудебная жалоба по главе 2.1 закона № 210-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].procedures[0].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].procedures[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].procedures[0].text"
+    ]
+  },
+  {
+    "id": "2ce3c8bb63a934e5",
+    "ru": "Единый тридцатидневный порядок независимо от предмета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].procedures[1].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].procedures[1].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].procedures[1].text"
+    ]
+  },
+  {
+    "id": "c39423aae36b66ec",
+    "ru": "Немедленное удовлетворение любого требования без проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].procedures[2].text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].procedures[2].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].procedures[2].text"
+    ]
+  },
+  {
+    "id": "c6a80d7e9ef1c79b",
+    "ru": "Подтверждение личности одним из предусмотренных способов. В перечне они указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "4874e532f265889b",
+    "ru": "Проверяется обязательный элемент, а не произвольная справка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "3c78975c16155465",
+    "ru": "Что требуют именно для этой операции?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f78c4ee8c8719b74",
+    "ru": "Личный приём с документом. Цифровую идентификацию я не проходил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "010cf2864fa076f5",
+    "ru": "Не исключаем альтернативы, но сверяем выбранный способ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "046ddd68e3995f96",
+    "ru": "Какой способ вы выбрали?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q1].text"
+    ]
+  },
+  {
+    "id": "41f7b52e9c15bf03",
+    "ru": "Само требование после приёма заявления, не отказ принять жалобу и не исправление опечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "41ba9def8b46dca2",
+    "ru": "Сокращённый срок здесь не задан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9178df5fd33bdf0b",
+    "ru": "В чём предмет жалобы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q2].text"
+    ]
+  },
+  {
+    "id": "ca2c6b2e8133e061",
+    "ru": "Да, регламент допускает другой установленный способ; обычная фотография в этот перечень не входит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "e280453bb8df81e0",
+    "ru": "Нельзя требовать исключительно паспорт, если разрешена альтернатива.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "ca823cf299752425",
+    "ru": "Можно ли подтвердить личность иначе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].questions[q3].text"
+    ]
+  },
+  {
+    "id": "438ddb121ff583a5",
+    "ru": "Вы работаете в подразделении, обеспечивающем рассмотрение жалобы надлежащим адресатом. Готовите материалы и проект мотивированного решения; не присваиваете полномочия органа, предоставляющего услугу. Конкретный адресат определяется по документам дела. В этой учебной услуге применяется глава 2.1 закона № 210-ФЗ; иная специальная федеральная процедура не задана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].role.text",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].role.text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].role.text"
+    ]
+  },
+  {
+    "id": "511ed4bd5c52e32a",
+    "ru": "Специалист по подготовке рассмотрения досудебных жалоб",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].role.title",
+      "cases:CASE_TEMPLATES[mfc-voluntary-document].role.title",
+      "cases:CASE_TEMPLATES[mfc-second-demand].role.title"
+    ]
+  },
+  {
+    "id": "dd8c7ea322108703",
+    "ru": "Подготовить мотивированное решение руководителя МФЦ по требованию работника, разъяснив допустимые способы подтверждения личности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].coach.plan"
+    ]
+  },
+  {
+    "id": "04ef4fa4f0772397",
+    "ru": "Снять любое требование об идентификации только по просьбе заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "faa686c10f107be1",
+    "ru": "Отказать в рассмотрении жалобы, пока заявитель не принесёт паспорт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-identity-required.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "e3a2ba3050e32612",
+    "ru": "Фото паспорта и способ подтверждения личности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-identity-required].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-identity-required].title"
+    ]
+  },
+  {
+    "id": "602b7dab5aab6852",
+    "ru": "Исключения и способ получения услуги проверяются по применимым правилам; принцип не отменяет установление личности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-identity-required].trap.explain"
+    ]
+  },
+  {
+    "id": "d50b7f269b0d3c7b",
+    "ru": "Любое требование личного документа незаконно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "6bc261ec88fbf8e6",
+    "ru": "Помощник: «Принцип одного окна означает запрет требовать у человека документы при любых условиях».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-identity-required].trap.text"
+    ]
+  },
+  {
+    "id": "40c7456aa4a3c7e9",
+    "ru": "Сопоставить распоряжение центра с порядком передачи документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[check].title"
+    ]
+  },
+  {
+    "id": "1cf60edc9f1ae0e4",
+    "ru": "Самостоятельно выдать результат государственной услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[grant].title"
+    ]
+  },
+  {
+    "id": "ff3dd148c559814f",
+    "ru": "Подменить жалобу на организацию жалобой только на работника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[head].title"
+    ]
+  },
+  {
+    "id": "cf287d2b29c75ea2",
+    "ru": "Подготовить мотивированный ответ после принятия решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[notify].title"
+    ]
+  },
+  {
+    "id": "80fb6ef2957ec545",
+    "ru": "Зафиксировать предмет жалобы и приложенные документы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[register].title"
+    ]
+  },
+  {
+    "id": "2f6dca0a1e4b9676",
+    "ru": "Подготовить материалы для рассмотрения учредителем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[route].title"
+    ]
+  },
+  {
+    "id": "d7f8eb322c77a6e9",
+    "ru": "Проверить фактические действия при удовлетворении жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].actions[track].title"
+    ]
+  },
+  {
+    "id": "6e4eb387d1064dfb",
+    "ru": "Жалоба подана учредителю. По учебным материалам оспаривается организационное решение самого МФЦ, повлиявшее на передачу уже принятых документов. Отказ в приёме и исправление опечатки не заявлены. Специальный сокращённый срок или иной федеральный порядок не предусмотрены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].brief"
+    ]
+  },
+  {
+    "id": "1bc5477e2cae2f40",
+    "ru": "Заявительница в МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].citizen.description"
+    ]
+  },
+  {
+    "id": "10f86c6d5256b152",
+    "ru": "Проверьте исходное событие и единицы счёта. Срок ответа и срок отдельного действия могут различаться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].coach.calendar",
+      "cases:CASE_TEMPLATES[budget-link].coach.calendar",
+      "cases:CASE_TEMPLATES[complaint-routing].coach.calendar"
+    ]
+  },
+  {
+    "id": "906b09491d45c3af",
+    "ru": "Выберите допустимые действия и проверьте их порядок. Независимые действия можно выполнять в разной последовательности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].coach.plan",
+      "cases:CASE_TEMPLATES[budget-link].coach.plan",
+      "cases:CASE_TEMPLATES[complaint-routing].coach.plan"
+    ]
+  },
+  {
+    "id": "2c7552f36ffd8fca",
+    "ru": "Отделите реквизиты документа от его применения. В рабочей проверке источника нужно прикрепить конкретный фрагмент и извлечь из него сведение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].coach.research",
+      "cases:CASE_TEMPLATES[budget-link].coach.research",
+      "cases:CASE_TEMPLATES[complaint-routing].coach.research"
+    ]
+  },
+  {
+    "id": "7993cd1f11dc6e89",
+    "ru": "Начните с предмета обращения. Уточните, кто принял оспариваемое решение и какие сведения подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].coach.talk",
+      "cases:CASE_TEMPLATES[budget-link].coach.talk",
+      "cases:CASE_TEMPLATES[complaint-routing].coach.talk"
+    ]
+  },
+  {
+    "id": "bafe0ae78c4e3fbc",
+    "ru": "Оспаривается порядок, установленный самим учреждением, а не только отдельный поступок работника. Это влияет на адресата жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].contrast.difference"
+    ]
+  },
+  {
+    "id": "d9185bbd577841e3",
+    "ru": "Выдача результата услуги вместо компетентного органа выходит за полномочия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].criticalRules[grant].message"
+    ]
+  },
+  {
+    "id": "0b9410b031d41ca0",
+    "ru": "В учебном субъекте для рассмотрения жалоб на сам МФЦ отдельное уполномоченное должностное лицо не определено. Учредитель центра принимает эти жалобы в пределах установленной компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[competence].text"
+    ]
+  },
+  {
+    "id": "2ef860504a87eed9",
+    "ru": "Карточка компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[competence].title",
+      "cases:CASE_TEMPLATES[repeat-other-authority].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f5ba2da98746b30a",
+    "ru": "Вымышленный порядок организации предписывает пакетную передачу заявлений по пятницам. Материал нужен для определения предмета жалобы; он не является нормативным образцом для реального МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[order].text"
+    ]
+  },
+  {
+    "id": "36d084df1bfa7664",
+    "ru": "Распоряжение учебного МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[order].title"
+    ]
+  },
+  {
+    "id": "8e4e10a35f16da07",
+    "ru": "Вымышленный документ учебного дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[order].type",
+      "cases:CASE_TEMPLATES[mfc-institution].documents[receipt].type",
+      "cases:CASE_TEMPLATES[mfc-institution].documents[competence].type"
+    ]
+  },
+  {
+    "id": "c17a8e2c1d266593",
+    "ru": "Пакет принят. Центр в официальном ответе подтвердил, что задержка связана с его организационным решением, а не с самовольным действием работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[receipt].text"
+    ]
+  },
+  {
+    "id": "47ce93863c9968f4",
+    "ru": "Расписка и ответ центра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].documents[receipt].title"
+    ]
+  },
+  {
+    "id": "c95c7e04e048c7c6",
+    "ru": "Ориентир: 10–14 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].duration",
+      "cases:CASE_TEMPLATES[budget-link].duration",
+      "cases:CASE_TEMPLATES[complaint-routing].duration"
+    ]
+  },
+  {
+    "id": "f6c01bcbaaf148a6",
+    "ru": "Распоряжение и ответ организации позволяют отличить её решение от самостоятельного действия работника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-institution].coach.docs"
+    ]
+  },
+  {
+    "id": "d169d701763e39c6",
+    "ru": "Всегда обжалуется только работник, который принял документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].factTask.options[employee].text"
+    ]
+  },
+  {
+    "id": "39216ba171b3386d",
+    "ru": "Оспаривается порядок, установленный самим МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].factTask.options[institution].text"
+    ]
+  },
+  {
+    "id": "2802c3f17c602459",
+    "ru": "Любая задержка означает отказ принять документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].factTask.options[refusal].text"
+    ]
+  },
+  {
+    "id": "c9cfe7a84cdec986",
+    "ru": "Что подтверждает предмет жалобы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].factTask.prompt"
+    ]
+  },
+  {
+    "id": "da29bd5e354f37c9",
+    "ru": "Организационное изменение и решение проблемы конкретного заявителя — разные проверяемые результаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.explain"
+    ]
+  },
+  {
+    "id": "237fba12f0baf60f",
+    "ru": "Сопоставьте новые сведения с предметом дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.failure",
+      "cases:CASE_TEMPLATES[budget-link].followup.failure",
+      "cases:CASE_TEMPLATES[complaint-routing].followup.failure"
+    ]
+  },
+  {
+    "id": "f01ec0dc570b0f07",
+    "ru": "В контрольном эпизоде жалоба удовлетворена. Центр сообщил, что распоряжение отменено, но пакет этой заявительницы всё ещё не передан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.intro"
+    ]
+  },
+  {
+    "id": "2343c192ba3b1d7c",
+    "ru": "Закрыть дело по сообщению об отмене распоряжения, не проверяя пакет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "bfc47962b095e7ec",
+    "ru": "Потребовать заново подать все уже принятые документы без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.options[ignore].text"
+    ]
+  },
+  {
+    "id": "4b9e2d01f02df2b1",
+    "ru": "Раздельно проверить отмену порядка и восстановление нарушенного положения заявительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.options[verify].text"
+    ]
+  },
+  {
+    "id": "1d7a84f6d7963636",
+    "ru": "Контрольное решение сохранено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].followup.success",
+      "cases:CASE_TEMPLATES[budget-link].followup.success",
+      "cases:CASE_TEMPLATES[complaint-routing].followup.success"
+    ]
+  },
+  {
+    "id": "b61d4128c4083de3",
+    "ru": "В заданных условиях жалоба на решение МФЦ подаётся его учредителю; вариант специально уполномоченного лица исключён условием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[mfc-institution].knowledge.explain"
+    ]
+  },
+  {
+    "id": "b9ebe497c1ea8a57",
+    "ru": "Жалоба на любой документ МФЦ относится только к специалисту окна.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "73f705056e8633a4",
+    "ru": "Учредитель автоматически предоставляет государственную услугу вместо профильного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "60d9218407c35b24",
+    "ru": "Найдите норму, разграничивающую адресатов жалобы на работника и на сам МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "6a5d1434b8fb3b23",
+    "ru": "Мне объяснили, что мой пакет не отправляют по единому порядку центра. Сотрудник показал распоряжение: все такие заявления держат до пятницы. Я оспариваю этот порядок МФЦ, а не личное поведение специалиста.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].opening"
+    ]
+  },
+  {
+    "id": "2a7e84368d022936",
+    "ru": "Да, есть расписка. Я не жалуюсь на отказ в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[accepted].answer"
+    ]
+  },
+  {
+    "id": "abce20cae0b95a31",
+    "ru": "Предмет не относится к пятидневному сроку для отказа в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[accepted].fact"
+    ]
+  },
+  {
+    "id": "659a6b4772ae4a13",
+    "ru": "Пакет документов был принят?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[accepted].text"
+    ]
+  },
+  {
+    "id": "d73d9088e0a11968",
+    "ru": "Общий порядок самого центра: принятые пакеты отправляют только по пятницам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[object].answer"
+    ]
+  },
+  {
+    "id": "d8738a041cc64a0a",
+    "ru": "Обжалуется решение организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[object].fact"
+    ]
+  },
+  {
+    "id": "8c83702365ff3417",
+    "ru": "Какое именно решение вы оспариваете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[object].text"
+    ]
+  },
+  {
+    "id": "a17627a30bcc80eb",
+    "ru": "В приложении — распоряжение центра и его официальный ответ. Работник сослался на это распоряжение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[proof].answer"
+    ]
+  },
+  {
+    "id": "55d3b20cb3a46b72",
+    "ru": "Есть документ центра, а не только рассказ об отдельном работнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[proof].fact"
+    ]
+  },
+  {
+    "id": "3048e8ca114372cc",
+    "ru": "Чем подтверждено, что это решение МФЦ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-institution].questions[proof].text"
+    ]
+  }
+]

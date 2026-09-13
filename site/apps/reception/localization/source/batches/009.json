@@ -1,0 +1,1155 @@
+[
+  {
+    "id": "1d8736015a38711c",
+    "ru": "Не учитывать новую связь, поскольку первая проверка ничего не нашла.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9e5414c47ba8718e",
+    "ru": "Считать супругу не имеющей значения для конфликта интересов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "9c4c83bc2c6bf7a7",
+    "ru": "Вообще не проверять новые сведения после первого отрицательного вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "1229305e695bb931",
+    "ru": "Найдите нормативное основание следующего действия: Продолжить объективную работу при отсутствии установленных признаков, учитывая обязанность реагировать на новые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "807a09dfc37ee3d2",
+    "ru": "Коллега увидел фамилию заявителя и предложил сразу снять меня с дела: у нас одинаковые фамилии. Но мы впервые встретились.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].opening",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q2].answer",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "34a9a56cb22d8ebf",
+    "ru": "Служащему А. Соколову поручен проект ответа гражданину Б. Соколову. Предмет относится к полномочиям подразделения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q0].answer",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q0].fact",
+      "cases:CASE_TEMPLATES[conflict-namesake].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1e216318f63132ab",
+    "ru": "Лица не родственники, не состоят в свойстве, не имеют общих организаций, обязательств или близких отношений. Возможность частной выгоды по представленным обстоятельствам не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q1].answer",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q1].fact",
+      "cases:CASE_TEMPLATES[conflict-namesake].documents[d2].text"
+    ]
+  },
+  {
+    "id": "cb1f4d275430c683",
+    "ru": "Коллега ссылается исключительно на совпадение фамилии. Иных сведений или подтверждений не приводит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q3].answer",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q3].fact",
+      "cases:CASE_TEMPLATES[conflict-namesake].documents[d0].text"
+    ]
+  },
+  {
+    "id": "2cc2c5471d819284",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Игрок — государственный гражданский служащий, на которого распространяются обязанности по предотвращению конфликта интересов. Проверены заявленные сведения: родства, свойства, имущественных, корпоративных и иных близких отношений нет, личная выгода в данном деле не установлена. Иных фактов заинтересованности не сообщено; одного сходства фамилий недостаточно для вывода о нарушении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].role.text"
+    ]
+  },
+  {
+    "id": "3d6b7261ee7c9aba",
+    "ru": "Продолжить объективную работу при отсутствии установленных признаков, учитывая обязанность реагировать на новые сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[conflict-namesake].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[conflict-namesake].contrast.decision"
+    ]
+  },
+  {
+    "id": "a1272f6f53fc4df9",
+    "ru": "Одинаковая фамилия, разные люди",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[conflict-namesake].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[conflict-namesake].title"
+    ]
+  },
+  {
+    "id": "63920b150a0aedc3",
+    "ru": "Продолжить объективную работу при отсутствии установленных признаков, учитывая обязанность реагировать на новые сведения. В исходной истории родство и связь с выгодоприобретателем подтверждены. Здесь первоначально такого факта нет, но новые связи могут изменить решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].trap.explain"
+    ]
+  },
+  {
+    "id": "edc18525bfcefec9",
+    "ru": "Записать коррупционное нарушение только по совпавшей фамилии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-namesake].trap.text",
+      "cases:CASE_TEMPLATES[conflict-namesake].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "ea8fef7a0d813bc7",
+    "ru": "Сверить решение об отводе с фактической историей проекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2e80f0765e17adbe",
+    "ru": "Прекратить неофициальное участие отведённого сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[a1].title"
+    ]
+  },
+  {
+    "id": "64654b926febb7e1",
+    "ru": "Обеспечить независимую подготовку назначенным исполнителем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c316bf2e9a82a30d",
+    "ru": "Передать необходимые материалы с соблюдением конфиденциальности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7d346d5bfe770186",
+    "ru": "Проверить исполнение и срок по обращению, не по одной подписи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[a4].title"
+    ]
+  },
+  {
+    "id": "9ba7a80e5bd05b8c",
+    "ru": "Прикрыть участие С-1 подписью С-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[b0].title"
+    ]
+  },
+  {
+    "id": "3bf456809f03dea6",
+    "ru": "Потерять обращение при передаче и потребовать подать его заново",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].actions[b1].title",
+      "cases:CASE_TEMPLATES[conflict-reassignment].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "907ec9a294f7086b",
+    "ru": "Все люди, документы и события этого дела вымышлены. Личный интерес исходного служащего установлен. Представитель нанимателя принял действующее решение об отводе от подготовки и согласования именно этого дела; независимый исполнитель назначен. Игрок организует исполнение этого решения, не устанавливает наказание. Техническая передача нейтральных документов через уполномоченного координатора разрешена, влияние на проект исключено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].brief"
+    ]
+  },
+  {
+    "id": "073b713c15fc3f79",
+    "ru": "В первом конфликтном деле требовалось уведомление. Здесь меры уже приняты: нужно проверить их фактическое исполнение, а не повторять формальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].coach.plan",
+      "cases:CASE_TEMPLATES[conflict-reassignment].contrast.difference"
+    ]
+  },
+  {
+    "id": "2d7b43f378354a7f",
+    "ru": "Порядок передачи материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d0].title"
+    ]
+  },
+  {
+    "id": "c65162f803d78fb1",
+    "ru": "Решение об урегулировании",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d1].title"
+    ]
+  },
+  {
+    "id": "96787780f154574d",
+    "ru": "История проекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d2].title"
+    ]
+  },
+  {
+    "id": "6aa9e992e90cc92b",
+    "ru": "Формальная смена фамилии исполнителя не устранила участие отведённого сотрудника в решении. В первом конфликтном деле требовалось уведомление. Здесь меры уже приняты: нужно проверить их фактическое исполнение, а не повторять формальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.explain"
+    ]
+  },
+  {
+    "id": "2d5937d5ecd3dc2f",
+    "ru": "Формальная смена фамилии исполнителя не устранила участие отведённого сотрудника в решении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "331ad4f9c026e407",
+    "ru": "Достаточно, что итог подпишет другой человек.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "2f866069050276d6",
+    "ru": "Отвод запрещает вообще рассматривать обращение заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-conflict-reassignment.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "545338441624adbf",
+    "ru": "Исправить маршрут согласования согласно действующему решению об отводе. В первом конфликтном деле требовалось уведомление. Здесь меры уже приняты: нужно проверить их фактическое исполнение, а не повторять формальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].followup.explain"
+    ]
+  },
+  {
+    "id": "ef2df41639af885c",
+    "ru": "Новый исполнитель теперь написал проект сам, но файл согласования вновь отправлен отведённому С-1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].followup.intro"
+    ]
+  },
+  {
+    "id": "9986b20ce7e4e697",
+    "ru": "Исправить маршрут согласования согласно действующему решению об отводе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "dea0608b39655c5b",
+    "ru": "Разрешить согласование С-1, раз он уже не автор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2bd7a2b29cc183f6",
+    "ru": "Прекратить всю переписку с заявителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "98b020754fef1f52",
+    "ru": "Сохранить скрытое авторство прежнего сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e6acd197cf0f2887",
+    "ru": "Начать для гражданина новый срок только из-за смены исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6ee8bbf673466d3f",
+    "ru": "Найдите нормативное основание следующего действия: Исполнить решение об урегулировании по существу: независимая подготовка, надлежащая передача материалов и контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "b7e759e0a54cf871",
+    "ru": "Руководитель уже передал обращение другому сотруднику из-за моей личной связи. Но новый исполнитель просит меня тайно написать за него проект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].opening",
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q2].answer",
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "3e8adaaf15596155",
+    "ru": "Служащий С-1 отведён от подготовки и согласования обращения Д-41. Исполнителем назначен С-2, который не имеет установленной заинтересованности. Срок рассмотрения обращения сохранён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q0].answer",
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q0].fact",
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d1].text"
+    ]
+  },
+  {
+    "id": "1bf6b437b33d12f2",
+    "ru": "В карточке стоит С-2, но основное содержание и выводы проекта написал С-1, прислав файл вне служебного маршрута. С-2 собирается только подписать подготовленный текст.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q1].answer",
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q1].fact",
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d2].text"
+    ]
+  },
+  {
+    "id": "43edd3ec2466736c",
+    "ru": "Координатор передаёт С-2 исходные документы дела. Передача фактов не должна возвращать С-1 контроль над содержанием решения; дополнительные сведения собираются установленным путём.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q3].answer",
+      "cases:CASE_TEMPLATES[conflict-reassignment].questions[q3].fact",
+      "cases:CASE_TEMPLATES[conflict-reassignment].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0ba2fbae7555d32d",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Личный интерес исходного служащего установлен. Представитель нанимателя принял действующее решение об отводе от подготовки и согласования именно этого дела; независимый исполнитель назначен. Игрок организует исполнение этого решения, не устанавливает наказание. Техническая передача нейтральных документов через уполномоченного координатора разрешена, влияние на проект исключено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].role.text"
+    ]
+  },
+  {
+    "id": "59774250c250f004",
+    "ru": "Исполнить решение об урегулировании по существу: независимая подготовка, надлежащая передача материалов и контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[conflict-reassignment].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[conflict-reassignment].contrast.decision"
+    ]
+  },
+  {
+    "id": "5c793029ba1c0f03",
+    "ru": "Дело передали, влияние осталось",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[conflict-reassignment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[conflict-reassignment].title"
+    ]
+  },
+  {
+    "id": "94b5171e2b8be9a5",
+    "ru": "Исполнить решение об урегулировании по существу: независимая подготовка, надлежащая передача материалов и контроль. В первом конфликтном деле требовалось уведомление. Здесь меры уже приняты: нужно проверить их фактическое исполнение, а не повторять формальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].trap.explain"
+    ]
+  },
+  {
+    "id": "b65daa392f4918e7",
+    "ru": "Независимая подпись сама по себе не устраняет скрытую подготовку отведённым сотрудником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-reassignment].trap.text"
+    ]
+  },
+  {
+    "id": "043eb8644aa4a738",
+    "ru": "Зафиксировать обнаруженное обстоятельство до решения по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[a0].title"
+    ]
+  },
+  {
+    "id": "7f7d9e5ef6f4f0f3",
+    "ru": "Уведомить представителя нанимателя установленным способом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a408e03b0f34ea8d",
+    "ru": "Обеспечить предусмотренное урегулирование и передачу материалов независимому исполнителю",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[a2].title"
+    ]
+  },
+  {
+    "id": "6d48c612648c1661",
+    "ru": "Сохранить конфиденциальность и права заявителя без лишних семейных сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[a3].title"
+    ]
+  },
+  {
+    "id": "fcd4563a4b8625cc",
+    "ru": "Контролировать прежний срок и содержательный результат рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[a4].title"
+    ]
+  },
+  {
+    "id": "209bb63d080a7783",
+    "ru": "Скрыть заинтересованность и единолично разрешить дело",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[b0].title",
+      "cases:CASE_TEMPLATES[conflict-relative].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "c28fdd18d763635c",
+    "ru": "Удалить обращение вместо урегулирования конфликта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].actions[b1].title"
+    ]
+  },
+  {
+    "id": "802aa32f5e151b6f",
+    "ru": "Автор обращения о подрядчике",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].citizen.description"
+    ]
+  },
+  {
+    "id": "ddb5ee5fe8dd7a7f",
+    "ru": "Исполнитель – государственный гражданский служащий. Руководитель и совладелец подрядчика – его близкий родственник. Обстоятельство стало известно при получении дела; решение ещё не принято.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d0].text"
+    ]
+  },
+  {
+    "id": "37620a39e9ba86fe",
+    "ru": "Служебная карточка и назначение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d0].title"
+    ]
+  },
+  {
+    "id": "c95d2238178c38fa",
+    "ru": "Учебная ситуация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d0].type"
+    ]
+  },
+  {
+    "id": "ba4697683471fb55",
+    "ru": "Обращение зарегистрировано {{registered}}. Смена исполнителя не является новым поступлением и сама по себе не перезапускает срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d1].text"
+    ]
+  },
+  {
+    "id": "58533bb0d2ddb05a",
+    "ru": "Карточка срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4ee952a1c838d62b",
+    "ru": "Контроль",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].documents[d1].type"
+    ]
+  },
+  {
+    "id": "7053fdaddc63b72f",
+    "ru": "Ориентир: 12–15 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].duration"
+    ]
+  },
+  {
+    "id": "18b8992870c48254",
+    "ru": "Нужны уведомление и надлежащее урегулирование возможного конфликта; обращение продолжает рассматриваться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[conflict-relative].factTask.explain",
+      "cases:CASE_TEMPLATES[conflict-relative].outcomes.good"
+    ]
+  },
+  {
+    "id": "bedefa21f1f7790c",
+    "ru": "Личная уверенность в честности отменяет процедуру уведомления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "f5e997fc5bd2d901",
+    "ru": "Из-за родственника жалобу нужно удалить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "78e94e6a35224bba",
+    "ru": "Учебное продолжение. Дело передали другому исполнителю и ошибочно установили новые 30 дней от передачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].followup.intro"
+    ]
+  },
+  {
+    "id": "857fab136772c989",
+    "ru": "Сохранить исходное течение срока, проверив основания любого отдельного продления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].followup.options[0].text",
+      "cases:CASE_TEMPLATES[conflict-relative].followup.explain"
+    ]
+  },
+  {
+    "id": "59fe4e3d53196ab0",
+    "ru": "Автоматически перезапустить срок от каждой передачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "06f95e654adb2d4a",
+    "ru": "Вернуть прежнему исполнителю ради удобства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a87c24a1ac3582c4",
+    "ru": "Найдите норму об урегулировании конфликта интересов на государственной гражданской службе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "5e69f33dda030438",
+    "ru": "Прошу проверить действия подрядчика. Я не знаю, кто у вас этим занимается, но хочу, чтобы документы рассмотрели беспристрастно. Договор и переписка приложены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].opening"
+    ]
+  },
+  {
+    "id": "0ffa4028f9607aa6",
+    "ru": "Рассмотрение обращения с применением правил предотвращения конфликта на гражданской службе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].procedures[0].text"
+    ]
+  },
+  {
+    "id": "0d7964abecb4a72e",
+    "ru": "Частная семейная переписка вместо служебного рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].procedures[1].text"
+    ]
+  },
+  {
+    "id": "07fc4af92b6e90a4",
+    "ru": "Автоматическое признание подрядчика виновным",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].procedures[2].text"
+    ]
+  },
+  {
+    "id": "92682fa73038d84a",
+    "ru": "Учебная служебная карточка: руководитель и совладелец подрядчика – близкий родственник назначенного гражданского служащего.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "dce27abecdae735d",
+    "ru": "Есть основание оценить личную заинтересованность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "8e8589931cd709e7",
+    "ru": "Какая связь обнаружена у исполнителя дела?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q0].text"
+    ]
+  },
+  {
+    "id": "2988472836eae991",
+    "ru": "При открытии материалов, до принятия содержательного решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "972b6794a7eef9c2",
+    "ru": "Уведомление не следует откладывать до результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "9699971ea47ad897",
+    "ru": "Когда исполнителю стало известно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q1].text"
+    ]
+  },
+  {
+    "id": "2eadef6fc6b92c2a",
+    "ru": "По условиям есть другой уполномоченный специалист; решение о распределении принимает надлежащее лицо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "df6af4b8ca1fdf9d",
+    "ru": "Есть законный организационный маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "935c0a891b511b9c",
+    "ru": "Можно ли передать дело независимому исполнителю?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q2].text"
+    ]
+  },
+  {
+    "id": "5514b38dded55f92",
+    "ru": "Нет; ему нужен надлежащий порядок рассмотрения и результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "a1371a8d06bd99b0",
+    "ru": "Не следует распространять избыточные сведения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "90523ea6f2cb00bc",
+    "ru": "Нужно ли сообщать заявителю лишние личные сведения семьи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].questions[q3].text"
+    ]
+  },
+  {
+    "id": "ff042a2978210a5a",
+    "ru": "Роль прямо подпадает под правила гражданской службы. Установлена возможность личной заинтересованности; самостоятельное окончательное решение без урегулирования не допускается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].role.text"
+    ]
+  },
+  {
+    "id": "e3cd205b32f959f3",
+    "ru": "Государственный гражданский служащий, назначенный исполнителем обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].role.title"
+    ]
+  },
+  {
+    "id": "9992de666509ddc4",
+    "ru": "Уведомить представителя нанимателя и обеспечить надлежащее независимое распределение дела без перезапуска срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].routes[0].text",
+      "cases:CASE_TEMPLATES[conflict-relative].coach.plan",
+      "cases:CASE_TEMPLATES[conflict-relative].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "38969ea953c3c100",
+    "ru": "Скрыть связь и единолично решить вопрос подрядчика родственника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].routes[1].text",
+      "cases:CASE_TEMPLATES[conflict-relative].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f51971297ca7f96a",
+    "ru": "Отказать заявителю из-за неудобства для исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].routes[2].text",
+      "cases:CASE_TEMPLATES[conflict-relative].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "91fddd5432cecb8a",
+    "ru": "Организация родственника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[conflict-relative].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[conflict-relative].title"
+    ]
+  },
+  {
+    "id": "a262dd4480ba888a",
+    "ru": "Служебная этика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].topic",
+      "cases:CASE_TEMPLATES[conflict-relative].tag",
+      "cases:CASE_TEMPLATES[conflict-namesake].topic"
+    ]
+  },
+  {
+    "id": "eee254ed3802b640",
+    "ru": "Применить уведомление и организационное урегулирование; обещание не заменяет процедуру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].trap.options[0].text",
+      "cases:CASE_TEMPLATES[conflict-relative].trap.explain"
+    ]
+  },
+  {
+    "id": "45446662b695aa08",
+    "ru": "Ограничиться личным обещанием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "d146faeeb81f7854",
+    "ru": "Помощник: «Пусть сотрудник просто пообещает быть объективным».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[conflict-relative].trap.text"
+    ]
+  },
+  {
+    "id": "119dc6aa6d656b05",
+    "ru": "Установить, что предмет письма – именно судебное решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2d6d73e3151cecad",
+    "ru": "Выбрать предусмотренный статьёй 11 порядок для этого обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[a1].title"
+    ]
+  },
+  {
+    "id": "2eafdffcf46d07d8",
+    "ru": "Подготовить возврат с разъяснением надлежащего порядка обжалования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ac3cf2b07c86d517",
+    "ru": "Не обещать приостановление исполнения или универсальный срок апелляции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[a3].title"
+    ]
+  },
+  {
+    "id": "378aaa5b52edda48",
+    "ru": "Проверить, что разъяснение не выдано за судебное решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[a4].title"
+    ]
+  },
+  {
+    "id": "9e4f7c5fde722d9d",
+    "ru": "Объявить судебный акт отменённым от имени администрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[b0].title",
+      "cases:CASE_TEMPLATES[court-cancel].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "7c1a9265d25af9c0",
+    "ru": "Выдать срок обработки письма за срок любой судебной жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].actions[b1].title"
+    ]
+  },
+  {
+    "id": "1569eea38d2765cc",
+    "ru": "Рассчитайте крайнюю дату возврата обращения заявителю с разъяснением порядка обжалования судебного акта. Не рассчитывайте здесь срок подачи жалобы в суд и не подменяйте возврат переадресацией. Это не универсальный срок устранения проблемы. В этом упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].calendar.context"
+    ]
+  },
+  {
+    "id": "4b948d1a322e1a76",
+    "ru": "Предметный срок действия по обращению: 59-ФЗ, статья 11, часть 2. Иные отраслевые нормы используются для решения по существу, а не как источник этого срока. Профиль исчисления задан отдельно в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].calendar.source"
+    ]
+  },
+  {
+    "id": "b01dff49e79d5ee9",
+    "ru": "Крайний день возврата с разъяснением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].calendar.title"
+    ]
+  },
+  {
+    "id": "a9bd2cf971f2edb8",
+    "ru": "Вложен судебный акт; единственное требование письма – его отмена администрацией. Процессуальный вид и стадия не заданы для расчёта апелляции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0b09389e50cf4e28",
+    "ru": "Оспариваемый акт и просьба",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].documents[d0].title"
+    ]
+  },
+  {
+    "id": "22d85b89f3369b90",
+    "ru": "Обращение зарегистрировано {{registered}} в органе исполнительной власти.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].documents[d1].text"
+    ]
+  },
+  {
+    "id": "26a3ae77bfaa20ab",
+    "ru": "Даты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].documents[d1].type",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d1].type"
+    ]
+  },
+  {
+    "id": "86d539e1a869c397",
+    "ru": "Обычная приёмная не пересматривает судебный акт; применяется специальное действие с разъяснением по статье 11.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[court-cancel].factTask.explain",
+      "cases:CASE_TEMPLATES[court-cancel].outcomes.good"
+    ]
+  },
+  {
+    "id": "c760d19de64c3a13",
+    "ru": "Ответ администрации может отменить судебное постановление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "050eb5315c2ead7f",
+    "ru": "У любого обжалования всегда один срок 30 дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "312ba19aeffd0ef9",
+    "ru": "Учебное продолжение. В проекте ответа появилось «исполнение судебного акта приостановлено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].followup.intro"
+    ]
+  },
+  {
+    "id": "09e887279853895c",
+    "ru": "Исключить обещание вне полномочий и оставить надлежащее разъяснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].followup.options[0].text",
+      "cases:CASE_TEMPLATES[court-cancel].followup.explain"
+    ]
+  },
+  {
+    "id": "b6466e7837117c5d",
+    "ru": "Подписать, раз заявителю так удобнее.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "a767828b3354a115",
+    "ru": "Считать проект новым судебным постановлением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2b8f629deedbc264",
+    "ru": "Мне не нравится постановление суда. Прошу вашу администрацию отменить его и написать, что исполнять не надо. Я думал, что любое начальство может пересмотреть решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].opening"
+    ]
+  },
+  {
+    "id": "034bf1fc4dcbd8ae",
+    "ru": "Порядок части 2 статьи 11 закона № 59-ФЗ для обращения об обжаловании судебного решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].procedures[0].text"
+    ]
+  },
+  {
+    "id": "87a4dd54f17a0c01",
+    "ru": "Пересмотр дела администрацией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].procedures[1].text"
+    ]
+  },
+  {
+    "id": "b6e137c5e7413df8",
+    "ru": "Предоставление услуги МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].procedures[2].text"
+    ]
+  },
+  {
+    "id": "e226526f2e81698d",
+    "ru": "В приложении именно судебное постановление, а не решение администрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "d871c562e9809d08",
+    "ru": "Установлен судебный характер акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "ed1e0a515857a5b5",
+    "ru": "Какой орган принял оспариваемый акт?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q0].text"
+    ]
+  },
+  {
+    "id": "69f4c68b96e219f0",
+    "ru": "Только отмена судебного постановления. Иных самостоятельных вопросов нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0888a3b103de07a5",
+    "ru": "Нельзя искусственно выделять несуществующие вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "b523ce7a20651b1f",
+    "ru": "Что является предметом письма?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d6ff820e9b8b7b44",
+    "ru": "В этой ситуации сведений об этом нет. Порядок и срок зависят от акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "8e269b59c7314b4d",
+    "ru": "Не следует угадывать процессуальный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "40b53f1a48b96964",
+    "ru": "Вы обращались в суд по процессуальному порядку?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a44cf450517ee7aa",
+    "ru": "В обычную приёмную исполнительного органа, не в суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "daa272c6224f3076",
+    "ru": "Роль не даёт полномочия пересмотра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "478413e97b2ff50e",
+    "ru": "Куда поступило письмо?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a049013c1ab08878",
+    "ru": "Возвратить такое обращение с разъяснением судебного порядка, не подменяя его рассмотрение обычным письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].routes[0].text",
+      "cases:CASE_TEMPLATES[court-cancel].coach.plan",
+      "cases:CASE_TEMPLATES[court-cancel].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "22c30941e5143b55",
+    "ru": "Поручить чиновнику отменить судебный акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].routes[1].text",
+      "cases:CASE_TEMPLATES[court-cancel].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "e309aa2d3da53684",
+    "ru": "Проигнорировать письмо без объяснения дальнейшего порядка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].routes[2].text",
+      "cases:CASE_TEMPLATES[court-cancel].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "a993625b1dc84ec7",
+    "ru": "Письмо не отменяет постановление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[court-cancel].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[court-cancel].title"
+    ]
+  },
+  {
+    "id": "e2c4753733a4ed67",
+    "ru": "Пределы полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].topic",
+      "cases:CASE_TEMPLATES[court-cancel].tag"
+    ]
+  },
+  {
+    "id": "deb112effdb604a2",
+    "ru": "Различить срок действия приёмной и специальный процессуальный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].trap.options[0].text",
+      "cases:CASE_TEMPLATES[court-cancel].trap.explain"
+    ]
+  },
+  {
+    "id": "02d64a83f61a238c",
+    "ru": "Назначить семь дней для любого суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "d41891e164cfa76a",
+    "ru": "Помощник: «Семь дней по 59-ФЗ – срок для любой апелляции».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-cancel].trap.text"
+    ]
+  },
+  {
+    "id": "e8f351fb7d29e145",
+    "ru": "Установить, что запрошена рассрочка исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a9a1cb787a219f50",
+    "ru": "Сопоставить решение и предложенный гражданином график.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[a1].title"
+    ]
+  },
+  {
+    "id": "1a3fbe734ad799f9",
+    "ru": "Разъяснить порядок обращения по статье 203 ГПК РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[a2].title"
+    ]
+  },
+  {
+    "id": "091d1ab077d7ec94",
+    "ru": "Не обещать положительный исход и автоматическую остановку исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[a3].title"
+    ]
+  },
+  {
+    "id": "6dcdb20cffa22788",
+    "ru": "После появления определения проверить его резолютивную часть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[a4].title"
+    ]
+  },
+  {
+    "id": "efd52decb618ab0e",
+    "ru": "Сообщить приставу, что талон приёмной запрещает исполнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[b0].title"
+    ]
+  },
+  {
+    "id": "844708e9eb24ef7a",
+    "ru": "Утвердить рассрочку за суд и прекратить взыскание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].actions[b1].title",
+      "cases:CASE_TEMPLATES[court-installments].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "ba0a71926ca08b1c",
+    "ru": "Все люди, документы и события этого дела вымышлены. Гражданское решение вынесено районным судом. Запрос в приёмную – о порядке получения рассрочки, без просьбы пересмотреть существо. Судебного определения о рассрочке, отсрочке или приостановлении нет. Материалы о доходах представлены как доводы, а не как заранее достаточное основание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].brief"
+    ]
+  },
+  {
+    "id": "d815e1d38088ea88",
+    "ru": "Решение не обжалуется. В отличие от отмены акта или исправления описки меняется порядок исполнения по отдельному решению суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].coach.plan",
+      "cases:CASE_TEMPLATES[court-installments].contrast.difference"
+    ]
+  },
+  {
+    "id": "fd99588528b7fe07",
+    "ru": "Суд, рассмотревший дело, вправе по заявлению участвующих лиц или пристава с учётом имущественного положения и иных обстоятельств отсрочить или рассрочить исполнение. Рассрочка не означает отмену присуждённого долга; удовлетворение заявления не гарантируется приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].coach.research",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.explain",
+      "cases:SOURCES[n14-gpk203].text"
+    ]
+  },
+  {
+    "id": "45a2b2b91949570d",
+    "ru": "Документы зарегистрированы муниципальной приёмной. Талон не является судебным определением, и в исполнительное производство распоряжений не направлялось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6cc0c3b09d13c2b1",
+    "ru": "Талон приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d0].title"
+    ]
+  },
+  {
+    "id": "037d03e8c1967dd0",
+    "ru": "Взыскана сумма по гражданскому спору. Решение вступило в силу; отдельный график исполнения судом пока не утверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d1].text"
+    ]
+  },
+  {
+    "id": "df8c3bfbd150d042",
+    "ru": "Решение Р-63",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c2ba0cdc795fdbde",
+    "ru": "Мария предлагает ежемесячные платежи и прикладывает сведения о временном снижении дохода. Просит объяснить, кто может рассмотреть рассрочку; долг по существу не отрицает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d2].text"
+    ]
+  },
+  {
+    "id": "a513b0e078093563",
+    "ru": "Обращение и предложенный график",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].documents[d2].title"
+    ]
+  }
+]

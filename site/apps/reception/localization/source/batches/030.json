@@ -1,0 +1,1184 @@
+[
+  {
+    "id": "8d41a9510dfc5181",
+    "ru": "Предмет жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].documents[d1].title",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].documents[d1].title"
+    ]
+  },
+  {
+    "id": "d7da134a9fab7718",
+    "ru": "Новое требование требует проверки предусмотренных исключений; позднее обнаружение само по себе не обосновывает бесконечную смену списка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-second-demand].outcomes.good"
+    ]
+  },
+  {
+    "id": "cf32fbab7e4f0ebd",
+    "ru": "Любое требование после первого отказа запрещено без исключений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "38723029b793b59b",
+    "ru": "Каждый сотрудник вправе заново определять комплект без объяснения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "5abf985cf6ae2f0e",
+    "ru": "Учебное продолжение. Поступило уведомление руководителя с описанием документально подтверждённого ошибочного действия и приложением. В нём нет объяснения, какие сведения теперь нужны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].followup.intro"
+    ]
+  },
+  {
+    "id": "c5b9312f36f9a6c2",
+    "ru": "Оценить новое подтверждение предусмотренного исключения и потребовать ясного обоснования конкретного перечня; не игнорировать новый документ и не принимать его как безграничное разрешение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].followup.explain"
+    ]
+  },
+  {
+    "id": "ca56211eb9b0f095",
+    "ru": "Считать любой подписанный документ разрешением требовать что угодно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6deee12764321c10",
+    "ru": "Не читать уведомление, потому что первоначальное требование было необоснованным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b35324ad097d8713",
+    "ru": "Сопоставить новое требование с первым отказом и проверить конкретное исключение, не подменяя его усмотрением сотрудника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-second-demand].coach.research"
+    ]
+  },
+  {
+    "id": "2e2141315f76fd8c",
+    "ru": "После первого отказа я исправил единственную указанную ошибку. Теперь после приёма пакета мне предъявили новый список. Первые документы за это время не менялись. Сотрудник говорит: «Мы только сейчас заметили».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].opening"
+    ]
+  },
+  {
+    "id": "6516cc98ec0d194b",
+    "ru": "Только отсутствие подписи на заявлении, подпись я поставил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "0062d37c9081e76a",
+    "ru": "Первоначально выявленный недостаток устранён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "6958696f43659951",
+    "ru": "Что указано в первом отказе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q0].text"
+    ]
+  },
+  {
+    "id": "5497e7a682e1bee8",
+    "ru": "Нет, всё осталось прежним; сроки их действия не истекли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "edbbdbee8ce6218d",
+    "ru": "Часть возможных исключений не подтверждается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "3cc9da89e53518c0",
+    "ru": "Менялись ли правила или прежние документы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q1].text"
+    ]
+  },
+  {
+    "id": "14883dca0757cbf2",
+    "ru": "Добавлена только подпись; иных новых документов и новых ошибок нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "53a7901eb1cae8ba",
+    "ru": "Не приписываем условие нового дефекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "4612bb59023362b3",
+    "ru": "Появились ли ошибки в новом документе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q2].text"
+    ]
+  },
+  {
+    "id": "dd85becd4bcfab32",
+    "ru": "Только устной фразой сотрудника. Письменного сообщения руководителя о документально подтверждённой ошибке нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "5c2f5c594b4bc596",
+    "ru": "Ссылка «заметили позже» не заменяет предусмотренное исключение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d95bb836cef9e893",
+    "ru": "Чем обоснован новый список?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].questions[q3].text"
+    ]
+  },
+  {
+    "id": "975b3362aeda33ca",
+    "ru": "Подготовить рассмотрение руководителем МФЦ с проверкой первоначального перечня и наличия конкретного законного исключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].coach.plan"
+    ]
+  },
+  {
+    "id": "23c9c5895f77b86a",
+    "ru": "Заранее объявить незаконным любое последующее требование, даже при изменении закона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4d4607a10a5baf1c",
+    "ru": "Обязать заявителя исполнять любой новый список без мотивировки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-second-demand.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "f4207efa51274c6b",
+    "ru": "Каждый раз не хватает нового документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-second-demand].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-second-demand].title"
+    ]
+  },
+  {
+    "id": "482bf7b7c9331012",
+    "ru": "Нужно проверять предусмотренные исключения и их оформление, а не вводить абсолютный запрет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-second-demand].trap.explain"
+    ]
+  },
+  {
+    "id": "99a3201b7404aa86",
+    "ru": "Никакие новые обстоятельства не имеют значения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "5553c60dc4635c92",
+    "ru": "Помощник: «Закон никогда не позволяет уточнить документы после первого отказа».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-second-demand].trap.text"
+    ]
+  },
+  {
+    "id": "2b722ef1a89847f8",
+    "ru": "Сопоставить запись на приём, расписку и условия начала срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[a0].title"
+    ]
+  },
+  {
+    "id": "76c1b2f58d0faea9",
+    "ru": "Проверить отсутствие задержки передачи и расчёт для момента обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[a1].title"
+    ]
+  },
+  {
+    "id": "98023d4a1fedc7c8",
+    "ru": "Понятно объяснить исходное событие и текущий статус без обвинений заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[a3].title"
+    ]
+  },
+  {
+    "id": "42c23ab8abd66655",
+    "ru": "Сохранить контроль дальнейшего процесса, если поступят сведения о просрочке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[a4].title"
+    ]
+  },
+  {
+    "id": "7b7ae80accf84a13",
+    "ru": "Отказать в регистрации жалобы из-за неподтверждённого нарушения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "e8b2f5cd312f037c",
+    "ru": "Считать регистрацию жалобы новым началом срока услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[b1].title"
+    ]
+  },
+  {
+    "id": "49608f902af766f5",
+    "ru": "Крайний день рассмотрения жалобы на предполагаемую просрочку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].calendar.title"
+    ]
+  },
+  {
+    "id": "9e97a8c2993036cd",
+    "ru": "В исходной задержке срок передачи нарушен. Здесь приём и передача своевременны, а вывод меняется из-за другого исходного события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].contrast.difference"
+    ]
+  },
+  {
+    "id": "e9e1073a8d2b35a4",
+    "ru": "Учебные условия: срок выбранной услуги начинается при поступлении полного заявления, а не при бронировании визита. Журналы подтверждают своевременную передачу. Расчёт для момента рассмотрения обращения показывает, что срок услуги ещё не истёк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9e00bd9c31c08e9c",
+    "ru": "Запись на приём и расписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].documents[d0].title"
+    ]
+  },
+  {
+    "id": "16f8c41a5c204e54",
+    "ru": "Гражданин обжалует предполагаемое нарушение срока. Жалоба подлежит рассмотрению независимо от того, подтвердится ли просрочка. Её собственный срок не заменяет срок услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].documents[d1].text"
+    ]
+  },
+  {
+    "id": "37df9da32041f802",
+    "ru": "Предварительная запись не является исходным событием по условиям этой услуги; жалобу нужно рассмотреть, но просрочка материалами не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].outcomes.good"
+    ]
+  },
+  {
+    "id": "05c89b66916f619f",
+    "ru": "Любая жалоба доказывает нарушение срока автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "facac1b90af12b2c",
+    "ru": "Раз просрочка не подтверждена, никаких объяснений гражданину не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "be69bd7b5bc3de7a",
+    "ru": "Учебное продолжение. Позднее срок услуги по тем же условиям действительно истёк, а результата нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].followup.intro"
+    ]
+  },
+  {
+    "id": "904d5c62ca5d761d",
+    "ru": "Оценить новое состояние на новую дату; прежний ответ об отсутствии просрочки не опровергает позднейшую задержку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].followup.explain"
+    ]
+  },
+  {
+    "id": "5052e368a834a839",
+    "ru": "Отклонить обращение, потому что раньше срок не был нарушен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "0e8bffe4d76ee8dd",
+    "ru": "Изменить дату первоначального заявления, чтобы скрыть задержку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "204d654f6c808b97",
+    "ru": "Разделить срок услуги и срок жалобы, оценив предполагаемую просрочку от надлежащего исходного события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].coach.research"
+    ]
+  },
+  {
+    "id": "01f4462e8bc47246",
+    "ru": "Я записался в центр задолго до визита. От записи уже прошло много дней, а услуга ещё не готова. Сотрудник утверждает, что срок начали считать только после принятия заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].opening"
+    ]
+  },
+  {
+    "id": "90993415b949babc",
+    "ru": "Позже записи на приём; расписка и подтверждение органа совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "9719011812c5d922",
+    "ru": "Запись на визит и заявление — разные события.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "ba2440c38808241a",
+    "ru": "Когда было принято само заявление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a1dc2dda1dd97a9e",
+    "ru": "Поступление полного заявления; предварительная запись не запускает этот срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "a16d942f7c9971b5",
+    "ru": "Применяется конкретное условие, не универсальная формула.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "845129ef6fcae8a7",
+    "ru": "Какое событие названо в условиях услуги?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q1].text"
+    ]
+  },
+  {
+    "id": "38811084922f03f4",
+    "ru": "Нет, передача своевременная; на момент проверки срок услуги по учебному расчёту ещё не истёк.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "5a1ef3c67e5d4666",
+    "ru": "Просрочка пока не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1d8d3ea14e26113c",
+    "ru": "Есть ли признаки задержки передачи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q2].text"
+    ]
+  },
+  {
+    "id": "952b0c0884f69dd2",
+    "ru": "Проверить срок и объяснить статус, а не ускорить услугу за дополнительную плату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2deb7661c3320fd1",
+    "ru": "Предмет допускает мотивированный отрицательный вывод.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "7c4df03a432f2944",
+    "ru": "Что вы просите в жалобе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].questions[q3].text"
+    ]
+  },
+  {
+    "id": "86c56bc90306b870",
+    "ru": "Подготовить мотивированный ответ надлежащего органа с отдельным объяснением срока услуги и срока рассмотрения жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].coach.plan"
+    ]
+  },
+  {
+    "id": "4481932cb6d9803a",
+    "ru": "Продлить срок услуги на время рассмотрения жалобы без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b04d109e237087fd",
+    "ru": "Пообещать немедленную выдачу только ради положительной реакции заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-not-overdue.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d4c57809abcb163e",
+    "ru": "Срок посчитали от записи на приём",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-service-not-overdue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-service-not-overdue].title"
+    ]
+  },
+  {
+    "id": "a9e210a62537ac72",
+    "ru": "Два срока относятся к разным действиям; одно не продлевает другое без самостоятельного основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].trap.explain"
+    ]
+  },
+  {
+    "id": "3c416bd9f77829b2",
+    "ru": "Всегда прибавлять пятнадцать дней к сроку услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "ee0c8c1711885515",
+    "ru": "Помощник: «Срок рассмотрения жалобы можно прибавить к сроку услуги».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].trap.text"
+    ]
+  },
+  {
+    "id": "1d3db349aa4eced7",
+    "ru": "Сверить расписку и автора решения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[a0].title"
+    ]
+  },
+  {
+    "id": "62baa2d8015b13b9",
+    "ru": "Установить предмет обжалования и применимый порядок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[a1].title"
+    ]
+  },
+  {
+    "id": "40a11e806ec2b5b1",
+    "ru": "Подготовить передачу по предусмотренному маршруту без самостоятельной отмены акта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[a2].title"
+    ]
+  },
+  {
+    "id": "44d3683243b8502b",
+    "ru": "Разъяснить заявителю, кто рассматривает жалобу и почему срок не определяется словом «отказ»",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ca40d00971b882c7",
+    "ru": "Проверить получение жалобы надлежащим адресатом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[a4].title"
+    ]
+  },
+  {
+    "id": "718d1b59828f05de",
+    "ru": "Отменить решение другого органа от имени МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "8990ffd5e228d268",
+    "ru": "Подменить жалобу на отказ в услуге жалобой на неприём документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].actions[b1].title"
+    ]
+  },
+  {
+    "id": "a216862cf2e7f426",
+    "ru": "Крайний день рассмотрения жалобы на отказ в услуге",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].calendar.title"
+    ]
+  },
+  {
+    "id": "62fd427f3426b01f",
+    "ru": "В двух исходных вариантах пакет не принимали. Здесь приём и передача состоялись: меняются предмет, адресат и срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].contrast.difference"
+    ]
+  },
+  {
+    "id": "8418dff651bb0a0a",
+    "ru": "В вымышленном деле МФЦ принял и своевременно передал пакет. Орган, предоставляющий услугу, после рассмотрения вынес мотивированный отказ в самой услуге. Заявитель обжалует этот отказ; МФЦ только выдал результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].documents[d0].text"
+    ]
+  },
+  {
+    "id": "11aaa2cdd44b0276",
+    "ru": "Расписка и решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2f844682186870c5",
+    "ru": "Применяется глава 2.1 закона № 210-ФЗ. Отказа в приёме документов, спора об исправлении ошибки и специальной процедуры по иному федеральному закону нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].documents[d1].text"
+    ]
+  },
+  {
+    "id": "9cf333db44275c69",
+    "ru": "Правовой режим упражнения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7e9e72a69c093848",
+    "ru": "Обжалуется отказ в предоставлении услуги, а не отказ МФЦ принять документы; подпись решения определяет маршрут.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].outcomes.good"
+    ]
+  },
+  {
+    "id": "65fe0725d7ce63e6",
+    "ru": "Любой документ со словом «отказ» означает пятидневный срок и жалобу руководителю МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "365ffacf5dc3c40a",
+    "ru": "Выдача отрицательного решения доказывает, что пакет не был принят.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "3b63d7e82bd6172e",
+    "ru": "Учебное продолжение. Из органа пришёл ответ только о том, что МФЦ принял пакет вовремя; основания отказа в услуге не рассмотрены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].followup.intro"
+    ]
+  },
+  {
+    "id": "d4105d4abbd9cda2",
+    "ru": "Вернуться к предмету жалобы: подтверждение своевременного приёма не является ответом о законности отказа в услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].followup.explain"
+    ]
+  },
+  {
+    "id": "b019819c08c927f8",
+    "ru": "Закрыть дело после любой фразы о соблюдении срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "bc218252aaaf2dab",
+    "ru": "Направить заявителя заново подать весь пакет без рассмотрения жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f87e302e677b7c52",
+    "ru": "Выбрать адресата решения об услуге и отличить общий срок жалобы от сокращённого срока по отказу в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].coach.research"
+    ]
+  },
+  {
+    "id": "2bc55bca6d0bc99b",
+    "ru": "Найдите статью, устанавливающую общий порядок подачи и рассмотрения досудебных жалоб при предоставлении услуг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].knowledge.prompt",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].knowledge.prompt",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "878bcf8a1fae6a0a",
+    "ru": "В МФЦ мне выдали отказ. Я думал, это значит, что документы вообще не приняли. В расписке, правда, стоит номер приёма, а на отказе — подпись другого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].opening"
+    ]
+  },
+  {
+    "id": "530baa2f3b6858cf",
+    "ru": "Да, и передача в орган тоже подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "55ceb7d6ce0f1da0",
+    "ru": "Стадия приёма состоялась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "7dfcb1226a48d7ae",
+    "ru": "Есть ли подтверждение приёма пакета?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q0].text"
+    ]
+  },
+  {
+    "id": "a1f95c17e9e86e77",
+    "ru": "Уполномоченный орган, предоставляющий услугу. МФЦ только выдал документ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "bc00bb58adb00506",
+    "ru": "Надлежащий адресат определяется автором решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "1309a9021228c409",
+    "ru": "Кто подписал решение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q1].text"
+    ]
+  },
+  {
+    "id": "fff37d336c1bbb42",
+    "ru": "Основание отказа в предоставлении услуги, а не приём пакета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "f72f40eb7b136c66",
+    "ru": "Иной предмет жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "089e1caf5be0814a",
+    "ru": "Что именно вы оспариваете?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e51b216eb7b87408",
+    "ru": "Нет. Жалоба только на отказ в результате рассмотрения; иной федеральный порядок не задан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2c4115645abe8225",
+    "ru": "Выбирается общий срок жалобы главы 2.1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8677fea40e739a49",
+    "ru": "Есть ли ещё требования о сроке или опечатке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].questions[q3].text"
+    ]
+  },
+  {
+    "id": "f6962ef8c7fc48b0",
+    "ru": "Передать жалобу на решение уполномоченному адресату органа, предоставляющего услугу, сохранив предусмотренный способ подачи через МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].coach.plan"
+    ]
+  },
+  {
+    "id": "5ace0bccd50c1882",
+    "ru": "Предложить руководителю МФЦ самостоятельно отменить акт другого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "916f8d486f19c16b",
+    "ru": "Вернуть жалобу только потому, что отрицательный результат выдан в окне МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "79be9d3936ffd858",
+    "ru": "Приняли документы, но не назначили услугу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-service-refusal].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-service-refusal].title"
+    ]
+  },
+  {
+    "id": "ff68405bda31632f",
+    "ru": "МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].topic",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].tag",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].topic"
+    ]
+  },
+  {
+    "id": "60aa1fe749b6509c",
+    "ru": "Сокращённый срок связан с названным законом предметом, а не с одним словом в документе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-service-refusal].trap.explain"
+    ]
+  },
+  {
+    "id": "32fbc43ba011e9ad",
+    "ru": "Применить пять дней ко всем отрицательным решениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "f6fbf04ba4d0ddca",
+    "ru": "Помощник: «Отказ означает пять рабочих дней вне зависимости от стадии».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-service-refusal].trap.text"
+    ]
+  },
+  {
+    "id": "4c72127cedb4225b",
+    "ru": "Сопоставить услугу, перечень и соглашение данного центра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b1f909b69711694c",
+    "ru": "Проверить комплект и единственное указанное основание отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[a1].title"
+    ]
+  },
+  {
+    "id": "6e24d58a07774cc0",
+    "ru": "Подготовить рассмотрение жалобы на отказ в приёме",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[a2].title"
+    ]
+  },
+  {
+    "id": "bacde414817563f3",
+    "ru": "Разъяснить право выбора в пределах конкретной услуги, не обобщая на все случаи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[a3].title"
+    ]
+  },
+  {
+    "id": "25524a1c6c737a23",
+    "ru": "Проверить фактическую возможность приёма пакета после рассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3f30452898a14b4c",
+    "ru": "Сохранить отказ только из-за места регистрации вопреки условиям дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "38aa99301214fb3d",
+    "ru": "Объявить все услуги экстерриториальными без проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].actions[b1].title"
+    ]
+  },
+  {
+    "id": "a6bbd0d81e218797",
+    "ru": "Предмет по-прежнему отказ в приёме, но законность маршрута устанавливается сопоставлением конкретной услуги, территории и соглашения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].contrast.difference"
+    ]
+  },
+  {
+    "id": "c3ebdcf97b363563",
+    "ru": "Учебные выписки подтверждают для конкретной услуги приём независимо от места жительства и участие данного МФЦ. Комплект полный. Работник отказал исключительно из-за регистрации в другом районе; иных оснований в деле нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].documents[d0].text"
+    ]
+  },
+  {
+    "id": "164a972e688c2a27",
+    "ru": "Перечень услуги и соглашение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].documents[d0].title"
+    ]
+  },
+  {
+    "id": "b4628134ce9b65bf",
+    "ru": "Номер талона и письменная отметка подтверждают отказ работника в приёме документов. Это не решение об отказе в самой услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].documents[d1].text"
+    ]
+  },
+  {
+    "id": "9ab48d4850fa7941",
+    "ru": "Запись обращения в окно",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].documents[d1].title"
+    ]
+  },
+  {
+    "id": "aad823a7220f29c2",
+    "ru": "Территориальное условие для этой услуги и этого центра проверено; отказ только по регистрации не обоснован материалами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].outcomes.good"
+    ]
+  },
+  {
+    "id": "e632fd50ff532afb",
+    "ru": "Любую услугу обязаны предоставлять в любом МФЦ без проверки соглашения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "5cd04a552f425b5a",
+    "ru": "Выбор места подачи вообще никогда не допускается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "ef597f75e842184b",
+    "ru": "Учебное продолжение. Другой посетитель ссылается на этот результат, но обращается за иной услугой, которой нет в соглашении центра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].followup.intro"
+    ]
+  },
+  {
+    "id": "436e4d403578575a",
+    "ru": "Проверить перечень и соглашение для другой услуги; результат первого дела не заменяет такую проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].followup.explain"
+    ]
+  },
+  {
+    "id": "f80594188e123e1c",
+    "ru": "Гарантировать приём другой услуги автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "ab266580dbb8ef86",
+    "ru": "Отменить положительный вывод по первому делу из-за другого случая.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8ac580e8d76892a3",
+    "ru": "Применить подтверждённое право выбора к данной услуге и центру, не превращая его в правило для всего банка услуг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].coach.research"
+    ]
+  },
+  {
+    "id": "04dd1e93d071ac8a",
+    "ru": "Я пришёл в центр рядом с работой. Документы не приняли: сказали идти по месту регистрации. Но на странице этой услуги написано, что её принимают независимо от места жительства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].opening"
+    ]
+  },
+  {
+    "id": "0b69afc31089bf3f",
+    "ru": "Для выбранной в деле услуги; выписка из перечня приложена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a743e986436573f5",
+    "ru": "Не переносим свойство на все услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "263e9e3f09098b9c",
+    "ru": "Для какой услуги установлен такой порядок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q0].text"
+    ]
+  },
+  {
+    "id": "c83d2db786bc2dec",
+    "ru": "Да, в приложении к соглашению назван именно этот центр и способ подачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "459b4547d7b25693",
+    "ru": "Недостаточно общей вывески МФЦ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d1349f91212ba2de",
+    "ru": "Этот МФЦ участвует в её предоставлении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q1].text"
+    ]
+  },
+  {
+    "id": "21f82f1cb746f4f4",
+    "ru": "По проверенному перечню комплект полный; документально названо только место регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "6ffeae6c70ab6372",
+    "ru": "Основание отказа определено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ce5e43c311852d83",
+    "ru": "Есть ли другие недостатки комплекта?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q2].text"
+    ]
+  },
+  {
+    "id": "7cc4c01e5d4fe0ab",
+    "ru": "Работник окна; распоряжение самого учреждения не приводилось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "cfa9082fec59aa6d",
+    "ru": "Адресат жалобы — руководитель центра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "1964c67d7f84d837",
+    "ru": "Кто отказал в приёме?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].questions[q3].text"
+    ]
+  },
+  {
+    "id": "dfdcfa0016d12857",
+    "ru": "Подготовить жалобу руководителю МФЦ на отказ работника с приложением сведений по конкретной услуге и участию центра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].coach.plan"
+    ]
+  },
+  {
+    "id": "47be2e784ce84c34",
+    "ru": "Направить человека по месту регистрации без проверки перечня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a475ae56f42a185b",
+    "ru": "Обещать принятие всех остальных услуг в любом центре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "50d1bd6fa7939268",
+    "ru": "Прописка в другом районе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-territorial-choice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-territorial-choice].title"
+    ]
+  },
+  {
+    "id": "b35888b6d79f7e41",
+    "ru": "Территориальный способ предоставления проверяется для каждой услуги и участвующего центра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].trap.explain"
+    ]
+  },
+  {
+    "id": "0ce8562b5bd4d747",
+    "ru": "Не проверять перечни после первого успешного случая.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "b3d28ba705580cd4",
+    "ru": "Помощник: «Раз одну услугу можно получить здесь, то все услуги доступны везде».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-territorial-choice].trap.text"
+    ]
+  },
+  {
+    "id": "bdca30a7961b481e",
+    "ru": "Сопоставить исходные сведения и результат услуги",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[a0].title"
+    ]
+  },
+  {
+    "id": "a7833ad12d0f7a12",
+    "ru": "Установить автора отказа и подтверждённые действия МФЦ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[a1].title"
+    ]
+  },
+  {
+    "id": "53ad001a015439c6",
+    "ru": "Передать жалобу по предусмотренному порядку на отказ исправить опечатку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[a2].title"
+    ]
+  },
+  {
+    "id": "2f2b6944110b2706",
+    "ru": "Разъяснить заявителю маршрут и не требовать самостоятельной правки акта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[a3].title"
+    ]
+  },
+  {
+    "id": "891f2106e2bdb07d",
+    "ru": "Проверить получение исправленного результата или мотивированного решения надлежащего органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[a4].title"
+    ]
+  },
+  {
+    "id": "bdcbc390c1359ea3",
+    "ru": "Исправить официальный акт другого органа в окне МФЦ без полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "c47a4c72c5813f46",
+    "ru": "Поставить исправление в зависимость от отказа заявителя от жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].actions[b1].title"
+    ]
+  },
+  {
+    "id": "c2ffd84fc861c7fa",
+    "ru": "Крайний день рассмотрения жалобы на отказ в исправлении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].calendar.title",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].calendar.title"
+    ]
+  },
+  {
+    "id": "ea63f16f4432b16a",
+    "ru": "В прежнем варианте отказывал сотрудник центра; здесь МФЦ выполнил передачу, а обжалуется акт другого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-typo-issuer].contrast.difference"
+    ]
+  }
+]

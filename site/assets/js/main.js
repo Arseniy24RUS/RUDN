@@ -1,17 +1,17 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {CONFIG} from './config.js?v=1.3.4';
-import {backend,groupOptions} from './backend.js?v=1.3.4';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.4';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.4';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.4';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.4';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.4';
-import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.4';
-import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.4';
+import {CONFIG} from './config.js?v=1.3.5';
+import {backend,groupOptions} from './backend.js?v=1.3.5';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.5';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.5';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.5';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.5';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.5';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.5';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.5';
 import {durableStore} from './durable-store.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.4';
-import {openAccount,mountProfile} from './account.js?v=1.3.4';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.5';
+import {openAccount,mountProfile} from './account.js?v=1.3.5';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
 
 const app = document.getElementById('app');
@@ -507,7 +507,7 @@ function renderSeminar5(topic){
     link.href=new URL('../../apps/reception/platform.css?v=1.0.1',import.meta.url).href;
     document.head.append(link);
   }
-  app.innerHTML='<section class="page reception-page"><div id="receptionMount" lang="ru" aria-busy="true"><p role="status">Открываем приёмную…</p></div></section>';
+  app.innerHTML=`<section class="page reception-page"><div id="receptionMount" lang="${getLocale()}" aria-busy="true"><p role="status">${ui('receptionOpening')}</p></div></section>`;
   const mount=app.querySelector('#receptionMount');
   const controller=new AbortController(),owner=attemptOwner();
   let mountedCleanup=()=>{},locale=getLocale();
@@ -522,7 +522,7 @@ function renderSeminar5(topic){
       lockedAccessPage(loc(topic.seminar,'title'),gate);
       return;
     }
-    if(locale!==getLocale()){locale=getLocale();mountedCleanup.refreshLocale?.();}
+    if(locale!==getLocale()){locale=getLocale();mountedCleanup.refreshLocale?.(locale);}
   };
   currentCleanup=cleanup;
   void (async()=>{
@@ -530,7 +530,7 @@ function renderSeminar5(topic){
       const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
       if(!active()){cleanup();return;}
       mountedCleanup=await mountReception(mount,{
-        backend,locale,signal:controller.signal,
+        backend,locale,getLocale,signal:controller.signal,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
         assessmentAllowed:()=>{const access=accessSnapshot();return topicGate(5,access.overrides,access.now).open;},
         onExit:()=>{location.hash='dashboard'}
@@ -540,7 +540,7 @@ function renderSeminar5(topic){
     }catch(error){
       if(!active())return;
       mount.setAttribute('aria-busy','false');
-      mount.innerHTML='<div class="panel" role="alert"><h2>Не удалось открыть приёмную</h2><p>Сохранённые ответы остаются на устройстве.</p><button type="button" class="btn btn-primary" id="receptionRetry">Повторить загрузку</button></div>';
+      mount.innerHTML=`<div class="panel" role="alert"><h2>${ui('receptionUnavailable')}</h2><p>${ui('answersOnDevice')}</p><button type="button" class="btn btn-primary" id="receptionRetry">${ui('retryLoading')}</button></div>`;
       mount.querySelector('#receptionRetry').onclick=()=>{cleanup();renderedKey='';render();};
       console.error('Reception module:',error);
     }

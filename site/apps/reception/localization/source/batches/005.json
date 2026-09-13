@@ -1,0 +1,1160 @@
+[
+  {
+    "id": "a58a6c85cba34c61",
+    "ru": "Объявить любое будущее сообщение этого заведения не рекламой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[b0].title"
+    ]
+  },
+  {
+    "id": "eca9562ed75df9e6",
+    "ru": "Назначить санкцию без установленных признаков и полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].actions[b1].title",
+      "cases:CASE_TEMPLATES[beer-required-menu].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "58209b9720aaf856",
+    "ru": "Все участники и документы дела вымышлены. В условиях установлено, что это обязательная информация для потребителя в месте оказания услуги: нейтральный полный перечень, обычное оформление, без акций, призывов, выделения отдельных товаров и внешнего распространения. Соблюдение иных правил продажи алкоголя отдельно не оценивается. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].brief"
+    ]
+  },
+  {
+    "id": "73656f401fa645c8",
+    "ru": "В соседнем деле признаки рекламы заданы. Здесь установлен нейтральный обязательный материал; правовой вывод должен измениться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].coach.plan",
+      "cases:CASE_TEMPLATES[beer-required-menu].contrast.difference"
+    ]
+  },
+  {
+    "id": "d1ccb758624f5b6f",
+    "ru": "Перечень находится в месте оказания услуги и используется для информирования потребителя. Наружной или интернет-рекламой данный материал в условиях не является.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d0].text"
+    ]
+  },
+  {
+    "id": "32997b6485b6fca5",
+    "ru": "Протокол контекста И-6",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d0].title"
+    ]
+  },
+  {
+    "id": "08c5f5a8bf23d1d5",
+    "ru": "В прошлом обращении была отдельная акция с выделением пива. Этот плакат не является спорным перечнем И-6.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2e1e9ad14e91a7dc",
+    "ru": "Другой рекламный плакат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d1].title"
+    ]
+  },
+  {
+    "id": "97d8dadf77365768",
+    "ru": "Представлена обязательная информация об ассортименте и ценах. Все строки одного оформления; рекламных обращений и выделения конкретного товара нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d2].text"
+    ]
+  },
+  {
+    "id": "961153454bbbe71d",
+    "ru": "Состав перечня И-6",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].documents[d2].title"
+    ]
+  },
+  {
+    "id": "e8c161e63862e275",
+    "ru": "Установленный нейтральный обязательный перечень нельзя считать рекламой только по наличию строки об алкоголе. В соседнем деле признаки рекламы заданы. Здесь установлен нейтральный обязательный материал; правовой вывод должен измениться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.explain"
+    ]
+  },
+  {
+    "id": "02389164abfc3a68",
+    "ru": "Установленный нейтральный обязательный перечень нельзя считать рекламой только по наличию строки об алкоголе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[beer-required-menu].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7cf5529ad395ee57",
+    "ru": "Любое упоминание алкогольного товара обязательно является рекламой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "bfb2810697bc34a7",
+    "ru": "Название «меню» освобождает любую акцию и любой рекламный плакат от закона.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "aae20ee793f8320b",
+    "ru": "Новый объект проверки требует самостоятельной квалификации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].followup.explain"
+    ]
+  },
+  {
+    "id": "f4987b27a3bf87a6",
+    "ru": "Прислали новый снимок: отдельный наружный плакат с рекламным выделением товара, отсутствовавший в первоначальных материалах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].followup.intro"
+    ]
+  },
+  {
+    "id": "ee72bfdefe66925d",
+    "ru": "Оценить новый материал отдельно; не распространять прежний вывод об И-6 автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "67fda04075fc6aa9",
+    "ru": "Ответить, что всё у этого заведения уже признано не рекламой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "1870a281c7f04a31",
+    "ru": "Переименовать плакат в меню и закрыть новое сообщение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "a8233207773177ba",
+    "ru": "Пункт 2 части 2 статьи 2 закона № 38-ФЗ исключает из его действия информацию, раскрытие или доведение которой до потребителя обязательно по федеральному закону. Нейтральная обязательная информация о составе ассортимента не приравнивается автоматически к рекламе. Контекст размещения и рекламные выделения проверяются отдельно; название «меню» само по себе не освобождает любой материал от правил о рекламе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].knowledge.explain",
+      "cases:SOURCES[n12-ad2].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-beer-required-menu].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "bd2938fd6746dd5e",
+    "ru": "Отделять обязательную информацию от рекламного продвижения по установленным обстоятельствам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "f22bf320d6aafede",
+    "ru": "Приравнивать любое упоминание к рекламе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "10ae68b569edec9d",
+    "ru": "Считать название носителя универсальным исключением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "16e435f8a5dff3cf",
+    "ru": "Найдите норму: Обязательная информация и реклама. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "8654d093d4f9ab45",
+    "ru": "В помещении указан ассортимент и цены, среди них пиво. Я считаю любую такую строку рекламой алкоголя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].opening"
+    ]
+  },
+  {
+    "id": "0c9b25a5c62cb7cd",
+    "ru": "Оценка границ применения рекламного закона к обязательной информации по статье 2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].procedures[0].text"
+    ]
+  },
+  {
+    "id": "d6f27e9923ce289b",
+    "ru": "Применение запрета рекламы без анализа информационного характера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].procedures[1].text"
+    ]
+  },
+  {
+    "id": "30411d1a4941c989",
+    "ru": "Подтверждение законности всех продаж по одному нейтральному перечню.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].procedures[2].text"
+    ]
+  },
+  {
+    "id": "1443c3340285ef0d",
+    "ru": "В месте оказания услуги, для выбора потребителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "9fdece65b739a575",
+    "ru": "Контекст отличается от внешнего продвижения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "77909c283ea4c5ae",
+    "ru": "Где размещён перечень?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q0].text"
+    ]
+  },
+  {
+    "id": "269bfe7db8e33f2e",
+    "ru": "Нет, перечень нейтральный и полный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "88682c2a69827121",
+    "ru": "Признаки рекламного выделения условиями исключены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "4c085c9cf2673dd5",
+    "ru": "Есть рекламные выделения или акции?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q1].text"
+    ]
+  },
+  {
+    "id": "ba14838d885e5cb2",
+    "ru": "Наименование, порцию и цену, как остальные строки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d2158c53458ca4f3",
+    "ru": "Обычная информация не равна автоматически продвижению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2516a103b34c9237",
+    "ru": "Что содержит спорная строка?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q2].text"
+    ]
+  },
+  {
+    "id": "4a1a1ec8f989262b",
+    "ru": "Нет, вопрос только о представленном информационном материале.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "c51855253affc49f",
+    "ru": "Вывод ограничен предметом обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "5bbd2b81eb297aba",
+    "ru": "Утверждается ли законность самой продажи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].questions[q3].text"
+    ]
+  },
+  {
+    "id": "9e9eb6e9f3eb01e6",
+    "ru": "Специалист подготовки ответа по рекламному обращению",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].role.title"
+    ]
+  },
+  {
+    "id": "233b03e6692a2d09",
+    "ru": "Подготовить мотивированный ответ компетентного органа о данном материале.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].routes[0].text"
+    ]
+  },
+  {
+    "id": "97602d4f8f6ec524",
+    "ru": "Поручить любому посетителю изъять обязательный перечень.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].routes[1].text"
+    ]
+  },
+  {
+    "id": "7048d275619879bb",
+    "ru": "Автоматически закрыть заведение по строке в ассортименте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].routes[2].text"
+    ]
+  },
+  {
+    "id": "1f4b8a7d3d487830",
+    "ru": "Обязательная информация без рекламного выделения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[beer-required-menu].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[beer-required-menu].title"
+    ]
+  },
+  {
+    "id": "a8a26afb4cc291e4",
+    "ru": "Важны обязательный характер и фактическое содержание, а не название носителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].trap.explain"
+    ]
+  },
+  {
+    "id": "e8acaa85e8b527cf",
+    "ru": "Название «меню» само по себе освобождает любую рекламную акцию, даже с призывом купить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-required-menu].trap.text"
+    ]
+  },
+  {
+    "id": "63286036564b51f0",
+    "ru": "Сопоставить общую площадь и выделенную область предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b4ae2ffa9139ac66",
+    "ru": "Рассчитать долю и отделить её от маркировки 18+.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[a1].title"
+    ]
+  },
+  {
+    "id": "43b16b6d756c354c",
+    "ru": "Подготовить материалы по установленному предмету требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[a2].title"
+    ]
+  },
+  {
+    "id": "e6685ec191131312",
+    "ru": "Не считать исполнение одного ограничения разрешением нарушать остальные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b7518fcd43a4928c",
+    "ru": "Проверить новое подтверждение площади именно в Р-10.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2937acfe59138d49",
+    "ru": "Засчитать любое наличие предупреждения независимо от его размера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[b0].title"
+    ]
+  },
+  {
+    "id": "ff3e214f1b30b8a1",
+    "ru": "Назначить санкцию от имени приёмной без компетенции и процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].actions[b1].title",
+      "cases:CASE_TEMPLATES[beer-warning-area].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "898ed93d5b7ea062",
+    "ru": "Все участники и документы дела вымышлены. Это реклама пива внутри стационарного торгового объекта с необходимым разрешённым режимом деятельности. Допустимость конкретного места и отсутствие иных нарушений заданы; вопрос посвящён площади предупреждения. Рекламные формулировки и реальные марки не показываются. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].brief"
+    ]
+  },
+  {
+    "id": "5ff32326b5631fe0",
+    "ru": "Базовая история оценивала место. Здесь место задано допустимым, но необходимо проверить долю предупреждения, а не его присутствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].coach.plan",
+      "cases:CASE_TEMPLATES[beer-warning-area].contrast.difference"
+    ]
+  },
+  {
+    "id": "ebfb39cc99ffab15",
+    "ru": "В другой рекламе предупреждение занимает 120 см² при площади 1000 см². Это не измерение Р-10.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d0].text"
+    ]
+  },
+  {
+    "id": "bf20690586d12716",
+    "ru": "Акт другого плаката",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2ab30f28a38550b3",
+    "ru": "Полное рекламное пространство — 1000 см². Предупреждение о вреде чрезмерного потребления — 50 см²; подпись предупреждения проверена отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d1].text"
+    ]
+  },
+  {
+    "id": "213905333cf7d4b9",
+    "ru": "Измерение рекламы Р-10",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d1].title"
+    ]
+  },
+  {
+    "id": "2c34140137a3621a",
+    "ru": "Ещё 100 см² занимает только отметка 18+. Этот участок не относится к предупреждению о вреде. Для задачи место и прочие условия размещения признаны допустимыми.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d2].text"
+    ]
+  },
+  {
+    "id": "c5a1b1525f5b3895",
+    "ru": "Разметка элементов Р-10",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].documents[d2].title"
+    ]
+  },
+  {
+    "id": "806dafc03489081c",
+    "ru": "В Р-10 предупреждение занимает 5%, а отдельная отметка 18+ не увеличивает его площадь. Базовая история оценивала место. Здесь место задано допустимым, но необходимо проверить долю предупреждения, а не его присутствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.explain"
+    ]
+  },
+  {
+    "id": "67bf3d7be7b42bbc",
+    "ru": "В Р-10 предупреждение занимает 5%, а отдельная отметка 18+ не увеличивает его площадь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[beer-warning-area].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8130b05c3abbe0ef",
+    "ru": "Само наличие любого предупреждения достаточно независимо от площади.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "979463330e94b073",
+    "ru": "Нужно сложить все возрастные и иные подписи и получить площадь предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b395d4c3c91d2ffe",
+    "ru": "Исправление одного аспекта не подменяет оценку нового утверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].followup.explain"
+    ]
+  },
+  {
+    "id": "61f6b3b260aff014",
+    "ru": "Площадь предупреждения довели до нормы, но в новую версию добавили утверждение о пользе продукта для здоровья.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].followup.intro"
+    ]
+  },
+  {
+    "id": "e5491593fd765d1e",
+    "ru": "Отдельно проверить новое содержание; исполнение требования площади не разрешает другие нарушения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "1e1c331f47e06e7b",
+    "ru": "Одобрить полностью, потому что прежняя площадь исправлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d6d389da70ec95ca",
+    "ru": "Учитывать только старую версию и игнорировать новое содержание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "63100967231502a6",
+    "ru": "Проверять установленный минимум площади предупреждения отдельно от возрастной отметки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "2efde8a6fd824a41",
+    "ru": "Считать наличие текста достаточным при любой площади.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "1f924fb869e6d425",
+    "ru": "Складывать предупреждение и все другие элементы без разграничения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b37bd8868dbe3c65",
+    "ru": "В рекламе внутри магазина написано предупреждение. Почему говорят, что одного его наличия недостаточно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].opening"
+    ]
+  },
+  {
+    "id": "e2a583e2dbf34959",
+    "ru": "Подготовка оценки самостоятельного требования части 3 статьи 21 закона о рекламе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].procedures[0].text"
+    ]
+  },
+  {
+    "id": "5b013c9ae009c6d9",
+    "ru": "Проверка только наличия текста без его площади.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].procedures[1].text"
+    ]
+  },
+  {
+    "id": "6105b37ca8d31eab",
+    "ru": "Выдача приёмной разрешения на любое дальнейшее размещение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5e0ede82f7aba0c5",
+    "ru": "В учебном измерении 1000 квадратных сантиметров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "6bed5ba911cc5c42",
+    "ru": "Есть знаменатель для проверки доли.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f8463c160ca52c3a",
+    "ru": "Какова вся площадь рекламного пространства?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q0].text"
+    ]
+  },
+  {
+    "id": "359286cdc144e880",
+    "ru": "50 квадратных сантиметров.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "dcf1c097b34b916a",
+    "ru": "Предупреждение составляет пять процентов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6e3a548d5dd1f9eb",
+    "ru": "Сколько занимает предупреждение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q1].text"
+    ]
+  },
+  {
+    "id": "fb58d26bd6958ba3",
+    "ru": "Пометка 18+, это отдельный элемент, не текст предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d48a9e8ae8311654",
+    "ru": "Площади разных элементов не складываются автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "64198d099136d382",
+    "ru": "Что занимает ещё сто квадратных сантиметров?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q2].text"
+    ]
+  },
+  {
+    "id": "cf9dbcb6793289df",
+    "ru": "Он задан допустимым для этой задачи; другие требования этим не отменяются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "900ce3c5e155ba12",
+    "ru": "Проверяется самостоятельное условие площади.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "10a65b8e14f7351e",
+    "ru": "Нужно оценивать сам канал размещения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].questions[q3].text"
+    ]
+  },
+  {
+    "id": "da6ede7e72d64253",
+    "ru": "Специалист подготовки материалов по рекламе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].role.title"
+    ]
+  },
+  {
+    "id": "5053c6f12d1b8934",
+    "ru": "Уполномоченное подразделение антимонопольного органа по установленным материалам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].routes[0].text"
+    ]
+  },
+  {
+    "id": "070fa06c9e31b33e",
+    "ru": "Продавец как окончательный арбитр площади предупреждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].routes[1].text"
+    ]
+  },
+  {
+    "id": "e19a907c6bf40f24",
+    "ru": "Гражданин как лицо, назначающее размер штрафа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].routes[2].text"
+    ]
+  },
+  {
+    "id": "d9b5538a0eb47302",
+    "ru": "Предупреждение есть, площади не хватает",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[beer-warning-area].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[beer-warning-area].title"
+    ]
+  },
+  {
+    "id": "4162b1c01737aea9",
+    "ru": "Доля определяется площадью предупреждения относительно всего рекламного пространства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].trap.explain"
+    ]
+  },
+  {
+    "id": "1e2b8035b187e2b5",
+    "ru": "По измерению 50 из 1000 предупреждение занимает 5%, а не 10%.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[beer-warning-area].trap.text"
+    ]
+  },
+  {
+    "id": "ba28232e1bbd5b9e",
+    "ru": "Сопоставить публикацию с архивной описью",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[compare].title"
+    ]
+  },
+  {
+    "id": "c531c6b7980aa0c1",
+    "ru": "Назвать общедоступные приложения секретными без правового основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[hide].title"
+    ]
+  },
+  {
+    "id": "7d8c4c2ced26ddf2",
+    "ru": "Сослаться только на наличие официального сайта без проверки запрошенных материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[homepage].title"
+    ]
+  },
+  {
+    "id": "c416be29c5db5565",
+    "ru": "Подготовить ответ на каждый пункт запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[notify].title"
+    ]
+  },
+  {
+    "id": "81a9c569090217a5",
+    "ru": "Включить доступные документы в ответ либо указать место их фактической официальной публикации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[provide].title"
+    ]
+  },
+  {
+    "id": "da9bf71b4fcb9da5",
+    "ru": "Зафиксировать запрошенный состав документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[scope].title"
+    ]
+  },
+  {
+    "id": "18611ecb307ea211",
+    "ru": "Проверить доступность файлов и приложений до отправки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].actions[track].title"
+    ]
+  },
+  {
+    "id": "81af3be56893baf9",
+    "ru": "Запрос находится в работе, итоговый ответ ещё не направлен. В учебном архиве есть принятое решение с двумя приложениями. В моделируемом разделе сайта опубликован только проект. Это запрос документов, а не просьба составить новый аналитический отчёт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].brief"
+    ]
+  },
+  {
+    "id": "660d92827dd6982f",
+    "ru": "Рассчитайте крайний день ответа на зарегистрированный запрос по 8-ФЗ. Отсрочка не применялась; запрос относится к деятельности этого органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].calendar.context",
+      "cases:CASE_TEMPLATES[budget-partial].calendar.context"
+    ]
+  },
+  {
+    "id": "a3e88e916ce9d2ce",
+    "ru": "Найденный материал не даёт запрошенного полного принятого комплекта. Официальный домен не превращает неполную публикацию в полный ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].contrast.difference"
+    ]
+  },
+  {
+    "id": "b3615c80f2abdb8f",
+    "ru": "Принятое решение, приложение 1 и приложение 2 имеются у органа. Сведения в этих материалах общедоступны. Опись и файлы созданы исключительно для учебного дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[archive].text"
+    ]
+  },
+  {
+    "id": "379e88b5bb46a480",
+    "ru": "Опись учебного архива",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[archive].title"
+    ]
+  },
+  {
+    "id": "09d7bc23b512ef15",
+    "ru": "Запрошенное размещено на официальном сайте. В проекте указана только главная страница; совпадение опубликованных материалов с запросом не проверено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[draft].text"
+    ]
+  },
+  {
+    "id": "e308ea1445dd8233",
+    "ru": "Проект ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[draft].title",
+      "cases:CASE_TEMPLATES[landfill-after-fire].documents[d0].title"
+    ]
+  },
+  {
+    "id": "647ef47f463c1164",
+    "ru": "Опубликован проект решения и анонс заседания. Принятого решения и двух приложений в рассматриваемой модели публикации нет. Это вымышленный снимок, не аудит действующего сайта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[web].text"
+    ]
+  },
+  {
+    "id": "f9105e721bccfda0",
+    "ru": "Состояние учебного раздела сайта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].documents[web].title"
+    ]
+  },
+  {
+    "id": "6702ae4bc1adabf9",
+    "ru": "Наличие ссылки само по себе не устанавливает, что на сайте размещена именно запрошенная информация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].factTask.explain",
+      "cases:CASE_TEMPLATES[budget-link].coach.docs"
+    ]
+  },
+  {
+    "id": "f3cf8a3aaeb8a3a6",
+    "ru": "Да: любая главная страница подтверждает наличие всех документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].factTask.options[denied].text"
+    ]
+  },
+  {
+    "id": "a618d5ab78461b33",
+    "ru": "Нет: в модели публикации найден проект, а запрошено принятое решение с приложениями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].factTask.options[missing].text"
+    ]
+  },
+  {
+    "id": "735a3b88fad20f7a",
+    "ru": "Да: проект и принятое решение всегда равнозначны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].factTask.options[same].text"
+    ]
+  },
+  {
+    "id": "484794f05b0bddb0",
+    "ru": "Можно ли считать запрошенные материалы уже опубликованными по данным дела?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].factTask.prompt"
+    ]
+  },
+  {
+    "id": "54d780c62823613f",
+    "ru": "Техническая доступность оценивается с позиции пользователя, а не только рабочего компьютера исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].followup.explain"
+    ]
+  },
+  {
+    "id": "d999c9bf337624f3",
+    "ru": "Перед отправкой в ответ добавили ссылки на принятое решение и приложение 1. Ссылка на приложение 2 требует входа во внутреннюю служебную сеть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].followup.intro"
+    ]
+  },
+  {
+    "id": "8aef97c67d9082dd",
+    "ru": "Закрыть работу: у сотрудника во внутренней сети файл открывается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "1418cb5ecf927645",
+    "ru": "Удалить из запроса упоминание второго приложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].followup.options[ignore].text"
+    ]
+  },
+  {
+    "id": "bd8a105970086b35",
+    "ru": "Обеспечить доступный заявителю способ получить приложение 2 и проверить комплектность ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].followup.options[verify].text"
+    ]
+  },
+  {
+    "id": "d3385db928573b88",
+    "ru": "Ответ указанием места публикации допустим, когда там размещена именно запрошенная информация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[budget-link].knowledge.explain",
+      "cases:CASE_TEMPLATES[budget-published].knowledge.options[apply].text"
+    ]
+  },
+  {
+    "id": "3d9d7165b3287c0f",
+    "ru": "Любой официальный сайт освобождает орган от проверки содержания ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].knowledge.options[broad].text",
+      "cases:CASE_TEMPLATES[budget-published].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "38014d5feb384c46",
+    "ru": "Ответ ссылкой полностью запрещён даже для опубликованных документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].knowledge.options[none].text",
+      "cases:CASE_TEMPLATES[budget-published].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "ad4bb7d8e430e39a",
+    "ru": "Найдите правило ответа ссылкой на уже опубликованную информацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].knowledge.prompt",
+      "cases:CASE_TEMPLATES[budget-published].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "87d0f6a06a8aa8af",
+    "ru": "Прошу принятое решение о бюджете вместе с приложениями. В проекте ответа мне дают ссылку на главную. Но там я нашёл только анонс заседания и старый проект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].opening"
+    ]
+  },
+  {
+    "id": "78b27edd20a2701e",
+    "ru": "Нет. Я уточняю запрос до ответа. Ограничение доступа никто не указал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[access].answer"
+    ]
+  },
+  {
+    "id": "3d936ba6d0a3d0c2",
+    "ru": "Не заявлено обжалование уже принятого отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[access].fact"
+    ]
+  },
+  {
+    "id": "a1c014cd405459e9",
+    "ru": "Вы получили отказ в доступе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[access].text"
+    ]
+  },
+  {
+    "id": "89d0a5bb253af0cf",
+    "ru": "Принятое решение и оба приложения, не проект и не сравнительную справку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[request].answer"
+    ]
+  },
+  {
+    "id": "7cc40b389b3197df",
+    "ru": "Объём запроса определён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[request].fact"
+    ]
+  },
+  {
+    "id": "9eeb280dfbd5e031",
+    "ru": "Что именно вы просите предоставить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[request].text"
+    ]
+  },
+  {
+    "id": "b036bbb5470b7f4e",
+    "ru": "Он помечен как проект. Приложений к принятому решению рядом нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[site].answer"
+    ]
+  },
+  {
+    "id": "c5383bb6b22d1f78",
+    "ru": "Найденный проект не совпадает с запрошенной информацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[site].fact"
+    ]
+  },
+  {
+    "id": "36184233e8bc3b00",
+    "ru": "Какой файл вы нашли на сайте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].questions[site].text"
+    ]
+  },
+  {
+    "id": "14a4bd7998c083f4",
+    "ru": "Учебная модель органа местного самоуправления, располагающего принятым решением о бюджете. Готовите ответ на запрос по 8-ФЗ. Моделируемая публикация и документы вымышлены; реальному муниципальному органу нарушения не приписываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].role.text",
+      "cases:CASE_TEMPLATES[budget-published].role.text",
+      "cases:CASE_TEMPLATES[budget-partial].role.text"
+    ]
+  },
+  {
+    "id": "bb795ff4243060d8",
+    "ru": "Подразделение доступа к муниципальной информации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].role.title",
+      "cases:CASE_TEMPLATES[budget-published].role.title",
+      "cases:CASE_TEMPLATES[budget-partial].role.title"
+    ]
+  },
+  {
+    "id": "706899acfca5996a",
+    "ru": "Подготовить ответ в подразделении органа, располагающего запрошенными документами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].routes[holder].text",
+      "cases:CASE_TEMPLATES[budget-link].contrast.decision"
+    ]
+  },
+  {
+    "id": "b2c35fc534716638",
+    "ru": "Направить запрос в Минтруд, поскольку там опубликован текст 8-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].routes[ministry].text"
+    ]
+  },
+  {
+    "id": "e35be963dee75b33",
+    "ru": "Вернуть запрос гражданину с предложением самостоятельно разыскать отсутствующие файлы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].routes[search].text"
+    ]
+  },
+  {
+    "id": "9ef2f9ad55afdd85",
+    "ru": "На сайте есть. Но что именно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].cases[budget-link].title",
+      "source-index:SOURCE_INDEX.entries[shelf:council].cases[budget-link].title"
+    ]
+  },
+  {
+    "id": "5ec874f4e462ca43",
+    "ru": "Проблема данного проекта ответа — отсутствие запрошенных документов в моделируемой публикации, а не само использование адреса официального сайта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].trap.explain"
+    ]
+  },
+  {
+    "id": "386f0d6eee8fa362",
+    "ru": "Согласиться, не сопоставляя запрос и публикацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "4cdea8191c806223",
+    "ru": "Всегда отказаться от ссылок и признать их незаконными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].trap.options[none].text"
+    ]
+  },
+  {
+    "id": "de47227ce7f9efcc",
+    "ru": "Проверить фактическое размещение запрошенных документов; закон не требует исключительно прямой ссылки, но ссылка не должна подменять отсутствующую информацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].trap.options[scope].text"
+    ]
+  },
+  {
+    "id": "0b230548b9a7de80",
+    "ru": "Помощник: «Часть 3 статьи 19 делает любую ссылку на официальную главную страницу достаточным ответом».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-link].trap.text"
+    ]
+  },
+  {
+    "id": "f12e343c55a3a405",
+    "ru": "Выдать вместо документов округа похожие документы управы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[guess].title"
+    ]
+  },
+  {
+    "id": "6d22950fd4671715",
+    "ru": "Уведомить пользователя о направлении запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[notify].title"
+    ]
+  },
+  {
+    "id": "8be405f2ea8c35d7",
+    "ru": "Установить орган, к деятельности которого относятся запрошенные документы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[owner].title"
+    ]
+  },
+  {
+    "id": "93f2edd17bc1dbd3",
+    "ru": "Вернуть запрос с требованием подать его заново",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[refile].title"
+    ]
+  },
+  {
+    "id": "591c17330ddbd7c9",
+    "ru": "Проверить регистрацию запроса и его предмет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[register].title"
+    ]
+  },
+  {
+    "id": "e541a4f022b1dea1",
+    "ru": "Подготовить направление запроса в аппарат Совета депутатов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[route].title"
+    ]
+  },
+  {
+    "id": "371e0c066bdd477a",
+    "ru": "Сохранить подтверждение направления и уведомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].actions[track].title"
+    ]
+  },
+  {
+    "id": "dd437a61f90cb5f7",
+    "ru": "Нужны уже принятые бюджетные документы муниципального округа. Запрос зарегистрирован в управе района, а не в аппарате Совета депутатов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].brief"
+    ]
+  },
+  {
+    "id": "96c31bcc7b00715b",
+    "ru": "Рассчитайте срок направления запроса компетентному органу. Вопрос касается существующих документов и не требует новой аналитики.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].calendar.context"
+    ]
+  },
+  {
+    "id": "2e41032ce52dbcd4",
+    "ru": "8-ФЗ, статья 18, часть 8",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].calendar.source"
+    ]
+  },
+  {
+    "id": "9bbc1df4e4128fdb",
+    "ru": "Крайняя дата направления запроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].calendar.title",
+      "cases:CASE_TEMPLATES[authority-contact].calendar.title"
+    ]
+  },
+  {
+    "id": "6abfc315a42cfdea",
+    "ru": "Запрос направляется компетентному органу с уведомлением пользователя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[budget-misdirected].coach.research",
+      "cases:CASE_TEMPLATES[budget-misdirected].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[budget-misdirected].knowledge.explain"
+    ]
+  }
+]

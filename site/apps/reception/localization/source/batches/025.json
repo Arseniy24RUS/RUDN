@@ -1,0 +1,1170 @@
+[
+  {
+    "id": "2678a8673ef96ac4",
+    "ru": "Признать любой ответ о здании полным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "128ac00c0f31453a",
+    "ru": "Согласовать демонтаж самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "e693d94fc339dbcc",
+    "ru": "В старом доме снимают лестничные детали. На стенде написано «ремонт кровли». Дом вроде под охраной. Я не против ремонта, но что будет с лестницей?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].opening"
+    ]
+  },
+  {
+    "id": "a214723c5326c35e",
+    "ru": "Обращение по вопросу сохранения объекта наследия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].procedures[0].text"
+    ]
+  },
+  {
+    "id": "d67fefa3e853ad1f",
+    "ru": "Выдача строительного допуска приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].procedures[1].text"
+    ]
+  },
+  {
+    "id": "1867be0f88a7c96e",
+    "ru": "Спор о результатах выборов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].procedures[2].text"
+    ]
+  },
+  {
+    "id": "8afda52574b8cb5f",
+    "ru": "В учебной выписке из реестра здание и предмет охраны указаны однозначно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "adeb0347e34bd274",
+    "ru": "Статус не выводится только из возраста дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "138ceb5ec8b505ca",
+    "ru": "Чем подтверждается охранный статус?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q0].text"
+    ]
+  },
+  {
+    "id": "7506a4a19a70612c",
+    "ru": "На снимках лестничные детали; представленная карточка работ относится к кровле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "641151d42559e6bc",
+    "ru": "Предметы документов не совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "88110048d949eafe",
+    "ru": "Какие работы видны и что разрешено по документу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q1].text"
+    ]
+  },
+  {
+    "id": "afa6efd0f5630d7e",
+    "ru": "В приложениях их нет; это нужно уточнить у компетентного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "7c1c473d953e22e0",
+    "ru": "Отсутствие в наборе не доказывает отсутствия вообще.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "fa9685609e8e72f9",
+    "ru": "Есть ли сведения о согласовании работ на лестнице?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q2].text"
+    ]
+  },
+  {
+    "id": "74de5e56e9e3d695",
+    "ru": "По материалам текущей угрозы не сообщается. Я прошу проверить характер работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "45337037f5b4d859",
+    "ru": "Не следует выдумывать аварийность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "61cc6a39929e579f",
+    "ru": "Есть ли угроза обрушения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].questions[q3].text"
+    ]
+  },
+  {
+    "id": "f0a5099bc947fa25",
+    "ru": "Подготовить рассмотрение органом охраны наследия по статусу объекта, предмету охраны и видам работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].routes[0].text",
+      "cases:CASE_TEMPLATES[heritage-stair].coach.plan",
+      "cases:CASE_TEMPLATES[heritage-stair].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "f0ce0fc635d23770",
+    "ru": "Разрешить демонтаж по названию работ на стенде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].routes[1].text",
+      "cases:CASE_TEMPLATES[heritage-stair].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "329754662329730e",
+    "ru": "Объявить подрядчика виновным без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].routes[2].text",
+      "cases:CASE_TEMPLATES[heritage-stair].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "caa8ea3b8b4fe658",
+    "ru": "Крыша и историческая лестница",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[heritage-stair].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[heritage-stair].title"
+    ]
+  },
+  {
+    "id": "5558703ee17bc40f",
+    "ru": "Культурное наследие",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].topic",
+      "cases:CASE_TEMPLATES[heritage-stair].tag",
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].topic"
+    ]
+  },
+  {
+    "id": "0ce0f0932de71ad1",
+    "ru": "Сопоставить предмет документа с конкретными работами и охраной объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].trap.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-stair].trap.explain"
+    ]
+  },
+  {
+    "id": "96cc0e5c82a50928",
+    "ru": "Распространить разрешение на любые работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "dc36ff7eaa3036c1",
+    "ru": "Помощник: «Документ на ремонт крыши разрешает работы во всём здании».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].trap.text"
+    ]
+  },
+  {
+    "id": "6c39491534a1412d",
+    "ru": "Сопоставить стороны договора и полное исполнение кредита.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[a0].title"
+    ]
+  },
+  {
+    "id": "54649fcbc5d31001",
+    "ru": "Отделить премию по заёмщице от другой платы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[a1].title"
+    ]
+  },
+  {
+    "id": "b85ae2e2b01642dd",
+    "ru": "Подготовить обоснование возврата премиальной части с учётом периода и даты заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ad3be889211cb5e1",
+    "ru": "Не считать другую плату автоматически законной или автоматически возвращаемой без отдельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7dd0b5acd82c6061",
+    "ru": "Контролировать обязательство перед заёмщицей независимо от последующих расчётов банка и страховщика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[a4].title"
+    ]
+  },
+  {
+    "id": "43f0961f4b07d243",
+    "ru": "Продлить срок до неопределённого перевода денег страховщиком банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[b0].title"
+    ]
+  },
+  {
+    "id": "61ea8c2c69cddfbc",
+    "ru": "Признать любую отдельно названную плату банка безусловно законной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].actions[b1].title",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "0b7f3a585f2a03a6",
+    "ru": "Все люди, документы и события этого дела вымышлены. Коллективное личное страхование соответствует абзацу первому части 2.1 статьи 7 закона № 353-ФЗ. Страхователь – банк, Мария – застрахованная заёмщица. Полное досрочное исполнение подтверждено; событий с признаками страхового случая нет. Из общей платы 40 000 рублей премия страховщику по Марии составляет 30 000, прочая плата банка 10 000 показана отдельно. Законность и возможный возврат прочей услуги не решены заранее. Заявление об исключении банк получил после погашения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].brief"
+    ]
+  },
+  {
+    "id": "0219b30e8de70b90",
+    "ru": "Часть 10 статьи 11 закона №353-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].calendar.context"
+    ]
+  },
+  {
+    "id": "539e41bd3c094dc5",
+    "ru": "Получено заявление кредитором",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].calendar.events[recipientReceived].label"
+    ]
+  },
+  {
+    "id": "566dc46f651935a4",
+    "ru": "Часть 10 статьи 11 закона №353-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].calendar.source"
+    ]
+  },
+  {
+    "id": "8367b0daeb29a3f6",
+    "ru": "Крайняя дата возврата заёмщику по заявлению кредитору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].calendar.title"
+    ]
+  },
+  {
+    "id": "78a623cefc47ce04",
+    "ru": "В отличие от индивидуального полиса требование исполняет кредитор. В отличие от первоначального отказа возврат связан с полным погашением и использованным периодом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].coach.plan",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].contrast.difference"
+    ]
+  },
+  {
+    "id": "c6d07f07e8ec0eb3",
+    "ru": "Предлагается отсчитать семь рабочих дней после будущего перечисления страховщиком банку, а не после получения заявления заёмщицы. Дату такого перечисления не называют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d0].text"
+    ]
+  },
+  {
+    "id": "12299ac913cb588f",
+    "ru": "Письмо банка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d0].title"
+    ]
+  },
+  {
+    "id": "819ba87a15a1fed7",
+    "ru": "Страхователь – банк. Мария включена как застрахованное лицо по обеспечивающему кредит договору. Общая плата 40 000 рублей: премия страховщику по ней 30 000, отдельно указанная плата банка 10 000.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d1].text"
+    ]
+  },
+  {
+    "id": "e66ae14b3e232395",
+    "ru": "Подключение и состав платы КС-18",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7acdfc9baebba726",
+    "ru": "Кредит полностью погашен досрочно {{observed}}. Банк получил заявление об исключении и возврате {{recipientReceived}}. Событий с признаками страхового случая нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d2].text"
+    ]
+  },
+  {
+    "id": "871ade2eded33f56",
+    "ru": "Погашение и получение заявления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a011280dd18a775c",
+    "ru": "Событие {{observed}}. Письмо отправлено {{sent}}, поступило в указанную приёмную или подразделение {{received}}, зарегистрировано {{registered}}. Кредитор получил надлежащее заявление {{recipientReceived}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].documents[dates].text"
+    ]
+  },
+  {
+    "id": "ff77ce8527725705",
+    "ru": "Требование относится к коллективному страхованию; база специального возврата – премия по заёмщице, а не вся общая плата. В отличие от индивидуального полиса требование исполняет кредитор. В отличие от первоначального отказа возврат связан с полным погашением и использованным периодом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.explain"
+    ]
+  },
+  {
+    "id": "e682208eaad1b65f",
+    "ru": "Требование относится к коллективному страхованию; база специального возврата – премия по заёмщице, а не вся общая плата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "64c677ee827f8857",
+    "ru": "Возврат по части 10 всегда равен всем сорока тысячам без вычетов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "72ac932efc871853",
+    "ru": "Начало срока возврата заёмщице произвольно переносится до расчётов между организациями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-collective-payoff.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "8d3b7977bf0cb389",
+    "ru": "Банк прислал расчёт за другую застрахованную персону по коллективному договору и считает общий номер договора достаточным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].followup.intro"
+    ]
+  },
+  {
+    "id": "3ac7925fb75fb8e1",
+    "ru": "Проверить расчёт и платёж именно по Марии и КС-18; общий договор не заменяет данные о конкретном лице.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].followup.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].followup.explain"
+    ]
+  },
+  {
+    "id": "4deeabfd6591273f",
+    "ru": "Засчитать возврат по любому участнику коллективного договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "538dace27e801b34",
+    "ru": "Передать заёмщице персональные данные всех участников для самостоятельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "135dc2446c1a3ba5",
+    "ru": "Ждать неограниченно перевода страховщиком банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "9ec89e5f08345449",
+    "ru": "Приравнять общий платёж к полной возвращаемой сумме без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "b83a07fe6fb91de6",
+    "ru": "Найдите нормативное основание следующего действия: Применить часть 10 статьи 11 к премиальной части с учётом периода; отсчитывать срок от заявления банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "1a6f442cebc2a9af",
+    "ru": "Банк включил меня в страхование. Кредит погасила полностью досрочно. Взяли сорок тысяч за всё, а теперь говорят ждать, пока страховщик перечислит деньги банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].opening"
+    ]
+  },
+  {
+    "id": "3ea058887e6baa19",
+    "ru": "Требование об исключении и возврате при полном досрочном исполнении в коллективном страховании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].procedures[0].text"
+    ]
+  },
+  {
+    "id": "40ffd24b7cc51b0b",
+    "ru": "Банк; я застрахованное лицо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q0].answer",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "64633a384dcd1330",
+    "ru": "Кто страхователь по договору?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q0].text"
+    ]
+  },
+  {
+    "id": "55970314ad0e8ce2",
+    "ru": "Да, {{observed}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q1].answer",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "015e3983125fd0ee",
+    "ru": "Кредит уже полностью погашен?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q1].text"
+    ]
+  },
+  {
+    "id": "26d35a4cc6f37b14",
+    "ru": "Тридцать тысяч – премия, десять – отдельная плата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q2].answer",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "f5b049ef7899a600",
+    "ru": "Что входит в общую плату?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q2].text"
+    ]
+  },
+  {
+    "id": "d346e74f72bb4659",
+    "ru": "Специалист подразделения по обращениям потребителей финансовых услуг",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].role.title"
+    ]
+  },
+  {
+    "id": "da1efd6eee4a5847",
+    "ru": "Кредитор, получивший заявление по КС-18; не подмена его обязательства страховщиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].routes[0].text"
+    ]
+  },
+  {
+    "id": "2e69dea2287e0d97",
+    "ru": "Применить часть 10 статьи 11 к премиальной части с учётом периода; отсчитывать срок от заявления банку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].contrast.decision"
+    ]
+  },
+  {
+    "id": "2557cbf8019b792b",
+    "ru": "В плате две части, возвращает не тот же адресат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[insurance-collective-payoff].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[insurance-collective-payoff].title"
+    ]
+  },
+  {
+    "id": "6bdd8e352a2ad9a8",
+    "ru": "Применить часть 10 статьи 11 к премиальной части с учётом периода; отсчитывать срок от заявления банку. В отличие от индивидуального полиса требование исполняет кредитор. В отличие от первоначального отказа возврат связан с полным погашением и использованным периодом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].trap.explain"
+    ]
+  },
+  {
+    "id": "251dc1c147725bbd",
+    "ru": "Возврат по специальной норме и отдельный спор о другой плате банка можно рассматривать раздельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].trap.text"
+    ]
+  },
+  {
+    "id": "e7036e727c1364cd",
+    "ru": "Установить страхователя, вид страхования и соблюдение периода",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[a0].title"
+    ]
+  },
+  {
+    "id": "fc786b12519e5a1c",
+    "ru": "Проверить дату получения заявления кредитором и условия применимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[a1].title"
+    ]
+  },
+  {
+    "id": "f923d5787ef34178",
+    "ru": "Рассчитать специальный срок возврата и определить дальнейший маршрут защиты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[a2].title"
+    ]
+  },
+  {
+    "id": "5f6986b876876348",
+    "ru": "Не обещать неизвестный размер ставки и не подменять право отказа устными советами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[a3].title"
+    ]
+  },
+  {
+    "id": "171f37dfe3193a89",
+    "ru": "Сверить фактический возврат с требуемой суммой и реквизитами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[a4].title"
+    ]
+  },
+  {
+    "id": "ded10eed0b3f0cdb",
+    "ru": "Гарантировать изменение или неизменность ставки без проверки договора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[b0].title",
+      "cases:CASE_TEMPLATES[insurance-collective].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "029e946f690b0aef",
+    "ru": "Заменить возврат письмом о регистрации заявления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].actions[b1].title"
+    ]
+  },
+  {
+    "id": "a0b9de97a2891cb6",
+    "ru": "Получено кредитором",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].calendar.events[bank].label"
+    ]
+  },
+  {
+    "id": "665ac63cd70e0dae",
+    "ru": "Не срок любой страховки и не обещание сохранения кредитной ставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].calendar.scope"
+    ]
+  },
+  {
+    "id": "99991e15d6002bc2",
+    "ru": "353-ФЗ, статья 7, часть 2.5; условия возврата установлены в деле. Начало счёта со следующего дня закреплено в профиле упражнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].calendar.source"
+    ]
+  },
+  {
+    "id": "e076c3f528f65c45",
+    "ru": "Крайний день возврата по заявлению заёмщицы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].calendar.title"
+    ]
+  },
+  {
+    "id": "044bb7a701ec7331",
+    "ru": "Кредитор – страхователь по коллективному личному страхованию для обеспечения кредита; гражданка включена в число застрахованных. Отказ в пределах 30 календарных дней. Получен кредитором {{bank}}; событий с признаками страхового случая нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].documents[d0].text"
+    ]
+  },
+  {
+    "id": "05493fb9d7eedd88",
+    "ru": "Договор и квитанция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d1a334854a6552bf",
+    "ru": "Поступило {{received}}, зарегистрировано {{registered}}. Не заменяет ранее поданное кредитору заявление. Изменение ставки требует отдельной проверки договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].documents[d1].text"
+    ]
+  },
+  {
+    "id": "55980f04f140f2d2",
+    "ru": "Письмо приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].documents[d1].title"
+    ]
+  },
+  {
+    "id": "b8378169e2a1f626",
+    "ru": "При заданном коллективном страховании заявление адресуется кредитору; срок возврата не начинается заново в приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective].factTask.explain",
+      "cases:CASE_TEMPLATES[insurance-collective].outcomes.good"
+    ]
+  },
+  {
+    "id": "0ef4a30f39b78047",
+    "ru": "Гражданка всегда должна подавать только страховщику независимо от страхователя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "8434d853fb361cfc",
+    "ru": "Регистрация жалобы в органе заново открывает период охлаждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "49dfb9fc45d1825d",
+    "ru": "Банк подтвердил прекращение участия, но сообщение не содержит сведений о возврате денег.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].followup.intro"
+    ]
+  },
+  {
+    "id": "91b83e24bab08169",
+    "ru": "Проверить отдельное исполнение денежного возврата и его срок, не считая прекращение участия доказательством перевода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].followup.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective].followup.explain"
+    ]
+  },
+  {
+    "id": "66fe70e85710e27a",
+    "ru": "Закрыть по прекращению участия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "0ed12d13dbd45115",
+    "ru": "Повторно начинать период охлаждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "84264f5e70eed9ed",
+    "ru": "В заданных условиях части 2.5 статьи 7 закона № 353-ФЗ заявление адресуется кредитору, который выступает страхователем коллективного личного страхования. Срок возврата – семь рабочих дней со дня получения заявления при выполненных условиях. Вопрос о ставке по кредиту проверяется отдельно: возврат не даёт оснований обещать её неизменность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].knowledge.explain"
+    ]
+  },
+  {
+    "id": "97f1b28b3f4e1f38",
+    "ru": "Найдите правило возврата по заявлению заёмщика при заданном коллективном страховании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "24d040e6c9239ea0",
+    "ru": "Хочу отказаться от страховки при кредите. Страховая отправляет в банк, банк – обратно. В договоре страхователем назван банк, а я включена в список застрахованных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].opening"
+    ]
+  },
+  {
+    "id": "7e546eb36d6563ae",
+    "ru": "Отказ от коллективного кредитного страхования при выполненных условиях закона № 353-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c8bb987e30e07178",
+    "ru": "Любое расторжение страхования независимо от условий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].procedures[1].text"
+    ]
+  },
+  {
+    "id": "271b15f53cd603a4",
+    "ru": "Общий срок ответа приёмной как срок возврата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].procedures[2].text"
+    ]
+  },
+  {
+    "id": "ae4407e90866fbea",
+    "ru": "Кредитор; заёмщица включена в коллективное личное страхование для обеспечения кредита.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "1feb9a0929e9f11a",
+    "ru": "Это не индивидуальный договор, в котором заёмщица сама страхователь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q0].fact",
+      "cases:CASE_TEMPLATES[insurance-collective].coach.talk"
+    ]
+  },
+  {
+    "id": "4b4d50daab24d205",
+    "ru": "Кто страхователь в договоре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q0].text"
+    ]
+  },
+  {
+    "id": "114536d5171121d7",
+    "ru": "В материалах подтверждено: в пределах 30 календарных дней с согласия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "f9f7a7dfc3f897c8",
+    "ru": "Условие периода охлаждения выполнено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "19c29fc91e3426bf",
+    "ru": "Отказ подан своевременно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q1].text"
+    ]
+  },
+  {
+    "id": "59143f2dfed91e4f",
+    "ru": "По условиям таких событий не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0697d33d217fc9ed",
+    "ru": "Нужно учитывать условие применимости возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "5c136b48575dd7a7",
+    "ru": "Есть ли события с признаками страхового случая?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q2].text"
+    ]
+  },
+  {
+    "id": "43daf23336691063",
+    "ru": "Подтверждено {{bank}}. В публичную приёмную письмо поступило позже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "5dce1e37207b5e01",
+    "ru": "Срок возврата связан с получением заявления кредитором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8b70257544cbe27f",
+    "ru": "Когда банк получил заявление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].questions[q3].text",
+      "cases:CASE_TEMPLATES[insurance-collective-payoff].questions[q3].text"
+    ]
+  },
+  {
+    "id": "6be9678f0ca9d519",
+    "ru": "Разъясняет маршрут заявления и специальный срок возврата при заданных условиях. Не распоряжается деньгами кредитора и не обещает неизменность ставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].role.text"
+    ]
+  },
+  {
+    "id": "38cc33f7df4e4304",
+    "ru": "Специалист публичной приёмной по защите прав потребителей финансовых услуг",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].role.title"
+    ]
+  },
+  {
+    "id": "cd92605817ee0f70",
+    "ru": "Проверить полученное кредитором заявление и специальный срок возврата, отдельно разъяснив необходимость проверки условий ставки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].routes[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective].coach.plan",
+      "cases:CASE_TEMPLATES[insurance-collective].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "13b2efdadfede48c",
+    "ru": "Отправлять гражданку между банком и страховщиком без анализа договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].routes[1].text",
+      "cases:CASE_TEMPLATES[insurance-collective].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "91aa6c4748739297",
+    "ru": "Гарантировать сохранение ставки без чтения условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].routes[2].text",
+      "cases:CASE_TEMPLATES[insurance-collective].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "a3a2471cd63d70d1",
+    "ru": "Страхователь – банк",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[insurance-collective].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[insurance-collective].title"
+    ]
+  },
+  {
+    "id": "ed74a5e49bd681a7",
+    "ru": "Кредит и страхование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].topic",
+      "cases:CASE_TEMPLATES[insurance-collective].tag",
+      "evidence-catalog:EVIDENCE_RECORDS[e6-insurance-collective].scope"
+    ]
+  },
+  {
+    "id": "a2a252162752cf39",
+    "ru": "Отделить срок рассмотрения обращения от специального семидневного рабочего срока возврата при условиях дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].trap.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-collective].trap.explain"
+    ]
+  },
+  {
+    "id": "6bb761351f4aecfb",
+    "ru": "Подменить специальный возврат общим ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "a14dd6f5e0d76d47",
+    "ru": "Помощник: «Банк может ответить за 15 дней, значит и деньги можно вернуть за 15».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-collective].trap.text"
+    ]
+  },
+  {
+    "id": "256b2b1b6226542d",
+    "ru": "Подтвердить полное досрочное исполнение и связь полиса с кредитом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[a0].title"
+    ]
+  },
+  {
+    "id": "ae18bdb9732b19b2",
+    "ru": "Разграничить период первоначального отказа и другое основание возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d57f82d9b929be09",
+    "ru": "Подготовить обоснование пропорционального возврата и даты его исполнения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[a2].title"
+    ]
+  },
+  {
+    "id": "300a8ef7d5263acf",
+    "ru": "Не обещать всю премию или конкретную сумму без расчёта периода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3176e5fffe190ca9",
+    "ru": "Сопоставить расчёт страховщика с фактическим периодом страхования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b3cb0577481f01c8",
+    "ru": "Отказать по одному признаку истечения тридцати дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[b0].title"
+    ]
+  },
+  {
+    "id": "7d29525ad42d84b2",
+    "ru": "Обязать вернуть всю премию независимо от использованного периода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].actions[b1].title",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "39fcfb9dd9e7ac73",
+    "ru": "Все люди, документы и события этого дела вымышлены. Индивидуальный добровольный договор заключён для обеспечения потребительского кредита. Илья – заёмщик и страхователь. Полное досрочное исполнение подтверждено, страхование должно было действовать дольше. Событий с признаками страхового случая нет. Подаётся заявление после полного досрочного исполнения, не отказ в первые 30 дней. Точная денежная сумма без полного расчёта периода не оценивается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].brief"
+    ]
+  },
+  {
+    "id": "3914279e154db513",
+    "ru": "Часть 12 статьи 11 закона №353-ФЗ. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].calendar.context"
+    ]
+  },
+  {
+    "id": "d42c9576edeb3671",
+    "ru": "Часть 12 статьи 11 закона №353-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].calendar.source"
+    ]
+  },
+  {
+    "id": "6385a6dd75bdcb4d",
+    "ru": "Истечение первых тридцати дней не отвечает на вопрос о возврате после полного досрочного исполнения. Отличаются основание и объём возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].coach.plan",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].contrast.difference"
+    ]
+  },
+  {
+    "id": "897dd526c0a6b35e",
+    "ru": "В ответе упомянуто только истечение тридцати дней от заключения договора. Полное досрочное исполнение и часть 12 статьи 11 не рассмотрены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d0].text"
+    ]
+  },
+  {
+    "id": "89eaff9cb05506f5",
+    "ru": "Отказ по шаблону",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d0].title"
+    ]
+  },
+  {
+    "id": "82cabca406cb1c9b",
+    "ru": "Обязательства по кредиту полностью исполнены досрочно {{observed}}. Это не частичное уменьшение долга. Договор страхования ИС-27 обеспечивал данный кредит и должен был действовать дальше.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d1].text"
+    ]
+  },
+  {
+    "id": "dd80cc6c33532891",
+    "ru": "Справка по кредиту К-27",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d1].title"
+    ]
+  },
+  {
+    "id": "cf57cabf9a103d2a",
+    "ru": "Заёмщик указан страхователем. Страховщик получил заявление о возврате {{recipientReceived}}. Премия относится к данному полису; страховых событий с предусмотренными признаками не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d2].text"
+    ]
+  },
+  {
+    "id": "5f46ad4718560669",
+    "ru": "Полис и заявление страховщику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].documents[d2].title"
+    ]
+  },
+  {
+    "id": "05c1c14a39837349",
+    "ru": "Основание требования – полное досрочное исполнение кредита, а не первоначальный период отказа. Истечение первых тридцати дней не отвечает на вопрос о возврате после полного досрочного исполнения. Отличаются основание и объём возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.explain"
+    ]
+  },
+  {
+    "id": "6a477e3ed3177e63",
+    "ru": "Основание требования – полное досрочное исполнение кредита, а не первоначальный период отказа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "04ffc64dd0a87b59",
+    "ru": "Истечение тридцати дней исключает любое основание возврата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "1e84bf89d19bf749",
+    "ru": "Полное погашение всегда обязывает вернуть всю премию без учёта действовавшего периода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-insurance-individual-payoff.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "655fcd1d11644db2",
+    "ru": "В расчёте страховщик использовал весь первоначальный срок полиса как уже прошедший, хотя он ещё не закончился.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].followup.intro"
+    ]
+  },
+  {
+    "id": "866b11700af080e4",
+    "ru": "Проверить фактически действовавший период и основания расчёта; полный плановый срок нельзя считать использованным автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].followup.options[0].text",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].followup.explain"
+    ]
+  },
+  {
+    "id": "620bef120bd4515d",
+    "ru": "Принять любой расчёт страховщика без сопоставления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "3beea95530f87272",
+    "ru": "Самостоятельно присудить моральный вред и штраф от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2aa5ada465d1e8d4",
+    "ru": "Вернуть всю премию как при любом отказе в первые тридцать дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f3a87b640ebc5bdc",
+    "ru": "Считать достаточным отказ по истечению первоначальных тридцати дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6d505c5c883bbaf9",
+    "ru": "Найдите нормативное основание следующего действия: Применить часть 12 статьи 11: возврат страховщиком с вычетом пропорциональной действовавшему периоду части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "c0009840a7724133",
+    "ru": "Кредит полностью погасил досрочно через несколько месяцев. В полисе страхователь – я. Мне сказали: тридцать дней закончились, поэтому вернуть ничего нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].opening"
+    ]
+  },
+  {
+    "id": "ba37dec1e6efb96b",
+    "ru": "Рассмотрение требования, связанного с полным досрочным исполнением и индивидуальным страхованием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].procedures[0].text"
+    ]
+  },
+  {
+    "id": "9b7764ff4c0219b1",
+    "ru": "Полностью, это подтверждено по К-27.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q0].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "d4d3b16f0de0d276",
+    "ru": "Кредит погашен полностью или частично?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q0].text"
+    ]
+  },
+  {
+    "id": "50985fa989237935",
+    "ru": "Я сам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q1].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "8517268e13ab0312",
+    "ru": "Кто страхователь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q1].text"
+    ]
+  },
+  {
+    "id": "fed5a6ffb1d62d56",
+    "ru": "Несколько месяцев; оставшийся период ещё есть.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q2].answer",
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "79aee2e6ccdf19f2",
+    "ru": "Какая часть страхового периода прошла?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q2].text"
+    ]
+  },
+  {
+    "id": "f432078f9d418179",
+    "ru": "Когда заявление поступило страховщику?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].questions[q3].text"
+    ]
+  },
+  {
+    "id": "17bbfd0aa3c2ca6b",
+    "ru": "Специалист приёмной по обращениям о финансовых услугах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].role.title"
+    ]
+  },
+  {
+    "id": "b611d01112938499",
+    "ru": "Страховщик по индивидуальному обеспечивающему кредит договору ИС-27.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[insurance-individual-payoff].routes[0].text"
+    ]
+  }
+]

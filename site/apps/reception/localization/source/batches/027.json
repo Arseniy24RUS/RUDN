@@ -1,0 +1,1190 @@
+[
+  {
+    "id": "319c1d7f60ed78db",
+    "ru": "№ 59-ФЗ, статья 8. Это срок направления, а не решения проблемы. В учебном профиле исходный день не включается, нерабочее окончание переносится на следующий рабочий. Продление по условию не применяется. Определите событие и крайний день именно названного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].calendar.context",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].calendar.context",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].calendar.context"
+    ]
+  },
+  {
+    "id": "0ae5278240c20887",
+    "ru": "№ 59-ФЗ, статья 8. Это срок направления, а не решения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].calendar.source",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].calendar.source",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].calendar.source"
+    ]
+  },
+  {
+    "id": "6b69148dbb653803",
+    "ru": "Принадлежность объекта задана материалами, а не определяется только словом «свалка». Проверяется согласование уровня и территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].coach.plan",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].contrast.difference"
+    ]
+  },
+  {
+    "id": "db7ba0ef00c3d911",
+    "ru": "Конверт заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d0].title"
+    ]
+  },
+  {
+    "id": "86966ab8bc6ab21f",
+    "ru": "Сведения об объекте Э-30",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d1].title"
+    ]
+  },
+  {
+    "id": "45ad3360523e0a15",
+    "ru": "Территориальная схема",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d2].title"
+    ]
+  },
+  {
+    "id": "4800e624429edf07",
+    "ru": "Адрес заявителя не заменяет установленное местоположение и уровень надзора объекта. Принадлежность объекта задана материалами, а не определяется только словом «свалка». Проверяется согласование уровня и территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.explain"
+    ]
+  },
+  {
+    "id": "eb588cf811e5cb1b",
+    "ru": "Адрес заявителя не заменяет установленное местоположение и уровень надзора объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7e7672b64c52ad5b",
+    "ru": "Все обращения москвича рассматривает только московский орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "551234984dacbe30",
+    "ru": "Любая свалка автоматически относится к муниципальному, а не федеральному надзору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-landfill-registry-scope.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "aa84da16476c7bec",
+    "ru": "Исправить ошибку направления и проверить доставку надлежащему органу. Принадлежность объекта задана материалами, а не определяется только словом «свалка». Проверяется согласование уровня и территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].followup.explain"
+    ]
+  },
+  {
+    "id": "91eba1e412502bbd",
+    "ru": "Квитанция показывает, что письмо доставлено в приёмную другого региона, хотя в проекте стоял правильный адресат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].followup.intro"
+    ]
+  },
+  {
+    "id": "b274e9dd4c46a1f9",
+    "ru": "Исправить ошибку направления и проверить доставку надлежащему органу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "8ecc65db82fd2737",
+    "ru": "Закрыть дело, потому что письмо было отправлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "21b6cf6bc93c0893",
+    "ru": "Заменить адрес объекта адресом заявителя в ответе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "4173b864e4e6cc69",
+    "ru": "Рассылать материал всем природоохранным органам без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "ec56994f2721945c",
+    "ru": "Найдите нормативное основание следующего действия: Направить обращение надлежащему органу по подтверждённым предмету и территории, уведомив заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "1372bd3f38baab93",
+    "ru": "Живу в Москве, но обращаюсь о площадке в другом регионе. Мне предложили московский районный отдел. В приложении есть сведения об объекте надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].opening",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q2].answer",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1e0fe5caade7db21",
+    "ru": "Объект Э-30 находится вне Москвы в обозначенном регионе. Учебная выписка подтверждает федеральный уровень экологического надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q0].answer",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q0].fact",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2438ff11e16c394e",
+    "ru": "Э-30 относится к указанному территориальному органу федерального надзора по месту объекта. Московская приёмная не обладает этой предметной территориальной компетенцией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q1].answer",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q1].fact",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d2].text"
+    ]
+  },
+  {
+    "id": "5782a7e70060c0df",
+    "ru": "Адрес для ответа находится в Москве. Он не является адресом объекта и не определяет вид его надзора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q3].answer",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].questions[q3].fact",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].documents[d0].text"
+    ]
+  },
+  {
+    "id": "7d99b000451dea60",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Рассматривается неаварийный вопрос по конкретному объекту. Место и режим надзора подтверждены полной учебной выпиской: объект отнесён к федеральному экологическому надзору, точная территориальная компетенция установлена. Текущего горения нет. Реальные контактные данные студент проверяет по справке; вымышленные нарушения реальным организациям не приписываются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].role.text"
+    ]
+  },
+  {
+    "id": "ad983b38db2304fd",
+    "ru": "Направить обращение надлежащему органу по подтверждённым предмету и территории, уведомив заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].contrast.decision"
+    ]
+  },
+  {
+    "id": "3e9d68b265526970",
+    "ru": "Регистрация объекта важнее адреса отправителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[landfill-registry-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[landfill-registry-scope].title"
+    ]
+  },
+  {
+    "id": "8d4b6a3405e2c8cf",
+    "ru": "Направить обращение надлежащему органу по подтверждённым предмету и территории, уведомив заявителя. Принадлежность объекта задана материалами, а не определяется только словом «свалка». Проверяется согласование уровня и территории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].trap.explain"
+    ]
+  },
+  {
+    "id": "9710ccab474da4dd",
+    "ru": "Выбирать адресата исключительно по обратному почтовому адресу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-registry-scope].trap.text",
+      "cases:CASE_TEMPLATES[landfill-registry-scope].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "c925b5f011e0622c",
+    "ru": "Установить координаты и отдельный признак текущего риска",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0e12aa418d763a91",
+    "ru": "Передать оперативное сообщение по месту объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5997f95f76514a55",
+    "ru": "Направить неаварийный вопрос по установленной региональной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[a2].title"
+    ]
+  },
+  {
+    "id": "46b37f597ee13d69",
+    "ru": "Уведомить заявителя без разглашения избыточных личных сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[a3].title"
+    ]
+  },
+  {
+    "id": "abd2fdc5d7e6d090",
+    "ru": "Проверить подтверждение получения правильным территориальным адресатом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[a4].title"
+    ]
+  },
+  {
+    "id": "a86db622bb3561c2",
+    "ru": "Оставить текущий риск без передачи до общего срока ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[b0].title",
+      "cases:CASE_TEMPLATES[landfill-territory].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "6f8d5c51a6a19e77",
+    "ru": "Определить территорию объекта по месту жительства автора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].actions[b1].title"
+    ]
+  },
+  {
+    "id": "97754427bd70212c",
+    "ru": "Крайний день переадресации неаварийного вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].calendar.title"
+    ]
+  },
+  {
+    "id": "2b5a89014dbdb349",
+    "ru": "Координаты объекта – Тверская область. Вымышленная учебная карточка устанавливает региональную компетенцию по неаварийной части. Адрес автора – Москва. Владение участком и причинитель не установлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3946bfc97f82264b",
+    "ru": "Карта и карточка компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].documents[d0].title"
+    ]
+  },
+  {
+    "id": "fcb68e8b53869593",
+    "ru": "Фото {{observed}} и описание текущего дыма. Это основание для оперативного сообщения, а не готовое заключение о составе отходов или виновнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].documents[d1].text"
+    ]
+  },
+  {
+    "id": "10bd244e26fc46ff",
+    "ru": "Описание дыма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].documents[d1].title"
+    ]
+  },
+  {
+    "id": "007e6d938756de68",
+    "ru": "Маршрут определяется местом объекта и установленным видом контроля, а не московским адресом автора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-territory].factTask.explain",
+      "cases:CASE_TEMPLATES[landfill-territory].outcomes.good"
+    ]
+  },
+  {
+    "id": "87d09b0038b87507",
+    "ru": "Любую жалобу москвича рассматривает только Москва.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "3a5f846ffbc9be4f",
+    "ru": "Ближайшая организация автоматически является виновником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "ca66fcb7b75272bd",
+    "ru": "Подтверждение отправки показывает экологический орган другого субъекта, хотя проект был подготовлен верно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].followup.intro"
+    ]
+  },
+  {
+    "id": "7b34b33939406c6e",
+    "ru": "Исправить исполнение маршрута и уведомление; правильный проект не доказывает правильную отправку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].followup.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-territory].followup.explain"
+    ]
+  },
+  {
+    "id": "bf9ca82492674a18",
+    "ru": "Закрыть по правильному проекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "f4282fca2738ab1d",
+    "ru": "Попросить автора переехать ближе к органу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b9fd006d5e098b28",
+    "ru": "Статья 65 закона № 7-ФЗ разграничивает федеральный и региональный экологический контроль. Для данного объекта региональная компетенция установлена условием: важен субъект расположения объекта, а не домашний адрес автора. Оперативный риск от дыма нельзя откладывать до истечения срока обычной переадресации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].knowledge.explain"
+    ]
+  },
+  {
+    "id": "b48119b44b797ced",
+    "ru": "Найдите разграничение федерального и регионального экологического контроля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "3dc60cc5805e2cca",
+    "ru": "Живу в Москве, но на даче в Тверской области увидел дым от мусорной площадки. Написал в московский орган. В ответе предложили искать участок по моему домашнему адресу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].opening"
+    ]
+  },
+  {
+    "id": "505a0069b116dab8",
+    "ru": "Оперативное сообщение и переадресация вопроса по территории и виду контроля",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].procedures[0].text"
+    ]
+  },
+  {
+    "id": "4bd1034697403fc2",
+    "ru": "Проверка московского домашнего адреса вместо объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5310ad02535d55ac",
+    "ru": "Назначение штрафа приёмной другого субъекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].procedures[2].text"
+    ]
+  },
+  {
+    "id": "5021d6d7faeb03c8",
+    "ru": "Координаты и карта помещают его в Тверскую область.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "1931374ae9104ab5",
+    "ru": "Адрес проживания автора не определяет территорию объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q0].fact",
+      "cases:CASE_TEMPLATES[landfill-territory].coach.talk"
+    ]
+  },
+  {
+    "id": "a9cb1334279e1211",
+    "ru": "Где расположен объект?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q0].text"
+    ]
+  },
+  {
+    "id": "460dedf1748dc794",
+    "ru": "На момент сообщения виден дым; причина и характер источника ещё не проверены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "b6ec1e943d9cc2df",
+    "ru": "Текущий риск нельзя оставлять до окончания переписки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f038537b1dbc6733",
+    "ru": "Горение продолжается?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q1].text"
+    ]
+  },
+  {
+    "id": "e127717f912e735d",
+    "ru": "По предмету неаварийного вопроса карточка компетенции указывает региональный экологический контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "0ad63a397cd0a2a0",
+    "ru": "Не нужно по догадке подменять его федеральным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "baf266146feebb18",
+    "ru": "Какой контроль установлен в карточке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q2].text"
+    ]
+  },
+  {
+    "id": "d043be1490f01389",
+    "ru": "Есть название рядом расположенной организации, но связь с площадкой не доказана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2eea83f2a42c435f",
+    "ru": "Близость не доказывает ответственность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "51ca606cac508143",
+    "ru": "Известен виновник?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].questions[q3].text"
+    ]
+  },
+  {
+    "id": "86a9720a3060e5d8",
+    "ru": "Не контролирует объекты другого субъекта. По условиям предварительно установлена компетенция регионального экологического органа Тверской области по неаварийной части; оперативное сообщение о дыме передаётся отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].role.text"
+    ]
+  },
+  {
+    "id": "4d5ba25376a50516",
+    "ru": "Сотрудник приёмной экологического органа Москвы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].role.title"
+    ]
+  },
+  {
+    "id": "ac18994b2dab0d9f",
+    "ru": "Передать сведения о текущем риске оперативно, а неаварийный вопрос – установленному региональному адресату Тверской области с уведомлением заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].routes[0].text",
+      "cases:CASE_TEMPLATES[landfill-territory].coach.plan",
+      "cases:CASE_TEMPLATES[landfill-territory].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "d754b9fbf5d5bae7",
+    "ru": "Искать свалку у московской квартиры автора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].routes[1].text",
+      "cases:CASE_TEMPLATES[landfill-territory].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "18dd0e07ed5311cd",
+    "ru": "Назначить федеральную проверку без установленного основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].routes[2].text",
+      "cases:CASE_TEMPLATES[landfill-territory].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "feea85f6bd570ee0",
+    "ru": "Заявитель в Москве, свалка – нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[landfill-territory].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[landfill-territory].title"
+    ]
+  },
+  {
+    "id": "540626be9b4d8682",
+    "ru": "Территория и экология",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].topic",
+      "cases:CASE_TEMPLATES[landfill-territory].tag",
+      "cases:CASE_TEMPLATES[landfill-current-burning].topic"
+    ]
+  },
+  {
+    "id": "b110390c28a9a410",
+    "ru": "Проверить территорию и предмет компетенции, затем канал получения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].trap.options[0].text",
+      "cases:CASE_TEMPLATES[landfill-territory].trap.explain"
+    ]
+  },
+  {
+    "id": "398422df011efd35",
+    "ru": "Выбрать любой экологический сайт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "38a9780151d1cd10",
+    "ru": "Помощник: «На одном сайте есть слово “экология” – этого хватит».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[landfill-territory].trap.text"
+    ]
+  },
+  {
+    "id": "816373ddd07f973a",
+    "ru": "Сопоставить даты выдачи и изменения фамилии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[a0].title"
+    ]
+  },
+  {
+    "id": "4db630e185e79f31",
+    "ru": "Проверить совпадение сведений на момент первоначального результата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[a1].title"
+    ]
+  },
+  {
+    "id": "98fc1cf5427a8df2",
+    "ru": "Подготовить мотивированный вывод по зарегистрированной жалобе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[a2].title",
+      "cases:CASE_TEMPLATES[mfc-service-not-overdue].actions[a2].title"
+    ]
+  },
+  {
+    "id": "4aca76a2609f919b",
+    "ru": "Разъяснить доступный порядок обновления и обжалования без произвольных платежей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[a3].title"
+    ]
+  },
+  {
+    "id": "19144c036b9b571f",
+    "ru": "Проверить, что заявителю объяснили различие процедур и не потребовали ненужных документов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[a4].title"
+    ]
+  },
+  {
+    "id": "a71bc1324de37467",
+    "ru": "Изменить исходную запись задним числом, скрыв изменение обстоятельств",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "18d462a35e36ae9d",
+    "ru": "Отказать в регистрации жалобы только из-за несогласия с её доводами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].actions[b1].title"
+    ]
+  },
+  {
+    "id": "7b79da99523a1ca0",
+    "ru": "В исходной истории ошибка присутствовала в момент выдачи. Здесь сведения стали другими позже, поэтому итог по существу меняется, но предметный срок жалобы сохраняется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].contrast.difference"
+    ]
+  },
+  {
+    "id": "f075fa29f9da67f3",
+    "ru": "Учебное дело: при выдаче результата фамилия совпадала с документами заявителя. Смена фамилии произошла позднее. Условия предусматривают отдельный порядок обновления сведений; ошибка выдавшего органа в исходной записи не подтверждается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].documents[d0].text"
+    ]
+  },
+  {
+    "id": "6bea43786fa8bc67",
+    "ru": "Хронология сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6a65cdc1e1d3c9d2",
+    "ru": "Жалоба зарегистрирована как обжалование отказа в исправлении предполагаемой ошибки. Должна быть рассмотрена по соответствующему предмету, даже если по существу обнаружено изменение обстоятельств, а не опечатка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].documents[d1].text"
+    ]
+  },
+  {
+    "id": "61e50efa2a8bf474",
+    "ru": "Обжалуемый отказ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].documents[d1].title"
+    ]
+  },
+  {
+    "id": "da9d136d5cc2ad0f",
+    "ru": "Новое состояние данных не доказывает прежнюю опечатку; жалобу нужно рассмотреть и объяснить надлежащий порядок обновления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].outcomes.good",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].coach.docs"
+    ]
+  },
+  {
+    "id": "b18205555c09f7d4",
+    "ru": "Сведения изменились после выдачи; новое состояние данных не доказывает прежнюю опечатку. Жалобу нужно рассмотреть и объяснить надлежащий порядок обновления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].factTask.options[0].text"
+    ]
+  },
+  {
+    "id": "09f5872aa01c800c",
+    "ru": "Любое несовпадение сегодня доказывает ошибку при первоначальной выдаче.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "34f459e80fcf89e4",
+    "ru": "Если требование не подтвердилось, жалобу можно не регистрировать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "84b28bf65cd8e3db",
+    "ru": "Учебное продолжение. При обращении за обновлением оператор обнаружил, что в исходном результате была ещё и неправильная дата рождения; она не менялась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].followup.intro"
+    ]
+  },
+  {
+    "id": "7ba31864d32e453c",
+    "ru": "Отделить подтверждённую первоначальную ошибку в дате рождения от последующей смены фамилии и применить соответствующие порядки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].followup.explain"
+    ]
+  },
+  {
+    "id": "27bb894f690e4982",
+    "ru": "Любое новое несоответствие считать последствием смены фамилии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "61837af3e31e534b",
+    "ru": "Отказаться читать исходные документы после первого отрицательного вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "91668309b8b0e4ee",
+    "ru": "Рассмотреть жалобу в пятидневном рабочем сроке и разъяснить обновление данных, не признавая несуществующую исходную ошибку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].coach.research"
+    ]
+  },
+  {
+    "id": "0407698a47d0c37d",
+    "ru": "После получения документа я сменил фамилию. Прошу исправить старую как опечатку, но орган отказал. Считаю, что мне должны просто заменить одну строку бесплатно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].opening"
+    ]
+  },
+  {
+    "id": "56b14bf94ec89f75",
+    "ru": "Та же, что указана в результате. Все записи на тот момент совпадали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "3fda2e018e1ebb53",
+    "ru": "Исходная опечатка не установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "ae7493d38111a38a",
+    "ru": "Какая фамилия была в документах при выдаче?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q0].text"
+    ]
+  },
+  {
+    "id": "0a81486d45ebbf1c",
+    "ru": "После выдачи результата, в свидетельстве более поздняя дата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "576c4d26d1ad4c60",
+    "ru": "Возникло новое обстоятельство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "03e52a15b68b4ba8",
+    "ru": "Когда произошла смена фамилии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q1].text"
+    ]
+  },
+  {
+    "id": "fcf9990500f75db9",
+    "ru": "Обжалую отказ исправить документ как ошибочный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "7cea5affeacc81c6",
+    "ru": "Предмет жалобы определяет срок даже при необоснованности требования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1b3917baadd020b8",
+    "ru": "Как сформулирована ваша жалоба?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q2].text"
+    ]
+  },
+  {
+    "id": "841195568dda387a",
+    "ru": "В учебных условиях отдельный порядок внесения изменений; платежи проверяются по нему, а не назначаются на месте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "c7c447363a27cf00",
+    "ru": "Не выдумываем стоимость и новую процедуру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "8103ce8188dd6417",
+    "ru": "Что предусмотрено для обновления сведений?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].questions[q3].text"
+    ]
+  },
+  {
+    "id": "0308374a28a0b4af",
+    "ru": "Подготовить мотивированное решение по жалобе и разъяснить отдельный порядок изменения данных, не обещая исправление несуществующей опечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].coach.plan"
+    ]
+  },
+  {
+    "id": "5390d26ea9aae840",
+    "ru": "Задним числом объявить исходный документ ошибочным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a18a9019bb73b4b4",
+    "ru": "Не рассматривать жалобу из-за неподтверждённой опечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-change-not-typo.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "4aac37fe2435c63c",
+    "ru": "Данные изменились уже после выдачи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-change-not-typo].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-change-not-typo].title"
+    ]
+  },
+  {
+    "id": "71ee8d87608b71f3",
+    "ru": "Срок определяется предметом обжалования, а итоговая обоснованность требования устанавливается в ходе рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].trap.explain"
+    ]
+  },
+  {
+    "id": "752b29b45eddf182",
+    "ru": "Менять срок после того, как доводы заявителя не подтвердились.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "b43fccde1ab7584c",
+    "ru": "Помощник: «Если опечатки нет, жалоба на отказ исправить её перестаёт быть пятидневной».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-change-not-typo].trap.text"
+    ]
+  },
+  {
+    "id": "34475d2727c31dc4",
+    "ru": "Сопоставить признанную ошибку и установленный срок исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[a0].title"
+    ]
+  },
+  {
+    "id": "dc31ec9758dbf176",
+    "ru": "Проверить исполнителя и отсутствие надлежащего изменения срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a4cacc49ac790704",
+    "ru": "Подготовить рассмотрение жалобы именно на просрочку исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ee9e132014cbefbb",
+    "ru": "Разъяснить заявителю дальнейшие действия и не заставлять повторять принятое заявление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[a3].title"
+    ]
+  },
+  {
+    "id": "18255e95d99d23da",
+    "ru": "Проверить выдачу надлежащего исправленного результата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[a4].title"
+    ]
+  },
+  {
+    "id": "5aa1f54d04040460",
+    "ru": "Оставить жалобу без рассмотрения до получения письменного отказа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[b0].title",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "ac7e9cec18c4b4e1",
+    "ru": "Зарегистрировать старое заявление заново, скрыв просрочку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].actions[b1].title"
+    ]
+  },
+  {
+    "id": "be9ae9832232d0db",
+    "ru": "Крайний день рассмотрения жалобы на срок исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].calendar.title"
+    ]
+  },
+  {
+    "id": "d50142e49fca727b",
+    "ru": "Опечатка не оспаривается и отказа нет; действие меняется из-за просроченного исполнения уже признанного исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].contrast.difference"
+    ]
+  },
+  {
+    "id": "398021eeabf7d86f",
+    "ru": "В вымышленной услуге ошибка признана, заявление передано выдавшему органу. Установленный именно для этой услуги срок исправления истёк, надлежащее основание его изменения отсутствует. Повторные обещания результата не содержат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f6912133bb2405a4",
+    "ru": "Контроль исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3d9b9a81b216f0a1",
+    "ru": "Обжалуется нарушение установленного срока исправления опечатки. Это не общий спор о сроке первоначального предоставления услуги. Жалоба подлежит рассмотрению уполномоченным адресатом выдавшего органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].documents[d1].text"
+    ]
+  },
+  {
+    "id": "4c47876ad138d6a0",
+    "ru": "Для жалобы на нарушение срока исправления не нужен дополнительный письменный отказ; задержка исправления сама является предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].factTask.explain",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].outcomes.good"
+    ]
+  },
+  {
+    "id": "467df6556e0210a8",
+    "ru": "Пятидневный срок применяется только при наличии слова «отказ» на бумаге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "dbd8de0199a0794a",
+    "ru": "Каждое обещание исправить начинает новый срок первоначальной услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "59793c24cfcaf617",
+    "ru": "Учебное продолжение. Выдавший орган сообщил «исправлено», но готовый файл не подписан и не может использоваться как результат услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].followup.intro"
+    ]
+  },
+  {
+    "id": "f590e33d7d51f321",
+    "ru": "Проверить надлежащее оформление и доступность результата; технический черновик не подтверждает исполнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].followup.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].followup.explain"
+    ]
+  },
+  {
+    "id": "2f8efdecb77e59af",
+    "ru": "Завершить контроль по одному сообщению «исправлено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "cadb37bf7e91c8d6",
+    "ru": "Попросить заявителя самостоятельно подписать файл органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "2e06fc31324ed261",
+    "ru": "Рассмотреть жалобу на просрочку исправления в предусмотренном пятидневном рабочем сроке и отдельно проверить выдачу результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].knowledge.explain",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].coach.research"
+    ]
+  },
+  {
+    "id": "5ba18de1fc4e9b59",
+    "ru": "Заявление на исправление приняли и согласились с опечаткой. Уже прошёл срок, указанный в регламенте. Мне говорят: «Отказа же нет, жаловаться не на что».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].opening"
+    ]
+  },
+  {
+    "id": "58efa7cdfe0175ff",
+    "ru": "Да, это указано в служебном сообщении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "7e91d4058c096aef",
+    "ru": "Нет спора об исходной ошибке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "5cd827fac88e2f25",
+    "ru": "Опечатка признана?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q0].text"
+    ]
+  },
+  {
+    "id": "cc6682c0f10a6c19",
+    "ru": "Да; в материалах есть выписка из учебного регламента и расчёт, подтверждающий его истечение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "39cf335548ce990a",
+    "ru": "Есть предмет нарушения срока исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "fc29fcc313e443d2",
+    "ru": "Установлен ли срок исправления?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q1].text"
+    ]
+  },
+  {
+    "id": "5885bee2558133be",
+    "ru": "Нет; допустимое основание изменения срока в деле не установлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "9860bf3c3afbe2d4",
+    "ru": "Обещание не заменяет правовое основание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "269f7d0686e4d4d9",
+    "ru": "Было ли мотивированное продление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q2].text"
+    ]
+  },
+  {
+    "id": "fc6dd204c645799f",
+    "ru": "Орган, выдавший результат. МФЦ передал материалы своевременно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "73a02aa6286285b1",
+    "ru": "Надлежащий субъект определяется по обязанности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "92b2b2ed8cf76439",
+    "ru": "Кто должен исправить результат?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].questions[q3].text"
+    ]
+  },
+  {
+    "id": "db53d66156949f22",
+    "ru": "Подготовить рассмотрение жалобы уполномоченным адресатом органа на просрочку исправления и контроль фактического результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].routes[0].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].coach.plan"
+    ]
+  },
+  {
+    "id": "83e059c4fc78e1d7",
+    "ru": "Ждать письменного отказа, не рассматривая жалобу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].routes[1].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "93ce964836c8f55e",
+    "ru": "Считать любое обещание законным продлением срока исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].routes[2].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-correction-overdue.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2e4bd4468dad9306",
+    "ru": "Исправление обещали, срок прошёл",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[mfc-correction-overdue].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[mfc-correction-overdue].title"
+    ]
+  },
+  {
+    "id": "fff7c1dddd497226",
+    "ru": "Обещание без предусмотренного основания не заменяет установленный срок и подтверждённый результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].trap.options[0].text",
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].trap.explain"
+    ]
+  },
+  {
+    "id": "b20eae3d5042e683",
+    "ru": "Обещания достаточно для бесконечного ожидания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "0f392c90d1eb562a",
+    "ru": "Помощник: «Пока сотрудник обещает исправление, нарушение срока не возникает».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-correction-overdue].trap.text"
+    ]
+  },
+  {
+    "id": "c467949a56a60ae2",
+    "ru": "Жалоба на нарушение работником МФЦ порядка передачи принятых документов зарегистрирована. Это не жалоба на отказ в приёме и не на исправление ошибки. В упражнении действует общий порядок главы 2.1 закона № 210-ФЗ, без особого федерального порядка и сокращённого срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].brief"
+    ]
+  },
+  {
+    "id": "f2e2f601cb2edc8f",
+    "ru": "Для данного предмета жалобы применяется срок 15 рабочих дней со дня регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].coach.research",
+      "cases:CASE_TEMPLATES[mfc-delay].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[mfc-delay].knowledge.explain"
+    ]
+  },
+  {
+    "id": "64c8096e374f9d09",
+    "ru": "Задержана передача уже принятых документов. Не следует путать её с хранением готового результата или с датой предварительной записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].contrast.difference"
+    ]
+  },
+  {
+    "id": "ed7fd53a35054919",
+    "ru": "Прошу проверить задержку передачи пакета работником МФЦ. Не прошу исправить опечатку и не обжалую отказ в приёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].documents[list].text"
+    ]
+  },
+  {
+    "id": "337c04632c6753c3",
+    "ru": "Содержание жалобы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].documents[list].title",
+      "cases:CASE_TEMPLATES[mfc-identity-required].documents[d1].title"
+    ]
+  },
+  {
+    "id": "f0076b4cd96c5705",
+    "ru": "Пакет принят. По учебным материалам срок служебной передачи истёк, подтверждение передачи отсутствует. Отказ в приёме документов не заявлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[mfc-delay].documents[refusal].text"
+    ]
+  }
+]

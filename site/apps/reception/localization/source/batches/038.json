@@ -1,0 +1,1164 @@
+[
+  {
+    "id": "01bf2c22607d22d7",
+    "ru": "Проверить юридическое значение протокола",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[a0].title"
+    ]
+  },
+  {
+    "id": "e4e778f5caf21592",
+    "ru": "Установить текущий статус предложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[a1].title"
+    ]
+  },
+  {
+    "id": "3c69632ea63df954",
+    "ru": "Направить на компетентную оценку места и реализации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[a2].title"
+    ]
+  },
+  {
+    "id": "00de7ce5d48d5749",
+    "ru": "Не выдавать пожелание за утверждённое финансирование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[a3].title"
+    ]
+  },
+  {
+    "id": "40a017c2e63272e1",
+    "ru": "Проверить содержание следующего ответа и документов о решении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[a4].title"
+    ]
+  },
+  {
+    "id": "af3a448b89b79cf6",
+    "ru": "Заявить о выделенных средствах без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[b0].title"
+    ]
+  },
+  {
+    "id": "fce5e67bbdc6508b",
+    "ru": "Подменить согласование места обещанием результата",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].actions[b1].title",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "285d9f4e632e8d01",
+    "ru": "Все люди, документы и события этого дела вымышлены. Имеется протокол обсуждения жителей с поддержкой предложения. Он не является актом уполномоченного органа об ассигнованиях, контрактом или итогом специальной процедуры, автоматически порождающей обязательство. Гражданин подаёт обычное предложение; соответствие места и возможности реализации ещё требуют оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].brief"
+    ]
+  },
+  {
+    "id": "46b87c30905a16f0",
+    "ru": "Протокол выражает поддержку, но его эффект зависит от формы участия и компетенции. Нельзя обещать акт, которого нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].coach.plan",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].contrast.difference"
+    ]
+  },
+  {
+    "id": "3cf553a5cfbe8bf2",
+    "ru": "Черновик ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8e16db523d461c8b",
+    "ru": "Протокол встречи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d1].title"
+    ]
+  },
+  {
+    "id": "42760fd5de28bd9d",
+    "ru": "Статус проекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d2].title"
+    ]
+  },
+  {
+    "id": "652d74bd8b8acca7",
+    "ru": "Поддержка жителей подтверждена, но бюджетное и исполнительное решение не принято. Протокол выражает поддержку, но его эффект зависит от формы участия и компетенции. Нельзя обещать акт, которого нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.explain"
+    ]
+  },
+  {
+    "id": "8b3776dc7f1dddb5",
+    "ru": "Поддержка жителей подтверждена, но бюджетное и исполнительное решение не принято.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "6420d7fe6c18b16c",
+    "ru": "Любой протокол жителей автоматически выделяет бюджетные средства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "5e68ae98f0829a9c",
+    "ru": "Без заранее утверждённой сметы предложение нельзя даже рассматривать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-proposal-vote-not-budget.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "67fef65daaf18ec7",
+    "ru": "Различить согласование места и решение о финансировании; уточнить оставшиеся этапы. Протокол выражает поддержку, но его эффект зависит от формы участия и компетенции. Нельзя обещать акт, которого нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].followup.explain"
+    ]
+  },
+  {
+    "id": "2f22b7a12cb7ed69",
+    "ru": "Подразделение согласовало только возможность размещения в указанной точке. Это назвали окончательным утверждением расходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].followup.intro"
+    ]
+  },
+  {
+    "id": "5906d647ef9cf567",
+    "ru": "Различить согласование места и решение о финансировании; уточнить оставшиеся этапы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "e1c5b0b904a61684",
+    "ru": "Объявить финансирование состоявшимся по согласованию места.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "12174222d06efdd9",
+    "ru": "Отменить рассмотрение, потому что работа состоит из нескольких этапов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "08b97cf80a93a638",
+    "ru": "Отклонить полезность обсуждения вместо рассмотрения предложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "819369dbaafd869b",
+    "ru": "Найдите нормативное основание следующего действия: Передать инициативу на надлежащую оценку и сообщить реальный статус без обещания неподтверждённых расходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "fb6731c22cc91b4b",
+    "ru": "На встрече все поддержали навес у остановки. Значит, администрация уже обязана поставить его к следующей неделе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].opening",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q2].answer",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "3feec1b8a1e382d4",
+    "ru": "Участники поддержали идею навеса. В протоколе нет решения уполномоченного бюджетного органа, утверждённой сметы или заключённого договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q0].answer",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q0].fact",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f505bdd236ee9ff8",
+    "ru": "Предложение ещё не проходило оценку места, полномочий и финансирования. Компетентное подразделение может рассмотреть вариант реализации и сообщить результат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q1].answer",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q1].fact",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d2].text"
+    ]
+  },
+  {
+    "id": "e063db0b87669aa3",
+    "ru": "Приёмная собирается написать: «Средства выделены, установка через неделю». Документа об этом нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q3].answer",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].questions[q3].fact",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].documents[d0].text"
+    ]
+  },
+  {
+    "id": "984d9048312a7a1a",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Имеется протокол обсуждения жителей с поддержкой предложения. Он не является актом уполномоченного органа об ассигнованиях, контрактом или итогом специальной процедуры, автоматически порождающей обязательство. Гражданин подаёт обычное предложение; соответствие места и возможности реализации ещё требуют оценки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].role.text"
+    ]
+  },
+  {
+    "id": "ee9c1ebaefeb0b25",
+    "ru": "Передать инициативу на надлежащую оценку и сообщить реальный статус без обещания неподтверждённых расходов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].contrast.decision"
+    ]
+  },
+  {
+    "id": "de67bc16db898a39",
+    "ru": "Голосование прошло, решение о расходах — нет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[proposal-vote-not-budget].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[proposal-vote-not-budget].title"
+    ]
+  },
+  {
+    "id": "cfc03bc482efb501",
+    "ru": "Передать инициативу на надлежащую оценку и сообщить реальный статус без обещания неподтверждённых расходов. Протокол выражает поддержку, но его эффект зависит от формы участия и компетенции. Нельзя обещать акт, которого нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].trap.explain"
+    ]
+  },
+  {
+    "id": "1230dfd8f2b9cc08",
+    "ru": "Подтвердить недельный срок установки без принятого решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].trap.text",
+      "cases:CASE_TEMPLATES[proposal-vote-not-budget].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "5f5c37bdbd3fbcd9",
+    "ru": "Проверить первый лист, опись и наличие приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2b08bf5cb7d70509",
+    "ru": "Сопоставить читаемое содержание приложения с реквизитами заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[a1].title"
+    ]
+  },
+  {
+    "id": "41904ef3407216a9",
+    "ru": "Подготовить надлежащее рассмотрение определимого вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[a2].title"
+    ]
+  },
+  {
+    "id": "4fe0be715112652d",
+    "ru": "Уведомить заявителя о дальнейших действиях без неустановленного требования переписать обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[a3].title"
+    ]
+  },
+  {
+    "id": "627b84d373c352c2",
+    "ru": "Проверить, что исполнитель получил именно нужное приложение и ответил по его предмету",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[a4].title"
+    ]
+  },
+  {
+    "id": "2fd199db73abcbd9",
+    "ru": "Признать отсутствие сути, игнорируя принятый содержательный документ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[b0].title",
+      "cases:CASE_TEMPLATES[readable-attachment].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "60fc6828b118b5db",
+    "ru": "Требовать новую подачу только из-за распределения сведений между двумя листами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].actions[b1].title"
+    ]
+  },
+  {
+    "id": "fb7112ca87c43f48",
+    "ru": "В варианте с неопределимой сутью дополнительных материалов нет. Здесь принятое приложение меняет вывод: вопрос определяется, требуется рассмотрение по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].contrast.difference"
+    ]
+  },
+  {
+    "id": "b2d64291e1484bec",
+    "ru": "Учебный комплект: на первом листе фамилия, почтовый адрес и ссылка на приложение. Учтённое приложение читаемо, содержит конкретное событие, адрес объекта и просьбу. Вместе материалы позволяют определить суть обращения; предмет входит в компетенцию текущего органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3da99910a0ff49ec",
+    "ru": "Первый лист и приложение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8f90da8ee9960135",
+    "ru": "Оба листа приняты и зарегистрированы совместно {{registered}}. Приложение не является позднейшим дополнением. Оснований считать исходное обращение лишённым сути только по первому листу в материалах нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].documents[d1].text"
+    ]
+  },
+  {
+    "id": "f47ce73d612d7b08",
+    "ru": "Опись поступления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].documents[d1].title"
+    ]
+  },
+  {
+    "id": "15bdb58493a31c97",
+    "ru": "Предмет определяется по поступившему комплекту, включая читаемое приложение; краткость первого листа не означает отсутствие сути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[readable-attachment].factTask.explain",
+      "cases:CASE_TEMPLATES[readable-attachment].outcomes.good"
+    ]
+  },
+  {
+    "id": "2b7ba158f5c34f28",
+    "ru": "Каждый лист должен отдельно содержать полное обращение, иначе весь комплект отклоняется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "1652c028784f9e4f",
+    "ru": "Приложения разрешено изучать только после отправки уведомления об отсутствии сути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "d6d97cb6b5670e4b",
+    "ru": "Учебное продолжение. В проекте ответа описано другое место: исполнителю по ошибке прикрепили приложение к соседнему входящему номеру.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].followup.intro"
+    ]
+  },
+  {
+    "id": "eeb5400432619229",
+    "ru": "Сопоставить опись и входящий номер, передать правильное приложение и проверить соответствие ответа действительному вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].followup.options[0].text",
+      "cases:CASE_TEMPLATES[readable-attachment].followup.explain"
+    ]
+  },
+  {
+    "id": "8501f61098002dee",
+    "ru": "Подписать ответ, поскольку хотя бы какое-то приложение рассмотрено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2483c1d4ce48b81e",
+    "ru": "Попросить гражданина ещё раз доказать, что он вообще направлял лист.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "09eb08632439e41a",
+    "ru": "Рассматривать определимое обращение по всему комплекту, а не направлять уведомление из-за краткого первого листа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[readable-attachment].knowledge.explain",
+      "cases:CASE_TEMPLATES[readable-attachment].coach.research"
+    ]
+  },
+  {
+    "id": "248b01f560ed8a2c",
+    "ru": "На первом листе письма одна фраза: «Прошу разобраться, всё указано в приложении». Сотрудник считает, что суть не определена. Дежурный показывает приложенный документ с конкретным адресом, событием и просьбой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].opening"
+    ]
+  },
+  {
+    "id": "ded9dac2018e05a6",
+    "ru": "Да, оно поступило вместе с письмом и учтено в описи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "2b24a74cf9db840d",
+    "ru": "Содержание нельзя оценивать только по первому листу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "6393f3029888a4e6",
+    "ru": "Есть ли приложение фактически?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q0].text"
+    ]
+  },
+  {
+    "id": "be69d15f29ecb460",
+    "ru": "Адрес, описание неисправности и просьба организовать рассмотрение вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c71ac8413a14d886",
+    "ru": "Предмет обращения определяется по комплекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "55c25fc85b87865d",
+    "ru": "Что указано в приложении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q1].text"
+    ]
+  },
+  {
+    "id": "89796ba40be80aab",
+    "ru": "Да, на первом листе; они читаемы и соответствуют описи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "48e5537ec36ba2bd",
+    "ru": "Реквизиты и содержание распределены между листами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "af8d9d3a439a1caf",
+    "ru": "Фамилия и адрес заявителя известны?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q2].text"
+    ]
+  },
+  {
+    "id": "19d7f9d377f24bd1",
+    "ru": "Да, в условии подтверждены полномочия; не требуется переадресация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "d2599c21e3d93cb5",
+    "ru": "Общий маршрут определён конкретной компетенцией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "104dd22e0612f9ed",
+    "ru": "Относится ли предмет к нашему органу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].questions[q3].text"
+    ]
+  },
+  {
+    "id": "fe4fde39e3502cb3",
+    "ru": "Рассмотреть определимый вопрос в пределах компетенции, учитывая одновременно первый лист и принятое приложение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].routes[0].text",
+      "cases:CASE_TEMPLATES[readable-attachment].coach.plan"
+    ]
+  },
+  {
+    "id": "bf47ec1e66aaec41",
+    "ru": "Отправить уведомление о неопределимости сути, не читая поступившее приложение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].routes[1].text",
+      "cases:CASE_TEMPLATES[readable-attachment].knowledge.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f0b9526a138d5f59",
+    "ru": "Требовать от автора переписать оба листа в один документ как условие рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].routes[2].text",
+      "cases:CASE_TEMPLATES[readable-attachment].knowledge.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d9dcc4259110f736",
+    "ru": "Ответ находится в приложении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[readable-attachment].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[readable-attachment].title"
+    ]
+  },
+  {
+    "id": "3831c297af8d335c",
+    "ru": "Нужно оценить поступивший материал в целом; определимость может обеспечиваться приложением, которое принято вместе с обращением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].trap.options[0].text",
+      "cases:CASE_TEMPLATES[readable-attachment].trap.explain"
+    ]
+  },
+  {
+    "id": "c7fd22e499f87cf9",
+    "ru": "Остальные листы не влияют на предмет обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "23784a99c43c2984",
+    "ru": "Помощник: «Чтобы определить суть, достаточно прочитать заголовок».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[readable-attachment].trap.text"
+    ]
+  },
+  {
+    "id": "d8323d645df00158",
+    "ru": "Сопоставить поставленный вопрос и тексты прежних писем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[compare].title"
+    ]
+  },
+  {
+    "id": "bfa3c0aebe822f89",
+    "ru": "Удалить прежние обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[erase].title"
+    ]
+  },
+  {
+    "id": "a3fada3649f2162d",
+    "ru": "Не считать новое письмо поводом обнулить нарушения прежних сроков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[notify].detail"
+    ]
+  },
+  {
+    "id": "5dc8b0ac6c329324",
+    "ru": "Объяснить заявителю дальнейший порядок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[notify].title"
+    ]
+  },
+  {
+    "id": "dd012e37cac6a2ef",
+    "ru": "Проверить регистрацию текущего обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[register].title"
+    ]
+  },
+  {
+    "id": "3ed9dfae20bcda0e",
+    "ru": "Подготовить рассмотрение вопроса по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[review].title"
+    ]
+  },
+  {
+    "id": "76b81efd8e9a5343",
+    "ru": "Прекратить переписку по одному счётчику",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[stop].title"
+    ]
+  },
+  {
+    "id": "ccee64cc9b0eef90",
+    "ru": "Сохранить контроль действительного ответа и историю обращений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].actions[track].title"
+    ]
+  },
+  {
+    "id": "d6cf5bd544d27196",
+    "ru": "Все три обращения направлены в один орган по тому же вопросу; новых обстоятельств в третьем письме нет. Однако в материалах только регистрационные уведомления, без ответов по существу. Сотрудник готовит материалы для рассмотрения, а не принимает решение о прекращении переписки самостоятельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].brief"
+    ]
+  },
+  {
+    "id": "c36398b6945f3273",
+    "ru": "Система показывает два исходящих письма. Их содержание не классифицировалось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[count].text"
+    ]
+  },
+  {
+    "id": "6e6d389e4fc85c22",
+    "ru": "Статистика исходящих",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[count].title"
+    ]
+  },
+  {
+    "id": "310f00116c36a3cd",
+    "ru": "Письмо 1: «Обращению присвоен номер». Письмо 2: «Материалы получены». Ответа на вопрос о проходе и мотивированного решения в письмах нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[letters].text"
+    ]
+  },
+  {
+    "id": "4850a52827ee9704",
+    "ru": "Два предыдущих исходящих письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[letters].title"
+    ]
+  },
+  {
+    "id": "7aa296884492a441",
+    "ru": "Просьба рассмотреть восстановление прохода. Предмет и орган не изменились; новые доводы отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[request].text"
+    ]
+  },
+  {
+    "id": "f3ca76e8e5ef6dbf",
+    "ru": "Повторённый вопрос",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].documents[request].title"
+    ]
+  },
+  {
+    "id": "2a948db2898b2c22",
+    "ru": "Проверяется содержание прошлых ответов, а не один числовой счётчик.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].contrast.difference"
+    ]
+  },
+  {
+    "id": "68a95c414dd0419d",
+    "ru": "Да: отсутствие новых доводов заменяет все остальные условия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].factTask.options[guess].text"
+    ]
+  },
+  {
+    "id": "59e90d6671ce8e3d",
+    "ru": "Да: любые два сообщения равны двум ответам по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].factTask.options[shortcut].text"
+    ]
+  },
+  {
+    "id": "fa39a202072cfe6a",
+    "ru": "Нет: отсутствуют неоднократные ответы по существу, хотя исходящих писем два.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].factTask.options[supported].text"
+    ]
+  },
+  {
+    "id": "7f351454937bc641",
+    "ru": "Подтверждает ли счётчик писем условия прекращения переписки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].factTask.prompt"
+    ]
+  },
+  {
+    "id": "ffa0679c39061c6f",
+    "ru": "Промежуточное сообщение не становится итогом только из-за своего порядкового номера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].followup.explain"
+    ]
+  },
+  {
+    "id": "171f0705ae44681a",
+    "ru": "Исполнитель прислал ещё одно письмо: «Вопрос находится в работе», без ответа на поставленный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].followup.intro"
+    ]
+  },
+  {
+    "id": "a1cf35133646d7dd",
+    "ru": "Отметить, что вопрос по существу не разрешён, и продолжить контроль надлежащего рассмотрения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].followup.options[check].text"
+    ]
+  },
+  {
+    "id": "f13e89cf82d8887e",
+    "ru": "Теперь считать три исходящих достаточным ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "45d8df19b8d7b7cc",
+    "ru": "Удалить третье письмо из истории.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].followup.options[other].text"
+    ]
+  },
+  {
+    "id": "2473b80e9df327ea",
+    "ru": "Нужны неоднократные письменные ответы по существу; регистрационные уведомления их не заменяют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].knowledge.explain"
+    ]
+  },
+  {
+    "id": "7499fda5e388646c",
+    "ru": "Любые два исходящих письма достаточны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "b84050bbfe56c380",
+    "ru": "Содержание прежних ответов не проверяется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "ee373c2ef6b6597c",
+    "ru": "Найдите условие о характере ранее данных ответов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "d2016934e7392c19",
+    "ru": "Мне дважды присылали письма о регистрации, но ни разу не ответили, будет ли восстановлен проход. Сегодня предложили прекратить переписку: говорят, уже отправили два ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].opening"
+    ]
+  },
+  {
+    "id": "d8e252e980b9de53",
+    "ru": "О присвоении номера и том, что обращение принято. О проходе ничего нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[content].answer"
+    ]
+  },
+  {
+    "id": "8777c85d173be49a",
+    "ru": "Регистрационные сообщения не разрешают поставленный вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[content].fact"
+    ]
+  },
+  {
+    "id": "7681f706166cbc0e",
+    "ru": "О чём говорили предыдущие письма?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[content].text"
+    ]
+  },
+  {
+    "id": "563e30c2be738624",
+    "ru": "Нет, я повторяю вопрос, который пока остался без ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[new].answer"
+    ]
+  },
+  {
+    "id": "0fba51f49f8bb865",
+    "ru": "Отсутствие нового довода не создаёт отсутствующие ответы по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[new].fact"
+    ]
+  },
+  {
+    "id": "35f2cce609110c0a",
+    "ru": "Есть ли новые обстоятельства?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[new].text"
+    ]
+  },
+  {
+    "id": "c3f4190f3838f502",
+    "ru": "Да, всё направлял в этот орган.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[recipient].answer"
+    ]
+  },
+  {
+    "id": "9c6f85799c4d2fb2",
+    "ru": "Совпадение органа есть, но недостаточно само по себе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[recipient].fact"
+    ]
+  },
+  {
+    "id": "baebb3363b340186",
+    "ru": "Одинаков ли орган-получатель?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].questions[recipient].text"
+    ]
+  },
+  {
+    "id": "d53bdd2f77dd4e94",
+    "ru": "Удалить старые письма, чтобы убрать проблему учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].routes[citizen].text"
+    ]
+  },
+  {
+    "id": "36df4936799c9763",
+    "ru": "Подготовить рассмотрение неразрешённого вопроса уполномоченным сотрудником.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].routes[proper].text"
+    ]
+  },
+  {
+    "id": "e8515e4322bceaf5",
+    "ru": "Прекратить переписку из-за двух исходящих уведомлений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].routes[shortcut].text"
+    ]
+  },
+  {
+    "id": "35f456bb22d3418a",
+    "ru": "Два уведомления – ещё не два ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[repeat-acknowledgements].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[repeat-acknowledgements].title"
+    ]
+  },
+  {
+    "id": "0858e678382435d7",
+    "ru": "Количество сообщений заменяет анализ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "00fa2638d3b32933",
+    "ru": "Нужно прочитать и сопоставить содержание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].trap.options[scope].text",
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].trap.explain"
+    ]
+  },
+  {
+    "id": "9b9ab37fe28dcbf0",
+    "ru": "Помощник: «Автоматический счётчик исходящих доказывает рассмотрение по существу».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].trap.text"
+    ]
+  },
+  {
+    "id": "4a505ade75b6d9f5",
+    "ru": "Нет ответов по существу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].variantContrast.changedFacts[0]"
+    ]
+  },
+  {
+    "id": "b87e146b52535399",
+    "ru": "Орган и вопрос совпадают",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].variantContrast.changedFacts[1]"
+    ]
+  },
+  {
+    "id": "09cf73411b7d5063",
+    "ru": "Отсутствие новых доводов не позволяет прекращать переписку при одних регистрационных сообщениях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-acknowledgements].variantContrast.decisionDifference"
+    ]
+  },
+  {
+    "id": "ee0149d5cc8dba9b",
+    "ru": "Передать сведения о возможной опасности ответственному дежурному",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[alert].title"
+    ]
+  },
+  {
+    "id": "8c62d18804371046",
+    "ru": "Сопоставить новые доводы с прежними ответами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[compare].title"
+    ]
+  },
+  {
+    "id": "3182d05c51957ba6",
+    "ru": "Объяснить дальнейший порядок без автоматического прекращения переписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[notify].title"
+    ]
+  },
+  {
+    "id": "b50e56b342cdcef6",
+    "ru": "Зарегистрировать новое обращение и приобщить материалы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[register].title"
+    ]
+  },
+  {
+    "id": "2988a5d601400b7a",
+    "ru": "Подготовить рассмотрение новых обстоятельств уполномоченным сотрудником",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[route].title"
+    ]
+  },
+  {
+    "id": "c71de70be6af9ca7",
+    "ru": "Самостоятельно прекратить переписку только из-за числа старых писем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[terminate].title"
+    ]
+  },
+  {
+    "id": "64e2b9aad4075a5f",
+    "ru": "Попросить гражданина проверить кабель прикосновением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[test].title"
+    ]
+  },
+  {
+    "id": "82d2e35f8649aeef",
+    "ru": "Сохранить контроль результата по новому участку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].actions[track].title"
+    ]
+  },
+  {
+    "id": "45994dfa975a800f",
+    "ru": "В деле есть прежние ответы по существу и новое письменное обращение в тот же орган. Решения о прекращении переписки в деле пока нет. Вы сопоставляете старые и новые обстоятельства и готовите материалы уполномоченному сотруднику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].brief"
+    ]
+  },
+  {
+    "id": "0554d24f29db166b",
+    "ru": "При наличии новых доводов или обстоятельств нельзя применять основание прекращения переписки, рассчитанное на их отсутствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].coach.research",
+      "cases:CASE_TEMPLATES[repeat-new-facts].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[repeat-new-facts].knowledge.explain"
+    ]
+  },
+  {
+    "id": "ca2ccb2ec68efd79",
+    "ru": "В повторном обращении появились новые существенные обстоятельства. Сам признак повторности не даёт основания игнорировать их.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].contrast.difference"
+    ]
+  },
+  {
+    "id": "4d1f098fea6b3513",
+    "ru": "Предложено опасное действие заявителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].criticalRules[test].message"
+    ]
+  },
+  {
+    "id": "c02c4a56b3419da0",
+    "ru": "Прежние ответы: точка А, исправность светильников. Новое обращение: точка Б, снимок повреждённого кабеля от {{observed}}. Материал отсутствует в прежнем деле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].documents[comparison].text"
+    ]
+  },
+  {
+    "id": "b3529fe0f818ffcf",
+    "ru": "Сопоставление материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].documents[comparison].title"
+    ]
+  },
+  {
+    "id": "c17d820bc21a3c4f",
+    "ru": "Ранее орган неоднократно отвечал по работе светильников в точке А. Нового снимка и точки Б в этих ответах нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].documents[old].text"
+    ]
+  },
+  {
+    "id": "4edad9e77545d81d",
+    "ru": "Предыдущие ответы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].documents[old].title"
+    ]
+  },
+  {
+    "id": "f5a550606175222e",
+    "ru": "Условие об отсутствии новых доводов и обстоятельств здесь не выполнено. Сам факт нескольких прежних ответов недостаточен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].factTask.explain",
+      "cases:CASE_TEMPLATES[repeat-new-facts].coach.docs"
+    ]
+  },
+  {
+    "id": "977dfe75f0b600e3",
+    "ru": "Да: после любого второго письма переписка прекращается автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].factTask.options[automatic].text"
+    ]
+  },
+  {
+    "id": "32e5ac73154338a5",
+    "ru": "Нет: представлены новые обстоятельства, их необходимо оценить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].factTask.options[new].text"
+    ]
+  },
+  {
+    "id": "2e7bfd2905b99575",
+    "ru": "Да: стажёр вправе прекратить переписку по своему усмотрению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].factTask.options[staff].text"
+    ]
+  },
+  {
+    "id": "88525880a9667924",
+    "ru": "Достаточно ли самого повторного обращения для прекращения переписки?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].factTask.prompt"
+    ]
+  },
+  {
+    "id": "2040d88b4b3d5dd2",
+    "ru": "Результат должен относиться к обстоятельствам текущего обращения, а не повторять прежний ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].followup.explain"
+    ]
+  },
+  {
+    "id": "19dbc5fbe738230d",
+    "ru": "В контрольном эпизоде исполнитель прислал старую фотографию точки А, хотя новое обращение было о точке Б.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].followup.intro"
+    ]
+  },
+  {
+    "id": "c08737543283e169",
+    "ru": "Сопоставить точку и дату; запросить уточнение именно по новому участку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].followup.options[clarify].text"
+    ]
+  },
+  {
+    "id": "7b6db938d3fa6cf4",
+    "ru": "Закрыть дело по любой фотографии работающего фонаря.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "e16545ff3505ef3e",
+    "ru": "Убрать из дела указание точки Б.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].followup.options[erase].text"
+    ]
+  },
+  {
+    "id": "fcee5beb9461a788",
+    "ru": "Число писем само по себе является достаточным основанием прекращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "cede07e65e6b6d07",
+    "ru": "Прекратить переписку может любой сотрудник без уведомления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "6594d7cc0d56771d",
+    "ru": "Найдите условия прекращения переписки по неоднократным обращениям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].knowledge.prompt",
+      "cases:CASE_TEMPLATES[repeat-same-arguments].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "d9c108ddc2ab86df",
+    "ru": "Я несколько раз писал про освещение. Мне отвечали, что светильники работают. Теперь сосед сфотографировал обрыв кабеля в другом месте. Принёс свежие материалы, а мне говорят: переписка закрыта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].opening"
+    ]
+  },
+  {
+    "id": "37307cf46760e616",
+    "ru": "На свежем снимке от {{observed}} – повреждение кабеля в точке Б. Раньше этого материала в деле не было.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[new].answer"
+    ]
+  },
+  {
+    "id": "7d89e16c7f391656",
+    "ru": "Новый материал и другой участок ранее не рассматривались.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[new].fact"
+    ]
+  },
+  {
+    "id": "289b1dd7788cddbc",
+    "ru": "Какие новые обстоятельства появились?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[new].text"
+    ]
+  },
+  {
+    "id": "1afb5b1481a4c657",
+    "ru": "Про работу самих светильников в точке А.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[old].answer"
+    ]
+  },
+  {
+    "id": "6d88e560ccb40a44",
+    "ru": "Прежний предмет касался точки А.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[old].fact"
+    ]
+  },
+  {
+    "id": "65802c43828a0cce",
+    "ru": "О чём были предыдущие ответы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[old].text"
+    ]
+  },
+  {
+    "id": "3e45b4a27c2841ab",
+    "ru": "Лежащий кабель виден с дорожки, ограждения не видно. Напряжение я не проверял.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[safety].answer"
+    ]
+  },
+  {
+    "id": "45e6b7350a8f0f32",
+    "ru": "Есть сообщение о возможной текущей опасности; гражданин не проверяет электрические параметры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[safety].fact"
+    ]
+  },
+  {
+    "id": "9019474dac833b67",
+    "ru": "Есть ли сейчас доступ к повреждению?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[repeat-new-facts].questions[safety].text"
+    ]
+  }
+]

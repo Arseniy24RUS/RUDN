@@ -36,6 +36,8 @@ jobs:
           npm ci --ignore-scripts
           npm run build:firebase
           npm run build:career
+          node site/apps/reception/localization/extract.mjs
+          node site/apps/reception/localization/compile.mjs
       # RUDN_RECEPTION_CALENDAR_UPDATE
       - name: Update published reception calendars
         run: node scripts/update-reception-calendars.mjs --previous-url https://arseniy24rus.github.io/RUDN/assets/data/calendars/current.json
@@ -51,12 +53,18 @@ jobs:
         run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
       - name: Verify legacy reception assignments and lazy content integrity
         run: node site/apps/reception/content/test.mjs
+      - name: Verify equivalent localized answers without changing historical grading
+        run: |
+          node site/apps/reception/localization/answer-alias-test.mjs
+          node site/apps/reception/localization/compiled-contract-test.mjs
+          node site/apps/reception/localization/reference-locale-test.mjs
+          node site/apps/reception/localization/source-strings-test.mjs
       - name: Verify career locale templates and question coverage
         run: node scripts/test_career_localization.mjs
       - name: Prepare native browser checks
         run: |
           python -m pip install playwright==1.57.0
-          python -m playwright install --with-deps chromium
+          python -m playwright install --with-deps chromium webkit
       - name: Test native Governor on desktop and mobile
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
       - name: Verify durable local queue and attachment replay
@@ -80,7 +88,15 @@ jobs:
             curl --fail --silent http://127.0.0.1:8765/ >/dev/null && break
             sleep 0.2
           done
-          node scripts/test_reception_complete.cjs
+          for reception_locale in ru en zh; do
+            RECEPTION_LOCALE="$reception_locale" node scripts/test_reception_complete.cjs
+          done
+          node scripts/test_reception_backup.cjs
+          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_locale_race.cjs
+          node scripts/test_platform_i18n.cjs
+          node site/apps/reception/localization/test.mjs
+          node site/apps/reception/localization/pack-test.mjs
+          node site/apps/reception/localization/presentation-test.mjs
       - name: Save native browser evidence
         if: always()
         uses: actions/upload-artifact@v4

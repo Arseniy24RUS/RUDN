@@ -1,0 +1,1166 @@
+[
+  {
+    "id": "e688ce1b5193d640",
+    "ru": "Компетентная государственная инспекция труда по месту работодателя для проверки учёта времени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].routes[0].text"
+    ]
+  },
+  {
+    "id": "b6285cfd7b47bcb8",
+    "ru": "Отнести установленное ожидание посадки к рабочему времени без управления; проверить табель отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[driver-waiting-work].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[driver-waiting-work].contrast.decision"
+    ]
+  },
+  {
+    "id": "98b38f76a499e0d4",
+    "ru": "Автобус стоит, водитель всё ещё работает",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[driver-waiting-work].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[driver-waiting-work].title"
+    ]
+  },
+  {
+    "id": "4499c89d29e32572",
+    "ru": "Режим труда водителей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].topic",
+      "cases:CASE_TEMPLATES[driver-split-break].topic",
+      "cases:CASE_TEMPLATES[driver-planned-extension].topic"
+    ]
+  },
+  {
+    "id": "34142a9ea6444922",
+    "ru": "Отнести установленное ожидание посадки к рабочему времени без управления; проверить табель отдельно. Здесь не впечатление пассажира о долгой поездке, а подтверждённая работа при стоянке. Учёт управления и рабочего времени даёт разные показатели.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].trap.explain"
+    ]
+  },
+  {
+    "id": "692c4a6119eb6fba",
+    "ru": "Время без управления автомобилем может оставаться рабочим временем водителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-waiting-work].trap.text"
+    ]
+  },
+  {
+    "id": "52471aa65e665978",
+    "ru": "Сопоставить код, уровень и исполнителя договора с выпиской.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2c2f208cd61fde49",
+    "ru": "Проверить пределы аккредитационной записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5f4f39caf16a784c",
+    "ru": "Подготовить ответ о неподтверждённом конкретном утверждении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[a2].title"
+    ]
+  },
+  {
+    "id": "801f137f865dc365",
+    "ru": "Не выдавать общий вывод о дипломе и закрытии вуза без оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[a3].title"
+    ]
+  },
+  {
+    "id": "2210cde55ccb45be",
+    "ru": "Проверить полную актуальную запись при поступлении нового подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b64d325b7a3d45a8",
+    "ru": "Засчитать запись 09.03.03 как подтверждение 38.03.04.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[b0].title"
+    ]
+  },
+  {
+    "id": "98f228ce429a277b",
+    "ru": "Объявить все документы об образовании недействительными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].actions[b1].title",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5b405d3d1335c43c",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Вымышленная организация реализует основную программу бакалавриата; действительность лицензии для неё установлена. Проверяется конкретное утверждение об аккредитации, не объявляется общий запрет обучения или вывод о будущем дипломе без дополнительных условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].brief"
+    ]
+  },
+  {
+    "id": "3a6286b0cb36661c",
+    "ru": "В варианте ДПО аккредитация не требовалась. Здесь вопрос касается основной программы и конкретной области записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].coach.plan",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].contrast.difference"
+    ]
+  },
+  {
+    "id": "5f04c97872d2a92e",
+    "ru": "Фраза «Все программы аккредитованы» без ссылки на конкретную запись.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f5adce21e7a13f07",
+    "ru": "Общая рекламная страница",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d0].title"
+    ]
+  },
+  {
+    "id": "1ca82be8e164e50a",
+    "ru": "Программа 38.03.04, уровень – бакалавриат. Лицензионные условия этой реализации подтверждены; спор касается утверждения об аккредитации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2840bdd690dcfeb3",
+    "ru": "Договор Б-21 и лицензия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d1].title"
+    ]
+  },
+  {
+    "id": "79e19af9fb298f9e",
+    "ru": "Запись по этой организации относится только к 09.03.03; распространение на укрупнённую группу или все программы не предусмотрено. По 38.03.04 подтверждения не получено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d2].text"
+    ]
+  },
+  {
+    "id": "0ad428afdabbef26",
+    "ru": "Выписка и уточнение области",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d2].title"
+    ]
+  },
+  {
+    "id": "01bed6af1d6e60dd",
+    "ru": "Представленная запись не подтверждает аккредитацию 38.03.04; она относится к другой прямо ограниченной программе. В варианте ДПО аккредитация не требовалась. Здесь вопрос касается основной программы и конкретной области записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.explain"
+    ]
+  },
+  {
+    "id": "5175e839975c41a2",
+    "ru": "Представленная запись не подтверждает аккредитацию 38.03.04; она относится к другой прямо ограниченной программе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].trap.explain",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].contrast.decision"
+    ]
+  },
+  {
+    "id": "328cfe19f0729879",
+    "ru": "Одна аккредитованная программа автоматически подтверждает все остальные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "04e5b3a8522635c9",
+    "ru": "Неподтверждение аккредитации автоматически аннулирует лицензию организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "5ffb8ddaa162ccc2",
+    "ru": "Вуз направил новую выписку, но в ней другой филиал.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].followup.intro"
+    ]
+  },
+  {
+    "id": "ad947f05482bdf3c",
+    "ru": "Сопоставить организацию, филиал и область новой записи с договором.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].followup.options[0].text",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].followup.explain"
+    ]
+  },
+  {
+    "id": "c5ca9d2d3c5215bf",
+    "ru": "Принять любую новую выписку того же бренда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "100856d178364203",
+    "ru": "Не читать новый документ после первого ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "5de52f5b666c2ab4",
+    "ru": "Сопоставлять область записи с программой и уровнем, не только с названием вуза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "a7dac05acfdc6ab5",
+    "ru": "Распространять любую запись на всё обучение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "b84123b7a32fca2f",
+    "ru": "Приравнять аккредитацию к автоматической действительности всех дипломов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "91e66ced3618d301",
+    "ru": "Вуз показывает аккредитацию. Но я поступаю на другое направление, которого не вижу в выписке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].opening"
+    ]
+  },
+  {
+    "id": "aa0b055b04722440",
+    "ru": "Проверка области аккредитационной записи и точности информирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].procedures[0].text"
+    ]
+  },
+  {
+    "id": "29f9d5544f18798f",
+    "ru": "Проверка только совпадения названия организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].procedures[1].text"
+    ]
+  },
+  {
+    "id": "1078c7107256efb7",
+    "ru": "Автоматическое прекращение деятельности всех программ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].procedures[2].text"
+    ]
+  },
+  {
+    "id": "d1f2cab616a23747",
+    "ru": "38.03.04, бакалавриат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "75b3a5b7dfb2f703",
+    "ru": "Известны код и уровень.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "42720b7a1a01f3a5",
+    "ru": "Какое направление в договоре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q0].text"
+    ]
+  },
+  {
+    "id": "90b086c02edcdbf7",
+    "ru": "Только отдельная программа 09.03.03.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "0aeac0c73efe68b2",
+    "ru": "Запись не на заявленную программу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "2d6f5cf68c0eddde",
+    "ru": "Что показано в выписке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q1].text"
+    ]
+  },
+  {
+    "id": "c7d8e5f4c08aa939",
+    "ru": "В материалах её область прямо ограничена указанной программой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "c77465f9bd31de46",
+    "ru": "Область не домысливается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "451e57b5fb316262",
+    "ru": "Может ли выписка охватывать целую группу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q2].text"
+    ]
+  },
+  {
+    "id": "a89ba72ef63c4aff",
+    "ru": "Ответ компетентного органа записи на 38.03.04 не подтвердил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "fd3e3f27378cc14e",
+    "ru": "Нужно сообщить именно этот результат, не общий вывод по вузу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "07374035fc110f3e",
+    "ru": "Есть актуальная проверка нужного направления?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a1dc258ba58976e9",
+    "ru": "Орган надзора и аккредитации, компетентный по данной организации высшего образования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].routes[0].text"
+    ]
+  },
+  {
+    "id": "c6a3913d530a0946",
+    "ru": "Рекламный отдел вуза как единственный источник подтверждения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].routes[1].text"
+    ]
+  },
+  {
+    "id": "0cfb4111e9a2bf4f",
+    "ru": "Приёмная как орган выдачи аккредитации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].routes[2].text"
+    ]
+  },
+  {
+    "id": "85e5c5dcaf9f434e",
+    "ru": "Выписка относится к другой программе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[education-accreditation-scope].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[education-accreditation-scope].title"
+    ]
+  },
+  {
+    "id": "6c645eb4c3c2ea48",
+    "ru": "Наличие одной аккредитованной программы подтверждает все программы этого вуза.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-accreditation-scope].trap.text"
+    ]
+  },
+  {
+    "id": "c2e75a5ba5181237",
+    "ru": "Установить вид программы по договору.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[a0].title"
+    ]
+  },
+  {
+    "id": "0cee1a0d257a6731",
+    "ru": "Сопоставить исполнителя с лицензионной записью.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e3d71e35412425a4",
+    "ru": "Разъяснить область государственной аккредитации и вид итогового документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[a2].title"
+    ]
+  },
+  {
+    "id": "04fa4857690eafad",
+    "ru": "Не приравнивать ДПО к высшему образованию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7f9c1beed408b88d",
+    "ru": "Проверить новые обещания и договор при изменении программы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[a4].title"
+    ]
+  },
+  {
+    "id": "6f3dc20f671cf152",
+    "ru": "Требовать государственную аккредитацию любого курса ДПО.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[b0].title"
+    ]
+  },
+  {
+    "id": "0194df5ddec5168b",
+    "ru": "Гарантировать получение диплома бакалавра после этого курса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].actions[b1].title",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b756eed44071153c",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Вымышленная лицензированная организация проводит обычное дополнительное профессиональное образование по управлению, не медицинское обучение и не бакалавриат. Уровень предшествующего образования слушателя соответствует требованиям по условию. Речь не о государственной итоговой аттестации по основной программе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].brief"
+    ]
+  },
+  {
+    "id": "86b81be26ddf6d1d",
+    "ru": "В базовом деле было важно выбрать реестр. Здесь лицензионные сведения известны, а ошибочно требуется аккредитация другого вида образования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].coach.plan",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].contrast.difference"
+    ]
+  },
+  {
+    "id": "dcd1bfb7a90dd5e5",
+    "ru": "Запись об аккредитации бакалавриата другого исполнителя не относится к этому курсу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d0].text"
+    ]
+  },
+  {
+    "id": "8be55780ffea3fb7",
+    "ru": "Реестр другой программы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e8a302518ffcb922",
+    "ru": "Исполнитель Ц-21. Дополнительная профессиональная программа повышения квалификации; результат – удостоверение при выполнении условий. Основная программа высшего образования не заявлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d1].text"
+    ]
+  },
+  {
+    "id": "9b0c20f945c21968",
+    "ru": "Договор ДПО-26",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d1].title"
+    ]
+  },
+  {
+    "id": "902db5776d8672a4",
+    "ru": "Лицензионная запись действительна на дату {{observed}} для соответствующего подвида дополнительного образования. Государственная аккредитация курса ДПО-26 не указана.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d2].text"
+    ]
+  },
+  {
+    "id": "f0ab2332bfb29f96",
+    "ru": "Проверенная выписка по Ц-21",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].documents[d2].title"
+    ]
+  },
+  {
+    "id": "5ca232e14af8d7d4",
+    "ru": "Государственная аккредитация не требуется для указанного ДПО; действительность лицензии проверяется отдельно и здесь подтверждена. В базовом деле было важно выбрать реестр. Здесь лицензионные сведения известны, а ошибочно требуется аккредитация другого вида образования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.explain"
+    ]
+  },
+  {
+    "id": "8ad0aa75ac483bf1",
+    "ru": "Государственная аккредитация не требуется для указанного ДПО; действительность лицензии проверяется отдельно и здесь подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].trap.explain",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].contrast.decision"
+    ]
+  },
+  {
+    "id": "b8237a53f1e76052",
+    "ru": "Любой курс без государственной аккредитации незаконен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "677c893619b0dd56",
+    "ru": "Раз аккредитация не требуется, лицензия тоже не нужна всем организациям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "8210107fdbcc3534",
+    "ru": "Менеджер прислал новую рекламу: тот же курс теперь обещает диплом бакалавра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].followup.intro"
+    ]
+  },
+  {
+    "id": "e13838e0b388335b",
+    "ru": "Проверить новое обещание и фактический договор отдельно; прежний вывод касался ДПО.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].followup.options[0].text",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].followup.explain"
+    ]
+  },
+  {
+    "id": "3d0bf891a5c31576",
+    "ru": "Разрешить обещание по действующей лицензии на ДПО.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "bc1ee7d2e269ae4c",
+    "ru": "Отменить все ранее выданные документы без проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "3a0890e2d46e5852",
+    "ru": "Статья 92 закона № 273-ФЗ регулирует государственную аккредитацию по основным образовательным программам с установленными исключениями. Дополнительная профессиональная программа не становится программой высшего образования и не подлежит такой государственной аккредитации. Проверка лицензии при этом остаётся отдельной. Запись об аккредитации относится к указанным в ней программам и характеристикам, а не автоматически ко всему, что рекламирует организация.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].knowledge.explain",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].knowledge.explain",
+      "cases:SOURCES[n13-edu92].text"
+    ]
+  },
+  {
+    "id": "a36daa747db86903",
+    "ru": "Учитывать вид программы при оценке отсутствия аккредитации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "a49a64b7fa420b43",
+    "ru": "Требовать аккредитацию каждого вида образования без исключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "aa9cd47f3b659c45",
+    "ru": "Считать отсутствие аккредитации отменой требований к лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "acebb9ae84b0940c",
+    "ru": "Найдите норму «Область государственной аккредитации». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].knowledge.prompt",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "f692d40fbcc0c8d8",
+    "ru": "Мне предложили курс повышения квалификации, но я не нашёл его государственной аккредитации. Значит обучение незаконно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].opening"
+    ]
+  },
+  {
+    "id": "1b91a99cb76c3468",
+    "ru": "Разграничение дополнительного и основного образования с проверкой лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].procedures[0].text"
+    ]
+  },
+  {
+    "id": "8147bc624b375449",
+    "ru": "Проверка только аккредитации по рекламному названию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].procedures[1].text"
+    ]
+  },
+  {
+    "id": "6312204cbafb7fa3",
+    "ru": "Признание удостоверения эквивалентом диплома бакалавра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].procedures[2].text"
+    ]
+  },
+  {
+    "id": "a0666a551584abb6",
+    "ru": "Дополнительная профессиональная программа повышения квалификации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "5fe70b3eb51ca369",
+    "ru": "Вид программы установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "7b11d76a58f6d70f",
+    "ru": "Что указано в договоре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q0].text"
+    ]
+  },
+  {
+    "id": "9863f314c88b6708",
+    "ru": "Удостоверение о повышении квалификации после успешного обучения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "8c46cc1a08dc8755",
+    "ru": "Диплом бакалавра не обещан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "dd565d41f5767ee8",
+    "ru": "Какой документ обещан?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q1].text"
+    ]
+  },
+  {
+    "id": "5735ccae7eecf10a",
+    "ru": "Да, нужный подвид и юридическое лицо совпадают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "a98ae8e761ada3b6",
+    "ru": "Лицензионная часть подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2422732031e5fb9b",
+    "ru": "Проверена лицензия?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q2].text"
+    ]
+  },
+  {
+    "id": "606545a836368edb",
+    "ru": "Запись государственной аккредитации этого курса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "117a44c80faaa6b3",
+    "ru": "Отсутствие оценивается с учётом вида программы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "616621505105a625",
+    "ru": "Что не найдено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b33eaf367bbe136f",
+    "ru": "Компетентное подразделение органа надзора в образовании по данному исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].routes[0].text"
+    ]
+  },
+  {
+    "id": "a3f9bdedabdcb0d2",
+    "ru": "Аккредитационный орган как обязательный издатель удостоверения ДПО.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].routes[1].text"
+    ]
+  },
+  {
+    "id": "c4150383afcb3a7d",
+    "ru": "Рекламный посредник как подтверждающий реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].routes[2].text"
+    ]
+  },
+  {
+    "id": "f1da0349d103c32c",
+    "ru": "Повышение квалификации – не бакалавриат",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[education-dpo-accreditation].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[education-dpo-accreditation].title"
+    ]
+  },
+  {
+    "id": "cd3a79abcd7d6c0b",
+    "ru": "Дополнительная профессиональная программа автоматически является бакалавриатом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].trap.text"
+    ]
+  },
+  {
+    "id": "7771f92d2613ff7c",
+    "ru": "Сопоставить договор и получателя платежа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[a0].title"
+    ]
+  },
+  {
+    "id": "26dd4732867341fa",
+    "ru": "Отделить У-1 от У-2 в проверке реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[a1].title"
+    ]
+  },
+  {
+    "id": "9e4faeb724362f93",
+    "ru": "Запросить подтверждение оснований деятельности У-2 по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b5dece195edd9a6c",
+    "ru": "Не объявлять документ поддельным только из-за другого владельца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b3b1b9ed76387a6b",
+    "ru": "Проверить полные реквизиты последующего документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[a4].title"
+    ]
+  },
+  {
+    "id": "92fda61382faa689",
+    "ru": "Признать достаточной лицензию любой одноимённой организации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[b0].title"
+    ]
+  },
+  {
+    "id": "4a844fb4751d3474",
+    "ru": "Самостоятельно запретить образовательную деятельность без процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].actions[b1].title",
+      "cases:CASE_TEMPLATES[education-provider-identity].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "5e828e1d7e89381f",
+    "ru": "Все граждане, организации-участники и служебные документы вымышлены. Договор заключён с юридическим лицом, не с непосредственно обучающим индивидуальным предпринимателем. Сетевая форма, агентская схема и реорганизация по материалам не подтверждены; их нельзя предполагать. Вы устанавливаете исполнителя, не выносите окончательное решение об аннулировании лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].brief"
+    ]
+  },
+  {
+    "id": "7b319d69a77820ce",
+    "ru": "Здесь различие не между лицензией и аккредитацией, а между двумя юридическими исполнителями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].coach.plan",
+      "cases:CASE_TEMPLATES[education-provider-identity].contrast.difference"
+    ]
+  },
+  {
+    "id": "07a892b00acdfde2",
+    "ru": "Обе организации используют название «Вектор знаний». Юридический исполнитель в буклете не указан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d0].text"
+    ]
+  },
+  {
+    "id": "4de48eda8e83dc19",
+    "ru": "Рекламный буклет",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d0].title"
+    ]
+  },
+  {
+    "id": "6a5d687ed27e1caf",
+    "ru": "Исполнитель обучения и получатель оплаты – юридическое лицо У-2. Образовательная программа подлежит лицензированию по заданным условиям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d1].text"
+    ]
+  },
+  {
+    "id": "bcfa266e2d98ccf6",
+    "ru": "Договор и платёж У-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d1].title"
+    ]
+  },
+  {
+    "id": "33e613ba66253439",
+    "ru": "Предъявленная запись относится к У-1. Документа, подтверждающего право У-2 оказывать данную услугу или особую форму взаимодействия, в деле нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d2].text"
+    ]
+  },
+  {
+    "id": "4910af5fdf0a9021",
+    "ru": "Лицензионные сведения У-1",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].documents[d2].title"
+    ]
+  },
+  {
+    "id": "a83bc08e2a426fd4",
+    "ru": "Документ У-1 не подтверждает право исполнителя У-2; необходимо установить и проверить лицензионное основание именно по У-2. Здесь различие не между лицензией и аккредитацией, а между двумя юридическими исполнителями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.explain"
+    ]
+  },
+  {
+    "id": "c82733c2a7ecc0d1",
+    "ru": "Документ У-1 не подтверждает право исполнителя У-2; необходимо установить и проверить лицензионное основание именно по У-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[education-provider-identity].trap.explain",
+      "cases:CASE_TEMPLATES[education-provider-identity].contrast.decision"
+    ]
+  },
+  {
+    "id": "17376478342e69e9",
+    "ru": "Одинаковое рекламное название делает две организации одним лицензиатом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "fc21ab1a707d02f2",
+    "ru": "Разные идентификаторы доказывают подделку предъявленной лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "5120ea0b5d0b1ec0",
+    "ru": "Пришёл скриншот с тем же названием, но поле идентификатора обрезано.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].followup.intro"
+    ]
+  },
+  {
+    "id": "31e609155aba55da",
+    "ru": "Получить полные сведения и сопоставить идентификатор, вид и статус записи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].followup.options[0].text",
+      "cases:CASE_TEMPLATES[education-provider-identity].followup.explain"
+    ]
+  },
+  {
+    "id": "ce8cda1b759721a9",
+    "ru": "Засчитать название как достаточное подтверждение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "4a8ceb8920a217ad",
+    "ru": "Признать скриншот заведомой подделкой без исследования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "52b428c35f750804",
+    "ru": "Статья 91 закона № 273-ФЗ устанавливает лицензирование образовательной деятельности по соответствующим видам, уровням и иным предусмотренным характеристикам. Исключение, в частности, касается индивидуальных предпринимателей, осуществляющих образовательную деятельность непосредственно. Юридическое лицо исполнителя и область разрешённой деятельности проверяют по надлежащему реестру. Рекламное название и номер документа другого лица не заменяют эту проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].knowledge.explain",
+      "cases:SOURCES[n13-edu91].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v13-education-provider-identity].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "94ba90eb996f56d0",
+    "ru": "Проверять лицензионное основание по юридическому исполнителю и виду деятельности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "e1365325bee0e1c3",
+    "ru": "Приравнивать общий бренд к единому лицензиату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "493a3ba07bbf68ca",
+    "ru": "Делать окончательный вывод о подделке по неполному скриншоту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "82bee93b8b611824",
+    "ru": "Найдите норму «Лицензирование образовательной деятельности». Укажите реквизиты и статью, затем выберите её применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "b25cd7f58c0029ca",
+    "ru": "На сайте школы есть лицензия, а в договоре другое юридическое лицо. Название у них одинаковое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].opening"
+    ]
+  },
+  {
+    "id": "33b525d460a5f34e",
+    "ru": "Проверка юридического исполнителя и его правового основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c6853d566c6c8c82",
+    "ru": "Оценка только фирменного названия на сайте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].procedures[1].text"
+    ]
+  },
+  {
+    "id": "84232db7ed54f467",
+    "ru": "Передача лицензии другой организации решением приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].procedures[2].text"
+    ]
+  },
+  {
+    "id": "2336346bf7859899",
+    "ru": "Организация У-2, получатель платы тоже У-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "7f07eb11d98ef82e",
+    "ru": "Договор и платёж сопоставимы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "7435dfe1d5e3adbd",
+    "ru": "Кто указан исполнителем?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q0].text"
+    ]
+  },
+  {
+    "id": "69a25aa285089171",
+    "ru": "Организации У-1 с тем же рекламным названием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "28b7c8497fc34b59",
+    "ru": "Другой субъект.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6ec20487b85a737f",
+    "ru": "Чья лицензия на сайте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q1].text"
+    ]
+  },
+  {
+    "id": "82ddcde0736a2263",
+    "ru": "Представленные материалы его не содержат.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ee4eebc0c21f3aeb",
+    "ru": "Нет подтверждённого основания считать одного исполнителя другим.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "d91847c59ef5c968",
+    "ru": "Есть ли договор между ними?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q2].text"
+    ]
+  },
+  {
+    "id": "c2501d09522e1890",
+    "ru": "Лицензия У-1 найдена; достаточного подтверждения по У-2 пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "174d96cda81e35bf",
+    "ru": "Нужно проверять У-2, а не утверждать нарушение по одному названию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "c8d0a7df6e962f92",
+    "ru": "Что показал реестр по У-2?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].questions[q3].text"
+    ]
+  },
+  {
+    "id": "2f9d5c5c9a3989e5",
+    "ru": "Соответствующий лицензирующий орган в сфере образования по установленному исполнителю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].routes[0].text"
+    ]
+  },
+  {
+    "id": "fb88f9626c139fbf",
+    "ru": "Только банк получателя оплаты вместо образовательного контроля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].routes[1].text"
+    ]
+  },
+  {
+    "id": "01eedf6f8cbc3e6d",
+    "ru": "Владелец торгового обозначения как орган лицензирования.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].routes[2].text"
+    ]
+  },
+  {
+    "id": "7c4c355e4b6cbd24",
+    "ru": "Одно название, два исполнителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[education-provider-identity].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[education-provider-identity].title"
+    ]
+  },
+  {
+    "id": "e1273966f1e55f30",
+    "ru": "Различие исполнителей требует проверки, но не доказывает подделку лицензии У-1.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-provider-identity].trap.text"
+    ]
+  },
+  {
+    "id": "b5a7c050a50694f1",
+    "ru": "Выделить лицо из договора и требуемый вид сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[a0].title"
+    ]
+  },
+  {
+    "id": "310a1531d0999860",
+    "ru": "Выбрать реестр лицензий, не подменяя его аккредитацией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[a1].title"
+    ]
+  },
+  {
+    "id": "aa7efedc2f8e40e0",
+    "ru": "Сопоставить идентификатор и запись, подготовить дальнейшее профильное рассмотрение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[a2].title"
+    ]
+  },
+  {
+    "id": "be8fac07eea70a18",
+    "ru": "Разъяснить заявителю, что установлено, а что ещё проверяется",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[a3].title"
+    ]
+  },
+  {
+    "id": "f73794e22581ea9a",
+    "ru": "Проверить, относится ли последующий ответ к лицу из договора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[a4].title"
+    ]
+  },
+  {
+    "id": "39197c3ce5a38aef",
+    "ru": "Признать отсутствие лицензии без проверки нужного реестра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[b0].title",
+      "cases:CASE_TEMPLATES[education-register].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "6784c25dfbc55ffd",
+    "ru": "Подменить запись юридического лица одноимённой организацией",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].actions[b1].title"
+    ]
+  },
+  {
+    "id": "21b178777dec6fa1",
+    "ru": "Слушатель учебного центра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].citizen.description",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].citizen.description",
+      "cases:CASE_TEMPLATES[education-accreditation-scope].citizen.description"
+    ]
+  },
+  {
+    "id": "f866cec55ff42998",
+    "ru": "В договоре организация с условным идентификатором УЧ-01. Одна выписка о лицензии относится к УЧ-02 с тем же брендом. Поиск аккредитации УЧ-01 не дал результата. Это не устанавливает наличие или отсутствие лицензии УЧ-01.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d0].text"
+    ]
+  }
+]

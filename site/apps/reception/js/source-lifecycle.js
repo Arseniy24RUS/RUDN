@@ -35,11 +35,11 @@ export function sourceReviewStatus(entry,asOf='2026-09-08',{policy=SOURCE_POLICY
  if(['text-changed','unavailable','blocked','unreadable','too-large','redirect-blocked'].includes(transport))reasons.push('Сетевой мониторинг: '+transport);
  return {status:entry.kind==='authored-case'?'authored':reasons.length?'review':'tracked',reasons,upcoming:warnings,transport,observation};
 }
-export function sourceHealthReport({asOf='2026-09-08',query='',filter='all',observations=[],index=SOURCE_INDEX}={}){
+export function sourceHealthReport({asOf='2026-09-08',query='',filter='all',observations=[],index=SOURCE_INDEX,translate=text=>text}={}){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(asOf)||!Number.isFinite(Date.parse(asOf)))throw Error('Неверная дата просмотра реестра');
  const q=String(query).normalize('NFKC').toLowerCase().replace(/ё/g,'е').trim();
  const rows=index.entries.map(e=>({...copySource(e),health:sourceReviewStatus(e,asOf,{observations})}));
- const matching=rows.filter(e=>(!q||(e.title+' '+e.url+' '+e.id+' '+e.families.join(' ')).toLowerCase().replace(/ё/g,'е').includes(q))&&(filter==='all'||filter==='review'&&e.health.status==='review'||filter===e.kind));
+ const matching=rows.filter(e=>(!q||(e.title+' '+translate(e.title)+' '+e.url+' '+e.id+' '+e.families.join(' ')).normalize('NFKC').toLowerCase().replace(/ё/g,'е').includes(q))&&(filter==='all'||filter==='review'&&e.health.status==='review'||filter===e.kind));
  return {schema:1,indexVersion:index.version,asOf,disclaimer:'Техническая доступность и совпадение текста не подтверждают правовую актуальность. Материалы дела вымышлены. Отчёт не содержит данные студентов и не меняет оценки.',total:rows.length,matching:matching.length,counts:{review:rows.filter(e=>e.health.status==='review').length,authored:rows.filter(e=>e.kind==='authored-case').length,tracked:rows.filter(e=>e.health.status==='tracked').length},entries:matching};
 }
 export function sourceImpact(ids,index=SOURCE_INDEX){const found=index.entries.filter(e=>ids.includes(e.id));return {sourceIds:found.map(e=>e.id),families:[...new Set(found.flatMap(e=>e.families))].sort(),cases:[...new Map(found.flatMap(e=>e.cases).map(c=>[c.id,c])).values()]};}

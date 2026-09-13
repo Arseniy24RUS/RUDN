@@ -1,0 +1,1133 @@
+[
+  {
+    "id": "82bf0ab9114dfc91",
+    "ru": "в предоставлении услуги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "59039a65043341c3",
+    "ru": "предоставления услуги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "bc57df4c635278bf",
+    "ru": "На какой стадии вынесен обжалуемый отказ?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.extracted.label"
+    ]
+  },
+  {
+    "id": "800b385a50622623",
+    "ru": "На какой стадии вынесен обжалуемый отказ? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.prompt"
+    ]
+  },
+  {
+    "id": "60a626a37df5e2d5",
+    "ru": "210-ФЗ статья 11.2 Приняли документы, но не назначили услугу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-service-refusal.searchHint"
+    ]
+  },
+  {
+    "id": "7b8f4a0547d18bdb",
+    "ru": "Применить подтверждённое право выбора к данной услуге и центру, не превращая его в правило для всего банка услуг. Предмет по-прежнему отказ в приёме, но законность маршрута устанавливается сопоставлением конкретной услуги, территории и соглашения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.explain"
+    ]
+  },
+  {
+    "id": "a08c119fc5f89431",
+    "ru": "регистрация в другом районе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "81127e282b945d3d",
+    "ru": "место регистрации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "290c7d6bf6976b26",
+    "ru": "место жительства",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "cb09e4a1ed9cac75",
+    "ru": "Какой признак места жительства не должен быть единственным основанием отказа по условиям?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.extracted.label"
+    ]
+  },
+  {
+    "id": "f74e3fa32d07a41b",
+    "ru": "Какой признак места жительства не должен быть единственным основанием отказа по условиям? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.prompt"
+    ]
+  },
+  {
+    "id": "0de7cec86358c44d",
+    "ru": "210-ФЗ статья 7 Прописка в другом районе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-territorial-choice.searchHint"
+    ]
+  },
+  {
+    "id": "9911113b7ce9cbba",
+    "ru": "Сохранить пятидневный предмет жалобы и направить её надлежащему адресату выдавшего органа, не исправляя чужой акт в МФЦ. В прежнем варианте отказывал сотрудник центра; здесь МФЦ выполнил передачу, а обжалуется акт другого органа.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.explain"
+    ]
+  },
+  {
+    "id": "6617f6c40f916c22",
+    "ru": "орган выдавший результат",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "cb20fea7ad006223",
+    "ru": "выдавший орган",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ed5567b05a7bde08",
+    "ru": "орган предоставляющий услугу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "6187a1091688929b",
+    "ru": "Кто является автором обжалуемого отказа?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.extracted.label"
+    ]
+  },
+  {
+    "id": "b4ff3a7154d3c183",
+    "ru": "Кто является автором обжалуемого отказа? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.prompt"
+    ]
+  },
+  {
+    "id": "d235d0ab5459e1da",
+    "ru": "210-ФЗ статья 11.2 Опечатка в акте другого органа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-typo-issuer.searchHint"
+    ]
+  },
+  {
+    "id": "d97ddfaf88362bac",
+    "ru": "Рассмотреть отказ в приёме надлежащего добровольного документа и не вводить его обязательность. Заявителя не заставляют собирать справку: он сам предлагает допустимый документ; отказ в его приёме требует другого решения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.explain"
+    ]
+  },
+  {
+    "id": "51d2c36a238ff67c",
+    "ru": "по собственной инициативе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "00ebd01ffb09ce7c",
+    "ru": "добровольное представление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "52a4488dd3ce102f",
+    "ru": "добровольно",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "3f0978628957058c",
+    "ru": "Какая характеристика представления меняет вывод?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.extracted.label"
+    ]
+  },
+  {
+    "id": "c42ee1a037f391b4",
+    "ru": "Какая характеристика представления меняет вывод? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.prompt"
+    ]
+  },
+  {
+    "id": "352c0401e91ac981",
+    "ru": "210-ФЗ статья 7 Сведения принёс сам заявитель",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-voluntary-document.searchHint"
+    ]
+  },
+  {
+    "id": "02c1cfbeb05a857d",
+    "ru": "Найдите часть статьи о данных других субъектов и укажите её номер. Свяжите правило с установленными обстоятельствами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-access.prompt"
+    ]
+  },
+  {
+    "id": "05c55509f98c8102",
+    "ru": "152-ФЗ статья 14 часть статьи о данных других субъектов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-access.searchHint"
+    ]
+  },
+  {
+    "id": "83bda4337e994177",
+    "ru": "Найдите часть статьи о перечне данных по категориям и укажите её номер. Свяжите правило с установленными обстоятельствами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.prompt"
+    ]
+  },
+  {
+    "id": "18fbde480c267ea7",
+    "ru": "152-ФЗ статья 10.1 часть статьи о перечне данных по категориям",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.searchHint"
+    ]
+  },
+  {
+    "id": "a87ce917da687ccb",
+    "ru": "Найдите пункт с определением персональных данных и укажите его номер. Свяжите правило с установленными обстоятельствами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.prompt"
+    ]
+  },
+  {
+    "id": "76bfd665a5d96325",
+    "ru": "152-ФЗ статья 3 пункт с определением персональных данных",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.searchHint"
+    ]
+  },
+  {
+    "id": "c730c2d870604be6",
+    "ru": "Проверить правовое основание для дополнительной категории данных, не распространяя доказательство повторно. В исходной истории согласие было общим. Здесь оно отдельное, но ограничено другим перечнем; наличие документа само по себе не решает вопрос.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.explain"
+    ]
+  },
+  {
+    "id": "835cfa017bbecc68",
+    "ru": "сведения о здоровье",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "2085cdd95a018a7a",
+    "ru": "данные о здоровье",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "26442e30057b9b8e",
+    "ru": "ограничения по здоровью",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "3ec9e18419a4302c",
+    "ru": "Какая категория не охвачена представленным перечнем?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.extracted.label"
+    ]
+  },
+  {
+    "id": "5ce801836735c9ec",
+    "ru": "Какая категория не охвачена представленным перечнем? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.prompt"
+    ]
+  },
+  {
+    "id": "d6bbeeaf16c1dab4",
+    "ru": "152-ФЗ статья 10.1 Согласие было на фотографию",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-consent-scope.searchHint"
+    ]
+  },
+  {
+    "id": "d5e629b75183591f",
+    "ru": "Не квалифицировать ограниченный доступ как доказанную публичную публикацию; проверять основания и границы фактической обработки. Похожий экран на сайте не равен открытой публикации: режим доступа и получатели меняют вывод.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.explain"
+    ]
+  },
+  {
+    "id": "9d34ec917b8138e9",
+    "ru": "ограниченный круг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b6ad82afe2829a3b",
+    "ru": "определённый круг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "92b4e8fcac81f0da",
+    "ru": "определенный круг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "67b1ec01785e7326",
+    "ru": "уполномоченные получатели",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "497ec539b3c4c2d1",
+    "ru": "Как назван определённый в деле круг получателей?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.extracted.label"
+    ]
+  },
+  {
+    "id": "b227f582e2f59ca6",
+    "ru": "Как назван определённый в деле круг получателей? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.prompt"
+    ]
+  },
+  {
+    "id": "4c2bc1fe7f2c2ddf",
+    "ru": "152-ФЗ статья 3 Таблица оказалась в моём кабинете",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-restricted-access.searchHint"
+    ]
+  },
+  {
+    "id": "ae4a214feeed61e5",
+    "ru": "Проверить выполнение требования о прекращении распространения в указанном объёме и не подменять его уничтожением всего учёта. Изначальное согласие было корректным; решение меняется из-за полученного требования о прекращении, а не из-за дефекта исходной подписи.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.explain"
+    ]
+  },
+  {
+    "id": "04deea0617b74e19",
+    "ru": "прекращение распространения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4eb6e8038719dd68",
+    "ru": "прекратить распространение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b88c49926c01498f",
+    "ru": "распространение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a8499e56d937400d",
+    "ru": "Какое действие является предметом требования?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.extracted.label"
+    ]
+  },
+  {
+    "id": "2a849f5c3f3caf62",
+    "ru": "Какое действие является предметом требования? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.prompt"
+    ]
+  },
+  {
+    "id": "0bfab91c0b97e00e",
+    "ru": "152-ФЗ статья 10.1 Разрешение больше не действует",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-privacy-withdrawal.searchHint"
+    ]
+  },
+  {
+    "id": "41a2bfdb97a7e34d",
+    "ru": "Рассматривать определимое обращение по всему комплекту, а не направлять уведомление из-за краткого первого листа. В варианте с неопределимой сутью дополнительных материалов нет. Здесь принятое приложение меняет вывод: вопрос определяется, требуется рассмотрение по существу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.explain"
+    ]
+  },
+  {
+    "id": "2919f56a79121af2",
+    "ru": "приложение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "e0375f470a381cca",
+    "ru": "содержательное приложение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "d4b0c492f8b29f63",
+    "ru": "читаемое приложение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "40cff078760afec7",
+    "ru": "приложенный документ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "5ea73e53907fa4ba",
+    "ru": "Какая часть комплекта раскрывает вопрос?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.extracted.label"
+    ]
+  },
+  {
+    "id": "0b79ec31e7d3c20d",
+    "ru": "Какая часть комплекта раскрывает вопрос? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.prompt"
+    ]
+  },
+  {
+    "id": "6f64f3d9fe2975b6",
+    "ru": "59-ФЗ статья 11 Ответ находится в приложении",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-readable-attachment.searchHint"
+    ]
+  },
+  {
+    "id": "dd2e3f142a6b031a",
+    "ru": "Не прекращать собственное рассмотрение на основании чужой переписки; оценить установленный предмет своей компетенции. Проверка новых доводов недостаточна: в данном варианте меняется субъект прежних ответов. Первое обращение к компетентному органу нельзя закрыть по истории других органов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.explain"
+    ]
+  },
+  {
+    "id": "820b241956a5a821",
+    "ru": "другие органы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "249c3d563807c5af",
+    "ru": "иные органы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "75a50254bc56901e",
+    "ru": "ответы других органов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "7e8b44bd5ee1279a",
+    "ru": "не тот же орган",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "3c9b7bee48300a0d",
+    "ru": "Какое различие адресатов здесь существенно?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.extracted.label"
+    ]
+  },
+  {
+    "id": "da5e21d88be3221f",
+    "ru": "Какое различие адресатов здесь существенно? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.prompt"
+    ]
+  },
+  {
+    "id": "142f251a9deceb81",
+    "ru": "59-ФЗ статья 11 Ответы были, но у другого органа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-other-authority.searchHint"
+    ]
+  },
+  {
+    "id": "79ea984810c2d12e",
+    "ru": "Продолжить надлежащее рассмотрение: условие о неоднократных письменных ответах по существу не подтверждено. В варианте без новых доводов прежние ответы действительно разрешают вопрос по существу; здесь это лишь уведомления, поэтому количество писем не даёт того же основания.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.explain"
+    ]
+  },
+  {
+    "id": "40e0b5a2e2c83177",
+    "ru": "ответов по существу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "369ab2f17e8efdaf",
+    "ru": "письменных ответов по существу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "f4366ea5127fa2e5",
+    "ru": "по существу поставленного вопроса",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "709ad840d7b5c152",
+    "ru": "Каких ответов нет в подборке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.extracted.label"
+    ]
+  },
+  {
+    "id": "bb6c9f51a32683cb",
+    "ru": "Каких ответов нет в подборке? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.prompt"
+    ]
+  },
+  {
+    "id": "0203627c7ba71396",
+    "ru": "59-ФЗ статья 11 Три письма — ни одного ответа по существу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-routing-only.searchHint"
+    ]
+  },
+  {
+    "id": "59991ae1d0192d96",
+    "ru": "Найдите часть статьи с условиями прекращения переписки и укажите её номер. Свяжите правило с установленными обстоятельствами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-scope.prompt"
+    ]
+  },
+  {
+    "id": "0df41bf96c0ecbeb",
+    "ru": "59-ФЗ статья 11 часть статьи с условиями прекращения переписки",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-scope.searchHint"
+    ]
+  },
+  {
+    "id": "28b4e4b46876c07d",
+    "ru": "Уведомить о неопределимости сути, не смешивая это основание с плохим почерком или непрофессиональной речью. В предыдущем варианте текст физически не читается; здесь он читаем, но предмет не определяется. Основания уведомления различны, хотя продолжительность срока совпадает.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.explain"
+    ]
+  },
+  {
+    "id": "c89bc0a39f82cee8",
+    "ru": "суть обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "0e94c7a1be20147c",
+    "ru": "суть предложения заявления или жалобы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "71d7a7316d1a084d",
+    "ru": "предмет обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "b41aac336d0973af",
+    "ru": "суть вопроса",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "ba624960f272593a",
+    "ru": "Какого элемента не удаётся определить?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.extracted.label"
+    ]
+  },
+  {
+    "id": "8574254e3c709613",
+    "ru": "Какого элемента не удаётся определить? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.prompt"
+    ]
+  },
+  {
+    "id": "7d238cb28c871f9a",
+    "ru": "59-ФЗ статья 11 Все слова читаются, вопрос не определяется",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unclear-subject.searchHint"
+    ]
+  },
+  {
+    "id": "3ee8e5c800cf42b4",
+    "ru": "Уведомить автора о нечитаемости текста, не подменяя отсутствующее содержание догадкой. В исходном анонимном сообщении содержание известно, но автор не установлен. Здесь автор известен, а содержание прочитать нельзя: меняются действие и срок.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.explain"
+    ]
+  },
+  {
+    "id": "e54388b4fd5949ec",
+    "ru": "фамилию и адрес",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "1495b7ea6648d864",
+    "ru": "фамилия и почтовый адрес",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ffe1cba69cb28d34",
+    "ru": "фамилия и адрес",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "ce480a2b25a08e40",
+    "ru": "почтовый адрес и фамилия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "dfb32672bb0d6e31",
+    "ru": "Что можно прочитать для направления уведомления?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.extracted.label"
+    ]
+  },
+  {
+    "id": "38d7df597559e2c3",
+    "ru": "Что можно прочитать для направления уведомления? Свяжите извлечённое сведение с решением по материалам.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.prompt"
+    ]
+  },
+  {
+    "id": "95d34bbe2089b304",
+    "ru": "59-ФЗ статья 11 Адрес читается, текст — нет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v09-unreadable-body.searchHint"
+    ]
+  },
+  {
+    "id": "d7be8777f854cb76",
+    "ru": "бесплатный прием по омс",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "994b87900e916096",
+    "ru": "бесплатная запись по омс",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "93c9c7b8fbb6dde9",
+    "ru": "бесплатный прием",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "4a8a5e8cb6a75f8d",
+    "ru": "по омс",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "9d7d8d62ed94de1d",
+    "ru": "Какой маршрут прямо подтверждён для заявительницы?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.extracted.label"
+    ]
+  },
+  {
+    "id": "fd9bce25561fcffd",
+    "ru": "Какой маршрут прямо подтверждён для заявительницы? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.prompt"
+    ]
+  },
+  {
+    "id": "cfeb398625cd37e9",
+    "ru": "на всей территории российской федерации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "69b8606cb7674447",
+    "ru": "на всей территории россии",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "377126a84a30ee5e",
+    "ru": "по всей россии",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "8ef5e21ac6d41ef3",
+    "ru": "Где действует право на помощь в объёме базовой программы?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.extracted.label"
+    ]
+  },
+  {
+    "id": "999a2869a2f3d2a8",
+    "ru": "Где действует право на помощь в объёме базовой программы? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.prompt"
+    ]
+  },
+  {
+    "id": "70db79c22a55d307",
+    "ru": "326-ФЗ статья 16 ОМС: права застрахованных лиц",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-other-region.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-free-slot.searchHint"
+    ]
+  },
+  {
+    "id": "62ab837051298d59",
+    "ru": "медицинским работникам",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4bdc2cb51ae0125d",
+    "ru": "медицинским специалистам",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5ae40495f1e7a07f",
+    "ru": "врачам",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "816b6e6af61ae7aa",
+    "ru": "Каким специалистам передаётся оценка состояния?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.extracted.label"
+    ]
+  },
+  {
+    "id": "9e1a3f44d808fcd2",
+    "ru": "Каким специалистам передаётся оценка состояния? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.prompt"
+    ]
+  },
+  {
+    "id": "f220fe360bd271ca",
+    "ru": "323-ФЗ статья 11 Охрана здоровья: недопустимость отказа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-oms-urgent-now.searchHint"
+    ]
+  },
+  {
+    "id": "60a0bbfe215545b8",
+    "ru": "безвозмездно",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "a569b74ff821a0d2",
+    "ru": "бесплатно",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1e7e5c7cd836436c",
+    "ru": "без оплаты",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "9a5a612a7687402e",
+    "ru": "Как выдаются предусмотренные статьёй 62 копии?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.extracted.label"
+    ]
+  },
+  {
+    "id": "10c25f44a0774b7a",
+    "ru": "Как выдаются предусмотренные статьёй 62 копии? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.prompt"
+    ]
+  },
+  {
+    "id": "0a5c46d7650877d4",
+    "ru": "197-ФЗ статья 62 Трудовой кодекс РФ: документы о работе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.searchHint"
+    ]
+  },
+  {
+    "id": "86879b3ea456e970",
+    "ru": "два",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "17be11b3853b8c60",
+    "ru": "два платежа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "02c4b468b2bbb0fd",
+    "ru": "Сколько платежей одного периода нужно сопоставить?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.extracted.label"
+    ]
+  },
+  {
+    "id": "3d0652bce92a2eb8",
+    "ru": "Сколько платежей одного периода нужно сопоставить? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.prompt"
+    ]
+  },
+  {
+    "id": "810fd4530aaf725a",
+    "ru": "197-ФЗ статья 136 Трудовой кодекс РФ: состав начисления и выплаты",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.searchHint"
+    ]
+  },
+  {
+    "id": "1d7e448aa0d36b3c",
+    "ru": "компенсация за задержку",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "cdc45f28b8d743e3",
+    "ru": "денежная компенсация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "27b8643a9eb3852f",
+    "ru": "компенсация",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a7e1812041697da6",
+    "ru": "Какое обязательство осталось неподтверждённым?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.extracted.label"
+    ]
+  },
+  {
+    "id": "5013773cb6d9291c",
+    "ru": "Фрагмент доказывает правомерность любых последующих действий учреждения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.findingOptions[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.findingOptions[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "78dd18c65475327d",
+    "ru": "Любой документ по этой теме позволяет не уточнять предмет и объект.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.findingOptions[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.findingOptions[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a39a265ab0319a9f",
+    "ru": "Какое обязательство осталось неподтверждённым? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.prompt"
+    ]
+  },
+  {
+    "id": "b06de010bee4a80a",
+    "ru": "197-ФЗ статья 236 Трудовой кодекс РФ: компенсация за задержку выплаты",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.searchHint"
+    ]
+  },
+  {
+    "id": "7e7eb89074a63f83",
+    "ru": "Проверьте основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-late-compensation.title",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-gross-net.title",
+      "evidence-catalog:EVIDENCE_TASKS.v10-salary-documents-request.title"
+    ]
+  },
+  {
+    "id": "0f64191b28ca0f08",
+    "ru": "испытание трубопровода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b06d1121babc5fcb",
+    "ru": "испытание и замена трубопровода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "8dc6a08a9eb54a8f",
+    "ru": "инженерный этап",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "9c9f47487359db56",
+    "ru": "испытание трубы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "9d0474175c31200d",
+    "ru": "Какой этап подтверждён первоначальным актом?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.extracted.label"
+    ]
+  },
+  {
+    "id": "b91db721d64d4f31",
+    "ru": "Какой этап подтверждён первоначальным актом? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.prompt"
+    ]
+  },
+  {
+    "id": "ec3815d19e815277",
+    "ru": "т-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4f7add496a2dc62b",
+    "ru": "т4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b02bb2f11ec09d24",
+    "ru": "участок т-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "f2fc2325d5d4ace2",
+    "ru": "Какой участок должен совпасть в схеме и акте?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.extracted.label"
+    ]
+  },
+  {
+    "id": "cee2cdddf011f00d",
+    "ru": "Какой участок должен совпасть в схеме и акте? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.prompt"
+    ]
+  },
+  {
+    "id": "c1ea3c794de87c73",
+    "ru": "196-ФЗ статья 12 Безопасность дорожного движения: ремонт и содержание",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-safe-detour.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-restoration.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.searchHint"
+    ]
+  },
+  {
+    "id": "d3e4d3a7ab87f764",
+    "ru": "т-9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "ff62ec7c95f5b3b8",
+    "ru": "т9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "e400db60256fcc91",
+    "ru": "участок т-9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a988a4c7e6f305a3",
+    "ru": "Какой номер относится к обращению?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.extracted.label"
+    ]
+  },
+  {
+    "id": "5074dbe53e9949cf",
+    "ru": "Какой номер относится к обращению? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.prompt"
+    ]
+  },
+  {
+    "id": "c2bdd52a23f7a954",
+    "ru": "59-ФЗ статья 10 Обращения: рассмотрение по существу",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-sidewalk-updated-permit.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.searchHint"
+    ]
+  },
+  {
+    "id": "17e34f8df30ae897",
+    "ru": "время",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "aa6af439e9f2290a",
+    "ru": "временной интервал",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2739ea80b5ec82b1",
+    "ru": "время проверки",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "4a337db437bf5297",
+    "ru": "ночной интервал",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "31166dd9f1ce3709",
+    "ru": "Какой параметр не совпадает у сообщения и первоначального акта?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.extracted.label"
+    ]
+  },
+  {
+    "id": "5dc8ad6241012f23",
+    "ru": "Какой параметр не совпадает у сообщения и первоначального акта? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-night-fault.prompt"
+    ]
+  },
+  {
+    "id": "4d71b46835d9b249",
+    "ru": "режим регулирования",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "6043d4c5cec42d8d",
+    "ru": "длительность фазы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a5e255894ad54302",
+    "ru": "предложение о режиме",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.extracted.accepted[2]"
+    ]
+  }
+]

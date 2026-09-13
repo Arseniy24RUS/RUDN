@@ -1,0 +1,696 @@
+[
+  {
+    "id": "8fd6af2c978593d1",
+    "ru": "Постановление П-73: Правомочным приставом {{decided}} вынесено постановление по ходатайству Х-73. Производство и участники установлены. Нового ходатайства не подавалось.\n\nИсходящий журнал: Запись П-73 помечена «подписано, не направлено». Запись о направлении отсутствует для предусмотренных получателей. Строка о доставке другого документа П-72 не относится к этому постановлению.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-copy-decision].fragments[material].text"
+    ]
+  },
+  {
+    "id": "0dec0649a2cfc362",
+    "ru": "Только дело bailiff-copy-decision",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-copy-decision].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-copy-decision].scope"
+    ]
+  },
+  {
+    "id": "1d54604387ed7392",
+    "ru": "Постановление вынесено, копию не направили · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-copy-decision].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-copy-decision].title"
+    ]
+  },
+  {
+    "id": "b4bf4a144e5c7081",
+    "ru": "Ходатайство Х-51: Указаны производство ИП-51, известный взыскателю конкретный счёт и просьба проверить сведения для совершения исполнительного действия. Мария подписала ходатайство; это не общий запрос о ходе работы.\n\nМаршрут входящего документа: Х-51 поступило в подразделение {{received}}, зарегистрировано {{registered}}, передано правомочному приставу {{officialReceived}}. Факт передачи подтверждён журналом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-specific-petition].fragments[material].text"
+    ]
+  },
+  {
+    "id": "41ce7b3ac243dfd3",
+    "ru": "Только дело bailiff-specific-petition",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-specific-petition].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-specific-petition].scope"
+    ]
+  },
+  {
+    "id": "eaae568b036de212",
+    "ru": "Ходатайство — не справочный вопрос · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-specific-petition].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-specific-petition].title"
+    ]
+  },
+  {
+    "id": "bd716672d4a35e4b",
+    "ru": "Бумажная жалоба Ж-84: Указаны обжалуемый пристав, производство, доводы и требования. Фамилия напечатана, поле подписи пустое. Отдельного подписанного приложения нет.\n\nОпись принятого комплекта: Подразделение приняло только три листа Ж-84 {{received}}. Подписанный оригинал, доверенность с жалобой или электронная подпись не поступали.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-unsigned-complaint].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5be88569fb74710c",
+    "ru": "Только дело bailiff-unsigned-complaint",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-unsigned-complaint].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-unsigned-complaint].scope"
+    ]
+  },
+  {
+    "id": "a79f0d3cb10cd6dd",
+    "ru": "Фамилия напечатана, подписи нет · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-bailiff-unsigned-complaint].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-bailiff-unsigned-complaint].title"
+    ]
+  },
+  {
+    "id": "b674c4816a095624",
+    "ru": "Решение Р-63: Взыскана сумма по гражданскому спору. Решение вступило в силу; отдельный график исполнения судом пока не утверждён.\n\nОбращение и предложенный график: Мария предлагает ежемесячные платежи и прикладывает сведения о временном снижении дохода. Просит объяснить, кто может рассмотреть рассрочку; долг по существу не отрицает.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-installments].fragments[material].text"
+    ]
+  },
+  {
+    "id": "450c789e0d43e0d6",
+    "ru": "Только дело court-installments",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-installments].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-installments].scope"
+    ]
+  },
+  {
+    "id": "08187da1b19215b8",
+    "ru": "Платить частями — не значит отменить решение · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-installments].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-installments].title"
+    ]
+  },
+  {
+    "id": "c2bf2b5c55a88deb",
+    "ru": "Судебный приказ СП-41: Мировой судья вынес приказ о взыскании денежной суммы. Рассмотрения иска с исследованием возражений сторон не проводилось.\n\nПисьмо в администрацию: Илья требует, чтобы администрация отменила СП-41. Возражения в суд ещё не направлял; считает муниципальный талон подтверждением их подачи.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-order-objections].fragments[material].text"
+    ]
+  },
+  {
+    "id": "f83eb7c557265cba",
+    "ru": "Только дело court-order-objections",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-order-objections].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-order-objections].scope"
+    ]
+  },
+  {
+    "id": "770a0f3d2525e342",
+    "ru": "Судебный приказ и возражения должника · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-order-objections].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-order-objections].title"
+    ]
+  },
+  {
+    "id": "aabde23667e2c654",
+    "ru": "Копия решения Д-24: Районный суд взыскал определённую сумму. В фамилии должника один раз указано «Соловёв» вместо «Соловьёв». Паспортные реквизиты, дата рождения и остальные части документа согласованы; сумма не содержит арифметического расхождения.\n\nМатериалы идентификации стороны: Документы в деле и вводная часть решения подтверждают одного и того же Сергея Соловьёва. Гражданин просит исправить букву и отдельно спрашивает, исчезнет ли после этого долг.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-typo-not-merits].fragments[material].text"
+    ]
+  },
+  {
+    "id": "c17b22d0075f1b01",
+    "ru": "material содержит вымышленные обстоятельства; norm – авторское изложение проверенного акта. Источник не подтверждает реальный инцидент.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-typo-not-merits].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-installments].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-order-objections].representation"
+    ]
+  },
+  {
+    "id": "0d1d0e5fe30ab1fa",
+    "ru": "Только дело court-typo-not-merits",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-typo-not-merits].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-typo-not-merits].scope"
+    ]
+  },
+  {
+    "id": "8ad73508712b0724",
+    "ru": "Описка в фамилии — не отмена взыскания · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-court-typo-not-merits].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-court-typo-not-merits].title"
+    ]
+  },
+  {
+    "id": "91d95e0b25eb3d12",
+    "ru": "План работодателя Г-11: В ежедневную плановую норму внесены 11 часов управления. Девять часов обозначены основной работой, ещё два – обязательным доездом, повторяющимся в нескольких сменах.\n\nПояснение работодателя: Автор графика ссылается исключительно на отступление пункта 9 приказа № 160. Неожиданных обстоятельств нет: дополнительные два часа известны до начала смены.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-planned-extension].fragments[material].text"
+    ]
+  },
+  {
+    "id": "652047ce381fbd1c",
+    "ru": "Только дело driver-planned-extension",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-planned-extension].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-planned-extension].scope"
+    ]
+  },
+  {
+    "id": "6cca62b2ff599808",
+    "ru": "Исключение заранее внесли в график · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-planned-extension].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-planned-extension].title"
+    ]
+  },
+  {
+    "id": "8e4ff59f3ac61ea7",
+    "ru": "Хронология рейса Р-17: Управление 2:15 → специальный перерыв 0:15 → управление 2:15 → специальный перерыв 0:30. После второго перерыва начинается следующий фрагмент управления. Время одного часового пояса.\n\nЖурнал обязанностей: Оба перерыва свободны от посадки, ремонта и иной работы. Это специальные перерывы от управления; выбранный рейс междугородный внутри России.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-split-break].fragments[material].text"
+    ]
+  },
+  {
+    "id": "f24bc6c25119603b",
+    "ru": "Только дело driver-split-break",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-split-break].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-split-break].scope"
+    ]
+  },
+  {
+    "id": "ef88f224119d0937",
+    "ru": "Два перерыва вместо одного · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-split-break].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-split-break].title"
+    ]
+  },
+  {
+    "id": "4a205deea4230b1c",
+    "ru": "Фрагмент сменного журнала В-25: Зафиксированы четыре часа управления и два часа стоянки автобуса в ожидании посадки. Запись относится к водителю Сергею, а не к сменщику.\n\nДиспетчерское задание: В двухчасовой промежуток водитель остаётся на рабочем месте, готовит посадку и ожидает указаний диспетчера. Работодатель обозначил этот промежуток как свободный отдых только в табеле.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-waiting-work].fragments[material].text"
+    ]
+  },
+  {
+    "id": "f08a09f1435c40d0",
+    "ru": "Только дело driver-waiting-work",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-waiting-work].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-waiting-work].scope"
+    ]
+  },
+  {
+    "id": "f0874ecd404cd914",
+    "ru": "Автобус стоит, водитель всё ещё работает · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-driver-waiting-work].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-driver-waiting-work].title"
+    ]
+  },
+  {
+    "id": "38efc86eafe803f0",
+    "ru": "План эвакуационного пути: Коридор К-3 ведёт к выходу Э-3. По акту специалиста коробки и тележки размещены поперёк прохода; допустимые параметры не сохранены.\n\nАкт замены механизма Э-3: Механизм двери исправен, открывание изнутри без ключа подтверждено. Складирование в коридоре этим актом не рассматривалось и не устранялось.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-corridor-blocked].fragments[material].text"
+    ]
+  },
+  {
+    "id": "7d666b9bb5adfc0c",
+    "ru": "Только дело fire-corridor-blocked",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-corridor-blocked].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-corridor-blocked].scope"
+    ]
+  },
+  {
+    "id": "7ebf1ad1cdf8e6d6",
+    "ru": "Дверь исправна, прохода к ней нет · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-corridor-blocked].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-corridor-blocked].title"
+    ]
+  },
+  {
+    "id": "963c43979ba41baa",
+    "ru": "План двери Э-2: Дверь Э-2 ведёт из холла наружу. Наружный доступ ограничен, внутри установлен механизм свободного открывания. Особый режим помещений не установлен.\n\nАкт проверки именно Э-2: Проверка {{observed}} выполнена изнутри в том же режиме замка: дверь открывается без ключа. Идентификатор и местоположение совпадают с обращением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-inside-release].fragments[material].text"
+    ]
+  },
+  {
+    "id": "06f36660c8733656",
+    "ru": "Только дело fire-inside-release",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-inside-release].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-inside-release].scope"
+    ]
+  },
+  {
+    "id": "96c0d6a66aea4bbc",
+    "ru": "Снаружи заперто, изнутри открывается · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-inside-release].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-inside-release].title"
+    ]
+  },
+  {
+    "id": "552462e05caa37b5",
+    "ru": "Акт первоначального осмотра: {{observed}} специалист проверил Э-5: свободное открывание изнутри без ключа отсутствовало. Особого режима помещений нет. Выход обозначен на плане эвакуации.\n\nОтчёт исполнителя об устранении: В отчёте показаны дверь Э-4 и её маркировка. Проверено открывание Э-4. Подтверждения по Э-5 документ не содержит, хотя сопроводительное письмо ссылается на жалобу Сергея.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-other-exit-report].fragments[material].text"
+    ]
+  },
+  {
+    "id": "d4a4f028923caafe",
+    "ru": "Только дело fire-other-exit-report",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-other-exit-report].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-other-exit-report].scope"
+    ]
+  },
+  {
+    "id": "563d9d844131de93",
+    "ru": "В акте указан соседний выход · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-fire-other-exit-report].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-fire-other-exit-report].title"
+    ]
+  },
+  {
+    "id": "627cdb22a78b8396",
+    "ru": "Подключение и состав платы КС-18: Страхователь – банк. Мария включена как застрахованное лицо по обеспечивающему кредит договору. Общая плата 40 000 рублей: премия страховщику по ней 30 000, отдельно указанная плата банка 10 000.\n\nПогашение и получение заявления: Кредит полностью погашен досрочно {{observed}}. Банк получил заявление об исключении и возврате {{recipientReceived}}. Событий с признаками страхового случая нет.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-collective-payoff].fragments[material].text"
+    ]
+  },
+  {
+    "id": "a1ecac236769d45b",
+    "ru": "Только дело insurance-collective-payoff",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-collective-payoff].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-collective-payoff].scope"
+    ]
+  },
+  {
+    "id": "4103c2b54a37aa8b",
+    "ru": "В плате две части, возвращает не тот же адресат · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-collective-payoff].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-collective-payoff].title"
+    ]
+  },
+  {
+    "id": "7241c27916fa1960",
+    "ru": "Справка по кредиту К-27: Обязательства по кредиту полностью исполнены досрочно {{observed}}. Это не частичное уменьшение долга. Договор страхования ИС-27 обеспечивал данный кредит и должен был действовать дальше.\n\nПолис и заявление страховщику: Заёмщик указан страхователем. Страховщик получил заявление о возврате {{recipientReceived}}. Премия относится к данному полису; страховых событий с предусмотренными признаками не установлено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-payoff].fragments[material].text"
+    ]
+  },
+  {
+    "id": "cefdde87eac08c11",
+    "ru": "Только дело insurance-individual-payoff",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-payoff].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-individual-payoff].scope"
+    ]
+  },
+  {
+    "id": "191f50f6f02d4658",
+    "ru": "Кредит погашен, тридцать дней давно прошли · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-payoff].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-individual-payoff].title"
+    ]
+  },
+  {
+    "id": "f505409e540471bb",
+    "ru": "Индивидуальный полис ИС-11: В поле «страхователь» указана Мария. Премия уплачена страховщику; страхование обеспечивает потребительский кредит. Это не включение в договор, где страхователем выступает банк.\n\nПодтверждение получения отказа: Страховщик получил подписанное заявление {{recipientReceived}} на двадцатый календарный день после заключения. Отсутствие событий с признаками страхового случая подтверждено. Более раннее письмо в банк получено {{received}}.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-refusal].fragments[material].text"
+    ]
+  },
+  {
+    "id": "90231e3bf8d038f0",
+    "ru": "Только дело insurance-individual-refusal",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-refusal].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-individual-refusal].scope"
+    ]
+  },
+  {
+    "id": "58783dfd56d78f79",
+    "ru": "Полис мой, заявление получено страховщиком · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v14-insurance-individual-refusal].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v14-insurance-individual-refusal].title"
+    ]
+  },
+  {
+    "id": "aed96b28696bf51e",
+    "ru": "Документ о подготовке собаки: Документ П-82 подтверждает специальное обучение собаки-проводника, идентификатор совпадает с предъявленным. Подлинность и установленная форма подтверждены в учебных условиях.\n\nАкт входного контроля: Доступ в зал отказан только по общей табличке «С животными нельзя». Иных причин не указано. Посетитель и собака находятся у входа; приём не начался.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-guide-dog].fragments[material].text"
+    ]
+  },
+  {
+    "id": "13f970e3fcff99c1",
+    "ru": "Только дело access-guide-dog",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-guide-dog].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-guide-dog].scope"
+    ]
+  },
+  {
+    "id": "c04d07d588051e32",
+    "ru": "Проводник остался у входа · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-guide-dog].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-guide-dog].title"
+    ]
+  },
+  {
+    "id": "0f56863d41a26350",
+    "ru": "Запись обращения за помощью: Посетительница просит конфиденциально озвучить полное содержание документа. Не просит сотрудника выбирать условия или подписывать вместо неё.\n\nУсловия доступного обслуживания: Кабинет К-2 свободен; сотрудник может прочитать полный текст или предоставить масштабируемую электронную копию. Посетительница выбирает чтение вслух в кабинете.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-reading-choice].fragments[material].text"
+    ]
+  },
+  {
+    "id": "7fcff82b272567e9",
+    "ru": "Только дело access-reading-choice",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-reading-choice].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-reading-choice].scope"
+    ]
+  },
+  {
+    "id": "d09f5dcb32ad31b9",
+    "ru": "Помочь прочитать — не решить за меня · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-reading-choice].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-reading-choice].title"
+    ]
+  },
+  {
+    "id": "7539f4e1d55f0f9a",
+    "ru": "Журнал очереди Т-40: Талон А-16 вызван только по громкой связи. Визуальное табло в этом секторе не отображает вызовы. Посетительница находилась в зале и не могла узнать о приглашении.\n\nКарточка доступных способов связи: Планшет П-3 исправен и доступен. Посетительница согласна на письменный диалог. Служебная инструкция допускает сопровождение до окна и конфиденциальное письменное разъяснение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-written-dialogue].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5811096b16cb0c64",
+    "ru": "Учебный материал; внешняя ссылка — нормативная основа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-written-dialogue].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-guide-dog].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-reading-choice].kind"
+    ]
+  },
+  {
+    "id": "517fbfe34e84425a",
+    "ru": "material содержит вымышленные обстоятельства; norm — авторское изложение нормативной основы, не автоматическая копия сайта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-written-dialogue].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-guide-dog].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-reading-choice].representation"
+    ]
+  },
+  {
+    "id": "bf6bd89d13105253",
+    "ru": "Только дело access-written-dialogue",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-written-dialogue].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-written-dialogue].scope"
+    ]
+  },
+  {
+    "id": "c409e90b233e933e",
+    "ru": "Меня вызвали только голосом · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-access-written-dialogue].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-access-written-dialogue].title"
+    ]
+  },
+  {
+    "id": "a15fc7ebf7e30eae",
+    "ru": "Опись материалов: Папка Д-42: акт А-4 о состоянии площадки, фотографии объекта без людей и приложение М-2 с медицинскими сведениями другого заявителя. Состав проверен.\n\nЗаключение по доступу: Акт А-4 и фотографии общедоступны для ознакомления по данному обращению. Медицинское приложение затрагивает права третьего лица, согласия или другого основания раскрытия нет. Его нельзя выдать целиком.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-access-materials].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5c2e3957af881436",
+    "ru": "Только дело complaint-access-materials",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-access-materials].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-access-materials].scope"
+    ]
+  },
+  {
+    "id": "63a3b2efd73b855b",
+    "ru": "Покажите, на чём основан ответ · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-access-materials].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-access-materials].title"
+    ]
+  },
+  {
+    "id": "7ed718cb22a11938",
+    "ru": "Текст жалобы: Гражданин оспаривает действия должностного лица С-8 при предыдущем рассмотрении. Действия руководителя и акт органа в целом предметом этой жалобы не являются.\n\nРезолюция руководителя: С-8 поручено дать своё объяснение, затем самому окончательно рассмотреть жалобу и подписать ответ от собственного имени. Другой проверяющий не назначен.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-officer-not-organ].fragments[material].text"
+    ]
+  },
+  {
+    "id": "015e1ad9a69b3602",
+    "ru": "Только дело complaint-officer-not-organ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-officer-not-organ].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-officer-not-organ].scope"
+    ]
+  },
+  {
+    "id": "f13091250563cd70",
+    "ru": "Объяснение работника — не решение по жалобе · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-officer-not-organ].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-officer-not-organ].title"
+    ]
+  },
+  {
+    "id": "630cb6b5d12bc580",
+    "ru": "Первоначальная жалоба Ж-18: Зарегистрирована {{registered}}. Указаны работник, услуга, дата и факт отказа в приёме пакета. Все необходимые условия специального порядка выполнены.\n\nОтвет о порядке: Ж-18 названа общим обращением по закону № 59-ФЗ со сроком 30 дней. В деле отсутствует рассмотрение отказа по специальному порядку; нового регистрационного начала не возникало.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-wrong-procedure].fragments[material].text"
+    ]
+  },
+  {
+    "id": "81858215de4a3a26",
+    "ru": "Только дело complaint-wrong-procedure",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-wrong-procedure].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-wrong-procedure].scope"
+    ]
+  },
+  {
+    "id": "061373222348f33e",
+    "ru": "Ответили о тридцати днях. А предмет другой · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-complaint-wrong-procedure].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-complaint-wrong-procedure].title"
+    ]
+  },
+  {
+    "id": "4b008895af05bd24",
+    "ru": "Личный договор займа: Организация О-17 обязана вернуть служащему личный денежный заём. Обязательство сохраняется, срок выплаты связан с финансовым состоянием организации.\n\nСлужебное поручение: Тот же служащий готовит проект по заявлению О-17. В данном деле благоприятный исход может облегчить исполнение её денежного обязательства перед ним.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-creditor].fragments[material].text"
+    ]
+  },
+  {
+    "id": "cd5909377ca2c7be",
+    "ru": "Только дело conflict-creditor",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-creditor].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-creditor].scope"
+    ]
+  },
+  {
+    "id": "edb2bb1c8646cf74",
+    "ru": "Не родственник, но мой должник · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-creditor].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-creditor].title"
+    ]
+  },
+  {
+    "id": "8cc70280dc54a208",
+    "ru": "Карточка назначения: Служащему А. Соколову поручен проект ответа гражданину Б. Соколову. Предмет относится к полномочиям подразделения.\n\nСведения об отношениях: Лица не родственники, не состоят в свойстве, не имеют общих организаций, обязательств или близких отношений. Возможность частной выгоды по представленным обстоятельствам не установлена.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-namesake].fragments[material].text"
+    ]
+  },
+  {
+    "id": "66632ad936d358e6",
+    "ru": "Только дело conflict-namesake",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-namesake].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-namesake].scope"
+    ]
+  },
+  {
+    "id": "838e5a7f5f93d91d",
+    "ru": "Одинаковая фамилия, разные люди · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-namesake].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-namesake].title"
+    ]
+  },
+  {
+    "id": "28eddc38f4bd28b4",
+    "ru": "Решение об урегулировании: Служащий С-1 отведён от подготовки и согласования обращения Д-41. Исполнителем назначен С-2, который не имеет установленной заинтересованности. Срок рассмотрения обращения сохранён.\n\nИстория проекта: В карточке стоит С-2, но основное содержание и выводы проекта написал С-1, прислав файл вне служебного маршрута. С-2 собирается только подписать подготовленный текст.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-reassignment].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5bfb19a989f9bbf3",
+    "ru": "Только дело conflict-reassignment",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-reassignment].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-reassignment].scope"
+    ]
+  },
+  {
+    "id": "c71353bc9edc8cc5",
+    "ru": "Дело передали, влияние осталось · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-conflict-reassignment].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-conflict-reassignment].title"
+    ]
+  },
+  {
+    "id": "8b1a681a22192f7d",
+    "ru": "Журнал пользователя: Черновик создан {{observed}} и оставался в статусе «не отправлен». До нажатия кнопки у органа не было поступившего обращения.\n\nКвитанция К-38: После отправки {{received}} официальный сервис подтвердил поступление органу. Идентификатор обращения О-381; время предыдущего черновика отдельно обозначено.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-draft-only].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2b96ad0fed5c942c",
+    "ru": "Только дело electronic-draft-only",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-draft-only].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-draft-only].scope"
+    ]
+  },
+  {
+    "id": "b89d86c4f4c4bc5b",
+    "ru": "Черновик есть, квитанции нет · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-draft-only].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-draft-only].title"
+    ]
+  },
+  {
+    "id": "b247cd6447f0ebe3",
+    "ru": "Текст Е-83: Читаемо указаны объект, место, наблюдавшееся обстоятельство и конкретная просьба. Обязательные сведения автора имеются, поступление подтверждено.\n\nПротокол вложения: Дополнительный файл photo.jpg не открывается. Содержание файла неизвестно; иных дефектов основного текста нет. Суть обращения определяется и без изображения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-optional-attachment].fragments[material].text"
+    ]
+  },
+  {
+    "id": "2571c1fb74c6e5ac",
+    "ru": "Только дело electronic-optional-attachment",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-optional-attachment].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-optional-attachment].scope"
+    ]
+  },
+  {
+    "id": "35549f575c7e6601",
+    "ru": "Вложение не открылось, текст прочитан · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-optional-attachment].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-optional-attachment].title"
+    ]
+  },
+  {
+    "id": "f83a9f7ef4cf92fc",
+    "ru": "Квитанция доставки: Обращение Е-72 доставлено {{received}}. В квитанции явно указано: это подтверждение поступления, не результат рассмотрения.\n\nПроверка входящего журнала: Запись решения по Е-72 отсутствует. Материал ожидает регистрации, ответ по существу не готовился. Идентификация отправителя подтверждена сервисом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-receipt-not-result].fragments[material].text"
+    ]
+  },
+  {
+    "id": "486a03a4dd898307",
+    "ru": "Только дело electronic-receipt-not-result",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-receipt-not-result].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-receipt-not-result].scope"
+    ]
+  },
+  {
+    "id": "cdd8a97c3e935027",
+    "ru": "Принято системой — ещё не рассмотрено · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-electronic-receipt-not-result].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-electronic-receipt-not-result].title"
+    ]
+  },
+  {
+    "id": "f46816695fdef8af",
+    "ru": "Акт по точке У-32: Профессиональная служба завершила действия по указанному эпизоду горения. Акт относится к У-32 и не содержит сведений о вывозе отходов.\n\nМатериалы обращения: В обращении два связанных вопроса: ранее происходившее горение и оставшаяся куча отходов. Фотографии после прекращения горения показывают отходы в той же точке.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-after-fire].fragments[material].text"
+    ]
+  },
+  {
+    "id": "0590228cde605b4d",
+    "ru": "Только дело landfill-after-fire",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-after-fire].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-after-fire].scope"
+    ]
+  },
+  {
+    "id": "44e75c44786a6067",
+    "ru": "Горение прекратилось, отходы остались · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-after-fire].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-after-fire].title"
+    ]
+  },
+  {
+    "id": "1903fc7135863982",
+    "ru": "Сообщение и время: Сообщение о продолжающемся горении в точке У-30. Связь с очевидцем сохранена; новых фото с опасного места не требуется.\n\nКарточка территории: Координаты У-30 относятся к территории данного муниципального образования. Собственник участка пока не установлен; дежурная профессиональная служба принимает сообщения с этими координатами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-current-burning].fragments[material].text"
+    ]
+  },
+  {
+    "id": "7759ad6a359e1b93",
+    "ru": "Только дело landfill-current-burning",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-current-burning].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-current-burning].scope"
+    ]
+  },
+  {
+    "id": "c2b3cba4dac180ad",
+    "ru": "Сначала точное место сообщения · материалы основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v16-landfill-current-burning].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v16-landfill-current-burning].title"
+    ]
+  }
+]

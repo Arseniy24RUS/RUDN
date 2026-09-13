@@ -1,0 +1,1135 @@
+[
+  {
+    "id": "d2f3d2771fab99ec",
+    "ru": "Распространить сертификат на весь сезон.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "007a89046d4f8232",
+    "ru": "Номер какой партии должен быть подтверждён?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-seedlings-batch.extracted.label"
+    ]
+  },
+  {
+    "id": "219cffc113fc7586",
+    "ru": "Проверить полный организационный маршрут инициативы. Полномочия субъекта РФ охватывают организацию деятельности с твёрдыми коммунальными отходами, включая накопление, в том числе раздельное. Конкретное предложение проверяется вместе с действующим порядком и дальнейшими звеньями, а не по цвету ёмкостей.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.explain"
+    ]
+  },
+  {
+    "id": "f694bd2b3b5a7163",
+    "ru": "раздельное",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "0340691f25dabd2d",
+    "ru": "раздельное накопление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "a391e5e126a65a6b",
+    "ru": "Проверить полный организационный маршрут инициативы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a0e9068e0c2a494b",
+    "ru": "Считать установку контейнеров полным исполнением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a98e027172a73165",
+    "ru": "Обещать бессрочное финансирование без решения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "6b048b5e91a2775e",
+    "ru": "Какое накопление названо наряду с общим накоплением отходов?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-separate-waste-chain.extracted.label"
+    ]
+  },
+  {
+    "id": "d6d929c8a95d353a",
+    "ru": "Передать установленный риск надлежащему исполнителю и проверить проход. Соответствие состояния дороги требованиям безопасности обеспечивает лицо, осуществляющее содержание дороги. Наличие разрешения на работы не отменяет проверку безопасности фактического прохода; полномочия приёмной и владельца дороги различны.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.explain"
+    ]
+  },
+  {
+    "id": "0dce859a40827319",
+    "ru": "лицо, осуществляющее содержание дороги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "94892949aca0f31f",
+    "ru": "осуществляющее содержание дороги лицо",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "293123bde319277b",
+    "ru": "лицо осуществляющее содержание дороги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "49dd332165cf3f14",
+    "ru": "Передать установленный риск надлежащему исполнителю и проверить проход.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "df259a879bd38e84",
+    "ru": "Считать разрешение доказательством безопасности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "8c46b731a5178e38",
+    "ru": "Объявить сотрудника приёмной владельцем дороги.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "668248d4a5496397",
+    "ru": "Кто обеспечивает соответствие состояния дороги при содержании?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.extracted.label"
+    ]
+  },
+  {
+    "id": "6dbce6f307981c8f",
+    "ru": "Проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sidewalk-boundary.title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.title",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.title"
+    ]
+  },
+  {
+    "id": "f80074781045a126",
+    "ru": "Разделить рекламную квалификацию и проверку воздействия света. Вывески и указатели без рекламной информации исключены из сферы действия закона о рекламе. Это разграничение относится к рекламному содержанию, а не ко всем условиям эксплуатации световой конструкции.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.explain"
+    ]
+  },
+  {
+    "id": "cdce72d13718a9b0",
+    "ru": "отсутствие рекламной информации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "3b9e202670efb289",
+    "ru": "без рекламной информации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b4058ae90bb9cf95",
+    "ru": "не содержат рекламной информации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "ea14820245b8527b",
+    "ru": "Разделить рекламную квалификацию и проверку воздействия света.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "1f4b04dc4907b8bc",
+    "ru": "Отказать во всех требованиях.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "39d2e47dc45af481",
+    "ru": "Всегда применять к названию магазина режим рекламы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "812b2298e22c8042",
+    "ru": "Какой признак важен для этого исключения?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-sign-not-ad.extracted.label"
+    ]
+  },
+  {
+    "id": "9e7a3bc459fac41e",
+    "ru": "Проверить исполнение по П-2. Учебная схема: П-1 – западный переход; П-2 – восточный переход у школы. Заявитель сообщает о П-2, прежний акт составлен по П-1.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.explain"
+    ]
+  },
+  {
+    "id": "157cea90e6ee0996",
+    "ru": "П-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "d31c423f7e1490e5",
+    "ru": "П2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "9ca12421a519efe4",
+    "ru": "Проверить исполнение по П-2.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "95072f468a305802",
+    "ru": "Закрыть по П-1.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d2604bfe7aeddb44",
+    "ru": "Считать оба устройства тождественными.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "1fadc3a140327f3b",
+    "ru": "Какой идентификатор нужно сопоставить с результатом проверки?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-signal-other-crossing.extracted.label"
+    ]
+  },
+  {
+    "id": "a9a8480babec19d8",
+    "ru": "Считать в месяцах, затем проверить перенос окончания. Срок в месяцах истекает в соответствующее число последнего месяца. Если такого числа нет, используется последний день этого месяца. Нерабочее окончание переносится на ближайший следующий рабочий день. Это не прибавление фиксированных 90 дней.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.explain"
+    ]
+  },
+  {
+    "id": "6bb163f69830a7e7",
+    "ru": "последний день этого месяца",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "310494bdd81c48ba",
+    "ru": "последний день месяца",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "c265c924fdabcd3b",
+    "ru": "последний календарный день месяца",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "89408c35427fc9b4",
+    "ru": "Считать в месяцах, затем проверить перенос окончания.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a0cb782476eb61b4",
+    "ru": "Всегда добавлять 90 дней.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "b36f461dbe902fc9",
+    "ru": "Начать срок от ответа инспектора.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "6ce27d4c03f58727",
+    "ru": "Какой день берётся, если в последнем месяце нет соответствующего числа?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.e6task-tax-calendar-months.extracted.label"
+    ]
+  },
+  {
+    "id": "a61fa9a6b062bb99",
+    "ru": "Проверить лицензию в соответствующем реестре и сопоставить юридическое лицо с договором. Реестр лицензий и реестр государственной аккредитации решают разные задачи. Отсутствие записи об аккредитации само по себе не доказывает отсутствие лицензии. В упражнении проверяется организация по её идентификатору и лицензия на обозначенный вид деятельности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.explain"
+    ]
+  },
+  {
+    "id": "a7238bfcc2b1254f",
+    "ru": "реестр лицензий",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "7aa2c0f345f25d62",
+    "ru": "сводный реестр лицензий",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "0b83d7eb6c230b58",
+    "ru": "реестр лицензий на образовательную деятельность",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "3e42964235b75626",
+    "ru": "Какой реестр нужен для проверки наличия лицензии?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.extracted.label"
+    ]
+  },
+  {
+    "id": "7a31f7e9d6c53265",
+    "ru": "Проверить лицензию в соответствующем реестре и сопоставить юридическое лицо с договором.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "145ecb72986f1c13",
+    "ru": "Объявить отсутствие лицензии по результату поиска аккредитации.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "2daf88d941d5399f",
+    "ru": "Использовать запись одноимённой организации без сверки идентификатора.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "378d2898ab3b27ee",
+    "ru": "Какой реестр нужен для проверки наличия лицензии? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.edu-register.prompt"
+    ]
+  },
+  {
+    "id": "f0c2df7156d68b9c",
+    "ru": "Различить техническую ошибку записи и ошибку исходного документа, применить специальный срок. Техническая ошибка допущена при внесении записи органом регистрации прав: исходный документ содержит верные сведения. По условиям упражнения исправление не меняет принадлежность права и не нарушает интересы третьих лиц. Применяется срок три рабочих дня; ошибка исходного документа требует иного анализа.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.explain"
+    ]
+  },
+  {
+    "id": "c4a3c1238f992c94",
+    "ru": "техническая",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "dbe7300e28819bf8",
+    "ru": "техническая ошибка",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "64a0dcf2b2a33e19",
+    "ru": "Укажите вид ошибки, допущенной регистратором при переносе верных сведений",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.extracted.label"
+    ]
+  },
+  {
+    "id": "f4eab3ff2910c003",
+    "ru": "Различить техническую ошибку записи и ошибку исходного документа, применить специальный срок.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7ee462fba4d49cd9",
+    "ru": "Применить обычные 30 дней ответа вместо срока исправления.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "8ec963cd3a8388df",
+    "ru": "Изменить собственника без проверки прав.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "93e40c79dda7aea1",
+    "ru": "Укажите вид ошибки, допущенной регистратором при переносе верных сведений Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.egrn-technical.prompt"
+    ]
+  },
+  {
+    "id": "f329c8181398b219",
+    "ru": "Различить контактный адрес и надлежащий канал, а регистрацию считать от фактического поступления надлежащего обращения. С 30.03.2025 общий порядок 59-ФЗ предусматривает электронное обращение через соответствующие системы или официальный сайт с идентификацией и/или аутентификацией. Произвольный email на странице контактов нельзя автоматически считать таким каналом. В учебном деле надлежащее обращение уже поступило через подтверждённый канал.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.explain"
+    ]
+  },
+  {
+    "id": "53f5425099dcb719",
+    "ru": "Госуслуги",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "1af27b8ee9da09ca",
+    "ru": "ЕПГУ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "97d3b1045b8f9ec8",
+    "ru": "портал Госуслуг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "17566d3d730a6e17",
+    "ru": "Единый портал государственных и муниципальных услуг",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "c2da141cf9181d58",
+    "ru": "Назовите портал, прямо предусмотренный общим порядком электронного обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.extracted.label"
+    ]
+  },
+  {
+    "id": "d101d7b88feb6046",
+    "ru": "Различить контактный адрес и надлежащий канал, а регистрацию считать от фактического поступления надлежащего обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "282621f92306313d",
+    "ru": "Считать любой найденный email официальной электронной приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "fcc8c85d03ffe564",
+    "ru": "Требовать у гражданина пароль от Госуслуг.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "37e7961f7d8c9971",
+    "ru": "Назовите портал, прямо предусмотренный общим порядком электронного обращения Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.electronic-channel.prompt"
+    ]
+  },
+  {
+    "id": "2e2a1e5c3b775e89",
+    "ru": "Проверить фактическое открывание изнутри, а не наличие ключа у сотрудника. Для обычного объекта без специального режима запор эвакуационной двери должен позволять открыть её изнутри без ключа. В кейсе прямо задано отсутствие специального режима. Наличие ключа на другом этаже у охранника не тождественно свободному открыванию изнутри.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.explain"
+    ]
+  },
+  {
+    "id": "1de36a32af798da0",
+    "ru": "ключ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "c12d04961bb5f8ce",
+    "ru": "ключа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "cbd9a5e2ab8bf5cb",
+    "ru": "использование ключа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "dd0f671b59767a7f",
+    "ru": "Что не должно требоваться для открывания двери изнутри?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.extracted.label"
+    ]
+  },
+  {
+    "id": "7b69b009d6270086",
+    "ru": "Проверить фактическое открывание изнутри, а не наличие ключа у сотрудника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "0f812a9337402c89",
+    "ru": "Считать ключ у охранника достаточным подтверждением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4134ac57f39d1416",
+    "ru": "Подменить проверку внешним видом двери.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a5c259287148cf41",
+    "ru": "Что не должно требоваться для открывания двери изнутри? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.fire-egress.prompt"
+    ]
+  },
+  {
+    "id": "514e5aaf50086f9b",
+    "ru": "Сопоставить маркировку конкретной партии, дату покупки и сведения о продолжающейся продаже. Срок годности и условия хранения проверяются по маркировке конкретного товара. Документ на свежую партию не подтверждает состояние другой партии на прилавке. В учебной ситуации речь о продукции с истёкшим сроком; требуется надлежащее рассмотрение, а не самостоятельное назначение санкции приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.explain"
+    ]
+  },
+  {
+    "id": "36df766d18655107",
+    "ru": "срок годности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b240a51b4c62f202",
+    "ru": "дата окончания срока годности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "5dd221a3f4a816e5",
+    "ru": "годен до",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "0f67fb0ab4f03162",
+    "ru": "Какой реквизит маркировки нужно сопоставить с датой продажи?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.extracted.label"
+    ]
+  },
+  {
+    "id": "3204d954653955ed",
+    "ru": "Сопоставить маркировку конкретной партии, дату покупки и сведения о продолжающейся продаже.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "220a1dfacb79e744",
+    "ru": "Считать сертификат другой партии ответом на жалобу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a6f36216f2cb8754",
+    "ru": "Обещать закрытие магазина от имени приёмной.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "81a3c4df9f885b8e",
+    "ru": "Какой реквизит маркировки нужно сопоставить с датой продажи? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.food-label.prompt"
+    ]
+  },
+  {
+    "id": "6b39e46be223ff13",
+    "ru": "Выполнить учебную оперативную передачу сообщения, не откладывая её до письменного ответа. При запахе газа аварийная служба вызывается по 104 либо через единый номер 112. Нельзя предлагать проверять утечку огнём. В игре сообщение моделируется: реального звонка нет. Бумажный срок обращения не заменяет оперативного сообщения об опасности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.explain"
+    ]
+  },
+  {
+    "id": "3e34e7b1c0e12411",
+    "ru": "Укажите один из указанных номеров: аварийная газовая или единая служба",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.extracted.label"
+    ]
+  },
+  {
+    "id": "53f5e29c889e0029",
+    "ru": "Выполнить учебную оперативную передачу сообщения, не откладывая её до письменного ответа.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "2bb1245b827e01e1",
+    "ru": "Ждать истечения срока письменного обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "86ad97abf1eba110",
+    "ru": "Попросить проверить источник запаха зажигалкой.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "08b780c81b6bdbb2",
+    "ru": "Укажите один из указанных номеров: аварийная газовая или единая служба Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.gas-number.prompt"
+    ]
+  },
+  {
+    "id": "2ef8689730dc7c43",
+    "ru": "Проверить основания работ на лестнице через орган охраны наследия. В учебной выписке объектом охраны названы фасад и историческая лестница здания. Предъявленный подрядчиком документ касается только кровли. Эти сведения требуют сопоставить предмет охраны и разрешённые работы, не приписывая документу более широкого действия.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.explain"
+    ]
+  },
+  {
+    "id": "4dc7930292b46207",
+    "ru": "кровля",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "31fa4d157880743a",
+    "ru": "кровли",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "eab1c3af46c0bf5f",
+    "ru": "ремонт кровли",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "3a78cf3888a419ae",
+    "ru": "Какой вид работ назван в документе подрядчика?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.extracted.label"
+    ]
+  },
+  {
+    "id": "0472910881b2b33d",
+    "ru": "Проверить основания работ на лестнице через орган охраны наследия.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "3452996a4a51104b",
+    "ru": "Считать ремонт кровли разрешением демонтировать лестницу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "405be00ad274e388",
+    "ru": "Признать любой ремонт памятника запрещённым.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2f7e6890b713a582",
+    "ru": "Какой вид работ назван в документе подрядчика? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.heritage-object.prompt"
+    ]
+  },
+  {
+    "id": "1358c288001451d8",
+    "ru": "Статья 10 — основание для рассмотрения и ответа, а не автоматическое бюджетное разрешение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.explain"
+    ]
+  },
+  {
+    "id": "3c280bb5c9bd445b",
+    "ru": "Номер статьи 59-ФЗ о рассмотрении обращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.extracted.label"
+    ]
+  },
+  {
+    "id": "ace8dd11d6df47e4",
+    "ru": "Норма об ответе обязывает профинансировать каждое предложение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.findingOptions[fund].text"
+    ]
+  },
+  {
+    "id": "8f330e72c6d7ed99",
+    "ru": "Раз это предложение, ответ не нужен.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.findingOptions[none].text"
+    ]
+  },
+  {
+    "id": "dc020ec2dece1f41",
+    "ru": "Нужно рассмотреть предложение и дать содержательный ответ. Одного обращения недостаточно для обещания бюджетных расходов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.findingOptions[substance].text"
+    ]
+  },
+  {
+    "id": "8b6a28ee9549c632",
+    "ru": "Найдите норму об объективном рассмотрении и ответе по существу. Установите, даёт ли она сама по себе право обещать финансирование проекта.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.prompt"
+    ]
+  },
+  {
+    "id": "53a3b82f976c98c4",
+    "ru": "Ответ и обещание финансирования",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.initiative.title",
+      "evidence-catalog:EVIDENCE_TASKS.initiative.searchHint"
+    ]
+  },
+  {
+    "id": "5516e2997d474d13",
+    "ru": "Подготовить материалы в пределах полномочий трудовой инспекции, не обещая автоматического взыскания спорной суммы. Статья 357 описывает полномочия государственного инспектора труда. Денежный спор и контрольное реагирование не превращают обычную приёмную в суд. Сопоставляются начисления, фактическая выплата и предмет жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.explain"
+    ]
+  },
+  {
+    "id": "a30961d1bca5e56e",
+    "ru": "статья 357",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "492c3222ed0b0b3d",
+    "ru": "ст. 357",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "12c7d607d7fc9dbd",
+    "ru": "Укажите номер статьи ТК РФ о полномочиях инспектора труда",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.extracted.label"
+    ]
+  },
+  {
+    "id": "9804404c390ce6f7",
+    "ru": "Подготовить материалы в пределах полномочий трудовой инспекции, не обещая автоматического взыскания спорной суммы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "97229f8707633a49",
+    "ru": "Самостоятельно взыскать любую названную сумму с работодателя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "1629a267312f4de3",
+    "ru": "Признать письмо работодателя доказательством полного расчёта без документов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "00c7d66ede4d382f",
+    "ru": "Укажите номер статьи ТК РФ о полномочиях инспектора труда Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.prompt"
+    ]
+  },
+  {
+    "id": "49fd5cc1b4d73175",
+    "ru": "Основание решения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.labour.title",
+      "evidence-catalog:EVIDENCE_TASKS.oms.title",
+      "evidence-catalog:EVIDENCE_TASKS.tree-object.title"
+    ]
+  },
+  {
+    "id": "3d8162dd2699b2cd",
+    "ru": "Наименование и территория проверяются вместе. Документ о федеральном законе на сайте Минтруда не делает министерство держателем местного бюджета.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.explain"
+    ]
+  },
+  {
+    "id": "159aa8f713c82fa8",
+    "ru": "г Москва",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "f126712ca7e83897",
+    "ru": "город Москва",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "58f4a5e94b14ce15",
+    "ru": "Город, указанный в наименовании официального сайта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.extracted.label"
+    ]
+  },
+  {
+    "id": "9e05066fe5d6444e",
+    "ru": "Сайт относится к муниципальному округу в Москве. Похожее название другой территории не определяет адресата.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.findingOptions[local].text"
+    ]
+  },
+  {
+    "id": "9e695e871ac41aca",
+    "ru": "Поскольку закон опубликован Минтрудом, местный бюджет следует запросить у Минтруда.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.findingOptions[ministry].text"
+    ]
+  },
+  {
+    "id": "67c57d238f9aa907",
+    "ru": "Название подтверждает, что речь о бюджете Нижегородской области.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.findingOptions[region].text"
+    ]
+  },
+  {
+    "id": "9db9c7fb8d34c77c",
+    "ru": "Проверьте территориальную принадлежность сайта муниципального округа. Введите город, к которому относится сайт, а затем укажите вывод.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.prompt"
+    ]
+  },
+  {
+    "id": "38731fe42d516365",
+    "ru": "муниципальный округ Нижегородский Москва официальный сайт бюджет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.searchHint"
+    ]
+  },
+  {
+    "id": "c241cf30b5f918fd",
+    "ru": "Москва или Нижегородская область?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.title"
+    ]
+  },
+  {
+    "id": "eab0a0d432b5bf46",
+    "ru": "Проверить правовое основание требования и обеспечить получение сведений установленным способом. В упражнении сведения доступны межведомственно; требование бумажной справки не предусмотрено правилами услуги и не относится к исключениям о личном представлении. Документы уже приняты, отказа в приёме и спора об исправлении опечатки нет. Нельзя автоматически применять сокращённый срок для иных предметов жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.explain"
+    ]
+  },
+  {
+    "id": "c5a6a8eb7b652d56",
+    "ru": "межведомственный обмен",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.extracted.accepted[0]",
+      "evidence-catalog:EVIDENCE_TASKS.v09-mfc-interagency-silence.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "6e0304c7a72047c2",
+    "ru": "межведомственный запрос",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ee76c2433f06ea0a",
+    "ru": "межведомственно",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "e7be5b192fa21e00",
+    "ru": "Какой способ получения сведений указан в условиях вместо требования к заявителю?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.extracted.label"
+    ]
+  },
+  {
+    "id": "458d6d07b6ae6faf",
+    "ru": "Проверить правовое основание требования и обеспечить получение сведений установленным способом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "b584286a4b334db7",
+    "ru": "Требовать любую справку для удобства сотрудника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a9a72bd3cf2030c4",
+    "ru": "Применить сокращённый срок без совпадения предмета жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "5e20fcd1b0ca6167",
+    "ru": "Какой способ получения сведений указан в условиях вместо требования к заявителю? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-extra.prompt"
+    ]
+  },
+  {
+    "id": "02605a2a485ed155",
+    "ru": "Часть 1 статьи 11.2 допускает учредителя либо специально уполномоченное субъектом лицо. В этом сценарии второй вариант исключён условием.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.explain"
+    ]
+  },
+  {
+    "id": "3210de673d8e9371",
+    "ru": "учредитель МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f4e276d245dfc50b",
+    "ru": "учредителю МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "20e685e44bd3f9ce",
+    "ru": "учредитель многофункционального центра",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "f96991478b8dd11c",
+    "ru": "учредителю многофункционального центра",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "2e8f0a8d7bccba7e",
+    "ru": "Кому направляется жалоба в этих условиях",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.extracted.label"
+    ]
+  },
+  {
+    "id": "de4c926e88021d8d",
+    "ru": "Любая подпись работника превращает решение центра в жалобу только на этого работника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.findingOptions[employee].text"
+    ]
+  },
+  {
+    "id": "534496617d3b3079",
+    "ru": "Жалоба на решение центра относится к учредителю при заданном отсутствии иного уполномоченного должностного лица.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.findingOptions[institution].text"
+    ]
+  },
+  {
+    "id": "b834b58fcfe83367",
+    "ru": "Центр окончательно рассматривает собственное решение вместо учредителя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.findingOptions[self].text"
+    ]
+  },
+  {
+    "id": "99e72999038a7e79",
+    "ru": "По условию оспаривается решение самого МФЦ; специальное уполномоченное должностное лицо субъекта не назначено. Найдите адресата и норму, не подменяя предмет жалобы действием отдельного работника.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.prompt"
+    ]
+  },
+  {
+    "id": "7178a867d7a5a4ed",
+    "ru": "Работник или центр как организация?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.title",
+      "evidence-catalog:EVIDENCE_TASKS.mfc-institution.searchHint"
+    ]
+  },
+  {
+    "id": "e508ef1bb535a343",
+    "ru": "Рассмотреть жалобу на отказ исправить опечатку по соответствующему сокращённому сроку. Для предусмотренной законом жалобы на отказ в исправлении опечаток и ошибок в выданных документах либо нарушение установленного срока исправления применяется пять рабочих дней со дня регистрации жалобы. Это срок рассмотрения жалобы, а не универсальный срок любого технического исправления в любом реестре.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.explain"
+    ]
+  },
+  {
+    "id": "abd18920076c974f",
+    "ru": "пять",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "c78768c3fab5183d",
+    "ru": "пять рабочих дней",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "ed4afbf91b652738",
+    "ru": "Сколько рабочих дней предусмотрено для указанной жалобы?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.extracted.label"
+    ]
+  },
+  {
+    "id": "b88c000b1a7caae9",
+    "ru": "Рассмотреть жалобу на отказ исправить опечатку по соответствующему сокращённому сроку.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "71072aee3ca1154f",
+    "ru": "Применить правило к любым спорам о праве собственности.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "3448ade53ae18d5c",
+    "ru": "Отсчитывать срок жалобы от даты рождения заявителя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "06aa193704244514",
+    "ru": "Сколько рабочих дней предусмотрено для указанной жалобы? Затем свяжите это сведение с действием по делу.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-typo.prompt"
+    ]
+  },
+  {
+    "id": "20f130c30e001d7e",
+    "ru": "Часть 1 статьи 11.2 разграничивает адресатов. Здесь обжалуется действие работника, поэтому подходит руководитель центра.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.explain"
+    ]
+  },
+  {
+    "id": "98aa929c3aafa554",
+    "ru": "руководитель МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "d3f2eae7b3d9418f",
+    "ru": "руководителю МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "cb5791b6f9d3c22e",
+    "ru": "руководитель этого МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a8463b0c055a6610",
+    "ru": "директор МФЦ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.mfc-worker.extracted.accepted[3]"
+    ]
+  }
+]

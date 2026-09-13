@@ -1,0 +1,1167 @@
+[
+  {
+    "id": "3ed6d9bd56f43217",
+    "ru": "Пункт 26 Правил противопожарного режима требует свободного открывания соответствующих эвакуационных дверей изнутри без ключа, с предусмотренным исключением для особого режима помещений. В этих заданиях исключение отсутствует. Закрытая снаружи дверь не доказывает невозможность открыть её изнутри; проверенный свободный выход не удостоверяет безопасность всего здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].coach.research",
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.explain",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].coach.research"
+    ]
+  },
+  {
+    "id": "eb559ffef76350ca",
+    "ru": "На изображении видна наружная сторона двери и замочная скважина. Внутреннее открывание по этой фотографии определить нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d0].text"
+    ]
+  },
+  {
+    "id": "56b4de33c05b10d6",
+    "ru": "Фотография с улицы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a9df0e87bac35ad2",
+    "ru": "Дверь Э-2 ведёт из холла наружу. Наружный доступ ограничен, внутри установлен механизм свободного открывания. Особый режим помещений не установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d1].text"
+    ]
+  },
+  {
+    "id": "8255b6e322130a2f",
+    "ru": "План двери Э-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3b0873e87ffa1275",
+    "ru": "Проверка {{observed}} выполнена изнутри в том же режиме замка: дверь открывается без ключа. Идентификатор и местоположение совпадают с обращением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d2].text"
+    ]
+  },
+  {
+    "id": "20711bc750c3414e",
+    "ru": "Акт проверки именно Э-2",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].documents[d2].title"
+    ]
+  },
+  {
+    "id": "2b09235a1e55aa30",
+    "ru": "Наружная запертость не доказывает блокировку эвакуации при подтверждённом свободном открывании изнутри. В базовом деле для выхода требовался ключ. Здесь внутреннее открывание свободно; нельзя ставить знак равенства между ограничением входа и блокировкой выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.explain"
+    ]
+  },
+  {
+    "id": "fbd232abafd3fdd0",
+    "ru": "Наружная запертость не доказывает блокировку эвакуации при подтверждённом свободном открывании изнутри.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "f9c4035ff5c683c2",
+    "ru": "Любая замочная скважина на наружной стороне доказывает нарушение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "ae982a6adfe4dbc9",
+    "ru": "Один акт по двери подтверждает полную пожарную безопасность всего здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-inside-release.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "364f724f30679ee8",
+    "ru": "При следующем осмотре внутренний механизм той же двери иногда заклинивает. Пожара сейчас нет, но неисправность подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].followup.intro"
+    ]
+  },
+  {
+    "id": "403b37a5d3f0d826",
+    "ru": "Передать новые сведения ответственным специалистам и организовать контроль устранения, не полагаясь на прежний исправный акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].followup.options[0].text",
+      "cases:CASE_TEMPLATES[fire-inside-release].followup.explain"
+    ]
+  },
+  {
+    "id": "a5091d6decabd5b4",
+    "ru": "Игнорировать неисправность, поскольку старый акт положительный.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "9146bf71a8145b77",
+    "ru": "Попросить гражданина многократно испытывать выход вместо специалистов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "5f242c29408eb10c",
+    "ru": "Правительство Российской Федерации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.issuer",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].knowledge.issuer",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].knowledge.issuer"
+    ]
+  },
+  {
+    "id": "1b95324d4c88b7b3",
+    "ru": "Потребовать демонтировать дверь по виду замочной скважины.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "c652016bb19dbc45",
+    "ru": "Закрыть все вопросы по зданию на основании одного акта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "8b99df061b7f6787",
+    "ru": "Найдите нормативное основание следующего действия: Проверить свободное открывание изнутри без ключа и не выводить блокировку только из наружной фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "75331d9b1a08a6f2",
+    "ru": "Учебный профиль пунктов 26/27 ПП РФ №1479 на 07.09.2026. После окончания действия акта нужна редакционная актуализация правового профиля, независимо от обновления календаря.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].legalApplicability.scope",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].legalApplicability.scope"
+    ]
+  },
+  {
+    "id": "c63c63bd055657c6",
+    "ru": "Снаружи дверь запасного выхода не открылась. На ней замочная скважина. Значит, выход точно заблокирован и надо немедленно выломать замок?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].opening"
+    ]
+  },
+  {
+    "id": "9030bdc7ef8982f1",
+    "ru": "Рассмотрение конкретного обращения о работоспособности эвакуационного выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].procedures[0].text"
+    ]
+  },
+  {
+    "id": "04117474d52271a5",
+    "ru": "С улицы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q0].answer",
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "3f25d4ff79930cfc",
+    "ru": "С какой стороны проверяли дверь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q0].text"
+    ]
+  },
+  {
+    "id": "1797ffbdf5afe274",
+    "ru": "Да, ответственный проверил изнутри без ключа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q1].answer",
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "af93872ab4589a9b",
+    "ru": "Есть ли данные о работе внутреннего механизма?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q1].text"
+    ]
+  },
+  {
+    "id": "81e88a8ae9b27840",
+    "ru": "Да, Э-2.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q2].answer",
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "0c0d1518607ceb13",
+    "ru": "На акте та же дверь?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q2].text"
+    ]
+  },
+  {
+    "id": "0e142936ab4c5d19",
+    "ru": "Нет, я спрашиваю о видимом замке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q3].answer",
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "402fe667d20519f3",
+    "ru": "Есть ли сейчас дым или невозможность выхода?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].questions[q3].text"
+    ]
+  },
+  {
+    "id": "b6c4eca8d82b5677",
+    "ru": "Специалист приёмной по обращениям о пожарной безопасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].role.title"
+    ]
+  },
+  {
+    "id": "879296c0253eb252",
+    "ru": "Ответственное подразделение по пожарной безопасности и компетентный пожарный надзор по установленному объекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].routes[0].text"
+    ]
+  },
+  {
+    "id": "f85528ea462d9ecf",
+    "ru": "Проверить свободное открывание изнутри без ключа и не выводить блокировку только из наружной фотографии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[fire-inside-release].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[fire-inside-release].contrast.decision"
+    ]
+  },
+  {
+    "id": "e686d9a0ff2c29a8",
+    "ru": "Снаружи заперто, изнутри открывается",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[fire-inside-release].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[fire-inside-release].title"
+    ]
+  },
+  {
+    "id": "c39d612f88369213",
+    "ru": "Эвакуационные пути",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].topic",
+      "cases:CASE_TEMPLATES[fire-corridor-blocked].topic",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].topic"
+    ]
+  },
+  {
+    "id": "b1ea3774b7e59ae8",
+    "ru": "Проверить свободное открывание изнутри без ключа и не выводить блокировку только из наружной фотографии. В базовом деле для выхода требовался ключ. Здесь внутреннее открывание свободно; нельзя ставить знак равенства между ограничением входа и блокировкой выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].trap.explain"
+    ]
+  },
+  {
+    "id": "724bf0249c1b8566",
+    "ru": "Проверка внутреннего открывания позволяет ограниченный вывод о двери, а не о всём здании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-inside-release].trap.text"
+    ]
+  },
+  {
+    "id": "e1254b4ec39ff304",
+    "ru": "Зафиксировать дверь, возможность открывания и отсутствие специального режима",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6eee6402886e29fb",
+    "ru": "Смоделировать оперативное сообщение ответственным за безопасность объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[a1].title"
+    ]
+  },
+  {
+    "id": "77770de0e28b28ad",
+    "ru": "Подготовить направление по установленной надзорной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[a2].title"
+    ]
+  },
+  {
+    "id": "b6a39a4322fc4b1a",
+    "ru": "Объяснить различие сообщения о риске и установленного результата проверки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[a3].title"
+    ]
+  },
+  {
+    "id": "87b315d2cdf8e27e",
+    "ru": "Запросить подтверждение фактического устранения препятствия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[a4].title"
+    ]
+  },
+  {
+    "id": "4f2226bd1da116a0",
+    "ru": "Предложить посетителю самостоятельно ломать запор",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[b0].title",
+      "cases:CASE_TEMPLATES[fire-key].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "5388b36957c4a9bc",
+    "ru": "Объявить выход безопасным только из-за ключа у охраны",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].actions[b1].title"
+    ]
+  },
+  {
+    "id": "c4f530c5a1b4e1af",
+    "ru": "Направление письменного сообщения по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].calendar.title"
+    ]
+  },
+  {
+    "id": "88a7ef873a741423",
+    "ru": "Посетитель общественного здания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].citizen.description"
+    ]
+  },
+  {
+    "id": "25b7992c814cb25c",
+    "ru": "Дверь обозначена эвакуационной, обычный объект без специального режима. Изнутри без ключа не открывается; ключ у охраны на другом этаже.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].documents[d0].text"
+    ]
+  },
+  {
+    "id": "a90b627272315711",
+    "ru": "План и карточка осмотра посетителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].documents[d0].title"
+    ]
+  },
+  {
+    "id": "97d12677a6e469fd",
+    "ru": "Утверждает, что ключа у охраны достаточно, но подтверждения свободного открывания не приводит.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].documents[d1].text"
+    ]
+  },
+  {
+    "id": "b94c455ec055f4ad",
+    "ru": "Объяснение администратора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3379bb145114174e",
+    "ru": "Ключ у охраны не подтверждает возможность открыть обычный эвакуационный выход изнутри без ключа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[fire-key].factTask.explain",
+      "cases:CASE_TEMPLATES[fire-key].outcomes.good"
+    ]
+  },
+  {
+    "id": "5da8aa3f80b5bd33",
+    "ru": "Ключ в здании всегда снимает все вопросы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "e811f14e51e3d6f0",
+    "ru": "Отсутствие дыма позволяет заблокировать выход.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "d1e975db9d213ea2",
+    "ru": "Учебное продолжение. Прислали фотографию открытой двери, но способ открытия изнутри не показан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].followup.intro"
+    ]
+  },
+  {
+    "id": "694af4462e3ab1e3",
+    "ru": "Уточнить фактическую возможность открыть дверь изнутри без ключа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].followup.options[0].text",
+      "cases:CASE_TEMPLATES[fire-key].followup.explain"
+    ]
+  },
+  {
+    "id": "a921cbda8488494f",
+    "ru": "Считать снимок достаточным для любого вывода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6d40fd87085f27b5",
+    "ru": "Разрешить снова запереть выход.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "d5d132f22c054fe2",
+    "ru": "У обозначенного эвакуационного выхода дверь заперта. Охрана говорит, ключ у них этажом ниже. Дыма сейчас нет, но в зале много людей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].opening"
+    ]
+  },
+  {
+    "id": "38c08535cc0ce744",
+    "ru": "Оперативное информирование ответственных и обращение по надзорной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].procedures[0].text"
+    ]
+  },
+  {
+    "id": "fe940ca1f649a9ec",
+    "ru": "Самостоятельное переоборудование двери посетителем",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].procedures[1].text"
+    ]
+  },
+  {
+    "id": "e3a851cb39807bc3",
+    "ru": "Назначение штрафа приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].procedures[2].text"
+    ]
+  },
+  {
+    "id": "3d614f53c90bbb0d",
+    "ru": "Да, по условиям план и знак подтверждают назначение двери.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "e5615d549c435210",
+    "ru": "Назначение выхода задано документами.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "b168d115ac431321",
+    "ru": "Это обозначенный эвакуационный выход?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q0].text"
+    ]
+  },
+  {
+    "id": "437a9f976d2180a4",
+    "ru": "Нет. Для открытия зовут охранника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "deb448506b7d4625",
+    "ru": "Есть существенное препятствие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "7c97ffd08e527a32",
+    "ru": "Можно ли открыть изнутри без ключа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q1].text"
+    ]
+  },
+  {
+    "id": "f9538e4ed9882ec8",
+    "ru": "По условиям это обычный объект, специального режима нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d7255fae3e10e4af",
+    "ru": "Не применяем исключение без основания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "595c502303f673fe",
+    "ru": "Есть ли особый режим охраны или содержания?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q2].text"
+    ]
+  },
+  {
+    "id": "ddad0a4e3575c7e7",
+    "ru": "Нет; сообщение о небезопасной организации выхода, а не о происходящем пожаре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "15f251c98c6cf6cf",
+    "ru": "Не нужно симулировать несуществующее возгорание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "694751e31af03508",
+    "ru": "Есть ли пожар или дым сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].questions[q3].text"
+    ]
+  },
+  {
+    "id": "cf4dd4117abd912c",
+    "ru": "Передать сообщение ответственным за объект и по компетенции пожарного надзора, не подменяя их технические решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].routes[0].text",
+      "cases:CASE_TEMPLATES[fire-key].coach.plan",
+      "cases:CASE_TEMPLATES[fire-key].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "998b5869bac50a7a",
+    "ru": "Попросить посетителя физически ломать дверь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].routes[1].text",
+      "cases:CASE_TEMPLATES[fire-key].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d5d642fd12e8dddd",
+    "ru": "Отложить всю информацию до формального письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].routes[2].text",
+      "cases:CASE_TEMPLATES[fire-key].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "526bf10b15ff5b4c",
+    "ru": "Ключ у охранника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[fire-key].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[fire-key].title"
+    ]
+  },
+  {
+    "id": "577284c55c45efae",
+    "ru": "Пожарная безопасность",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].topic",
+      "cases:CASE_TEMPLATES[fire-key].tag"
+    ]
+  },
+  {
+    "id": "f6e56eae724f7f3b",
+    "ru": "Рассмотреть сведения о риске до происшествия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].trap.options[0].text",
+      "cases:CASE_TEMPLATES[fire-key].trap.explain"
+    ]
+  },
+  {
+    "id": "40f06166b71ffc93",
+    "ru": "Отказать до появления дыма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "a0d3b16787b1af75",
+    "ru": "Помощник: «Нет пожара – нет предмета обращения».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-key].trap.text"
+    ]
+  },
+  {
+    "id": "0bfc3b9697caff74",
+    "ru": "Сопоставить идентификаторы первоначального акта и отчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[a0].title"
+    ]
+  },
+  {
+    "id": "8a7cd095c761becf",
+    "ru": "Зафиксировать, какая часть исполнения по Э-5 не подтверждена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[a1].title"
+    ]
+  },
+  {
+    "id": "fe427a4c092cdabc",
+    "ru": "Передать требование уточнения в пределах компетенции и обеспечить контроль риска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[a2].title"
+    ]
+  },
+  {
+    "id": "36f09d0b09235a91",
+    "ru": "Не предлагать гражданину добывать подтверждение из опасного помещения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[a3].title"
+    ]
+  },
+  {
+    "id": "354569ce31f6963c",
+    "ru": "Проверить относящиеся к Э-5 сведения об открывании изнутри без ключа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[a4].title"
+    ]
+  },
+  {
+    "id": "3bcae6e1d0ae35cd",
+    "ru": "Снять контроль по исправлению соседнего выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[b0].title"
+    ]
+  },
+  {
+    "id": "73b8d4277db8f5aa",
+    "ru": "Согласовать постоянное ожидание дежурного с ключом вместо внутреннего открывания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].actions[b1].title",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "356952a0bdfb0cfa",
+    "ru": "Все люди, документы и события этого дела вымышлены. Поступившие материалы относятся к обычному общественному зданию без особого режима. Заявленный выход Э-5 по плану эвакуационный. Первоначальный акт специалиста фиксирует необходимость ключа изнутри у Э-5. Последующий отчёт об устранении относится к Э-4. Нынешнее состояние Э-5 не подтверждено этим отчётом. Пожар или дым сейчас не заявлены; самовольный осмотр гражданином не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].brief"
+    ]
+  },
+  {
+    "id": "94c0ae904d9f87fe",
+    "ru": "В отличие от нового заявления о замке, здесь проверяется результат уже начатой работы. Идентификатор и содержание подтверждения важнее заголовка отчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].coach.plan",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].contrast.difference"
+    ]
+  },
+  {
+    "id": "429ff2dccffadd93",
+    "ru": "Исполнитель просит снять обращение с контроля, поскольку в здании «одна из дверей исправлена». Перечень осмотренных выходов не дополнен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3ef2489329a21abf",
+    "ru": "Общее письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8091f01d924d8025",
+    "ru": "{{observed}} специалист проверил Э-5: свободное открывание изнутри без ключа отсутствовало. Особого режима помещений нет. Выход обозначен на плане эвакуации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d1].text"
+    ]
+  },
+  {
+    "id": "5fd880c9765f066e",
+    "ru": "Акт первоначального осмотра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a99571a4f100f727",
+    "ru": "В отчёте показаны дверь Э-4 и её маркировка. Проверено открывание Э-4. Подтверждения по Э-5 документ не содержит, хотя сопроводительное письмо ссылается на жалобу Сергея.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d2].text"
+    ]
+  },
+  {
+    "id": "4bcbe3fed588dc18",
+    "ru": "Отчёт исполнителя об устранении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].documents[d2].title"
+    ]
+  },
+  {
+    "id": "8df8d9eb71aea176",
+    "ru": "Отчёт по Э-4 не подтверждает устранение установленного недостатка Э-5. В отличие от нового заявления о замке, здесь проверяется результат уже начатой работы. Идентификатор и содержание подтверждения важнее заголовка отчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.explain"
+    ]
+  },
+  {
+    "id": "437da166844aa4ca",
+    "ru": "Отчёт по Э-4 не подтверждает устранение установленного недостатка Э-5.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "4e92f5ac06b9b3a2",
+    "ru": "Совпадения здания достаточно независимо от номера выхода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f58fbdba9b382e7b",
+    "ru": "Недостаток отчёта позволяет утверждать, что все двери здания неисправны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-fire-other-exit-report.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "9c16f55fccd45ed2",
+    "ru": "Исполнитель исправил заголовок отчёта на Э-5, но оставил фотографию с маркировкой Э-4 и прежний журнал осмотра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].followup.intro"
+    ]
+  },
+  {
+    "id": "85558668286e1b64",
+    "ru": "Проверить фактическое обследование и результат по Э-5; изменение заголовка само по себе не устраняет противоречие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].followup.options[0].text",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].followup.explain"
+    ]
+  },
+  {
+    "id": "ab106677ffa25d69",
+    "ru": "Принять исправленный заголовок без материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "42761f13c625f580",
+    "ru": "Объявить нарушение устранённым из-за истечения срока письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "31f3b6ee05bbc32f",
+    "ru": "Признать исполнение по любому выходу этого здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "96ca8a02d372d991",
+    "ru": "Принять наличие дежурного с ключом как замену свободного внутреннего открывания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "817906b012ab5cdd",
+    "ru": "Найдите нормативное основание следующего действия: Проверить соответствие результата именно Э-5 и не снимать контроль по документу о соседней двери.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "67b457a319097ea0",
+    "ru": "У выхода Э-5 стоял человек с ключом и говорил ждать его. В ответ прислали акт, что всё открывается. Но на фотографии совсем другая дверь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].opening"
+    ]
+  },
+  {
+    "id": "d039dd5e28b80463",
+    "ru": "Контроль исполнения по конкретному эвакуационному выходу с неполным подтверждением.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].procedures[0].text"
+    ]
+  },
+  {
+    "id": "fbb3b4ffe30d2ef7",
+    "ru": "Э-5.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q0].answer",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1d99d30b1a1e0c56",
+    "ru": "Какой выход указан в вашем материале?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q0].text"
+    ]
+  },
+  {
+    "id": "bf0c17a793c3cdc5",
+    "ru": "Э-4, маркировка читается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q1].answer",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "f0fa1c6a0dd5b0cf",
+    "ru": "Какой выход виден в отчёте?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q1].text"
+    ]
+  },
+  {
+    "id": "1dded89bc824adb6",
+    "ru": "Нет, именно его и не хватает.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q2].answer",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "ced95ef1d20f1850",
+    "ru": "Есть ли отдельный результат по Э-5?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q2].text"
+    ]
+  },
+  {
+    "id": "d2d71c3915896931",
+    "ru": "Нет, прошу проверить исполнение прежнего обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q3].answer",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "73e64256eeb15cee",
+    "ru": "Есть ли сейчас сообщение о пожаре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a9b8e1798797c54c",
+    "ru": "Специалист контроля обращений по пожарной безопасности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].role.title"
+    ]
+  },
+  {
+    "id": "03083792d7a532c1",
+    "ru": "Ответственный исполнитель по Э-5 и компетентное надзорное подразделение без произвольной смены объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].routes[0].text"
+    ]
+  },
+  {
+    "id": "c87c095edb7e3b15",
+    "ru": "Проверить соответствие результата именно Э-5 и не снимать контроль по документу о соседней двери.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[fire-other-exit-report].contrast.decision"
+    ]
+  },
+  {
+    "id": "a040b85fe2be6a44",
+    "ru": "В акте указан соседний выход",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[fire-other-exit-report].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[fire-other-exit-report].title"
+    ]
+  },
+  {
+    "id": "fd8e6f10fd5e5f5e",
+    "ru": "Проверить соответствие результата именно Э-5 и не снимать контроль по документу о соседней двери. В отличие от нового заявления о замке, здесь проверяется результат уже начатой работы. Идентификатор и содержание подтверждения важнее заголовка отчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].trap.explain"
+    ]
+  },
+  {
+    "id": "7d97ca1b263b72fe",
+    "ru": "Акт по соседнему выходу доказывает исправность всех дверей с одинаковой моделью замка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[fire-other-exit-report].trap.text"
+    ]
+  },
+  {
+    "id": "d72e5aadb49a9c21",
+    "ru": "Установить полномочия продавца по представленному договору",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[a0].title"
+    ]
+  },
+  {
+    "id": "d056e3e14b5811fc",
+    "ru": "Зафиксировать фактическую дату получения претензии перевозчиком",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[a1].title"
+    ]
+  },
+  {
+    "id": "9485a838e7cf6eab",
+    "ru": "Рассчитать специальный срок по правильному событию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8b0b13f1d9b87bad",
+    "ru": "Разъяснить пределы вывода без оправдания возможной задержки передачи продавцом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b36f03b229862508",
+    "ru": "Контролировать содержательный ответ перевозчика по всем требованиям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c01f5a83cad25565",
+    "ru": "Отсчитать срок перевозчика от регистрации у неуполномоченного посредника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[b0].title"
+    ]
+  },
+  {
+    "id": "dc957af11f567b1c",
+    "ru": "Удалить претензию как поданную через сайт без изучения получателей и дальнейшей доставки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].actions[b1].title",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "b8d6de450d424125",
+    "ru": "Учебная ситуация: граждане, участники событий, учреждения-нарушители и служебные материалы вымышлены. Правовые сведения отделены от фактов дела. Вы готовите решение в пределах указанной роли, а не проводите экспертизу или реальную проверку. Календарная задача касается отдельного срока перевозчика.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].brief",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].brief"
+    ]
+  },
+  {
+    "id": "f840f88bde7dc178",
+    "ru": "Рассчитайте крайний день рассмотрения надлежащей претензии перевозчиком и уведомления по ней. Продления или специальных исключений по условию нет. Это не дата гарантированной выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].calendar.context",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].calendar.context"
+    ]
+  },
+  {
+    "id": "c1d624b972208390",
+    "ru": "Получено независимым продавцом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].calendar.events[agent].label"
+    ]
+  },
+  {
+    "id": "d0abaacd6cc60c15",
+    "ru": "План должен следовать установленным фактам. Получатель, полномочие, исходная дата и результат рассмотрения — разные факты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].coach.plan"
+    ]
+  },
+  {
+    "id": "af8eb251c2bd9eec",
+    "ru": "Уточняйте предмет, объект, время и получателя. В базовом деле дата получения перевозчиком задана без спора о получателе. Здесь статус посредника и два разных получения изменяют начало отсчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].coach.talk"
+    ]
+  },
+  {
+    "id": "f1ffe33b1694edfe",
+    "ru": "В базовом деле дата получения перевозчиком задана без спора о получателе. Здесь статус посредника и два разных получения изменяют начало отсчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].contrast.difference"
+    ]
+  },
+  {
+    "id": "3c375be21078c893",
+    "ru": "Надлежащая претензия получена перевозчиком {{carrier}}. Это подтверждённое исходное событие для его рассмотрения. Ответ сайта-посредника касается только регистрации у самого посредника, а не удовлетворения или отклонения перевозчиком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0f8d54afe91e8533",
+    "ru": "Уведомление перевозчика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d0].title",
+      "cases:CASE_TEMPLATES[waste-site-register].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d742a6ae4e00ee47",
+    "ru": "Позднее обращение поступило в орган {{received}} и зарегистрировано {{registered}}. Эти события относятся к другой переписке. В данном упражнении рассчитывается крайний день рассмотрения претензии перевозчиком и уведомления по ней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d1].text"
+    ]
+  },
+  {
+    "id": "408dba0749e4f291",
+    "ru": "Письмо в публичную приёмную",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3b390cdbf39b8e44",
+    "ru": "Сайт «Учебный билет» — независимый продавец. По представленному договору он не уполномочен получать претензии от имени перевозчика. Получение им письма {{agent}} не являлось получением перевозчиком. Его собственные обязательства по передаче рассматриваются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d2].text"
+    ]
+  },
+  {
+    "id": "626415b4a7b3524f",
+    "ru": "Сведения о посреднике",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[d2].title"
+    ]
+  },
+  {
+    "id": "cf8d756c336cb518",
+    "ru": "Отправлено {{sent}}, поступило {{received}}, зарегистрировано {{registered}}. Эти события не меняют даты принятия нормативных актов. Текущее оперативное сообщение, если оно есть в условии, передаётся без ожидания срока письменного ответа. Независимый продавец получил письмо {{agent}}, перевозчик — {{carrier}}; полномочия получателей задаются в материале конкретного дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].documents[dates].text"
+    ]
+  },
+  {
+    "id": "023cbc29ddcb728d",
+    "ru": "В условиях данного договора специальный срок перевозчика связан с подтверждённым получением {{carrier}}, а не с прежней регистрацией у независимого продавца. В базовом деле дата получения перевозчиком задана без спора о получателе. Здесь статус посредника и два разных получения изменяют начало отсчёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.explain"
+    ]
+  },
+  {
+    "id": "2ca2592a99d6402b",
+    "ru": "В условиях данного договора специальный срок перевозчика связан с подтверждённым получением {{carrier}}, а не с прежней регистрацией у независимого продавца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[flight-agent-receipt].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "a0d78e318e646095",
+    "ru": "Любой продавец билетов всегда принимает претензии от имени всех перевозчиков.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "049d7dd6be3b12b7",
+    "ru": "Дата регистрации в публичной приёмной автоматически заменяет дату поступления перевозчику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b19717711dec31d0",
+    "ru": "Проверить полноту ответа по расходам, не считать регистрационный номер решением всех требований. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].followup.explain"
+    ]
+  },
+  {
+    "id": "d4ff4b5f7630e498",
+    "ru": "Перевозчик ответил о задержке рейса, но не рассмотрел отдельно приложенный вопрос о расходах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].followup.intro"
+    ]
+  },
+  {
+    "id": "acfcd81eeac8ed83",
+    "ru": "Проверить полноту ответа по расходам, не считать регистрационный номер решением всех требований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "337685eb2f6085a1",
+    "ru": "Считать претензию разрешённой при наличии любого ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "2a5323ce3a16b9b3",
+    "ru": "Взыскать расходы письмом приёмной без необходимых полномочий и проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "630334b1d3653bcd",
+    "ru": "Перевозчик рассматривает претензию и уведомляет о её удовлетворении или отклонении в течение тридцати дней с даты её поступления. Получение независимым посредником не приравнивается к получению перевозчиком без соответствующего основания. Это срок рассмотрения и уведомления, а не обещание выплаты любой заявленной суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].knowledge.explain",
+      "cases:SOURCES[norm11-flight-claim].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v11-flight-agent-receipt].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "61cb6e9d1797411d",
+    "ru": "Считать срок от подтверждённого получения перевозчиком с учётом полномочий первого получателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b7313e841b19596f",
+    "ru": "Считать получение любым продавцом билетов получением перевозчиком независимо от договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "574a449db95e37dd",
+    "ru": "Начать срок перевозчика заново с поздней регистрации письма в публичной приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dc2f99b517fe7ef3",
+    "ru": "Найдите норму: Получение претензии перевозчиком. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "60e22290bdbb6ce2",
+    "ru": "Я отправил претензию на сайт, где купил билет. Там ответили «обращение принято». Думаю, срок авиакомпании уже истёк, но она называет другую дату.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[flight-agent-receipt].opening"
+    ]
+  }
+]

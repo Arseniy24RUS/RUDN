@@ -1,0 +1,1248 @@
+[
+  {
+    "id": "d6640344e941988f",
+    "ru": "согласие",
+    "contexts": [
+      "cases:SOURCES[152].tags[3]"
+    ]
+  },
+  {
+    "id": "9d8cf70dc46c9cca",
+    "ru": "данные",
+    "contexts": [
+      "cases:SOURCES[152].tags[4]",
+      "cases:SOURCES[rkn].tags[0]"
+    ]
+  },
+  {
+    "id": "99fd2a72e5bcbc37",
+    "ru": "Сведения о здоровье относятся к специальным категориям персональных данных. Для их обработки необходимы предусмотренные законом основания. Согласие на распространение оформляется отдельно от иных согласий; молчание не является таким согласием. При рассмотрении жалобы проверяют наличие и объём правового основания. Материалы с данными детей не публикуют и передают только в необходимом объёме уполномоченным адресатам.",
+    "contexts": [
+      "cases:SOURCES[152].text"
+    ]
+  },
+  {
+    "id": "0ddcec775544bf77",
+    "ru": "Претензии по почтовой связи",
+    "contexts": [
+      "cases:SOURCES[176].short",
+      "cases:SOURCES[176].title",
+      "cases:SOURCES[176].tags[0]"
+    ]
+  },
+  {
+    "id": "3eadfcfdf534c84b",
+    "ru": "По международным отправлениям порядок претензий и розыска определяется российским законодательством и международными договорами. Срок для любого внутреннего отправления нельзя автоматически назначать международной посылке.",
+    "contexts": [
+      "cases:SOURCES[176].text"
+    ]
+  },
+  {
+    "id": "ef7db8a81e47cdf8",
+    "ru": "Доступ к объектам и услугам",
+    "contexts": [
+      "cases:SOURCES[181].short",
+      "cases:SOURCES[181].title",
+      "source-index:SOURCE_INDEX.entries[shelf:181].title"
+    ]
+  },
+  {
+    "id": "8b97369f7498fa8b",
+    "ru": "Обеспечиваются доступность объектов и услуг и необходимая помощь. Одна только вывеска или кнопка вызова не подтверждает фактическую возможность получить услугу. Способ помощи согласуется с человеком; использование инвалидности для дополнительных, не предусмотренных процедурой требований недопустимо.",
+    "contexts": [
+      "cases:SOURCES[181].text"
+    ]
+  },
+  {
+    "id": "2d2454b04c600abc",
+    "ru": "Учебная редакция от 07.09.2026; применимость определяется датой и условиями дела.",
+    "contexts": [
+      "cases:SOURCES[196].revision",
+      "cases:SOURCES[38].revision",
+      "cases:SOURCES[60].revision"
+    ]
+  },
+  {
+    "id": "f88df3698da81641",
+    "ru": "Безопасность дорожного движения",
+    "contexts": [
+      "cases:SOURCES[196].short",
+      "cases:SOURCES[196].title",
+      "cases:SOURCES[196].tags[0]"
+    ]
+  },
+  {
+    "id": "fad96f5c8e204042",
+    "ru": "Содержание дорог должно обеспечивать безопасность движения. Обязанности владельца дороги и перевозчика различаются. Режим труда водителя не устанавливается по длительности работы автобуса на маршруте.",
+    "contexts": [
+      "cases:SOURCES[196].text"
+    ]
+  },
+  {
+    "id": "af8233cdbf9045d5",
+    "ru": "Положения, применяемые в задании; проверка 07.09.2026. Редакция привязана к событиям дела.",
+    "contexts": [
+      "cases:SOURCES[197].revision",
+      "cases:SOURCES[326].revision",
+      "cases:SOURCES[218].revision"
+    ]
+  },
+  {
+    "id": "617468852114d532",
+    "ru": "Трудовой кодекс: полномочия инспектора",
+    "contexts": [
+      "cases:SOURCES[197].short",
+      "cases:SOURCES[197].title",
+      "source-index:SOURCE_INDEX.entries[shelf:197].title"
+    ]
+  },
+  {
+    "id": "1f903ca8b11c8d73",
+    "ru": "специальная процедура",
+    "contexts": [
+      "cases:SOURCES[197].tags[0]",
+      "cases:SOURCES[326].tags[0]",
+      "cases:SOURCES[218].tags[0]"
+    ]
+  },
+  {
+    "id": "ddbf3446789925d0",
+    "ru": "Государственные инспекторы труда обладают установленными ТК РФ полномочиями. Обращение само по себе не означает автоматического проведения любой проверки или взыскания спорной суммы. Вид реагирования определяется по установленным обстоятельствам и применимым правилам контроля.",
+    "contexts": [
+      "cases:SOURCES[197].text"
+    ]
+  },
+  {
+    "id": "cfd59e8c8d156189",
+    "ru": "Карантинный сертификат проверяется при наличии установленных законом условий вывоза подкарантинной продукции. Нужны сведения о зоне, ограничениях, восприимчивости продукции и партии. Документ на другую партию не подтверждает данную поставку.",
+    "contexts": [
+      "cases:SOURCES[206].text"
+    ]
+  },
+  {
+    "id": "469cb3c7b8fd6310",
+    "ru": "Статья 11.2, части 1, 6 и 8",
+    "contexts": [
+      "cases:SOURCES[210].article"
+    ]
+  },
+  {
+    "id": "70bc538ed2f421c3",
+    "ru": "Федеральный закон от 27.07.2010 № 210-ФЗ",
+    "contexts": [
+      "cases:SOURCES[210].number",
+      "cases:SOURCES[v16-norm-mfc].number",
+      "evidence-catalog:EVIDENCE_RECORDS[law210-complaints].publisher"
+    ]
+  },
+  {
+    "id": "647c7b326c867725",
+    "ru": "Проверены указанные части 06.09.2026. Не использовать будущую редакцию для ранней даты дела.",
+    "contexts": [
+      "cases:SOURCES[210].revision"
+    ]
+  },
+  {
+    "id": "1bc1de77168ab52e",
+    "ru": "210-ФЗ",
+    "contexts": [
+      "cases:SOURCES[210].short",
+      "cases:SOURCES[v16-norm-mfc].short"
+    ]
+  },
+  {
+    "id": "ef6b12fe6acd07c6",
+    "ru": "мфц",
+    "contexts": [
+      "cases:SOURCES[210].tags[0]"
+    ]
+  },
+  {
+    "id": "3e823bba937cb565",
+    "ru": "услуга",
+    "contexts": [
+      "cases:SOURCES[210].tags[2]"
+    ]
+  },
+  {
+    "id": "4c9150af21964a02",
+    "ru": "рабочие дни",
+    "contexts": [
+      "cases:SOURCES[210].tags[3]"
+    ]
+  },
+  {
+    "id": "b2f01e2b208b4142",
+    "ru": "Для общего порядка главы 2.1 предмет жалобы определяет срок: обычно 15 рабочих дней, а для названных в части 6 случаев отказа в приёме документов или исправлении ошибок и нарушения срока исправления – 5 рабочих дней со дня регистрации. Жалоба на работника МФЦ подаётся руководителю центра. Направление мотивированного ответа после принятия решения имеет отдельный срок по части 8. При специальном федеральном порядке проверяют его применимость.",
+    "contexts": [
+      "cases:SOURCES[210].text"
+    ]
+  },
+  {
+    "id": "c4af7a7c884c30a7",
+    "ru": "Досудебные жалобы при предоставлении услуг",
+    "contexts": [
+      "cases:SOURCES[210].title",
+      "source-index:SOURCE_INDEX.entries[shelf:210].title"
+    ]
+  },
+  {
+    "id": "a096421c7b571a93",
+    "ru": "ЕГРН: исправление технической ошибки",
+    "contexts": [
+      "cases:SOURCES[218].short",
+      "cases:SOURCES[218].title",
+      "source-index:SOURCE_INDEX.entries[shelf:218].title"
+    ]
+  },
+  {
+    "id": "a293477b51c16d17",
+    "ru": "Техническая ошибка в записи ЕГРН при предусмотренных законом условиях исправляется органом регистрации прав в течение трёх рабочих дней. Опечатка регистратора отличается от реестровой ошибки, воспроизведённой из исходного документа. В задании прямо исключены спор о праве и вред законным интересам других лиц.",
+    "contexts": [
+      "cases:SOURCES[218].text"
+    ]
+  },
+  {
+    "id": "a9316e419c95baa8",
+    "ru": "Жалоба в порядке подчинённости",
+    "contexts": [
+      "cases:SOURCES[229].short",
+      "cases:SOURCES[229].title",
+      "cases:SOURCES[229].tags[0]"
+    ]
+  },
+  {
+    "id": "d4950032b46988d7",
+    "ru": "Жалобу рассматривает правомочное должностное лицо службы судебных приставов в течение десяти дней с поступления; при исчислении дней исключаются нерабочие дни. Принятие соответствующего заявления судом приостанавливает рассмотрение такой жалобы.",
+    "contexts": [
+      "cases:SOURCES[229].text"
+    ]
+  },
+  {
+    "id": "d7b957df5a95370d",
+    "ru": "Пособие: начало десяти рабочих дней",
+    "contexts": [
+      "cases:SOURCES[255].short",
+      "cases:SOURCES[255].title",
+      "source-index:SOURCE_INDEX.entries[shelf:255].title"
+    ]
+  },
+  {
+    "id": "810a252f00a07e92",
+    "ru": "СФР назначает и выплачивает пособие по временной нетрудоспособности в пределах десяти рабочих дней со дня получения необходимых сведений и документов. Закрытие больничного, получение обращения и получение полного комплекта сведений – не одно событие. В задаче рассчитывается только выплата части пособия со стороны СФР.",
+    "contexts": [
+      "cases:SOURCES[255].text"
+    ]
+  },
+  {
+    "id": "30a4e3898798968d",
+    "ru": "ОМС: защита прав застрахованного",
+    "contexts": [
+      "cases:SOURCES[326].short",
+      "cases:SOURCES[326].title",
+      "source-index:SOURCE_INDEX.entries[shelf:326].title"
+    ]
+  },
+  {
+    "id": "01b56d2cb2e21572",
+    "ru": "Застрахованное лицо имеет права в системе обязательного медицинского страхования, в том числе на защиту прав и законных интересов. Для организации помощи по полису значимы страховая медицинская организация и территориальный фонд; приёмная не ставит диагноз и не обещает определённую дату приёма.",
+    "contexts": [
+      "cases:SOURCES[326].text"
+    ]
+  },
+  {
+    "id": "e262e9231fa122fb",
+    "ru": "Возврат при отказе от кредитного страхования",
+    "contexts": [
+      "cases:SOURCES[353].short",
+      "cases:SOURCES[353].title",
+      "cases:SOURCES[353].tags[0]"
+    ]
+  },
+  {
+    "id": "ad255d4bdd2d2d33",
+    "ru": "Для указанной в деле коллективной страховки страхователь – кредитор. Своевременный отказ и отсутствие событий с признаками страхового случая позволяют применить предусмотренный законом возврат; его срок считается от получения заявления кредитором.",
+    "contexts": [
+      "cases:SOURCES[353].text"
+    ]
+  },
+  {
+    "id": "fd8f72fe2c2c28d2",
+    "ru": "Реклама и информационные вывески",
+    "contexts": [
+      "cases:SOURCES[38].short",
+      "cases:SOURCES[38].title",
+      "cases:SOURCES[38].tags[0]"
+    ]
+  },
+  {
+    "id": "2acd030d489e03ec",
+    "ru": "Нерекламная вывеска, рекламное сообщение по сети связи и реклама алкогольной продукции проверяются по разным положениям. Для рассылки требуется предварительное согласие адресата. Источник передачи номера отдельно доказывается.",
+    "contexts": [
+      "cases:SOURCES[38].text"
+    ]
+  },
+  {
+    "id": "b9d2c93b2a29ad3f",
+    "ru": "Статьи 6, 8, 10, 12",
+    "contexts": [
+      "cases:SOURCES[59].article"
+    ]
+  },
+  {
+    "id": "50111cd80b048a87",
+    "ru": "Федеральный закон от 02.05.2006 № 59-ФЗ",
+    "contexts": [
+      "cases:SOURCES[59].number",
+      "cases:SOURCES[n13-noise].number",
+      "cases:SOURCES[v16-norm-routing].number"
+    ]
+  },
+  {
+    "id": "c2e81c299bac5b66",
+    "ru": "Редакция от 28.12.2024",
+    "contexts": [
+      "cases:SOURCES[59].revision"
+    ]
+  },
+  {
+    "id": "f2be6b8e2341d83b",
+    "ru": "59-ФЗ",
+    "contexts": [
+      "cases:SOURCES[59].short",
+      "cases:SOURCES[n13-noise].short",
+      "cases:SOURCES[v16-norm-routing].short"
+    ]
+  },
+  {
+    "id": "3a35c43f75c65690",
+    "ru": "обращение",
+    "contexts": [
+      "cases:SOURCES[59].tags[0]",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "a5dfe1450f6e1d94",
+    "ru": "срок",
+    "contexts": [
+      "cases:SOURCES[59].tags[1]",
+      "cases:SOURCES[rules].tags[0]"
+    ]
+  },
+  {
+    "id": "3867c3303fb5d166",
+    "ru": "регистрация",
+    "contexts": [
+      "cases:SOURCES[59].tags[2]"
+    ]
+  },
+  {
+    "id": "91edfeba7f6ed870",
+    "ru": "жалоба",
+    "contexts": [
+      "cases:SOURCES[59].tags[3]",
+      "cases:SOURCES[rkn].tags[4]",
+      "cases:SOURCES[210].tags[1]"
+    ]
+  },
+  {
+    "id": "d977a3948e7d365b",
+    "ru": "люк",
+    "contexts": [
+      "cases:SOURCES[59].tags[4]",
+      "cases:SOURCES[mos].tags[3]"
+    ]
+  },
+  {
+    "id": "da54a8659efff014",
+    "ru": "Статья 8: регистрация письменного обращения – в течение трёх дней с момента поступления; переадресация по компетенции – в течение семи дней со дня регистрации, с уведомлением гражданина. Жалобу нельзя направлять на рассмотрение тому органу или должностному лицу, чьи решения или действия обжалуются. Статья 12: общий срок рассмотрения – 30 дней со дня регистрации; предусмотрены исключения и условия продления. Это не универсальный срок устранения самой проблемы. Если вопросы относятся к компетенции нескольких органов, часть 4 статьи 8 предусматривает направление копий соответствующим органам в течение семи дней со дня регистрации.",
+    "contexts": [
+      "cases:SOURCES[59].text"
+    ]
+  },
+  {
+    "id": "c4d6e8bf9075da64",
+    "ru": "Претензия к воздушному перевозчику",
+    "contexts": [
+      "cases:SOURCES[60].short",
+      "cases:SOURCES[60].title",
+      "cases:SOURCES[60].tags[0]"
+    ]
+  },
+  {
+    "id": "55877ecb9f4981e2",
+    "ru": "Перевозчик рассматривает претензию и сообщает о результате в течение 30 дней со дня её поступления. Это не общий срок ответа приёмной и не автоматическое решение о возмещении.",
+    "contexts": [
+      "cases:SOURCES[60].text"
+    ]
+  },
+  {
+    "id": "1787c8ea4a3665ba",
+    "ru": "Разграничение экологического контроля",
+    "contexts": [
+      "cases:SOURCES[7].short",
+      "cases:SOURCES[7].title",
+      "cases:SOURCES[7].tags[0]"
+    ]
+  },
+  {
+    "id": "92aec5082b42674b",
+    "ru": "Федеральный и региональный экологический контроль различаются. Территория объекта и вид контроля проверяются до назначения адресата; адрес заявителя не определяет местонахождение объекта.",
+    "contexts": [
+      "cases:SOURCES[7].text"
+    ]
+  },
+  {
+    "id": "b73197dc43a930cc",
+    "ru": "Гражданская служба: конфликт интересов",
+    "contexts": [
+      "cases:SOURCES[79].short",
+      "cases:SOURCES[79].title",
+      "source-index:SOURCE_INDEX.entries[shelf:79].title"
+    ]
+  },
+  {
+    "id": "81da32d3f634c037",
+    "ru": "Гражданский служащий предотвращает и урегулирует конфликт интересов, уведомляет представителя нанимателя о возникшей личной заинтересованности в установленном порядке. Сокрытие связи и обещание личной беспристрастности не заменяют уведомление и организационное решение. Речь именно о государственной гражданской службе.",
+    "contexts": [
+      "cases:SOURCES[79].text"
+    ]
+  },
+  {
+    "id": "cd32bc495969774c",
+    "ru": "Статьи 8, 18, 19, 20",
+    "contexts": [
+      "cases:SOURCES[8].article"
+    ]
+  },
+  {
+    "id": "ee7536bd381bd2d4",
+    "ru": "Федеральный закон от 09.02.2009 № 8-ФЗ",
+    "contexts": [
+      "cases:SOURCES[8].number",
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].publisher"
+    ]
+  },
+  {
+    "id": "8b9f7ccadc00c0df",
+    "ru": "Редакция с изменениями от 31.07.2025",
+    "contexts": [
+      "cases:SOURCES[8].revision"
+    ]
+  },
+  {
+    "id": "114fc540c1be83bd",
+    "ru": "8-ФЗ",
+    "contexts": [
+      "cases:SOURCES[8].short"
+    ]
+  },
+  {
+    "id": "f1d7eb3317f97a8f",
+    "ru": "информация",
+    "contexts": [
+      "cases:SOURCES[8].tags[0]"
+    ]
+  },
+  {
+    "id": "e665425985a8abff",
+    "ru": "бюджет",
+    "contexts": [
+      "cases:SOURCES[8].tags[1]",
+      "cases:SOURCES[council].tags[2]"
+    ]
+  },
+  {
+    "id": "73779be53d179bbe",
+    "ru": "документ",
+    "contexts": [
+      "cases:SOURCES[8].tags[2]"
+    ]
+  },
+  {
+    "id": "1fa93dc6ec87348a",
+    "ru": "совет",
+    "contexts": [
+      "cases:SOURCES[8].tags[3]",
+      "cases:SOURCES[council].tags[0]"
+    ]
+  },
+  {
+    "id": "7960f03228139232",
+    "ru": "запрос",
+    "contexts": [
+      "cases:SOURCES[8].tags[4]"
+    ]
+  },
+  {
+    "id": "5eae18c9e08936f9",
+    "ru": "Пользователь вправе запрашивать информацию о деятельности государственных органов и органов местного самоуправления. Обосновывать необходимость получения общедоступной информации не требуется. Статья 18: регистрация запроса – в течение трёх дней, рассмотрение – в течение 30 дней со дня регистрации, если законодательством не установлено иное. Если информация не относится к деятельности получателя, запрос направляется в компетентный орган в течение семи дней со дня регистрации с уведомлением пользователя. Порядок запроса информации не нужно автоматически заменять общим порядком жалоб.",
+    "contexts": [
+      "cases:SOURCES[8].text"
+    ]
+  },
+  {
+    "id": "b2fdf844a74e5548",
+    "ru": "Доступ к информации о деятельности власти",
+    "contexts": [
+      "cases:SOURCES[8].title",
+      "source-index:SOURCE_INDEX.entries[shelf:8].title"
+    ]
+  },
+  {
+    "id": "b179d79ae7949f49",
+    "ru": "Организация обращения с отходами",
+    "contexts": [
+      "cases:SOURCES[89].short",
+      "cases:SOURCES[89].title",
+      "cases:SOURCES[89].tags[0]"
+    ]
+  },
+  {
+    "id": "f7c6c8787e3a5d46",
+    "ru": "Организация накопления, включая раздельное накопление, связана с полномочиями субъекта РФ и установленным порядком. Одной установки контейнеров недостаточно без дальнейшего вывоза и обработки.",
+    "contexts": [
+      "cases:SOURCES[89].text"
+    ]
+  },
+  {
+    "id": "23145a5775e3a417",
+    "ru": "Бюджет и аппарат Совета депутатов",
+    "contexts": [
+      "cases:SOURCES[council].article"
+    ]
+  },
+  {
+    "id": "fccdeda567f57a28",
+    "ru": "Официальный сайт муниципального округа Нижегородский в городе Москве",
+    "contexts": [
+      "cases:SOURCES[council].number",
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].publisher"
+    ]
+  },
+  {
+    "id": "1a5c124cd679fb88",
+    "ru": "Совет депутатов",
+    "contexts": [
+      "cases:SOURCES[council].short"
+    ]
+  },
+  {
+    "id": "60249b5592c1f885",
+    "ru": "муниципальный",
+    "contexts": [
+      "cases:SOURCES[council].tags[1]"
+    ]
+  },
+  {
+    "id": "2de3ec781b061739",
+    "ru": "нижегородский",
+    "contexts": [
+      "cases:SOURCES[council].tags[3]"
+    ]
+  },
+  {
+    "id": "7bb93c26c2fb7149",
+    "ru": "контакт",
+    "contexts": [
+      "cases:SOURCES[council].tags[4]"
+    ]
+  },
+  {
+    "id": "5ee9845e7e3ca330",
+    "ru": "На сайте размещены сведения об органах местного самоуправления и бюджетные документы. Найдите аппарат Совета депутатов, его контакты и документы запрошенного периода. Управа района и органы муниципального округа – не одно и то же.",
+    "contexts": [
+      "cases:SOURCES[council].text"
+    ]
+  },
+  {
+    "id": "94cc11d6724f5dde",
+    "ru": "Муниципальный округ Нижегородский",
+    "contexts": [
+      "cases:SOURCES[council].title",
+      "evidence-catalog:EVIDENCE_RECORDS[council-site].title",
+      "source-index:SOURCE_INDEX.entries[shelf:council].title"
+    ]
+  },
+  {
+    "id": "c358382a9f13f2b6",
+    "ru": "Изменения закона № 59-ФЗ с 30.03.2025",
+    "contexts": [
+      "cases:SOURCES[electronic].article"
+    ]
+  },
+  {
+    "id": "d7cf7bc5c052efe7",
+    "ru": "Разъяснение ФНС России от 14.04.2025",
+    "contexts": [
+      "cases:SOURCES[electronic].number"
+    ]
+  },
+  {
+    "id": "01383380b3dd7634",
+    "ru": "Разъяснение; первичное основание – статья 4 закона № 59-ФЗ",
+    "contexts": [
+      "cases:SOURCES[electronic].revision"
+    ]
+  },
+  {
+    "id": "ece6b449cb391b06",
+    "ru": "Электронный канал",
+    "contexts": [
+      "cases:SOURCES[electronic].short"
+    ]
+  },
+  {
+    "id": "968f47b288c0d52a",
+    "ru": "электронный",
+    "contexts": [
+      "cases:SOURCES[electronic].tags[1]"
+    ]
+  },
+  {
+    "id": "e88e1a759ff55457",
+    "ru": "канал",
+    "contexts": [
+      "cases:SOURCES[electronic].tags[2]"
+    ]
+  },
+  {
+    "id": "beff42c3c10b0c00",
+    "ru": "почта",
+    "contexts": [
+      "cases:SOURCES[electronic].tags[3]",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "5dfe746e51f6623e",
+    "ru": "По общему порядку 59-ФЗ электронное обращение направляют через предусмотренные законом информационные системы или официальные сайты с идентификацией и/или аутентификацией. Опубликованный email не следует автоматически считать таким каналом. Для специальных процедур проверяют отдельные правила.",
+    "contexts": [
+      "cases:SOURCES[electronic].text"
+    ]
+  },
+  {
+    "id": "d13fdbab9eb4332d",
+    "ru": "Как направляют электронное обращение",
+    "contexts": [
+      "cases:SOURCES[electronic].title",
+      "source-index:SOURCE_INDEX.entries[shelf:electronic].title"
+    ]
+  },
+  {
+    "id": "ad464e0b339971c3",
+    "ru": "Структура, полномочия и контакты",
+    "contexts": [
+      "cases:SOURCES[mos].article"
+    ]
+  },
+  {
+    "id": "959f9ff4de769792",
+    "ru": "Официальный портал Мэра и Правительства Москвы",
+    "contexts": [
+      "cases:SOURCES[mos].number"
+    ]
+  },
+  {
+    "id": "1964015c47241320",
+    "ru": "Отправная ссылка для поиска; изменяемые контакты пока не оцениваются.",
+    "contexts": [
+      "cases:SOURCES[mos].revision",
+      "cases:SOURCES[rkn].revision",
+      "cases:SOURCES[council].revision"
+    ]
+  },
+  {
+    "id": "eb63f79a229771cd",
+    "ru": "Москва",
+    "contexts": [
+      "cases:SOURCES[mos].short",
+      "cases:SOURCES[n13-moscow-noise].tags[2]",
+      "evidence-catalog:EVIDENCE_TASKS.local-identity.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "83e1cc9091d0a23b",
+    "ru": "орган",
+    "contexts": [
+      "cases:SOURCES[mos].tags[0]",
+      "cases:SOURCES[rkn].tags[3]"
+    ]
+  },
+  {
+    "id": "5dcaaef2e4ea238d",
+    "ru": "исполнитель",
+    "contexts": [
+      "cases:SOURCES[mos].tags[1]"
+    ]
+  },
+  {
+    "id": "bfdd6b62346d5ffb",
+    "ru": "мос",
+    "contexts": [
+      "cases:SOURCES[mos].tags[2]"
+    ]
+  },
+  {
+    "id": "263b5c0e14d823e7",
+    "ru": "служба",
+    "contexts": [
+      "cases:SOURCES[mos].tags[4]"
+    ]
+  },
+  {
+    "id": "36b6077158c1085f",
+    "ru": "Начальная точка для поиска профильного органа, территориального подразделения и опубликованных контактов. Найдите конкретную страницу и проверьте компетенцию. Сам факт нахождения сайта в домене mos.ru не доказывает правильность адресата.",
+    "contexts": [
+      "cases:SOURCES[mos].text"
+    ]
+  },
+  {
+    "id": "6dd3683025b63ba2",
+    "ru": "Органы власти Москвы",
+    "contexts": [
+      "cases:SOURCES[mos].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].title"
+    ]
+  },
+  {
+    "id": "575bc78b923e740e",
+    "ru": "Обязательная информация и реклама",
+    "contexts": [
+      "cases:SOURCES[n12-ad2].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-ad2].title"
+    ]
+  },
+  {
+    "id": "97a2782d6ef656bb",
+    "ru": "Федеральный закон № 38-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n12-ad21].short",
+      "cases:SOURCES[n12-ad21].number",
+      "cases:SOURCES[n12-ad2].short"
+    ]
+  },
+  {
+    "id": "f74d6219dbf4125b",
+    "ru": "Самостоятельные ограничения алкогольной рекламы",
+    "contexts": [
+      "cases:SOURCES[n12-ad21].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-ad21].title"
+    ]
+  },
+  {
+    "id": "8cfaa4f7a44c6b9f",
+    "ru": "Информация о товаре и сроке годности",
+    "contexts": [
+      "cases:SOURCES[n12-consumer10].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-consumer10].title"
+    ]
+  },
+  {
+    "id": "413f113658bcd0f5",
+    "ru": "Закон РФ № 2300-1",
+    "contexts": [
+      "cases:SOURCES[n12-consumer18].short",
+      "cases:SOURCES[n12-consumer18].number",
+      "cases:SOURCES[n12-consumer10].short"
+    ]
+  },
+  {
+    "id": "752b097b649ecabe",
+    "ru": "Некачественный товар и подтверждение покупки",
+    "contexts": [
+      "cases:SOURCES[n12-consumer18].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-consumer18].title"
+    ]
+  },
+  {
+    "id": "0a476ec16b39b8de",
+    "ru": "Безопасность товара и меры при выявлении опасности",
+    "contexts": [
+      "cases:SOURCES[n12-consumer7].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-consumer7].title"
+    ]
+  },
+  {
+    "id": "6fd832806057a635",
+    "ru": "Краткое авторское изложение; проверено 07.09.2026. Конкретные условия заданы материалами учебного дела.",
+    "contexts": [
+      "cases:SOURCES[n12-egrn].revision",
+      "cases:SOURCES[n12-post].revision",
+      "cases:SOURCES[n12-tax88].revision"
+    ]
+  },
+  {
+    "id": "50d80d643ff2b82a",
+    "ru": "Федеральный закон № 218-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n12-egrn].short",
+      "cases:SOURCES[n12-egrn].number"
+    ]
+  },
+  {
+    "id": "2b5df2e68a2fe9c5",
+    "ru": "учебный профиль 0.12",
+    "contexts": [
+      "cases:SOURCES[n12-egrn].tags[1]",
+      "cases:SOURCES[n12-post].tags[1]",
+      "cases:SOURCES[n12-tax88].tags[1]"
+    ]
+  },
+  {
+    "id": "c13baf29365fdb14",
+    "ru": "Техническая и реестровая ошибки: разные основания",
+    "contexts": [
+      "cases:SOURCES[n12-egrn].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-egrn].title"
+    ]
+  },
+  {
+    "id": "e00bf8cb92b2bf98",
+    "ru": "Федеральный закон № 176-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n12-post].short",
+      "cases:SOURCES[n12-post].number"
+    ]
+  },
+  {
+    "id": "fd13bc9d8bdda9a6",
+    "ru": "Претензии по международным почтовым отправлениям",
+    "contexts": [
+      "cases:SOURCES[n12-post].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-post].title"
+    ]
+  },
+  {
+    "id": "23645b1b51a2ff96",
+    "ru": "НК РФ, ч. 2",
+    "contexts": [
+      "cases:SOURCES[n12-tax221].short",
+      "cases:SOURCES[n12-tax221].number"
+    ]
+  },
+  {
+    "id": "e818c44ea9867481",
+    "ru": "Заявление о вычете в упрощённом порядке",
+    "contexts": [
+      "cases:SOURCES[n12-tax221].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-tax221].title"
+    ]
+  },
+  {
+    "id": "2a13f92f954a1336",
+    "ru": "НК РФ, ч. 1",
+    "contexts": [
+      "cases:SOURCES[n12-tax88].short",
+      "cases:SOURCES[n12-tax88].number"
+    ]
+  },
+  {
+    "id": "04907aca61b6eca8",
+    "ru": "Камеральная проверка: декларация, уточнение и пояснения",
+    "contexts": [
+      "cases:SOURCES[n12-tax88].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n12-tax88].title"
+    ]
+  },
+  {
+    "id": "fa3a2025d9350808",
+    "ru": "Статья 91",
+    "contexts": [
+      "cases:SOURCES[n13-edu91].article"
+    ]
+  },
+  {
+    "id": "168663738465d689",
+    "ru": "Федеральный закон от 29.12.2012 № 273-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-edu91].number",
+      "cases:SOURCES[n13-edu92].number"
+    ]
+  },
+  {
+    "id": "a796d9cf0cdbe715",
+    "ru": "273-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-edu91].short",
+      "cases:SOURCES[n13-edu92].short",
+      "cases:SOURCES[v16-norm-interest].short"
+    ]
+  },
+  {
+    "id": "1ef7024ce4e62fb9",
+    "ru": "Лицензирование образовательной деятельности",
+    "contexts": [
+      "cases:SOURCES[n13-edu91].title",
+      "cases:SOURCES[n13-edu91].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-edu91].title"
+    ]
+  },
+  {
+    "id": "6542888c6eb5cb21",
+    "ru": "Статья 92",
+    "contexts": [
+      "cases:SOURCES[n13-edu92].article"
+    ]
+  },
+  {
+    "id": "e843cf892f7b59dc",
+    "ru": "Область государственной аккредитации",
+    "contexts": [
+      "cases:SOURCES[n13-edu92].title",
+      "cases:SOURCES[n13-edu92].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-edu92].title"
+    ]
+  },
+  {
+    "id": "0aed1fe151016691",
+    "ru": "Разграничение предмета обращения",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].article"
+    ]
+  },
+  {
+    "id": "f549ad97bd4dc084",
+    "ru": "Разъяснение территориального управления Роспотребнадзора",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].number"
+    ]
+  },
+  {
+    "id": "2232b1b386b8a8f2",
+    "ru": "Архивное разъяснение; используется для предметного разграничения, не для численных норм или контактов.",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].revision"
+    ]
+  },
+  {
+    "id": "63df86f53574fa76",
+    "ru": "Роспотребнадзор",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].short"
+    ]
+  },
+  {
+    "id": "2505cac3d21e4126",
+    "ru": "оборудование",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].tags[1]"
+    ]
+  },
+  {
+    "id": "497e34da51b2d310",
+    "ru": "Разъяснение рассматривает воздействие шума систем вентиляции, холодильного и отопительного оборудования на условия проживания. Для такого предмета предусмотрено обращение в территориальное управление Роспотребнадзора. Оно не подтверждает превышение на вымышленном объекте и не делает бытовую запись экспертным измерением.",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].text"
+    ]
+  },
+  {
+    "id": "0de97d1c885f54f8",
+    "ru": "Шум инженерного оборудования",
+    "contexts": [
+      "cases:SOURCES[n13-equipment-noise].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-equipment-noise].title"
+    ]
+  },
+  {
+    "id": "241f9450c9ce94b0",
+    "ru": "Статья 15",
+    "contexts": [
+      "cases:SOURCES[n13-guard15].article",
+      "cases:SOURCES[v16-norm-access].article",
+      "cases:SOURCES[v16-norm-sfrterm].article"
+    ]
+  },
+  {
+    "id": "ebac08babe43be72",
+    "ru": "Федеральный закон от 30.11.2024 № 427-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-guard15].number",
+      "cases:SOURCES[n13-guard20].number"
+    ]
+  },
+  {
+    "id": "e8e3a4f8599fa60b",
+    "ru": "427-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-guard15].short",
+      "cases:SOURCES[n13-guard20].short"
+    ]
+  },
+  {
+    "id": "f7425695de237896",
+    "ru": "Полномочия и обязанности частного охранника",
+    "contexts": [
+      "cases:SOURCES[n13-guard15].title",
+      "cases:SOURCES[n13-guard15].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-guard15].title"
+    ]
+  },
+  {
+    "id": "16ba1e1351c6fccd",
+    "ru": "Статья 20",
+    "contexts": [
+      "cases:SOURCES[n13-guard20].article"
+    ]
+  },
+  {
+    "id": "ab063946d4c0396a",
+    "ru": "Реестр лицензий частной охранной деятельности",
+    "contexts": [
+      "cases:SOURCES[n13-guard20].title",
+      "cases:SOURCES[n13-guard20].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-guard20].title"
+    ]
+  },
+  {
+    "id": "b008a5477f7bfc43",
+    "ru": "Статья 2, пункт 2",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].article"
+    ]
+  },
+  {
+    "id": "7c7e5de0e5353f9a",
+    "ru": "Закон города Москвы от 12.07.2002 № 42",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].number"
+    ]
+  },
+  {
+    "id": "7deff3533f9d554d",
+    "ru": "Авторская сверка 07.09.2026",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].revision"
+    ]
+  },
+  {
+    "id": "7572033c6a803764",
+    "ru": "Закон Москвы №42",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].short"
+    ]
+  },
+  {
+    "id": "ad926f2c78494d28",
+    "ru": "шум",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].tags[0]",
+      "cases:SOURCES[n13-equipment-noise].tags[0]",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b1eb2830e953c48a",
+    "ru": "авария",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].tags[1]"
+    ]
+  },
+  {
+    "id": "ee82b3eed5a330c9",
+    "ru": "Для московской истории учитывается исключение для предотвращения и ликвидации последствий аварий и предусмотренных неотложных работ. Применимость подтверждается обстоятельствами дела, не словом «авария». Оно не распространяется автоматически на обычное восстановление покрытия следующей ночью и не является единым законом для всех регионов.",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].text"
+    ]
+  },
+  {
+    "id": "ec3f0f5b6d693961",
+    "ru": "Исключение для неотложных работ: только Москва",
+    "contexts": [
+      "cases:SOURCES[n13-moscow-noise].title",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-moscow-noise].title"
+    ]
+  },
+  {
+    "id": "749360ba828c67f6",
+    "ru": "Статья 8",
+    "contexts": [
+      "cases:SOURCES[n13-noise].article",
+      "cases:SOURCES[v16-norm-routing].article"
+    ]
+  },
+  {
+    "id": "3b4661146ff861b8",
+    "ru": "Компетенция и переадресация обращения",
+    "contexts": [
+      "cases:SOURCES[n13-noise].title",
+      "cases:SOURCES[n13-noise].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-noise].title"
+    ]
+  },
+  {
+    "id": "9964482bfd015ac8",
+    "ru": "Статья 21",
+    "contexts": [
+      "cases:SOURCES[n13-plants].article"
+    ]
+  },
+  {
+    "id": "0023cda7c8d0a73b",
+    "ru": "Федеральный закон от 21.07.2014 № 206-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-plants].number"
+    ]
+  },
+  {
+    "id": "179164b0f1c22384",
+    "ru": "Авторская сверка 07.09.2026; область применения указана в каждом деле.",
+    "contexts": [
+      "cases:SOURCES[n13-plants].revision",
+      "cases:SOURCES[n13-guard15].revision",
+      "cases:SOURCES[n13-guard20].revision"
+    ]
+  },
+  {
+    "id": "8d727a89d5875c1e",
+    "ru": "206-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-plants].short"
+    ]
+  },
+  {
+    "id": "9cdbd6d9e0797e61",
+    "ru": "Вывоз продукции из карантинной фитосанитарной зоны",
+    "contexts": [
+      "cases:SOURCES[n13-plants].title",
+      "cases:SOURCES[n13-plants].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-plants].title"
+    ]
+  },
+  {
+    "id": "98ce49aa446c437d",
+    "ru": "Статья 13.4",
+    "contexts": [
+      "cases:SOURCES[n13-waste].article"
+    ]
+  },
+  {
+    "id": "bf3704653616b18b",
+    "ru": "Федеральный закон от 24.06.1998 № 89-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-waste].number"
+    ]
+  },
+  {
+    "id": "231ce6851ac2aa62",
+    "ru": "89-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n13-waste].short"
+    ]
+  },
+  {
+    "id": "7078fce006fd03cf",
+    "ru": "Места и порядок раздельного накопления отходов",
+    "contexts": [
+      "cases:SOURCES[n13-waste].title",
+      "cases:SOURCES[n13-waste].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n13-waste].title"
+    ]
+  },
+  {
+    "id": "8a301915a0cd3ead",
+    "ru": "Статья 125",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff125].article"
+    ]
+  },
+  {
+    "id": "0acbe35edd1d8546",
+    "ru": "Неподписанная жалоба в порядке подчинённости",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff125].title",
+      "cases:SOURCES[n14-bailiff125].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-bailiff125].title"
+    ]
+  },
+  {
+    "id": "8fa5ed133f52dc3b",
+    "ru": "Статья 64.1",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff641].article"
+    ]
+  },
+  {
+    "id": "09fef438bc0ec8db",
+    "ru": "Федеральный закон от 2007-10-02 № 229-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff641].number",
+      "cases:SOURCES[n14-bailiff125].number"
+    ]
+  },
+  {
+    "id": "553590c9fce348a5",
+    "ru": "229-ФЗ",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff641].short",
+      "cases:SOURCES[n14-bailiff125].short"
+    ]
+  },
+  {
+    "id": "9f188c25c418a09f",
+    "ru": "Ходатайство и копия постановления",
+    "contexts": [
+      "cases:SOURCES[n14-bailiff641].title",
+      "cases:SOURCES[n14-bailiff641].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-bailiff641].title"
+    ]
+  },
+  {
+    "id": "b72ed08e4d32340b",
+    "ru": "Пункт 11",
+    "contexts": [
+      "cases:SOURCES[n14-driver11].article"
+    ]
+  },
+  {
+    "id": "74b3e1efbdce47dc",
+    "ru": "Специальный перерыв водителя",
+    "contexts": [
+      "cases:SOURCES[n14-driver11].title",
+      "cases:SOURCES[n14-driver11].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-driver11].title"
+    ]
+  },
+  {
+    "id": "6a5b4d8ec9c36f8f",
+    "ru": "Пункт 13",
+    "contexts": [
+      "cases:SOURCES[n14-driver13].article"
+    ]
+  },
+  {
+    "id": "0dbb530a0a73fe0b",
+    "ru": "Приказ Минтранса России от 2026-04-14 № 160",
+    "contexts": [
+      "cases:SOURCES[n14-driver13].number",
+      "cases:SOURCES[n14-driver11].number",
+      "cases:SOURCES[n14-driver9].number"
+    ]
+  },
+  {
+    "id": "a035b94ccdc5c7c2",
+    "ru": "Стоянка в ожидании посадки и рабочее время",
+    "contexts": [
+      "cases:SOURCES[n14-driver13].title",
+      "cases:SOURCES[n14-driver13].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-driver13].title"
+    ]
+  },
+  {
+    "id": "c88d75c1529938ec",
+    "ru": "Пункт 9",
+    "contexts": [
+      "cases:SOURCES[n14-driver9].article"
+    ]
+  },
+  {
+    "id": "87622972714dce07",
+    "ru": "Отступление не является плановым графиком",
+    "contexts": [
+      "cases:SOURCES[n14-driver9].title",
+      "cases:SOURCES[n14-driver9].tags[0]",
+      "source-index:SOURCE_INDEX.entries[shelf:n14-driver9].title"
+    ]
+  }
+]

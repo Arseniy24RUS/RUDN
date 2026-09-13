@@ -1,0 +1,618 @@
+{
+  "a60023c9230d0f78": {
+    "en": "Repair the site and review the earlier response · supporting materials",
+    "zh": "修复设施并核查此前答复 · 依据材料"
+  },
+  "7278a7f24f169b44": {
+    "en": "Details of the insured event: The incapacity for work is due to caring for a sick child. No illness of the employee is recorded. Entitlement for the relevant period is confirmed.\n\nPayment plan and receipt of data: HR used the template “the first three days paid by the employer”. The insurer received all necessary information on {{info}}; no payment has yet been made for this event.",
+    "zh": "保险事故信息：不能工作的原因为照顾患病儿童。未登记员工本人患病。相关期间的领取资格已获确认。\n\n支付计划与资料接收：人事部门套用了“前三日由雇主支付”的模板。保险人于{{info}}收到全部必要信息；尚未就此次事故支付款项。"
+  },
+  "72aacc44b141a34b": {
+    "en": "Caring for a child — a different payment source · supporting materials",
+    "zh": "照顾儿童——支付来源不同 · 依据材料"
+  },
+  "3bc2ea5afcde3114": {
+    "en": "Decision Р-29: The insurer adopted a reasoned refusal on {{decision}}. The specific insured event and employee are identified; the details required to send it to both recipients are complete.\n\nOutgoing messages log: Р-29 was sent to the policyholder. There is no record of sending it to the insured person; no message was generated in the personal account.",
+    "zh": "Р-29号决定：保险人于{{decision}}作出了附有理由的拒绝决定。决定注明了具体保险事故及员工；向两名收件对象发送所需的信息均齐全。\n\n发文日志：Р-29已发给投保人。未记录向被保险人发送；也未生成个人账户消息。"
+  },
+  "5b597e7e0d79472d": {
+    "en": "A decision exists, but the employee was not notified · supporting materials",
+    "zh": "已作出决定，却未通知员工 · 依据材料"
+  },
+  "54d53ead1fd9465e": {
+    "en": "Period and grounds for incapacity for work: The employee's own illness, lasting eight calendar days. Not care for a family member or an occupational injury. The employee's status and the grounds are confirmed.\n\nPayment and information log: The employer's payment is marked “first three days”. The Social Fund has not paid for the remaining days. The insurer accepted the complete required information on {{info}}.",
+    "zh": "不能工作的期间与事由：员工本人患病，持续八个自然日。并非照顾家属，也并非工伤。员工身份及事由均已确认。\n\n付款与资料日志：雇主付款标注为“前三日”。其余日期尚未获得社会基金支付。保险人于{{info}}收齐全部必要信息。"
+  },
+  "d3c7c7169bfc236f": {
+    "en": "A transfer arrived, but which days does it cover? · supporting materials",
+    "zh": "款已到账，但支付的是哪些日期？ · 依据材料"
+  },
+  "2c176be265a10460": {
+    "en": "Choose the competent authority for Tver Oblast and the specified type of oversight.",
+    "zh": "根据特维尔州及指定监督类型选择有权机关。"
+  },
+  "412ef38163fa2f5a": {
+    "en": "Choose a Moscow authority based on the author's registered address.",
+    "zh": "按作者户籍地址选择莫斯科机关。"
+  },
+  "e811020a76f725c0": {
+    "en": "Do not check the type of oversight.",
+    "zh": "不核查监督类型。"
+  },
+  "3d7bd39557860c5a": {
+    "en": "Which constituent entity determines the territorial referral in this case?",
+    "zh": "本案应依据哪个联邦主体确定属地转送方向？"
+  },
+  "adbccfcd02176f7d": {
+    "en": "Request the materials while retaining independent final consideration. Article 8 of Law No. 59-FZ prohibits referring a complaint to the body or official whose decisions or actions are challenged. Collecting explanations for consideration by an authorized person is not equivalent to transferring the final decision on the complaint.",
+    "zh": "调取材料，同时确保最终审理的独立性。第59-FZ号法律第8条禁止将投诉交由其决定或行为受到投诉的机关或官员审理。为有权人员审理而收集说明，不等同于移交投诉的最终处理权。"
+  },
+  "47501ef3fae1cd38": {
+    "en": "their own actions",
+    "zh": "其本人的行为"
+  },
+  "ce971785df79d6a7": {
+    "en": "their own actions",
+    "zh": "自己的行为"
+  },
+  "c5a921ec3122049f": {
+    "en": "his own actions",
+    "zh": "他本人的行为"
+  },
+  "1f4735a3b2367e12": {
+    "en": "Request the materials while retaining independent final consideration.",
+    "zh": "调取材料，同时确保最终审理的独立性。"
+  },
+  "43792b1cc505081b": {
+    "en": "Assign the person complained about to make the final decision on the complaint.",
+    "zh": "指定被投诉人负责投诉的最终处理。"
+  },
+  "bb4d3826e6183240": {
+    "en": "Prohibit collecting any explanations.",
+    "zh": "禁止收集任何说明。"
+  },
+  "67779082643d70fb": {
+    "en": "Whose actions must not be assigned to that same person for final consideration of the complaint?",
+    "zh": "不得将针对谁的行为的投诉交由该人本人作出最终处理？"
+  },
+  "983185131e7b3d54": {
+    "en": "Check the special procedure and do not promise a universal delivery date. Claims to trace international postal items are governed by Russian legislation and international treaties. Domestic postal time limits cannot automatically be applied to every international tracing claim.",
+    "zh": "核查特别程序，不承诺通用的送达日期。国际邮件查询索赔适用俄罗斯联邦法律及国际条约。国内邮件期限不能自动套用于一切国际邮件查询。"
+  },
+  "10ba5e6b5b4810eb": {
+    "en": "international treaties",
+    "zh": "国际条约"
+  },
+  "161d0b116e17f6ec": {
+    "en": "international treaties of the Russian Federation",
+    "zh": "俄罗斯联邦参加的国际条约"
+  },
+  "5a28425d8f32ce6c": {
+    "en": "Check the special procedure and do not promise a universal delivery date.",
+    "zh": "核查特别程序，不承诺通用的送达日期。"
+  },
+  "38f89f446155fe95": {
+    "en": "Always count only 30 days.",
+    "zh": "一律只计算30日。"
+  },
+  "330e1c494b4b7e67": {
+    "en": "Replace tracing with cancellation of release.",
+    "zh": "以撤销放行代替查询。"
+  },
+  "7453e1974ab9ea50": {
+    "en": "Which instruments apply alongside Russian legislation?",
+    "zh": "除俄罗斯联邦法律外，还应考虑哪些法律文件？"
+  },
+  "158baa7df8918ef1": {
+    "en": "Check the document for С-24 together with the conditions and route. Training shipment card: С-24 was transported out of a designated phytosanitary quarantine zone under restrictions applying to this product type. The certificate presented covers С-18. A document relating to С-24 is required, not one for a neighboring consignment.",
+    "zh": "结合条件及运输路线核查С-24批次的文件。教学供货卡：С-24从划定的植物检疫隔离区运出，该类产品适用相关限制。出示的证书属于С-18批次。需要的是С-24的文件，而非相邻批次的文件。"
+  },
+  "12e54eec5de6fbbf": {
+    "en": "С-24",
+    "zh": "С-24"
+  },
+  "7c569678957d393a": {
+    "en": "C24",
+    "zh": "C24"
+  },
+  "4ac6153433b87d58": {
+    "en": "Check the document for С-24 together with the conditions and route.",
+    "zh": "结合条件及运输路线核查С-24批次的文件。"
+  },
+  "3be603f490600129": {
+    "en": "Accept the certificate for С-18.",
+    "zh": "接受С-18批次的证书。"
+  },
+  "5e8852e9d25f4975": {
+    "en": "Compare the records for the specific drivers and day. Organizations and sole traders operating vehicles must comply with the prescribed work and rest regime for drivers. Checking the schedule and actual work cannot be replaced by observing how long a vehicle is in use.",
+    "zh": "核对具体驾驶员及具体日期的记录。运营车辆的组织和个体经营者必须遵守规定的驾驶员工作与休息制度。观察车辆使用时长，不能代替核查排班和实际工作情况。"
+  },
+  "e553cee7cde85c0e": {
+    "en": "drivers",
+    "zh": "驾驶员"
+  },
+  "fdcac9671e0c515e": {
+    "en": "driver",
+    "zh": "驾驶员"
+  },
+  "1ada494a1ccfd477": {
+    "en": "drivers' work and rest regime",
+    "zh": "驾驶员工作与休息制度"
+  },
+  "8ea83cd204ec807a": {
+    "en": "Compare the records for the specific drivers and day.",
+    "zh": "核对具体驾驶员及具体日期的记录。"
+  },
+  "25962ba14d498d5a": {
+    "en": "Equate the bus's operating time with a person's shift.",
+    "zh": "将公交车的运营时长等同于个人班次。"
+  },
+  "aef7584c1bff1776": {
+    "en": "Accept a document covering a different period.",
+    "zh": "采纳另一时段的文件。"
+  },
+  "9fb1185bb501cd07": {
+    "en": "Whose work and rest regime must be checked?",
+    "zh": "应核查谁的工作与休息制度？"
+  },
+  "bfe3157f7c26821e": {
+    "en": "Check when the carrier received the claim and what its decision says. Article 127.1 of the Air Code ties the 30-day claim consideration period to receipt by the carrier. Neither the sending date nor later registration at another authority replaces that event.",
+    "zh": "核查承运人收到索赔的日期及其决定内容。《航空法典》第127.1条将30日索赔处理期限与承运人收到索赔相联系。寄送日期及后来在其他机关登记的日期均不能代替这一事件。"
+  },
+  "a987f4e1519f6edf": {
+    "en": "receipt of the claim by the carrier",
+    "zh": "承运人收到索赔"
+  },
+  "720b09633f1b5ac8": {
+    "en": "receipt of the claim by the carrier",
+    "zh": "承运人收到索赔"
+  },
+  "cf8168e2e32914b2": {
+    "en": "the carrier receiving the claim",
+    "zh": "承运人收到索赔"
+  },
+  "7d49fb2795d57c07": {
+    "en": "the carrier receiving the claim",
+    "zh": "承运人收到索赔"
+  },
+  "19ae44accf69345e": {
+    "en": "Check when the carrier received the claim and what its decision says.",
+    "zh": "核查承运人收到索赔的日期及其决定内容。"
+  },
+  "63d578a5f06170d3": {
+    "en": "Count from when the reception office opened the case.",
+    "zh": "从接待处建立案件之日起计算。"
+  },
+  "083b3865b6ae87d2": {
+    "en": "Extend the deadline by sending an automatic reply.",
+    "zh": "以自动回复延长期限。"
+  },
+  "1b59d5a74a8c065e": {
+    "en": "Which event starts the specified period?",
+    "zh": "该期限从什么事件开始计算？"
+  },
+  "a51f13b3c5a275c9": {
+    "en": "Check the organization and employee separately, while retaining the questions about the incident. Official National Guard materials distinguish licensing documents for a security organization from a private guard's documents. The organization's licence does not replace the individual private guard's certificate.",
+    "zh": "分别核查组织和工作人员，同时继续查明事件本身。俄罗斯国家近卫军的官方材料区分保安机构的许可文件与私人保安员的证件。机构许可证不能代替具体私人保安员的资格证。"
+  },
+  "eb64681932608e22": {
+    "en": "private security guard certificate",
+    "zh": "私人保安员资格证"
+  },
+  "72b00441221f82e8": {
+    "en": "security guard certificate",
+    "zh": "保安员资格证"
+  },
+  "70b5783ec4be05ec": {
+    "en": "Check the organization and employee separately, while retaining the questions about the incident.",
+    "zh": "分别核查组织和工作人员，同时继续查明事件本身。"
+  },
+  "c095c85afd796193": {
+    "en": "Treat the club's emblem as a certificate.",
+    "zh": "将俱乐部标志视为资格证。"
+  },
+  "d13b75230aa18bc3": {
+    "en": "Substitute the organization's licence for the employee's document.",
+    "zh": "用机构许可证代替工作人员的证件。"
+  },
+  "538deb859fd9ebe1": {
+    "en": "What is the document confirming an individual private guard's status called?",
+    "zh": "确认具体私人保安员身份资格的证件叫什么？"
+  },
+  "ae8ff7b7f8301c37": {
+    "en": "Check the date of receipt by the lender and the special refund rules. Under collective insurance where the lender is the policyholder, the borrower's cancellation request is addressed to the lender. Under Part 2.5 of Article 7 of Law No. 353-FZ, the refund is made within no more than seven working days of receipt of the application; the other conditions are expressly specified in the case.",
+    "zh": "核查贷款人收到申请的日期及特别退款规则。在贷款人作为投保人的集体保险中，借款人的退保申请应提交贷款人。根据第353-FZ号法律第7条第2.5款的条件，应自收到申请之日起不超过七个工作日内退款；其他条件已在案情中明确给出。"
+  },
+  "1662b1b4e0345e11": {
+    "en": "to the lender",
+    "zh": "向贷款人"
+  },
+  "92f2b1f60a959ce2": {
+    "en": "bank",
+    "zh": "银行"
+  },
+  "1f8111c9335f1b58": {
+    "en": "to the bank",
+    "zh": "向银行"
+  },
+  "fbdc6d21608b5294": {
+    "en": "lender",
+    "zh": "贷款人"
+  },
+  "035fb46f2fe72440": {
+    "en": "Check the date of receipt by the lender and the special refund rules.",
+    "zh": "核查贷款人收到申请的日期及特别退款规则。"
+  },
+  "8d512d282b203b43": {
+    "en": "Always redirect the request to the insurer.",
+    "zh": "一律转交保险人。"
+  },
+  "ef3f0d0b20ef4666": {
+    "en": "Count an automatic reply as a refund.",
+    "zh": "将自动回复视为已经退款。"
+  },
+  "c6df54f928200550": {
+    "en": "To whom should the application be addressed under the specified collective insurance?",
+    "zh": "在上述集体保险情形下，申请应提交谁？"
+  },
+  "65cb659051b707d8": {
+    "en": "Choose the competent authority for Tver Oblast and the specified type of oversight. Training case card: the site is in Tver Oblast and this non-emergency issue falls within regional environmental competence. The author's Moscow address is for correspondence and does not change the site's location.",
+    "zh": "根据特维尔州及指定监督类型选择有权机关。教学案情卡：涉事地点位于特维尔州，该非紧急事项属于地区环境管理职权。作者的莫斯科地址用于联系，不改变涉事地点的所在地。"
+  },
+  "4fd159be169a72ce": {
+    "en": "Tver Oblast",
+    "zh": "特维尔州"
+  },
+  "d0fbcc41cda409de": {
+    "en": "Tver Oblast",
+    "zh": "特维尔州"
+  },
+  "a1789e79f44fec12": {
+    "en": "Part 2",
+    "zh": "第2款"
+  },
+  "34cd649857314a94": {
+    "en": "Pt. 2",
+    "zh": "第2款"
+  },
+  "f71a3ca40348c87f": {
+    "en": "Enter the part number within Article 11 concerning this type of appeal",
+    "zh": "填写第11条中涉及此类来函的款号"
+  },
+  "4bc9546e6acda68c": {
+    "en": "Explain the judicial appeal procedure and take the prescribed action on the appeal without reviewing the court's decision.",
+    "zh": "说明司法救济程序，依法处理来函，但不得重新审查法院裁判。"
+  },
+  "8db9589f19004f00": {
+    "en": "Overturn the judicial decision with an ordinary reply letter.",
+    "zh": "以普通回函撤销法院裁判。"
+  },
+  "542b1c512bb7ec29": {
+    "en": "Present seven days as the universal deadline for an appeal.",
+    "zh": "将七日解释为一切上诉的通用期限。"
+  },
+  "75bf72d45c64477f": {
+    "en": "Enter the part number within Article 11 concerning this type of appeal. Then connect this fact to the action required in the case.",
+    "zh": "填写第11条中涉及此类来函的款号。随后将这一事实与本案应采取的行动相联系。"
+  },
+  "561fef9fdbddb950": {
+    "en": "Ask the advertising distributor to substantiate consent without declaring a data leak already proven. Advertising over telecommunications networks requires the subscriber's or recipient's prior consent. The advertising distributor bears the burden of proving that consent. Advertising to the recipient must stop upon their request.",
+    "zh": "要求广告发布者提供事先同意的证明，但不得直接认定数据泄露已经成立。通过电信网络发送广告须事先取得用户或收件人的同意。广告发布者负有证明该同意的责任。收件人要求停止后，必须停止向其发送广告。"
+  },
+  "d2eb319066cc55dc": {
+    "en": "advertising distributor",
+    "zh": "广告发布者"
+  },
+  "e289dc0bf84b12e8": {
+    "en": "by the advertising distributor",
+    "zh": "由广告发布者"
+  },
+  "1dbbbd03af3b63a1": {
+    "en": "Ask the advertising distributor to substantiate consent without declaring a data leak already proven.",
+    "zh": "要求广告发布者提供事先同意的证明，但不得直接认定数据泄露已经成立。"
+  },
+  "d4e2b87371c4bee3": {
+    "en": "Treat knowing the phone number as consent.",
+    "zh": "将知晓电话号码视为已经获得同意。"
+  },
+  "b4f3fe639eb6f004": {
+    "en": "Require only the citizen to prove a negative.",
+    "zh": "仅要求公民证明某事未发生。"
+  },
+  "a263a7d185559a25": {
+    "en": "Who must prove that prior consent was obtained?",
+    "zh": "谁负有证明已取得事先同意的责任？"
+  },
+  "fc5eb0ae45664b71": {
+    "en": "Forward the information without fabricating an individual response. Part 1 of Article 11 of Law No. 59-FZ provides that no reply is given to a written appeal that lacks the author's surname or return address. Information about a suspected unlawful act and the person committing it must be sent to the competent state authority.",
+    "zh": "转交有关信息，不编造针对个人的答复。第59-FZ号法律第11条第1款规定，书面来函未注明作者姓氏或答复地址的，不予答复。若包含涉嫌违法行为及其实施者的信息，应按职权转送有关国家机关。"
+  },
+  "9fbdc06cde606dc1": {
+    "en": "referral to the competent authority",
+    "zh": "转送有权机关"
+  },
+  "07e2f172f3dbe416": {
+    "en": "referral to the competent state authority",
+    "zh": "按职权转送有关国家机关"
+  },
+  "e47910ed391ff49b": {
+    "en": "transfer to the competent authority",
+    "zh": "移送有权机关"
+  },
+  "70956cd73a07d764": {
+    "en": "refer to the competent authority",
+    "zh": "转送有权机关"
+  },
+  "0a2feb84198052cb": {
+    "en": "Forward the information without fabricating an individual response.",
+    "zh": "转交有关信息，不编造针对个人的答复。"
+  },
+  "36c4d280f7756e80": {
+    "en": "Destroy the sheet.",
+    "zh": "销毁纸张。"
+  },
+  "6132e3ad85036ff8": {
+    "en": "Invent the author's details.",
+    "zh": "编造作者信息。"
+  },
+  "90de196539a18e32": {
+    "en": "What should be done with the specific information instead of deleting it?",
+    "zh": "对于这些具体信息，应采取什么行动，而不是将其删除？"
+  },
+  "c2162b93dcb08eea": {
+    "en": "Exclude non-working days when calculating the ten-day period. Article 15 of Law No. 229-FZ excludes non-working days from periods expressed in days. Counting begins on the day following the triggering event. For the period under Article 126, apply this general rule together with the date of receipt by the authorized person.",
+    "zh": "计算十日期限时排除非工作日。第229-FZ号法律第15条规定，以日计算的期限不计入非工作日，自起算事件的次日起计算。确定第126条的期限时，应结合这一通则及有权人员收到材料的日期。"
+  },
+  "a20ab7efea8df60d": {
+    "en": "non-working days",
+    "zh": "非工作日"
+  },
+  "dbd92b0a851f7b72": {
+    "en": "non-working",
+    "zh": "非工作日"
+  },
+  "820314b93f119d85": {
+    "en": "Exclude non-working days when calculating the ten-day period.",
+    "zh": "计算十日期限时排除非工作日。"
+  },
+  "67ec7e1bf33988df": {
+    "en": "Count ten calendar days without applying Article 15.",
+    "zh": "不适用第15条，直接计算十个自然日。"
+  },
+  "9da53b295b89eb7f": {
+    "en": "Move the start date to whenever it is convenient to read the appeal.",
+    "zh": "将起算日移到方便阅读来函的日期。"
+  },
+  "2c6a0972268c2de6": {
+    "en": "Which days are excluded from this period?",
+    "zh": "该期限不计入哪些日期？"
+  },
+  "f721cfba5baae2bf": {
+    "en": "Check the separate restriction on the advertising structure. Clause 5 of Part 2 of Article 21 governs outdoor advertising structures. The distance requirement concerning educational institutions is a separate provision. The billboard advertising beer in this case does not fall within the special rules for advertising a winery.",
+    "zh": "审查针对广告设施的独立限制。第21条第2款第5项规范户外广告设施的使用。与教育机构距离有关的条件另行规定。本案广告牌上的啤酒广告不属于酒庄广告的特殊情形。"
+  },
+  "191fdb596f7360f7": {
+    "en": "Clause 5",
+    "zh": "第5项"
+  },
+  "193e18b777ab76ea": {
+    "en": "Cl. 5",
+    "zh": "第5项"
+  },
+  "dd252d1e6ed0d5ba": {
+    "en": "cl5",
+    "zh": "第5项"
+  },
+  "69ca79e29efc12f1": {
+    "en": "Check the separate restriction on the advertising structure.",
+    "zh": "审查针对广告设施的独立限制。"
+  },
+  "a84a94a2f4439a28": {
+    "en": "Check only the distance to the school.",
+    "zh": "仅审查与学校的距离。"
+  },
+  "6f7dc0b68020fd0d": {
+    "en": "Treat a partial alteration as automatically remedying the violation.",
+    "zh": "认为部分修改就自动消除了违法情形。"
+  },
+  "6013ca4a85ac8e33": {
+    "en": "Which clause of Part 2 concerns outdoor advertising structures?",
+    "zh": "第2款中的哪一项涉及户外广告设施？"
+  },
+  "40ee5043996f5579": {
+    "en": "Arrange an agreed accessible appointment and separately examine the cause of the barrier. Accessibility covers not only entering the building but actually receiving the service. In this training case, the person cannot reach the service desk upstairs, but an appointment can be arranged in an accessible room on the ground floor. Agree the assistance with the person.",
+    "zh": "安排经本人同意的无障碍接待，并另行审查障碍的原因。无障碍不仅包括进入建筑物，还包括实际获得服务。本教学案例中，当事人无法到达楼上的服务工位，但可以在一楼的无障碍房间安排接待。协助方式应与本人商定。"
+  },
+  "174eba873846e62d": {
+    "en": "ground",
+    "zh": "一楼"
+  },
+  "123b030778ccaa87": {
+    "en": "ground",
+    "zh": "一楼"
+  },
+  "a5483ea3eb971f9c": {
+    "en": "ground floor",
+    "zh": "一楼"
+  },
+  "795f85c43bb94208": {
+    "en": "on the ground floor",
+    "zh": "在一楼"
+  },
+  "789b32b95daaa2ed": {
+    "en": "On which floor is an accessible reception room available in this case?",
+    "zh": "根据案情，可供无障碍接待的房间位于哪一层？"
+  },
+  "51c4353b9b709667": {
+    "en": "Arrange an agreed accessible appointment and separately examine the cause of the barrier.",
+    "zh": "安排经本人同意的无障碍接待，并另行审查障碍的原因。"
+  },
+  "75ee7d7797d0cf96": {
+    "en": "Treat the presence of a call button as sufficient, regardless of whether the service is received.",
+    "zh": "无论当事人是否获得服务，都认为安装了呼叫按钮就已足够。"
+  },
+  "a2fb91b22ab6f651": {
+    "en": "Carry the person against their will.",
+    "zh": "违背本人意愿搬抬当事人。"
+  },
+  "75f7a541bb69f73d": {
+    "en": "On which floor is an accessible reception room available in this case? Then connect this fact to the action required in the case.",
+    "zh": "根据案情，可供无障碍接待的房间位于哪一层？随后将这一事实与本案应采取的行动相联系。"
+  },
+  "463613c9fce17778": {
+    "en": "Part 6 of Article 8 prohibits referring a complaint for consideration to its subject, but does not prohibit every request to obtain materials from that person or body.",
+    "zh": "第8条第6款禁止将投诉转交被投诉对象审理，但并不意味着一律不得向其调取材料。"
+  },
+  "a913f02c49cc8280": {
+    "en": "Part number within Article 8 of Law 59-FZ",
+    "zh": "第59-FZ号法律第8条中的款号"
+  },
+  "1653997fd839e9cf": {
+    "en": "It is forbidden even to request necessary materials from the person complained about.",
+    "zh": "甚至不得向被投诉人索取必要材料。"
+  },
+  "208cbab0ee86c3c0": {
+    "en": "If the employee knows the circumstances best, they must always make the final decision on the complaint against themselves.",
+    "zh": "如果该工作人员最了解情况，就应始终由其本人对针对自己的投诉作出最终处理。"
+  },
+  "06cc28454631ee03": {
+    "en": "Requesting materials from the person complained about is not the same as assigning them the final consideration of the complaint against themselves.",
+    "zh": "向被投诉人调取材料，不等于委托其对针对自己的投诉作出最终处理。"
+  },
+  "80ea9d3170afc329": {
+    "en": "Find the prohibition on referring a complaint to the person whose actions are challenged. Enter the relevant part number within Article 8.",
+    "zh": "找到禁止将投诉转交被投诉行为实施者的规定。填写第8条中对应的款号。"
+  },
+  "946fb825bc23a2d3": {
+    "en": "The recipient whose actions are challenged",
+    "zh": "其行为受到投诉的收件对象"
+  },
+  "21f7fd5ff7adc3ff": {
+    "en": "Disclose the interest and ensure independent assignment of the case, preserving the response deadline. When a personal interest causes or may cause a conflict of interest, a civil servant must notify the employer's representative under the established procedure as soon as they become aware of it. Confidence in one's own honesty does not replace notification. The appeal remains under consideration: the work must be properly reassigned.",
+    "zh": "披露利害关系，确保独立分配审理工作，并维持原有办理期限。当个人利益已经或可能导致利益冲突时，国家文职公务员应在知悉后立即依规定程序通知任用方代表。自信清廉不能代替通知。申诉的办理不因此终止，应妥善重新分配工作。"
+  },
+  "09f4e21e72bc3ab3": {
+    "en": "the employer's representative",
+    "zh": "任用方代表"
+  },
+  "dc7bce421711d44d": {
+    "en": "employer's representative",
+    "zh": "任用方代表"
+  },
+  "bcf6b688ba3a241c": {
+    "en": "Whom must the civil servant notify under the established procedure?",
+    "zh": "国家文职公务员应依规定程序通知谁？"
+  },
+  "deaa5924542ce751": {
+    "en": "Disclose the interest and ensure independent assignment of the case, preserving the response deadline.",
+    "zh": "披露利害关系，确保独立分配审理工作，并维持原有办理期限。"
+  },
+  "772d18646560f804": {
+    "en": "Conceal the connection and invoke personal honesty.",
+    "zh": "隐瞒关系，以个人清廉为由解释。"
+  },
+  "f6022945d5366bef": {
+    "en": "Delete the complaint to prevent a conflict from arising.",
+    "zh": "删除投诉，以免出现利益冲突。"
+  },
+  "7ba72818414c18c2": {
+    "en": "Whom must the civil servant notify under the established procedure? Then connect this fact to the action required in the case.",
+    "zh": "国家文职公务员应依规定程序通知谁？随后将这一事实与本案应采取的行动相联系。"
+  },
+  "bddf8f10041c7031": {
+    "en": "Explain the judicial appeal procedure and take the prescribed action on the appeal without reviewing the court's decision. For an appeal challenging a judicial decision, Part 2 of Article 11 requires its return with an explanation of the appeal procedure within seven days of registration. An executive authority's reception office does not overturn judicial decisions. This period is not the procedural deadline for filing an appeal.",
+    "zh": "说明司法救济程序，依法处理来函，但不得重新审查法院裁判。对于质疑法院裁判的来函，第11条第2款规定，应自登记之日起七日内退回，并说明上诉程序。行政机关接待处无权撤销法院裁判。该期限不是提起上诉的诉讼期限。"
+  },
+  "d9eb7ab521e83f39": {
+    "en": "Information on facility Э-30: Facility Э-30 is outside Moscow in the specified region. The training extract confirms federal environmental supervision.\n\nTerritorial jurisdiction map: Э-30 falls under the specified territorial federal supervisory body at the facility's location. The Moscow reception office lacks this subject-matter and territorial jurisdiction.",
+    "zh": "设施Э-30的信息：设施Э-30位于莫斯科以外的指定地区。教学摘录确认其属于联邦环境监督。\n\n地域管辖示意图：Э-30归设施所在地指定的联邦监督派出机构管辖。莫斯科接待处没有相应事项和地域管辖权。"
+  },
+  "de45ee020ffc3036": {
+    "en": "Only fictional case landfill-registry-scope",
+    "zh": "仅适用于虚构案件 landfill-registry-scope"
+  },
+  "d88b6c46d95a5c9e": {
+    "en": "Facility registration matters more than the sender's address · supporting materials",
+    "zh": "设施登记信息比寄件人地址更重要 · 依据材料"
+  },
+  "b6e5ab4401cfa04e": {
+    "en": "Letter П-39: An individual bench proposal specifying the location and need. The signature and required details are present. There is no formal application under a special budget procedure.\n\nParticipation-format guidance: An ordinary proposal differs from a formally submitted initiative project and a meeting resolution. It must be considered but does not itself allocate funding.",
+    "zh": "信函П-39：个人提出设置长椅的建议，写明地点和需求，具备签名及必要要件。并未按特殊预算程序正式申报。\n\n参与形式指南：普通建议不同于正式申报的居民倡议项目和会议决议。它应予审议，但本身不意味着拨款。"
+  },
+  "4b9939ed0923524f": {
+    "en": "Only fictional case proposal-one-resident",
+    "zh": "仅适用于虚构案件 proposal-one-resident"
+  },
+  "123651e77c635d80": {
+    "en": "One resident’s proposal · supporting materials",
+    "zh": "一名居民的建议 · 依据材料"
+  },
+  "c7bf9d86abac739f": {
+    "en": "Representative’s authority: The group authorised the citizen to submit a proposal to improve entrance accessibility and receive a response. There is no authority to obtain participants’ medical information.\n\nContents of the request: Alongside the proposal, the citizen requests all neighbours’ health information. That information is not public; no consent to disclosure or other basis has been provided.",
+    "zh": "代表权限：小组授权该公民提交改善入口无障碍条件的建议并接收答复，但未授权其取得参与者的医疗信息。\n\n请求内容：除建议外，该公民还请求所有邻居的健康信息。这些信息并不公开，也未提供披露同意或其他依据。"
+  },
+  "634ca7d52662f42f": {
+    "en": "Only fictional case proposal-representative-limits",
+    "zh": "仅适用于虚构案件 proposal-representative-limits"
+  },
+  "1fb5b87d03a7c958": {
+    "en": "Support the idea — do not disclose others’ information · supporting materials",
+    "zh": "支持想法，不泄露他人信息 · 依据材料"
+  },
+  "641fff87ef770263": {
+    "en": "Meeting minutes: Participants supported the shelter idea. The minutes contain no decision by an authorised budget body, approved estimate or concluded contract.\n\nProject status: The proposal has not yet undergone assessment of the location, authority or funding. The competent unit may consider an implementation option and report the outcome.",
+    "zh": "会议记录：参与者支持遮棚想法。会议记录中没有有权预算机关的决定、获批概算或已签合同。\n\n项目状态：建议尚未经过选址、权限和资金评估。主管部门可审议实施方案并告知结果。"
+  },
+  "2f05cc4318b3abf3": {
+    "en": "Only fictional case proposal-vote-not-budget",
+    "zh": "仅适用于虚构案件 proposal-vote-not-budget"
+  },
+  "b91b4083a2ae1e26": {
+    "en": "The vote happened; the spending decision did not · supporting materials",
+    "zh": "已经投票，尚未决定支出 · 依据材料"
+  },
+  "ddcb0e5ef7ffeab0": {
+    "en": "Only fictional case several-minimum-attachments",
+    "zh": "仅适用于虚构案件 several-minimum-attachments"
+  },
+  "43d6595acd5b51d0": {
+    "en": "Only fictional case several-partial-response",
+    "zh": "仅适用于虚构案件 several-partial-response"
+  },
+  "598c36f58d8295b8": {
+    "en": "Only fictional case several-repair-and-complaint",
+    "zh": "仅适用于虚构案件 several-repair-and-complaint"
+  },
+  "4a05b246f71d6a44": {
+    "en": "Only fictional case sickpay-child-care",
+    "zh": "仅适用于虚构案件 sickpay-child-care"
+  },
+  "515de80400d07d18": {
+    "en": "Only fictional case sickpay-refusal-notice",
+    "zh": "仅适用于虚构案件 sickpay-refusal-notice"
+  },
+  "daa797fefda30e05": {
+    "en": "Only fictional case sickpay-two-payers",
+    "zh": "仅适用于虚构案件 sickpay-two-payers"
+  },
+  "945e8bdb75986b9c": {
+    "en": "Inventory of submission D-37: Question 1: a missing stop on route M-4. Attachment A: route diagram. Question 2: dissemination of a child's medical information. Attachment B: supporting material containing sensitive data.\n\nCompetence map: The transport unit reviews question 1 using attachment A. Question 2 goes to the appropriately competent authority with the necessary materials; the transport unit does not need attachment B.",
+    "zh": "D-37 诉求材料清单：问题 1：M-4 线路缺少停靠站。附件 A：线路图。问题 2：儿童医疗信息被传播。附件 B：含敏感数据的证明材料。\n\n职权划分图：交通部门依据附件 A 审查问题 1。问题 2 连同必要材料转交相应主管机关；交通部门不需要附件 B。"
+  },
+  "38dabc4970a18c78": {
+    "en": "Two problems, different attachments · supporting materials",
+    "zh": "两个问题，不同附件 · 依据材料"
+  },
+  "0930b0e8a3b05c34": {
+    "en": "Submission O-37: Two independent questions: a pothole near the building and lack of lighting on the approach. Both contain sufficient descriptions of their locations.\n\nReply and repair record: The record concerns filling the pothole. The reply describes only road repairs and contains no lighting information.",
+    "zh": "O-37 诉求：两个独立问题：楼旁坑洞，以及通行路段缺乏照明。两者都有充分的地点描述。\n\n答复与维修记录：记录针对坑洞修补。答复仅描述道路维修，没有照明信息。"
+  },
+  "5b1ea04f55da461e": {
+    "en": "A reply to the first question is not a reply to the whole letter · supporting materials",
+    "zh": "答复第一个问题，不等于答复整封信 · 依据材料"
+  },
+  "cb7e62438cd210dc": {
+    "en": "Letter D-38: Question A: a damaged path. Question B: the accuracy of official I-7's previous reply stating that work was complete.\n\nMaterials concerning the previous reply: I-7 reported completion. Dated materials show that the site had not been restored by the specified date; the final causes and responsibility have not yet been established.",
+    "zh": "D-38 信件：问题 A：小路损坏。问题 B：公职人员 I-7 此前声称工作已完成的答复是否真实。\n\n此前答复相关材料：I-7 报告已完成。带日期材料显示，到所指日期现场尚未修复；最终原因和责任尚未确定。"
+  }
+}

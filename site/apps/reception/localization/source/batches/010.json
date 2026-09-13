@@ -1,0 +1,1240 @@
+[
+  {
+    "id": "51757702bf0d3ef0",
+    "ru": "Заявлен вопрос о рассрочке исполнения, а не об отмене взыскания; решения суда о рассрочке ещё нет. Решение не обжалуется. В отличие от отмены акта или исправления описки меняется порядок исполнения по отдельному решению суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.explain"
+    ]
+  },
+  {
+    "id": "9bbf5d305333ea76",
+    "ru": "Заявлен вопрос о рассрочке исполнения, а не об отмене взыскания; решения суда о рассрочке ещё нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c79cd30fef65a354",
+    "ru": "Регистрация обращения сама приостанавливает исполнительные действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "d16325ebe98faf08",
+    "ru": "Снижение дохода автоматически освобождает от присуждённой суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-installments.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "b5d6773e0a6b95f7",
+    "ru": "В новом определении суд разрешил три платежа. Гражданин считает, что это значит освобождение от всей оставшейся суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].followup.intro"
+    ]
+  },
+  {
+    "id": "0f8442f3d9ba38fe",
+    "ru": "Разъяснить утверждённые сроки и объём платежей, не подменяя рассрочку освобождением от долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].followup.options[0].text",
+      "cases:CASE_TEMPLATES[court-installments].followup.explain"
+    ]
+  },
+  {
+    "id": "3329eb5d08b44437",
+    "ru": "Подтвердить полное освобождение от суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "47bf099d2215b1e1",
+    "ru": "Игнорировать определение и продолжить обсуждать только старый талон.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "6fe6a9b22f96f8c4",
+    "ru": "Утвердить график платежей подписью сотрудника приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "bca9a31a1b98ca8f",
+    "ru": "Обещать обязательную рассрочку по одному документу о доходе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "4dfb7cf76702dc1e",
+    "ru": "Найдите нормативное основание следующего действия: Разъяснить возможность заявления о рассрочке в суд, рассмотревший дело; решение принимает суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "a2e51fd4de0fe0bd",
+    "ru": "Решение я не оспариваю, но всю сумму сейчас внести не могу. Можно администрация разрешит платить по месяцам и скажет приставу пока ничего не делать?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].opening"
+    ]
+  },
+  {
+    "id": "68469dbc64f69220",
+    "ru": "Разъяснение судебного порядка изменения исполнения без пересмотра существа решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].procedures[0].text"
+    ]
+  },
+  {
+    "id": "3968d03dff395f23",
+    "ru": "Нет, мне нужен посильный порядок выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q0].answer",
+      "cases:CASE_TEMPLATES[court-installments].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "dc276a231b60eec2",
+    "ru": "Оспариваете сам долг?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q0].text"
+    ]
+  },
+  {
+    "id": "baf7b19cb6f6f7fd",
+    "ru": "График составила я.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q1].answer",
+      "cases:CASE_TEMPLATES[court-installments].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "46ca7c402fda46a6",
+    "ru": "Кто предложил график?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q1].text"
+    ]
+  },
+  {
+    "id": "3d22e1ffa41a4b77",
+    "ru": "Нет; мне выдали талон в приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q2].answer",
+      "cases:CASE_TEMPLATES[court-installments].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9a121dece375d3d8",
+    "ru": "Суд уже выносил отдельное определение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q2].text"
+    ]
+  },
+  {
+    "id": "81edfa09c12e084d",
+    "ru": "Сведения о доходах и обязательных расходах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q3].answer",
+      "cases:CASE_TEMPLATES[court-installments].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "439946adfe4e7c28",
+    "ru": "Какие обстоятельства хотите представить суду?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].questions[q3].text"
+    ]
+  },
+  {
+    "id": "f0a2a53e50498c32",
+    "ru": "Суд, рассмотревший дело, для рассмотрения заявления о рассрочке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].routes[0].text"
+    ]
+  },
+  {
+    "id": "657593a08e02ccdb",
+    "ru": "Разъяснить возможность заявления о рассрочке в суд, рассмотревший дело; решение принимает суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[court-installments].contrast.decision"
+    ]
+  },
+  {
+    "id": "17170f4e8bce0005",
+    "ru": "Платить частями — не значит отменить решение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[court-installments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[court-installments].title"
+    ]
+  },
+  {
+    "id": "4de2476e74d22565",
+    "ru": "Разъяснить возможность заявления о рассрочке в суд, рассмотревший дело; решение принимает суд. Решение не обжалуется. В отличие от отмены акта или исправления описки меняется порядок исполнения по отдельному решению суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].trap.explain"
+    ]
+  },
+  {
+    "id": "20d59895207b7b54",
+    "ru": "Подача обращения в администрацию уже заменяет определение суда о рассрочке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-installments].trap.text"
+    ]
+  },
+  {
+    "id": "107577aca1974873",
+    "ru": "Установить вид акта и требование отменить его.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[a0].title"
+    ]
+  },
+  {
+    "id": "f7e5bcb85bb57117",
+    "ru": "Без промедления разъяснить адресата возражений и самостоятельность судебного срока.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[a1].title"
+    ]
+  },
+  {
+    "id": "1b97559efc779f1b",
+    "ru": "Подготовить возврат обращения с разъяснением по части 2 статьи 11 закона № 59-ФЗ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[a2].title"
+    ]
+  },
+  {
+    "id": "903c2d2195cc7dad",
+    "ru": "Не обещать сохранение срока из-за письма в администрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[a3].title"
+    ]
+  },
+  {
+    "id": "812dceee4dd5d765",
+    "ru": "Проверить получение уведомления, не объявляя приказ отменённым до определения суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[a4].title"
+    ]
+  },
+  {
+    "id": "01556a44f23cdc8c",
+    "ru": "Ждать тридцать дней прежде чем сообщить о судебном порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[b0].title"
+    ]
+  },
+  {
+    "id": "be79c11c6b41b0d6",
+    "ru": "Самостоятельно отменить приказ или гарантировать отсутствие долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].actions[b1].title",
+      "cases:CASE_TEMPLATES[court-order-objections].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "74ffb8d54eeae0a0",
+    "ru": "Все люди, документы и события этого дела вымышлены. Это судебный приказ мирового судьи по денежному требованию в гражданском процессе, не решение по иску и не постановление по КоАП. Обращение в администрацию прямо требует отменить судебный акт. На момент разговора срок подачи возражений по указанным в деле обстоятельствам ещё не истёк. Его отдельный последний день не рассчитывается; подача в администрацию не считается подачей судье.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].brief"
+    ]
+  },
+  {
+    "id": "7eaea88f17a4dde2",
+    "ru": "Часть 2 статьи 11 закона № 59-ФЗ; не срок подачи судебных возражений. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.context"
+    ]
+  },
+  {
+    "id": "72f36088ac76f0b7",
+    "ru": "Часть 2 статьи 11 закона № 59-ФЗ; не срок подачи судебных возражений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.source"
+    ]
+  },
+  {
+    "id": "da2b0b9251fc6ade",
+    "ru": "Крайняя дата возврата обращения с разъяснением",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.title"
+    ]
+  },
+  {
+    "id": "15c2c6c39855363f",
+    "ru": "Здесь именно приказ, а не исковое решение. Меняются способ возражения и значение отмены; муниципальный срок возврата не сохраняет процессуальный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].coach.plan",
+      "cases:CASE_TEMPLATES[court-order-objections].contrast.difference"
+    ]
+  },
+  {
+    "id": "c6bead66d4c5fd37",
+    "ru": "При своевременном поступлении возражений должника относительно исполнения судебного приказа судья отменяет приказ. Взыскатель сохраняет возможность предъявить требование в исковом порядке. Это не отмена муниципальной администрацией и не признание отсутствия долга по существу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].coach.research",
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.explain",
+      "cases:SOURCES[n14-gpk129].text"
+    ]
+  },
+  {
+    "id": "d3d8bafe629b23d7",
+    "ru": "Копию приказа получил {{observed}}. Письмо в администрацию поступило {{received}}. В учебных условиях срок для своевременных возражений сейчас сохраняется; чужой почтовый адрес не заменяет суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d0].text"
+    ]
+  },
+  {
+    "id": "3c74da48dc76e825",
+    "ru": "Сведения о получении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d0].title"
+    ]
+  },
+  {
+    "id": "acebc4e0e31700b8",
+    "ru": "Мировой судья вынес приказ о взыскании денежной суммы. Рассмотрения иска с исследованием возражений сторон не проводилось.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d1].text"
+    ]
+  },
+  {
+    "id": "aa3e2b4454ae85b3",
+    "ru": "Судебный приказ СП-41",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d1].title"
+    ]
+  },
+  {
+    "id": "86f19d229c153442",
+    "ru": "Илья требует, чтобы администрация отменила СП-41. Возражения в суд ещё не направлял; считает муниципальный талон подтверждением их подачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d2].text"
+    ]
+  },
+  {
+    "id": "be6ea9c1f98ed036",
+    "ru": "Письмо в администрацию",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].documents[d2].title"
+    ]
+  },
+  {
+    "id": "54a30622a77a731f",
+    "ru": "Оспаривается судебный приказ; муниципальное письмо не заменяет своевременных возражений судье. Здесь именно приказ, а не исковое решение. Меняются способ возражения и значение отмены; муниципальный срок возврата не сохраняет процессуальный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.explain"
+    ]
+  },
+  {
+    "id": "ab9121126302b447",
+    "ru": "Оспаривается судебный приказ; муниципальное письмо не заменяет своевременных возражений судье.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "9cc81a781eef3fa2",
+    "ru": "Администрация вправе отменить приказ своим ответом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "095c6840a7f66ffc",
+    "ru": "Письмо любому органу автоматически сохраняет срок подачи возражений в суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-order-objections.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "54489b4b67b26015",
+    "ru": "Судья отменил приказ по своевременным возражениям. Теперь поступила копия искового заявления того же взыскателя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].followup.intro"
+    ]
+  },
+  {
+    "id": "1b57af24b312f7a4",
+    "ru": "Объяснить, что отмена приказа не исключает исковое производство; новое заявление нельзя игнорировать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].followup.options[0].text",
+      "cases:CASE_TEMPLATES[court-order-objections].followup.explain"
+    ]
+  },
+  {
+    "id": "912dee5df507b0a6",
+    "ru": "Объявить любой последующий иск незаконным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "71ad9b49c9ebc748",
+    "ru": "Подменить ответом администрации решение по новому иску.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "f06dfa60b2cf9bbd",
+    "ru": "Применить к приказу административную отмену.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "d16f36c65cbf69de",
+    "ru": "Назвать отмену приказа окончательным доказательством отсутствия долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d843f26f3fcea336",
+    "ru": "Найдите нормативное основание следующего действия: Разъяснить своевременную подачу возражений вынесшему приказ судье; не решать спор о долге за суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "2fcdac76a9c356b3",
+    "ru": "Получил судебный приказ и не согласен с взысканием. Отправил его в администрацию: пусть она отменит. Это ведь то же самое, что подать возражения судье?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].opening"
+    ]
+  },
+  {
+    "id": "a86960e66ae2bc8a",
+    "ru": "Возврат обращения, обжалующего судебный акт, с разъяснением судебного порядка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].procedures[0].text"
+    ]
+  },
+  {
+    "id": "c8b8e1af3fe96fda",
+    "ru": "Судебный приказ СП-41.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q0].answer",
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "f2eb62c8ef41c86c",
+    "ru": "Как называется акт в его заголовке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q0].text"
+    ]
+  },
+  {
+    "id": "338689d984f662ac",
+    "ru": "Пока только в администрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q1].answer",
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "a620acd53e8edee4",
+    "ru": "Куда направлены возражения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q1].text"
+    ]
+  },
+  {
+    "id": "386d88af8aa773d3",
+    "ru": "Да, хочу возразить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q2].answer",
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "19eea420345e3fd0",
+    "ru": "Вы не согласны с исполнением приказа?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q2].text"
+    ]
+  },
+  {
+    "id": "75f1b1f1caee3ecd",
+    "ru": "Нет, только регистрационный талон.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q3].answer",
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "a13f906546b3675b",
+    "ru": "Есть ли судебное определение об отмене?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].questions[q3].text"
+    ]
+  },
+  {
+    "id": "1814d27f5bd913e4",
+    "ru": "Специалист канцелярии муниципальной администрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].role.title"
+    ]
+  },
+  {
+    "id": "37b0a2e19735f020",
+    "ru": "Вынесший судебный приказ судья; обращение направляет сам заявитель надлежащим способом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].routes[0].text"
+    ]
+  },
+  {
+    "id": "4f096db6e9f4e928",
+    "ru": "Разъяснить своевременную подачу возражений вынесшему приказ судье; не решать спор о долге за суд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[court-order-objections].contrast.decision"
+    ]
+  },
+  {
+    "id": "183e8f2b3b762e0c",
+    "ru": "Судебный приказ и возражения должника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[court-order-objections].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[court-order-objections].title"
+    ]
+  },
+  {
+    "id": "6d3af00d3004b153",
+    "ru": "Разъяснить своевременную подачу возражений вынесшему приказ судье; не решать спор о долге за суд. Здесь именно приказ, а не исковое решение. Меняются способ возражения и значение отмены; муниципальный срок возврата не сохраняет процессуальный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].trap.explain"
+    ]
+  },
+  {
+    "id": "ac7f00c3937bbbee",
+    "ru": "Отмена судебного приказа не исключает последующего предъявления взыскателем иска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-order-objections].trap.text"
+    ]
+  },
+  {
+    "id": "68d2a7ee2743f9d1",
+    "ru": "Сопоставить решение и сведения о стороне.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[a0].title"
+    ]
+  },
+  {
+    "id": "758f28c1b745bc03",
+    "ru": "Отделить исправление буквы от пересмотра долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[a1].title"
+    ]
+  },
+  {
+    "id": "2436b1f3bce5a37d",
+    "ru": "Подготовить понятное разъяснение порядка статьи 200 ГПК РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[a2].title"
+    ]
+  },
+  {
+    "id": "e7ab5266cc15c212",
+    "ru": "Не передавать паспортные сведения посторонним получателям.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e7b711818c545d8b",
+    "ru": "Проверить, что разъяснение не обещает отмену взыскания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fcc8fc0e4ba17cb1",
+    "ru": "Направить в банк уведомление об автоматической отмене долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[b0].title"
+    ]
+  },
+  {
+    "id": "27e7b8b3eb8a8201",
+    "ru": "Самостоятельно исправить копию решения и выдать её как судебный акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].actions[b1].title",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1589a2f7cd7d3236",
+    "ru": "Все люди, документы и события этого дела вымышлены. Запрос гражданина в муниципальную приёмную касается разъяснения способа исправления, а не подачи процессуального заявления. Это вступившее в силу решение районного суда по гражданскому делу, не судебный приказ. Личность стороны не спорна: остальные идентификаторы совпадают. Сумма и распределение прав не оспариваются в этой части.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].brief"
+    ]
+  },
+  {
+    "id": "20f27afef0acddd4",
+    "ru": "Статья 12 закона № 59-ФЗ; учебный профиль исчисления. Сначала определите исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.context",
+      "cases:CASE_TEMPLATES[court-installments].calendar.context",
+      "cases:CASE_TEMPLATES[driver-waiting-work].calendar.context"
+    ]
+  },
+  {
+    "id": "bae25d34bcaf97be",
+    "ru": "Поступило в приёмную / подразделение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[court-installments].calendar.events[received].label",
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.events[received].label"
+    ]
+  },
+  {
+    "id": "d1050e20f58c9501",
+    "ru": "Внутренняя регистрация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.events[registered].label",
+      "cases:CASE_TEMPLATES[court-installments].calendar.events[registered].label",
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.events[registered].label"
+    ]
+  },
+  {
+    "id": "e380379d5693691f",
+    "ru": "Отправлено письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[court-installments].calendar.events[sent].label",
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.events[sent].label"
+    ]
+  },
+  {
+    "id": "c4f6ce40ca1a9ec3",
+    "ru": "1 рабочий день",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.ruleOptions[working1].text",
+      "cases:CASE_TEMPLATES[court-installments].calendar.ruleOptions[working1].text",
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.ruleOptions[working1].text"
+    ]
+  },
+  {
+    "id": "feef75229a8016c5",
+    "ru": "Учебный профиль: со следующего дня после указанного события; нерабочее окончание переносится на ближайший рабочий день. Это не универсальное правило всех процедур. Календарный срок не заменяет оперативное реагирование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.scope",
+      "cases:CASE_TEMPLATES[court-installments].calendar.scope",
+      "cases:CASE_TEMPLATES[court-order-objections].calendar.scope"
+    ]
+  },
+  {
+    "id": "5d9760b1fd53e574",
+    "ru": "Статья 12 закона № 59-ФЗ; учебный профиль исчисления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.source",
+      "cases:CASE_TEMPLATES[court-installments].calendar.source",
+      "cases:CASE_TEMPLATES[driver-waiting-work].calendar.source"
+    ]
+  },
+  {
+    "id": "5122c6981faf75c3",
+    "ru": "Крайняя дата письменного ответа на обращение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].calendar.title",
+      "cases:CASE_TEMPLATES[court-installments].calendar.title",
+      "cases:CASE_TEMPLATES[driver-waiting-work].calendar.title"
+    ]
+  },
+  {
+    "id": "5c4f78a5db535aad",
+    "ru": "Участник вымышленной учебной истории",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].citizen.description",
+      "cases:CASE_TEMPLATES[court-installments].citizen.description",
+      "cases:CASE_TEMPLATES[court-order-objections].citizen.description"
+    ]
+  },
+  {
+    "id": "0153b1f67e4715c0",
+    "ru": "Разделите поступление, внутреннюю регистрацию и указанное специальной нормой событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].coach.calendar",
+      "cases:CASE_TEMPLATES[court-installments].coach.calendar",
+      "cases:CASE_TEMPLATES[court-order-objections].coach.calendar"
+    ]
+  },
+  {
+    "id": "5dd0d19ece6ae550",
+    "ru": "Сопоставьте два относящихся к выводу документа. Их открытие не заменяет выбор оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].coach.docs",
+      "cases:CASE_TEMPLATES[court-installments].coach.docs",
+      "cases:CASE_TEMPLATES[court-order-objections].coach.docs"
+    ]
+  },
+  {
+    "id": "a0ffc326a2c236c7",
+    "ru": "В исходной истории оспаривался судебный акт по существу. Здесь спор касается только описки; нужен отдельный порядок исправления, не административная отмена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].coach.plan",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].contrast.difference"
+    ]
+  },
+  {
+    "id": "d7c9aca825c59801",
+    "ru": "Описки и явные арифметические ошибки в решении исправляет суд, принявший решение. Исправление не служит способом заново разрешить спор или изменить существо решения. Муниципальная приёмная не исправляет судебный акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].coach.research",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.explain",
+      "cases:SOURCES[n14-gpk200].text"
+    ]
+  },
+  {
+    "id": "2aaca81219c9a27d",
+    "ru": "Установите предмет и недостающие обстоятельства. Не считайте первое предположение заявителя доказанным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].coach.talk",
+      "cases:CASE_TEMPLATES[court-installments].coach.talk",
+      "cases:CASE_TEMPLATES[court-order-objections].coach.talk"
+    ]
+  },
+  {
+    "id": "93c4c08712e42618",
+    "ru": "Различаются юридически существенный факт, материалы, необходимое действие и контрольное продолжение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[court-installments].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[court-order-objections].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "7981dcb1d34a1d23",
+    "ru": "Знакомый написал, что любая опечатка делает решение недействительным. Судебного определения об отмене или исправлении не представлено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d0].text"
+    ]
+  },
+  {
+    "id": "65a309bd28090a7c",
+    "ru": "Совет из переписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d0].title"
+    ]
+  },
+  {
+    "id": "9d4b35f1aca75fc1",
+    "ru": "Районный суд взыскал определённую сумму. В фамилии должника один раз указано «Соловёв» вместо «Соловьёв». Паспортные реквизиты, дата рождения и остальные части документа согласованы; сумма не содержит арифметического расхождения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d1].text"
+    ]
+  },
+  {
+    "id": "2c08fdc7f222040b",
+    "ru": "Копия решения Д-24",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d1].title"
+    ]
+  },
+  {
+    "id": "a25c731211379a10",
+    "ru": "Документы в деле и вводная часть решения подтверждают одного и того же Сергея Соловьёва. Гражданин просит исправить букву и отдельно спрашивает, исчезнет ли после этого долг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d2].text"
+    ]
+  },
+  {
+    "id": "e32dc6fd6f6696cc",
+    "ru": "Материалы идентификации стороны",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[d2].title"
+    ]
+  },
+  {
+    "id": "491cd4b1c46dac42",
+    "ru": "Событие {{observed}}. Письмо отправлено {{sent}}, поступило в указанную приёмную или подразделение {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[dates].text",
+      "cases:CASE_TEMPLATES[court-installments].documents[dates].text",
+      "cases:CASE_TEMPLATES[court-order-objections].documents[dates].text"
+    ]
+  },
+  {
+    "id": "b13b106a7e9c2d4f",
+    "ru": "Временная линия дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[dates].title",
+      "cases:CASE_TEMPLATES[court-installments].documents[dates].title",
+      "cases:CASE_TEMPLATES[court-order-objections].documents[dates].title"
+    ]
+  },
+  {
+    "id": "e0cf0f818a7a42e2",
+    "ru": "Учебные даты событий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].documents[dates].type",
+      "cases:CASE_TEMPLATES[court-installments].documents[dates].type",
+      "cases:CASE_TEMPLATES[court-order-objections].documents[dates].type"
+    ]
+  },
+  {
+    "id": "c2e25f5e174351e5",
+    "ru": "8–10 минут",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].duration",
+      "cases:CASE_TEMPLATES[driver-waiting-work].duration",
+      "cases:CASE_TEMPLATES[bailiff-copy-decision].duration"
+    ]
+  },
+  {
+    "id": "500abfe3c918fe70",
+    "ru": "Подтверждена описка при отсутствии спора о личности; она сама по себе не отменяет решение. В исходной истории оспаривался судебный акт по существу. Здесь спор касается только описки; нужен отдельный порядок исправления, не административная отмена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.explain"
+    ]
+  },
+  {
+    "id": "9efdbbe4aee18225",
+    "ru": "Подтверждена описка при отсутствии спора о личности; она сама по себе не отменяет решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "76494a86e25e4b1c",
+    "ru": "Ошибка в одной букве автоматически прекращает долг.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "c5f72bcfe1c583a3",
+    "ru": "Муниципальная приёмная может заменить фамилию в выданном судом акте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v14-court-typo-not-merits.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "388044a1135a71dc",
+    "ru": "Проверьте, к какому событию и документу относится новое сообщение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.failure",
+      "cases:CASE_TEMPLATES[court-installments].followup.failure",
+      "cases:CASE_TEMPLATES[court-order-objections].followup.failure"
+    ]
+  },
+  {
+    "id": "f5b48b3a6d30afbc",
+    "ru": "Суд исправил фамилию. Гражданин прислал определение и просит назвать его подтверждением полного погашения долга.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.intro"
+    ]
+  },
+  {
+    "id": "3b47c6091b4be864",
+    "ru": "Объяснить предел определения: исправлена описка, вопрос исполнения долга этим не разрешён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.options[0].text",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.explain"
+    ]
+  },
+  {
+    "id": "8fb1b15624fe258a",
+    "ru": "Подтвердить полное погашение по определению об описке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d5522d3255f15e9e",
+    "ru": "Отказаться читать новый документ, поскольку ответ уже дан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "51b4db2fa453afc4",
+    "ru": "Следующее действие учитывает изменившиеся обстоятельства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].followup.success",
+      "cases:CASE_TEMPLATES[court-installments].followup.success",
+      "cases:CASE_TEMPLATES[court-order-objections].followup.success"
+    ]
+  },
+  {
+    "id": "6a7d9d6db8a07c9a",
+    "ru": "ГПК РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.codeAliases[0]",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.codeAliases[0]",
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.codeAliases[0]"
+    ]
+  },
+  {
+    "id": "1f77d19e7641a2f3",
+    "ru": "ГПК",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.codeAliases[1]",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.codeAliases[1]",
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.codeAliases[1]"
+    ]
+  },
+  {
+    "id": "ba6bcb1dfcc15b01",
+    "ru": "Гражданский процессуальный кодекс РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.codeAliases[2]",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.codeAliases[2]",
+      "cases:CASE_TEMPLATES[court-order-objections].knowledge.codeAliases[2]"
+    ]
+  },
+  {
+    "id": "814988049c44aa38",
+    "ru": "Гражданский процессуальный кодекс Российской Федерации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.codeName",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.codeAliases[3]",
+      "cases:CASE_TEMPLATES[court-installments].knowledge.codeName"
+    ]
+  },
+  {
+    "id": "057cf8eb2fe1fe51",
+    "ru": "Исправить судебный акт распоряжением администрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "3b4bdbdbd11b8868",
+    "ru": "Отменить взыскание из-за орфографического различия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "d6023e0f3ff8aae0",
+    "ru": "Найдите нормативное основание следующего действия: Разъяснить обращение за исправлением описки к принявшему решение суду, без пересмотра существа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "f169fd2397b99a10",
+    "ru": "В решении перепутали одну букву моей фамилии. Данные паспорта и всё остальное верные. Мне сказали: раз ошибка есть, администрация должна отменить решение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].opening"
+    ]
+  },
+  {
+    "id": "64410eadff1a9725",
+    "ru": "Сопоставьте материалы дела и пределы выбранных действий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].outcomes.bad",
+      "cases:CASE_TEMPLATES[court-installments].outcomes.bad",
+      "cases:CASE_TEMPLATES[court-order-objections].outcomes.bad"
+    ]
+  },
+  {
+    "id": "0f2397182e3554c8",
+    "ru": "План связывает факты, полномочия и контроль результата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].outcomes.good",
+      "cases:CASE_TEMPLATES[court-installments].outcomes.good",
+      "cases:CASE_TEMPLATES[court-order-objections].outcomes.good"
+    ]
+  },
+  {
+    "id": "8e6edef8c9606d9b",
+    "ru": "Разъяснение гражданину специального судебного порядка; приёмная не исправляет акт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].procedures[0].text"
+    ]
+  },
+  {
+    "id": "00914bcc0864a75d",
+    "ru": "Обычный ответ за 30 дней независимо от предмета и уже принятых решений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].procedures[1].text",
+      "cases:CASE_TEMPLATES[court-installments].procedures[1].text",
+      "cases:CASE_TEMPLATES[court-order-objections].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5f5f55ce1734d1b9",
+    "ru": "Немедленное удовлетворение требования без проверки компетенции и условий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].procedures[2].text",
+      "cases:CASE_TEMPLATES[court-installments].procedures[2].text",
+      "cases:CASE_TEMPLATES[court-order-objections].procedures[2].text"
+    ]
+  },
+  {
+    "id": "0477bc8de9d4ae92",
+    "ru": "Только букву. Но надеялся, что это отменит и взыскание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q0].answer",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "dfa80d84e9e94f55",
+    "ru": "Что именно хотите изменить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q0].text"
+    ]
+  },
+  {
+    "id": "c6da65a7096167d3",
+    "ru": "Районный суд; в копии написано «решение».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q1].answer",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "d867f15ac80b7382",
+    "ru": "Кто принял документ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q1].text"
+    ]
+  },
+  {
+    "id": "d6b00e1892db4ace",
+    "ru": "Нет, паспорт и дата рождения мои.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q2].answer",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c109404a57d900ea",
+    "ru": "Есть ли спор о личности должника?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q2].text"
+    ]
+  },
+  {
+    "id": "b2a1c3b111e17766",
+    "ru": "Нет, пока есть только совет знакомого.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q3].answer",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "bca96e0142993be5",
+    "ru": "Получали ли определение суда об исправлении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].questions[q3].text"
+    ]
+  },
+  {
+    "id": "34d07eed42e5af82",
+    "ru": "Вы готовите разъяснение или проект служебного действия в обозначенной роли. Не принимаете за суд, инспектора, страховщика или руководителя решение, на которое у вас нет полномочий. Все отправки моделируются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].role.text",
+      "cases:CASE_TEMPLATES[court-installments].role.text",
+      "cases:CASE_TEMPLATES[court-order-objections].role.text"
+    ]
+  },
+  {
+    "id": "193b15a3438ec07e",
+    "ru": "Специалист муниципальной приёмной по обращениям граждан",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].role.title",
+      "cases:CASE_TEMPLATES[court-installments].role.title"
+    ]
+  },
+  {
+    "id": "c57b7b19f64cf1f2",
+    "ru": "Суд, принявший решение, для процессуального заявления самого гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].routes[0].text"
+    ]
+  },
+  {
+    "id": "10527be1164c7e39",
+    "ru": "Орган, удобный заявителю, независимо от его полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].routes[1].text",
+      "cases:CASE_TEMPLATES[court-installments].routes[1].text",
+      "cases:CASE_TEMPLATES[court-order-objections].routes[1].text"
+    ]
+  },
+  {
+    "id": "ca41ccaa1a7ccffd",
+    "ru": "Любая организация с похожим названием без проверки отношения к делу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].routes[2].text",
+      "cases:CASE_TEMPLATES[court-installments].routes[2].text",
+      "cases:CASE_TEMPLATES[court-order-objections].routes[2].text"
+    ]
+  },
+  {
+    "id": "20159f8009d0c5c5",
+    "ru": "Разъяснить обращение за исправлением описки к принявшему решение суду, без пересмотра существа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[court-typo-not-merits].contrast.decision"
+    ]
+  },
+  {
+    "id": "1d0e7a4520dcb8aa",
+    "ru": "Описка в фамилии — не отмена взыскания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[court-typo-not-merits].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[court-typo-not-merits].title"
+    ]
+  },
+  {
+    "id": "c73cf06099890883",
+    "ru": "Судебные акты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].topic",
+      "cases:CASE_TEMPLATES[court-installments].topic",
+      "cases:CASE_TEMPLATES[court-order-objections].topic"
+    ]
+  },
+  {
+    "id": "89a581ca2c8fe296",
+    "ru": "Разъяснить обращение за исправлением описки к принявшему решение суду, без пересмотра существа. В исходной истории оспаривался судебный акт по существу. Здесь спор касается только описки; нужен отдельный порядок исправления, не административная отмена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].trap.explain"
+    ]
+  },
+  {
+    "id": "a6b07b950fe39c78",
+    "ru": "Утверждение не подтверждается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].trap.options[0].text",
+      "cases:CASE_TEMPLATES[court-installments].trap.options[0].text",
+      "cases:CASE_TEMPLATES[court-order-objections].trap.options[0].text"
+    ]
+  },
+  {
+    "id": "adc55cea8733e884",
+    "ru": "Утверждение подтверждается в данных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].trap.options[1].text",
+      "cases:CASE_TEMPLATES[court-installments].trap.options[1].text",
+      "cases:CASE_TEMPLATES[court-order-objections].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "0d8b92ad6bfad2f4",
+    "ru": "Исправление описки само по себе не отменяет присуждённое взыскание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[court-typo-not-merits].trap.text"
+    ]
+  },
+  {
+    "id": "ecf6654d01161af9",
+    "ru": "Получить именно план Г-11 и относящееся к нему пояснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b767ccdf67922d9d",
+    "ru": "Отделить планирование работодателя от решения водителя в возникшей ситуации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[a1].title"
+    ]
+  },
+  {
+    "id": "f585279f73658d31",
+    "ru": "Подготовить оценку применения пункта 9 и необходимые надзорные материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[a2].title"
+    ]
+  },
+  {
+    "id": "54025e1a5806dcfd",
+    "ru": "Не назначать штраф и не требовать самовольного отказа от безопасных действий в пути.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[a3].title"
+    ]
+  },
+  {
+    "id": "1ffd37e5c74e6127",
+    "ru": "Сопоставить новый график со всеми обозначенными интервалами управления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[a4].title"
+    ]
+  },
+  {
+    "id": "7e8c529c8a8c2625",
+    "ru": "Согласовать график только из-за ссылки на исключение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[b0].title"
+    ]
+  },
+  {
+    "id": "e6992ad8d5c35eb0",
+    "ru": "Назначить штраф от имени приёмной без процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].actions[b1].title",
+      "cases:CASE_TEMPLATES[driver-planned-extension].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "47a85d346b9937ce",
+    "ru": "Все люди, документы и события этого дела вымышлены. Водитель работает по трудовому договору на внутрироссийской междугородной перевозке. Проект графика заранее предусматривает 9 часов управления и ещё 2 часа под названием «доезд». Это именно план работодателя, не самостоятельное решение водителя из-за неожиданной ситуации. Не оцениваются условия ненормированного дня или международного рейса; они отсутствуют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].brief"
+    ]
+  },
+  {
+    "id": "d424e730faf49a2d",
+    "ru": "Исходная тема касалась достоверности записи о конкретной смене. Здесь ключевое различие – плановое использование исключения до возникновения обстоятельств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].coach.plan",
+      "cases:CASE_TEMPLATES[driver-planned-extension].contrast.difference"
+    ]
+  },
+  {
+    "id": "90aed2001d7f918c",
+    "ru": "Пункт 9 допускает увеличение водителем времени управления в установленных пределах для завершения перевозки или следования к стоянке, но прямо запрещает работодателю составлять время управления с учётом этих отступлений. Регулярное включение исключения в график не обосновывается одним названием «доезд».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].coach.research",
+      "cases:CASE_TEMPLATES[driver-planned-extension].knowledge.explain",
+      "cases:SOURCES[n14-driver9].text"
+    ]
+  },
+  {
+    "id": "e90f770283a39c34",
+    "ru": "В прошлом месяце один водитель задержался из-за перекрытой дороги. Этот инцидент относится к другому рейсу и не объясняет заранее составленный Г-11.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d0].text"
+    ]
+  },
+  {
+    "id": "c671a52fe80e06b4",
+    "ru": "Записка о другом рейсе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[driver-planned-extension].documents[d0].title"
+    ]
+  }
+]

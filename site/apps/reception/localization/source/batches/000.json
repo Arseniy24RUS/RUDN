@@ -1,0 +1,1159 @@
+[
+  {
+    "id": "7788a63738f56a69",
+    "ru": "Эта глава пока доступна на русском языке. Переключение языка платформы не сбрасывает работу.",
+    "contexts": [
+      "app.js:300"
+    ]
+  },
+  {
+    "id": "8ef6e4546a47385a",
+    "ru": "Шесть дел: два базовых, три средних и одно сложное. Ориентир 60 минут самостоятельной работы плюс общий разбор и завершение занятия. Продолжительность требует пилота.",
+    "contexts": [
+      "assignment:SHIFT_PROFILE.description",
+      "assignment:SHIFT_PROFILES.balanced-six.description"
+    ]
+  },
+  {
+    "id": "c8e74f1477d21ee4",
+    "ru": "Занятие с общим разбором",
+    "contexts": [
+      "assignment:SHIFT_PROFILE.title",
+      "assignment:SHIFT_PROFILES.balanced-six.title"
+    ]
+  },
+  {
+    "id": "4c487811c4d66a49",
+    "ru": "Восемь дел и восемь контрольных продолжений: два базовых, четыре средних, два сложных. Ориентир 90 минут без общего разбора; это учебный план, а не измеренное время и не таймер оценки.",
+    "contexts": [
+      "assignment:SHIFT_PROFILES.extended-eight.description"
+    ]
+  },
+  {
+    "id": "ef9d3fd7ecbf0190",
+    "ru": "Самостоятельная смена · 90 минут",
+    "contexts": [
+      "assignment:SHIFT_PROFILES.extended-eight.title"
+    ]
+  },
+  {
+    "id": "e1b9ed590f7a4bad",
+    "ru": "Доступ определяется расписанием основной платформы. Завершённые черновики не удаляются.",
+    "contexts": [
+      "boot.js:12"
+    ]
+  },
+  {
+    "id": "ee344fdb556e8d05",
+    "ru": "Вернуться к курсу",
+    "contexts": [
+      "boot.js:12",
+      "boot.js:17"
+    ]
+  },
+  {
+    "id": "fcdd89bcbc0b488b",
+    "ru": "Семинар ещё не открыт",
+    "contexts": [
+      "boot.js:12"
+    ]
+  },
+  {
+    "id": "2387bc7b51ce1db3",
+    "ru": "Смена должна сохраняться под вашим студенческим профилем.",
+    "contexts": [
+      "boot.js:13"
+    ]
+  },
+  {
+    "id": "5323cec277d960ff",
+    "ru": "Автономная тренировка без оценки",
+    "contexts": [
+      "boot.js:13"
+    ]
+  },
+  {
+    "id": "5bf04feb4973910e",
+    "ru": "Открыть семинар на платформе",
+    "contexts": [
+      "boot.js:13"
+    ]
+  },
+  {
+    "id": "aeafac7aae8a6ce1",
+    "ru": "Войдите в профиль платформы",
+    "contexts": [
+      "boot.js:13"
+    ]
+  },
+  {
+    "id": "928955133a32955c",
+    "ru": "Открыть автономную тренировку",
+    "contexts": [
+      "boot.js:17"
+    ]
+  },
+  {
+    "id": "b3e006460d2f7cce",
+    "ru": "Подключение к платформе недоступно",
+    "contexts": [
+      "boot.js:17"
+    ]
+  },
+  {
+    "id": "d289abbc857e3cc5",
+    "ru": "Этот файл предназначен для установки в репозиторий RUDN. Для просмотра без профиля откройте автономную тренировку.",
+    "contexts": [
+      "boot.js:17"
+    ]
+  },
+  {
+    "id": "debbbf1b25792555",
+    "ru": "Автономная тренировка",
+    "contexts": [
+      "boot.js:5"
+    ]
+  },
+  {
+    "id": "baa5ea6d2f0296f3",
+    "ru": "Выяснить конкретный барьер и предпочтительный способ помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[a0].title"
+    ]
+  },
+  {
+    "id": "526913122f98ee30",
+    "ru": "Подтвердить доступное приватное помещение и возможность участия специалиста",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[a1].title"
+    ]
+  },
+  {
+    "id": "42a363c92133f42f",
+    "ru": "Организовать согласованный приём на первом этаже",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ccbe0a534eb1d83b",
+    "ru": "Сохранить самостоятельность и конфиденциальность заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[a3].title"
+    ]
+  },
+  {
+    "id": "b8b440fa0604a647",
+    "ru": "Зафиксировать и передать вопрос о повторяющемся барьере для последующего контроля",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[a4].title"
+    ]
+  },
+  {
+    "id": "1a9b1e91e2f88646",
+    "ru": "Принудительно переносить заявителя против его воли",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[b0].title",
+      "cases:CASE_TEMPLATES[access-counter].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "7cece31bfd0bcf63",
+    "ru": "Потребовать сообщить диагноз всей очереди",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].actions[b1].title"
+    ]
+  },
+  {
+    "id": "93f2f4818ef26ffe",
+    "ru": "Заявитель, использующий кресло-коляску",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].citizen.description"
+    ]
+  },
+  {
+    "id": "24566e21f1076ec5",
+    "ru": "Доступная переговорная на первом этаже свободна; туда можно пригласить специалиста. Лестница к обычному месту приёма не преодолима для заявителя; переносить его против воли нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d0].text"
+    ]
+  },
+  {
+    "id": "baf5e7f029743ce8",
+    "ru": "План помещений и просьба",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d0].title"
+    ]
+  },
+  {
+    "id": "2b933294c73cf412",
+    "ru": "Учебные условия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d0].type"
+    ]
+  },
+  {
+    "id": "8b3b18813883d393",
+    "ru": "Ссылается только на исправную кнопку вызова, не объясняя возможность фактически получить услугу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d1].text"
+    ]
+  },
+  {
+    "id": "a9ef223f2e6e202b",
+    "ru": "Ответ администратора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3e0ccd92fa15959c",
+    "ru": "Сообщение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].documents[d1].type"
+    ]
+  },
+  {
+    "id": "daa0bec3ddf226f3",
+    "ru": "Исправная кнопка не решает барьер; по условиям можно согласовать приём в доступном конфиденциальном помещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[access-counter].factTask.explain",
+      "cases:CASE_TEMPLATES[access-counter].outcomes.good"
+    ]
+  },
+  {
+    "id": "3921f2b102bc7e37",
+    "ru": "Кнопка автоматически подтверждает полную доступность услуги.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "4ccf271eff52bcb5",
+    "ru": "Нужно заставить посетителя подняться любым способом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "fdb0414f6c766862",
+    "ru": "Учебное продолжение. Приём организован, но на следующую дату снова предложен недоступный этаж.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].followup.intro"
+    ]
+  },
+  {
+    "id": "e0287fe2b8adcc27",
+    "ru": "Проверить устойчивый доступный порядок последующих посещений с согласованием заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].followup.options[0].text",
+      "cases:CASE_TEMPLATES[access-counter].followup.explain"
+    ]
+  },
+  {
+    "id": "dffb5f10374e5fbe",
+    "ru": "Считать одноразовую помощь окончательным устранением барьера.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "6facf3ea951ae66d",
+    "ru": "Отменить следующий приём из-за неудобства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "7491776504883b52",
+    "ru": "Найдите норму об обеспечении доступа инвалидов к объектам и услугам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "86744ae223866c0f",
+    "ru": "Кнопка вызова работает, но сотрудник говорит, что всё равно надо подняться на второй этаж. Лифта нет. Я готов поговорить здесь, если можно обеспечить конфиденциальность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].opening"
+    ]
+  },
+  {
+    "id": "afdb4edef6507fd0",
+    "ru": "Организация доступного приёма и отдельное рассмотрение обращения о барьере",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].procedures[0].text"
+    ]
+  },
+  {
+    "id": "f4429e728387d2fd",
+    "ru": "Отказ в любом общении из-за устройства здания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].procedures[1].text"
+    ]
+  },
+  {
+    "id": "a13f6fb975210fac",
+    "ru": "Медицинское освидетельствование приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].procedures[2].text"
+    ]
+  },
+  {
+    "id": "27bc3f6f6d3b8e4d",
+    "ru": "Рабочее место на втором этаже недоступно; проблема не в кнопке вызова.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b872631804bda554",
+    "ru": "Нужна фактическая доступность приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "6137c0a7f7e7b34f",
+    "ru": "Что мешает получить услугу?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q0].text"
+    ]
+  },
+  {
+    "id": "434eb764f3103cdc",
+    "ru": "Приём в доступном помещении первого этажа; переносить меня по лестнице не нужно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "5736fec129cd0a8b",
+    "ru": "Учитывается выбор человека.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "9e48923d04a52e59",
+    "ru": "Какую помощь вы считаете подходящей?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q1].text"
+    ]
+  },
+  {
+    "id": "b611040be5f46b02",
+    "ru": "Свободная переговорная на первом этаже доступна и позволяет закрыть дверь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "ff66af0df02151bd",
+    "ru": "Есть организационное решение без обещания реконструкции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "bd8dec2f2a5b94b4",
+    "ru": "Есть ли такое помещение по условиям центра?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q2].text"
+    ]
+  },
+  {
+    "id": "bc7a5eb02e7ce3ed",
+    "ru": "Нет, документы я передам в приватной обстановке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "f6ab85b32e256875",
+    "ru": "Нужно сохранить конфиденциальность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "3ab3ec7509ce69ff",
+    "ru": "Нужно ли обсуждать чувствительные сведения при очереди?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].questions[q3].text"
+    ]
+  },
+  {
+    "id": "e03adf6e770843b1",
+    "ru": "Согласовать помощь, организовать доступный приём в пределах полномочий и передать вопрос о системном барьере ответственному.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].routes[0].text",
+      "cases:CASE_TEMPLATES[access-counter].coach.plan",
+      "cases:CASE_TEMPLATES[access-counter].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "527286b77b58a29e",
+    "ru": "Принудительно переносить человека по лестнице.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].routes[1].text",
+      "cases:CASE_TEMPLATES[access-counter].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "3825fd0e35d18769",
+    "ru": "Обсудить личные документы вслух в очереди.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].routes[2].text",
+      "cases:CASE_TEMPLATES[access-counter].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "7250a5022603d19d",
+    "ru": "Кнопка есть, приём недоступен",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[access-counter].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[access-counter].title"
+    ]
+  },
+  {
+    "id": "a02548ebc61bfa50",
+    "ru": "Доступная среда",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].topic",
+      "cases:CASE_TEMPLATES[access-counter].tag",
+      "cases:CASE_TEMPLATES[access-written-dialogue].topic"
+    ]
+  },
+  {
+    "id": "7fe46a6528c0d7bc",
+    "ru": "Проверить реальную возможность получить услугу и необходимую помощь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].trap.options[0].text",
+      "cases:CASE_TEMPLATES[access-counter].trap.explain"
+    ]
+  },
+  {
+    "id": "ccf91e9b024301cd",
+    "ru": "Ограничиться исправностью кнопки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "88c9835a90c10fc1",
+    "ru": "Помощник: «Достаточно поставить кнопку; остальное не относится к доступности».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-counter].trap.text"
+    ]
+  },
+  {
+    "id": "afecb5fc24a74774",
+    "ru": "Сопоставить документ о подготовке с собакой-проводником",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[a0].title"
+    ]
+  },
+  {
+    "id": "af4658de02e8c6be",
+    "ru": "Сообщить ответственному о неверном применении общего запрета",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5c4f825a37489b66",
+    "ru": "Организовать проход и согласованное сопровождение при необходимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[a2].title"
+    ]
+  },
+  {
+    "id": "7c6b7787f58a7da3",
+    "ru": "Не собирать лишние медицинские сведения для обычной помощи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[a3].title"
+    ]
+  },
+  {
+    "id": "434d180700a72353",
+    "ru": "Проверить доступность всего пути до места обслуживания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[a4].title"
+    ]
+  },
+  {
+    "id": "fe2151011a8ac1d2",
+    "ru": "Обязать оставить собаку на улице",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[b0].title"
+    ]
+  },
+  {
+    "id": "59276982231c2b0a",
+    "ru": "Передавать посторонним сведения о здоровье без основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].actions[b1].title",
+      "cases:CASE_TEMPLATES[access-guide-dog].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "410221dba1eed492",
+    "ru": "Все люди, документы и события этого дела вымышлены. Посетитель пользуется собакой-проводником. Документ о специальном обучении установленной формы проверен и относится к этой собаке. Объект — обычное помещение приёма, без иных специальных ограничений в условиях. Для обычной помощи не требуется обсуждать диагноз посетителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].brief"
+    ]
+  },
+  {
+    "id": "a1cc907d820b088f",
+    "ru": "Документальное условие допуска выполнено. Проблема не в отсутствии бумаги, а в применении общего запрета и фактическом пути к услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].coach.plan",
+      "cases:CASE_TEMPLATES[access-guide-dog].contrast.difference"
+    ]
+  },
+  {
+    "id": "f4b5a8ce22035eb3",
+    "ru": "Памятка отдела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d0].title"
+    ]
+  },
+  {
+    "id": "f11b751568e427f8",
+    "ru": "Документ о подготовке собаки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c785641bcb539de3",
+    "ru": "Акт входного контроля",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d2].title"
+    ]
+  },
+  {
+    "id": "68836fbc60b811ce",
+    "ru": "Общий запрет животных применён к собаке-проводнику при подтверждённом обучении. Документальное условие допуска выполнено. Проблема не в отсутствии бумаги, а в применении общего запрета и фактическом пути к услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.explain"
+    ]
+  },
+  {
+    "id": "e98918175852b61f",
+    "ru": "Общий запрет животных применён к собаке-проводнику при подтверждённом обучении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "befa4047596ae442",
+    "ru": "Любая табличка у входа отменяет право доступа собаки-проводника.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "4172b292bad5ef04",
+    "ru": "Для входа необходимо заново подтверждать диагноз посетителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-guide-dog.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "f8a54d6e8445fdec",
+    "ru": "Организовать доступный путь или согласованное доступное место приёма, не ограничиваясь входом. Документальное условие допуска выполнено. Проблема не в отсутствии бумаги, а в применении общего запрета и фактическом пути к услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.explain"
+    ]
+  },
+  {
+    "id": "a9d0bd355797bc2b",
+    "ru": "На входе пропустили. Однако единственный коридор к окну заставлен стульями; пройти безопасно нельзя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.intro"
+    ]
+  },
+  {
+    "id": "9687e6f50e7b8b79",
+    "ru": "Организовать доступный путь или согласованное доступное место приёма, не ограничиваясь входом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "c3c29246f7853019",
+    "ru": "Считать услугу доступной, потому что дверь теперь открыта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "f87232f6ceac413f",
+    "ru": "Предложить посетителю самому двигать препятствия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b6c457bf139ba680",
+    "ru": "Разрешить вход только после обсуждения диагноза со всеми охранниками.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "3bb451b6d2d64be0",
+    "ru": "Найдите нормативное основание следующего действия: Обеспечить доступ с собакой-проводником при установленных условиях и предложить согласованную помощь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "0824af162cb1fe22",
+    "ru": "У меня собака-проводник. Документ о её обучении показал, но охранник сослался на табличку «С животными нельзя».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].opening",
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q2].answer",
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "872f4afd190b390a",
+    "ru": "Документ П-82 подтверждает специальное обучение собаки-проводника, идентификатор совпадает с предъявленным. Подлинность и установленная форма подтверждены в учебных условиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q0].answer",
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q0].fact",
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d1].text"
+    ]
+  },
+  {
+    "id": "96a802ad7ee17d09",
+    "ru": "Какой материал подтверждает ваши слова?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q0].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q0].text",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q0].text"
+    ]
+  },
+  {
+    "id": "f16907c392dbcb59",
+    "ru": "Доступ в зал отказан только по общей табличке «С животными нельзя». Иных причин не указано. Посетитель и собака находятся у входа; приём не начался.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q1].answer",
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q1].fact",
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d2].text"
+    ]
+  },
+  {
+    "id": "b118a606931865cd",
+    "ru": "Что выяснилось при проверке?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q1].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q1].text",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q1].text"
+    ]
+  },
+  {
+    "id": "f9ffdfca2e0dca41",
+    "ru": "Почему вы обратились сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q2].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q2].text",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q2].text"
+    ]
+  },
+  {
+    "id": "1e10e7b3f5ea9f39",
+    "ru": "Входной сотрудник может связаться с ответственным за доступность и предложить сопровождение с согласия человека; специальная медицинская справка для этой помощи не предусмотрена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q3].answer",
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q3].fact",
+      "cases:CASE_TEMPLATES[access-guide-dog].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9ca6703a18ca1d65",
+    "ru": "Есть ли другие документы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].questions[q3].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q3].text",
+      "cases:CASE_TEMPLATES[conflict-namesake].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a10488387324aa8f",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Посетитель пользуется собакой-проводником. Документ о специальном обучении установленной формы проверен и относится к этой собаке. Объект — обычное помещение приёма, без иных специальных ограничений в условиях. Для обычной помощи не требуется обсуждать диагноз посетителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].role.text"
+    ]
+  },
+  {
+    "id": "c28ee9769838bc80",
+    "ru": "Обеспечить доступ с собакой-проводником при установленных условиях и предложить согласованную помощь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[access-guide-dog].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[access-guide-dog].contrast.decision"
+    ]
+  },
+  {
+    "id": "7959f0445c6e4915",
+    "ru": "Проводник остался у входа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[access-guide-dog].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[access-guide-dog].title"
+    ]
+  },
+  {
+    "id": "38ae0c8679b27d5a",
+    "ru": "Обеспечить доступ с собакой-проводником при установленных условиях и предложить согласованную помощь. Документальное условие допуска выполнено. Проблема не в отсутствии бумаги, а в применении общего запрета и фактическом пути к услуге.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].trap.explain"
+    ]
+  },
+  {
+    "id": "caf69537b3995706",
+    "ru": "Оставить собаку на улице как обязательное условие приёма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-guide-dog].trap.text",
+      "cases:CASE_TEMPLATES[access-guide-dog].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "005620acf2f810f9",
+    "ru": "Уточнить согласованный формат ознакомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[a0].title"
+    ]
+  },
+  {
+    "id": "10a2b97d17e54dc0",
+    "ru": "Организовать доступное конфиденциальное место",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d822576e3e4fc7ac",
+    "ru": "Предоставить полный текст в выбранном формате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[a2].title"
+    ]
+  },
+  {
+    "id": "0114caba7d08a23a",
+    "ru": "Оставить выбор и подпись за самой посетительницей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[a3].title"
+    ]
+  },
+  {
+    "id": "78775986f4854549",
+    "ru": "Проверить, что предоставлены все условия, включая платежи и ограничения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[a4].title"
+    ]
+  },
+  {
+    "id": "38bf08c2e8736b05",
+    "ru": "Подписать документ за посетительницу без полномочий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[b0].title"
+    ]
+  },
+  {
+    "id": "406a700c1b6d9234",
+    "ru": "Передать материалы дочери вопреки воле посетительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].actions[b1].title",
+      "cases:CASE_TEMPLATES[access-reading-choice].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "7971b960883d7da4",
+    "ru": "Все люди, документы и события этого дела вымышлены. Личность посетительницы установлена по обычному порядку операции. Она понимает содержание, самостоятельно принимает решения и подписывает документы; оснований считать её недееспособной не задано. Согласованный отдельный кабинет и читаемый электронный документ доступны. Дочь не является уполномоченным представителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].brief"
+    ]
+  },
+  {
+    "id": "4bdc908401e94aae",
+    "ru": "Способность прочитать определённый шрифт не равна способности понимать и выражать собственную волю. Проверяется качество помощи, а не диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].coach.plan",
+      "cases:CASE_TEMPLATES[access-reading-choice].contrast.difference"
+    ]
+  },
+  {
+    "id": "6bc44182a22c1f4d",
+    "ru": "Записка сопровождающей",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3a64344e0070632f",
+    "ru": "Запись обращения за помощью",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d1].title"
+    ]
+  },
+  {
+    "id": "5a080faa7dc3e8bb",
+    "ru": "Условия доступного обслуживания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d2].title"
+    ]
+  },
+  {
+    "id": "081d3e677f870f0d",
+    "ru": "Нужна помощь с чтением, а не замена волеизъявления посетительницы сопровождающей. Способность прочитать определённый шрифт не равна способности понимать и выражать собственную волю. Проверяется качество помощи, а не диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.explain"
+    ]
+  },
+  {
+    "id": "c8cce81e7d7bbcd2",
+    "ru": "Нужна помощь с чтением, а не замена волеизъявления посетительницы сопровождающей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "d8ffc27a8218219a",
+    "ru": "Любое нарушение зрения означает невозможность самостоятельно подписать документ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a0ad9d2c4538e21c",
+    "ru": "Сопровождение родственником само по себе подтверждает представительство.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-access-reading-choice.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "2f8a682cc93b33c3",
+    "ru": "Дать ознакомиться с полным содержанием до подтверждения, не решая за посетительницу. Способность прочитать определённый шрифт не равна способности понимать и выражать собственную волю. Проверяется качество помощи, а не диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.explain"
+    ]
+  },
+  {
+    "id": "50ec05ac3ae60de3",
+    "ru": "Сотрудник зачитал основной абзац, но пропустил раздел о платежах и ограничениях. Посетительницу уже приглашают подписать.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.intro"
+    ]
+  },
+  {
+    "id": "1288611cbf6022fb",
+    "ru": "Дать ознакомиться с полным содержанием до подтверждения, не решая за посетительницу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "2e5e2efcbce64a63",
+    "ru": "Подписать сейчас, а ограничения объяснить позднее.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d8b965544eebd80c",
+    "ru": "Считать основной абзац достаточным вместо полного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "75f9acbf84100419",
+    "ru": "Передать выбор условий дочери без надлежащих оснований.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "9803266ee25204e3",
+    "ru": "Отказать в чтении, раз человек не может прочитать мелкий шрифт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "a5c279da71dbe621",
+    "ru": "Найдите нормативное основание следующего действия: Обеспечить выбранное доступное ознакомление, сохранив самостоятельное решение посетительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "4ec8d6539d707ffb",
+    "ru": "Мелкий текст я не различаю. Можно прочитать его мне в отдельном месте? Дочь пришла со мной, но решение я принимаю сама.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].opening",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q2].answer",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "8dd5741782b17bb2",
+    "ru": "Посетительница просит конфиденциально озвучить полное содержание документа. Не просит сотрудника выбирать условия или подписывать вместо неё.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q0].answer",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q0].fact",
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d1].text"
+    ]
+  },
+  {
+    "id": "d1f104fddaccff47",
+    "ru": "Кабинет К-2 свободен; сотрудник может прочитать полный текст или предоставить масштабируемую электронную копию. Посетительница выбирает чтение вслух в кабинете.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q1].answer",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q1].fact",
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d2].text"
+    ]
+  },
+  {
+    "id": "f53ba61634234de2",
+    "ru": "Дочь предлагает забрать документы и выбрать условия вместо матери. Полномочия представителя не представлены, согласия заменить собственное решение посетительница не давала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q3].answer",
+      "cases:CASE_TEMPLATES[access-reading-choice].questions[q3].fact",
+      "cases:CASE_TEMPLATES[access-reading-choice].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f5b4cf745364f1a0",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Личность посетительницы установлена по обычному порядку операции. Она понимает содержание, самостоятельно принимает решения и подписывает документы; оснований считать её недееспособной не задано. Согласованный отдельный кабинет и читаемый электронный документ доступны. Дочь не является уполномоченным представителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].role.text"
+    ]
+  },
+  {
+    "id": "2b29def2787549f7",
+    "ru": "Обеспечить выбранное доступное ознакомление, сохранив самостоятельное решение посетительницы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[access-reading-choice].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[access-reading-choice].contrast.decision"
+    ]
+  },
+  {
+    "id": "cd349d698c2bddf4",
+    "ru": "Помочь прочитать — не решить за меня",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[access-reading-choice].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[access-reading-choice].title"
+    ]
+  },
+  {
+    "id": "c20202fa22387077",
+    "ru": "Обеспечить выбранное доступное ознакомление, сохранив самостоятельное решение посетительницы. Способность прочитать определённый шрифт не равна способности понимать и выражать собственную волю. Проверяется качество помощи, а не диагноз.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].trap.explain"
+    ]
+  },
+  {
+    "id": "af4b2522ba94d0d3",
+    "ru": "Чтение сотрудником по просьбе посетительницы не означает передачу ему права решать за неё.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-reading-choice].trap.text"
+    ]
+  },
+  {
+    "id": "6c7116a9fda87b5c",
+    "ru": "Уточнить удобный способ общения у посетительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[a0].title"
+    ]
+  },
+  {
+    "id": "3c4564fdbad7268e",
+    "ru": "Организовать письменный диалог на доступном устройстве",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[a1].title"
+    ]
+  },
+  {
+    "id": "e020b1c26a81b425",
+    "ru": "Передать сообщение о неисправном визуальном вызове ответственному",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[a2].title"
+    ]
+  },
+  {
+    "id": "f9350579e872ac1f",
+    "ru": "Сохранить самостоятельность и конфиденциальность посетительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[a3].title"
+    ]
+  },
+  {
+    "id": "3590cd86c673a484",
+    "ru": "Проверить доступность последующего уведомления о результате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[a4].title"
+    ]
+  },
+  {
+    "id": "0d3702d104a8cf6b",
+    "ru": "Засчитать только голосовой вызов как полноценный приём",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[b0].title"
+    ]
+  },
+  {
+    "id": "726afca3d5c7a01c",
+    "ru": "Обсуждать личные сведения через случайного посетителя без согласия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].actions[b1].title",
+      "cases:CASE_TEMPLATES[access-written-dialogue].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "01f890935faccf8e",
+    "ru": "Все люди, документы и события этого дела вымышлены. Посетительница с нарушением слуха просит общаться письменно. Самостоятельно принимает решения; представитель не требуется. В данном отделении уже есть исправный планшет для письменного диалога и доступное отдельное место. Проблема касается помощи сейчас и отдельного письменного обращения об организации приёма, не решения о назначении льготы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].brief"
+    ]
+  },
+  {
+    "id": "194e7ef56507b908",
+    "ru": "№ 59-ФЗ, статья 12. Предметные обязанности и помощь не откладываются до этой даты. В учебном профиле исходный день не включается, нерабочее окончание переносится на следующий рабочий. Продление по условию не применяется. Определите событие и крайний день именно названного действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].calendar.context",
+      "cases:CASE_TEMPLATES[access-guide-dog].calendar.context",
+      "cases:CASE_TEMPLATES[access-reading-choice].calendar.context"
+    ]
+  },
+  {
+    "id": "ad65e148c9a3d08e",
+    "ru": "Федеральная пятидневная неделя, счёт со следующего дня и перенос окончания вперёд явно заданы условием этого упражнения. Это не универсальный профиль всех процедур; он не заменяет срочную помощь или специальное оперативное действие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].calendar.scope",
+      "cases:CASE_TEMPLATES[access-guide-dog].calendar.scope",
+      "cases:CASE_TEMPLATES[access-reading-choice].calendar.scope"
+    ]
+  },
+  {
+    "id": "6d0992a587d7661a",
+    "ru": "№ 59-ФЗ, статья 12. Предметные обязанности и помощь не откладываются до этой даты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].calendar.source",
+      "cases:CASE_TEMPLATES[access-guide-dog].calendar.source",
+      "cases:CASE_TEMPLATES[access-reading-choice].calendar.source"
+    ]
+  },
+  {
+    "id": "f666570a1c46b2c9",
+    "ru": "Различайте срок конкретного действия и другие этапы. Правило исчисления показано в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].coach.calendar",
+      "cases:CASE_TEMPLATES[access-guide-dog].coach.calendar",
+      "cases:CASE_TEMPLATES[access-reading-choice].coach.calendar"
+    ]
+  },
+  {
+    "id": "e60f697451c89c71",
+    "ru": "Открытые материалы и выбранные основания ответа — не одно действие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].coach.docs",
+      "cases:CASE_TEMPLATES[access-guide-dog].coach.docs",
+      "cases:CASE_TEMPLATES[access-reading-choice].coach.docs"
+    ]
+  },
+  {
+    "id": "e37f438ed2f65175",
+    "ru": "Исходный вариант касался физического прохода. Здесь препятствие информационное; помощь должна учитывать выбранный человеком способ связи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].coach.plan",
+      "cases:CASE_TEMPLATES[access-written-dialogue].contrast.difference"
+    ]
+  },
+  {
+    "id": "af782bd518302bce",
+    "ru": "Статья 15 закона № 181-ФЗ предусматривает доступность информации и услуг, сопровождение и помощь при преодолении барьеров. Собака-проводник допускается при наличии документа о специальном обучении. Помощь не означает лишение человека возможности самостоятельно принимать решения. Конкретный способ взаимодействия согласуется с посетителем; документы, подтверждающие право на отдельную услугу, и предоставление обычной помощи не смешиваются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].coach.research",
+      "cases:CASE_TEMPLATES[access-written-dialogue].knowledge.explain",
+      "cases:CASE_TEMPLATES[access-guide-dog].coach.research"
+    ]
+  },
+  {
+    "id": "ffc5be6b756afb17",
+    "ru": "Уточните, что человек просит и какие сведения пока не подтверждены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].coach.talk",
+      "cases:CASE_TEMPLATES[access-guide-dog].coach.talk",
+      "cases:CASE_TEMPLATES[access-reading-choice].coach.talk"
+    ]
+  },
+  {
+    "id": "321d776d62e62d69",
+    "ru": "Меняются установленные факты, состав материалов и допустимое действие; дата и имя не являются отличием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[access-guide-dog].contrast.notCosmetic",
+      "cases:CASE_TEMPLATES[access-reading-choice].contrast.notCosmetic"
+    ]
+  },
+  {
+    "id": "ecfee38553ed68a8",
+    "ru": "Сотрудник попросил привести слышащего родственника. Порядок этой операции не требует представителя: посетительница вправе действовать сама.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d0].text"
+    ]
+  },
+  {
+    "id": "8a981db3caf73a8b",
+    "ru": "Сообщение сотрудника",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d0].title"
+    ]
+  },
+  {
+    "id": "aadad19d51116789",
+    "ru": "Талон А-16 вызван только по громкой связи. Визуальное табло в этом секторе не отображает вызовы. Посетительница находилась в зале и не могла узнать о приглашении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d1].text"
+    ]
+  },
+  {
+    "id": "0a01c6482136e96e",
+    "ru": "Журнал очереди Т-40",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d1].title"
+    ]
+  },
+  {
+    "id": "e4677785c83060e0",
+    "ru": "Планшет П-3 исправен и доступен. Посетительница согласна на письменный диалог. Служебная инструкция допускает сопровождение до окна и конфиденциальное письменное разъяснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d2].text"
+    ]
+  },
+  {
+    "id": "941ed3fa157f3043",
+    "ru": "Карточка доступных способов связи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[access-written-dialogue].documents[d2].title"
+    ]
+  }
+]

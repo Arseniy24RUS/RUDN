@@ -1,0 +1,1162 @@
+[
+  {
+    "id": "03ef835985eb51a0",
+    "ru": "Представленное заявление по упрощённому порядку. Продление и специальные исключения отсутствуют. Профиль счёта этого упражнения: со следующего дня после события; нерабочее окончание переносится вперёд; федеральная пятидневная неделя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.scope"
+    ]
+  },
+  {
+    "id": "0f71118a6d4d70fd",
+    "ru": "Пункт 2 статьи 88 НК РФ; статья 221.1 НК РФ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.source"
+    ]
+  },
+  {
+    "id": "9a94c46886504643",
+    "ru": "Крайний день проверки упрощённого заявления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].calendar.title"
+    ]
+  },
+  {
+    "id": "9e371ada9d4aea74",
+    "ru": "В других налоговых историях представлены декларации. Здесь действует упрощённое заявление, а появление его черновика не начинает проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].coach.plan",
+      "cases:CASE_TEMPLATES[tax-simplified-statement].contrast.difference"
+    ]
+  },
+  {
+    "id": "a0a654080f6c3d63",
+    "ru": "Для обычной декларации без специальных условий указан трёхмесячный срок. Памятка не описывает заявление У-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b91e717f5a7b166d",
+    "ru": "Памятка по обычной 3-НДФЛ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a15c92ffb19ab311",
+    "ru": "Предзаполненный документ сформирован {{draft}}. До {{statement}} не подписан и не представлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d1].text"
+    ]
+  },
+  {
+    "id": "ece2e17c3b2b553f",
+    "ru": "Черновик У-4",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d1].title"
+    ]
+  },
+  {
+    "id": "69578ab352cd6795",
+    "ru": "Допустимое заявление в порядке статьи 221.1 подписано и представлено {{statement}}. Это не декларация 3-НДФЛ. Продление проверки в данном деле не применяется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d2].text"
+    ]
+  },
+  {
+    "id": "163191eb55c4bb3b",
+    "ru": "Квитанция заявления У-4",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[d2].title"
+    ]
+  },
+  {
+    "id": "fda5dc335a401e9d",
+    "ru": "Черновик {{draft}}, представленное заявление {{statement}}. Письмо получено {{received}}, зарегистрировано {{registered}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].documents[dates].text"
+    ]
+  },
+  {
+    "id": "9043e03b2e4a50ca",
+    "ru": "Срок связан с представленным заявлением, а не появлением черновика; порядок отличается от обычной 3-НДФЛ. В других налоговых историях представлены декларации. Здесь действует упрощённое заявление, а появление его черновика не начинает проверку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.explain"
+    ]
+  },
+  {
+    "id": "7e38b9d2ab167ce7",
+    "ru": "Срок связан с представленным заявлением, а не появлением черновика; порядок отличается от обычной 3-НДФЛ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[tax-simplified-statement].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "fc4b708e49896275",
+    "ru": "Появление любого черновика равнозначно подаче.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "a967a4fa58aa847c",
+    "ru": "Любой налоговый вычет проверяется только три календарных месяца.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "0a842dd99f313775",
+    "ru": "Завершение одного этапа не доказывает выполнение другого.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].followup.explain"
+    ]
+  },
+  {
+    "id": "52b54afb85b51e9a",
+    "ru": "В личном кабинете появилась отметка «проверка завершена», но подтверждения перечисления ещё нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].followup.intro"
+    ]
+  },
+  {
+    "id": "4ea8083b62e00f5d",
+    "ru": "Различить результат проверки и перечисление; выяснить следующий статус без выдуманной даты выплаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "26b924bf2b483cbd",
+    "ru": "Сообщить, что деньги уже зачислены, раз проверка завершилась.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "1afb0f3d0bed6179",
+    "ru": "Заново назначить полные три месяца со дня каждого вопроса гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8213acb6d2eef94b",
+    "ru": "Статья 221.1 части второй НК РФ регулирует вычеты в упрощённом порядке по заявлению через личный кабинет. Предзаполненное заявление, оставленное черновиком, и представленное подписанное заявление — разные события. Срок проверки заявления установлен пунктом 2 статьи 88 части первой НК РФ: 30 календарных дней, если не применены предусмотренные законом исключения. В данном упражнении заявление допустимо, представлено, продления нет; дату перечисления денег не рассчитывают.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.explain",
+      "cases:SOURCES[n12-tax221].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v12-tax-simplified-statement].fragments[norm].text"
+    ]
+  },
+  {
+    "id": "ecb8e6a5f0d05632",
+    "ru": "Различать заявление упрощённого порядка и неподписанный черновик.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "135999fdec69e251",
+    "ru": "Считать любой черновик автоматически представленным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "a096b22588e0b42b",
+    "ru": "Приравнивать стандартный срок проверки к гарантии возврата всей суммы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6f03fec524da59d8",
+    "ru": "Найдите норму: Заявление о вычете в упрощённом порядке. Укажите реквизиты акта и статью; затем выберите применимое положение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "fdf3230242b13b3f",
+    "ru": "Заявление в личном кабинете появилось давно. Я подписал его позже, но ждать надо с момента появления, верно?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].opening"
+    ]
+  },
+  {
+    "id": "b6e217be82116f5b",
+    "ru": "Упрощённый вычет по статье 221.1 с проверкой заявления по статье 88 НК РФ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].procedures[0].text"
+    ]
+  },
+  {
+    "id": "0998a4676d718223",
+    "ru": "Обычная первоначальная декларация, которой в этом деле нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].procedures[1].text"
+    ]
+  },
+  {
+    "id": "7950592b4daff3a4",
+    "ru": "Ответ на обращение по 59-ФЗ вместо проверки заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].procedures[2].text"
+    ]
+  },
+  {
+    "id": "b91541a5419da99d",
+    "ru": "Нет, это был предзаполненный черновик.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "d80d52ce9907f4d0",
+    "ru": "Черновик не равен представленному заявлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "1777ea3e53a99dbc",
+    "ru": "Первый документ был отправлен?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q0].text"
+    ]
+  },
+  {
+    "id": "42145f638201b4b6",
+    "ru": "Квитанция подтверждает {{statement}}.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "96e32d4fa17ce3ea",
+    "ru": "Есть дата юридически значимого представления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "9d4b063690f18ed9",
+    "ru": "Когда подписали и представили заявление?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q1].text"
+    ]
+  },
+  {
+    "id": "10ac66a18af6f596",
+    "ru": "Нет, именно заявление по упрощённому порядку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "60e0d7b54b393913",
+    "ru": "Применяется другая процедура.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "00b41b5a923a4b25",
+    "ru": "Это обычная декларация 3-НДФЛ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q2].text"
+    ]
+  },
+  {
+    "id": "99e2ace4c880dd15",
+    "ru": "Нет; по условиям для этой проверки его не применяют.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "06715608f307f344",
+    "ru": "В задаче стандартный тридцатидневный срок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "48b586c19e0dc897",
+    "ru": "Есть уведомление о продлении?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].questions[q3].text"
+    ]
+  },
+  {
+    "id": "5abbf3c957c2df09",
+    "ru": "Специалист подготовки разъяснения по упрощённому вычету",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].role.title"
+    ]
+  },
+  {
+    "id": "031b8369569b6cab",
+    "ru": "Подразделение налогового органа по соответствующему заявлению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].routes[0].text"
+    ]
+  },
+  {
+    "id": "5ccdec3e7bdccad2",
+    "ru": "Банк как орган, одобряющий размер налогового вычета.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].routes[1].text"
+    ]
+  },
+  {
+    "id": "5f93e2abe9e0f01c",
+    "ru": "Администратор интерфейса как лицо, разрешающее налоговое требование.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].routes[2].text"
+    ]
+  },
+  {
+    "id": "bfc9a1217d155747",
+    "ru": "Черновик появился раньше заявления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[tax-simplified-statement].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[tax-simplified-statement].title"
+    ]
+  },
+  {
+    "id": "1217eacf828cf29d",
+    "ru": "Статья 221.1 находится в части второй, статья 88 — в первой. Это не разные даты одной и той же части кодекса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].trap.explain"
+    ]
+  },
+  {
+    "id": "43f628dc8cb99f19",
+    "ru": "Упрощённое заявление предусмотрено частью второй НК РФ; срок его проверки следует отдельно проверить в части первой.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[tax-simplified-statement].trap.text"
+    ]
+  },
+  {
+    "id": "d9fbff3e42470326",
+    "ru": "Оперативно передать подтверждённое сообщение назначенному дежурному",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[a0].title"
+    ]
+  },
+  {
+    "id": "53e929798686b22a",
+    "ru": "Организовать через ответственных безопасное ограничение подхода и профильный осмотр",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[a1].title"
+    ]
+  },
+  {
+    "id": "85243b5bec179c71",
+    "ru": "Продолжить отдельное рассмотрение письменного обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[a2].title"
+    ]
+  },
+  {
+    "id": "17f20f475b102dfe",
+    "ru": "Не требовать от заявительницы приближаться к повреждённой ветке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[a3].title"
+    ]
+  },
+  {
+    "id": "004fb7798e5b1a58",
+    "ru": "Проверить безопасность обхода и подтверждение дальнейшего устранения риска",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[a4].title"
+    ]
+  },
+  {
+    "id": "5c848a24f262dbd9",
+    "ru": "Отложить оперативную передачу до общего срока ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[b0].title"
+    ]
+  },
+  {
+    "id": "2cad60952307a086",
+    "ru": "Попросить жительницу самой подпилить или обследовать ветку",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].actions[b1].title"
+    ]
+  },
+  {
+    "id": "5b914d255a228352",
+    "ru": "Попросить жительницу самой подпилить или обследовать ветку: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "6d3c3845434909bf",
+    "ru": "На дереве Д-31 после ветра повреждена крупная ветка над используемым проходом. Карточка дежурного подтверждает актуальность сообщения. Граница опасного участка и меры определяются ответственными специалистами, не студентом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d0].text"
+    ]
+  },
+  {
+    "id": "9c74a514b01f3567",
+    "ru": "Карточка оперативного сообщения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d0].title",
+      "cases:CASE_TEMPLATES[gas-address-correction].documents[d0].title"
+    ]
+  },
+  {
+    "id": "274779973361f7fc",
+    "ru": "Определены дежурный по территории и профильная служба осмотра насаждений. Организуются безопасное ограничение подхода и профессиональная оценка. Игра моделирует сообщения, не направляет их в реальные службы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d1].text"
+    ]
+  },
+  {
+    "id": "11c7d471e03ae336",
+    "ru": "Схема служебного взаимодействия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d1].title"
+    ]
+  },
+  {
+    "id": "c988f080cc207e61",
+    "ru": "Плановый осмотр двора намечен позднее. График не отменяет реакции на новое повреждение и не является разрешением спилить всё дерево.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d2].text"
+    ]
+  },
+  {
+    "id": "3a83cbc0f13c8fea",
+    "ru": "Плановая ведомость озеленения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].documents[d2].title"
+    ]
+  },
+  {
+    "id": "fcd0d301c597fde5",
+    "ru": "Текущее повреждение требует оперативной передачи и защиты прохода по компетенции; способ дальнейших работ определяют специалисты. Исходная история проверяла основание уже выполненного удаления. Здесь повреждение создаёт текущую опасность: сначала нужны защита и профессиональная оценка, а не бумажное ожидание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.explain"
+    ]
+  },
+  {
+    "id": "45ca037118c8dcc9",
+    "ru": "Текущее повреждение требует оперативной передачи и защиты прохода по компетенции; способ дальнейших работ определяют специалисты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "228fd7792e0c9170",
+    "ru": "Любая опасность с деревом означает обязательное самостоятельное решение приёмной о полном спиле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "4fd38ec6f227586b",
+    "ru": "До письменного ответа нельзя организовывать ограничение опасного прохода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "e149c1dfc726c5dd",
+    "ru": "Передать новую информацию ответственному дежурному и проверить безопасность временного маршрута. Это новое обстоятельство или неполное подтверждение; прежний вывод не заменяет его проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].followup.explain"
+    ]
+  },
+  {
+    "id": "6300140fa8586ca7",
+    "ru": "Опасный подход ограничили, но ограждение направляет пешеходов под другую повреждённую ветку.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].followup.intro"
+    ]
+  },
+  {
+    "id": "ee756c02a3b04bce",
+    "ru": "Передать новую информацию ответственному дежурному и проверить безопасность временного маршрута.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "24f49509f72fb80a",
+    "ru": "Закрыть вопрос, поскольку первоначальная лента уже установлена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "7e13a2a3976b66dd",
+    "ru": "Предложить заявительнице передвинуть ограждение под свою ответственность.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "709f6ea5b3da9263",
+    "ru": "После ветра крупная повреждённая ветка висит над проходом к дому. Я написала обращение, но пока никто не ограничил подход. Надо дождаться ответа на письмо?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].opening"
+    ]
+  },
+  {
+    "id": "b4d2851d93e892d3",
+    "ru": "Рассмотреть только законность будущего удаления, не передавая информацию о текущей опасности.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].procedures[1].text"
+    ]
+  },
+  {
+    "id": "5f7b6de103a87d4a",
+    "ru": "Дождаться планового обследования по общему обращению прежде чем передать сообщение об опасном участке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].procedures[2].text"
+    ]
+  },
+  {
+    "id": "f8d1cd339dbd7628",
+    "ru": "Да. Карточка оперативного осмотра подтверждает повреждение над действующим пешеходным проходом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "4267950f1fb4c32b",
+    "ru": "Обычный срок переписки не определяет время первичной защиты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "02de85db042acb39",
+    "ru": "Опасность сохраняется сейчас?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q0].text"
+    ]
+  },
+  {
+    "id": "bb76179ef0376fc8",
+    "ru": "В служебной карточке назначена профильная служба; необходим профессиональный осмотр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "62c427961274a452",
+    "ru": "Сотрудник приёмной не назначает способ удаления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "c6ae76464d19d974",
+    "ru": "Кто уполномочен оценить состояние дерева?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q1].text"
+    ]
+  },
+  {
+    "id": "c6965400854dc432",
+    "ru": "Пока нет. Нужно организовать сообщение ответственному дежурному и ограничение доступа в пределах его полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "b58c4bb09cc39a68",
+    "ru": "Нужна оперативная передача, а не сбор гражданином опасных доказательств.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "3e916632b99ec08e",
+    "ru": "Есть ли безопасное ограничение подхода?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q2].text"
+    ]
+  },
+  {
+    "id": "7fe30917f4555503",
+    "ru": "Место известно по карточке. Я не должна подходить под ветку или измерять её.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "63e2a06c2986b008",
+    "ru": "Дополнительное обследование заявителем не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "64531be6ce9b23f1",
+    "ru": "Вы можете предоставить сведения без приближения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].questions[q3].text"
+    ]
+  },
+  {
+    "id": "1a22f25503dce451",
+    "ru": "Дежурный специалист городского хозяйства",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].role.title"
+    ]
+  },
+  {
+    "id": "14b58962e0bbd2e2",
+    "ru": "Сначала инициировать оперативные действия ответственных служб, не определяя самостоятельно объём удаления насаждений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].routes[0].text"
+    ]
+  },
+  {
+    "id": "0432b5803c065f71",
+    "ru": "Запросить разрешение на спил как условие первичного сообщения о нависающей ветви.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].routes[1].text"
+    ]
+  },
+  {
+    "id": "ff723f35508e3d34",
+    "ru": "Попросить посетителя самостоятельно убрать ветвь для восстановления прохода.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].routes[2].text"
+    ]
+  },
+  {
+    "id": "5fc6e96ce19e7d3b",
+    "ru": "Ветка над проходом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[trees-current-danger].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[trees-current-danger].title"
+    ]
+  },
+  {
+    "id": "7779d2afa955ddec",
+    "ru": "Исходная история проверяла основание уже выполненного удаления. Здесь повреждение создаёт текущую опасность: сначала нужны защита и профессиональная оценка, а не бумажное ожидание.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].trap.explain",
+      "cases:CASE_TEMPLATES[trees-current-danger].coach.plan",
+      "cases:CASE_TEMPLATES[trees-current-danger].contrast.difference"
+    ]
+  },
+  {
+    "id": "125e494f3b4ba087",
+    "ru": "Помощник: «Плановая ведомость исключает внеплановую реакцию даже при новом повреждении».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-current-danger].trap.text"
+    ]
+  },
+  {
+    "id": "57551fdbfbe362f8",
+    "ru": "Сопоставить место работ с документом и картой",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[a0].title"
+    ]
+  },
+  {
+    "id": "6f2afe657f28e441",
+    "ru": "Установить профильный орган по территории и виду работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[a1].title"
+    ]
+  },
+  {
+    "id": "050b0a4b725b7c62",
+    "ru": "Подготовить направление обращения с указанием несоответствия участков",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[a2].title"
+    ]
+  },
+  {
+    "id": "3e929dff9557e261",
+    "ru": "Уведомить заявителя без преждевременного вывода о виновности",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7669f0234ade03b7",
+    "ru": "Проверить ответ именно по участку А",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[a4].title"
+    ]
+  },
+  {
+    "id": "d67243d1db905b15",
+    "ru": "Предложить заявителю физически блокировать работу техники",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[b0].title",
+      "cases:CASE_TEMPLATES[trees-other-site].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "ba3a44a647726a72",
+    "ru": "Скрыть несоответствие участка из передаваемых материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].actions[b1].title"
+    ]
+  },
+  {
+    "id": "a4a62be53d1868df",
+    "ru": "Рассчитайте крайнюю дату направления копии обращения надлежащему адресату. Это не универсальный срок устранения проблемы. В данном упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.context",
+      "cases:CASE_TEMPLATES[gas-smell].calendar.context",
+      "cases:CASE_TEMPLATES[food-other-batch].calendar.context"
+    ]
+  },
+  {
+    "id": "c71bc1c3ef35abf9",
+    "ru": "Предметный срок действия по обращению: 59-ФЗ, статья 8. Иные отраслевые нормы используются для решения по существу, а не как источник этого срока. Профиль исчисления задан отдельно в условии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.source",
+      "cases:CASE_TEMPLATES[gas-smell].calendar.source",
+      "cases:CASE_TEMPLATES[food-other-batch].calendar.source"
+    ]
+  },
+  {
+    "id": "3c11c377dfda5823",
+    "ru": "Крайняя дата направления по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].calendar.title",
+      "cases:CASE_TEMPLATES[food-other-batch].calendar.title"
+    ]
+  },
+  {
+    "id": "0287eac36010b0c5",
+    "ru": "Житель двора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].citizen.description"
+    ]
+  },
+  {
+    "id": "a36bd85290bb2db8",
+    "ru": "На снимках работы на участке А. Документ перечисляет деревья участка Б. Разрешение на участок А в представленном наборе отсутствует; это не означает, что его не существует.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b0bb66926f3a4476",
+    "ru": "Схема А/Б и разрешительная карточка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d0].title"
+    ]
+  },
+  {
+    "id": "ca2932ca85c61395",
+    "ru": "Учебное сопоставление",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d0].type",
+      "cases:CASE_TEMPLATES[mfc-typo-refusal].documents[d0].type"
+    ]
+  },
+  {
+    "id": "48f4a886a3b19f30",
+    "ru": "Подрядчик утверждает, что документ общий для квартала. Подтверждающего приложения нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d1].text"
+    ]
+  },
+  {
+    "id": "a253dccb18c73ab7",
+    "ru": "Сообщение подрядчика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d1].title"
+    ]
+  },
+  {
+    "id": "80ed2c13959276b6",
+    "ru": "Пояснение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].documents[d1].type"
+    ]
+  },
+  {
+    "id": "7d618baa130455a2",
+    "ru": "Представленный документ не подтверждает право на работы именно на участке А; требуется уточнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[trees-other-site].factTask.explain",
+      "cases:CASE_TEMPLATES[trees-other-site].outcomes.good"
+    ]
+  },
+  {
+    "id": "f928fa7d94ff642a",
+    "ru": "Копия подтверждает любые работы в этом квартале.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "580e3a9b89e11f55",
+    "ru": "Отсутствие документа в письме уже доказывает преступление.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "7b0906f6243854e0",
+    "ru": "Учебное продолжение. В ответ вновь вложили документ на участок Б.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].followup.intro"
+    ]
+  },
+  {
+    "id": "b2db74c23f9ca164",
+    "ru": "Обозначить неразрешённый вопрос об участке А и организовать содержательное уточнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].followup.options[0].text",
+      "cases:CASE_TEMPLATES[trees-other-site].followup.explain"
+    ]
+  },
+  {
+    "id": "7064abaca3e54c78",
+    "ru": "Закрыть дело после повторного документа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "dfb25b8613cabc17",
+    "ru": "Самостоятельно аннулировать разрешение органа власти.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "ba1aa4059622b4f3",
+    "ru": "Найдите норму, устанавливающую порядок и срок действия, указанного в календарном задании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].knowledge.prompt",
+      "cases:CASE_TEMPLATES[heritage-stair].knowledge.prompt",
+      "cases:CASE_TEMPLATES[gas-smell].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "2406d8d61d7bb104",
+    "ru": "Во дворе спиливают деревья. Рабочие показывают бумагу, но, кажется, на ней другой участок. Кто-то в чате уже написал, что разрешено всё.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].opening"
+    ]
+  },
+  {
+    "id": "6c29a35ff712452c",
+    "ru": "Обращение о работах на территории с определением профильной компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].procedures[0].text"
+    ]
+  },
+  {
+    "id": "0cba0a57e39ee861",
+    "ru": "Выдача разрешения сотрудником приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].procedures[1].text"
+    ]
+  },
+  {
+    "id": "f5958ab0e4c24b05",
+    "ru": "Рассмотрение судебной апелляции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].procedures[2].text"
+    ]
+  },
+  {
+    "id": "0f971ef65fb40069",
+    "ru": "На схеме отметил участок А; на нём виден спил.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "8c49cd4e92aa685c",
+    "ru": "Установлен объект наблюдения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "df48d220076a2143",
+    "ru": "Где сделаны фотографии?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q0].text"
+    ]
+  },
+  {
+    "id": "e159b06f35c5f540",
+    "ru": "В приложенной копии написан участок Б, на противоположной стороне квартала.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c5ec10ce2da2cd3a",
+    "ru": "Документ относится к другому объекту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "6b2787f8ed05eeb8",
+    "ru": "Какой объект назван в документе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q1].text"
+    ]
+  },
+  {
+    "id": "20274773111b3476",
+    "ru": "Проход ограждён. По условиям дела о текущей угрозе не сообщается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "87cb84fd218ea512",
+    "ru": "Кейс не требует имитации аварийного вызова.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "0c6924faad3644bc",
+    "ru": "Есть ли непосредственная опасность для людей?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q2].text"
+    ]
+  },
+  {
+    "id": "3b1060ffccd81df7",
+    "ru": "Есть исходящая отметка и название органа; подлинность и применимость нужно проверить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "2b3c7a684cd66a90",
+    "ru": "Фотокопия не заменяет проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "37af8b626e79ed28",
+    "ru": "Удалось ли установить владельца территории и орган выдачи?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].questions[q3].text"
+    ]
+  },
+  {
+    "id": "57c83877c903bfee",
+    "ru": "Уточнить границы и документ на участок А, направить материалы компетентному органу охраны зелёных насаждений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].routes[0].text",
+      "cases:CASE_TEMPLATES[trees-other-site].coach.plan",
+      "cases:CASE_TEMPLATES[trees-other-site].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b12d184f84782162",
+    "ru": "Поручить гражданину самому остановить технику.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].routes[1].text",
+      "cases:CASE_TEMPLATES[trees-other-site].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f00179f227ada267",
+    "ru": "Согласовать спил от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].routes[2].text",
+      "cases:CASE_TEMPLATES[trees-other-site].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "9fe22ca8ea35fd49",
+    "ru": "Разрешение на соседний участок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[trees-other-site].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[trees-other-site].title"
+    ]
+  },
+  {
+    "id": "e53c5c6398f0751f",
+    "ru": "Зелёные насаждения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].topic",
+      "cases:CASE_TEMPLATES[trees-other-site].tag",
+      "cases:CASE_TEMPLATES[trees-permit-matches].topic"
+    ]
+  },
+  {
+    "id": "73818334549b7802",
+    "ru": "Проверить, охватывает ли оно объект и работы из обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].trap.options[0].text",
+      "cases:CASE_TEMPLATES[trees-other-site].trap.explain"
+    ]
+  },
+  {
+    "id": "b6f11be13a129ce1",
+    "ru": "Прекратить рассмотрение после слова «разрешение».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "db6760d4f8f1dbd7",
+    "ru": "Помощник: «Раз есть разрешение, жалоба беспредметна».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-other-site].trap.text"
+    ]
+  },
+  {
+    "id": "40e2815851379a28",
+    "ru": "Сопоставить номера, место, вид работ и действительность основания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[a0].title"
+    ]
+  },
+  {
+    "id": "d3361c74eaa354e4",
+    "ru": "Проверить акт и подтверждение уполномоченного подразделения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[a1].title"
+    ]
+  },
+  {
+    "id": "95ca3591e34c128a",
+    "ru": "Подготовить ответ об установленном основании конкретных работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ac6983b096bacdaf",
+    "ru": "Разъяснить доступные сведения и порядок постановки отдельных вопросов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[a3].title"
+    ]
+  },
+  {
+    "id": "e0566ccd6d9a4e5c",
+    "ru": "Не распространять вывод на иные деревья или будущие работы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[a4].title"
+    ]
+  },
+  {
+    "id": "a2880948716ac0f4",
+    "ru": "Признать отсутствие разрешения из-за отсутствия копии у заявительницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[b0].title"
+    ]
+  },
+  {
+    "id": "48cdb4c6240da5b0",
+    "ru": "Разрешить дальнейшее удаление любых деревьев по прежнему акту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].actions[b1].title"
+    ]
+  },
+  {
+    "id": "d35757ba85fd5a80",
+    "ru": "Разрешить дальнейшее удаление любых деревьев по прежнему акту: действие выходит за обозначенную компетенцию или создаёт необоснованный риск.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1b807ee6cc4b5789",
+    "ru": "В обращении оспаривается удаление двух деревьев Д-14 и Д-15. Место и номера подтверждены принятым комплектом, а не определены по виду породы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b45ba7a07932e290",
+    "ru": "Карточка места и план Д-14/Д-15",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d0].title"
+    ]
+  },
+  {
+    "id": "38ea878b48134782",
+    "ru": "Уполномоченный отдел подтвердил действующее основание на удаление Д-14 и Д-15; заключение и акт относятся к ним. Отклонений по этим работам в условии не установлено. Это синтетические материалы, не сообщение о реальном объекте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d1].text"
+    ]
+  },
+  {
+    "id": "70dc82021b69e103",
+    "ru": "Проверенная выписка и акт",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d1].title"
+    ]
+  },
+  {
+    "id": "3ec985964d3192e0",
+    "ru": "Соседний участок имеет другие номера. Его документы не нужны для подтверждения данного удаления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d2].text"
+    ]
+  },
+  {
+    "id": "3e4c1636f049b66d",
+    "ru": "Разрешение соседнего двора",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].documents[d2].title"
+    ]
+  },
+  {
+    "id": "3b2b68a46e8bef85",
+    "ru": "В этом комплекте основание и выполненные работы относятся к тем же деревьям; отсутствие копии у жительницы не доказывает отсутствие разрешения. В первоначальном варианте разрешение относилось к другому месту. Здесь оно подтверждено для нужных деревьев, и ответ по существу должен измениться.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.explain"
+    ]
+  },
+  {
+    "id": "37d33d9f9cd7996f",
+    "ru": "В этом комплекте основание и выполненные работы относятся к тем же деревьям; отсутствие копии у жительницы не доказывает отсутствие разрешения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "7d27bde9394b83ff",
+    "ru": "Любая вырубка незаконна, если заявителю заранее не выдали личную копию разрешения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "7f45d0a6a1858492",
+    "ru": "Один проверенный акт разрешает любые дальнейшие работы во всём дворе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[trees-permit-matches].factTask.options[2].text"
+    ]
+  }
+]

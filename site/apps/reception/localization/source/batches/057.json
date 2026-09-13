@@ -1,0 +1,946 @@
+[
+  {
+    "id": "f8af1cbe3586c7d5",
+    "ru": "Запрос информации рассматривается по специальным правилам. Если информация не относится к деятельности получателя, применяют правило направления компетентному органу с уведомлением пользователя.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article18].text"
+    ]
+  },
+  {
+    "id": "7eeeca4fbfeb1385",
+    "ru": "Статья 19, часть 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article19].label"
+    ]
+  },
+  {
+    "id": "ff9ce86bb629cef0",
+    "ru": "Для уже опубликованной информации допустим ответ с указанием издания или электронного адреса официального сайта, где она размещена. Проверяют, действительно ли запрошенная информация размещена на указанном официальном сайте. Прямая ссылка удобнее для пользователя, но сама по себе не является единственным допустимым форматом по закону.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article19].text"
+    ]
+  },
+  {
+    "id": "4504e87b8115bff8",
+    "ru": "Статья 9, часть 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article9].label"
+    ]
+  },
+  {
+    "id": "4682d6b59aa44cf1",
+    "ru": "Орган определяет подразделение или должностных лиц, обеспечивающих доступ к информации. Размещение текста закона на сайте министерства не означает, что это министерство владеет всеми запрашиваемыми местными документами.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].fragments[article9].text"
+    ]
+  },
+  {
+    "id": "94c06eeefc045872",
+    "ru": "8-ФЗ · доступ к информации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[law8-access].title",
+      "source-index:SOURCE_INDEX.entries[evidence:law8-access].title"
+    ]
+  },
+  {
+    "id": "49c4d1651d96d7a8",
+    "ru": "Входящая корреспонденция и общие вопросы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].fragments[incoming].label"
+    ]
+  },
+  {
+    "id": "044ee817d9aa76f7",
+    "ru": "Контакт-центр для входящей корреспонденции и общих вопросов: 8 (499) 254-50-72. Это справочная связь, а не подача письменного обращения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].fragments[incoming].text"
+    ]
+  },
+  {
+    "id": "dcc738d8d4a222c4",
+    "ru": "Территориальный орган для Москвы",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].fragments[moscow].label"
+    ]
+  },
+  {
+    "id": "408259c014359050",
+    "ru": "Межрегиональное управление Росприроднадзора по г. Москве и Калужской области. Приёмная в Москве: 8 (495) 025-23-82, доб. 77904. Территория в названии важна: город Москва и Московская область не взаимозаменяемы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].fragments[moscow].text"
+    ]
+  },
+  {
+    "id": "69f026a01675ef7b",
+    "ru": "Контактная страница",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-contacts].originalKind"
+    ]
+  },
+  {
+    "id": "51b53cdb0379128a",
+    "ru": "Федеральная служба по надзору в сфере природопользования",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].publisher"
+    ]
+  },
+  {
+    "id": "cabdc94d252213eb",
+    "ru": "Центральный аппарат; отдельно — территориальный орган",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-contacts].scope"
+    ]
+  },
+  {
+    "id": "6f94e73249f37d64",
+    "ru": "Росприроднадзор · контакты",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-contacts].title",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-contacts].title"
+    ]
+  },
+  {
+    "id": "89a7902064ee3ca2",
+    "ru": "Телефон НТС",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].fragments[phone].label"
+    ]
+  },
+  {
+    "id": "13738b51a4ea4d21",
+    "ru": "На странице совета опубликован телефон 8 (495) 777-31-52, добавочные 3934 или 3924. Официальность сайта не делает этот номер универсальным для всех обращений.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].fragments[phone].text"
+    ]
+  },
+  {
+    "id": "f355436a32783506",
+    "ru": "Назначение контакта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].fragments[scope].label"
+    ]
+  },
+  {
+    "id": "41414d46391c28b3",
+    "ru": "Контакт предназначен только для вопросов непосредственной деятельности научно-технического совета. Другие контакты следует искать в соответствующем разделе ведомства.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].fragments[scope].text"
+    ]
+  },
+  {
+    "id": "34f3e1b60740abfa",
+    "ru": "Научно-технический совет Росприроднадзора",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].publisher"
+    ]
+  },
+  {
+    "id": "f952713a3ce1f218",
+    "ru": "Научно-технический совет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-nts].scope"
+    ]
+  },
+  {
+    "id": "44c4dcbfa891f401",
+    "ru": "Росприроднадзор · научно-технический совет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-nts].title",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-nts].title"
+    ]
+  },
+  {
+    "id": "c99bfb4705a018f5",
+    "ru": "Территория деятельности",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].fragments[territory].label"
+    ]
+  },
+  {
+    "id": "d45e824aaac52bb3",
+    "ru": "Положение описывает территориальный орган по Московской и Смоленской областям. Совпадение слова «Московской» не подтверждает компетенцию по объекту в городе Москве.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].fragments[territory].text"
+    ]
+  },
+  {
+    "id": "e6461796e9dfce32",
+    "ru": "Положение о территориальном органе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].kind",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-regional].originalKind"
+    ]
+  },
+  {
+    "id": "b8bd09fd9f14741b",
+    "ru": "Межрегиональное управление Росприроднадзора по Московской и Смоленской областям",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].publisher"
+    ]
+  },
+  {
+    "id": "799f3b6273f9b925",
+    "ru": "Московская и Смоленская области",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-regional].scope"
+    ]
+  },
+  {
+    "id": "e92bbdd53ee670e0",
+    "ru": "Росприроднадзор · другое территориальное управление",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[rpn-regional].title",
+      "source-index:SOURCE_INDEX.entries[evidence:rpn-regional].title"
+    ]
+  },
+  {
+    "id": "144f37f2071942a1",
+    "ru": "Новые обстоятельства",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].fragments[newfacts].label"
+    ]
+  },
+  {
+    "id": "3456ca1a7de6b964",
+    "ru": "Новый документ или снимок сопоставляют с предметом и датой старого ответа. Совпадение автора писем не доказывает тождество вопросов.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].fragments[newfacts].text"
+    ]
+  },
+  {
+    "id": "4313ee4ab13887a8",
+    "ru": "Недостаточность сведений",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].fragments[unknown].label"
+    ]
+  },
+  {
+    "id": "acdfa7c2cf97f4f0",
+    "ru": "В исходных историях про люк владелец сети не установлен; в историях о реке по одному снимку не установлены состав загрязнения и уровень надзора. Недостающие факты нельзя заменить предположением.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].fragments[unknown].text"
+    ]
+  },
+  {
+    "id": "da2d628d5fc9e4db",
+    "ru": "Вымышленные служебные материалы симулятора",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].publisher"
+    ]
+  },
+  {
+    "id": "57f24cc81bc143b0",
+    "ru": "Только вымышленные обстоятельства дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].scope",
+      "source-index:SOURCE_INDEX.entries[evidence:scenario-register].scope"
+    ]
+  },
+  {
+    "id": "9b3075af8b6be54d",
+    "ru": "Материалы дела · реестр и ответ исполнителя",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[scenario-register].title",
+      "source-index:SOURCE_INDEX.entries[evidence:scenario-register].title"
+    ]
+  },
+  {
+    "id": "465b65c25a893ae2",
+    "ru": "Статья 19, часть / пункт 4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "9fab86cff7a3d0b6",
+    "ru": "При наличии общедоступной и ограниченной частей предоставляется открытая информация. Ограничение остальной части обосновывается соответствующим актом.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].fragments[relevant].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.explain"
+    ]
+  },
+  {
+    "id": "c559ab94ba211b7a",
+    "ru": "Применимость к конкретной истории устанавливается по её обстоятельствам. Само название документа не подтверждает выбранное действие.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].fragments[scope].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].fragments[scope].text"
+    ]
+  },
+  {
+    "id": "e7e0809145203068",
+    "ru": "Федеральный закон от 2009-02-09 № 8-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].publisher"
+    ]
+  },
+  {
+    "id": "facabd3e8d7a8b29",
+    "ru": "Авторское учебное изложение проверенной нормы, не копия сайта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].representation"
+    ]
+  },
+  {
+    "id": "1e909c7a0fac12fa",
+    "ru": "8-ФЗ · части информации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-budget-partial].title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-budget-partial.title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-budget-partial].title"
+    ]
+  },
+  {
+    "id": "ea94670406bad3fc",
+    "ru": "Пределы вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].fragments[limit].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].fragments[limit].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].fragments[limit].label"
+    ]
+  },
+  {
+    "id": "842044eba2f13c2f",
+    "ru": "Сведения о другом заявителе, объекте или периоде не заменяют проверку по этому делу. Название органа не даёт сотруднику неограниченных полномочий.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].fragments[limit].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].fragments[limit].text",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].fragments[limit].text"
+    ]
+  },
+  {
+    "id": "6bdf3ed5306b459a",
+    "ru": "Сопоставление материалов дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].fragments[material].label"
+    ]
+  },
+  {
+    "id": "b3d8661c2502a334",
+    "ru": "Письмо городской службы и схема относятся к колодцу К-17. Акт осмотра этого объекта подтверждает открытую горловину. Внутренняя схема указывает дежурную службу как адресата оперативного сообщения.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].fragments[material].text"
+    ]
+  },
+  {
+    "id": "746a398683a49947",
+    "ru": "Учебный материал; ссылка ведёт к правовой основе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].kind"
+    ]
+  },
+  {
+    "id": "641e142f05e3e82b",
+    "ru": "Авторский пакет учебного дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].publisher"
+    ]
+  },
+  {
+    "id": "b255690bf5d10e55",
+    "ru": "Первый фрагмент пересказывает условие задачи, не настоящий регламент и не выдержку с сайта. По внешней ссылке проверяется правовая основа, а не факты инцидента.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].representation"
+    ]
+  },
+  {
+    "id": "cda4bdeaa529c898",
+    "ru": "Только обстоятельства данной вымышленной ситуации",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].scope"
+    ]
+  },
+  {
+    "id": "f9c223248edc0c1c",
+    "ru": "Теперь известно, чья сеть · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-known-owner].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-hatch-known-owner].title"
+    ]
+  },
+  {
+    "id": "0868bc7704ad92ae",
+    "ru": "На исходном снимке объекта ещё нет крышки. Более поздние акт и снимок совпадают по месту и номеру, подтверждают завершённый ремонт. Наличие старой фотографии не отменяет результат проверки.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].fragments[material].text"
+    ]
+  },
+  {
+    "id": "7720849d70e12730",
+    "ru": "Фотография была сделана до ремонта · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-hatch-restored].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-hatch-restored].title"
+    ]
+  },
+  {
+    "id": "eaaabf28048f7ac9",
+    "ru": "Свидетельство об изменении фамилии имеет более позднюю дату, чем результат услуги. Первоначальные сведения совпадали. Эта хронология отличает изменение данных от ошибки, но не отменяет рассмотрения жалобы на отказ исправить предполагаемую опечатку.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-change-not-typo].fragments[material].text"
+    ]
+  },
+  {
+    "id": "29ebe4d595824706",
+    "ru": "Данные изменились уже после выдачи · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-change-not-typo].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-change-not-typo].title"
+    ]
+  },
+  {
+    "id": "eaa799d33a779a9a",
+    "ru": "Часть 6 статьи 11.2 охватывает не только отказ исправить ошибки, но и обжалование нарушения установленного срока их исправления. В деле этот срок подтверждён и истёк; нового отрицательного акта ждать не требуется.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-correction-overdue].fragments[material].text"
+    ]
+  },
+  {
+    "id": "36855d88a037bbe8",
+    "ru": "Исправление обещали, срок прошёл · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-correction-overdue].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-correction-overdue].title"
+    ]
+  },
+  {
+    "id": "b6ceb73af926e105",
+    "ru": "В условиях услуги допускается документ или иной предусмотренный способ идентификации. Исключение для документов, удостоверяющих личность, не означает обязанность принимать произвольную фотографию. Сведения не расширяются до лишних копий.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-identity-required].fragments[material].text"
+    ]
+  },
+  {
+    "id": "a44c67d4391467da",
+    "ru": "Фото паспорта и способ подтверждения личности · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-identity-required].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-identity-required].title"
+    ]
+  },
+  {
+    "id": "5f3beb55f8fcd133",
+    "ru": "В акте названо только отсутствие ответа по межведомственным сведениям. Часть 6 статьи 7.1 не позволяет использовать это как основание отказа заявителю. Применимость относится к указанной категории сведений.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-interagency-silence].fragments[material].text"
+    ]
+  },
+  {
+    "id": "100ac8e01a0604b7",
+    "ru": "Не ответило другое ведомство · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-interagency-silence].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-interagency-silence].title"
+    ]
+  },
+  {
+    "id": "9f1179e4373499a1",
+    "ru": "Журнал содержит отметки о завершении услуги органом и получении результата МФЦ. Невыполненной осталась выдача и надлежащее уведомление, а не первоначальное рассмотрение.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-ready-not-issued].fragments[material].text"
+    ]
+  },
+  {
+    "id": "ecc19f93b2433130",
+    "ru": "Готовый результат лежит в центре · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-ready-not-issued].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-ready-not-issued].title"
+    ]
+  },
+  {
+    "id": "cac21c5cc549ea6a",
+    "ru": "В имеющемся комплекте не подтверждены изменение правил, новые ошибки, истечение срока или надлежаще оформленное исключение по ошибочному действию. Пункт 4 части 1 статьи 7 требует проверки этих обстоятельств, а не автоматического принятия очередного списка.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-second-demand].fragments[material].text"
+    ]
+  },
+  {
+    "id": "b21299c51e45f097",
+    "ru": "Каждый раз не хватает нового документа · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-second-demand].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-second-demand].title"
+    ]
+  },
+  {
+    "id": "3329cfdd729d71d8",
+    "ru": "В учебном регламенте исходным событием указано поступление полного заявления. Предварительная запись не равна подаче. Жалоба на предполагаемую просрочку рассматривается по своему порядку независимо от проверки срока услуги.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-service-not-overdue].fragments[material].text"
+    ]
+  },
+  {
+    "id": "25d98850acff62fa",
+    "ru": "Срок посчитали от записи на приём · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-service-not-overdue].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-service-not-overdue].title"
+    ]
+  },
+  {
+    "id": "a5c85c4a495279f6",
+    "ru": "Расписка подтверждает приём. Обжалуемый акт вынес орган, предоставляющий услугу; в нём отказано в предоставлении, не в приёме. Для этого предмета в общем порядке действует пятнадцатидневный рабочий срок рассмотрения жалобы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-service-refusal].fragments[material].text"
+    ]
+  },
+  {
+    "id": "fccc5c31845a7d4c",
+    "ru": "Приняли документы, но не назначили услугу · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-service-refusal].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-service-refusal].title"
+    ]
+  },
+  {
+    "id": "bf040cf72892af1f",
+    "ru": "В учебной выписке названы конкретная услуга и участвующий МФЦ. Для неё подтверждён приём независимо от места жительства. Эти условия не являются универсальным перечнем услуг всех центров.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-territorial-choice].fragments[material].text"
+    ]
+  },
+  {
+    "id": "9a59f79c5f8b0f0d",
+    "ru": "Прописка в другом районе · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-territorial-choice].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-territorial-choice].title"
+    ]
+  },
+  {
+    "id": "96726fce68b5e8da",
+    "ru": "Отказ подписан органом, выдавшим результат. МФЦ подтверждённо принял и передал заявление. Исправление акта и рассмотрение жалобы на его автора не переходят к МФЦ только из-за выдачи документа в центре.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-typo-issuer].fragments[material].text"
+    ]
+  },
+  {
+    "id": "1f86fdc42a8360a5",
+    "ru": "Опечатка в акте другого органа · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-typo-issuer].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-typo-issuer].title"
+    ]
+  },
+  {
+    "id": "3b88c9f8e2e3dc4f",
+    "ru": "Статья 7 закона № 210-ФЗ различает требование межведомственных сведений и возможность представить их по собственной инициативе. Условия дела подтверждают допустимость и надлежащую форму добровольного документа.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-voluntary-document].fragments[material].text"
+    ]
+  },
+  {
+    "id": "1f87652fe88601e5",
+    "ru": "Сведения принёс сам заявитель · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-mfc-voluntary-document].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-mfc-voluntary-document].title"
+    ]
+  },
+  {
+    "id": "59866040f8452720",
+    "ru": "Статья 14, часть / пункт 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-access].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "79f9273833ba688d",
+    "ru": "В ответе субъекту не включаются данные других субъектов, если нет законного основания их раскрыть. Право индивидуального доступа не означает доступ ко всему массиву.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-access].fragments[relevant].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-access.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-access.explain"
+    ]
+  },
+  {
+    "id": "c8ca792e0a758807",
+    "ru": "152-ФЗ · сведения других лиц",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-access].title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-access.title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-pd-access].title"
+    ]
+  },
+  {
+    "id": "c71c193fe783a75c",
+    "ru": "Статья 10.1, часть / пункт 1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "afa61cbdfb237477",
+    "ru": "В отдельном согласии субъект определяет перечень персональных данных по категориям. Оценка распространения требует проверки именно разрешённого состава.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].fragments[relevant].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.explain"
+    ]
+  },
+  {
+    "id": "1a516dbf9144735f",
+    "ru": "152-ФЗ · объём согласия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-consent.title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-pd-consent].title"
+    ]
+  },
+  {
+    "id": "d6307fba627ee250",
+    "ru": "Статья 3, часть / пункт 1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "b04638f3fe72f67b",
+    "ru": "Критерий персональных данных – отношение к прямо или косвенно определяемому физическому лицу. Название таблицы и удаление фамилии сами по себе этот вопрос не решают.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].fragments[relevant].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.explain"
+    ]
+  },
+  {
+    "id": "feaeb0c02acd4e26",
+    "ru": "Федеральный закон от 2006-07-27 № 152-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-consent].publisher",
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-access].publisher"
+    ]
+  },
+  {
+    "id": "abcd0f0bcfe2685e",
+    "ru": "152-ФЗ · определяемость лица",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-pd-definition].title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-pd-definition.title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-pd-definition].title"
+    ]
+  },
+  {
+    "id": "c45de2e6735e6857",
+    "ru": "В согласии названы имя и фотография. В открытой публикации появились также ограничения по здоровью. Наличие отдельной формы не расширяет согласие до любых категорий данных.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].fragments[material].text"
+    ]
+  },
+  {
+    "id": "d9abde6819978fb1",
+    "ru": "Согласие было на фотографию · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-consent-scope].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-privacy-consent-scope].title"
+    ]
+  },
+  {
+    "id": "37fe5189a1951291",
+    "ru": "На проверенном этапе неопределённый круг пользователей таблицу не видит. Доступ имеют названные получатели. В законе раскрытие неопределённому кругу отличается от предоставления определённому лицу или кругу лиц.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-restricted-access].fragments[material].text"
+    ]
+  },
+  {
+    "id": "538cf440674030a0",
+    "ru": "Таблица оказалась в моём кабинете · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-restricted-access].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-privacy-restricted-access].title"
+    ]
+  },
+  {
+    "id": "89b3dcb855cacf93",
+    "ru": "Требование касается распространения имени и фото в открытом альбоме. Оно не распространяется автоматически на служебные записи, которые могут обрабатываться на ином законном основании.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-withdrawal].fragments[material].text"
+    ]
+  },
+  {
+    "id": "9b7d2788602b56b8",
+    "ru": "Разрешение больше не действует · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-privacy-withdrawal].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-privacy-withdrawal].title"
+    ]
+  },
+  {
+    "id": "62bc91ed76d4bf36",
+    "ru": "Приложение поступило одновременно и раскрывает конкретный вопрос. Оно входит в учебный комплект и позволяет установить суть. Условия применения части 4.1 статьи 11 здесь не подтверждены, даже если первый лист сам по себе краток.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-readable-attachment].fragments[material].text"
+    ]
+  },
+  {
+    "id": "43db39f43caa0d65",
+    "ru": "Ответ находится в приложении · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-readable-attachment].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-readable-attachment].title"
+    ]
+  },
+  {
+    "id": "53e2c7249c71e258",
+    "ru": "Часть 5 статьи 11 связывает данное основание с обращениями в один и тот же орган или одному должностному лицу. Здесь текущий орган получает первое обращение по своему предмету; письма иных органов не заменяют это условие.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-other-authority].fragments[material].text"
+    ]
+  },
+  {
+    "id": "6a1a95d8af6e0469",
+    "ru": "Ответы были, но у другого органа · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-other-authority].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-repeat-other-authority].title"
+    ]
+  },
+  {
+    "id": "77c331c60d17072a",
+    "ru": "В учебном комплекте присутствуют только регистрационное уведомление, переадресация и промежуточный статус. Ответов по существу нет. Часть 5 статьи 11 не позволяет заменить проверку этих условий подсчётом исходящих.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-routing-only].fragments[material].text"
+    ]
+  },
+  {
+    "id": "5802af6c2e76652c",
+    "ru": "Три письма — ни одного ответа по существу · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-routing-only].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-repeat-routing-only].title"
+    ]
+  },
+  {
+    "id": "9b31f447aad7cae6",
+    "ru": "Статья 11, часть / пункт 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-scope].fragments[relevant].label"
+    ]
+  },
+  {
+    "id": "59474f51f9387103",
+    "ru": "Прекращение переписки по вопросу допускается уполномоченным лицом при совокупности предусмотренных условий. Проверяют ответы по существу, отсутствие нового и совпадение адресата; уведомляют о решении.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-scope].fragments[relevant].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-scope.findingOptions[support].text",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-scope.explain"
+    ]
+  },
+  {
+    "id": "6303b31ba9732a30",
+    "ru": "Федеральный закон от 2006-05-02 № 59-ФЗ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-scope].publisher"
+    ]
+  },
+  {
+    "id": "d865f6225e604769",
+    "ru": "59-ФЗ · условия прекращения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-repeat-scope].title",
+      "evidence-catalog:EVIDENCE_TASKS.v09-repeat-scope.title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-repeat-scope].title"
+    ]
+  },
+  {
+    "id": "5873d5c136c21768",
+    "ru": "В данной вымышленной ситуации невозможно определить суть после проверки всего текста и отсутствующих приложений. Часть 4.1 статьи 11 относится к этому основанию; часть 4 касается иной проблемы — нечитаемости текста.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-unclear-subject].fragments[material].text"
+    ]
+  },
+  {
+    "id": "83183aeaf64862c2",
+    "ru": "Все слова читаются, вопрос не определяется · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-unclear-subject].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-unclear-subject].title"
+    ]
+  },
+  {
+    "id": "93206e72e85c5ddc",
+    "ru": "Фамилия и адрес установлены; основной текст и возможные приложения не позволяют прочитать вопрос. Часть 4 статьи 11 предусматривает сообщение об этом, когда фамилия и почтовый адрес поддаются прочтению. Переадресация по догадке не заменяет уведомление.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-unreadable-body].fragments[material].text"
+    ]
+  },
+  {
+    "id": "b8af1a41bae167e6",
+    "ru": "Адрес читается, текст — нет · проверка основания",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v09-unreadable-body].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v09-unreadable-body].title"
+    ]
+  },
+  {
+    "id": "214fb7a053309d70",
+    "ru": "Предложен бесплатный плановый приём по действующему направлению заявительницы. Карточка профильного специалиста подтверждает соответствие применимому сроку ожидания. Это отдельное условие данного вымышленного дела. Платная ссылка расположена первой; во вложении — бесплатный маршрут по ОМС. Оплата не поставлена условием бесплатного приёма. Заявительница письмо получила, но вложение не открыла.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-free-slot].fragments[material].text"
+    ]
+  },
+  {
+    "id": "4b8691e8b45b2c23",
+    "ru": "Бесплатное время уже предложили · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-free-slot].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-oms-free-slot].title"
+    ]
+  },
+  {
+    "id": "1059282c54e18cc9",
+    "ru": "Направление действительно. Вид плановой помощи включён в базовую программу ОМС, организация участвует по соответствующему профилю. Эти условия установлены для учебного дела, а не для любой клиники. Отказ обоснован исключительно оформлением действующего полиса в другом субъекте РФ. Вместо рассмотрения направления предлагается платный приём. Сообщение получено в дату события.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-other-region].fragments[material].text"
+    ]
+  },
+  {
+    "id": "c872a17ad621fc6f",
+    "ru": "Полис выдан не здесь · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-other-region].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-oms-other-region].title"
+    ]
+  },
+  {
+    "id": "b92eea55f7aa2f50",
+    "ru": "Заявительница сообщает о резком текущем ухудшении состояния; дежурный фиксирует, что продолжать обычный разговор затруднительно. Клинический диагноз не установлен и не является задачей студента. Организовать связь с медицинской помощью и доступ специалистов; действовать по указаниям медицинского диспетчера в пределах роли. Учебная кнопка передачи сообщения не совершает настоящего вызова. Не требовать оплаты или полиса до вызова, не назначать лекарства.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-urgent-now].fragments[material].text"
+    ]
+  },
+  {
+    "id": "77900cb06c7dbb6c",
+    "ru": "Письмо потом, помощь сейчас · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-oms-urgent-now].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-oms-urgent-now].title"
+    ]
+  },
+  {
+    "id": "f7c04a84351bd41c",
+    "ru": "Запрошены справка о зарплате заявителя за один период и заверенная копия его приказа о приёме. Подача письменного заявления подтверждена. Других работников и их зарплаты заявление не касается. Для выдачи названных копий предложено оплатить «услугу заверения». Ответ относится к заявлению и получен в дату события. По условиям дела материалы ещё не выданы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].fragments[material].text"
+    ]
+  },
+  {
+    "id": "ada5f7a819ed929d",
+    "ru": "Сначала заплатите за копии · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-salary-documents-request].title"
+    ]
+  },
+  {
+    "id": "f4d7e958b1b719e1",
+    "ru": "Период один. Начислено: 60 000 рублей. Удержано по указанному в листке основанию: 7 800 рублей. К выплате: 52 200 рублей. Законность основания удержания не является предметом этого арифметического упражнения. Работник получил 20 000 и 32 200 рублей. Назначение платежей связывает их с тем же расчётным месяцем. Своевременность обоих поступлений установлена условиями дела.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].fragments[material].text"
+    ]
+  },
+  {
+    "id": "70b11c37d6f0d34b",
+    "ru": "Один перевод и весь расчётный месяц · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-salary-gross-net].title"
+    ]
+  },
+  {
+    "id": "b3c376a339026e3a",
+    "ru": "Сопоставленные сведения дела",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].fragments[material].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].fragments[material].label"
+    ]
+  },
+  {
+    "id": "0847204b0cdda457",
+    "ru": "Начисленная зарплата к выплате — 52 200 рублей. Работодатель письменно признал задержку на десять календарных дней. В представленном расчётном листке компенсация за задержку не начислена. Все сведения относятся к одному работнику и периоду. Поступило 52 200 рублей; назначение — заработная плата за тот же период. Других поступлений, включая компенсацию, в представленном отрезке выписки нет. Последний платёж и письмо работодателя получены в дату события.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].fragments[material].text"
+    ]
+  },
+  {
+    "id": "f427c69605265ae6",
+    "ru": "Правовая основа и пределы применения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].fragments[norm].label",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].fragments[norm].label"
+    ]
+  },
+  {
+    "id": "fe69e794744ece84",
+    "ru": "Учебный материал; внешняя ссылка ведёт к правовой основе",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].kind",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].kind"
+    ]
+  },
+  {
+    "id": "be9cea9c99c6a461",
+    "ru": "Первый фрагмент — авторский материал дела, не опубликованный реальный акт учреждения. Второй — краткое изложение нормы. Ссылка на закон не подтверждает вымышленный инцидент.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].representation",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].representation"
+    ]
+  },
+  {
+    "id": "978dd9462f5ec916",
+    "ru": "Сведения об объектах и событиях действуют только в этой вымышленной ситуации.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-gross-net].scope",
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-documents-request].scope"
+    ]
+  },
+  {
+    "id": "2677c97654fd37df",
+    "ru": "Зарплата пришла. Компенсация — нет · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-salary-late-compensation].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-salary-late-compensation].title"
+    ]
+  },
+  {
+    "id": "c08b9f55f614b036",
+    "ru": "В учебном задании по Т-12 предусмотрены замена трубопровода, восстановление покрытия и вывоз материалов. Временный обход проверен и остаётся безопасным. Срок отдельной стадии определяется подтверждённым графиком исполнителя. Принято испытание нового трубопровода. В акт не включены тротуарное покрытие и вывоз материалов. Сообщение исполнителя в дату события ошибочно называет завершённым весь комплекс.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-restoration].fragments[material].text"
+    ]
+  },
+  {
+    "id": "933d01e1a065deda",
+    "ru": "Трубу заменили, тротуар не восстановили · основание вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_RECORDS[v10-sidewalk-restoration].title",
+      "source-index:SOURCE_INDEX.entries[evidence:v10-sidewalk-restoration].title"
+    ]
+  }
+]

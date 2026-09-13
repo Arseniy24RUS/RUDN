@@ -1,0 +1,1065 @@
+[
+  {
+    "id": "1743ee0456c04ef8",
+    "ru": "Проверить регистрацию и выделить оба вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[register].title"
+    ]
+  },
+  {
+    "id": "3933f2bbbc1e005c",
+    "ru": "Подготовить направление копий обращения по компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[route].title"
+    ]
+  },
+  {
+    "id": "17f9ab8f37423281",
+    "ru": "Установить компетентного адресата для каждого вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[scope].title"
+    ]
+  },
+  {
+    "id": "d2e5387271913b1d",
+    "ru": "Вести контроль результата отдельно по каждому вопросу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].actions[track].title"
+    ]
+  },
+  {
+    "id": "a704736bdcb05eae",
+    "ru": "Письменное обращение поступило в приёмную органа исполнительной власти Москвы. Оно содержит два самостоятельных вопроса. Приложены условные материалы без настоящих персональных данных. Предметы и компетенцию нужно разграничить.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].brief"
+    ]
+  },
+  {
+    "id": "d61b028f482ac0fc",
+    "ru": "Рассчитайте последний день направления копий по компетенции нескольких органов. Это не дата окончательного ответа по каждому из вопросов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].calendar.context"
+    ]
+  },
+  {
+    "id": "8fffce911a1db7d6",
+    "ru": "59-ФЗ, статья 8, часть 4",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].calendar.source"
+    ]
+  },
+  {
+    "id": "343f0cd684ac775f",
+    "ru": "Крайняя дата направления копий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].calendar.title"
+    ]
+  },
+  {
+    "id": "c11d55e77efc6e84",
+    "ru": "Копии обращения направляются соответствующим компетентным органам; результаты проверяются по каждому вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].coach.research",
+      "cases:CASE_TEMPLATES[several-issues].knowledge.options[apply].text",
+      "cases:CASE_TEMPLATES[several-issues].knowledge.explain"
+    ]
+  },
+  {
+    "id": "be9c250988d739c8",
+    "ru": "Необоснованное распространение чувствительного приложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].criticalRules[broadcast].message"
+    ]
+  },
+  {
+    "id": "4b68a089fed2ceaa",
+    "ru": "1. Проверить изменение организации автобусного движения. 2. Проверить правовое основание открытой публикации телефона и медицинских сведений заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[combined].text"
+    ]
+  },
+  {
+    "id": "7f9293669a6384c5",
+    "ru": "Письмо с двумя требованиями",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[combined].title"
+    ]
+  },
+  {
+    "id": "89f79b2d2f304007",
+    "ru": "В учебной модели транспортный вопрос передаётся профильному органу Москвы, вопрос защиты прав субъекта данных – уполномоченному органу в этой сфере. Официальные наименования и полномочия проверяются отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[competence].text"
+    ]
+  },
+  {
+    "id": "fcce78a4f67ae419",
+    "ru": "Материалы о разграничении",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[competence].title"
+    ]
+  },
+  {
+    "id": "81f7dfae38a2bd28",
+    "ru": "В реальной работе доступ к приложению ограничивается. Здесь медицинские сведения и телефон не воспроизводятся.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[personal].text"
+    ]
+  },
+  {
+    "id": "c22bc87db1b890d3",
+    "ru": "Условное чувствительное приложение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].documents[personal].title"
+    ]
+  },
+  {
+    "id": "f0d27c74d0baa65e",
+    "ru": "При нескольких вопросах нужно обеспечить рассмотрение каждого, а не требовать автоматически новые обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].factTask.explain",
+      "cases:CASE_TEMPLATES[several-issues].coach.docs",
+      "cases:CASE_TEMPLATES[several-issues].contrast.difference"
+    ]
+  },
+  {
+    "id": "752e164005529026",
+    "ru": "Обращение отсутствует, пока гражданин не перепишет два отдельных письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].factTask.options[new].text"
+    ]
+  },
+  {
+    "id": "a8c76661dce6050b",
+    "ru": "Только транспортный вопрос, остальной текст не относится к обращению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].factTask.options[one].text"
+    ]
+  },
+  {
+    "id": "51828ae3893bbd62",
+    "ru": "Два самостоятельных вопроса с разной компетенцией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].factTask.options[two].text"
+    ]
+  },
+  {
+    "id": "3062db7b6ae154b0",
+    "ru": "Как устроен предмет обращения?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].factTask.prompt"
+    ]
+  },
+  {
+    "id": "a07caae6ddb29ecb",
+    "ru": "Контроль относится к каждому поставленному вопросу, а не только к числу полученных писем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].followup.explain"
+    ]
+  },
+  {
+    "id": "69a5c655f9d8d7f2",
+    "ru": "Транспортный орган ответил по движению автобуса. Подтверждения рассмотрения вопроса персональных данных пока нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].followup.intro"
+    ]
+  },
+  {
+    "id": "50b263c196e493f3",
+    "ru": "Потребовать новое обращение по персональным данным, не проверив направление старого.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].followup.options[again].text"
+    ]
+  },
+  {
+    "id": "5072565e21a6ee92",
+    "ru": "Закрыть весь файл по полученному транспортному ответу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].followup.options[close].text"
+    ]
+  },
+  {
+    "id": "76da35047a5cc86b",
+    "ru": "Отдельно проверить второй маршрут; один ответ не закрывает оба вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].followup.options[keep].text"
+    ]
+  },
+  {
+    "id": "e516730d2de395b1",
+    "ru": "Компетенция первого выбранного адресата автоматически охватывает всё письмо.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].knowledge.options[broad].text"
+    ]
+  },
+  {
+    "id": "a09ac4200ea3e67b",
+    "ru": "Гражданин всегда обязан переписать несколько новых обращений.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].knowledge.options[none].text"
+    ]
+  },
+  {
+    "id": "7cfa8a4037cdfc3a",
+    "ru": "Найдите правило направления обращения, если его вопросы относятся к компетенции нескольких органов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "8def38b88d81af08",
+    "ru": "Автобус у дома стал ходить намного реже. И ещё: районное учреждение разместило мой телефон и сведения о здоровье на открытой странице. Я написал об этом одним письмом. Мне теперь нужно писать два новых?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].opening"
+    ]
+  },
+  {
+    "id": "d4ddcf79322d23bc",
+    "ru": "Мой телефон рядом с медицинскими сведениями. Условную копию я приложил отдельно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[data].answer"
+    ]
+  },
+  {
+    "id": "935822870379a5be",
+    "ru": "Второй предмет связан с распространением персональных данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[data].fact"
+    ]
+  },
+  {
+    "id": "e463a0fd9abb8d83",
+    "ru": "Что размещено в открытом доступе?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[data].text"
+    ]
+  },
+  {
+    "id": "8528a6406898109a",
+    "ru": "Да. Ответ только про автобус не решит вопрос с публикацией.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[goals].answer"
+    ]
+  },
+  {
+    "id": "92d6966a80180f8e",
+    "ru": "Заявитель просит рассмотреть оба вопроса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[goals].fact"
+    ]
+  },
+  {
+    "id": "2b4837bdad60f703",
+    "ru": "По обоим вопросам нужен результат?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[goals].text"
+    ]
+  },
+  {
+    "id": "bf8d576647e1b908",
+    "ru": "Прошу проверить организацию движения городского автобуса, а не спор о штрафе или билетах.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[transport].answer"
+    ]
+  },
+  {
+    "id": "6865aa44329648fe",
+    "ru": "Первый предмет – организация автобусного движения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[transport].fact"
+    ]
+  },
+  {
+    "id": "8fe0576ac46974e2",
+    "ru": "Какой вопрос связан с транспортом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].questions[transport].text"
+    ]
+  },
+  {
+    "id": "0448831113d222ed",
+    "ru": "Вернуть письмо для обязательного разделения самим заявителем.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].routes[refile].text"
+    ]
+  },
+  {
+    "id": "85ba0c8f597a43c5",
+    "ru": "Направить копии соответствующим компетентным органам, разграничив вопросы и необходимые приложения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].routes[split].text"
+    ]
+  },
+  {
+    "id": "fe868e35bfd407d9",
+    "ru": "Передать всё только транспортному органу и считать вопрос данных решённым.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].routes[transport].text"
+    ]
+  },
+  {
+    "id": "4829336e6cdaf5b5",
+    "ru": "В одном письме – два вопроса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[several-issues].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[several-issues].title"
+    ]
+  },
+  {
+    "id": "c6ca2f1516cbda12",
+    "ru": "Разграничение компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].topic",
+      "cases:CASE_TEMPLATES[several-issues].tag",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].topic"
+    ]
+  },
+  {
+    "id": "94962d98b7a13614",
+    "ru": "При маршрутизации требуется минимизация раскрытия сведений. Удобство рассылки не является самостоятельным правовым основанием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].trap.explain"
+    ]
+  },
+  {
+    "id": "cddfa8c55986cee6",
+    "ru": "Разослать все приложения всем органам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].trap.options[agree].text"
+    ]
+  },
+  {
+    "id": "67e9e19dfadc3c9e",
+    "ru": "Удалить чувствительное приложение из дела без сохранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].trap.options[delete].text"
+    ]
+  },
+  {
+    "id": "d48ed490bcb620f7",
+    "ru": "Передавать приложения только в необходимом объёме и с учётом компетенции адресата.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].trap.options[scope].text"
+    ]
+  },
+  {
+    "id": "d4ee0d810f89c497",
+    "ru": "Помощник: «Для удобства прикрепим медицинские сведения ко всем исходящим письмам».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-issues].trap.text"
+    ]
+  },
+  {
+    "id": "b7fefdae0aa44826",
+    "ru": "Выделить два предмета обращения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[a0].title"
+    ]
+  },
+  {
+    "id": "306554f9a2f99230",
+    "ru": "Сопоставить приложения с компетенциями",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[a1].title"
+    ]
+  },
+  {
+    "id": "c6ad9eecd95ecbdf",
+    "ru": "Направить необходимые комплекты по надлежащим каналам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[a2].title"
+    ]
+  },
+  {
+    "id": "3aa4505096439835",
+    "ru": "Ограничить лишнее распространение частных сведений",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[a3].title"
+    ]
+  },
+  {
+    "id": "8168f7e805cce7a6",
+    "ru": "Поставить отдельный контроль по обоим вопросам",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[a4].title"
+    ]
+  },
+  {
+    "id": "09312a779f792e1c",
+    "ru": "Опубликовать медицинское приложение в общей переписке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[b0].title"
+    ]
+  },
+  {
+    "id": "bb984e88b3ee09d5",
+    "ru": "Закрыть второй вопрос без направления необходимых материалов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].actions[b1].title",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1dc5172fc1972e40",
+    "ru": "Все люди, документы и события этого дела вымышлены. Два вопроса относятся к разной компетенции, обе компетенции в учебной схеме установлены. Для транспортного вопроса достаточны адрес, маршрут и расписание; медицинские сведения к нему не относятся. Вопрос о данных требует соответствующих материалов по защищённому надлежащему маршруту. Необходимые сведения для рассмотрения не удаляются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].brief"
+    ]
+  },
+  {
+    "id": "ffdbdd40a4702f0e",
+    "ru": "Крайний день направления копий по нескольким компетенциям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].calendar.title",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].calendar.title"
+    ]
+  },
+  {
+    "id": "196e324516ea8b07",
+    "ru": "Минимизация не означает удаление нужных доказательств. Проверяется соответствие состава каждого направления его предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].coach.plan",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].contrast.difference"
+    ]
+  },
+  {
+    "id": "c3166b48cd9b2b66",
+    "ru": "Статья 6 закона № 59-ФЗ охраняет сведения частной жизни из обращения. Направление обращения органу, в чью компетенцию входит решение вопроса, само по себе не считается разглашением. Это не разрешает рассылать все чувствительные приложения любым адресатам: состав передаваемых материалов должен соответствовать предмету и полномочиям. Необходимые сведения не следует изымать настолько, что рассмотрение вопроса становится невозможным.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].coach.research",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].knowledge.explain",
+      "cases:SOURCES[v16-norm-confidential].text"
+    ]
+  },
+  {
+    "id": "f40650718206c873",
+    "ru": "Черновик рассылки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d0].title"
+    ]
+  },
+  {
+    "id": "06b20e8d17e79cc3",
+    "ru": "Опись обращения Д-37",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d1].title"
+    ]
+  },
+  {
+    "id": "60137a5659c57215",
+    "ru": "Схема компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d2].title"
+    ]
+  },
+  {
+    "id": "e01c1096ec85d7b0",
+    "ru": "Разные предметы требуют разных относимых комплектов, а не одинакового полного архива для всех. Минимизация не означает удаление нужных доказательств. Проверяется соответствие состава каждого направления его предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.explain"
+    ]
+  },
+  {
+    "id": "6d4c4914b5dcb18a",
+    "ru": "Разные предметы требуют разных относимых комплектов, а не одинакового полного архива для всех.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "22146b767108bbc1",
+    "ru": "Любому исполнителю всегда нужен весь архив независимо от полномочий.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "15829b7db247606d",
+    "ru": "Защита данных требует удалить все доказательства по второму вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "3923394d47519d4c",
+    "ru": "Обеспечить передачу необходимых материалов второму адресату и продолжить отдельный контроль. Минимизация не означает удаление нужных доказательств. Проверяется соответствие состава каждого направления его предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].followup.explain"
+    ]
+  },
+  {
+    "id": "9be6c2f0ab8f6d0e",
+    "ru": "Ответ транспортников получен. Второй адресат сообщает, что нужное приложение ему вообще не передали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].followup.intro"
+    ]
+  },
+  {
+    "id": "d5a3d1c4a62c37cf",
+    "ru": "Обеспечить передачу необходимых материалов второму адресату и продолжить отдельный контроль.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d657612b428abb11",
+    "ru": "Считать весь материал исполненным по ответу транспортников.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "8f8a3b3446b0aae0",
+    "ru": "Отправить полный архив во все отделы на всякий случай.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "b1abc77adcb949d9",
+    "ru": "Убрать второй вопрос из ответа ради сокращения комплекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "17accfc9d22df1c6",
+    "ru": "Найдите нормативное основание следующего действия: Сформировать относимые комплекты каждому компетентному адресату и сохранить контроль обоих вопросов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "cc396530ef34aba3",
+    "ru": "В одном письме я написал о маршруте автобуса и о публикации медицинских данных ребёнка. Всё письмо с медицинскими приложениями отправили транспортникам.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].opening",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q2].answer",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "99f48b7b7c069fea",
+    "ru": "Вопрос 1: отсутствие остановки маршрута М-4. Приложение А: схема маршрута. Вопрос 2: распространение медицинских сведений ребёнка. Приложение Б: подтверждающий материал с чувствительными данными.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q0].answer",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q0].fact",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d1].text"
+    ]
+  },
+  {
+    "id": "24ef0d217babcba8",
+    "ru": "Транспортное подразделение рассматривает вопрос 1 по приложению А. Вопрос 2 направляется уполномоченному по соответствующей компетенции с необходимыми материалами; транспортникам приложение Б не требуется.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q1].answer",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q1].fact",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d2].text"
+    ]
+  },
+  {
+    "id": "b6d0bafc8fb54476",
+    "ru": "Один полный архив с обоими приложениями подготовлен для всех адресатов без разграничения состава.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q3].answer",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].questions[q3].fact",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d0].text"
+    ]
+  },
+  {
+    "id": "0bd279c8b66ff92b",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Два вопроса относятся к разной компетенции, обе компетенции в учебной схеме установлены. Для транспортного вопроса достаточны адрес, маршрут и расписание; медицинские сведения к нему не относятся. Вопрос о данных требует соответствующих материалов по защищённому надлежащему маршруту. Необходимые сведения для рассмотрения не удаляются.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].role.text"
+    ]
+  },
+  {
+    "id": "11670a8a13b1e4fe",
+    "ru": "Сформировать относимые комплекты каждому компетентному адресату и сохранить контроль обоих вопросов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].contrast.decision"
+    ]
+  },
+  {
+    "id": "552c609d2e8e93ea",
+    "ru": "Две проблемы, разные приложения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[several-minimum-attachments].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[several-minimum-attachments].title"
+    ]
+  },
+  {
+    "id": "a785f09b7eb776fc",
+    "ru": "Сформировать относимые комплекты каждому компетентному адресату и сохранить контроль обоих вопросов. Минимизация не означает удаление нужных доказательств. Проверяется соответствие состава каждого направления его предмету.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].trap.explain"
+    ]
+  },
+  {
+    "id": "3bf47702cf196769",
+    "ru": "Разослать чувствительный материал транспортному подразделению без необходимости.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-minimum-attachments].trap.text",
+      "cases:CASE_TEMPLATES[several-minimum-attachments].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "7e6f9ec2da628d47",
+    "ru": "Сопоставить каждый вопрос с полученными материалами",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[a0].title"
+    ]
+  },
+  {
+    "id": "695ad83d853d9d4f",
+    "ru": "Сохранить подтверждённый результат по первому вопросу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[a1].title"
+    ]
+  },
+  {
+    "id": "cf2b7d13020c7eca",
+    "ru": "Восстановить контроль по нерассмотренной части",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[a2].title"
+    ]
+  },
+  {
+    "id": "08628fb57f40d899",
+    "ru": "Сообщить гражданину фактическое состояние без ложного закрытия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d380e97b06f52d1b",
+    "ru": "Проверить относимый ответ по освещению и исходный срок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[a4].title"
+    ]
+  },
+  {
+    "id": "c9b708a0d7f52555",
+    "ru": "Закрыть второй вопрос по нерелевантному акту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[b0].title"
+    ]
+  },
+  {
+    "id": "3268da1e0ff462e6",
+    "ru": "Удалить первоначальную дату ради нового срока",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].actions[b1].title",
+      "cases:CASE_TEMPLATES[several-partial-response].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1ff9acdb0f053bf4",
+    "ru": "Все люди, документы и события этого дела вымышлены. Оба вопроса отдельно поставлены в принятом обращении и относятся к установленным компетенциям. Акт подтверждает только ремонт ямы; освещение и его проверка в акте не упомянуты. Продления срока по нерассмотренной части не оформлялось. Дополнительное письмо гражданина указывает на пропуск, не отменяя первоначальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].brief"
+    ]
+  },
+  {
+    "id": "8aea77143887cd39",
+    "ru": "Это контроль полноты, а не новая жалоба на уже устранённую яму. Объединение вопросов в одном письме не делает их одним действием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].coach.plan",
+      "cases:CASE_TEMPLATES[several-partial-response].contrast.difference"
+    ]
+  },
+  {
+    "id": "5a1f612c7ed74d04",
+    "ru": "Карточка контроля",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d0].title"
+    ]
+  },
+  {
+    "id": "d3eb4c261aadbcd4",
+    "ru": "Обращение О-37",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d1].title"
+    ]
+  },
+  {
+    "id": "266043c78f1045a3",
+    "ru": "Ответ и акт ремонта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d2].title"
+    ]
+  },
+  {
+    "id": "42c147d343ada86d",
+    "ru": "Первый предмет разрешён, по второму результат не подтверждён и контроль утрачен. Это контроль полноты, а не новая жалоба на уже устранённую яму. Объединение вопросов в одном письме не делает их одним действием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.explain"
+    ]
+  },
+  {
+    "id": "64c1d19bd424a67d",
+    "ru": "Первый предмет разрешён, по второму результат не подтверждён и контроль утрачен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c27d9b6b3a0a48e4",
+    "ru": "Любой результат по письму позволяет закрыть всё обращение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "cc35a3fd44ec1aeb",
+    "ru": "Каждое напоминание гражданина автоматически начинает срок заново.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-partial-response.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "68abe4475e329f09",
+    "ru": "Проверить результат по указанному месту, не засчитывая соседний фонарь. Это контроль полноты, а не новая жалоба на уже устранённую яму. Объединение вопросов в одном письме не делает их одним действием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].followup.explain"
+    ]
+  },
+  {
+    "id": "0ee899ab14888135",
+    "ru": "Ответственный прислал справку о фонаре в соседнем дворе. Подход из обращения в ней не указан.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].followup.intro"
+    ]
+  },
+  {
+    "id": "e32cfe0838756b62",
+    "ru": "Проверить результат по указанному месту, не засчитывая соседний фонарь.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "d5da2bc8169f8eb9",
+    "ru": "Закрыть вопрос по любому исправному фонарю.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b16f4386d7b5ad86",
+    "ru": "Попросить гражданина подать все документы с нуля.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "eb23b23c6ef43289",
+    "ru": "Перезапустить общий срок из-за напоминания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "95aee4fa463bc394",
+    "ru": "Отправить тот же акт ямы как ответ об освещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "f693a8deb730cae7",
+    "ru": "Найдите нормативное основание следующего действия: Продолжить рассмотрение пропущенной части в её исходном контексте и проверить полноту итогового ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "25ed68ea388c0a0c",
+    "ru": "Я написал о яме и неисправном освещении. Яму заделали, о свете ничего не сказали. В системе стоит «всё исполнено».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].opening",
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q2].answer",
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "7b3c06868c20f0e9",
+    "ru": "Два самостоятельных вопроса: яма у дома и отсутствие освещения на подходе. Оба содержат достаточное описание места.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q0].answer",
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q0].fact",
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d1].text"
+    ]
+  },
+  {
+    "id": "754c453f396a9abe",
+    "ru": "Акт относится к заделке ямы. В ответе описан только дорожный ремонт; сведений об освещении нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q1].answer",
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q1].fact",
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d2].text"
+    ]
+  },
+  {
+    "id": "dea7b019471a1075",
+    "ru": "Статус всего обращения изменён на «исполнено» после одного акта. Поручение по свету остаётся без ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q3].answer",
+      "cases:CASE_TEMPLATES[several-partial-response].questions[q3].fact",
+      "cases:CASE_TEMPLATES[several-partial-response].documents[d0].text"
+    ]
+  },
+  {
+    "id": "c28c33ce7c3ddde8",
+    "ru": "Вы готовите решение и действия в пределах указанной роли. Условия о компетенции установлены материалами. Не назначаете лечение, не применяете реальные санкции и не отправляете настоящие обращения. Оба вопроса отдельно поставлены в принятом обращении и относятся к установленным компетенциям. Акт подтверждает только ремонт ямы; освещение и его проверка в акте не упомянуты. Продления срока по нерассмотренной части не оформлялось. Дополнительное письмо гражданина указывает на пропуск, не отменяя первоначальную регистрацию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].role.text"
+    ]
+  },
+  {
+    "id": "6dfa825206c90303",
+    "ru": "Продолжить рассмотрение пропущенной части в её исходном контексте и проверить полноту итогового ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].sourceTask.prompt",
+      "cases:CASE_TEMPLATES[several-partial-response].knowledge.options[0].text",
+      "cases:CASE_TEMPLATES[several-partial-response].contrast.decision"
+    ]
+  },
+  {
+    "id": "251c6c45230ad2c2",
+    "ru": "Ответ на первый вопрос — не на всё письмо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[several-partial-response].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[several-partial-response].title"
+    ]
+  },
+  {
+    "id": "a059b6d8e51172bf",
+    "ru": "Продолжить рассмотрение пропущенной части в её исходном контексте и проверить полноту итогового ответа. Это контроль полноты, а не новая жалоба на уже устранённую яму. Объединение вопросов в одном письме не делает их одним действием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].trap.explain"
+    ]
+  },
+  {
+    "id": "d7b0c27603506374",
+    "ru": "Акт ремонта ямы не подтверждает рассмотрение вопроса об освещении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-partial-response].trap.text"
+    ]
+  },
+  {
+    "id": "55a15013800e7c90",
+    "ru": "Определить оба предмета и обжалуемое лицо",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[a0].title"
+    ]
+  },
+  {
+    "id": "2dd20becbb9a14ae",
+    "ru": "Назначить надлежащие раздельные маршруты",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[a1].title"
+    ]
+  },
+  {
+    "id": "a0e3540cc5f7f036",
+    "ru": "Получить необходимые материалы и пояснения без саморассмотрения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[a2].title"
+    ]
+  },
+  {
+    "id": "ce5c56b4720305fa",
+    "ru": "Сохранить информирование гражданина по двум направлениям",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[a3].title"
+    ]
+  },
+  {
+    "id": "47e41627ab44ef17",
+    "ru": "Проверить и результат ремонта, и самостоятельное решение по жалобе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[a4].title"
+    ]
+  },
+  {
+    "id": "27912f1fab9a50c6",
+    "ru": "Признать виновность заранее только со слов заявителя",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[b0].title"
+    ]
+  },
+  {
+    "id": "4dcc555b6415e709",
+    "ru": "Закрыть жалобу подписью самого обжалуемого лица",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].actions[b1].title",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1a61356317995494",
+    "ru": "Все люди, документы и события этого дела вымышлены. Применяется общий порядок обращений, не специальное процессуальное обжалование. В одном документе содержатся просьба о ремонте и жалоба на действия конкретного должностного лица И-7. Надлежащий независимый маршрут по жалобе задан. Исполнитель технических работ может получить относимую заявку; окончательное рассмотрение жалобы И-7 не поручается.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].brief"
+    ]
+  },
+  {
+    "id": "9eba9e46d7f9343c",
+    "ru": "Совпадение объекта не делает техническую заявку и жалобу на должностное лицо одним предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].coach.plan",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].contrast.difference"
+    ]
+  },
+  {
+    "id": "323bba75ddad9027",
+    "ru": "Резолюция",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d0].title"
+    ]
+  },
+  {
+    "id": "520fb40a3ca0fafb",
+    "ru": "Письмо Д-38",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d1].title"
+    ]
+  },
+  {
+    "id": "26711ce67cc4535f",
+    "ru": "Материалы прежнего ответа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f298ba545d18e25e",
+    "ru": "Нужно разделить техническое исполнение и независимое рассмотрение жалобы на прежние действия. Совпадение объекта не делает техническую заявку и жалобу на должностное лицо одним предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.explain"
+    ]
+  },
+  {
+    "id": "f49d668dfdd435ec",
+    "ru": "Нужно разделить техническое исполнение и независимое рассмотрение жалобы на прежние действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].factTask.options[0].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "1aa9eefd51cef7a7",
+    "ru": "Ремонт автоматически устраняет необходимость рассмотреть жалобу на ответ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "98fba9b3607dccc4",
+    "ru": "Обжалуемому лицу нельзя даже предложить дать пояснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v16-several-repair-and-complaint.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "29097f10313429e5",
+    "ru": "Сохранить ремонт как подтверждённый результат и продолжить надлежащее рассмотрение жалобы. Совпадение объекта не делает техническую заявку и жалобу на должностное лицо одним предметом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].followup.explain"
+    ]
+  },
+  {
+    "id": "b4b6f2410996f6ff",
+    "ru": "Дорожку восстановили. Решения о прежнем ответе нет, но весь документ закрыт.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].followup.intro"
+    ]
+  },
+  {
+    "id": "e4a28ff1e1311560",
+    "ru": "Сохранить ремонт как подтверждённый результат и продолжить надлежащее рассмотрение жалобы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "e8920a1f90946e49",
+    "ru": "Считать ремонт ответом на все доводы о прежних действиях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "ebda29c2b684c66a",
+    "ru": "Отменить уже выполненный ремонт ради проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "9da15536a3ada879",
+    "ru": "Игнорировать ремонт до окончания всей проверки ответа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "edf2d421506b8d19",
+    "ru": "Найдите нормативное основание следующего действия: Организовать ремонтный маршрут отдельно от надлежащего рассмотрения жалобы, запросив относимые материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "1acc11f1df96029b",
+    "ru": "Мне нужно восстановить дорожку и проверить, почему инспектор сообщил о выполнении, хотя работы не было. Всё письмо опять поручили ему.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].opening",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q2].answer",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "37b52b05610d610c",
+    "ru": "Вопрос А: повреждённая дорожка. Вопрос Б: достоверность прежнего ответа должностного лица И-7 о завершении работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q0].answer",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q0].fact",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d1].text"
+    ]
+  },
+  {
+    "id": "eaa1a44273306322",
+    "ru": "И-7 сообщил об исполнении. Датированные материалы показывают, что объект не был восстановлен на указанную дату; окончательные причины и ответственность ещё не установлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q1].answer",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q1].fact",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d2].text"
+    ]
+  },
+  {
+    "id": "dac915dbf425c717",
+    "ru": "Оба вопроса полностью переданы И-7 для самостоятельного окончательного ответа. Независимой проверки жалобы не назначено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q3].answer",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].questions[q3].fact",
+      "cases:CASE_TEMPLATES[several-repair-and-complaint].documents[d0].text"
+    ]
+  }
+]

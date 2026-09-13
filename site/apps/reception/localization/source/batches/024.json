@@ -1,0 +1,1157 @@
+[
+  {
+    "id": "a210b925f2e08cf3",
+    "ru": "Сняты E-3 и E-4 с объекта H-21, указаны маркировка, место хранения и ответственный реставратор. В журнале нет списания или уничтожения; подтверждений выхода за согласованный объём в материалах нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d1].text"
+    ]
+  },
+  {
+    "id": "59b53a45a33f02b6",
+    "ru": "Журнал передачи элементов",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4a7ac2bee17201e1",
+    "ru": "Автор сообщения пишет «всё сносят», но не указывает номера снятых деталей и не видел разрешительный комплект. Это сообщение объясняет тревогу, но не заменяет документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d2].text"
+    ]
+  },
+  {
+    "id": "352ddb2cc17b3d6a",
+    "ru": "Публикация в домовом чате",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].documents[d2].title"
+    ]
+  },
+  {
+    "id": "d4363b34345df788",
+    "ru": "Представленные документы подтверждают разрешённое временное снятие E-3 и E-4; уничтожение или выход за согласованный объём по этим материалам не установлен. В исходной истории разрешение не охватывает спорную лестницу; здесь комплект относится к снятым элементам. Смена решения основана на совпадении объекта, объёма и фактического этапа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.explain"
+    ]
+  },
+  {
+    "id": "f5c97787ca9c0bd2",
+    "ru": "Представленные документы подтверждают разрешённое временное снятие E-3 и E-4; уничтожение или выход за согласованный объём по этим материалам не установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "8579eb7edc1182ca",
+    "ru": "Охранный статус запрещает любое снятие деталей даже для разрешённой реставрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "9caf75f55dedf4c8",
+    "ru": "Любое разрешение на фасад допускает снятие всех его элементов без учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "d3d2a3291c62ffe8",
+    "ru": "Проверить основание работ по E-7 отдельно, не распространить прежний вывод на новый элемент. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].followup.explain"
+    ]
+  },
+  {
+    "id": "6b410ad61003cbac",
+    "ru": "В следующем журнале впервые появился E-7, отсутствующий в представленном согласованном объёме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].followup.intro"
+    ]
+  },
+  {
+    "id": "f243f1a49650bab4",
+    "ru": "Проверить основание работ по E-7 отдельно, не распространить прежний вывод на новый элемент.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "ee26d320aa3d1440",
+    "ru": "Принять E-7 без проверки, поскольку подрядчик уже работал на фасаде.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b472fc64cb7e8275",
+    "ru": "Объявить уничтоженными и E-3, и E-4 без новых сведений о них.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "55469658ee111d9e",
+    "ru": "Порядок работ по сохранению охватывает как включённые в реестр, так и выявленные объекты. В учебном профиле проверяются разрешение на конкретные работы, соответствующая проектная документация и предусмотренный надзор. Лицензия подрядчика и согласие собственника не заменяют разрешительный комплект на объект. Перечень и редакция нормы зафиксированы в справочном пакете, а не обновляются заменой года задачи.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].knowledge.explain",
+      "cases:CASE_TEMPLATES[heritage-identified-status].knowledge.explain",
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].knowledge.explain"
+    ]
+  },
+  {
+    "id": "db5da498e7662760",
+    "ru": "Проверить временное снятие конкретных деталей по разрешённому объёму и данным их учёта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "1c405269d33e10a1",
+    "ru": "Считать любое временное снятие на охраняемом фасаде недопустимым независимо от проекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "3b2ae8c5ad2f7e25",
+    "ru": "Принять разрешение на отдельные элементы за разрешение любых следующих работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "68543584d09c9bbe",
+    "ru": "Найдите норму: Документы на конкретные работы по сохранению наследия. Укажите реквизиты акта и статью, затем определите применение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].knowledge.prompt",
+      "cases:CASE_TEMPLATES[heritage-identified-status].knowledge.prompt",
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "41e40a716752ebe3",
+    "ru": "Я увидел, что с фасада снимают детали. Дом охраняется, значит любую такую работу нужно немедленно запретить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].opening"
+    ]
+  },
+  {
+    "id": "e68af4eec95ca451",
+    "ru": "Сопоставить фактический этап с разрешённым объёмом и дать предметное разъяснение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].procedures[0].text"
+    ]
+  },
+  {
+    "id": "af3d57bdf154c7a4",
+    "ru": "Автоматически квалифицировать снятие как снос здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].procedures[1].text"
+    ]
+  },
+  {
+    "id": "49e125fbc198ce32",
+    "ru": "Снять охранный статус, раз реставрация разрешена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].procedures[2].text"
+    ]
+  },
+  {
+    "id": "bff448cc6947ca73",
+    "ru": "В журнале именно E-3 и E-4.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "a83c954712918c74",
+    "ru": "Номера совпадают с проектом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "e2dde8bb734f520b",
+    "ru": "Какие детали сняты?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q0].text"
+    ]
+  },
+  {
+    "id": "0ade57547cbb005a",
+    "ru": "Да, разрешение и согласованный проект представлены целиком в учебном деле.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "92127784b866e74c",
+    "ru": "Условия разрешённого объёма заданы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "5bdeee7da249ecba",
+    "ru": "Есть ли документ на эти работы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q1].text"
+    ]
+  },
+  {
+    "id": "16d0068155ed5be8",
+    "ru": "На реставрацию с маркировкой и местом хранения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "b632bd7263f1f7ea",
+    "ru": "Снятие не равно подтверждённому уничтожению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "2fd5c87bc8985707",
+    "ru": "Куда переданы элементы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q2].text"
+    ]
+  },
+  {
+    "id": "f75212fd188d3eb8",
+    "ru": "Сейчас нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "1db8cc14c046b95f",
+    "ru": "Нельзя выходить за установленные обстоятельства.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "37408c11a0aeab7f",
+    "ru": "Есть ли сведения о других работах?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].questions[q3].text"
+    ]
+  },
+  {
+    "id": "c1ad7a61de51660a",
+    "ru": "Специалист приёмной регионального органа охраны культурного наследия",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].role.title",
+      "cases:CASE_TEMPLATES[heritage-identified-status].role.title",
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].role.title"
+    ]
+  },
+  {
+    "id": "200cf364bd6b3cfc",
+    "ru": "Подготовить ответ в компетентном органе охраны с опорой на комплект и контроль конкретного этапа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].routes[0].text"
+    ]
+  },
+  {
+    "id": "2c39b7c9cacf7e0a",
+    "ru": "Поручить обычной управляющей организации изменить охранный статус.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].routes[1].text"
+    ]
+  },
+  {
+    "id": "97452c44f107959c",
+    "ru": "Направить заявление только подрядчику для окончательного разрешения жалобы на его действия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].routes[2].text"
+    ]
+  },
+  {
+    "id": "8557bcfba5f44099",
+    "ru": "Сняли для реставрации, а не уничтожили",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[heritage-approved-restoration].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[heritage-approved-restoration].title"
+    ]
+  },
+  {
+    "id": "040f32c68003799f",
+    "ru": "Подтверждённый этап ограничен конкретными элементами и видом работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].trap.explain"
+    ]
+  },
+  {
+    "id": "76466146e6864cb1",
+    "ru": "Совпадение проекта и журнала по E-3 и E-4 не разрешает автоматически работы с другими деталями.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-approved-restoration].trap.text"
+    ]
+  },
+  {
+    "id": "be87763221611742",
+    "ru": "Сопоставить идентификатор и границы H-32 с ответом органа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[a0].title"
+    ]
+  },
+  {
+    "id": "f5bb1d6ee5c9d6f5",
+    "ru": "Учесть выявленный статус независимо от публичной поисковой выдачи",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[a1].title"
+    ]
+  },
+  {
+    "id": "5f45293fdaa2d94a",
+    "ru": "Подготовить проверку разрешительного основания в пределах компетенции",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[a2].title"
+    ]
+  },
+  {
+    "id": "713c9ad6b88bd923",
+    "ru": "Объяснить заявителю различие реестра и выявленного статуса без присвоения нового статуса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[a3].title"
+    ]
+  },
+  {
+    "id": "2ad8668baebfbb45",
+    "ru": "Контролировать ответ именно о комплекте на спорные работы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[a4].title"
+    ]
+  },
+  {
+    "id": "e6cfab01385a843c",
+    "ru": "Признать любое старое здание охраняемым только по возрасту",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[b0].title"
+    ]
+  },
+  {
+    "id": "c96aa2baed1133ad",
+    "ru": "Разрешить работы исключительно по пустой выдаче реестра",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].actions[b1].title",
+      "cases:CASE_TEMPLATES[heritage-identified-status].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "94fc50bb692eb434",
+    "ru": "План должен следовать установленным фактам. Статья 45 охватывает и выявленные объекты; статус здесь установлен ответом компетентного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].coach.plan"
+    ]
+  },
+  {
+    "id": "52af68c5fc89c822",
+    "ru": "Уточняйте предмет, объект, время и получателя. Спор о включении в реестр не равен спору об отсутствии охраны: новое решающее обстоятельство — подтверждённый выявленный статус, а не возраст здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].coach.talk"
+    ]
+  },
+  {
+    "id": "f3e0ed259c435a97",
+    "ru": "Спор о включении в реестр не равен спору об отсутствии охраны: новое решающее обстоятельство — подтверждённый выявленный статус, а не возраст здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].contrast.difference"
+    ]
+  },
+  {
+    "id": "699780658a9c22f4",
+    "ru": "На H-32 проводят именно работы по сохранению фасада. Подрядчик представляет только согласие собственника и ссылается на отсутствие записи в реестре. Разрешительный комплект на работы в материалах не подтверждён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d0].text"
+    ]
+  },
+  {
+    "id": "d31b936b6debec96",
+    "ru": "Сведения о проводимых работах",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d0].title"
+    ]
+  },
+  {
+    "id": "32cf44e5a6438676",
+    "ru": "Заявитель получил пустую выдачу публичного реестра по названию здания. Скриншот не отражает перечень выявленных объектов и не опровергает ответ органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d1].text"
+    ]
+  },
+  {
+    "id": "42d8012dec1c010c",
+    "ru": "Результат самостоятельного поиска",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d1].title"
+    ]
+  },
+  {
+    "id": "227655eb70267b3a",
+    "ru": "Орган подтвердил: здание H-32 включено в действующий перечень выявленных объектов культурного наследия. Идентификатор, адрес и границы совпадают с местом работ. Включение в реестр пока не завершено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d2].text"
+    ]
+  },
+  {
+    "id": "70c8a145ead083ae",
+    "ru": "Ответ органа об охранном статусе",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].documents[d2].title"
+    ]
+  },
+  {
+    "id": "3302919d8686e726",
+    "ru": "Выявленный статус H-32 подтверждён; отсутствие завершённой записи в реестре не отменяет порядок работ по сохранению выявленного объекта. Спор о включении в реестр не равен спору об отсутствии охраны: новое решающее обстоятельство — подтверждённый выявленный статус, а не возраст здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.explain"
+    ]
+  },
+  {
+    "id": "7301db9f0ab18b24",
+    "ru": "Выявленный статус H-32 подтверждён; отсутствие завершённой записи в реестре не отменяет порядок работ по сохранению выявленного объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-identified-status].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "bd3a20a8411e7403",
+    "ru": "Охрана возникает только после появления результата в поисковой форме реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "f06e1af1051989b0",
+    "ru": "Возраст здания сам по себе достаточен для присвоения статуса выявленного объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "6d4bcffb2db904e6",
+    "ru": "Получить сведения по H-32: чужое разрешение не подтверждает работы на этом объекте. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].followup.explain"
+    ]
+  },
+  {
+    "id": "d7c4e3127eec664d",
+    "ru": "В ответ прислано разрешение на H-33, находящийся за соседним адресом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].followup.intro"
+    ]
+  },
+  {
+    "id": "41dbb4058126903a",
+    "ru": "Получить сведения по H-32: чужое разрешение не подтверждает работы на этом объекте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "a3d5b7a0f13febee",
+    "ru": "Засчитать разрешение, так как оба здания в одном квартале.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "b74a67c1b09367d5",
+    "ru": "Удалить документ о выявленном статусе, чтобы согласовать материалы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "0cacc97989e7b1b2",
+    "ru": "Учесть подтверждённый выявленный статус при проверке основания работ по сохранению.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "b20660d46eb6961b",
+    "ru": "Не учитывать выявленный статус до появления объекта в публичной выдаче реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "40f43222cd621d63",
+    "ru": "Признать достаточным согласие собственника, поскольку регистрация объекта ещё не завершена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "6df115b2d8179b89",
+    "ru": "На сайте реестра я дом не нашёл. Подрядчик говорит: раз номера нет, разрешение органа охраны ему не требуется. Но у соседей есть документ о выявленном объекте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].opening"
+    ]
+  },
+  {
+    "id": "e4eadfab9a9e9e2e",
+    "ru": "Проверить документы на работы с учётом установленного выявленного статуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].procedures[0].text"
+    ]
+  },
+  {
+    "id": "e39786c28c8377d9",
+    "ru": "Разрешить работы по одному согласию собственника из-за пустого поиска.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].procedures[1].text"
+    ]
+  },
+  {
+    "id": "1d275a9c4c05d708",
+    "ru": "Самостоятельно включить объект в государственный реестр решением приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].procedures[2].text"
+    ]
+  },
+  {
+    "id": "bfff4f2cb24e4e72",
+    "ru": "Выявленный объект культурного наследия, H-32.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "39ad8b12af1611f8",
+    "ru": "Проверяется не только включение в реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "a2bfad12db60a2d4",
+    "ru": "Какой статус подтвердил орган?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q0].text"
+    ]
+  },
+  {
+    "id": "c0e2b26456747795",
+    "ru": "Да, адрес и границы совпали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "c76a5cf4d01035dd",
+    "ru": "Идентификация установлена условием.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "9f0691f34cd651fe",
+    "ru": "Совпадает ли здание с документом?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q1].text"
+    ]
+  },
+  {
+    "id": "5c17014f22d2ffdb",
+    "ru": "Согласие собственника, но не разрешение органа охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "d5d38f22c87204d3",
+    "ru": "Документы имеют разное назначение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "95ae56c8080a4c26",
+    "ru": "Какие документы показал подрядчик?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q2].text"
+    ]
+  },
+  {
+    "id": "4f7cac69e88ea07f",
+    "ru": "Нет, только одну поисковую форму реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "4061fa870fb9b63b",
+    "ru": "Пустая выдача не подтверждает отсутствие другого статуса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "7cc458cc0419e785",
+    "ru": "Пустой поиск проверял перечень выявленных объектов?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].questions[q3].text"
+    ]
+  },
+  {
+    "id": "ecc99154e04c1955",
+    "ru": "Подготовить материалы компетентному региональному органу охраны выявленных объектов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].routes[0].text"
+    ]
+  },
+  {
+    "id": "43c9b6357ff6ff6a",
+    "ru": "Передать вопрос только владельцу здания для подтверждения отсутствия охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].routes[1].text"
+    ]
+  },
+  {
+    "id": "5ac631f84e77ff9f",
+    "ru": "Направить в любой музей по сходству названия здания.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].routes[2].text"
+    ]
+  },
+  {
+    "id": "d94a49d542fe732c",
+    "ru": "В реестре ещё нет, в перечне уже есть",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[heritage-identified-status].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[heritage-identified-status].title"
+    ]
+  },
+  {
+    "id": "25034cf8ae88bbda",
+    "ru": "Статья 45 охватывает и выявленные объекты; статус здесь установлен ответом компетентного органа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].trap.explain"
+    ]
+  },
+  {
+    "id": "3bfc1b5a6c2ed61d",
+    "ru": "Если публичный реестр не выдал карточку, подтверждённый выявленный статус учитывать не нужно.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-identified-status].trap.text"
+    ]
+  },
+  {
+    "id": "c98ab192c8e5905e",
+    "ru": "Определить назначение лицензионной выписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[a0].title"
+    ]
+  },
+  {
+    "id": "1415d160beb91f8a",
+    "ru": "Сопоставить её с проверкой комплекта по H-44",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[a1].title"
+    ]
+  },
+  {
+    "id": "d53ab005fd8ca655",
+    "ru": "Подготовить материалы для законного решения уполномоченного лица",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[a2].title"
+    ]
+  },
+  {
+    "id": "3bfc7084253155f8",
+    "ru": "Разъяснить различие документов, не обвиняя организацию в подделке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[a3].title"
+    ]
+  },
+  {
+    "id": "d87075b19f3d5fd4",
+    "ru": "Проверить относимость каждого последующего разрешительного документа",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[a4].title"
+    ]
+  },
+  {
+    "id": "4ae46a08d18eadaf",
+    "ru": "Объявить поддельной действующую лицензию только из-за отсутствия адреса дома",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[b0].title"
+    ]
+  },
+  {
+    "id": "41d3f038d34787bc",
+    "ru": "Поручить заявительнице самой остановить работы внутри объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].actions[b1].title",
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "1e1e678c3ab9e86c",
+    "ru": "План должен следовать установленным фактам. Назначение двух документов различается; соблюдение одного условия не подтверждает другое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].coach.plan"
+    ]
+  },
+  {
+    "id": "223e865e74165c2b",
+    "ru": "Уточняйте предмет, объект, время и получателя. Исходный сюжет проверял пределы разрешённого объёма; здесь сначала нужно отличить разрешение на объект от лицензии на деятельность исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].coach.talk"
+    ]
+  },
+  {
+    "id": "77a035f8a5d270fa",
+    "ru": "Исходный сюжет проверял пределы разрешённого объёма; здесь сначала нужно отличить разрешение на объект от лицензии на деятельность исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].contrast.difference"
+    ]
+  },
+  {
+    "id": "fc6d2ffadcbc5719",
+    "ru": "Буклет перечисляет успешно завершённые проекты в других зданиях. Отзывы заказчиков не являются разрешительным документом на H-44.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d0].text"
+    ]
+  },
+  {
+    "id": "ca63e51b72f7cf53",
+    "ru": "Буклет подрядчика",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d0].title"
+    ]
+  },
+  {
+    "id": "8cf1cded61e8cbed",
+    "ru": "Организация «Учебная реставрация» имеет действующую лицензию на указанную в документе деятельность. Выписка относится к организации; объект H-44, виды конкретных работ на нём и проект в ней не указаны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d1].text"
+    ]
+  },
+  {
+    "id": "0bd243413f02db73",
+    "ru": "Лицензионная выписка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d1].title"
+    ]
+  },
+  {
+    "id": "35f755f4d1274ee7",
+    "ru": "Уполномоченное подразделение подтверждает охранный статус H-44 и проведение работ по сохранению. В проверенном комплекте на данном этапе представлены лицензия и письмо собственника; разрешение на конкретные работы отсутствует. Отдельный применимый упрощённый режим по условию не установлен.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d2].text"
+    ]
+  },
+  {
+    "id": "b6be068dff378137",
+    "ru": "Проверка комплекта по H-44",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d2].title"
+    ]
+  },
+  {
+    "id": "f66835d5d06238e3",
+    "ru": "Лицензия подтверждает допуск организации к деятельности, но не заменяет отсутствующее в проверенном комплекте разрешение на работы по H-44. Исходный сюжет проверял пределы разрешённого объёма; здесь сначала нужно отличить разрешение на объект от лицензии на деятельность исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.explain"
+    ]
+  },
+  {
+    "id": "306755f273e49e95",
+    "ru": "Лицензия подтверждает допуск организации к деятельности, но не заменяет отсутствующее в проверенном комплекте разрешение на работы по H-44.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "c4fad07b8af656f9",
+    "ru": "Лицензия на реставрацию разрешает любые работы на любом памятнике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "8dd461d2df906c58",
+    "ru": "Отсутствие H-44 в лицензии доказывает, что сама лицензия поддельная.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "a856dd39873acea1",
+    "ru": "Проверить соответствие разрешённого вида фактическим работам, не принимать любой документ с нужным адресом. Объём предыдущего подтверждения не расширяется автоматически.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].followup.explain"
+    ]
+  },
+  {
+    "id": "6c0cf535ea9d3634",
+    "ru": "Подрядчик прислал разрешение на противоаварийное укрытие, но спорные работы касаются замены декоративных деталей.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].followup.intro"
+    ]
+  },
+  {
+    "id": "86544a1269fd611d",
+    "ru": "Проверить соответствие разрешённого вида фактическим работам, не принимать любой документ с нужным адресом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "eeb507f47391aa05",
+    "ru": "Считать вопрос закрытым после совпадения адреса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "cf780fb6b1710413",
+    "ru": "Установить новый разрешённый объём собственноручной правкой разрешения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "7e0f998d1e3ec30f",
+    "ru": "Различить допуск подрядчика к деятельности и разрешение на конкретный объект и вид работ.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "3c7911dd3ca412ff",
+    "ru": "Принять лицензию реставратора за разрешение на любой фасад в пределах его специализации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "c3d83982efb6e80f",
+    "ru": "Принять согласие собственника вместо разрешительного комплекта без установленного исключения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "9c86e8c841791b7e",
+    "ru": "Мне показали красивый документ с печатью и сказали, что это разрешение на все реставрационные работы. Но в нём нет нашего дома.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].opening"
+    ]
+  },
+  {
+    "id": "249316809354c8e9",
+    "ru": "Разграничить лицензию исполнителя и разрешение на объект, подготовить дальнейшее рассмотрение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].procedures[0].text"
+    ]
+  },
+  {
+    "id": "fd35c806213e2dc6",
+    "ru": "Считать лицензию универсальным разрешением на конкретные работы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].procedures[1].text"
+    ]
+  },
+  {
+    "id": "25607097da909491",
+    "ru": "Отменить лицензию подрядчика письмом сотрудника приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].procedures[2].text"
+    ]
+  },
+  {
+    "id": "fd941ee24c1517f9",
+    "ru": "На организацию, а не на этот дом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "c0f3683cb6c08191",
+    "ru": "Лицензия относится к деятельности исполнителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "8bfc8293bd6d173b",
+    "ru": "На кого выдан документ?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q0].text"
+    ]
+  },
+  {
+    "id": "3fa41518576a9494",
+    "ru": "Уполномоченное подразделение проверило комплект: такого документа там нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "19a2610a677043a2",
+    "ru": "Отсутствие установлено проверкой, не только отсутствием копии у гражданина.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "35d5969ce5f9b998",
+    "ru": "Есть ли разрешение с идентификатором H-44?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q1].text"
+    ]
+  },
+  {
+    "id": "24d7f714e2ae7334",
+    "ru": "Да, но оно не является разрешением органа охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "b56e85b9c66c3a93",
+    "ru": "Воля собственника не заменяет специальный порядок.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c58b8c227c54d6cf",
+    "ru": "Согласие собственника приложено?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q2].text"
+    ]
+  },
+  {
+    "id": "e142b7d1494554c2",
+    "ru": "Нет, я готовлю материалы уполномоченному должностному лицу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "19cefc19a1a9da9e",
+    "ru": "Принудительная мера не входит в самостоятельную компетенцию приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d1ef08dd315ffb2e",
+    "ru": "Вы должны сами запретить работы?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].questions[q3].text"
+    ]
+  },
+  {
+    "id": "d26713f93689bb17",
+    "ru": "Передать установленный недостаток комплекта уполномоченному должностному лицу органа охраны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].routes[0].text"
+    ]
+  },
+  {
+    "id": "615d4ac1b5a3ed71",
+    "ru": "Ограничиться запросом положительных отзывов о подрядчике.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].routes[1].text"
+    ]
+  },
+  {
+    "id": "34b2521e33638052",
+    "ru": "Направить заявительницу самостоятельно останавливать работы на объекте.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].routes[2].text"
+    ]
+  },
+  {
+    "id": "e010594dc8208e0f",
+    "ru": "Повышенный",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].tag",
+      "cases:CASE_TEMPLATES[flight-cancel-nonrefundable].tag"
+    ]
+  },
+  {
+    "id": "a714d8264aec4364",
+    "ru": "Лицензия подрядчика — не разрешение на этот фасад",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[heritage-license-not-permit].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[heritage-license-not-permit].title"
+    ]
+  },
+  {
+    "id": "f5f097618151037b",
+    "ru": "Назначение двух документов различается; соблюдение одного условия не подтверждает другое.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].trap.explain"
+    ]
+  },
+  {
+    "id": "a69d53b1996bc7e1",
+    "ru": "Действующая лицензия подрядчика не заменяет разрешение на конкретные работы по сохранению объекта.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-license-not-permit].trap.text"
+    ]
+  },
+  {
+    "id": "4cef0234bf75ef05",
+    "ru": "Сопоставить выписку, предмет охраны и наблюдаемые работы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[a0].title"
+    ]
+  },
+  {
+    "id": "97e567b03f547db1",
+    "ru": "Установить компетентный орган охраны данного объекта",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[a1].title"
+    ]
+  },
+  {
+    "id": "cabd7fee07a66d28",
+    "ru": "Подготовить запрос о документальных основаниях работ на лестнице",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[a2].title"
+    ]
+  },
+  {
+    "id": "1bb1bbc561cfca5a",
+    "ru": "Разъяснить заявителю границы установленного и дальнейший порядок",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[a3].title"
+    ]
+  },
+  {
+    "id": "7f38efbaeb16234d",
+    "ru": "Проверить ответ отдельно по сохранению лестницы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[a4].title"
+    ]
+  },
+  {
+    "id": "f735d9c8ac34452a",
+    "ru": "Разрешить уничтожение деталей от имени приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[b0].title",
+      "cases:CASE_TEMPLATES[heritage-stair].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "b77098b92b3a75e6",
+    "ru": "Требовать от гражданина оплатить обязательную для приёма жалобы экспертизу",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].actions[b1].title"
+    ]
+  },
+  {
+    "id": "ae81b0b9c2d2cd43",
+    "ru": "Житель исторического здания",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].citizen.description"
+    ]
+  },
+  {
+    "id": "d7691be6762835a0",
+    "ru": "Предмет охраны: фасад и историческая лестница. Представленная карточка: ремонт кровли. Документ о работах на лестнице в набор не включён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d0].text"
+    ]
+  },
+  {
+    "id": "f0f9d631393a2f53",
+    "ru": "Выписка и карточка работ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d0].title"
+    ]
+  },
+  {
+    "id": "10110b6bf7a3a648",
+    "ru": "Учебные документы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d0].type",
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d0].type"
+    ]
+  },
+  {
+    "id": "0e438ff0b06e36d5",
+    "ru": "Видно снятие части элементов лестницы. Цель снятия и порядок сохранения элементов по фотографиям не установлены.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d1].text"
+    ]
+  },
+  {
+    "id": "7417196b66767cca",
+    "ru": "Описание фотографий",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].documents[d1].title"
+    ]
+  },
+  {
+    "id": "4855a9627bb537c4",
+    "ru": "Нужна проверка оснований именно для работ на охраняемой лестнице; документ о кровле не отвечает на вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-stair].factTask.explain",
+      "cases:CASE_TEMPLATES[heritage-stair].outcomes.good"
+    ]
+  },
+  {
+    "id": "26ab2a691414d0fa",
+    "ru": "Любой ремонт автоматически разрешает все работы в здании.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "f9b51c7334730e8e",
+    "ru": "Снятие детали безусловно означает её уничтожение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "56da04f8c9ebcaf3",
+    "ru": "Учебное продолжение. Ответ описывает только ремонт кровли, не затрагивая лестницу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].followup.intro"
+    ]
+  },
+  {
+    "id": "dfebf130d2dbca30",
+    "ru": "Выделить оставшийся вопрос по предмету охраны и направить уточнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[heritage-stair].followup.options[0].text",
+      "cases:CASE_TEMPLATES[heritage-stair].followup.explain"
+    ]
+  }
+]

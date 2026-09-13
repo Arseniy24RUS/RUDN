@@ -1,0 +1,1167 @@
+[
+  {
+    "id": "5adb2bd7e33654ec",
+    "ru": "Договор и выписки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d0].title"
+    ]
+  },
+  {
+    "id": "e547288160ff8cbb",
+    "ru": "Вымышленный учебный реестр",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d0].type"
+    ]
+  },
+  {
+    "id": "7c376df86fb1324e",
+    "ru": "На сайте указан бренд без достаточного пояснения о лице, оказывающем услугу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d1].text"
+    ]
+  },
+  {
+    "id": "da5067881deefbe6",
+    "ru": "Скриншот рекламы",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d1].title"
+    ]
+  },
+  {
+    "id": "0bf0fcb2ff78b2eb",
+    "ru": "Информация",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].documents[d1].type"
+    ]
+  },
+  {
+    "id": "bbdfe89e40de08d3",
+    "ru": "Нужно найти лицензию именно лица УЧ-01; отсутствие аккредитации не является ответом на этот вопрос.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[education-register].factTask.explain",
+      "cases:CASE_TEMPLATES[education-register].outcomes.good"
+    ]
+  },
+  {
+    "id": "b8a71be68e6a3108",
+    "ru": "Отсутствие аккредитации доказывает отсутствие лицензии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "afebc8d835e642b3",
+    "ru": "Лицензия одноимённого УЧ-02 автоматически относится к УЧ-01.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "ef97ac4c44de07ea",
+    "ru": "Учебное продолжение. В ответе вновь ссылка на УЧ-02.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].followup.intro"
+    ]
+  },
+  {
+    "id": "bc53239e98b8b628",
+    "ru": "Уточнить результат по юридическому лицу УЧ-01 из договора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].followup.options[0].text",
+      "cases:CASE_TEMPLATES[education-register].followup.explain"
+    ]
+  },
+  {
+    "id": "39c65ed583307e42",
+    "ru": "Согласиться из-за совпадения бренда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "d54bb8f99c515f95",
+    "ru": "Удалить договор заявителя.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "8ac2ea23fc482cde",
+    "ru": "Я проверил учебный центр и не нашёл аккредитацию. Значит, он работает без лицензии? В договоре одно юрлицо, а сайт показывает красивое общее название.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].opening"
+    ]
+  },
+  {
+    "id": "e238504558cf6528",
+    "ru": "Обращение с проверкой сведений о лицензировании образования",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].procedures[0].text"
+    ]
+  },
+  {
+    "id": "88307594969a8db7",
+    "ru": "Автоматическое аннулирование договора приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].procedures[1].text"
+    ]
+  },
+  {
+    "id": "97aa9334ca918b44",
+    "ru": "Внесение данных в реестр студентом",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].procedures[2].text"
+    ]
+  },
+  {
+    "id": "248b5e01f96f1e4e",
+    "ru": "Дополнительное образование; я хочу проверить наличие лицензии, а не статус диплома по основной программе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "b2d78f796446a830",
+    "ru": "Разграничен предмет проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "efe67666ced6f3bd",
+    "ru": "Какой вид программы указан в договоре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q0].text"
+    ]
+  },
+  {
+    "id": "7d3c94c14a45365b",
+    "ru": "В реестре государственной аккредитации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "02d0a4851a965edb",
+    "ru": "Использован другой реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "b92b532373cf1dab",
+    "ru": "Где вы искали?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q1].text"
+    ]
+  },
+  {
+    "id": "53cc384a9c1d1439",
+    "ru": "Бренд общий, но юридическое лицо и его идентификатор есть в договоре.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "7708b237fc2b16d9",
+    "ru": "Нужно проверять лицо, а не бренд.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "c5762c24f6cab11c",
+    "ru": "Совпадают ли лица на сайте и в договоре?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q2].text"
+    ]
+  },
+  {
+    "id": "07675d58c35d9b6c",
+    "ru": "Учебные выписки о двух одноимённых организациях; идентификаторы разные.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "e27572180e81f9ad",
+    "ru": "Нельзя выбрать по названию.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "6f7d5cf942f0bcfd",
+    "ru": "Что есть в приложениях?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].questions[q3].text"
+    ]
+  },
+  {
+    "id": "8e5de8183e2f5d5d",
+    "ru": "Проверить надлежащий реестр и юридическое лицо; при выявленном несоответствии подготовить обращение по компетенции.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].routes[0].text",
+      "cases:CASE_TEMPLATES[education-register].coach.plan",
+      "cases:CASE_TEMPLATES[education-register].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "c7574009d35e9fc8",
+    "ru": "Признать нарушение только по поиску аккредитации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].routes[1].text",
+      "cases:CASE_TEMPLATES[education-register].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "585e6cf471bb4dfc",
+    "ru": "Выдать лицензию от имени приёмной.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].routes[2].text",
+      "cases:CASE_TEMPLATES[education-register].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "dcc23ec1d2a0dc2f",
+    "ru": "Нужный реестр, не похожее название",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[education-register].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[education-register].title"
+    ]
+  },
+  {
+    "id": "5d65068ada840d3c",
+    "ru": "Образование",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].topic",
+      "cases:CASE_TEMPLATES[education-register].tag",
+      "cases:CASE_TEMPLATES[education-dpo-accreditation].topic"
+    ]
+  },
+  {
+    "id": "ba3dff79ab2018f7",
+    "ru": "Развести виды сведений и выбрать реестр по вопросу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].trap.options[0].text",
+      "cases:CASE_TEMPLATES[education-register].trap.explain"
+    ]
+  },
+  {
+    "id": "d2b0a9cf23cf5b1e",
+    "ru": "Использовать любой образовательный реестр.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "79efee48f24e5848",
+    "ru": "Помощник: «Лицензия и аккредитация – одно и то же».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[education-register].trap.text"
+    ]
+  },
+  {
+    "id": "28d51a0a9441783b",
+    "ru": "Сопоставить исходный документ и реестровую запись",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[a0].title"
+    ]
+  },
+  {
+    "id": "09df80edc7b365db",
+    "ru": "Подтвердить условия именно технического исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[a1].title"
+    ]
+  },
+  {
+    "id": "fe58d7601e94ef53",
+    "ru": "Передать заявление ответственному специалисту органа регистрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[a2].title"
+    ]
+  },
+  {
+    "id": "9049a1e0d7a4ae9e",
+    "ru": "Объяснить специальный срок и порядок уведомления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[a3].title"
+    ]
+  },
+  {
+    "id": "ffd9344fbd25075a",
+    "ru": "Проверить исправленную запись, а не только получение письма",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[a4].title"
+    ]
+  },
+  {
+    "id": "61ff42f78b6bc2cc",
+    "ru": "Изменить принадлежность права под видом опечатки",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[b0].title",
+      "cases:CASE_TEMPLATES[egrn-letter].criticalRules[b0].message"
+    ]
+  },
+  {
+    "id": "e5d1908a95d0c880",
+    "ru": "Применить 30 дней общего ответа как срок любого исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].actions[b1].title"
+    ]
+  },
+  {
+    "id": "adc514887d858623",
+    "ru": "Личные истории, документы и организации-участники инцидента вымышлены. Даты дела закреплены в карточке. В календарной задаче применяйте указанную специальную процедуру и пятидневную рабочую неделю; дата обычного письма не заменяет её исходное событие.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].brief",
+      "cases:CASE_TEMPLATES[sickpay-data].brief",
+      "cases:CASE_TEMPLATES[mfc-extra-paper].brief"
+    ]
+  },
+  {
+    "id": "ccc792c6dd1c2a07",
+    "ru": "Рассчитайте крайний день указанного в заголовке действия. Это не универсальный срок устранения проблемы. В данном упражнении счёт начинается со следующего дня после исходного события; нерабочее окончание переносится на следующий рабочий день. В специальном задании заявление/жалоба зарегистрированы в день получения: используйте исходное событие, прямо названное в норме.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].calendar.context"
+    ]
+  },
+  {
+    "id": "ba9e22375bbcb3cc",
+    "ru": "Основание предметного срока: закон № 218-ФЗ, статья 61; для общего обращения – 59-ФЗ. Правило счёта явно задано в упражнении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].calendar.source"
+    ]
+  },
+  {
+    "id": "4abc469a13e6d15f",
+    "ru": "Крайний день технического исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].calendar.title"
+    ]
+  },
+  {
+    "id": "bdbf10b64c44eb8d",
+    "ru": "Правообладатель",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].citizen.description"
+    ]
+  },
+  {
+    "id": "29d33fa652190675",
+    "ru": "В исходном документе и подтверждении личности одна и та же фамилия; в записи ЕГРН одна буква отличается. По условиям техническая ошибка регистратора установлена; спор о праве исключён.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d0].text"
+    ]
+  },
+  {
+    "id": "5d0bc244bb836819",
+    "ru": "Сопоставление фамилии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d0].title"
+    ]
+  },
+  {
+    "id": "3b69437c60987660",
+    "ru": "Заявление об исправлении получено органом регистрации {{received}}. Обращение не касается изменения принадлежности права.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d1].text"
+    ]
+  },
+  {
+    "id": "51b2536f3e806490",
+    "ru": "Расписка органа регистрации",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d1].title"
+    ]
+  },
+  {
+    "id": "635c3c5d59a00a97",
+    "ru": "Получение",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].documents[d1].type"
+    ]
+  },
+  {
+    "id": "151b33d1b8bb058e",
+    "ru": "По заданным условиям рассматривается техническое исправление записи, а не новый спор о праве.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-letter].factTask.explain",
+      "cases:CASE_TEMPLATES[egrn-letter].outcomes.good"
+    ]
+  },
+  {
+    "id": "3834f8fb6faa7b9a",
+    "ru": "Любую ошибку в реестре исправляют обычным письмом за 30 дней.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].factTask.options[1].text"
+    ]
+  },
+  {
+    "id": "3d88ab7b425d5c84",
+    "ru": "Для исправления буквы можно передать право другому лицу.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].factTask.options[2].text"
+    ]
+  },
+  {
+    "id": "809a905f17d185d4",
+    "ru": "Учебное продолжение. Прислано письмо «ошибка исправлена», но в приложенной актуальной выписке прежняя буква.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].followup.intro"
+    ]
+  },
+  {
+    "id": "8814c9ca7be47765",
+    "ru": "Сопоставить запись с заявлением и уточнить фактическое исполнение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].followup.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-letter].followup.explain"
+    ]
+  },
+  {
+    "id": "5ca3f032e25c896e",
+    "ru": "Закрыть дело по тексту письма.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "e4fc33df1059db4d",
+    "ru": "Самостоятельно отредактировать официальный реестр в обход процедуры.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "cee5d304e76355cd",
+    "ru": "Найдите норму о порядке исправления ошибок в ЕГРН.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].knowledge.prompt"
+    ]
+  },
+  {
+    "id": "d1492bcc7fa7bba8",
+    "ru": "В выписке ЕГРН моя фамилия с опечаткой. В документе, по которому делали запись, написано правильно. Мне сказали ждать обычный ответ месяц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].opening"
+    ]
+  },
+  {
+    "id": "a686101d665b1214",
+    "ru": "Специальная процедура исправления по статье 61 закона № 218-ФЗ",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].procedures[0].text"
+    ]
+  },
+  {
+    "id": "be0d6feeee0562e7",
+    "ru": "Обычная консультация вместо исправления",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].procedures[1].text"
+    ]
+  },
+  {
+    "id": "06d95db90581dbcb",
+    "ru": "Пересмотр судебного решения приёмной",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].procedures[2].text"
+    ]
+  },
+  {
+    "id": "7b561a94d50cedb0",
+    "ru": "Исходный документ верный; при внесении записи одну букву перепутали.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "94a805883d5f5d4e",
+    "ru": "Проверяется техническая ошибка переноса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "826467c0bb6cbc48",
+    "ru": "Где именно допущено расхождение?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q0].text"
+    ]
+  },
+  {
+    "id": "86a176ca623754e8",
+    "ru": "По условиям дела личность однозначно установлена, принадлежность права не меняется, спора и вреда третьим лицам нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "fa605571255d0802",
+    "ru": "Заданы условия технического исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "0b7e1683b2272a1f",
+    "ru": "Меняется ли правообладатель или спорят ли другие лица?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q1].text"
+    ]
+  },
+  {
+    "id": "18ff61506c9d2091",
+    "ru": "{{received}}; передача через МФЦ здесь уже завершена.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "6488a333a829d37e",
+    "ru": "Исходное событие – получение заявления органом регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "9917a8447400de41",
+    "ru": "Когда заявление принято органом регистрации?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q2].text"
+    ]
+  },
+  {
+    "id": "c244a9b917da317c",
+    "ru": "Исправить запись, а не прислать общую консультацию о регистрации.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "676556392ac17c91",
+    "ru": "Нельзя подменять исправление письмом.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "b29f7c1db0b8c0a6",
+    "ru": "Какая именно просьба?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].questions[q3].text"
+    ]
+  },
+  {
+    "id": "a1d39ff2c9810e9d",
+    "ru": "Вы ведёте заявление об установленной технической ошибке. Изменение прав и разрешение споров исключены условиями дела.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].role.text"
+    ]
+  },
+  {
+    "id": "8fe725dee80e8f32",
+    "ru": "Приём заявления в территориальном органе регистрации прав",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].role.title"
+    ]
+  },
+  {
+    "id": "745ac4a0cb908ac8",
+    "ru": "Орган регистрации прав проверяет условия и выполняет техническое исправление в специальном порядке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].routes[0].text",
+      "cases:CASE_TEMPLATES[egrn-letter].coach.plan",
+      "cases:CASE_TEMPLATES[egrn-letter].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "196746adae88daed",
+    "ru": "Приёмная меняет собственника без проверки документов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].routes[1].text",
+      "cases:CASE_TEMPLATES[egrn-letter].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "f85ab417c282c1ff",
+    "ru": "Отказать в рассмотрении потому, что ошибка небольшая.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].routes[2].text",
+      "cases:CASE_TEMPLATES[egrn-letter].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "06042530aed06768",
+    "ru": "Одна буква в реестре",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[egrn-letter].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[egrn-letter].title"
+    ]
+  },
+  {
+    "id": "6b2d5b23b62b210b",
+    "ru": "Регистрация недвижимости",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].topic",
+      "cases:CASE_TEMPLATES[egrn-letter].tag",
+      "cases:CASE_TEMPLATES[egrn-source-plan].topic"
+    ]
+  },
+  {
+    "id": "e54001bd98fdc84f",
+    "ru": "Различить источник ошибки и правовые последствия исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].trap.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-letter].trap.explain"
+    ]
+  },
+  {
+    "id": "34a5227ef044983e",
+    "ru": "Не смотреть исходные документы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].trap.options[1].text"
+    ]
+  },
+  {
+    "id": "69b15709936d0c71",
+    "ru": "Помощник: «Любое расхождение в ЕГРН – одна и та же ошибка».",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-letter].trap.text"
+    ]
+  },
+  {
+    "id": "a335a833993d4934",
+    "ru": "Сопоставить выписку, выгрузку и параметры слоёв.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[a0].title"
+    ]
+  },
+  {
+    "id": "aa86edbbe4078114",
+    "ru": "Зафиксировать, какое расхождение установлено и какое не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[a1].title"
+    ]
+  },
+  {
+    "id": "22cdd13ac11786fd",
+    "ru": "Передать технические сведения ответственному за отображение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[a2].title"
+    ]
+  },
+  {
+    "id": "8bd41baa61fbddb9",
+    "ru": "Разъяснить пределы вывода без отрицания права подать надлежащее заявление при новых данных.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[a3].title"
+    ]
+  },
+  {
+    "id": "45fadf6287578373",
+    "ru": "Проверить отображение нужного объекта и ответ по существу обращения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[a4].title"
+    ]
+  },
+  {
+    "id": "b923cf4a65af0037",
+    "ru": "Назвать сам факт подачи обращения доказательством ошибки ЕГРН.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[b0].title"
+    ]
+  },
+  {
+    "id": "4093d39c93a48395",
+    "ru": "Изменить координаты, чтобы они визуально совпали с выбранным снимком.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].actions[b1].title",
+      "cases:CASE_TEMPLATES[egrn-map-layer].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "547f6beab841d215",
+    "ru": "Все участники и документы дела вымышлены. Вопрос поступил как обращение о работе публичного картографического сервиса. Проверенная выписка и выгрузка совпадают; графическое несовпадение обнаружено только на одном снимке подложки. Заявление об изменении сведений ЕГРН не подано. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].brief"
+    ]
+  },
+  {
+    "id": "36cdde369e2eaa55",
+    "ru": "Определите последний день ответа органа по зарегистрированному обращению. Продление не применяется. Это не срок исполнения материального требования или исправления реестра.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].calendar.context",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].calendar.context",
+      "cases:CASE_TEMPLATES[parcel-customs-notice].calendar.context"
+    ]
+  },
+  {
+    "id": "a23a55c0d770c52c",
+    "ru": "В других историях ошибка записи подтверждена документами. Здесь заявленное изменение координат не установлено, а техническое отображение требует отдельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].coach.plan",
+      "cases:CASE_TEMPLATES[egrn-map-layer].contrast.difference"
+    ]
+  },
+  {
+    "id": "79414c0af364deb0",
+    "ru": "Несовпадение контура наблюдается только на подложке С-2. На С-1 при тех же координатах несовпадения нет. Причину отображения ещё должен проверить оператор сервиса.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d0].text"
+    ]
+  },
+  {
+    "id": "b31dd0f35f26c924",
+    "ru": "Протокол отображения",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d0].title"
+    ]
+  },
+  {
+    "id": "45df0bc4efdc3641",
+    "ru": "Участок У-12 также выглядит смещённым на старой распечатке. Дата и исходный слой этой распечатки неизвестны.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d1].text"
+    ]
+  },
+  {
+    "id": "51ce78ffd2642e09",
+    "ru": "Снимок соседнего участка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d1].title"
+    ]
+  },
+  {
+    "id": "7b9fa844a637afe5",
+    "ru": "Для объекта У-11 таблицы координат в выписке и контрольной выгрузке совпадают. Заключение специалиста: изменение значений записи не обнаружено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d2].text"
+    ]
+  },
+  {
+    "id": "65a1a33b682dab8a",
+    "ru": "Выписка и контрольная выгрузка",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].documents[d2].title"
+    ]
+  },
+  {
+    "id": "93c89680469e42ee",
+    "ru": "Материалы подтверждают проблему отображения, но не установленную ошибку записи ЕГРН. В других историях ошибка записи подтверждена документами. Здесь заявленное изменение координат не установлено, а техническое отображение требует отдельной проверки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.explain"
+    ]
+  },
+  {
+    "id": "23b453ad79d46103",
+    "ru": "Материалы подтверждают проблему отображения, но не установленную ошибку записи ЕГРН.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-map-layer].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "de23ba335513759d",
+    "ru": "Видимый сдвиг сам по себе доказывает необходимость изменить координаты в ЕГРН.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "9e80aa5d56fe3ebf",
+    "ru": "Совпадение выписки и выгрузки доказывает исправность всех картографических сервисов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "12e21cac9d1a6fd5",
+    "ru": "Новое обстоятельство относится к отображению и версии, не к установленному изменению прав.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.explain"
+    ]
+  },
+  {
+    "id": "e4735c558a332fa2",
+    "ru": "Оператор сообщает об исправлении. После обновления слой С-2 работает, но у заявителя открывается старая сохранённая копия.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.intro"
+    ]
+  },
+  {
+    "id": "201e874948ddec65",
+    "ru": "Проверить версию и повторное воспроизведение; не изменять реестр ради старого кэша.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.options[0].text"
+    ]
+  },
+  {
+    "id": "1f98ae118b76df75",
+    "ru": "Повторно изменить координаты во всех записях.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.options[1].text"
+    ]
+  },
+  {
+    "id": "0916366dfcd4099f",
+    "ru": "Объявить жалобу ложной без проверки версии.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].followup.options[2].text"
+    ]
+  },
+  {
+    "id": "141bf00c765aeabe",
+    "ru": "Проверить наличие ошибки в сведениях, прежде чем применять порядок их исправления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].knowledge.options[0].text"
+    ]
+  },
+  {
+    "id": "1dce5feae0e111cd",
+    "ru": "Исправлять сведения по любому скриншоту.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].knowledge.options[1].text"
+    ]
+  },
+  {
+    "id": "5e0bb132af29abfa",
+    "ru": "Считать картографическую подложку решением регистратора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].knowledge.options[2].text"
+    ]
+  },
+  {
+    "id": "8f2dbf9078316717",
+    "ru": "На экране контур дома съехал. Наверное, вы переписали координаты моего участка. Исправьте их сегодня.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].opening"
+    ]
+  },
+  {
+    "id": "f6486396c17b4191",
+    "ru": "Рассмотрение обращения о сервисе с технической проверкой отображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].procedures[0].text"
+    ]
+  },
+  {
+    "id": "edb2cfd6d25b438c",
+    "ru": "Внесение новых координат как исправление уже доказанной ошибки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].procedures[1].text"
+    ]
+  },
+  {
+    "id": "90cca23913270982",
+    "ru": "Судебный спор о границах без заявленного спора и его материалов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].procedures[2].text"
+    ]
+  },
+  {
+    "id": "eabbd25599ded6a0",
+    "ru": "Есть свежая выписка и две версии отображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q0].answer"
+    ]
+  },
+  {
+    "id": "de9a963e99237506",
+    "ru": "Нужна проверка записи и отображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q0].fact"
+    ]
+  },
+  {
+    "id": "0ce80520dd63d096",
+    "ru": "Какие материалы можно сравнить?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q0].text"
+    ]
+  },
+  {
+    "id": "9adb3faadd6ea74d",
+    "ru": "Профильный специалист подтвердил совпадение выписки и выгрузки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q1].answer"
+    ]
+  },
+  {
+    "id": "caa52df1ccb5a58e",
+    "ru": "Изменение записи не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q1].fact"
+    ]
+  },
+  {
+    "id": "e267d8866e7834d6",
+    "ru": "Совпадают ли координаты в документах?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q1].text"
+    ]
+  },
+  {
+    "id": "411da41593b6c7f6",
+    "ru": "На новой подложке да, на другой нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q2].answer"
+    ]
+  },
+  {
+    "id": "3a93ca0b2b702bfa",
+    "ru": "Проблема зависит от слоя отображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q2].fact"
+    ]
+  },
+  {
+    "id": "1f1fdd792ae451c4",
+    "ru": "На всех подложках виден сдвиг?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q2].text"
+    ]
+  },
+  {
+    "id": "1c7c897752bd5e1a",
+    "ru": "Нет, я написал о картинке в сервисе.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q3].answer"
+    ]
+  },
+  {
+    "id": "0325266db434286e",
+    "ru": "Предмет текущего обращения — отображение.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q3].fact"
+    ]
+  },
+  {
+    "id": "d4cd4f793d2b341d",
+    "ru": "Есть заявление об исправлении реестра?",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].questions[q3].text"
+    ]
+  },
+  {
+    "id": "bd891075d6578fab",
+    "ru": "Специалист по обращениям и сопровождению публичного сервиса",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].role.title"
+    ]
+  },
+  {
+    "id": "0130ef67205dbb6a",
+    "ru": "Привлечь оператора отображения и профильное подразделение; не подменять регистратора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].routes[0].text"
+    ]
+  },
+  {
+    "id": "4e6a36bc09286a2b",
+    "ru": "Выдать пользователю право редактировать публичные координаты.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].routes[1].text"
+    ]
+  },
+  {
+    "id": "255e0e6dd5186588",
+    "ru": "Окончательно поручить вопрос автору соседней распечатки.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].routes[2].text"
+    ]
+  },
+  {
+    "id": "8fd404cd97ecc7bf",
+    "ru": "Сдвинулся слой, а не запись",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:59].cases[egrn-map-layer].title",
+      "source-index:SOURCE_INDEX.entries[shelf:mos].cases[egrn-map-layer].title"
+    ]
+  },
+  {
+    "id": "ed65ec80ac982265",
+    "ru": "Совпадение значений исключает лишь заявленное изменение записи в проверенных материалах, а не любую проблему отображения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].trap.explain"
+    ]
+  },
+  {
+    "id": "608e9c9472e8e139",
+    "ru": "Если координаты совпали, больше никаких проблем с сервисом быть не может.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-map-layer].trap.text"
+    ]
+  },
+  {
+    "id": "e1136052a1c99d0d",
+    "ru": "Сопоставить проект правки и подтверждённые интересы третьего лица.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[a0].title"
+    ]
+  },
+  {
+    "id": "b098c97aa9724a66",
+    "ru": "Зафиксировать отсутствие необходимого судебного решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[a1].title"
+    ]
+  },
+  {
+    "id": "37bc8d61da779507",
+    "ru": "Подготовить мотивированное разъяснение специального порядка.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[a2].title"
+    ]
+  },
+  {
+    "id": "c21b77dcc47317ce",
+    "ru": "Не раскрывать избыточные сведения соседа и не обещать исход судебного спора.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[a3].title"
+    ]
+  },
+  {
+    "id": "12c42b0c94305a96",
+    "ru": "Проверить, что ответ разъясняет маршрут и не сообщает о несуществующей правке.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[a4].title"
+    ]
+  },
+  {
+    "id": "814dae1d82fb1a7f",
+    "ru": "Признать любую правку невозможной навсегда, даже после судебного решения.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[b0].title"
+    ]
+  },
+  {
+    "id": "349f891a9ca8f760",
+    "ru": "Изменить границу, игнорируя установленный риск нарушения чужих интересов.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].actions[b1].title",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].criticalRules[b1].message"
+    ]
+  },
+  {
+    "id": "24b9ac299278e8b4",
+    "ru": "Все участники и документы дела вымышлены. Проверенные материалы устанавливают, что предлагаемая правка может нарушить законные интересы соседа, полагавшегося на запись. Судебного решения нет. Рассматривается обращение о допустимом порядке, а не иск и не готовое решение о праве. Вы готовите материалы и проект действий, а не заменяете решение уполномоченного лица. Календарная задача касается формального ответа органа, не фактического устранения проблемы.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].brief"
+    ]
+  },
+  {
+    "id": "be07ecc2eaba41cb",
+    "ru": "В бесспорном варианте пакет позволяет подготовить исправление. Здесь установлен риск нарушения законных интересов третьего лица и отсутствует необходимое решение суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].coach.plan",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].contrast.difference"
+    ]
+  },
+  {
+    "id": "467047ed49c4798a",
+    "ru": "В ином деле исправили букву без изменения зарегистрированных прав и интересов третьих лиц.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d0].text"
+    ]
+  },
+  {
+    "id": "c93dc9f64434754b",
+    "ru": "Пример исправленной фамилии",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d0].title"
+    ]
+  },
+  {
+    "id": "a041af4c51415f1d",
+    "ru": "Изменение З-7 может нарушить законные интересы правообладателя соседнего участка, полагавшегося на сведения ЕГРН. Это не бесспорная замена буквы в имени.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d1].text"
+    ]
+  },
+  {
+    "id": "b8d38bd40a1d5010",
+    "ru": "Заключение по предлагаемой правке",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d1].title"
+    ]
+  },
+  {
+    "id": "6e05913d486746f5",
+    "ru": "Возражение касается именно изменения З-7. Решения суда об исправлении в материалах нет; подан лишь проект заявления.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d2].text"
+    ]
+  },
+  {
+    "id": "52be2b840cc62f30",
+    "ru": "Возражение и состав дела",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].documents[d2].title"
+    ]
+  },
+  {
+    "id": "89b0c44542e6cdfe",
+    "ru": "Предлагаемая правка затрагивает законные интересы другого лица; бесспорное исправление не подтверждено. В бесспорном варианте пакет позволяет подготовить исправление. Здесь установлен риск нарушения законных интересов третьего лица и отсутствует необходимое решение суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].factTask.explain",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.explain"
+    ]
+  },
+  {
+    "id": "41943f4f534a5729",
+    "ru": "Предлагаемая правка затрагивает законные интересы другого лица; бесспорное исправление не подтверждено.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].factTask.options[0].text",
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].contrast.decision",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.findingOptions[0].text"
+    ]
+  },
+  {
+    "id": "316649a712715a5f",
+    "ru": "Название «опечатка» позволяет не учитывать документы соседа.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].factTask.options[1].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.findingOptions[1].text"
+    ]
+  },
+  {
+    "id": "18ad958354bc4800",
+    "ru": "Проект иска равнозначен вступившему в силу решению суда.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].factTask.options[2].text",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.findingOptions[2].text"
+    ]
+  },
+  {
+    "id": "7f88063daa6d50b9",
+    "ru": "Различаются стадия судебного процесса и акт, который разрешает спор.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.explain"
+    ]
+  },
+  {
+    "id": "d55e8ce2c341ab57",
+    "ru": "Заявитель принёс определение суда о принятии иска, но решения по существу ещё нет.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.intro"
+    ]
+  },
+  {
+    "id": "1ac3d9d0790f41fd",
+    "ru": "Принять сведения о процессе; не выдавать принятие иска за решение об исправлении.",
+    "contexts": [
+      "cases:CASE_TEMPLATES[egrn-rights-dispute].followup.options[0].text"
+    ]
+  }
+]

@@ -1,0 +1,1178 @@
+[
+  {
+    "id": "2c28675a15389dd5",
+    "ru": "длительность зеленого сигнала",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "f2fcc5c14076d903",
+    "ru": "Каков предмет, который не заменяет проверка ламп?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.extracted.label"
+    ]
+  },
+  {
+    "id": "6f397b00003ccd3c",
+    "ru": "Каков предмет, который не заменяет проверка ламп? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-timing-proposal.prompt"
+    ]
+  },
+  {
+    "id": "78099ea2aee68c97",
+    "ru": "видимость",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "97aa148373126c42",
+    "ru": "видимость сигнала",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "d1e5d9d0db98af30",
+    "ru": "видимость со стороны библиотеки",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "9f098c9ddf856a86",
+    "ru": "Что не оценено первоначальным актом?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.extracted.label"
+    ]
+  },
+  {
+    "id": "bf11240bc9f05918",
+    "ru": "Что не оценено первоначальным актом? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-signal-visibility.prompt"
+    ]
+  },
+  {
+    "id": "29d5f39a9db951e6",
+    "ru": "профессиональная оценка",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "35846d4cc69fb6ca",
+    "ru": "профильный осмотр",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "02ed41769d092b68",
+    "ru": "профессиональный осмотр",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "be37a41b08317df4",
+    "ru": "осмотр специалистами",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "39c6bc7996a650a2",
+    "ru": "Какая стадия должна предшествовать решению о конкретном виде работ?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.extracted.label"
+    ]
+  },
+  {
+    "id": "c670e5d278bdfb02",
+    "ru": "Какая стадия должна предшествовать решению о конкретном виде работ? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.prompt"
+    ]
+  },
+  {
+    "id": "60228b739f4a8aa5",
+    "ru": "д-14 и д-15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4267a4bfd4562717",
+    "ru": "д14 и д15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "2b2124e167ffccd8",
+    "ru": "д-14, д-15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a86c3d3c2b3ef0e0",
+    "ru": "Какие номера входят в проверенное основание?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.extracted.label"
+    ]
+  },
+  {
+    "id": "7f629066ba5f810e",
+    "ru": "Какие номера входят в проверенное основание? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-permit-matches.prompt"
+    ]
+  },
+  {
+    "id": "55c2d171ff1f5c37",
+    "ru": "санитарная обрезка",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "19eae1bb50469e93",
+    "ru": "обрезка ветвей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "8c1dc23a1ba6a1c9",
+    "ru": "санитарная обрезка ветвей",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d28d4047df6e7ec8",
+    "ru": "Какой вид работы допускает первоначальное основание?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.extracted.label"
+    ]
+  },
+  {
+    "id": "18269816b2d3343a",
+    "ru": "Какой вид работы допускает первоначальное основание? Свяжите ответ с подходящим фрагментом, а не только с общим названием темы.",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.prompt"
+    ]
+  },
+  {
+    "id": "8426f5def75e8e36",
+    "ru": "7-ФЗ статья 61 Охрана окружающей среды: зелёный фонд",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-pruning-scope.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v10-trees-current-danger.searchHint"
+    ]
+  },
+  {
+    "id": "8cbf9ed21f2341c6",
+    "ru": "электронная почта",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "f090ae4d1722a462",
+    "ru": "Какой рекламный канал единственный разрешён в согласии?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.extracted.label"
+    ]
+  },
+  {
+    "id": "d8a4283878c36b54",
+    "ru": "З-18",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "517f8fdadcd78c32",
+    "ru": "С каким заказом связано сообщение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.extracted.label"
+    ]
+  },
+  {
+    "id": "a14e5164b9f43462",
+    "ru": "Содержание сообщения и признаки рекламы 38 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-service-message.searchHint"
+    ]
+  },
+  {
+    "id": "cdbd73cf85912048",
+    "ru": "10 часов 15 минут",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "7e83148ff10e4ea0",
+    "ru": "В какое время получено требование прекратить рекламу?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.extracted.label"
+    ]
+  },
+  {
+    "id": "99f42c9ce4b21807",
+    "ru": "Предварительное согласие на рекламу и прекращение рассылки 38 18",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-withdrawal-time.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v11-ads-channel-scope.searchHint"
+    ]
+  },
+  {
+    "id": "7d18aa016eacf207",
+    "ru": "получение перевозчиком",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "660d703de3704392",
+    "ru": "поступление перевозчику",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "c9ffbe9370ecfeec",
+    "ru": "Какое событие запускает срок перевозчика в этом деле?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.extracted.label"
+    ]
+  },
+  {
+    "id": "56185433eec43b22",
+    "ru": "Получение претензии перевозчиком 60 127.1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-agent-receipt.searchHint"
+    ]
+  },
+  {
+    "id": "e377c93949f62d1d",
+    "ru": "вынужденный отказ",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "2d6d5e14550c3a7d",
+    "ru": "вынужденный",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "110b1259df58a62a",
+    "ru": "Какой вид отказа заявлен по подтверждённой отмене?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.extracted.label"
+    ]
+  },
+  {
+    "id": "3e0d534aa04ede8e",
+    "ru": "Вынужденный отказ и невозвратный тариф 60 108",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-cancel-nonrefundable.searchHint"
+    ]
+  },
+  {
+    "id": "955b6674ce7b8a02",
+    "ru": "семь",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ec7f00b622654591",
+    "ru": "7 часов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "cea9e462f855ceac",
+    "ru": "семь часов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.extracted.accepted[3]"
+    ]
+  },
+  {
+    "id": "250012eb10dda4d0",
+    "ru": "Сколько часов ожидания до начала посадки установлено к 15:00?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.extracted.label"
+    ]
+  },
+  {
+    "id": "12de524f6b2946fa",
+    "ru": "Обслуживание пассажиров при ожидании посадки 82 99.2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-flight-weather-care.searchHint"
+    ]
+  },
+  {
+    "id": "5e477edb0b94a67e",
+    "ru": "корпус 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "9bc3b5a814354925",
+    "ru": "третий корпус",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "06c6c15060200b3e",
+    "ru": "Какой корпус относится к текущему событию?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.extracted.label"
+    ]
+  },
+  {
+    "id": "f382ca170606914a",
+    "ru": "Г-25",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "e06bf72572da42ff",
+    "ru": "Какой номер связывает акт и запрос о выполненных действиях?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-past-incident.extracted.label"
+    ]
+  },
+  {
+    "id": "61564d7d12be3926",
+    "ru": "Г-31",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "105c71e0ffc717ee",
+    "ru": "Какой объект указан и в объявлении, и в текущем сообщении?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-planned-outage.extracted.label"
+    ]
+  },
+  {
+    "id": "217cfa03f93c6dd6",
+    "ru": "E-3 и E-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "66bcd69c4dc58edc",
+    "ru": "Е-3 и Е-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d536fb28934264a0",
+    "ru": "Какие два элемента названы и в проекте, и в журнале?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.extracted.label"
+    ]
+  },
+  {
+    "id": "6b23ac4a62b9d88a",
+    "ru": "Документы на конкретные работы по сохранению наследия 73 45",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-approved-restoration.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.searchHint"
+    ]
+  },
+  {
+    "id": "63e5ef03e849f8a3",
+    "ru": "выявленный объект культурного наследия",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "5ced9af4946acea1",
+    "ru": "выявленный объект",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "397684c16d002647",
+    "ru": "выявленный",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "f9c07675ccfcbe6d",
+    "ru": "Какой статус подтверждён в ответе органа?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-identified-status.extracted.label"
+    ]
+  },
+  {
+    "id": "faabfc12734dbdfa",
+    "ru": "Н-44",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "6e8605feda5a666c",
+    "ru": "Какой объект проверен в служебной записке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-heritage-license-not-permit.extracted.label"
+    ]
+  },
+  {
+    "id": "bdc635b9b87009d4",
+    "ru": "гул",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "546bad51b66efa21",
+    "ru": "звуковое воздействие",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "83c8f0b197217012",
+    "ru": "Какой новый предмет не исследован актом?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.extracted.label"
+    ]
+  },
+  {
+    "id": "2fb2665ff0d80a09",
+    "ru": "11 часов 30 минут",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a341479f6cf71939",
+    "ru": "В какое время составлен представленный акт?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.extracted.label"
+    ]
+  },
+  {
+    "id": "d43de4456828304d",
+    "ru": "Рассмотрение всех существенных обстоятельств обращения 59 10",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v11-gas-address-correction.searchHint"
+    ]
+  },
+  {
+    "id": "994941924a114ec7",
+    "ru": "С-14",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "90f32994452f650e",
+    "ru": "Какой идентификатор связывает текущую запись и прежнюю карточку?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.extracted.label"
+    ]
+  },
+  {
+    "id": "3b29268372f86e53",
+    "ru": "Вывески без рекламных сведений и пределы исключения 38 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.searchHint"
+    ]
+  },
+  {
+    "id": "4d4fa5e91699a244",
+    "ru": "Проверьте связь источника и вывода",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-promotion.title",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-night-measurement.title",
+      "evidence-catalog:EVIDENCE_TASKS.v11-sign-light-restored.title"
+    ]
+  },
+  {
+    "id": "b033c460afeeb76f",
+    "ru": "интернет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "1be398a9723d2f7d",
+    "ru": "сеть интернет",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "dd1762d11ce61af4",
+    "ru": "интернет-сайт",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "5eea64246ae64901",
+    "ru": "Какой канал подтверждён протоколом?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.extracted.label"
+    ]
+  },
+  {
+    "id": "09f84b110c62fdd2",
+    "ru": "Самостоятельные ограничения алкогольной рекламы 38 статья 21",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-online-agegate.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.searchHint"
+    ]
+  },
+  {
+    "id": "6a690ec0c175e395",
+    "ru": "И-6",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "99df5f9a368296cd",
+    "ru": "И 6",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "4212f6716a32c20e",
+    "ru": "Как обозначен нейтральный перечень?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.extracted.label"
+    ]
+  },
+  {
+    "id": "4c1deeeaf5271cde",
+    "ru": "Обязательная информация и реклама 38 статья 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-required-menu.searchHint"
+    ]
+  },
+  {
+    "id": "0fcb8273cad2a4fc",
+    "ru": "5 процентов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "064ec34eca219475",
+    "ru": "пять процентов",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "cc64c7729111bd4c",
+    "ru": "Какую долю рекламного пространства занимает предупреждение в исходном Р-10?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-beer-warning-area.extracted.label"
+    ]
+  },
+  {
+    "id": "c1c45c422504299e",
+    "ru": "С-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "e98a9fcfba0a7e26",
+    "ru": "С 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "fb7fa6e1fc51f871",
+    "ru": "На какой подложке выявлено несовпадение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.extracted.label"
+    ]
+  },
+  {
+    "id": "9ace121cb4ea4799",
+    "ru": "З-7",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "e3f8f425ca5a41fb",
+    "ru": "З 7",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "bf75fe3774d62eeb",
+    "ru": "Какой идентификатор имеет спорное изменение?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.extracted.label"
+    ]
+  },
+  {
+    "id": "880382cfbfec6548",
+    "ru": "ТП-41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "ca3964bf7a5a94ab",
+    "ru": "ТП 41",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "847a0c0aabfc2b7d",
+    "ru": "Какой идентификатор плана относится к принятому делу?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.extracted.label"
+    ]
+  },
+  {
+    "id": "aab36e0a5ce59501",
+    "ru": "Техническая и реестровая ошибки: разные основания 218 статья 61",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.searchHint"
+    ]
+  },
+  {
+    "id": "ae2f27eb266a237e",
+    "ru": "Подтвердите извлечённое сведение",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-source-plan.title",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-map-layer.title",
+      "evidence-catalog:EVIDENCE_TASKS.v12-egrn-rights-dispute.title"
+    ]
+  },
+  {
+    "id": "8e2a916b86478b4c",
+    "ru": "М-8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "441c3af17f5b2bea",
+    "ru": "М 8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "99bd56a9dbf9f2c3",
+    "ru": "Как обозначена партия на полной маркировке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.extracted.label"
+    ]
+  },
+  {
+    "id": "0e0c15b1afae13d3",
+    "ru": "Информация о товаре и сроке годности 2300-1 статья 10",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-manufactured-date.searchHint"
+    ]
+  },
+  {
+    "id": "d738ebd017ea67a4",
+    "ru": "П-61",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "abd3bf0f5feaa2c4",
+    "ru": "П 61",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "d356e050d7975d71",
+    "ru": "Какая партия относится к подтверждённой покупке?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.extracted.label"
+    ]
+  },
+  {
+    "id": "73ab4884f2a592f6",
+    "ru": "Некачественный товар и подтверждение покупки 2300-1 статья 18",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-no-receipt-refund.searchHint"
+    ]
+  },
+  {
+    "id": "b9c6486966a74436",
+    "ru": "Д-72",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "c42fb17bf32f0766",
+    "ru": "Д 72",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "e01cbf57c0183660",
+    "ru": "Какую партию должен охватывать результат?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.extracted.label"
+    ]
+  },
+  {
+    "id": "2a5961950bfa7046",
+    "ru": "Безопасность товара и меры при выявлении опасности 2300-1 статья 7",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-food-recall-wrong-batch.searchHint"
+    ]
+  },
+  {
+    "id": "afe38d89ea445c17",
+    "ru": "МПО-71",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "225582447e316350",
+    "ru": "МПО 71",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "b75ef8450cf826f6",
+    "ru": "Какой идентификатор нужно проверить в ответе?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.extracted.label"
+    ]
+  },
+  {
+    "id": "8c322d618e55d559",
+    "ru": "Претензии по международным почтовым отправлениям 176 статья 37",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-customs-notice.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.searchHint"
+    ]
+  },
+  {
+    "id": "82d01f4878de724f",
+    "ru": "акт вручения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "b1266b8b1ba986b3",
+    "ru": "актом вручения",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "4bef8cb470ab8e38",
+    "ru": "акт вручения МПО-93",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "d97594ccd3e4cc10",
+    "ru": "Каким актом подтверждено состояние при получении?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-damaged-delivery.extracted.label"
+    ]
+  },
+  {
+    "id": "92c6a197729e4ca3",
+    "ru": "МПО-481",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "faeb1a61059b84e2",
+    "ru": "МПО 481",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "26132b6f69dad802",
+    "ru": "Какой номер подтверждён квитанцией?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-parcel-wrong-tracking.extracted.label"
+    ]
+  },
+  {
+    "id": "56b0ad5905e0f450",
+    "ru": "Д-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "84de1beddbbc5e2f",
+    "ru": "Д 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "e88d5939a5bc7776",
+    "ru": "уточнённая декларация Д-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "bfe29e226eda0f22",
+    "ru": "Какой документ определяет начало новой проверки?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.extracted.label"
+    ]
+  },
+  {
+    "id": "6a3acb803ca05bd4",
+    "ru": "Камеральная проверка: декларация, уточнение и пояснения 146 статья 88",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-amended-declaration.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.searchHint"
+    ]
+  },
+  {
+    "id": "77988cdb38ea1c5c",
+    "ru": "П-8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "497d32f6b988b910",
+    "ru": "П 8",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "eecb886f06b3444e",
+    "ru": "Как обозначен пакет пояснений?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-explanations-only.extracted.label"
+    ]
+  },
+  {
+    "id": "cd959282def5625e",
+    "ru": "У-4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "7e9049463712171c",
+    "ru": "У 4",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "51d2b221203b0405",
+    "ru": "Каков идентификатор заявления в квитанции?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.extracted.label"
+    ]
+  },
+  {
+    "id": "1cb1277226672bad",
+    "ru": "Заявление о вычете в упрощённом порядке 117 статья 221.1",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v12-tax-simplified-statement.searchHint"
+    ]
+  },
+  {
+    "id": "f65bc6c9f7788092",
+    "ru": "Каков код проверяемого направления по договору?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.extracted.label"
+    ]
+  },
+  {
+    "id": "082998f975d167dc",
+    "ru": "дополнительная профессиональная программа",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "9f8d6d6c89de0620",
+    "ru": "дополнительное профессиональное образование",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "155176a88045a9f9",
+    "ru": "ДПО",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.extracted.accepted[2]"
+    ]
+  },
+  {
+    "id": "a9530882f73e4f25",
+    "ru": "Каков вид программы по договору?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.extracted.label"
+    ]
+  },
+  {
+    "id": "4deaf24dc1022283",
+    "ru": "Область государственной аккредитации 273 статья 92",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-dpo-accreditation.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-accreditation-scope.searchHint"
+    ]
+  },
+  {
+    "id": "c8b854ee474235ed",
+    "ru": "У-2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "ef468bca21ade025",
+    "ru": "У 2",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "ae5904c0ee5d6605",
+    "ru": "Кто указан исполнителем в договоре?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.extracted.label"
+    ]
+  },
+  {
+    "id": "ed6aba5de04bbfe2",
+    "ru": "Лицензирование образовательной деятельности 273 статья 91",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-education-provider-identity.searchHint"
+    ]
+  },
+  {
+    "id": "b35702a92e075a80",
+    "ru": "О-17",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "884e51fcc091faea",
+    "ru": "О 17",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "970e25c17726398e",
+    "ru": "Какой идентификатор организации сопоставлен с реестром?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.extracted.label"
+    ]
+  },
+  {
+    "id": "d534d99fca53ccf3",
+    "ru": "Реестр лицензий частной охранной деятельности 427 статья 20",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-current-register.searchHint"
+    ]
+  },
+  {
+    "id": "9ea4879dc95105f6",
+    "ru": "К-9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "a21cd49bd03ca6eb",
+    "ru": "К 9",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1041502f1a7cfea7",
+    "ru": "Кто указан в записи и сменном задании?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.extracted.label"
+    ]
+  },
+  {
+    "id": "c791729870e9862f",
+    "ru": "О-5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "fbaaecb087c16f51",
+    "ru": "О 5",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "801b608b668ee5ca",
+    "ru": "Какой объект фигурирует в относимых правилах и записи?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.extracted.label"
+    ]
+  },
+  {
+    "id": "afb3b5a2e18a2c84",
+    "ru": "Полномочия и обязанности частного охранника 427 статья 15",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-property-inspection.searchHint",
+      "evidence-catalog:EVIDENCE_TASKS.v13-guard-identification-request.searchHint"
+    ]
+  },
+  {
+    "id": "b67b24bd24539898",
+    "ru": "А-22",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "4449a9cbf3f59b0e",
+    "ru": "А 22",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "1fc25dd657de9234",
+    "ru": "Какой аварийный эпизод подтверждён обоими документами?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-emergency-work.extracted.label"
+    ]
+  },
+  {
+    "id": "f7284a9585a3bcda",
+    "ru": "Московская область",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "26e1f8f02f5100af",
+    "ru": "в Московской области",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.extracted.accepted[1]"
+    ]
+  },
+  {
+    "id": "4b5023c4eea9e940",
+    "ru": "В каком субъекте расположен объект обращения?",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.prompt",
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-other-region.extracted.label"
+    ]
+  },
+  {
+    "id": "d1b211e87299fd1a",
+    "ru": "В-3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.extracted.accepted[0]"
+    ]
+  },
+  {
+    "id": "97cbd010cab79c5f",
+    "ru": "В 3",
+    "contexts": [
+      "evidence-catalog:EVIDENCE_TASKS.v13-noise-ventilation.extracted.accepted[1]"
+    ]
+  }
+]
