@@ -1,4 +1,4 @@
-import {CONTENT_VERSION,RUBRIC_VERSION,CASES} from './cases.js';
+import {CONTENT_VERSION,RUBRIC_VERSION,CASES} from './content-library.js';
 import {restoreShift,summary} from './engine.js';
 
 export const PILOT_VERSION='reception-pilot-2';

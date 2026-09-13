@@ -10,7 +10,7 @@ async function db(path,method='GET',body){const r=await fetch(`http://127.0.0.1:
   await context.route('**/assets/js/config.js*',r=>r.fulfill({contentType:'application/javascript',body:config}));
   const errors=[];await context.route(/https:\/\/.*(?:googleapis\.com|firebaseio\.com|firebasedatabase\.app|firebaseapp\.com)\//,r=>{errors.push('Production request blocked');return r.abort()});
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
-  const ready=async()=>{await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.3')).backend.init()});await page.locator('#app[aria-busy="false"]').waitFor()};
+  const ready=async()=>{await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.4')).backend.init()});await page.locator('#app[aria-busy="false"]').waitFor()};
   try{
     await page.goto('http://127.0.0.1:8765/#dashboard');await ready();await page.locator('#profileButton').click();await page.locator('#authIdentifier').fill(key);await page.locator('#authStudentDetails').waitFor();await page.locator('#authSubmit').click();await page.locator('#authDialog').waitFor({state:'hidden'});
     await page.goto('http://127.0.0.1:8765/#activity/seminar-3');await page.locator('#settlementForm[data-attempt-id]').waitFor();

@@ -3,12 +3,12 @@
   'use strict';
   const G=root.GovernorGame,S=G.Stories,I=G.icon;
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const tr=(l,r,e)=>l==='en'?e:r,loc=(v,l)=>v?.[l]||v?.ru||'';
+  const tr=(l,r,e)=>globalThis.GovernorGame.I18n.choose(l,()=>(r),()=>(e)),loc=(v,l)=>globalThis.GovernorGame.I18n.local(v,l);
   const ARCHIVE_KEY='rudn-governor-stage7-correspondence';
   let hooks,dialog,current=null,origin=null,saveFailed=false;
   const lang=()=>hooks.language(),state=()=>hooks.state();
   const place=(id,l)=>loc(G.Population.MUNICIPALITIES.find(d=>d.id===id)?.name,l);
-  const percent=(v,l)=>new Intl.NumberFormat(l==='en'?'en-US':'ru-RU',{maximumFractionDigits:1}).format(v*100)+'%';
+  const percent=(v,l)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:1}).format(v*100)+'%';
   const phaseName=(p,l)=>[tr(l,'Первое письмо','First letter'),tr(l,'Спустя годы','Years later'),tr(l,'Развязка','Ending')][p];
   function getArchive(){try{const a=JSON.parse((window.GovernorGame.Platform?.storage||localStorage).getItem(ARCHIVE_KEY)||'[]');return Array.isArray(a)?a.filter(x=>x&&typeof x.id==='string'&&Array.isArray(x.endings)).slice(-12):[];}catch(_){return [];}}
   function remember(){

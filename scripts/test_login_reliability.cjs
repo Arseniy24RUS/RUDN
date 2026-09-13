@@ -19,11 +19,11 @@ const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   try{
     await page.goto(base+'#dashboard');
-    await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.3')).backend.init()});
+    await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.4')).backend.init()});
     await page.locator('#app[aria-busy="false"]').waitFor();
     await page.locator('#profileButton').click();await page.locator('#authIdentifier').waitFor();
     await page.evaluate(async()=>{
-      const {backend}=await import('/assets/js/backend.js?v=1.3.3');const original=backend.lookupStudent.bind(backend);
+      const {backend}=await import('/assets/js/backend.js?v=1.3.4');const original=backend.lookupStudent.bind(backend);
       window.qaLookups=[];window.qaDelay=0;window.qaReject=false;
       backend.lookupStudent=async value=>{window.qaLookups.push(value);const delay=window.qaDelay,reject=window.qaReject;await new Promise(r=>setTimeout(r,delay));if(reject)throw {code:'network/offline'};return original(value)};
     });

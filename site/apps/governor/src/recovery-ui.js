@@ -2,9 +2,9 @@
 (function(root){
   'use strict';
   const G=root.GovernorGame,R=G.Recovery,E=G.Engine,I=G.icon;
-  const tr=(l,ru,en)=>l==='en'?en:ru;
+  const tr=(l,ru,en)=>globalThis.GovernorGame.I18n.choose(l,()=>(ru),()=>(en));
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const money=(v,l)=>new Intl.NumberFormat(l==='en'?'en-US':'ru-RU',{maximumFractionDigits:2}).format(v);
+  const money=(v,l)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:2}).format(v);
   let hooks,dialog,origin=null,selected=null,operation=null;
   const names={reserves:['Расчёт своими силами','Use your own resources'],grant:['Помощь с паузой','Support with a pause'],loan:['Заём с возвратом','A loan to repay']};
   function title(id,l){return names[id]?tr(l,...names[id]):'';}

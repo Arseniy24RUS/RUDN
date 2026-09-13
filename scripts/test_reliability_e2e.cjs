@@ -5,7 +5,7 @@ const base='http://127.0.0.1:8765/',root='rudn-platform/v1',key=process.env.QA_S
 const out=process.env.QA_OUT||path.join(require('node:os').tmpdir(),'rudn-reliability-e2e');fs.mkdirSync(out,{recursive:true});
 const bank=JSON.parse(fs.readFileSync('site/data/questions.json','utf8'));
 const config=fs.readFileSync('site/assets/js/config.js','utf8').replace(/export const CONFIG\s*=\s*\{/,'export const CONFIG = {emulators:{auth:"http://127.0.0.1:9099",host:"127.0.0.1",databasePort:9000},');
-const version='1.3.3';
+const version='1.3.4';
 async function db(p,method='GET',body){const r=await fetch(`http://127.0.0.1:9000/${p}.json?ns=demo-rudn-default-rtdb`,{method,headers:{Authorization:'Bearer owner','Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const value=await r.json();assert(r.ok,JSON.stringify(value));return value}
 async function poll(fn,message){for(let i=0;i<80;i++){if(await fn())return;await new Promise(r=>setTimeout(r,250))}throw Error(message)}
 async function backend(page,method,...args){return page.evaluate(async({method,args,version})=>(await import(`/assets/js/backend.js?v=${version}`)).backend[method](...args),{method,args,version})}

@@ -3,6 +3,8 @@
   "version": "7.0-stage7",
   "note": "English working translations for educational access, not validated language-equivalent scores or official institutional names. Numeric scoring data is unchanged.",
   "entries": {
+    "Инструменты профориентации": "Career guidance tools",
+    "Разделы профориентационного теста": "Career guidance test sections",
     "Скачать или восстановить ответы": "Download or restore answers",
     "Как отвечать на вопросы": "How to answer the questions",
     "Карьерные роли и семейства подразделений являются учебными типовыми моделями, а не исчерпывающим воспроизведением штатного расписания конкретного органа. Точное название должности, требования и порядок поступления определяются актуальным объявлением и должностным регламентом.": "Career roles and department families are illustrative educational models, not a complete staffing list for any authority. Actual titles, requirements and entry procedures are defined by the current announcement and job regulations.",
@@ -2849,12 +2851,12 @@
       "Example portfolio evidence: {0}"
     ],
     [
-      "{0}: {1}",
-      "{0}: {1}"
-    ],
-    [
       "Содержательная область выбранного направления: {0}.",
       "Policy area of the selected path: {0}."
+    ],
+    [
+      "{0}: {1}",
+      "{0}: {1}"
     ]
   ]
 }

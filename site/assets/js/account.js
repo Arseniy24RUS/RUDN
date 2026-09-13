@@ -1,6 +1,6 @@
-import {backend,groupOptions} from './backend.js?v=1.3.3';
-import {getLocale} from './i18n.js?v=1.3.3';
-import {toast,formError} from './notifications.js?v=1.3.3';
+import {backend,groupOptions} from './backend.js?v=1.3.4';
+import {getLocale} from './i18n.js?v=1.3.4';
+import {toast,formError} from './notifications.js?v=1.3.4';
 
 const COPY={
   ru:{account:'Аккаунт',profile:'Профиль',teacher:'Преподаватель',student:'Студент',role:'Роль',name:'ФИО',group:'Учебная группа',identifier:'Студенческий билет',email:'Email',save:'Сохранить',saved:'Профиль сохранён',logout:'Выйти',settings:'Настройки курса',close:'Закрыть',saving:'Сохраняем…',ready:'Вы вошли',help:'ФИО и учебную группу можно изменить. Номер билета остаётся прежним.'},

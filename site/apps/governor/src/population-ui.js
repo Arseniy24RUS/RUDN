@@ -2,12 +2,12 @@
   'use strict';
   const P=root.GovernorGame.Population,icon=root.GovernorGame.icon;
   const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const local=(v,lang)=>typeof v==='object'?(v[lang]||v.ru):v;
-  const text=(lang,ru,en)=>lang==='ru'?ru:en;
-  const num=(n,lang)=>new Intl.NumberFormat(lang==='ru'?'ru-RU':'en-US',{maximumFractionDigits:0}).format(n);
+  const local=(v,lang)=>globalThis.GovernorGame.I18n.local(v,lang);
+  const text=(lang,ru,en)=>globalThis.GovernorGame.I18n.choose(lang,()=>(ru),()=>(en));
+  const num=(n,lang)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(lang),{maximumFractionDigits:0}).format(n);
   const sign=(n,lang)=>(n>0?'+':n<0?'−':'')+num(Math.abs(n),lang);
   const labels={healthAccess:['Медицина','Healthcare'],schoolAccess:['Школа','School'],childcareAccess:['Уход за детьми','Childcare'],employment:['Работа','Employment'],housingAccess:['Жильё','Housing']};
-  const label=(k,lang)=>labels[k][lang==='ru'?0:1];
+  const label=(k,lang)=>globalThis.GovernorGame.I18n.choose(lang,()=>labels[k][0],()=>labels[k][1]);
   const statuses=(v,lang)=>v<.6?text(lang,'Не хватает','Shortage'):v<.85?text(lang,'Есть трудности','Under pressure'):text(lang,'Доступно','Accessible');
   function tabs(lang,active){return `<div class="world-tabs" role="group" aria-label="${text(lang,'Слои карты','Map views')}"><button type="button" data-world-view="map" aria-pressed="${active==='map'}">${icon('construction',{size:17})}${text(lang,'Проекты','Projects')}</button><button type="button" data-world-view="residents" aria-pressed="${active==='residents'}">${icon('people',{size:17})}${text(lang,'Жители','Residents')}</button><button type="button" data-world-view="stories" aria-pressed="${active==='stories'}">${icon('journal',{size:17})}${text(lang,'Письма','Letters')}</button></div>`;}
   function briefing(state,id,lang){

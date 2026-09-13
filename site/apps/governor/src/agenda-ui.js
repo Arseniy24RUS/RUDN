@@ -3,10 +3,10 @@
  'use strict';
  const G=root.GovernorGame,A=G.Agenda;
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const tr=(l,r,e)=>l==='en'?e:r;
- const loc=(v,l)=>v?.[l]||v?.ru||'';
+ const tr=(l,r,e)=>globalThis.GovernorGame.I18n.choose(l,()=>(r),()=>(e));
+ const loc=(v,l)=>globalThis.GovernorGame.I18n.local(v,l);
  let hooks,focused=null;
- const fmt=(v,l,metric)=>new Intl.NumberFormat(l==='en'?'en-US':'ru-RU',{maximumFractionDigits:1}).format(v*100)+(metric==='floodProtection'?' / 100':'%');
+ const fmt=(v,l,metric)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:1}).format(v*100)+(metric==='floodProtection'?' / 100':'%');
  function init(h){hooks=h;}
  function returnButton(label){return `<button type="button" class="secondary-button" data-agenda-return>${esc(label)}</button>`;}
  function render(host) {

@@ -1,6 +1,6 @@
 import { createCareerRuntime } from './runtime.bundle.mjs';
-import {backend} from '../../assets/js/backend.js?v=1.3.3';
-import {durableStore} from '../../assets/js/durable-store.js?v=1.3.3';
+import {backend} from '../../assets/js/backend.js?v=1.3.4';
+import {durableStore} from '../../assets/js/durable-store.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const VALID_ROUTES = new Set(['home','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);

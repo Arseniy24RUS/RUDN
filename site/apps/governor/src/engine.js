@@ -65,6 +65,7 @@
   }
 
   function localise(value, language) {
+    if (root.GovernorGame?.I18n) return root.GovernorGame.I18n.local(value, language);
     if (value && typeof value === 'object' && (value.ru || value.en)) {
       return value[language] || value.ru || value.en;
     }
@@ -546,7 +547,7 @@
       agenda,
       version: VERSION,
       contentVersion: CONTENT_VERSION,
-      language: opts.language === 'en' ? 'en' : 'ru',
+      language: ['ru','en','zh'].includes(opts.language) ? opts.language : 'ru',
       profile: {
         name: String(opts.name || '').trim(),
         group: String(opts.group || '').trim()
@@ -1213,17 +1214,18 @@
     const assistance=state.finance.totalEmergencyTransfers;
     const fiscalStatus=assistance>0?'assistance-used':future.unfunded?'future-gap':'covered-under-assumptions';
     const recoveryReport=Recovery.report(state);
-    const ru=`Новых мер: ${launched.length}; годов без новой меры: ${deferred}. Капитальные проекты составили ${Math.round(capitalShare*100)}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${serviceChange>0?'+':''}${serviceChange} п. п. `+
-      (assistance>0?`Для завершения срока понадобилось ${round2(assistance)} млрд ₽ экстренной учебной помощи. `:'Экстренная учебная помощь не использовалась. ')+
-      (future.unfunded?'При продолжении действующих обязательств есть дефицит следующего бюджета. ':'Условный прогноз следующих трёх лет не требует помощи. ')+
-      (recoveryReport?`В учебном кейсе старый счёт: ${recoveryReport.bill} млрд ₽; целевая помощь: ${recoveryReport.grantReceived}; возврат помощи: ${recoveryReport.grantReturned}; остаток займа: ${recoveryReport.principalOutstanding}. `:'')+
-      'Название описывает ваш курс, а не оценку знаний и не доказательство успешности управления.';
+    const ruParts=[`Новых мер: ${launched.length}; годов без новой меры: ${deferred}. Капитальные проекты составили ${Math.round(capitalShare*100)}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${serviceChange>0?'+':''}${serviceChange} п. п. `,
+      assistance>0?`Для завершения срока понадобилось ${round2(assistance)} млрд ₽ экстренной учебной помощи. `:'Экстренная учебная помощь не использовалась. ',
+      future.unfunded?'При продолжении действующих обязательств есть дефицит следующего бюджета. ':'Условный прогноз следующих трёх лет не требует помощи. ',
+      recoveryReport?`В учебном кейсе старый счёт: ${recoveryReport.bill} млрд ₽; целевая помощь: ${recoveryReport.grantReceived}; возврат помощи: ${recoveryReport.grantReturned}; остаток займа: ${recoveryReport.principalOutstanding}. `:'',
+      'Название описывает ваш курс, а не оценку знаний и не доказательство успешности управления.'];
+    const ru=ruParts.join('');
     const en=`New measures: ${launched.length}; years without a new measure: ${deferred}. Capital projects account for ${Math.round(capitalShare*100)}% of policy spending; ${actualCapital} capital projects opened. Mean service-access index changed by ${serviceChange>0?'+':''}${serviceChange} pp. `+
       (assistance>0?`Completing the term required ${round2(assistance)} bn RUB in emergency classroom support. `:'No emergency classroom support was used. ')+
       (future.unfunded?'Existing commitments imply a future cash shortfall. ':'The conditional three-year projection requires no support. ')+
       (recoveryReport?`Classroom inherited bill: ${recoveryReport.bill} bn RUB; conditional grant: ${recoveryReport.grantReceived}; grant returned: ${recoveryReport.grantReturned}; loan still outstanding: ${recoveryReport.principalOutstanding}. `:'')+
       'The title describes your course, not learning attainment or proof of governance success.';
-    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en},future,
+    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en,...(root.GovernorGame.I18n?{zh:ruParts.map(part=>localise(part,'zh')).join('')}:{})},future,
       evidence:{advisorAverage:round1(advisorAverage),actualCapital,assistance,deferred,launched:launched.length,capitalShare:round2(capitalShare),serviceShare:round2(serviceShare),protectionShare:round2(protectionShare),coverage,serviceChange,fiscalStatus,promises,future},
       lessons:[
        {ru:'Ввод объекта, доступность услуги и бюджетная устойчивость проверяются отдельно.',en:'Facility opening, service access and fiscal resilience are assessed separately.'},
@@ -1297,7 +1299,7 @@
         state.agenda = Agenda.create('guided');
       }
       if (!validateState(state)) return null;
-      state.language = state.language === 'en' ? 'en' : 'ru';
+      state.language = ['ru','en','zh'].includes(state.language) ? state.language : 'ru';
       state.activeView = state.activeView || 'mission';
       state.soundEnabled = state.soundEnabled !== false;
       state.badges = Array.isArray(state.badges) ? state.badges : [];
@@ -1332,7 +1334,8 @@
   }
 
   function buildReport(state, language) {
-    const lang = language === 'en' ? 'en' : 'ru';
+    const lang = ['ru','en','zh'].includes(language) ? language : 'ru';
+    root.GovernorGame?.I18n?.install(DATA);
     const scenario = getScenario(state);
     const challenge = getChallenge(state);
     const ending = BudgetReview.stopped(state) ? {

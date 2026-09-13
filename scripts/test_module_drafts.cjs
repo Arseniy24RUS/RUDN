@@ -4,7 +4,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
 const {chromium,webkit}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const base=process.env.MODULE_TEST_URL||'http://127.0.0.1:8765/';
 const out=process.env.QA_OUT||path.join(require('node:os').tmpdir(),'rudn-module-drafts');fs.mkdirSync(out,{recursive:true});
-const fake=`import {durableStore as d} from '/assets/js/durable-store.js?v=1.3.3';
+const fake=`import {durableStore as d} from '/assets/js/durable-store.js';
 const profile={studentKey:'9909133001',ticket:'9909133001',fullName:'Синтетический Тест Модулей',group:'ГГУбд-02-26'};
 export const groupOptions=()=>['ГГУбд-01-26','ГГУбд-02-26','ГГУбд-03-26','ГГУбд-04-26','ГГУбд-05-26','ГГУбд-06-26'];
 export const backend={profile,authReady:true,user:{uid:'module-test-uid'},serverTimeOffset:0,isAdmin:()=>false,getProfile:()=>profile,init:async()=>backend,
@@ -14,12 +14,12 @@ export const backend={profile,authReady:true,user:{uid:'module-test-uid'},server
  saveAttempt:async r=>{r={...r,id:r.id||crypto.randomUUID(),studentKey:profile.studentKey};const s={owner:'student:'+profile.studentKey,activitySlug:r.activitySlug,mode:r.draftMode||r.mode||'default',attemptId:r.id};const old=await d.loadDraft(s);await d.complete({...s,state:old?.state||{},attempt:r});localStorage.setItem('rudn.attempt.v2:'+profile.studentKey+':'+r.id,JSON.stringify(r));return r;},
 };`;
 const owner='student:9909133001';
-async function draft(page,activitySlug,mode){return page.evaluate(async s=>(await import('/assets/js/durable-store.js?v=1.3.3')).durableStore.loadDraft(s),{owner,activitySlug,mode})}
-async function flush(page){await page.evaluate(async()=>{await window.moduleHandle?.flush?.();await (await import('/assets/js/durable-store.js?v=1.3.3')).durableStore.flush()})}
+async function draft(page,activitySlug,mode){return page.evaluate(async s=>(await import('/assets/js/durable-store.js')).durableStore.loadDraft(s),{owner,activitySlug,mode})}
+async function flush(page){await page.evaluate(async()=>{await window.moduleHandle?.flush?.();await (await import('/assets/js/durable-store.js')).durableStore.flush()})}
 async function poll(fn,label){for(let i=0;i<80;i++){if(await fn())return;await new Promise(r=>setTimeout(r,125))}throw Error(label)}
 async function fixture(page){await page.goto(base+'module-draft-test.html')}
 async function shot(page,name){await page.screenshot({path:path.join(out,name+'.png'),fullPage:false})}
-async function mountReception(page){await page.evaluate(async()=>{const {backend}=await import('/assets/js/backend.js?v=1.3.3'),{mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()}),assessmentAllowed:true})})}
+async function mountReception(page){await page.evaluate(async()=>{const {backend}=await import('/assets/js/backend.js?v=1.3.4'),{mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()}),assessmentAllowed:true})})}
 async function mountCareer(page){await page.evaluate(async()=>{const {mountCareer}=await import('/apps/career/entry.mjs');window.moduleHandle=await mountCareer(document.querySelector('#module'),{owner:'student:9909133001',lang:'ru'})})}
 const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(',');
 (async()=>{
@@ -32,7 +32,7 @@ const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(
     await context.route('**/module-draft-test.html',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><html lang="ru"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Isolated module persistence test</title><body style="margin:0"><div id="module"></div></body></html>'}));
     await context.route(/^https:\/\//,r=>r.abort());
     await context.addInitScript(()=>localStorage.setItem('rudn.locale','ru'));
-    const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+    const page=await context.newPage(),requests=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',request=>requests.push(request.url()));
     try{
      if(module==='career'){
       await fixture(page);await mountCareer(page);await page.locator('#start-test-button').click();
@@ -45,14 +45,21 @@ const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(
       await page.locator('#sectors-next').click();const conditions=await page.locator('.condition-option[data-value="3"]').count();
       for(let i=0;i<conditions;i++)await page.locator('.condition-option[data-value="3"]').nth(i).click();
       await page.locator('#calculate-button').click();await flush(page);
-      const attempts=await page.evaluate(async()=> (await import('/assets/js/durable-store.js?v=1.3.3')).durableStore.listAttempts({owner:'student:9909133001'}));
+      const attempts=await page.evaluate(async()=> (await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner:'student:9909133001'}));
       assert.equal(attempts.length,1);assert.equal(attempts[0].recordGrade,false);assert.equal(attempts[0].activitySlug,'career-diagnostic');
       await shot(page,name+'-career-result');
      }
      if(module==='reception'){
-      await fixture(page);await mountReception(page);await page.locator('[data-mode="assessment"]').check();await page.locator('[data-action="start"]').click();
+      await fixture(page);await mountReception(page);
+      const first=await draft(page,'seminar-5','2026-2027:practice');
+      const loaded=await page.evaluate(async()=>(await import('/apps/reception/js/content-library.js')).loadedContentIds());
+      assert.deepEqual([...loaded].sort(),first.state.assignment.manifest.map(m=>m.templateId).sort(),'Only initially assigned cases are loaded');
+      assert.equal(requests.some(url=>/\/js\/(cases|evidence-catalog|source-index)\.js/.test(url)),false,'No original heavy bank modules requested');
+      assert.equal(requests.some(url=>/\/content\/(catalog|source-index)\.json/.test(url)),false,'No optional catalog or editor index requested');
+      await shot(page,name+'-reception-home');
+      await page.locator('[data-mode="assessment"]').check();await page.locator('[data-action="start"]').click();
       await page.locator('[data-action="tab"][data-tab="research"]').click();
-      const input=page.locator('input[type="text"][data-field]').first(),field=await input.getAttribute('data-field');await input.pressSequentially('Последний символ сохранён',{delay:20});
+      const input=page.locator('input[type="text"][data-field]').first(),field=await input.getAttribute('data-field');await input.pressSequentially('Последний символ сохранён',{delay:20});await shot(page,name+'-reception-middle');
       // Dispose immediately, without an arbitrary delay: the pending input must drain.
       await page.evaluate(()=>moduleHandle());
       const before=await draft(page,'seminar-5','2026-2027:assessment');assert.equal(field.split('.').reduce((value,key)=>value[key],before.state.cases[before.state.caseIds[0]]),'Последний символ сохранён');
@@ -64,7 +71,11 @@ const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(
       }
       await poll(async()=> (await draft(page,'seminar-5','2026-2027:assessment'))?.phase==='completed','Reception not completed');await flush(page);
       const done=await draft(page,'seminar-5','2026-2027:assessment');assert.equal(done.state.completed,true);assert.equal(done.attemptId,before.attemptId);
-      assert.equal(await page.locator('[data-feedback="training"]').count(),0);await shot(page,name+'-reception-result');
+      assert.equal(await page.locator('[data-feedback="training"]').count(),0);
+      await page.locator('.rx-score-label').filter({hasText:'Итоговый балл за эту попытку'}).waitFor();
+      await page.locator('.rx-save-message').filter({hasText:'ожидает отправки'}).waitFor();
+      assert.equal(await page.getByText('Все основные и контрольные решения подтверждены.',{exact:true}).count(),0);
+      await shot(page,name+'-reception-result');
      }
      if(module==='puzzle'){
       await page.goto(base+'apps/puzzle.html?context=free');await page.locator('#puzzleStart').click();
@@ -79,10 +90,10 @@ const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(
       assert.equal((await draft(page,'maps-freeplay','free')).attemptId,before.attemptId);await canvas.scrollIntoViewIfNeeded();await shot(page,name+'-puzzle-restored-412');
       // Seed only this isolated test draft at the final piece to verify the completion boundary.
       await fixture(page);
-      await page.evaluate(async owner=>{const d=(await import('/assets/js/durable-store.js?v=1.3.3')).durableStore,s={owner,activitySlug:'maps-freeplay',mode:'free'},old=await d.loadDraft(s),state=structuredClone(old.state);state.cursor=88;state.current=state.order[88];state.placed=88;state.pieces=state.pieces.map(p=>({...p,locked:p.index!==state.current,inTray:p.index===state.current,point:null,dx:0,dy:0}));await d.checkpoint({...s,attemptId:old.attemptId,state});},owner);
+      await page.evaluate(async owner=>{const d=(await import('/assets/js/durable-store.js')).durableStore,s={owner,activitySlug:'maps-freeplay',mode:'free'},old=await d.loadDraft(s),state=structuredClone(old.state);state.cursor=88;state.current=state.order[88];state.placed=88;state.pieces=state.pieces.map(p=>({...p,locked:p.index!==state.current,inTray:p.index===state.current,point:null,dx:0,dy:0}));await d.checkpoint({...s,attemptId:old.attemptId,state});},owner);
       await page.goto(base+'apps/puzzle.html?context=free');await poll(async()=> (await page.locator('#puzzleStart').innerText()).includes('другую'),'Final piece restore');
       await canvas.focus();await canvas.press('Enter');await canvas.press('Enter');await page.locator('#puzzleResultDialog[open]').waitFor();await flush(page);
-      const attempts=await page.evaluate(async owner=>(await import('/assets/js/durable-store.js?v=1.3.3')).durableStore.listAttempts({owner}),owner);assert.equal(attempts.length,1);assert.equal(attempts[0].recordGrade,false);assert.equal(attempts[0].placed,89);assert(attempts[0].durationMs>=1000);await shot(page,name+'-puzzle-result');
+      const attempts=await page.evaluate(async owner=>(await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner}),owner);assert.equal(attempts.length,1);assert.equal(attempts[0].recordGrade,false);assert.equal(attempts[0].placed,89);assert(attempts[0].durationMs>=1000);await shot(page,name+'-puzzle-result');
      }
      if(module==='governor'){
       await page.goto(base+'apps/governor/index.html');await page.locator('#platform-loading').waitFor({state:'hidden'});

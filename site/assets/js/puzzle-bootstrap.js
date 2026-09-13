@@ -1,8 +1,8 @@
-import {backend,groupOptions} from './backend.js?v=1.3.3';
-import {getLocale} from './i18n.js?v=1.3.3';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.3';
-import {initNotifications} from './notifications.js?v=1.3.3';
-import {durableStore} from './durable-store.js?v=1.3.3';
+import {backend,groupOptions} from './backend.js?v=1.3.4';
+import {getLocale} from './i18n.js?v=1.3.4';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.4';
+import {initNotifications} from './notifications.js?v=1.3.4';
+import {durableStore} from './durable-store.js?v=1.3.4';
 
 export async function mountPuzzlePage(options={}){
 const root=document.getElementById('geoPuzzleApp');

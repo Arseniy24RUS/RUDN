@@ -1,17 +1,18 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {CONFIG} from './config.js?v=1.3.3';
-import {backend,groupOptions} from './backend.js?v=1.3.3';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.3';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.3';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.3';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.3';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.3';
-import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.3';
-import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.3';
+import {CONFIG} from './config.js?v=1.3.4';
+import {backend,groupOptions} from './backend.js?v=1.3.4';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.4';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.4';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.4';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.4';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.4';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.4';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.4';
 import {durableStore} from './durable-store.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.3';
-import {openAccount,mountProfile} from './account.js?v=1.3.3';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.4';
+import {openAccount,mountProfile} from './account.js?v=1.3.4';
+import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -605,15 +606,27 @@ Object.assign(GOVERNOR_COPY.ru,{rubric:'Пять критериев по 1 ба�
 Object.assign(GOVERNOR_COPY.en,{rubric:'Five criteria, worth 1 point each: campaign completion, delivered programmes, health/school/employment across five districts relative to the starting position, financial headroom including three future budgets, and fulfilled promises. An early financial handover caps the attempt score at 2.5 points.'});
 Object.assign(GOVERNOR_COPY.zh,{rubric:'五项标准各占1分：完成任期、投入运行的项目、五个地区的医疗/教育/就业相较起点的表现、考虑未来三期预算的财政余量，以及兑现承诺。提前移交财政管理时，本次得分上限为2.5分。'});
 const governorCopy=()=>GOVERNOR_COPY[getLocale()]||GOVERNOR_COPY.ru;
+Object.assign(GOVERNOR_COPY.ru,{languages:'Симулятор доступен на русском, английском и китайском языках.',unsafe:'Не удалось сохранить на устройстве · скачайте резервную копию работы',conflict:'Обе версии работы сохранены · требуется выбор версии'});
+Object.assign(GOVERNOR_COPY.en,{languages:'The simulator is available in Russian, English and Chinese.',unsafe:'Could not save on this device · download a backup of your work',conflict:'Both versions retained · choose which version to continue'});
+Object.assign(GOVERNOR_COPY.zh,{languages:'模拟器支持俄语、英语和中文。',unsafe:'无法保存到此设备 · 请下载作业备份',conflict:'已保留两个版本 · 请选择要继续的版本'});
 function nativeGovernorAttempts(attempts,studentKey){
   return Object.values(attempts||{}).filter(a=>a?.studentKey===studentKey&&a.activitySlug==='seminar-7'&&a.type==='governor-simulator'&&a.source==='native-v1'&&a.governor&&typeof a.governor==='object')
     .sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
 }
 function governorPending(studentKey,id){try{return localStorage.getItem(`rudn.pending.v1:${studentKey}:${id}`)!==null}catch{return null}}
-function governorSaveLabel(studentKey,id){const c=governorCopy(),pending=governorPending(studentKey,id);return c[pending===true?'pending':pending===false?'submitted':'saved']}
-function updateGovernorSaveStatus(container){
+function governorSaveLabel(studentKey,id){const c=governorCopy();return c[governorPending(studentKey,id)===true?'pending':'saved']}
+async function updateGovernorSaveStatus(container){
   const studentKey=backend.getProfile()?.studentKey;if(!studentKey)return;
-  container.querySelectorAll('[data-governor-save]').forEach(node=>{if(node.dataset.governorStudent===studentKey)node.textContent=governorSaveLabel(studentKey,node.dataset.governorSave)});
+  const locale=getLocale();
+  await Promise.all([...container.querySelectorAll('[data-governor-save]')].map(async node=>{
+    if(node.dataset.governorStudent!==studentKey)return;
+    const id=node.dataset.governorSave;
+    try{
+      const status=await durableStore.getSaveStatus({owner:'student:'+studentKey,activitySlug:'seminar-7',mode:'campaign',attemptId:id});
+      if(!node.isConnected||studentKey!==backend.getProfile()?.studentKey||locale!==getLocale())return;
+      node.textContent=governorCopy()[governorReceiptState(status,governorPending(studentKey,id))];
+    }catch{if(node.isConnected&&studentKey===backend.getProfile()?.studentKey&&locale===getLocale())node.textContent=governorCopy().saved;}
+  }));
 }
 function governorNumber(value,scale=1){
   if(value===null||value===undefined||value===''||!Number.isFinite(Number(value)))return '—';
@@ -622,7 +635,7 @@ function governorNumber(value,scale=1){
 function governorTable(title,headers,rows,{wrap=false}={}){
   const c=governorCopy(),cellStyle=wrap?' style="white-space:normal"':'';return `<h3>${esc(title)}</h3><div class="table-wrap" tabindex="0" role="region" aria-label="${esc(title)}"><table class="data-table"><thead><tr>${headers.map(label=>`<th scope="col"${cellStyle}>${esc(label)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(row=>`<tr>${row.map((value,index)=>index===0?`<th scope="row"${cellStyle}>${esc(value)}</th>`:`<td${cellStyle}>${esc(value)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${headers.length}">${esc(c.noRows)}</td></tr>`}</tbody></table></div>`;
 }
-function governorReportText(value){return value&&typeof value==='object'?(value[getLocale()]??value.ru??value.en??'—'):value??'—'}
+function governorReportText(value){return governorReportValue(value,getLocale())}
 function governorAssessmentDetails(report){
   const assessment=report.assessment;if(!assessment||typeof assessment!=='object')return '';
   const c=governorCopy(),criteria=(Array.isArray(assessment.criteria)?assessment.criteria:[]).slice(0,20).map(row=>[
@@ -638,11 +651,11 @@ function governorReportCards(attempts,{teacher=false}={}){
     const score=hasGrade?`${c.score}: ${governorNumber(attempt.points)}/5`:c.ungraded;
     const status=c[report.campaignStatus==='completed'?'complete':report.campaignStatus==='financial-handover'?'handover':'unknown'];
     const metrics=['support','development','fiscalSpace','reserve','debt','population'];
-    const territories=(Array.isArray(report.territories)?report.territories:[]).slice(0,5).map(row=>[row?.name||row?.id||'—',governorNumber(row?.population),governorNumber(row?.healthAccess,100),governorNumber(row?.schoolAccess,100),governorNumber(row?.employment,100)]);
+const territories=(Array.isArray(report.territories)?report.territories:[]).slice(0,5).map(row=>[governorReportText(row?.name||row?.id||'—'),governorNumber(row?.population),governorNumber(row?.healthAccess,100),governorNumber(row?.schoolAccess,100),governorNumber(row?.employment,100)]);
     const funding={treasury:c.treasury,cofinance:c.cofinance,debt:c.debtFunding,reserve:c.reserveFunding};
     const delivery={'on-time':c.onTime,delayed:c.delayed,overrun:c.overrun,partial:c.partial};
-    const decisions=(Array.isArray(report.decisionRegister)?report.decisionRegister:[]).slice(0,20).map(row=>[row?.year??'—',row?.mission||'—',row?.action||'—',funding[row?.fundingMode]||row?.fundingMode||'—',governorNumber(row?.cost),delivery[row?.delivery]||row?.delivery||'—']);
-    return `<article class="panel governor-report" style="overflow-wrap:anywhere"><h3>${esc(attempt.title||c.title)}</h3><p>${esc(formatDate(attempt.createdAt))} · ${esc(status)} · ${esc(c.decisions)}: ${esc(governorNumber(report.decisions))}/20</p><p><strong class="badge success">${esc(score)}</strong> <span class="badge"${teacher?'':` data-governor-save="${esc(attempt.id)}" data-governor-student="${esc(attempt.studentKey)}"`}>${esc(teacher?c.submitted:governorSaveLabel(attempt.studentKey,attempt.id))}</span></p><details><summary>${esc(c.details)}</summary>${governorAssessmentDetails(report)}<dl class="profile-dl"><dt>${esc(c.scenario)}</dt><dd>${esc(report.scenario||'—')}</dd><dt>${esc(c.seed)}</dt><dd>${esc(report.seed||'—')}</dd><dt>${esc(c.application)}</dt><dd>${esc(report.applicationVersion||'—')}</dd><dt>${esc(c.model)}</dt><dd>${esc(report.modelVersion||'—')}</dd></dl><h3>${esc(c.reflection)}</h3><p class="submission-case">${esc(attempt.reflection||c.noReflection)}</p><h3>${esc(c.outcomes)}</h3><dl class="profile-dl">${metrics.map(key=>`<dt>${esc(c[key])}</dt><dd>${esc(governorNumber(final[key]))}</dd>`).join('')}</dl>${governorTable(c.territories,[c.territory,c.population,c.health,c.school,c.employment],territories)}<div class="subsection">${governorTable(c.register,[c.year,c.mission,c.action,c.funding,c.cost,c.delivery],decisions)}</div></details></article>`;
+    const decisions=(Array.isArray(report.decisionRegister)?report.decisionRegister:[]).slice(0,20).map(row=>[row?.year??'—',governorReportText(row?.mission),governorReportText(row?.action),funding[row?.fundingMode]||row?.fundingMode||'—',governorNumber(row?.cost),delivery[row?.delivery]||row?.delivery||'—']);
+    return `<article class="panel governor-report" style="overflow-wrap:anywhere"><h3>${esc(c.title)}</h3><p>${esc(formatDate(attempt.createdAt))} · ${esc(status)} · ${esc(c.decisions)}: ${esc(governorNumber(report.decisions))}/20</p><p><strong class="badge success">${esc(score)}</strong> <span class="badge"${teacher?'':` data-governor-save="${esc(attempt.id)}" data-governor-student="${esc(attempt.studentKey)}"`}>${esc(teacher?c.submitted:governorSaveLabel(attempt.studentKey,attempt.id))}</span></p><details><summary>${esc(c.details)}</summary>${governorAssessmentDetails(report)}<dl class="profile-dl"><dt>${esc(c.scenario)}</dt><dd>${esc(governorReportText(report.scenario))}</dd><dt>${esc(c.seed)}</dt><dd>${esc(report.seed||'—')}</dd><dt>${esc(c.application)}</dt><dd>${esc(report.applicationVersion||'—')}</dd><dt>${esc(c.model)}</dt><dd>${esc(report.modelVersion||'—')}</dd></dl><h3>${esc(c.reflection)}</h3><p class="submission-case">${esc(attempt.reflection||c.noReflection)}</p><h3>${esc(c.outcomes)}</h3><dl class="profile-dl">${metrics.map(key=>`<dt>${esc(c[key])}</dt><dd>${esc(governorNumber(final[key]))}</dd>`).join('')}</dl>${governorTable(c.territories,[c.territory,c.population,c.health,c.school,c.employment],territories)}<div class="subsection">${governorTable(c.register,[c.year,c.mission,c.action,c.funding,c.cost,c.delivery],decisions)}</div></details></article>`;
   }).join('');
 }
 async function renderSeminar7(topic){
@@ -650,13 +663,14 @@ async function renderSeminar7(topic){
   const intro=`<div class="panel external-card"><div><span class="badge">${esc(c.module)}</span><h2>${esc(c.title)}</h2><p>${esc(ui('seminar7Lead'))}</p><p class="muted">${esc(c.languages)}</p></div><a class="btn btn-primary" href="apps/governor/index.html">${esc(ui('openSimulator'))}</a></div><div class="panel"><p class="notice">${esc(c.assessment)}</p><p>${esc(c.rubric)}</p></div>`;
   app.innerHTML=seminarShell(topic,`${intro}<section class="panel"><h2>${esc(c.history)}</h2><div id="governorHistory" role="status">${backend.isAdmin()?esc(c.preview):!studentKey?esc(ui('profileRequired')):esc(t('loading'))}</div></section>`);
   if(!studentKey)return;
-  const [items,grades]=await Promise.all([backend.getAttempts(studentKey),backend.getGrades(studentKey)]);
+  const [items,grades]=await Promise.all([backend.getAttempts(studentKey),backend.getGrades(studentKey),prepareGovernorReportLocale().catch(()=>{})]);
   if(owner!==attemptOwner()||hash!==location.hash)return;
   const history=app.querySelector('#governorHistory');if(!history)return;
   history.removeAttribute('role');
   const attempts=nativeGovernorAttempts(items,studentKey);
   history.innerHTML=`<p><strong>${esc(c.currentGrade)}: ${esc(governorNumber(grades['seminar-7']?.points))}/5</strong></p><p class="muted">${esc(c.historyLead)}</p><div class="page-actions"><button class="btn btn-neutral btn-small" id="governorHistoryRefresh">${esc(ui('refresh'))}</button></div>${attempts.length?governorReportCards(attempts):`<p>${esc(c.empty)}</p>`}`;
   history.querySelector('#governorHistoryRefresh').onclick=()=>render();
+  updateGovernorSaveStatus(history);
 }
 let puzzleFragmentPromise=null;
 async function getPuzzleFragment(){
@@ -709,7 +723,7 @@ async function renderAdmin(){
     catch(error){toast(error,'error');controls.querySelectorAll('button').forEach(item=>item.disabled=false)}
   });
 }
-function renderStudentGrades(studentKey,all){
+async function renderStudentGrades(studentKey,all){
   currentCleanup?.();currentCleanup=null;
   const p=all.profiles[studentKey],grades=all.grades?.[studentKey]||{},items=gradeItems();
   app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${p.ticket} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
@@ -721,6 +735,9 @@ function renderStudentGrades(studentKey,all){
   };
   const reports=nativeGovernorAttempts(all.attempts?.[studentKey],studentKey);
   if(reports.length){
+    const gradeForm=app.querySelector('#gradeEdit'),locale=getLocale(),owner=attemptOwner();
+    await prepareGovernorReportLocale().catch(()=>{});
+    if(!gradeForm.isConnected||app.querySelector('#gradeEdit')!==gradeForm||locale!==getLocale()||owner!==attemptOwner())return;
     const c=governorCopy(),gradePanel=app.querySelector('#gradeEdit').closest('.panel');
     gradePanel.insertAdjacentHTML('beforebegin',`<section class="panel"><h2>${esc(c.teacherReports)}</h2><p class="muted">${esc(c.teacherHelp)}</p>${all.stale?`<p class="notice warning">${esc(c.cached)}</p>`:''}${governorReportCards(reports,{teacher:true})}</section>`);
     if(all.stale)app.querySelectorAll('#gradeEdit input,#gradeEdit textarea,#gradeEdit button[type="submit"]').forEach(control=>control.disabled=true);
@@ -901,7 +918,7 @@ async function bootstrap(){
   registerRecoveryProvider(()=>durableStore.exportBackup({owner:attemptOwner()}));
   translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
-  durableStore.subscribe(()=>updateQuizSaveStatus(app));
+  durableStore.subscribe(()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app)});
   backend.init().then(()=>render()).catch(error=>toast(error,'error'));
   await loadData();dataReady=true;
   updateTopProfile();await render();

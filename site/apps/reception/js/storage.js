@@ -1,5 +1,6 @@
 import {restoreShift,academicPeriod} from './engine.js';
-import {durableStore} from '../../../assets/js/durable-store.js?v=1.3.3';
+import {hydrateSavedShift} from './content-library.js';
+import {durableStore} from '../../../assets/js/durable-store.js';
 
 /** Async adapter for the platform; the pure legacy helpers below remain compatible. */
 export function createReceptionStorage({owner,period=academicPeriod(),backend}){
@@ -9,8 +10,11 @@ export function createReceptionStorage({owner,period=academicPeriod(),backend}){
  const raw=mode=>{try{return localStorage.getItem(storeKey(owner,mode,period));}catch{return null;}};
  return {
   async read(mode){
-   const legacy=readDraftResult(owner,mode,period);observed.set(mode,raw(mode));
+   const existing=raw(mode);let parsed=null;try{parsed=JSON.parse(existing);}catch{/* Legacy reader preserves corrupt text. */}
+   await hydrateSavedShift(parsed);
+   const legacy=readDraftResult(owner,mode,period);observed.set(mode,existing);
    const draft=await (backend?.loadDraft?.(scope(mode))||durableStore.loadDraft(scope(mode)));
+   await hydrateSavedShift(draft?.state);
    const restored=draft?.state&&restoreShift(draft.state,owner,mode,period);
    if(draft)revisions.set(draft.attemptId,draft.revision);
    if(restored&&(!legacy.state||restored.id===legacy.state.id&&Number(restored.revision)>=Number(legacy.state.revision)))return {state:restored,status:'ready',saveStatus:draft.saveStatus};

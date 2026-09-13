@@ -1,5 +1,4 @@
-import {EVIDENCE_VERSION} from './evidence-catalog.js';
-import {CASES,CASE_TEMPLATES,CONTENT_VERSION,datedCaseBank} from './cases.js';
+import {EVIDENCE_VERSION,CASES,CASE_TEMPLATES,CONTENT_VERSION,datedCaseBank} from './content-library.js';
 import {modePolicy} from './policy.js';
 
 export const ASSIGNMENT_VERSION='balanced-bank-4';

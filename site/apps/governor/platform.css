@@ -30,3 +30,29 @@
 @media(max-width:370px){.platform-brand{display:none}.platform-bar-actions{width:100%;justify-content:space-between;margin:0}.platform-bar a.platform-back,.platform-bar button{font-size:12px}}
 
 .platform-rubric{margin:16px 0;padding:12px 14px;border:1px solid #cbdfe9;border-radius:12px;background:#f7fbfe;font:13px/1.6 system-ui,sans-serif}.platform-rubric summary{font-weight:650;color:#145779;min-height:32px;align-content:center}.platform-rubric p{margin:12px 0}.platform-criterion{padding:14px 0;border-top:1px solid #d5e4ed}.platform-criterion>strong{font-size:15px}.platform-criterion>p{font-size:13px;margin:8px 0}
+
+html[lang^="zh"] .budget-stat .stat-copy strong::after{content:' 十亿'}
+.mobile-bottom-nav{background:#fff!important;backdrop-filter:none!important}
+
+#toast-region{position:static;inset:auto;z-index:auto;display:block;width:100%;max-width:100%;pointer-events:auto;margin:0 0 12px;scroll-margin-top:calc(var(--platform-bar) + 12px)}
+#toast-region:empty{display:none;margin:0}
+#toast-region .toast{grid-template-columns:34px minmax(0,1fr) 44px;min-height:58px;padding:7px 9px;gap:8px;max-height:170px;background:#eff8fd;backdrop-filter:none;box-shadow:none;animation:none;overflow:auto}
+#toast-region .toast>div{min-width:0;overflow-wrap:anywhere}
+#toast-region .toast-close{min-width:44px;min-height:44px;background:#dfeff9}
+
+/* A single platform identity; the game's compact strip contains only game tools. */
+.game-shell>.topbar .topbar-logo,.game-shell>.topbar .brand-divider,.game-shell>.topbar .topbar-name{display:none}
+.game-shell>.topbar{grid-template-columns:minmax(0,1fr) auto auto;min-height:76px}
+.game-shell>.topbar .topbar-brand{display:none}
+.game-shell>.topbar .core-stats{min-width:0}
+#game-shell #floating-save{position:static;inset:auto;opacity:1;min-height:44px;flex-shrink:0;box-shadow:none;margin:0}
+@media(max-width:900px){
+ .game-shell>.topbar{position:relative;top:auto;grid-template-columns:44px minmax(0,1fr) auto;padding:8px 12px;gap:6px;box-shadow:none;backdrop-filter:none}
+ .game-shell>.topbar .topbar-brand{display:flex;grid-column:1;grid-row:1}
+ .game-shell>.topbar .profile-box{grid-column:2/-1;grid-row:1;justify-content:flex-end;min-width:0}
+ .game-shell>.topbar .profile-avatar{width:38px;height:38px}
+ .game-shell>.topbar #language-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px}
+ .game-shell>.topbar .core-stats{grid-row:2}
+ .mission-panel,.secondary-stage{scroll-margin-top:calc(var(--platform-bar) + 14px)}
+ .action-cards,.action-card{scroll-margin-top:calc(var(--platform-bar) + 14px);scroll-margin-bottom:100px}
+}

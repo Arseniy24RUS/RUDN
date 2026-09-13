@@ -3,9 +3,9 @@ import {referenceNumber,referenceUnit,formatReference} from './legal-reference.j
 import {documentEvidenceCheck,requiredActionPlan,validDocumentSelection} from './documents.js';
 import {BUNDLED_CALENDARS} from '../../../assets/js/calendar-bundled.js';
 import {calendarYearNow,validateCalendarSnapshot} from '../../../assets/js/calendar-model.js';
-import {EVIDENCE_VERSION} from './evidence-catalog.js';
+import {EVIDENCE_VERSION} from './content-library.js';
 import {newEvidence,evidenceChecks,evidenceFeedback,validEvidence} from './evidence.js';
-import {CASES,CASE_TEMPLATES,instantiateCase,CONTENT_VERSION,VERSION,RUBRIC,RUBRIC_VERSION} from './cases.js';
+import {CASES,CASE_TEMPLATES,instantiateCase,CONTENT_VERSION,VERSION,RUBRIC,RUBRIC_VERSION,requireTemplate,hydrateTemplates} from './content-library.js';
 import {calculateDeadline,parseDateOnly,CALENDAR_VERSION,formatDateOnly,durationLabel} from '../../../assets/js/legal-calendar.js';
 import {modePolicy,isIndependent} from './policy.js';
 import {createAssignment,validAssignment} from './assignment.js';
@@ -16,6 +16,7 @@ export function academicPeriod(now=new Date()) {const y=now.getUTCFullYear(),sta
 export function caseIdsFor(mode){modePolicy(mode);return CASES.map(c=>c.id);}
 export function caseById(id,state=null){
  const c=CASES.find(x=>x.id===id);if(!c)throw Error('Дело не найдено.');
+ requireTemplate(c.templateId);
  if(!state?.calendarSnapshot)return c;
  const manifest=state.assignment.manifest.find(x=>x.id===id);if(!manifest)throw Error('Дело не назначено этой смене.');
  const instance=instantiateCase(CASE_TEMPLATES.find(t=>t.id===manifest.templateId),manifest.datePackId,{dateValues:manifest.dateValues,calendarSnapshot:state.calendarSnapshot});
@@ -23,13 +24,20 @@ export function caseById(id,state=null){
  return instance;
 }
 export function newCase(){return {asked:[],opened:[],fact:'',factEvidence:'',factEvidenceIds:[],comparison:[],procedure:'',route:'',actions:[],trap:'',knowledge:{lawNumber:'',actDate:'',article:'',application:'',url:''},evidence:newEvidence(),calendar:{anchor:'',rule:'',start:'',shift:'',answer:''},sources:[],phase:'talk',first:null,practiceRevisions:[],followup:'',followupConfirmed:false,skipped:false};}
-export function newShift(owner='preview',mode='practice',{period=academicPeriod(),id=uuid(),seed=uuid(),templateId=null,level=null,recentCaseIds=[],profileId='balanced-six',calendarYear=calendarYearNow(),calendarSnapshot=BUNDLED_CALENDARS,calendarStatus=null}={}) {
+export function newShift(owner='preview',mode='practice',{period=academicPeriod(),id=uuid(),seed=uuid(),templateId=null,level=null,recentCaseIds=[],profileId='balanced-six',calendarYear=calendarYearNow(),calendarSnapshot=BUNDLED_CALENDARS,calendarStatus=null,preparedAssignment=null}={}) {
  modePolicy(mode);validateCalendarSnapshot(calendarSnapshot);
- const assignment=createAssignment({seed,mode,templateId,level,recentCaseIds,profileId,calendarYear,calendarSnapshot}),caseIds=assignment.caseIds;
- const sourceSnapshot=createSourceSnapshot(assignment.manifest.map(m=>CASE_TEMPLATES.find(t=>t.id===m.templateId)));
+ const assignment=preparedAssignment||createAssignment({seed,mode,templateId,level,recentCaseIds,profileId,calendarYear,calendarSnapshot}),caseIds=assignment.caseIds;
+ const sourceSnapshot=createSourceSnapshot(assignment.manifest.map(m=>requireTemplate(m.templateId)));
  return {schema:16,sourceSnapshot,calendarYear,calendarSnapshot:clone(calendarSnapshot),calendarStatus:clone(calendarStatus),evidenceVersion:EVIDENCE_VERSION,version:VERSION,contentVersion:CONTENT_VERSION,rubricVersion:RUBRIC_VERSION,calendarVersion:CALENDAR_VERSION,
   id,seed,owner,mode,period,assignment,caseIds,startedAt:new Date().toISOString(),endedAt:null,screen:'home',active:0,
   cases:Object.fromEntries(caseIds.map(key=>[key,newCase()])),events:[],submitted:false,completed:false};
+}
+/** Choose once from light metadata; load those exact IDs before creating any work. */
+export async function newShiftPrepared(owner='preview',mode='practice',options={},loadOptions={}){
+ const seed=options.seed||uuid(),calendarYear=options.calendarYear||calendarYearNow(),calendarSnapshot=options.calendarSnapshot||BUNDLED_CALENDARS;
+ const assignment=createAssignment({...options,seed,mode,calendarYear,calendarSnapshot});
+ await hydrateTemplates(assignment.manifest.map(m=>m.templateId),loadOptions);
+ return newShift(owner,mode,{...options,seed,calendarYear,calendarSnapshot,preparedAssignment:assignment});
 }
 export function event(state,type,caseId,data={}){state.events.push({at:new Date().toISOString(),type,caseId,...data});if(state.events.length>1000)state.events.splice(0,state.events.length-1000);}
 export function safeUrl(value){try{const s=String(value||'').trim(),u=new URL(s);if(s.length>2048||!['http:','https:'].includes(u.protocol)||u.username||u.password||!u.hostname.includes('.')||/^(?:\d{1,3}\.){3}\d{1,3}$/.test(u.hostname)||u.hostname.endsWith('.local'))return '';return u.href;}catch{return '';}}

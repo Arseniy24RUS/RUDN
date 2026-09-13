@@ -2,8 +2,8 @@
 (function(root){
 'use strict';const G=root.GovernorGame,P=G.ProjectPresentation,A=G.IllustratedAssets;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const tr=(l,r,e)=>l==='en'?e:r,loc=(x,l)=>G.WorldModel.local(x,l);
-const n=(x,l)=>new Intl.NumberFormat(l==='en'?'en-US':'ru-RU',{maximumFractionDigits:1}).format(x||0);
+const tr=(l,r,e)=>globalThis.GovernorGame.I18n.choose(l,()=>(r),()=>(e)),loc=(x,l)=>G.WorldModel.local(x,l);
+const n=(x,l)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:1}).format(x||0);
 const money=(x,l)=>`${n(x,l)} ${tr(l,'млрд ₽','bn RUB')}`;
 const icon=(i,s=18)=>G.icon(i,{size:s});
 function stageName(v,l){const labels={building:['Строительство','Construction'],civil:['Инфраструктурные работы','Infrastructure works'],equipment:['Монтаж и настройка','Installation and setup'],landscape:['Подготовка территории','Landscape preparation'],service:['Подготовка услуги','Service preparation']};const pair=labels[v.form]||labels.service;return tr(l,...pair);}

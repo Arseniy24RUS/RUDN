@@ -21,7 +21,7 @@
     {id:3,ru:'Когда планы встречаются с кризисом',en:'When plans meet a crisis',lead:{ru:'У региона есть новая инфраструктура и прежние уязвимости. Следующие годы проверят, что действительно работает.',en:'The region has new infrastructure and old vulnerabilities. The coming years will test what actually works.'},question:{ru:'Не каждую потерю можно предотвратить. На что вы будете опираться: резерв, подготовленные службы или внешнюю помощь?',en:'Not every loss can be prevented. Will you rely on reserves, prepared services, or outside help?'},advisor:'elena'},
     {id:4,ru:'Что останется после вас',en:'What remains after you',lead:{ru:'Кризисы прошли, но их последствия остались. Последняя глава – о восстановлении, работающих услугах и честном отчёте.',en:'The crises have passed, but their consequences remain. The final chapter is about recovery, working services and an honest account.'},question:{ru:'Жители запомнят не число проектов, а то, как изменилась повседневная жизнь.',en:'Residents will remember changes to everyday life, not the number of projects.'},advisor:'ilya'}
   ];
-  function local(v,lang){return v&&typeof v==='object'?(v[lang]||v.ru||v.en||''):String(v||'');}
+  function local(v,lang){return root.GovernorGame.I18n?root.GovernorGame.I18n.local(v,lang):v&&typeof v==='object'?(v[lang]||v.ru||v.en||''):String(v||'');}
   function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
   function kind(project) {
     const a=project.actionId||'';

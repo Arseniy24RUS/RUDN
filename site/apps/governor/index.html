@@ -115,7 +115,7 @@
     </section>
 
     <section id="game-shell" class="game-shell hidden" aria-label="Симулятор губернатора">
-      <header class="topbar">
+      <section class="topbar" aria-label="Ресурсы кампании">
         <div class="topbar-brand">
           <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Открыть главное меню"></button>
           <img src="assets/rudn-logo.webp" alt="РУДН" class="topbar-logo">
@@ -162,7 +162,7 @@
             <span class="profile-copy"><small data-ui="profileGovernor">Губернатор-студент</small><strong id="profile-name"></strong><em id="profile-level"></em></span>
           </button>
         </div>
-      </header>
+      </section>
 
       <div class="game-grid">
         <nav class="side-nav" id="side-nav" aria-label="Разделы игры">
@@ -317,6 +317,9 @@
   <div id="confetti-layer" class="confetti-layer" aria-hidden="true"></div>
   <div id="screen-reader-live" class="sr-only" aria-live="assertive"></div>
 
+  <script src="src/i18n.js"></script>
+  <script src="locales/zh-Hans.js"></script>
+  <script src="src/i18n-shell.js"></script>
   <script src="src/icons.js"></script>
   <script src="src/game-data.js"></script>
   <script src="src/stage3-data.js"></script>

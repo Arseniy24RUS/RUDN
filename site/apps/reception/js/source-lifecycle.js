@@ -1,6 +1,4 @@
-import {SOURCES} from './cases.js';
-import {EVIDENCE_RECORDS,EVIDENCE_TASKS,EVIDENCE_VERSION} from './evidence-catalog.js';
-import {SOURCE_INDEX} from './source-index.js';
+import {SOURCES,EVIDENCE_RECORDS,EVIDENCE_TASKS,EVIDENCE_VERSION,SOURCE_INDEX} from './content-library.js';
 import {SOURCE_POLICY,SOURCE_POLICY_VERSION} from './source-policy.js';
 const copySource=value=>JSON.parse(JSON.stringify(value));
 const own=(object,key)=>Object.prototype.hasOwnProperty.call(object,key);

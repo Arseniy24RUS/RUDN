@@ -4,8 +4,8 @@ const preview=new URLSearchParams(location.search).get('preview')==='1';
 async function boot(){
  if(preview){await mountReception(root,{profileLabel:'Автономная тренировка',assessmentAllowed:false,onExit:()=>{location.href='?preview=1';}});return;}
  try{
-  const {backend}=await import('../../../assets/js/backend.js?v=1.3.3');
-  const {topicGate,academicContext}=await import('../../../assets/js/access.js?v=1.3.3');
+  const {backend}=await import('../../../assets/js/backend.js?v=1.3.4');
+  const {topicGate,academicContext}=await import('../../../assets/js/access.js?v=1.3.4');
   await backend.init();
   const now=Date.now()+Number(backend.serverTimeOffset||0),year=academicContext(now).startYear;
   const gate=topicGate(5,backend.getAccessOverrides(year),now),admin=backend.isAdmin();

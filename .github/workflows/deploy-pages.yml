@@ -48,7 +48,11 @@ jobs:
             node --check "$file"
           done < <(find site -type f \( -name '*.js' -o -name '*.mjs' \) -print0)
       - name: Verify Governor grading and offline contract
-        run: node --test scripts/test_governor_contract.mjs scripts/test_governor_service_worker.mjs
+        run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
+      - name: Verify legacy reception assignments and lazy content integrity
+        run: node site/apps/reception/content/test.mjs
+      - name: Verify career locale templates and question coverage
+        run: node scripts/test_career_localization.mjs
       - name: Prepare native browser checks
         run: |
           python -m pip install playwright==1.57.0
@@ -62,12 +66,29 @@ jobs:
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/test_durable_store.mjs
+      - name: Complete eight reception cases through the real interface
+        shell: bash
+        env:
+          DURABLE_TEST_BROWSERS: chromium
+          QA_OUT: ${{ runner.temp }}/reception-browser-qa
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          python -m http.server 8765 --bind 127.0.0.1 --directory site > "${{ runner.temp }}/reception-server.log" 2>&1 &
+          reception_server_pid=$!
+          trap 'kill "$reception_server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:8765/ >/dev/null && break
+            sleep 0.2
+          done
+          node scripts/test_reception_complete.cjs
       - name: Save native browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: governor-browser-qa
-          path: ${{ runner.temp }}/governor-browser-qa
+          path: |
+            ${{ runner.temp }}/governor-browser-qa
+            ${{ runner.temp }}/reception-browser-qa
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure Pages

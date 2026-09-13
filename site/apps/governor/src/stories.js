@@ -9,7 +9,7 @@
   const VERSION = DATA.version;
   const clone = value => JSON.parse(JSON.stringify(value));
   const METRICS = ['healthAccess','schoolAccess','childcareAccess','employment','housingAccess','digitalAccess','mobility','floodProtection','digitalProtection'];
-  const local = (v, lang) => v?.[lang] || v?.ru || '';
+  const local = (v, lang) => root.GovernorGame.I18n ? root.GovernorGame.I18n.local(v,lang) : v?.[lang] || v?.ru || '';
   const find = id => DATA.arcs.find(a => a.id === id);
   const key = (id, phase) => `${id}:${phase}`;
   const finishedTurns = state => state?.population?.ledgers?.length || 0;

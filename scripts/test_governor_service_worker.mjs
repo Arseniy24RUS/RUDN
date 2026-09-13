@@ -117,7 +117,7 @@ test('module manifest includes runtime files; only the minimal platform is insta
   }
   for(const entry of ['./','./index.html','./apps/puzzle.html','./'+modulePath,'./'+modulePath+'index.html',
     './'+modulePath+'platform-bridge.js','./'+modulePath+'platform-contract.js','./'+modulePath+'platform.css',
-    './assets/js/main.js?v=1.3.3','./assets/js/teacher-journal.js?v=1.3.3','./assets/css/site.css?v=1.3.3',
+    './assets/js/main.js?v=1.3.4','./assets/js/teacher-journal.js?v=1.3.4','./assets/css/site.css?v=1.3.4',
     './assets/js/career-course.js','./apps/career/entry.mjs','./apps/career/runtime.bundle.mjs',
     './apps/career/surface.html','./apps/career/module.css','./apps/career/assets/fonts/noto-sans-sc.woff2',
     './apps/career/data/model-manifest.json','./apps/career/docs/TEACHER-GUIDE-STAGE8.md',
@@ -127,7 +127,7 @@ test('module manifest includes runtime files; only the minimal platform is insta
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
   assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')),'Optional modules cannot delay installation');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
-  assert.ok(worker.cacheName.endsWith(':v1.3.3-durable'));
+  assert.ok(worker.cacheName.endsWith(':v1.3.4-durable'));
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{
@@ -158,6 +158,17 @@ test('opened module resource pack becomes available offline without caching othe
   assert.match(await navigation.text(),/<!doctype html>/i);
   const missing=await worker.request('./apps/missing/index.html',{mode:'navigate'});
   assert.equal(missing.type,'error','An uncached page must not receive unrelated HTML');
+});
+
+test('reception preparation caches metadata but leaves the complete bank and catalog lazy',async()=>{
+  const worker=makeWorker();
+  await worker.emit('install');
+  await worker.emit('message',{data:{type:'PREPARE_MODULE',module:'reception'}});
+  const paths=worker.installedRequests.map(request=>new URL(request.url).pathname);
+  assert.ok(paths.some(path=>path.endsWith('/reception/content/manifest.js')));
+  assert.ok(paths.some(path=>path.endsWith('/reception/js/content-library.js')));
+  assert.ok(!paths.some(path=>/\/reception\/js\/(cases|evidence-catalog|source-index)\.js$/.test(path)));
+  assert.ok(!paths.some(path=>/\/reception\/(content\/.+\.json|localization\/source\/)/.test(path)));
 });
 
 test('404 and 500 responses preserve and return the healthy cached resource',async()=>{
@@ -246,14 +257,14 @@ test('handshake preserves an existing compatible binding even when another cache
   const worker=makeWorker();
   const client={id:'same-version-old-tab',url:scope,postMessage(){}};
   worker.activeClients=[client];
-  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.3-earlier-build');
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.4-earlier-build');
   const current=await worker.cacheStorage.open(worker.cacheName);
   for(const [cache,label] of [[old,'earlier'],[current,'current']]){
-    await cache.put('./assets/js/main.js?v=1.3.3',new Response(label+' main'));
+    await cache.put('./assets/js/main.js?v=1.3.4',new Response(label+' main'));
     await cache.put('./apps/career/entry.mjs',new Response(label+' lazy module'));
   }
   await worker.emit('activate');
-  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.3'}});
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.4'}});
   assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:client.id})).text(),'earlier lazy module');
 });
 
@@ -285,8 +296,8 @@ test('open clients keep cached lazy modules and versioned core while a new navig
   await previous.put('./assets/js/backend.js?v=1.3.2',new Response('old singleton backend'));
   await previous.put('./apps/career/entry.mjs',new Response('old lazy career'));
   await current.put('./index.html',new Response('current document'));
-  await current.put('./assets/js/main.js?v=1.3.3',new Response('current main'));
-  await current.put('./assets/js/backend.js?v=1.3.3',new Response('current singleton backend'));
+  await current.put('./assets/js/main.js?v=1.3.4',new Response('current main'));
+  await current.put('./assets/js/backend.js?v=1.3.4',new Response('current singleton backend'));
   await current.put('./apps/career/entry.mjs',new Response('current lazy career'));
   await worker.emit('activate');
   worker.fetch=async()=>new Response('new code served even for an old URL');
@@ -295,7 +306,7 @@ test('open clients keep cached lazy modules and versioned core while a new navig
     ['./assets/js/backend.js?v=1.3.2','old singleton backend']
   ])assert.equal(await (await worker.request(file,{clientId:oldClient.id})).text(),expected);
   assert.equal(await (await worker.request('./index.html',{mode:'navigate',clientId:oldClient.id,resultingClientId:'new-tab'})).text(),'current document');
-  assert.equal(await (await worker.request('./assets/js/backend.js?v=1.3.3',{clientId:'new-tab'})).text(),'current singleton backend');
+  assert.equal(await (await worker.request('./assets/js/backend.js?v=1.3.4',{clientId:'new-tab'})).text(),'current singleton backend');
   assert.equal(await (await worker.request('./apps/career/entry.mjs',{clientId:'new-tab'})).text(),'current lazy career');
   assert.equal((await worker.request('./assets/js/backend.js?v=1.3.2',{clientId:'new-tab'})).type,'error','A current tab cannot cache fresh code under an old version URL');
   assert.equal(await current.match('./assets/js/backend.js?v=1.3.2'),undefined);
@@ -312,20 +323,20 @@ test('client bindings survive worker restarts and a second update without moving
   worker.activeClients=[clients[0]];
   const oldName=worker.cachePrefix+'v1.3.2-reliability-1';
   await (await worker.cacheStorage.open(oldName)).put('./apps/career/entry.mjs',new Response('1.3.2 career'));
-  await (await worker.cacheStorage.open(worker.cacheName)).put('./apps/career/entry.mjs',new Response('1.3.3 career'));
+  await (await worker.cacheStorage.open(worker.cacheName)).put('./apps/career/entry.mjs',new Response('1.3.4 career'));
   await worker.emit('activate');
   await worker.request('./index.html',{mode:'navigate',resultingClientId:clients[1].id});
   const restarted=makeWorker(scope,{stores:worker.stores});
   restarted.fetch=async()=>new Response('wrong fresh code');
   assert.equal(await (await restarted.request('./apps/career/entry.mjs',{clientId:clients[0].id})).text(),'1.3.2 career');
-  const next=makeWorker(scope,{stores:worker.stores,source:workerSource.replaceAll('1.3.3','1.3.4')});
+  const next=makeWorker(scope,{stores:worker.stores,source:workerSource.replaceAll('1.3.4','1.3.4')});
   next.activeClients=clients;
   const nextCache=await next.cacheStorage.open(next.cacheName);
   await nextCache.put('./apps/career/entry.mjs',new Response('1.3.4 career'));
   await nextCache.put('./index.html',new Response('1.3.4 document'));
   await next.emit('activate');
   next.fetch=async()=>new Response('wrong fresh code');
-  for(const [clientId,expected] of [['old-tab','1.3.2 career'],['middle-tab','1.3.3 career']]){
+  for(const [clientId,expected] of [['old-tab','1.3.2 career'],['middle-tab','1.3.4 career']]){
     assert.equal(await (await next.request('./apps/career/entry.mjs',{clientId})).text(),expected);
   }
   assert.equal(await (await next.request('./index.html',{mode:'navigate',resultingClientId:'new-tab'})).text(),'1.3.4 document');
@@ -368,7 +379,7 @@ test('page boot announces its loaded version after a controller change and only 
   const updated={postMessage:message=>sent.push(message)};
   const workers={controller:original,ready:Promise.resolve(),addEventListener:(type,handler)=>listeners.set(type,handler)};
   vm.runInNewContext(helper.replace('import.meta.url',JSON.stringify(scope+'assets/js/main.js?v=1.3.2'))+'\nconnectPageRelease();',{
-    URL,navigator:{serviceWorker:workers},CONFIG:{version:'1.3.3'},getLocale:()=> 'en',toast:(...args)=>notices.push(args)
+    URL,navigator:{serviceWorker:workers},CONFIG:{version:'1.3.4'},getLocale:()=> 'en',toast:(...args)=>notices.push(args)
   });
   await Promise.resolve();
   assert.ok(sent.length>=1);

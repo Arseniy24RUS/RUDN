@@ -4,9 +4,9 @@
 'use strict';const G=root.GovernorGame,M=G.WorldModel,R=G.IllustratedWorld||G.WorldGeometry;
 const instances=new Map();
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const text=(lang,ru,en)=>lang==='en'?en:ru;
+const text=(lang,ru,en)=>globalThis.GovernorGame.I18n.choose(lang,()=>(ru),()=>(en));
 const icon=(n,s=18)=>G.icon(n,{size:s});
-const fmt=(v,lang)=>new Intl.NumberFormat(lang==='en'?'en-US':'ru-RU').format(v);
+const fmt=(v,lang)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(lang)).format(v);
 function create(host,callbacks){
  const api={host,callbacks,zoom:1,dx:0,dy:0,focusId:null,baseline:false,frame:null,width:0,height:0,signature:null,draws:0,disposed:false};
  host.classList.add('world-host');

@@ -1,21 +1,21 @@
-import {backend} from '../../assets/js/backend.js?v=1.3.3';
-import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.3';
-import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.3';
-import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.3';
-import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.3';
-import {durableStore} from '../../assets/js/durable-store.js?v=1.3.3';
+import {backend} from '../../assets/js/backend.js?v=1.3.4';
+import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.4';
+import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.4';
+import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.4';
+import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.4';
+import {durableStore} from '../../assets/js/durable-store.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
 const $=selector=>document.querySelector(selector);
 const courseUrl=new URL('../../#activity/seminar-7',import.meta.url).href;
-const courseLocale=getLocale();
 let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false;
 const storageValues=new Map(),pendingCheckpoints=new Set();
 let latestSaveStatus=null;
-let language=getLocale()==='en'?'en':'ru';
-const tr=(ru,en)=>language==='en'?en:ru;
-const local=value=>typeof value==='string'?value:value?.[language]||value?.ru||'';
+let language=G.I18n.normalize(getLocale());
+const tr=(ru,en)=>G.I18n.choose(language,ru,en);
+const local=value=>G.I18n.local(value,language);
+$('#platform-loading-text').textContent={ru:'Восстанавливаем профиль платформы…',en:'Restoring your course profile…',zh:'正在恢复课程账号…'}[language];
 const message=text=>{$('#platform-status').textContent=text;};
 const canAccess=()=>{
   if(backend.isAdmin())return true;
@@ -57,6 +57,7 @@ function syncText(){
     :latestSaveStatus?.state==='saved'?tr('Партия сохранена. Можно продолжить позже.','Campaign saved. You can continue later.'):tr('Партия сохранена на устройстве. Изменения отправятся автоматически.','Campaign saved on this device. Changes will upload automatically.');
 }
 function refresh(){
+  G.I18n.shell(document,language);
   $('#platform-report').textContent=tr('Отчёт к семинару','Seminar report');
   $('#platform-back').textContent=tr('← Раздел 7','← Section 7');
   $('#platform-course-name').textContent=tr('Введение в специальность','Introduction to the Profession');
@@ -170,7 +171,7 @@ async function tryStart(){
     language,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):profile.fullName,group:profile?.group||''},
     canWrite:sameOwner,onNewRun:runChanged,onError:()=>block(tr('Не удалось запустить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not start. Reload or return to section 7.')),
     onSaved:state=>{try{ensureRun(state);refresh();if(runtime&&terminal(state)&&!backend.isAdmin())submit();}catch{message(tr('Партия сохранена; сведения об отчёте требуют свободного места на устройстве.','Campaign saved; report metadata needs free device storage.'));}},
-    onLanguage:next=>{language=next;if(courseLocale!=='zh')setLocale(next);refresh();},
+    onLanguage:next=>{language=G.I18n.normalize(next);setLocale(language);refresh();},
     onEnd:host=>{if(host.querySelector('[data-platform-submit]'))return;const b=document.createElement('button');b.type='button';b.className='primary-button';b.dataset.platformSubmit='';b.textContent=tr('Оценка и отчёт к семинару','Seminar grade and report');b.addEventListener('click',submissionDialog);host.append(b);},
     attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();if(terminal(runtime.state())&&!backend.isAdmin())submit();}
   };

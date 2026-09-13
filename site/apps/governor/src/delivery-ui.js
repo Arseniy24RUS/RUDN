@@ -2,8 +2,8 @@
 (function(root){
 'use strict';const G=root.GovernorGame,D=G.DeliveryDesk,A=G.IllustratedAssets;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const tr=(l,r,e)=>l==='en'?e:r,loc=(v,l)=>v?.[l]||v?.ru||'';
-const money=(v,l)=>new Intl.NumberFormat(l==='en'?'en-US':'ru-RU',{maximumFractionDigits:2}).format(v||0)+tr(l,' млрд ₽',' bn RUB');
+const tr=(l,r,e)=>globalThis.GovernorGame.I18n.choose(l,()=>(r),()=>(e)),loc=(v,l)=>globalThis.GovernorGame.I18n.local(v,l);
+const money=(v,l)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:2}).format(v||0)+tr(l,' млрд ₽',' bn RUB');
 const names={ending:['Последний год финансирования','Final funded year'],'opening-next':['Открытие в следующем году','Opening next year'],opened:['Началась работа','Now operating'],ended:['Контракт закончился','Contract ended'],delivery:['В реализации','In delivery'],operating:['Работает','Operating'],archive:['История проекта','Project history']};
 function title(x,l){return tr(l,...names[x.reason]);}
 function consequence(x,l){

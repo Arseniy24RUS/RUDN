@@ -1,4 +1,4 @@
-import {EVIDENCE_RECORDS,EVIDENCE_TASKS,EVIDENCE_VERSION} from './evidence-catalog.js';
+import {EVIDENCE_RECORDS,EVIDENCE_TASKS,EVIDENCE_VERSION} from './content-library.js';
 
 /** A frozen reference task, not an AI verdict about an arbitrary webpage. */
 function evidenceContext(value,c){
