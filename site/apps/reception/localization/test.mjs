@@ -48,6 +48,24 @@ try {
             check(translator.missing().length === 0, 'unexpected missing fixture translation');
           } else check(root.querySelector('h1').textContent === 'Приёмная', 'Russian not restored');
         }
+        // A mixed assignment may load the generic date paragraph before the
+        // specific one. Its final date slot must never consume an extra sentence.
+        const generic='Получено {{received}}, зарегистрировано {{registered}}.';
+        const specific=generic+' Пристав получил ходатайство {{officialReceived}}.';
+        for(const locale of ['en','zh'])for(const reverse of [false,true]){
+          const entries=[[generic,languageText[locale]],[specific,languageText[locale]+(locale==='en'?' The bailiff received the motion on {{officialReceived}}.':' 执行员于{{officialReceived}}收到申请。')]];
+          const translator=createReceptionTranslator({locale,catalog:Object.fromEntries(reverse?entries.reverse():entries)});
+          const dates={received:'11.11.2026',registered:'12.11.2026',officialReceived:'13.11.2026'};
+          const fill=text=>text.replace(/\{\{(\w+)\}\}/g,(_,key)=>dates[key]);
+          root.replaceChildren();
+          for(const [source,target] of entries){
+            const p=document.createElement('p');p.textContent=fill(source);p.dataset.expected=fill(target);root.append(p);
+          }
+          translator.apply(root);
+          for(const p of root.children)check(p.textContent===p.dataset.expected,'Mixed-pack date paragraph used a generic translation');
+          const rendered=root.innerHTML;translator.apply(root);
+          check(root.innerHTML===rendered&&translator.missing().length===0,'Mixed-pack date localization must be complete and idempotent');
+        }
         // Full WebKit shift regression: this evidence caption is not a level
         // badge, despite ending in the same Russian word.
         for(const locale of ['en','zh']){
@@ -105,7 +123,7 @@ try {
         const manifest={schema:2,locale:'en',complete:true,contentVersion:'fixture',sourceVersion:'a'.repeat(64),templates:[],entries:{common:entry,catalog:{},'source-index':{}}};
         const loaded = await loadReceptionTranslator('en', {fetch: async url => ({ok: true, json: async () => String(url).includes('.manifest.json')?manifest:pack})});
         check(loaded.translate('Полный абзац') === 'Full paragraph', 'catalog failed after incomplete load retry');
-        return {languages: 4, immutableState: true, userContentPreserved: true, datesPreserved: true, documentComparisonLabels: true, numericCounters: true, incompleteCatalogRejected: true};
+        return {languages: 4, immutableState: true, userContentPreserved: true, datesPreserved: true, mixedPackDateTemplates: true, documentComparisonLabels: true, numericCounters: true, incompleteCatalogRejected: true};
       });
       assert.equal(errors.length, 0, errors.join('\n'));
       console.log(`${engine}: ${JSON.stringify(result)}`);
