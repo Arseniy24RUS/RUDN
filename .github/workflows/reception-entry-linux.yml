@@ -1,0 +1,42 @@
+name: Reception entry lifecycle on Linux
+on:
+  push:
+    branches: [qa/reception-entry-linux]
+permissions:
+  contents: read
+jobs:
+  entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+          node site/apps/reception/localization/extract.mjs
+          node site/apps/reception/localization/compile.mjs
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify direct and shell entry in all locales
+        env:
+          DURABLE_TEST_BROWSERS: chromium,webkit
+          QA_OUT: ${{ runner.temp }}/entry-qa
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          python -m http.server 8765 --bind 127.0.0.1 --protocol HTTP/1.1 --directory site > "${{ runner.temp }}/server.log" 2>&1 &
+          reception_server_pid=$!
+          trap 'kill "$reception_server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:8765/ >/dev/null && break
+            sleep 0.2
+          done
+          node scripts/test_reception_entry_i18n.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reception-entry-linux
+          path: ${{ runner.temp }}/entry-qa
