@@ -44,6 +44,18 @@ def main():
                     network_coverage[simulation] += 1
                 if simulation == 'connection-loss' and not result.get('connectionLossVerified'):
                     errors.append(f'Unverified transport failure: {case}')
+                if simulation == 'connection-loss':
+                    proof = result.get('connectionLossProof', [])
+                    expected_probes = [('before-outage', False), ('outage', True),
+                                       ('recovered', False), ('outage-for-game', True)]
+                    valid = len(proof) == 4 and len({item.get('nonce') for item in proof}) == 4
+                    for item, (label, failed) in zip(proof, expected_probes):
+                        valid = valid and item.get('label') == label and item.get('failed') is failed
+                        valid = valid and item.get('serverHits', 0) > 0 and bool(item.get('nonce'))
+                        valid = valid and item.get('serverState') == ('connection-loss' if failed else 'online')
+                        valid = valid and (item.get('status') is None if failed else item.get('status') == 200)
+                    if not valid:
+                        errors.append(f'Missing server-observed outage/recovery proof: {case}')
             elif result['suite'] == 'layout':
                 if key in layouts:
                     errors.append(f'Duplicate layout case: {key}')

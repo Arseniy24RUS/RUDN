@@ -2,6 +2,9 @@
 // every external request is blocked. This script never reads/writes production Firebase.
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {chromium,webkit}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+const configVersion=fs.readFileSync(path.join(__dirname,'../site/assets/js/config.js'),'utf8').match(/\bversion\s*:\s*['"]([^'"]+)['"]/);
+assert(configVersion,'Cannot determine current CONFIG.version for the browser fixture');
+const backendModule='/assets/js/backend.js?v='+encodeURIComponent(configVersion[1].replace(/-pages$/,''));
 const base=process.env.MODULE_TEST_URL||'http://127.0.0.1:8765/';
 const out=process.env.QA_OUT||path.join(require('node:os').tmpdir(),'rudn-module-drafts');fs.mkdirSync(out,{recursive:true});
 const fake=`import {durableStore as d} from '/assets/js/durable-store.js';
@@ -19,7 +22,7 @@ async function flush(page){await page.evaluate(async()=>{await window.moduleHand
 async function poll(fn,label){for(let i=0;i<80;i++){if(await fn())return;await new Promise(r=>setTimeout(r,125))}throw Error(label)}
 async function fixture(page){await page.goto(base+'module-draft-test.html')}
 async function shot(page,name){await page.screenshot({path:path.join(out,name+'.png'),fullPage:false})}
-async function mountReception(page){await page.evaluate(async()=>{const {backend}=await import('/assets/js/backend.js?v=1.3.5'),{mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()}),assessmentAllowed:true})})}
+async function mountReception(page){await page.evaluate(async backendModule=>{const {backend}=await import(backendModule),{mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()}),assessmentAllowed:true})},backendModule)}
 async function mountCareer(page){await page.evaluate(async()=>{const {mountCareer}=await import('/apps/career/entry.mjs');window.moduleHandle=await mountCareer(document.querySelector('#module'),{owner:'student:9909133001',lang:'ru'})})}
 const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(',');
 (async()=>{

@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import threading
@@ -29,6 +30,10 @@ from playwright.sync_api import sync_playwright
 
 
 REPO = Path(__file__).resolve().parents[1]
+CONFIG_VERSION = re.search(r"\bversion\s*:\s*['\"]([^'\"]+)['\"]", (REPO / "site/assets/js/config.js").read_text(encoding="utf-8"))
+if not CONFIG_VERSION:
+    raise RuntimeError("Cannot determine current CONFIG.version for the browser fixture")
+ASSET_VERSION = CONFIG_VERSION.group(1).removesuffix("-pages")
 PROFILE_KEY = "rudn.profile.v1"
 FIXTURE_KEY = "qa.native.local-only"
 STUDENT_A = {
@@ -374,7 +379,7 @@ class Suite:
         stored_a = switch.evaluate("key=>JSON.parse(localStorage.getItem(key))", a_saved["key"])
         assert stored_a == a_saved["save"]
         assert len(b_saved["save"]["state"]["history"]) == 2
-        assert switch.evaluate("async()=> (await import('../../assets/js/backend.js?v=1.3.5')).backend.user.uid") == "qa-native-shared-uid"
+        assert switch.evaluate("async version=> (await import('../../assets/js/backend.js?v='+encodeURIComponent(version))).backend.user.uid", ASSET_VERSION) == "qa-native-shared-uid"
         a.close()
         switch.goto(self.server.base, wait_until="networkidle")
         switch.evaluate("profile=>localStorage.setItem('rudn.profile.v1',JSON.stringify(profile))", STUDENT_A)

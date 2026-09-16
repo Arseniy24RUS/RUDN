@@ -96,6 +96,9 @@ jobs:
             puzzle_extra+=(--maps russia-subjects,world-countries,municipal-274048,municipal-144764,adm1-MCO,adm1-USA,adm1-IDN)
           fi
           python scripts/test_puzzle_catalog.py --output "${{ runner.temp }}/puzzle-qa" --browsers "${{ matrix.browser }}" --shard "${{ matrix.shard }}" --workers 2 "${puzzle_extra[@]}"
+      - name: Verify every map in English and Chinese at all twelve sizes
+        if: inputs.coverage != 'smoke'
+        run: python scripts/test_puzzle_locale_layout.py --output "${{ runner.temp }}/puzzle-qa" --browsers "${{ matrix.browser }}" --shard "${{ matrix.shard }}" --workers 1
       - name: Artifact name
         if: always()
         id: artifact
@@ -129,12 +132,18 @@ jobs:
       - name: Verify every required case ran and passed
         env:
           MATRIX_COVERAGE: ${{ inputs.coverage || 'full' }}
-        run: python scripts/test_puzzle_report.py --artifacts "${{ runner.temp }}/puzzle-matrix" --coverage "$MATRIX_COVERAGE"
+        run: |
+          python scripts/test_puzzle_report.py --artifacts "${{ runner.temp }}/puzzle-matrix" --coverage "$MATRIX_COVERAGE"
+          if [[ "$MATRIX_COVERAGE" == 'full' ]]; then
+            python scripts/test_puzzle_locale_report.py --artifacts "${{ runner.temp }}/puzzle-matrix"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: puzzle-matrix-summary
-          path: ${{ runner.temp }}/puzzle-matrix/puzzle-matrix-summary.json
+          path: |
+            ${{ runner.temp }}/puzzle-matrix/puzzle-matrix-summary.json
+            ${{ runner.temp }}/puzzle-matrix/localized-layout-summary.json
 
   storage:
     runs-on: ubuntu-latest

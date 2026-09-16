@@ -5,6 +5,9 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {chromium, webkit} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const configVersion = fs.readFileSync(path.join(__dirname, '../site/assets/js/config.js'), 'utf8').match(/\bversion\s*:\s*['"]([^'"]+)['"]/);
+assert(configVersion, 'Cannot determine current CONFIG.version for the browser fixture');
+const backendModule = '/assets/js/backend.js?v=' + encodeURIComponent(configVersion[1].replace(/-pages$/, ''));
 const base = process.env.MODULE_TEST_URL || 'http://127.0.0.1:8765/';
 if(!['127.0.0.1','localhost'].includes(new URL(base).hostname))throw Error('Reception QA requires an isolated localhost server');
 const locale=process.env.RECEPTION_LOCALE||'ru';
@@ -22,15 +25,15 @@ const previous=await store.loadDraft(draftScope);await store.complete({...draftS
 const fixture = '<!doctype html><html lang="ru"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reception positive UI QA</title><body style="margin:0"><div id="module"></div></body></html>';
 const attr = value => JSON.stringify(String(value));
 async function mount(page) {
-  await page.evaluate(async locale => {
+  await page.evaluate(async ({locale,backendModule}) => {
     window.qaLocale=locale;window.localeMissing=[];
-    const {backend}=await import('/assets/js/backend.js?v=1.3.5');
+    const {backend}=await import(backendModule);
     const {mountReception}=await import('/apps/reception/js/app.js');
     const {BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');
     window.moduleHandle=await mountReception(document.querySelector('#module'),{backend,period:'2026-2027',assessmentAllowed:true,
       locale,getLocale:()=>window.qaLocale,onMissingTranslation:text=>window.localeMissing.push({locale:window.qaLocale,text}),
       calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()})});
-  },locale);
+  },{locale,backendModule});
   await page.waitForFunction(()=>window.moduleHandle.getLocale()===window.qaLocale&&document.querySelector('.rx-global-status')&&!document.querySelector('.boot.rx-locale-status'));
 }
 async function flush(page) {await page.evaluate(async()=>{await window.moduleHandle.flush();await (await import('/assets/js/durable-store.js')).durableStore.flush();});}

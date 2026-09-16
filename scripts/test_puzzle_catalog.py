@@ -23,9 +23,9 @@ import sys
 import threading
 import time
 import traceback
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
-from playwright.async_api import async_playwright
+from playwright.async_api import Error as PlaywrightError, async_playwright
 from prepare_puzzle_catalog import ROOT, build_catalog, read_json, write_json
 
 VIEWPORTS = [(320, 568), (360, 800), (390, 844), (412, 915), (768, 1024), (1024, 1366), (1366, 768), (1920, 1080)]
@@ -65,9 +65,11 @@ READ_ONLY_HOOK = r"""
 class PuzzleServer:
     def __init__(self, output, port=0):
         self.output, self.port = output, port
+        self.transport_probes = []
 
     def __enter__(self):
         fixture_output = self.output
+        transport_probes = self.transport_probes
         class Handler(SimpleHTTPRequestHandler):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, directory=str(ROOT / 'site'), **kwargs)
@@ -88,7 +90,16 @@ class PuzzleServer:
                     pass  # Browser intentionally cancelled during navigation.
 
             def do_GET(self):
-                if re.search(r'(?:^|;\s*)qa-puzzle-offline=connection-loss(?:;|$)', self.headers.get('Cookie', '')):
+                cookie = self.headers.get('Cookie', '')
+                connection_loss = bool(re.search(r'(?:^|;\s*)qa-puzzle-offline=connection-loss(?:;|$)', cookie))
+                server_outage = bool(re.search(r'(?:^|;\s*)qa-puzzle-offline=1(?:;|$)', cookie))
+                requested = urlsplit(self.path)
+                nonce = parse_qs(requested.query).get('nonce', [''])[0] if requested.path == '/RUDN/__qa/connection-probe' else ''
+                if nonce and re.fullmatch(r'[A-Za-z0-9_-]{1,100}', nonce):
+                    transport_probes.append({'nonce': nonce, 'state': 'connection-loss' if connection_loss else 'server-outage' if server_outage else 'online'})
+                else:
+                    nonce = ''
+                if connection_loss:
                     # No HTTP response: the transport disappears before headers.
                     # Per-context cookie keeps independent matrix workers isolated.
                     self.close_connection = True
@@ -98,9 +109,17 @@ class PuzzleServer:
                         pass
                     self.connection.close()
                     return
-                if re.search(r'(?:^|;\s*)qa-puzzle-offline=1(?:;|$)', self.headers.get('Cookie', '')):
+                if server_outage:
                     body = b'Isolated QA network outage'
                     self.send_response(503);self.send_header('Content-Length', str(len(body)))
+                    self.end_headers();self.wfile.write(body)
+                    return
+                if nonce:
+                    body = json.dumps({'nonce': nonce, 'transport': 'http'}).encode('utf-8')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/json')
+                    self.send_header('Cache-Control', 'no-store')
+                    self.send_header('Content-Length', str(len(body)))
                     self.end_headers();self.wfile.write(body)
                     return
                 if not self.path.startswith('/RUDN/'):
@@ -133,7 +152,7 @@ class PuzzleServer:
                     else:
                         marker = 'const nativeFetch=previousFetch.bind(window);'
                         replacement = r"""const nativeFetch=(input,options)=>{
- const url=typeof input==='string'?input:input.url;
+ const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
  const api=url.match(/geoboundaries\.org\/api\/current\/gbOpen\/([A-Z]{3})\/ADM1\//);
  const geometry=url.match(/\/gbOpen\/([A-Z]{3})\/ADM1\/.*\.(?:geojson|json)(?:\?|$)/);
  return previousFetch.call(window,api?`/RUDN/__qa/metadata/${api[1]}.json`:geometry?`/RUDN/__qa/geometry/${geometry[1]}.json`:input,options);
@@ -179,6 +198,7 @@ async def context_for(browser, server, output, viewport, locale, record):
     context = await browser.new_context(viewport={'width': viewport[0], 'height': viewport[1]},
                                         locale={'ru': 'ru-RU', 'en': 'en-GB', 'zh': 'zh-CN'}[locale],
                                         service_workers='allow', reduced_motion='reduce', has_touch=viewport[0] <= 768)
+    context._qa_server = server
     await context.add_init_script(initializer(locale))
 
     async def route(request_route):
@@ -308,7 +328,7 @@ async def check_layout(page, record, label):
     # Wait for ResizeObserver + debounced projection rebuild, not an arbitrary
     # sleep that races Firefox/WebKit under a concurrent full-catalog workload.
     await page.wait_for_function("""()=>{const c=document.querySelector('#puzzleCanvas'),s=window.__puzzleRead?.();if(!c||!s)return false;
-      const r=c.getBoundingClientRect();return Math.abs(r.width-s.canvas.width)<=2&&Math.abs(r.height-s.canvas.height)<=2;}""", timeout=8000)
+      const r=c.getBoundingClientRect();return Math.abs(r.width-s.canvas.width)<=2&&Math.abs(r.height-s.canvas.height)<=2;}""", timeout=8000, polling=50)
     metrics = await page.evaluate("""()=>{
       const box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,client:el.clientWidth,scroll:el.scrollWidth}};
       const c=document.querySelector('#puzzleCanvas'),stage=c.closest('.puzzle-stage-card');
@@ -333,6 +353,39 @@ async def check_layout(page, record, label):
     return metrics
 
 
+async def transport_probe(context, base, label, expect_failure=False):
+    """Require a server-observed request, not merely a rejected JS expression."""
+    server = context._qa_server
+    nonce = str(time.time_ns())
+    response, failure = None, None
+    try:
+        response = await context.request.get(base + '__qa/connection-probe?nonce=' + nonce, timeout=10000)
+    except PlaywrightError as error:
+        failure = str(error).splitlines()[0]
+    hits = [event for event in server.transport_probes if event['nonce'] == nonce]
+    expected_state = 'connection-loss' if expect_failure else 'online'
+    assert hits and all(hit['state'] == expected_state for hit in hits), ('Probe did not reach the expected server transport', label, hits, failure)
+    if expect_failure:
+        assert failure and any(word in failure.lower() for word in ('socket', 'connection', 'reset', 'closed')), ('Expected actual TCP failure', label, failure)
+        assert response is None
+    else:
+        assert failure is None and response.status == 200, ('Transport recovery failed', label, failure)
+        assert await response.json() == {'nonce': nonce, 'transport': 'http'}
+    return {'label': label, 'nonce': nonce, 'serverHits': len(hits), 'serverState': expected_state,
+            'failed': bool(failure), 'error': failure, 'status': response.status if response else None}
+
+
+async def verify_connection_loss(context, base, record):
+    # Direct HTTP uses the same context cookies and bypasses both SW caches and
+    # WebKit inspector pageerrors emitted even for caught failed fetch promises.
+    proof = []
+    for label, loss in (('before-outage', False), ('outage', True), ('recovered', False), ('outage-for-game', True)):
+        await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': 'connection-loss' if loss else '0', 'url': base}])
+        proof.append(await transport_probe(context, base, label, expect_failure=loss))
+    record['connectionLossProof'] = proof
+    record['connectionLossVerified'] = True
+
+
 async def offline_resume(page, context, before, record, mode='browser'):
     await flush(page)
     await page.wait_for_function("'serviceWorker' in navigator && navigator.serviceWorker.controller", timeout=25000)
@@ -340,18 +393,12 @@ async def offline_resume(page, context, before, record, mode='browser'):
       html:Boolean(await caches.match(new URL('puzzle.html',location.href).href)),
       cachedUrls:await Promise.all((await caches.keys()).map(async name=>({name,html:(await (await caches.open(name)).keys()).filter(request=>request.url.includes('puzzle.html')).map(request=>request.url)})))})""")
     record['offlineSimulation'] = mode
-    if mode in ('server-outage', 'connection-loss'):
-        await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1' if mode == 'server-outage' else mode, 'url': page._qa_base}])
+    if mode == 'connection-loss':
+        await verify_connection_loss(context, page._qa_base, record)
+    elif mode == 'server-outage':
+        await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1', 'url': page._qa_base}])
     else:
         await context.set_offline(True)
-    if mode == 'connection-loss':
-        # Prove actual uncached transport failure, rather than assuming a cookie
-        # changed network behaviour. Cached SW navigation must still succeed.
-        record['connectionLossVerified'] = await page.evaluate("""async()=>{
-          try{await fetch(new URL('__qa/connection-probe?nonce='+crypto.randomUUID(),location.origin+'/RUDN/'),{cache:'no-store'});return false}
-          catch{return true}
-        }""")
-        assert record['connectionLossVerified'], 'Uncached request succeeded during connection loss'
     await page.reload(wait_until='domcontentloaded')
     restored = await ready(page)
     assert restored['attemptId'] == before['attemptId'], ('Offline restore changed attempt', before, restored)

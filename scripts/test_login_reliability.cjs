@@ -5,6 +5,9 @@ const base=process.env.QA_BASE||'http://127.0.0.1:8765/';
 if(!/^http:\/\/(127\.0\.0\.1|localhost):/.test(base))throw Error('Localhost only');
 const out=process.env.QA_OUT||path.join(require('node:os').tmpdir(),'rudn-login-reliability');fs.mkdirSync(out,{recursive:true});
 const config=fs.readFileSync('site/assets/js/config.js','utf8').replace(/export const CONFIG\s*=\s*\{/,'export const CONFIG = {emulators:{auth:"http://127.0.0.1:9099",host:"127.0.0.1",databasePort:9000},');
+const configVersion=config.match(/\bversion\s*:\s*['"]([^'"]+)['"]/);
+assert(configVersion,'Cannot determine current CONFIG.version for the browser fixture');
+const backendModule='/assets/js/backend.js?v='+encodeURIComponent(configVersion[1].replace(/-pages$/,''));
 async function db(p,method='GET',body){const response=await fetch(`http://127.0.0.1:9000/${p}.json?ns=demo-rudn-default-rtdb`,{method,headers:{Authorization:'Bearer owner','Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});assert(response.ok,await response.text().then(text=>{try{return JSON.parse(text)}catch{return text}}));}
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 (async()=>{
@@ -19,14 +22,14 @@ const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
   try{
     await page.goto(base+'#dashboard');
-    await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.5')).backend.init()});
+    await page.evaluate(async backendModule=>{await (await import(backendModule)).backend.init()},backendModule);
     await page.locator('#app[aria-busy="false"]').waitFor();
     await page.locator('#profileButton').click();await page.locator('#authIdentifier').waitFor();
-    await page.evaluate(async()=>{
-      const {backend}=await import('/assets/js/backend.js?v=1.3.5');const original=backend.lookupStudent.bind(backend);
+    await page.evaluate(async backendModule=>{
+      const {backend}=await import(backendModule);const original=backend.lookupStudent.bind(backend);
       window.qaLookups=[];window.qaDelay=0;window.qaReject=false;
       backend.lookupStudent=async value=>{window.qaLookups.push(value);const delay=window.qaDelay,reject=window.qaReject;await new Promise(r=>setTimeout(r,delay));if(reject)throw {code:'network/offline'};return original(value)};
-    });
+    },backendModule);
     const input=page.locator('#authIdentifier');
     await input.pressSequentially('9909',{delay:800});await wait(800);
     assert.deepEqual(await page.evaluate(()=>window.qaLookups),[],'Incomplete number requested');

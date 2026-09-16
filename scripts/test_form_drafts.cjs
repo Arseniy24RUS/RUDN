@@ -2,6 +2,9 @@ const fs=require('node:fs'),assert=require('node:assert/strict');
 const {chromium,webkit}=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root='rudn-platform/v1',key=process.env.QA_STUDENT||'9909133001',out=process.env.QA_OUT||require('node:os').tmpdir(),withStorage=process.env.QA_STORAGE==='1';
 const config=fs.readFileSync('site/assets/js/config.js','utf8').replace(/export const CONFIG\s*=\s*\{/,`export const CONFIG = {emulators:{auth:"http://127.0.0.1:9099",host:"127.0.0.1",databasePort:9000${withStorage?',storagePort:9199':''}},`);
+const configVersion=config.match(/\bversion\s*:\s*['"]([^'"]+)['"]/);
+assert(configVersion,'Cannot determine current CONFIG.version for the browser fixture');
+const backendModule='/assets/js/backend.js?v='+encodeURIComponent(configVersion[1].replace(/-pages$/,''));
 async function db(path,method='GET',body){const r=await fetch(`http://127.0.0.1:9000/${root}/${path}.json?ns=demo-rudn-default-rtdb`,{method,headers:{Authorization:'Bearer owner','Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});assert(r.ok);return r.json()}
 (async()=>{
   await db('profiles/'+key,'PUT',{studentKey:key,ticket:key,email:key+'@rudn.ru',fullName:'Синтетический Тест Вложений',group:'ГГУбд-03-26',ownerUid:'qa-existing',ownerUids:{'qa-existing':true}});
@@ -10,7 +13,7 @@ async function db(path,method='GET',body){const r=await fetch(`http://127.0.0.1:
   await context.route('**/assets/js/config.js*',r=>r.fulfill({contentType:'application/javascript',body:config}));
   const errors=[];await context.route(/https:\/\/.*(?:googleapis\.com|firebaseio\.com|firebasedatabase\.app|firebaseapp\.com)\//,r=>{errors.push('Production request blocked');return r.abort()});
   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
-  const ready=async()=>{await page.evaluate(async()=>{await (await import('/assets/js/backend.js?v=1.3.5')).backend.init()});await page.locator('#app[aria-busy="false"]').waitFor()};
+  const ready=async()=>{await page.evaluate(async backendModule=>{await (await import(backendModule)).backend.init()},backendModule);await page.locator('#app[aria-busy="false"]').waitFor()};
   try{
     await page.goto('http://127.0.0.1:8765/#dashboard');await ready();await page.locator('#profileButton').click();await page.locator('#authIdentifier').fill(key);await page.locator('#authStudentDetails').waitFor();await page.locator('#authSubmit').click();await page.locator('#authDialog').waitFor({state:'hidden'});
     await page.goto('http://127.0.0.1:8765/#activity/seminar-3');await page.locator('#settlementForm[data-attempt-id]').waitFor();
