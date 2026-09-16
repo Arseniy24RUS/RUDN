@@ -31,8 +31,11 @@ export function createReceptionTranslator({locale = 'ru', catalog = {}, literals
       const capture=source==='{{topic}} · {{level}} уровень'&&match[1]==='level'?'(Базовый|Средний|Сложный)':uiTemplates.has(source)&&match[1]==='count'?'(\\d+)':'(.+?)';
       pattern += escapeRegExp(source.slice(last, match.index)) + capture; names.push(match[1]); last = match.index + match[0].length;
     }
-    return {pattern: new RegExp(pattern + escapeRegExp(source.slice(last)) + '$','s'), names, target,source};
-  });
+    return {pattern: new RegExp(pattern + escapeRegExp(source.slice(last)) + '$','s'), names, target,source,specificity:source.replace(/\{\{\w+\}\}/g,'').length};
+  // A longer authored paragraph must win over its generic prefix. Otherwise a
+  // final date slot can swallow the extra sentence and leave it untranslated.
+  // Pack/assignment order must not decide which authored translation is used.
+  }).sort((a,b)=>b.specificity-a.specificity||(a.source<b.source?-1:a.source>b.source?1:0));
   // Exact authored source segments allow composition of a UI prefix + case title,
   // option text or reference caption. These are not arbitrary word translations;
   // profile text and entered answers are excluded by explicit DOM boundaries.

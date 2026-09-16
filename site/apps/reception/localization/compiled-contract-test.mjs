@@ -1,5 +1,6 @@
 // Run only after the publication-gated real translation build, never fixtures.
 import assert from 'node:assert/strict';
+import './date-template-test.mjs';
 import {unapprovedCyrillic} from './validation.js';
 assert.equal(unapprovedCyrillic('依据第210-ФЗ号法律','依据第210-ФЗ号法律'),false,'Rechecking translated Chinese preserves the exact source-present legal code');
 assert.equal(unapprovedCyrillic('第210-ФЗ号法律','第999-ФЗ号法律'),true,'An invented legal code is not exempt');

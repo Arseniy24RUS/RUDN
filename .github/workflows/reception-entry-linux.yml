@@ -19,6 +19,7 @@ jobs:
           npm run build:career
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
+          node site/apps/reception/localization/compiled-contract-test.mjs
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium webkit
       - name: Verify direct and shell entry in all locales
@@ -35,6 +36,10 @@ jobs:
             sleep 0.2
           done
           node scripts/test_reception_entry_i18n.cjs
+          node site/apps/reception/localization/test.mjs
+          node site/apps/reception/localization/pack-test.mjs
+          node site/apps/reception/localization/presentation-test.mjs
+          node scripts/test_reception_document_labels.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
