@@ -1,0 +1,78 @@
+name: Puzzle full localized layout supplement
+
+on:
+  push:
+    branches: [qa/puzzle-localized-layout]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  layouts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+        shard: [1/6, 2/6, 3/6, 4/6, 5/6, 6/6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reuse the exact independently audited release fixtures
+        uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          run-id: 35133449209
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/puzzle-qa
+      - name: Prepare production runtime and browser
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+      - name: Check every map in EN and ZH at all twelve sizes
+        run: python scripts/ci_locale_layout.py --output "${{ runner.temp }}/puzzle-qa" --browsers "${{ matrix.browser }}" --shard "${{ matrix.shard }}" --workers 1
+      - name: Artifact name
+        if: always()
+        id: artifact
+        shell: bash
+        run: echo "shard=$(echo '${{ matrix.shard }}' | tr / -)" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: localized-layout-${{ matrix.browser }}-${{ steps.artifact.outputs.shard }}
+          path: |
+            ${{ runner.temp }}/puzzle-qa/supplemental-locale-layout-*.json*
+            ${{ runner.temp }}/puzzle-qa/*failure.png
+          retention-days: 14
+
+  complete-localized-matrix:
+    if: always()
+    needs: layouts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: localized-layout-*
+          path: ${{ runner.temp }}/localized-matrix
+      - name: Fail on any missing, duplicate or unsuccessful map/locale/viewport
+        run: python scripts/ci_locale_layout_report.py --artifacts "${{ runner.temp }}/localized-matrix"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: localized-layout-summary
+          path: ${{ runner.temp }}/localized-matrix/localized-layout-summary.json

@@ -308,7 +308,7 @@ async def check_layout(page, record, label):
     # Wait for ResizeObserver + debounced projection rebuild, not an arbitrary
     # sleep that races Firefox/WebKit under a concurrent full-catalog workload.
     await page.wait_for_function("""()=>{const c=document.querySelector('#puzzleCanvas'),s=window.__puzzleRead?.();if(!c||!s)return false;
-      const r=c.getBoundingClientRect();return Math.abs(r.width-s.canvas.width)<=2&&Math.abs(r.height-s.canvas.height)<=2;}""", timeout=8000)
+      const r=c.getBoundingClientRect();return Math.abs(r.width-s.canvas.width)<=2&&Math.abs(r.height-s.canvas.height)<=2;}""", timeout=8000, polling=50)
     metrics = await page.evaluate("""()=>{
       const box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,client:el.clientWidth,scroll:el.scrollWidth}};
       const c=document.querySelector('#puzzleCanvas'),stage=c.closest('.puzzle-stage-card');
