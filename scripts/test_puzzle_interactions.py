@@ -204,12 +204,12 @@ async def fullscreen_resize(page, context, browser_name, server, record):
 async def native_fullscreen(page, context, browser_name, server, record):
     await open_game(page, server)
     await page.locator('#puzzleFullscreen').tap()
-    await page.wait_for_timeout(200)
+    await page.wait_for_function("document.fullscreenElement||document.querySelector('.is-puzzle-fullscreen')")
     record['implementation'] = await page.evaluate("document.fullscreenElement?'native':document.querySelector('.is-puzzle-fullscreen')?'fallback':'none'")
     assert record['implementation'] != 'none', 'Fullscreen button had no effect'
     await check_layout(page, record, 'fullscreen')
     await page.locator('#puzzleFullscreen').tap()
-    assert await page.evaluate("!document.fullscreenElement&&!document.querySelector('.is-puzzle-fullscreen')"), 'Exit button failed'
+    await page.wait_for_function("!document.fullscreenElement&&!document.querySelector('.is-puzzle-fullscreen')")
 
 
 async def hint_limit(page, context, browser_name, server, record):
@@ -466,6 +466,130 @@ async def two_tabs(page, context, browser_name, server, record):
     record['writerTransfer'] = {'before': 1, 'after': 2, 'attemptUnchanged': True, 'passiveTabIgnored': True}
 
 
+async def third_touch_does_not_place(page, context, browser_name, server, record):
+    await open_game(page, server)
+    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await ready(page, {'mode': 'country-regions', 'selection': 'USA'})
+    await page.locator('#puzzleCountry').select_option('MCO')
+    await ready(page, {'mode': 'country-regions', 'selection': 'MCO'})
+    await page.locator('#puzzleCanvas').focus()
+    await page.keyboard.press('Enter')
+    for _ in range(3):
+        await page.keyboard.press('Shift+ArrowRight')
+    await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+    before = await state(page)
+    x, y = before['source']['x'], before['source']['y']
+    local = [{'x': x, 'y': y}, {'x': x + 55, 'y': y + 20}, {'x': x + 1, 'y': y + 1}]
+    if browser_name == 'chromium':
+        await page.evaluate("""()=>{window.__qaTouchEvents=[];
+          const c=document.querySelector('#puzzleCanvas');
+          for(const type of ['pointerdown','pointerup'])c.addEventListener(type,e=>window.__qaTouchEvents.push({type:e.type,trusted:e.isTrusted}));
+        }""")
+        cdp = await context.new_cdp_session(page)
+        points = [dict(point, id=i+1) for i, point in enumerate(await canvas_points(page, local))]
+        for length in [1,2,3]:
+            await cdp.send('Input.dispatchTouchEvent', {'type':'touchStart','touchPoints':points[:length]})
+        # CDP ends the contacts listed here, leaving the other two held down.
+        await cdp.send('Input.dispatchTouchEvent', {'type':'touchEnd','touchPoints':points[:1]})
+        lifted = await state(page)
+        await cdp.send('Input.dispatchTouchEvent', {'type':'touchMove','touchPoints':points[1:]})
+        rebased = await state(page)
+        await cdp.send('Input.dispatchTouchEvent', {'type':'touchEnd','touchPoints':[]})
+        await cdp.detach()
+        events = await page.evaluate('window.__qaTouchEvents')
+        assert sum(event['type']=='pointerdown' for event in events) == 3 and all(event['trusted'] for event in events), ('Trusted three-touch input did not reach canvas', events)
+        record['input'] = 'Trusted Chromium CDP three-touch contact and release; emulated device'
+    else:
+        await gesture(page, [dict(point,type='pointerdown',id=i+7) for i,point in enumerate(local)])
+        await gesture(page, [dict(local[0],type='pointerup',id=7)])
+        lifted = await state(page)
+        await gesture(page, [dict(point,type='pointermove',id=i+8) for i,point in enumerate(local[1:])])
+        rebased = await state(page)
+        await gesture(page, [dict(point,type='pointerup',id=i+8) for i,point in enumerate(local[1:])])
+        record['input'] = 'Synthetic three-pointer contact and release; no physical-device claim'
+    after = await state(page)
+    assert (after['placed'],after['errors'],after['finished']) == (before['placed'],before['errors'],before['finished']), 'Third finger caused an unintended placement or error'
+    for key in ['k','x','y']:
+        assert abs(rebased['view'][key]-lifted['view'][key]) < 1e-5, ('Lifting first finger caused a pinch jump', key)
+    record['noMoveOrError'] = True
+    record['remainingPinchRebased'] = True
+
+
+async def completion_restart_race(page, context, browser_name, server, record):
+    await open_game(page, server)
+    # Delay only acknowledgement of the first completed local checkpoint.
+    # The public persistence adapter still performs the real durable write.
+    await page.evaluate("""()=>{
+      const p=document.querySelector('#geoPuzzleApp').puzzleProgress,save=p.save;
+      let held=false;
+      p.save=snapshot=>{const work=save(snapshot);
+        if(snapshot.finished&&!held){held=true;window.__qaHeldAttempt=snapshot.attemptId;
+          return new Promise((resolve,reject)=>{window.__qaReleaseCompletion=()=>work.then(resolve,reject)});
+        }return work;};
+    }""")
+    await place_pieces(page, (await state(page))['total'])
+    completed = await state(page)
+    assert completed['finished'] and completed['placed'] == completed['total']
+    assert await page.evaluate('window.__qaHeldAttempt') == completed['attemptId']
+    assert not await page.locator('#puzzleResultDialog').evaluate('(el)=>el.open')
+    await page.locator('#puzzleReset').click()
+    await page.wait_for_function('()=>{const s=window.__puzzleRead();return s.ready&&!s.loading&&!s.finished}')
+    replacement = await state(page)
+    assert replacement['attemptId'] != completed['attemptId'] and replacement['placed'] == 0
+    await page.evaluate('()=>{window.__qaReleaseCompletion();}')
+    await page.wait_for_timeout(400)
+    assert not await page.locator('#puzzleResultDialog').evaluate('(el)=>el.open'), 'Old completion opened a result on the new incomplete game'
+    assert not await page.locator('.puzzle-save-notice').count(), 'Old completion produced a false storage-failure notice'
+    await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+    await trusted_drop(page)
+    await trusted_drop(page)
+    saved = await draft(page)
+    assert saved['attemptId'] == replacement['attemptId'] and saved['state']['placed'] == 2
+    await page.reload(wait_until='domcontentloaded')
+    restored = await ready(page)
+    assert restored['attemptId'] == replacement['attemptId'] and restored['placed'] == 2 and not restored['finished'], 'Late completion displaced the new draft head on reload'
+    assert not await page.locator('#puzzleResultDialog').evaluate('(el)=>el.open')
+    attempts = await page.evaluate("""async ({base,owner})=>{
+      const {durableStore}=await import(base+'assets/js/durable-store.js');
+      return durableStore.listAttempts({owner});
+    }""", {'base':server.base,'owner':'student:'+STUDENT['studentKey']})
+    assert [attempt['id'] for attempt in attempts] == [completed['attemptId']], 'Completion race duplicated or misattributed an attempt'
+    record['completedAttempt'] = completed['attemptId']
+    record['replacementAttempt'] = replacement['attemptId']
+    record['replacementRestoredPieces'] = restored['placed']
+    record['staleCompletionIgnored'] = True
+
+
+async def world_locale_recovery(page, context, browser_name, server, record):
+    await open_game(page, server)
+    await page.locator('[data-puzzle-mode="world-countries"]').click()
+    await ready(page, {'mode': 'world-countries', 'selection': None})
+    await place_pieces(page, 5)
+    await page.locator('#puzzleHint').click()
+    baseline = await draft(page)
+    baseline_state = baseline['state']
+    assert len(baseline_state['featureIds']) == 240
+    assert baseline_state['placed'] == 5 and baseline_state['hints'] == 1
+    restored_locales = []
+    for locale in ['zh', 'en', 'ru']:
+        page._qa_locale = locale
+        await page.goto(server.base + f'apps/puzzle.html?context=free&qaLocale={locale}', wait_until='domcontentloaded')
+        restored = await ready(page, {'mode': 'world-countries', 'selection': None})
+        assert await page.locator('html').get_attribute('lang') == ('zh-Hans' if locale == 'zh' else locale)
+        assert restored['attemptId'] == baseline['attemptId'], ('Language change replaced the world attempt', locale)
+        assert restored['total'] == 240 and restored['placed'] == 5 and restored['hints'] == 1, ('Language change changed world geometry or progress', locale, restored['total'])
+        recovered = (await draft(page))['state']
+        for key in ['featureIds', 'order', 'cursor', 'current', 'difficulty', 'geometryRef', 'finished', 'timerStarted']:
+            assert recovered[key] == baseline_state[key], ('World recovery mismatch', locale, key)
+        for before, after in zip(baseline_state['pieces'], recovered['pieces']):
+            assert (before['locked'], before['inTray']) == (after['locked'], after['inTray']), ('Piece status changed', locale)
+            if before.get('point') and after.get('point'):
+                assert all(abs(a-b)<1e-5 for a,b in zip(before['point'],after['point'])), ('Piece position changed', locale)
+        restored_locales.append({'locale': locale, 'total': restored['total'], 'placed': restored['placed'], 'hints': restored['hints']})
+    record['attemptUnchanged'] = True
+    record['worldLocaleRecovery'] = restored_locales
+
+
 SCENARIOS = {
     'input': input_and_cancel,
     'fullscreen': fullscreen_resize,
@@ -475,6 +599,9 @@ SCENARIOS = {
     'graded': graded_rules,
     'rapid-route': rapid_and_route,
     'two-tabs': two_tabs,
+    'completion-restart': completion_restart_race,
+    'world-locales': world_locale_recovery,
+    'third-touch': third_touch_does_not_place,
 }
 
 

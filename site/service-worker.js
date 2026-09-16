@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.6-puzzle-2`;
+const CACHE=`${CACHE_PREFIX}v1.3.6-puzzle-3`;
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -371,7 +371,10 @@ const PUZZLE_SHELL=[
   './data/legacy-en.json','./data/legacy-zh.json'
 ];
 const PRECACHE=[...SHELL,...CAREER_SHELL,...GOVERNOR_ASSETS];
-// Optional modules must not delay an install or invalidate the basic platform.
+// The puzzle entry and catalogs must survive the first offline navigation after
+// an update. Its scripts already belong to the platform shell; prepare the whole
+// small entry pack before activation so a new release cannot strand a saved game.
+// Other optional modules remain lazy.
 const CORE_SHELL=SHELL.filter(path=>!/^\.\/apps\//.test(path)&&!path.includes('/calendars/')&&!path.includes('/calendar-')&&!path.includes('/legal-calendar')&&!path.includes('/previews/')&&!path.includes('firebase-storage'));
 
 async function fetchWithDeadline(request,timeout=12000){
@@ -406,7 +409,7 @@ async function prepareResources(paths,{required=false,cacheName=CACHE}={}){
 
 self.addEventListener('install',event=>{
   event.waitUntil(
-    prepareResources(CORE_SHELL,{required:true})
+    prepareResources([...CORE_SHELL,...PUZZLE_SHELL],{required:true})
       .then(()=>self.skipWaiting())
   );
 });

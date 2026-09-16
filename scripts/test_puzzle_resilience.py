@@ -18,7 +18,7 @@ import time
 import traceback
 
 from playwright.async_api import async_playwright
-from test_puzzle_catalog import PuzzleServer, ROOT, STUDENT, context_for, flush, ready, trusted_drop, write_json
+from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, trusted_drop, write_json
 
 
 FETCH_FAULT = r"""(() => {
@@ -232,6 +232,84 @@ async def old_schema(page, context, browser_name, server, record):
     record['migration'] = {'from': 'puzzle-v2 without geometryRef/relative zoom', 'to': 'puzzle-v3 with immutable geometry', 'placementsPreserved': 1}
 
 
+async def legacy_world(page, context, browser_name, server, record):
+    """Play the historical localized filter, then restore its v2 draft in RU/EN."""
+    handler = server.httpd.RequestHandlerClass
+    original_get = handler.do_GET
+    source = (ROOT / 'site/assets/js/puzzle-engine.js').read_text(encoding='utf-8')
+    current_filter = 'if (mode === "world-countries" && ["ATA", "ATF"].includes(countryCode) && !retained.has(featureId(feature, index))) return;'
+    legacy_filter = 'if (mode === "world-countries" && (countryCode === "ATA" || /antarct|антаркт/i.test(name))) return;'
+    assert source.count(current_filter) == 1, 'Historical world-filter insertion marker changed'
+    source = source.replace(current_filter, legacy_filter, 1)
+    marker = '  function checkpoint() {'
+    assert source.count(marker) == 1
+    source = 'window.__qaLegacyWorldEngine=true;\n' + source.replace(marker, READ_ONLY_HOOK + '\n' + marker, 1)
+    old_requests = []
+
+    def legacy_get(request):
+        if request.path.startswith('/RUDN/assets/js/puzzle-engine.js?') and 'qaLegacyWorld=1' in request.path:
+            old_requests.append(request.path)
+            body = source.encode('utf-8')
+            request.send_response(200)
+            request.send_header('Content-Type', 'text/javascript; charset=utf-8')
+            request.send_header('Cache-Control', 'no-store')
+            request.send_header('Content-Length', str(len(body)))
+            request.end_headers()
+            request.wfile.write(body)
+        else:
+            original_get(request)
+
+    # The legacy engine has its own URL, so a real worker can cache both versions
+    # without a test deleting production caches or altering the stored geometry.
+    await context.add_init_script("""(() => {
+      const descriptor=Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype,'src');
+      Object.defineProperty(HTMLScriptElement.prototype,'src',{...descriptor,set(value){
+        const url=new URL(value,location.href);
+        if(url.pathname.endsWith('/puzzle-engine.js')&&!sessionStorage.getItem('qa.world.current'))url.searchParams.set('qaLegacyWorld','1');
+        descriptor.set.call(this,url.href);
+      }});
+    })();""")
+    handler.do_GET = legacy_get
+    try:
+        await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=zh', wait_until='domcontentloaded')
+        await ready(page)
+        assert await page.evaluate('window.__qaLegacyWorldEngine===true'), 'Historical engine was not loaded'
+        await page.locator('[data-puzzle-mode="world-countries"]').click()
+        historical = await ready(page, {'mode': 'world-countries', 'selection': None})
+        assert historical['total'] == 241, ('Historical Chinese world set changed', historical['total'])
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await trusted_drop(page)
+        await trusted_drop(page)
+        original = await saved(page)
+        assert original['state']['placed'] == 2 and len(original['state']['featureIds']) == 241
+        restores = []
+        for locale in ('ru', 'en'):
+            await page.evaluate("""async ({base,draft})=>{
+              document.querySelector('#geoPuzzleApp').puzzleProgress.save=()=>Promise.resolve();
+              sessionStorage.setItem('qa.world.current','true');
+              const {durableStore}=await import(base+'assets/js/durable-store.js');
+              const state={...draft.state,version:2};
+              delete state.geometryRef;delete state.finishedResult;delete state.selections;delete state.view.zoom;
+              await durableStore.checkpoint({owner:draft.owner,activitySlug:'maps-freeplay',mode:'free',
+                attemptId:draft.attemptId,contentVersion:'puzzle-v2',state},{queue:false});
+            }""", {'base': server.base, 'draft': original})
+            await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=' + locale, wait_until='domcontentloaded')
+            restored = await ready(page)
+            assert not await page.evaluate('window.__qaLegacyWorldEngine===true'), 'Restore used the historical engine'
+            assert await page.evaluate('window.RUDNI18N.locale') == locale
+            assert restored['attemptId'] == original['attemptId'] and restored['placed'] == 2 and restored['total'] == 241
+            assert restored['order'] == original['state']['order'] and restored['featureIds'] == original['state']['featureIds']
+            migrated = await saved(page)
+            assert migrated['contentVersion'] == 'puzzle-v3' and migrated['state']['version'] == 3 and migrated['state']['geometryRef']
+            await quiet(page)
+            restores.append({'locale': locale, 'total': restored['total'], 'placed': restored['placed'], 'sameAttemptOrderAndIds': True})
+        assert old_requests, 'The fixture did not serve a historical engine'
+        record['legacyWorld'] = {'method': 'Actual UI game using historical localized name filter; its played draft downgraded to v2 without geometryRef before each current-code RU/EN restore',
+                                 'originalLocale': 'zh', 'originalTotal': 241, 'placements': 2, 'restores': restores}
+    finally:
+        handler.do_GET = original_get
+
+
 async def service_worker_update(page, context, browser_name, server, record, offline=False):
     await open_game(page, server)
     await trusted_drop(page)
@@ -269,6 +347,13 @@ async def service_worker_update(page, context, browser_name, server, record, off
         await flush(page)
         if offline:
             await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1', 'url': server.base}])
+            # The live page remains bound to its old release, which correctly
+            # rejects uncached resources. Probe the same browser-context cookie
+            # through its HTTP client so the worker cannot manufacture failure.
+            probe = await context.request.get(server.base + '__qa/update-offline-probe?nonce=' + token)
+            outage = {'status': probe.status, 'body': await probe.text(), 'transport': 'Browser-context HTTP client, bypassing SW'}
+            assert outage['status'] == 503 and 'Isolated QA network outage' in outage['body'], outage
+            record['outageProbe'] = outage
             record['offlineSimulation'] = 'Verified fixture-server 503 outage immediately after worker activation, before first reload'
         response = await page.reload(wait_until='domcontentloaded')
         assert response.status == 200, ('Prepared puzzle shell was unavailable after worker update', response.status)
@@ -299,6 +384,11 @@ async def worker_version_skew(page, context, browser_name, server, record):
     current_version = re.search(r'const CACHE=`\$\{CACHE_PREFIX\}v(\d+\.\d+\.\d+)', current_source).group(1)
     old_version = '1.3.5' if current_version != '1.3.5' else '1.3.4'
     old_source = current_source.replace(current_version, old_version)
+    # Preserve the previous worker's missing optional shell even after the new
+    # worker fixes its install list. Otherwise this upgrade regression vanishes.
+    old_source, old_installs = re.subn(r'prepareResources\(\[\.\.\.CORE_SHELL,\s*\.\.\.PUZZLE_SHELL\],\{required:true\}\)',
+                                     'prepareResources(CORE_SHELL,{required:true})', old_source, count=1)
+    assert old_installs == 1, 'Prior-release fixture must explicitly exclude the puzzle shell'
 
     def skew_get(request):
         if request.path == old_path or request.path == landing_path:
@@ -344,7 +434,7 @@ async def worker_version_skew(page, context, browser_name, server, record):
 SCENARIOS = {'initial-failure': initial_failure, 'initial-hang': initial_hang,
              'replacement-failure': replacement_failure, 'storage-denied': storage_denied,
              'storage-quota': storage_quota, 'hidden-timer': hidden_timer,
-             'profile-isolation': profile_isolation, 'old-schema': old_schema,
+             'profile-isolation': profile_isolation, 'old-schema': old_schema, 'legacy-world': legacy_world,
              'worker-update': service_worker_update, 'worker-version-skew': worker_version_skew,
              'worker-update-offline': worker_update_offline}
 

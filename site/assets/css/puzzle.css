@@ -199,6 +199,9 @@
   margin-top: 18px;
 }
 .puzzle-toolbar-field { display: grid; gap: 6px; min-width: 0; }
+/* WebKit can paint a long selected option outside the native select box.
+   Keep its paint inside the field, with room for the keyboard focus outline. */
+.puzzle-toolbar .puzzle-dependent { overflow: hidden; padding: 6px; margin: -6px; }
 .puzzle-toolbar label,
 .puzzle-field-label {
   color: var(--muted);

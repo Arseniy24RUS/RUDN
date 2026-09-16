@@ -37,9 +37,12 @@ async def run(args, server):
             try:
                 for cycle in range(args.cycles):
                     for map_id in ids:
+                        if cycle or map_id != ids[0]:
+                            await page.evaluate('window.__qaPerf.longTasks=[]')
                         started = time.monotonic()
                         state = await start_map(page, catalog[map_id], 'medium')
                         row = {'id': map_id, 'cycle': cycle, 'loadSeconds': round(time.monotonic()-started, 3)}
+                        row['loadLongTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
                         if map_id != 'adm1-MCO':
                             # Enter lifts the piece; arrows and a real mouse drag then place it.
                             await page.locator('#puzzleCanvas').press('Enter')
@@ -61,6 +64,7 @@ async def run(args, server):
                             for key in ('handlers', 'latencies'):
                                 values = sorted(await page.evaluate(f'window.__qaPerf.{key}'))
                                 row[key+'P95Ms'] = round(values[min(len(values)-1, int(len(values)*.95))], 2) if values else None
+                            row['dragLongTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
                             await page.locator('#puzzleReturn').click()
                         await trusted_drop(page)
                         if cycle == 0:
@@ -70,7 +74,6 @@ async def run(args, server):
                         heap = (await cdp.send('Runtime.getHeapUsage'))['usedSize']
                         heaps.append(heap)
                         row['retainedHeapMiB'] = round(heap/1024/1024, 2)
-                        row['longTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
                         row['status'] = 'passed'
                         record['maps'].append(row)
                         print(channel, cycle, map_id, row['dragFrameP95Ms'] if 'dragFrameP95Ms' in row else '-', row['retainedHeapMiB'], flush=True)

@@ -80,6 +80,7 @@ function makeWorker(workerScope=scope,{stores=new Map(),source=workerSource}={})
     get clientCacheName(){return vm.runInContext('CLIENT_CACHE',context)},
     get precache(){return Array.from(vm.runInContext('PRECACHE',context))},
     get core(){return Array.from(vm.runInContext('CORE_SHELL',context))},
+    get puzzle(){return Array.from(vm.runInContext('PUZZLE_SHELL',context))},
     get networkCalls(){return networkCalls},
     get skipped(){return skipped},
     get claimed(){return claimed},
@@ -111,7 +112,7 @@ function makeWorker(workerScope=scope,{stores=new Map(),source=workerSource}={})
   return harness;
 }
 
-test('module manifest includes runtime files; only the minimal platform is installed',async()=>{
+test('module manifest includes runtime files; platform and puzzle entry are installed',async()=>{
   const worker=makeWorker();
   await worker.emit('install');
   assert.equal(worker.skipped,true);
@@ -130,9 +131,28 @@ test('module manifest includes runtime files; only the minimal platform is insta
     assert.ok(worker.precache.includes(entry),`Missing entry: ${entry}`);
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
-  assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')),'Optional modules cannot delay installation');
+  assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')&&!request.url.endsWith('/apps/puzzle.html')),'Other optional modules cannot delay installation');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
   assert.ok(worker.cacheName.startsWith(worker.cachePrefix+`v${currentVersion}-`));
+});
+
+test('a newly activated release can reopen a saved puzzle before its first online visit',async()=>{
+  const worker=makeWorker();
+  await worker.emit('install');
+  await worker.emit('activate');
+  worker.fetch=async()=>{throw new TypeError('Network unavailable')};
+  for(const entry of worker.puzzle){
+    const response=await worker.request(entry,{mode:entry.endsWith('.html')?'navigate':'cors'});
+    assert.equal(response?.status,200,`New puzzle release unavailable offline: ${entry}`);
+  }
+});
+
+test('an incomplete puzzle entry prevents activation of an unusable update',async()=>{
+  const worker=makeWorker();
+  const fetch=worker.fetch;
+  worker.fetch=request=>request.url.endsWith('/apps/puzzle.html')?Promise.resolve(new Response('Unavailable',{status:503})):fetch(request);
+  await assert.rejects(worker.emit('install'),/resource\/unavailable/);
+  assert.equal(worker.skipped,false,'The prepared older worker must remain active');
 });
 
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{

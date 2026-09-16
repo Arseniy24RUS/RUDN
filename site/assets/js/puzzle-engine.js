@@ -455,8 +455,9 @@
     return value !== undefined && value !== null ? String(value) : `feature-${index + 1}`;
   }
 
-  function normalizeCollection(collection, mode) {
+  function normalizeCollection(collection, mode, savedFeatureIds = null) {
     const seen = new Set();
+    const retained = new Set(savedFeatureIds || []);
     const features = [];
     (collection.features || []).forEach((feature, index) => {
       if (!feature || !feature.geometry || !["Polygon", "MultiPolygon"].includes(feature.geometry.type)) return;
@@ -465,7 +466,10 @@
       const countryCode = String(
         properties.ADM0_A3 || properties.adm0_a3 || properties.ISO_A3 || properties.iso_a3 || properties.SOV_A3 || properties.sov_a3 || "",
       ).toUpperCase();
-      if (mode === "world-countries" && (countryCode === "ATA" || /antarct|антаркт/i.test(name))) return;
+      // Keep the established non-Antarctic set identical in every language.
+      // Filtering translated names made ATF disappear only in RU/EN and broke
+      // recovery when a saved world game was reopened in Chinese.
+      if (mode === "world-countries" && ["ATA", "ATF"].includes(countryCode) && !retained.has(featureId(feature, index))) return;
       let id = featureId(feature, index);
       if (seen.has(id)) id = `${id}-${index + 1}`;
       seen.add(id);
@@ -677,7 +681,7 @@
         resolved = { wrapper: state.wrapper, collection: state.collection, selection: state.selection };
       } else resolved = await resolveDataset(settings.mode, settings.selection, controller.signal);
       if (!current()) return;
-      const collection = normalizeCollection(resolved.collection, settings.mode);
+      const collection = normalizeCollection(resolved.collection, settings.mode, resume?.featureIds);
       const featureIds = collection.features.map(feature => feature.properties._puzzleId);
       if (resume && JSON.stringify(featureIds) !== JSON.stringify(resume.featureIds)) throw new Error(tr("Набор карты изменился. Сохранённая попытка не перезаписана."));
       const count = collection.features.length;
@@ -1464,8 +1468,9 @@
     state.pointers.set(event.pointerId, point);
     try { els.canvas.setPointerCapture(event.pointerId); } catch (_) { /* no-op */ }
 
-    if (state.pointers.size === 2) {
+    if (state.pointers.size >= 2) {
       state.draggingPiece = false;
+      state.draggingFromTray = false;
       state.draggingPan = false;
       startPinch();
       return;
@@ -1532,9 +1537,11 @@
 
   function pointerEnd(event) {
     if (!state.pointers.has(event.pointerId)) return;
+    const wasMultiTouch = state.pointers.size >= 2;
     state.pointers.delete(event.pointerId);
-    if (state.pointers.size < 2) state.pinch = null;
-    if (state.draggingPiece) attemptSnap();
+    if (state.pointers.size >= 2) startPinch();
+    else state.pinch = null;
+    if (!wasMultiTouch && state.draggingPiece) attemptSnap();
     state.draggingPiece = false;
     state.draggingFromTray = false;
     state.draggingPan = false;
@@ -1614,7 +1621,7 @@
     state.finishedResult = localResult();
     updateUi();
     drawAll(true);
-    await checkpoint();
+    const attemptId = state.attemptId;
     const payload = {
       csrf, activity_slug: root.dataset.activitySlug, attempt_id: state.attemptId,
       mode: state.mode, selection: state.selection, difficulty: state.difficulty,
@@ -1623,7 +1630,10 @@
       feature_ids: state.features.map(feature => feature.properties._puzzleId),
       dataset_id: state.wrapper?.dataset?.id,
     };
-    const attemptId = state.attemptId;
+    await checkpoint();
+    // A slow local acknowledgement may arrive after the student has already
+    // started another map. Never complete or open a result for that new attempt.
+    if (disposed || state.attemptId !== attemptId) return;
     try {
       // This bridge commits only to the device. Cloud delivery is queued separately.
       const result = await fetchJson(`/api/puzzle/complete?lang=${encodeURIComponent(locale)}`, {
