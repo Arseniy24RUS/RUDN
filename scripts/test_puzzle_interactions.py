@@ -181,6 +181,7 @@ async def fullscreen_resize(page, context, browser_name, server, record):
     await page.keyboard.press('Shift+ArrowRight')
     await page.locator('#puzzleZoomIn').tap()
     baseline = (await draft(page))['state']
+    await page.locator('#puzzleFullscreen').evaluate("el=>el.addEventListener('click',()=>{window.__qaFullscreenFocus=document.activeElement?.id},{capture:true,once:true})")
     await page.locator('#puzzleFullscreen').tap()
     await page.locator('.is-puzzle-fullscreen').wait_for()
     for width, height in [(390,844), (844,390), (320,568), (568,320), (1024,768)]:
@@ -196,7 +197,7 @@ async def fullscreen_resize(page, context, browser_name, server, record):
     await page.keyboard.press('Escape')
     assert not await page.locator('.is-puzzle-fullscreen').count()
     assert not await page.locator('body.puzzle-fullscreen-active').count()
-    assert await page.locator('#puzzleFullscreen').evaluate('(el)=>el===document.activeElement'), 'Fullscreen did not restore focus'
+    assert await page.evaluate('document.activeElement?.id===window.__qaFullscreenFocus'), 'Fullscreen did not restore pre-entry focus'
     record['preserved'] = ['attempt', 'current piece geographic position', 'geographic view center', 'relative zoom', 'progress', 'focus']
 
 
@@ -288,6 +289,7 @@ async def graded_rules(page, context, browser_name, server, record):
         await page.locator('#puzzleResultDialog[open]').wait_for()
         saved = (await draft(page, 'seminar'))['state']
         assert saved['completionReceipt']['points'] == expected, saved['completionReceipt']
+        assert saved['completionReceipt']['best_points'] == 5, ('Best grade decreased after expert completion', saved['completionReceipt'])
         assert saved['hints'] == 0
         assert await page.locator('#puzzleResultDialog .puzzle-result-metric').count() == 3
         assert not await page.locator('#puzzleResultErrors').count()
@@ -306,6 +308,14 @@ async def graded_rules(page, context, browser_name, server, record):
 
 
 async def rapid_and_route(page, context, browser_name, server, record):
+    # Install before mount because the engine intentionally captures its own
+    # fetch bridge to isolate a disposed route from the following route.
+    await page.add_init_script("""(()=>{
+      const wrap=fetcher=>function(input,options){const result=fetcher.call(this,input,options);const url=typeof input==='string'?input:input?.url||'';
+        if(window.__qaDelayMetadata&&url.includes('/data/country-adm1/USA')){window.__qaDelayedMetadata=(window.__qaDelayedMetadata||0)+1;return Promise.resolve(result).then(response=>new Promise(resolve=>setTimeout(()=>resolve(response),6000)))}return result};
+      let current=wrap(window.fetch);
+      Object.defineProperty(window,'fetch',{configurable:true,get:()=>current,set:value=>{current=wrap(value)}});
+    })()""")
     await page.goto(server.base + 'index.html#puzzle', wait_until='domcontentloaded')
     await ready(page)
     # Delay only a public persistence adapter's acknowledgment, never modify
@@ -321,24 +331,70 @@ async def rapid_and_route(page, context, browser_name, server, record):
     await page.wait_for_timeout(700)
     assert (await state(page))['difficulty'] == 'easy', 'Older slow checkpoint replaced latest difficulty'
     assert await page.evaluate('window.__qaDelayedSaves') >= 2
-    await page.evaluate("document.querySelector('#geoPuzzleApp').puzzleProgress.save=window.__qaSave")
+    await page.evaluate("()=>{document.querySelector('#geoPuzzleApp').puzzleProgress.save=window.__qaSave;}")
     record['delayedCheckpointLatestWins'] = True
+    # A map selection immediately after a difficulty selection inherits the
+    # pending difficulty, even while the previous checkpoint is still pending.
+    await page.evaluate("""()=>{
+      const p=document.querySelector('#geoPuzzleApp').puzzleProgress;
+      window.__qaModeSave=p.save;window.__qaModeSaves=0;
+      p.save=snapshot=>{const saved=window.__qaModeSave(snapshot);if(window.__qaModeSaves++===0)return new Promise(resolve=>setTimeout(resolve,650)).then(()=>saved);return saved};
+    }""")
+    await page.locator('[data-puzzle-difficulty="hard"]').click()
+    await page.locator('[data-puzzle-mode="world-countries"]').click()
+    inherited = await ready(page, {'mode': 'world-countries', 'selection': None})
+    assert inherited['difficulty'] == 'hard', ('Immediate mode selection lost pending hard difficulty', inherited['difficulty'])
+    await page.wait_for_timeout(700)
+    assert (await state(page))['difficulty'] == 'hard' and (await state(page))['mode'] == 'world-countries'
+    assert await page.evaluate('window.__qaModeSaves') >= 2
+    await page.evaluate("()=>{document.querySelector('#geoPuzzleApp').puzzleProgress.save=window.__qaModeSave;}")
+    await page.locator('[data-puzzle-mode="russia-subjects"]').click()
+    await ready(page, {'mode': 'russia-subjects', 'selection': None})
+    record['pendingDifficultyInheritedByMode'] = True
     # Delay the same public fetch bridge used by the game. This also exercises
     # latest-selection cancellation when a service worker has warm assets.
-    await page.evaluate("""()=>{
-      window.__qaFetch=window.fetch;window.__qaDelayedMetadata=0;
-      window.fetch=(input,options)=>{const result=window.__qaFetch(input,options);if(String(input).includes('/data/country-adm1/USA')){window.__qaDelayedMetadata++;return result.then(response=>new Promise(resolve=>setTimeout(()=>resolve(response),650)))}return result};
-    }""")
+    await page.evaluate("()=>{window.__qaDelayMetadata=true;window.__qaDelayedMetadata=0;}")
     original = await state(page)
     await page.locator('[data-puzzle-mode="country-regions"]').click()
     await page.wait_for_function('window.__qaDelayedMetadata>0')
+    assert (await state(page))['loading'], 'Delayed replacement already settled before cancellation'
     await page.locator('[data-puzzle-mode="russia-subjects"]').click()
-    await page.wait_for_timeout(750)
+    await page.wait_for_timeout(200)
     canceled = await ready(page)
+    record['pendingMapRace'] = {'before': {'mode': original['mode'], 'attemptId': original['attemptId']}, 'after': {'mode': canceled['mode'], 'attemptId': canceled['attemptId']}, 'delayedMetadata': await page.evaluate('window.__qaDelayedMetadata')}
     assert canceled['mode'] == 'russia-subjects' and canceled['attemptId'] == original['attemptId'], 'Clicking current map did not cancel pending replacement'
-    await page.evaluate('window.fetch=window.__qaFetch')
+    await page.wait_for_timeout(6100)
+    assert (await state(page))['attemptId'] == original['attemptId'], 'Canceled response replaced the retained current map later'
     record['pendingMapCanceledByCurrentSelection'] = True
+    continued = []
+    for action in ['hint-key', 'trusted-drag']:
+        if action == 'trusted-drag':
+            await page.locator('#puzzleReturn').click()
+            page.once('dialog', lambda dialog: asyncio.create_task(dialog.accept()))
+        before = await state(page)
+        await page.evaluate('()=>{window.__qaDelayedMetadata=0;}')
+        await page.locator('[data-puzzle-mode="country-regions"]').click()
+        await page.wait_for_function('window.__qaDelayedMetadata>0')
+        assert (await state(page))['loading'], 'Replacement was not pending when continuing the old game'
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        if action == 'hint-key':
+            await page.locator('#puzzleCanvas').focus()
+            await page.keyboard.press('h')
+        else:
+            await trusted_drop(page)
+        after = await state(page)
+        assert after['attemptId'] == before['attemptId'] and after['mode'] == 'russia-subjects' and not after['loading'], ('Continuing current game did not cancel pending replacement', action, before['attemptId'], after['attemptId'], after['mode'])
+        assert after['hints'] == before['hints'] + (1 if action == 'hint-key' else 0)
+        assert after['placed'] == before['placed'] + (1 if action == 'trusted-drag' else 0)
+        await page.wait_for_timeout(6100)
+        settled = await state(page)
+        assert (settled['attemptId'], settled['hints'], settled['placed'], settled['mode']) == (after['attemptId'], after['hints'], after['placed'], after['mode']), ('Delayed response discarded the continued game', action)
+        continued.append({'action': action, 'attemptUnchanged': True, 'hints': after['hints'], 'placed': after['placed']})
+    await page.evaluate('()=>{window.__qaDelayMetadata=false;}')
+    record['pendingMapCanceledByGameplay'] = continued
+    page.once('dialog', lambda dialog: asyncio.create_task(dialog.accept()))
     await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await ready(page, {'mode': 'country-regions', 'selection': 'USA'})
     await page.locator('#puzzleCountry option[value="CAN"]').wait_for(state='attached')
     seen = []
 
@@ -379,6 +435,8 @@ async def two_tabs(page, context, browser_name, server, record):
     await trusted_drop(page)
     baseline = await draft(page)
     second = await context.new_page()
+    second._qa_base = server.base
+    second._qa_locale = record['locale']
     watch(second, record)
     await second.goto(server.base + 'apps/puzzle.html?context=free', wait_until='domcontentloaded')
     await ready(second)
@@ -391,8 +449,15 @@ async def two_tabs(page, context, browser_name, server, record):
     await reader.keyboard.press('h')
     assert (await state(reader))['hints'] == before['hints'], 'Passive tab accepted a mutation'
     # Read-only observation of the latest stored head, then real owner closure.
+    record['writerBeforeClose'] = await writer.evaluate("({visible:document.visibilityState,writable:document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()})")
+    record['readerBeforeClose'] = await reader.evaluate("({visible:document.visibilityState,writable:document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()})")
     await writer.close()
-    await reader.wait_for_function("document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()", timeout=10000)
+    await reader.bring_to_front()
+    try:
+        await reader.wait_for_function("document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()", timeout=10000)
+    except Exception:
+        record['readerAfterClose'] = await reader.evaluate("async()=>({visible:document.visibilityState,writable:document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite(),locks:await navigator.locks?.query(),state:window.__puzzleRead()})")
+        raise
     await reader.wait_for_function("id=>{const s=window.__puzzleRead();return s.ready&&!s.loading&&s.attemptId===id&&s.placed===1}", arg=baseline['attemptId'])
     await reader.locator('#puzzleCanvas').scroll_into_view_if_needed()
     await trusted_drop(reader)
@@ -423,12 +488,14 @@ async def run(args, server):
             browser = await getattr(playwright, browser_name).launch(**options)
             try:
                 for scenario in args.scenarios.split(','):
-                    locales = ['ru', 'en', 'zh'] if scenario in ('confirmations', 'graded') else ['en' if scenario == 'fullscreen' else 'ru']
+                    locales = args.locales.split(',') if scenario in ('confirmations', 'graded') else ['en' if scenario == 'fullscreen' else 'ru']
                     for locale in locales:
                         record = {'browser': browser_name, 'scenario': scenario, 'locale': locale, 'status': 'failed'}
                         started = time.monotonic()
                         context = await context_for(browser, server, args.output, (390,844), locale, record)
                         page = await context.new_page()
+                        page._qa_base = server.base
+                        page._qa_locale = locale
                         watch(page, record)
                         try:
                             await SCENARIOS[scenario](page, context, browser_name, server, record)
@@ -459,7 +526,9 @@ async def run(args, server):
     report = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'expected': len(results),
               'passed': sum(item['status'] == 'passed' for item in results),
               'failed': sum(item['status'] != 'passed' for item in results), 'results': results,
-              'physicalDevices': 'Not tested', 'productionWrites': 'Blocked by CSP and network routing'}
+              'physicalDevices': 'Not tested', 'productionWrites': 'Blocked by CSP and network routing',
+              'requestedScenarios': args.scenarios.split(','), 'requestedBrowsers': args.browsers.split(','),
+              'requestedLocales': args.locales.split(',')}
     write_json(args.output / 'interactions.json', report)
     return 1 if report['failed'] else 0
 
@@ -468,6 +537,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--browsers', default='chromium,firefox,webkit')
+    parser.add_argument('--locales', default='ru,en,zh', help='Locales for localized confirmations and graded flows')
     parser.add_argument('--scenarios', default=','.join(SCENARIOS))
     parser.add_argument('--port', type=int, default=0)
     args = parser.parse_args()
@@ -478,6 +548,8 @@ def main():
         parser.error('Unknown browser')
     if not set(args.scenarios.split(',')) <= set(SCENARIOS):
         parser.error('Unknown scenario')
+    if not set(args.locales.split(',')) <= {'ru', 'en', 'zh'}:
+        parser.error('Unknown locale')
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / 'interactions.jsonl').write_text('', encoding='utf-8')
     with PuzzleServer(args.output, args.port) as server:

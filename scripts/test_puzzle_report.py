@@ -18,6 +18,7 @@ def main():
                 for identifier in maps for level in ('easy', 'medium', 'hard')}
     expected_layout = {(browser, identifier) for browser in ('chromium', 'firefox', 'webkit') for identifier in maps}
     completed, layouts, errors = set(), set(), []
+    network_coverage = {'browser': 0, 'connection-loss': 0}
     for path in args.artifacts.rglob('all-*.json'):
         report = json.loads(path.read_text(encoding='utf-8'))
         if report.get('suite') != 'all':
@@ -36,6 +37,13 @@ def main():
                 completed.add(case)
                 if not result.get('offlineResume') or not result.get('hintAndReturn') or result.get('inputPieces') != result.get('features'):
                     errors.append(f'Missing actual input/offline/hint coverage: {case}')
+                simulation = result.get('offlineSimulation')
+                if simulation not in network_coverage or (key[0] != 'webkit' and simulation != 'browser'):
+                    errors.append(f'Unexpected or weaker network simulation: {case}: {simulation}')
+                else:
+                    network_coverage[simulation] += 1
+                if simulation == 'connection-loss' and not result.get('connectionLossVerified'):
+                    errors.append(f'Unverified transport failure: {case}')
             elif result['suite'] == 'layout':
                 if key in layouts:
                     errors.append(f'Duplicate layout case: {key}')
@@ -47,7 +55,9 @@ def main():
     if layouts != expected_layout:
         errors.append(f'Layout coverage: {len(layouts)}/{len(expected_layout)}. Missing: {sorted(expected_layout-layouts)[:15]}')
     summary = {'coverage': args.coverage, 'maps': len(maps), 'completionCases': len(completed),
-               'layoutCases': len(layouts) * 12, 'passed': not errors, 'errors': errors}
+               'layoutCases': len(layouts) * 12, 'networkCoverage': network_coverage,
+               'networkLimitation': 'WebKit socket-loss coverage does not establish browser-emulated or physical-device offline navigation; see independent offline probe.',
+               'passed': not errors, 'errors': errors}
     write_json(args.artifacts / 'puzzle-matrix-summary.json', summary)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return int(bool(errors))

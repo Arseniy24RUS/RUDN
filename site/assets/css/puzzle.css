@@ -210,9 +210,9 @@
 .puzzle-toolbar select { min-height: 46px; padding-right: 34px; font-weight: 720; }
 .puzzle-toolbar .field-help { min-height: 16px; line-height: 1.35; }
 .puzzle-toolbar [hidden] { display: none !important; }
-.puzzle-difficulty-buttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.puzzle-difficulty-buttons { display: grid; grid-template-columns: repeat(3, minmax(44px, 1fr)); gap: 6px; }
 .puzzle-difficulty-button {
-  min-width: 0;
+  min-width: 44px;
   min-height: 46px;
   padding: 9px 6px;
   display: flex;

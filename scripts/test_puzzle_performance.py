@@ -26,7 +26,12 @@ async def run(args, server):
             observe(page, record)
             await page.add_init_script("""window.__qaPerf={longTasks:[]};
               new PerformanceObserver(list=>window.__qaPerf.longTasks.push(...list.getEntries().map(e=>e.duration)))
-                .observe({type:'longtask',buffered:true});""")
+                .observe({type:'longtask',buffered:true});
+              document.addEventListener('pointermove',()=>window.__qaPerf.eventStart=performance.now(),true);
+              document.addEventListener('pointermove',()=>{if(window.__qaPerf.measuring){
+                window.__qaPerf.handlers.push(performance.now()-window.__qaPerf.eventStart);
+                const start=performance.now();requestAnimationFrame(()=>window.__qaPerf.latencies.push(performance.now()-start));
+              }});""")
             cdp = await context.new_cdp_session(page)
             heaps = []
             try:
@@ -44,7 +49,7 @@ async def run(args, server):
                             x, y = box['x'] + state['source']['x'], box['y'] + state['source']['y']
                             await page.mouse.move(x, y)
                             await page.mouse.down()
-                            await page.evaluate("window.__qaPerf.frames=[];window.__qaPerf.measuring=true;let last=performance.now();function frame(t){if(!window.__qaPerf.measuring)return;window.__qaPerf.frames.push(t-last);last=t;requestAnimationFrame(frame)}requestAnimationFrame(frame)")
+                            await page.evaluate("Object.assign(window.__qaPerf,{frames:[],longTasks:[],handlers:[],latencies:[],measuring:true});let last=performance.now();function frame(t){if(!window.__qaPerf.measuring)return;window.__qaPerf.frames.push(t-last);last=t;requestAnimationFrame(frame)}requestAnimationFrame(frame)")
                             for step in range(36):
                                 await page.mouse.move(x + (step % 9) * 2, y - (step % 7) * 2)
                             await page.mouse.up()
@@ -53,6 +58,9 @@ async def run(args, server):
                             row['dragFrames'] = len(frames)
                             row['dragFrameP50Ms'] = round(statistics.median(frames), 2) if frames else None
                             row['dragFrameP95Ms'] = round(frames[min(len(frames)-1, int(len(frames)*.95))], 2) if frames else None
+                            for key in ('handlers', 'latencies'):
+                                values = sorted(await page.evaluate(f'window.__qaPerf.{key}'))
+                                row[key+'P95Ms'] = round(values[min(len(values)-1, int(len(values)*.95))], 2) if values else None
                             await page.locator('#puzzleReturn').click()
                         await trusted_drop(page)
                         if cycle == 0:

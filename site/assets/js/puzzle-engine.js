@@ -217,9 +217,22 @@
     listeners.push(() => target?.removeEventListener(name, callback, options));
   };
   const writable = () => !disposed && (root.puzzleProgress?.canWrite?.() ?? true);
-  function acceptInput() {
+  function acceptInput(gameplay = true) {
     if (state.restoring) return false;
-    if (writable()) return true;
+    if (writable()) {
+      // Continuing the visible game withdraws an unfinished map change. A
+      // delayed request/reconnection must never replace newly played progress.
+      if (gameplay && state.ready && (state.loading || retryLoad)) {
+        ++selectionGeneration;
+        ++loadGeneration;
+        activeLoad?.abort();
+        retryLoad = null;
+        clearTimeout(state.retryTimer);
+        setLoading(false);
+        syncSelectors();
+      }
+      return true;
+    }
     void root.puzzleProgress?.takeControl?.();
     return false;
   }
@@ -603,7 +616,7 @@
   }
 
   async function requestGame(settings = selectedSettings(), force = false) {
-    if (!acceptInput()) { syncSelectors(); return; }
+    if (!acceptInput(false)) { syncSelectors(); return; }
     if (!force && state.ready && settings.mode === state.mode && settings.difficulty === state.difficulty && String(settings.selection || "") === String(state.selection || "")) {
       ++selectionGeneration;
       ++loadGeneration;
@@ -621,6 +634,8 @@
     const selection = ++selectionGeneration;
     ++loadGeneration;
     activeLoad?.abort();
+    syncSelectors(settings);
+    setLoading(true, "Подготавливаем карту");
     await checkpoint();
     if (disposed || selection !== selectionGeneration) return;
     return startGame({ desired: settings });
@@ -1696,6 +1711,7 @@
   }
 
   function keyDown(event) {
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "h", "H"].includes(event.key) || (seminarContext && event.key.toLowerCase() === "h")) return;
     if (!state.ready || state.finished || !acceptInput()) return;
     const piece = currentPiece();
     const step = event.shiftKey ? 28 : 9;

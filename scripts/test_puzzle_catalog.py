@@ -18,6 +18,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
 import re
+import socket
 import sys
 import threading
 import time
@@ -87,6 +88,16 @@ class PuzzleServer:
                     pass  # Browser intentionally cancelled during navigation.
 
             def do_GET(self):
+                if re.search(r'(?:^|;\s*)qa-puzzle-offline=connection-loss(?:;|$)', self.headers.get('Cookie', '')):
+                    # No HTTP response: the transport disappears before headers.
+                    # Per-context cookie keeps independent matrix workers isolated.
+                    self.close_connection = True
+                    try:
+                        self.connection.shutdown(socket.SHUT_RDWR)
+                    except OSError:
+                        pass
+                    self.connection.close()
+                    return
                 if re.search(r'(?:^|;\s*)qa-puzzle-offline=1(?:;|$)', self.headers.get('Cookie', '')):
                     body = b'Isolated QA network outage'
                     self.send_response(503);self.send_header('Content-Length', str(len(body)))
@@ -235,6 +246,9 @@ async def start_map(page, entry, difficulty):
         await button.click()
     else:
         await page.locator('#puzzleDifficulty').select_option(difficulty, force=True)
+    # Catalog coverage uses a completed choice. Rapid combinations are exercised
+    # separately by the interaction suite, with an explicit expected final choice.
+    await page.wait_for_function("difficulty=>{const s=window.__puzzleRead();return s.ready&&!s.loading&&s.difficulty===difficulty}", arg=difficulty)
     card = page.locator(f'[data-puzzle-mode="{entry["mode"]}"]')
     await card.first.click()
     if entry['selection'] is not None:
@@ -258,6 +272,9 @@ async def place_pieces(page, count, pointer_type='mouse'):
       for(let i=0;i<count;i++){
         const s=window.__puzzleRead();if(s.finished)break;
         if(!s.ready||!s.source||!s.target)throw new Error('Map not playable');
+        if(![s.source.x,s.source.y,s.target.x,s.target.y].every(Number.isFinite))throw new Error(`Non-finite pointer coordinates for piece ${s.current}`);
+        if(s.target.x<0||s.target.x>s.canvas.width||s.target.y<0||s.target.y>s.canvas.mapBottom)
+          throw new Error(`Piece ${s.current} target is outside the visible map: ${JSON.stringify(s.target)}`);
         const r=c.getBoundingClientRect();
         const dispatch=(type,p,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,
           pointerId:7,pointerType,isPrimary:true,button:0,buttons,clientX:r.left+p.x,clientY:r.top+p.y}));
@@ -323,10 +340,18 @@ async def offline_resume(page, context, before, record, mode='browser'):
       html:Boolean(await caches.match(new URL('puzzle.html',location.href).href)),
       cachedUrls:await Promise.all((await caches.keys()).map(async name=>({name,html:(await (await caches.open(name)).keys()).filter(request=>request.url.includes('puzzle.html')).map(request=>request.url)})))})""")
     record['offlineSimulation'] = mode
-    if mode == 'server-outage':
-        await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1', 'url': page._qa_base}])
+    if mode in ('server-outage', 'connection-loss'):
+        await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1' if mode == 'server-outage' else mode, 'url': page._qa_base}])
     else:
         await context.set_offline(True)
+    if mode == 'connection-loss':
+        # Prove actual uncached transport failure, rather than assuming a cookie
+        # changed network behaviour. Cached SW navigation must still succeed.
+        record['connectionLossVerified'] = await page.evaluate("""async()=>{
+          try{await fetch(new URL('__qa/connection-probe?nonce='+crypto.randomUUID(),location.origin+'/RUDN/'),{cache:'no-store'});return false}
+          catch{return true}
+        }""")
+        assert record['connectionLossVerified'], 'Uncached request succeeded during connection loss'
     await page.reload(wait_until='domcontentloaded')
     restored = await ready(page)
     assert restored['attemptId'] == before['attemptId'], ('Offline restore changed attempt', before, restored)
@@ -365,7 +390,7 @@ async def completion_case(browser, server, args, entry, difficulty, index, share
         if not args.no_offline:
             offline_mode = args.offline_mode
             if offline_mode == 'auto':
-                offline_mode = 'server-outage' if sys.platform == 'win32' and args.browser_name == 'webkit' else 'browser'
+                offline_mode = 'connection-loss' if args.browser_name == 'webkit' else 'browser'
             await offline_resume(page, context, before, record, offline_mode)
         record['resumeAtSeconds'] = round(time.monotonic() - started, 3)
         final = await place_pieces(page, state['total'] - first_count, 'touch' if viewport[0] <= 768 else 'mouse')
@@ -452,6 +477,8 @@ async def run(args, server):
                 launch_options['firefox_user_prefs'] = {'network.proxy.type': 0}
             browser = await getattr(playwright, browser_name).launch(**launch_options)
             prefix = f'{args.suite}-{browser_name}-{shard_index}-of-{shard_count}'
+            if args.label:
+                prefix += '-' + args.label
             jsonl = args.output / (prefix + '.jsonl')
             jsonl.write_text('', encoding='utf-8')
             tasks = []
@@ -494,6 +521,7 @@ async def run(args, server):
             finally:
                 await browser.close()
             report = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'browser': browser_name,
+                      'browserVersion': browser.version, 'platform': sys.platform,
                       'suite': args.suite, 'shard': args.shard, 'partial': bool(args.maps) or shard_count > 1,
                       'expected': len(tasks), 'passed': sum(item['status'] == 'passed' for item in results),
                       'failed': sum(item['status'] != 'passed' for item in results), 'results': results,
@@ -515,10 +543,11 @@ def main():
     parser.add_argument('--shard', default='1/1')
     parser.add_argument('--workers', type=int, default=2)
     parser.add_argument('--port', type=int, default=0)
+    parser.add_argument('--label', default='', help='Optional report suffix to preserve evidence from another run')
     parser.add_argument('--serve', action='store_true', help='Only run the loopback fixture server')
     parser.add_argument('--no-offline', action='store_true', help='Development only; report marks absent offline coverage')
-    parser.add_argument('--offline-mode', choices=('auto', 'browser', 'server-outage'), default='auto',
-                        help='Windows WebKit cannot reload offline even a minimal SW; auto uses server outage there, native offline elsewhere')
+    parser.add_argument('--offline-mode', choices=('auto', 'browser', 'server-outage', 'connection-loss'), default='auto',
+                        help='Auto uses browser offline in Chromium/Firefox and verified socket connection loss in WebKit; the independent offline probe reports driver limitations')
     parser.add_argument('--screenshots', choices=('representative', 'all'), default='representative')
     args = parser.parse_args()
     args.output = args.output.resolve()
@@ -530,6 +559,8 @@ def main():
         parser.error('Unknown difficulty')
     if not 1 <= args.workers <= 8:
         parser.error('Workers must be 1..8')
+    if args.label and not re.fullmatch(r'[A-Za-z0-9_-]+', args.label):
+        parser.error('Label must contain only letters, digits, underscores and hyphens')
     with PuzzleServer(args.output, args.port) as server:
         print('Puzzle fixture server: ' + server.base, flush=True)
         if args.serve:

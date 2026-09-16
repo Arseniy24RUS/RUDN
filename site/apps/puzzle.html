@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0079c1">
   <title>Географический конструктор · РУДН</title>
   <link rel="icon" href="../assets/img/icon-192.png">
-  <link rel="stylesheet" href="../assets/css/site.css?v=1.2.2">
+  <link rel="stylesheet" href="../assets/css/site.css?v=1.3.6">
   <link rel="stylesheet" href="../assets/css/puzzle.css?v=1.3.6">
   <style>
     body{background:#eef4f8}.puzzle-pages-header{height:62px;background:#fff;border-bottom:1px solid #dbe5ef;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:40}.puzzle-pages-header img{width:105px}.puzzle-pages-header a{font-size:12px}.puzzle-page-main{max-width:1580px;margin:0 auto;padding:22px}.puzzle-shell[data-access-pending="true"]{visibility:hidden;pointer-events:none}.puzzle-profile-chip[hidden]{display:none}.puzzle-profile-warning{max-width:900px;margin:20px auto;background:#fff8e8;border-left:4px solid #df9d18;padding:16px;border-radius:0 12px 12px 0}.puzzle-history-table td{font-size:12px}@media(max-width:760px){.puzzle-page-main{padding:10px}.puzzle-pages-header{padding:0 10px;height:54px}.puzzle-pages-header img{width:82px}}
@@ -75,9 +75,47 @@
     </div>
   </main>
   <div class="puzzle-toast" id="puzzleToast" role="status"></div>
-  <script type="module" src="../assets/js/puzzle-bootstrap.js?v=1.3.6"></script>
-  <script src="../assets/puzzle/vendor/d3.v7.9.0.min.js" defer></script>
-  <script src="../assets/puzzle/vendor/topojson-client.v3.1.0.min.js" defer></script>
-  <script src="../assets/js/puzzle-engine.js?v=1.3.6" defer></script>
+  <script src="../assets/puzzle/vendor/d3.v7.9.0.min.js"></script>
+  <script src="../assets/puzzle/vendor/topojson-client.v3.1.0.min.js"></script>
+  <script>
+    // This entry must run without a module import: an older worker can serve
+    // new, previously uncached HTML while correctly rejecting its new modules.
+    (()=>{
+      const release='1.3.6',workers=navigator.serviceWorker;
+      let starting=false,started=false,registration;
+      const status=document.createElement('p');status.className='puzzle-page-main';status.setAttribute('role','status');
+      const language=document.documentElement.dataset.locale;
+      status.textContent=language==='zh'?'正在准备地图…':language==='en'?'Preparing the map…':'Подготавливаем карту…';
+      document.querySelector('main').before(status);
+      const start=async()=>{
+        if(starting||started)return;starting=true;
+        try{
+          await import('../assets/js/puzzle-bootstrap.js?v=1.3.6');
+          await new Promise((resolve,reject)=>{
+            const script=document.createElement('script');script.src='../assets/js/puzzle-engine.js?v=1.3.6';
+            script.onload=resolve;script.onerror=reject;document.body.append(script);
+          });
+          started=true;status.remove();
+        }catch{
+          status.textContent=language==='zh'?'连接恢复后地图将自动打开。':language==='en'?'The map will open when the connection returns.':'Карта откроется, когда связь восстановится.';
+          window.addEventListener('online',()=>location.reload(),{once:true});
+        }finally{starting=false}
+      };
+      const announce=()=>workers?.controller?.postMessage({type:'BIND_RELEASE',release});
+      if(!workers){void start();return}
+      workers.addEventListener('message',event=>{
+        if(event.source!==workers.controller)return;
+        if(event.data?.type==='RELEASE_BOUND'&&event.data.release===release)void start();
+      });
+      workers.addEventListener('controllerchange',announce);
+      window.addEventListener('online',()=>{void registration?.update().catch(()=>{});announce()});
+      // A fresh browser can load directly; an existing worker first binds this
+      // document to the matching installed release. Existing games stay pinned.
+      if(!workers.controller)void start();else announce();
+      void workers.register('../service-worker.js',{updateViaCache:'none'}).then(value=>{
+        registration=value;if(!workers.controller)void start();else announce();
+      }).catch(()=>{if(!workers.controller)void start()});
+    })();
+  </script>
 </body>
 </html>

@@ -29,6 +29,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: puzzle-checks-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   catalog:
     runs-on: ubuntu-latest
@@ -110,7 +114,7 @@ jobs:
 
   complete-matrix:
     if: always()
-    needs: [catalog, browsers, storage]
+    needs: [catalog, browsers, storage, interactions]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -152,7 +156,9 @@ jobs:
           npm ci --ignore-scripts
           npm run build:firebase
           python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Diagnose native offline navigation separately from application behavior
+        run: python scripts/test_puzzle_offline_probe.py --output "${{ runner.temp }}/puzzle-offline-probe.json"
       - name: Verify local storage and tab ownership
         shell: bash
         env:
@@ -161,4 +167,49 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/puzzle_storage_test.mjs
       - name: Verify immutable results and retry against Firebase emulators
-        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config scripts/puzzle-emulator.json --only auth,database "node scripts/puzzle_storage_emulator_test.mjs"
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/puzzle_storage_emulator_test.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: puzzle-offline-driver-report
+          path: ${{ runner.temp }}/puzzle-offline-probe.json
+
+  interactions:
+    needs: catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          path: ${{ runner.temp }}/puzzle-interactions
+      - name: Prepare runtime and browser
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+      - name: Verify actual controls, locales, fullscreen and competing tabs
+        run: python scripts/test_puzzle_interactions.py --output "${{ runner.temp }}/puzzle-interactions" --browsers "${{ matrix.browser }}"
+      - name: Verify network faults, unavailable storage, old drafts and worker upgrades
+        run: python scripts/test_puzzle_resilience.py --output "${{ runner.temp }}/puzzle-interactions" --browsers "${{ matrix.browser }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: puzzle-interactions-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/puzzle-interactions/interactions*.json*
+            ${{ runner.temp }}/puzzle-interactions/resilience*.json*
+            ${{ runner.temp }}/puzzle-interactions/failures
+          retention-days: 14
