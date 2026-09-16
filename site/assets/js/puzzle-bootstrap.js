@@ -1,12 +1,24 @@
-import {backend,groupOptions} from './backend.js?v=1.3.5';
-import {getLocale} from './i18n.js?v=1.3.5';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.5';
-import {initNotifications} from './notifications.js?v=1.3.5';
-import {durableStore} from './durable-store.js?v=1.3.5';
+import {backend,groupOptions} from './backend.js?v=1.3.6';
+import {getLocale} from './i18n.js?v=1.3.6';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.6';
+import {initNotifications} from './notifications.js?v=1.3.6';
+import {durableStore} from './durable-store.js?v=1.3.6';
+import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.6';
+let activePuzzleBridge=null;
 
-export async function mountPuzzlePage(options={}){
+export function mountPuzzlePage(options={}){
 const root=document.getElementById('geoPuzzleApp');
-if(!root)return ()=>{};
+if(!root)return Promise.resolve(()=>{});
+if(root.puzzleMountPromise)return root.puzzleMountPromise;
+return root.puzzleMountPromise=mountPuzzleRoot(options,root);
+}
+
+async function mountPuzzleRoot(options,root){
+let resolveReady;root.puzzleReady=new Promise(resolve=>resolveReady=resolve);
+root.dataset.playAllowed='false';
+let disposed=false;
+let writer=null;
+const lifecycleCleanup=[];
 if(!document.getElementById('toastStack')){const host=document.createElement('div');host.id='toastStack';host.className='toast-stack';host.setAttribute('aria-live','polite');document.body.append(host)}
 initNotifications();
 const native=root.dataset.native==='true';
@@ -14,11 +26,27 @@ const locale=getLocale();
 const context=options.context==='seminar'||(!options.context&&new URLSearchParams(location.search).get('context')==='seminar')?'seminar':'free';
 const base=options.base||'../assets/puzzle/data';
 const legacyBase=options.legacyBase||'../data';
-const nativeFetch=window.fetch.bind(window);
+const bridgeToken={original:activePuzzleBridge?.original||window.fetch};
+const previousFetch=bridgeToken.original;
+const nativeFetch=previousFetch.bind(window);
 const activeAttempts=new Map();
+const completedAttempts=new Map();
+const warn=detail=>root.dispatchEvent(new CustomEvent('puzzle:storage-warning',{detail}));
+const storageWarning=event=>{if(disposed||!root.isConnected)return;event.stopImmediatePropagation();warn(event.detail)};
+window.addEventListener('rudn:storage-warning',storageWarning,true);
+const geometryStore=createPuzzleGeometryStore({onWarning:warn});
+const restoreFetch=()=>{if(activePuzzleBridge===bridgeToken){if(window.fetch===puzzleFetch)window.fetch=previousFetch;activePuzzleBridge=null}};
+const abandonMount=async()=>{
+  disposed=true;resolveReady();restoreFetch();
+  lifecycleCleanup.splice(0).forEach(cleanup=>cleanup());
+  window.removeEventListener('rudn:storage-warning',storageWarning,true);
+  await writer?.close();void geometryStore.close();delete root.puzzleMountPromise;
+  return ()=>{};
+};
 let municipalCatalog=null;
 let admCatalog=null;
 let admManifest=null;
+let admCatalogSource=null;
 
 const staticTranslations={
   ru:{back:'К семинару',profileRequired:'Сначала войдите в профиль на главной странице курса.',profile:'Профиль',eyebrow:'Интерактивная география публичного управления',hero:'Соберите территорию —<br>от муниципалитета до мира',lead:'Сохранены перетаскивание, масштабирование, сенсорное управление и точное совмещение. Завершённая карта автоматически связывается с вашим профилем.',choose:'Выберите карту',assessmentLead:'Зачётным остаётся режим с 89 субъектами России. Остальные режимы сохраняются как тренировка.',credit:'Зачёт',russiaSubjects:'Субъекты России',graded89:'89 деталей · зачёт',municipalities:'Муниципалитеты субъекта',practiceSelect:'Выбор территории · тренировка',world:'Страны мира',worldPractice:'Политическая карта · тренировка',foreignRegions:'Регионы другой страны',countrySelect:'Выбор государства · тренировка',dataset:'Набор',authorMap:'Авторская карта отполированного проекта.',federalSubject:'Субъект Российской Федерации',country:'Страна',difficulty:'Сложность',loadMap:'Загрузить карту',restart:'Начать заново',placed:'Поставлено',errors:'Ошибки',time:'Время',prepare:'Подготовка карты',prepareHelp:'Выберите режим и загрузите карту.',returnPiece:'Вернуть деталь',center:'Центрировать',hint:'Подсказка',fullscreen:'Во весь экран',current:'Текущая территория',dataSource:'Набор геоданных',assessment:'Оценивание',expert5:'Экспертная — 5',otherScores:'Стандартная — 4 · Учебная — 3',bestSaved:'В журнал записывается лучший зачётный результат.',how:'Как играть',how1:'Перетащите красную территорию на её место.',how2:'Масштабируйте карту колёсиком, кнопками или жестом.',how3:'Используйте возврат детали и подсказку.',how4:'Последняя деталь завершает и сохраняет попытку.',history:'Моя история карт',historyLead:'Зачётные и тренировочные прохождения сохраняются в профиле.',map:'Карта',mode:'Режим',pieces:'Детали',points:'Баллы',date:'Дата',complete:'Карта собрана',playAgain:'Собрать ещё раз',continueCourse:'Продолжить курс'},
@@ -30,6 +58,11 @@ Object.assign(staticTranslations.en,{backMaps:'Back to maps',lead:'Choose any mo
 Object.assign(staticTranslations.zh,{backMaps:'返回地图',lead:'可自由选择任一模式，不受课程进度限制。登录后，俄罗斯地图成绩会进入排行榜。',assessmentLead:'所有模式始终开放，不受课程时间表限制。',graded89:'89块',practiceSelect:'选择地区',worldPractice:'政治地图',countrySelect:'选择国家',profileOptional:'无需登录即可游戏。登录后成绩会显示在排行榜中。',profileRequired:'开始计分前请先登录个人资料。',seminarHero:'拼合俄罗斯地图<br>共89个联邦主体',seminarLead:'选择难度，完成全部联邦主体，并将最佳成绩保存到电子成绩册。',seminarChoose:'俄罗斯联邦主体地图',seminarAssessmentLead:'研讨课仅使用一个计分模式。难度决定拼合精度和得分。',leaderboard:'排行榜',leaderboardLead:'每位学生在每个难度中只保留最佳用时。',groupFilter:'按班级筛选',allGroups:'全部班级',groupsSelected:'已选择班级：{count}',clearGroups:'显示全部',exportCsv:'下载CSV',easy:'学习',medium:'标准',hard:'专家',fullName:'姓名',group:'班级',iconRu:'俄',iconMu:'市',mapVariant:'地图模式',backCourse:'返回课程',participantProfile:'参与者资料',modeGroup:'地理地图模式',toolbarSettings:'游戏设置',gameMap:'游戏地图',interactiveMap:'互动地图'});
 
 const sourceTranslations={};
+for(const [language,copy] of Object.entries({
+  ru:{prepareHelp:'Карта загружается автоматически.',zoomOut:'Уменьшить',zoomIn:'Увеличить',how3:context==='seminar'?'Верните деталь, чтобы попробовать снова.':'На одну игру доступны 10 подсказок.'},
+  en:{prepareHelp:'The map loads automatically.',zoomOut:'Zoom out',zoomIn:'Zoom in',how3:context==='seminar'?'Return the piece to try again.':'You have 10 hints per game.'},
+  zh:{prepareHelp:'地图正在自动加载。',zoomOut:'缩小',zoomIn:'放大',how3:context==='seminar'?'退回拼块后再试一次。':'每局游戏可使用10次提示。'},
+}))Object.assign(staticTranslations[language],copy);
 let sourcePatterns=[];
 const engineTranslations={
   en:{'Свободная игра':'Free play','свободная игра':'free play','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'Difficulty controls placement precision and does not change the course gradebook.'},
@@ -37,15 +70,17 @@ const engineTranslations={
 };
 async function loadLegacy(){
   if(locale!=='ru'){
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
     try{
-      const response=await nativeFetch(`${legacyBase}/legacy-${locale}.json`);
+      const response=await nativeFetch(`${legacyBase}/legacy-${locale}.json`,{signal:controller.signal});
       if(response.ok){
         const bundle=await response.json();
         Object.assign(sourceTranslations,bundle.exact||bundle);
         sourcePatterns=(bundle.patterns||[]).flatMap(rule=>{try{return[{pattern:new RegExp(rule.source,rule.flags||'u'),target:String(rule.target||'').replace(/\\(\d+)/g,(_,index)=>`$${index}`)}]}catch{return[]}});
       }
-    }catch{}
+    }catch{}finally{clearTimeout(timer)}
   }
+  if(disposed||!root.isConnected)return;
   Object.assign(sourceTranslations,engineTranslations[locale]||{});
   window.RUDNI18N={locale,ready:Promise.resolve(),t(source,params={}){let value=sourceTranslations[source];if(value===undefined){value=source;for(const rule of sourcePatterns){if(rule.pattern.test(source)){value=source.replace(rule.pattern,rule.target);break}}}for(const [k,v] of Object.entries(params))value=value.replaceAll(`{${k}}`,String(v));return value}};
   document.querySelectorAll('[data-static-i18n]').forEach(el=>{const value=staticTranslations[locale]?.[el.dataset.staticI18n]??staticTranslations.ru[el.dataset.staticI18n];if(value!==undefined)el.innerHTML=value});
@@ -54,45 +89,78 @@ async function loadLegacy(){
   window.__resolvePuzzleI18n?.();
 }
 function jsonResponse(value,status=200){return new Response(JSON.stringify(value),{status,headers:{'content-type':'application/json; charset=utf-8'}})}
-async function load(path){const r=await nativeFetch(path);if(!r.ok)throw new Error(`${path}: HTTP ${r.status}`);return r.json()}
+async function load(path,signal){const r=await nativeFetch(path,{signal});if(!r.ok)throw new Error(`${path}: HTTP ${r.status}`);return r.json()}
 function wrapper({id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin='bundled',year='',note='',geometry_url,feature_count}){return{dataset:{id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin,year,year_en:year,year_zh:year,note,note_en:note,note_zh:note,geometry_url,feature_count}}}
 async function getMunicipalCatalog(){if(!municipalCatalog)municipalCatalog=await load(`${base}/municipal/catalog.json`);return municipalCatalog}
 async function getAdmManifest(){if(!admManifest)admManifest=await load(`${base}/adm1/manifest.json`);return admManifest}
 async function worldNames(){const geo=await load(`${base}/world_countries_50m.geojson`);const map={};for(const f of geo.features||[]){const p=f.properties||{};const iso=String(p.ADM0_A3||p.ISO_A3||p.adm0_a3||p.iso_a3||'').toUpperCase();if(iso)map[iso]={ru:p.name_ru||p.NAME_RU||p.name||p.ADMIN||iso,en:p.name_en||p.NAME_EN||p.ADMIN||p.name||iso,zh:p.name_zh||p.NAME_ZH||p.name_en||p.ADMIN||iso}}return map}
-async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.boundaryName||iso,name_en:n.en||item.boundaryName||iso,name_zh:n.zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
-async function remoteAdm1(iso){const metaResponse=await nativeFetch(`https://www.geoboundaries.org/api/current/gbOpen/${iso}/ADM1/`);if(!metaResponse.ok)throw new Error(`geoBoundaries HTTP ${metaResponse.status}`);const meta=await metaResponse.json();const geometry=meta.simplifiedGeometryGeoJSON||meta.gjDownloadURL;if(!geometry)throw new Error('geoBoundaries did not provide GeoJSON');return wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'ADM1'}`,title_en:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'First-level administrative units'}`,title_zh:`${meta.boundaryName||iso}：一级行政区`,source:`geoBoundaries; ${meta.boundarySource||''}`,source_en:`geoBoundaries; ${meta.boundarySource||''}`,source_zh:`geoBoundaries; ${meta.boundarySource||''}`,license:meta.boundaryLicense||'CC BY 4.0',license_en:meta.boundaryLicense||'CC BY 4.0',license_zh:meta.boundaryLicense||'CC BY 4.0',origin:'remote',year:String(meta.boundaryYearRepresented||''),note:'Loaded from geoBoundaries gbOpen.',geometry_url:geometry,feature_count:Number(meta.admUnitCount)||null})}
+async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);admCatalogSource=raw;const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.boundaryName||iso,name_en:n.en||item.boundaryName||iso,name_zh:n.zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
+async function remoteAdm1(iso,signal){
+  const catalog=admCatalogSource||await load(`${base}/geoboundaries_adm1_catalog.json`,signal);
+  const pinned=catalog.find(item=>String(item.boundaryISO).toUpperCase()===iso);
+  const controller=new AbortController(),abort=()=>controller.abort();
+  if(signal?.aborted)controller.abort();else signal?.addEventListener('abort',abort,{once:true});
+  const timer=setTimeout(abort,4000);let meta;
+  try{
+    const response=await nativeFetch(`https://www.geoboundaries.org/api/current/gbOpen/${iso}/ADM1/`,{signal:controller.signal});
+    if(!response.ok)throw new Error(`geoBoundaries HTTP ${response.status}`);
+    meta=await response.json();
+  }catch(error){if(signal?.aborted||!pinned)throw error;meta=pinned}
+  finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
+  if(!meta?.simplifiedGeometryGeoJSON&&!meta?.gjDownloadURL)meta=pinned||meta;
+const geometry=meta.simplifiedGeometryGeoJSON||meta.gjDownloadURL;if(!geometry)throw new Error('geoBoundaries did not provide GeoJSON');return wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'ADM1'}`,title_en:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'First-level administrative units'}`,title_zh:`${meta.boundaryName||iso}：一级行政区`,source:`geoBoundaries; ${meta.boundarySource||''}`,source_en:`geoBoundaries; ${meta.boundarySource||''}`,source_zh:`geoBoundaries; ${meta.boundarySource||''}`,license:meta.boundaryLicense||'CC BY 4.0',license_en:meta.boundaryLicense||'CC BY 4.0',license_zh:meta.boundaryLicense||'CC BY 4.0',origin:'remote',year:String(meta.boundaryYearRepresented||''),note:'Loaded from geoBoundaries gbOpen.',geometry_url:geometry,feature_count:Number(meta.admUnitCount)||null})}
 
-window.fetch=async(input,options={})=>{
-  const url=typeof input==='string'?input:input.url;
+const puzzleFetch=async(input,options={})=>{
+  const url=typeof input==='string'?input:input instanceof URL?input.href:input.url;
   const pathname=(()=>{try{return new URL(url,location.href).pathname}catch{return url}})();
-  if(!pathname.startsWith('/api/puzzle/'))return nativeFetch(input,options);
+  if(!pathname.startsWith('/api/puzzle/')){
+    // geoBoundaries may return a Git LFS pointer on the raw host. The official
+    // media host serves the actual GeoJSON, including for larger country maps.
+    const remote=new URL(url,location.href),geometryUrl=puzzleGeometryUrl(remote.href);
+    if(geometryUrl!==remote.href)return nativeFetch(geometryUrl,options);
+    return nativeFetch(input,options);
+  }
   try{
     if(pathname.endsWith('/catalog/municipal'))return jsonResponse(await getMunicipalCatalog());
     if(pathname.endsWith('/catalog/adm1'))return jsonResponse(await getAdmCatalog());
     if(pathname.endsWith('/data/russia-subjects'))return jsonResponse(wrapper({id:'russia-subjects-89-v1',title:'Субъекты Российской Федерации',title_en:'Constituent Entities of the Russian Federation',title_zh:'俄罗斯联邦主体',source:'Авторский набор Russian Regions Puzzle',source_en:'Author-created Russian Regions Puzzle dataset',source_zh:'作者创建的俄罗斯联邦主体拼图数据集',license:'Авторские и исходные условия см. в уведомлениях',license_en:'See bundled notices for licences',license_zh:'许可信息见随附说明',geometry_url:`${base}/russia_subjects_89.topojson`,feature_count:89}));
     if(pathname.endsWith('/data/world-countries'))return jsonResponse(wrapper({id:'world-countries-course-2026-v1',title:'Страны и территории мира',title_en:'Countries and Territories of the World',title_zh:'世界国家和地区',source:'Актуализированная карта курса на основе Natural Earth',source_en:'Course-specific updated map based on Natural Earth',source_zh:'基于Natural Earth的课程更新版地图',license:'Natural Earth — public domain; редакция курса предоставлена преподавателем',license_en:'Natural Earth — public domain; course edition supplied by the instructor',license_zh:'Natural Earth为公共领域数据；课程版本由教师提供',geometry_url:`${base}/world_countries_50m.geojson`,feature_count:240,year:'2026'}));
     const municipal=pathname.match(/\/data\/russia-municipalities\/([^/]+)$/);if(municipal){const id=decodeURIComponent(municipal[1]);const cat=await getMunicipalCatalog();const item=cat.subjects.find(x=>String(x.id)===String(id));if(!item)return jsonResponse({detail:'Subject not found'},404);return jsonResponse(wrapper({id:`russia-municipal-${id}-course-2025-v1`,title:`${item.name}: муниципальные районы и округа`,title_en:`${item.name_en||item.name}: Municipal Districts and Okrugs`,title_zh:`${item.name_zh||item.name_en||item.name}：市政区和专区`,source:item.source,source_en:item.source_en||item.source,source_zh:item.source_zh||item.source,license:item.license,license_en:item.license_en||item.license,license_zh:item.license_zh||item.license,geometry_url:`${base}/municipal/subject-${id}.geojson`,feature_count:item.units,year:'2025'}))}
-    const adm=pathname.match(/\/data\/country-adm1\/([A-Za-z]{3})$/);if(adm){const iso=adm[1].toUpperCase();if(iso==='USA')return jsonResponse(wrapper({id:'usa-adm1-local',title:'Соединённые Штаты Америки: штаты и округ Колумбия',title_en:'United States of America: States and the District of Columbia',title_zh:'美国：各州和哥伦比亚特区',source:'Public-domain US boundary data',source_en:'Public-domain US boundary data',source_zh:'美国公共领域边界数据',license:'Public domain',license_en:'Public domain',license_zh:'公共领域',geometry_url:`${base}/usa_states.geojson`,feature_count:51}));const local=(await getAdmManifest()).find(x=>x.iso===iso);if(local)return jsonResponse(wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${iso}: ADM1`,title_en:`${iso}: first-level administrative units`,title_zh:`${iso}：一级行政区`,source:'geoBoundaries gbOpen',source_en:'geoBoundaries gbOpen',source_zh:'geoBoundaries gbOpen',license:'CC BY 4.0',license_en:'CC BY 4.0',license_zh:'CC BY 4.0',geometry_url:`${base}/adm1/${iso}.geojson`,feature_count:local.features}));return jsonResponse(await remoteAdm1(iso))}
+    const adm=pathname.match(/\/data\/country-adm1\/([A-Za-z]{3})$/);if(adm){const iso=adm[1].toUpperCase();if(iso==='USA')return jsonResponse(wrapper({id:'usa-adm1-local',title:'Соединённые Штаты Америки: штаты и округ Колумбия',title_en:'United States of America: States and the District of Columbia',title_zh:'美国：各州和哥伦比亚特区',source:'Public-domain US boundary data',source_en:'Public-domain US boundary data',source_zh:'美国公共领域边界数据',license:'Public domain',license_en:'Public domain',license_zh:'公共领域',geometry_url:`${base}/usa_states.geojson`,feature_count:51}));const local=(await getAdmManifest()).find(x=>x.iso===iso);if(local)return jsonResponse(wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${iso}: ADM1`,title_en:`${iso}: first-level administrative units`,title_zh:`${iso}：一级行政区`,source:'geoBoundaries gbOpen',source_en:'geoBoundaries gbOpen',source_zh:'geoBoundaries gbOpen',license:'CC BY 4.0',license_en:'CC BY 4.0',license_zh:'CC BY 4.0',geometry_url:`${base}/adm1/${iso}.geojson`,feature_count:local.features}));return jsonResponse(await remoteAdm1(iso,options.signal))}
     if(pathname.endsWith('/start')){const body=JSON.parse(options.body||'{}');const id=crypto.randomUUID();const seed=Math.floor(Math.random()*0xffffffff);activeAttempts.set(id,{...body,id,seed,startedAt:Date.now()});return jsonResponse({attempt_id:id,seed})}
     if(pathname.endsWith('/complete')){
       const body=JSON.parse(options.body||'{}');const started=activeAttempts.get(body.attempt_id)||{};
+      if(completedAttempts.has(body.attempt_id))return jsonResponse(completedAttempts.get(body.attempt_id));
+      if(!body.attempt_id||!['easy','medium','hard'].includes(body.difficulty)||Number(body.placed)!==Number(body.total)||Number(body.total)<1)return jsonResponse({detail:'Invalid completed attempt'},400);
+      const persisted=body.__snapshot?null:await durableStore.loadDraft({...progressScope,attemptId:body.attempt_id});
+      const saved=body.__snapshot?{...persisted,state:body.__snapshot}:persisted;
+      if(persisted?.state?.completionReceipt)return jsonResponse(persisted.state.completionReceipt);
+      if(saved?.state?.completionReceipt)return jsonResponse(saved.state.completionReceipt);
       const signedIn=progressOwner.startsWith('student:');const sameStudent=signedIn&&!backend.isAdmin()&&`student:${backend.getProfile()?.studentKey}`===progressOwner;const russian89=body.mode==='russia-subjects'&&Number(body.placed)===89&&Number(body.total)===89;
       const gradeEligible=context==='seminar'&&russian89;const points=gradeEligible?({easy:3,medium:4,hard:5}[body.difficulty]||0):0;const practicePoints=({easy:3,medium:4,hard:5}[body.difficulty]||0);const title=started.dataset_title||body.dataset_id||body.mode;
-      if(signedIn){
-        const record={id:body.attempt_id,studentKey:progressOwner.slice(8),createdAt:new Date(started.startedAt||Date.now()).toISOString(),type:'map-puzzle',activitySlug:gradeEligible?'seminar-2':'maps-freeplay',draftMode:context,title,practicePoints,gradeEligible,recordGrade:gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
-        if(gradeEligible)Object.assign(record,{points,maxPoints:5});
-        const saved=await durableStore.loadDraft({...progressScope,attemptId:record.id});
-        await durableStore.complete({...progressScope,attemptId:record.id,state:saved?.state||body,attempt:record});
-        if(sameStudent)await backend.saveAttempt(record);
-        if(russian89&&sameStudent){try{await backend.savePuzzleLeaderboardResult({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total})}catch(error){console.warn('Leaderboard write failed',error)}}
+      const best=gradeEligible?Math.max(points,Number(root.dataset.currentGrade)||0):0;
+      const result={points,practice_points:practicePoints,best_points:best,grade_eligible:gradeEligible,message:''};
+      const record={id:body.attempt_id,...(signedIn?{studentKey:progressOwner.slice(8)}:{}),createdAt:new Date(started.startedAt||saved?.createdAt||Date.now()).toISOString(),type:'map-puzzle',activitySlug:progressScope.activitySlug,draftMode:context,title,practicePoints,gradeEligible,recordGrade:gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
+      if(gradeEligible)Object.assign(record,{points,maxPoints:5});
+      if(russian89&&signedIn){const leaderboard=backend.puzzleLeaderboardRecord({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total,timestamp:Date.now()},progressProfile);if(leaderboard)record.leaderboard=leaderboard}
+      // Geometry, final screen and both delivery jobs survive a reload. Cloud I/O
+      // starts only after this transaction; it never delays the result dialog.
+      const completion=await durableStore.complete({...progressScope,attemptId:record.id,contentVersion:'puzzle-v3',state:{...(saved?.state||body),finished:true,completionReceipt:result},attempt:record},{queue:signedIn});
+      const receipt=completion?.state?.completionReceipt||result;
+      completedAttempts.set(body.attempt_id,receipt);
+      if(sameStudent){
+        // A completed snapshot can be captured again after reload. Keep the
+        // immutable first record (especially its leaderboard timestamp).
+        const immutable=(await durableStore.listAttempts({owner:progressOwner})).find(attempt=>attempt.id===record.id)||record;
+        void backend.saveAttempt(immutable).catch(()=>{});
       }
-      const best=gradeEligible?(await backend.getGrades())['seminar-2']?.points||0:0;void renderLeaderboard();
-      const message=!signedIn?(locale==='zh'?'地图已完成。登录后可保存成绩。':locale==='en'?'Map completed. Sign in to save results.':'Карта собрана. Войдите, чтобы сохранять результаты.'):gradeEligible?(locale==='zh'?'成绩已写入电子成绩册。':locale==='en'?'The result was saved to the electronic gradebook.':'Результат сохранён в электронном журнале.'):(locale==='zh'?'自由游戏结果已保存。':locale==='en'?'Free-play result saved.':'Результат свободной игры сохранён.');
-      return jsonResponse({points,practice_points:practicePoints,best_points:best,grade_eligible:gradeEligible,message})
+      return jsonResponse(receipt)
     }
     return jsonResponse({detail:'Not found'},404);
-  }catch(error){console.error(error);return jsonResponse({detail:String(error.message||error)},500)}
+  }catch(error){if(options.signal?.aborted||error?.name==='AbortError')throw error;return jsonResponse({detail:String(error.message||error)},500)}
 };
+window.fetch=puzzleFetch;
+activePuzzleBridge=bridgeToken;
 
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const formatLeaderboardTime=value=>{const seconds=Math.max(0,Math.floor(Number(value||0)/1000));return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
@@ -150,14 +218,70 @@ if(context==='seminar'){
   document.getElementById('puzzleMode').value='russia-subjects';
 }
 await backend.init();
+if(!root.isConnected)return abandonMount();
 const progressOwner=backend.isAdmin()?`teacher:${backend.user.uid}`:backend.getProfile()?.studentKey?`student:${backend.getProfile().studentKey}`:'guest:puzzle';
+const progressProfile=backend.getProfile()?{...backend.getProfile()}:null;
 const progressScope={owner:progressOwner,activitySlug:context==='seminar'?'seminar-2':'maps-freeplay',mode:context};
-const savedPuzzle=await backend.loadDraft(progressScope);
+// Local recovery and map preparation are independent of cloud reads.
+const savedPuzzle=await durableStore.loadDraft(progressScope);
+if(!root.isConnected)return abandonMount();
+const revisions=new Map(savedPuzzle?[[savedPuzzle.attemptId,savedPuzzle.revision]]:[]);
+let saveTail=Promise.resolve();
+const currentOwner=()=>backend.isAdmin()?`teacher:${backend.user.uid}`:backend.getProfile()?.studentKey?`student:${backend.getProfile().studentKey}`:'guest:puzzle';
 root.puzzleProgress={
  restore:savedPuzzle?.state||null,
- save:snapshot=>backend.checkpoint({...progressScope,attemptId:snapshot.attemptId,contentVersion:'puzzle-v2',phase:snapshot.finished?'completed':'answering',state:snapshot},{queue:progressOwner.startsWith('student:')}),
- flush:()=>durableStore.flush(),
+ save:snapshot=>{
+   if(!writer?.canWrite()||currentOwner()!==progressOwner)return Promise.resolve(null);
+   // Call the durable operation immediately: it writes its recovery journal
+   // synchronously, including during pagehide. IndexedDB serializes commits.
+   const work=(async()=>{
+     if(snapshot.finished){
+       const response=await puzzleFetch('/api/puzzle/complete',{method:'POST',body:JSON.stringify({
+         attempt_id:snapshot.attemptId,mode:snapshot.mode,selection:snapshot.selection,difficulty:snapshot.difficulty,
+         placed:snapshot.placed,total:snapshot.featureIds?.length||snapshot.pieces?.length,errors:snapshot.errors,hints:snapshot.hints,
+         duration_ms:snapshot.finishedResult?.durationMs??snapshot.elapsedMs,feature_ids:snapshot.featureIds,dataset_id:snapshot.wrapper?.dataset?.id,__snapshot:snapshot,
+       })});
+       if(!response.ok)throw new Error('storage/completion-unavailable');
+       const saved=await durableStore.loadDraft({...progressScope,attemptId:snapshot.attemptId});
+       if(saved)revisions.set(snapshot.attemptId,saved.revision);
+       return saved;
+     }
+     const baseRevision=revisions.get(snapshot.attemptId)||0;
+     revisions.set(snapshot.attemptId,baseRevision+1);
+     const saved=await backend.checkpoint({...progressScope,attemptId:snapshot.attemptId,baseRevision,contentVersion:'puzzle-v3',phase:'answering',state:snapshot},{queue:progressOwner.startsWith('student:')});
+     if(saved)revisions.set(snapshot.attemptId,Math.max(revisions.get(snapshot.attemptId)||0,saved.revision));
+     return saved;
+   })();
+   saveTail=work;return work;
+ },
+ saveGeometry:wrapper=>geometryStore.save(wrapper),
+ loadGeometry:ref=>geometryStore.load(ref),
+ canWrite:()=>Boolean(writer?.canWrite()&&currentOwner()===progressOwner&&!disposed),
+ takeControl:()=>writer.acquire(),
+ flush:async()=>{await saveTail.catch(()=>{});await durableStore.flush()},
 };
+writer=createPuzzleWriter({
+ scope:`${progressOwner}:${progressScope.activitySlug}:${context}`,
+ isActive:()=>document.visibilityState!=='hidden'&&currentOwner()===progressOwner&&root.isConnected,
+ readState:async()=>{const saved=await durableStore.loadDraft(progressScope);if(saved)revisions.set(saved.attemptId,saved.revision);root.puzzleProgress.restore=saved?.state||null;return saved?.state||null},
+ onChange:detail=>root.dispatchEvent(new CustomEvent('puzzle:writerchange',{detail})),
+ beforeRelease:async()=>{await root.puzzleProgress.capture?.();await root.puzzleProgress.flush()},
+});
+await writer.acquire();
+if(!root.isConnected)return abandonMount();
+const visibility=()=>{if(document.visibilityState==='hidden')void writer.release();else if(currentOwner()===progressOwner)void writer.acquire()};
+const identityChanged=()=>{if(currentOwner()!==progressOwner){root.dataset.playAllowed='false';void writer.release()}};
+const pageHide=()=>void writer.release();
+document.addEventListener('visibilitychange',visibility);
+window.addEventListener('focus',visibility);
+window.addEventListener('pagehide',pageHide);
+window.addEventListener('rudn:identitychange',identityChanged);
+const writerRetry=setInterval(()=>{if(!disposed&&document.visibilityState!=='hidden'&&currentOwner()===progressOwner&&!writer.canWrite())void writer.acquire()},1500);
+lifecycleCleanup.push(()=>{
+  clearInterval(writerRetry);document.removeEventListener('visibilitychange',visibility);
+  window.removeEventListener('focus',visibility);window.removeEventListener('pagehide',pageHide);
+  window.removeEventListener('rudn:identitychange',identityChanged);
+});
 const profile=backend.getProfile();
 const accessNow=backend.globalNow(),accessContext=academicContext(accessNow),accessGate=topicGate(2,backend.getAccessOverrides(accessContext.startYear),accessNow);
 if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
@@ -166,17 +290,30 @@ if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
   root.hidden=true;root.insertAdjacentHTML('beforebegin',`<section class="panel access-lock-panel"><div class="access-lock-icon">⌛</div><h2>${copy.title}</h2><p>${detail}</p><a class="btn btn-neutral" href="${native?'#dashboard':'../index.html#dashboard'}"${native?'':' target="_top"'}>← ${staticTranslations[locale]?.back||staticTranslations.ru.back}</a></section>`);
 }else{
   root.hidden=false;root.removeAttribute('data-access-pending');
-  if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;const grades=await backend.getGrades();root.dataset.currentGrade=String(grades['seminar-2']?.points||0)}else if(!backend.isAdmin()){const warning=document.getElementById('puzzleProfileWarning');warning.hidden=false;if(context==='seminar'){document.getElementById('puzzleProfileWarningText').dataset.staticI18n='profileRequired';root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog')&&!el.closest('.puzzle-leaderboard'))el.disabled=true})}}
+  if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;root.dataset.currentGrade=String(backend.localGrades(profile.studentKey)['seminar-2']?.points||0);void backend.getGrades().then(grades=>{if(!disposed&&currentOwner()===progressOwner)root.dataset.currentGrade=String(Math.max(Number(root.dataset.currentGrade)||0,Number(grades['seminar-2']?.points)||0))}).catch(()=>{})}else if(!backend.isAdmin()){const warning=document.getElementById('puzzleProfileWarning');warning.hidden=false;if(context==='seminar'){document.getElementById('puzzleProfileWarningText').dataset.staticI18n='profileRequired';root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog')&&!el.closest('.puzzle-leaderboard'))el.disabled=true})}}
   setupGroupFilter();
   document.getElementById('puzzleLeaderboardExport')?.addEventListener('click',exportLeaderboard);
   void renderLeaderboard();
 }
 await loadLegacy();
-const engineCleanup=native?window.mountRudnPuzzle?.():null;
+if(!root.isConnected)return abandonMount();
+root.dataset.playAllowed=String(!root.hidden&&(context!=='seminar'||Boolean(profile)||backend.isAdmin()));
+resolveReady();
+const engineCleanup=native&&root.isConnected?window.mountRudnPuzzle?.():null;
+// Prepare the small module shell; exact played geometry is in IndexedDB.
+navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'puzzle'});
+if(!native&&'serviceWorker' in navigator){
+  void navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url),{updateViaCache:'none'})
+    .then(()=>navigator.serviceWorker.ready).then(registration=>registration.active?.postMessage({type:'PREPARE_MODULE',module:'puzzle'})).catch(()=>{});
+}
 const cleanup=()=>{
   engineCleanup?.();
-  if(window.fetch!==nativeFetch)window.fetch=nativeFetch;
-  return durableStore.flush();
+  lifecycleCleanup.splice(0).forEach(cleanup=>cleanup());
+  restoreFetch();
+  return writer.close().finally(()=>{
+    disposed=true;window.removeEventListener('rudn:storage-warning',storageWarning,true);
+    void geometryStore.close();delete root.puzzleMountPromise;
+  });
 };
 cleanup.flush=async()=>{await root.puzzleProgress?.capture?.();await durableStore.flush();};
 return cleanup;

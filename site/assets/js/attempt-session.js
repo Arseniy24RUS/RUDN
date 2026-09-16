@@ -1,7 +1,7 @@
-import {backend} from './backend.js?v=1.3.5';
-import {readState,writeState} from './session.js?v=1.3.5';
+import {backend} from './backend.js?v=1.3.6';
+import {readState,writeState} from './session.js?v=1.3.6';
 import {durableStore} from './durable-store.js';
-import {registerRecoveryProvider} from './notifications.js?v=1.3.5';
+import {registerRecoveryProvider} from './notifications.js?v=1.3.6';
 
 export function attemptOwner(){
   if(backend.isAdmin())return `teacher:${backend.user.uid}`;

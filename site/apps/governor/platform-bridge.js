@@ -1,8 +1,8 @@
-import {backend} from '../../assets/js/backend.js?v=1.3.5';
-import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.5';
-import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.5';
-import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.5';
-import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.5';
+import {backend} from '../../assets/js/backend.js?v=1.3.6';
+import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.6';
+import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.6';
+import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.6';
+import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.6';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
