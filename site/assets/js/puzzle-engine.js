@@ -2,15 +2,16 @@
   "use strict";
 
   const mountRudnPuzzle = () => {
-  const initialisePuzzle = () => {
   const root = document.getElementById("geoPuzzleApp");
-  if (!root) return;
+  const initialisePuzzle = () => {
+  if (!root?.isConnected || root.dataset.playAllowed === "false") return;
   // Keep this mount's API bridge alive until its last local completion has drained.
   const scopedFetch=window.fetch.bind(window);
 
   const locale = window.RUDNI18N?.locale || document.documentElement.dataset.locale || "en";
   const htmlLocale = locale === "zh" ? "zh-Hans" : locale;
   const tr = (source, params = {}) => window.RUDNI18N?.t(source, params) || source;
+  const copy = (ru, en, zh) => locale === "zh" ? zh : locale === "en" ? en : ru;
   const localized = (object, key, fallback = "") => {
     if (!object || typeof object !== "object") return fallback;
     if (locale !== "ru") {
@@ -70,7 +71,7 @@
     country: byId("puzzleCountry"),
     countryHint: byId("puzzleCountryHint"),
     difficulty: byId("puzzleDifficulty"),
-    start: byId("puzzleStart"),
+    difficulties: [...root.querySelectorAll("[data-puzzle-difficulty]")],
     reset: byId("puzzleReset"),
     center: byId("puzzleCenter"),
     zoomIn: byId("puzzleZoomIn"),
@@ -78,6 +79,7 @@
     fullscreen: byId("puzzleFullscreen"),
     returnPiece: byId("puzzleReturn"),
     hint: byId("puzzleHint"),
+    hintLabel: byId("puzzleHintLabel"),
     canvas: byId("puzzleCanvas"),
     canvasWrap: byId("puzzleCanvasWrap"),
     empty: byId("puzzleEmpty"),
@@ -96,12 +98,8 @@
     difficultyHint: byId("puzzleDifficultyHint"),
     currentName: byId("puzzleCurrentName"),
     progress: byId("puzzleProgressBar"),
-    progressMirrors: [...document.querySelectorAll("[data-progress-mirror]")],
-    sourceTitle: byId("puzzleSourceTitle"),
-    source: byId("puzzleSource"),
-    origin: byId("puzzleOriginBadge"),
+    progressTrack: byId("puzzleProgressTrack"),
     modeCards: [...document.querySelectorAll("[data-puzzle-mode]")],
-    startDuplicates: [...document.querySelectorAll("[data-puzzle-start-duplicate]")],
     toast: byId("puzzleToast"),
     resultDialog: byId("puzzleResultDialog"),
     resultText: byId("puzzleResultText"),
@@ -109,7 +107,6 @@
     resultPoints: byId("puzzleResultPoints"),
     resultCount: byId("puzzleResultCount"),
     resultTime: byId("puzzleResultTime"),
-    resultErrors: byId("puzzleResultErrors"),
     resultBack: byId("puzzleResultBack"),
     playAgain: byId("puzzlePlayAgain"),
     closeResult: byId("puzzleCloseResult"),
@@ -124,9 +121,9 @@
   const staticCtx = staticCanvas.getContext("2d", { alpha: true });
 
   const DIFFICULTY = {
-    easy: { label: tr("Учебная"), points: 3, snap: 60, hintAlways: true },
-    medium: { label: tr("Стандартная"), points: 4, snap: 30, hintAlways: false },
-    hard: { label: tr("Экспертная"), points: 5, snap: 12, hintAlways: false },
+    easy: { label: tr("Учебная"), points: 3, snap: 60 },
+    medium: { label: tr("Стандартная"), points: 4, snap: 30 },
+    hard: { label: tr("Экспертная"), points: 5, snap: 12 },
   };
 
   const MODE_LABELS = {
@@ -146,6 +143,7 @@
   const state = {
     ready: false,
     loading: false,
+    restoring: false,
     started: false,
     finished: false,
     attemptId: null,
@@ -173,6 +171,7 @@
     elapsedBeforeStart: 0,
     hintUntil: 0,
     view: { x: 0, y: 0, k: 1 },
+    baseViewK: 1,
     viewMin: 0.55,
     viewMax: 16,
     projection: null,
@@ -197,25 +196,87 @@
     staticDirty: true,
     resizeTimer: 0,
     lastCheckpointAt: 0,
+    timerStarted: false,
+    geometryRef: null,
+    finishedResult: null,
+    selections: {},
   };
+  let disposed = false;
+  let loadGeneration = 0;
+  let activeLoad = null;
+  let retryLoad = null;
+  let catalogSubjects = null;
+  let catalogCountries = null;
+  let hintTimer = 0;
+  let checkpointTimer = 0;
+  let storageNoticeShown = false;
+  let selectionGeneration = 0;
+  const listeners = [];
+  const on = (target, name, callback, options) => {
+    target?.addEventListener(name, callback, options);
+    listeners.push(() => target?.removeEventListener(name, callback, options));
+  };
+  const writable = () => !disposed && (root.puzzleProgress?.canWrite?.() ?? true);
+  function acceptInput(gameplay = true) {
+    if (state.restoring) return false;
+    if (writable()) {
+      // Continuing the visible game withdraws an unfinished map change. A
+      // delayed request/reconnection must never replace newly played progress.
+      if (gameplay && state.ready && (state.loading || retryLoad)) {
+        ++selectionGeneration;
+        ++loadGeneration;
+        activeLoad?.abort();
+        retryLoad = null;
+        clearTimeout(state.retryTimer);
+        setLoading(false);
+        syncSelectors();
+      }
+      return true;
+    }
+    void root.puzzleProgress?.takeControl?.();
+    return false;
+  }
+  function storageNotice() {
+    if (storageNoticeShown || disposed) return;
+    storageNoticeShown = true;
+    const notice = document.createElement("p");
+    notice.className = "puzzle-save-notice";
+    notice.setAttribute("role", "status");
+    notice.textContent = copy("Игра продолжается, но браузер не смог сохранить её на устройстве. Освободите место, чтобы сохранить прогресс.", "You can keep playing, but this browser could not save the game on this device. Free some storage to keep your progress.", "您可以继续游戏，但浏览器无法在设备上保存进度。请释放存储空间。");
+    els.canvasWrap.parentElement.append(notice);
+  }
 
-  function checkpoint() {
-    if (!state.ready || !state.attemptId || !root.puzzleProgress?.save) return Promise.resolve();
+  function snapshotState() {
     const worldCentre=screenToWorld(state.cssWidth / 2,state.mapBottom / 2);
     const centre = state.projection?.invert([worldCentre.x,worldCentre.y]);
     const snapshot = {
+      version:3,geometryRef:state.geometryRef,finishedResult:state.finishedResult,selections:{...state.selections},
       attemptId:state.attemptId,seed:state.seed,mode:state.mode,selection:state.selection,difficulty:state.difficulty,
       wrapper:{dataset:state.wrapper?.dataset},featureIds:state.features.map(feature=>feature.properties._puzzleId),
       order:[...state.order],cursor:state.cursor,current:state.current,placed:state.placed,errors:state.errors,hints:state.hints,
-      finished:state.finished,started:state.started,elapsedMs:Math.round(elapsedMs()),timerStarted:Boolean(state.startedAt||state.elapsedBeforeStart),
-      view:{k:state.view.k,centre},pieces:state.pieces.map(piece=>{
+      finished:state.finished,started:state.started,elapsedMs:Math.round(elapsedMs()),timerStarted:state.timerStarted,
+      view:{k:state.view.k,zoom:state.view.k/state.baseViewK,centre},pieces:state.pieces.map(piece=>{
         const anchor=state.anchors[piece.index];
         const point=!piece.locked&&!piece.inTray&&anchor?state.projection?.invert([anchor[0]+piece.dx,anchor[1]+piece.dy]):null;
         return {index:piece.index,locked:piece.locked,inTray:piece.inTray,point,dx:piece.dx/state.cssWidth,dy:piece.dy/state.cssHeight};
       }),
     };
+    return snapshot;
+  }
+  function checkpoint() {
+    clearTimeout(checkpointTimer);
+    checkpointTimer = 0;
+    if (state.restoring || !state.ready || !state.attemptId || !root.puzzleProgress?.save || !writable()) return Promise.resolve();
+    const snapshot = snapshotState();
     state.lastCheckpointAt=performance.now();
-    return root.puzzleProgress.save(snapshot).catch(error=>window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{errorCode:error.code||'storage/unavailable'}})));
+    return Promise.resolve(root.puzzleProgress.save(snapshot)).then(result => {
+      if (result?.saveStatus?.durable === false) storageNotice();
+      return result;
+    }).catch(storageNotice);
+  }
+  function scheduleCheckpoint() {
+    if (performance.now() - state.lastCheckpointAt >= 250) void checkpoint();
+    else if (!checkpointTimer) checkpointTimer = setTimeout(() => { checkpointTimer = 0; void checkpoint(); }, 250);
   }
   if(root.puzzleProgress)root.puzzleProgress.capture=checkpoint;
 
@@ -230,16 +291,17 @@
 
   function setLoading(visible, title = "Загружаем геоданные", text = "При первом открытии набор сохраняется в локальный кэш платформы.") {
     state.loading = visible;
-    els.loading.hidden = !visible;
+    els.loading.hidden = !visible || state.ready;
+    root.setAttribute("aria-busy", String(visible));
     els.loadingTitle.textContent = tr(title);
     els.loadingText.textContent = tr(text);
-    els.start.disabled = visible;
   }
 
   function setControlsEnabled(enabled) {
-    [els.center, els.zoomIn, els.zoomOut, els.returnPiece, els.hint, els.reset].forEach((el) => {
-      el.disabled = !enabled;
+    [els.center, els.zoomIn, els.zoomOut, els.returnPiece, els.reset].forEach((el) => {
+      el.disabled = !enabled || !writable();
     });
+    updateHintControl();
   }
 
   function updateDependentFields() {
@@ -274,24 +336,24 @@
     }
     if (!state.ready) {
       els.datasetTitle.textContent = MODE_LABELS[mode] || tr("Географическая карта");
-      els.datasetSubtitle.textContent = mode === "russia-subjects"
-        ? tr("89 территорий · выберите сложность и загрузите карту.")
-        : tr("Выберите территорию и загрузите тренировочную карту.");
+      els.datasetSubtitle.textContent = copy("Карта загружается автоматически", "The map loads automatically", "地图自动加载");
       els.placed.textContent = mode === "russia-subjects" ? "0 / 89" : "0 / —";
       els.currentName.textContent = tr("Игра ещё не начата");
-      if (els.sourceTitle) els.sourceTitle.textContent = tr("Карта ещё не загружена");
-      els.source.textContent = tr("Источник, период и лицензия появятся после загрузки.");
-      els.origin.textContent = tr("нет данных");
-      els.origin.className = "badge";
     }
-    if (mode === "russia-municipalities") void loadSubjectCatalog();
-    if (mode === "country-regions") void loadAdm1Catalog();
+    els.difficulties.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.puzzleDifficulty === els.difficulty.value)));
   }
 
   async function fetchJson(url, options = {}) {
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    if (options.signal?.aborted) abort();
+    options.signal?.addEventListener("abort", abort, { once: true });
+    const timeout = setTimeout(abort, 45000);
+    try {
     const response = await scopedFetch(url, {
       credentials: "same-origin",
       ...options,
+      signal: controller.signal,
       headers: {
         Accept: "application/json",
         ...(options.headers || {}),
@@ -308,6 +370,10 @@
       throw new Error(detail || `HTTP ${response.status}`);
     }
     return payload;
+    } finally {
+      clearTimeout(timeout);
+      options.signal?.removeEventListener("abort", abort);
+    }
   }
 
   function bestTopologyObject(topology) {
@@ -389,8 +455,9 @@
     return value !== undefined && value !== null ? String(value) : `feature-${index + 1}`;
   }
 
-  function normalizeCollection(collection, mode) {
+  function normalizeCollection(collection, mode, savedFeatureIds = null) {
     const seen = new Set();
+    const retained = new Set(savedFeatureIds || []);
     const features = [];
     (collection.features || []).forEach((feature, index) => {
       if (!feature || !feature.geometry || !["Polygon", "MultiPolygon"].includes(feature.geometry.type)) return;
@@ -399,7 +466,10 @@
       const countryCode = String(
         properties.ADM0_A3 || properties.adm0_a3 || properties.ISO_A3 || properties.iso_a3 || properties.SOV_A3 || properties.sov_a3 || "",
       ).toUpperCase();
-      if (mode === "world-countries" && (countryCode === "ATA" || /antarct|антаркт/i.test(name))) return;
+      // Keep the established non-Antarctic set identical in every language.
+      // Filtering translated names made ATF disappear only in RU/EN and broke
+      // recovery when a saved world game was reopened in Chinese.
+      if (mode === "world-countries" && ["ATA", "ATF"].includes(countryCode) && !retained.has(featureId(feature, index))) return;
       let id = featureId(feature, index);
       if (seen.has(id)) id = `${id}-${index + 1}`;
       seen.add(id);
@@ -407,84 +477,59 @@
       feature.id = id;
       features.push(feature);
     });
-    if (features.length < 2) throw new Error(tr("В выбранном наборе недостаточно территорий для игры."));
+    if (features.length < 1) throw new Error(tr("В выбранном наборе недостаточно территорий для игры."));
     return { type: "FeatureCollection", features };
   }
 
-  async function loadWrapper(cacheKey, url) {
+  async function loadWrapper(cacheKey, url, signal) {
     if (state.datasetCache.has(cacheKey)) return state.datasetCache.get(cacheKey);
-    const promise = fetchJson(url).catch((error) => {
-      state.datasetCache.delete(cacheKey);
-      throw error;
-    });
-    state.datasetCache.set(cacheKey, promise);
-    return promise;
+    const value = await fetchJson(url, { signal });
+    if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
+    state.datasetCache.set(cacheKey, value);
+    // Keep only a few maps in RAM; durable geometry remains available offline.
+    while (state.datasetCache.size > 8) state.datasetCache.delete(state.datasetCache.keys().next().value);
+    return value;
   }
 
-  async function ensureGeometry(wrapper, cacheKey) {
+  async function ensureGeometry(wrapper, cacheKey, signal) {
     if (wrapper && wrapper.geometry) return wrapper;
     const geometryUrl = wrapper && wrapper.dataset && wrapper.dataset.geometry_url;
     if (!geometryUrl) throw new Error(tr("Для выбранного набора не указана геометрия."));
-    const geometry = await loadWrapper(`${cacheKey}:geometry`, geometryUrl);
+    const geometry = await loadWrapper(`${cacheKey}:geometry`, geometryUrl, signal);
     return { ...wrapper, geometry };
   }
 
-  async function loadSubjectCatalog() {
-    if (state.subjectCatalogLoaded) return;
-    state.subjectCatalogLoaded = true;
-    els.subject.innerHTML = `<option value="">${escapeHtml(tr("Загрузка субъектов…"))}</option>`;
-    try {
+  function loadSubjectCatalog() {
+    if (catalogSubjects) return catalogSubjects;
+    catalogSubjects = (async () => {
       const payload = await loadWrapper("municipal-catalog", "/api/puzzle/catalog/municipal");
-      const items = Array.isArray(payload.subjects) ? payload.subjects : [];
+      const items = [...(payload.subjects || [])].filter(item => item.available);
       items.sort((a, b) => localeCompare(localized(a, "name", a.name), localized(b, "name", b.name)));
-      els.subject.innerHTML = items.map((item) => {
-        const count = Number.isFinite(item.units) && item.units > 0 ? ` · ${item.units}` : "";
-        const unavailable = item.available ? "" : " disabled";
-        const suffix = item.available ? count : ` · ${tr("карта ожидается")}`;
-        return `<option value="${escapeAttr(item.id)}"${unavailable}>${escapeHtml(localized(item, "name", item.name || item.id))}${escapeHtml(suffix)}</option>`;
-      }).join("");
-      const firstAvailable = items.find((item) => item.available);
-      if (firstAvailable) els.subject.value = String(firstAvailable.id);
-      const unavailableCount = Number(payload.missing_count || 0);
-      els.subjectHint.textContent = mapAvailabilityText(payload.available_count, payload.subject_count, unavailableCount);
-      if (unavailableCount > 0) {
-        toast(municipalNotice(payload.available_count, payload.subject_count, unavailableCount), "info", 6500);
-      }
-    } catch (error) {
-      state.subjectCatalogLoaded = false;
-      els.subject.innerHTML = `<option value="">${escapeHtml(tr("Не удалось загрузить каталог"))}</option>`;
-      toast(localizeError(`Каталог субъектов недоступен: ${error.message}`), "error", 6000);
-    }
+      if (disposed) return items;
+      const selected = els.subject.value;
+      els.subject.innerHTML = items.map(item => `<option value="${escapeAttr(item.id)}">${escapeHtml(localized(item, "name", item.name || item.id))}</option>`).join("");
+      const preferred = state.selections["russia-municipalities"] || selected;
+      els.subject.value = items.some(item => String(item.id) === String(preferred)) ? String(preferred) : String(items[0]?.id || "");
+      els.subjectHint.textContent = "";
+      return items;
+    })().catch(error => { catalogSubjects = null; throw error; });
+    return catalogSubjects;
   }
 
-  async function loadAdm1Catalog() {
-    if (state.adm1CatalogLoaded) return;
-    state.adm1CatalogLoaded = true;
-    els.country.innerHTML = `<option value="USA">${escapeHtml(tr("Загрузка каталога стран…"))}</option>`;
-    try {
-      const payload = await fetchJson("/api/puzzle/catalog/adm1");
-      const items = Array.isArray(payload.countries) ? payload.countries : [];
-      items.sort((a, b) => Number(Boolean(b.local)) - Number(Boolean(a.local)) || localeCompare(localized(a, "name", a.name), localized(b, "name", b.name)));
-      const localItems = items.filter((item) => item.local);
-      const remoteItems = items.filter((item) => !item.local);
-      const optionMarkup = (item) => {
-        const count = Number.isFinite(item.units) && item.units > 0 ? ` · ${item.units}` : "";
-        const canonicalValue = localized(item, "canonical", item.canonical || "ADM1");
-        const canonical = canonicalValue && canonicalValue !== "ADM1" ? ` · ${canonicalValue}` : "";
-        return `<option value="${escapeAttr(item.iso)}">${escapeHtml(localized(item, "name", item.name || item.iso))}${escapeHtml(canonical)}${count}</option>`;
-      };
-      els.country.innerHTML = [
-        localItems.length ? `<optgroup label="${escapeAttr(tr("Встроены в платформу"))}">${localItems.map(optionMarkup).join("")}</optgroup>` : "",
-        remoteItems.length ? `<optgroup label="${escapeAttr(tr("Загружаются через geoBoundaries"))}">${remoteItems.map(optionMarkup).join("")}</optgroup>` : "",
-      ].join("");
-      const offlineCount = Number(payload.offline_count || localItems.length);
-      els.countryHint.textContent = offlineAvailabilityText(offlineCount);
-      if ([...els.country.options].some((option) => option.value === "USA")) els.country.value = "USA";
-    } catch (error) {
-      state.adm1CatalogLoaded = false;
-      els.country.innerHTML = `<option value="USA">${escapeHtml(locale === "zh" ? "美国" : locale === "en" ? "United States of America" : "Соединённые Штаты Америки")}</option>`;
-      toast(localizeError(`Полный каталог стран временно недоступен: ${error.message}`), "error", 5000);
-    }
+  function loadAdm1Catalog() {
+    if (catalogCountries) return catalogCountries;
+    catalogCountries = (async () => {
+      const payload = await loadWrapper("adm1-catalog", "/api/puzzle/catalog/adm1");
+      const items = [...new Map((payload.countries || []).map(item => [item.iso, item])).values()];
+      items.sort((a, b) => localeCompare(localized(a, "name", a.name), localized(b, "name", b.name)));
+      if (disposed) return items;
+      const selected = state.selections["country-regions"] || els.country.value || "USA";
+      els.country.innerHTML = items.map(item => `<option value="${escapeAttr(item.iso)}">${escapeHtml(localized(item, "name", item.name || item.iso))}</option>`).join("");
+      els.country.value = items.some(item => item.iso === selected) ? selected : (items.some(item => item.iso === "USA") ? "USA" : items[0]?.iso || "");
+      els.countryHint.textContent = "";
+      return items;
+    })().catch(error => { catalogCountries = null; throw error; });
+    return catalogCountries;
   }
 
   function escapeHtml(value) {
@@ -497,45 +542,16 @@
     return escapeHtml(value).replace(/`/g, "&#96;");
   }
 
-  async function resolveDataset(mode) {
+  async function resolveDataset(mode, selection, signal) {
     if (!window.d3) throw new Error(tr("Локальный картографический модуль не загрузился. Обновите страницу."));
-
-    if (mode === "russia-subjects") {
-      let wrapper = await loadWrapper("russia-subjects", "/api/puzzle/data/russia-subjects");
-      wrapper = await ensureGeometry(wrapper, "russia-subjects");
-      return { wrapper, collection: normalizeCollection(geometryToCollection(wrapper.geometry), mode), selection: null };
-    }
-
-    if (mode === "world-countries") {
-      let wrapper = await loadWrapper("world-countries", "/api/puzzle/data/world-countries");
-      wrapper = await ensureGeometry(wrapper, "world-countries");
-      return { wrapper, collection: normalizeCollection(geometryToCollection(wrapper.geometry), mode), selection: null };
-    }
-
-    if (mode === "country-regions") {
-      const iso = els.country.value || "USA";
-      let wrapper = await loadWrapper(`adm1-${iso}`, `/api/puzzle/data/country-adm1/${encodeURIComponent(iso)}`);
-      wrapper = await ensureGeometry(wrapper, `adm1-${iso}`);
-      return { wrapper, collection: normalizeCollection(geometryToCollection(wrapper.geometry), mode), selection: iso };
-    }
-
-    if (mode === "russia-municipalities") {
-      await loadSubjectCatalog();
-      const subjectId = els.subject.value;
-      if (!subjectId) throw new Error(tr("Выберите субъект Российской Федерации."));
-      let wrapper = await loadWrapper(
-        `municipal-${subjectId}`,
-        `/api/puzzle/data/russia-municipalities/${encodeURIComponent(subjectId)}`,
-      );
-      wrapper = await ensureGeometry(wrapper, `municipal-${subjectId}`);
-      return {
-        wrapper,
-        collection: normalizeCollection(geometryToCollection(wrapper.geometry), mode),
-        selection: subjectId,
-      };
-    }
-
-    throw new Error(tr("Неизвестный вариант карты."));
+    const route = mode === "russia-subjects" ? "russia-subjects"
+      : mode === "world-countries" ? "world-countries"
+      : mode === "country-regions" ? `country-adm1/${encodeURIComponent(selection)}`
+      : `russia-municipalities/${encodeURIComponent(selection)}`;
+    const cacheKey = `${mode}:${selection || ""}`;
+    const wrapper = await loadWrapper(cacheKey, `/api/puzzle/data/${route}`, signal);
+    const complete = await ensureGeometry(wrapper, cacheKey, signal);
+    return { wrapper: complete, collection: geometryToCollection(complete.geometry), selection };
   }
 
   function hashString(value) {
@@ -586,137 +602,164 @@
     });
   }
 
-  async function startGame({ reuseDataset = false, resume = null } = {}) {
-    if (state.loading) return;
-    if (state.started && !state.finished && state.placed > 0 && !window.confirm(tr("Текущая попытка будет прервана. Начать заново?"))) return;
+  function hasPlayed() {
+    return state.timerStarted || state.placed > 0 || state.hints > 0 || state.errors > 0;
+  }
 
-    const mode = seminarContext ? "russia-subjects" : resume?.mode || els.mode.value;
-    const difficulty = resume?.difficulty || els.difficulty.value;
-    els.mode.value=mode;els.difficulty.value=difficulty;
-    setLoading(true, "Подготавливаем карту", mode === "russia-municipalities" ? "Муниципальный слой крупнее обычного; первая загрузка может занять некоторое время." : "Геометрия проверяется и подготавливается для сенсорного управления.");
-    els.empty.hidden = true;
+  function selectedSettings() {
+    const mode = seminarContext ? "russia-subjects" : els.mode.value;
+    return { mode, difficulty: els.difficulty.value || "medium", selection: mode === "russia-municipalities" ? els.subject.value : mode === "country-regions" ? els.country.value || "USA" : null };
+  }
 
+  function syncSelectors(settings = state) {
+    els.mode.value = settings.mode;
+    els.difficulty.value = settings.difficulty;
+    if (settings.mode === "russia-municipalities" && settings.selection) els.subject.value = settings.selection;
+    if (settings.mode === "country-regions" && settings.selection) els.country.value = settings.selection;
+    updateDependentFields();
+  }
+
+  async function requestGame(settings = selectedSettings(), force = false) {
+    if (!acceptInput(false)) { syncSelectors(); return; }
+    if (!force && state.ready && settings.mode === state.mode && settings.difficulty === state.difficulty && String(settings.selection || "") === String(state.selection || "")) {
+      ++selectionGeneration;
+      ++loadGeneration;
+      activeLoad?.abort();
+      retryLoad = null;
+      clearTimeout(state.retryTimer);
+      setLoading(false);
+      syncSelectors();
+      return;
+    }
+    if (state.started && !state.finished && hasPlayed() && !window.confirm(copy("Начать новую игру? Текущая попытка будет заменена.", "Start a new game? This will replace the current attempt.", "开始新游戏？当前进度将被替换。"))) {
+      syncSelectors();
+      return;
+    }
+    const selection = ++selectionGeneration;
+    ++loadGeneration;
+    activeLoad?.abort();
+    syncSelectors(settings);
+    setLoading(true, "Подготавливаем карту");
+    await checkpoint();
+    if (disposed || selection !== selectionGeneration) return;
+    return startGame({ desired: settings });
+  }
+
+  async function startGame({ resume = null, desired = null } = {}) {
+    if (disposed || root.dataset.playAllowed === "false") return;
+    const generation = ++loadGeneration;
+    state.restoring = Boolean(resume);
+    activeLoad?.abort();
+    const controller = new AbortController();
+    activeLoad = controller;
+    retryLoad = null;
+    clearTimeout(state.retryTimer);
+    const current = () => !disposed && generation === loadGeneration && !controller.signal.aborted;
+    const settings = { ...(resume || desired || selectedSettings()) };
+    settings.mode = seminarContext ? "russia-subjects" : settings.mode || "russia-subjects";
+    settings.difficulty = DIFFICULTY[settings.difficulty] ? settings.difficulty : "medium";
+    syncSelectors(settings);
+    setLoading(true, "Подготавливаем карту", "Геометрия проверяется и подготавливается для сенсорного управления.");
+    if (!state.ready) els.empty.hidden = true;
     try {
-      let resolved;
-      if (resume?.wrapper?.dataset?.geometry_url) {
-        const wrapper=await ensureGeometry(resume.wrapper,`resume-${resume.wrapper.dataset.id}`);
-        resolved={wrapper,collection:geometryToCollection(wrapper.geometry),selection:resume.selection};
-      } else if (reuseDataset && state.wrapper && state.collection && state.mode === mode && state.difficulty === difficulty) {
-        resolved = { wrapper: state.wrapper, collection: state.collection, selection: state.selection };
-      } else {
-        resolved = await resolveDataset(mode);
+      let storedGeometry = resume?.geometryRef ? await root.puzzleProgress?.loadGeometry?.(resume.geometryRef) : null;
+      if (!current()) return;
+      if (settings.mode === "russia-municipalities" && !storedGeometry) {
+        await loadSubjectCatalog();
+        settings.selection = settings.selection || state.selections[settings.mode] || els.subject.value;
+      } else if (settings.mode === "country-regions" && !storedGeometry) {
+        await loadAdm1Catalog();
+        settings.selection = settings.selection || state.selections[settings.mode] || "USA";
       }
-      const collection = normalizeCollection(resolved.collection, mode);
-      if(resume&&JSON.stringify(collection.features.map(feature=>feature.properties._puzzleId))!==JSON.stringify(resume.featureIds))throw new Error(tr('Набор карты изменился. Сохранённая попытка не перезаписана.'));
-      const attempt = resume?{attempt_id:resume.attemptId,seed:resume.seed}:await startAttempt(
-        mode,
-        resolved.selection,
-        difficulty,
-        collection.features.length,
-        collection.features.map((feature) => feature.properties._puzzleId),
-        resolved.wrapper.dataset || {},
-      );
-
-      state.mode = mode;
-      state.selection = resolved.selection;
-      state.difficulty = difficulty;
-      state.wrapper = resolved.wrapper;
-      state.collection = collection;
-      state.features = collection.features;
-      state.attemptId = attempt.attempt_id;
-      state.seed = Number(attempt.seed) || hashString(`${Date.now()}-${mode}-${resolved.selection || ""}`);
-      state.order = seededShuffle(state.features.length, state.seed);
+      if (!current()) return;
+      let resolved;
+      if (storedGeometry?.geometry) resolved = { wrapper: storedGeometry, collection: geometryToCollection(storedGeometry.geometry), selection: settings.selection };
+      else if (resume?.wrapper?.dataset?.geometry_url) {
+        const wrapper = await ensureGeometry(resume.wrapper, `resume-${resume.wrapper.dataset.id}`, controller.signal);
+        resolved = { wrapper, collection: geometryToCollection(wrapper.geometry), selection: settings.selection };
+      } else if (state.wrapper && state.mode === settings.mode && String(state.selection || "") === String(settings.selection || "")) {
+        resolved = { wrapper: state.wrapper, collection: state.collection, selection: state.selection };
+      } else resolved = await resolveDataset(settings.mode, settings.selection, controller.signal);
+      if (!current()) return;
+      const collection = normalizeCollection(resolved.collection, settings.mode, resume?.featureIds);
+      const featureIds = collection.features.map(feature => feature.properties._puzzleId);
+      if (resume && JSON.stringify(featureIds) !== JSON.stringify(resume.featureIds)) throw new Error(tr("Набор карты изменился. Сохранённая попытка не перезаписана."));
+      const count = collection.features.length;
+      if (resume && (!Array.isArray(resume.order) || resume.order.length !== count || new Set(resume.order).size !== count || resume.order.some(index => !Number.isInteger(index) || index < 0 || index >= count) || !Array.isArray(resume.pieces) || resume.pieces.length !== count)) throw new Error(tr("Сохранённая попытка несовместима с картой."));
+      const geometryRef = resume?.geometryRef || await root.puzzleProgress?.saveGeometry?.(resolved.wrapper) || null;
+      if (!current()) return;
+      const attempt = resume ? { attempt_id: resume.attemptId, seed: resume.seed } : await startAttempt(settings.mode, resolved.selection, settings.difficulty, count, featureIds, resolved.wrapper.dataset || {});
+      if (!current()) return;
+      cancelGesture();
+      clearTimeout(hintTimer);
+      if (els.resultDialog.open) els.resultDialog.close();
+      Object.assign(state, {
+        mode: settings.mode, selection: resolved.selection, difficulty: settings.difficulty,
+        wrapper: resolved.wrapper, collection, features: collection.features, geometryRef,
+        attemptId: attempt.attempt_id, seed: Number(attempt.seed) || hashString(attempt.attempt_id),
+        cursor: resume?.cursor || 0, current: -1, placed: 0,
+        errors: Math.max(0, Number(resume?.errors) || 0), hints: Math.max(0, Number(resume?.hints) || 0),
+        startedAt: null, elapsedBeforeStart: Math.max(0, Number(resume?.elapsedMs) || 0),
+        timerStarted: Boolean(resume?.timerStarted), finished: Boolean(resume?.finished),
+        finishedResult: resume?.finishedResult || null, started: true, ready: true,
+        view: { x: 0, y: 0, k: 1 }, hintUntil: 0,
+        selections: { ...state.selections, ...resume?.selections, [settings.mode]: resolved.selection },
+      });
+      state.order = resume ? [...resume.order] : seededShuffle(count, state.seed);
+      state.current = state.finished ? -1 : resume ? resume.current : state.order[0];
       state.pieces = state.features.map((_, index) => ({ index, dx: 0, dy: 0, locked: false, inTray: true }));
-      state.cursor = 0;
-      state.current = state.order[0];
-      state.placed = 0;
-      state.errors = 0;
-      state.hints = 0;
-      state.startedAt = null;
-      state.elapsedBeforeStart = 0;
-      state.finished = false;
-      state.started = true;
-      state.ready = true;
-      state.view = { x: 0, y: 0, k: 1 };
-      state.hintUntil = 0;
-
       fitCanvas();
       rebuildGeometry();
-      if(resume){
-        const count=state.features.length;
-        if(!Array.isArray(resume.order)||resume.order.length!==count||new Set(resume.order).size!==count||resume.order.some(index=>!Number.isInteger(index)||index<0||index>=count)||!Array.isArray(resume.pieces)||resume.pieces.length!==count)throw new Error(tr('Сохранённая попытка несовместима с картой.'));
-        state.order=[...resume.order];state.cursor=resume.cursor;state.current=resume.current;state.errors=resume.errors;state.hints=resume.hints;
-        state.elapsedBeforeStart=Math.max(0,Number(resume.elapsedMs)||0);state.startedAt=resume.timerStarted?performance.now():null;
-        state.pieces=resume.pieces.map((piece,index)=>{
-          const point=piece.point&&state.projection(piece.point),anchor=state.anchors[index];
-          return {index,locked:Boolean(piece.locked),inTray:Boolean(piece.inTray),dx:piece.locked?0:point?point[0]-anchor[0]:Number(piece.dx||0)*state.cssWidth,dy:piece.locked?0:point?point[1]-anchor[1]:Number(piece.dy||0)*state.cssHeight};
-        });
-        state.placed=state.pieces.filter(piece=>piece.locked).length;
-        if(resume.view?.centre?.every(Number.isFinite)){const point=state.projection(resume.view.centre);const k=clamp(Number(resume.view.k)||state.view.k,state.viewMin,state.viewMax);if(point.every(Number.isFinite))state.view={k,x:state.cssWidth/2-point[0]*k,y:state.mapBottom/2-point[1]*k};}
-        if(state.current>=0&&state.pieces[state.current]?.inTray)placePieceInTray(state.current);
-      }else setCurrentPiece(state.current);
-      updateUi();
+      if (resume) restorePositions(resume);
+      else setCurrentPiece(state.current);
+      if (state.timerStarted && !state.finished && !document.hidden && writable()) state.startedAt = performance.now();
+      syncSelectors();
       updateDatasetMeta();
+      updateUi();
       setControlsEnabled(true);
-      els.mode.disabled = true;
-      els.subject.disabled = true;
-      els.country.disabled = true;
-      els.difficulty.disabled = true;
-      els.start.textContent = tr("Загрузить другую карту");
       setLoading(false);
+      els.empty.hidden = true;
       drawAll(true);
-      els.canvas.focus({ preventScroll: true });
-      if(resume?.finished)void completeGame();else await checkpoint();
+      state.restoring = false;
+      if (state.finished) showResult();
+      else await checkpoint();
     } catch (error) {
+      if (!current()) return;
+      // A stale tab must not write its old scene if loading the durable head failed.
+      state.restoring = Boolean(resume);
       setLoading(false);
-      state.started = false;
-      state.ready = false;
-      els.empty.hidden = false;
-      setControlsEnabled(false);
-      els.mode.disabled = false;
-      els.subject.disabled = false;
-      els.country.disabled = false;
-      els.difficulty.disabled = false;
-      toast(localizeError(error.message || tr("Не удалось запустить игру.")), "error", 7000);
+      if (state.ready) syncSelectors();
+      else {
+        els.empty.hidden = false;
+        els.empty.querySelector("h2").textContent = copy("Подготавливаем карту", "Preparing the map", "正在准备地图");
+        els.empty.querySelector("p").textContent = copy("Для первой загрузки требуется подключение. Карта появится автоматически, когда связь восстановится.", "A connection is needed for the first download. The map will open automatically when it returns.", "首次加载需要网络连接。连接恢复后地图将自动打开。");
+      }
+      retryLoad = { resume, desired: settings };
+      state.retryTimer = setTimeout(() => { if (retryLoad && navigator.onLine) void startGame(retryLoad); }, 15000);
+      // Keep the current scene and draft intact. Network retries never block play.
+      root.dispatchEvent(new CustomEvent("puzzle:load-status", { detail: { status: "waiting", mode: settings.mode, selection: settings.selection, reason: String(error.message || error) } }));
     }
   }
 
-  function updateDatasetMeta() {
-    const meta = state.wrapper && state.wrapper.dataset ? state.wrapper.dataset : {};
-    const title = localized(meta, "title", MODE_LABELS[state.mode] || tr("Географическая карта"));
-    const year = localized(meta, "year", meta.year || "");
-    const source = localized(meta, "source", meta.source || "");
-    const license = localized(meta, "license", meta.license || "");
-    const note = localized(meta, "note", meta.note || "");
-    els.datasetTitle.textContent = title;
-    if (els.sourceTitle) els.sourceTitle.textContent = title || tr("Набор геоданных");
-    if (els.modeBadge) {
-      const graded = seminarContext && state.mode === "russia-subjects";
-      els.modeBadge.textContent = graded ? tr("Зачётный режим") : seminarContext ? tr("Тренировочный режим") : tr("Свободная игра");
-      els.modeBadge.classList.toggle("training", !graded);
+  function restorePositions(saved) {
+    state.pieces = saved.pieces.map((piece, index) => {
+      const point = piece.point && state.projection(piece.point), anchor = state.anchors[index];
+      return { index, locked: Boolean(piece.locked), inTray: Boolean(piece.inTray), dx: piece.locked ? 0 : point ? point[0] - anchor[0] : Number(piece.dx || 0) * state.cssWidth, dy: piece.locked ? 0 : point ? point[1] - anchor[1] : Number(piece.dy || 0) * state.cssHeight };
+    });
+    state.placed = state.pieces.filter(piece => piece.locked).length;
+    if (saved.view?.centre?.every(Number.isFinite)) {
+      const point = state.projection(saved.view.centre);
+      const savedZoom = Number(saved.view.zoom);
+      const k = clamp(savedZoom > 0 ? savedZoom * state.baseViewK : Number(saved.view.k) || state.view.k, Math.min(state.viewMin,state.baseViewK), Math.max(state.viewMax,state.baseViewK));
+      if (point?.every(Number.isFinite)) state.view = { k, x: state.cssWidth / 2 - point[0] * k, y: state.mapBottom / 2 - point[1] * k };
     }
-    const count = state.features.length;
-    const detail = [
-      territoryCount(count),
-      seminarContext && state.mode === "russia-subjects" ? tr("зачётный режим") : tr("свободная игра"),
-      year ? `${tr("данные")}: ${year}` : null,
-    ].filter(Boolean).join(" · ");
-    els.datasetSubtitle.textContent = detail;
-    const sourceLabel = source ? escapeHtml(source) : escapeHtml(tr("Источник не указан"));
-    const sourceMarkup = meta.source_url
-      ? `<strong><a href="${escapeAttr(meta.source_url)}" target="_blank" rel="noopener noreferrer">${sourceLabel}</a></strong>`
-      : `<strong>${sourceLabel}</strong>`;
-    const osmAttribution = /openstreetmap|odbl/i.test(`${source} ${license}`)
-      ? `<br><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors · ODbL</a>`
-      : "";
-    els.source.innerHTML = [
-      sourceMarkup,
-      license ? `<br>${escapeHtml(tr("Лицензия"))}: ${escapeHtml(license)}` : "",
-      osmAttribution,
-      note ? `<br>${escapeHtml(note)}` : "",
-    ].join("");
-    els.origin.textContent = originLabel(meta.origin);
-    els.origin.className = `badge ${String(meta.origin || "").includes("network") ? "badge-success" : "badge-blue"}`;
+    if (state.current >= 0 && state.pieces[state.current]?.inTray) placePieceInTray(state.current);
+  }
+
+  function updateDatasetMeta() {
+    const meta = state.wrapper?.dataset || {};
+    els.datasetTitle.textContent = localized(meta, "title", MODE_LABELS[state.mode] || tr("Географическая карта"));
+    els.datasetSubtitle.textContent = [territoryCount(state.features.length), seminarContext ? tr("зачётный режим") : tr("свободная игра")].join(" · ");
   }
 
   function originLabel(origin) {
@@ -738,8 +781,8 @@
 
   function fitCanvas() {
     const rect = els.canvasWrap.getBoundingClientRect();
-    state.cssWidth = Math.max(320, Math.floor(rect.width));
-    state.cssHeight = Math.max(420, Math.floor(rect.height));
+    state.cssWidth = Math.max(1, rect.width);
+    state.cssHeight = Math.max(1, rect.height);
     state.dpr = Math.min(2, window.devicePixelRatio || 1);
     els.canvas.width = Math.floor(state.cssWidth * state.dpr);
     els.canvas.height = Math.floor(state.cssHeight * state.dpr);
@@ -751,8 +794,8 @@
     hitCtx.setTransform(1, 0, 0, 1, 0, 0);
     staticCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     state.staticDirty = true;
-    state.trayHeight = Math.min(150, Math.max(116, state.cssHeight * 0.19));
-    state.mapBottom = state.cssHeight - state.trayHeight - 14;
+    state.trayHeight = Math.min(150, state.cssHeight * 0.46, Math.max(82, state.cssHeight * 0.22));
+    state.mapBottom = Math.max(1, state.cssHeight - state.trayHeight - 14);
   }
 
   function forEachGeometryCoordinate(geometry, callback) {
@@ -1037,6 +1080,7 @@
       return Number.isFinite(value[0]) && Number.isFinite(value[1]) ? value : [state.bounds[index].cx, state.bounds[index].cy];
     });
     if (state.mode === "russia-subjects") fitRussiaView();
+    state.baseViewK = state.mode === "russia-subjects" ? state.view.k : 1;
     if (state.current >= 0 && state.pieces[state.current] && state.pieces[state.current].inTray) placePieceInTray(state.current);
   }
 
@@ -1067,7 +1111,7 @@
 
   function trayCenter() {
     const tray = trayRect();
-    return { x: tray.x + tray.width / 2, y: tray.y + tray.height / 2 + 7 };
+    return { x: tray.x + tray.width / 2, y: tray.y + 42 + (tray.height - 48) / 2 };
   }
 
   function screenToWorld(x, y) {
@@ -1138,8 +1182,7 @@
   function drawHint() {
     const piece = currentPiece();
     if (!piece || piece.locked || piece.inTray) return;
-    const config = DIFFICULTY[state.difficulty];
-    if (!config.hintAlways && Date.now() > state.hintUntil) return;
+    if (seminarContext || Date.now() >= state.hintUntil) return;
     ctx.save();
     setScene(ctx);
     ctx.fillStyle = "rgba(255, 213, 74, .44)";
@@ -1176,15 +1219,15 @@
     if (piece.inTray) {
       const tray = trayRect();
       const scale = state.mode === "russia-subjects"
-        ? Math.min((tray.width * 0.8) / bounds.width, (tray.height * 0.8) / bounds.height)
-        : Math.min((tray.width * 0.54) / bounds.width, (tray.height * 0.52) / bounds.height, 2.4);
+        ? Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height)
+        : Math.min((tray.width * 0.54) / bounds.width, (tray.height - 50) / bounds.height, 2.4);
       const center = trayCenter();
       const trayPaths = state.mode === "russia-subjects"
         ? highResolutionPaths(piece.index)
         : { path, strokePath };
       ctx.save();
       resetContext(ctx);
-      ctx.translate(center.x, center.y + 4);
+      ctx.translate(center.x, center.y);
       ctx.scale(scale, scale);
       ctx.translate(-bounds.cx, -bounds.cy);
       ctx.fillStyle = "#dc3f45";
@@ -1220,13 +1263,10 @@
     ctx.fill();
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = "#60708a";
-    ctx.font = '700 11px Inter, "Segoe UI", sans-serif';
-    ctx.fillText(tr("ТЕКУЩАЯ ТЕРРИТОРИЯ"), tray.x + 13, tray.y + 20);
     ctx.fillStyle = "#152238";
     ctx.font = '800 13px Inter, "Segoe UI", sans-serif';
     const name = state.current >= 0 ? state.features[state.current].properties._puzzleName : "";
-    drawWrappedText(ctx, name, tray.x + 13, tray.y + 42, tray.width - 26, 16);
+    drawWrappedText(ctx, name, tray.x + 13, tray.y + 19, tray.width - 26, 16);
     ctx.restore();
   }
 
@@ -1246,6 +1286,19 @@
     const lines = [];
     let line = "";
     words.forEach((word) => {
+      // Break unspaced names (including Chinese) rather than drawing outside the tray.
+      if (context.measureText(word).width > maxWidth) {
+        if (line) lines.push(line);
+        line = "";
+        for (const char of word) {
+          if (line && context.measureText(line + char).width > maxWidth) {
+            lines.push(line);
+            line = "";
+          }
+          line += char;
+        }
+        return;
+      }
       const candidate = line ? `${line} ${word}` : word;
       if (line && context.measureText(candidate).width > maxWidth) {
         lines.push(line);
@@ -1255,7 +1308,12 @@
       }
     });
     if (line) lines.push(line);
-    lines.forEach((value, index) => context.fillText(value, x, y + index * lineHeight));
+    if (lines.length > 2) {
+      let last = lines[1];
+      while (last && context.measureText(last + "…").width > maxWidth) last = last.slice(0, -1);
+      lines[1] = last + "…";
+    }
+    lines.slice(0, 2).forEach((value, index) => context.fillText(value, x, y + index * lineHeight));
   }
 
   function rebuildStaticLayer() {
@@ -1274,8 +1332,8 @@
     resetContext(ctx);
     ctx.drawImage(staticCanvas, 0, 0, staticCanvas.width, staticCanvas.height, 0, 0, state.cssWidth, state.cssHeight);
     drawHint();
-    drawCurrentPiece();
     drawTray();
+    drawCurrentPiece();
   }
 
   function requestDraw(rebuildStatic = false) {
@@ -1294,7 +1352,12 @@
     els.difficultyLabel.textContent = state.started ? DIFFICULTY[state.difficulty].label : "—";
     const progressPercent = total ? `${Math.round(state.placed / total * 100)}%` : "0%";
     els.progress.style.width = progressPercent;
-    els.progressMirrors.forEach((bar) => { bar.style.width = progressPercent; });
+    if (els.progressTrack) {
+      els.progressTrack.setAttribute("aria-valuenow", String(state.placed));
+      els.progressTrack.setAttribute("aria-valuemax", String(total || 1));
+      els.progressTrack.setAttribute("aria-valuetext", `${state.placed} / ${total}`);
+    }
+    updateHintControl();
     if (state.current >= 0 && state.features[state.current]) {
       els.currentName.textContent = state.finished ? tr("Карта собрана") : state.features[state.current].properties._puzzleName;
     } else {
@@ -1303,11 +1366,18 @@
   }
 
   function startTimerIfNeeded() {
-    if (!state.startedAt) state.startedAt = performance.now();
+    if (state.finished || document.hidden || !writable()) return;
+    state.timerStarted = true;
+    if (state.startedAt === null) state.startedAt = performance.now();
+  }
+
+  function pauseTimer() {
+    if (state.startedAt !== null) state.elapsedBeforeStart += performance.now() - state.startedAt;
+    state.startedAt = null;
   }
 
   function elapsedMs() {
-    return state.elapsedBeforeStart + (state.startedAt && !state.finished ? performance.now() - state.startedAt : 0);
+    return state.elapsedBeforeStart + (state.startedAt !== null && !state.finished ? performance.now() - state.startedAt : 0);
   }
 
   function formatTime(milliseconds) {
@@ -1322,8 +1392,7 @@
 
   function tick() {
     if (state.started && !state.finished) els.time.textContent = formatTime(elapsedMs());
-    if(state.startedAt&&!state.finished&&performance.now()-state.lastCheckpointAt>10000)void checkpoint();
-    if (state.ready && Date.now() <= state.hintUntil) requestDraw();
+    if(state.startedAt!==null&&!state.finished&&performance.now()-state.lastCheckpointAt>10000)void checkpoint();
     state.animationFrame = requestAnimationFrame(tick);
   }
 
@@ -1361,7 +1430,7 @@
 
   function canvasPoint(event) {
     const rect = els.canvas.getBoundingClientRect();
-    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    return { x: (event.clientX - rect.left) * state.cssWidth / Math.max(1, rect.width), y: (event.clientY - rect.top) * state.cssHeight / Math.max(1, rect.height) };
   }
 
   function startPinch() {
@@ -1393,13 +1462,15 @@
   }
 
   function pointerDown(event) {
-    if (!state.ready || state.finished) return;
+    if (!state.ready || state.finished || !acceptInput() || (event.pointerType === "mouse" && event.button !== 0)) return;
+    startTimerIfNeeded();
     const point = canvasPoint(event);
     state.pointers.set(event.pointerId, point);
     try { els.canvas.setPointerCapture(event.pointerId); } catch (_) { /* no-op */ }
 
-    if (state.pointers.size === 2) {
+    if (state.pointers.size >= 2) {
       state.draggingPiece = false;
+      state.draggingFromTray = false;
       state.draggingPan = false;
       startPinch();
       return;
@@ -1427,11 +1498,12 @@
   }
 
   function pointerMove(event) {
-    if (!state.ready || state.finished) return;
+    if (!state.ready || state.finished || !writable() || !state.pointers.has(event.pointerId)) return;
     const point = canvasPoint(event);
     if (state.pointers.has(event.pointerId)) state.pointers.set(event.pointerId, point);
     if (state.pointers.size >= 2) {
       updatePinch();
+      scheduleCheckpoint();
       return;
     }
     const piece = currentPiece();
@@ -1460,12 +1532,16 @@
       state.view.y = point.y - state.panOffset.y;
       requestDraw(true);
     }
+    scheduleCheckpoint();
   }
 
   function pointerEnd(event) {
+    if (!state.pointers.has(event.pointerId)) return;
+    const wasMultiTouch = state.pointers.size >= 2;
     state.pointers.delete(event.pointerId);
-    if (state.pointers.size < 2) state.pinch = null;
-    if (state.draggingPiece) attemptSnap();
+    if (state.pointers.size >= 2) startPinch();
+    else state.pinch = null;
+    if (!wasMultiTouch && state.draggingPiece) attemptSnap();
     state.draggingPiece = false;
     state.draggingFromTray = false;
     state.draggingPan = false;
@@ -1473,13 +1549,28 @@
     void checkpoint();
   }
 
+  function cancelGesture() {
+    const ids = [...state.pointers.keys()];
+    state.pointers.clear();
+    state.pinch = null;
+    state.draggingPiece = state.draggingFromTray = state.draggingPan = false;
+    for (const id of ids) { try { els.canvas.releasePointerCapture(id); } catch (_) { /* capture already released */ } }
+  }
+
+  function pointerCancel(event) {
+    if (!state.pointers.has(event.pointerId)) return;
+    cancelGesture();
+    void checkpoint();
+  }
+
   function attemptSnap() {
     const piece = currentPiece();
     if (!piece || piece.locked || piece.inTray) return;
     const screenDistance = Math.hypot(piece.dx, piece.dy) * state.view.k;
-    const remaining = state.features.length - state.placed;
     const threshold = DIFFICULTY[state.difficulty].snap;
-    if (screenDistance <= threshold || remaining === 1) {
+    if (screenDistance <= threshold) {
+      state.hintUntil = 0;
+      clearTimeout(hintTimer);
       piece.dx = 0;
       piece.dy = 0;
       piece.locked = true;
@@ -1501,65 +1592,56 @@
     }
   }
 
+  function localResult() {
+    return { points: seminarContext && state.mode === "russia-subjects" ? DIFFICULTY[state.difficulty].points : 0,
+      practice_points: DIFFICULTY[state.difficulty].points,
+      grade_eligible: seminarContext && state.mode === "russia-subjects",
+      difficulty: state.difficulty, total: state.features.length, durationMs: Math.round(state.elapsedBeforeStart) };
+  }
+
+  function showResult() {
+    const result = state.finishedResult || localResult();
+    els.resultPointsLabel.textContent = result.grade_eligible ? copy("Сложность / балл", "Difficulty / score", "难度 / 分数") : tr("Сложность");
+    els.resultPoints.textContent = DIFFICULTY[state.difficulty].label + (result.grade_eligible ? ` · ${formatPoints(result.points)}/5` : "");
+    els.resultCount.textContent = String(result.total ?? state.features.length);
+    els.resultTime.textContent = formatTime(result.durationMs ?? state.elapsedBeforeStart);
+    els.time.textContent = formatTime(state.elapsedBeforeStart);
+    setControlsEnabled(true);
+    if (!els.resultDialog.open) {
+      if (typeof els.resultDialog.showModal === "function") els.resultDialog.showModal();
+      else els.resultDialog.setAttribute("open", "");
+    }
+  }
+
   async function completeGame() {
-    const completedDuration = elapsedMs();
+    if (state.finished || !writable()) return;
+    pauseTimer();
     state.finished = true;
-    state.elapsedBeforeStart = completedDuration;
     state.current = -1;
+    state.finishedResult = localResult();
     updateUi();
     drawAll(true);
-    setControlsEnabled(false);
-    els.reset.disabled = false;
-    // The server rejects zero-duration synthetic completions.  On very small
-    // maps a genuine expert attempt can finish in under one second, therefore
-    // clamp only the transmitted value while retaining the measured UI time.
-    const duration = Math.max(1000, Math.round(state.elapsedBeforeStart));
-    await checkpoint();
+    const attemptId = state.attemptId;
     const payload = {
-      csrf,
-      activity_slug: root.dataset.activitySlug,
-      attempt_id: state.attemptId,
-      mode: state.mode,
-      selection: state.selection,
-      difficulty: state.difficulty,
-      placed: state.placed,
-      total: state.features.length,
-      errors: state.errors,
-      hints: state.hints,
-      duration_ms: duration,
-      feature_ids: state.features.map((feature) => feature.properties._puzzleId),
-      dataset_id: state.wrapper && state.wrapper.dataset && state.wrapper.dataset.id,
+      csrf, activity_slug: root.dataset.activitySlug, attempt_id: state.attemptId,
+      mode: state.mode, selection: state.selection, difficulty: state.difficulty,
+      placed: state.placed, total: state.features.length, errors: state.errors, hints: state.hints,
+      duration_ms: Math.round(state.elapsedBeforeStart),
+      feature_ids: state.features.map(feature => feature.properties._puzzleId),
+      dataset_id: state.wrapper?.dataset?.id,
     };
-    let result = {
-      points: state.mode === "russia-subjects" ? DIFFICULTY[state.difficulty].points : 0,
-      practice_points: DIFFICULTY[state.difficulty].points,
-      best_points: Number(root.dataset.currentGrade || 0),
-      grade_eligible: seminarContext && state.mode === "russia-subjects",
-    };
+    await checkpoint();
+    // A slow local acknowledgement may arrive after the student has already
+    // started another map. Never complete or open a result for that new attempt.
+    if (disposed || state.attemptId !== attemptId) return;
     try {
-      result = await fetchJson(`/api/puzzle/complete?lang=${encodeURIComponent(locale)}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      // This bridge commits only to the device. Cloud delivery is queued separately.
+      const result = await fetchJson(`/api/puzzle/complete?lang=${encodeURIComponent(locale)}`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
       });
-      root.dataset.currentGrade = String(result.best_points ?? result.points ?? 0);
-      els.resultText.textContent = result.message || tr("Результат сохранён в электронном журнале.");
-    } catch (error) {
-      els.resultText.textContent = localizeError(`Карта собрана, но результат пока не записан: ${error.message}`);
-      toast(tr("Не удалось записать результат. Не закрывайте страницу и повторите попытку позже."), "error", 7000);
-    }
-    if (result.grade_eligible) {
-      els.resultPointsLabel.textContent = tr("Баллы в журнал");
-      els.resultPoints.textContent = `${formatPoints(result.points)}/5`;
-    } else {
-      els.resultPointsLabel.textContent = tr("Сложность");
-      els.resultPoints.textContent = DIFFICULTY[state.difficulty].label;
-    }
-    els.resultCount.textContent = String(state.features.length);
-    els.resultTime.textContent = formatTime(duration);
-    els.resultErrors.textContent = String(state.errors);
-    if (typeof els.resultDialog.showModal === "function") els.resultDialog.showModal();
-    else els.resultDialog.setAttribute("open", "");
+      if (result?.saveStatus?.durable === false) storageNotice();
+    } catch (_) { storageNotice(); }
+    if (!disposed && state.attemptId === attemptId) showResult();
   }
 
   function formatPoints(value) {
@@ -1568,31 +1650,43 @@
   }
 
   function zoomAt(factor, x, y) {
-    if (!state.ready) return;
+    if (!state.ready || !acceptInput()) return;
+    startTimerIfNeeded();
     const world = screenToWorld(x, y);
     const k = clamp(state.view.k * factor, state.viewMin, state.viewMax);
     state.view.k = k;
     state.view.x = x - world.x * k;
     state.view.y = y - world.y * k;
     drawAll(true);
+    scheduleCheckpoint();
   }
 
   function centerView() {
+    if (!state.ready || !acceptInput()) return;
+    startTimerIfNeeded();
     if (state.mode === "russia-subjects") fitRussiaView();
     else state.view = { x: 0, y: 0, k: 1 };
     const piece = currentPiece();
     if (piece && piece.inTray) placePieceInTray(piece.index);
     drawAll(true);
+    void checkpoint();
   }
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
+  function updateHintControl() {
+    els.hint.hidden = seminarContext;
+    els.hint.disabled = seminarContext || !state.ready || state.finished || !writable() || state.hints >= 10 || Date.now() < state.hintUntil;
+    if (els.hintLabel) els.hintLabel.textContent = `${tr("Подсказка")} · ${Math.max(0, 10 - state.hints)}/10`;
+  }
+
   function showHint() {
-    if (!state.ready || state.finished) return;
+    if (seminarContext || !state.ready || state.finished || state.hints >= 10 || Date.now() < state.hintUntil || !acceptInput()) return;
     const piece = currentPiece();
     if (!piece) return;
+    startTimerIfNeeded();
     if (piece.inTray) {
       const center = { x: state.cssWidth / 2, y: state.mapBottom / 2 };
       const world = screenToWorld(center.x, center.y);
@@ -1603,12 +1697,15 @@
     }
     state.hints += 1;
     state.hintUntil = Date.now() + 2200;
+    updateHintControl();
     drawAll();
-    toast(tr("Правильное место подсвечено жёлтым контуром."), "success", 2200);
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(() => { state.hintUntil = 0; updateHintControl(); requestDraw(); }, 2200);
     void checkpoint();
   }
 
   function returnCurrentPiece() {
+    if (!acceptInput()) return;
     const piece = currentPiece();
     if (!piece || piece.locked) return;
     placePieceInTray(piece.index);
@@ -1624,11 +1721,13 @@
   }
 
   function keyDown(event) {
-    if (!state.ready || state.finished) return;
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "h", "H"].includes(event.key) || (seminarContext && event.key.toLowerCase() === "h")) return;
+    if (!state.ready || state.finished || !acceptInput()) return;
     const piece = currentPiece();
     const step = event.shiftKey ? 28 : 9;
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
       event.preventDefault();
+      startTimerIfNeeded();
       if (event.altKey || !piece || piece.inTray) {
         if (event.key === "ArrowLeft") state.view.x += step;
         if (event.key === "ArrowRight") state.view.x -= step;
@@ -1662,110 +1761,170 @@
     void checkpoint();
   }
 
-  async function toggleFullscreen() {
-    const target = els.canvasWrap.parentElement;
-    try {
-      if (!document.fullscreenElement) await target.requestFullscreen();
-      else await document.exitFullscreen();
-    } catch (error) {
-      toast(localizeError(`Полноэкранный режим недоступен: ${error.message}`), "error");
+  const stage = els.canvasWrap.parentElement;
+  let fullscreenOrigin = null;
+  const inertSiblings = new Map();
+  function isFullscreen() { return document.fullscreenElement === stage || stage.classList.contains("is-puzzle-fullscreen"); }
+  function updateViewportHeight() {
+    stage.style.setProperty("--puzzle-viewport-height", `${window.visualViewport?.height || window.innerHeight}px`);
+  }
+  function fullscreenUi() {
+    const active = isFullscreen();
+    document.body.classList.toggle("puzzle-fullscreen-active", active);
+    els.fullscreen.setAttribute("aria-pressed", String(active));
+    const label = els.fullscreen.querySelector("span");
+    if (label) label.textContent = active ? copy("Выйти", "Exit full screen", "退出全屏") : tr("Во весь экран");
+    if (active && !inertSiblings.size) {
+      for (let node = stage; node.parentElement && node.parentElement !== document.documentElement; node = node.parentElement) {
+        for (const sibling of node.parentElement.children) if (sibling !== node && sibling instanceof HTMLElement) { inertSiblings.set(sibling, sibling.inert); sibling.inert = true; }
+      }
+    } else if (!active) {
+      for (const [element, inert] of inertSiblings) element.inert = inert;
+      inertSiblings.clear();
+      if (fullscreenOrigin) {
+        window.scrollTo(fullscreenOrigin.x, fullscreenOrigin.y);
+        fullscreenOrigin.focus?.focus?.({ preventScroll: true });
+        fullscreenOrigin = null;
+      }
     }
+    updateViewportHeight();
+    handleResize();
+  }
+  async function toggleFullscreen() {
+    if (isFullscreen()) {
+      if (document.fullscreenElement === stage) await document.exitFullscreen().catch(() => {});
+      stage.classList.remove("is-puzzle-fullscreen");
+    } else {
+      fullscreenOrigin = { x: scrollX, y: scrollY, focus: document.activeElement };
+      try {
+        if (!stage.requestFullscreen) throw new Error("No native fullscreen");
+        await stage.requestFullscreen();
+      } catch (_) { stage.classList.add("is-puzzle-fullscreen"); }
+    }
+    fullscreenUi();
   }
 
   function handleResize() {
+    updateViewportHeight();
     window.clearTimeout(state.resizeTimer);
     state.resizeTimer = window.setTimeout(() => {
-      if (!state.ready) return;
+      if (!state.ready || disposed) return;
+      const rect = els.canvasWrap.getBoundingClientRect();
+      if (Math.abs(state.cssWidth - rect.width) < 0.5 && Math.abs(state.cssHeight - rect.height) < 0.5) return;
+      const saved = snapshotState();
+      cancelGesture();
       fitCanvas();
       rebuildGeometry();
-      const piece = currentPiece();
-      if (piece && !piece.locked) placePieceInTray(piece.index);
-      centerView();
-    }, 140);
+      restorePositions(saved);
+      drawAll(true);
+      void checkpoint();
+    }, 60);
   }
 
-  function unlockSelectors() {
-    els.mode.disabled = seminarContext;
-    els.subject.disabled = false;
-    els.country.disabled = false;
-    els.difficulty.disabled = false;
+  function lifecycleSave() {
+    pauseTimer();
+    cancelGesture();
+    void checkpoint();
   }
-
-  els.mode.addEventListener("change", updateDependentFields);
-  els.modeCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      if (seminarContext) return;
-      if (state.started && !state.finished && state.placed > 0) {
-        const proceed = window.confirm(tr("Текущая попытка будет прервана при загрузке другой карты. Продолжить?"));
-        if (!proceed) return;
-      }
-      els.mode.value = card.dataset.puzzleMode;
-      updateDependentFields();
-      card.focus();
+  function onVisible() {
+    if (document.hidden) lifecycleSave();
+    else if (state.timerStarted && !state.finished && writable()) startTimerIfNeeded();
+    else if (!writable()) void root.puzzleProgress?.takeControl?.();
+  }
+  function writerChange(event) {
+    if (!event.detail?.writable) { pauseTimer(); cancelGesture(); setControlsEnabled(false); return; }
+    if (event.detail.restore) void startGame({ resume: event.detail.restore });
+    else { setControlsEnabled(state.ready); if (state.timerStarted) startTimerIfNeeded(); }
+  }
+  on(els.mode, "change", () => void requestGame());
+  els.modeCards.forEach(card => on(card, "click", () => {
+    if (seminarContext) return;
+    const mode = card.dataset.puzzleMode;
+    void requestGame({ mode, difficulty: els.difficulty.value, selection: state.selections[mode] || (mode === "country-regions" ? "USA" : null) });
+  }));
+  on(els.subject, "change", () => void requestGame());
+  on(els.country, "change", () => void requestGame());
+  els.difficulties.forEach(button => {
+    on(button, "click", () => { const settings = selectedSettings(); settings.difficulty = button.dataset.puzzleDifficulty; void requestGame(settings); });
+    on(button, "keydown", event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const index = els.difficulties.indexOf(button);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? 2 : (index + (event.key === "ArrowRight" ? 1 : 2)) % 3;
+      els.difficulties[next].focus();
+      els.difficulties[next].click();
     });
   });
-  els.start.addEventListener("click", () => void startGame());
-  els.startDuplicates.forEach((button) => button.addEventListener("click", () => void startGame()));
-  els.reset.addEventListener("click", () => {
-    unlockSelectors();
-    void startGame({ reuseDataset: true });
-  });
-  els.center.addEventListener("click", centerView);
-  els.zoomIn.addEventListener("click", () => zoomAt(1.22, state.cssWidth / 2, state.mapBottom / 2));
-  els.zoomOut.addEventListener("click", () => zoomAt(1 / 1.22, state.cssWidth / 2, state.mapBottom / 2));
-  els.returnPiece.addEventListener("click", returnCurrentPiece);
-  els.hint.addEventListener("click", showHint);
-  els.fullscreen.addEventListener("click", () => void toggleFullscreen());
-  els.canvas.addEventListener("pointerdown", pointerDown);
-  els.canvas.addEventListener("pointermove", pointerMove);
-  els.canvas.addEventListener("pointerup", pointerEnd);
-  els.canvas.addEventListener("pointercancel", pointerEnd);
-  els.canvas.addEventListener("wheel", wheel, { passive: false });
-  els.canvas.addEventListener("keydown", keyDown);
-  els.playAgain.addEventListener("click", () => {
-    els.resultDialog.close();
-    unlockSelectors();
-    void startGame({ reuseDataset: true });
-  });
-  els.resultBack.addEventListener("click", (event) => {
+  on(els.reset, "click", () => void requestGame({ mode: state.mode, selection: state.selection, difficulty: state.difficulty }, true));
+  on(els.center, "click", centerView);
+  on(els.zoomIn, "click", () => zoomAt(1.22, state.cssWidth / 2, state.mapBottom / 2));
+  on(els.zoomOut, "click", () => zoomAt(1 / 1.22, state.cssWidth / 2, state.mapBottom / 2));
+  on(els.returnPiece, "click", returnCurrentPiece);
+  on(els.hint, "click", showHint);
+  on(els.fullscreen, "click", () => void toggleFullscreen());
+  on(els.canvas, "pointerdown", pointerDown);
+  on(els.canvas, "pointermove", pointerMove);
+  on(els.canvas, "pointerup", pointerEnd);
+  on(els.canvas, "pointercancel", pointerCancel);
+  on(els.canvas, "lostpointercapture", pointerCancel);
+  on(els.canvas, "wheel", wheel, { passive: false });
+  on(els.canvas, "keydown", keyDown);
+  on(els.playAgain, "click", () => void requestGame({ mode: state.mode, selection: state.selection, difficulty: state.difficulty }, true));
+  on(els.resultBack, "click", event => {
     if (root.dataset.native !== "true") return;
     event.preventDefault();
     els.resultDialog.close();
   });
-  els.closeResult.addEventListener("click", () => {
+  on(els.closeResult, "click", () => {
     els.resultDialog.close();
     if (root.dataset.native === "true") window.location.hash = "dashboard";
-    else window.top.location.href = "../index.html#dashboard";
+    else window.location.href = "../index.html#dashboard";
   });
-  window.addEventListener("resize", handleResize);
-  document.addEventListener("fullscreenchange", handleResize);
-  window.addEventListener('pagehide',checkpoint);
-
+  on(document, "keydown", event => { if (event.key === "Escape" && stage.classList.contains("is-puzzle-fullscreen") && !els.resultDialog.open) { event.preventDefault(); void toggleFullscreen(); } });
+  on(window, "resize", handleResize);
+  on(window.visualViewport, "resize", handleResize);
+  on(document, "fullscreenchange", fullscreenUi);
+  on(window, "pagehide", lifecycleSave);
+  on(document, "visibilitychange", onVisible);
+  on(document, "freeze", lifecycleSave);
+  on(window, "pageshow", onVisible);
+  on(window, "online", () => { if (retryLoad) void startGame(retryLoad); });
+  on(root, "puzzle:writerchange", writerChange);
+  on(root, "puzzle:storage-warning", storageNotice);
+  const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(handleResize) : null;
+  resizeObserver?.observe(els.canvasWrap);
   updateDependentFields();
   updateUi();
   state.animationFrame = requestAnimationFrame(tick);
-  if(root.puzzleProgress?.restore?.started)void startGame({resume:root.puzzleProgress.restore});
+  const restored = root.puzzleProgress?.restore;
+  if (restored?.started) { state.selections = { ...restored.selections }; void startGame({ resume: restored }); }
+  else void startGame({ desired: { mode: "russia-subjects", difficulty: "medium", selection: null } });
   return () => {
-    void checkpoint();
+    lifecycleSave();
+    disposed = true;
+    ++loadGeneration;
+    activeLoad?.abort();
+    clearTimeout(hintTimer);
+    clearTimeout(checkpointTimer);
+    clearTimeout(state.retryTimer);
     cancelAnimationFrame(state.animationFrame);
     cancelAnimationFrame(state.drawFrame);
     window.clearTimeout(state.resizeTimer);
     window.clearTimeout(toast.timer);
-    window.removeEventListener("resize", handleResize);
-    document.removeEventListener("fullscreenchange", handleResize);
-    window.removeEventListener('pagehide',checkpoint);
-    if (document.fullscreenElement?.closest?.(".puzzle-stage-card")) void document.exitFullscreen().catch(() => {});
+    resizeObserver?.disconnect();
+    listeners.forEach(remove => remove());
+    stage.classList.remove("is-puzzle-fullscreen");
+    document.body.classList.remove("puzzle-fullscreen-active");
+    for (const [element, inert] of inertSiblings) element.inert = inert;
+    if (document.fullscreenElement === stage) void document.exitFullscreen().catch(() => {});
   };
   };
 
   let cleanup=null;
   let destroyed=false;
-  const initialise=()=>{if(!destroyed)cleanup=initialisePuzzle()};
-  if (window.RUDNI18N?.ready) {
-    window.RUDNI18N.ready.then(initialise).catch(initialise);
-  } else {
-    initialise();
-  }
+  let initialised = false;
+  const initialise = () => { if (!destroyed && !initialised) { initialised = true; cleanup = initialisePuzzle(); } };
+  Promise.all([window.RUDNI18N?.ready, root?.puzzleReady]).then(initialise).catch(error => { console.error("Puzzle initialization failed", error); });
   return ()=>{destroyed=true;cleanup?.()};
   };
 

@@ -1,17 +1,17 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {CONFIG} from './config.js?v=1.3.5';
-import {backend,groupOptions} from './backend.js?v=1.3.5';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.5';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.5';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.5';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.5';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.5';
-import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.5';
-import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.5';
+import {CONFIG} from './config.js?v=1.3.6';
+import {backend,groupOptions} from './backend.js?v=1.3.6';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.6';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.6';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.6';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.6';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.6';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.6';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.6';
 import {durableStore} from './durable-store.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.5';
-import {openAccount,mountProfile} from './account.js?v=1.3.5';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.6';
+import {openAccount,mountProfile} from './account.js?v=1.3.6';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
 
 const app = document.getElementById('app');
@@ -681,7 +681,7 @@ async function getPuzzleFragment(){
     const toastNode=documentCopy.getElementById('puzzleToast');
     const resultDialog=documentCopy.getElementById('puzzleResultDialog');
     if(!main||!toastNode||!resultDialog)throw new Error('Puzzle component markup is incomplete.');
-    return `${main.innerHTML}${toastNode.outerHTML}${resultDialog.outerHTML}`;
+    return `${main.innerHTML}${toastNode.outerHTML}${main.contains(resultDialog)?'':resultDialog.outerHTML}`;
   });
   return puzzleFragmentPromise;
 }

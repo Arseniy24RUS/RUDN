@@ -56,11 +56,71 @@
     "tolerance": 0.0021583143830962073
   },
   {
+    "iso": "HUN",
+    "features": 20,
+    "source_size": 264300,
+    "size": 352849,
+    "tolerance": 0,
+    "sha256": "1a42030c5a8d5ffc5e81e9ff476cd0350a0e3a846b234dad2c65d6efe3103a90",
+    "source": "geoBoundaries gbOpen; original source data and reviewed administrative units",
+    "license": "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "year": "2011",
+    "provenance": {
+      "reviewedAt": "2026-09-16",
+      "originalReportedFeatures": 20,
+      "publishedFeatures": 19,
+      "correction": "Restore Budapest from original source SHP; subtract its exact polygon from Pest to keep administrative units disjoint.",
+      "sourceUrls": [
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/5c25134028196d43ce97b5071934fd0cfc92f09f/sourceData/gbOpen/HUN_ADM1.zip",
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/HUN/ADM1/geoBoundaries-HUN-ADM1_simplified.geojson"
+      ],
+      "sourceHashes": {
+        "sourceZipSha256": "ff18292a5d1d76ee8d805c45ed6e718465fe1ae1e49d780a5b01dfb1cb1dd318",
+        "publishedGeoJSONSha256": "b7ccb4f9b7e8ffff95edd9f74a4f6cdee026cc3f4317d3aa917512888c9eab24"
+      },
+      "officialReferences": [
+        "https://www.ksh.hu/regional-data"
+      ],
+      "coverageSymmetricDifferenceArea": 0.0,
+      "tools": "pyshp 3.1.4 (WGS84 SHP), Shapely 2.1.2 exact set operations; no simplification"
+    }
+  },
+  {
     "iso": "IND",
     "features": 36,
     "source_size": 5103747,
     "size": 1106947,
     "tolerance": 0.006025520839583946
+  },
+  {
+    "iso": "IRN",
+    "features": 31,
+    "source_size": 2734212,
+    "size": 1044508,
+    "tolerance": 0,
+    "sha256": "bd6e9b8489d6775e7bc0ccd82b12a026fc1055031e9e57ddc012c1d72fdc52e1",
+    "source": "geoBoundaries gbOpen; original source data and reviewed administrative units",
+    "license": "Open Data Commons Open Database License 1.0",
+    "year": "2017",
+    "provenance": {
+      "reviewedAt": "2026-09-16",
+      "originalReportedFeatures": 33,
+      "publishedFeatures": 32,
+      "correction": "Union the two adjacent, non-overlapping published Mazandaran features into one province. Preserve the complete published geographic footprint and all other provinces.",
+      "sourceUrls": [
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/5c25134028196d43ce97b5071934fd0cfc92f09f/sourceData/gbOpen/IRN_ADM1.zip",
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/IRN/ADM1/geoBoundaries-IRN-ADM1_simplified.geojson"
+      ],
+      "sourceHashes": {
+        "sourceZipSha256": "dc795664719368e98f359e57cdd6942dc1b8ae1fd0c2f8cc402a430a7c04ab32",
+        "publishedGeoJSONSha256": "bed64f34847d707d6448d11afed74e87b594b37edd61c77622746c54efd3d970"
+      },
+      "officialReferences": [
+        "https://www.tresor.economie.gouv.fr/Pays/IR/provinces-iraniennes"
+      ],
+      "coverageSymmetricDifferenceArea": 0.0,
+      "tools": "pyshp 3.1.4 (WGS84 SHP), Shapely 2.1.2 exact set operations; no simplification"
+    }
   },
   {
     "iso": "ITA",
@@ -91,11 +151,71 @@
     "tolerance": 0.005215216377004169
   },
   {
+    "iso": "TKM",
+    "features": 6,
+    "source_size": 151884,
+    "size": 52965,
+    "tolerance": 0,
+    "sha256": "75b6c99d2ee80dfbdb93ecec08aa1d1ecd89d6e93e5f94fda21ffbc0b44ba361",
+    "source": "geoBoundaries gbOpen; original source data and reviewed administrative units",
+    "license": "Public Domain",
+    "year": "2007",
+    "provenance": {
+      "reviewedAt": "2026-09-16",
+      "originalReportedFeatures": 6,
+      "publishedFeatures": 5,
+      "correction": "Restore Ashgabat from original source SHP; subtract its exact polygon from Ahal. Preserve the source 2007 division (five velayats plus Ashgabat), not a claim of 2026 boundaries.",
+      "sourceUrls": [
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/5c25134028196d43ce97b5071934fd0cfc92f09f/sourceData/gbOpen/TKM_ADM1.zip",
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/TKM/ADM1/geoBoundaries-TKM-ADM1_simplified.geojson"
+      ],
+      "sourceHashes": {
+        "sourceZipSha256": "20751eef4045f9d6598c7467d91bc692a48e2a75225e434d4506a94eca2ecb0c",
+        "publishedGeoJSONSha256": "80a91019672683bc6b882722330bd4731b072ff7c0343b28bc752f812da1a8ae"
+      },
+      "officialReferences": [
+        "https://www.stat.gov.tm/population-census-pdfs/results/en/6.pdf"
+      ],
+      "coverageSymmetricDifferenceArea": 0.0,
+      "tools": "pyshp 3.1.4 (WGS84 SHP), Shapely 2.1.2 exact set operations; no simplification"
+    }
+  },
+  {
     "iso": "TUR",
     "features": 81,
     "source_size": 1559408,
     "size": 634032,
     "tolerance": 0.0028801256653733227
+  },
+  {
+    "iso": "XKX",
+    "features": 7,
+    "source_size": 3030622,
+    "size": 76355,
+    "tolerance": 0,
+    "sha256": "98482992d296358489d5f5e070e3d62e6d6b8573a1f0ac6769fb5fce1e69b5c8",
+    "source": "geoBoundaries gbOpen; original source data and reviewed administrative units",
+    "license": "Creative Commons Attribution-ShareAlike 2.0",
+    "year": "2021",
+    "provenance": {
+      "reviewedAt": "2026-09-16",
+      "originalReportedFeatures": 48,
+      "publishedFeatures": 7,
+      "correction": "Keep the seven published districts. The original source count 48 mixes seven districts, 38 municipalities and three protected areas; it is not the ADM1 piece count.",
+      "sourceUrls": [
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/5c25134028196d43ce97b5071934fd0cfc92f09f/sourceData/gbOpen/XKX_ADM1.zip",
+        "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/XKX/ADM1/geoBoundaries-XKX-ADM1_simplified.geojson"
+      ],
+      "sourceHashes": {
+        "sourceZipSha256": "eb40f2c59bb6722fc4df49f0546d78dde080f0deb45a2ecd51a2d185ba58690b",
+        "publishedGeoJSONSha256": "f0976bb034347f9f6e41ad76a0fdb1586465a5df3120ff2c43feaa7670bc593c"
+      },
+      "officialReferences": [
+        "https://gzk.rks-gov.net/ActDocumentDetail.aspx?ActID=16114"
+      ],
+      "coverageSymmetricDifferenceArea": 0.0,
+      "tools": "pyshp 3.1.4 (WGS84 SHP), Shapely 2.1.2 exact set operations; no simplification"
+    }
   },
   {
     "iso": "ZAF",

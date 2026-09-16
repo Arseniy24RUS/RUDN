@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.5-durable-copyfix-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.6-puzzle-3`;
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -83,32 +83,33 @@ const SHELL=[
   './apps/reception/style.css?v=1.0.1',
   './apps/reception/platform.css?v=1.0.1',
   './','./index.html','./apps/puzzle.html',
-  './assets/css/site.css?v=1.3.5',
-  './assets/css/puzzle.css?v=1.2.2',
-  './assets/js/main.js?v=1.3.5',
+  './assets/css/site.css?v=1.3.6',
+  './assets/css/puzzle.css?v=1.3.6',
+  './assets/js/main.js?v=1.3.6',
   './assets/js/career-course.js',
   './assets/js/durable-store.js',
   './assets/js/checkpoint-sync.js',
   './assets/js/firebase-rest.js',
   './assets/js/form-draft.js',
   './assets/js/governor-report-locale.js',
-  './assets/js/backend.js?v=1.3.5',
-  './assets/js/session.js?v=1.3.5',
-  './assets/js/attempt-session.js?v=1.3.5',
-  './assets/js/notifications.js?v=1.3.5',
-  './assets/js/account.js?v=1.3.5',
-  './assets/js/teacher-journal.js?v=1.3.5',
+  './assets/js/backend.js?v=1.3.6',
+  './assets/js/session.js?v=1.3.6',
+  './assets/js/attempt-session.js?v=1.3.6',
+  './assets/js/notifications.js?v=1.3.6',
+  './assets/js/account.js?v=1.3.6',
+  './assets/js/teacher-journal.js?v=1.3.6',
   './assets/vendor/firebase/firebase-core.js',
   './assets/vendor/firebase/firebase-storage.js',
   './assets/vendor/firebase/firebase-shared.js',
-  './assets/js/grading-revisions.js?v=1.3.5',
-  './assets/js/config.js?v=1.3.5',
-  './assets/js/i18n.js?v=1.3.5',
-  './assets/js/quiz.js?v=1.3.5',
-  './assets/js/adaptive-quiz.js?v=1.3.5',
-  './assets/js/access.js?v=1.3.5',
-  './assets/js/puzzle-bootstrap.js?v=1.3.5',
-  './assets/js/puzzle-engine.js?v=1.3.5',
+  './assets/js/grading-revisions.js?v=1.3.6',
+  './assets/js/config.js?v=1.3.6',
+  './assets/js/i18n.js?v=1.3.6',
+  './assets/js/quiz.js?v=1.3.6',
+  './assets/js/adaptive-quiz.js?v=1.3.6',
+  './assets/js/access.js?v=1.3.6',
+  './assets/js/puzzle-bootstrap.js?v=1.3.6',
+  './assets/js/puzzle-engine.js?v=1.3.6',
+  './assets/js/puzzle-storage.js?v=1.3.6',
   './assets/puzzle/vendor/d3.v7.9.0.min.js',
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
@@ -360,8 +361,20 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/styles.css",
   "./apps/governor/world.css"
 ];
+const PUZZLE_SHELL=[
+  './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.6',
+  './assets/js/puzzle-bootstrap.js?v=1.3.6','./assets/js/puzzle-engine.js?v=1.3.6',
+  './assets/js/puzzle-storage.js?v=1.3.6','./assets/js/durable-store.js?v=1.3.6',
+  './assets/puzzle/vendor/d3.v7.9.0.min.js','./assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
+  './assets/puzzle/data/municipal/catalog.json','./assets/puzzle/data/adm1/manifest.json',
+  './assets/puzzle/data/geoboundaries_adm1_catalog.json',
+  './data/legacy-en.json','./data/legacy-zh.json'
+];
 const PRECACHE=[...SHELL,...CAREER_SHELL,...GOVERNOR_ASSETS];
-// Optional modules must not delay an install or invalidate the basic platform.
+// The puzzle entry and catalogs must survive the first offline navigation after
+// an update. Its scripts already belong to the platform shell; prepare the whole
+// small entry pack before activation so a new release cannot strand a saved game.
+// Other optional modules remain lazy.
 const CORE_SHELL=SHELL.filter(path=>!/^\.\/apps\//.test(path)&&!path.includes('/calendars/')&&!path.includes('/calendar-')&&!path.includes('/legal-calendar')&&!path.includes('/previews/')&&!path.includes('firebase-storage'));
 
 async function fetchWithDeadline(request,timeout=12000){
@@ -396,7 +409,7 @@ async function prepareResources(paths,{required=false,cacheName=CACHE}={}){
 
 self.addEventListener('install',event=>{
   event.waitUntil(
-    prepareResources(CORE_SHELL,{required:true})
+    prepareResources([...CORE_SHELL,...PUZZLE_SHELL],{required:true})
       .then(()=>self.skipWaiting())
   );
 });
@@ -522,7 +535,7 @@ self.addEventListener('message',event=>{
   }
   if(event.data?.type!=='PREPARE_MODULE')return;
   const module=event.data.module;
-  const paths=module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
+  const paths=module==='puzzle'?PUZZLE_SHELL:module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
   const extras=Array.isArray(event.data.urls)?event.data.urls.slice(0,250).filter(url=>typeof url==='string'):[];
   event.waitUntil((async()=>{
     const cacheName=inScopeClient(event.source)?await clientRelease(event.source.id)||CACHE:CACHE;

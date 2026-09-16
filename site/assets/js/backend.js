@@ -1,9 +1,10 @@
-import {CONFIG} from './config.js?v=1.3.5';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.5';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.5';
+import {CONFIG} from './config.js?v=1.3.6';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.6';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.6';
 import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
+import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.6';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -104,7 +105,10 @@ class Backend{
         this.authClient=authMod.initializeAuth(app,{persistence:[authMod.indexedDBLocalPersistence,authMod.browserLocalPersistence]});
         this.database=dbMod.getDatabase(app);
         if(CONFIG.emulators){authMod.connectAuthEmulator(this.authClient,CONFIG.emulators.auth,{disableWarnings:true});dbMod.connectDatabaseEmulator(this.database,CONFIG.emulators.host,CONFIG.emulators.databasePort)}
-        await this.authClient.authStateReady();
+        // An unavailable browser auth store must not block local course work.
+        // The listener below still reconciles the eventual identity; writes are
+        // owner-scoped and cloud delivery waits for an authenticated session.
+        await bounded(this.authClient.authStateReady(),4000).catch(()=>{});
         this.authReady=true;this.user=this.authClient.currentUser;
         this.authUnsubscribe=authMod.onAuthStateChanged(this.authClient,user=>this.handleAuthUser(user));
         this.connectionUnsubscribe=dbMod.onValue(dbMod.ref(this.database,'.info/connected'),snap=>{
@@ -234,6 +238,11 @@ class Backend{
             active,signal,attachments
           });
           if(!active())throw serviceError('auth/profile-changed');
+          // This delivery belongs to the same immutable queued attempt. Do not
+          // acknowledge it before both the grade and public result are durable.
+          if(attempt.type==='map-puzzle'&&attempt.leaderboard){
+            await commitPuzzleLeaderboard(this.puzzleLeaderboardTransport(),attempt.id,attempt.leaderboard,{signal,active});
+          }
           try{
             storeAttempt(result);
             deleteState(pendingStorageKey(result));
@@ -619,37 +628,44 @@ class Backend{
     }
   }
 
-  async savePuzzleLeaderboardResult({difficulty,timeMs,placed,total}){
-    if(!this.profile||this.mode!=='cloud'||!this.db||!this.database)return null;
+  puzzleLeaderboardTransport(){
+    if(!this.puzzleResultsClient)this.puzzleResultsClient=createFirebaseRestTransport({
+      databaseURL:CONFIG.emulators?`http://${CONFIG.emulators.host}:${CONFIG.emulators.databasePort}`:CONFIG.firebase.databaseURL,
+      namespace:CONFIG.emulators?'demo-rudn-default-rtdb':null,rootPath:'results',
+      getUser:()=>this.user,getGeneration:()=>this.generation
+    });
+    return this.puzzleResultsClient;
+  }
+  puzzleLeaderboardRecord({difficulty,timeMs,placed,total,timestamp=Date.now()},profile=this.getProfile()){
+    if(!profile)return null;
     const level=['easy','medium','hard'].includes(difficulty)?difficulty:'medium';
     const measuredTime=Math.max(0,Math.min(3599000,Math.round(Number(timeMs)||0)));
     if(measuredTime<=1000)return null;
     const record={
-      fio:String(this.profile.fullName||'').slice(0,100),
-      group:String(this.profile.group||'').slice(0,50),
+      fio:String(profile.fullName||'').slice(0,100),
+      group:String(profile.group||'').slice(0,50),
       difficulty:level,
       time_ms:measuredTime,
       placed:Number(placed),total:Number(total),
-      timestamp:this.db.serverTimestamp(),
+      timestamp:Number(timestamp)||Date.now(),
       user_agent:String(navigator.userAgent||'browser').slice(0,200)
     };
     if(record.placed!==89||record.total!==89)return null;
-    const resultRef=this.db.push(this.db.ref(this.database,'results'));
-    await this.db.set(resultRef,record);
-    return {...record,id:resultRef.key,timestamp:Date.now()};
+    return record;
   }
   async getPuzzleLeaderboard(){
     try{
       if(this.mode==='cloud'&&this.db&&this.database){
-        const snapshot=await this.db.get(this.db.ref(this.database,'results'));
+        const snapshot=await bounded(this.db.get(this.db.ref(this.database,'results')),4000);
         return Object.entries(snapshot.val()||{}).map(([id,value])=>({id,...value}));
       }
       const url=`${String(CONFIG.firebase.databaseURL).replace(/\/$/,'')}/results.json`;
-      const response=await fetch(url,{cache:'no-store'});
+      const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),5000);
+      let response;try{response=await fetch(url,{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timer)}
       if(!response.ok)throw new Error(`HTTP ${response.status}`);
       const value=await response.json();
       return Object.entries(value||{}).map(([id,row])=>({id,...row}));
-    }catch(error){console.warn('Leaderboard unavailable',error);return []}
+    }catch{return []}
   }
 
   automaticRoomKey(group,date=new Date()){return automaticRoomKey(group,date)}
