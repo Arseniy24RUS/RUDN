@@ -19,6 +19,8 @@ const expected = {
   en: ['Opening public reception…', 'Unable to open public reception', 'Your saved answers remain on this device.', 'Retry loading'],
   zh: ['正在打开公众接待室…', '无法打开公众接待室', '已保存的答案仍保留在本设备上。', '重新加载'],
 };
+const entryCases = Object.keys(expected).flatMap(locale =>
+  ['direct', 'shell'].map(entryMode => ({ locale, entryMode })));
 const fakeBackend = `
 export const groupOptions = () => Array.from({length:6}, (_, i) => 'ГГУбд-0'+(i+1)+'-26');
 export const backend = {
@@ -33,7 +35,7 @@ export const backend = {
   for (const engine of (process.env.DURABLE_TEST_BROWSERS || 'chromium,webkit').split(',')) {
     const browser = await playwright[engine].launch({ headless: true });
     try {
-      for (const locale of ['ru', 'en', 'zh']) {
+      for (const { locale, entryMode } of entryCases) {
         const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
         const page = await context.newPage();
         const errors = [], external = [];
@@ -62,12 +64,26 @@ export const backend = {
           return route.continue();
         });
         try {
+          if (entryMode === 'shell') {
+            // Finish the real shell's document/font lifecycle before deliberately
+            // holding a module request. WebKit screenshots await fonts.ready;
+            // holding an initial-load request can deadlock that screenshot wait.
+            await page.goto(base + '#dashboard', { waitUntil: 'load' });
+            await page.locator('a[href="#activity/seminar-5"]').first().waitFor();
+            assert.equal(await page.locator('#topName').innerText(), 'Synthetic Entry QA');
+            await page.evaluate(() => document.fonts.ready);
+            assert.equal(importRequests, 0, 'Shell does not preload Reception');
+          }
           await page.goto(base + '#activity/seminar-5', { waitUntil: 'domcontentloaded' });
           assert.equal(new URL(page.url()).hash, '#activity/seminar-5');
           await page.locator('#receptionMount[aria-busy="true"] [role="status"]').waitFor();
           assert.equal(await page.locator('#receptionMount [role="status"]').innerText(), expected[locale][0]);
           assert.equal(await page.locator('#topName').innerText(), 'Synthetic Entry QA');
-          await page.screenshot({ path: path.join(output, `${engine}-${locale}-loading.png`) });
+          if (entryMode === 'shell') {
+            await page.screenshot({ path: path.join(output, `${engine}-${locale}-loading.png`) });
+          }
+          // The direct-link case still asserts the same delayed loading DOM.
+          // Release its request before taking a screenshot so initial load can finish.
           releaseImport();
           await page.locator('#receptionMount[aria-busy="false"] #receptionRetry').waitFor();
           assert.deepEqual(await page.locator('#receptionMount [role="alert"]').evaluate(el => [
@@ -82,8 +98,10 @@ export const backend = {
           assert.equal(importRequests, 1, 'One delayed import, no repeated background loads');
           assert.deepEqual(errors, [], 'No unexpected JavaScript errors');
           assert.deepEqual(external, [], 'No access to production or third-party services');
-          await page.screenshot({ path: path.join(output, `${engine}-${locale}-failure.png`) });
-          console.log(`PASS ${engine}/${locale}: real platform loading and import-error copy is localized.`);
+          await page.waitForLoadState('load');
+          const failureSuffix = entryMode === 'direct' ? '-direct' : '';
+          await page.screenshot({ path: path.join(output, `${engine}-${locale}${failureSuffix}-failure.png`) });
+          console.log(`PASS ${engine}/${locale}/${entryMode}: real platform loading and import-error copy is localized.`);
         } finally {
           releaseImport();
           await context.close();
