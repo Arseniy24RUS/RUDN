@@ -5,6 +5,7 @@ import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
 import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.8';
+import {puzzleLeaderboardAttemptId} from './student-identity.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -241,7 +242,7 @@ class Backend{
           // This delivery belongs to the same immutable queued attempt. Do not
           // acknowledge it before both the grade and public result are durable.
           if(attempt.type==='map-puzzle'&&attempt.leaderboard){
-            await commitPuzzleLeaderboard(this.puzzleLeaderboardTransport(),attempt.id,attempt.leaderboard,{signal,active});
+            await commitPuzzleLeaderboard(this.puzzleLeaderboardTransport(),puzzleLeaderboardAttemptId(attempt),attempt.leaderboard,{signal,active});
           }
           try{
             storeAttempt(result);

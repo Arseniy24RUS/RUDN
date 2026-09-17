@@ -193,6 +193,7 @@ jobs:
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node --test scripts/puzzle_storage_order_test.mjs
+          node --test scripts/puzzle_identity_leaderboard_test.mjs
           node scripts/puzzle_storage_test.mjs
           DURABLE_TEST_BROWSERS=chromium,firefox,webkit QA_OUT="${{ runner.temp }}/puzzle-storage-recovery" node scripts/puzzle_storage_recovery_test.mjs
       - name: Verify immutable results and retry against Firebase emulators

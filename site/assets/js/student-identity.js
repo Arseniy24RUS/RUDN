@@ -2,6 +2,29 @@
 export const officialTicket = profile => profile?.officialTicket || profile?.ticket || '';
 export const mergedRecordId = (sourceKey, id) => `merged-${sourceKey}-${id}`;
 
+/** Public puzzle results keep their first delivery key when private owners merge. */
+export function puzzleLeaderboardAttemptId(attempt) {
+  let id = attempt?.leaderboardAttemptId ?? attempt?.id;
+  const source = attempt?.mergedFrom;
+  if (attempt?.leaderboardAttemptId == null && /^\d{5,20}$/.test(source?.studentKey || '') &&
+      id === mergedRecordId(source.studentKey, source.attemptId)) {
+    // Recover the exact recorded source of a legacy migration. A valid public
+    // ID can itself start with "merged-", so never infer deeper ancestry from it.
+    id = source.attemptId;
+  }
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_-]{1,150}$/.test(id)) {
+    throw Object.assign(new TypeError('Invalid puzzle leaderboard attempt ID'), {code: 'database/invalid-attempt-id'});
+  }
+  return id;
+}
+
+/** Invalid local receipts stay durable, but cannot prevent public rows rendering. */
+export function puzzleLeaderboardLocalResult(attempt) {
+  if (attempt?.type !== 'map-puzzle' || !attempt.leaderboard) return null;
+  try { return {...attempt.leaderboard, id: puzzleLeaderboardAttemptId(attempt), pending: true}; }
+  catch { return null; } // Delivery still applies the strict identifier validator.
+}
+
 export function rekeyStudentValue(value, {from, to, ids = {}}) {
   const visit = (item, field = '') => {
     if (typeof item === 'string') {
@@ -15,7 +38,15 @@ export function rekeyStudentValue(value, {from, to, ids = {}}) {
     }
     if (Array.isArray(item)) return item.map(child => visit(child, field));
     if (item && typeof item === 'object' && !(typeof Blob !== 'undefined' && item instanceof Blob)) {
-      return Object.fromEntries(Object.entries(item).map(([name, child]) => [name, visit(child, name)]));
+      const puzzleResult = item.type === 'map-puzzle' && item.leaderboard;
+      const next = Object.fromEntries(Object.entries(item).map(([name, child]) => [name,
+        // This JSON payload may already be public under append-only rules.
+        puzzleResult && name === 'leaderboard' ? JSON.parse(JSON.stringify(child)) : visit(child, name)]));
+      if (puzzleResult) {
+        try { next.leaderboardAttemptId = puzzleLeaderboardAttemptId(item); }
+        catch { /* Retain an unpublishable receipt without blocking the owner's other work. */ }
+      }
+      return next;
     }
     return item;
   };

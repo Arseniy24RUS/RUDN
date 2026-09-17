@@ -3,6 +3,7 @@ import {getLocale} from './i18n.js?v=1.3.8';
 import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.8';
 import {initNotifications} from './notifications.js?v=1.3.8';
 import {durableStore} from './durable-store.js?v=1.3.8';
+import {puzzleLeaderboardLocalResult} from './student-identity.js';
 import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.8';
 import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.8';
 let activePuzzleBridge=null;
@@ -264,7 +265,7 @@ async function refreshLeaderboard({cloud=true}={}){
   const owner=currentOwner(),localRevision=++leaderboardLocalRevision;
   const attempts=owner===progressOwner&&owner.startsWith('student:')?await durableStore.listAttempts({owner}).catch(()=>[]):[];
   if(disposed||leaderboardClosed||!root.isConnected||localRevision!==leaderboardLocalRevision)return;
-  leaderboardLocal=currentOwner()===owner?attempts.filter(attempt=>attempt.type==='map-puzzle'&&attempt.leaderboard).map(attempt=>({...attempt.leaderboard,id:attempt.id,pending:true})):[];
+  leaderboardLocal=currentOwner()===owner?attempts.map(puzzleLeaderboardLocalResult).filter(Boolean):[];
   renderLeaderboard();
   if(!cloud)return;
   if(leaderboardRefresh){leaderboardRetry=true;return leaderboardRefresh}
