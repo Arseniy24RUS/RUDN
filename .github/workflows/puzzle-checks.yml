@@ -192,6 +192,7 @@ jobs:
           PUZZLE_STORAGE_BROWSERS: chromium
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node --test scripts/puzzle_storage_order_test.mjs
           node scripts/puzzle_storage_test.mjs
       - name: Verify immutable results and retry against Firebase emulators
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/puzzle_storage_emulator_test.mjs"

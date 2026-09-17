@@ -134,7 +134,6 @@ export function createDurableStore(options = {}) {
       try { tx = db.transaction(names, write ? 'readwrite' : 'readonly'); }
       catch (error) { reject(error); return; }
       const changes = [];
-      let result;
       let actionError;
       const request = req => new Promise((ok, fail) => { req.onsuccess = () => ok(req.result); req.onerror = () => fail(req.error); });
       const adapter = {
@@ -152,12 +151,17 @@ export function createDurableStore(options = {}) {
         delete: async (table, id) => { await request(tx.objectStore(table).delete(id)); changes.push([table, id, undefined]); },
       };
       tx.oncomplete = () => {
-        for (const [table, id, value] of changes) value === undefined ? memory[table].delete(id) : memory[table].set(id, copy(value));
-        resolve(result);
+        // IDB completion and the action's promise continuations are separate
+        // signals. Wait for both before returning a value or mirroring reads.
+        actionResult.then(result => {
+          for (const [table, id, value] of changes) value === undefined ? memory[table].delete(id) : memory[table].set(id, copy(value));
+          resolve(result);
+        }).catch(reject);
       };
       tx.onabort = () => reject(actionError || tx.error || new Error('IDB transaction aborted'));
       tx.onerror = () => { /* Abort owns rejection. */ };
-      Promise.resolve().then(() => action(adapter)).then(value => { result = value; }).catch(error => {
+      const actionResult = Promise.resolve().then(() => action(adapter));
+      actionResult.catch(error => {
         actionError = error;
         try { tx.abort(); } catch { reject(error); }
       });

@@ -30,6 +30,38 @@ RENDER_HOOK = r"""
     return {differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples};
   };
   window.__rasterOracleProbe=(actual,expected)=>rasterPixelDifference(actual,expected,1);
+  const contextDetails=context=>({attributes:context.getContextAttributes?.(),transform:Array.from(context.getTransform().toFloat64Array()),
+    alpha:context.globalAlpha,composite:context.globalCompositeOperation,fill:context.fillStyle,stroke:context.strokeStyle,
+    width:context.lineWidth,join:context.lineJoin,cap:context.lineCap,miter:context.miterLimit,dash:context.getLineDash(),dashOffset:context.lineDashOffset,
+    shadow:[context.shadowColor,context.shadowBlur,context.shadowOffsetX,context.shadowOffsetY],filter:context.filter,smoothing:context.imageSmoothingEnabled});
+  const diagnoseRaster=async(source,actual,expected,paint)=>{
+    const width=source.width,height=source.height,sourceContext=source.getContext('2d'),results=[];
+    const stamp=document.createElement('canvas');stamp.width=stamp.height=4;stamp.getContext('2d').fillRect(0,0,4,4);
+    const bitmap=typeof createImageBitmap==='function'?await createImageBitmap(stamp):null;
+    const sourceBefore=contextDetails(sourceContext);
+    try{
+      for(const kind of ['fresh-repeat-1','fresh-repeat-2','fresh-context-before-size','fresh-cloned-path','fresh-cpu','reused-vector','reused-readback','reused-bitmap']){
+        const canvas=document.createElement('canvas');
+        let context=kind==='fresh-context-before-size'?canvas.getContext('2d',{alpha:true}):null;
+        canvas.width=width;canvas.height=height;
+        context=context||canvas.getContext('2d',kind==='fresh-cpu'?{alpha:true,willReadFrequently:true}:{alpha:true});
+        if(kind.startsWith('reused-')){
+          for(let n=0;n<5;n++){
+            canvas.height=0;canvas.width=width+n+1;canvas.height=height+n+1;
+            if(kind==='reused-bitmap'){context.drawImage(bitmap||stamp,0,0);}else paint(context,false);
+            if(kind==='reused-readback')context.getImageData(0,0,canvas.width,canvas.height);
+          }
+          canvas.height=0;canvas.width=width;canvas.height=height;
+        }
+        paint(context,kind==='fresh-cloned-path');
+        const first=context.getImageData(0,0,width,height).data;
+        const second=context.getImageData(0,0,width,height).data;
+        results.push({kind,context:contextDetails(context),versusActual:rasterPixelDifference(first,actual,width),
+          versusReference:rasterPixelDifference(first,expected,width),repeatRead:rasterPixelDifference(second,first,width)});
+      }
+      return {sourceContext:sourceBefore,sourceRepeat:rasterPixelDifference(sourceContext.getImageData(0,0,width,height).data,actual,width),cases:results};
+    }finally{bitmap?.close();}
+  };
   window.__backgroundPaints=0;
   const observedBackgroundFill=staticCtx.fill;
   staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};
@@ -45,17 +77,27 @@ RENDER_HOOK = r"""
     renderer:state.renderGeometry?.diagnostics(),baseViewK:state.baseViewK,
     features:state.features.map((feature,index)=>({id:feature.properties._puzzleId,name:feature.properties._puzzleName,
       russian:feature.properties.name_ru||feature.properties.name,point:worldToScreen(...state.anchors[index])}))});
-  window.__spriteAudit=()=>{
-    const sprite=activeSprite,piece=currentPiece(),paths=highResolutionPaths(piece.index);
+  window.__spriteAudit=async()=>{
+    const sprite={...activeSprite},piece={...currentPiece()},paths=highResolutionPaths(piece.index),expectedScale=state.view.k;
+    const fillRule=state.mode==='russia-subjects'?'nonzero':'evenodd';
     const canvas=document.createElement('canvas');canvas.width=sprite.canvas.width;canvas.height=sprite.canvas.height;
     const context=canvas.getContext('2d');context.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
     context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/sprite.scale;context.lineJoin=context.lineCap='round';
-    context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
+    context.fill(paths.path,fillRule);context.stroke(paths.strokePath);
     const actual=sprite.canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
     const expected=context.getImageData(0,0,canvas.width,canvas.height).data;
     const difference=rasterPixelDifference(actual,expected,canvas.width);
-    return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale:state.view.k,dpr:sprite.dpr,
-      pixels:canvas.width*canvas.height,bytes:actual.length,...difference,
+    let nativeDiagnostic=null;
+    if(difference.maximumAlphaDifference>1||difference.maximumPremultipliedDifference>1){
+      nativeDiagnostic=await diagnoseRaster(sprite.canvas,actual,expected,(target,clone)=>{
+        target.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
+        target.fillStyle='#dc3f45';target.strokeStyle='#8e2028';target.lineWidth=1.2/sprite.scale;target.lineJoin=target.lineCap='round';
+        target.fill(clone?new Path2D(paths.path):paths.path,fillRule);
+        target.stroke(clone?new Path2D(paths.strokePath):paths.strokePath);
+      });
+    }
+    return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
+      pixels:canvas.width*canvas.height,bytes:actual.length,...difference,nativeDiagnostic,referenceContext:contextDetails(context),
       featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
       source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
       preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
