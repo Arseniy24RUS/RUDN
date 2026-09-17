@@ -30,14 +30,26 @@ RENDER_HOOK = r"""
     return {differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples};
   };
   window.__rasterOracleProbe=(actual,expected)=>rasterPixelDifference(actual,expected,1);
+  const RASTER_POSITION_EPSILON=1e-4;
   const rasterPixelMatches=(a,b,i)=>Math.abs(a[i+3]-b[i+3])<=1&&[0,1,2].every(c=>Math.abs(a[i+c]*a[i+3]/255-b[i+c]*b[i+3]/255)<=1);
+  const rasterRoundoffTracker=(actual,expected)=>{
+    const critical=[],explained=new Set();for(let i=0;i<actual.length;i+=4)if(!rasterPixelMatches(actual,expected,i))critical.push(i);
+    let validCandidates=0;
+    return {addCandidate(pixels,dx,dy){
+      if(!Number.isFinite(dx)||!Number.isFinite(dy)||Math.hypot(dx,dy)>RASTER_POSITION_EPSILON||pixels.length!==actual.length)return [];
+      validCandidates++;
+      const matched=critical.filter(i=>rasterPixelMatches(actual,pixels,i));matched.forEach(i=>explained.add(i));return matched;
+    },summary(){return {criticalPixels:critical.length,explainedPixels:explained.size,unexplainedPixels:critical.length-explained.size,
+      maximumPhysicalTranslation:RASTER_POSITION_EPSILON,validCandidates};}};
+  };
+  window.__rasterMembershipProbe=(actual,expected,candidates)=>{const tracker=rasterRoundoffTracker(actual,expected);
+    for(const candidate of candidates)tracker.addCandidate(candidate.pixels,candidate.dx,candidate.dy);return tracker.summary();};
   const contextDetails=context=>({attributes:context.getContextAttributes?.(),transform:Array.from(context.getTransform().toFloat64Array()),
     alpha:context.globalAlpha,composite:context.globalCompositeOperation,fill:context.fillStyle,stroke:context.strokeStyle,
     width:context.lineWidth,join:context.lineJoin,cap:context.lineCap,miter:context.miterLimit,dash:context.getLineDash(),dashOffset:context.lineDashOffset,
     shadow:[context.shadowColor,context.shadowBlur,context.shadowOffsetX,context.shadowOffsetY],filter:context.filter,smoothing:context.imageSmoothingEnabled});
-  const diagnoseRaster=async(source,actual,expected,paint)=>{
-    const width=source.width,height=source.height,sourceContext=source.getContext('2d'),results=[],critical=[],explained=new Set();
-    for(let i=0;i<actual.length;i+=4)if(!rasterPixelMatches(actual,expected,i))critical.push(i);
+  const diagnoseRaster=async(source,actual,expected,paint,contextOptions={alpha:true})=>{
+    const width=source.width,height=source.height,sourceContext=source.getContext('2d'),results=[],roundoff=rasterRoundoffTracker(actual,expected);
     const stamp=document.createElement('canvas');stamp.width=stamp.height=4;stamp.getContext('2d').fillRect(0,0,4,4);
     const bitmap=typeof createImageBitmap==='function'?await createImageBitmap(stamp):null;
     const sourceBefore=contextDetails(sourceContext);
@@ -46,9 +58,9 @@ RENDER_HOOK = r"""
       for(const epsilon of [1e-7,1e-6,1e-5,1e-4])for(const axis of ['x','y'])for(const sign of [-1,1])kinds.push(`jitter:${axis}:${epsilon*sign}`);
       for(const kind of kinds){
         const canvas=document.createElement('canvas');
-        let context=kind==='fresh-context-before-size'?canvas.getContext('2d',{alpha:true}):null;
+        let context=kind==='fresh-context-before-size'?canvas.getContext('2d',contextOptions):null;
         canvas.width=width;canvas.height=height;
-        context=context||canvas.getContext('2d',kind==='fresh-cpu'?{alpha:true,willReadFrequently:true}:{alpha:true});
+        context=context||canvas.getContext('2d',kind==='fresh-cpu'?{alpha:true,willReadFrequently:true}:contextOptions);
         if(kind.startsWith('reused-')){
           for(let n=0;n<5;n++){
             canvas.height=0;canvas.width=width+n+1;canvas.height=height+n+1;
@@ -66,14 +78,13 @@ RENDER_HOOK = r"""
         }
         const first=context.getImageData(0,0,width,height).data;
         const second=context.getImageData(0,0,width,height).data;
-        const explainedPixels=jitter?critical.filter(i=>rasterPixelMatches(actual,first,i)):[];
-        explainedPixels.forEach(i=>explained.add(i));
+        const explainedPixels=jitter?roundoff.addCandidate(first,jitter[1]==='x'?Number(jitter[2]):0,jitter[1]==='y'?Number(jitter[2]):0):[];
         results.push({kind,context:contextDetails(context),versusActual:rasterPixelDifference(first,actual,width),
           versusReference:rasterPixelDifference(first,expected,width),repeatRead:rasterPixelDifference(second,first,width),
           explainedOriginalPixels:explainedPixels.map(i=>({x:(i/4)%width,y:Math.floor(i/4/width)}))});
       }
       return {sourceContext:sourceBefore,sourceRepeat:rasterPixelDifference(sourceContext.getImageData(0,0,width,height).data,actual,width),
-        roundoffProbe:{criticalPixels:critical.length,explainedPixels:explained.size,maximumPhysicalTranslation:1e-4},cases:results};
+        roundoffProbe:roundoff.summary(),cases:results};
     }finally{bitmap?.close();}
   };
   window.__backgroundPaints=0;
@@ -83,12 +94,14 @@ RENDER_HOOK = r"""
   ctx.drawImage=function(...args){if(args[0]===staticCanvas)window.__backgroundDraw={x:args[1],y:args[2],width:args[3],height:args[4]};return observedDrawImage.apply(this,args);};
   const observedPieceRaster=drawPieceRaster;
   window.__spriteSurfaces={replacements:0,unreleased:0};
-  window.__spriteRasterFlushes=0;
-  const observedRasterRead=CanvasRenderingContext2D.prototype.getImageData;
-  CanvasRenderingContext2D.prototype.getImageData=function(x,y,width,height,...args){
-    if(this.canvas===activeSprite.canvas&&width===1&&height===1)window.__spriteRasterFlushes++;
-    return observedRasterRead.call(this,x,y,width,height,...args);
-  };
+  window.__spritePaints={fill:0,stroke:0,bitmap:0};
+  for(const [method,kind] of [['fill','fill'],['stroke','stroke'],['drawImage','bitmap']]){
+    const original=CanvasRenderingContext2D.prototype[method];
+    CanvasRenderingContext2D.prototype[method]=function(...args){
+      if(this.canvas===activeSprite.canvas)window.__spritePaints[kind]++;
+      return original.apply(this,args);
+    };
+  }
   drawPieceRaster=function(...args){const canvas=activeSprite.canvas,path=activeSprite.path,scale=activeSprite.scale,left=activeSprite.left,top=activeSprite.top,hits=rasterPreparation.hits;
     const result=observedPieceRaster(...args);
     if(canvas!==activeSprite.canvas){window.__spriteSurfaces.replacements++;if(canvas.width||canvas.height)window.__spriteSurfaces.unreleased++;}
@@ -102,8 +115,11 @@ RENDER_HOOK = r"""
   window.__spriteAudit=async()=>{
     const sprite={...activeSprite},piece={...currentPiece()},paths=highResolutionPaths(piece.index),expectedScale=state.view.k;
     const fillRule=state.mode==='russia-subjects'?'nonzero':'evenodd';
+    // The worker requests a readback-optimized context; direct native paths keep
+    // their ordinary context. Backend differences are not coordinate roundoff.
+    const source=window.__spriteOrigin,referenceOptions=source==='worker'?{alpha:true,willReadFrequently:true}:{alpha:true};
     const canvas=document.createElement('canvas');canvas.width=sprite.canvas.width;canvas.height=sprite.canvas.height;
-    const context=canvas.getContext('2d');context.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
+    const context=canvas.getContext('2d',referenceOptions);context.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
     context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/sprite.scale;context.lineJoin=context.lineCap='round';
     context.fill(paths.path,fillRule);context.stroke(paths.strokePath);
     const actual=sprite.canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
@@ -116,15 +132,15 @@ RENDER_HOOK = r"""
         target.fillStyle='#dc3f45';target.strokeStyle='#8e2028';target.lineWidth=1.2/sprite.scale;target.lineJoin=target.lineCap='round';
         target.fill(clone?new Path2D(paths.path):paths.path,fillRule);
         target.stroke(clone?new Path2D(paths.strokePath):paths.strokePath);
-      });
+      },referenceOptions);
     }
     return {seed:state.seed,order:[...state.order],placed:state.placed,currentPath:sprite.path===paths.path,currentStrokePath:sprite.strokePath===paths.strokePath,
       currentFillRule:sprite.fillRule===fillRule,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
       pixels:canvas.width*canvas.height,bytes:actual.length,...difference,nativeDiagnostic,referenceContext:contextDetails(context),
       surfaceLifecycle:{...window.__spriteSurfaces},
-      rasterFlushes:window.__spriteRasterFlushes,
+      rasterPaints:{...window.__spritePaints},
       featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
-      source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
+      source,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
       preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
       actualTransform:Array.from(sprite.canvas.getContext('2d').getTransform().toFloat64Array()),referenceTransform:Array.from(context.getTransform().toFloat64Array()),
       rectangle:{left:sprite.left,top:sprite.top,right:sprite.right,bottom:sprite.bottom}};
@@ -159,17 +175,17 @@ RENDER_HOOK = r"""
       cacheActualTransform=Array.from(staticCtx.getTransform().toFloat64Array());cacheReferenceTransform=Array.from(context.getTransform().toFloat64Array());
       cacheDifference=rasterPixelDifference(q,p,fresh.width);
       if(cacheDifference.maximumAlphaDifference>1||cacheDifference.maximumPremultipliedDifference>1){
-        const critical=[],explained=new Set();for(let i=0;i<q.length;i+=4)if(!rasterPixelMatches(q,p,i))critical.push(i);
+        const roundoff=rasterRoundoffTracker(q,p);
         for(const epsilon of [1e-7,1e-6,1e-5,1e-4])for(const axis of ['x','y'])for(const sign of [-1,1]){
           const target=document.createElement('canvas');target.width=fresh.width;target.height=fresh.height;
           const shifted={...view,[axis]:view[axis]+epsilon*sign/state.dpr},targetContext=target.getContext('2d');
           drawMap(targetContext,shifted,map);drawLockedPieces(targetContext,shifted,map);
           const pixels=targetContext.getImageData(0,0,target.width,target.height).data;
-          const explainedPixels=critical.filter(i=>rasterPixelMatches(q,pixels,i));explainedPixels.forEach(i=>explained.add(i));
+          const explainedPixels=roundoff.addCandidate(pixels,axis==='x'?epsilon*sign:0,axis==='y'?epsilon*sign:0);
           cacheJitter.push({axis,physicalPixels:epsilon*sign,versusActual:rasterPixelDifference(q,pixels,fresh.width),versusReference:rasterPixelDifference(p,pixels,fresh.width),
             explainedOriginalPixels:explainedPixels.map(i=>({x:(i/4)%fresh.width,y:Math.floor(i/4/fresh.width)}))});
         }
-        cacheRoundoffProbe={criticalPixels:critical.length,explainedPixels:explained.size,maximumPhysicalTranslation:1e-4};
+        cacheRoundoffProbe=roundoff.summary();
       }}
     const draw=window.__backgroundDraw,expectedDraw={x:sprite.left+state.view.x-sprite.viewX,y:sprite.top+state.view.y-sprite.viewY,width:staticCanvas.width/state.dpr,height:staticCanvas.height/state.dpr};
     return {seed:state.seed,order:[...state.order],current:state.current,differences,maximumDifference,maximumPremultipliedDifference,examples,
@@ -184,12 +200,18 @@ RENDER_HOOK = r"""
 
 
 def assert_raster_quantization(metrics, cached=False):
-    # Raw RGB is unstable at alpha0/1 after native canvas readback. Permit at
-    # most one 8-bit alpha/premultiplied-color level per pixel, with no allowance
-    # for a count of corrupted pixels. Geometry and commands remain exact.
+    # Compare alpha and all premultiplied channels against one actual native
+    # reference per pixel. CI demonstrated a native sample threshold at a
+    # 0.0001-physical-pixel translation, with unchanged full commands/geometry.
+    # This coordinate bound is separate from the 0.35 CSS-pixel display LOD.
     alpha = 'cacheMaximumAlphaDifference' if cached else 'maximumAlphaDifference'
     color = 'cacheMaximumPremultipliedDifference' if cached else 'maximumPremultipliedDifference'
-    assert metrics[alpha] <= 1 and metrics[color] <= 1, metrics
+    if metrics[alpha] <= 1 and metrics[color] <= 1:
+        return
+    evidence = metrics.get('cacheRoundoffProbe') if cached else (metrics.get('nativeDiagnostic') or {}).get('roundoffProbe')
+    assert evidence and evidence['maximumPhysicalTranslation'] <= 1e-4, metrics
+    assert evidence['validCandidates'] > 0 and evidence['criticalPixels'] > 0, metrics
+    assert evidence['unexplainedPixels'] == 0 and evidence['explainedPixels'] == evidence['criticalPixels'], metrics
 
 
 async def check_raster_oracle(page):
@@ -209,6 +231,38 @@ async def check_raster_oracle(page):
             assert not accepted, metrics
         else:
             assert accepted, ('Pixel oracle accepted a corrupt pixel', metrics)
+    opaque=[100,150,200,255]
+    edge=[143,32,40,64]
+    transparent=[0,0,0,0]
+    candidate=lambda pixels,dx=1e-4,dy=0: {'pixels':pixels,'dx':dx,'dy':dy}
+    membership_cases=[
+        ('bounded native sample',transparent,edge,[candidate(transparent)],True),
+        ('changed opaque color',[108,150,200,255],opaque,[candidate(opaque)],False),
+        ('eight alpha levels',[143,32,40,8],edge,[candidate(transparent),candidate(edge,-1e-4)],False),
+        ('deleted opaque interior',transparent,opaque,[candidate(opaque)],False),
+        ('out-of-bound exact match',transparent,edge,[candidate(transparent,0.001)],False),
+        ('diagonal exceeds bound',transparent,edge,[candidate(transparent,1e-4,1e-4)],False),
+        ('non-numeric shift',transparent,edge,[candidate(transparent,None)],False),
+        # Different references may not independently donate different channels.
+        ('mixed channel membership',[100,150,200,255],opaque,
+         [candidate([100,160,200,255]),candidate([110,150,200,255])],False),
+    ]
+    results=[]
+    for name,actual,expected,candidates,accepted in membership_cases:
+        if name=='mixed channel membership': expected=[110,160,200,255]
+        evidence=await page.evaluate('args=>window.__rasterMembershipProbe(...args)',[actual,expected,candidates])
+        assert (evidence['unexplainedPixels']==0)==accepted,(name,evidence)
+        results.append({'name':name,'accepted':accepted,**evidence})
+    native_shift=await page.evaluate(r"""()=>{
+      const paint=(dx,dy)=>{const canvas=document.createElement('canvas');canvas.width=canvas.height=16;
+        const context=canvas.getContext('2d');context.fillStyle='#648fc8';context.fillRect(4+dx,4+dy,8,8);
+        return context.getImageData(0,0,16,16).data;};
+      const expected=paint(0,0),actual=paint(1,0),candidates=[];
+      for(const [dx,dy] of [[1e-4,0],[-1e-4,0],[0,1e-4],[0,-1e-4]])candidates.push({dx,dy,pixels:paint(dx,dy)});
+      return window.__rasterMembershipProbe(actual,expected,candidates);
+    }""")
+    assert native_shift['unexplainedPixels'] > 0, ('Oracle accepted a one-physical-pixel contour shift',native_shift)
+    return {'quantizationCases':len(cases),'membershipCases':results,'onePhysicalPixelContour':native_shift}
 
 
 async def settled(page):
@@ -364,7 +418,8 @@ async def run_case(browser, engine, locale, server, fixtures, output):
 
 async def run_dpr_case(browser, engine, dpr, server, output):
     record = {'browser': engine, 'dpr': dpr, 'status': 'running', 'input': 'synthetic multi-pointer pinch through real canvas handlers; no state setters'}
-    record['pixelOracle'] = {'maxAlphaLevels': 1, 'maxPremultipliedChannelLevels': 1, 'rawDifferencesRetained': True}
+    record['pixelOracle'] = {'maxAlphaLevelsAgainstMatchedReference': 1, 'maxPremultipliedChannelLevelsAgainstMatchedReference': 1,
+                             'maxReferenceTranslationPhysicalPixels': 1e-4, 'requiresZeroUnexplainedPixels': True, 'rawDifferencesRetained': True}
     context = await browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=dpr, locale='ru-RU', has_touch=True, reduced_motion='reduce')
     await context.add_init_script(catalog.initializer('ru'))
     await context.add_init_script("""(()=>{window.__strokeMetrics=[];const original=CanvasRenderingContext2D.prototype.stroke;
@@ -376,7 +431,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
     try:
         await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
         await page.bring_to_front(); await catalog.ready(page)
-        await check_raster_oracle(page)
+        record['oracleControls']=await check_raster_oracle(page)
         await page.locator('[data-puzzle-mode="country-regions"]').click()
         await catalog.ready(page, {'mode': 'russia-subjects', 'selection': None})
         await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -417,7 +472,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             assert sprite['currentPath'] and sprite['currentStrokePath'] and sprite['currentFillRule'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
             assert sprite['dpr'] == min(dpr, 2), sprite
             assert 0 < sprite['bytes'] <= 16*1024*1024, sprite
-            assert sprite['surfaceLifecycle']['unreleased'] == 0 and sprite['rasterFlushes'] > 0, sprite
+            assert sprite['surfaceLifecycle']['unreleased'] == 0 and sum(sprite['rasterPaints'].values()) > 0, sprite
             assert_raster_quantization(sprite)
             background = await page.evaluate('window.__backgroundAudit()')
             assert background['currentProjection'] and background['currentPieces'], background
@@ -428,7 +483,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             assert background['draw'] == background['expectedDraw'], background
             await page.keyboard.press('Alt+ArrowRight')
             translated = await page.evaluate('window.__backgroundAudit()')
-            assert (await page.evaluate('window.__spriteRasterFlushes')) == sprite['rasterFlushes'], 'Translation rerasterized the active contour'
+            assert (await page.evaluate('window.__spritePaints')) == sprite['rasterPaints'], 'Translation rerasterized the active contour'
             assert translated['paints'] == background['paints'], translated
             assert_raster_quantization(translated, cached=True)
             assert translated['outsidePixels']==0 and translated['draw']==translated['expectedDraw'], translated

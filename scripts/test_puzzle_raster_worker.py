@@ -21,13 +21,14 @@ window.__rasterPixels=()=>[...rasterPreparation.cache.values()].map(item=>{
   const actual=document.createElement('canvas'),expected=document.createElement('canvas');
   actual.width=expected.width=item.width;actual.height=expected.height=item.height;
   actual.getContext('2d').drawImage(item.bitmap,0,0);
-  const context=expected.getContext('2d'),paths=highResolutionPaths(item.index);
+  const context=expected.getContext('2d',{alpha:true,willReadFrequently:true}),paths=highResolutionPaths(item.index);
   context.setTransform(item.dpr*item.scale,0,0,item.dpr*item.scale,-item.x0,-item.y0);
   context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/item.scale;context.lineJoin=context.lineCap='round';
   context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
   const a=actual.getContext('2d').getImageData(0,0,item.width,item.height).data,b=context.getImageData(0,0,item.width,item.height).data;
   let differences=0,maximumDifference=0,nonempty=0;for(let i=0;i<a.length;i++){if(a[i]!==b[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(a[i]-b[i]));if(i%4===3&&a[i])nonempty++;}
-  return {index:item.index,scale:item.scale,bytes:a.length,differences,maximumDifference,nonempty};
+  return {index:item.index,scale:item.scale,bytes:a.length,differences,maximumDifference,nonempty,
+    referenceContextAttributes:context.getContextAttributes?.()};
 });
 """
 

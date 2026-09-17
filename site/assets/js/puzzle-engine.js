@@ -1650,11 +1650,6 @@
       context.lineWidth = 1.2 / scale; context.lineJoin = context.lineCap = "round";
       context.fill(path, fillRule);
       context.stroke(strokePath);
-      // Resolve the native raster before its first image consumption. Without
-      // this flush WebKit can give the cached contour different edge coverage
-      // from the identical path drawn directly. Translations reuse the result;
-      // worker bitmaps have already been rasterized off the main thread.
-      context.getImageData(0, 0, 1, 1);
       Object.assign(sprite, { path, strokePath, fillRule, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
       }
       rasterPreparationStats();

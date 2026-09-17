@@ -29,7 +29,9 @@ onmessage = async ({ data }) => {
     const path = replay(fill), border = replay(stroke), built = performance.now();
     for (const { width, height, x0, y0, scale } of variants) {
       canvas = new OffscreenCanvas(width, height);
-      const context = canvas.getContext("2d");
+      // Every preparation reads the full raster back. Request a context suited
+      // to CPU readback to reduce contention with the shared GPU/compositor.
+      const context = canvas.getContext("2d", { alpha: true, willReadFrequently: true });
       if (!context) throw new Error("Canvas unavailable");
       context.setTransform(dpr * scale, 0, 0, dpr * scale, -x0, -y0);
       context.fillStyle = "#dc3f45"; context.strokeStyle = "#8e2028";
