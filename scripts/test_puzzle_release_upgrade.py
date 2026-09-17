@@ -106,8 +106,9 @@ def compare(before, after):
     assert not before['finished'] and not after['finished']
 
 
-async def case(browser, fixtures, output, commit, mode, selection, version):
-    record = {'mode': mode, 'selection': selection, 'oldCommit': commit, 'oldVersion': '1.3.6', 'newVersion': version, 'status': 'running', 'fixture': 'actual historical UI and source geometry, no draft injection'}
+async def case(browser, fixtures, output, commit, mode, selection, version, context_mode='free'):
+    record = {'mode': mode, 'context':context_mode, 'selection': selection, 'oldCommit': commit, 'oldVersion': '1.3.6', 'newVersion': version, 'status': 'running', 'fixture': 'actual historical UI and source geometry, no draft injection'}
+    image_prefix = context_mode + '-' + mode
     with HistoricalServer(fixtures, commit) as server:
         context = await catalog.context_for(browser, server, fixtures, (390, 844), 'ru', record)
         page = await context.new_page()
@@ -116,7 +117,7 @@ async def case(browser, fixtures, output, commit, mode, selection, version):
         writes = []
         context.on('request', lambda request: writes.append({'method': request.method, 'url': request.url}) if request.method not in ['GET', 'HEAD', 'OPTIONS'] else None)
         try:
-            await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
+            await page.goto(server.base + 'apps/puzzle.html?context=' + context_mode + '&qaLocale=ru', wait_until='domcontentloaded')
             await page.bring_to_front()
             await catalog.ready(page)
             await page.locator('[data-puzzle-difficulty="hard"]').click()
@@ -129,17 +130,25 @@ async def case(browser, fixtures, output, commit, mode, selection, version):
             await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
             await catalog.trusted_drop(page)
             await catalog.trusted_drop(page)
-            await page.locator('#puzzleHint').click()
-            await page.wait_for_function('window.__puzzleRead().hints===1')
+            if context_mode == 'free':
+                await page.locator('#puzzleHint').click()
+                await page.wait_for_function('window.__puzzleRead().hints===1')
+            else:
+                await page.locator('#puzzleCanvas').press('Enter')
+            await page.locator('#puzzleCanvas').press('ArrowLeft')
+            await page.locator('#puzzleCanvas').press('ArrowUp')
+            await page.locator('#puzzleZoomIn').click()
+            await page.locator('#puzzleZoomIn').click()
             await catalog.flush(page)
             old = await page.evaluate('window.__upgradeRead()')
-            assert old['placed'] == 2 and old['hints'] == 1
+            assert old['placed'] == 2 and old['hints'] == (1 if context_mode == 'free' else 0)
+            assert old['pieces'][old['current']]['point'] and not old['pieces'][old['current']]['inTray']
             await page.wait_for_function('navigator.serviceWorker.controller')
             await page.evaluate('navigator.serviceWorker.ready')
             record['before'] = old
             record['oldCaches'] = await page.evaluate('caches.keys()')
             assert any('1.3.6' in name for name in record['oldCaches'])
-            await page.screenshot(path=str(output / (mode + '-old.png')))
+            await page.screenshot(path=str(output / (image_prefix + '-old.png')))
 
             server.current = True
             await page.evaluate("async()=>{window.__upgradeControllerChanges=0;navigator.serviceWorker.addEventListener('controllerchange',()=>window.__upgradeControllerChanges++);const registration=await navigator.serviceWorker.getRegistration();await registration.update()}")
@@ -160,7 +169,7 @@ async def case(browser, fixtures, output, commit, mode, selection, version):
             offline = await page.evaluate('window.__upgradeRead()')
             compare(old, offline)
             await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
-            await page.locator('.puzzle-stage-card').screenshot(path=str(output / (mode + '-new-offline.png')))
+            await page.locator('.puzzle-stage-card').screenshot(path=str(output / (image_prefix + '-new-offline.png')))
             record['after'], record['offline'], record['writes'] = current, offline, writes
             assert not writes, writes
             assert not record.get('pageErrors'), record.get('pageErrors')
@@ -169,7 +178,7 @@ async def case(browser, fixtures, output, commit, mode, selection, version):
             record['status'], record['error'], record['traceback'] = 'failed', repr(error), traceback.format_exc()
             try:
                 record['lastState'] = await page.evaluate('window.__puzzleRead?.()')
-                await page.screenshot(path=str(output / (mode + '-failure.png')), timeout=10000)
+                await page.screenshot(path=str(output / (image_prefix + '-failure.png')), timeout=10000)
             except Exception:
                 pass
         finally:
@@ -187,8 +196,8 @@ async def main(args):
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch()
         try:
-            for mode, selection in [('russia-subjects', None), ('country-regions', 'RUS')]:
-                record = await case(browser, Path(args.fixtures), output, args.old_commit, mode, selection, version)
+            for mode, selection, context_mode in [('russia-subjects', None, 'free'), ('country-regions', 'RUS', 'free'), ('russia-subjects', None, 'seminar')]:
+                record = await case(browser, Path(args.fixtures), output, args.old_commit, mode, selection, version, context_mode)
                 records.append(record)
                 (output / 'release-upgrade.json').write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf-8')
                 print(json.dumps({'mode': mode, 'status': record['status'], 'error': record.get('error')}, ensure_ascii=False), flush=True)

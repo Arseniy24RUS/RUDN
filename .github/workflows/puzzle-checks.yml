@@ -142,12 +142,19 @@ jobs:
         env:
           MATRIX_COVERAGE: ${{ inputs.coverage || 'full' }}
         run: |
+          python scripts/test_puzzle_report.py --artifacts "${{ runner.temp }}/puzzle-matrix" --coverage "$MATRIX_COVERAGE"
+      - name: Verify every localized layout even when another suite failed
+        if: always() && inputs.coverage != 'smoke'
+        run: python scripts/test_puzzle_locale_report.py --artifacts "${{ runner.temp }}/puzzle-matrix"
+      - name: Require all independent quality gates
+        if: always()
+        run: |
+          test "${{ needs.catalog.result }}" = success
+          test "${{ needs.browsers.result }}" = success
+          test "${{ needs.storage.result }}" = success
+          test "${{ needs.interactions.result }}" = success
           test "${{ needs.games-and-rendering.result }}" = success
           test "${{ needs.performance.result }}" = success
-          python scripts/test_puzzle_report.py --artifacts "${{ runner.temp }}/puzzle-matrix" --coverage "$MATRIX_COVERAGE"
-          if [[ "$MATRIX_COVERAGE" == 'full' ]]; then
-            python scripts/test_puzzle_locale_report.py --artifacts "${{ runner.temp }}/puzzle-matrix"
-          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -283,6 +290,8 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/test_free_module_contexts.mjs
           node scripts/test_games_platform.mjs
+      - name: Recover native puzzle loading and cancel stale route loads
+        run: python scripts/test_puzzle_native_load.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/native-loader" --browsers "${{ matrix.browser }}"
       - name: Restore actual 1.3.6 attempts after the new worker activates
         if: matrix.browser == 'chromium'
         run: python scripts/test_puzzle_release_upgrade.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/upgrade"
@@ -296,6 +305,7 @@ jobs:
             ${{ runner.temp }}/games-qa/render
             ${{ runner.temp }}/games-qa/leaderboard
             ${{ runner.temp }}/games-qa/upgrade
+            ${{ runner.temp }}/games-qa/native-loader
             ${{ runner.temp }}/games-qa/*.json
             ${{ runner.temp }}/games-qa/*.xlsx
           retention-days: 14
@@ -323,7 +333,7 @@ jobs:
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium
       - name: Measure actual drawing, frame intervals, long tasks and memory at CPU x1/x4/x6
-        run: python scripts/test_puzzle_performance.py --output "${{ runner.temp }}/performance-qa" --channels chromium --cycles 3 --cpu-rates 1,4,6
+        run: python scripts/test_puzzle_performance.py --output "${{ runner.temp }}/performance-qa" --channels chromium --cycles 3 --cpu-rates 1,4,6 --enforce-budgets
       - uses: actions/upload-artifact@v4
         if: always()
         with:

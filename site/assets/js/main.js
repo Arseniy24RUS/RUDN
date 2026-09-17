@@ -708,53 +708,115 @@ async function renderSeminar7(topic){
   history.querySelector('#governorHistoryRefresh').onclick=()=>render();
   updateGovernorSaveStatus(history);
 }
-let puzzleFragmentPromise=null;
-async function getPuzzleFragment(){
-  if(!puzzleFragmentPromise)puzzleFragmentPromise=fetch('apps/puzzle.html',{cache:'no-store'}).then(async response=>{
-    if(!response.ok)throw new Error(`apps/puzzle.html: HTTP ${response.status}`);
-    const documentCopy=new DOMParser().parseFromString(await response.text(),'text/html');
-    const main=documentCopy.querySelector('.puzzle-page-main');
-    const toastNode=documentCopy.getElementById('puzzleToast');
-    const resultDialog=documentCopy.getElementById('puzzleResultDialog');
-    if(!main||!toastNode||!resultDialog)throw new Error('Puzzle component markup is incomplete.');
-    return `${main.innerHTML}${toastNode.outerHTML}${main.contains(resultDialog)?'':resultDialog.outerHTML}`;
-  }).catch(error=>{puzzleFragmentPromise=null;throw error;});
-  return puzzleFragmentPromise;
+let puzzleFragment=null;
+const puzzleRuntimeRequests=new Map();
+async function getPuzzleFragment(signal){
+  if(puzzleFragment)return puzzleFragment;
+  const response=await fetch('apps/puzzle.html',{cache:'no-store',signal});
+  if(!response.ok)throw new Error(`apps/puzzle.html: HTTP ${response.status}`);
+  const documentCopy=new DOMParser().parseFromString(await response.text(),'text/html');
+  signal.throwIfAborted();
+  const main=documentCopy.querySelector('.puzzle-page-main'),toastNode=documentCopy.getElementById('puzzleToast'),resultDialog=documentCopy.getElementById('puzzleResultDialog');
+  if(!main||!toastNode||!resultDialog)throw new Error('Puzzle component markup is incomplete.');
+  // Cache successful markup only. A cancelled route never shares its pending
+  // request (or a rejected promise) with the next route or profile.
+  puzzleFragment=`${main.innerHTML}${toastNode.outerHTML}${main.contains(resultDialog)?'':resultDialog.outerHTML}`;
+  return puzzleFragment;
 }
-let puzzleRuntimePromise=null;
-function loadPuzzleRuntime(){
-  if(window.mountRudnPuzzle&&window.RudnPuzzleGeometry)return Promise.resolve();
-  if(!puzzleRuntimePromise)puzzleRuntimePromise=(async()=>{
+async function loadPuzzleRuntime(signal){
     for(const [url,ready] of [
       ['../puzzle/vendor/d3.v7.9.0.min.js',()=>window.d3],
       ['../puzzle/vendor/topojson-client.v3.1.0.min.js',()=>window.topojson],
       ['./puzzle-render-geometry.js?v=1.3.7',()=>window.RudnPuzzleGeometry],
       ['./puzzle-engine.js?v=1.3.7',()=>window.mountRudnPuzzle]
     ]){
-      if(ready())continue;
+      signal.throwIfAborted();if(ready())continue;
       await new Promise((resolve,reject)=>{
-        const script=document.createElement('script');script.src=new URL(url,import.meta.url).href;
-        script.onload=resolve;script.onerror=()=>{script.remove();reject(new Error('Puzzle runtime unavailable'));};
+        const source=new URL(url,import.meta.url),previousRequests=puzzleRuntimeRequests.get(url)||0;
+        puzzleRuntimeRequests.set(url,previousRequests+1);
+        // Removing a script does not reliably cancel its network request. A new
+        // URL keeps a retry independent of the abandoned in-flight response.
+        if(previousRequests)source.searchParams.set('puzzle_retry',String(previousRequests));
+        const script=document.createElement('script');script.src=source.href;
+        let settled=false;
+        const finish=error=>{if(settled)return;settled=true;signal.removeEventListener('abort',abort);script.onload=script.onerror=null;if(error){script.remove();reject(error)}else resolve()};
+        const abort=()=>finish(new DOMException('Puzzle loading cancelled','AbortError'));
+        script.onload=()=>finish(ready()?null:new Error('Puzzle runtime unavailable'));
+        script.onerror=()=>finish(new Error('Puzzle runtime unavailable'));
+        signal.addEventListener('abort',abort,{once:true});
+        if(signal.aborted){abort();return;}
         document.head.append(script);
       });
     }
-  })().catch(error=>{puzzleRuntimePromise=null;throw error;});
-  return puzzleRuntimePromise;
 }
 async function renderPuzzleRoute(asSeminar=false){
   if(asSeminar){
     const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);
     if(!accessAllowed(gate)){lockedAccessPage(ui('puzzleTitle'),gate);return}
   }
-  const context=asSeminar?'seminar':'free',requestedHash=location.hash,requestedOwner=attemptOwner();
-  const [fragment]=await Promise.all([getPuzzleFragment(),loadPuzzleRuntime()]);
-  if(location.hash!==requestedHash||attemptOwner()!==requestedOwner)return;
-  app.innerHTML=`<section class="page puzzle-native-page" data-puzzle-route="${context}">${!asSeminar?`<div class="page-actions"><a class="btn btn-neutral btn-small" href="#games">← ${gamesText('back')}</a></div>`:''}${fragment}</section>`;
-  app.querySelector('.puzzle-profile-warning a')?.setAttribute('href','#profile');
-  app.querySelector('#puzzleResultBack')?.setAttribute('href',asSeminar?'#activity/seminar-2':'#puzzle');
-  const root=app.querySelector('#geoPuzzleApp');
-  root.dataset.native='true';
-  currentCleanup=await mountPuzzlePage({context,base:'assets/puzzle/data',legacyBase:'data'});
+  const context=asSeminar?'seminar':'free',requestedHash=location.hash,requestedOwner=attemptOwner(),requestedLocale=getLocale();
+  const copy={ru:{loading:'Открываем карту…',waiting:'Карта откроется автоматически после подключения.'},en:{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'},zh:{loading:'正在打开地图…',waiting:'连接恢复后，地图会自动打开。'}}[requestedLocale]||{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'};
+  app.innerHTML=`<section class="page puzzle-native-page" data-puzzle-route="${context}"><div class="page-actions"><a class="btn btn-neutral btn-small" href="${asSeminar?'#dashboard':'#games'}">← ${esc(asSeminar?ui('back'):gamesText('back'))}</a></div><div class="panel" role="status" aria-live="polite" data-puzzle-loading="loading">${esc(copy.loading)}</div></section>`;
+  const container=app.firstElementChild;
+  let disposed=false,running=false,retrySoon=false,mountStarted=false,failures=0,timer=0,controller=null,mountedCleanup=null,cleanupPromise=null;
+  const active=()=>!disposed&&container.isConnected&&location.hash===requestedHash&&attemptOwner()===requestedOwner&&getLocale()===requestedLocale;
+  const cleanup=()=>{
+    if(disposed)return cleanupPromise;
+    disposed=true;clearTimeout(timer);controller?.abort();
+    window.removeEventListener('online',wake);window.removeEventListener('offline',pause);
+    window.removeEventListener('hashchange',checkRoute);window.removeEventListener('rudn:identitychange',checkRoute);window.removeEventListener('rudn:locale',checkRoute);window.removeEventListener('rudn:accesschange',checkRoute);
+    document.removeEventListener('visibilitychange',visibility);
+    return cleanupPromise=Promise.resolve().then(()=>mountedCleanup?.());
+  };
+  cleanup.flush=()=>mountedCleanup?.flush?.();
+  const permitted=()=>{
+    if(!active()){cleanup();return false;}
+    if(asSeminar){const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);if(!accessAllowed(gate)){cleanup();lockedAccessPage(ui('puzzleTitle'),gate);return false;}}
+    return true;
+  };
+  const waiting=()=>{const status=container.querySelector('[data-puzzle-loading]');if(status){status.dataset.puzzleLoading='waiting';status.textContent=copy.waiting}};
+  const schedule=delay=>{clearTimeout(timer);if(active()&&document.visibilityState!=='hidden'&&navigator.onLine!==false)timer=setTimeout(()=>void attempt(),delay)};
+  async function attempt(){
+    if(!permitted()||mountedCleanup||running)return;
+    // Even offline, the installed service worker may already have every asset.
+    if(document.visibilityState==='hidden'){waiting();return;}
+    running=true;retrySoon=false;controller=new AbortController();
+    const signal=controller.signal,deadline=setTimeout(()=>controller?.abort(),8000);
+    try{
+      const [fragment]=await Promise.all([getPuzzleFragment(signal),loadPuzzleRuntime(signal)]);
+      clearTimeout(deadline);
+      if(!permitted()||signal.aborted)return;
+      mountStarted=true;
+      const content=document.createElement('div');content.innerHTML=fragment;
+      const root=content.querySelector('#geoPuzzleApp');root.dataset.native='true';
+      content.querySelector('.puzzle-profile-warning a')?.setAttribute('href','#profile');
+      content.querySelector('#puzzleResultBack')?.setAttribute('href',asSeminar?'#activity/seminar-2':'#puzzle');
+      container.querySelector('[data-puzzle-loading]')?.remove();container.append(...content.childNodes);
+      const mounted=await mountPuzzlePage({context,base:'assets/puzzle/data',legacyBase:'data'});
+      if(!active()){await mounted?.();return;}
+      mountedCleanup=mounted;
+    }catch(error){
+      controller.abort();
+      if(!active())return;
+      // Retrying is for unavailable assets only. An unexpected mount error must
+      // not append a second game or acquire a second writer on this route.
+      if(mountStarted){console.error(error.code||error);cleanup();app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#games">${esc(gamesText('back'))}</a></div>`);toast(error,'error');return;}
+      waiting();failures++;schedule(Math.min(15000,1000*2**Math.min(failures,4)));
+    }finally{clearTimeout(deadline);running=false;if(retrySoon&&!mountedCleanup)schedule(0);}
+  }
+  function wake(){if(!active()||mountedCleanup)return;failures=0;if(running){retrySoon=true;return;}clearTimeout(timer);void attempt();}
+  function pause(){clearTimeout(timer);if(!mountedCleanup&&document.visibilityState==='hidden')controller?.abort();}
+  // Once mounted, render() owns navigation: it captures and flushes the draft
+  // before cleanup. These listeners only cancel the pending asset load.
+  function checkRoute(){if(mountedCleanup)return;if(!active())cleanup();else if(asSeminar)permitted();}
+  function visibility(){if(document.visibilityState==='hidden')pause();else wake();}
+  window.addEventListener('online',wake);window.addEventListener('offline',pause);
+  window.addEventListener('hashchange',checkRoute);window.addEventListener('rudn:identitychange',checkRoute);window.addEventListener('rudn:locale',checkRoute);window.addEventListener('rudn:accesschange',checkRoute);
+  document.addEventListener('visibilitychange',visibility);
+  currentCleanup=cleanup;
+  // Return immediately: a missing script must not hold render()'s mutex or
+  // prevent Back. Recovery updates this route without re-running focus/scroll.
+  void attempt();
 }
 
 async function renderAdmin(){

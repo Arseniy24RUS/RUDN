@@ -460,8 +460,16 @@ async function activateRelease(){
   await self.clients.claim();
 }
 
+function puzzleRuntimeCacheKey(request){
+  const url=new URL(request.url),path=url.pathname.slice(SCOPE.pathname.length);
+  // The native loader uses this counter solely to escape browser coalescing of
+  // an abandoned script request. It must still read/write the exact bound
+  // release's canonical asset; preserve v and every other query parameter.
+  if(['assets/js/puzzle-engine.js','assets/js/puzzle-render-geometry.js','assets/puzzle/vendor/d3.v7.9.0.min.js','assets/puzzle/vendor/topojson-client.v3.1.0.min.js'].includes(path)&&url.searchParams.getAll('puzzle_retry').length===1&&/^\d{1,6}$/.test(url.searchParams.get('puzzle_retry'))){url.searchParams.delete('puzzle_retry');return url.href;}
+  return request;
+}
 async function matchOwnCache(cache,request){
-  const cached=await cache.match(request);
+  const cached=await cache.match(puzzleRuntimeCacheKey(request));
   if(cached)return cached;
   // Navigation parameters do not change these static HTML entry points.
   if(request.mode==='navigate'){
@@ -500,7 +508,7 @@ async function serveRequest(event,networkFirst){
     const response=await fetchWithDeadline(request,available?1800:12000);
     if(response.ok){
       // An unavailable/full cache must not turn a successful request into an error.
-      try{await cache.put(request,response.clone())}catch{}
+      try{await cache.put(puzzleRuntimeCacheKey(request),response.clone())}catch{}
       return response;
     }
     // A failed deployment or temporary server error must not poison offline copies.

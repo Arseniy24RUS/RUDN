@@ -127,6 +127,73 @@ async def replacement_failure(page, context, browser_name, server, record):
     record['failedRequests'] = await page.evaluate('window.__qaFault.calls')
 
 
+async def preparation_failure(page, context, browser_name, server, record):
+    """A failed renderer/path preparation must not replace a playable draft."""
+    await open_game(page, server)
+    await trusted_drop(page)
+    await page.locator('#puzzleHint').click()
+    confirmations = []
+
+    async def accept(dialog):
+        confirmations.append(dialog.message)
+        await dialog.accept()
+
+    page.on('dialog', accept)
+    await page.evaluate("""()=>{
+      window.__qaGeometryOriginal=window.RudnPuzzleGeometry;
+      window.__qaPreparationFault={stage:'',calls:0,waiting:0};
+      document.querySelector('#geoPuzzleApp').addEventListener('puzzle:load-status',event=>{
+        if(event.detail.status==='waiting')window.__qaPreparationFault.waiting++;
+      });
+      window.RudnPuzzleGeometry={...window.__qaGeometryOriginal,createTopologyRenderer(...args){
+        const fault=window.__qaPreparationFault;
+        if(fault.stage==='renderer'){
+          fault.calls++;fault.stage='';throw new Error('QA renderer preparation failed');
+        }
+        const renderer=window.__qaGeometryOriginal.createTopologyRenderer(...args);
+        if(fault.stage!=='first-path')return renderer;
+        return {...renderer,get(...getArgs){
+          if(fault.stage==='first-path'){
+            fault.calls++;fault.stage='';throw new Error('QA first path preparation failed');
+          }
+          return renderer.get(...getArgs);
+        }};
+      }};
+    }""")
+    preserved = ['attemptId', 'mode', 'selection', 'difficulty', 'seed', 'featureIds',
+                 'order', 'current', 'cursor', 'placed', 'errors', 'hints', 'view',
+                 'geometryRef', 'finished', 'finishedResult', 'timerStarted', 'pieces']
+    stages = []
+    for stage in ('renderer', 'first-path'):
+        before = await saved(page)
+        await page.evaluate("stage=>Object.assign(window.__qaPreparationFault,{stage,calls:0,waiting:0})", stage)
+        await page.locator('[data-puzzle-difficulty="hard"]').click()
+        await page.wait_for_function('window.__qaPreparationFault.calls===1&&window.__qaPreparationFault.waiting===1&&!window.__puzzleRead().loading')
+        after = await saved(page)
+        assert after['attemptId'] == before['attemptId'], 'Failed preparation replaced the durable attempt'
+        for field in preserved:
+            assert after['state'].get(field) == before['state'].get(field), (stage, field, before['state'].get(field), after['state'].get(field))
+        assert after['state']['elapsedMs'] >= before['state']['elapsedMs'], 'Rollback reset the timer'
+        await quiet(page)
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await trusted_drop(page)
+        continued = await saved(page)
+        assert continued['attemptId'] == before['attemptId'] and continued['state']['placed'] == before['state']['placed'] + 1
+        await page.evaluate("window.dispatchEvent(new Event('online'))")
+        assert not (await state(page))['loading'], 'Continuing the old game left a replacement retry active'
+        stages.append({'fault': stage, 'preservedFields': preserved, 'continuedPlacements': continued['state']['placed']})
+    previous = await saved(page)
+    await page.evaluate('window.RudnPuzzleGeometry=window.__qaGeometryOriginal')
+    await page.locator('[data-puzzle-difficulty="hard"]').click()
+    await page.wait_for_function("window.__puzzleRead().ready&&!window.__puzzleRead().loading&&window.__puzzleRead().difficulty==='hard'")
+    replaced = await saved(page)
+    assert replaced['attemptId'] != previous['attemptId']
+    assert replaced['state']['difficulty'] == 'hard' and replaced['state']['placed'] == 0 and replaced['state']['hints'] == 0
+    assert len(confirmations) == 3, confirmations
+    record['preparationStages'] = stages
+    record['successfulReplacement'] = {'newAttempt': True, 'difficulty': 'hard', 'placed': 0, 'confirmations': len(confirmations)}
+
+
 async def storage_fault(page, context, browser_name, server, record, quota=False):
     # Identity seed reads remain available to the fixture adapter. Every durable
     # persistence write fails; this is not a claim that localStorage getters fail.
@@ -434,7 +501,8 @@ async def worker_version_skew(page, context, browser_name, server, record):
 
 
 SCENARIOS = {'initial-failure': initial_failure, 'initial-hang': initial_hang,
-             'replacement-failure': replacement_failure, 'storage-denied': storage_denied,
+             'replacement-failure': replacement_failure, 'preparation-failure': preparation_failure,
+             'storage-denied': storage_denied,
              'storage-quota': storage_quota, 'hidden-timer': hidden_timer,
              'profile-isolation': profile_isolation, 'old-schema': old_schema, 'legacy-world': legacy_world,
              'worker-update': service_worker_update, 'worker-version-skew': worker_version_skew,
@@ -461,13 +529,13 @@ async def run(args, server):
                     page.on('pageerror', lambda error, r=record: r.setdefault('pageErrors', []).append(str(error)))
                     async def dialog_seen(dialog, r=record):
                         r.setdefault('dialogs', []).append(dialog.message)
-                        if r['scenario'] != 'replacement-failure':
+                        if r['scenario'] not in ('replacement-failure', 'preparation-failure'):
                             await dialog.dismiss()
                     page.on('dialog', dialog_seen)
                     try:
                         await SCENARIOS[name](page, context, browser_name, server, record)
                         assert not record.get('pageErrors'), record.get('pageErrors')
-                        if name != 'replacement-failure':
+                        if name not in ('replacement-failure', 'preparation-failure'):
                             assert not record.get('dialogs'), ('Unexpected browser dialog', record['dialogs'])
                         record['status'] = 'passed'
                     except Exception as error:

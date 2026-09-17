@@ -105,8 +105,19 @@ async function load(path,signal){const r=await nativeFetch(path,{signal});if(!r.
 function wrapper({id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin='bundled',year='',note='',geometry_url,feature_count}){return{dataset:{id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin,year,year_en:year,year_zh:year,note,note_en:note,note_zh:note,geometry_url,feature_count}}}
 async function getMunicipalCatalog(){if(!municipalCatalog)municipalCatalog=await load(`${base}/municipal/catalog.json`);return municipalCatalog}
 async function getAdmManifest(){if(!admManifest)admManifest=await load(`${base}/adm1/manifest.json`);return admManifest}
-async function worldNames(){const geo=await load(`${base}/world_countries_50m.geojson`);const map={};for(const f of geo.features||[]){const p=f.properties||{};const iso=String(p.ADM0_A3||p.ISO_A3||p.adm0_a3||p.iso_a3||'').toUpperCase();if(iso)map[iso]={ru:p.name_ru||p.NAME_RU||p.name||p.ADMIN||iso,en:p.name_en||p.NAME_EN||p.ADMIN||p.name||iso,zh:p.name_zh||p.NAME_ZH||p.name_en||p.ADMIN||iso}}return map}
-async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);admCatalogSource=raw;const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.boundaryName||iso,name_en:n.en||item.boundaryName||iso,name_zh:n.zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
+async function worldNames(){
+  const geo=await load(`${base}/world_countries_50m.geojson`),map={};
+  for(const feature of geo.features||[]){
+    const p=feature.properties||{};
+    // Natural Earth and the ADM1 catalog use different codes for a few names.
+    // Preserve both identifiers for lookup; geometry and saved IDs stay intact.
+    const codes=[p.ADM0_A3,p.adm0_a3,p.ISO_A3,p.iso_a3].map(value=>String(value||'').toUpperCase()).filter(value=>/^[A-Z]{3}$/.test(value));
+    for(const iso of codes)map[iso]={ru:p.name_ru||p.NAME_RU||p.name||p.ADMIN||iso,en:p.name_en||p.NAME_EN||p.ADMIN||p.admin||p.name||iso,zh:p.name_zh||p.NAME_ZH||p.name_en||p.ADMIN||p.admin||iso};
+  }
+  if(!map.XKX&&map.KOS)map.XKX=map.KOS;
+  return map;
+}
+async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);admCatalogSource=raw;const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.name_ru||item.boundaryName||iso,name_en:n.en||item.name_en||item.boundaryName||iso,name_zh:n.zh||item.name_zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
 async function localAdm1(iso,local){
   const country=(await getAdmCatalog()).countries.find(item=>item.iso===iso)||{};
   const source=local.source||'geoBoundaries gbOpen',license=local.license||'CC BY 4.0';
@@ -217,6 +228,9 @@ function setupGroupFilter(){
 }
 function renderLeaderboard(){
   if(disposed||leaderboardClosed||!root.isConnected)return;
+  const active=document.activeElement;
+  const activePage=active?.matches('[data-page-step]')&&root.contains(active)?{difficulty:active.closest('[data-leaderboard-pagination]')?.dataset.leaderboardPagination,step:active.dataset.pageStep}:null;
+  const activeGroup=active?.matches('#puzzleGroupFilterOptions input')&&root.contains(active)?active.value:null;
   leaderboardRows=bestPuzzleResults(leaderboardRemote,leaderboardLocal);
   const filter=root.querySelector('#puzzleGroupFilterOptions');
   const groups=puzzleGroups(leaderboardRows,[...groupOptions(),...selectedGroups]);
@@ -238,6 +252,12 @@ function renderLeaderboard(){
   const status=root.querySelector('#puzzleLeaderboardStatus');
   if(status){const pending=leaderboardRows.some(row=>row.pending);status.textContent=leaderboardError||groupFilterCopy(pending?'leaderboardPending':leaderboardStale?(leaderboardRows.length?'leaderboardCached':'leaderboardWaiting'):!leaderboardLoaded?'leaderboardLoading':leaderboardRows.length?'':'leaderboardEmpty');if(leaderboardLoaded&&!leaderboardStale&&!pending&&!leaderboardError&&leaderboardRows.length)status.textContent=''}
   const exportButton=root.querySelector('#puzzleLeaderboardExport');if(exportButton&&!exportButton.dataset.exporting)exportButton.disabled=!filtered.length;
+  // Refresh only restores the control that was actually focused and replaced.
+  // It never moves initial focus or focuses a hidden/collapsed control.
+  if(active&&!active.isConnected&&document.visibilityState!=='hidden'){
+    const replacement=activePage?[...root.querySelectorAll('[data-leaderboard-pagination] [data-page-step]')].find(button=>button.closest('[data-leaderboard-pagination]').dataset.leaderboardPagination===activePage.difficulty&&button.dataset.pageStep===activePage.step):activeGroup!==null?[...root.querySelectorAll('#puzzleGroupFilterOptions input')].find(input=>input.value===activeGroup):null;
+    if(replacement&&!replacement.disabled&&replacement.getClientRects().length)replacement.focus({preventScroll:true});
+  }
 }
 async function refreshLeaderboard({cloud=true}={}){
   if(disposed||leaderboardClosed||!root.isConnected)return;

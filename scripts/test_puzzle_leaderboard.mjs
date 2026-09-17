@@ -8,6 +8,25 @@ import {bestPuzzleResults,normalizePuzzleResult,puzzleGroups,filterPuzzleResults
 import {commitPuzzleLeaderboard} from '../site/assets/js/puzzle-storage.js';
 
 const row=(id,extra={})=>({id,fio:'Student '+id,group:'ГГУбд-01-26',difficulty:'hard',time_ms:4000,placed:89,total:89,timestamp:1767225600000,...extra});
+test('all catalog country labels resolve in RU/EN/ZH without changing ISO identities',async()=>{
+  const source=readFileSync(new URL('../site/assets/js/puzzle-bootstrap.js',import.meta.url),'utf8');
+  const code=source.slice(source.indexOf('async function worldNames()'),source.indexOf('async function localAdm1('));
+  assert.ok(code.includes('async function getAdmCatalog()'));
+  const load=async path=>JSON.parse(readFileSync(new URL('../site/assets/puzzle/data/'+path.split('/').pop(),import.meta.url),'utf8'));
+  const manifest=JSON.parse(readFileSync(new URL('../site/assets/puzzle/data/adm1/manifest.json',import.meta.url),'utf8'));
+  const context=vm.createContext({base:'/data',load,getAdmManifest:async()=>manifest});
+  vm.runInContext('let admCatalog,admCatalogSource;'+code,context);
+  const catalog=await vm.runInContext('getAdmCatalog()',context);
+  const raw=await load('/data/geoboundaries_adm1_catalog.json');
+  assert.equal(catalog.countries.length,198);
+  assert.deepEqual(Array.from(catalog.countries,item=>item.iso),raw.map(item=>item.boundaryISO));
+  for(const country of catalog.countries){
+    assert.match(country.name,/\p{Script=Cyrillic}/u,country.iso+' RU');
+    assert.match(country.name_zh,/\p{Script=Han}/u,country.iso+' ZH');
+    assert.ok(country.name_en.trim(),country.iso+' EN');
+  }
+  for(const iso of ['XKX','SSD','PSE'])assert.notEqual(catalog.countries.find(item=>item.iso===iso).name,raw.find(item=>item.boundaryISO===iso).boundaryName);
+});
 test('per-difficulty best times, stable identities, old identities and deterministic ties',()=>{
   const a='a'.repeat(64),b='b'.repeat(64);
   const rows=bestPuzzleResults([
@@ -25,6 +44,7 @@ test('per-difficulty best times, stable identities, old identities and determini
   const sameLabel={fio:'Same Name',group:'Group'};
   assert.equal(bestPuzzleResults([row('legacy',sameLabel),row('new',{...sameLabel,participant_id:a})]).length,1);
   assert.equal(bestPuzzleResults([row('one',{...sameLabel,participant_id:a}),row('two',{...sameLabel,participant_id:b})]).length,2);
+  assert.equal(bestPuzzleResults([row('left',{fio:'A|B',group:'C'}),row('right',{fio:'A',group:'B|C'})]).length,2);
 });
 test('local outbox and confirmed immutable record produce one row; real long duration wins over legacy clamp',()=>{
   const local=row('attempt',{elapsed_ms:7200500,time_ms:3599000,pending:true});

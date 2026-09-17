@@ -119,6 +119,8 @@
   const hitCtx = hitCanvas.getContext("2d");
   const staticCanvas = document.createElement("canvas");
   const staticCtx = staticCanvas.getContext("2d", { alpha: true });
+  const backgroundSprite = { valid: false, direct: false };
+  const activeSprite = { canvas: document.createElement("canvas"), path: null };
 
   const DIFFICULTY = {
     easy: { label: tr("Низкая"), points: 3, snap: 60 },
@@ -173,6 +175,7 @@
     viewMin: 0.55,
     viewMax: 16,
     projection: null,
+    legacyProjection: false,
     cssWidth: 1,
     cssHeight: 1,
     dpr: 1,
@@ -679,6 +682,7 @@
     syncSelectors(settings);
     setLoading(true, "Подготавливаем карту", "Геометрия проверяется и подготавливается для сенсорного управления.");
     if (!state.ready) els.empty.hidden = true;
+    let previousScene = null;
     try {
       let storedGeometry = resume?.geometryRef ? await root.puzzleProgress?.loadGeometry?.(resume.geometryRef) : null;
       if (!current()) return;
@@ -709,11 +713,18 @@
       const attempt = resume ? { attempt_id: resume.attemptId, seed: resume.seed } : await startAttempt(settings.mode, resolved.selection, settings.difficulty, count, featureIds, resolved.wrapper.dataset || {});
       if (!current()) return;
       cancelGesture();
-      clearTimeout(hintTimer);
-      if (els.resultDialog.open) els.resultDialog.close();
+      // Preparation below is synchronous: retain the whole live scene until
+      // projection, paths, restored positions and the first draw all succeed.
+      previousScene = { ...state };
       Object.assign(state, {
         mode: settings.mode, selection: resolved.selection, difficulty: settings.difficulty,
         wrapper: resolved.wrapper, collection, features: collection.features, geometryRef,
+        // Older drafts used offsets in the fitted projection instead of a
+        // geographic point/relative zoom. Keep their original coordinate space
+        // for this first restore; the next checkpoint writes portable values.
+        legacyProjection: Boolean(resume && (!(Number(resume.view?.zoom) > 0)
+          || resume.pieces.some(piece => !piece.locked && !piece.inTray
+            && (!Array.isArray(piece.point) || piece.point.length !== 2 || !piece.point.every(Number.isFinite))))),
         attemptId: attempt.attempt_id, seed: Number(attempt.seed) || hashString(attempt.attempt_id),
         cursor: resume?.cursor || 0, current: -1, placed: 0,
         errors: Math.max(0, Number(resume?.errors) || 0), hints: Math.max(0, Number(resume?.hints) || 0),
@@ -739,6 +750,9 @@
       setLoading(false);
       els.empty.hidden = true;
       drawAll(true);
+      previousScene = null;
+      clearTimeout(hintTimer);
+      if (els.resultDialog.open) els.resultDialog.close();
       state.restoring = false;
       // Catalogues enrich the controls, but a saved offline map can open first.
       if (!seminarContext && ["russia-subjects", "country-regions"].includes(state.mode)) void loadAdm1Catalog().catch(() => {});
@@ -746,6 +760,27 @@
       if (state.finished) showResult();
       else await checkpoint();
     } catch (error) {
+      if (previousScene) {
+        Object.assign(state, previousScene);
+        // fitCanvas clears the live and cached canvases. Restore their sizes
+        // and rebuild pixels from the retained paths without preparing again.
+        const width = Math.floor(state.cssWidth * state.dpr);
+        const height = Math.floor(state.cssHeight * state.dpr);
+        for (const canvas of [els.canvas, hitCanvas, staticCanvas]) {
+          if (canvas.width !== width) canvas.width = width;
+          if (canvas.height !== height) canvas.height = height;
+        }
+        ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        hitCtx.setTransform(1, 0, 0, 1, 0, 0);
+        staticCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+        if (!disposed && state.ready) {
+          syncSelectors();
+          updateDatasetMeta();
+          updateUi();
+          setControlsEnabled(true);
+          drawAll(true);
+        }
+      }
       if (!current()) return;
       // A stale tab must not write its old scene if loading the durable head failed.
       state.restoring = Boolean(resume);
@@ -812,8 +847,9 @@
     els.canvas.height = Math.floor(state.cssHeight * state.dpr);
     hitCanvas.width = els.canvas.width;
     hitCanvas.height = els.canvas.height;
-    staticCanvas.width = els.canvas.width;
-    staticCanvas.height = els.canvas.height;
+    // The background cache allocates its own bounded viewport plus overscan.
+    backgroundSprite.valid = false;
+    staticCanvas.width = staticCanvas.height = 0;
     ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     hitCtx.setTransform(1, 0, 0, 1, 0, 0);
     staticCtx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
@@ -890,6 +926,12 @@
       projection = window.d3.geoNaturalEarth1().rotate([-11, 0]);
     } else if (state.mode === "russia-subjects") {
       projection = window.d3.geoMercator().rotate([-105, 0]);
+      if (!state.legacyProjection) {
+        // fitRussiaView already fits the exact projected coordinate bounds.
+        // A second spherical-stream fit here is expensive and algebraically
+        // cancels out in that final view transform. Keep fixed internal units.
+        return projection.scale(150).translate([0, 0]);
+      }
       projection.fitSize(
         [Math.max(1, map.width - padding * 2), Math.max(1, map.height - padding * 2)],
         state.collection,
@@ -935,13 +977,13 @@
     return { x0, y0, x1, y1, width: Math.max(1, x1 - x0), height: Math.max(1, y1 - y0), cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
   }
 
-  function appendRing(path, ring, toleranceOverride = null) {
+  function appendRing(path, ring, toleranceOverride = null, projectedRing = null) {
     if (state.mode === "russia-subjects") {
       const tolerance = toleranceOverride ?? 0;
       let previous = null;
       let subpathStart = null;
-      ring.forEach((coordinate) => {
-        const projected = state.projection(coordinate);
+      ring.forEach((coordinate, index) => {
+        const projected = projectedRing ? projectedRing[index] : state.projection(coordinate);
         if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
         if (!previous) {
           path.moveTo(projected[0], projected[1]);
@@ -967,8 +1009,8 @@
     let previous = null;
     const seamLimit = state.cssWidth * 0.72;
     const tolerance = 0;
-    ring.forEach((coordinate) => {
-      const projected = state.projection(coordinate);
+    ring.forEach((coordinate, index) => {
+      const projected = projectedRing ? projectedRing[index] : state.projection(coordinate);
       if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
       const distance = previous ? Math.hypot(projected[0] - previous[0], projected[1] - previous[1]) : 0;
       if (previous && distance > seamLimit) {
@@ -988,16 +1030,24 @@
 
   function buildPath(feature, toleranceOverride = null) {
     const path = new Path2D();
+    // Closing a ring on a large compound Path2D can repeatedly rescan all its
+    // preceding contours in browser canvas backends. Close each independent
+    // ring first, then append it; coordinates, winding and fill rules stay exact.
+    const append = (ring) => {
+      const ringPath = new Path2D();
+      appendRing(ringPath, ring, toleranceOverride);
+      path.addPath(ringPath);
+    };
     const geometry = feature.geometry || {};
     if (geometry.type === "Polygon") {
-      (geometry.coordinates || []).forEach((ring) => appendRing(path, ring, toleranceOverride));
+      (geometry.coordinates || []).forEach(append);
     } else if (geometry.type === "MultiPolygon") {
-      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendRing(path, ring, toleranceOverride)));
+      (geometry.coordinates || []).forEach((polygon) => polygon.forEach(append));
     }
     return path;
   }
 
-  function appendStrokeRing(path, ring, toleranceOverride = null) {
+  function appendStrokeRing(path, ring, toleranceOverride = null, projectedRing = null) {
     if (state.mode === "russia-subjects") {
       const tolerance = toleranceOverride ?? 0;
       let previousCoordinate = null;
@@ -1005,8 +1055,8 @@
       let subpathStart = null;
       let meridianInterrupted = false;
       const onAntimeridian = (coordinate) => Math.abs(Math.abs(Number(coordinate?.[0])) - 180) < 1e-6;
-      ring.forEach((coordinate) => {
-        const projected = state.projection(coordinate);
+      ring.forEach((coordinate, index) => {
+        const projected = projectedRing ? projectedRing[index] : state.projection(coordinate);
         if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
         if (!previousProjected) {
           path.moveTo(projected[0], projected[1]);
@@ -1045,8 +1095,8 @@
     const seamLimit = state.mode === "russia-subjects" ? 80 : state.cssWidth * 0.72;
     const tolerance = state.mode === "russia-subjects" ? 0.8 : 0;
     const onAntimeridian = (coordinate) => Math.abs(Math.abs(Number(coordinate?.[0])) - 180) < 1e-6;
-    ring.forEach((coordinate) => {
-      const projected = state.projection(coordinate);
+    ring.forEach((coordinate, index) => {
+      const projected = projectedRing ? projectedRing[index] : state.projection(coordinate);
       if (!projected || !Number.isFinite(projected[0]) || !Number.isFinite(projected[1])) return;
       const distance = previousProjected ? Math.hypot(projected[0] - previousProjected[0], projected[1] - previousProjected[1]) : 0;
       const meridianSegment = state.mode === "russia-subjects"
@@ -1071,11 +1121,16 @@
 
   function buildStrokePath(feature, toleranceOverride = null) {
     const path = new Path2D();
+    const append = (ring) => {
+      const ringPath = new Path2D();
+      appendStrokeRing(ringPath, ring, toleranceOverride);
+      path.addPath(ringPath);
+    };
     const geometry = feature.geometry || {};
     if (geometry.type === "Polygon") {
-      (geometry.coordinates || []).forEach((ring) => appendStrokeRing(path, ring, toleranceOverride));
+      (geometry.coordinates || []).forEach(append);
     } else if (geometry.type === "MultiPolygon") {
-      (geometry.coordinates || []).forEach((polygon) => polygon.forEach((ring) => appendStrokeRing(path, ring, toleranceOverride)));
+      (geometry.coordinates || []).forEach((polygon) => polygon.forEach(append));
     }
     return path;
   }
@@ -1086,12 +1141,40 @@
     return { path: state.paths[index], strokePath: state.strokePaths[index] };
   }
 
+  function buildFeatureGeometry(feature) {
+    const path = new Path2D(), strokePath = new Path2D();
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    const append = (ring) => {
+      // Reuse each projection for bounds, fill and border. Keep this temporary
+      // array per ring so large island datasets do not retain a second geometry.
+      const projected = ring.map(coordinate => {
+        const point = state.projection(coordinate);
+        if (point && point.every(Number.isFinite)) {
+          x0 = Math.min(x0, point[0]); y0 = Math.min(y0, point[1]);
+          x1 = Math.max(x1, point[0]); y1 = Math.max(y1, point[1]);
+        }
+        return point;
+      });
+      const fillRing = new Path2D(), strokeRing = new Path2D();
+      appendRing(fillRing, ring, 0, projected);
+      appendStrokeRing(strokeRing, ring, 0, projected);
+      path.addPath(fillRing); strokePath.addPath(strokeRing);
+    };
+    const geometry = feature.geometry || {};
+    if (geometry.type === "Polygon") (geometry.coordinates || []).forEach(append);
+    else if (geometry.type === "MultiPolygon") (geometry.coordinates || []).forEach(polygon => polygon.forEach(append));
+    if (![x0, y0, x1, y1].every(Number.isFinite)) { x0 = y0 = 0; x1 = y1 = 1; }
+    return { path, strokePath, bounds: { x0, y0, x1, y1, width: Math.max(1, x1 - x0), height: Math.max(1, y1 - y0), cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 } };
+  }
+
   function rebuildGeometry() {
     if (!state.collection) return;
+    activeSprite.path = null;
     state.projection = buildProjection();
     const geoPath = window.d3.geoPath(state.projection);
-    state.bounds = state.features.map((feature) => {
-      if (state.mode !== "world-countries") return manualFeatureBounds(feature);
+    const prepared = state.mode === "russia-subjects" ? null : state.features.map(buildFeatureGeometry);
+    state.bounds = state.features.map((feature, index) => {
+      if (state.mode !== "world-countries") return prepared ? prepared[index].bounds : manualFeatureBounds(feature);
       const value = geoPath.bounds(feature);
       const x0 = Number.isFinite(value[0][0]) ? value[0][0] : 0;
       const y0 = Number.isFinite(value[0][1]) ? value[0][1] : 0;
@@ -1107,8 +1190,8 @@
     if (state.mode === "russia-subjects") fitRussiaView();
     state.baseViewK = state.mode === "russia-subjects" ? state.view.k : 1;
     state.renderGeometry = state.mode === "russia-subjects" ? window.RudnPuzzleGeometry.createTopologyRenderer({ topology: state.wrapper?.geometry, objectKey: bestTopologyObject(state.wrapper?.geometry || {}), featureIds: state.features.map(feature => feature.properties._puzzleId), project: state.projection, seamWidth: 2 * Math.PI * state.projection.scale(), maxScale: state.baseViewK * state.viewMax }) : null;
-    state.paths = state.renderGeometry ? [] : state.features.map((feature) => buildPath(feature));
-    state.strokePaths = state.renderGeometry ? [] : state.features.map((feature) => buildStrokePath(feature));
+    state.paths = state.renderGeometry ? [] : prepared ? prepared.map(feature => feature.path) : state.features.map((feature) => buildPath(feature));
+    state.strokePaths = state.renderGeometry ? [] : prepared ? prepared.map(feature => feature.strokePath) : state.features.map((feature) => buildStrokePath(feature));
     if (state.current >= 0 && state.pieces[state.current] && state.pieces[state.current].inTray) placePieceInTray(state.current);
   }
 
@@ -1185,14 +1268,14 @@
     return state.current >= 0 ? state.pieces[state.current] : null;
   }
 
-  function setScene(context) {
+  function setScene(context, view = state.view) {
     context.setTransform(
-      state.dpr * state.view.k,
+      state.dpr * view.k,
       0,
       0,
-      state.dpr * state.view.k,
-      state.dpr * state.view.x,
-      state.dpr * state.view.y,
+      state.dpr * view.k,
+      state.dpr * view.x,
+      state.dpr * view.y,
     );
   }
 
@@ -1205,14 +1288,13 @@
     ctx.clearRect(0, 0, state.cssWidth, state.cssHeight);
   }
 
-  function clipMap(context) {
+  function clipMap(context, map = state.mapRect) {
     resetContext(context);
-    const map = state.mapRect;
     context.beginPath(); context.rect(map.x, map.y, map.width, map.height); context.clip();
   }
 
-  function visibleFeature(index) {
-    const bounds = state.bounds[index], map = state.mapRect, view = state.view;
+  function visibleFeature(index, view = state.view, map = state.mapRect) {
+    const bounds = state.bounds[index];
     return bounds.x1 * view.k + view.x >= map.x - 3 && bounds.x0 * view.k + view.x <= map.x + map.width + 3
       && bounds.y1 * view.k + view.y >= map.y - 3 && bounds.y0 * view.k + view.y <= map.y + map.height + 3;
   }
@@ -1221,17 +1303,17 @@
     return state.renderGeometry ? state.renderGeometry.get(index, state.view.k) : { path: state.paths[index], strokePath: state.strokePaths[index] };
   }
 
-  function drawMap(context = ctx) {
+  function drawMap(context = ctx, view = state.view, map = state.mapRect) {
     const fillRule = state.mode === "russia-subjects" ? "nonzero" : "evenodd";
     context.save();
-    clipMap(context);
-    setScene(context);
+    clipMap(context, map);
+    setScene(context, view);
     context.fillStyle = "#e7f1f7";
     context.strokeStyle = "#91b2c6";
     context.lineWidth = 1 / state.view.k;
     context.lineJoin = context.lineCap = "round";
     state.features.forEach((_, index) => {
-      if (!visibleFeature(index)) return;
+      if (!visibleFeature(index, view, map)) return;
       const paths = displayPaths(index);
       context.fill(paths.path, fillRule);
       context.stroke(paths.strokePath);
@@ -1256,22 +1338,65 @@
     ctx.restore();
   }
 
-  function drawLockedPieces(context = ctx) {
+  function drawLockedPieces(context = ctx, view = state.view, map = state.mapRect) {
     const fillRule = state.mode === "russia-subjects" ? "nonzero" : "evenodd";
     context.save();
-    clipMap(context);
-    setScene(context);
+    clipMap(context, map);
+    setScene(context, view);
     context.fillStyle = "#0079c1";
     context.strokeStyle = "#004f80";
     context.lineWidth = 1 / state.view.k;
     context.lineJoin = context.lineCap = "round";
     state.pieces.forEach((piece) => {
-      if (!piece.locked || !visibleFeature(piece.index)) return;
+      if (!piece.locked || !visibleFeature(piece.index, view, map)) return;
       const paths = displayPaths(piece.index);
       context.fill(paths.path, fillRule);
       context.stroke(paths.strokePath);
     });
     context.restore();
+  }
+
+  function drawPieceRaster(path, strokePath, bounds, scale, tx, ty) {
+    // Rasterize the complete original contour at the *current* physical pixel
+    // scale. Translation can reuse it without retessellating thousands of
+    // islands. Zoom/projection changes always rebuild; never stretch old pixels.
+    const dpr = state.dpr, pad = 2;
+    const left = Math.max(bounds.x0 * scale - pad, -tx);
+    const top = Math.max(bounds.y0 * scale - pad, -ty);
+    const right = Math.min(bounds.x1 * scale + pad, state.cssWidth - tx);
+    const bottom = Math.min(bounds.y1 * scale + pad, state.cssHeight - ty);
+    if (right <= left || bottom <= top) return true;
+    const sprite = activeSprite;
+    if (sprite.path !== path || sprite.scale !== scale || sprite.dpr !== dpr
+      || left < sprite.left || top < sprite.top || right > sprite.right || bottom > sprite.bottom) {
+      // At most 16 MiB, including a small motion margin; oversize displays keep
+      // the vector fallback instead of allocating an unbounded zoomed bitmap.
+      const maxPixels = 4 * 1024 * 1024;
+      let margin = 96;
+      let x0, y0, x1, y1;
+      do {
+        x0 = Math.floor(Math.max(bounds.x0 * scale - pad, left - margin) * dpr);
+        y0 = Math.floor(Math.max(bounds.y0 * scale - pad, top - margin) * dpr);
+        x1 = Math.ceil(Math.min(bounds.x1 * scale + pad, right + margin) * dpr);
+        y1 = Math.ceil(Math.min(bounds.y1 * scale + pad, bottom + margin) * dpr);
+        if ((x1 - x0) * (y1 - y0) <= maxPixels) break;
+        if (!margin) return false;
+        margin = Math.floor(margin / 2);
+      } while (true);
+      const canvas = sprite.canvas;
+      canvas.width = Math.max(1, x1 - x0); canvas.height = Math.max(1, y1 - y0);
+      const context = canvas.getContext("2d", { alpha: true });
+      context.setTransform(dpr * scale, 0, 0, dpr * scale, -x0, -y0);
+      context.fillStyle = "#dc3f45"; context.strokeStyle = "#8e2028";
+      context.lineWidth = 1.2 / scale; context.lineJoin = context.lineCap = "round";
+      context.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
+      context.stroke(strokePath);
+      Object.assign(sprite, { path, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
+    }
+    ctx.save(); resetContext(ctx);
+    ctx.drawImage(sprite.canvas, sprite.left + tx, sprite.top + ty, sprite.canvas.width / dpr, sprite.canvas.height / dpr);
+    ctx.restore();
+    return true;
   }
 
   function drawCurrentPiece() {
@@ -1283,6 +1408,7 @@
       const tray = trayRect();
       const scale = Math.max(0.001, Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height));
       const center = trayCenter();
+      if (drawPieceRaster(path, strokePath, bounds, scale, center.x - bounds.cx * scale, center.y - bounds.cy * scale)) return;
       ctx.save();
       resetContext(ctx);
       ctx.translate(center.x, center.y);
@@ -1297,6 +1423,7 @@
       ctx.restore();
       return;
     }
+    if (drawPieceRaster(path, strokePath, bounds, state.view.k, state.view.x + piece.dx * state.view.k, state.view.y + piece.dy * state.view.k)) return;
     ctx.save();
     setScene(ctx);
     ctx.translate(piece.dx, piece.dy);
@@ -1375,10 +1502,38 @@
   }
 
   function rebuildStaticLayer() {
-    staticCtx.setTransform(1, 0, 0, 1, 0, 0);
-    staticCtx.clearRect(0, 0, staticCanvas.width, staticCanvas.height);
-    drawMap(staticCtx);
-    drawLockedPieces(staticCtx);
+    const sprite = backgroundSprite, map = state.mapRect, view = state.view, dpr = state.dpr;
+    const sameScene = sprite.valid && sprite.projection === state.projection && sprite.pieces === state.pieces
+      && sprite.placed === state.placed && sprite.scale === view.k && sprite.dpr === dpr
+      && sprite.map.x === map.x && sprite.map.y === map.y && sprite.map.width === map.width && sprite.map.height === map.height;
+    const x = sprite.left + view.x - sprite.viewX, y = sprite.top + view.y - sprite.viewY;
+    if (sameScene && !sprite.direct && x <= map.x && y <= map.y
+      && x + staticCanvas.width / dpr >= map.x + map.width && y + staticCanvas.height / dpr >= map.y + map.height) {
+      state.staticDirty = false;
+      return;
+    }
+    let margin = Math.max(64, Math.min(256, Math.min(map.width, map.height) / 2));
+    let left, top, width, height;
+    do {
+      left = Math.floor((map.x - margin) * dpr) / dpr;
+      top = Math.floor((map.y - margin) * dpr) / dpr;
+      width = Math.ceil((map.x + map.width + margin - left) * dpr);
+      height = Math.ceil((map.y + map.height + margin - top) * dpr);
+      if (width * height <= 4 * 1024 * 1024 || !margin) break;
+      margin = Math.floor(margin / 2);
+    } while (true);
+    Object.assign(sprite, { valid: true, direct: width * height > 4 * 1024 * 1024,
+      projection: state.projection, pieces: state.pieces, placed: state.placed, scale: view.k, dpr,
+      map: { ...map }, left, top, viewX: view.x, viewY: view.y });
+    if (sprite.direct) {
+      staticCanvas.width = staticCanvas.height = 0;
+    } else {
+      staticCanvas.width = width; staticCanvas.height = height;
+      const cacheView = { x: view.x - left, y: view.y - top, k: view.k };
+      const cacheMap = { x: 0, y: 0, width: width / dpr, height: height / dpr };
+      drawMap(staticCtx, cacheView, cacheMap);
+      drawLockedPieces(staticCtx, cacheView, cacheMap);
+    }
     state.staticDirty = false;
   }
 
@@ -1388,7 +1543,17 @@
     if (state.staticDirty) rebuildStaticLayer();
     clearCanvas();
     resetContext(ctx);
-    ctx.drawImage(staticCanvas, 0, 0, staticCanvas.width, staticCanvas.height, 0, 0, state.cssWidth, state.cssHeight);
+    if (backgroundSprite.direct) {
+      drawMap(); drawLockedPieces();
+    } else {
+      // Cache translation never changes scale. Clip at the actual map rectangle
+      // so the overscan cannot appear in the piece tray or over the controls.
+      ctx.save(); clipMap(ctx);
+      const x = backgroundSprite.left + state.view.x - backgroundSprite.viewX;
+      const y = backgroundSprite.top + state.view.y - backgroundSprite.viewY;
+      ctx.drawImage(staticCanvas, x, y, staticCanvas.width / state.dpr, staticCanvas.height / state.dpr);
+      ctx.restore();
+    }
     drawHint();
     drawTray();
     drawCurrentPiece();
@@ -1973,6 +2138,10 @@
     window.clearTimeout(state.resizeTimer);
     window.clearTimeout(toast.timer);
     resizeObserver?.disconnect();
+    activeSprite.path = null;
+    activeSprite.canvas.width = activeSprite.canvas.height = 0;
+    backgroundSprite.valid = false;
+    staticCanvas.width = staticCanvas.height = 0;
     listeners.forEach(remove => remove());
     stage.classList.remove("is-puzzle-fullscreen");
     document.body.classList.remove("puzzle-fullscreen-active");

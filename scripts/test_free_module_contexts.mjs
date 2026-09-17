@@ -55,7 +55,7 @@ async function mount(page,module,context,guest=false){
 }
 try{
  for(const engine of (process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').split(',')){
-  const browser=await pw[engine].launch({headless:true});
+  const browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});
   try{
    for(const module of ['reception','career'].filter(name=>!process.env.FREE_MODULES||process.env.FREE_MODULES.split(',').includes(name))){
     const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[];
@@ -76,29 +76,42 @@ try{
     if(module==='career'){
      // Complete the actual diagnostic UI as a guest; this exercises the local
      // result handler as well as the independently saved 16-view workspace.
-     await page.evaluate(()=>window.handle.navigate('test'));
-     for(let question=0;question<27;question++){
-      await page.locator('#answer-options [data-answer="3"]').click();
-      await page.locator('#question-next').click();
-     }
-     for(let sector=0;sector<4;sector++)await page.locator('.priority-toggle').nth(sector).click();
-     for(let sector=4;sector<6;sector++)await page.locator('.low-toggle').nth(sector).click();
-     await page.locator('#sectors-next').click();
-     const conditions=await page.locator('.condition-option[data-value="3"]').count();assert(conditions>0);
-     for(let condition=0;condition<conditions;condition++)await page.locator('.condition-option[data-value="3"]').nth(condition).click();
-     await page.locator('#calculate-button').click();await flush(page);
+     const completeCareer=async()=>{
+      await page.evaluate(()=>window.handle.navigate('test'));
+      for(let question=0;question<27;question++){
+       await page.locator('#answer-options [data-answer="3"]').click();
+       await page.locator('#question-next').click();
+      }
+      for(let sector=0;sector<4;sector++)await page.locator('.priority-toggle').nth(sector).click();
+      for(let sector=4;sector<6;sector++)await page.locator('.low-toggle').nth(sector).click();
+      await page.locator('#sectors-next').click();
+      const conditions=await page.locator('.condition-option[data-value="3"]').count();assert(conditions>0);
+      for(let condition=0;condition<conditions;condition++)await page.locator('.condition-option[data-value="3"]').nth(condition).click();
+      await page.locator('#calculate-button').click();await flush(page);
+     };
+     await completeCareer();
      const attempts=await page.evaluate(async()=>(await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner:'guest:career'}));
      assert.equal(attempts.length,1);assert.equal(attempts[0].activitySlug,'career-freeplay');assert.equal(attempts[0].recordGrade,false);
      await page.reload();await mount(page,module,'free',true);
      for(const route of ['home','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies'])await page.evaluate(route=>window.handle.navigate(route),route);
      await flush(page);
      assert.equal((await page.evaluate(async()=>(await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner:'guest:career'}))).length,1);
+     await mount(page,module,'free');await completeCareer();
+     const signedAttempts=await page.evaluate(async owner=>(await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner}),freeScope.owner);
+     assert.equal(signedAttempts.length,1);assert.equal(signedAttempts[0].activitySlug,'career-freeplay');assert.equal(signedAttempts[0].recordGrade,false);
+     assert((await page.evaluate(()=>window.qaCompletedAttempts||[])).includes(signedAttempts[0].id),'Signed-in result reaches the shared Backend instance');
     }else{
      // Free play has its own replay archive as well as its own active draft.
      await page.locator('[data-action="home"]').first().click();
      await page.locator('[data-action="open-bank"]').click();
      await page.locator('[data-action="random-practice"]').click();
-     await page.locator('.rx-confirm-dialog button[value="accept"]').click();await flush(page);
+     await page.locator('.rx-confirm-dialog button[value="accept"]').click();
+     // Calendar/content preparation is outside the edit queue. Wait for the
+     // committed replacement, not merely the confirmation click or old flush.
+     await page.waitForFunction(id=>{
+      const value=localStorage.getItem('rudn.reception.free:rudn.reception.v16:preview:2026-2027:practice');
+      return value&&JSON.parse(value).id!==id;
+     },guest.state.id);await flush(page);
      const replay=await load(page,{...freeScope,owner:'guest:reception'});
      assert.notEqual(replay.state.id,guest.state.id,'Replay creates a new free attempt');
      assert(await page.evaluate(()=>Object.keys(localStorage).some(key=>key.startsWith('rudn.reception.free:rudn.reception.archive.'))),'Free replay archives only in the free namespace');

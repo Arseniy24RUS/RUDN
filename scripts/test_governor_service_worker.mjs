@@ -155,6 +155,36 @@ test('an incomplete puzzle entry prevents activation of an unusable update',asyn
   assert.equal(worker.skipped,false,'The prepared older worker must remain active');
 });
 
+test('puzzle runtime retries retain offline cache and cache successful retries under the canonical URL',async()=>{
+  const worker=makeWorker(),cache=await worker.cacheStorage.open(worker.cacheName);
+  const engine=`./assets/js/puzzle-engine.js?v=${currentVersion}`;
+  worker.fetch=async()=>new Response('recovered runtime');
+  assert.equal(await (await worker.request(engine+'&puzzle_retry=2',{clientId:'puzzle-tab'})).text(),'recovered runtime');
+  assert.equal(await (await cache.match(engine)).text(),'recovered runtime');
+  assert.equal(await cache.match(engine+'&puzzle_retry=2'),undefined,'Retry counters must not multiply cached assets');
+  worker.fetch=async()=>{throw new TypeError('Network unavailable')};
+  assert.equal(await (await worker.request(engine+'&puzzle_retry=3',{clientId:'puzzle-tab'})).text(),'recovered runtime');
+  assert.equal(await (await worker.request(engine,{clientId:'puzzle-tab'})).text(),'recovered runtime');
+  assert.equal(worker.networkCalls,1);
+  for(const url of [engine+'&puzzle_retry=invalid',engine+'&puzzle_retry=3&different=1',`./assets/js/backend.js?v=${currentVersion}&puzzle_retry=3`]){
+    assert.equal((await worker.request(url)).type,'error','Only the numeric loader parameter on its four runtime files is canonicalized');
+  }
+});
+
+test('puzzle retry counters preserve historical client bindings and the version guard',async()=>{
+  const worker=makeWorker(),client={id:'old-puzzle-tab',url:scope,postMessage(){}};
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.2-puzzle');
+  const current=await worker.cacheStorage.open(worker.cacheName);
+  await old.put('./assets/js/main.js?v=1.3.2',new Response('old main'));
+  await old.put('./assets/js/puzzle-engine.js?v=1.3.2',new Response('old puzzle'));
+  await current.put(`./assets/js/puzzle-engine.js?v=${currentVersion}`,new Response('current puzzle'));
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.2'}});
+  assert.equal(await (await worker.request('./assets/js/puzzle-engine.js?v=1.3.2&puzzle_retry=1',{clientId:client.id})).text(),'old puzzle');
+  assert.equal((await worker.request(`./assets/js/puzzle-engine.js?v=${currentVersion}&puzzle_retry=1`,{clientId:client.id})).type,'error');
+  assert.equal((await worker.request('./assets/js/puzzle-render-geometry.js?v=1.3.2&puzzle_retry=1',{clientId:client.id})).type,'error');
+  assert.equal(worker.networkCalls,0,'Neither a retry nor a missing old asset may fetch a newer release');
+});
+
 test('activation deletes only this scope releases and the exact legacy platform cache',async()=>{
   const worker=makeWorker();
   const rootWorker=makeWorker('https://example.test/');

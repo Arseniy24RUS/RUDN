@@ -31,7 +31,7 @@ export function bestPuzzleResults(remote = [], local = []) {
   }
   // Link an older name/group row only when that label identifies exactly one
   // known participant. Never merge two identified students with matching names.
-  const label = row => `${row.fio.toLocaleLowerCase()}|${row.group.toLocaleLowerCase()}`;
+  const label = row => JSON.stringify([row.fio.toLowerCase(), row.group.toLowerCase()]);
   const identities = new Map();
   for (const row of attempts.values()) if (row.participant_id) {
     const known = identities.get(label(row)) || new Set();

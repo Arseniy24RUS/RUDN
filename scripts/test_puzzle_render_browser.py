@@ -16,10 +16,62 @@ from playwright.async_api import async_playwright
 import test_puzzle_catalog as catalog
 
 RENDER_HOOK = r"""
+  window.__backgroundPaints=0;
+  const observedBackgroundFill=staticCtx.fill;
+  staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};
+  const observedDrawImage=ctx.drawImage;
+  ctx.drawImage=function(...args){if(args[0]===staticCanvas)window.__backgroundDraw={x:args[1],y:args[2],width:args[3],height:args[4]};return observedDrawImage.apply(this,args);};
   window.__renderRead=()=>({snapshot:snapshotState(),map:{...state.mapRect},tray:trayRect(),side:state.sideTray,
     renderer:state.renderGeometry?.diagnostics(),baseViewK:state.baseViewK,
     features:state.features.map((feature,index)=>({id:feature.properties._puzzleId,name:feature.properties._puzzleName,
       russian:feature.properties.name_ru||feature.properties.name,point:worldToScreen(...state.anchors[index])}))});
+  window.__spriteAudit=()=>{
+    const sprite=activeSprite,piece=currentPiece(),paths=highResolutionPaths(piece.index);
+    const canvas=document.createElement('canvas');canvas.width=sprite.canvas.width;canvas.height=sprite.canvas.height;
+    const context=canvas.getContext('2d');context.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
+    context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/sprite.scale;context.lineJoin=context.lineCap='round';
+    context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
+    const actual=sprite.canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
+    const expected=context.getImageData(0,0,canvas.width,canvas.height).data;
+    let differences=0,maximumDifference=0,nonempty=0;
+    for(let i=0;i<actual.length;i++){if(actual[i]!==expected[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(actual[i]-expected[i]));if(i%4===3&&actual[i])nonempty++;}
+    return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale:state.view.k,dpr:sprite.dpr,
+      pixels:canvas.width*canvas.height,bytes:actual.length,differences,maximumDifference,nonempty,
+      rectangle:{left:sprite.left,top:sprite.top,right:sprite.right,bottom:sprite.bottom}};
+  };
+  window.__backgroundAudit=()=>{
+    const actual=document.createElement('canvas'),expected=document.createElement('canvas');
+    actual.width=expected.width=els.canvas.width;actual.height=expected.height=els.canvas.height;
+    const a=actual.getContext('2d'),b=expected.getContext('2d'),sprite=backgroundSprite;
+    a.save();clipMap(a);
+    if(sprite.direct){drawMap(a);drawLockedPieces(a);}else a.drawImage(staticCanvas,
+      sprite.left+state.view.x-sprite.viewX,sprite.top+state.view.y-sprite.viewY,staticCanvas.width/state.dpr,staticCanvas.height/state.dpr);
+    a.restore();drawMap(b);drawLockedPieces(b);
+    const pixels=a.getImageData(0,0,actual.width,actual.height).data,reference=b.getImageData(0,0,actual.width,actual.height).data;
+    let differences=0,maximumDifference=0,maximumPremultipliedDifference=0,outsidePixels=0;const examples=[];
+    for(let i=0;i<pixels.length;i++){
+      if(pixels[i]!==reference[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(pixels[i]-reference[i]));
+      const alpha=(i&~3)+3;
+      maximumPremultipliedDifference=Math.max(maximumPremultipliedDifference,i%4===3?Math.abs(pixels[i]-reference[i]):Math.abs(pixels[i]*pixels[alpha]/255-reference[i]*reference[alpha]/255));
+      if(i%4===3&&examples.length<12&&Math.abs(pixels[i]-reference[i])>5){const p=i>>2;examples.push({x:p%actual.width,y:Math.floor(p/actual.width),actual:Array.from(pixels.slice(i-3,i+1)),expected:Array.from(reference.slice(i-3,i+1)),map:{...state.mapRect}});}
+      if(i%4===3&&pixels[i]){const p=i>>2,x=(p%actual.width+.5)/state.dpr,y=(Math.floor(p/actual.width)+.5)/state.dpr,m=state.mapRect;
+        if(x<m.x||x>m.x+m.width||y<m.y||y>m.y+m.height)outsidePixels++;}
+    }
+    // Compare exact contours on an equal-size surface. Native raster backends
+    // can choose different edge tessellation for a larger overscan surface;
+    // that small antialias difference is recorded separately above.
+    const fresh=document.createElement('canvas');fresh.width=staticCanvas.width;fresh.height=staticCanvas.height;
+    let cacheDifferences=0;
+    if(!sprite.direct){const context=fresh.getContext('2d'),view={x:sprite.viewX-sprite.left,y:sprite.viewY-sprite.top,k:state.view.k},map={x:0,y:0,width:fresh.width/state.dpr,height:fresh.height/state.dpr};
+      drawMap(context,view,map);drawLockedPieces(context,view,map);
+      const p=context.getImageData(0,0,fresh.width,fresh.height).data,q=staticCtx.getImageData(0,0,fresh.width,fresh.height).data;
+      for(let i=0;i<p.length;i++)if(p[i]!==q[i])cacheDifferences++;}
+    const draw=window.__backgroundDraw,expectedDraw={x:sprite.left+state.view.x-sprite.viewX,y:sprite.top+state.view.y-sprite.viewY,width:staticCanvas.width/state.dpr,height:staticCanvas.height/state.dpr};
+    return {differences,maximumDifference,maximumPremultipliedDifference,examples,cacheDifferences,draw,expectedDraw,outsidePixels,bytes:staticCanvas.width*staticCanvas.height*4,
+      currentProjection:sprite.projection===state.projection,currentPieces:sprite.pieces===state.pieces,
+      placed:sprite.placed,expectedPlaced:state.placed,scale:sprite.scale,expectedScale:state.view.k,
+      dpr:sprite.dpr,paints:window.__backgroundPaints,direct:sprite.direct};
+  };
 """
 
 
@@ -212,8 +264,25 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             for metric in state['metrics']:
                 expected = {'#91b2c6': 1, '#004f80': 1, '#8e2028': 1.2, '#b97900': 2.2}[metric['color']]
                 assert abs(metric['width'] - expected) < 1e-5, metric
-            records.append({'zoom': zoom, 'canvas': [state['width'], state['height']], 'colors': sorted(colors), 'samples': len(state['metrics'])})
+            sprite = await page.evaluate('window.__spriteAudit()')
+            assert sprite['currentPath'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
+            assert sprite['dpr'] == min(dpr, 2), sprite
+            assert 0 < sprite['bytes'] <= 16*1024*1024, sprite
+            assert sprite['differences'] == 0, sprite
+            background = await page.evaluate('window.__backgroundAudit()')
+            assert background['currentProjection'] and background['currentPieces'], background
+            assert background['placed'] == background['expectedPlaced'], background
+            assert abs(background['scale']-background['expectedScale']) < 1e-9 and background['dpr']==min(dpr,2), background
+            assert background['bytes'] <= 16*1024*1024 and background['outsidePixels']==0, background
+            assert background['cacheDifferences'] == 0 and background['draw'] == background['expectedDraw'], background
+            await page.keyboard.press('Alt+ArrowRight')
+            translated = await page.evaluate('window.__backgroundAudit()')
+            assert translated['paints'] == background['paints'], translated
+            assert translated['cacheDifferences']==0 and translated['outsidePixels']==0 and translated['draw']==translated['expectedDraw'], translated
+            await page.keyboard.press('Alt+ArrowLeft')
+            records.append({'zoom': zoom, 'canvas': [state['width'], state['height']], 'colors': sorted(colors), 'samples': len(state['metrics']), 'sprite':sprite,'background':background,'translated':translated})
         await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-dpr{dpr}-zoom16.png'))
+        record['backgroundInvalidation'] = await check_background_invalidation(page)
         record['zooms'], record['status'] = records, 'passed'
         assert not record.get('pageErrors'), record.get('pageErrors')
     except Exception as error:
@@ -221,6 +290,31 @@ async def run_dpr_case(browser, engine, dpr, server, output):
     finally:
         await context.close()
     return record
+
+
+async def check_background_invalidation(page):
+    await page.locator('#puzzleCenter').click()
+    await page.locator('#puzzleReturn').click()
+    await page.locator('#puzzleCanvas').focus()
+    before = await page.evaluate('window.__backgroundAudit()')
+    # Move beyond the overscan: a newly rendered exact-scale tile must replace it.
+    for _ in range(10):
+        await page.keyboard.press('Alt+Shift+ArrowRight')
+    beyond = await page.evaluate('window.__backgroundAudit()')
+    assert beyond['paints'] > before['paints'] and beyond['cacheDifferences'] == 0, beyond
+    assert beyond['draw'] == beyond['expectedDraw'] and beyond['outsidePixels'] == 0, beyond
+    await page.locator('#puzzleCenter').click()
+    before_drop = await page.evaluate('window.__backgroundAudit()')
+    await catalog.trusted_drop(page)
+    locked = await page.evaluate('window.__backgroundAudit()')
+    assert locked['placed'] == before_drop['placed'] + 1 and locked['expectedPlaced'] == locked['placed'], locked
+    assert locked['paints'] > before_drop['paints'] and locked['cacheDifferences'] == 0, locked
+    await page.set_viewport_size({'width': 844, 'height': 390})
+    await settled(page)
+    resized = await page.evaluate('window.__backgroundAudit()')
+    assert resized['currentProjection'] and resized['currentPieces'] and resized['cacheDifferences'] == 0, resized
+    assert resized['bytes'] <= 16 * 1024 * 1024 and resized['outsidePixels'] == 0, resized
+    return {'beyondOverscan':beyond,'locked':locked,'resized':resized}
 
 
 async def main(args):

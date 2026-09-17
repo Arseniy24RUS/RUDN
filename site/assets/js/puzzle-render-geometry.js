@@ -139,18 +139,20 @@
     function build(index, indices) {
       const path = new Path(), strokePath = new Path();
       for (const ring of ringsFor(selected[index])) {
+        const ringPath = new Path();
         let first = null, previous = null;
         visitRing(ring, indices, (x, y, meridian) => {
           const point = { x, y, meridian };
-          if (!first) { first = point; path.moveTo(x, y); strokePath.moveTo(x, y); }
+          if (!first) { first = point; ringPath.moveTo(x, y); strokePath.moveTo(x, y); }
           else if (previous.x !== x || previous.y !== y) {
-            if (Math.abs(x - previous.x) > seamWidth / 2) { path.closePath(); path.moveTo(x, y); strokePath.moveTo(x, y); }
-            else { path.lineTo(x, y); if (previous.meridian && meridian) strokePath.moveTo(x, y); else strokePath.lineTo(x, y); }
+            if (Math.abs(x - previous.x) > seamWidth / 2) { ringPath.closePath(); ringPath.moveTo(x, y); strokePath.moveTo(x, y); }
+            else { ringPath.lineTo(x, y); if (previous.meridian && meridian) strokePath.moveTo(x, y); else strokePath.lineTo(x, y); }
           }
           previous = point;
         });
         if (first) {
-          path.closePath();
+          ringPath.closePath();
+          path.addPath(ringPath);
           if (Math.abs(previous.x - first.x) <= seamWidth / 2 && !(previous.meridian && first.meridian)) strokePath.lineTo(first.x, first.y);
         }
       }

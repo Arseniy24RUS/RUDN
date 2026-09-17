@@ -18,11 +18,20 @@ const sourceHash = digest(topology);
 const objectKey = Object.keys(topology.objects).sort((a, b) => topology.objects[b].geometries.length - topology.objects[a].geometries.length)[0];
 const features = sandbox.topojson.feature(topology, topology.objects[objectKey]).features;
 assert.equal(features.length, 89);
+const sourceCoordinates = features.flatMap(feature => feature.geometry.type === 'Polygon'
+  ? feature.geometry.coordinates.flat() : feature.geometry.coordinates.flat(2));
+function fittedCloud(projection, map) {
+  let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for(const coordinate of sourceCoordinates){const [x,y]=projection(coordinate);x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}
+  const k=Math.max(.01,Math.min((map.width-24)/Math.max(1,x1-x0),(map.height-24)/Math.max(1,y1-y0)));
+  return {k,x:map.x+map.width/2-k*(x0+x1)/2,y:map.y+map.height/2-k*(y0+y1)/2};
+}
 class RecordedPath {
   constructor() { this.rings = []; this.current = null; this.vertices = 0; }
   moveTo(x, y) { this.current = [[x, y]]; this.rings.push(this.current); this.vertices++; }
   lineTo(x, y) { this.current.push([x, y]); this.vertices++; }
   closePath() {}
+  addPath(other) { this.rings.push(...other.rings); this.vertices += other.vertices; }
 }
 const area = points => {
   if (!points.length) return 0;
@@ -36,7 +45,7 @@ const distanceSquared = (xy, index, first, last) => {
   const t = dx || dy ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / (dx * dx + dy * dy))) : 0;
   return (x - ax - t * dx) ** 2 + (y - ay - t * dy) ** 2;
 };
-const report = { sourceHash, sourceFeatures: features.length, cases: [], layouts: [] };
+const report = { sourceHash, sourceFeatures: features.length, cases: [], layouts: [], projectionEquivalence:[] };
 const began = performance.now();
 for (const [width, height, fullscreen, viewportWidth, viewportHeight] of [
   [320, 340.8, false, 320, 568], [390, 500, false, 390, 844],
@@ -52,6 +61,17 @@ for (const [width, height, fullscreen, viewportWidth, viewportHeight] of [
   const padding = Math.max(8, Math.min(20, map.width * 0.025));
   const projection = sandbox.d3.geoMercator().rotate([-105, 0]).fitSize([Math.max(1, map.width - padding * 2), Math.max(1, map.height - padding * 2)], { type: 'FeatureCollection', features });
   const offset = projection.translate(); projection.translate([offset[0] + map.x + padding, offset[1] + map.y + padding]);
+  const fixed = sandbox.d3.geoMercator().rotate([-105,0]).scale(150).translate([0,0]);
+  const originalView=fittedCloud(projection,map),fixedView=fittedCloud(fixed,map);
+  let maximumScreenDifference=0;
+  for(const coordinate of sourceCoordinates){
+    const a=projection(coordinate),b=fixed(coordinate);
+    maximumScreenDifference=Math.max(maximumScreenDifference,
+      Math.abs(a[0]*originalView.k+originalView.x-b[0]*fixedView.k-fixedView.x),
+      Math.abs(a[1]*originalView.k+originalView.y-b[1]*fixedView.k-fixedView.y));
+  }
+  assert(maximumScreenDifference<1e-7,'Fixed internal Mercator units changed the fitted map');
+  report.projectionEquivalence.push({width,height,vertices:sourceCoordinates.length,maximumScreenDifference});
   const setupAt = performance.now();
   const renderer = createTopologyRenderer({ topology, objectKey, featureIds: features.map(feature => String(feature.id)), project: projection, seamWidth: 2 * Math.PI * projection.scale(), Path: RecordedPath });
   assert(renderer, 'Author topology must use shared-arc rendering');
