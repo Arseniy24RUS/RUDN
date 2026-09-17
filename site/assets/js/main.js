@@ -9,6 +9,7 @@ import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lec
 import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.7';
 import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.7';
 import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.7';
+import {officialTicket} from './student-identity.js';
 import {durableStore} from './durable-store.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
 import {mountTeacherJournal} from './teacher-journal.js?v=1.3.7';
@@ -229,7 +230,7 @@ function updateTopProfile(){
   const profile=backend.getProfile();
   document.getElementById('topAvatar').textContent=profile?.fullName?.trim()?.[0]||'?';
   document.getElementById('topName').textContent=profile?.fullName||t('signIn');
-  document.getElementById('topGroup').textContent=profile?`${profile.group} · ${profile.ticket}`:'';
+  document.getElementById('topGroup').textContent=profile?`${profile.group} · ${officialTicket(profile)}`:'';
 }
 function updateSync(status){
   updateTopProfile();updateQuizSaveStatus(app);
@@ -342,7 +343,7 @@ async function renderDashboard(){
     }).join('');
     return `<article class="topic-card ${allowed?'':'access-locked'} ${perfect?'topic-perfect':''}" ${perfect?`aria-label="${esc(ui('platinumTopic'))}"`:''}><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong></div><div class="topic-copy"><div class="access-status ${gate.open?'open':'closed'}">${esc(gateStatus(gate))}</div><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair ${activities.length===3?'activity-trio':''}">${activityCards}</div></article>`;
   }).join('');
-  app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</span><span>${accessText('currentWeek')}: ${access.context.week}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(profile?.ticket||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${accessText('scheduleLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
+  app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</span><span>${accessText('currentWeek')}: ${access.context.week}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(officialTicket(profile)||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(officialTicket(profile)||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${accessText('scheduleLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
   app.querySelector('#heroLogin')?.addEventListener('click',openAuthDialog);
   if(backend.isAdmin()){
     app.querySelector('.score-ring')?.remove();app.querySelector('.stats-grid')?.remove();app.querySelector('#heroLogin')?.remove();
@@ -373,9 +374,9 @@ async function renderGradebook(){
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
   app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
   app.querySelector('#refreshGrades')?.addEventListener('click',render);
-  app.querySelector('#exportPersonal')?.addEventListener('click',()=>downloadCsv(`gradebook-${profile.ticket}.csv`,[
+  app.querySelector('#exportPersonal')?.addEventListener('click',()=>downloadCsv(`gradebook-${officialTicket(profile)}.csv`,[
     ['student_id','full_name','email','group',...items.map(x=>x.slug),'total'],
-    [profile.ticket,profile.fullName,profile.email,profile.group,...items.map(x=>number(grades[x.slug]?.points)),total]
+    [officialTicket(profile),profile.fullName,profile.email,profile.group,...items.map(x=>number(grades[x.slug]?.points)),total]
   ]));
 }
 
@@ -846,7 +847,7 @@ async function renderAdmin(){
 async function renderStudentGrades(studentKey,all){
   currentCleanup?.();currentCleanup=null;
   const p=all.profiles[studentKey],grades=all.grades?.[studentKey]||{},items=gradeItems();
-  app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${p.ticket} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
+  app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${officialTicket(p)} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
   app.querySelector('#gradeEditCancel').onclick=()=>renderGradebook();
   app.querySelector('#gradeEdit').onsubmit=async event=>{
     event.preventDefault();const form=event.currentTarget,button=form.querySelector('[type=submit]');if(button.disabled)return;button.disabled=true;
@@ -863,7 +864,7 @@ async function renderStudentGrades(studentKey,all){
     if(all.stale)app.querySelectorAll('#gradeEdit input,#gradeEdit textarea,#gradeEdit button[type="submit"]').forEach(control=>control.disabled=true);
   }
 }
-function exportAdminCsv(profiles,grades,items){const rows=[['student_id','full_name','email','group',...items.map(x=>x.slug),'total']];for(const p of profiles){const g=grades[p.studentKey]||{},values=items.map(x=>number(g[x.slug]?.points)),total=values.reduce((a,b)=>a+b,0);rows.push([p.ticket,p.fullName||'',p.email,p.group,...values,total])}downloadCsv('rudn-gradebook.csv',rows)}
+function exportAdminCsv(profiles,grades,items){const rows=[['student_id','full_name','email','group',...items.map(x=>x.slug),'total']];for(const p of profiles){const g=grades[p.studentKey]||{},values=items.map(x=>number(g[x.slug]?.points)),total=values.reduce((a,b)=>a+b,0);rows.push([officialTicket(p),p.fullName||'',p.email,p.group,...values,total])}downloadCsv('rudn-gradebook.csv',rows)}
 function downloadCsv(filename,rows){const text='\ufeff'+rows.map(row=>row.map(cell=>`"${String(cell??'').replaceAll('"','""')}"`).join(';')).join('\r\n');const blob=new Blob([text],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 
 const authStudentDetails=document.getElementById('authStudentDetails');

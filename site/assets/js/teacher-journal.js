@@ -1,5 +1,6 @@
 import {backend,groupOptions} from './backend.js?v=1.3.7';
 import {getLocale} from './i18n.js?v=1.3.7';
+import {officialTicket,absentFromRoster} from './student-identity.js';
 
 const COPY={
   ru:{title:'Электронный журнал',groups:'Учебные группы',search:'Поиск по ФИО или билету',name:'ФИО / билет',topic:'Тема',lecture:'Лекция',seminar:'Семинар',quiz:'Квиз',work:'Самостоятельная',exam:'Экзамен',total:'Итог',registered:'Зарегистрировано',results:'С результатами',average:'Средний итог',activityAverage:'Среднее',submitted:'С результатом',export:'Скачать CSV',refresh:'Обновить',edit:'Оценки',empty:'Нет студентов для выбранных условий',cached:'Сохранённая копия',updated:'Обновлено',settings:'Настройки курса'},
@@ -39,14 +40,19 @@ export function journalModel(snapshot,topics){
     ...(topic.number===1?[{slug:'seminar-1-classroom',kind:'quiz',max:50,topic:1,ungraded:true}]:[]),
     {slug:topic.seminar.slug,kind:topic.number===1?'work':'seminar',max:5,topic:topic.number}
   ]).concat({slug:'exam',kind:'exam',max:20});
-  const rows=Object.values(snapshot.profiles||{}).map(profile=>{
+  const visibleProfiles=Object.values(snapshot.profiles||{}).filter(profile=>!profile.mergedInto);
+  for(const [hash,record] of Object.entries(snapshot.rosterAbsences||{})){
+    if(record.absent===false||visibleProfiles.some(profile=>absentFromRoster(profile,{[hash]:record})))continue;
+    visibleProfiles.push({studentKey:`roster:${hash}`,fullName:record.fullName,group:record.group,ticket:'',rosterOnly:true});
+  }
+  const rows=visibleProfiles.map(profile=>{
     const grades=snapshot.grades?.[profile.studentKey]||{};const values={};
     for(const column of columns){const grade=grades[column.slug];values[column.slug]=grade&&Number.isFinite(Number(grade.points))?numeric(grade.points):null}
     const attempts=Object.values(snapshot.attempts?.[profile.studentKey]||{}).filter(a=>a.activitySlug==='seminar-1-classroom'&&Number.isFinite(Number(a.points)));
     values['seminar-1-classroom']=attempts.length?Math.max(...attempts.map(a=>numeric(a.points))):null;
     const total=numeric(columns.filter(c=>!c.ungraded).reduce((sum,c)=>sum+(values[c.slug]??0),0));
     const hasGovernorReports=Object.values(snapshot.attempts?.[profile.studentKey]||{}).some(a=>a?.studentKey===profile.studentKey&&a.activitySlug==='seminar-7'&&a.type==='governor-simulator'&&a.source==='native-v1'&&a.governor&&typeof a.governor==='object');
-    return {profile,values,total,hasResults:columns.some(c=>values[c.slug]!==null),hasGovernorReports};
+    return {profile,values,total,hasResults:columns.some(c=>values[c.slug]!==null),hasGovernorReports,absentFromOfficialRoster:absentFromRoster(profile,snapshot.rosterAbsences)};
   }).sort((a,b)=>String(a.profile.group).localeCompare(String(b.profile.group))||String(a.profile.fullName).localeCompare(String(b.profile.fullName),'ru'));
   return {columns,rows};
 }
@@ -97,7 +103,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
     backend.isAdmin()&&backend.user?.uid===uid&&backend.generation===generation;
   const canEdit=()=>current()&&databaseAvailable()&&Boolean(snapshot)&&!snapshot.stale;
   const filtered=()=>rows.filter(row=>selected.has(row.profile.group)&&
-    `${row.profile.fullName} ${row.profile.ticket}`.toLocaleLowerCase().includes(query));
+    `${row.profile.fullName} ${officialTicket(row.profile)} ${row.profile.ticket}`.toLocaleLowerCase().includes(query));
   const label=column=>`${c[column.kind]} /${column.max}`;
 
   function renderStatus(){
@@ -142,7 +148,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
         return {count:values.length,mean:values.length?numeric(values.reduce((sum,value)=>sum+value,0)/values.length):'—'};
       });
       return `<section class="panel journal-group"><h2>${esc(group)}</h2>
-        <div class="journal-summary"><span>${c.registered}: <b>${groupRows.length}</b></span>
+        <div class="journal-summary"><span>${c.registered}: <b>${groupRows.filter(row=>!row.profile.rosterOnly).length}</b></span>
           <span>${c.results}: <b>${withResults.length}</b></span><span>${c.average}: <b>${average}</b></span></div>
         <div class="teacher-table-scroll" data-journal-table="${esc(group)}" tabindex="0" role="region" aria-label="${esc(group)}">
           <table class="teacher-gradebook"><thead><tr><th rowspan="2" class="student-sticky">${c.name}</th>
@@ -150,9 +156,9 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
             <th rowspan="2">${c.exam} /20</th><th rowspan="2">${c.total} /100</th><th rowspan="2">${c.edit}</th></tr>
             <tr>${columns.filter(column=>column.topic).map(column=>`<th class="${column.ungraded?'ungraded':''}">${label(column)}</th>`).join('')}</tr></thead>
           <tbody>${groupRows.map(row=>`<tr data-student-key="${esc(row.profile.studentKey)}">
-            <th scope="row" class="student-sticky">${esc(row.profile.fullName||row.profile.ticket)}<small>${esc(row.profile.ticket)}</small></th>
+            <th scope="row" class="student-sticky"><span${row.absentFromOfficialRoster?' class="student-name-absent"':''}>${esc(row.profile.fullName||officialTicket(row.profile))}</span><small>${esc(officialTicket(row.profile))}</small></th>
             ${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}
-            <td class="journal-total">${row.total}</td><td><button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button></td></tr>`).join('')}
+            <td class="journal-total">${row.profile.rosterOnly?'—':row.total}</td><td>${row.profile.rosterOnly?'':`<button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button>`}</td></tr>`).join('')}
             <tr class="journal-statistics"><th class="student-sticky">${c.submitted}</th>${statistics.map(stat=>`<td>${stat.count}</td>`).join('')}<td>${withResults.length}</td><td></td></tr>
             <tr class="journal-statistics"><th class="student-sticky">${c.activityAverage}</th>${statistics.map(stat=>`<td>${stat.mean}</td>`).join('')}<td>${average}</td><td></td></tr>
           </tbody></table></div></section>`;
@@ -258,8 +264,8 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
     if(!current()||!snapshot)return;
     downloadCsv('rudn-gradebook.csv',[
       ['student_id','full_name','group',...columns.map(column=>column.slug),'total'],
-      ...filtered().map(row=>[row.profile.ticket,row.profile.fullName,row.profile.group,
-        ...columns.map(column=>row.values[column.slug]??''),row.total])
+      ...filtered().map(row=>[officialTicket(row.profile),row.profile.fullName,row.profile.group,
+        ...columns.map(column=>row.values[column.slug]??''),row.profile.rosterOnly?'':row.total])
     ]);
   };
   renderData();

@@ -1,6 +1,7 @@
 import {backend,groupOptions} from './backend.js?v=1.3.7';
 import {getLocale} from './i18n.js?v=1.3.7';
 import {toast,formError} from './notifications.js?v=1.3.7';
+import {officialTicket} from './student-identity.js';
 
 const COPY={
   ru:{account:'Аккаунт',profile:'Профиль',teacher:'Преподаватель',student:'Студент',role:'Роль',name:'ФИО',group:'Учебная группа',identifier:'Студенческий билет',email:'Email',save:'Сохранить',saved:'Профиль сохранён',logout:'Выйти',settings:'Настройки курса',close:'Закрыть',saving:'Сохраняем…',ready:'Вы вошли',help:'ФИО и учебную группу можно изменить. Номер билета остаётся прежним.'},
@@ -10,7 +11,7 @@ const COPY={
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy=()=>COPY[getLocale()]||COPY.ru;
 function identity(){const teacher=backend.isAdmin();const profile=backend.getProfile();return teacher?{teacher,name:backend.user.displayName||'',email:backend.user.email,uid:backend.user.uid}:profile?{...profile,name:profile.fullName,teacher:false}:null}
-function details(user,c){return `<dl class="profile-dl"><dt>${c.name}</dt><dd>${esc(user.name||'—')}</dd><dt>${c.role}</dt><dd>${c[user.teacher?'teacher':'student']}</dd><dt>${c.email}</dt><dd>${esc(user.email)}</dd>${user.teacher?'':`<dt>${c.identifier}</dt><dd>${esc(user.ticket)}</dd><dt>${c.group}</dt><dd>${esc(user.group)}</dd>`}</dl>`}
+function details(user,c){return `<dl class="profile-dl"><dt>${c.name}</dt><dd>${esc(user.name||'—')}</dd><dt>${c.role}</dt><dd>${c[user.teacher?'teacher':'student']}</dd><dt>${c.email}</dt><dd>${esc(user.email)}</dd>${user.teacher?'':`<dt>${c.identifier}</dt><dd>${esc(officialTicket(user))}</dd><dt>${c.group}</dt><dd>${esc(user.group)}</dd>`}</dl>`}
 async function logout(){location.hash='dashboard';await backend.signOut();document.getElementById('accountDialog')?.close()}
 export function openAccount(openLogin){
   const user=identity();if(!user){openLogin();return}

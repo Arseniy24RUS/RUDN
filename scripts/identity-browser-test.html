@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:9010 http://127.0.0.1:9109">
+<title>Local identity regression checks</title><link rel="stylesheet" href="../site/assets/css/site.css"></head>
+<body><button id="run">Run identity checks</button><pre id="result">Ready — synthetic data only, external connections blocked.</pre>
+<main id="journal"></main><section id="profile"></section>
+<script type="module">
+import {createDurableStore,durableStore} from '../site/assets/js/durable-store.js';
+import {backend} from '../site/assets/js/backend.js?v=1.3.6';
+import {journalModel,mountTeacherJournal} from '../site/assets/js/teacher-journal.js?v=1.3.6';
+import {mountProfile} from '../site/assets/js/account.js?v=1.3.6';
+clearInterval(backend.connectionRetry);
+const assert=(value,message)=>{if(!value)throw Error(message);};
+const same=(a,b,message)=>assert(JSON.stringify(a)===JSON.stringify(b),message);
+const old='9900100001',key='9900100002',owner='student:'+old,targetOwner='student:'+key;
+const scope={owner,activitySlug:'seminar-1',mode:'work',attemptId:'pending-result'};
+const synthetic=(studentKey,name)=>({studentKey,ticket:studentKey,email:studentKey+'@rudn.ru',fullName:name,displayName:name,group:'ГГУбд-01-26',ownerUid:'synthetic-uid',ownerUids:{'synthetic-uid':true}});
+document.querySelector('#run').onclick=async()=>{
+  const report=[];const output=document.querySelector('#result');
+  const test=async(name,fn)=>{await fn();report.push(name);output.textContent='PASS: '+report.join('\nPASS: ');};
+  try{
+    const store=createDurableStore({databaseName:'identity-check-'+crypto.randomUUID(),broadcast:false});
+    await test('IDB migration preserves pending result, draft and attachment; retry is idempotent',async()=>{
+      const attachment=await store.putAttachment({owner,attemptId:scope.attemptId,blob:new Blob(['saved attachment']),name:'answer.txt'});
+      await store.complete({...scope,state:{text:'Original answer',file:'rudn-attachment:'+attachment.id},attachmentIds:[attachment.id],
+        attempt:{id:scope.attemptId,studentKey:old,activitySlug:'seminar-1',points:5,file:'rudn-attachment:'+attachment.id,createdAt:'2026-09-17T00:00:00Z'}});
+      const before=await store.exportBackup({owner});
+      await store.migrateOwner({from:old,to:key});
+      same(await store.exportBackup({owner}).then(v=>({...v,createdAt:''})),{...before,createdAt:''},'original owner must be unchanged');
+      const moved=await store.listAttempts({owner:targetOwner});
+      assert(moved.length===1&&moved[0].studentKey===key&&moved[0].points===5,'canonical result');
+      const pending=await store.listPending({owner:targetOwner});
+      assert(pending.length===2,'both pending operations copied');
+      for(const op of pending)for(const id of op.attachmentIds){
+        const file=await store.getAttachment(id);
+        assert(file.owner===targetOwner&&file.attemptId===op.attemptId,'attachment identity');
+        assert(await file.blob.text()==='saved attachment','attachment content');
+      }
+      await store.migrateOwner({from:old,to:key});
+      assert((await store.listPending({owner:targetOwner})).length===2,'retry must not duplicate outbox');
+      for(const op of pending)await store.ack(op.id,op.revision);
+      await store.migrateOwner({from:old,to:key});
+      assert((await store.listPending({owner:targetOwner})).length===0,'acknowledged work must not be queued again');
+      assert((await store.listPending({owner})).length===2,'source recovery copy remains');
+    });
+    await test('late saves from an old tab preserve both draft branches',async()=>{
+      const draftScope={owner,activitySlug:'lecture-1',mode:'text',attemptId:'late-draft'};
+      const file=await store.putAttachment({...draftScope,blob:new Blob(['late attachment']),name:'late.txt'});
+      await store.checkpoint({...draftScope,state:{text:'before merge',file:'rudn-attachment:'+file.id},attachmentIds:[file.id]});
+      await store.migrateOwner({from:old,to:key});
+      const copied={...draftScope,owner:targetOwner,attemptId:'merged-'+old+'-late-draft'};
+      await store.checkpoint({...copied,state:{text:'canonical edit'}});
+      await store.checkpoint({...draftScope,state:{text:'old tab edit',file:'rudn-attachment:'+file.id},attachmentIds:[file.id]});
+      await store.migrateOwner({from:old,to:key});
+      assert((await store.loadDraft(copied)).state.text==='canonical edit','canonical progress kept');
+      const backup=await store.exportBackup({owner:targetOwner});
+      assert(backup.drafts.some(d=>d.state.text==='old tab edit'),'late branch kept');
+      const branch=backup.drafts.find(d=>d.state.text==='old tab edit');
+      const branchFile=await store.getAttachment(branch.attachmentIds[0]);
+      assert(branchFile.attemptId===branch.attemptId&&branch.state.file==='rudn-attachment:'+branchFile.id,'late branch attachment matches its outbox');
+    });
+    await test('old and new logins resolve to one account; an existing session adopts its canonical profile',async()=>{
+      const canonical={...synthetic(key,'Synthetic Student'),officialTicket:key,mergedFrom:old};
+      const cloud={profiles:{[key]:canonical,[old]:{...synthetic(old,'Old Name'),mergedInto:key}},studentAliases:{[old]:key}};
+      backend.user={uid:'synthetic-uid'};backend.authReady=true;backend.profile=synthetic(old,'Old Name');backend.isAdmin=()=>false;
+      backend.ensureStudentCloud=async()=>backend.user;
+      backend.readCloud=async path=>path.split('/').reduce((v,p)=>v?.[p],cloud)??null;
+      backend.restTransport=()=>({transaction:async(path,fn)=>{const parts=path.split('/'),last=parts.pop();let at=cloud;for(const p of parts)at=at[p];const next=fn(at[last]);if(next!==undefined)at[last]=next;return {value:at[last]};}});
+      const a=await backend.lookupStudent(old),b=await backend.lookupStudent(key);
+      assert(a.studentKey===key&&b.studentKey===key&&a.fullName===b.fullName,'aliases resolve identically');
+      await durableStore.complete({...scope,state:{text:'pending on old session'},attempt:{id:scope.attemptId,studentKey:old,activitySlug:'seminar-1',points:5,createdAt:'2026-09-17T00:00:00Z'}});
+      await backend.reconcileMergedProfile();
+      assert(backend.profile.studentKey===key,'existing session switched');
+      assert((await durableStore.listAttempts({owner:targetOwner})).some(a=>a.points===5),'pending result copied before switch');
+      assert((await durableStore.listAttempts({owner})).length>0,'source retained after switch');
+    });
+    await test('teacher journal hides merged profiles and greys only absent names, including roster-only students',async()=>{
+      const snapshot={profiles:{[key]:synthetic(key,'Synthetic Student'),[old]:{...synthetic(old,'Duplicate'),mergedInto:key}},
+        grades:{[key]:{'seminar-1':{points:5}}},attempts:{},rosterAbsences:{missing:{fullName:'Synthetic Absent',group:'ГГУбд-01-26',absent:true}}};
+      const topics=[{number:1,lecture:{slug:'lecture-1'},seminar:{slug:'seminar-1'}}];
+      const model=journalModel(snapshot,topics);
+      assert(model.rows.length===2&&!model.rows.some(r=>r.profile.studentKey===old),'single canonical row plus absent roster entry');
+      let role='teacher';
+      backend.isAdmin=()=>role==='teacher';backend.user={uid:'synthetic-teacher'};backend.databaseAvailable=()=>true;
+      backend.adminAll=async()=>({...snapshot,stale:false,cachedAt:new Date().toISOString()});
+      backend.adminCachedSnapshot=()=>null;backend.onStatus=()=>()=>{};
+      location.hash='gradebook';
+      mountTeacherJournal(document.querySelector('#journal'),{topics,onEdit:()=>{},downloadCsv:()=>{}});
+      for(let i=0;i<100&&!document.querySelector('.student-name-absent');i++)await new Promise(r=>setTimeout(r,20));
+      const absent=document.querySelector('.teacher-gradebook .student-name-absent');
+      assert(absent?.textContent==='Synthetic Absent','absent name rendered');
+      assert(getComputedStyle(absent).color==='rgb(115, 123, 134)','grey name');
+      assert(!absent.closest('tr').querySelector('[data-grade-edit]'),'no edits for an unregistered roster row');
+      role='student';backend.getProfile=()=>synthetic('9900100099','Synthetic Absent');
+      mountProfile(document.querySelector('#profile'));
+      assert(!document.querySelector('#profile .student-name-absent'),'no absence class in student account');
+      assert(getComputedStyle(document.querySelector('#profile .profile-dl dd')).color!==getComputedStyle(absent).color,'student name retains normal color');
+    });
+    store.close();output.textContent='ALL CHECKS PASSED\n'+report.join('\n');
+    output.dataset.status='passed';
+  }catch(error){output.textContent='FAILED: '+error.stack;output.dataset.status='failed';}
+};
+</script></body></html>

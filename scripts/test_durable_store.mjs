@@ -10,7 +10,7 @@ let playwright;
 try { playwright = require(process.env.PLAYWRIGHT_PATH || 'playwright'); }
 catch { throw new Error('Playwright is required. Use an existing installation via PLAYWRIGHT_PATH.'); }
 const source = await readFile(new URL('../site/assets/js/durable-store.js', import.meta.url));
-const supportSources = Object.fromEntries(await Promise.all(['checkpoint-sync.js', 'firebase-rest.js'].map(async name => [`/${name}`, await readFile(new URL(`../site/assets/js/${name}`, import.meta.url))])));
+const supportSources = Object.fromEntries(await Promise.all(['checkpoint-sync.js', 'firebase-rest.js', 'student-identity.js'].map(async name => [`/${name}`, await readFile(new URL(`../site/assets/js/${name}`, import.meta.url))])));
 const server = createServer((request, response) => {
   response.setHeader('Cache-Control', 'no-store');
   if (request.url === '/durable-store.js') { response.setHeader('Content-Type', 'text/javascript'); response.end(source); }

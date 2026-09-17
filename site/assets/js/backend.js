@@ -275,6 +275,39 @@ class Backend{
       return await this.durableSync().restore(scope,{timeoutMs:3000});
     }catch{return null}
   }
+  async reconcileMergedProfile(){
+    if(!this.profile||this.isAdmin()||!this.user)return;
+    const before=this.profile,uid=this.user.uid,generation=this.generation;
+    const active=()=>this.profile?.studentKey===before.studentKey&&this.user?.uid===uid&&this.generation===generation&&!this.isAdmin();
+    const identity=await this.resolveStudentIdentity(before.studentKey);
+    const remote=await this.readCloud(`profiles/${identity.studentKey}`,{authoritative:true});
+    if(!active())throw serviceError('auth/profile-changed');
+    if(identity.studentKey!==before.studentKey&&(!remote||remote.studentKey!==identity.studentKey||remote.mergedInto))throw serviceError('auth/invalid-identifier');
+    const sources=new Set(String(remote?.mergedFrom||'').split(',').filter(Boolean));
+    if(identity.studentKey!==before.studentKey)sources.add(before.studentKey);
+    for(const from of sources){
+      if(from===identity.studentKey)continue;
+      // The server-owned alias is the authority, never client profile metadata.
+      const resolved=await this.resolveStudentIdentity(from);
+      if(resolved.studentKey!==identity.studentKey)throw serviceError('auth/invalid-identifier');
+      for(const attempt of this.localAttempts().filter(a=>a.studentKey===from)){
+        try{storeAttempt(attempt,{pending:Boolean(readState(pendingStorageKey(attempt),null))})}catch{}
+      }
+      await durableStore.migrateOwner({from,to:identity.studentKey});
+      if(!active())throw serviceError('auth/profile-changed');
+    }
+    if(identity.studentKey===before.studentKey)return;
+    const result=await this.restTransport().transaction(`profiles/${identity.studentKey}`,current=>{
+      if(!active()||!current||current.mergedInto)throw serviceError('auth/profile-changed');
+      return this.ownedProfile(current,current);
+    });
+    if(!active())throw serviceError('auth/profile-changed');
+    // Persist the new identity only after its work is safely copied.
+    writeLocal(PROFILE_KEY,result.value);
+    writeState(`profile-cache.v1:${identity.studentKey}`,result.value);
+    this.checkpointSync?.stop();this.generation++;this.profile=result.value;
+    this.emitStatus();window.dispatchEvent(new Event('rudn:identitychange'));
+  }
   async ensureCloudProfile(){
     if(!this.profile||this.isAdmin()||!this.user)throw serviceError('auth/profile-required');
     const profile={...this.profile};
@@ -335,6 +368,7 @@ class Backend{
           group:normalizeGroup(record.group),
           createdAt:record.createdAt||null,
           updatedAt:record.updatedAt||null,
+          ...(record.officialTicket?{officialTicket:record.officialTicket}:{}),
           source:'profile'
         };try{writeState(`profile-cache.v1:${identity.studentKey}`,found)}catch{};return found;
       }
@@ -558,6 +592,8 @@ class Backend{
     const profile={...this.profile};const uid=this.user.uid;const generation=this.generation;
     const active=()=>generation===this.generation&&this.user?.uid===uid&&this.profile?.studentKey===profile.studentKey&&!this.isAdmin();
     this.flushing=(async()=>{try{
+      await this.reconcileMergedProfile();
+      if(!active())return;
       const owner=`student:${profile.studentKey}`;
       await durableStore.importLegacy({owner});
       if(!active())return;
@@ -601,12 +637,13 @@ class Backend{
         // permission to attempt a read. It may still be false during startup.
         if(!active())throw serviceError('auth/profile-changed');
 
-        const values=await Promise.all(['profiles','attempts','grades'].map(path=>this.readCloud(path)));
+        const values=await Promise.all(['profiles','attempts','grades','rosterAbsences'].map(path=>this.readCloud(path)));
         if(!active())throw serviceError('auth/profile-changed');
         const snapshot={
           profiles:values[0]||{},
           attempts:values[1]||{},
           grades:values[2]||{},
+          rosterAbsences:values[3]||{},
           cachedAt:now(),
           stale:false
         };

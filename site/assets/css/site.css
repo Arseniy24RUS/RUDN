@@ -209,6 +209,7 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 .teacher-gradebook thead{position:sticky;top:0;z-index:4}.teacher-gradebook thead th{background:#eaf4fa;color:#193d56;font-size:12px}
 .teacher-gradebook .student-sticky{position:sticky;left:0;z-index:2;text-align:left;min-width:230px;width:230px;max-width:230px;white-space:normal;overflow-wrap:anywhere;box-shadow:2px 0 0 #dbe6ed}
 .teacher-gradebook thead .student-sticky{z-index:5}.teacher-gradebook small{display:block;color:#58677a;font-size:11px;font-weight:400;margin-top:5px}
+.teacher-gradebook .student-name-absent{color:#737b86}
 .teacher-gradebook .ungraded{color:#5b6370}.teacher-gradebook .journal-total{font-weight:800;color:#006aab}.teacher-gradebook .journal-statistics th,.teacher-gradebook .journal-statistics td{background:#f5f9fc;font-size:12px}
 @media(max-width:760px){.teacher-gradebook .student-sticky{min-width:140px;width:140px;max-width:140px;font-size:12px}.journal-group{padding:13px}.journal-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.journal-groups button{font-size:12px;padding:10px}.journal-summary{gap:8px;font-size:12px}}
 

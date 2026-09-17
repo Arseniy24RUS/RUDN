@@ -7,6 +7,7 @@
  * Completion adds an immutable attempt in that same transaction. Queue acknowledgments
  * are revision-conditional, so a slow response cannot acknowledge a subsequent edit.
  */
+import {mergedRecordId, rekeyStudentValue} from './student-identity.js';
 const DATABASE = 'rudn-durable-v1';
 const VERSION = 1;
 const TABLES = ['drafts', 'outbox', 'attempts', 'attachments', 'conflicts', 'meta'];
@@ -607,8 +608,99 @@ export function createDurableStore(options = {}) {
     return {drafts, attempts};
   }
 
+  // Copy, never move: an old tab may still hold this owner's unsent work.
+  // Every copied revision has a receipt in the same transaction as its outbox.
+  async function migrateOwner({from, to}) {
+    if (!/^\d{5,20}$/.test(from) || !/^\d{5,20}$/.test(to) || from === to) return;
+    await importLegacy({owner: `student:${from}`});
+    await Promise.all([...serial.values()]);
+    const owner = `student:${from}`, targetOwner = `student:${to}`;
+    const envelopes = await transaction(TABLES, true, async tx => {
+      const data = Object.fromEntries(await Promise.all(['drafts', 'attempts', 'outbox', 'attachments', 'conflicts'].map(async table =>
+        [table, (await tx.all(table)).filter(record => record.owner === owner)])));
+      if (!Object.values(data).some(rows => rows.length)) return [];
+      // Do not acknowledge an identity switch with a memory-only copy of work.
+      if (!db) throw new TypeError('storage/identity-migration-needs-indexeddb');
+      const ids = {};
+      for (const record of [...data.drafts, ...data.attempts, ...data.outbox, ...data.attachments]) {
+        if (record.attemptId) ids[record.attemptId] = mergedRecordId(from, record.attemptId);
+      }
+      for (const record of data.attachments) ids[record.id] = mergedRecordId(from, record.id);
+      const receipt = (table, record) => `owner-merge:${from}:${to}:${table}:${record.id}:${record.revision || record.updatedAt || 0}`;
+      const remap = record => rekeyStudentValue(copy(record), {from, to, ids});
+      for (const draft of data.drafts) {
+        const scope = {...draft, owner: targetOwner, attemptId: ids[draft.attemptId]};
+        const base = await tx.get('drafts', draftKey(scope));
+        // Later edits from an obsolete tab are retained as a separate branch.
+        if (base && base.mergeSourceRevision !== draft.revision &&
+            !await tx.get('meta', receipt('drafts', draft))) {
+          scope.attemptId += `-revision-${draft.revision}`;
+        }
+        ids[draft.id] = draftKey(scope);
+      }
+      for (const record of data.attachments) {
+        if (!await tx.get('attachments', ids[record.id])) await tx.put('attachments', {...remap(record), id: ids[record.id]});
+      }
+      const copied = [];
+      for (const draft of data.drafts) {
+        if (await tx.get('meta', receipt('drafts', draft))) continue;
+        const next = {...remap(draft), id: ids[draft.id], owner: targetOwner, studentKey: to,
+          mergeSourceRevision: draft.revision, mergedFrom: {studentKey: from, attemptId: draft.attemptId},
+          remoteRevision: null, acknowledgedRevision: 0};
+        // draftKey encodes a possibly branched attempt id in its last component.
+        next.attemptId = decodeURIComponent(next.id.split(':').at(-1));
+        next.state = rekeyStudentValue(next.state, {from: to, to, ids: {[ids[draft.attemptId]]: next.attemptId}});
+        if (next.attemptId !== ids[draft.attemptId]) {
+          const branchIds = {};
+          for (const id of next.attachmentIds || []) {
+            const attachment = await tx.get('attachments', id);
+            if (!attachment) continue;
+            const branchId = `${id}-revision-${draft.revision}`;
+            branchIds[id] = branchId;
+            if (!await tx.get('attachments', branchId)) await tx.put('attachments',
+              {...attachment, id: branchId, attemptId: next.attemptId});
+          }
+          next.attachmentIds = (next.attachmentIds || []).map(id => branchIds[id] || id);
+          next.state = rekeyStudentValue(next.state, {from: to, to, ids: branchIds});
+        }
+        next.scope = scopeKey(next);
+        if (!await tx.get('drafts', next.id)) await tx.put('drafts', next);
+        const operations = [];
+        const queued = data.outbox.some(op => op.draftId === draft.id && op.type === 'checkpoint');
+        if (queued) {
+          const op = operation('checkpoint', next, next, next.attachmentIds || []);
+          if (!await tx.get('outbox', op.id)) await tx.put('outbox', op);
+          operations.push(op);
+        }
+        await tx.put('meta', {id: receipt('drafts', draft), targetId: next.id});
+        copied.push({draft: next, operations});
+      }
+      for (const record of data.attempts) {
+        if (await tx.get('meta', receipt('attempts', record))) continue;
+        const next = {...remap(record), owner: targetOwner, id: attemptKey(targetOwner, ids[record.attemptId])};
+        next.payload = {...next.payload, mergedFrom: {studentKey: from, attemptId: record.attemptId}};
+        if (!await tx.get('attempts', next.id)) await tx.put('attempts', next);
+        const queued = data.outbox.find(op => op.type === 'attempt' && op.attemptId === record.attemptId);
+        if (queued) {
+          const op = {...remap(queued), id: `attempt:${next.id}`, status: 'pending', failures: 0, nextAttemptAt: 0,
+            payload: next.payload, owner: targetOwner, studentKey: to};
+          if (!await tx.get('outbox', op.id)) await tx.put('outbox', op);
+        }
+        await tx.put('meta', {id: receipt('attempts', record), targetId: next.id});
+      }
+      for (const record of data.conflicts) {
+        const id = mergedRecordId(from, record.id);
+        if (!await tx.get('conflicts', id)) await tx.put('conflicts', {...remap(record), id, owner: targetOwner});
+      }
+      return copied;
+    });
+    for (const envelope of envelopes) await updateMirrorFromDatabase(envelope.draft.id);
+    if (envelopes.length) notify({owner: targetOwner, migratedFrom: owner});
+  }
+
   return {
     ready,
+    migrateOwner,
     checkpoint: (input, settings) => persist(input, 'checkpoint', settings),
     complete: (input, settings) => persist(input, 'complete', settings),
     async loadDraft(scope) {
