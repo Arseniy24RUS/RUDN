@@ -6,7 +6,8 @@ import {createRequire} from 'node:module';
 import {join} from 'node:path';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const source=await readFile(new URL('../site/assets/js/durable-store.js',import.meta.url));
-const server=createServer((req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type',req.url==='/store.js'?'text/javascript':'text/html');res.end(req.url==='/store.js'?source:'<!doctype html><title>Isolated completion recovery</title>');});
+const identitySource=await readFile(new URL('../site/assets/js/student-identity.js',import.meta.url));
+const server=createServer((req,res)=>{const module=req.url==='/store.js'?source:req.url==='/student-identity.js'?identitySource:null;res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type',module?'text/javascript':'text/html');res.end(module||'<!doctype html><title>Isolated completion recovery</title>');});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const report=[];
 try{

@@ -6,7 +6,7 @@ import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const playwright=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const sources=Object.fromEntries(await Promise.all(['puzzle-storage.js','durable-store.js'].map(async name=>[name,await readFile(new URL(`../site/assets/js/${name}`,import.meta.url))])));
+const sources=Object.fromEntries(await Promise.all(['puzzle-storage.js','durable-store.js','student-identity.js'].map(async name=>[name,await readFile(new URL(`../site/assets/js/${name}`,import.meta.url))])));
 const server=createServer((request,response)=>{
   const source=sources[new URL(request.url,'http://localhost').pathname.slice(1)];
   response.setHeader('Content-Type',source?'text/javascript':'text/html');
