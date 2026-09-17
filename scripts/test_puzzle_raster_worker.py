@@ -17,7 +17,7 @@ window.__rasterRead=()=>({stats:rasterPreparationStats(),snapshot:snapshotState(
   cache:[...rasterPreparation.cache.values()].map(p=>({index:p.index,scale:p.scale,bytes:p.bytes,currentProjection:p.projection===state.projection})),
   commands:[...rasterPreparation.commands.values()].map(p=>({bytes:p.bytes,currentProjection:p.projection===state.projection})),
   complex:state.features.map((feature,index)=>({index,complex:complexFeature(index),vertices:feature.geometry.type==='Polygon'?feature.geometry.coordinates.reduce((s,r)=>s+r.length,0):feature.geometry.coordinates.reduce((s,p)=>s+p.reduce((s,r)=>s+r.length,0),0)}))});
-window.__rasterPixels=()=>[...rasterPreparation.cache.values()].map(item=>{
+window.__rasterPixels=()=>Promise.all([...rasterPreparation.cache.values()].map(async item=>{
   const actual=document.createElement('canvas'),expected=document.createElement('canvas');
   actual.width=expected.width=item.width;actual.height=expected.height=item.height;
   actual.getContext('2d').drawImage(item.bitmap,0,0);
@@ -25,11 +25,26 @@ window.__rasterPixels=()=>[...rasterPreparation.cache.values()].map(item=>{
   context.setTransform(item.dpr*item.scale,0,0,item.dpr*item.scale,-item.x0,-item.y0);
   context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/item.scale;context.lineJoin=context.lineCap='round';
   context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
-  const a=actual.getContext('2d').getImageData(0,0,item.width,item.height).data,b=context.getImageData(0,0,item.width,item.height).data;
-  let differences=0,maximumDifference=0,nonempty=0;for(let i=0;i<a.length;i++){if(a[i]!==b[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(a[i]-b[i]));if(i%4===3&&a[i])nonempty++;}
-  return {index:item.index,scale:item.scale,bytes:a.length,differences,maximumDifference,nonempty,
-    referenceContextAttributes:context.getContextAttributes?.()};
-});
+  const a=actual.getContext('2d').getImageData(0,0,item.width,item.height).data;
+  const independentPixels=context.getImageData(0,0,item.width,item.height);
+  let rawDifferences=0,rawMaximumDifference=0,nonempty=0;
+  for(let i=0;i<a.length;i++){if(a[i]!==independentPixels.data[i])rawDifferences++;
+    rawMaximumDifference=Math.max(rawMaximumDifference,Math.abs(a[i]-independentPixels.data[i]));if(i%4===3&&a[i])nonempty++;}
+  // The worker transports independently drawn pixels through ImageBitmap.
+  // Apply the same alpha premultiplication round trip to the reference; never
+  // construct it from the actual bitmap or relax the exact-byte assertion.
+  const referenceBitmap=await createImageBitmap(independentPixels);
+  try{
+    const transported=document.createElement('canvas');transported.width=item.width;transported.height=item.height;
+    const target=transported.getContext('2d');target.drawImage(referenceBitmap,0,0);
+    const b=target.getImageData(0,0,item.width,item.height).data;
+    let differences=0,maximumDifference=0;
+    for(let i=0;i<a.length;i++){if(a[i]!==b[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(a[i]-b[i]));}
+    return {index:item.index,scale:item.scale,bytes:a.length,differences,maximumDifference,nonempty,
+      rawDifferences,rawMaximumDifference,referenceTransport:'ImageData -> ImageBitmap -> Canvas -> ImageData',
+      referenceContextAttributes:context.getContextAttributes?.()};
+  }finally{referenceBitmap.close();}
+}));
 """
 
 
