@@ -42,11 +42,11 @@ onmessage = async ({ data }) => {
       results.push({ scale, bitmap });
       canvas.width = canvas.height = 0;
     }
-    postMessage({ type: "ready", id, results, buildMs: built - begin, rasterMs: performance.now() - built,
-      workerMs: performance.now() - begin }, results.map(result => result.bitmap));
+    postMessage({ type: "ready", id, results, fill, stroke, buildMs: built - begin, rasterMs: performance.now() - built,
+      workerMs: performance.now() - begin }, [...results.map(result => result.bitmap), fill.buffer, stroke.buffer]);
   } catch (_) {
     if (canvas) canvas.width = canvas.height = 0;
     results.forEach(result => result.bitmap.close());
-    postMessage({ type: "failed", id });
+    postMessage({ type: "failed", id, fill, stroke }, [fill.buffer, stroke.buffer]);
   }
 };

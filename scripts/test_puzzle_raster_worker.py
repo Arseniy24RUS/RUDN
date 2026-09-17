@@ -15,6 +15,7 @@ import test_puzzle_catalog as qa
 HOOK = r"""
 window.__rasterRead=()=>({stats:rasterPreparationStats(),snapshot:snapshotState(),
   cache:[...rasterPreparation.cache.values()].map(p=>({index:p.index,scale:p.scale,bytes:p.bytes,currentProjection:p.projection===state.projection})),
+  commands:[...rasterPreparation.commands.values()].map(p=>({bytes:p.bytes,currentProjection:p.projection===state.projection})),
   complex:state.features.map((feature,index)=>({index,complex:complexFeature(index),vertices:feature.geometry.type==='Polygon'?feature.geometry.coordinates.reduce((s,r)=>s+r.length,0):feature.geometry.coordinates.reduce((s,p)=>s+p.reduce((s,r)=>s+r.length,0),0)}))});
 window.__rasterPixels=()=>[...rasterPreparation.cache.values()].map(item=>{
   const actual=document.createElement('canvas'),expected=document.createElement('canvas');
@@ -38,6 +39,7 @@ def budget(record):
     assert stats['commandBytes'] <= stats['commandBudgetBytes'], stats
     assert stats['peakCommandBytes'] <= stats['commandBudgetBytes'], stats
     assert all(item['currentProjection'] for item in record['cache']), record
+    assert all(item['currentProjection'] for item in record['commands']), record
 
 
 async def seek_heaviest(page):
@@ -105,6 +107,11 @@ async def pixels_case(browser, engine, country, server):
             assert len(observation['wheels']) == 6, observation
             assert all(job['at'] - observation['wheels'][-1] >= 145 for job in observation['jobs']), observation
             record['zoomDebounce'] = observation
+            await page.wait_for_function('window.__rasterRead().stats.pendingJobs===0')
+            reuse = await page.evaluate('window.__rasterRead()')
+            budget(reuse)
+            assert any(p['index'] == index and p['reusedCommands'] for p in reuse['stats']['preparations']), reuse
+            record['commandReuse'] = reuse['stats']
         await page.locator('#puzzleZoomIn').click()
         await page.set_viewport_size({'width': 844, 'height': 390})
         await page.wait_for_function('()=>{const c=document.querySelector("#puzzleCanvas");return Math.abs(c.getBoundingClientRect().width-window.__puzzleRead().canvas.width)<.5}')

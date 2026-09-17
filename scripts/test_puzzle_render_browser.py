@@ -21,6 +21,12 @@ RENDER_HOOK = r"""
   staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};
   const observedDrawImage=ctx.drawImage;
   ctx.drawImage=function(...args){if(args[0]===staticCanvas)window.__backgroundDraw={x:args[1],y:args[2],width:args[3],height:args[4]};return observedDrawImage.apply(this,args);};
+  const observedPieceRaster=drawPieceRaster;
+  drawPieceRaster=function(...args){const path=activeSprite.path,scale=activeSprite.scale,left=activeSprite.left,top=activeSprite.top,hits=rasterPreparation.hits;
+    const result=observedPieceRaster(...args);
+    if(rasterPreparation.hits>hits)window.__spriteOrigin='worker';
+    else if(path!==activeSprite.path||scale!==activeSprite.scale||left!==activeSprite.left||top!==activeSprite.top)window.__spriteOrigin='direct';
+    return result;};
   window.__renderRead=()=>({snapshot:snapshotState(),map:{...state.mapRect},tray:trayRect(),side:state.sideTray,
     renderer:state.renderGeometry?.diagnostics(),baseViewK:state.baseViewK,
     features:state.features.map((feature,index)=>({id:feature.properties._puzzleId,name:feature.properties._puzzleName,
@@ -33,10 +39,20 @@ RENDER_HOOK = r"""
     context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
     const actual=sprite.canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
     const expected=context.getImageData(0,0,canvas.width,canvas.height).data;
-    let differences=0,maximumDifference=0,nonempty=0;
+    let differences=0,maximumDifference=0,nonempty=0,maximumAlphaDifference=0,maximumPremultipliedDifference=0;
+    const examples=[];
     for(let i=0;i<actual.length;i++){if(actual[i]!==expected[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(actual[i]-expected[i]));if(i%4===3&&actual[i])nonempty++;}
+    for(let i=0;i<actual.length;i+=4){
+      maximumAlphaDifference=Math.max(maximumAlphaDifference,Math.abs(actual[i+3]-expected[i+3]));
+      for(let c=0;c<3;c++)maximumPremultipliedDifference=Math.max(maximumPremultipliedDifference,Math.abs(actual[i+c]*actual[i+3]/255-expected[i+c]*expected[i+3]/255));
+      if(examples.length<8&&[0,1,2,3].some(c=>actual[i+c]!==expected[i+c]))examples.push({x:(i/4)%canvas.width,y:Math.floor(i/4/canvas.width),actual:Array.from(actual.slice(i,i+4)),expected:Array.from(expected.slice(i,i+4))});
+    }
     return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale:state.view.k,dpr:sprite.dpr,
-      pixels:canvas.width*canvas.height,bytes:actual.length,differences,maximumDifference,nonempty,
+      pixels:canvas.width*canvas.height,bytes:actual.length,differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples,
+      featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
+      source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
+      preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
+      actualTransform:Array.from(sprite.canvas.getContext('2d').getTransform().toFloat64Array()),referenceTransform:Array.from(context.getTransform().toFloat64Array()),
       rectangle:{left:sprite.left,top:sprite.top,right:sprite.right,bottom:sprite.bottom}};
   };
   window.__backgroundAudit=()=>{
@@ -243,6 +259,17 @@ async def run_dpr_case(browser, engine, dpr, server, output):
         await catalog.ready(page, {'mode': 'russia-subjects', 'selection': None})
         await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
         await settled(page)
+        if dpr == 3:
+            # The Linux WebKit regression occurred on Kirov at the capped DPR2
+            # raster scale. Reach that real contour through the existing input
+            # handlers so the reference does not depend on a random first piece.
+            scene = await page.evaluate('window.__renderRead()')
+            index = next(i for i, feature in enumerate(scene['features']) if str(feature['id']) == '115100')
+            state = await page.evaluate('window.__puzzleRead()')
+            await catalog.place_pieces(page, state['order'].index(index))
+            assert (await page.evaluate('window.__puzzleRead().current')) == index
+            assert not (await page.evaluate('window.__puzzleRead().finished'))
+            record['referenceFeature'] = '115100'
         await page.locator('#puzzleCanvas').focus()
         await page.keyboard.press('h')
         records = []

@@ -127,7 +127,7 @@
   const activeSprite = { canvas: document.createElement("canvas"), path: null };
   const rasterPreparation = {
     worker: null, status: "idle", projection: null, timer: 0, timeout: 0,
-    generation: 0, sequence: 0, pending: null, cache: new Map(), failed: new Set(),
+    generation: 0, sequence: 0, pending: null, cache: new Map(), commands: new Map(), failed: new Set(),
     vertexCounts: new WeakMap(), planKey: null, desired: [], preparations: [],
     lastScale: null, notBefore: 0,
     hits: 0, fallbacks: 0, peakReservedRasterBytes: 0, peakCommandBytes: 0,
@@ -1376,10 +1376,12 @@
     // Reserve canvas + ImageData + transferred bitmap for the in-flight job.
     // Native path/backend memory is separate from these explicit raster bounds.
     const reservedRasterBytes = bitmapBytes + canvasBytes + (rasterPreparation.pending?.bytes || 0) * 3;
-    const commandBytes = rasterPreparation.pending?.commandBytes || 0;
+    const cachedCommandBytes = [...rasterPreparation.commands.values()].reduce((sum, item) => sum + item.bytes, 0);
+    const inFlightCommandBytes = rasterPreparation.pending?.commandBytes || 0;
+    const commandBytes = cachedCommandBytes + inFlightCommandBytes;
     rasterPreparation.peakReservedRasterBytes = Math.max(rasterPreparation.peakReservedRasterBytes, reservedRasterBytes);
     rasterPreparation.peakCommandBytes = Math.max(rasterPreparation.peakCommandBytes, commandBytes);
-    return { status: rasterPreparation.status, pendingJobs: Number(!!rasterPreparation.pending), commandBytes,
+    return { status: rasterPreparation.status, pendingJobs: Number(!!rasterPreparation.pending), commandBytes, cachedCommandBytes, inFlightCommandBytes,
       bitmapBytes, canvasBytes, reservedRasterBytes, rasterBudgetBytes: ACTIVE_RASTER_BUDGET,
       commandBudgetBytes: COMMAND_BUDGET, peakReservedRasterBytes: rasterPreparation.peakReservedRasterBytes,
       peakCommandBytes: rasterPreparation.peakCommandBytes, hits: rasterPreparation.hits, fallbacks: rasterPreparation.fallbacks,
@@ -1406,6 +1408,7 @@
     const terminal = ["unsupported", "failed"].includes(rasterPreparation.status) ? rasterPreparation.status : "idle";
     stopRasterWorker(terminal);
     for (const key of rasterPreparation.cache.keys()) removePreparedRaster(key);
+    rasterPreparation.commands.clear();
     rasterPreparation.failed.clear();
     rasterPreparation.planKey = null;
     rasterPreparation.projection = null;
@@ -1438,6 +1441,13 @@
         if (!pending || data.id !== pending.id) { data.results?.forEach(item => item.bitmap.close()); return; }
         clearTimeout(rasterPreparation.timeout);
         rasterPreparation.pending = null;
+        if (pending.projection === state.projection && data.fill?.byteLength && data.stroke?.byteLength) {
+          // Transfer ownership back, rather than cloning several MiB on every
+          // zoom. The same immutable projected commands serve every exact scale.
+          rasterPreparation.commands.delete(pending.index);
+          rasterPreparation.commands.set(pending.index, { fill: data.fill, stroke: data.stroke,
+            bytes: data.fill.byteLength + data.stroke.byteLength, projection: pending.projection });
+        }
         if (data.type !== "ready") {
           pending.variants.forEach(item => rasterPreparation.failed.add(item.key));
         } else {
@@ -1448,7 +1458,7 @@
             rasterPreparation.cache.set(variant.key, { ...variant, bitmap: result.bitmap, projection: pending.projection });
           });
           rasterPreparation.preparations.push({ index: pending.index, attemptId: pending.attemptId, mode: pending.mode,
-            selection: pending.selection, serializationMs: pending.serializationMs,
+            selection: pending.selection, serializationMs: pending.serializationMs, reusedCommands: pending.reusedCommands,
             readyMs: performance.now() - pending.begin, buildMs: data.buildMs, rasterMs: data.rasterMs,
             workerMs: data.workerMs, bytes: pending.bytes, commandBytes: pending.commandBytes });
           if (rasterPreparation.preparations.length > 32) rasterPreparation.preparations.shift();
@@ -1470,9 +1480,10 @@
       let vertices = 0, rings = 0;
       for (const polygon of polygons) for (const ring of polygon) { vertices += ring.length; ++rings; }
       // Conservative serialized-size bound, including ring closure/flush markers.
-      rasterPreparation.vertexCounts.set(feature, vertices >= 20000 && (vertices + rings * 4) * 48 <= COMMAND_BUDGET);
+      const commandEstimate = (vertices + rings * 4) * 48;
+      rasterPreparation.vertexCounts.set(feature, { complex: vertices >= 20000 && commandEstimate <= COMMAND_BUDGET, commandEstimate });
     }
-    return rasterPreparation.vertexCounts.get(feature);
+    return rasterPreparation.vertexCounts.get(feature).complex;
   }
 
   function rasterVariant(index, scale) {
@@ -1516,6 +1527,7 @@
     });
     const keys = new Set(desired.flat().map(item => item.key));
     for (const key of rasterPreparation.cache.keys()) if (!keys.has(key)) removePreparedRaster(key);
+    for (const index of rasterPreparation.commands.keys()) if (!indices.includes(index)) rasterPreparation.commands.delete(index);
     if (rasterPreparation.pending && !rasterPreparation.pending.variants.every(item => keys.has(item.key))) {
       stopRasterWorker(); rasterPreparation.planKey = null; scheduleRasterPreparation(); return;
     }
@@ -1528,16 +1540,31 @@
       const begin = performance.now(), index = variants[0].index;
       let commands;
       try {
-        if (state.renderGeometry) commands = state.renderGeometry.getFullCommands(index);
-        else {
-          const paths = buildFeatureGeometry(state.features[index], window.RudnPuzzleGeometry.CommandPath);
-          commands = { fill: paths.path.commands(), stroke: paths.strokePath.commands() };
+        const cached = rasterPreparation.commands.get(index);
+        const reusedCommands = cached?.projection === state.projection;
+        if (reusedCommands) {
+          commands = { fill: cached.fill, stroke: cached.stroke };
+          rasterPreparation.commands.delete(index);
+        } else {
+          // Reserve an upper bound before allocating encoded buffers. Prefer
+          // retaining the active contour over speculative look-ahead work.
+          const estimate = rasterPreparation.vertexCounts.get(state.features[index]).commandEstimate;
+          for (const key of rasterPreparation.commands.keys()) {
+            if (rasterPreparationStats().commandBytes + estimate <= COMMAND_BUDGET) break;
+            if (key !== state.current) rasterPreparation.commands.delete(key);
+          }
+          if (rasterPreparationStats().commandBytes + estimate > COMMAND_BUDGET) continue;
+          if (state.renderGeometry) commands = state.renderGeometry.getFullCommands(index);
+          else {
+            const paths = buildFeatureGeometry(state.features[index], window.RudnPuzzleGeometry.CommandPath);
+            commands = { fill: paths.path.commands(), stroke: paths.strokePath.commands() };
+          }
         }
         const commandBytes = commands.fill.byteLength + commands.stroke.byteLength;
-        if (commandBytes > COMMAND_BUDGET) { variants.forEach(item => rasterPreparation.failed.add(item.key)); continue; }
+        if (rasterPreparationStats().commandBytes + commandBytes > COMMAND_BUDGET) { variants.forEach(item => rasterPreparation.failed.add(item.key)); continue; }
         const id = ++rasterPreparation.sequence;
         rasterPreparation.pending = { id, index, variants, bytes, commandBytes, begin,
-          serializationMs: performance.now() - begin, projection: state.projection,
+          serializationMs: performance.now() - begin, reusedCommands, projection: state.projection,
           attemptId: state.attemptId, mode: state.mode, selection: state.selection };
         rasterPreparationStats();
         rasterPreparation.worker.postMessage({ id, variants, dpr: state.dpr, fillRule: state.mode === "russia-subjects" ? "nonzero" : "evenodd", ...commands },
