@@ -25,6 +25,7 @@ DRAW_TIMING_HOOK = r"""
     return state.features.map((feature,index)=>({index,vertices:count(feature.geometry?.coordinates)}))
       .sort((a,b)=>b.vertices-a.vertices||a.index-b.index)[0];
   };
+  window.__qaRasterPreparation=()=>rasterPreparationStats();
 """
 
 
@@ -86,6 +87,19 @@ async def zoom_and_pan(page):
     return result
 
 
+async def measured_placement(page):
+    # Include the preceding trusted drag, snap, first draw of the next tray
+    # piece, and two presented frames. Never wait for the worker to become warm.
+    await begin_measurement(page)
+    started = time.monotonic()
+    await trusted_drop(page)
+    frames = await end_measurement(page)
+    return {'inputAndPresentationMs':round((time.monotonic()-started)*1000,2),
+            'frameMs':frames, 'drawMs':await drawing_metrics(page),
+            'longTasksMs':await page.evaluate('window.__qaPerf.longTasks'),
+            'preparation':await page.evaluate('window.__qaRasterPreparation()')}
+
+
 def write_progress(args, results):
     report={'method':'Trusted input; instrumented Canvas draw work, RAF intervals, long tasks and GC heap; desktop browser runtime',
             'physicalMobileDevices':False, 'cycles':args.cycles, 'cpuRates':args.cpu_rates, 'results':results}
@@ -104,6 +118,9 @@ def performance_budget(row):
     for phase, values in row.get('zoomAndPan',{}).items():
         checks[phase+'P95Ms'] = (values['frameMs']['p95'],(100 if phase=='zoom' else 50)*frame_scale)
         if phase=='pan':checks[phase+'MaxMs'] = (values['frameMs']['max'],250*frame_scale)
+    for phase in ('placementBeforeHeaviest','placementAfterHeaviest'):
+        if phase in row:
+            checks[phase+'MaxMs'] = (row[phase]['frameMs']['max'],250*frame_scale)
     return {'passed':all(actual<=limit for actual,limit in checks.values()),
             'checks':{name:{'actual':actual,'limit':round(limit,2),'passed':actual<=limit} for name,(actual,limit) in checks.items()}}
 
@@ -142,7 +159,7 @@ async def run(args, server):
                         started = time.monotonic()
                         state = await start_map(page, catalog[map_id], 'medium')
                         row = {'id': map_id, 'cycle': cycle, 'cpuThrottle':rate, 'loadSeconds': round(time.monotonic()-started, 3)}
-                        row['includesInitialWorldBootstrap'] = cycle == 0 and map_id == ids[0]
+                        row['includesInitialBootstrap'] = cycle == 0 and map_id == ids[0]
                         row['loadLongTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
                         if map_id != 'adm1-MCO':
                             # Reach the most detailed territory through actual
@@ -150,7 +167,11 @@ async def run(args, server):
                             # stand in for the expensive active contour.
                             heavy = await page.evaluate('window.__qaHeaviestFeature()')
                             while state['current'] != heavy['index']:
-                                await trusted_drop(page)
+                                next_index = state['order'][state['order'].index(state['current'])+1]
+                                if next_index == heavy['index']:
+                                    row['placementBeforeHeaviest'] = await measured_placement(page)
+                                else:
+                                    await trusted_drop(page)
                                 state = await page.evaluate('window.__puzzleRead()')
                                 assert not state['finished'], 'Heaviest territory was not reached'
                             row['activeFeature'] = heavy
@@ -166,6 +187,7 @@ async def run(args, server):
                             destination = max(corners,key=lambda point:(point[0]-state['target']['x'])**2+(point[1]-state['target']['y'])**2)
                             destination_x, destination_y = box['x']+destination[0],box['y']+destination[1]
                             await page.mouse.move(x, y)
+                            row['preparationBeforeFirstLift'] = await page.evaluate('window.__qaRasterPreparation()')
                             await page.mouse.down()
                             await begin_measurement(page)
                             for step in range(36):
@@ -185,7 +207,7 @@ async def run(args, server):
                             row['dragDrawMs'] = await drawing_metrics(page)
                             row['zoomAndPan'] = await zoom_and_pan(page)
                             await page.locator('#puzzleReturn').click()
-                        await trusted_drop(page)
+                        row['placementAfterHeaviest'] = await measured_placement(page)
                         if cycle == 0:
                             await offline_resume(page, context, await page.evaluate('window.__puzzleRead()'), row)
                             await context.set_offline(False)
@@ -193,6 +215,13 @@ async def run(args, server):
                         heap = (await cdp.send('Runtime.getHeapUsage'))['usedSize']
                         heaps.append(heap)
                         row['retainedHeapMiB'] = round(heap/1024/1024, 2)
+                        row['rasterPreparation'] = await page.evaluate('window.__qaRasterPreparation()')
+                        for key in ('commandBytes','bitmapBytes','canvasBytes','reservedRasterBytes','pendingJobs'):
+                            assert row['rasterPreparation'][key] >= 0, (key,row['rasterPreparation'])
+                        assert row['rasterPreparation']['reservedRasterBytes'] <= row['rasterPreparation']['rasterBudgetBytes'], row['rasterPreparation']
+                        assert row['rasterPreparation']['commandBytes'] <= row['rasterPreparation']['commandBudgetBytes'], row['rasterPreparation']
+                        assert row['rasterPreparation']['peakReservedRasterBytes'] <= row['rasterPreparation']['rasterBudgetBytes'], row['rasterPreparation']
+                        assert row['rasterPreparation']['peakCommandBytes'] <= row['rasterPreparation']['commandBudgetBytes'], row['rasterPreparation']
                         row['performanceBudget'] = performance_budget(row)
                         row['status'] = 'passed'
                         record['maps'].append(row)
@@ -200,11 +229,11 @@ async def run(args, server):
                         print(channel, cycle, map_id, row['dragFrameP95Ms'] if 'dragFrameP95Ms' in row else '-', row['retainedHeapMiB'], flush=True)
                 assert not record.get('pageErrors'), record.get('pageErrors')
                 assert not record.get('unexpectedWrites'), record.get('unexpectedWrites')
+                record['retainedHeapAfterCyclesMiB'] = [round(heaps[(i+1)*len(ids)-1]/1024/1024,2) for i in range(args.cycles)]
                 if args.enforce_budgets:
                     failed = [{key:row[key] for key in ('id','cpuThrottle','performanceBudget')} for row in record['maps'] if not row['performanceBudget']['passed']]
                     assert not failed, f'Performance guardrails exceeded: {json.dumps(failed)}'
                 record['status'] = 'passed'
-                record['retainedHeapAfterCyclesMiB'] = [round(heaps[(i+1)*len(ids)-1]/1024/1024,2) for i in range(args.cycles)]
             except Exception as error:
                 record['status']='failed'
                 record['error'] = str(error)

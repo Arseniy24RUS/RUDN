@@ -46,6 +46,16 @@ const distanceSquared = (xy, index, first, last) => {
   return (x - ax - t * dx) ** 2 + (y - ay - t * dy) ** 2;
 };
 const report = { sourceHash, sourceFeatures: features.length, cases: [], layouts: [], projectionEquivalence:[] };
+function replayCommands(commands) {
+  const path = new RecordedPath(); let ring = new RecordedPath();
+  for (let i = 0; i < commands.length; i += 3) {
+    if (commands[i] === 0) ring.moveTo(commands[i + 1], commands[i + 2]);
+    else if (commands[i] === 1) ring.lineTo(commands[i + 1], commands[i + 2]);
+    else if (commands[i] === 2) ring.closePath();
+    else { path.addPath(ring); ring = new RecordedPath(); }
+  }
+  path.addPath(ring); return path;
+}
 const began = performance.now();
 for (const [width, height, fullscreen, viewportWidth, viewportHeight] of [
   [320, 340.8, false, 320, 568], [390, 500, false, 390, 844],
@@ -76,6 +86,12 @@ for (const [width, height, fullscreen, viewportWidth, viewportHeight] of [
   const renderer = createTopologyRenderer({ topology, objectKey, featureIds: features.map(feature => String(feature.id)), project: projection, seamWidth: 2 * Math.PI * projection.scale(), Path: RecordedPath });
   assert(renderer, 'Author topology must use shared-arc rendering');
   const setupMs = performance.now() - setupAt;
+  // Worker commands must preserve every coordinate and ring, including seams.
+  features.forEach((feature, index) => {
+    const full = renderer.getFull(index), commands = renderer.getFullCommands(index);
+    assert.deepEqual(replayCommands(commands.fill).rings, full.path.rings, `Worker fill changed ${feature.id}`);
+    assert.deepEqual(replayCommands(commands.stroke).rings, full.strokePath.rings, `Worker border changed ${feature.id}`);
+  });
   for (const zoom of [0.55, 1, 1.01, 2, 4, 8, 16, 32, 64, 128]) {
     const started = performance.now(), level = renderer.inspectLevel(zoom);
     let maximumSquared = 0, checkedPoints = 0;

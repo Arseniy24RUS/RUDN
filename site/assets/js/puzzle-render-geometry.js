@@ -5,6 +5,29 @@
   const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
   const arcId = value => value < 0 ? ~value : value;
 
+  // The same contour builders can target native paths or transferable commands.
+  // Keep addPath boundaries: closing thousands of rings on one native compound
+  // path is much slower than closing each ring before adding it.
+  class CommandPath {
+    constructor() { this.parts = []; this.length = 0; }
+    moveTo(x, y) { this.parts.push(0, x, y); this.length += 3; }
+    lineTo(x, y) { this.parts.push(1, x, y); this.length += 3; }
+    closePath() { this.parts.push(2, 0, 0); this.length += 3; }
+    addPath(path) { this.parts.push(path); this.length += path.length + 3; }
+    commands() {
+      const output = new Float64Array(this.length);
+      let offset = 0;
+      const append = path => {
+        for (const part of path.parts) {
+          if (typeof part === "number") output[offset++] = part;
+          else { append(part); output[offset++] = 3; output[offset++] = 0; output[offset++] = 0; }
+        }
+      };
+      append(this);
+      return output;
+    }
+  }
+
   function computeLayout(width, height, fullscreen, viewportWidth, viewportHeight) {
     const margin = 10, gap = 12;
     const side = fullscreen && viewportWidth > viewportHeight && viewportHeight <= 520;
@@ -136,10 +159,10 @@
       while (levels.size > 3) levels.delete(levels.keys().next().value);
       return level;
     }
-    function build(index, indices) {
-      const path = new Path(), strokePath = new Path();
+    function build(index, indices, TargetPath = Path) {
+      const path = new TargetPath(), strokePath = new TargetPath();
       for (const ring of ringsFor(selected[index])) {
-        const ringPath = new Path();
+        const ringPath = new TargetPath();
         let first = null, previous = null;
         visitRing(ring, indices, (x, y, meridian) => {
           const point = { x, y, meridian };
@@ -171,10 +194,14 @@
         while (fullPaths.size > 3) fullPaths.delete(fullPaths.keys().next().value);
         return result;
       },
+      getFullCommands(index) {
+        const paths = build(index, full, CommandPath);
+        return { fill: paths.path.commands(), stroke: paths.strokePath.commands() };
+      },
       diagnostics() { return { sourceVertices: full.reduce((sum, values) => sum + values.length, 0), levels: [...levels.values()].map(level => ({ bucket: level.bucket, tolerance: level.tolerance, retained: level.retained, paths: level.paths.size })), fullPaths: fullPaths.size }; },
       // Read-only copies used by geometric error tests; never used to mutate a game.
       inspectLevel(scale) { const level = levelFor(scale); return { bucket: level.bucket, tolerance: level.tolerance, arcs: arcs.map((arc, index) => ({ xy: Array.from(arc.xy), indices: Array.from(level.indices[index]) })) }; },
     };
   }
-  globalThis.RudnPuzzleGeometry = Object.freeze({ computeLayout, createTopologyRenderer, maxError: MAX_ERROR });
+  globalThis.RudnPuzzleGeometry = Object.freeze({ computeLayout, createTopologyRenderer, CommandPath, maxError: MAX_ERROR });
 })();

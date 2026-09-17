@@ -283,6 +283,8 @@ jobs:
           python scripts/test_puzzle_xlsx.py --artifacts "${{ runner.temp }}/games-qa"
       - name: Verify actual mobile geometry and rotation in all languages
         run: python scripts/test_puzzle_render_browser.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/render" --browsers "${{ matrix.browser }}" --dpr-checks
+      - name: Verify exact worker pixels, bounded memory and cancellation
+        run: python scripts/test_puzzle_raster_worker.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/raster-worker" --browsers "${{ matrix.browser }}"
       - name: Verify free module UI and unchanged course attempts
         env:
           DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
@@ -303,6 +305,7 @@ jobs:
           name: games-render-${{ matrix.browser }}
           path: |
             ${{ runner.temp }}/games-qa/render
+            ${{ runner.temp }}/games-qa/raster-worker
             ${{ runner.temp }}/games-qa/leaderboard
             ${{ runner.temp }}/games-qa/upgrade
             ${{ runner.temp }}/games-qa/native-loader

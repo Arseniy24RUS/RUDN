@@ -1,5 +1,9 @@
 (() => {
   "use strict";
+  const engineScriptUrl = document.currentScript?.src;
+  const rasterWorkerUrl = engineScriptUrl ? new URL("./puzzle-raster-worker.js", engineScriptUrl) : null;
+  const rasterVersion = engineScriptUrl && new URL(engineScriptUrl).searchParams.get("v");
+  if (rasterVersion) rasterWorkerUrl.searchParams.set("v", rasterVersion);
 
   const mountRudnPuzzle = () => {
   const root = document.getElementById("geoPuzzleApp");
@@ -121,6 +125,14 @@
   const staticCtx = staticCanvas.getContext("2d", { alpha: true });
   const backgroundSprite = { valid: false, direct: false };
   const activeSprite = { canvas: document.createElement("canvas"), path: null };
+  const rasterPreparation = {
+    worker: null, status: "idle", projection: null, timer: 0, timeout: 0,
+    generation: 0, sequence: 0, pending: null, cache: new Map(), failed: new Set(),
+    vertexCounts: new WeakMap(), planKey: null, desired: [], preparations: [],
+    lastScale: null, notBefore: 0,
+    hits: 0, fallbacks: 0, peakReservedRasterBytes: 0, peakCommandBytes: 0,
+  };
+  const ACTIVE_RASTER_BUDGET = 16 * 1024 * 1024, COMMAND_BUDGET = 8 * 1024 * 1024;
 
   const DIFFICULTY = {
     easy: { label: tr("Низкая"), points: 3, snap: 60 },
@@ -1141,8 +1153,8 @@
     return { path: state.paths[index], strokePath: state.strokePaths[index] };
   }
 
-  function buildFeatureGeometry(feature) {
-    const path = new Path2D(), strokePath = new Path2D();
+  function buildFeatureGeometry(feature, TargetPath = Path2D) {
+    const path = new TargetPath(), strokePath = new TargetPath();
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
     const append = (ring) => {
       // Reuse each projection for bounds, fill and border. Keep this temporary
@@ -1155,7 +1167,7 @@
         }
         return point;
       });
-      const fillRing = new Path2D(), strokeRing = new Path2D();
+      const fillRing = new TargetPath(), strokeRing = new TargetPath();
       appendRing(fillRing, ring, 0, projected);
       appendStrokeRing(strokeRing, ring, 0, projected);
       path.addPath(fillRing); strokePath.addPath(strokeRing);
@@ -1169,10 +1181,11 @@
 
   function rebuildGeometry() {
     if (!state.collection) return;
+    resetRasterPreparation();
     activeSprite.path = null;
     state.projection = buildProjection();
     const geoPath = window.d3.geoPath(state.projection);
-    const prepared = state.mode === "russia-subjects" ? null : state.features.map(buildFeatureGeometry);
+    const prepared = state.mode === "russia-subjects" ? null : state.features.map(feature => buildFeatureGeometry(feature));
     state.bounds = state.features.map((feature, index) => {
       if (state.mode !== "world-countries") return prepared ? prepared[index].bounds : manualFeatureBounds(feature);
       const value = geoPath.bounds(feature);
@@ -1356,6 +1369,195 @@
     context.restore();
   }
 
+  function rasterPreparationStats() {
+    const cache = rasterPreparation.cache;
+    const bitmapBytes = [...cache.values()].reduce((sum, item) => sum + item.bytes, 0);
+    const canvasBytes = activeSprite.canvas.width * activeSprite.canvas.height * 4;
+    // Reserve canvas + ImageData + transferred bitmap for the in-flight job.
+    // Native path/backend memory is separate from these explicit raster bounds.
+    const reservedRasterBytes = bitmapBytes + canvasBytes + (rasterPreparation.pending?.bytes || 0) * 3;
+    const commandBytes = rasterPreparation.pending?.commandBytes || 0;
+    rasterPreparation.peakReservedRasterBytes = Math.max(rasterPreparation.peakReservedRasterBytes, reservedRasterBytes);
+    rasterPreparation.peakCommandBytes = Math.max(rasterPreparation.peakCommandBytes, commandBytes);
+    return { status: rasterPreparation.status, pendingJobs: Number(!!rasterPreparation.pending), commandBytes,
+      bitmapBytes, canvasBytes, reservedRasterBytes, rasterBudgetBytes: ACTIVE_RASTER_BUDGET,
+      commandBudgetBytes: COMMAND_BUDGET, peakReservedRasterBytes: rasterPreparation.peakReservedRasterBytes,
+      peakCommandBytes: rasterPreparation.peakCommandBytes, hits: rasterPreparation.hits, fallbacks: rasterPreparation.fallbacks,
+      preparations: rasterPreparation.preparations.map(item => ({ ...item })) };
+  }
+
+  function stopRasterWorker(status = "idle") {
+    ++rasterPreparation.generation;
+    rasterPreparation.worker?.terminate();
+    rasterPreparation.worker = null;
+    rasterPreparation.pending = null;
+    rasterPreparation.status = status;
+    clearTimeout(rasterPreparation.timeout);
+  }
+
+  function removePreparedRaster(key) {
+    rasterPreparation.cache.get(key)?.bitmap.close();
+    rasterPreparation.cache.delete(key);
+  }
+
+  function resetRasterPreparation() {
+    clearTimeout(rasterPreparation.timer);
+    rasterPreparation.timer = 0;
+    const terminal = ["unsupported", "failed"].includes(rasterPreparation.status) ? rasterPreparation.status : "idle";
+    stopRasterWorker(terminal);
+    for (const key of rasterPreparation.cache.keys()) removePreparedRaster(key);
+    rasterPreparation.failed.clear();
+    rasterPreparation.planKey = null;
+    rasterPreparation.projection = null;
+    rasterPreparation.lastScale = null;
+    rasterPreparation.notBefore = 0;
+  }
+
+  function startRasterWorker() {
+    if (rasterPreparation.worker || ["unsupported", "failed"].includes(rasterPreparation.status)) return;
+    if (!rasterWorkerUrl || typeof Worker !== "function") { rasterPreparation.status = "unsupported"; return; }
+    try {
+      const worker = new Worker(rasterWorkerUrl), generation = rasterPreparation.generation;
+      rasterPreparation.worker = worker;
+      rasterPreparation.status = "probing";
+      worker.onerror = event => { event.preventDefault(); stopRasterWorker("failed"); };
+      worker.onmessageerror = event => { event.preventDefault?.(); stopRasterWorker("failed"); };
+      worker.onmessage = ({ data }) => {
+        if (disposed || generation !== rasterPreparation.generation) {
+          data.results?.forEach(item => item.bitmap.close()); return;
+        }
+        if (data.type === "capability") {
+          clearTimeout(rasterPreparation.timeout);
+          if (!data.supported) { stopRasterWorker("unsupported"); return; }
+          rasterPreparation.status = "ready";
+          rasterPreparation.planKey = null;
+          scheduleRasterPreparation();
+          return;
+        }
+        const pending = rasterPreparation.pending;
+        if (!pending || data.id !== pending.id) { data.results?.forEach(item => item.bitmap.close()); return; }
+        clearTimeout(rasterPreparation.timeout);
+        rasterPreparation.pending = null;
+        if (data.type !== "ready") {
+          pending.variants.forEach(item => rasterPreparation.failed.add(item.key));
+        } else {
+          data.results.forEach(result => {
+            const variant = pending.variants.find(item => item.scale === result.scale);
+            if (!variant || pending.projection !== state.projection) { result.bitmap.close(); return; }
+            removePreparedRaster(variant.key);
+            rasterPreparation.cache.set(variant.key, { ...variant, bitmap: result.bitmap, projection: pending.projection });
+          });
+          rasterPreparation.preparations.push({ index: pending.index, attemptId: pending.attemptId, mode: pending.mode,
+            selection: pending.selection, serializationMs: pending.serializationMs,
+            readyMs: performance.now() - pending.begin, buildMs: data.buildMs, rasterMs: data.rasterMs,
+            workerMs: data.workerMs, bytes: pending.bytes, commandBytes: pending.commandBytes });
+          if (rasterPreparation.preparations.length > 32) rasterPreparation.preparations.shift();
+        }
+        rasterPreparationStats();
+        rasterPreparation.planKey = null;
+        scheduleRasterPreparation();
+      };
+      rasterPreparation.timeout = setTimeout(() => stopRasterWorker("failed"), 15000);
+    } catch (_) { stopRasterWorker("failed"); }
+  }
+
+  function complexFeature(index) {
+    const feature = state.features[index];
+    if (!feature) return false;
+    if (!rasterPreparation.vertexCounts.has(feature)) {
+      const geometry = feature.geometry || {};
+      const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.type === "MultiPolygon" ? geometry.coordinates : [];
+      let vertices = 0, rings = 0;
+      for (const polygon of polygons) for (const ring of polygon) { vertices += ring.length; ++rings; }
+      // Conservative serialized-size bound, including ring closure/flush markers.
+      rasterPreparation.vertexCounts.set(feature, vertices >= 20000 && (vertices + rings * 4) * 48 <= COMMAND_BUDGET);
+    }
+    return rasterPreparation.vertexCounts.get(feature);
+  }
+
+  function rasterVariant(index, scale) {
+    const bounds = state.bounds[index], dpr = state.dpr;
+    const x0 = Math.floor((bounds.x0 * scale - 2) * dpr), y0 = Math.floor((bounds.y0 * scale - 2) * dpr);
+    const width = Math.ceil((bounds.x1 * scale + 2) * dpr) - x0, height = Math.ceil((bounds.y1 * scale + 2) * dpr) - y0;
+    return { index, key: `${index}:${scale}:${dpr}`, scale, dpr, x0, y0, width, height, bytes: width * height * 4 };
+  }
+
+  function scheduleRasterPreparation() {
+    const piece = currentPiece();
+    if (disposed || !state.ready || !piece?.inTray || piece.locked || ["unsupported", "failed"].includes(rasterPreparation.status)) return;
+    if (rasterPreparation.lastScale !== null && rasterPreparation.lastScale !== state.view.k) {
+      // Wheel/pinch frames need the exact new vector scale immediately, but a
+      // cold-raster prefetch is useful only after that scale stops changing.
+      // Do not serialize the same large contour on every intermediate frame.
+      rasterPreparation.notBefore = performance.now() + 150;
+      if (rasterPreparation.pending) stopRasterWorker();
+    }
+    rasterPreparation.lastScale = state.view.k;
+    const planKey = `${state.current}:${state.view.k}:${state.dpr}`;
+    if (rasterPreparation.projection === state.projection && rasterPreparation.planKey === planKey) return;
+    rasterPreparation.projection = state.projection;
+    rasterPreparation.planKey = planKey;
+    clearTimeout(rasterPreparation.timer);
+    rasterPreparation.timer = setTimeout(prepareRasterCandidates, Math.max(0, rasterPreparation.notBefore - performance.now()));
+  }
+
+  function prepareRasterCandidates() {
+    rasterPreparation.timer = 0;
+    if (disposed || !state.ready || !currentPiece()?.inTray) { rasterPreparation.planKey = null; return; }
+    startRasterWorker();
+    if (rasterPreparation.status !== "ready") return;
+    // Look ahead to the next complex contour; simple intervening pieces need no
+    // worker and must not evict a useful preparation before it can be displayed.
+    const indices = state.order.slice(state.cursor).filter(index => !state.pieces[index].locked && complexFeature(index)).slice(0, 2);
+    const desired = indices.map(index => {
+      const bounds = state.bounds[index], tray = trayRect();
+      const trayScale = Math.max(0.001, Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height));
+      return [...new Set([state.view.k, trayScale])].map(scale => rasterVariant(index, scale));
+    });
+    const keys = new Set(desired.flat().map(item => item.key));
+    for (const key of rasterPreparation.cache.keys()) if (!keys.has(key)) removePreparedRaster(key);
+    if (rasterPreparation.pending && !rasterPreparation.pending.variants.every(item => keys.has(item.key))) {
+      stopRasterWorker(); rasterPreparation.planKey = null; scheduleRasterPreparation(); return;
+    }
+    if (rasterPreparation.pending) return;
+    for (const group of desired) {
+      const variants = group.filter(item => !rasterPreparation.cache.has(item.key) && !rasterPreparation.failed.has(item.key));
+      if (!variants.length) continue;
+      const bytes = variants.reduce((sum, item) => sum + item.bytes, 0);
+      if (bytes > 2 * 1024 * 1024 || rasterPreparationStats().reservedRasterBytes + bytes * 3 > ACTIVE_RASTER_BUDGET) continue;
+      const begin = performance.now(), index = variants[0].index;
+      let commands;
+      try {
+        if (state.renderGeometry) commands = state.renderGeometry.getFullCommands(index);
+        else {
+          const paths = buildFeatureGeometry(state.features[index], window.RudnPuzzleGeometry.CommandPath);
+          commands = { fill: paths.path.commands(), stroke: paths.strokePath.commands() };
+        }
+        const commandBytes = commands.fill.byteLength + commands.stroke.byteLength;
+        if (commandBytes > COMMAND_BUDGET) { variants.forEach(item => rasterPreparation.failed.add(item.key)); continue; }
+        const id = ++rasterPreparation.sequence;
+        rasterPreparation.pending = { id, index, variants, bytes, commandBytes, begin,
+          serializationMs: performance.now() - begin, projection: state.projection,
+          attemptId: state.attemptId, mode: state.mode, selection: state.selection };
+        rasterPreparationStats();
+        rasterPreparation.worker.postMessage({ id, variants, dpr: state.dpr, fillRule: state.mode === "russia-subjects" ? "nonzero" : "evenodd", ...commands },
+          [commands.fill.buffer, commands.stroke.buffer]);
+        rasterPreparation.timeout = setTimeout(() => stopRasterWorker("failed"), 15000);
+      } catch (_) { stopRasterWorker("failed"); }
+      return;
+    }
+  }
+
+  function reserveActiveRaster(bytes, keepKey = null) {
+    const oldBytes = activeSprite.canvas.width * activeSprite.canvas.height * 4;
+    for (const key of rasterPreparation.cache.keys()) {
+      if (rasterPreparationStats().reservedRasterBytes - oldBytes + bytes <= ACTIVE_RASTER_BUDGET) break;
+      if (key !== keepKey) removePreparedRaster(key);
+    }
+    if (rasterPreparationStats().reservedRasterBytes - oldBytes + bytes > ACTIVE_RASTER_BUDGET && rasterPreparation.pending) stopRasterWorker();
+    return rasterPreparationStats().reservedRasterBytes - oldBytes + bytes <= ACTIVE_RASTER_BUDGET;
+  }
+
   function drawPieceRaster(path, strokePath, bounds, scale, tx, ty) {
     // Rasterize the complete original contour at the *current* physical pixel
     // scale. Translation can reuse it without retessellating thousands of
@@ -1369,6 +1571,16 @@
     const sprite = activeSprite;
     if (sprite.path !== path || sprite.scale !== scale || sprite.dpr !== dpr
       || left < sprite.left || top < sprite.top || right > sprite.right || bottom > sprite.bottom) {
+      const key = `${state.current}:${scale}:${dpr}`, prepared = rasterPreparation.cache.get(key);
+      if (prepared?.projection === state.projection && reserveActiveRaster(prepared.bytes, key)) {
+        sprite.canvas.height = 0;
+        sprite.canvas.width = prepared.width; sprite.canvas.height = prepared.height;
+        sprite.canvas.getContext("2d").drawImage(prepared.bitmap, 0, 0);
+        Object.assign(sprite, { path, scale, dpr, left: prepared.x0 / dpr, top: prepared.y0 / dpr,
+          right: (prepared.x0 + prepared.width) / dpr, bottom: (prepared.y0 + prepared.height) / dpr });
+        ++rasterPreparation.hits;
+      } else {
+      if (complexFeature(state.current)) ++rasterPreparation.fallbacks;
       // At most 16 MiB, including a small motion margin; oversize displays keep
       // the vector fallback instead of allocating an unbounded zoomed bitmap.
       const maxPixels = 4 * 1024 * 1024;
@@ -1384,6 +1596,8 @@
         margin = Math.floor(margin / 2);
       } while (true);
       const canvas = sprite.canvas;
+      if (!reserveActiveRaster((x1 - x0) * (y1 - y0) * 4)) return false;
+      canvas.height = 0;
       canvas.width = Math.max(1, x1 - x0); canvas.height = Math.max(1, y1 - y0);
       const context = canvas.getContext("2d", { alpha: true });
       context.setTransform(dpr * scale, 0, 0, dpr * scale, -x0, -y0);
@@ -1392,6 +1606,8 @@
       context.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
       context.stroke(strokePath);
       Object.assign(sprite, { path, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
+      }
+      rasterPreparationStats();
     }
     ctx.save(); resetContext(ctx);
     ctx.drawImage(sprite.canvas, sprite.left + tx, sprite.top + ty, sprite.canvas.width / dpr, sprite.canvas.height / dpr);
@@ -1405,6 +1621,7 @@
     const { path, strokePath } = highResolutionPaths(piece.index);
     const bounds = state.bounds[piece.index];
     if (piece.inTray) {
+      scheduleRasterPreparation();
       const tray = trayRect();
       const scale = Math.max(0.001, Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height));
       const center = trayCenter();
@@ -2138,6 +2355,7 @@
     window.clearTimeout(state.resizeTimer);
     window.clearTimeout(toast.timer);
     resizeObserver?.disconnect();
+    resetRasterPreparation();
     activeSprite.path = null;
     activeSprite.canvas.width = activeSprite.canvas.height = 0;
     backgroundSprite.valid = false;
