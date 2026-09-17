@@ -132,6 +132,22 @@ async def fault_case(browser, scenario, server):
     context = await qa.context_for(browser, server, server.output, (1366, 768), 'ru', record)
     if scenario == 'worker-error':
         await context.route('**/puzzle-raster-worker.js*', lambda route: route.fulfill(status=200, content_type='text/javascript', body="throw new Error('Isolated worker failure')"))
+    elif scenario == 'slow-scale-response':
+        await context.add_init_script(r"""(()=>{
+          const Native=Worker;window.__heldRasters=0;window.__rasterWorkers=0;window.__rasterTerminations=0;
+          window.__holdRasterReplies=true;const held=[];
+          window.__releaseRasterReplies=()=>{window.__holdRasterReplies=false;held.splice(0).forEach(deliver=>deliver())};
+          window.Worker=class extends Native{
+            constructor(...args){super(...args);window.__rasterWorkers++;let callback=null;
+              Object.defineProperty(this,'onmessage',{set(value){callback=value},get(){return callback}});
+              this.addEventListener('message',event=>{
+                if(event.data.type==='ready'&&window.__holdRasterReplies){window.__heldRasters++;held.push(()=>callback?.(event))}
+                else callback?.(event);
+              });
+            }
+            terminate(){window.__rasterTerminations++;return super.terminate()}
+          };
+        })();""")
     else:
         await context.add_init_script(r"""(()=>{const Native=Worker;window.__heldRasters=0;window.Worker=class extends Native{
           constructor(...args){super(...args);let callback=null;Object.defineProperty(this,'onmessage',{set(value){callback=value},get(){return callback}});
@@ -149,6 +165,32 @@ async def fault_case(browser, scenario, server):
             await qa.trusted_drop(page)
             after = await page.evaluate('window.__puzzleRead()')
             assert after['attemptId'] == before['attemptId'] and after['placed'] == before['placed'] + 1
+        elif scenario == 'slow-scale-response':
+            await page.wait_for_function('window.__heldRasters>0', timeout=30000)
+            before = await page.evaluate('({scene:window.__puzzleRead(),workers:window.__rasterWorkers,terminated:window.__rasterTerminations})')
+            for _ in range(3):
+                await page.locator('#puzzleZoomIn').click()
+                # A real response is deliberately held beyond each debounce.
+                # This reproduces slow wheel frames without changing game state.
+                await page.wait_for_timeout(250)
+                current = await page.evaluate('({workers:window.__rasterWorkers,terminated:window.__rasterTerminations,scene:window.__rasterRead()})')
+                assert current['workers'] == before['workers'] and current['terminated'] == before['terminated'], current
+                assert current['scene']['stats']['pendingJobs'] == 1, current
+                budget(current['scene'])
+            await page.evaluate('window.__releaseRasterReplies()')
+            await page.wait_for_function('window.__rasterRead().stats.pendingJobs===0&&window.__rasterRead().stats.preparations.some(p=>p.reusedCommands)', timeout=30000)
+            after = await page.evaluate('window.__rasterRead()')
+            budget(after)
+            preparations = after['stats']['preparations']
+            obsolete = [p for p in preparations if p.get('discardedVariants', 0)]
+            assert obsolete and all(p['reusedCommands'] for p in preparations if p['index'] == obsolete[0]['index'] and p is not obsolete[0]), preparations
+            assert after['snapshot']['attemptId'] == before['scene']['attemptId']
+            assert after['snapshot']['placed'] == before['scene']['placed']
+            await qa.trusted_drop(page)
+            record['softCancellation'] = {'heldRealResponses': await page.evaluate('window.__heldRasters'),
+                'workersBefore': before['workers'], 'workersAfter': await page.evaluate('window.__rasterWorkers'),
+                'discardedObsoleteVariants': sum(p.get('discardedVariants', 0) for p in preparations),
+                'preparations': preparations, 'continuedInput': True}
         else:
             await page.wait_for_function('window.__heldRasters>0', timeout=30000)
             before = await page.evaluate('window.__puzzleRead()')
@@ -183,14 +225,14 @@ async def main(args):
                         records.append(record)
                         print(json.dumps({k: record.get(k) for k in ['browser', 'country', 'scenario', 'capability', 'status', 'error']}), flush=True)
                     if engine == 'chromium':
-                        for scenario in ['worker-error', 'stale-response']:
+                        for scenario in ['worker-error', 'stale-response', 'slow-scale-response']:
                             record = await fault_case(browser, scenario, server)
                             records.append(record)
                             print(json.dumps({k: record.get(k) for k in ['scenario', 'status', 'error']}), flush=True)
                 finally:
                     await browser.close()
                 (output / 'raster-worker.json').write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf-8')
-    if len(records) != len(args.browsers) * 2 + (2 if 'chromium' in args.browsers else 0) or any(item['status'] != 'passed' for item in records):
+    if len(records) != len(args.browsers) * 2 + (3 if 'chromium' in args.browsers else 0) or any(item['status'] != 'passed' for item in records):
         raise SystemExit(1)
 
 

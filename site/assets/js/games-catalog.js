@@ -1,8 +1,8 @@
 /** Free-play entries. Course routes and grading remain independent. */
 export const GAMES_COPY = {
-  ru: { title: 'Игры', lead: 'Исследуйте, пробуйте разные решения и играйте снова. Все модули доступны без расписания и без оценки в журнале.', play: 'Играть', back: 'К играм', free: 'Свободная игра', guest: 'Можно играть без входа. Прогресс сохраняется на этом устройстве; после входа личные результаты синхронизируются с профилем.' },
-  en: { title: 'Games', lead: 'Explore, try different decisions and play again. Every module is available at any time, without a course grade.', play: 'Play', back: 'Back to games', free: 'Free play', guest: 'Play without signing in. Progress is saved on this device; when signed in, your personal results sync with your profile.' },
-  zh: { title: '游戏', lead: '探索、尝试不同决策并反复体验。所有模块随时开放，不计入课程成绩。', play: '开始游戏', back: '返回游戏', free: '自由体验', guest: '无需登录即可体验，进度保存在此设备上。登录后，个人结果会与账号同步。' },
+  ru: { title: 'Игры', lead: 'Исследуйте, пробуйте разные решения и играйте снова. Все модули доступны без расписания и без оценки в журнале.', play: 'Играть', back: 'К играм', free: 'Свободная игра', guest: 'Можно играть без входа: гостевой прогресс сохраняется на этом устройстве отдельно от профиля. Для синхронизации результатов войдите перед началом игры.' },
+  en: { title: 'Games', lead: 'Explore, try different decisions and play again. Every module is available at any time, without a course grade.', play: 'Play', back: 'Back to games', free: 'Free play', guest: 'Play without signing in: guest progress stays on this device, separate from your profile. To sync results, sign in before starting a game.' },
+  zh: { title: '游戏', lead: '探索、尝试不同决策并反复体验。所有模块随时开放，不计入课程成绩。', play: '开始游戏', back: '返回游戏', free: '自由体验', guest: '无需登录即可体验：访客进度保存在此设备上，与账号进度分开。若要同步结果，请在开始游戏前登录。' },
 };
 
 export const GAMES = [

@@ -30,17 +30,21 @@ RENDER_HOOK = r"""
     return {differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples};
   };
   window.__rasterOracleProbe=(actual,expected)=>rasterPixelDifference(actual,expected,1);
+  const rasterPixelMatches=(a,b,i)=>Math.abs(a[i+3]-b[i+3])<=1&&[0,1,2].every(c=>Math.abs(a[i+c]*a[i+3]/255-b[i+c]*b[i+3]/255)<=1);
   const contextDetails=context=>({attributes:context.getContextAttributes?.(),transform:Array.from(context.getTransform().toFloat64Array()),
     alpha:context.globalAlpha,composite:context.globalCompositeOperation,fill:context.fillStyle,stroke:context.strokeStyle,
     width:context.lineWidth,join:context.lineJoin,cap:context.lineCap,miter:context.miterLimit,dash:context.getLineDash(),dashOffset:context.lineDashOffset,
     shadow:[context.shadowColor,context.shadowBlur,context.shadowOffsetX,context.shadowOffsetY],filter:context.filter,smoothing:context.imageSmoothingEnabled});
   const diagnoseRaster=async(source,actual,expected,paint)=>{
-    const width=source.width,height=source.height,sourceContext=source.getContext('2d'),results=[];
+    const width=source.width,height=source.height,sourceContext=source.getContext('2d'),results=[],critical=[],explained=new Set();
+    for(let i=0;i<actual.length;i+=4)if(!rasterPixelMatches(actual,expected,i))critical.push(i);
     const stamp=document.createElement('canvas');stamp.width=stamp.height=4;stamp.getContext('2d').fillRect(0,0,4,4);
     const bitmap=typeof createImageBitmap==='function'?await createImageBitmap(stamp):null;
     const sourceBefore=contextDetails(sourceContext);
     try{
-      for(const kind of ['fresh-repeat-1','fresh-repeat-2','fresh-composited','fresh-context-before-size','fresh-cloned-path','fresh-cpu','reused-vector','reused-readback','reused-bitmap']){
+      const kinds=['fresh-repeat-1','fresh-repeat-2','fresh-composited','fresh-context-before-size','fresh-cloned-path','fresh-cpu','reused-vector','reused-readback','reused-bitmap'];
+      for(const epsilon of [1e-7,1e-6,1e-5,1e-4])for(const axis of ['x','y'])for(const sign of [-1,1])kinds.push(`jitter:${axis}:${epsilon*sign}`);
+      for(const kind of kinds){
         const canvas=document.createElement('canvas');
         let context=kind==='fresh-context-before-size'?canvas.getContext('2d',{alpha:true}):null;
         canvas.width=width;canvas.height=height;
@@ -53,7 +57,8 @@ RENDER_HOOK = r"""
           }
           canvas.height=0;canvas.width=width;canvas.height=height;
         }
-        paint(context,kind==='fresh-cloned-path');
+        const jitter=kind.startsWith('jitter:')?kind.split(':'):null;
+        paint(context,kind==='fresh-cloned-path',jitter?.[1]==='x'?Number(jitter[2]):0,jitter?.[1]==='y'?Number(jitter[2]):0);
         if(kind==='fresh-composited'){
           const destination=document.createElement('canvas');destination.width=width;destination.height=height;
           const destinationContext=destination.getContext('2d');destinationContext.drawImage(canvas,0,0);
@@ -61,10 +66,14 @@ RENDER_HOOK = r"""
         }
         const first=context.getImageData(0,0,width,height).data;
         const second=context.getImageData(0,0,width,height).data;
+        const explainedPixels=jitter?critical.filter(i=>rasterPixelMatches(actual,first,i)):[];
+        explainedPixels.forEach(i=>explained.add(i));
         results.push({kind,context:contextDetails(context),versusActual:rasterPixelDifference(first,actual,width),
-          versusReference:rasterPixelDifference(first,expected,width),repeatRead:rasterPixelDifference(second,first,width)});
+          versusReference:rasterPixelDifference(first,expected,width),repeatRead:rasterPixelDifference(second,first,width),
+          explainedOriginalPixels:explainedPixels.map(i=>({x:(i/4)%width,y:Math.floor(i/4/width)}))});
       }
-      return {sourceContext:sourceBefore,sourceRepeat:rasterPixelDifference(sourceContext.getImageData(0,0,width,height).data,actual,width),cases:results};
+      return {sourceContext:sourceBefore,sourceRepeat:rasterPixelDifference(sourceContext.getImageData(0,0,width,height).data,actual,width),
+        roundoffProbe:{criticalPixels:critical.length,explainedPixels:explained.size,maximumPhysicalTranslation:1e-4},cases:results};
     }finally{bitmap?.close();}
   };
   window.__backgroundPaints=0;
@@ -102,14 +111,14 @@ RENDER_HOOK = r"""
     const difference=rasterPixelDifference(actual,expected,canvas.width);
     let nativeDiagnostic=null;
     if(difference.maximumAlphaDifference>1||difference.maximumPremultipliedDifference>1){
-      nativeDiagnostic=await diagnoseRaster(sprite.canvas,actual,expected,(target,clone)=>{
-        target.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr,-sprite.top*sprite.dpr);
+      nativeDiagnostic=await diagnoseRaster(sprite.canvas,actual,expected,(target,clone,dx=0,dy=0)=>{
+        target.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr+dx,-sprite.top*sprite.dpr+dy);
         target.fillStyle='#dc3f45';target.strokeStyle='#8e2028';target.lineWidth=1.2/sprite.scale;target.lineJoin=target.lineCap='round';
         target.fill(clone?new Path2D(paths.path):paths.path,fillRule);
         target.stroke(clone?new Path2D(paths.strokePath):paths.strokePath);
       });
     }
-    return {currentPath:sprite.path===paths.path,currentStrokePath:sprite.strokePath===paths.strokePath,
+    return {seed:state.seed,order:[...state.order],placed:state.placed,currentPath:sprite.path===paths.path,currentStrokePath:sprite.strokePath===paths.strokePath,
       currentFillRule:sprite.fillRule===fillRule,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
       pixels:canvas.width*canvas.height,bytes:actual.length,...difference,nativeDiagnostic,referenceContext:contextDetails(context),
       surfaceLifecycle:{...window.__spriteSurfaces},
@@ -143,17 +152,30 @@ RENDER_HOOK = r"""
     // that small antialias difference is recorded separately above.
     const fresh=document.createElement('canvas');fresh.width=staticCanvas.width;fresh.height=staticCanvas.height;
     let cacheDifference={differences:0,maximumDifference:0,maximumAlphaDifference:0,maximumPremultipliedDifference:0,examples:[]};
-    let cacheActualTransform=null,cacheReferenceTransform=null;
+    let cacheActualTransform=null,cacheReferenceTransform=null,cacheRoundoffProbe=null;const cacheJitter=[];
     if(!sprite.direct){const context=fresh.getContext('2d'),view={x:sprite.viewX-sprite.left,y:sprite.viewY-sprite.top,k:state.view.k},map={x:0,y:0,width:fresh.width/state.dpr,height:fresh.height/state.dpr};
       drawMap(context,view,map);drawLockedPieces(context,view,map);
       const p=context.getImageData(0,0,fresh.width,fresh.height).data,q=staticCtx.getImageData(0,0,fresh.width,fresh.height).data;
       cacheActualTransform=Array.from(staticCtx.getTransform().toFloat64Array());cacheReferenceTransform=Array.from(context.getTransform().toFloat64Array());
-      cacheDifference=rasterPixelDifference(q,p,fresh.width);}
+      cacheDifference=rasterPixelDifference(q,p,fresh.width);
+      if(cacheDifference.maximumAlphaDifference>1||cacheDifference.maximumPremultipliedDifference>1){
+        const critical=[],explained=new Set();for(let i=0;i<q.length;i+=4)if(!rasterPixelMatches(q,p,i))critical.push(i);
+        for(const epsilon of [1e-7,1e-6,1e-5,1e-4])for(const axis of ['x','y'])for(const sign of [-1,1]){
+          const target=document.createElement('canvas');target.width=fresh.width;target.height=fresh.height;
+          const shifted={...view,[axis]:view[axis]+epsilon*sign/state.dpr},targetContext=target.getContext('2d');
+          drawMap(targetContext,shifted,map);drawLockedPieces(targetContext,shifted,map);
+          const pixels=targetContext.getImageData(0,0,target.width,target.height).data;
+          const explainedPixels=critical.filter(i=>rasterPixelMatches(q,pixels,i));explainedPixels.forEach(i=>explained.add(i));
+          cacheJitter.push({axis,physicalPixels:epsilon*sign,versusActual:rasterPixelDifference(q,pixels,fresh.width),versusReference:rasterPixelDifference(p,pixels,fresh.width),
+            explainedOriginalPixels:explainedPixels.map(i=>({x:(i/4)%fresh.width,y:Math.floor(i/4/fresh.width)}))});
+        }
+        cacheRoundoffProbe={criticalPixels:critical.length,explainedPixels:explained.size,maximumPhysicalTranslation:1e-4};
+      }}
     const draw=window.__backgroundDraw,expectedDraw={x:sprite.left+state.view.x-sprite.viewX,y:sprite.top+state.view.y-sprite.viewY,width:staticCanvas.width/state.dpr,height:staticCanvas.height/state.dpr};
-    return {differences,maximumDifference,maximumPremultipliedDifference,examples,
+    return {seed:state.seed,order:[...state.order],current:state.current,differences,maximumDifference,maximumPremultipliedDifference,examples,
       cacheDifferences:cacheDifference.differences,cacheMaximumDifference:cacheDifference.maximumDifference,
       cacheMaximumAlphaDifference:cacheDifference.maximumAlphaDifference,cacheMaximumPremultipliedDifference:cacheDifference.maximumPremultipliedDifference,
-      cacheExamples:cacheDifference.examples,cacheActualTransform,cacheReferenceTransform,draw,expectedDraw,outsidePixels,bytes:staticCanvas.width*staticCanvas.height*4,
+      cacheExamples:cacheDifference.examples,cacheActualTransform,cacheReferenceTransform,cacheJitter,cacheRoundoffProbe,draw,expectedDraw,outsidePixels,bytes:staticCanvas.width*staticCanvas.height*4,
       currentProjection:sprite.projection===state.projection,currentPieces:sprite.pieces===state.pieces,
       placed:sprite.placed,expectedPlaced:state.placed,scale:sprite.scale,expectedScale:state.view.k,
       dpr:sprite.dpr,paints:window.__backgroundPaints,direct:sprite.direct};

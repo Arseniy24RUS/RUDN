@@ -1441,24 +1441,29 @@
         if (!pending || data.id !== pending.id) { data.results?.forEach(item => item.bitmap.close()); return; }
         clearTimeout(rasterPreparation.timeout);
         rasterPreparation.pending = null;
-        if (pending.projection === state.projection && data.fill?.byteLength && data.stroke?.byteLength) {
+        const sameScene = pending.projection === state.projection && pending.attemptId === state.attemptId;
+        const desired = sameScene ? rasterCandidates() : [];
+        const keys = new Set(desired.flat().map(item => item.key));
+        const wantedCommands = desired.some(group => group[0]?.index === pending.index);
+        if (wantedCommands && data.fill?.byteLength && data.stroke?.byteLength) {
           // Transfer ownership back, rather than cloning several MiB on every
-          // zoom. The same immutable projected commands serve every exact scale.
+          // zoom. Even an obsolete scale returns useful immutable commands.
           rasterPreparation.commands.delete(pending.index);
           rasterPreparation.commands.set(pending.index, { fill: data.fill, stroke: data.stroke,
             bytes: data.fill.byteLength + data.stroke.byteLength, projection: pending.projection });
         }
         if (data.type !== "ready") {
-          pending.variants.forEach(item => rasterPreparation.failed.add(item.key));
+          pending.variants.filter(item => keys.has(item.key)).forEach(item => rasterPreparation.failed.add(item.key));
         } else {
+          let discardedVariants = 0;
           data.results.forEach(result => {
             const variant = pending.variants.find(item => item.scale === result.scale);
-            if (!variant || pending.projection !== state.projection) { result.bitmap.close(); return; }
+            if (!variant || !keys.has(variant.key)) { result.bitmap.close(); ++discardedVariants; return; }
             removePreparedRaster(variant.key);
             rasterPreparation.cache.set(variant.key, { ...variant, bitmap: result.bitmap, projection: pending.projection });
           });
           rasterPreparation.preparations.push({ index: pending.index, attemptId: pending.attemptId, mode: pending.mode,
-            selection: pending.selection, serializationMs: pending.serializationMs, reusedCommands: pending.reusedCommands,
+            selection: pending.selection, serializationMs: pending.serializationMs, reusedCommands: pending.reusedCommands, discardedVariants,
             readyMs: performance.now() - pending.begin, buildMs: data.buildMs, rasterMs: data.rasterMs,
             workerMs: data.workerMs, bytes: pending.bytes, commandBytes: pending.commandBytes });
           if (rasterPreparation.preparations.length > 32) rasterPreparation.preparations.shift();
@@ -1501,7 +1506,8 @@
       // cold-raster prefetch is useful only after that scale stops changing.
       // Do not serialize the same large contour on every intermediate frame.
       rasterPreparation.notBefore = performance.now() + 150;
-      if (rasterPreparation.pending) stopRasterWorker();
+      // Keep the one in-flight job alive to recover its transferred commands.
+      // Its response is filtered against the latest exact-scale candidates.
     }
     rasterPreparation.lastScale = state.view.k;
     const planKey = `${state.current}:${state.view.k}:${state.dpr}`;
@@ -1512,25 +1518,30 @@
     rasterPreparation.timer = setTimeout(prepareRasterCandidates, Math.max(0, rasterPreparation.notBefore - performance.now()));
   }
 
+  function rasterCandidates() {
+    if (disposed || !state.ready || !currentPiece() || currentPiece().locked) return [];
+    // Look ahead to the next complex contour; simple intervening pieces need no
+    // worker and must not evict a useful preparation before it can be displayed.
+    const indices = state.order.slice(state.cursor).filter(index => !state.pieces[index].locked && complexFeature(index)).slice(0, 2);
+    return indices.map(index => {
+      const bounds = state.bounds[index], tray = trayRect();
+      const trayScale = Math.max(0.001, Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height));
+      return [...new Set([state.view.k, trayScale])].map(scale => rasterVariant(index, scale));
+    });
+  }
+
   function prepareRasterCandidates() {
     rasterPreparation.timer = 0;
     if (disposed || !state.ready || !currentPiece()?.inTray) { rasterPreparation.planKey = null; return; }
     startRasterWorker();
     if (rasterPreparation.status !== "ready") return;
-    // Look ahead to the next complex contour; simple intervening pieces need no
-    // worker and must not evict a useful preparation before it can be displayed.
-    const indices = state.order.slice(state.cursor).filter(index => !state.pieces[index].locked && complexFeature(index)).slice(0, 2);
-    const desired = indices.map(index => {
-      const bounds = state.bounds[index], tray = trayRect();
-      const trayScale = Math.max(0.001, Math.min((tray.width - 28) / bounds.width, (tray.height - 50) / bounds.height));
-      return [...new Set([state.view.k, trayScale])].map(scale => rasterVariant(index, scale));
-    });
+    const desired = rasterCandidates();
+    const indices = desired.map(group => group[0].index);
     const keys = new Set(desired.flat().map(item => item.key));
     for (const key of rasterPreparation.cache.keys()) if (!keys.has(key)) removePreparedRaster(key);
     for (const index of rasterPreparation.commands.keys()) if (!indices.includes(index)) rasterPreparation.commands.delete(index);
-    if (rasterPreparation.pending && !rasterPreparation.pending.variants.every(item => keys.has(item.key))) {
-      stopRasterWorker(); rasterPreparation.planKey = null; scheduleRasterPreparation(); return;
-    }
+    // A newer scale/selection waits for this job's returned command buffers;
+    // Map/projection disposal and safety checks can still terminate it.
     if (rasterPreparation.pending) return;
     for (const group of desired) {
       const variants = group.filter(item => !rasterPreparation.cache.has(item.key) && !rasterPreparation.failed.has(item.key));
