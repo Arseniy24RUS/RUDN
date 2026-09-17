@@ -40,7 +40,7 @@ RENDER_HOOK = r"""
     const bitmap=typeof createImageBitmap==='function'?await createImageBitmap(stamp):null;
     const sourceBefore=contextDetails(sourceContext);
     try{
-      for(const kind of ['fresh-repeat-1','fresh-repeat-2','fresh-context-before-size','fresh-cloned-path','fresh-cpu','reused-vector','reused-readback','reused-bitmap']){
+      for(const kind of ['fresh-repeat-1','fresh-repeat-2','fresh-composited','fresh-context-before-size','fresh-cloned-path','fresh-cpu','reused-vector','reused-readback','reused-bitmap']){
         const canvas=document.createElement('canvas');
         let context=kind==='fresh-context-before-size'?canvas.getContext('2d',{alpha:true}):null;
         canvas.width=width;canvas.height=height;
@@ -54,6 +54,11 @@ RENDER_HOOK = r"""
           canvas.height=0;canvas.width=width;canvas.height=height;
         }
         paint(context,kind==='fresh-cloned-path');
+        if(kind==='fresh-composited'){
+          const destination=document.createElement('canvas');destination.width=width;destination.height=height;
+          const destinationContext=destination.getContext('2d');destinationContext.drawImage(canvas,0,0);
+          destinationContext.getImageData(0,0,width,height);
+        }
         const first=context.getImageData(0,0,width,height).data;
         const second=context.getImageData(0,0,width,height).data;
         results.push({kind,context:contextDetails(context),versusActual:rasterPixelDifference(first,actual,width),
