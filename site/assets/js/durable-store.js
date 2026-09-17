@@ -236,6 +236,60 @@ export function createDurableStore(options = {}) {
     return pending;
   }
 
+  async function recoverCompletedAttempt(tx, envelope, previous) {
+    const {draft, attempt} = envelope;
+    // A terminal checkpoint can reach IDB before complete() falls back to the
+    // mirror. Recover its missing immutable result independently of the draft;
+    // the checkpoint's state, revision and delivery must remain authoritative.
+    if (draft.phase !== 'completed' || !attempt) return;
+    const equivalent = (a, b) => {
+      const canonical = value => JSON.stringify(value, (_key, item) => item && typeof item === 'object' && !Array.isArray(item)
+        ? Object.fromEntries(Object.keys(item).sort().map(key => [key, item[key]])) : item);
+      return canonical(a) === canonical(b);
+    };
+    const conflict = (reason, current = previous) => tx.put('conflicts', {
+      id: `recovery:${draft.id}:${draft.lastIntentId}:${reason}`, owner: previous.owner,
+      draftId: previous.id, current, incoming: attempt, createdAt: now(), reason,
+    });
+    const payload = attempt.payload;
+    const validScope = /^(student|teacher|guest):[^\s]+$/.test(draft.owner)
+      && ['owner', 'activitySlug', 'mode', 'attemptId', 'scope', 'id'].every(key => draft[key] === previous[key])
+      && draft.id === draftKey(draft) && draft.scope === scopeKey(draft);
+    const validAttempt = attempt.id === attemptKey(previous.owner, previous.attemptId)
+      && attempt.owner === previous.owner && attempt.attemptId === previous.attemptId && attempt.draftId === previous.id
+      && Number.isSafeInteger(attempt.revision) && attempt.revision > 0
+      && payload && typeof payload === 'object' && !Array.isArray(payload)
+      && (payload.id === undefined || payload.id === previous.attemptId)
+      && (payload.activitySlug === undefined || payload.activitySlug === previous.activitySlug)
+      && (payload.studentKey == null || !previous.owner.startsWith('student:') || String(payload.studentKey) === previous.owner.slice(8));
+    if (!validScope || !validAttempt) { await conflict('fallback-attempt-invalid'); return; }
+    const existing = await tx.get('attempts', attempt.id);
+    if (existing) {
+      if (existing.owner !== attempt.owner || existing.attemptId !== attempt.attemptId || existing.draftId !== attempt.draftId || !equivalent(existing.payload, payload)) {
+        await conflict('fallback-attempt-mismatch', existing);
+      }
+      // An existing result can already be acknowledged. An older mirror must
+      // neither replace that result nor resurrect its completed delivery.
+      return;
+    }
+    const operationId = `attempt:${attempt.id}`;
+    const incoming = (envelope.operations || []).filter(op => op.type === 'attempt' || op.id === operationId);
+    const validOperation = op => op.id === operationId && op.type === 'attempt'
+      && ['owner', 'attemptId', 'draftId'].every(key => op[key] === attempt[key])
+      && op.activitySlug === previous.activitySlug && op.mode === previous.mode
+      && Number.isSafeInteger(op.revision) && op.revision > 0
+      && ['pending', 'quarantined'].includes(op.status) && equivalent(op.payload, payload);
+    if (incoming.length > 1 || (incoming[0] && !validOperation(incoming[0]))) {
+      await conflict('fallback-attempt-invalid'); return;
+    }
+    const pending = await tx.get('outbox', operationId);
+    if (pending && !validOperation(pending)) { await conflict('fallback-attempt-mismatch', pending); return; }
+    await tx.put('attempts', attempt);
+    // Keep a current delivery's retry/revision metadata. No mirror operation
+    // means a device-only or already acknowledged result: do not invent one.
+    if (!pending && incoming[0]) await tx.put('outbox', incoming[0]);
+  }
+
   function ready() {
     if (!initPromise) {
       // Capture before a caller writes its new intent, preventing self-replay.
@@ -252,6 +306,8 @@ export function createDurableStore(options = {}) {
                 await tx.put('drafts', envelope.draft);
                 for (const op of envelope.operations || []) await tx.put('outbox', op);
                 if (envelope.attempt) await tx.put('attempts', envelope.attempt);
+              } else if (previous.phase === 'completed') {
+                await recoverCompletedAttempt(tx, envelope, previous);
               } else if (previous.lastIntentId !== envelope.draft.lastIntentId && previous.phase !== 'completed') {
                 await tx.put('conflicts', {id: `recovery:${envelope.draft.id}:${envelope.draft.lastIntentId}`, owner: envelope.draft.owner, draftId: envelope.draft.id, current: previous, incoming: envelope.draft, createdAt: now(), reason: 'fallback-recovery'});
               }

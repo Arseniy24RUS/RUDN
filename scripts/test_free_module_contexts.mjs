@@ -18,13 +18,14 @@ saveAttempt:async attempt=>{try{if(!profile())throw Error('Guest called signed-i
 if(window.qaHoldSave)await new Promise(resolve=>{window.qaReleaseSave=()=>{window.qaHoldSave=false;resolve();};});
 const p=profile(),scope={owner:'student:'+p.studentKey,activitySlug:attempt.activitySlug,mode:attempt.draftMode,attemptId:attempt.id};
 if(attempt.activitySlug.endsWith('-freeplay')&&attempt.recordGrade!==false)throw Error('Free result attempted to grade');
-const previous=await store.loadDraft(scope);await store.complete({...scope,state:previous?.state||{},attempt});
+const previous=await store.loadDraft(scope);const saved=await store.complete({...scope,state:previous?.state||{},attempt});
+window.qaSaveReceipt=saved?.saveStatus;
 const attempts=backend.localAttempts();if(!attempts.some(a=>a.id===attempt.id))attempts.push(attempt);
 // Match the real backend: a full legacy localStorage mirror cannot reject a
 // result already committed to IndexedDB. Keep diagnostic evidence in memory.
 try{localStorage.setItem('qa.attempts',JSON.stringify(attempts));}catch(error){window.qaMirrorError=String(error);}
 window.qaCompletedAttempts=[...(window.qaCompletedAttempts||[]),attempt.id];
-return attempt;}catch(error){window.qaSaveError=String(error.stack||error);throw error;}}};`;
+return {...attempt,saveStatus:saved?.saveStatus};}catch(error){window.qaSaveError=String(error.stack||error);throw error;}}};`;
 const types={'.js':'text/javascript','.mjs':'text/javascript','.json':'application/json','.css':'text/css','.html':'text/html','.svg':'image/svg+xml','.webp':'image/webp','.woff2':'font/woff2'};
 const server=createServer(async(req,res)=>{
  try{
@@ -39,6 +40,16 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const base=`http://127.0.0.1:${server.address().port}`,profile={studentKey:'free-context-a',fullName:'Isolated QA',group:'ГГУбд-01-26'};
 const flush=page=>page.evaluate(async()=>{await window.handle?.flush?.();await (await import('/assets/js/durable-store.js')).durableStore.flush();});
 const load=(page,scope)=>page.evaluate(async scope=>(await import('/assets/js/durable-store.js')).durableStore.loadDraft(scope),scope);
+const governorPersistence=async(page,owner)=>page.evaluate(async owner=>{
+ const store=(await import('/assets/js/durable-store.js')).durableStore;
+ const attempts=await store.listAttempts({owner});
+ const draft=await store.loadDraft({owner,activitySlug:'governor-freeplay',mode:'campaign'});
+ const run=JSON.parse(GovernorGame.Platform.storage.getItem('platform-run')||'{}');
+ const mirrors=Object.keys(localStorage).filter(key=>key.startsWith('rudn.durable.mirror.v1:')).map(key=>{const value=JSON.parse(localStorage.getItem(key));return {owner:value.draft?.owner,attemptId:value.attempt?.attemptId,draftId:value.draft?.attemptId,fallback:value.fallback};});
+ return {attemptIds:attempts.map(attempt=>attempt.id),draftId:draft?.attemptId,phase:draft?.phase,saveStatus:draft?.saveStatus,
+  runId:run.submissionId,submitted:run.submitted,receipt:window.qaSaveReceipt,mirrorError:window.qaMirrorError,
+  mirrorAttempts:mirrors.filter(value=>value.owner===owner),storageBytes:Object.keys(localStorage).reduce((sum,key)=>sum+2*(key.length+(localStorage.getItem(key)||'').length),0)};
+},owner);
 async function mount(page,module,context,guest=false){
  await page.evaluate(async({module,context,guest,profile})=>{
   await window.handle?.flush?.();if(window.handle?.destroy)await window.handle.destroy();else window.handle?.();
@@ -153,8 +164,14 @@ try{
     assert.equal(attempt.activitySlug,'governor-freeplay');assert.equal(attempt.recordGrade,false);assert.equal(attempt.governor.decisions,20);
     assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('qa.grades'))),{'seminar-7':{points:4}});
     assert.equal(await page.evaluate(()=>localStorage.getItem('rudn.governor.v1:student%3Afree-context-a:sentinel')),'course-unchanged');
+    const beforeReload=await governorPersistence(page,owner);
+    if(!guest)assert.equal(beforeReload.receipt?.durable,true,'Signed-in completion must acknowledge durable storage before reload');
+    if(process.env.GOVERNOR_PERSISTENCE_DIAGNOSTICS)console.log(JSON.stringify({engine,guest,beforeReload}));
     await page.reload();await page.locator('html[data-app-ready=true]').waitFor();
-    assert.equal((await page.evaluate(async owner=>(await (await import('/assets/js/durable-store.js')).durableStore.listAttempts({owner})),owner)).length,1,'Completed restore does not create a second attempt');
+    const afterReload=await governorPersistence(page,owner);
+    if(afterReload.attemptIds.length!==1||process.env.GOVERNOR_PERSISTENCE_DIAGNOSTICS)console.log(JSON.stringify({engine,guest,beforeReload,afterReload}));
+    assert.equal(afterReload.attemptIds.length,1,'Completed restore retains exactly one completed attempt');
+    assert.deepEqual(afterReload.attemptIds,beforeReload.attemptIds,'Restore retains the original immutable completion ID');
     if(!pendingReplayId){
      await page.locator('#continue-campaign').click();await page.locator('#end-dialog[open]').waitFor();
      await page.locator('#play-again').click();await page.locator('#start-form').waitFor();

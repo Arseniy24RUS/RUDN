@@ -194,13 +194,16 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node --test scripts/puzzle_storage_order_test.mjs
           node scripts/puzzle_storage_test.mjs
+          DURABLE_TEST_BROWSERS=chromium,firefox,webkit QA_OUT="${{ runner.temp }}/puzzle-storage-recovery" node scripts/puzzle_storage_recovery_test.mjs
       - name: Verify immutable results and retry against Firebase emulators
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/puzzle_storage_emulator_test.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: puzzle-offline-driver-report
-          path: ${{ runner.temp }}/puzzle-offline-probe.json
+          path: |
+            ${{ runner.temp }}/puzzle-offline-probe.json
+            ${{ runner.temp }}/puzzle-storage-recovery/completion-recovery.json
 
   interactions:
     needs: catalog
