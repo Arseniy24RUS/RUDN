@@ -304,6 +304,9 @@ jobs:
           node scripts/test_games_platform.mjs
       - name: Recover native puzzle loading and cancel stale route loads
         run: python scripts/test_puzzle_native_load.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/native-loader" --browsers "${{ matrix.browser }}"
+      - name: Reopen the real platform puzzle with cached course data offline
+        if: matrix.browser != 'webkit'
+        run: python scripts/test_puzzle_native_offline.py --output "${{ runner.temp }}/games-qa/native-offline" --browsers "${{ matrix.browser }}"
       - name: Restore actual 1.3.6 attempts after the new worker activates
         if: matrix.browser == 'chromium'
         run: python scripts/test_puzzle_release_upgrade.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/upgrade"
@@ -320,6 +323,7 @@ jobs:
             ${{ runner.temp }}/games-qa/leaderboard
             ${{ runner.temp }}/games-qa/upgrade
             ${{ runner.temp }}/games-qa/native-loader
+            ${{ runner.temp }}/games-qa/native-offline
             ${{ runner.temp }}/games-qa/*.json
             ${{ runner.temp }}/games-qa/*.xlsx
           retention-days: 14

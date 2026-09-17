@@ -202,7 +202,9 @@ function scheduleAccessRefresh(){
 }
 
 async function loadJson(path,fallback){
-  const response=await fetch(path,{cache:'no-store'});
+  // Revalidate before worker installation; no-store prevents Firefox from
+  // serving even worker-cached resources in browser offline mode.
+  const response=await fetch(path,{cache:'no-cache'});
   if(!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
   return response.json();
 }
@@ -713,7 +715,7 @@ let puzzleFragment=null;
 const puzzleRuntimeRequests=new Map();
 async function getPuzzleFragment(signal){
   if(puzzleFragment)return puzzleFragment;
-  const response=await fetch('apps/puzzle.html',{cache:'no-store',signal});
+  const response=await fetch('apps/puzzle.html',{cache:'no-cache',signal});
   if(!response.ok)throw new Error(`apps/puzzle.html: HTTP ${response.status}`);
   const documentCopy=new DOMParser().parseFromString(await response.text(),'text/html');
   signal.throwIfAborted();
