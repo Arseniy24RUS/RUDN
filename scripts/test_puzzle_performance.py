@@ -83,7 +83,14 @@ async def zoom_and_pan(page):
         frames = await end_measurement(page)
         assert await page.evaluate('window.__qaPerf.draws.length>0'), f'No Canvas draws in {phase}'
         result[phase]={'drawMs':await drawing_metrics(page), 'frameMs':frames, 'longTasksMs':await page.evaluate('window.__qaPerf.longTasks')}
+        # Centering invalidates the background scale/position. Measure its own
+        # presented frames so deferred raster work cannot be hidden between
+        # phases or attributed to the following pan/placement.
+        await begin_measurement(page)
         await page.locator('#puzzleCenter').click()
+        frames = await end_measurement(page)
+        result['centerAfter'+phase.capitalize()]={'drawMs':await drawing_metrics(page), 'frameMs':frames,
+                                                'longTasksMs':await page.evaluate('window.__qaPerf.longTasks')}
     return result
 
 
@@ -116,8 +123,10 @@ def performance_budget(row):
         checks['dragP95Ms'] = (row['dragFrameP95Ms'],50*frame_scale)
         checks['dragMaxMs'] = (row['dragFrameMaxMs'],250*frame_scale)
     for phase, values in row.get('zoomAndPan',{}).items():
-        checks[phase+'P95Ms'] = (values['frameMs']['p95'],(100 if phase=='zoom' else 50)*frame_scale)
-        if phase=='pan':checks[phase+'MaxMs'] = (values['frameMs']['max'],250*frame_scale)
+        if phase in ('zoom','pan'):
+            checks[phase+'P95Ms'] = (values['frameMs']['p95'],(100 if phase=='zoom' else 50)*frame_scale)
+        if phase in ('pan','centerAfterZoom','centerAfterPan'):
+            checks[phase+'MaxMs'] = (values['frameMs']['max'],250*frame_scale)
     for phase in ('placementBeforeHeaviest','placementAfterHeaviest'):
         if phase in row:
             checks[phase+'MaxMs'] = (row[phase]['frameMs']['max'],250*frame_scale)

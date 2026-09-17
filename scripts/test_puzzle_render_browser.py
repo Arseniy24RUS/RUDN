@@ -74,6 +74,12 @@ RENDER_HOOK = r"""
   ctx.drawImage=function(...args){if(args[0]===staticCanvas)window.__backgroundDraw={x:args[1],y:args[2],width:args[3],height:args[4]};return observedDrawImage.apply(this,args);};
   const observedPieceRaster=drawPieceRaster;
   window.__spriteSurfaces={replacements:0,unreleased:0};
+  window.__spriteRasterFlushes=0;
+  const observedRasterRead=CanvasRenderingContext2D.prototype.getImageData;
+  CanvasRenderingContext2D.prototype.getImageData=function(x,y,width,height,...args){
+    if(this.canvas===activeSprite.canvas&&width===1&&height===1)window.__spriteRasterFlushes++;
+    return observedRasterRead.call(this,x,y,width,height,...args);
+  };
   drawPieceRaster=function(...args){const canvas=activeSprite.canvas,path=activeSprite.path,scale=activeSprite.scale,left=activeSprite.left,top=activeSprite.top,hits=rasterPreparation.hits;
     const result=observedPieceRaster(...args);
     if(canvas!==activeSprite.canvas){window.__spriteSurfaces.replacements++;if(canvas.width||canvas.height)window.__spriteSurfaces.unreleased++;}
@@ -107,6 +113,7 @@ RENDER_HOOK = r"""
       currentFillRule:sprite.fillRule===fillRule,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
       pixels:canvas.width*canvas.height,bytes:actual.length,...difference,nativeDiagnostic,referenceContext:contextDetails(context),
       surfaceLifecycle:{...window.__spriteSurfaces},
+      rasterFlushes:window.__spriteRasterFlushes,
       featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
       source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
       preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
@@ -388,7 +395,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             assert sprite['currentPath'] and sprite['currentStrokePath'] and sprite['currentFillRule'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
             assert sprite['dpr'] == min(dpr, 2), sprite
             assert 0 < sprite['bytes'] <= 16*1024*1024, sprite
-            assert sprite['surfaceLifecycle']['replacements'] > 0 and sprite['surfaceLifecycle']['unreleased'] == 0, sprite
+            assert sprite['surfaceLifecycle']['unreleased'] == 0 and sprite['rasterFlushes'] > 0, sprite
             assert_raster_quantization(sprite)
             background = await page.evaluate('window.__backgroundAudit()')
             assert background['currentProjection'] and background['currentPieces'], background
@@ -399,6 +406,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             assert background['draw'] == background['expectedDraw'], background
             await page.keyboard.press('Alt+ArrowRight')
             translated = await page.evaluate('window.__backgroundAudit()')
+            assert (await page.evaluate('window.__spriteRasterFlushes')) == sprite['rasterFlushes'], 'Translation rerasterized the active contour'
             assert translated['paints'] == background['paints'], translated
             assert_raster_quantization(translated, cached=True)
             assert translated['outsidePixels']==0 and translated['draw']==translated['expectedDraw'], translated

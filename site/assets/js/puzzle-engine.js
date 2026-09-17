@@ -1585,17 +1585,12 @@
     return rasterPreparationStats().reservedRasterBytes - oldBytes + bytes <= ACTIVE_RASTER_BUDGET;
   }
 
-  function replaceActiveRaster(width, height) {
-    // A resized, repeatedly composited WebKit surface can retain a different
-    // edge raster than a fresh surface for the same immutable Path2D. Release
-    // its backing store first, then give each new raster its own context. Pure
-    // translations still reuse that exact raster without another allocation.
-    activeSprite.canvas.height = 0;
-    activeSprite.canvas.width = 0;
-    const canvas = document.createElement("canvas");
+  function resizeActiveRaster(width, height) {
+    // Clear the old height first so a tall-to-wide resize cannot transiently
+    // allocate newWidth * oldHeight outside the explicit raster budget.
+    const canvas = activeSprite.canvas;
     canvas.height = 0;
     canvas.width = width; canvas.height = height;
-    activeSprite.canvas = canvas;
     return canvas;
   }
 
@@ -1615,7 +1610,7 @@
       || left < sprite.left || top < sprite.top || right > sprite.right || bottom > sprite.bottom) {
       const key = `${state.current}:${scale}:${dpr}`, prepared = rasterPreparation.cache.get(key);
       if (prepared?.projection === state.projection && reserveActiveRaster(prepared.bytes, key)) {
-        const canvas = replaceActiveRaster(prepared.width, prepared.height);
+        const canvas = resizeActiveRaster(prepared.width, prepared.height);
         canvas.getContext("2d").drawImage(prepared.bitmap, 0, 0);
         Object.assign(sprite, { path, strokePath, fillRule, scale, dpr, left: prepared.x0 / dpr, top: prepared.y0 / dpr,
           right: (prepared.x0 + prepared.width) / dpr, bottom: (prepared.y0 + prepared.height) / dpr });
@@ -1637,13 +1632,18 @@
         margin = Math.floor(margin / 2);
       } while (true);
       if (!reserveActiveRaster((x1 - x0) * (y1 - y0) * 4)) return false;
-      const canvas = replaceActiveRaster(Math.max(1, x1 - x0), Math.max(1, y1 - y0));
+      const canvas = resizeActiveRaster(Math.max(1, x1 - x0), Math.max(1, y1 - y0));
       const context = canvas.getContext("2d", { alpha: true });
       context.setTransform(dpr * scale, 0, 0, dpr * scale, -x0, -y0);
       context.fillStyle = "#dc3f45"; context.strokeStyle = "#8e2028";
       context.lineWidth = 1.2 / scale; context.lineJoin = context.lineCap = "round";
       context.fill(path, fillRule);
       context.stroke(strokePath);
+      // Resolve the native raster before its first image consumption. Without
+      // this flush WebKit can give the cached contour different edge coverage
+      // from the identical path drawn directly. Translations reuse the result;
+      // worker bitmaps have already been rasterized off the main thread.
+      context.getImageData(0, 0, 1, 1);
       Object.assign(sprite, { path, strokePath, fillRule, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
       }
       rasterPreparationStats();
@@ -2055,14 +2055,12 @@
       piece.locked = true;
       piece.inTray = false;
       state.placed += 1;
-      updateUi();
-      drawAll(true);
       if (state.placed >= state.features.length) {
         void completeGame();
       } else {
         do { state.cursor += 1; } while (state.cursor < state.order.length && state.pieces[state.order[state.cursor]].locked);
         setCurrentPiece(state.order[state.cursor]);
-        drawAll();
+        drawAll(true);
       }
     } else {
       state.errors += 1;

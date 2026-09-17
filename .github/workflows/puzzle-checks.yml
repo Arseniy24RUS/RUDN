@@ -279,7 +279,7 @@ jobs:
         env:
           QA_OUT: ${{ runner.temp }}/games-qa
         run: |
-          node --test scripts/test_free_module_contracts.mjs scripts/test_puzzle_leaderboard.mjs
+          node --test scripts/test_free_module_contracts.mjs scripts/test_puzzle_leaderboard.mjs scripts/puzzle_snap_test.mjs
           node scripts/test_puzzle_render_geometry.cjs
           python scripts/test_puzzle_xlsx.py --artifacts "${{ runner.temp }}/games-qa"
       - name: Verify actual mobile geometry and rotation in all languages
@@ -337,7 +337,9 @@ jobs:
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium
       - name: Measure actual drawing, frame intervals, long tasks and memory at CPU x1/x4/x6
-        run: python scripts/test_puzzle_performance.py --output "${{ runner.temp }}/performance-qa" --channels chromium --cycles 3 --cpu-rates 1,4,6 --enforce-budgets
+        run: |
+          python scripts/test_puzzle_performance_budget.py
+          python scripts/test_puzzle_performance.py --output "${{ runner.temp }}/performance-qa" --channels chromium --cycles 3 --cpu-rates 1,4,6 --enforce-budgets
       - uses: actions/upload-artifact@v4
         if: always()
         with:
