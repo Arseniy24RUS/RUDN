@@ -16,6 +16,20 @@ from playwright.async_api import async_playwright
 import test_puzzle_catalog as catalog
 
 RENDER_HOOK = r"""
+  const rasterPixelDifference=(actual,expected,width)=>{
+    let differences=0,maximumDifference=0,nonempty=0,maximumAlphaDifference=0,maximumPremultipliedDifference=0;
+    const examples=[];
+    for(let i=0;i<actual.length;i+=4){
+      let changed=false;
+      for(let c=0;c<4;c++){const difference=Math.abs(actual[i+c]-expected[i+c]);if(difference){differences++;changed=true;}maximumDifference=Math.max(maximumDifference,difference);}
+      if(actual[i+3])nonempty++;
+      maximumAlphaDifference=Math.max(maximumAlphaDifference,Math.abs(actual[i+3]-expected[i+3]));
+      for(let c=0;c<3;c++)maximumPremultipliedDifference=Math.max(maximumPremultipliedDifference,Math.abs(actual[i+c]*actual[i+3]/255-expected[i+c]*expected[i+3]/255));
+      if(changed&&examples.length<8)examples.push({x:(i/4)%width,y:Math.floor(i/4/width),actual:Array.from(actual.slice(i,i+4)),expected:Array.from(expected.slice(i,i+4))});
+    }
+    return {differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples};
+  };
+  window.__rasterOracleProbe=(actual,expected)=>rasterPixelDifference(actual,expected,1);
   window.__backgroundPaints=0;
   const observedBackgroundFill=staticCtx.fill;
   staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};
@@ -39,16 +53,9 @@ RENDER_HOOK = r"""
     context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
     const actual=sprite.canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;
     const expected=context.getImageData(0,0,canvas.width,canvas.height).data;
-    let differences=0,maximumDifference=0,nonempty=0,maximumAlphaDifference=0,maximumPremultipliedDifference=0;
-    const examples=[];
-    for(let i=0;i<actual.length;i++){if(actual[i]!==expected[i])differences++;maximumDifference=Math.max(maximumDifference,Math.abs(actual[i]-expected[i]));if(i%4===3&&actual[i])nonempty++;}
-    for(let i=0;i<actual.length;i+=4){
-      maximumAlphaDifference=Math.max(maximumAlphaDifference,Math.abs(actual[i+3]-expected[i+3]));
-      for(let c=0;c<3;c++)maximumPremultipliedDifference=Math.max(maximumPremultipliedDifference,Math.abs(actual[i+c]*actual[i+3]/255-expected[i+c]*expected[i+3]/255));
-      if(examples.length<8&&[0,1,2,3].some(c=>actual[i+c]!==expected[i+c]))examples.push({x:(i/4)%canvas.width,y:Math.floor(i/4/canvas.width),actual:Array.from(actual.slice(i,i+4)),expected:Array.from(expected.slice(i,i+4))});
-    }
+    const difference=rasterPixelDifference(actual,expected,canvas.width);
     return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale:state.view.k,dpr:sprite.dpr,
-      pixels:canvas.width*canvas.height,bytes:actual.length,differences,maximumDifference,nonempty,maximumAlphaDifference,maximumPremultipliedDifference,examples,
+      pixels:canvas.width*canvas.height,bytes:actual.length,...difference,
       featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
       source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
       preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
@@ -77,18 +84,51 @@ RENDER_HOOK = r"""
     // can choose different edge tessellation for a larger overscan surface;
     // that small antialias difference is recorded separately above.
     const fresh=document.createElement('canvas');fresh.width=staticCanvas.width;fresh.height=staticCanvas.height;
-    let cacheDifferences=0;
+    let cacheDifference={differences:0,maximumDifference:0,maximumAlphaDifference:0,maximumPremultipliedDifference:0,examples:[]};
+    let cacheActualTransform=null,cacheReferenceTransform=null;
     if(!sprite.direct){const context=fresh.getContext('2d'),view={x:sprite.viewX-sprite.left,y:sprite.viewY-sprite.top,k:state.view.k},map={x:0,y:0,width:fresh.width/state.dpr,height:fresh.height/state.dpr};
       drawMap(context,view,map);drawLockedPieces(context,view,map);
       const p=context.getImageData(0,0,fresh.width,fresh.height).data,q=staticCtx.getImageData(0,0,fresh.width,fresh.height).data;
-      for(let i=0;i<p.length;i++)if(p[i]!==q[i])cacheDifferences++;}
+      cacheActualTransform=Array.from(staticCtx.getTransform().toFloat64Array());cacheReferenceTransform=Array.from(context.getTransform().toFloat64Array());
+      cacheDifference=rasterPixelDifference(q,p,fresh.width);}
     const draw=window.__backgroundDraw,expectedDraw={x:sprite.left+state.view.x-sprite.viewX,y:sprite.top+state.view.y-sprite.viewY,width:staticCanvas.width/state.dpr,height:staticCanvas.height/state.dpr};
-    return {differences,maximumDifference,maximumPremultipliedDifference,examples,cacheDifferences,draw,expectedDraw,outsidePixels,bytes:staticCanvas.width*staticCanvas.height*4,
+    return {differences,maximumDifference,maximumPremultipliedDifference,examples,
+      cacheDifferences:cacheDifference.differences,cacheMaximumDifference:cacheDifference.maximumDifference,
+      cacheMaximumAlphaDifference:cacheDifference.maximumAlphaDifference,cacheMaximumPremultipliedDifference:cacheDifference.maximumPremultipliedDifference,
+      cacheExamples:cacheDifference.examples,cacheActualTransform,cacheReferenceTransform,draw,expectedDraw,outsidePixels,bytes:staticCanvas.width*staticCanvas.height*4,
       currentProjection:sprite.projection===state.projection,currentPieces:sprite.pieces===state.pieces,
       placed:sprite.placed,expectedPlaced:state.placed,scale:sprite.scale,expectedScale:state.view.k,
       dpr:sprite.dpr,paints:window.__backgroundPaints,direct:sprite.direct};
   };
 """
+
+
+def assert_raster_quantization(metrics, cached=False):
+    # Raw RGB is unstable at alpha0/1 after native canvas readback. Permit at
+    # most one 8-bit alpha/premultiplied-color level per pixel, with no allowance
+    # for a count of corrupted pixels. Geometry and commands remain exact.
+    alpha = 'cacheMaximumAlphaDifference' if cached else 'maximumAlphaDifference'
+    color = 'cacheMaximumPremultipliedDifference' if cached else 'maximumPremultipliedDifference'
+    assert metrics[alpha] <= 1 and metrics[color] <= 1, metrics
+
+
+async def check_raster_oracle(page):
+    cases = [
+        ([100, 150, 200, 255], [100, 150, 200, 255], True),
+        ([101, 150, 200, 255], [100, 150, 200, 255], True),
+        ([128, 0, 0, 2], [255, 0, 0, 1], True),
+        ([128, 0, 0, 9], [128, 0, 0, 1], False),
+        ([108, 150, 200, 255], [100, 150, 200, 255], False),
+        ([0, 0, 0, 0], [142, 32, 40, 255], False),
+    ]
+    for actual, expected, accepted in cases:
+        metrics = await page.evaluate('args=>window.__rasterOracleProbe(...args)', [actual, expected])
+        try:
+            assert_raster_quantization(metrics)
+        except AssertionError:
+            assert not accepted, metrics
+        else:
+            assert accepted, ('Pixel oracle accepted a corrupt pixel', metrics)
 
 
 async def settled(page):
@@ -244,6 +284,7 @@ async def run_case(browser, engine, locale, server, fixtures, output):
 
 async def run_dpr_case(browser, engine, dpr, server, output):
     record = {'browser': engine, 'dpr': dpr, 'status': 'running', 'input': 'synthetic multi-pointer pinch through real canvas handlers; no state setters'}
+    record['pixelOracle'] = {'maxAlphaLevels': 1, 'maxPremultipliedChannelLevels': 1, 'rawDifferencesRetained': True}
     context = await browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=dpr, locale='ru-RU', has_touch=True, reduced_motion='reduce')
     await context.add_init_script(catalog.initializer('ru'))
     await context.add_init_script("""(()=>{window.__strokeMetrics=[];const original=CanvasRenderingContext2D.prototype.stroke;
@@ -255,6 +296,7 @@ async def run_dpr_case(browser, engine, dpr, server, output):
     try:
         await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
         await page.bring_to_front(); await catalog.ready(page)
+        await check_raster_oracle(page)
         await page.locator('[data-puzzle-mode="country-regions"]').click()
         await catalog.ready(page, {'mode': 'russia-subjects', 'selection': None})
         await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -295,17 +337,19 @@ async def run_dpr_case(browser, engine, dpr, server, output):
             assert sprite['currentPath'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
             assert sprite['dpr'] == min(dpr, 2), sprite
             assert 0 < sprite['bytes'] <= 16*1024*1024, sprite
-            assert sprite['differences'] == 0, sprite
+            assert_raster_quantization(sprite)
             background = await page.evaluate('window.__backgroundAudit()')
             assert background['currentProjection'] and background['currentPieces'], background
             assert background['placed'] == background['expectedPlaced'], background
             assert abs(background['scale']-background['expectedScale']) < 1e-9 and background['dpr']==min(dpr,2), background
             assert background['bytes'] <= 16*1024*1024 and background['outsidePixels']==0, background
-            assert background['cacheDifferences'] == 0 and background['draw'] == background['expectedDraw'], background
+            assert_raster_quantization(background, cached=True)
+            assert background['draw'] == background['expectedDraw'], background
             await page.keyboard.press('Alt+ArrowRight')
             translated = await page.evaluate('window.__backgroundAudit()')
             assert translated['paints'] == background['paints'], translated
-            assert translated['cacheDifferences']==0 and translated['outsidePixels']==0 and translated['draw']==translated['expectedDraw'], translated
+            assert_raster_quantization(translated, cached=True)
+            assert translated['outsidePixels']==0 and translated['draw']==translated['expectedDraw'], translated
             await page.keyboard.press('Alt+ArrowLeft')
             records.append({'zoom': zoom, 'canvas': [state['width'], state['height']], 'colors': sorted(colors), 'samples': len(state['metrics']), 'sprite':sprite,'background':background,'translated':translated})
         await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-dpr{dpr}-zoom16.png'))
@@ -328,18 +372,21 @@ async def check_background_invalidation(page):
     for _ in range(10):
         await page.keyboard.press('Alt+Shift+ArrowRight')
     beyond = await page.evaluate('window.__backgroundAudit()')
-    assert beyond['paints'] > before['paints'] and beyond['cacheDifferences'] == 0, beyond
+    assert beyond['paints'] > before['paints'], beyond
+    assert_raster_quantization(beyond, cached=True)
     assert beyond['draw'] == beyond['expectedDraw'] and beyond['outsidePixels'] == 0, beyond
     await page.locator('#puzzleCenter').click()
     before_drop = await page.evaluate('window.__backgroundAudit()')
     await catalog.trusted_drop(page)
     locked = await page.evaluate('window.__backgroundAudit()')
     assert locked['placed'] == before_drop['placed'] + 1 and locked['expectedPlaced'] == locked['placed'], locked
-    assert locked['paints'] > before_drop['paints'] and locked['cacheDifferences'] == 0, locked
+    assert locked['paints'] > before_drop['paints'], locked
+    assert_raster_quantization(locked, cached=True)
     await page.set_viewport_size({'width': 844, 'height': 390})
     await settled(page)
     resized = await page.evaluate('window.__backgroundAudit()')
-    assert resized['currentProjection'] and resized['currentPieces'] and resized['cacheDifferences'] == 0, resized
+    assert resized['currentProjection'] and resized['currentPieces'], resized
+    assert_raster_quantization(resized, cached=True)
     assert resized['bytes'] <= 16 * 1024 * 1024 and resized['outsidePixels'] == 0, resized
     return {'beyondOverscan':beyond,'locked':locked,'resized':resized}
 
