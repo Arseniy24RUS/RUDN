@@ -10,6 +10,15 @@ on:
   pull_request:
     paths:
       - 'site/apps/puzzle.html'
+      - 'site/apps/governor/**'
+      - 'site/apps/reception/**'
+      - 'site/apps/career/**'
+      - 'site/assets/js/main.js'
+      - 'site/assets/js/games-catalog.js'
+      - 'site/assets/js/i18n.js'
+      - 'site/index.html'
+      - 'scripts/test_free_module*'
+      - 'scripts/test_games_platform*'
       - 'site/assets/js/puzzle-*.js'
       - 'site/assets/js/backend.js'
       - 'site/assets/js/durable-store.js'
@@ -21,7 +30,7 @@ on:
   workflow_dispatch:
     inputs:
       coverage:
-        description: 'Full: 289 maps, all difficulties and engines. Smoke: representative maps.'
+        description: 'Full: complete application catalog, all difficulties and engines. Smoke: representative maps.'
         type: choice
         options: [full, smoke]
         default: full
@@ -117,7 +126,7 @@ jobs:
 
   complete-matrix:
     if: always()
-    needs: [catalog, browsers, storage, interactions]
+    needs: [catalog, browsers, storage, interactions, games-and-rendering, performance]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -134,9 +143,18 @@ jobs:
           MATRIX_COVERAGE: ${{ inputs.coverage || 'full' }}
         run: |
           python scripts/test_puzzle_report.py --artifacts "${{ runner.temp }}/puzzle-matrix" --coverage "$MATRIX_COVERAGE"
-          if [[ "$MATRIX_COVERAGE" == 'full' ]]; then
-            python scripts/test_puzzle_locale_report.py --artifacts "${{ runner.temp }}/puzzle-matrix"
-          fi
+      - name: Verify every localized layout even when another suite failed
+        if: always() && inputs.coverage != 'smoke'
+        run: python scripts/test_puzzle_locale_report.py --artifacts "${{ runner.temp }}/puzzle-matrix"
+      - name: Require all independent quality gates
+        if: always()
+        run: |
+          test "${{ needs.catalog.result }}" = success
+          test "${{ needs.browsers.result }}" = success
+          test "${{ needs.storage.result }}" = success
+          test "${{ needs.interactions.result }}" = success
+          test "${{ needs.games-and-rendering.result }}" = success
+          test "${{ needs.performance.result }}" = success
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -174,14 +192,18 @@ jobs:
           PUZZLE_STORAGE_BROWSERS: chromium
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node --test scripts/puzzle_storage_order_test.mjs
           node scripts/puzzle_storage_test.mjs
+          DURABLE_TEST_BROWSERS=chromium,firefox,webkit QA_OUT="${{ runner.temp }}/puzzle-storage-recovery" node scripts/puzzle_storage_recovery_test.mjs
       - name: Verify immutable results and retry against Firebase emulators
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/puzzle_storage_emulator_test.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: puzzle-offline-driver-report
-          path: ${{ runner.temp }}/puzzle-offline-probe.json
+          path: |
+            ${{ runner.temp }}/puzzle-offline-probe.json
+            ${{ runner.temp }}/puzzle-storage-recovery/completion-recovery.json
 
   interactions:
     needs: catalog
@@ -221,4 +243,113 @@ jobs:
             ${{ runner.temp }}/puzzle-interactions/interactions*.json*
             ${{ runner.temp }}/puzzle-interactions/resilience*.json*
             ${{ runner.temp }}/puzzle-interactions/failures
+          retention-days: 14
+
+  games-and-rendering:
+    needs: catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          path: ${{ runner.temp }}/games-qa
+      - name: Prepare isolated browser runtime
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+          python -m pip install playwright==1.61.0 openpyxl==3.1.5
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+      - name: Verify geometry, free contexts and independent XLSX parsing
+        env:
+          QA_OUT: ${{ runner.temp }}/games-qa
+        run: |
+          node --test scripts/test_free_module_contracts.mjs scripts/test_puzzle_leaderboard.mjs scripts/puzzle_snap_test.mjs scripts/puzzle_raster_schedule_test.mjs
+          node scripts/test_puzzle_render_geometry.cjs
+          python scripts/test_puzzle_xlsx.py --artifacts "${{ runner.temp }}/games-qa"
+      - name: Verify actual mobile geometry and rotation in all languages
+        run: python scripts/test_puzzle_render_browser.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/render" --browsers "${{ matrix.browser }}" --dpr-checks
+      - name: Diagnose native WebKit raster phases with deterministic attempts
+        if: always() && matrix.browser == 'webkit'
+        run: python scripts/test_puzzle_native_diagnostic.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/native-raster"
+      - name: Verify exact worker pixels, bounded memory and cancellation
+        run: python scripts/test_puzzle_raster_worker.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/raster-worker" --browsers "${{ matrix.browser }}"
+      - name: Verify free module UI and unchanged course attempts
+        env:
+          DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test_free_module_contexts.mjs
+          node scripts/test_games_platform.mjs
+      - name: Recover native puzzle loading and cancel stale route loads
+        run: python scripts/test_puzzle_native_load.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/native-loader" --browsers "${{ matrix.browser }}"
+      - name: Restore actual 1.3.6 attempts after the new worker activates
+        if: matrix.browser == 'chromium'
+        run: python scripts/test_puzzle_release_upgrade.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/upgrade"
+      - name: Verify student completion through Firebase to visible leaderboard and XLSX
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "python scripts/test_puzzle_leaderboard_emulator.py --browsers ${{ matrix.browser }} --output ${{ runner.temp }}/games-qa/leaderboard"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: games-render-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/games-qa/render
+            ${{ runner.temp }}/games-qa/native-raster
+            ${{ runner.temp }}/games-qa/raster-worker
+            ${{ runner.temp }}/games-qa/leaderboard
+            ${{ runner.temp }}/games-qa/upgrade
+            ${{ runner.temp }}/games-qa/native-loader
+            ${{ runner.temp }}/games-qa/*.json
+            ${{ runner.temp }}/games-qa/*.xlsx
+          retention-days: 14
+
+  performance:
+    needs: catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          path: ${{ runner.temp }}/performance-qa
+      - name: Prepare runtime
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+      - name: Measure actual drawing, frame intervals, long tasks and memory at CPU x1/x4/x6
+        run: |
+          python scripts/test_puzzle_performance_budget.py
+          python scripts/test_puzzle_performance.py --output "${{ runner.temp }}/performance-qa" --channels chromium --cycles 3 --cpu-rates 1,4,6 --enforce-budgets
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: games-render-performance
+          path: ${{ runner.temp }}/performance-qa/desktop-performance.json
           retention-days: 14

@@ -57,7 +57,7 @@ READ_ONLY_HOOK = r"""
       errors:state.errors,elapsedMs:elapsedMs(),source,target,view:{...state.view},
       inTray:piece?.inTray,featureIds:state.features.map(f=>f.properties._puzzleId),
       order:[...state.order],canvas:{width:state.cssWidth,height:state.cssHeight,mapBottom:state.mapBottom},
-      tray:trayRect()};
+      map:{...state.mapRect},sideTray:state.sideTray,tray:trayRect()};
   };
 """
 
@@ -250,6 +250,18 @@ async def ready(page, entry=None):
     return await page.evaluate('window.__puzzleRead()')
 
 
+async def select_map(page, entry):
+    mode = entry['mode']
+    category = 'country-regions' if mode == 'russia-subjects' else mode
+    await page.locator(f'[data-puzzle-mode="{category}"]').first.click()
+    selection = 'RUS' if mode == 'russia-subjects' else entry.get('selection')
+    if selection is not None:
+        selector = '#puzzleSubject' if mode == 'russia-municipalities' else '#puzzleCountry'
+        await page.wait_for_function("s=>[...document.querySelector(s.selector).options].some(o=>o.value===s.value)",
+                                     arg={'selector': selector, 'value': selection})
+        await page.locator(selector).select_option(selection)
+
+
 async def start_map(page, entry, difficulty):
     target_url = page._qa_base + 'apps/puzzle.html?context=free&qaLocale=' + page._qa_locale
     if page.url != target_url:
@@ -269,13 +281,7 @@ async def start_map(page, entry, difficulty):
     # Catalog coverage uses a completed choice. Rapid combinations are exercised
     # separately by the interaction suite, with an explicit expected final choice.
     await page.wait_for_function("difficulty=>{const s=window.__puzzleRead();return s.ready&&!s.loading&&s.difficulty===difficulty}", arg=difficulty)
-    card = page.locator(f'[data-puzzle-mode="{entry["mode"]}"]')
-    await card.first.click()
-    if entry['selection'] is not None:
-        selector = '#puzzleSubject' if entry['mode'] == 'russia-municipalities' else '#puzzleCountry'
-        await page.wait_for_function("s=>[...document.querySelector(s.selector).options].some(o=>o.value===s.value)",
-                                     arg={'selector': selector, 'value': entry['selection']})
-        await page.locator(selector).select_option(entry['selection'])
+    await select_map(page, entry)
     state = await ready(page, entry)
     assert state['difficulty'] == difficulty, (difficulty, state['difficulty'])
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -293,13 +299,13 @@ async def place_pieces(page, count, pointer_type='mouse'):
         const s=window.__puzzleRead();if(s.finished)break;
         if(!s.ready||!s.source||!s.target)throw new Error('Map not playable');
         if(![s.source.x,s.source.y,s.target.x,s.target.y].every(Number.isFinite))throw new Error(`Non-finite pointer coordinates for piece ${s.current}`);
-        if(s.target.x<0||s.target.x>s.canvas.width||s.target.y<0||s.target.y>s.canvas.mapBottom)
+        if(s.target.x<s.map.x||s.target.x>s.map.x+s.map.width||s.target.y<s.map.y||s.target.y>s.map.y+s.map.height)
           throw new Error(`Piece ${s.current} target is outside the visible map: ${JSON.stringify(s.target)}`);
         const r=c.getBoundingClientRect();
         const dispatch=(type,p,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,
           pointerId:7,pointerType,isPrimary:true,button:0,buttons,clientX:r.left+p.x,clientY:r.top+p.y}));
         dispatch('pointerdown',s.source,1);
-        dispatch('pointermove',{x:s.target.x,y:Math.min(s.target.y,s.tray.y-12)},1);
+        dispatch('pointermove',{x:s.map.x+s.map.width/2,y:s.map.y+s.map.height/2},1);
         dispatch('pointermove',s.target,1);
         dispatch('pointerup',s.target,0);
         const after=window.__puzzleRead();
@@ -317,7 +323,7 @@ async def trusted_drop(page):
     source, target = state['source'], state['target']
     await page.mouse.move(box['x'] + source['x'], box['y'] + source['y'])
     await page.mouse.down()
-    await page.mouse.move(box['x'] + target['x'], box['y'] + min(target['y'], state['tray']['y'] - 12), steps=3)
+    await page.mouse.move(box['x'] + state['map']['x'] + state['map']['width'] / 2, box['y'] + state['map']['y'] + state['map']['height'] / 2, steps=3)
     await page.mouse.move(box['x'] + target['x'], box['y'] + target['y'])
     await page.mouse.up()
     after = await page.evaluate('window.__puzzleRead()')

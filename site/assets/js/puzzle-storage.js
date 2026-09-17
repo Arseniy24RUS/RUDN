@@ -109,7 +109,7 @@ export function createPuzzleWriter({scope,readState,onChange=()=>{},beforeReleas
 export async function commitPuzzleLeaderboard(transport,attemptId,record,{signal,active=()=>true}={}){
   if(!/^[A-Za-z0-9_-]{1,150}$/.test(String(attemptId)))throw Object.assign(new Error('Invalid attempt ID'),{code:'database/invalid-attempt-id'});
   const assertActive=()=>{if(!active())throw Object.assign(new Error('Profile changed'),{code:'auth/profile-changed'})};
-  const same=existing=>existing&&['fio','group','difficulty','time_ms','placed','total','timestamp','user_agent'].every(key=>existing[key]===record[key]);
+  const same=existing=>existing&&['fio','group','difficulty','time_ms','placed','total','timestamp','user_agent'].every(key=>existing[key]===record[key])&&['participant_id','elapsed_ms'].every(key=>(existing[key]??null)===(record[key]??null));
   assertActive();
   try{
     const result=await transport.transaction(attemptId,existing=>{

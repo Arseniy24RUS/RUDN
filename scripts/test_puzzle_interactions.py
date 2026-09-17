@@ -21,7 +21,7 @@ import traceback
 from playwright.async_api import async_playwright
 from test_puzzle_catalog import (
     PuzzleServer, ROOT, STUDENT, check_layout, context_for, flush,
-    place_pieces, ready, trusted_drop, write_json,
+    place_pieces, ready, select_map, trusted_drop, write_json,
 )
 
 
@@ -40,6 +40,9 @@ async def draft(page, mode='free'):
 async def open_game(page, server, mode='free', locale='ru'):
     await page.goto(server.base + f'apps/puzzle.html?context={mode}&qaLocale={locale}', wait_until='domcontentloaded')
     await ready(page)
+    if mode == 'free':
+        await select_map(page, {'mode':'russia-subjects','selection':None})
+        await ready(page, {'mode':'russia-subjects','selection':None})
     await page.wait_for_function("document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()")
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
 
@@ -137,7 +140,7 @@ async def input_and_cancel(page, context, browser_name, server, record):
         await touch('touchEnd', [])
         assert (await state(page))['placed'] == before['placed'] + 1, 'Trusted touch drag failed'
         before = await state(page)
-        center = await canvas_points(page, [{'x': before['canvas']['width'] / 2, 'y': before['canvas']['mapBottom'] / 2}])
+        center = await canvas_points(page, [{'x': before['map']['x'] + before['map']['width'] / 2, 'y': before['map']['y'] + before['map']['height'] / 2}])
         x, y = center[0]['x'], center[0]['y']
         await touch('touchStart', [{'x': x - 30, 'y': y}, {'x': x + 30, 'y': y}])
         await touch('touchMove', [{'x': x - 60, 'y': y}, {'x': x + 60, 'y': y}])
@@ -152,7 +155,7 @@ async def input_and_cancel(page, context, browser_name, server, record):
         await page.locator('#puzzleZoomIn').tap()
         assert (await state(page))['view']['k'] > before['view']['k'], 'Trusted touch tap did not zoom'
         before = await state(page)
-        x, y = before['canvas']['width'] / 2, before['canvas']['mapBottom'] / 2
+        x, y = before['map']['x'] + before['map']['width'] / 2, before['map']['y'] + before['map']['height'] / 2
         await gesture(page, [
             {'type': 'pointerdown', 'id': 7, 'x': x - 25, 'y': y},
             {'type': 'pointerdown', 'id': 8, 'x': x + 25, 'y': y},
@@ -271,7 +274,7 @@ async def confirmations(page, context, browser_name, server, record):
 
 async def graded_rules(page, context, browser_name, server, record):
     await open_game(page, server, 'seminar', record['locale'])
-    assert await page.locator('#puzzleHint').is_hidden()
+    assert await page.locator('#puzzleHint').is_visible()
     results = []
     for difficulty, expected in [('hard', 5), ('easy', 3), ('medium', 4)]:
         if results:
@@ -282,15 +285,17 @@ async def graded_rules(page, context, browser_name, server, record):
         await page.locator('#puzzleCanvas').focus()
         before = await state(page)
         await page.keyboard.press('h')
-        assert (await state(page))['hints'] == 0, 'H key enabled graded hint'
-        assert (await state(page))['inTray'], 'H key revealed the graded answer'
+        assert (await state(page))['hints'] == 1, 'H key did not enable graded hint'
+        await page.keyboard.press('h')
+        assert (await state(page))['hints'] == 1, 'Repeated active hint consumed limit'
+        await page.locator('#puzzleReturn').click()
         # Every piece follows the actual pointer handlers. No completion setters.
         await place_pieces(page, before['total'])
         await page.locator('#puzzleResultDialog[open]').wait_for()
         saved = (await draft(page, 'seminar'))['state']
         assert saved['completionReceipt']['points'] == expected, saved['completionReceipt']
         assert saved['completionReceipt']['best_points'] == 5, ('Best grade decreased after expert completion', saved['completionReceipt'])
-        assert saved['hints'] == 0
+        assert saved['hints'] == 1
         assert await page.locator('#puzzleResultDialog .puzzle-result-metric').count() == 3
         assert not await page.locator('#puzzleResultErrors').count()
         results.append({'difficulty': difficulty, 'points': expected, 'attempt': saved['attemptId']})
@@ -318,6 +323,8 @@ async def rapid_and_route(page, context, browser_name, server, record):
     })()""")
     await page.goto(server.base + 'index.html#puzzle', wait_until='domcontentloaded')
     await ready(page)
+    await select_map(page, {'mode':'russia-subjects','selection':None})
+    await ready(page, {'mode':'russia-subjects','selection':None})
     # Delay only a public persistence adapter's acknowledgment, never modify
     # engine state. A later selection must not be overtaken by the first save.
     await page.evaluate("""()=>{
@@ -348,17 +355,17 @@ async def rapid_and_route(page, context, browser_name, server, record):
     assert (await state(page))['difficulty'] == 'hard' and (await state(page))['mode'] == 'world-countries'
     assert await page.evaluate('window.__qaModeSaves') >= 2
     await page.evaluate("()=>{document.querySelector('#geoPuzzleApp').puzzleProgress.save=window.__qaModeSave;}")
-    await page.locator('[data-puzzle-mode="russia-subjects"]').click()
+    await select_map(page, {'mode':'russia-subjects','selection':None})
     await ready(page, {'mode': 'russia-subjects', 'selection': None})
     record['pendingDifficultyInheritedByMode'] = True
     # Delay the same public fetch bridge used by the game. This also exercises
     # latest-selection cancellation when a service worker has warm assets.
     await page.evaluate("()=>{window.__qaDelayMetadata=true;window.__qaDelayedMetadata=0;}")
     original = await state(page)
-    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await select_map(page, {'mode':'country-regions','selection':'USA'})
     await page.wait_for_function('window.__qaDelayedMetadata>0')
     assert (await state(page))['loading'], 'Delayed replacement already settled before cancellation'
-    await page.locator('[data-puzzle-mode="russia-subjects"]').click()
+    await select_map(page, {'mode':'russia-subjects','selection':None})
     await page.wait_for_timeout(200)
     canceled = await ready(page)
     record['pendingMapRace'] = {'before': {'mode': original['mode'], 'attemptId': original['attemptId']}, 'after': {'mode': canceled['mode'], 'attemptId': canceled['attemptId']}, 'delayedMetadata': await page.evaluate('window.__qaDelayedMetadata')}
@@ -373,7 +380,7 @@ async def rapid_and_route(page, context, browser_name, server, record):
             page.once('dialog', lambda dialog: asyncio.create_task(dialog.accept()))
         before = await state(page)
         await page.evaluate('()=>{window.__qaDelayedMetadata=0;}')
-        await page.locator('[data-puzzle-mode="country-regions"]').click()
+        await select_map(page, {'mode':'country-regions','selection':'USA'})
         await page.wait_for_function('window.__qaDelayedMetadata>0')
         assert (await state(page))['loading'], 'Replacement was not pending when continuing the old game'
         await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -393,7 +400,7 @@ async def rapid_and_route(page, context, browser_name, server, record):
     await page.evaluate('()=>{window.__qaDelayMetadata=false;}')
     record['pendingMapCanceledByGameplay'] = continued
     page.once('dialog', lambda dialog: asyncio.create_task(dialog.accept()))
-    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await select_map(page, {'mode':'country-regions','selection':'USA'})
     await ready(page, {'mode': 'country-regions', 'selection': 'USA'})
     await page.locator('#puzzleCountry option[value="CAN"]').wait_for(state='attached')
     seen = []
@@ -468,7 +475,7 @@ async def two_tabs(page, context, browser_name, server, record):
 
 async def third_touch_does_not_place(page, context, browser_name, server, record):
     await open_game(page, server)
-    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await select_map(page, {'mode':'country-regions','selection':'USA'})
     await ready(page, {'mode': 'country-regions', 'selection': 'USA'})
     await page.locator('#puzzleCountry').select_option('MCO')
     await ready(page, {'mode': 'country-regions', 'selection': 'MCO'})

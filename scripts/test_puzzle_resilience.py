@@ -18,14 +18,14 @@ import time
 import traceback
 
 from playwright.async_api import async_playwright
-from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, trusted_drop, write_json
+from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, select_map, trusted_drop, write_json
 
 
 FETCH_FAULT = r"""(() => {
  const original=window.fetch.bind(window);
  window.__qaFault={pattern:'',kind:'fail',enabled:false,calls:0,aborts:0};
  window.fetch=(input,options={})=>{
-  const url=typeof input==='string'?input:input.url;
+  const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
   const f=window.__qaFault;
   if(!f.enabled||!String(url).includes(f.pattern))return original(input,options);
   f.calls++;
@@ -53,6 +53,8 @@ async def saved(page, owner=None):
 async def open_game(page, server):
     await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
     await ready(page)
+    await select_map(page, {'mode':'russia-subjects','selection':None})
+    await ready(page, {'mode':'russia-subjects','selection':None})
     await page.wait_for_function("document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()")
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
 
@@ -63,7 +65,7 @@ async def quiet(page):
 
 
 async def first_load(page, context, browser_name, server, record, hanging=False):
-    await context.add_init_script(FETCH_FAULT + "window.__qaFault={pattern:'russia_subjects_89.topojson',kind:'%s',enabled:true,calls:0,aborts:0};" % ('hang' if hanging else 'fail'))
+    await context.add_init_script(FETCH_FAULT + "window.__qaFault={pattern:'world_countries_50m.geojson',kind:'%s',enabled:true,calls:0,aborts:0};" % ('hang' if hanging else 'fail'))
     if hanging:
         await page.clock.install()
     await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
@@ -81,7 +83,7 @@ async def first_load(page, context, browser_name, server, record, hanging=False)
     assert not await page.locator('.puzzle-save-notice').count(), 'Connection failure was misreported as lost local storage'
     await page.evaluate("()=>{window.__qaFault.enabled=false;window.dispatchEvent(new Event('online'));}")
     recovered = await ready(page)
-    assert recovered['mode'] == 'russia-subjects' and recovered['placed'] == 0
+    assert recovered['mode'] == 'world-countries' and recovered['placed'] == 0
     assert recovered['elapsedMs'] == 0, 'Autoload/recovery started the timer'
     assert await focus.evaluate('(el)=>el===document.activeElement'), 'Recovery stole keyboard focus'
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -110,7 +112,7 @@ async def replacement_failure(page, context, browser_name, server, record):
         await dialog.accept()
 
     page.on('dialog', accept)
-    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await select_map(page, {'mode':'country-regions','selection':'USA'})
     await page.wait_for_function('window.__qaFault.calls>0&&!window.__puzzleRead().loading')
     after = await state(page)
     assert after['attemptId'] == before['attemptId'] and after['placed'] == 1 and after['mode'] == 'russia-subjects'
@@ -123,6 +125,73 @@ async def replacement_failure(page, context, browser_name, server, record):
     assert latest['attemptId'] == before['attemptId'] and latest['state']['placed'] == 2
     record['preserved'] = ['attempt', 'map', 'first placement', 'continued input', 'new checkpoint']
     record['failedRequests'] = await page.evaluate('window.__qaFault.calls')
+
+
+async def preparation_failure(page, context, browser_name, server, record):
+    """A failed renderer/path preparation must not replace a playable draft."""
+    await open_game(page, server)
+    await trusted_drop(page)
+    await page.locator('#puzzleHint').click()
+    confirmations = []
+
+    async def accept(dialog):
+        confirmations.append(dialog.message)
+        await dialog.accept()
+
+    page.on('dialog', accept)
+    await page.evaluate("""()=>{
+      window.__qaGeometryOriginal=window.RudnPuzzleGeometry;
+      window.__qaPreparationFault={stage:'',calls:0,waiting:0};
+      document.querySelector('#geoPuzzleApp').addEventListener('puzzle:load-status',event=>{
+        if(event.detail.status==='waiting')window.__qaPreparationFault.waiting++;
+      });
+      window.RudnPuzzleGeometry={...window.__qaGeometryOriginal,createTopologyRenderer(...args){
+        const fault=window.__qaPreparationFault;
+        if(fault.stage==='renderer'){
+          fault.calls++;fault.stage='';throw new Error('QA renderer preparation failed');
+        }
+        const renderer=window.__qaGeometryOriginal.createTopologyRenderer(...args);
+        if(fault.stage!=='first-path')return renderer;
+        return {...renderer,get(...getArgs){
+          if(fault.stage==='first-path'){
+            fault.calls++;fault.stage='';throw new Error('QA first path preparation failed');
+          }
+          return renderer.get(...getArgs);
+        }};
+      }};
+    }""")
+    preserved = ['attemptId', 'mode', 'selection', 'difficulty', 'seed', 'featureIds',
+                 'order', 'current', 'cursor', 'placed', 'errors', 'hints', 'view',
+                 'geometryRef', 'finished', 'finishedResult', 'timerStarted', 'pieces']
+    stages = []
+    for stage in ('renderer', 'first-path'):
+        before = await saved(page)
+        await page.evaluate("stage=>Object.assign(window.__qaPreparationFault,{stage,calls:0,waiting:0})", stage)
+        await page.locator('[data-puzzle-difficulty="hard"]').click()
+        await page.wait_for_function('window.__qaPreparationFault.calls===1&&window.__qaPreparationFault.waiting===1&&!window.__puzzleRead().loading')
+        after = await saved(page)
+        assert after['attemptId'] == before['attemptId'], 'Failed preparation replaced the durable attempt'
+        for field in preserved:
+            assert after['state'].get(field) == before['state'].get(field), (stage, field, before['state'].get(field), after['state'].get(field))
+        assert after['state']['elapsedMs'] >= before['state']['elapsedMs'], 'Rollback reset the timer'
+        await quiet(page)
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await trusted_drop(page)
+        continued = await saved(page)
+        assert continued['attemptId'] == before['attemptId'] and continued['state']['placed'] == before['state']['placed'] + 1
+        await page.evaluate("window.dispatchEvent(new Event('online'))")
+        assert not (await state(page))['loading'], 'Continuing the old game left a replacement retry active'
+        stages.append({'fault': stage, 'preservedFields': preserved, 'continuedPlacements': continued['state']['placed']})
+    previous = await saved(page)
+    await page.evaluate('window.RudnPuzzleGeometry=window.__qaGeometryOriginal')
+    await page.locator('[data-puzzle-difficulty="hard"]').click()
+    await page.wait_for_function("window.__puzzleRead().ready&&!window.__puzzleRead().loading&&window.__puzzleRead().difficulty==='hard'")
+    replaced = await saved(page)
+    assert replaced['attemptId'] != previous['attemptId']
+    assert replaced['state']['difficulty'] == 'hard' and replaced['state']['placed'] == 0 and replaced['state']['hints'] == 0
+    assert len(confirmations) == 3, confirmations
+    record['preparationStages'] = stages
+    record['successfulReplacement'] = {'newAttempt': True, 'difficulty': 'hard', 'placed': 0, 'confirmations': len(confirmations)}
 
 
 async def storage_fault(page, context, browser_name, server, record, quota=False):
@@ -432,7 +501,8 @@ async def worker_version_skew(page, context, browser_name, server, record):
 
 
 SCENARIOS = {'initial-failure': initial_failure, 'initial-hang': initial_hang,
-             'replacement-failure': replacement_failure, 'storage-denied': storage_denied,
+             'replacement-failure': replacement_failure, 'preparation-failure': preparation_failure,
+             'storage-denied': storage_denied,
              'storage-quota': storage_quota, 'hidden-timer': hidden_timer,
              'profile-isolation': profile_isolation, 'old-schema': old_schema, 'legacy-world': legacy_world,
              'worker-update': service_worker_update, 'worker-version-skew': worker_version_skew,
@@ -459,13 +529,13 @@ async def run(args, server):
                     page.on('pageerror', lambda error, r=record: r.setdefault('pageErrors', []).append(str(error)))
                     async def dialog_seen(dialog, r=record):
                         r.setdefault('dialogs', []).append(dialog.message)
-                        if r['scenario'] != 'replacement-failure':
+                        if r['scenario'] not in ('replacement-failure', 'preparation-failure'):
                             await dialog.dismiss()
                     page.on('dialog', dialog_seen)
                     try:
                         await SCENARIOS[name](page, context, browser_name, server, record)
                         assert not record.get('pageErrors'), record.get('pageErrors')
-                        if name != 'replacement-failure':
+                        if name not in ('replacement-failure', 'preparation-failure'):
                             assert not record.get('dialogs'), ('Unexpected browser dialog', record['dialogs'])
                         record['status'] = 'passed'
                     except Exception as error:

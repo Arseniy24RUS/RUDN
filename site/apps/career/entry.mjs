@@ -1,5 +1,5 @@
 import { createCareerRuntime } from './runtime.bundle.mjs';
-import {backend} from '../../assets/js/backend.js?v=1.3.4';
+import {backend} from '../../assets/js/backend.js?v=1.3.7';
 import {durableStore} from '../../assets/js/durable-store.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
@@ -8,18 +8,19 @@ const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : Str
 const activeMounts = new WeakMap();
 
 /** A native, isolated DOM component. Authentication and course navigation belong to the host. */
-export async function mountCareer(container, {owner = 'guest', lang = 'ru', onResult, initialRoute = 'home', onRouteChange, signal} = {}) {
+export async function mountCareer(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, initialRoute = 'home', onRouteChange, signal} = {}) {
   if (!(container instanceof HTMLElement)) throw new TypeError('Career module requires an HTMLElement container.');
   activeMounts.get(container)?.destroy();
   const shadow = container.shadowRoot || container.attachShadow({mode:'open'});
-  const ownerKey = `rudn-career:embedded:${encodeURIComponent(MODULE_BASE.pathname)}:${encodeURIComponent(String(owner || 'guest'))}:`;
+  const free=hostContext==='free';
+  const ownerKey = `rudn-career:${free?'free:':''}embedded:${encodeURIComponent(MODULE_BASE.pathname)}:${encodeURIComponent(String(owner || 'guest'))}:`;
   let current = null, disposed = false, language = locale(lang), route = VALID_ROUTES.has(initialRoute) ? initialRoute : 'home', generation = 0;
   const hostWindow = container.ownerDocument.defaultView;
   const hostDocument = container.ownerDocument;
   const controller = new AbortController();
   const abortFromHost = () => api.destroy();
   const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:career';
-  const progressScope={owner:durableOwner,activitySlug:'career-workspace',mode:'diagnostic',attemptId:'workspace-v1'};
+  const progressScope={owner:durableOwner,activitySlug:free?'career-freeplay':'career-workspace',mode:free?'workspace':'diagnostic',attemptId:'workspace-v1'};
   const values=new Map(),observedLegacy=new Map(),pendingSaves=new Set();
   try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
   const saveCopy={ru:{pending:'Сохранено на устройстве · ожидает отправки',saved:'Сохранено',unsafe:'Не удалось сохранить. Скачайте ответы перед закрытием.'},en:{pending:'Saved on this device · awaiting upload',saved:'Saved',unsafe:'Could not save. Download your answers before closing.'},'zh-Hans':{pending:'已保存在此设备 · 等待上传',saved:'已保存',unsafe:'无法保存。关闭前请下载答案。'}};
@@ -166,10 +167,11 @@ export async function mountCareer(container, {owner = 'guest', lang = 'ru', onRe
         if(destroyed || resultsSent.has(record.recordId))return;
         resultsSent.add(record.recordId);
         const captured=structuredClone(record);
-        if(durableOwner.startsWith('student:')){
-          const attempt={id:captured.recordId,studentKey:durableOwner.slice(8),activitySlug:'career-diagnostic',draftMode:'diagnostic',type:'career-diagnostic',recordGrade:false,createdAt:captured.createdAt,title:'Career diagnostic',career:captured};
-          track(durableStore.complete({owner:durableOwner,activitySlug:attempt.activitySlug,mode:'diagnostic',attemptId:attempt.id,state:{record:captured},attempt},{queue:true}).then(()=>{
-            if(!backend.isAdmin()&&backend.getProfile()?.studentKey===attempt.studentKey)return backend.saveAttempt(attempt);
+        if(free||durableOwner.startsWith('student:')){
+          const student=durableOwner.startsWith('student:');
+          const attempt={id:captured.recordId,...(student?{studentKey:durableOwner.slice(8)}:{}),activitySlug:free?'career-freeplay':'career-diagnostic',draftMode:'diagnostic',type:'career-diagnostic',recordGrade:false,createdAt:captured.createdAt,title:'Career diagnostic',career:captured};
+          track(durableStore.complete({owner:durableOwner,activitySlug:attempt.activitySlug,mode:'diagnostic',attemptId:attempt.id,state:{record:captured},attempt},{queue:student}).then(()=>{
+            if(student&&!backend.isAdmin()&&backend.getProfile()?.studentKey===attempt.studentKey)return backend.saveAttempt(attempt);
           }).catch(error=>hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}))));
         }
         if(typeof onResult === 'function') track(Promise.resolve().then(() => onResult(captured)).catch(error => console.error('Career result callback failed:',error)));

@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.6-puzzle-3`;
+const CACHE=`${CACHE_PREFIX}v1.3.7-games-1`;
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -83,33 +83,38 @@ const SHELL=[
   './apps/reception/style.css?v=1.0.1',
   './apps/reception/platform.css?v=1.0.1',
   './','./index.html','./apps/puzzle.html',
-  './assets/css/site.css?v=1.3.6',
-  './assets/css/puzzle.css?v=1.3.6',
-  './assets/js/main.js?v=1.3.6',
+  './assets/css/site.css?v=1.3.7',
+  './assets/css/puzzle.css?v=1.3.7',
+  './assets/js/main.js?v=1.3.7',
+  './assets/js/games-catalog.js?v=1.3.7',
   './assets/js/career-course.js',
   './assets/js/durable-store.js',
   './assets/js/checkpoint-sync.js',
   './assets/js/firebase-rest.js',
   './assets/js/form-draft.js',
   './assets/js/governor-report-locale.js',
-  './assets/js/backend.js?v=1.3.6',
-  './assets/js/session.js?v=1.3.6',
-  './assets/js/attempt-session.js?v=1.3.6',
-  './assets/js/notifications.js?v=1.3.6',
-  './assets/js/account.js?v=1.3.6',
-  './assets/js/teacher-journal.js?v=1.3.6',
+  './assets/js/backend.js?v=1.3.7',
+  './assets/js/session.js?v=1.3.7',
+  './assets/js/attempt-session.js?v=1.3.7',
+  './assets/js/notifications.js?v=1.3.7',
+  './assets/js/account.js?v=1.3.7',
+  './assets/js/teacher-journal.js?v=1.3.7',
   './assets/vendor/firebase/firebase-core.js',
   './assets/vendor/firebase/firebase-storage.js',
   './assets/vendor/firebase/firebase-shared.js',
-  './assets/js/grading-revisions.js?v=1.3.6',
-  './assets/js/config.js?v=1.3.6',
-  './assets/js/i18n.js?v=1.3.6',
-  './assets/js/quiz.js?v=1.3.6',
-  './assets/js/adaptive-quiz.js?v=1.3.6',
-  './assets/js/access.js?v=1.3.6',
-  './assets/js/puzzle-bootstrap.js?v=1.3.6',
-  './assets/js/puzzle-engine.js?v=1.3.6',
-  './assets/js/puzzle-storage.js?v=1.3.6',
+  './assets/js/grading-revisions.js?v=1.3.7',
+  './assets/js/config.js?v=1.3.7',
+  './assets/js/i18n.js?v=1.3.7',
+  './assets/js/quiz.js?v=1.3.7',
+  './assets/js/adaptive-quiz.js?v=1.3.7',
+  './assets/js/access.js?v=1.3.7',
+  './assets/js/puzzle-bootstrap.js?v=1.3.7',
+  './assets/js/puzzle-engine.js?v=1.3.7',
+  './assets/js/puzzle-render-geometry.js?v=1.3.7',
+  './assets/js/puzzle-raster-worker.js?v=1.3.7',
+  './assets/js/puzzle-leaderboard.js?v=1.3.7',
+  './assets/vendor/xlsx/xlsx-0.20.3.full.min.js',
+  './assets/js/puzzle-storage.js?v=1.3.7',
   './assets/puzzle/vendor/d3.v7.9.0.min.js',
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
@@ -362,9 +367,13 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/world.css"
 ];
 const PUZZLE_SHELL=[
-  './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.6',
-  './assets/js/puzzle-bootstrap.js?v=1.3.6','./assets/js/puzzle-engine.js?v=1.3.6',
-  './assets/js/puzzle-storage.js?v=1.3.6','./assets/js/durable-store.js?v=1.3.6',
+  './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.7',
+  './assets/js/puzzle-bootstrap.js?v=1.3.7','./assets/js/puzzle-engine.js?v=1.3.7',
+  './assets/js/puzzle-render-geometry.js?v=1.3.7',
+  './assets/js/puzzle-raster-worker.js?v=1.3.7',
+  './assets/js/puzzle-leaderboard.js?v=1.3.7',
+  './assets/vendor/xlsx/xlsx-0.20.3.full.min.js',
+  './assets/js/puzzle-storage.js?v=1.3.7','./assets/js/durable-store.js?v=1.3.7',
   './assets/puzzle/vendor/d3.v7.9.0.min.js','./assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/puzzle/data/municipal/catalog.json','./assets/puzzle/data/adm1/manifest.json',
   './assets/puzzle/data/geoboundaries_adm1_catalog.json',
@@ -453,8 +462,16 @@ async function activateRelease(){
   await self.clients.claim();
 }
 
+function puzzleRuntimeCacheKey(request){
+  const url=new URL(request.url),path=url.pathname.slice(SCOPE.pathname.length);
+  // The native loader uses this counter solely to escape browser coalescing of
+  // an abandoned script request. It must still read/write the exact bound
+  // release's canonical asset; preserve v and every other query parameter.
+  if(['assets/js/puzzle-engine.js','assets/js/puzzle-render-geometry.js','assets/puzzle/vendor/d3.v7.9.0.min.js','assets/puzzle/vendor/topojson-client.v3.1.0.min.js'].includes(path)&&url.searchParams.getAll('puzzle_retry').length===1&&/^\d{1,6}$/.test(url.searchParams.get('puzzle_retry'))){url.searchParams.delete('puzzle_retry');return url.href;}
+  return request;
+}
 async function matchOwnCache(cache,request){
-  const cached=await cache.match(request);
+  const cached=await cache.match(puzzleRuntimeCacheKey(request));
   if(cached)return cached;
   // Navigation parameters do not change these static HTML entry points.
   if(request.mode==='navigate'){
@@ -493,7 +510,7 @@ async function serveRequest(event,networkFirst){
     const response=await fetchWithDeadline(request,available?1800:12000);
     if(response.ok){
       // An unavailable/full cache must not turn a successful request into an error.
-      try{await cache.put(request,response.clone())}catch{}
+      try{await cache.put(puzzleRuntimeCacheKey(request),response.clone())}catch{}
       return response;
     }
     // A failed deployment or temporary server error must not poison offline copies.

@@ -1,9 +1,10 @@
-import {backend,groupOptions} from './backend.js?v=1.3.6';
-import {getLocale} from './i18n.js?v=1.3.6';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.6';
-import {initNotifications} from './notifications.js?v=1.3.6';
-import {durableStore} from './durable-store.js?v=1.3.6';
-import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.6';
+import {backend,groupOptions} from './backend.js?v=1.3.7';
+import {getLocale} from './i18n.js?v=1.3.7';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.7';
+import {initNotifications} from './notifications.js?v=1.3.7';
+import {durableStore} from './durable-store.js?v=1.3.7';
+import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.7';
+import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.7';
 let activePuzzleBridge=null;
 
 export function mountPuzzlePage(options={}){
@@ -59,15 +60,26 @@ Object.assign(staticTranslations.zh,{backMaps:'返回地图',lead:'可自由选�
 
 const sourceTranslations={};
 for(const [language,copy] of Object.entries({
-  ru:{prepareHelp:'Карта загружается автоматически.',zoomOut:'Уменьшить',zoomIn:'Увеличить',how3:context==='seminar'?'Верните деталь, чтобы попробовать снова.':'На одну игру доступны 10 подсказок.'},
-  en:{prepareHelp:'The map loads automatically.',zoomOut:'Zoom out',zoomIn:'Zoom in',how3:context==='seminar'?'Return the piece to try again.':'You have 10 hints per game.'},
-  zh:{prepareHelp:'地图正在自动加载。',zoomOut:'缩小',zoomIn:'放大',how3:context==='seminar'?'退回拼块后再试一次。':'每局游戏可使用10次提示。'},
+  ru:{prepareHelp:'Карта загружается автоматически.',zoomOut:'Уменьшить',zoomIn:'Увеличить',how3:'На одну игру доступны 10 подсказок.'},
+  en:{prepareHelp:'The map loads automatically.',zoomOut:'Zoom out',zoomIn:'Zoom in',how3:'You have 10 hints per game.'},
+  zh:{prepareHelp:'地图正在自动加载。',zoomOut:'缩小',zoomIn:'放大',how3:'每局游戏可使用10次提示。'},
 }))Object.assign(staticTranslations[language],copy);
+for(const [language,copy] of Object.entries({
+  ru:{exportXlsx:'Скачать XLSX',rank:'Место',dateUTC:'Дата (UTC)',leaderboardLoading:'Загружаем результаты…',leaderboardEmpty:'Пока нет результатов.',leaderboardCached:'Показаны сохранённые результаты.',leaderboardWaiting:'Результаты появятся после подключения.',leaderboardPending:'Ваш результат сохранён на устройстве.',previousPage:'Назад',nextPage:'Далее',pageOf:'Страница {page} из {pages}',exportFailed:'Не удалось подготовить файл. Попробуйте ещё раз.',foreignRegions:'Регионы стран',municipalities:'Муниципалитеты России'},
+  en:{exportXlsx:'Download XLSX',rank:'Rank',dateUTC:'Date (UTC)',leaderboardLoading:'Loading results…',leaderboardEmpty:'No results yet.',leaderboardCached:'Showing saved results.',leaderboardWaiting:'Results will appear when connected.',leaderboardPending:'Your result is saved on this device.',previousPage:'Previous',nextPage:'Next',pageOf:'Page {page} of {pages}',exportFailed:'Could not prepare the file. Please try again.',foreignRegions:'Country regions',municipalities:'Municipalities of Russia'},
+  zh:{exportXlsx:'下载XLSX',rank:'排名',dateUTC:'日期（UTC）',leaderboardLoading:'正在加载成绩…',leaderboardEmpty:'暂无成绩。',leaderboardCached:'显示已保存的成绩。',leaderboardWaiting:'联网后将显示成绩。',leaderboardPending:'您的成绩已保存在此设备。',previousPage:'上一页',nextPage:'下一页',pageOf:'第{page}页，共{pages}页',exportFailed:'无法生成文件，请重试。',foreignRegions:'各国行政区',municipalities:'俄罗斯市政区'},
+}))Object.assign(staticTranslations[language],copy);
+Object.assign(staticTranslations.ru,{backMaps:'К играм',easy:'Низкая',medium:'Средняя',hard:'Высокая',foreignRegions:'Регионы стран мира',municipalities:'Муниципалитеты регионов России'});
+Object.assign(staticTranslations.en,{backMaps:'Back to games',easy:'Low',medium:'Medium',hard:'High',foreignRegions:'Regions of world countries',municipalities:'Municipalities of Russian regions'});
+Object.assign(staticTranslations.zh,{backMaps:'返回游戏',easy:'低',medium:'中',hard:'高',foreignRegions:'世界各国行政区',municipalities:'俄罗斯各地区市政区'});
 let sourcePatterns=[];
 const engineTranslations={
+  ru:{'Учебная':'Низкая','Стандартная':'Средняя','Экспертная':'Высокая'},
   en:{'Свободная игра':'Free play','свободная игра':'free play','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'Difficulty controls placement precision and does not change the course gradebook.'},
   zh:{'Свободная игра':'自由游戏','свободная игра':'自由游戏','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'难度决定拼合精度，不会更改课程成绩册。'}
 };
+Object.assign(engineTranslations.en,{'Учебная':'Low','Стандартная':'Medium','Экспертная':'High','Низкая':'Low','Средняя':'Medium','Высокая':'High','Подсказка':'Hint'});
+Object.assign(engineTranslations.zh,{'Учебная':'低','Стандартная':'中','Экспертная':'高','Низкая':'低','Средняя':'中','Высокая':'高','Подсказка':'提示'});
 async function loadLegacy(){
   if(locale!=='ru'){
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
@@ -93,8 +105,19 @@ async function load(path,signal){const r=await nativeFetch(path,{signal});if(!r.
 function wrapper({id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin='bundled',year='',note='',geometry_url,feature_count}){return{dataset:{id,title,title_en,title_zh,source,source_en,source_zh,license,license_en,license_zh,origin,year,year_en:year,year_zh:year,note,note_en:note,note_zh:note,geometry_url,feature_count}}}
 async function getMunicipalCatalog(){if(!municipalCatalog)municipalCatalog=await load(`${base}/municipal/catalog.json`);return municipalCatalog}
 async function getAdmManifest(){if(!admManifest)admManifest=await load(`${base}/adm1/manifest.json`);return admManifest}
-async function worldNames(){const geo=await load(`${base}/world_countries_50m.geojson`);const map={};for(const f of geo.features||[]){const p=f.properties||{};const iso=String(p.ADM0_A3||p.ISO_A3||p.adm0_a3||p.iso_a3||'').toUpperCase();if(iso)map[iso]={ru:p.name_ru||p.NAME_RU||p.name||p.ADMIN||iso,en:p.name_en||p.NAME_EN||p.ADMIN||p.name||iso,zh:p.name_zh||p.NAME_ZH||p.name_en||p.ADMIN||iso}}return map}
-async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);admCatalogSource=raw;const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.boundaryName||iso,name_en:n.en||item.boundaryName||iso,name_zh:n.zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
+async function worldNames(){
+  const geo=await load(`${base}/world_countries_50m.geojson`),map={};
+  for(const feature of geo.features||[]){
+    const p=feature.properties||{};
+    // Natural Earth and the ADM1 catalog use different codes for a few names.
+    // Preserve both identifiers for lookup; geometry and saved IDs stay intact.
+    const codes=[p.ADM0_A3,p.adm0_a3,p.ISO_A3,p.iso_a3].map(value=>String(value||'').toUpperCase()).filter(value=>/^[A-Z]{3}$/.test(value));
+    for(const iso of codes)map[iso]={ru:p.name_ru||p.NAME_RU||p.name||p.ADMIN||iso,en:p.name_en||p.NAME_EN||p.ADMIN||p.admin||p.name||iso,zh:p.name_zh||p.NAME_ZH||p.name_en||p.ADMIN||p.admin||iso};
+  }
+  if(!map.XKX&&map.KOS)map.XKX=map.KOS;
+  return map;
+}
+async function getAdmCatalog(){if(admCatalog)return admCatalog;const [raw,manifest,names]=await Promise.all([load(`${base}/geoboundaries_adm1_catalog.json`),getAdmManifest(),worldNames()]);admCatalogSource=raw;const local=new Map(manifest.map(x=>[x.iso,x.features]));local.set('USA',51);const countries=raw.map(item=>{const iso=String(item.boundaryISO||'').toUpperCase();const n=names[iso]||{};return{iso,name:n.ru||item.name_ru||item.boundaryName||iso,name_en:n.en||item.name_en||item.boundaryName||iso,name_zh:n.zh||item.name_zh||n.en||item.boundaryName||iso,units:local.get(iso)||Number(item.admUnitCount)||null,year:item.boundaryYearRepresented||'',canonical:item.boundaryCanonical||'ADM1',canonical_en:item.boundaryCanonical||'First-level administrative units',canonical_zh:'一级行政区',local:local.has(iso)}}).filter(x=>/^[A-Z]{3}$/.test(x.iso));admCatalog={origin:'bundled',countries,offline_count:local.size};return admCatalog}
 async function localAdm1(iso,local){
   const country=(await getAdmCatalog()).countries.find(item=>item.iso===iso)||{};
   const source=local.source||'geoBoundaries gbOpen',license=local.license||'CC BY 4.0';
@@ -151,7 +174,7 @@ const puzzleFetch=async(input,options={})=>{
       const result={points,practice_points:practicePoints,best_points:best,grade_eligible:gradeEligible,message:''};
       const record={id:body.attempt_id,...(signedIn?{studentKey:progressOwner.slice(8)}:{}),createdAt:new Date(started.startedAt||saved?.createdAt||Date.now()).toISOString(),type:'map-puzzle',activitySlug:progressScope.activitySlug,draftMode:context,title,practicePoints,gradeEligible,recordGrade:gradeEligible,mode:body.mode,selection:body.selection,difficulty:body.difficulty,placed:body.placed,total:body.total,errors:body.errors,hints:body.hints,durationMs:body.duration_ms,featureIds:body.feature_ids,datasetId:body.dataset_id};
       if(gradeEligible)Object.assign(record,{points,maxPoints:5});
-      if(russian89&&signedIn){const leaderboard=backend.puzzleLeaderboardRecord({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total,timestamp:Date.now()},progressProfile);if(leaderboard)record.leaderboard=leaderboard}
+      if(russian89&&signedIn){const leaderboard=await backend.puzzleLeaderboardRecord({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total,timestamp:Date.now()},progressProfile);if(leaderboard)record.leaderboard=leaderboard}
       // Geometry, final screen and both delivery jobs survive a reload. Cloud I/O
       // starts only after this transaction; it never delays the result dialog.
       const completion=await durableStore.complete({...progressScope,attemptId:record.id,contentVersion:'puzzle-v3',state:{...(saved?.state||body),finished:true,completionReceipt:result},attempt:record},{queue:signedIn});
@@ -172,11 +195,13 @@ window.fetch=puzzleFetch;
 activePuzzleBridge=bridgeToken;
 
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-const formatLeaderboardTime=value=>{const seconds=Math.max(0,Math.floor(Number(value||0)/1000));return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`};
-let leaderboardRows=[];
-const selectedGroups=new Set();
+let leaderboardRows=[],leaderboardLocal=[];
+const leaderboardCache=backend.getCachedPuzzleLeaderboard();
+let leaderboardRemote=leaderboardCache?.rows||[],leaderboardLoaded=Boolean(leaderboardCache),leaderboardStale=Boolean(leaderboardCache);
+let leaderboardRefresh=null,leaderboardController=null,leaderboardScheduled=0,leaderboardRetry=false,leaderboardError='',leaderboardClosed=false,leaderboardLocalRevision=0;
+const selectedGroups=new Set(),leaderboardPages=new Map();
 const groupFilterCopy=key=>staticTranslations[locale]?.[key]??staticTranslations.ru[key]??key;
-function filteredLeaderboardRows(){return leaderboardRows.filter(row=>!selectedGroups.size||selectedGroups.has(String(row.group||'')))}
+function filteredLeaderboardRows(){return filterPuzzleResults(leaderboardRows,selectedGroups)}
 function updateGroupFilterSummary(){
   const summary=document.getElementById('puzzleGroupFilterSummary');
   if(!summary)return;
@@ -188,34 +213,108 @@ function setupGroupFilter(){
   const options=document.getElementById('puzzleGroupFilterOptions');
   const clear=document.getElementById('puzzleGroupFilterClear');
   if(!options)return;
-  options.innerHTML=groupOptions().map(group=>`<label class="puzzle-group-option"><input type="checkbox" value="${escapeHtml(group)}"><span>${escapeHtml(group)}</span></label>`).join('');
-  options.addEventListener('change',event=>{
+  const change=event=>{
     if(!(event.target instanceof HTMLInputElement))return;
     if(event.target.checked)selectedGroups.add(event.target.value);else selectedGroups.delete(event.target.value);
-    updateGroupFilterSummary();void renderLeaderboard();
-  });
-  clear?.addEventListener('click',()=>{
+    leaderboardPages.clear();updateGroupFilterSummary();renderLeaderboard();
+  };
+  const reset=()=>{
     selectedGroups.clear();options.querySelectorAll('input').forEach(input=>{input.checked=false});
-    updateGroupFilterSummary();void renderLeaderboard();
-  });
+    leaderboardPages.clear();updateGroupFilterSummary();renderLeaderboard();
+  };
+  options.addEventListener('change',change);clear?.addEventListener('click',reset);
+  lifecycleCleanup.push(()=>{options.removeEventListener('change',change);clear?.removeEventListener('click',reset)});
   updateGroupFilterSummary();
 }
-function bestLeaderboardRows(items){
-  const best=new Map();
-  for(const row of items){if(!['easy','medium','hard'].includes(row?.difficulty)||Number(row?.total)!==89||Number(row?.placed)!==89||Number(row?.time_ms)<=1000)continue;const key=`${String(row.fio||'').trim().toLowerCase()}|${String(row.group||'').trim().toLowerCase()}|${row.difficulty}`;const prior=best.get(key);if(!prior||Number(row.time_ms)<Number(prior.time_ms))best.set(key,row)}
-  return [...best.values()].sort((a,b)=>Number(a.time_ms)-Number(b.time_ms)||Number(a.timestamp)-Number(b.timestamp));
-}
-async function renderLeaderboard(){
-  leaderboardRows=bestLeaderboardRows(await backend.getPuzzleLeaderboard());
-  for(const difficulty of ['easy','medium','hard']){
-    const body=document.querySelector(`#leader_${difficulty} tbody`);if(!body)continue;
-    const rows=filteredLeaderboardRows().filter(row=>row.difficulty===difficulty).slice(0,100);
-    body.innerHTML=rows.length?rows.map((row,index)=>`<tr><td>${index+1}</td><td><strong>${escapeHtml(row.fio)}</strong></td><td>${escapeHtml(row.group)}</td><td>${formatLeaderboardTime(row.time_ms)}</td><td>${new Date(Number(row.timestamp)||Date.now()).toLocaleDateString(locale==='zh'?'zh-CN':locale==='en'?'en-GB':'ru-RU')}</td></tr>`).join(''):`<tr><td colspan="5" class="muted">—</td></tr>`;
+function renderLeaderboard(){
+  if(disposed||leaderboardClosed||!root.isConnected)return;
+  const active=document.activeElement;
+  const activePage=active?.matches('[data-page-step]')&&root.contains(active)?{difficulty:active.closest('[data-leaderboard-pagination]')?.dataset.leaderboardPagination,step:active.dataset.pageStep}:null;
+  const activeGroup=active?.matches('#puzzleGroupFilterOptions input')&&root.contains(active)?active.value:null;
+  leaderboardRows=bestPuzzleResults(leaderboardRemote,leaderboardLocal);
+  const filter=root.querySelector('#puzzleGroupFilterOptions');
+  const groups=puzzleGroups(leaderboardRows,[...groupOptions(),...selectedGroups]);
+  if(filter&&filter.dataset.groups!==JSON.stringify(groups)){
+    filter.innerHTML=groups.map(group=>`<label class="puzzle-group-option"><input type="checkbox" value="${escapeHtml(group)}"${selectedGroups.has(group)?' checked':''}><span>${escapeHtml(group)}</span></label>`).join('');
+    filter.dataset.groups=JSON.stringify(groups);
+  }
+  const filtered=filteredLeaderboardRows();
+  for(const difficulty of PUZZLE_LEVELS){
+    const table=root.querySelector(`#leader_${difficulty}`),body=table?.querySelector('tbody');if(!body)continue;
+    const page=puzzleResultPage(filtered,difficulty,leaderboardPages.get(difficulty));leaderboardPages.set(difficulty,page.page);
+    body.innerHTML=page.rows.length?page.rows.map((row,index)=>`<tr data-attempt-id="${escapeHtml(row.id)}"><td>${page.offset+index+1}</td><td><strong>${escapeHtml(row.fio)}</strong></td><td>${escapeHtml(row.group)}</td><td>${formatPuzzleTime(row.elapsed_ms)}</td><td>${new Date(row.timestamp).toLocaleDateString(locale==='zh'?'zh-CN':locale==='en'?'en-GB':'ru-RU')}</td></tr>`).join(''):`<tr><td colspan="5" class="muted">${escapeHtml(groupFilterCopy(leaderboardLoaded?'leaderboardEmpty':leaderboardStale?'leaderboardWaiting':'leaderboardLoading'))}</td></tr>`;
+    let nav=root.querySelector(`[data-leaderboard-pagination="${difficulty}"]`);
+    if(!nav){nav=document.createElement('nav');nav.className='puzzle-leaderboard-pagination';nav.dataset.leaderboardPagination=difficulty;table.closest('.table-scroll').after(nav)}
+    nav.hidden=page.pages<=1;
+    nav.setAttribute('aria-label',groupFilterCopy(difficulty));
+    nav.innerHTML=`<button class="btn btn-neutral btn-small" type="button" data-page-step="-1"${page.page===0?' disabled':''}>${escapeHtml(groupFilterCopy('previousPage'))}</button><span>${escapeHtml(groupFilterCopy('pageOf').replace('{page}',String(page.page+1)).replace('{pages}',String(page.pages)))}</span><button class="btn btn-neutral btn-small" type="button" data-page-step="1"${page.page===page.pages-1?' disabled':''}>${escapeHtml(groupFilterCopy('nextPage'))}</button>`;
+  }
+  const status=root.querySelector('#puzzleLeaderboardStatus');
+  if(status){const pending=leaderboardRows.some(row=>row.pending);status.textContent=leaderboardError||groupFilterCopy(pending?'leaderboardPending':leaderboardStale?(leaderboardRows.length?'leaderboardCached':'leaderboardWaiting'):!leaderboardLoaded?'leaderboardLoading':leaderboardRows.length?'':'leaderboardEmpty');if(leaderboardLoaded&&!leaderboardStale&&!pending&&!leaderboardError&&leaderboardRows.length)status.textContent=''}
+  const exportButton=root.querySelector('#puzzleLeaderboardExport');if(exportButton&&!exportButton.dataset.exporting)exportButton.disabled=!filtered.length;
+  // Refresh only restores the control that was actually focused and replaced.
+  // It never moves initial focus or focuses a hidden/collapsed control.
+  if(active&&!active.isConnected&&document.visibilityState!=='hidden'){
+    const replacement=activePage?[...root.querySelectorAll('[data-leaderboard-pagination] [data-page-step]')].find(button=>button.closest('[data-leaderboard-pagination]').dataset.leaderboardPagination===activePage.difficulty&&button.dataset.pageStep===activePage.step):activeGroup!==null?[...root.querySelectorAll('#puzzleGroupFilterOptions input')].find(input=>input.value===activeGroup):null;
+    if(replacement&&!replacement.disabled&&replacement.getClientRects().length)replacement.focus({preventScroll:true});
   }
 }
-function exportLeaderboard(){
-  const header=['fio','group','difficulty','time_ms','timestamp'];const csv=[header.join(';'),...filteredLeaderboardRows().map(row=>header.map(key=>`"${String(row[key]??'').replaceAll('"','""')}"`).join(';'))].join('\r\n');
-  const link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));link.download='rudn-map-leaderboard.csv';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+async function refreshLeaderboard({cloud=true}={}){
+  if(disposed||leaderboardClosed||!root.isConnected)return;
+  const owner=currentOwner(),localRevision=++leaderboardLocalRevision;
+  const attempts=owner===progressOwner&&owner.startsWith('student:')?await durableStore.listAttempts({owner}).catch(()=>[]):[];
+  if(disposed||leaderboardClosed||!root.isConnected||localRevision!==leaderboardLocalRevision)return;
+  leaderboardLocal=currentOwner()===owner?attempts.filter(attempt=>attempt.type==='map-puzzle'&&attempt.leaderboard).map(attempt=>({...attempt.leaderboard,id:attempt.id,pending:true})):[];
+  renderLeaderboard();
+  if(!cloud)return;
+  if(leaderboardRefresh){leaderboardRetry=true;return leaderboardRefresh}
+  const controller=new AbortController();leaderboardController=controller;
+  leaderboardRefresh=(async()=>{
+    if(cloud&&navigator.onLine!==false){
+      try{
+        const rows=await backend.getPuzzleLeaderboard({signal:controller.signal});
+        if(disposed||!root.isConnected||controller.signal.aborted)return;
+        leaderboardRemote=rows;leaderboardLoaded=true;leaderboardStale=false;
+      }catch{if(controller.signal.aborted)return;leaderboardStale=true}
+    }else if(cloud)leaderboardStale=true;
+    renderLeaderboard();
+  })().finally(()=>{leaderboardRefresh=null;if(leaderboardController===controller)leaderboardController=null;if(leaderboardRetry){leaderboardRetry=false;scheduleLeaderboard()}});
+  return leaderboardRefresh;
+}
+function scheduleLeaderboard(){
+  clearTimeout(leaderboardScheduled);
+  if(leaderboardClosed)return;
+  leaderboardScheduled=setTimeout(()=>{if(!disposed&&document.visibilityState!=='hidden')void refreshLeaderboard()},100);
+}
+function setupLeaderboard(){
+  setupGroupFilter();
+  const exportButton=root.querySelector('#puzzleLeaderboardExport');
+  exportButton?.addEventListener('click',exportLeaderboard);
+  const pages=event=>{const button=event.target.closest('[data-page-step]');if(!button||button.disabled)return;const nav=button.closest('[data-leaderboard-pagination]');if(!nav)return;const difficulty=nav.dataset.leaderboardPagination;leaderboardPages.set(difficulty,(leaderboardPages.get(difficulty)||0)+Number(button.dataset.pageStep));renderLeaderboard();root.querySelector(`[data-leaderboard-pagination="${difficulty}"] [data-page-step="${button.dataset.pageStep}"]`)?.focus()};
+  root.addEventListener('click',pages);
+  for(const event of ['rudn:gradechange','rudn:identitychange','online','focus'])window.addEventListener(event,scheduleLeaderboard);
+  document.addEventListener('visibilitychange',scheduleLeaderboard);
+  const poll=setInterval(()=>{if(document.visibilityState!=='hidden')void refreshLeaderboard()},30000);
+  lifecycleCleanup.push(()=>{
+    leaderboardClosed=true;
+    clearInterval(poll);clearTimeout(leaderboardScheduled);leaderboardController?.abort();
+    root.removeEventListener('click',pages);exportButton?.removeEventListener('click',exportLeaderboard);
+    for(const event of ['rudn:gradechange','rudn:identitychange','online','focus'])window.removeEventListener(event,scheduleLeaderboard);
+    document.removeEventListener('visibilitychange',scheduleLeaderboard);
+  });
+  void refreshLeaderboard();
+}
+async function exportLeaderboard(){
+  const button=root.querySelector('#puzzleLeaderboardExport');if(!button||button.dataset.exporting)return;
+  const rows=filteredLeaderboardRows();if(!rows.length)return;
+  button.dataset.exporting='true';button.disabled=true;leaderboardError='';
+  try{
+    const XLSX=await loadPuzzleXlsx();if(disposed||!root.isConnected)return;
+    const workbook=puzzleLeaderboardWorkbook(XLSX,rows,staticTranslations[locale]||staticTranslations.ru);
+    const bytes=XLSX.write(workbook,{bookType:'xlsx',type:'array',compression:true});
+    const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));link.download='rudn-map-leaderboard.xlsx';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+  }catch{leaderboardError=groupFilterCopy('exportFailed')}
+  finally{delete button.dataset.exporting;renderLeaderboard()}
 }
 
 const puzzleLogo=document.getElementById('puzzleRudnLogo');if(puzzleLogo){puzzleLogo.src=locale==='ru'?'../assets/img/rudn-logo.png':'../assets/img/rudn-logo-en.png';puzzleLogo.alt=locale==='ru'?'РУДН':'RUDN University'}
@@ -300,9 +399,7 @@ if(context==='seminar'&&!backend.isAdmin()&&!accessGate.open){
 }else{
   root.hidden=false;root.removeAttribute('data-access-pending');
   if(profile){root.dataset.userName=profile.fullName;root.dataset.group=profile.group;document.getElementById('puzzleProfileChip').hidden=false;document.getElementById('puzzleProfileAvatar').textContent=profile.fullName.trim()[0]||'?';document.getElementById('puzzleProfileName').textContent=profile.fullName;document.getElementById('puzzleProfileMeta').textContent=`${profile.group} · № ${profile.ticket}`;root.dataset.currentGrade=String(backend.localGrades(profile.studentKey)['seminar-2']?.points||0);void backend.getGrades().then(grades=>{if(!disposed&&currentOwner()===progressOwner)root.dataset.currentGrade=String(Math.max(Number(root.dataset.currentGrade)||0,Number(grades['seminar-2']?.points)||0))}).catch(()=>{})}else if(!backend.isAdmin()){const warning=document.getElementById('puzzleProfileWarning');warning.hidden=false;if(context==='seminar'){document.getElementById('puzzleProfileWarningText').dataset.staticI18n='profileRequired';root.querySelectorAll('button,select').forEach(el=>{if(!el.closest('dialog')&&!el.closest('.puzzle-leaderboard'))el.disabled=true})}}
-  setupGroupFilter();
-  document.getElementById('puzzleLeaderboardExport')?.addEventListener('click',exportLeaderboard);
-  void renderLeaderboard();
+  setupLeaderboard();
 }
 await loadLegacy();
 if(!root.isConnected)return abandonMount();

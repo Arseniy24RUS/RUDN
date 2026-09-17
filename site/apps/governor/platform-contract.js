@@ -59,12 +59,13 @@ function validOwner(owner) {
 }
 
 /** Capture the owner once; switching accounts requires a new adapter and game. */
-export function scopedStorage(storage, owner) {
-  if (!validOwner(owner)) fail('governor/owner-required');
+export function scopedStorage(storage, owner, {context='course'}={}) {
+  const free=context==='free';
+  if (!validOwner(owner)&&!(free&&/^guest:\S+$/.test(owner))) fail('governor/owner-required');
   if (!storage || !['getItem', 'setItem', 'removeItem'].every(method => typeof storage[method] === 'function')) {
     fail('governor/storage-required');
   }
-  const namespace = `${PREFIX}${encodeURIComponent(owner)}:`;
+  const namespace = `${free?'rudn.governor.free.v1:':PREFIX}${encodeURIComponent(owner)}:`;
   const keyFor = key => namespace + String(key);
   return Object.freeze({
     getItem: key => storage.getItem(keyFor(key)),
@@ -244,8 +245,10 @@ function timestamp(value) {
 }
 
 /** Caller persists and reuses `now` and the resulting record for submission retries. */
-export function makeSubmission({ state, G, owner, studentKey, run, reflection, now }) {
-  if (typeof studentKey !== 'string' || !studentKey || owner !== `student:${studentKey}` || !validOwner(owner)) {
+export function makeSubmission({ state, G, owner, studentKey, run, reflection, now, context='course' }) {
+  const free=context==='free';
+  if ((!free&&(typeof studentKey !== 'string'||!studentKey||owner!==`student:${studentKey}`||!validOwner(owner))) ||
+      (free&&(!/^(student|teacher|guest):\S+$/.test(owner)||owner.startsWith('student:')&&owner!==`student:${studentKey}`))) {
     fail('governor/student-owner-mismatch');
   }
   if (typeof run?.submissionId !== 'string' || !run.submissionId.trim()) fail('governor/run-required');
@@ -255,13 +258,13 @@ export function makeSubmission({ state, G, owner, studentKey, run, reflection, n
   const governor = compactReport(state, G);
   return {
     id: run.submissionId,
-    studentKey,
+    ...(owner.startsWith('student:')?{studentKey}:{}),
     source: 'native-v1',
     type: 'governor-simulator',
-    activitySlug: 'seminar-7',
+    activitySlug: free?'governor-freeplay':'seminar-7',
     schemaVersion: 1,
-    recordGrade: true,
-    reviewStatus: 'auto-scored',
+    recordGrade: !free,
+    reviewStatus: free?'practice':'auto-scored',
     points: governor.assessment.points,
     maxPoints: 5,
     governor,
