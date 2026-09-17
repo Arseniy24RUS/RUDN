@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.3.6';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.6';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.6';
+import {CONFIG} from './config.js?v=1.3.7';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.7';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.7';
 import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
-import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.6';
+import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.7';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -636,36 +636,50 @@ class Backend{
     });
     return this.puzzleResultsClient;
   }
-  puzzleLeaderboardRecord({difficulty,timeMs,placed,total,timestamp=Date.now()},profile=this.getProfile()){
+  async puzzleLeaderboardRecord({difficulty,timeMs,placed,total,timestamp=Date.now()},profile=this.getProfile()){
     if(!profile)return null;
     const level=['easy','medium','hard'].includes(difficulty)?difficulty:'medium';
-    const measuredTime=Math.max(0,Math.min(3599000,Math.round(Number(timeMs)||0)));
-    if(measuredTime<=1000)return null;
+    const elapsed=Math.round(Number(timeMs));
+    if(!Number.isSafeInteger(elapsed)||elapsed<=1000)return null;
     const record={
       fio:String(profile.fullName||'').slice(0,100),
       group:String(profile.group||'').slice(0,50),
       difficulty:level,
-      time_ms:measuredTime,
+      // Keep the original field within deployed append-only rule limits. New
+      // readers use the full duration, including games longer than one hour.
+      time_ms:Math.min(3599000,elapsed),
+      elapsed_ms:elapsed,
       placed:Number(placed),total:Number(total),
       timestamp:Number(timestamp)||Date.now(),
       user_agent:String(navigator.userAgent||'browser').slice(0,200)
     };
     if(record.placed!==89||record.total!==89)return null;
+    if(profile.studentKey)record.participant_id=await sha256(`rudn-puzzle-participant-v1:${profile.studentKey}`);
     return record;
   }
-  async getPuzzleLeaderboard(){
+  puzzleLeaderboardCacheKey(){
+    return `rudn.puzzle-leaderboard.v2:${CONFIG.emulators?'emulator':CONFIG.firebase.projectId}`;
+  }
+  getCachedPuzzleLeaderboard(){
+    const cached=readLocal(this.puzzleLeaderboardCacheKey(),null);
+    return cached&&Array.isArray(cached.rows)?cached:null;
+  }
+  async getPuzzleLeaderboard({signal}={}){
+    const base=CONFIG.emulators?`http://${CONFIG.emulators.host}:${CONFIG.emulators.databasePort}`:CONFIG.firebase.databaseURL;
+    const url=new URL(`${String(base).replace(/\/$/,'')}/results.json`);
+    if(CONFIG.emulators)url.searchParams.set('ns','demo-rudn-default-rtdb');
+    const controller=new AbortController(),abort=()=>controller.abort();
+    if(signal?.aborted)abort();else signal?.addEventListener('abort',abort,{once:true});
+    const timer=setTimeout(abort,5000);
     try{
-      if(this.mode==='cloud'&&this.db&&this.database){
-        const snapshot=await bounded(this.db.get(this.db.ref(this.database,'results')),4000);
-        return Object.entries(snapshot.val()||{}).map(([id,value])=>({id,...value}));
-      }
-      const url=`${String(CONFIG.firebase.databaseURL).replace(/\/$/,'')}/results.json`;
-      const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),5000);
-      let response;try{response=await fetch(url,{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timer)}
+      const response=await fetch(url.href,{cache:'no-store',signal:controller.signal});
       if(!response.ok)throw new Error(`HTTP ${response.status}`);
       const value=await response.json();
-      return Object.entries(value||{}).map(([id,row])=>({id,...row}));
-    }catch{return []}
+      if(value!==null&&(typeof value!=='object'||Array.isArray(value)))throw new Error('Invalid leaderboard response');
+      const rows=Object.entries(value||{}).map(([id,row])=>({...row,id}));
+      try{writeLocal(this.puzzleLeaderboardCacheKey(),{rows,cachedAt:Date.now()})}catch{}
+      return rows;
+    }finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
   }
 
   automaticRoomKey(group,date=new Date()){return automaticRoomKey(group,date)}

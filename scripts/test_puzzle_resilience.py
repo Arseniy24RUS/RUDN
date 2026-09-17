@@ -18,14 +18,14 @@ import time
 import traceback
 
 from playwright.async_api import async_playwright
-from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, trusted_drop, write_json
+from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, select_map, trusted_drop, write_json
 
 
 FETCH_FAULT = r"""(() => {
  const original=window.fetch.bind(window);
  window.__qaFault={pattern:'',kind:'fail',enabled:false,calls:0,aborts:0};
  window.fetch=(input,options={})=>{
-  const url=typeof input==='string'?input:input.url;
+  const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
   const f=window.__qaFault;
   if(!f.enabled||!String(url).includes(f.pattern))return original(input,options);
   f.calls++;
@@ -53,6 +53,8 @@ async def saved(page, owner=None):
 async def open_game(page, server):
     await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
     await ready(page)
+    await select_map(page, {'mode':'russia-subjects','selection':None})
+    await ready(page, {'mode':'russia-subjects','selection':None})
     await page.wait_for_function("document.querySelector('#geoPuzzleApp').puzzleProgress.canWrite()")
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
 
@@ -63,7 +65,7 @@ async def quiet(page):
 
 
 async def first_load(page, context, browser_name, server, record, hanging=False):
-    await context.add_init_script(FETCH_FAULT + "window.__qaFault={pattern:'russia_subjects_89.topojson',kind:'%s',enabled:true,calls:0,aborts:0};" % ('hang' if hanging else 'fail'))
+    await context.add_init_script(FETCH_FAULT + "window.__qaFault={pattern:'world_countries_50m.geojson',kind:'%s',enabled:true,calls:0,aborts:0};" % ('hang' if hanging else 'fail'))
     if hanging:
         await page.clock.install()
     await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
@@ -81,7 +83,7 @@ async def first_load(page, context, browser_name, server, record, hanging=False)
     assert not await page.locator('.puzzle-save-notice').count(), 'Connection failure was misreported as lost local storage'
     await page.evaluate("()=>{window.__qaFault.enabled=false;window.dispatchEvent(new Event('online'));}")
     recovered = await ready(page)
-    assert recovered['mode'] == 'russia-subjects' and recovered['placed'] == 0
+    assert recovered['mode'] == 'world-countries' and recovered['placed'] == 0
     assert recovered['elapsedMs'] == 0, 'Autoload/recovery started the timer'
     assert await focus.evaluate('(el)=>el===document.activeElement'), 'Recovery stole keyboard focus'
     await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
@@ -110,7 +112,7 @@ async def replacement_failure(page, context, browser_name, server, record):
         await dialog.accept()
 
     page.on('dialog', accept)
-    await page.locator('[data-puzzle-mode="country-regions"]').click()
+    await select_map(page, {'mode':'country-regions','selection':'USA'})
     await page.wait_for_function('window.__qaFault.calls>0&&!window.__puzzleRead().loading')
     after = await state(page)
     assert after['attemptId'] == before['attemptId'] and after['placed'] == 1 and after['mode'] == 'russia-subjects'

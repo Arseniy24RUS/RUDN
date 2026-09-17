@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""Targeted render/rotation regression on isolated loopback data, never production.
+
+Browser plugin is not available as a skill in the automated runner. Playwright
+provides repeatable engine, viewport and input coverage; physical-phone checks
+remain separate. The server adds read-only observations, never game setters.
+"""
+import argparse
+import asyncio
+import json
+from pathlib import Path
+import time
+import traceback
+
+from playwright.async_api import async_playwright
+import test_puzzle_catalog as catalog
+
+RENDER_HOOK = r"""
+  window.__renderRead=()=>({snapshot:snapshotState(),map:{...state.mapRect},tray:trayRect(),side:state.sideTray,
+    renderer:state.renderGeometry?.diagnostics(),baseViewK:state.baseViewK,
+    features:state.features.map((feature,index)=>({id:feature.properties._puzzleId,name:feature.properties._puzzleName,
+      russian:feature.properties.name_ru||feature.properties.name,point:worldToScreen(...state.anchors[index])}))});
+"""
+
+
+async def settled(page):
+    await page.wait_for_function("""()=>{const c=document.querySelector('#puzzleCanvas'),s=window.__puzzleRead?.();
+      if(!c||!s||s.loading)return false;const r=c.getBoundingClientRect();
+      return Math.abs(r.width-s.canvas.width)<.5&&Math.abs(r.height-s.canvas.height)<.5;}""", polling=50, timeout=30000)
+    return await page.evaluate('window.__renderRead()')
+
+
+async def layout_evidence(page, fullscreen):
+    scene = await settled(page)
+    metrics = await page.evaluate("""()=>{const box=e=>{const r=e.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}};
+      return {width:innerWidth,height:innerHeight,scrollWidth:document.documentElement.scrollWidth,
+      stage:box(document.querySelector('.puzzle-stage-card')),canvas:box(document.querySelector('#puzzleCanvas')),
+      footer:box(document.querySelector('.puzzle-stage-footer')),buttons:[...document.querySelectorAll('.puzzle-stage-footer button')].map(box)};}""")
+    assert metrics['scrollWidth'] <= metrics['width'] + 1, metrics
+    if fullscreen:
+        assert metrics['stage']['top'] >= -1 and metrics['stage']['bottom'] <= metrics['height'] + 1, metrics
+        assert metrics['canvas']['bottom'] <= metrics['footer']['top'] + 1, metrics
+        assert metrics['footer']['bottom'] <= metrics['height'] + 1, metrics
+    for button in metrics['buttons']:
+        assert button['width'] >= 43.5 and button['height'] >= 43.5, metrics
+        assert button['left'] >= -1 and button['right'] <= metrics['width'] + 1, metrics
+    return {'metrics': metrics, 'map': scene['map'], 'tray': scene['tray'], 'side': scene['side']}
+
+
+async def run_case(browser, engine, locale, server, fixtures, output):
+    record = {'browser': engine, 'locale': locale, 'status': 'running', 'input': 'trusted mouse and keyboard; synthetic pointer only while seeking the small reference piece'}
+    context = await catalog.context_for(browser, server, fixtures, (390, 844), locale, record)
+    await context.add_init_script("Object.defineProperty(HTMLElement.prototype,'requestFullscreen',{configurable:true,value(){return Promise.reject(new Error('Isolated fallback capability test'))}})")
+    page = await context.new_page()
+    page._qa_base, page._qa_locale = server.base, locale
+    catalog.observe(page, record)
+    try:
+        await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=' + locale, wait_until='domcontentloaded')
+        await page.bring_to_front()
+        state = await catalog.ready(page)
+        assert state['mode'] == 'world-countries'
+        assert not (await page.evaluate('window.__renderRead().snapshot.timerStarted'))
+        assert await page.locator('[data-puzzle-mode]').count() == 3
+        await page.evaluate("""()=>{const original=window.RudnPuzzleGeometry;window.__geometryTimings=[];
+          window.RudnPuzzleGeometry={...original,createTopologyRenderer(...args){const start=performance.now();
+          const result=original.createTopologyRenderer(...args);window.__geometryTimings.push(performance.now()-start);return result;}}}""")
+        await page.locator('[data-puzzle-mode="country-regions"]').click()
+        state = await catalog.ready(page, {'mode': 'russia-subjects', 'selection': None})
+        assert state['total'] == 89
+        await page.wait_for_function("document.querySelector('#puzzleCountry').options.length>1")
+        countries = await page.locator('#puzzleCountry option').evaluate_all('options=>options.map(o=>o.value)')
+        assert countries[0] == 'RUS' and countries.count('RUS') == 1
+        assert await page.locator('#puzzleCountry').input_value() == 'RUS'
+        await page.locator('[data-puzzle-difficulty="hard"]').click()
+        await page.wait_for_function("window.__puzzleRead().difficulty==='hard'&&!window.__puzzleRead().loading")
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await settled(page)
+        labels = await page.locator('#puzzleReturn .puzzle-action-label,#puzzleCenter .puzzle-action-label').evaluate_all('els=>els.map(e=>getComputedStyle(e).display)')
+        assert labels == ['none', 'none'], labels
+        assert await page.locator('#puzzleReturn').get_attribute('aria-label')
+        record['normalLayout'] = await page.evaluate('window.__renderRead()')
+        await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-{locale}-portrait.png'))
+        record['layouts'] = []
+        for width, height in [(320, 568), (360, 800), (412, 915), (390, 844)]:
+            await page.set_viewport_size({'width': width, 'height': height})
+            record['layouts'].append(await layout_evidence(page, False))
+
+        # Exercise every preceding piece normally; stop on Ingushetia without
+        # completing the attempt. Its full silhouette used to collapse to 1–3 points.
+        state = await page.evaluate('window.__puzzleRead()')
+        names = (await page.evaluate('window.__renderRead()'))['features']
+        tiny = next(i for i, item in enumerate(names) if 'Ингуш' in (item['russian'] or ''))
+        count = state['order'].index(tiny)
+        if count:
+            await catalog.place_pieces(page, count)
+        assert (await page.evaluate('window.__puzzleRead().current')) == tiny
+        assert not (await page.evaluate('window.__puzzleRead().finished'))
+        await page.locator('#puzzleFullscreen').click()
+        await page.set_viewport_size({'width': 844, 'height': 390})
+        current = await settled(page)
+        assert current['side'] and current['map']['height'] == current['tray']['height']
+        assert current['map']['x'] + current['map']['width'] + 12 <= current['tray']['x'] + 1e-6
+        labels = await page.locator('#puzzleReturn .puzzle-action-label,#puzzleCenter .puzzle-action-label').evaluate_all('els=>els.map(e=>getComputedStyle(e).display)')
+        assert all(value != 'none' for value in labels), labels
+        await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-{locale}-landscape-tray.png'))
+        for width, height in [(568, 320), (800, 360), (915, 412), (844, 390)]:
+            await page.set_viewport_size({'width': width, 'height': height})
+            record['layouts'].append(await layout_evidence(page, True))
+        current = await settled(page)
+
+        # Leftward exit from the side tray, using trusted pointer input.
+        box = await page.locator('#puzzleCanvas').bounding_box()
+        source = (await page.evaluate('window.__puzzleRead()'))['source']
+        destination = {'x': current['map']['x'] + current['map']['width'] * .6, 'y': current['map']['y'] + current['map']['height'] * .3}
+        await page.mouse.move(box['x'] + source['x'], box['y'] + source['y'])
+        await page.mouse.down()
+        await page.mouse.move(box['x'] + destination['x'], box['y'] + destination['y'], steps=5)
+        await page.mouse.up()
+        moved = await page.evaluate('window.__puzzleRead()')
+        assert not moved['inTray'] and moved['current'] == tiny, moved
+
+        # The scene's geographic centre, relative zoom and loose-piece point
+        # survive both responsive projection changes and page restoration.
+        for _ in range(9):
+            await page.locator('#puzzleZoomIn').click()
+        before = (await page.evaluate('window.__renderRead()'))['snapshot']
+        await page.set_viewport_size({'width': 390, 'height': 844})
+        after = (await settled(page))['snapshot']
+        assert abs(before['view']['zoom'] - after['view']['zoom']) < 1e-6
+        assert max(abs(a-b) for a,b in zip(before['view']['centre'], after['view']['centre'])) < 1e-6
+        assert max(abs(a-b) for a,b in zip(before['pieces'][tiny]['point'], after['pieces'][tiny]['point'])) < 1e-6
+        await page.set_viewport_size({'width': 844, 'height': 390})
+        await settled(page)
+
+        # Return the active piece and centre the Caucasus through trusted panning;
+        # no private setters or synthetic completion state are involved.
+        await page.locator('#puzzleReturn').click()
+        current = await page.evaluate('window.__renderRead()')
+        target = current['features'][tiny]['point']
+        center = {'x': current['map']['x'] + current['map']['width']/2, 'y': current['map']['y'] + current['map']['height']/2}
+        box = await page.locator('#puzzleCanvas').bounding_box()
+        await page.mouse.move(box['x'] + center['x'], box['y'] + center['y'])
+        await page.mouse.down()
+        await page.mouse.move(box['x'] + center['x'] + center['x'] - target['x'], box['y'] + center['y'] + center['y'] - target['y'], steps=6)
+        await page.mouse.up()
+        await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-{locale}-caucasus-zoom.png'))
+        record['zoomState'] = await page.evaluate('window.__renderRead()')
+        record['geometrySetupMs'] = await page.evaluate('window.__geometryTimings||[]')
+        assert len(record['zoomState']['renderer']['levels']) <= 3
+        assert record['zoomState']['renderer']['fullPaths'] <= 3
+        await catalog.flush(page)
+        saved = (await page.evaluate('window.__renderRead()'))['snapshot']
+        await page.keyboard.press('Escape')
+        await page.reload(wait_until='domcontentloaded')
+        restored = await catalog.ready(page)
+        restored_snapshot = (await settled(page))['snapshot']
+        assert restored['attemptId'] == saved['attemptId']
+        assert restored['placed'] == saved['placed'] and restored['hints'] == saved['hints']
+        assert abs(restored_snapshot['view']['zoom'] - saved['view']['zoom']) < 1e-6
+        assert max(abs(a-b) for a,b in zip(restored_snapshot['view']['centre'], saved['view']['centre'])) < 1e-6
+        assert not record.get('pageErrors'), record.get('pageErrors')
+        assert not record.get('unexpectedWrites'), record.get('unexpectedWrites')
+        record['status'] = 'passed'
+    except Exception as error:
+        record['status'], record['error'] = 'failed', repr(error)
+        record['traceback'] = traceback.format_exc()
+        try:
+            record['lastState'] = await page.evaluate('window.__renderRead?.()')
+            await page.screenshot(path=str(output / f'{engine}-{locale}-failure.png'), timeout=10000)
+        except Exception:
+            pass
+    finally:
+        await context.close()
+    return record
+
+
+async def run_dpr_case(browser, engine, dpr, server, output):
+    record = {'browser': engine, 'dpr': dpr, 'status': 'running', 'input': 'synthetic multi-pointer pinch through real canvas handlers; no state setters'}
+    context = await browser.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=dpr, locale='ru-RU', has_touch=True, reduced_motion='reduce')
+    await context.add_init_script(catalog.initializer('ru'))
+    await context.add_init_script("""(()=>{window.__strokeMetrics=[];const original=CanvasRenderingContext2D.prototype.stroke;
+      CanvasRenderingContext2D.prototype.stroke=function(...args){const m=this.getTransform();
+        if(['#91b2c6','#004f80','#8e2028','#b97900'].includes(this.strokeStyle))window.__strokeMetrics.push({color:this.strokeStyle,width:this.lineWidth*Math.hypot(m.a,m.b)/Math.min(devicePixelRatio,2)});
+        return original.apply(this,args);};})()""")
+    page = await context.new_page(); page._qa_base, page._qa_locale = server.base, 'ru'
+    catalog.observe(page, record)
+    try:
+        await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
+        await page.bring_to_front(); await catalog.ready(page)
+        await page.locator('[data-puzzle-mode="country-regions"]').click()
+        await catalog.ready(page, {'mode': 'russia-subjects', 'selection': None})
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await settled(page)
+        await page.locator('#puzzleCanvas').focus()
+        await page.keyboard.press('h')
+        records = []
+        for zoom in [1, 2, 4, 8, 16]:
+            if zoom > 1:
+                await page.evaluate("""()=>{window.__strokeMetrics=[];const c=document.querySelector('#puzzleCanvas'),r=c.getBoundingClientRect(),m=window.__renderRead().map;
+                  const x=m.x+m.width/2,y=m.y+m.height/2;
+                  const emit=(type,id,dx,buttons)=>c.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:id,pointerType:'touch',isPrimary:id===71,button:0,buttons,clientX:r.left+x+dx,clientY:r.top+y}));
+                  emit('pointerdown',71,-20,1);emit('pointerdown',72,20,1);emit('pointermove',72,60,1);emit('pointerup',72,60,0);emit('pointerup',71,-20,0);}""")
+                await page.evaluate('new Promise(requestAnimationFrame)')
+                await page.keyboard.press('h')
+            state = await page.evaluate("""()=>{const c=document.querySelector('#puzzleCanvas');return {zoom:window.__renderRead().snapshot.view.zoom,metrics:window.__strokeMetrics,css:c.getBoundingClientRect().toJSON(),width:c.width,height:c.height,dpr:devicePixelRatio}}""")
+            assert abs(state['zoom'] - zoom) < 1e-6, state['zoom']
+            assert state['dpr'] == dpr
+            assert state['width'] == int(state['css']['width'] * min(dpr, 2))
+            assert state['height'] == int(state['css']['height'] * min(dpr, 2))
+            colors = {metric['color'] for metric in state['metrics']}
+            assert {'#91b2c6', '#8e2028', '#b97900'} <= colors, colors
+            for metric in state['metrics']:
+                expected = {'#91b2c6': 1, '#004f80': 1, '#8e2028': 1.2, '#b97900': 2.2}[metric['color']]
+                assert abs(metric['width'] - expected) < 1e-5, metric
+            records.append({'zoom': zoom, 'canvas': [state['width'], state['height']], 'colors': sorted(colors), 'samples': len(state['metrics'])})
+        await page.locator('.puzzle-stage-card').screenshot(path=str(output / f'{engine}-dpr{dpr}-zoom16.png'))
+        record['zooms'], record['status'] = records, 'passed'
+        assert not record.get('pageErrors'), record.get('pageErrors')
+    except Exception as error:
+        record['status'], record['error'], record['traceback'] = 'failed', repr(error), traceback.format_exc()
+    finally:
+        await context.close()
+    return record
+
+
+async def main(args):
+    output, fixtures = Path(args.output), Path(args.fixtures)
+    output.mkdir(parents=True, exist_ok=True)
+    catalog.READ_ONLY_HOOK += RENDER_HOOK
+    records = []
+    with catalog.PuzzleServer(fixtures) as server:
+        async with async_playwright() as playwright:
+            for engine in args.browsers:
+                # Firefox otherwise inherits the host proxy, which can reject
+                # the isolated loopback origin before any app code is loaded.
+                options = {'firefox_user_prefs': {'network.proxy.type': 0}} if engine == 'firefox' else {}
+                browser = await getattr(playwright, engine).launch(**options)
+                try:
+                    for locale in args.locales:
+                        started = time.monotonic()
+                        record = await run_case(browser, engine, locale, server, fixtures, output)
+                        record['elapsedSeconds'] = time.monotonic() - started
+                        records.append(record)
+                        (output / 'render-browser.json').write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf-8')
+                        print(json.dumps({key: record[key] for key in ['browser', 'locale', 'status', 'elapsedSeconds']}, ensure_ascii=False), flush=True)
+                        if record['status'] != 'passed': print(record.get('error'), flush=True)
+                    if args.dpr_checks:
+                        for dpr in [1, 2, 3]:
+                            record = await run_dpr_case(browser, engine, dpr, server, output)
+                            records.append(record)
+                            (output / 'render-browser.json').write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding='utf-8')
+                            print(json.dumps({'browser': engine, 'dpr': dpr, 'status': record['status'], 'error': record.get('error')}, ensure_ascii=False), flush=True)
+                finally:
+                    await browser.close()
+    if len(records) != len(args.browsers) * (len(args.locales) + (3 if args.dpr_checks else 0)) or any(record['status'] != 'passed' for record in records):
+        raise SystemExit(1)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--fixtures', required=True)
+    parser.add_argument('--output', required=True)
+    parser.add_argument('--browsers', nargs='+', default=['chromium', 'firefox', 'webkit'])
+    parser.add_argument('--locales', nargs='+', default=['ru', 'en', 'zh'])
+    parser.add_argument('--dpr-checks', action='store_true')
+    asyncio.run(main(parser.parse_args()))

@@ -267,3 +267,16 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
   body:has(#careerMount),body:has(#careerMount) .main{margin:0;padding:0;background:#fff}
   body:has(#careerMount) .page,body:has(#careerMount) #careerMount{max-width:none;width:100%;margin:0;border:0;padding:0}
 }
+
+/* Course actions and the shared free-play catalogue. */
+.activity-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.activity-mini footer{flex-wrap:wrap}
+.lecture-test-status{line-height:1.4}
+.games-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.game-card{display:flex;flex-direction:column;align-items:flex-start;gap:16px;margin:0}
+.game-card h2{margin:0 0 10px;font-size:22px}
+.game-card p{margin:0;line-height:1.65}
+.game-card .btn{margin-top:auto}
+.game-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:16px;background:#e7f5fc;color:var(--rudn-blue);font-size:29px}
+.games-guest-note{margin:20px 0;max-width:900px;line-height:1.6}
+@media(max-width:680px){.games-grid{grid-template-columns:1fr}.game-card h2{font-size:20px}}

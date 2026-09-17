@@ -265,7 +265,7 @@ def verify_auditor():
         raise AssertionError(f'Auditor accepted corrupt fixture {index}')
 
 
-def build_catalog():
+def build_catalog(*, include_legacy=False):
     municipal = read_json(DATA / 'municipal/catalog.json')
     local_adm = {entry['iso']: entry for entry in read_json(DATA / 'adm1/manifest.json')}
     catalog = read_json(DATA / 'geoboundaries_adm1_catalog.json')
@@ -285,7 +285,11 @@ def build_catalog():
         if iso in seen:
             raise ValueError(f'Duplicate ADM1 country {iso}: remove invalid catalog row')
         seen.add(iso)
-        entry = {'id': f'adm1-{iso}', 'mode': 'country-regions', 'selection': iso, 'catalogMetadata': item}
+        # Russia now selects the author-provided 89-subject map above. The old
+        # external RUS entry remains shipped only to restore existing attempts.
+        if iso == 'RUS' and not include_legacy:
+            continue
+        entry = {'legacyOnly': iso == 'RUS', 'id': f'adm1-{iso}', 'mode': 'country-regions', 'selection': iso, 'catalogMetadata': item}
         if iso == 'USA':
             entry.update(localPath='usa_states.geojson', expectedFeatures=51)
         elif iso in local_adm:
@@ -412,7 +416,7 @@ def main():
     if args.output.is_relative_to(ROOT):
         parser.error('QA fixtures must be outside the repository')
     args.output.mkdir(parents=True, exist_ok=True)
-    maps = build_catalog()
+    maps = build_catalog(include_legacy=True)
     selected = set(args.only.split(',')) if args.only else None
     if selected:
         unknown = selected - {item['id'] for item in maps}
@@ -426,7 +430,7 @@ def main():
             result = future.result()
             results.append(result)
             print(f'{len(results):03d}/{len(maps)} {result["id"]} {result["status"]} {result.get("source", "")} {result.get("audit", {}).get("features", "")} {result.get("error", "")}', flush=True)
-            report = {'schemaVersion': 2, 'partial': bool(selected), 'expectedMaps': len(maps),
+            report = {'schemaVersion': 2, 'partial': bool(selected), 'expectedMaps': len(maps), 'selectableMaps':len(build_catalog()), 'legacyMaps':['adm1-RUS'],
                       'passed': sum(item['status'] == 'passed' for item in results),
                       'failed': sum(item['status'] != 'passed' for item in results),
                       'apiUnavailable': sorted(item['id'] for item in results if item.get('provenance', {}).get('apiAvailability') == 'unavailable'),

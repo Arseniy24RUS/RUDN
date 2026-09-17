@@ -5,19 +5,66 @@ import asyncio
 import json
 import statistics
 import time
+import traceback
 from pathlib import Path
 from playwright.async_api import async_playwright
+import test_puzzle_catalog as catalog_module
 from test_puzzle_catalog import (PuzzleServer, context_for, observe, start_map,
                                  ready, trusted_drop, offline_resume, build_catalog)
 
 
+DRAW_TIMING_HOOK = r"""
+  // Test-only instrumentation of actual Canvas render work; never changes game state.
+  const qaOriginalDrawAll=drawAll;
+  drawAll=function(...args){const start=performance.now();try{return qaOriginalDrawAll(...args)}finally{
+    const metrics=window.__qaPerf;if(metrics?.measuring)metrics.draws.push(performance.now()-start);
+  }};
+"""
+
+
+async def drawing_metrics(page):
+    values = sorted(await page.evaluate('window.__qaPerf.draws'))
+    assert values, 'No Canvas drawing was measured'
+    return {'samples':len(values), 'p50':round(statistics.median(values),2),
+            'p95':round(values[min(len(values)-1,int(len(values)*.95))],2), 'max':round(max(values),2)}
+
+
+async def zoom_and_pan(page):
+    result = {}
+    await page.locator('#puzzleReturn').click()
+    for phase in ['zoom','pan']:
+        await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+        await page.evaluate("Object.assign(window.__qaPerf,{draws:[],longTasks:[],measuring:true})")
+        box = await page.locator('#puzzleCanvas').bounding_box()
+        state = await page.evaluate('window.__puzzleRead()')
+        area = state['map']
+        if phase == 'zoom':
+            await page.mouse.move(box['x']+area['x']+area['width']/2, box['y']+area['y']+area['height']/2)
+            for delta in [-180]*8+[180]*8:
+                await page.mouse.wheel(0,delta)
+                await page.evaluate('new Promise(requestAnimationFrame)')
+        else:
+            x,y = box['x']+area['x']+area['width']/2,box['y']+area['y']+area['height']/2
+            await page.mouse.move(x,y)
+            await page.mouse.down()
+            for step in range(24):
+                await page.mouse.move(x+step*2,y+step)
+            await page.mouse.up()
+        await page.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+        await page.evaluate('window.__qaPerf.measuring=false')
+        assert await page.evaluate('window.__qaPerf.draws.length>0'), f'No Canvas draws in {phase}'
+        result[phase]={'drawMs':await drawing_metrics(page), 'longTasksMs':await page.evaluate('window.__qaPerf.longTasks')}
+        await page.locator('#puzzleCenter').click()
+    return result
+
+
 async def run(args, server):
     catalog = {m['id']: m for m in build_catalog()}
-    ids = ['russia-subjects', 'adm1-RUS', 'adm1-CHL', 'adm1-CAN', 'adm1-IDN', 'world-countries', 'adm1-MCO']
+    ids = ['russia-subjects', 'adm1-CHL', 'adm1-CAN', 'adm1-IDN', 'world-countries', 'adm1-MCO']
     results = []
     async with async_playwright() as playwright:
         for channel in args.channels.split(','):
-            options = {'executable_path': str(args.chrome)} if channel == 'chrome' else {'channel': channel}
+            options = {'executable_path': str(args.chrome)} if channel == 'chrome' and args.chrome else {} if channel == 'chromium' else {'channel': channel}
             browser = await playwright.chromium.launch(headless=True, **options)
             record = {'browser': channel, 'version': browser.version, 'status': 'failed', 'maps': []}
             context = await context_for(browser, server, args.output, (1366, 768), 'ru', record)
@@ -36,12 +83,14 @@ async def run(args, server):
             heaps = []
             try:
                 for cycle in range(args.cycles):
+                    rate = args.cpu_rates[cycle % len(args.cpu_rates)]
+                    await cdp.send('Emulation.setCPUThrottlingRate', {'rate':rate})
                     for map_id in ids:
                         if cycle or map_id != ids[0]:
                             await page.evaluate('window.__qaPerf.longTasks=[]')
                         started = time.monotonic()
                         state = await start_map(page, catalog[map_id], 'medium')
-                        row = {'id': map_id, 'cycle': cycle, 'loadSeconds': round(time.monotonic()-started, 3)}
+                        row = {'id': map_id, 'cycle': cycle, 'cpuThrottle':rate, 'loadSeconds': round(time.monotonic()-started, 3)}
                         row['loadLongTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
                         if map_id != 'adm1-MCO':
                             # Enter lifts the piece; arrows and a real mouse drag then place it.
@@ -52,7 +101,7 @@ async def run(args, server):
                             x, y = box['x'] + state['source']['x'], box['y'] + state['source']['y']
                             await page.mouse.move(x, y)
                             await page.mouse.down()
-                            await page.evaluate("Object.assign(window.__qaPerf,{frames:[],longTasks:[],handlers:[],latencies:[],measuring:true});let last=performance.now();function frame(t){if(!window.__qaPerf.measuring)return;window.__qaPerf.frames.push(t-last);last=t;requestAnimationFrame(frame)}requestAnimationFrame(frame)")
+                            await page.evaluate("Object.assign(window.__qaPerf,{frames:[],longTasks:[],handlers:[],latencies:[],draws:[],measuring:true});let last=performance.now();function frame(t){if(!window.__qaPerf.measuring)return;window.__qaPerf.frames.push(t-last);last=t;requestAnimationFrame(frame)}requestAnimationFrame(frame)")
                             for step in range(36):
                                 await page.mouse.move(x + (step % 9) * 2, y - (step % 7) * 2)
                             await page.mouse.up()
@@ -65,6 +114,8 @@ async def run(args, server):
                                 values = sorted(await page.evaluate(f'window.__qaPerf.{key}'))
                                 row[key+'P95Ms'] = round(values[min(len(values)-1, int(len(values)*.95))], 2) if values else None
                             row['dragLongTasksMs'] = await page.evaluate('window.__qaPerf.longTasks')
+                            row['dragDrawMs'] = await drawing_metrics(page)
+                            row['zoomAndPan'] = await zoom_and_pan(page)
                             await page.locator('#puzzleReturn').click()
                         await trusted_drop(page)
                         if cycle == 0:
@@ -83,13 +134,15 @@ async def run(args, server):
                 record['retainedHeapAfterCyclesMiB'] = [round(heaps[(i+1)*len(ids)-1]/1024/1024,2) for i in range(args.cycles)]
             except Exception as error:
                 record['error'] = str(error)
+                record['traceback'] = traceback.format_exc()
+                print(record['traceback'],flush=True)
                 await page.screenshot(path=str(args.output / f'performance-{channel}-failure.png'))
             finally:
                 await context.close()
                 await browser.close()
                 results.append(record)
     report = {'method':'Installed Edge / official Chrome for Testing; trusted keyboard and mouse; GC heap measurement; desktop only',
-              'physicalMobileDevices': False, 'cycles':args.cycles, 'results':results}
+              'physicalMobileDevices': False, 'cycles':args.cycles, 'cpuRates':args.cpu_rates, 'results':results}
     (args.output / 'desktop-performance.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     return int(any(r['status'] != 'passed' for r in results))
 
@@ -100,6 +153,9 @@ if __name__ == '__main__':
     parser.add_argument('--channels',default='msedge,chrome')
     parser.add_argument('--chrome',type=Path)
     parser.add_argument('--cycles',type=int,default=3)
+    parser.add_argument('--cpu-rates',default='1,4,6')
     args = parser.parse_args()
+    args.cpu_rates = [float(value) for value in args.cpu_rates.split(',')]
+    catalog_module.READ_ONLY_HOOK += DRAW_TIMING_HOOK
     with PuzzleServer(args.output) as server:
         raise SystemExit(asyncio.run(run(args,server)))

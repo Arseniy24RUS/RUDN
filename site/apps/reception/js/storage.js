@@ -2,17 +2,29 @@ import {restoreShift,academicPeriod} from './engine.js';
 import {hydrateSavedShift} from './content-library.js';
 import {durableStore} from '../../../assets/js/durable-store.js';
 
+/** Every legacy key, archive and lock uses the same context boundary. */
+export function receptionStorageContext(context='course',storage){
+ const prefix=context==='free'?'rudn.reception.free:':'';
+ const source=()=>storage||globalThis.localStorage;
+ const keyFor=key=>prefix+key;
+ const keys=()=>Array.from({length:source().length},(_,index)=>source().key(index)).filter(key=>key?.startsWith(prefix));
+ return {activitySlug:context==='free'?'reception-freeplay':'seminar-5',keyFor,storage:{
+  getItem:key=>source().getItem(keyFor(key)),setItem:(key,value)=>source().setItem(keyFor(key),value),removeItem:key=>source().removeItem(keyFor(key)),
+  get length(){return keys().length;},key:index=>keys()[index]?.slice(prefix.length)??null
+ }};
+}
 /** Async adapter for the platform; the pure legacy helpers below remain compatible. */
-export function createReceptionStorage({owner,period=academicPeriod(),backend}){
+export function createReceptionStorage({owner,period=academicPeriod(),backend,context='course',storage}){
+ const boundary=receptionStorageContext(context,storage),store=boundary.storage;
  const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:reception';
  const revisions=new Map(),observed=new Map();
- const scope=mode=>({owner:durableOwner,activitySlug:'seminar-5',mode:`${period}:${mode}`});
- const raw=mode=>{try{return localStorage.getItem(storeKey(owner,mode,period));}catch{return null;}};
+ const scope=mode=>({owner:durableOwner,activitySlug:boundary.activitySlug,mode:`${period}:${mode}`});
+ const raw=mode=>{try{return store.getItem(storeKey(owner,mode,period));}catch{return null;}};
  return {
   async read(mode){
    const existing=raw(mode);let parsed=null;try{parsed=JSON.parse(existing);}catch{/* Legacy reader preserves corrupt text. */}
    await hydrateSavedShift(parsed);
-   const legacy=readDraftResult(owner,mode,period);observed.set(mode,existing);
+   const legacy=readDraftResult(owner,mode,period,store);observed.set(mode,existing);
    const draft=await (backend?.loadDraft?.(scope(mode))||durableStore.loadDraft(scope(mode)));
    await hydrateSavedShift(draft?.state);
    const restored=draft?.state&&restoreShift(draft.state,owner,mode,period);
@@ -35,7 +47,7 @@ export function createReceptionStorage({owner,period=academicPeriod(),backend}){
     let legacySaved=false;
     try{
      if(raw(state.mode)!==currentRaw)return {ok:false,conflict:true};
-     localStorage.setItem(storeKey(owner,state.mode,period),JSON.stringify(next));observed.set(state.mode,JSON.stringify(next));legacySaved=true;
+     store.setItem(storeKey(owner,state.mode,period),JSON.stringify(next));observed.set(state.mode,JSON.stringify(next));legacySaved=true;
     }catch{}
     Object.assign(state,next);
     return {ok:saved.saveStatus.durable||legacySaved,conflict:false,saveStatus:saved.saveStatus};

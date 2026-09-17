@@ -146,7 +146,7 @@
 
 .puzzle-mode-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-top: 20px;
   padding-bottom: 18px;
@@ -242,7 +242,6 @@
 .puzzle-difficulty-button:disabled { cursor: wait; opacity: .55; }
 .puzzle-difficulty-grade { font-size: 12px; }
 .puzzle-shell[data-context="free"] .puzzle-difficulty-grade { display: none; }
-.puzzle-shell[data-context="seminar"] #puzzleHint { display: none; }
 .puzzle-context-value {
   min-height: 46px;
   display: flex;
@@ -521,7 +520,6 @@ body.puzzle-fullscreen-active { overflow: hidden; overscroll-behavior: none; }
 .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-footer { padding: 6px 8px; gap: 6px; }
 
 @media (max-width: 1320px) {
-  .puzzle-mode-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .puzzle-toolbar { grid-template-columns: minmax(0, 1fr) minmax(290px, 1.5fr); }
   .puzzle-toolbar-actions { grid-column: 1 / -1; justify-content: flex-end; }
   .puzzle-workspace { grid-template-columns: 1fr; }
@@ -561,6 +559,9 @@ body.puzzle-fullscreen-active { overflow: hidden; overscroll-behavior: none; }
   .puzzle-stage-actions .btn { min-width: 0; gap: 3px; padding: 6px 5px; }
   .puzzle-stage-actions .btn span { min-width: 0; overflow-wrap: anywhere; }
   .puzzle-stage-actions:last-child .btn { flex: 1; }
+  .puzzle-stage-card:not(:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen)) .puzzle-stage-actions:first-child { grid-template-columns: repeat(4, 44px); }
+  .puzzle-stage-card:not(:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen)) :is(#puzzleReturn, #puzzleCenter) { width: 44px; height: 44px; padding: 0; font-size: 20px; }
+  .puzzle-stage-card:not(:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen)) :is(#puzzleReturn, #puzzleCenter) .puzzle-action-label { display: none; }
   .puzzle-help-list { grid-template-columns: 1fr; }
   .puzzle-dialog-body { padding: 22px; }
   .puzzle-result-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
