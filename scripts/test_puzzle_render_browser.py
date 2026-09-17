@@ -9,6 +9,7 @@ import argparse
 import asyncio
 import json
 from pathlib import Path
+import re
 import time
 import traceback
 
@@ -272,6 +273,40 @@ async def settled(page):
     return await page.evaluate('window.__renderRead()')
 
 
+async def check_localized_ui(page, locale):
+    copy = {
+        'ru': {'hint': 'Подсказка', 'metrics': ['Поставлено', 'Ошибки', 'Время'],
+               'title': 'Субъекты Российской Федерации', 'stage': 'Игровая карта', 'canvas': 'Интерактивная карта',
+               'controls': ['Вернуть деталь', 'Центрировать', 'Уменьшить', 'Увеличить']},
+        'en': {'hint': 'Hint', 'metrics': ['Placed', 'Errors', 'Time'],
+               'title': 'Constituent Entities of the Russian Federation', 'stage': 'Game map', 'canvas': 'Interactive map',
+               'controls': ['Return piece', 'Centre map', 'Zoom out', 'Zoom in']},
+        'zh': {'hint': '提示', 'metrics': ['已放置', '错误', '用时'],
+               'title': '俄罗斯联邦主体', 'stage': '游戏地图', 'canvas': '互动地图',
+               'controls': ['退回拼块', '居中', '缩小', '放大']},
+    }[locale]
+    state = await page.evaluate('window.__puzzleRead()')
+    ui = await page.evaluate("""()=>{const stage=document.querySelector('.puzzle-stage-card'),canvas=document.querySelector('#puzzleCanvas'),p=document.querySelector('#puzzleProgressTrack');
+      return {hint:document.querySelector('#puzzleHintLabel').textContent.trim(),title:document.querySelector('#puzzleDatasetTitle').textContent.trim(),
+        metrics:[...document.querySelectorAll('.puzzle-stage-metrics > div > span')].map(e=>e.textContent.trim()),
+        placed:document.querySelector('#puzzlePlaced').textContent.trim(),stage:stage.getAttribute('aria-label'),canvas:canvas.getAttribute('aria-label'),
+        controls:['puzzleReturn','puzzleCenter','puzzleZoomOut','puzzleZoomIn'].map(id=>document.getElementById(id).getAttribute('aria-label')),
+        description:canvas.getAttribute('aria-describedby').split(/\\s+/).map(id=>document.getElementById(id).textContent.trim()).join(' '),
+        progress:{role:p.getAttribute('role'),name:document.getElementById(p.getAttribute('aria-labelledby')).textContent.trim(),now:p.getAttribute('aria-valuenow'),max:p.getAttribute('aria-valuemax')},
+        difficulty:document.querySelector('#puzzleDifficultyLabel').textContent.trim(),
+        controlText:document.querySelector('.puzzle-stage-footer').innerText};}""")
+    assert ui['hint'] == f"{copy['hint']} · {10-state['hints']}/10", ui
+    assert await page.get_by_role('button', name=f"? {ui['hint']}", exact=True).count() == 1
+    for key in ['title', 'metrics', 'stage', 'canvas', 'controls']:
+        assert ui[key] == copy[key], (locale, key, ui[key])
+    assert ui['placed'] == f"{state['placed']} / {state['total']}", ui
+    assert ui['progress'] == {'role': 'progressbar', 'name': copy['metrics'][0], 'now': str(state['placed']), 'max': str(state['total'])}, ui
+    if locale != 'ru':
+        # Territory names are proper nouns; restrict this guard to UI controls.
+        assert not re.search('[А-Яа-яЁё]', ui['controlText'] + ui['difficulty'] + ' '.join(ui['controls'] + ui['metrics'])), ui
+    return ui
+
+
 async def layout_evidence(page, fullscreen):
     scene = await settled(page)
     metrics = await page.evaluate("""()=>{const box=e=>{const r=e.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}};
@@ -315,6 +350,7 @@ async def run_case(browser, engine, locale, server, fixtures, output):
         assert await page.locator('#puzzleCountry').input_value() == 'RUS'
         await page.locator('[data-puzzle-difficulty="hard"]').click()
         await page.wait_for_function("window.__puzzleRead().difficulty==='hard'&&!window.__puzzleRead().loading")
+        record['localizedUi'] = await check_localized_ui(page, locale)
         await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
         await settled(page)
         labels = await page.locator('#puzzleReturn .puzzle-action-label,#puzzleCenter .puzzle-action-label').evaluate_all('els=>els.map(e=>getComputedStyle(e).display)')
@@ -400,6 +436,16 @@ async def run_case(browser, engine, locale, server, fixtures, output):
         assert restored['placed'] == saved['placed'] and restored['hints'] == saved['hints']
         assert abs(restored_snapshot['view']['zoom'] - saved['view']['zoom']) < 1e-6
         assert max(abs(a-b) for a,b in zip(restored_snapshot['view']['centre'], saved['view']['centre'])) < 1e-6
+        next_locale = {'ru': 'en', 'en': 'zh', 'zh': 'ru'}[locale]
+        page._qa_locale = next_locale
+        await page.goto(server.base + f'apps/puzzle.html?context=free&qaLocale={next_locale}', wait_until='domcontentloaded')
+        switched = await catalog.ready(page)
+        assert (switched['attemptId'], switched['placed'], switched['hints']) == (saved['attemptId'], saved['placed'], saved['hints'])
+        record['languageSwitch'] = {'from': locale, 'to': next_locale, 'beforeHint': await check_localized_ui(page, next_locale)}
+        await page.locator('#puzzleCanvas').focus()
+        await page.keyboard.press('h')
+        assert (await page.evaluate('window.__puzzleRead().hints')) == switched['hints'] + 1
+        record['languageSwitch']['afterHint'] = await check_localized_ui(page, next_locale)
         assert not record.get('pageErrors'), record.get('pageErrors')
         assert not record.get('unexpectedWrites'), record.get('unexpectedWrites')
         record['status'] = 'passed'

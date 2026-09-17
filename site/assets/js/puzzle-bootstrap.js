@@ -78,8 +78,8 @@ const engineTranslations={
   en:{'Свободная игра':'Free play','свободная игра':'free play','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'Difficulty controls placement precision and does not change the course gradebook.'},
   zh:{'Свободная игра':'自由游戏','свободная игра':'自由游戏','Сложность влияет на точность совмещения и не изменяет учебный журнал.':'难度决定拼合精度，不会更改课程成绩册。'}
 };
-Object.assign(engineTranslations.en,{'Учебная':'Low','Стандартная':'Medium','Экспертная':'High','Низкая':'Low','Средняя':'Medium','Высокая':'High'});
-Object.assign(engineTranslations.zh,{'Учебная':'低','Стандартная':'中','Экспертная':'高','Низкая':'低','Средняя':'中','Высокая':'高'});
+Object.assign(engineTranslations.en,{'Учебная':'Low','Стандартная':'Medium','Экспертная':'High','Низкая':'Low','Средняя':'Medium','Высокая':'High','Подсказка':'Hint'});
+Object.assign(engineTranslations.zh,{'Учебная':'低','Стандартная':'中','Экспертная':'高','Низкая':'低','Средняя':'中','Высокая':'高','Подсказка':'提示'});
 async function loadLegacy(){
   if(locale!=='ru'){
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
