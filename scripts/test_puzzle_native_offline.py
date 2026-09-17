@@ -37,6 +37,7 @@ CACHED_PATHS = [
     'data/question_media.json', 'data/symbol_manifest.json',
 ]
 FETCH_PATHS = {'/RUDN/' + path for path in CACHED_PATHS if path != 'index.html'}
+REQUIRED_PATHS = FETCH_PATHS | {'/RUDN/index.html'}
 GUARD = r"""(() => {
   const allowed = new Set(['GET', 'HEAD', 'OPTIONS']);
   const record = kind => { void window.__qaBlockedWrite(kind); };
@@ -160,14 +161,54 @@ def seconds(value):
     return sum(int(part) * 60 ** index for index, part in enumerate(reversed(value.split(':'))))
 
 
+def previous_document_cancellation(failure, responses, offline_generation):
+    """Keep lifecycle cancellation evidence without hiding offline failures."""
+    return (failure['error'] == 'NS_BINDING_ABORTED'
+            and failure['path'] not in REQUIRED_PATHS
+            and isinstance(failure.get('generation'), int)
+            and failure['generation'] < offline_generation
+            and any(row['url'] == failure['url'] and row['status'] == 200
+                    and row['responsePhase'] == 'offline-reload'
+                    and row['fromServiceWorker'] and row['generation'] == offline_generation
+                    for row in responses))
+
+
+def check_cancellation_classifier():
+    # The CI failure is an old world-label fetch cancelled by a reload, then
+    # successfully fetched through SW in the next document. These controls keep
+    # the exception narrower than "ignore aborts" or "ignore all online errors".
+    old = {'path': '/RUDN/assets/puzzle/data/world_countries_50m.geojson',
+           'error': 'NS_BINDING_ABORTED', 'generation': 1}
+    old['url'] = 'http://127.0.0.1:12345' + old['path']
+    replacement = {'path': old['path'], 'url': old['url'], 'status': 200,
+                   'fromServiceWorker': True, 'generation': 3, 'responsePhase': 'offline-reload'}
+    assert previous_document_cancellation(old, [replacement], 3)
+    assert not previous_document_cancellation({**old, 'generation': 3}, [replacement], 3)
+    assert not previous_document_cancellation({**old, 'error': 'NS_ERROR_OFFLINE'}, [replacement], 3)
+    assert not previous_document_cancellation(old, [], 3)
+    assert not previous_document_cancellation(old, [{**replacement, 'fromServiceWorker': False}], 3)
+    assert not previous_document_cancellation(old, [{**replacement, 'generation': 1}], 3)
+    assert not previous_document_cancellation({**old, 'generation': None}, [replacement], 3)
+    assert not previous_document_cancellation(old, [{**replacement, 'url': old['url'] + '?different=1'}], 3)
+    assert not previous_document_cancellation(old, [{**replacement, 'url': old['url'].replace(':12345', ':12346')}], 3)
+    assert not previous_document_cancellation(old, [{**replacement, 'responsePhase': 'reconnected'}], 3)
+    for path in REQUIRED_PATHS:
+        url = 'http://127.0.0.1:12345' + path
+        assert not previous_document_cancellation({**old, 'path': path, 'url': url},
+                                                   [{**replacement, 'path': path, 'url': url}], 3)
+
+
 async def run(browser_name, args):
     report = {'browser': browser_name, 'platform': platform.platform(), 'passed': False,
               'startedAt': datetime.now(timezone.utc).isoformat(), 'readiness': 'visible DOM only',
               'transport': 'browser-offline; no HTTP routing', 'mainOverride': bool(args.main_source),
               'sourceCommit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
-              'runtimeErrors': [], 'staticFailures': [], 'offlineResponses': [], 'blockedWrites': []}
+              'runtimeErrors': [], 'staticFailures': [], 'offlineResponses': [], 'blockedWrites': [],
+              'teardownDiagnostics': []}
     args.output.mkdir(parents=True, exist_ok=True)
     offline_phase = False
+    generation, phase = 0, 'initialization'
+    request_meta = {}
     with NativeServer(args.main_source) as server:
         report.update({'mainSha256': sha256(server.main_bytes),
                        'serviceWorkerSha256': sha256((SITE / 'service-worker.js').read_bytes())})
@@ -178,17 +219,51 @@ async def run(browser_name, args):
             context = await browser.new_context(service_workers='allow', viewport={'width': 1366, 'height': 900})
             await context.expose_binding('__qaBlockedWrite', lambda _source, kind: report['blockedWrites'].append(kind))
             await context.add_init_script(GUARD)
-            context.on('request', lambda request: report['blockedWrites'].append('observed-' + request.method)
-                       if request.method not in READ_METHODS else None)
-            context.on('response', lambda response: report['offlineResponses'].append({
-                'path': urlsplit(response.url).path, 'status': response.status, 'fromServiceWorker': response.from_service_worker})
-                if offline_phase and urlsplit(response.url).path.startswith('/RUDN/') else None)
-            context.on('requestfailed', lambda request: report['staticFailures'].append({
-                'path': urlsplit(request.url).path, 'error': request.failure})
-                if urlsplit(request.url).path.startswith('/RUDN/') else None)
+            def observe_request(request):
+                request_meta[request] = {'generation': generation, 'startedPhase': phase}
+                if request.method not in READ_METHODS:
+                    report['blockedWrites'].append('observed-' + request.method)
+
+            def metadata(request):
+                # Unknown ownership must fail conservatively, never qualify as
+                # a previous-document cancellation merely because it is absent.
+                return request_meta.get(request, {'generation': None, 'startedPhase': 'unknown'})
+
+            def observe_response(response):
+                if not urlsplit(response.url).path.startswith('/RUDN/'):
+                    return
+                row = {'path': urlsplit(response.url).path, 'url': response.url, 'status': response.status,
+                       'fromServiceWorker': response.from_service_worker, 'responsePhase': phase,
+                       **metadata(response.request)}
+                if phase == 'teardown':
+                    report['teardownDiagnostics'].append({'event': 'response', **row})
+                elif offline_phase:
+                    report['offlineResponses'].append(row)
+
+            def observe_failure(request):
+                if not urlsplit(request.url).path.startswith('/RUDN/'):
+                    return
+                row = {'path': urlsplit(request.url).path, 'url': request.url, 'error': request.failure,
+                       'failedPhase': phase, 'failedGeneration': generation, **metadata(request)}
+                if phase == 'teardown':
+                    report['teardownDiagnostics'].append({'event': 'requestfailed', **row})
+                else:
+                    report['staticFailures'].append(row)
+
+            def observe_error(error):
+                if phase == 'teardown':
+                    report['teardownDiagnostics'].append({'event': 'pageerror', 'error': str(error)})
+                else:
+                    report['runtimeErrors'].append(str(error))
+
+            context.on('request', observe_request)
+            context.on('response', observe_response)
+            context.on('requestfailed', observe_failure)
             page = await context.new_page()
-            page.on('pageerror', lambda error: report['runtimeErrors'].append(str(error)))
+            page.on('pageerror', observe_error)
             try:
+                generation += 1
+                phase = 'online-initial-document'
                 await page.goto(server.base + 'index.html#games', wait_until='domcontentloaded')
                 await page.locator('[data-game="maps"] a').click()
                 await ready(page, 240)
@@ -202,6 +277,8 @@ async def run(browser_name, args):
                 await page.locator('#puzzleReturn').click()
                 await asyncio.wait_for(page.evaluate('navigator.serviceWorker.ready'), timeout=90)
                 await page.wait_for_function('navigator.serviceWorker.controller', timeout=45000)
+                generation += 1
+                phase = 'online-reload'
                 await page.reload(wait_until='domcontentloaded')
                 await ready(page, 89)
                 report['beforeOffline'] = await progress(page)
@@ -219,39 +296,70 @@ async def run(browser_name, args):
                 probe = server.origin + '/__qa/connection-probe?nonce=' + str(datetime.now(timezone.utc).timestamp())
                 report['onlineControl'] = await page.evaluate("async url=>({status:(await fetch(url,{cache:'no-store'})).status,online:navigator.onLine})", probe)
                 assert report['onlineControl'] == {'status': 200, 'online': True}
+                phase = 'offline-transport-probe'
                 await context.set_offline(True)
                 report['offlineControl'] = await page.evaluate("async url=>{try{await fetch(url,{cache:'no-store'});return {rejected:false,online:navigator.onLine}}catch{return {rejected:true,online:navigator.onLine}}}", probe)
                 assert report['offlineControl'] == {'rejected': True, 'online': False}
                 print(json.dumps({'browser': browser_name, 'stage': 'offline-transport-verified'}), flush=True)
                 offline_phase = True
+                generation += 1
+                phase = 'offline-reload'
+                report['offlineDocumentGeneration'] = generation
                 await page.reload(wait_until='domcontentloaded')
                 await ready(page, 89)
+                # Russia itself restores before the background country labels.
+                # Wait for their visible completion before deciding whether an
+                # older cancelled label request has a successful replacement.
+                await page.wait_for_function("document.querySelectorAll('#puzzleCountry option').length===198",
+                                             timeout=30000, polling=50)
+                countries = await page.locator('#puzzleCountry option').evaluate_all('nodes=>nodes.map(node=>node.value)')
+                report['countryCount'] = len(countries)
+                report['uniqueCountryCount'] = len(set(countries))
+                report['russiaFirst'] = countries[0] == 'RUS'
+                assert report['countryCount'] == 198 and report['uniqueCountryCount'] == 198 and report['russiaFirst']
                 report['afterOffline'] = await progress(page)
                 for key in ['mode', 'country', 'difficulty', 'placed', 'hints', 'territory', 'guest']:
                     assert report['afterOffline'][key] == report['beforeOffline'][key], key
                 assert seconds(report['afterOffline']['time']) >= seconds(report['beforeOffline']['time'])
-                for path in FETCH_PATHS | {'/RUDN/index.html'}:
-                    assert any(row['path'] == path and row['status'] == 200 and row['fromServiceWorker']
-                               for row in report['offlineResponses']), f'Expected cached SW response for {path}'
-                assert not report['staticFailures'], report['staticFailures']
-                assert not report['runtimeErrors'], report['runtimeErrors']
-                assert not report['blockedWrites'] and not server.write_requests
                 assert await page.locator('#toastStack .rudn-notice').count() == 0
                 assert await page.locator('#puzzleResultDialog[open]').count() == 0
                 await page.locator('.puzzle-stage-card').screenshot(path=str(args.output / f'native-offline-{browser_name}.png'))
+                phase = 'reconnected'
                 await context.set_offline(False)
                 report['reconnectedControl'] = await page.evaluate("async url=>({status:(await fetch(url,{cache:'no-store'})).status,online:navigator.onLine})", probe)
                 assert report['reconnectedControl'] == {'status': 200, 'online': True}
+                # Evaluate the complete observed operation, including reconnect.
+                # An online replacement can never stand in for offline proof.
+                for path in REQUIRED_PATHS:
+                    assert any(row['path'] == path and row['status'] == 200 and row['fromServiceWorker']
+                               and row['generation'] == generation and row['responsePhase'] == 'offline-reload'
+                               for row in report['offlineResponses']), f'Expected cached SW response for {path}'
+                report['previousDocumentCancellations'] = [row for row in report['staticFailures']
+                    if previous_document_cancellation(row, report['offlineResponses'], generation)]
+                report['unexpectedStaticFailures'] = [row for row in report['staticFailures']
+                    if not previous_document_cancellation(row, report['offlineResponses'], generation)]
+                assert not report['unexpectedStaticFailures'], report['unexpectedStaticFailures']
+                assert not report['runtimeErrors'], report['runtimeErrors']
+                assert not report['blockedWrites'] and not server.write_requests
                 report['passed'] = True
             except Exception as error:
                 report['failure'] = str(error)
                 report['dom'] = await page.evaluate("""() => ({hash:location.hash,visibility:document.visibilityState,focus:document.hasFocus(),controller:!!navigator.serviceWorker.controller,online:navigator.onLine,root:!!document.querySelector('#geoPuzzleApp'),appText:document.querySelector('#app')?.textContent.slice(0,1000)})""")
                 await page.screenshot(path=str(args.output / f'native-offline-{browser_name}-failure.png'))
             finally:
-                report['serverWriteRequests'] = server.write_requests
-                report['finishedAt'] = datetime.now(timezone.utc).isoformat()
+                # Close-triggered request cancellation remains visible, but
+                # cannot mutate the operation whose assertions just ran.
+                phase = 'teardown'
+                report['frozenObservationCounts'] = {key: len(report[key]) for key in
+                    ['offlineResponses', 'staticFailures', 'runtimeErrors']}
                 await context.close()
                 await browser.close()
+                assert all(len(report[key]) == count for key, count in report['frozenObservationCounts'].items())
+                report['serverWriteRequests'] = server.write_requests
+                if report['blockedWrites'] or server.write_requests:
+                    report['passed'] = False
+                    report['failure'] = 'Read-only guard observed a write, including teardown'
+                report['finishedAt'] = datetime.now(timezone.utc).isoformat()
     path = args.output / f'native-offline-{browser_name}.json'
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf8')
     print(json.dumps({'browser': browser_name, 'passed': report['passed'], 'report': str(path)}), flush=True)
@@ -259,6 +367,7 @@ async def run(browser_name, args):
 
 
 async def main():
+    check_cancellation_classifier()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--browsers', default='firefox,chromium')
     parser.add_argument('--output', type=Path, required=True)
