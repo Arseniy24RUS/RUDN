@@ -73,8 +73,10 @@ RENDER_HOOK = r"""
   const observedDrawImage=ctx.drawImage;
   ctx.drawImage=function(...args){if(args[0]===staticCanvas)window.__backgroundDraw={x:args[1],y:args[2],width:args[3],height:args[4]};return observedDrawImage.apply(this,args);};
   const observedPieceRaster=drawPieceRaster;
-  drawPieceRaster=function(...args){const path=activeSprite.path,scale=activeSprite.scale,left=activeSprite.left,top=activeSprite.top,hits=rasterPreparation.hits;
+  window.__spriteSurfaces={replacements:0,unreleased:0};
+  drawPieceRaster=function(...args){const canvas=activeSprite.canvas,path=activeSprite.path,scale=activeSprite.scale,left=activeSprite.left,top=activeSprite.top,hits=rasterPreparation.hits;
     const result=observedPieceRaster(...args);
+    if(canvas!==activeSprite.canvas){window.__spriteSurfaces.replacements++;if(canvas.width||canvas.height)window.__spriteSurfaces.unreleased++;}
     if(rasterPreparation.hits>hits)window.__spriteOrigin='worker';
     else if(path!==activeSprite.path||scale!==activeSprite.scale||left!==activeSprite.left||top!==activeSprite.top)window.__spriteOrigin='direct';
     return result;};
@@ -101,8 +103,10 @@ RENDER_HOOK = r"""
         target.stroke(clone?new Path2D(paths.strokePath):paths.strokePath);
       });
     }
-    return {currentPath:sprite.path===paths.path,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
+    return {currentPath:sprite.path===paths.path,currentStrokePath:sprite.strokePath===paths.strokePath,
+      currentFillRule:sprite.fillRule===fillRule,scale:sprite.scale,expectedScale,dpr:sprite.dpr,
       pixels:canvas.width*canvas.height,bytes:actual.length,...difference,nativeDiagnostic,referenceContext:contextDetails(context),
+      surfaceLifecycle:{...window.__spriteSurfaces},
       featureId:state.features[piece.index].properties._puzzleId,featureName:state.features[piece.index].properties._puzzleName,
       source:window.__spriteOrigin,workerStatus:rasterPreparation.status,workerHits:rasterPreparation.hits,
       preparedCacheKey:rasterPreparation.cache.has(`${state.current}:${sprite.scale}:${sprite.dpr}`)?`${state.current}:${sprite.scale}:${sprite.dpr}`:null,
@@ -381,9 +385,10 @@ async def run_dpr_case(browser, engine, dpr, server, output):
                 expected = {'#91b2c6': 1, '#004f80': 1, '#8e2028': 1.2, '#b97900': 2.2}[metric['color']]
                 assert abs(metric['width'] - expected) < 1e-5, metric
             sprite = await page.evaluate('window.__spriteAudit()')
-            assert sprite['currentPath'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
+            assert sprite['currentPath'] and sprite['currentStrokePath'] and sprite['currentFillRule'] and abs(sprite['scale']-sprite['expectedScale']) < 1e-9, sprite
             assert sprite['dpr'] == min(dpr, 2), sprite
             assert 0 < sprite['bytes'] <= 16*1024*1024, sprite
+            assert sprite['surfaceLifecycle']['replacements'] > 0 and sprite['surfaceLifecycle']['unreleased'] == 0, sprite
             assert_raster_quantization(sprite)
             background = await page.evaluate('window.__backgroundAudit()')
             assert background['currentProjection'] and background['currentPieces'], background

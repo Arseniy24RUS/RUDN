@@ -1585,25 +1585,39 @@
     return rasterPreparationStats().reservedRasterBytes - oldBytes + bytes <= ACTIVE_RASTER_BUDGET;
   }
 
+  function replaceActiveRaster(width, height) {
+    // A resized, repeatedly composited WebKit surface can retain a different
+    // edge raster than a fresh surface for the same immutable Path2D. Release
+    // its backing store first, then give each new raster its own context. Pure
+    // translations still reuse that exact raster without another allocation.
+    activeSprite.canvas.height = 0;
+    activeSprite.canvas.width = 0;
+    const canvas = document.createElement("canvas");
+    canvas.height = 0;
+    canvas.width = width; canvas.height = height;
+    activeSprite.canvas = canvas;
+    return canvas;
+  }
+
   function drawPieceRaster(path, strokePath, bounds, scale, tx, ty) {
     // Rasterize the complete original contour at the *current* physical pixel
     // scale. Translation can reuse it without retessellating thousands of
     // islands. Zoom/projection changes always rebuild; never stretch old pixels.
     const dpr = state.dpr, pad = 2;
+    const fillRule = state.mode === "russia-subjects" ? "nonzero" : "evenodd";
     const left = Math.max(bounds.x0 * scale - pad, -tx);
     const top = Math.max(bounds.y0 * scale - pad, -ty);
     const right = Math.min(bounds.x1 * scale + pad, state.cssWidth - tx);
     const bottom = Math.min(bounds.y1 * scale + pad, state.cssHeight - ty);
     if (right <= left || bottom <= top) return true;
     const sprite = activeSprite;
-    if (sprite.path !== path || sprite.scale !== scale || sprite.dpr !== dpr
+    if (sprite.path !== path || sprite.strokePath !== strokePath || sprite.fillRule !== fillRule || sprite.scale !== scale || sprite.dpr !== dpr
       || left < sprite.left || top < sprite.top || right > sprite.right || bottom > sprite.bottom) {
       const key = `${state.current}:${scale}:${dpr}`, prepared = rasterPreparation.cache.get(key);
       if (prepared?.projection === state.projection && reserveActiveRaster(prepared.bytes, key)) {
-        sprite.canvas.height = 0;
-        sprite.canvas.width = prepared.width; sprite.canvas.height = prepared.height;
-        sprite.canvas.getContext("2d").drawImage(prepared.bitmap, 0, 0);
-        Object.assign(sprite, { path, scale, dpr, left: prepared.x0 / dpr, top: prepared.y0 / dpr,
+        const canvas = replaceActiveRaster(prepared.width, prepared.height);
+        canvas.getContext("2d").drawImage(prepared.bitmap, 0, 0);
+        Object.assign(sprite, { path, strokePath, fillRule, scale, dpr, left: prepared.x0 / dpr, top: prepared.y0 / dpr,
           right: (prepared.x0 + prepared.width) / dpr, bottom: (prepared.y0 + prepared.height) / dpr });
         ++rasterPreparation.hits;
       } else {
@@ -1622,17 +1636,15 @@
         if (!margin) return false;
         margin = Math.floor(margin / 2);
       } while (true);
-      const canvas = sprite.canvas;
       if (!reserveActiveRaster((x1 - x0) * (y1 - y0) * 4)) return false;
-      canvas.height = 0;
-      canvas.width = Math.max(1, x1 - x0); canvas.height = Math.max(1, y1 - y0);
+      const canvas = replaceActiveRaster(Math.max(1, x1 - x0), Math.max(1, y1 - y0));
       const context = canvas.getContext("2d", { alpha: true });
       context.setTransform(dpr * scale, 0, 0, dpr * scale, -x0, -y0);
       context.fillStyle = "#dc3f45"; context.strokeStyle = "#8e2028";
       context.lineWidth = 1.2 / scale; context.lineJoin = context.lineCap = "round";
-      context.fill(path, state.mode === "russia-subjects" ? "nonzero" : "evenodd");
+      context.fill(path, fillRule);
       context.stroke(strokePath);
-      Object.assign(sprite, { path, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
+      Object.assign(sprite, { path, strokePath, fillRule, scale, dpr, left: x0 / dpr, top: y0 / dpr, right: x1 / dpr, bottom: y1 / dpr });
       }
       rasterPreparationStats();
     }
