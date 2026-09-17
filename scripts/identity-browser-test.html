@@ -5,9 +5,9 @@
 <main id="journal"></main><section id="profile"></section>
 <script type="module">
 import {createDurableStore,durableStore} from '../site/assets/js/durable-store.js';
-import {backend} from '../site/assets/js/backend.js?v=1.3.6';
-import {journalModel,mountTeacherJournal} from '../site/assets/js/teacher-journal.js?v=1.3.6';
-import {mountProfile} from '../site/assets/js/account.js?v=1.3.6';
+import {backend} from '../site/assets/js/backend.js?v=1.3.8';
+import {journalModel,mountTeacherJournal} from '../site/assets/js/teacher-journal.js?v=1.3.8';
+import {mountProfile} from '../site/assets/js/account.js?v=1.3.8';
 clearInterval(backend.connectionRetry);
 const assert=(value,message)=>{if(!value)throw Error(message);};
 const same=(a,b,message)=>assert(JSON.stringify(a)===JSON.stringify(b),message);

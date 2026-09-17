@@ -1,8 +1,8 @@
-import {backend} from './backend.js?v=1.3.7';
+import {backend} from './backend.js?v=1.3.8';
 import {durableStore} from './durable-store.js';
-import {attemptOwner} from './attempt-session.js?v=1.3.7';
-import {getLocale} from './i18n.js?v=1.3.7';
-import {toast,registerRecoveryProvider} from './notifications.js?v=1.3.7';
+import {attemptOwner} from './attempt-session.js?v=1.3.8';
+import {getLocale} from './i18n.js?v=1.3.8';
+import {toast,registerRecoveryProvider} from './notifications.js?v=1.3.8';
 
 const controllers=new WeakMap();
 const copy={ru:['Сохранено на устройстве','Ожидает отправки','Сохранено','Вложение: '],en:['Saved on this device','Waiting to send','Saved','Attachment: '],zh:['已保存在此设备上','等待上传','已保存','附件：']};

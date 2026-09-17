@@ -1,5 +1,5 @@
-import {backend,groupOptions} from './backend.js?v=1.3.7';
-import {getLocale} from './i18n.js?v=1.3.7';
+import {backend,groupOptions} from './backend.js?v=1.3.8';
+import {getLocale} from './i18n.js?v=1.3.8';
 import {officialTicket,absentFromRoster} from './student-identity.js';
 
 const COPY={

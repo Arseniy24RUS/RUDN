@@ -23,7 +23,8 @@ const engines = (process.env.DURABLE_TEST_BROWSERS || 'chromium,webkit').split('
 const report = [];
 try {
   for (const engine of engines) {
-    const browser = await playwright[engine].launch({headless: true});
+    const browser = await playwright[engine].launch({headless: true,
+      ...(engine === 'chromium' && process.env.DURABLE_CHROMIUM_PATH ? {executablePath: process.env.DURABLE_CHROMIUM_PATH} : {})});
     try {
       const page = await browser.newPage();
       const errors = [];

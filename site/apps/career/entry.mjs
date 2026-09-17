@@ -1,5 +1,5 @@
 import { createCareerRuntime } from './runtime.bundle.mjs';
-import {backend} from '../../assets/js/backend.js?v=1.3.7';
+import {backend} from '../../assets/js/backend.js?v=1.3.8';
 import {durableStore} from '../../assets/js/durable-store.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);

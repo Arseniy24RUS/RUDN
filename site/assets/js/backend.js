@@ -1,10 +1,10 @@
-import {CONFIG} from './config.js?v=1.3.7';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.7';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.7';
+import {CONFIG} from './config.js?v=1.3.8';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.8';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.8';
 import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
-import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.7';
+import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.8';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';

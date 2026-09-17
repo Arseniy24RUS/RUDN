@@ -1,10 +1,10 @@
-import {backend,groupOptions} from './backend.js?v=1.3.7';
-import {getLocale} from './i18n.js?v=1.3.7';
-import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.7';
-import {initNotifications} from './notifications.js?v=1.3.7';
-import {durableStore} from './durable-store.js?v=1.3.7';
-import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.7';
-import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.7';
+import {backend,groupOptions} from './backend.js?v=1.3.8';
+import {getLocale} from './i18n.js?v=1.3.8';
+import {academicContext,formatAccessDate,topicGate} from './access.js?v=1.3.8';
+import {initNotifications} from './notifications.js?v=1.3.8';
+import {durableStore} from './durable-store.js?v=1.3.8';
+import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.8';
+import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.8';
 let activePuzzleBridge=null;
 
 export function mountPuzzlePage(options={}){
