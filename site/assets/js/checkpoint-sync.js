@@ -297,16 +297,38 @@ export async function commitStudentAttempt(transport,attempt,{
     createdAt:attempt.createdAt||new Date().toISOString(),
     ...(attachments.length?{attachments}: {})};
   const attemptPath=`attempts/${key(studentKey)}/${key(record.id)}`;
-  const saved=await transport.transaction(attemptPath,current=>{
+  let collided=false;
+  let saved=await transport.transaction(attemptPath,current=>{
     ensureActive();
     if(current){
       if(current.studentKey!==studentKey||current.id!==record.id||current.activitySlug!==record.activitySlug){
         throw fault('database/checkpoint-identity-mismatch');
       }
+      // A resumed canonical draft can finish before its obsolete tab reconnects.
+      // Retain that tab's result separately instead of acknowledging another result.
+      collided=Boolean(record.mergedFrom &&
+        (current.mergedFrom?.studentKey!==record.mergedFrom.studentKey ||
+         current.mergedFrom?.attemptId!==record.mergedFrom.attemptId ||
+         !Object.is(Number(current.points),Number(record.points))));
       return undefined;
     }
     return record;
   },{signal});
+  if(collided){
+    const recovered={...record,id:record.id+'-source-result',mergedCollision:record.id};
+    saved=await transport.transaction(`attempts/${key(studentKey)}/${key(recovered.id)}`,current=>{
+      ensureActive();
+      if(current){
+        if(current.studentKey!==studentKey||current.activitySlug!==recovered.activitySlug||
+           current.mergedFrom?.studentKey!==recovered.mergedFrom.studentKey||
+           current.mergedFrom?.attemptId!==recovered.mergedFrom.attemptId||!Object.is(Number(current.points),Number(recovered.points))){
+          throw fault('database/checkpoint-identity-mismatch');
+        }
+        return undefined;
+      }
+      return recovered;
+    },{signal});
+  }
   ensureActive();
   const authoritative=saved.value;
   const points=Number(authoritative.points);

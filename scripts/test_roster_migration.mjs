@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {planRosterUpdate,applyPatch,ticketHash} from './roster-migration.mjs';
+import {commitStudentAttempt} from '../site/assets/js/checkpoint-sync.js';
 const prefix='rudn-platform/v1';
 const database='http://127.0.0.1:9010';
 async function request(path,method='GET',body,token='owner'){
@@ -70,4 +71,20 @@ test('migration preserves data, is idempotent, and Firebase rules enforce identi
   assert.equal((await request(prefix+'/attempts/'+canonical+'/later','PUT',{...future,studentKey:canonical},a.idToken)).status,200,'canonical profile can receive new results');
   const invalid=structuredClone(fixture);invalid.profiles[newSingle]=profile(newSingle,b.localId,'Someone Else');
   assert.throws(()=>planRosterUpdate(invalid,options),/occupied/);
+  const delayedId='merged-'+old+'-delayed';
+  const completed={id:delayedId,studentKey:canonical,ownerUid:a.localId,activitySlug:'seminar-2',points:2,createdAt:'2026-01-01T00:00:00Z'};
+  assert.equal((await request(prefix+'/attempts/'+canonical+'/'+delayedId,'PUT',completed,a.idToken)).status,200);
+  const transport={transaction:async(path,update)=>{
+    const prior=await request(prefix+'/'+path,'GET',undefined,a.idToken);assert.equal(prior.status,200);
+    const next=update(prior.value);
+    if(next===undefined)return {value:prior.value};
+    const result=await request(prefix+'/'+path,'PUT',next,a.idToken);assert.equal(result.status,200,JSON.stringify(result.value));
+    return {value:result.value};
+  }};
+  const delayed={...completed,points:5,mergedFrom:{studentKey:old,attemptId:'delayed'}};
+  const recovered=await commitStudentAttempt(transport,delayed,{studentKey:canonical,uid:a.localId});
+  assert.equal(recovered.id,delayedId+'-source-result');
+  assert.equal((await request(prefix+'/attempts/'+canonical+'/'+delayedId,'GET',undefined,a.idToken)).value.points,2,'canonical completion preserved');
+  assert.equal((await request(prefix+'/grades/'+canonical+'/seminar-2','GET',undefined,a.idToken)).value.points,5,'late result contributes its best grade');
+  assert.equal((await commitStudentAttempt(transport,delayed,{studentKey:canonical,uid:a.localId})).id,recovered.id,'late replay is idempotent');
 });
