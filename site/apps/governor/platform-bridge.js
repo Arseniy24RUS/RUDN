@@ -2,6 +2,7 @@ import {backend} from '../../assets/js/backend.js?v=1.3.8';
 import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.8';
 import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.8';
 import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access.js?v=1.3.8';
+import {gameAccessGate} from '../../assets/js/games-catalog.js?v=1.3.8';
 import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.8';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
@@ -21,7 +22,8 @@ const local=value=>G.I18n.local(value,language);
 $('#platform-loading-text').textContent={ru:'Восстанавливаем профиль платформы…',en:'Restoring your course profile…',zh:'正在恢复课程账号…'}[language];
 const message=text=>{$('#platform-status').textContent=text;};
 const canAccess=()=>{
-  if(free||backend.isAdmin())return true;
+  if(free)return gameAccessGate('governor',backend)?.open!==false;
+  if(backend.isAdmin())return true;
   const now=backend.globalNow();
   return topicGate(7,backend.getAccessOverrides(academicContext(now).startYear),now).open;
 };

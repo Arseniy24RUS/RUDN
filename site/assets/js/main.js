@@ -1,5 +1,5 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {GAMES,GAMES_COPY} from './games-catalog.js?v=1.3.8';
+import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.8';
 import {CONFIG} from './config.js?v=1.3.8';
 import {backend,groupOptions} from './backend.js?v=1.3.8';
 import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.8';
@@ -161,8 +161,8 @@ function gateStatus(gate){
   if(gate.open)return accessText('automaticOpen');
   return accessText('lockedUntil',{week:gate.week,date:formatAccessDate(gate.opensAt,getLocale())});
 }
-function lockedAccessPage(title,gate){
-  app.innerHTML=contentPage(title,gateStatus(gate),`<div class="panel access-lock-panel"><div class="access-lock-icon">⌛</div><h2>${accessText('locked')}</h2><p>${esc(gateStatus(gate))}</p><a class="btn btn-neutral" href="#dashboard">← ${ui('back')}</a></div>`);
+function lockedAccessPage(title,gate,back='#dashboard'){
+  app.innerHTML=contentPage(title,gateStatus(gate),`<div class="panel access-lock-panel"><div class="access-lock-icon">⌛</div><h2>${accessText('locked')}</h2><p>${esc(gateStatus(gate))}</p><a class="btn btn-neutral" href="${back}">← ${back==='#games'?gamesText('back'):ui('back')}</a></div>`);
 }
 function quizAccessGate(activitySlug,snapshot=accessSnapshot()){
   const lecture=String(activitySlug).match(/^lecture-(\d+)$/);if(lecture)return lectureTestGate(Number(lecture[1]),snapshot.overrides,snapshot.now);
@@ -174,6 +174,7 @@ function route(){
   const [name,...parts]=raw.split('/');
   return {name:name||'dashboard',parts};
 }
+function freeGameForRoute({name,parts}){return name==='puzzle'?'maps':name==='games'?parts[0]:null;}
 function formatDate(value){
   if(!value) return '—';
   try{return new Intl.DateTimeFormat(getLocale()==='zh'?'zh-CN':getLocale()==='en'?'en-GB':'ru-RU',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value))}catch{return String(value)}
@@ -258,20 +259,26 @@ async function render(){
   if(renderRunning){renderAgain=true;return}
   const nextKey=`${location.hash}:${attemptOwner()}`;
   const currentRoute=route();
+  const freeGame=freeGameForRoute(currentRoute);
+  const freeGate=freeGame&&gameAccessGate(freeGame,backend);
+  const freeAllowed=!freeGate||freeGate.open;
   // Background Auth/Database updates must not detach the form being edited.
-  if(renderedKey===nextKey&&renderedLocale===getLocale()&&formCleanups.length)return;
-  if(currentCareer?.handle&&currentCareer.owner===attemptOwner()&&isModuleRoute('career',currentCareer.context)&& (currentCareer.context==='free'||backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow())))){
+  if(freeAllowed&&renderedKey===nextKey&&renderedLocale===getLocale()&&formCleanups.length)return;
+  if(freeAllowed&&currentCareer?.handle&&currentCareer.owner===attemptOwner()&&isModuleRoute('career',currentCareer.context)&& (currentCareer.context==='free'||backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow())))){
     renderedKey=nextKey;currentCleanup.refreshLocale();currentCareer.handle.navigate(careerRoute(currentRoute.parts[1]));return;
   }
-  if(!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
+  if(freeAllowed&&!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
   const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;renderedLocale=getLocale();
   try{for(const controller of formCleanups)await controller.destroy();formCleanups=[];await durableStore.flush()}
   catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return}
   if(currentCleanup){try{await currentCleanup.flush?.();await currentCleanup()}catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return} currentCleanup=null}
   const r=route();setActiveNav(r.name);
+  // Saving the previous screen is asynchronous; recheck the current route/profile.
+  const requestedGame=freeGameForRoute(r),requestedGate=requestedGame&&gameAccessGate(requestedGame,backend);
   app.setAttribute('aria-busy','true');
   try{
-    if(!backend.authReady&&['activity','gradebook','profile','admin','live'].includes(r.name))app.innerHTML=`<div class="panel" role="status">${t('loading')}</div>`;
+    if(!backend.authReady&&['activity','gradebook','profile','admin','live','games','puzzle'].includes(r.name))app.innerHTML=`<div class="panel" role="status">${t('loading')}</div>`;
+    else if(requestedGate&&!requestedGate.open)lockedAccessPage(loc(GAMES.find(game=>game.id===requestedGame),'title'),requestedGate,'#games');
     else if(r.name==='dashboard') await renderDashboard();
     else if(r.name==='gradebook') await renderGradebook();
     else if(r.name==='materials') renderMaterials();
@@ -529,7 +536,9 @@ function renderGamesRoute(module){
     else renderSeminar6(topic,{context:'free'});
     return;
   }
-  app.innerHTML=contentPage(gamesText('title'),gamesText('lead'),`<div class="games-grid">${GAMES.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${game.href}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
+  const games=GAMES.filter(game=>gameAccessGate(game.id,backend)?.open!==false);
+  const lead=backend.getProfile()&&!backend.isAdmin()?GAMES_STUDENT_LEAD[getLocale()]||GAMES_STUDENT_LEAD.ru:gamesText('lead');
+  app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${game.href}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
 }
 function renderSeminar5(topic,{context='course'}={}){
   const free=context==='free';
@@ -774,7 +783,8 @@ async function renderPuzzleRoute(asSeminar=false){
   cleanup.flush=()=>mountedCleanup?.flush?.();
   const permitted=()=>{
     if(!active()){cleanup();return false;}
-    if(asSeminar){const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);if(!accessAllowed(gate)){cleanup();lockedAccessPage(ui('puzzleTitle'),gate);return false;}}
+    const access=accessSnapshot(),gate=asSeminar?topicGate(2,access.overrides,access.now):gameAccessGate('maps',backend);
+    if(gate&&!accessAllowed(gate)){cleanup();lockedAccessPage(ui('puzzleTitle'),gate,asSeminar?'#dashboard':'#games');return false;}
     return true;
   };
   const waiting=()=>{const status=container.querySelector('[data-puzzle-loading]');if(status){status.dataset.puzzleLoading='waiting';status.textContent=copy.waiting}};
@@ -811,7 +821,7 @@ async function renderPuzzleRoute(asSeminar=false){
   function pause(){clearTimeout(timer);if(!mountedCleanup&&document.visibilityState==='hidden')controller?.abort();}
   // Once mounted, render() owns navigation: it captures and flushes the draft
   // before cleanup. These listeners only cancel the pending asset load.
-  function checkRoute(){if(mountedCleanup)return;if(!active())cleanup();else if(asSeminar)permitted();}
+  function checkRoute(){if(mountedCleanup)return;if(!active())cleanup();else permitted();}
   function visibility(){if(document.visibilityState==='hidden')pause();else wake();}
   window.addEventListener('online',wake);window.addEventListener('offline',pause);
   window.addEventListener('hashchange',checkRoute);window.addEventListener('rudn:identitychange',checkRoute);window.addEventListener('rudn:locale',checkRoute);window.addEventListener('rudn:accesschange',checkRoute);
