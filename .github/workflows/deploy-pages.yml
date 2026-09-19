@@ -19,15 +19,17 @@ concurrency:
 
 jobs:
   puzzle-checks:
-    if: ${{ !contains(github.event.head_commit.message, '[games-access-only]') }}
+    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: puzzle-checks
-    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && contains(github.event.head_commit.message, '[games-access-only]'))) }}
+    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]')))) }}
     env:
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') }}
+      QUIZ_LAYOUT_ONLY: ${{ contains(github.event.head_commit.message, '[quiz-layout-only]') }}
       GAMES_ACCESS_ONLY: ${{ contains(github.event.head_commit.message, '[games-access-only]') }}
     environment:
       name: github-pages
@@ -39,14 +41,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      # A deliberately requested access-only hotfix does not rerun every map.
+      # Focused UI hotfixes run their own checks instead of every map.
       # Reject the shortcut if the commit changes anything outside this scope.
-      - name: Verify access-only change scope
-        if: env.GAMES_ACCESS_ONLY == 'true'
+      - name: Verify focused hotfix change scope
+        if: env.FOCUSED_HOTFIX == 'true'
         run: |
           python - <<'PY'
-          import subprocess
-          allowed = {
+          import os, subprocess
+          games_access = {
             '.github/workflows/deploy-pages.yml',
             'scripts/test_games_access.mjs',
             'site/assets/js/games-catalog.js',
@@ -54,8 +56,15 @@ jobs:
             'site/apps/governor/platform-bridge.js',
             'site/service-worker.js',
           }
+          quiz_layout = {
+            '.github/workflows/deploy-pages.yml',
+            'scripts/test_quiz_layout.mjs',
+            'site/assets/css/site.css',
+            'site/service-worker.js',
+          }
+          allowed = quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
-          assert changed and changed <= allowed, f'Not an access-only change: {sorted(changed - allowed)}'
+          assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           PY
       - name: Prepare Node.js
         uses: actions/setup-node@v4
@@ -72,7 +81,7 @@ jobs:
       - name: Update published reception calendars
         run: node scripts/update-reception-calendars.mjs --previous-url https://arseniy24rus.github.io/RUDN/assets/data/calendars/current.json
       - name: Validate static bundle
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -81,31 +90,31 @@ jobs:
             node --check "$file"
           done < <(find site -type f \( -name '*.js' -o -name '*.mjs' \) -print0)
       - name: Verify Governor grading and offline contract
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
       - name: Verify legacy reception assignments and lazy content integrity
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: node site/apps/reception/content/test.mjs
       - name: Verify equivalent localized answers without changing historical grading
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: |
           node site/apps/reception/localization/answer-alias-test.mjs
           node site/apps/reception/localization/compiled-contract-test.mjs
           node site/apps/reception/localization/reference-locale-test.mjs
           node site/apps/reception/localization/source-strings-test.mjs
       - name: Verify career locale templates and question coverage
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: node scripts/test_career_localization.mjs
       - name: Prepare native browser checks
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium webkit
       - name: Test native Governor on desktop and mobile
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
       - name: Verify durable local queue and attachment replay
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         shell: bash
         env:
           DURABLE_TEST_BROWSERS: chromium
@@ -113,7 +122,7 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/test_durable_store.mjs
       - name: Complete eight reception cases through the real interface
-        if: env.GAMES_ACCESS_ONLY != 'true'
+        if: env.FOCUSED_HOTFIX != 'true'
         shell: bash
         env:
           DURABLE_TEST_BROWSERS: chromium
@@ -151,6 +160,16 @@ jobs:
           node --check site/apps/governor/platform-bridge.js
           node --check site/service-worker.js
           node scripts/test_games_access.mjs
+      - name: Check only quiz answer layout
+        if: env.QUIZ_LAYOUT_ONLY == 'true'
+        env:
+          QA_OUT: ${{ runner.temp }}/quiz-layout-qa
+        run: |
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node --check site/service-worker.js
+          node scripts/test_quiz_layout.mjs
       - name: Save native browser evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -160,6 +179,7 @@ jobs:
             ${{ runner.temp }}/governor-browser-qa
             ${{ runner.temp }}/reception-browser-qa
             ${{ runner.temp }}/games-access-qa
+            ${{ runner.temp }}/quiz-layout-qa
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure Pages
