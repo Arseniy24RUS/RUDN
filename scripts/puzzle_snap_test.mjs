@@ -20,7 +20,7 @@ function game({locked = [false, false], dx = 0} = {}) {
   const events = [];
   const state = {current: 0, placed: locked.filter(Boolean).length, cursor: 0, order: locked.map((_, i) => i),
     pieces: locked.map((value, index) => ({index, locked: value, inTray: false, dx: index ? 0 : dx, dy: 0})),
-    features: locked.map((_, i) => ({properties: {_puzzleId: String(i)}})), view: {k: 2}, difficulty: 'medium', errors: 0,
+    features: locked.map((_, i) => ({properties: {_puzzleId: String(i)}})), view: {k: 2}, difficulty: 'medium',
     hints: 0, hintUntil: 999, finished: false, elapsedBeforeStart: 1234, attemptId: 'stable-attempt'};
   const record = type => events.push({type, current: state.current, placed: state.placed, finished: state.finished});
   const context = vm.createContext({state, DIFFICULTY: {medium: {snap: 10}}, hintTimer: 1, clearTimeout() {},
@@ -68,7 +68,7 @@ test('a placement outside the unchanged tolerance leaves the current piece avail
   assert.equal(state.placed, 0);
   assert.equal(state.current, 0);
   assert.equal(state.pieces[0].locked, false);
-  assert.equal(state.errors, 1);
+  assert.equal('errors' in state, false);
   assert.deepEqual(events.map(event => event.type), ['ui', 'draw']);
   assert.equal(events[1].dirty, false);
 });

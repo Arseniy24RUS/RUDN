@@ -323,7 +323,7 @@
   text-transform: uppercase;
 }
 .puzzle-stage-kicker.training { color: var(--warning); }
-.puzzle-stage-metrics { display: grid; grid-template-columns: repeat(3, minmax(76px, auto)); gap: 8px; }
+.puzzle-stage-metrics { display: grid; grid-template-columns: repeat(2, minmax(76px, auto)); gap: 8px; }
 .puzzle-stage-metrics > div {
   min-width: 82px;
   padding: 8px 11px;
@@ -531,7 +531,7 @@ body.puzzle-fullscreen-active { overflow: hidden; overscroll-behavior: none; }
   .puzzle-profile-chip { width: min(360px, 100%); }
   .puzzle-toolbar { grid-template-columns: 1fr 1fr; }
   .puzzle-stage-head { grid-template-columns: 1fr; }
-  .puzzle-stage-metrics { width: 100%; grid-template-columns: repeat(3, 1fr); }
+  .puzzle-stage-metrics { width: 100%; grid-template-columns: repeat(2, 1fr); }
   .puzzle-canvas-wrap { height: clamp(360px, 65vh, 760px); }
 }
 
@@ -588,7 +588,7 @@ body.puzzle-fullscreen-active { overflow: hidden; overscroll-behavior: none; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-title strong { font-size: 15px; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) #puzzleDatasetSubtitle { display: none; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-kicker { font-size: 9px; margin-bottom: 0; }
-  .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-metrics { width: auto; grid-template-columns: repeat(3, auto); gap: 4px; }
+  .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-metrics { width: auto; grid-template-columns: repeat(2, auto); gap: 4px; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-metrics > div { min-width: 52px; padding: 4px 7px; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-metrics strong { font-size: 13px; }
   .puzzle-stage-card:is(:fullscreen, :-webkit-full-screen, .is-puzzle-fullscreen) .puzzle-stage-footer { flex-direction: row; }

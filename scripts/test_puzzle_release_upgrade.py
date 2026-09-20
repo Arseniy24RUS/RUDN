@@ -94,7 +94,7 @@ class HistoricalServer(catalog.PuzzleServer):
 
 
 def compare(before, after):
-    for key in ['attemptId', 'seed', 'mode', 'selection', 'difficulty', 'order', 'featureIds', 'placed', 'hints', 'errors', 'current', 'geometryRef']:
+    for key in ['attemptId', 'seed', 'mode', 'selection', 'difficulty', 'order', 'featureIds', 'placed', 'hints', 'current', 'geometryRef']:
         assert before[key] == after[key], (key, before[key], after[key])
     for old, new in zip(before['pieces'], after['pieces']):
         assert old['locked'] == new['locked'] and old['inTray'] == new['inTray']
@@ -104,6 +104,7 @@ def compare(before, after):
     assert max(abs(a-b) for a,b in zip(before['view']['centre'], after['view']['centre'])) < 1e-6
     assert after['elapsedMs'] >= before['elapsedMs'] - 1, ('Elapsed time reset', before['elapsedMs'], after['elapsedMs'])
     assert not before['finished'] and not after['finished']
+    assert 'errors' not in after, 'Retired mistake counter must not enter new snapshots'
 
 
 async def case(browser, fixtures, output, commit, mode, selection, version, context_mode='free'):

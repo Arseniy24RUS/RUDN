@@ -19,16 +19,17 @@ concurrency:
 
 jobs:
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: puzzle-checks
-    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]')))) }}
+    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]')))) }}
     env:
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') }}
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') }}
+      PUZZLE_NO_MISTAKES_ONLY: ${{ contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') }}
       QUIZ_LAYOUT_ONLY: ${{ contains(github.event.head_commit.message, '[quiz-layout-only]') }}
       GAMES_ACCESS_ONLY: ${{ contains(github.event.head_commit.message, '[games-access-only]') }}
     environment:
@@ -62,7 +63,24 @@ jobs:
             'site/assets/css/site.css',
             'site/service-worker.js',
           }
-          allowed = quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
+          puzzle_no_mistakes = {
+            '.github/workflows/deploy-pages.yml',
+            '.github/workflows/puzzle-checks.yml',
+            'scripts/puzzle_snap_test.mjs',
+            'scripts/test_puzzle_catalog.py',
+            'scripts/test_puzzle_interactions.py',
+            'scripts/test_puzzle_release_upgrade.py',
+            'scripts/test_puzzle_resilience.py',
+            'scripts/test_puzzle_no_mistakes.py',
+            'scripts/test_puzzle_leaderboard.mjs',
+            'site/apps/puzzle.html',
+            'site/assets/css/puzzle.css',
+            'site/assets/js/puzzle-bootstrap.js',
+            'site/assets/js/puzzle-engine.js',
+            'site/service-worker.js',
+            'docs/puzzle-no-mistakes.md',
+          }
+          allowed = puzzle_no_mistakes if os.environ['PUZZLE_NO_MISTAKES_ONLY'] == 'true' else quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           PY
@@ -170,6 +188,20 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node --check site/service-worker.js
           node scripts/test_quiz_layout.mjs
+      - name: Verify puzzle progress and results without mistake counters
+        if: env.PUZZLE_NO_MISTAKES_ONLY == 'true'
+        env:
+          QA_OUT: ${{ runner.temp }}/puzzle-no-mistakes-qa
+        run: |
+          python -m pip install playwright==1.61.0 openpyxl==3.1.5
+          python -m playwright install --with-deps chromium
+          git fetch --no-tags --depth=1 origin 93698d66ca2f9f04143beba14db969d3f3927a6c
+          node --check site/assets/js/puzzle-engine.js
+          node --check site/assets/js/puzzle-bootstrap.js
+          node --check site/service-worker.js
+          node --test scripts/puzzle_snap_test.mjs scripts/test_puzzle_leaderboard.mjs
+          python scripts/test_puzzle_xlsx.py --artifacts "$QA_OUT"
+          python scripts/test_puzzle_no_mistakes.py --output "$QA_OUT"
       - name: Save native browser evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -180,6 +212,7 @@ jobs:
             ${{ runner.temp }}/reception-browser-qa
             ${{ runner.temp }}/games-access-qa
             ${{ runner.temp }}/quiz-layout-qa
+            ${{ runner.temp }}/puzzle-no-mistakes-qa
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure Pages

@@ -161,7 +161,7 @@ async def preparation_failure(page, context, browser_name, server, record):
       }};
     }""")
     preserved = ['attemptId', 'mode', 'selection', 'difficulty', 'seed', 'featureIds',
-                 'order', 'current', 'cursor', 'placed', 'errors', 'hints', 'view',
+                 'order', 'current', 'cursor', 'placed', 'hints', 'view',
                  'geometryRef', 'finished', 'finishedResult', 'timerStarted', 'pieces']
     stages = []
     for stage in ('renderer', 'first-path'):

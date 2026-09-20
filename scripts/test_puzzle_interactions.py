@@ -107,7 +107,7 @@ async def input_and_cancel(page, context, browser_name, server, record):
             await page.wait_for_timeout(60)
         await page.mouse.up()
         after = await state(page)
-        assert (after['placed'], after['errors']) == (before['placed'], before['errors']), (cancel_kind, before, after)
+        assert (after['placed'], after['hasErrorCounter']) == (before['placed'], False), (cancel_kind, before, after)
     record['cancellation'] = ['synthetic pointercancel during trusted drag', 'native lostpointercapture during trusted drag']
 
     await page.locator('#puzzleReturn').click()
@@ -147,7 +147,7 @@ async def input_and_cancel(page, context, browser_name, server, record):
         await touch('touchEnd', [])
         after = await state(page)
         assert after['view']['k'] > before['view']['k'] * 1.1, ('Trusted pinch did not zoom', before, after)
-        assert (after['placed'], after['errors']) == (before['placed'], before['errors']), 'Pinch placed a piece'
+        assert (after['placed'], after['hasErrorCounter']) == (before['placed'], False), 'Pinch placed a piece'
         await cdp.detach()
         record['touch'] = 'Trusted Chromium CDP drag and two-finger pinch; emulated device'
     else:
@@ -166,7 +166,7 @@ async def input_and_cancel(page, context, browser_name, server, record):
         ])
         after = await state(page)
         assert after['view']['k'] > before['view']['k'] * 1.1, 'Synthetic pinch did not zoom'
-        assert (after['placed'], after['errors']) == (before['placed'], before['errors'])
+        assert (after['placed'], after['hasErrorCounter']) == (before['placed'], False)
         record['touch'] = 'Trusted touchscreen tap; synthetic two-pointer pinch (no physical-device claim)'
     await check_layout(page, record, 'after-mixed-input')
 
@@ -515,7 +515,7 @@ async def third_touch_does_not_place(page, context, browser_name, server, record
         await gesture(page, [dict(point,type='pointerup',id=i+8) for i,point in enumerate(local[1:])])
         record['input'] = 'Synthetic three-pointer contact and release; no physical-device claim'
     after = await state(page)
-    assert (after['placed'],after['errors'],after['finished']) == (before['placed'],before['errors'],before['finished']), 'Third finger caused an unintended placement or error'
+    assert (after['placed'],after['hasErrorCounter'],after['finished']) == (before['placed'],False,before['finished']), 'Third finger caused an unintended placement or error'
     for key in ['k','x','y']:
         assert abs(rebased['view'][key]-lifted['view'][key]) < 1e-5, ('Lifting first finger caused a pinch jump', key)
     record['noMoveOrError'] = True

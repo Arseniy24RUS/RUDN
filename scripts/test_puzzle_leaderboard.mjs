@@ -8,6 +8,15 @@ import {bestPuzzleResults,normalizePuzzleResult,puzzleGroups,filterPuzzleResults
 import {commitPuzzleLeaderboard} from '../site/assets/js/puzzle-storage.js';
 
 const row=(id,extra={})=>({id,fio:'Student '+id,group:'ГГУбд-01-26',difficulty:'hard',time_ms:4000,placed:89,total:89,timestamp:1767225600000,...extra});
+test('legacy mistake counters do not affect ranking or leak into normalized/exported rows',()=>{
+  const legacy=row('legacy',{errors:900,time_ms:3000});
+  const current=row('current',{time_ms:4000});
+  const before=JSON.stringify(legacy);
+  const ranked=bestPuzzleResults([current,legacy]);
+  assert.deepEqual(ranked.map(item=>item.id),['legacy','current']);
+  assert.ok(ranked.every(item=>!Object.hasOwn(item,'errors')));
+  assert.equal(JSON.stringify(legacy),before,'Historical cloud records must not be rewritten');
+});
 test('all catalog country labels resolve in RU/EN/ZH without changing ISO identities',async()=>{
   const source=readFileSync(new URL('../site/assets/js/puzzle-bootstrap.js',import.meta.url),'utf8');
   const code=source.slice(source.indexOf('async function worldNames()'),source.indexOf('async function localAdm1('));

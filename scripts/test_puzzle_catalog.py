@@ -54,7 +54,7 @@ READ_ONLY_HOOK = r"""
     return {ready:state.ready,loading:state.loading,started:state.started,finished:state.finished,
       attemptId:state.attemptId,difficulty:state.difficulty,mode:state.mode,selection:state.selection,
       placed:state.placed,total:state.features.length,current:state.current,hints:state.hints,
-      errors:state.errors,elapsedMs:elapsedMs(),source,target,view:{...state.view},
+      hasErrorCounter:'errors' in state,elapsedMs:elapsedMs(),source,target,view:{...state.view},
       inTray:piece?.inTray,featureIds:state.features.map(f=>f.properties._puzzleId),
       order:[...state.order],canvas:{width:state.cssWidth,height:state.cssHeight,mapBottom:state.mapBottom},
       map:{...state.mapRect},sideTray:state.sideTray,tray:trayRect()};

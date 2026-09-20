@@ -94,7 +94,6 @@
     datasetSubtitle: byId("puzzleDatasetSubtitle"),
     placed: byId("puzzlePlaced"),
     time: byId("puzzleTime"),
-    errors: byId("puzzleErrors"),
     difficultyLabel: byId("puzzleDifficultyLabel"),
     modeSummary: byId("puzzleModeSummary"),
     modeBadge: byId("puzzleModeBadge"),
@@ -177,7 +176,6 @@
     cursor: 0,
     current: -1,
     placed: 0,
-    errors: 0,
     hints: 0,
     startedAt: null,
     elapsedBeforeStart: 0,
@@ -271,7 +269,7 @@
       version:3,geometryRef:state.geometryRef,finishedResult:state.finishedResult,selections:{...state.selections},
       attemptId:state.attemptId,seed:state.seed,mode:state.mode,selection:state.selection,difficulty:state.difficulty,
       wrapper:{dataset:state.wrapper?.dataset},featureIds:state.features.map(feature=>feature.properties._puzzleId),
-      order:[...state.order],cursor:state.cursor,current:state.current,placed:state.placed,errors:state.errors,hints:state.hints,
+      order:[...state.order],cursor:state.cursor,current:state.current,placed:state.placed,hints:state.hints,
       finished:state.finished,started:state.started,elapsedMs:Math.round(elapsedMs()),timerStarted:state.timerStarted,
       view:{k:state.view.k,zoom:state.view.k/state.baseViewK,centre},pieces:state.pieces.map(piece=>{
         const anchor=state.anchors[piece.index];
@@ -622,7 +620,7 @@
   }
 
   function hasPlayed() {
-    return state.timerStarted || state.placed > 0 || state.hints > 0 || state.errors > 0;
+    return state.timerStarted || state.placed > 0 || state.hints > 0;
   }
 
   function selectedSettings() {
@@ -739,7 +737,8 @@
             && (!Array.isArray(piece.point) || piece.point.length !== 2 || !piece.point.every(Number.isFinite))))),
         attemptId: attempt.attempt_id, seed: Number(attempt.seed) || hashString(attempt.attempt_id),
         cursor: resume?.cursor || 0, current: -1, placed: 0,
-        errors: Math.max(0, Number(resume?.errors) || 0), hints: Math.max(0, Number(resume?.hints) || 0),
+        // Legacy error counters are deliberately ignored; all game progress is retained.
+        hints: Math.max(0, Number(resume?.hints) || 0),
         startedAt: null, elapsedBeforeStart: Math.max(0, Number(resume?.elapsedMs) || 0),
         timerStarted: Boolean(resume?.timerStarted), finished: Boolean(resume?.finished),
         finishedResult: resume?.finishedResult || null, started: true, ready: true,
@@ -1833,7 +1832,6 @@
   function updateUi() {
     const total = state.features.length;
     els.placed.textContent = `${state.placed} / ${total}`;
-    els.errors.textContent = String(state.errors);
     els.difficultyLabel.textContent = state.started ? DIFFICULTY[state.difficulty].label : "—";
     const progressPercent = total ? `${Math.round(state.placed / total * 100)}%` : "0%";
     els.progress.style.width = progressPercent;
@@ -2069,7 +2067,6 @@
         drawAll(true);
       }
     } else {
-      state.errors += 1;
       updateUi();
       drawAll();
     }
@@ -2108,7 +2105,7 @@
     const payload = {
       csrf, activity_slug: root.dataset.activitySlug, attempt_id: state.attemptId,
       mode: state.mode, selection: state.selection, difficulty: state.difficulty,
-      placed: state.placed, total: state.features.length, errors: state.errors, hints: state.hints,
+      placed: state.placed, total: state.features.length, hints: state.hints,
       duration_ms: Math.round(state.elapsedBeforeStart),
       feature_ids: state.features.map(feature => feature.properties._puzzleId),
       dataset_id: state.wrapper?.dataset?.id,
