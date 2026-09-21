@@ -11,7 +11,7 @@
   </defs>
   <rect class="bg" width="1100" height="560"/>
   <text class="title" x="42" y="54">Course data flow with optional synchronization</text>
-  <rect class="panel" x="34" y="88" width="1032" height="420"/>
+  <rect class="panel" x="34" y="88" width="1032" height="390"/>
   <rect class="box" x="70" y="145" width="230" height="120"/>
   <text class="label" x="96" y="185">Course shell</text>
   <text class="small" x="96" y="219">RU / EN / ZH</text>
@@ -37,6 +37,6 @@
   <text class="small" x="825" y="391">protected profiles</text>
   <text class="small" x="825" y="419">teacher gradebook</text>
   <path class="arrow" d="M915 265 V313"/>
-  <text class="small" x="72" y="476">Boundary: static Pages serves the client; configured Firebase handles synchronization.</text>
-  <text class="small" x="72" y="504">Production identity and rules must be validated separately.</text>
+  <text class="small" x="72" y="520">Boundary: static Pages serves the client; configured Firebase handles synchronization.</text>
+  <text class="small" x="72" y="546">Production identity and rules must be validated separately.</text>
 </svg>
