@@ -1,68 +1,123 @@
-# RUDN Learning Platform — «Введение в специальность: государственное и муниципальное управление»
+# RUDN Learning Platform
 
-Статическая GitHub Pages-редакция авторской образовательной платформы Арсения Михайловича Ситковского для студентов РУДН.
+[English](#english) | [Русский](#русский)
 
-## Состав
+Live site: [https://arseniy24rus.github.io/RUDN/](https://arseniy24rus.github.io/RUDN/)
 
-- 8 лекций и 8 семинаров;
-- видеолекции YouTube/VK и презентации PDF/PPTX;
-- 195 тестовых вопросов на русском, английском и китайском языках;
-- live-квиз «Ветви и уровни власти» с 50 иллюстрированными органами;
-- географический конструктор: 89 субъектов РФ, муниципальные образования всех 89 субъектов, страны мира и ADM1 зарубежных государств;
-- задания по системе расселения, нормативным правовым актам, обращениям граждан и государственной службе;
-- встроенный симулятор «Губернатор: Новая область» с автоматической оценкой 0–5 за семинар 7;
-- профориентационный тест;
-- электронный журнал до 100 баллов.
+<a id="english"></a>
+## English
 
-## Архитектура GitHub Pages
+![English RUDN course dashboard](assets/visuals/readme/hero-en.png)
 
-`site/` содержит полностью статический HTML/CSS/JavaScript-клиент. Профили, попытки, оценки, live-сессии и загруженные подтверждения синхронизируются через Firebase. Доступность соединения не меняет роль вошедшего пользователя.
+![English walkthrough from course dashboard to geography puzzle](assets/visuals/readme/demo-en.gif)
 
-### Версия 1.3 — профориентация в шестом разделе
+RUDN Learning Platform is a static GitHub Pages course environment for “Introduction to the Profession: State and Municipal Administration”. It is written for students who need a guided course path, and for an instructor who needs one place to publish materials, formative tests, practice games, and optionally synchronized results. The public site can be explored without signing in; the screenshots and demo GIF in this README use guest mode and do not create student records, gradebook rows, live sessions, production submissions, or Firebase writes.
 
-Семинар 6 включает нативный профориентационный модуль: 27 вопросов, 9 шкал интересов, справочник органов, сравнение направлений, профессиональные пробы и рабочую тетрадь. Маршрут `#activity/seminar-6` открывает компонент непосредственно внутри страницы курса. Язык, навигация и доступность раздела определяются платформой.
+The course surface is multilingual at the shell level: Russian, English, and Chinese navigation are available, while individual modules have their own coverage. The Governor simulator is documented as RU/EN in [`docs/GOVERNOR_NATIVE_INTEGRATION.md`](docs/GOVERNOR_NATIVE_INTEGRATION.md), and the career module describes its embedded locale contract in [`site/apps/career/README.md`](site/apps/career/README.md). The current course includes eight lectures and eight seminars, presentation and document materials, tests, a live quiz on branches and levels of power, a geography puzzle, a citizen-reception training module, a career-exploration module, and a Governor simulator with an automatic seminar-7 score formula. The geography puzzle covers world countries, ADM1 regions, all Russian federal subjects, and municipal maps for all 89 Russian subjects; its catalog and no-mistakes behavior are documented in [`docs/puzzle-quality.md`](docs/puzzle-quality.md) and [`docs/puzzle-no-mistakes.md`](docs/puzzle-no-mistakes.md).
 
-Ответы и рабочие материалы сохраняются локально отдельно для UID преподавателя или `studentKey` студента. При смене профиля компонент уничтожается вместе с обработчиками; данные другого профиля не отображаются. Между устройствами эти материалы автоматически не синхронизируются. Индексы интересов не являются учебными баллами и не передаются в журнал. Прежний официальный тест знаний со сдачей подтверждения остаётся отдельным заданием семинара до 5 баллов; итоговые 100 баллов курса сохранены.
+A typical safe review scenario is: open the dashboard, inspect the visible course path, open Materials, then open Games and launch the geography puzzle in guest mode. That flow demonstrates the student experience without touching a production gradebook. For a configured class, the same shell can use Firebase Anonymous Authentication and Email/Password for profile state, local attempt queues, teacher access, gradebook synchronization, live quizzes, and uploaded confirmations. The platform deliberately distinguishes the educational profile key from strong identity proof; [`SECURITY.md`](SECURITY.md) explains that knowing another student identifier is not cryptographic authentication. [`DEPLOYMENT.md`](DEPLOYMENT.md) describes the static Pages deployment and Firebase rule deployment process.
 
-Исходники компонента и контракт подключения описаны в [site/apps/career/README.md](site/apps/career/README.md). Сборка: `npm ci --ignore-scripts && npm run build:career`. Workflow пересобирает компонент перед проверкой и публикацией. Service worker платформы обновляет его ресурсы в общем кэше; отдельный service worker модулем не регистрируется.
+![RUDN course workflow](assets/visuals/readme/architecture-en.svg)
 
-### Версия 1.3.1 — нативный симулятор губернатора
+Architecturally, this is a static site under [`site/`](site). The course shell is [`site/index.html`](site/index.html) plus JavaScript and CSS in [`site/assets`](site/assets). Firebase browser SDK files are built and pinned locally rather than pulled from a CDN at runtime. The native reception module is documented in [`site/apps/reception/README.md`](site/apps/reception/README.md), the career module in [`site/apps/career/README.md`](site/apps/career/README.md), and the Governor integration in [`docs/GOVERNOR_NATIVE_INTEGRATION.md`](docs/GOVERNOR_NATIVE_INTEGRATION.md). The shared service worker owns offline caching for the course and embedded modules; module-specific workers are avoided where the integration docs say so.
 
-Семинар `#activity/seminar-7` открывает `apps/governor/index.html` в том же окне и на том же origin платформы, без iframe и перехода на внешний симулятор. Используются существующие профиль студента и правила открытия раздела 7. Оболочка курса поддерживает RU/EN/ZH; симулятор — RU/EN.
+The project uses Node.js 20+ for the documented checks. A minimal local preview is:
 
-При завершении кампании или досрочной передаче финансового управления автоматически сохраняются оценка 0–5 и отчёт. Пять критериев оценивают завершение кампании, исполнение программ, территориальные услуги, финансовую устойчивость и выполнение обещаний. При досрочной передаче управления действует предел 2,5 балла. В отчёте показан расчёт каждой составляющей; рефлексия не является условием автоматического сохранения.
+```bash
+npm ci --ignore-scripts
+npm run build:firebase
+npm run build:career
+python -m http.server 8765 --bind 127.0.0.1 --directory site
+```
 
-Журнал сохраняет лучший результат за семинар 7 в пределах прежних 5 баллов; максимум курса остаётся 100. Пробное прохождение преподавателя не создаёт студенческую попытку или оценку. Сохранения симулятора разделены по владельцу, а готовые результаты проходят через существующую локальную очередь платформы. За автономную загрузку отвечает общий service worker курса.
+Then open `http://127.0.0.1:8765/`. Focused checks preserved from the repository include:
 
-Описание маршрутов, точной формулы, контракта данных и локальных проверок: [интеграция симулятора](docs/GOVERNOR_NATIVE_INTEGRATION.md). Изменения и статус проверок: [релизные заметки 1.3.1](docs/RELEASE_NOTES_1.3.1.md).
+```bash
+node --test scripts/test_governor_contract.mjs
+node --test scripts/test_governor_service_worker.mjs
+node --check site/assets/js/main.js
+node --check site/assets/js/teacher-journal.js
+node --check site/apps/governor/platform-bridge.js
+node --check site/apps/governor/platform-contract.js
+git diff --check
+```
 
-Для этой интеграции пройдены 14 контрактных тестов, 6 тестов service worker и полный браузерный прогон 10/10 после объединения с карьерным модулем. Дополнительно проверен переход преподавателя между разделами 6 и 7. Проверка действующего Firebase требует отдельного входа; исторические результаты [QA.md](QA.md) не заменяют эти проверки. Статус опубликованной сборки доступен в [GitHub Actions](https://github.com/Arseniy24RUS/RUDN/actions/workflows/deploy-pages.yml). Выпуск 1.3.1 успешно [развёрнут в GitHub Pages](https://github.com/Arseniy24RUS/RUDN/actions/runs/34642672669).
+For the Governor browser workflow, the repository documents:
 
-### Версия 1.2
+```bash
+python scripts/test_governor_browser.py --output /tmp/rudn-governor-browser-qa
+```
 
-- `session.js` и совместимый адаптер `backend` разделяют роль, подключение и сохранение. Firebase Auth восстанавливается до анонимного входа; пароль не сохраняется приложением.
-- `attempt-session.js` хранит черновики по владельцу, активности и режиму, независимо от языка. После завершения открывается результат, а не пустая новая попытка; новая попытка начинается только кнопкой повтора.
-- Результат сначала попадает в отдельную устойчивую локальную очередь `rudn.pending.v1:*`, затем отправляется с тем же ID. Выход не удаляет очередь и черновики. Лучшие оценки не уменьшаются.
-- `teacher-journal.js` строит журнал зарегистрированных студентов. Квиз `/50` хранится как попытка с `recordGrade:false` и не входит в 100 баллов.
-- Кэш журнала привязан к UID преподавателя, имеет дату актуальности и удаляется при выходе. Изменения оценок и расписания требуют подключения.
-- Код Firebase SDK поставляется в `site/assets/vendor/firebase/`; версии зависимостей закреплены в `package-lock.json`. Storage загружается только при отправке файла.
+Keep browser-output directories outside the repository. The full Pages workflow is [`/.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml); it builds Firebase and career assets, validates the static bundle, runs Governor, reception, durable-store, localization, and browser checks, then publishes `site/` through GitHub Pages.
 
-Сборка локальных Firebase-модулей: `npm ci && npm run build:firebase`. После изменения зависимостей пересоберите модули и проверьте список файлов в service worker. Обычная очистка HTTP/Service Worker-кэша не затрагивает работы; **полная очистка данных сайта браузером удалит локальные черновики и неотправленные работы**.
+The main limitation is the same one stated in the old README: GitHub Pages publishes client-side code and learning banks as static files. This is suitable for guided learning and formative assessment, but it is not a secure exam system without a trusted server-side assessment path. Local tests and guest screenshots also do not prove real production Firebase sign-in, rule deployment, or cloud delivery of a new grade. The repository contains third-party and module-specific licenses, including [`site/assets/vendor/xlsx/LICENSE`](site/assets/vendor/xlsx/LICENSE) and [`site/apps/governor/LICENSE`](site/apps/governor/LICENSE). Course text, authored assignments, RUDN branding, generated bundles, and third-party libraries should be reused only under their respective rights; this README does not add a new blanket open-source license.
 
-## Публикация
+<details>
+<summary>Preserved publication notes</summary>
 
-На Windows достаточно распаковать проект и запустить `publish_to_github.bat`. Сценарий создаёт Git-репозиторий, отправляет все файлы в `Arseniy24RUS/RUDN` и, при наличии авторизованного GitHub CLI, автоматически включает GitHub Pages. Workflow `.github/workflows/deploy-pages.yml` запускается после push в `main` и публикует каталог `site/` только после сборки и проверок, включая контракт симулятора, service worker и браузерные сценарии.
+- On Windows, `publish_to_github.bat` and `publish_to_github.ps1` remain the convenience publication scripts.
+- GitHub Pages should be configured for GitHub Actions.
+- Firebase rules are in [`firebase/`](firebase); deploy only to the intended project after backup and review.
+- A full browser check with real Firebase credentials is a separate operational step, not implied by local emulated or guest-mode tests.
+- Clearing all browser site data removes local drafts and unsent work.
 
-Целевой адрес после успешного workflow: [платформа РУДН](https://arseniy24rus.github.io/RUDN/). Наличие инструкции и адреса не означает, что версия 1.3.1 уже опубликована.
+</details>
 
-## Firebase
+<a id="русский"></a>
+## Русский
 
-Конфигурация существующего проекта платформы находится в `site/assets/js/config.js`; адаптер авторизации и синхронизации — в `site/assets/js/backend.js`, правила — в `firebase/`. Нативный симулятор использует эти компоненты без отдельной регистрации, переноса базы или изменения идентификаторов студентов.
+![Русская панель курса РУДН](assets/visuals/readme/hero-ru.png)
 
-В рамках подготовки версии 1.3.1 реальный вход в Firebase, доставка новой попытки в действующую базу и её отображение после облачной синхронизации ещё не подтверждены. Локальные тесты не являются проверкой действующих учётных записей и опубликованных правил.
+![Русский сценарий от курса к географическому пазлу](assets/visuals/readme/demo-ru.gif)
 
-Для развёртывания правил на Windows добавлен `configure_firebase.bat`. Подробности: [DEPLOYMENT.md](DEPLOYMENT.md) и [SECURITY.md](SECURITY.md).
+RUDN Learning Platform — статическая GitHub Pages-платформа курса «Введение в специальность: государственное и муниципальное управление». Она предназначена для студентов, которым нужен понятный маршрут по темам, и для преподавателя, которому нужен единый контур публикации материалов, формирующих тестов, интерактивных заданий и, при настройке Firebase, синхронизации результатов. Публичный сайт можно просматривать без входа; снимки и GIF в этом README выполнены в гостевом режиме и не создают студенческие записи, строки журнала, live-сессии, производственные отправки или записи Firebase.
 
-## Важное ограничение
+Оболочка курса поддерживает русскую, английскую и китайскую навигацию, а отдельные модули имеют собственное покрытие языков. Интеграция симулятора губернатора описывает RU/EN-поддержку в [`docs/GOVERNOR_NATIVE_INTEGRATION.md`](docs/GOVERNOR_NATIVE_INTEGRATION.md), а карьерный модуль описывает контракт локализации в [`site/apps/career/README.md`](site/apps/career/README.md). В курсе есть восемь лекций и восемь семинаров, презентации и документы, тесты, live-квиз по ветвям и уровням власти, географический пазл, тренажёр работы с обращениями граждан, профориентационный модуль и нативный симулятор губернатора с автоматической формулой оценки за семинар 7. Географический пазл включает страны мира, ADM1-регионы зарубежных государств, 89 субъектов РФ и муниципальные карты всех 89 субъектов; качество каталога и отказ от счётчика ошибок описаны в [`docs/puzzle-quality.md`](docs/puzzle-quality.md) и [`docs/puzzle-no-mistakes.md`](docs/puzzle-no-mistakes.md).
 
-GitHub Pages публикует клиентский код и учебный банк как статические файлы. Поэтому ключи тестов технически доступны пользователю, умеющему анализировать исходный код. Эта редакция подходит для формирующего оценивания и учебной работы, но не должна считаться защищённой экзаменационной системой без доверенного серверного контура.
+Безопасный сценарий ревью выглядит так: открыть главную панель, посмотреть учебный маршрут, перейти в «Материалы», затем открыть «Игры» и запустить географический пазл без входа. Такой маршрут показывает реальный интерфейс студента, но не трогает действующий журнал. В настроенном учебном запуске та же оболочка может использовать Firebase Anonymous Authentication и Email/Password для профиля, локальной очереди попыток, преподавательского доступа, синхронизации журнала, live-квизов и загрузки подтверждений. При этом платформа прямо разделяет учебный ключ профиля и строгую идентификацию личности: [`SECURITY.md`](SECURITY.md) поясняет, почему знание чужого номера не является криптографической аутентификацией. Развёртывание Pages и правил Firebase описано в [`DEPLOYMENT.md`](DEPLOYMENT.md).
+
+![Рабочий поток курса РУДН](assets/visuals/readme/architecture-ru.svg)
+
+Технически проект — статический сайт в [`site/`](site). Оболочка курса состоит из [`site/index.html`](site/index.html), JavaScript и CSS в [`site/assets`](site/assets). Firebase SDK собирается и закрепляется локально, а не подгружается с CDN во время работы. Нативная «Приёмная» описана в [`site/apps/reception/README.md`](site/apps/reception/README.md), карьерный модуль — в [`site/apps/career/README.md`](site/apps/career/README.md), интеграция губернатора — в [`docs/GOVERNOR_NATIVE_INTEGRATION.md`](docs/GOVERNOR_NATIVE_INTEGRATION.md). Общий service worker управляет автономным кэшем курса и встроенных модулей; отдельные workers модулей не регистрируются там, где это запрещено интеграционным контрактом.
+
+Для локальных проверок нужен Node.js 20+. Минимальный просмотр:
+
+```bash
+npm ci --ignore-scripts
+npm run build:firebase
+npm run build:career
+python -m http.server 8765 --bind 127.0.0.1 --directory site
+```
+
+Затем откройте `http://127.0.0.1:8765/`. Сохранённые фокусные проверки:
+
+```bash
+node --test scripts/test_governor_contract.mjs
+node --test scripts/test_governor_service_worker.mjs
+node --check site/assets/js/main.js
+node --check site/assets/js/teacher-journal.js
+node --check site/apps/governor/platform-bridge.js
+node --check site/apps/governor/platform-contract.js
+git diff --check
+```
+
+Для браузерной проверки губернатора в репозитории указан сценарий:
+
+```bash
+python scripts/test_governor_browser.py --output /tmp/rudn-governor-browser-qa
+```
+
+Вывод браузерных проверок следует держать вне репозитория. Полный workflow публикации — [`/.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml): он собирает Firebase и career assets, валидирует статический каталог, запускает проверки губернатора, приёмной, durable-store, локализации и браузерных сценариев, затем публикует `site/` через GitHub Pages.
+
+Главное ограничение осталось прежним: GitHub Pages публикует клиентский код и учебные банки как статические файлы. Это подходит для учебного маршрута и формирующего оценивания, но не является защищённой экзаменационной системой без доверенного серверного контура. Локальные тесты и гостевые снимки также не доказывают реальный вход в производственный Firebase, публикацию правил или доставку новой оценки в облако. В репозитории есть сторонние и модульные лицензии, включая [`site/assets/vendor/xlsx/LICENSE`](site/assets/vendor/xlsx/LICENSE) и [`site/apps/governor/LICENSE`](site/apps/governor/LICENSE). Тексты курса, авторские задания, бренд РУДН, собранные bundles и сторонние библиотеки следует использовать только в рамках соответствующих прав; этот README не добавляет новую общую open-source-лицензию.
+
+<details>
+<summary>Сохранённые заметки по публикации</summary>
+
+- В Windows остаются удобные сценарии `publish_to_github.bat` и `publish_to_github.ps1`.
+- GitHub Pages нужно настроить на GitHub Actions.
+- Правила Firebase лежат в [`firebase/`](firebase); разворачивайте их только в целевой проект после резервной копии и ревью.
+- Полная проверка с реальными учётными данными Firebase — отдельный эксплуатационный шаг, а не следствие локальных гостевых тестов.
+- Полная очистка данных сайта в браузере удаляет локальные черновики и неотправленные работы.
+
+</details>
