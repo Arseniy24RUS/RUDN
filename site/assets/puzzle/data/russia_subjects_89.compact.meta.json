@@ -1,0 +1,37 @@
+{
+  "format": "TopoJSON",
+  "source": "russia_subjects_89.topojson",
+  "output": "russia_subjects_89.compact.json",
+  "sourceSha256": "ac697adf68124f8e72221288896e32d4c9995764997966342d9075b36be0d56e",
+  "outputSha256": "c9998fe92ac8726f4c8e13afa7f39673383a777f5a79c53447d871423eca5f62",
+  "sourceBytes": 15112342,
+  "outputBytes": 6594109,
+  "gzipSourceBytes": 4450714,
+  "gzipOutputBytes": 2631660,
+  "subjects": 89,
+  "arcs": 2543,
+  "vertices": 480091,
+  "quantization": {
+    "scale": [
+      1e-7,
+      1e-7
+    ],
+    "translate": [
+      0,
+      0
+    ],
+    "maxCoordinateErrorDegrees": 8.526512829121202e-14,
+    "maxPositionErrorDegrees": 8.987733679556355e-14,
+    "conservativePositionErrorMetres": 1.003929852006445e-8,
+    "maximumAllowedCoordinateErrorDegrees": 1e-12,
+    "maximumAllowedPositionErrorMetres": 1.5796765491707473e-7
+  },
+  "preserves": [
+    "all vertices and their order",
+    "arc and ring references",
+    "feature IDs",
+    "properties",
+    "original bbox"
+  ],
+  "simplification": false
+}

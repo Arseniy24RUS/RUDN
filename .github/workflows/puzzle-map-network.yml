@@ -1,0 +1,59 @@
+name: Puzzle map network fallback
+
+on:
+  push:
+    branches: [codex/puzzle-wifi-fallback]
+  pull_request:
+    paths:
+      - 'site/apps/puzzle.html'
+      - 'site/assets/js/puzzle-*.js'
+      - 'site/assets/js/main.js'
+      - 'site/assets/puzzle/data/russia_subjects_89*'
+      - 'site/service-worker.js'
+      - 'scripts/build-puzzle-map.mjs'
+      - 'scripts/test_puzzle_map_*'
+      - '.github/workflows/puzzle-map-network.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: puzzle-map-network-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  network-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare isolated runtime and browser
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+      - name: Verify exact compact geometry and network loader
+        run: |
+          node scripts/build-puzzle-map.mjs --check
+          node --test scripts/test_puzzle_map_loader.mjs scripts/puzzle_snap_test.mjs scripts/puzzle_storage_order_test.mjs scripts/puzzle_identity_leaderboard_test.mjs
+          node scripts/test_puzzle_render_geometry.cjs
+      - name: Verify graded completion, legacy recovery and mobile fallback
+        run: python scripts/test_puzzle_map_network.py --output "${{ runner.temp }}/puzzle-map-network" --browsers "${{ matrix.browser }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: puzzle-map-network-${{ matrix.browser }}
+          path: ${{ runner.temp }}/puzzle-map-network
+          retention-days: 14

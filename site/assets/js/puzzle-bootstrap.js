@@ -5,6 +5,7 @@ import {initNotifications} from './notifications.js?v=1.3.8';
 import {durableStore} from './durable-store.js?v=1.3.8';
 import {puzzleLeaderboardLocalResult} from './student-identity.js';
 import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.8';
+import {loadRussiaMap} from './puzzle-map-loader.js?v=1.3.8';
 import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.8';
 let activePuzzleBridge=null;
 
@@ -147,6 +148,15 @@ const puzzleFetch=async(input,options={})=>{
   const url=typeof input==='string'?input:input instanceof URL?input.href:input.url;
   const pathname=(()=>{try{return new URL(url,location.href).pathname}catch{return url}})();
   if(!pathname.startsWith('/api/puzzle/')){
+    const requested=new URL(url,location.href);
+    const russiaUrl=new URL(`${base}/russia_subjects_89.topojson`,location.href);
+    if(requested.origin===russiaUrl.origin&&requested.pathname===russiaUrl.pathname){
+      const {geometry,source}=await loadRussiaMap({fetchImpl:nativeFetch,primaryUrl:requested.href,
+        fallbackUrl:new URL('russia_subjects_89.compact.json',russiaUrl).href,options});
+      if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
+      if(!disposed&&root.isConnected)root.dataset.geometrySource=source;
+      return jsonResponse(geometry);
+    }
     // geoBoundaries may return a Git LFS pointer on the raw host. The official
     // media host serves the actual GeoJSON, including for larger country maps.
     const remote=new URL(url,location.href),geometryUrl=puzzleGeometryUrl(remote.href);

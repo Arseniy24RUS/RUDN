@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.8-puzzle-no-mistakes-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.8-puzzle-map-fallback-1`;
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -110,6 +110,7 @@ const SHELL=[
   './assets/js/adaptive-quiz.js?v=1.3.8',
   './assets/js/access.js?v=1.3.8',
   './assets/js/puzzle-bootstrap.js?v=1.3.8',
+  './assets/js/puzzle-map-loader.js?v=1.3.8',
   './assets/js/puzzle-engine.js?v=1.3.8',
   './assets/js/puzzle-render-geometry.js?v=1.3.8',
   './assets/js/puzzle-raster-worker.js?v=1.3.8',
@@ -370,6 +371,7 @@ const GOVERNOR_ASSETS=[
 const PUZZLE_SHELL=[
   './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.8',
   './assets/js/puzzle-bootstrap.js?v=1.3.8','./assets/js/puzzle-engine.js?v=1.3.8',
+  './assets/js/puzzle-map-loader.js?v=1.3.8',
   './assets/js/puzzle-render-geometry.js?v=1.3.8',
   './assets/js/puzzle-raster-worker.js?v=1.3.8',
   './assets/js/puzzle-leaderboard.js?v=1.3.8',

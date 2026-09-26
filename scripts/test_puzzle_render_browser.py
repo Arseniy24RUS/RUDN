@@ -275,13 +275,13 @@ async def settled(page):
 
 async def check_localized_ui(page, locale):
     copy = {
-        'ru': {'hint': 'Подсказка', 'metrics': ['Поставлено', 'Ошибки', 'Время'],
+        'ru': {'hint': 'Подсказка', 'metrics': ['Поставлено', 'Время'],
                'title': 'Субъекты Российской Федерации', 'stage': 'Игровая карта', 'canvas': 'Интерактивная карта',
                'controls': ['Вернуть деталь', 'Центрировать', 'Уменьшить', 'Увеличить']},
-        'en': {'hint': 'Hint', 'metrics': ['Placed', 'Errors', 'Time'],
+        'en': {'hint': 'Hint', 'metrics': ['Placed', 'Time'],
                'title': 'Constituent Entities of the Russian Federation', 'stage': 'Game map', 'canvas': 'Interactive map',
                'controls': ['Return piece', 'Centre map', 'Zoom out', 'Zoom in']},
-        'zh': {'hint': '提示', 'metrics': ['已放置', '错误', '用时'],
+        'zh': {'hint': '提示', 'metrics': ['已放置', '用时'],
                'title': '俄罗斯联邦主体', 'stage': '游戏地图', 'canvas': '互动地图',
                'controls': ['退回拼块', '居中', '缩小', '放大']},
     }[locale]
@@ -299,6 +299,8 @@ async def check_localized_ui(page, locale):
     assert await page.get_by_role('button', name=f"? {ui['hint']}", exact=True).count() == 1
     for key in ['title', 'metrics', 'stage', 'canvas', 'controls']:
         assert ui[key] == copy[key], (locale, key, ui[key])
+    assert await page.locator('#puzzleErrors,[data-static-i18n="errors"]').count() == 0
+    assert not state['hasErrorCounter']
     assert ui['placed'] == f"{state['placed']} / {state['total']}", ui
     assert ui['progress'] == {'role': 'progressbar', 'name': copy['metrics'][0], 'now': str(state['placed']), 'max': str(state['total'])}, ui
     if locale != 'ru':
