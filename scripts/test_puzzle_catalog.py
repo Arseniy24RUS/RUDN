@@ -51,7 +51,7 @@ READ_ONLY_HOOK = r"""
     const piece=currentPiece(),anchor=piece&&state.anchors[piece.index];
     const target=anchor?worldToScreen(anchor[0],anchor[1]):null;
     const source=piece?(piece.inTray?trayCenter():worldToScreen(anchor[0]+piece.dx,anchor[1]+piece.dy)):null;
-    return {ready:state.ready,loading:state.loading,started:state.started,finished:state.finished,
+    return {ready:state.ready,loading:state.loading,restoring:state.restoring,writable:writable(),started:state.started,finished:state.finished,
       attemptId:state.attemptId,difficulty:state.difficulty,mode:state.mode,selection:state.selection,
       placed:state.placed,total:state.features.length,current:state.current,hints:state.hints,
       hasErrorCounter:'errors' in state,elapsedMs:elapsedMs(),source,target,view:{...state.view},
@@ -253,6 +253,12 @@ async def ready(page, entry=None):
 async def select_map(page, entry):
     mode = entry['mode']
     category = 'country-regions' if mode == 'russia-subjects' else mode
+    # A rendered previous scene can remain visible while its write lease and
+    # saved state are restored. A mode click during that interval is ignored.
+    await page.wait_for_function("""()=>{
+      const s=window.__puzzleRead();
+      return s.ready&&!s.loading&&!s.restoring&&s.writable;
+    }""")
     await page.locator(f'[data-puzzle-mode="{category}"]').first.click()
     selection = 'RUS' if mode == 'russia-subjects' else entry.get('selection')
     if selection is not None:

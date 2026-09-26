@@ -128,14 +128,6 @@ jobs:
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium webkit
-      - name: Verify authentication recovery and stale response handling
-        if: env.FOCUSED_HOTFIX != 'true'
-        shell: bash
-        env:
-          QA_OUT: ${{ runner.temp }}/auth-recovery-qa
-        run: |
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node scripts/test_auth_recovery.mjs
       - name: Test native Governor on desktop and mobile
         if: env.FOCUSED_HOTFIX != 'true'
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
@@ -219,7 +211,6 @@ jobs:
             ${{ runner.temp }}/governor-browser-qa
             ${{ runner.temp }}/reception-browser-qa
             ${{ runner.temp }}/games-access-qa
-            ${{ runner.temp }}/auth-recovery-qa
             ${{ runner.temp }}/quiz-layout-qa
             ${{ runner.temp }}/puzzle-no-mistakes-qa
           if-no-files-found: ignore

@@ -67,6 +67,7 @@ jobs:
         if: always()
         with:
           name: puzzle-audited-catalog
+          overwrite: true
           path: ${{ runner.temp }}/puzzle-qa
           retention-days: 7
 
@@ -117,6 +118,8 @@ jobs:
         if: always()
         with:
           name: puzzle-${{ matrix.browser }}-${{ steps.artifact.outputs.shard }}
+          # A rerun must replace its old report, not leave two identical names.
+          overwrite: true
           path: |
             ${{ runner.temp }}/puzzle-qa/*.json
             ${{ runner.temp }}/puzzle-qa/*.jsonl
@@ -159,6 +162,7 @@ jobs:
         if: always()
         with:
           name: puzzle-matrix-summary
+          overwrite: true
           path: |
             ${{ runner.temp }}/puzzle-matrix/puzzle-matrix-summary.json
             ${{ runner.temp }}/puzzle-matrix/localized-layout-summary.json
@@ -186,6 +190,13 @@ jobs:
           python -m playwright install --with-deps chromium firefox webkit
       - name: Diagnose native offline navigation separately from application behavior
         run: python scripts/test_puzzle_offline_probe.py --output "${{ runner.temp }}/puzzle-offline-probe.json"
+      - name: Verify authentication recovery and stale response handling
+        shell: bash
+        env:
+          QA_OUT: ${{ runner.temp }}/auth-recovery-qa
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test_auth_recovery.mjs
       - name: Verify local storage and tab ownership
         shell: bash
         env:
@@ -205,9 +216,11 @@ jobs:
         if: always()
         with:
           name: puzzle-offline-driver-report
+          overwrite: true
           path: |
             ${{ runner.temp }}/puzzle-offline-probe.json
             ${{ runner.temp }}/puzzle-storage-recovery/completion-recovery.json
+            ${{ runner.temp }}/auth-recovery-qa
 
   interactions:
     needs: catalog
@@ -243,6 +256,7 @@ jobs:
         if: always()
         with:
           name: puzzle-interactions-${{ matrix.browser }}
+          overwrite: true
           path: |
             ${{ runner.temp }}/puzzle-interactions/interactions*.json*
             ${{ runner.temp }}/puzzle-interactions/resilience*.json*
@@ -325,6 +339,7 @@ jobs:
         if: always()
         with:
           name: games-render-${{ matrix.browser }}
+          overwrite: true
           path: |
             ${{ runner.temp }}/games-qa/render
             ${{ runner.temp }}/games-qa/native-raster
@@ -369,5 +384,6 @@ jobs:
         if: always()
         with:
           name: games-render-performance
+          overwrite: true
           path: ${{ runner.temp }}/performance-qa/desktop-performance.json
           retention-days: 14
