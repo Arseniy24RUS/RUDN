@@ -304,6 +304,11 @@ jobs:
           node scripts/test_games_platform.mjs
       - name: Recover native puzzle loading and cancel stale route loads
         run: python scripts/test_puzzle_native_load.py --fixtures "${{ runner.temp }}/games-qa" --output "${{ runner.temp }}/games-qa/native-loader" --browsers "${{ matrix.browser }}"
+      - name: Verify primary map and compact network fallback
+        run: |
+          node scripts/build-puzzle-map.mjs --check
+          node --test scripts/test_puzzle_map_loader.mjs
+          python scripts/test_puzzle_map_network.py --output "${{ runner.temp }}/games-qa/map-network" --browsers "${{ matrix.browser }}"
       - name: Reopen the real platform puzzle with cached course data offline
         if: matrix.browser != 'webkit'
         run: python scripts/test_puzzle_native_offline.py --output "${{ runner.temp }}/games-qa/native-offline" --browsers "${{ matrix.browser }}"
@@ -322,6 +327,7 @@ jobs:
           path: |
             ${{ runner.temp }}/games-qa/render
             ${{ runner.temp }}/games-qa/native-raster
+            ${{ runner.temp }}/games-qa/map-network
             ${{ runner.temp }}/games-qa/raster-worker
             ${{ runner.temp }}/games-qa/leaderboard
             ${{ runner.temp }}/games-qa/upgrade
