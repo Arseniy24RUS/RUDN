@@ -102,6 +102,21 @@ async def seed_legacy_fault(page, base, kind):
 
 async def finish_and_verify(page, base, record):
     before = await page.evaluate('window.__puzzleRead()')
+    recovered = await stored(page, base)
+    geometry_ref = recovered['draft']['state'].get('geometryRef')
+    assert geometry_ref, 'Recovered attempt has no saved geometry reference'
+    saved_geometry = await page.evaluate("""async ref=>{
+      const wrapper=await document.querySelector('#geoPuzzleApp').puzzleProgress.loadGeometry(ref);
+      const geometry=wrapper?.geometry;
+      const collection=Object.values(geometry?.objects||{})
+        .find(item=>item.type==='GeometryCollection'&&item.geometries?.length===89);
+      return {available:Boolean(geometry),type:geometry?.type,
+        featureIds:collection?.geometries.map(feature=>String(feature.id))};
+    }""", geometry_ref)
+    assert saved_geometry['available'], 'Recovered geometry reference has no map bytes'
+    assert saved_geometry['type'] == 'Topology', saved_geometry
+    assert saved_geometry['featureIds'] == before['featureIds'], saved_geometry
+    request_counts = (len(record['geometryRequests']), len(record['compactRequests']))
     pointer = 'touch' if record['viewport'][0] <= 768 else 'mouse'
     result = await place_pieces(page, 89, pointer)
     assert result['actual'] == 89 - before['placed'], result
@@ -140,9 +155,13 @@ async def finish_and_verify(page, base, record):
     reopened = await stored(page, base)
     for key in ('attempts', 'grades', 'pending', 'draft'):
         assert reopened[key] == final[key], ('Reload changed durable completion', key)
+    assert (len(record['geometryRequests']), len(record['compactRequests'])) == request_counts, (
+        'Reload redownloaded geometry instead of using the recovered snapshot',
+        record['geometryRequests'], record['compactRequests'])
     record['completion'] = {'attemptId': attempt['id'], 'points': attempt['points'],
                             'placed': attempt['placed'], 'deliveryTypes': ['attempt', 'checkpoint'],
-                            'unchangedAfterReload': True}
+                            'unchangedAfterReload': True, 'geometrySnapshotAvailable': True,
+                            'reloadWithoutGeometryRequests': True}
 
 
 CASES = [

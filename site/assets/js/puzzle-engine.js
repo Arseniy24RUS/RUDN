@@ -718,7 +718,9 @@
       if (resume && JSON.stringify(featureIds) !== JSON.stringify(resume.featureIds)) throw new Error(tr("Набор карты изменился. Сохранённая попытка не перезаписана."));
       const count = collection.features.length;
       if (resume && (!Array.isArray(resume.order) || resume.order.length !== count || new Set(resume.order).size !== count || resume.order.some(index => !Number.isInteger(index) || index < 0 || index >= count) || !Array.isArray(resume.pieces) || resume.pieces.length !== count)) throw new Error(tr("Сохранённая попытка несовместима с картой."));
-      const geometryRef = resume?.geometryRef || await root.puzzleProgress?.saveGeometry?.(resolved.wrapper) || null;
+      // An evicted snapshot must be replaced with the recovered map bytes;
+      // retaining its missing reference would force another download on reload.
+      const geometryRef = (storedGeometry?.geometry && resume?.geometryRef) || await root.puzzleProgress?.saveGeometry?.(resolved.wrapper) || null;
       if (!current()) return;
       const attempt = resume ? { attempt_id: resume.attemptId, seed: resume.seed } : await startAttempt(settings.mode, resolved.selection, settings.difficulty, count, featureIds, resolved.wrapper.dataset || {});
       if (!current()) return;
