@@ -122,11 +122,15 @@ async def finish_and_verify(page, base, record):
     assert result['actual'] == 89 - before['placed'], result
     assert result['state']['finished'] and result['state']['placed'] == 89
     await page.locator('#puzzleResultDialog[open]').wait_for()
-    await page.wait_for_function("""async ({base,backendPath})=>{
+    await page.evaluate("""async ({base,backendPath})=>{
       const {backend}=await import(base+backendPath);
-      return backend.localGrades()['seminar-2']?.points===4 &&
+      window.__qaMapGradeReady=()=>backend.localGrades()['seminar-2']?.points===4 &&
         backend.localAttempts().some(a=>a.id===window.__puzzleRead().attemptId);
-    }""", arg={'base': base, 'backendPath': module_paths()['backend']})
+    }""", {'base': base, 'backendPath': module_paths()['backend']})
+    # wait_for_function polls the return value synchronously. An async
+    # predicate returns a truthy Promise and can finish on its first false
+    # result, before the real completion bridge has saved the local grade.
+    await page.wait_for_function('window.__qaMapGradeReady()')
     final = await stored(page, base)
     assert len(final['attempts']) == 1, final['attempts']
     attempt = final['attempts'][0]
