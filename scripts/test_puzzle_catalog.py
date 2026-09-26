@@ -255,9 +255,10 @@ async def select_map(page, entry):
     category = 'country-regions' if mode == 'russia-subjects' else mode
     # A rendered previous scene can remain visible while its write lease and
     # saved state are restored. A mode click during that interval is ignored.
+    # Pending replacement loads must stay selectable so users can cancel them.
     await page.wait_for_function("""()=>{
       const s=window.__puzzleRead();
-      return s.ready&&!s.loading&&!s.restoring&&s.writable;
+      return s.ready&&!s.restoring&&s.writable;
     }""")
     await page.locator(f'[data-puzzle-mode="{category}"]').first.click()
     selection = 'RUS' if mode == 'russia-subjects' else entry.get('selection')
