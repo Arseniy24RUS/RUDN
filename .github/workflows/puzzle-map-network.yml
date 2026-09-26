@@ -51,6 +51,13 @@ jobs:
           node scripts/test_puzzle_render_geometry.cjs
       - name: Verify graded completion, legacy recovery and mobile fallback
         run: python scripts/test_puzzle_map_network.py --output "${{ runner.temp }}/puzzle-map-network" --browsers "${{ matrix.browser }}"
+      - name: Verify Governor access and isolated free-play persistence
+        env:
+          FREE_MODULES: governor
+          DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test_free_module_contexts.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

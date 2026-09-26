@@ -137,9 +137,16 @@ try{
     const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[];
     page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());
     await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
-    await context.addInitScript(({guest,profile})=>{localStorage.setItem('qa.closed','yes');if(!guest)localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.grades',JSON.stringify({'seminar-7':{points:4}}));localStorage.setItem('rudn.governor.v1:student%3Afree-context-a:sentinel','course-unchanged');},{guest,profile});
-    await page.goto(base+'/apps/governor/index.html?context=free');await page.locator('html[data-app-ready=true]').waitFor();
-    assert.equal(await page.locator('#app').evaluate(el=>el.hidden||el.inert),false,'Free Governor ignores closed seminar and allows guests');
+    await context.addInitScript(({guest,profile})=>{if(localStorage.getItem('qa.closed')===null)localStorage.setItem('qa.closed','yes');if(!guest)localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.grades',JSON.stringify({'seminar-7':{points:4}}));localStorage.setItem('rudn.governor.v1:student%3Afree-context-a:sentinel','course-unchanged');},{guest,profile});
+    await page.goto(base+'/apps/governor/index.html?context=free');
+    if(!guest){
+     // Student free play follows the course gate; guests remain unrestricted.
+     await page.waitForFunction(()=>/Раздел 7 закрыт преподавателем|Section 7 is closed by the instructor/.test(document.querySelector('#platform-loading-text')?.textContent||''));
+     assert.equal(await page.locator('#app').isVisible(),false,'Closed course topic blocks student free play');
+     await page.evaluate(()=>{localStorage.setItem('qa.closed','no');window.dispatchEvent(new Event('rudn:accesschange'));});
+    }
+    await page.locator('html[data-app-ready=true]').waitFor();
+    assert.equal(await page.locator('#app').evaluate(el=>el.hidden||el.inert),false,guest?'Guests can play with a closed course topic':'Students can play after the course topic opens');
     if(!await page.locator('#campaign-options').getAttribute('open'))await page.locator('#campaign-options > summary').click();
     await page.locator('#campaign-mode').selectOption('guided');await page.locator('#scenario-select').selectOption('balanced');await page.locator('#session-seed').fill('FREE-CONTEXT');await page.locator('#start-form button[type=submit]').click();
     await page.locator('#game-shell:not(.hidden)').waitFor();
@@ -184,7 +191,7 @@ try{
     assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('qa.grades'))),{'seminar-7':{points:4}});
     await page.evaluate(({guest,profile})=>{if(guest)localStorage.setItem('qa.profile',JSON.stringify(profile));else localStorage.removeItem('qa.profile');window.dispatchEvent(new CustomEvent('rudn:identitychange'));},{guest,profile});
     assert.equal(await page.locator('#app').evaluate(el=>el.hidden&&el.inert),true,'Identity change freezes the previous owner campaign');
-    assert.deepEqual(errors,[]);await context.close();console.log(`PASS ${engine} governor ${guest?'guest':'student'}: closed-gate entry, all20 UI decisions, ungraded completion, idempotent restore`);
+    assert.deepEqual(errors,[]);await context.close();console.log(`PASS ${engine} governor ${guest?'guest closed-gate entry':'student locked-then-open entry'}: all20 UI decisions, ungraded completion, idempotent restore`);
    }
   }finally{await browser.close();}
  }

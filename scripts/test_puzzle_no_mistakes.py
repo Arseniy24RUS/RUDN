@@ -45,10 +45,13 @@ async def finish(page):
     await catalog.place_pieces(page, 89)
     await page.locator('#puzzleResultDialog[open]').wait_for()
     # The real bridge saves the grade asynchronously after its durable completion.
-    await page.wait_for_function("""async base=>{
+    await page.evaluate("""async base=>{
       const {backend}=await import(base+'assets/js/backend.js?v=1.3.8');
-      return backend.localAttempts().some(a=>a.id===window.__puzzleRead().attemptId);
-    }""", arg=page._qa_base)
+      window.__qaNoMistakesAttemptReady=()=>backend.localAttempts().some(a=>a.id===window.__puzzleRead().attemptId);
+    }""", page._qa_base)
+    # Poll a Boolean; an async predicate's Promise is immediately truthy to
+    # Playwright and can return before the attempt/grade mirror has been saved.
+    await page.wait_for_function('window.__qaNoMistakesAttemptReady()')
 
 
 async def assert_ui(page):
