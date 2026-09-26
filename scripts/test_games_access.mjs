@@ -83,6 +83,27 @@ try{
   for(const role of ['guest','teacher']){
     await page.goto(base+'/__qa/'+role);await page.locator('[data-game=career]').waitFor();assert.equal((await cards()).length,4);
   }
+  // A guest's graded route must explain the missing profile instead of
+  // showing the static "Preparing the map" canvas with no actual download.
+  await page.goto(base+'/__qa/guest');await page.locator('[data-game=maps]').waitFor();
+  await go('activity/seminar-2');await page.locator('[data-puzzle-sign-in]').waitFor();
+  for(const locale of ['en','zh','ru']){
+    await page.locator('[data-lang="'+locale+'"]').first().click();await ready();
+    await page.locator('[data-puzzle-sign-in]').waitFor();
+    assert.equal(await page.locator('#geoPuzzleApp,#puzzleEmpty').count(),0,'No false loading state before sign-in');
+    assert(await page.locator('#puzzleSignIn').isEnabled());
+  }
+  await page.locator('#puzzleSignIn').click();await page.locator('#authDialog[open]').waitFor();
+  await page.locator('#authDialog .modal-close').click();
+  await page.locator('[data-puzzle-sign-in] a').click();
+  await page.locator('#geoPuzzleApp[data-play-allowed="true"]').waitFor();
+  await go('activity/seminar-2');await page.locator('[data-puzzle-sign-in]').waitFor();
+  await page.evaluate(()=>{localStorage.setItem('qa.role','"student"');window.dispatchEvent(new Event('rudn:identitychange'));});
+  await page.locator('#geoPuzzleApp[data-play-allowed="true"]').waitFor();
+  assert.equal(await page.locator('[data-puzzle-sign-in]').count(),0,'Signing in resumes the same graded route');
+  await page.goto(base+'/__qa/teacher');await page.locator('[data-game=maps]').waitFor();
+  await go('activity/seminar-2');await page.locator('#geoPuzzleApp[data-play-allowed="true"]').waitFor();
+  console.log('PASS graded map sign-in RU/EN/ZH, sign-in action, guest free play, student continuation and teacher preview');
   // A guest route must be revoked immediately when a student profile takes over.
   await page.goto(base+'/__qa/guest');await page.locator('[data-game=career]').waitFor();
   await page.locator('[data-game=career] a').click();await page.locator('#careerMount').waitFor();

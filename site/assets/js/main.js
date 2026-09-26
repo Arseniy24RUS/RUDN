@@ -765,6 +765,18 @@ async function renderPuzzleRoute(asSeminar=false){
   if(asSeminar){
     const access=accessSnapshot(),gate=topicGate(2,access.overrides,access.now);
     if(!accessAllowed(gate)){lockedAccessPage(ui('puzzleTitle'),gate);return}
+    if(!backend.getProfile()&&!backend.isAdmin()){
+      // A graded attempt needs an owner. Explain that before mounting the
+      // disabled canvas, which otherwise looks like an endless map download.
+      const copy={
+        ru:{title:'Карта России · зачётное задание',lead:'Войдите в профиль студента, чтобы пройти карту и сохранить оценку в журнале.',free:'Играть без оценки'},
+        en:{title:'Map of Russia · graded assignment',lead:'Sign in to your student profile to complete the map and save your grade.',free:'Play without a grade'},
+        zh:{title:'俄罗斯地图 · 计分作业',lead:'请登录学生个人资料，完成地图后将成绩保存到成绩册。',free:'不计分游戏'},
+      }[getLocale()];
+      app.innerHTML=contentPage(copy.title,copy.lead,`<section class="panel" data-puzzle-sign-in><div class="page-actions"><button class="btn btn-primary" id="puzzleSignIn" type="button">${esc(t('signIn'))}</button><a class="btn btn-neutral" href="#puzzle">${esc(copy.free)}</a></div></section>`);
+      app.querySelector('#puzzleSignIn').addEventListener('click',openAuthDialog);
+      return;
+    }
   }
   const context=asSeminar?'seminar':'free',requestedHash=location.hash,requestedOwner=attemptOwner(),requestedLocale=getLocale();
   const copy={ru:{loading:'Открываем карту…',waiting:'Карта откроется автоматически после подключения.'},en:{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'},zh:{loading:'正在打开地图…',waiting:'连接恢复后，地图会自动打开。'}}[requestedLocale]||{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'};
