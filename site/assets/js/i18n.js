@@ -1,5 +1,6 @@
 const dictionaries = {
   ru: {
+    resetPassword:'Отправить письмо для смены пароля', resetPasswordSending:'Отправляем запрос…', resetPasswordSent:'Запрос принят. Если для этого email существует учётная запись, сервис отправит письмо для смены пароля. Проверьте папки «Входящие» и «Спам».', authSigningIn:'Выполняется вход…', authSlow:'Подключение занимает больше времени. Подождите…',
     receptionOpening:'Открываем приёмную…', receptionUnavailable:'Не удалось открыть приёмную', answersOnDevice:'Сохранённые ответы остаются на устройстве.', retryLoading:'Повторить загрузку',
     courseHome:'Главная страница курса', languageChoice:'Выбор языка интерфейса', navigation:'Навигация', mobileNavigation:'Мобильная навигация', close:'Закрыть', identifierExample:'1234567890 или 1234567890@rudn.ru',
     courseShort:'Введение в специальность', programmeShort:'Государственное и муниципальное управление',
@@ -19,6 +20,7 @@ const dictionaries = {
     submissionSaved:'Работа сохранена', synced:'Синхронизировано', localSaved:'Сохранено на устройстве', error:'Ошибка',
   },
   en: {
+    resetPassword:'Send password reset email', resetPasswordSending:'Sending request…', resetPasswordSent:'Request accepted. If an account exists for this email, the service will send a password reset email. Check your inbox and spam folder.', authSigningIn:'Signing in…', authSlow:'Still connecting. Please wait…',
     receptionOpening:'Opening public reception…', receptionUnavailable:'Unable to open public reception', answersOnDevice:'Your saved answers remain on this device.', retryLoading:'Retry loading',
     courseHome:'Course home', languageChoice:'Interface language', navigation:'Navigation', mobileNavigation:'Mobile navigation', close:'Close', identifierExample:'1234567890 or 1234567890@rudn.ru',
     courseShort:'Introduction to the Profession', programmeShort:'State and Municipal Administration',
@@ -38,6 +40,7 @@ const dictionaries = {
     submissionSaved:'Submission saved', synced:'Synchronized', localSaved:'Saved on this device', error:'Error',
   },
   zh: {
+    resetPassword:'发送密码重置邮件', resetPasswordSending:'正在发送请求……', resetPasswordSent:'请求已受理。如果该邮箱已注册账号，系统将发送密码重置邮件。请检查收件箱和垃圾邮件文件夹。', authSigningIn:'正在登录……', authSlow:'正在连接，请稍候……',
     receptionOpening:'正在打开公众接待室…', receptionUnavailable:'无法打开公众接待室', answersOnDevice:'已保存的答案仍保留在本设备上。', retryLoading:'重新加载',
     courseHome:'课程首页', languageChoice:'界面语言', navigation:'导航', mobileNavigation:'移动端导航', close:'关闭', identifierExample:'1234567890 或 1234567890@rudn.ru',
     courseShort:'专业导论', programmeShort:'国家与市政管理',

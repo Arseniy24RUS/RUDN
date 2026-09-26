@@ -690,7 +690,8 @@
     settings.mode = seminarContext ? "russia-subjects" : settings.mode || "world-countries";
     settings.difficulty = DIFFICULTY[settings.difficulty] ? settings.difficulty : "medium";
     syncSelectors(settings);
-    setLoading(true, "Подготавливаем карту", "Геометрия проверяется и подготавливается для сенсорного управления.");
+    root.dataset.loadPhase = "geometry";
+    setLoading(true, copy("Загружаем карту", "Loading the map", "正在加载地图"), copy("Получаем границы территорий. Карта откроется автоматически.", "Loading territory boundaries. The map will open automatically.", "正在获取行政边界，地图将自动打开。"));
     if (!state.ready) els.empty.hidden = true;
     let previousScene = null;
     try {
@@ -720,6 +721,8 @@
       if (resume && (!Array.isArray(resume.order) || resume.order.length !== count || new Set(resume.order).size !== count || resume.order.some(index => !Number.isInteger(index) || index < 0 || index >= count) || !Array.isArray(resume.pieces) || resume.pieces.length !== count)) throw new Error(tr("Сохранённая попытка несовместима с картой."));
       // An evicted snapshot must be replaced with the recovered map bytes;
       // retaining its missing reference would force another download on reload.
+      root.dataset.loadPhase = "cache";
+      setLoading(true, copy("Подготавливаем карту", "Preparing the map", "正在准备地图"), copy("Границы загружены. Подготавливаем карту к игре.", "Boundaries loaded. Preparing the map for play.", "边界已加载，正在准备地图。"));
       const geometryRef = (storedGeometry?.geometry && resume?.geometryRef) || await root.puzzleProgress?.saveGeometry?.(resolved.wrapper) || null;
       if (!current()) return;
       const attempt = resume ? { attempt_id: resume.attemptId, seed: resume.seed } : await startAttempt(settings.mode, resolved.selection, settings.difficulty, count, featureIds, resolved.wrapper.dataset || {});
@@ -751,6 +754,7 @@
       state.order = resume ? [...resume.order] : seededShuffle(count, state.seed);
       state.current = state.finished ? -1 : resume ? resume.current : state.order[0];
       state.pieces = state.features.map((_, index) => ({ index, dx: 0, dy: 0, locked: false, inTray: true }));
+      root.dataset.loadPhase = "render";
       fitCanvas();
       rebuildGeometry();
       if (resume) restorePositions(resume);
@@ -763,6 +767,7 @@
       setLoading(false);
       els.empty.hidden = true;
       drawAll(true);
+      root.dataset.loadPhase = "ready";
       previousScene = null;
       clearTimeout(hintTimer);
       if (els.resultDialog.open) els.resultDialog.close();
@@ -801,7 +806,7 @@
       if (state.ready) syncSelectors();
       else {
         els.empty.hidden = false;
-        els.empty.querySelector("h2").textContent = copy("Подготавливаем карту", "Preparing the map", "正在准备地图");
+        els.empty.querySelector("h2").textContent = copy("Не удалось открыть карту", "The map could not be opened", "无法打开地图");
         els.empty.querySelector("p").textContent = copy("Для первой загрузки требуется подключение. Карта появится автоматически, когда связь восстановится.", "A connection is needed for the first download. The map will open automatically when it returns.", "首次加载需要网络连接。连接恢复后地图将自动打开。");
       }
       retryLoad = { resume, desired: settings };

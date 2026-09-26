@@ -278,6 +278,57 @@ test('a cache write failure still returns the successful network response',async
   assert.equal(await (await worker.request('./'+modulePath+'src/engine.js')).text(),'successful network content');
 });
 
+test('Russia map responses do not wait for an indefinitely pending optional cache write',{timeout:2500},async()=>{
+  const worker=makeWorker(),cache=await worker.cacheStorage.open(worker.cacheName);
+  let writes=0;
+  cache.put=()=>{writes++;return new Promise(()=>{})};
+  worker.fetch=async()=>new Response('healthy map bytes');
+  for(const file of ['russia_subjects_89.topojson','russia_subjects_89.compact.json']){
+    const started=Date.now();
+    const response=await worker.request('./assets/puzzle/data/'+file);
+    assert.equal(await response.text(),'healthy map bytes');
+    assert.ok(Date.now()-started<500,'The response waited for its optional cache write');
+  }
+  assert.equal(writes,2);
+});
+
+test('Russia map cache open and read have bounded waits before healthy network delivery',{timeout:3500},async()=>{
+  for(const stage of ['open','match']){
+    const worker=makeWorker(),cache=await worker.cacheStorage.open(worker.cacheName);
+    if(stage==='open'){
+      const open=worker.cacheStorage.open;
+      worker.cacheStorage.open=name=>name===worker.cacheName?new Promise(()=>{}):open.call(worker.cacheStorage,name);
+    }else cache.match=()=>new Promise(()=>{});
+    worker.fetch=async()=>new Response(stage+' recovered map');
+    const started=Date.now();
+    const response=await worker.request('./assets/puzzle/data/russia_subjects_89.topojson');
+    assert.equal(await response.text(),stage+' recovered map');
+    assert.ok(Date.now()-started<1500,stage+' exceeded the optional cache deadline');
+    assert.equal(worker.networkCalls,1);
+  }
+});
+
+test('Russia map caching remains scoped to the bound release, retains offline copies and rejects failed responses',async()=>{
+  const worker=makeWorker(),current=await worker.cacheStorage.open(worker.cacheName);
+  const file='./assets/puzzle/data/russia_subjects_89.topojson';
+  const fallback='./assets/puzzle/data/russia_subjects_89.compact.json';
+  await current.put(file,new Response('current offline geometry'));
+  worker.fetch=async()=>new Response('failed map',{status:503});
+  assert.equal(await (await worker.request(file)).text(),'current offline geometry');
+  assert.equal(worker.networkCalls,0);
+  assert.equal((await worker.request(fallback)).status,503);
+  assert.equal(await current.match(fallback),undefined);
+  const client={id:'old-map-tab',url:scope,postMessage(){}};
+  const old=await worker.cacheStorage.open(worker.cachePrefix+'v1.3.2-puzzle');
+  await old.put('./assets/js/main.js?v=1.3.2',new Response('old main'));
+  await old.put(file,new Response('old geometry'));
+  await worker.emit('message',{source:client,data:{type:'BIND_RELEASE',release:'1.3.2'}});
+  const before=worker.networkCalls;
+  assert.equal(await (await worker.request(file,{clientId:client.id})).text(),'old geometry');
+  assert.equal((await worker.request(fallback,{clientId:client.id})).type,'error');
+  assert.equal(worker.networkCalls,before,'An old map may not fetch bytes from the current release');
+});
+
 test('an open task retains its own previous-release cache during activation',async()=>{
   const worker=makeWorker();worker.activeClients=[{id:'open-task',url:scope,postMessage(){}}];
   const previous=worker.cachePrefix+'previous';

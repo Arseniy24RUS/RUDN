@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.8-puzzle-sign-in`;
+const CACHE=`${CACHE_PREFIX}v1.3.8-map-startup-recovery`;
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -490,6 +490,38 @@ async function unavailableRelease(clientId){
   if(inScopeClient(client))client.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
   return Response.error();
 }
+async function optionalGeometryCache(action){
+  let timer;
+  try{
+    return await Promise.race([
+      Promise.resolve().then(action),
+      new Promise(resolve=>{timer=setTimeout(()=>resolve(null),750)})
+    ]);
+  }catch{return null}
+  finally{clearTimeout(timer)}
+}
+async function serveCurrentRussiaGeometry(event){
+  const request=event.request;
+  let cache;
+  // A broken browser cache must not hide a healthy same-origin map response.
+  // This is only the current release's optional geometry, never its app shell.
+  const cached=await optionalGeometryCache(async()=>{
+    cache=await caches.open(CACHE);
+    return cache.match(request);
+  });
+  if(cached)return cached;
+  try{
+    const response=await fetchWithDeadline(request);
+    if(response.ok){
+      const copy=response.clone();
+      event.waitUntil(optionalGeometryCache(async()=>{
+        const target=cache||await caches.open(CACHE);
+        await target.put(request,copy);
+      }));
+    }
+    return response;
+  }catch{return Response.error()}
+}
 async function serveRequest(event,networkFirst){
   const request=event.request;
   // A navigation creates a new document. Its HTML and imports use the installed
@@ -500,6 +532,7 @@ async function serveRequest(event,networkFirst){
   if(!navigation&&event.clientId&&!await clientRelease(event.clientId))await bindClient(event.clientId,cacheName);
   const url=new URL(request.url),version=url.searchParams.get('v');
   if(version&&/^assets\/js\//.test(url.pathname.slice(SCOPE.pathname.length))&&releaseVersion(cacheName)&&version!==releaseVersion(cacheName))return unavailableRelease(event.clientId);
+  if(!navigation&&cacheName===CACHE&&/^assets\/puzzle\/data\/russia_subjects_89\.(?:topojson|compact\.json)$/.test(url.pathname.slice(SCOPE.pathname.length)))return serveCurrentRussiaGeometry(event);
   const cache=await caches.open(cacheName);
   // This daily CI feed is mutable independently of the application release.
   const mutableCalendar=cacheName===CACHE&&url.pathname===new URL('assets/data/calendars/current.json',SCOPE).pathname;

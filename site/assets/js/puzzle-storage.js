@@ -7,25 +7,48 @@ export function puzzleGeometryUrl(input,base=globalThis.location?.href){
 }
 
 /** Exact, immutable map snapshots. Geometry stays on the device, outside cloud checkpoints. */
-export function createPuzzleGeometryStore({indexedDB=globalThis.indexedDB,caches=globalThis.caches,onWarning=()=>{},databaseName='rudn-puzzle-geometry-v1'}={}){
+export function createPuzzleGeometryStore({indexedDB=globalThis.indexedDB,caches=globalThis.caches,onWarning=()=>{},databaseName='rudn-puzzle-geometry-v1',operationTimeoutMs=3000}={}){
   const memory=new Map();
   const remember=(id,json)=>{memory.delete(id);memory.set(id,json);while(memory.size>3)memory.delete(memory.keys().next().value)};
-  let opening;
+  // Geometry is an optional offline copy. A browser storage request can remain
+  // pending without firing an error; it must never prevent drawing a loaded map.
+  const timeoutError=()=>new Error('storage/geometry-timeout');
+  const bounded=async action=>{
+    let timer;
+    try{return await Promise.race([Promise.resolve().then(action),new Promise((_,reject)=>{timer=setTimeout(()=>reject(timeoutError()),operationTimeoutMs)})])}
+    finally{clearTimeout(timer)}
+  };
+  let opening,db=null,closed=false;
   const open=()=>opening||=(new Promise(resolve=>{
-    if(!indexedDB){resolve(null);return}
-    let request;
-    try{request=indexedDB.open(databaseName,1)}catch{resolve(null);return}
-    request.onupgradeneeded=()=>request.result.createObjectStore('geometry',{keyPath:'id'});
-    request.onsuccess=()=>resolve(request.result);
-    request.onerror=request.onblocked=()=>resolve(null);
+    if(!indexedDB||closed){resolve(null);return}
+    let request,settled=false;
+    const finish=value=>{if(settled)return;settled=true;clearTimeout(timer);resolve(value)};
+    const timer=setTimeout(()=>finish(null),operationTimeoutMs);
+    try{request=indexedDB.open(databaseName,1)}catch{finish(null);return}
+    request.onupgradeneeded=()=>{
+      if(settled||closed){try{request.transaction?.abort()}catch{}return}
+      request.result.createObjectStore('geometry',{keyPath:'id'});
+    };
+    request.onsuccess=()=>{
+      if(settled||closed){request.result.close();finish(null);return}
+      db=request.result;
+      db.onversionchange=()=>{db?.close();db=null};
+      finish(db);
+    };
+    request.onerror=request.onblocked=()=>finish(null);
   }));
   const transaction=async(action,write=false)=>{
-    const db=await open();if(!db)throw new Error('storage/unavailable');
+    const connection=await open();if(!connection||closed)throw new Error('storage/unavailable');
     return new Promise((resolve,reject)=>{
-      const tx=db.transaction('geometry',write?'readwrite':'readonly');
-      const request=action(tx.objectStore('geometry'));
-      let value;request.onsuccess=()=>value=request.result;
-      tx.oncomplete=()=>resolve(value);tx.onerror=tx.onabort=()=>reject(tx.error||new Error('storage/unavailable'));
+      let tx,value,settled=false;
+      const finish=error=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):resolve(value)};
+      const timer=setTimeout(()=>{finish(timeoutError());try{tx?.abort()}catch{}},operationTimeoutMs);
+      try{
+        tx=connection.transaction('geometry',write?'readwrite':'readonly');
+        const request=action(tx.objectStore('geometry'));
+        request.onsuccess=()=>value=request.result;
+        tx.oncomplete=()=>finish();tx.onerror=tx.onabort=()=>finish(tx.error||new Error('storage/unavailable'));
+      }catch(error){finish(error);try{tx?.abort()}catch{}}
     });
   };
   const cacheKey=id=>new URL(`/.rudn-puzzle-snapshots/${encodeURIComponent(id)}`,globalThis.location?.origin||'https://localhost/').href;
@@ -33,11 +56,12 @@ export function createPuzzleGeometryStore({indexedDB=globalThis.indexedDB,caches
     async save(wrapper){
       if(!wrapper?.geometry)throw new TypeError('A complete map geometry is required.');
       const json=JSON.stringify(wrapper),bytes=new TextEncoder().encode(json);
-      const digest=globalThis.crypto?.subtle?new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)):null;
+      let digest=null;
+      try{if(globalThis.crypto?.subtle)digest=new Uint8Array(await bounded(()=>crypto.subtle.digest('SHA-256',bytes)))}catch{}
       const id=digest?Array.from(digest,value=>value.toString(16).padStart(2,'0')).join(''):globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random()}`;
       remember(id,json);
       try{await transaction(store=>store.put({id,json}),true);return id}catch{}
-      try{const cache=await caches.open(databaseName);await cache.put(cacheKey(id),new Response(json,{headers:{'content-type':'application/json'}}));return id}catch{}
+      try{await bounded(async()=>{const cache=await caches.open(databaseName);await cache.put(cacheKey(id),new Response(json,{headers:{'content-type':'application/json'}}))});return id}catch{}
       onWarning({code:'storage/geometry-unavailable'});
       return id;
     },
@@ -45,10 +69,10 @@ export function createPuzzleGeometryStore({indexedDB=globalThis.indexedDB,caches
       if(!id)return null;
       if(memory.has(id))return JSON.parse(memory.get(id));
       try{const record=await transaction(store=>store.get(id));if(record?.json){remember(id,record.json);return JSON.parse(record.json)}}catch{}
-      try{const cached=await (await caches.open(databaseName)).match(cacheKey(id));if(cached){const json=await cached.text();remember(id,json);return JSON.parse(json)}}catch{}
+      try{const json=await bounded(async()=>{const cached=await (await caches.open(databaseName)).match(cacheKey(id));return cached?cached.text():null});if(json){remember(id,json);return JSON.parse(json)}}catch{}
       return null;
     },
-    async close(){(await opening)?.close()},
+    async close(){closed=true;db?.close();db=null},
   };
 }
 

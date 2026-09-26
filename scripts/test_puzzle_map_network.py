@@ -33,6 +33,37 @@ OWNER = 'student:' + STUDENT['studentKey']
 SCOPE = {'owner': OWNER, 'activitySlug': 'seminar-2', 'mode': 'seminar'}
 
 
+def pending_geometry_storage(kind):
+    """Stall only the optional map cache; keep student progress storage real."""
+    return """(()=>{
+      const kind=%s, name='rudn-puzzle-geometry-v1';
+      window.__qaGeometryFaultHits=[];
+      const hit=stage=>window.__qaGeometryFaultHits.push(stage);
+      const open=IDBFactory.prototype.open;
+      IDBFactory.prototype.open=function(database,...args){
+        if(database===name&&kind==='open') {hit('open');return {};}
+        if(database===name&&kind==='cache') {hit('idb-unavailable');throw new Error('QA optional geometry IDB unavailable');}
+        return open.call(this,database,...args);
+      };
+      const transaction=IDBDatabase.prototype.transaction;
+      IDBDatabase.prototype.transaction=function(stores,mode,...args){
+        if(this.name===name&&mode==='readwrite'&&kind==='write'){
+          hit('write');
+          // Browser never delivers request success or transaction completion.
+          // Its abort surface remains available to the deadline cleanup.
+          const tx={objectStore:()=>({put:()=>({})}),abort(){this.onabort?.();}};
+          return tx;
+        }
+        return transaction.call(this,stores,mode,...args);
+      };
+      const cacheOpen=CacheStorage.prototype.open;
+      CacheStorage.prototype.open=function(cacheName){
+        if(cacheName===name&&kind==='cache'){hit('cache');return new Promise(()=>{});}
+        return cacheOpen.call(this,cacheName);
+      };
+    })();""" % json.dumps(kind)
+
+
 def module_paths():
     """Use the application's actual module identities, including cache versions."""
     source = (SITE / 'assets/js/puzzle-bootstrap.js').read_text('utf-8')
@@ -179,6 +210,12 @@ CASES = [
      'viewport': (390, 844), 'legacy': 'v2-no-ref'},
     {'name': 'native-evicted-v3-hang', 'route': 'native', 'fault': 'hang',
      'viewport': (1366, 900), 'legacy': 'v3-missing-bytes'},
+    {'name': 'native-geometry-open-pending', 'route': 'native', 'fault': 'none',
+     'viewport': (1366, 900), 'storageFault': 'open'},
+    {'name': 'native-geometry-write-pending', 'route': 'native', 'fault': 'none',
+     'viewport': (1366, 900), 'storageFault': 'write'},
+    {'name': 'native-fallback-geometry-cache-pending', 'route': 'native', 'fault': 'abort',
+     'viewport': (1366, 900), 'storageFault': 'cache'},
 ]
 
 
@@ -191,6 +228,8 @@ async def run_case(browser, server, output, case):
                                         viewport=dict(zip(('width', 'height'), case['viewport'])),
                                         has_touch=case['viewport'][0] <= 768)
     await context.add_init_script(initializer('ru'))
+    if case.get('storageFault'):
+        await context.add_init_script(pending_geometry_storage(case['storageFault']))
     original_phase = bool(case.get('legacy'))
     release = asyncio.Event()
 
@@ -241,6 +280,18 @@ async def run_case(browser, server, output, case):
         url = server.base + ('index.html#activity/seminar-2' if case['route'] == 'native'
                              else 'apps/puzzle.html?context=seminar')
         await page.goto(url, wait_until='domcontentloaded')
+        if case.get('storageFault'):
+            # Reproduce the photographed state before waiting for recovery:
+            # the real spinner is visible, all 89 regions are still absent.
+            await page.locator('#puzzleLoading').wait_for(state='visible')
+            spinner_started = time.monotonic()
+            loading = await page.evaluate('window.__puzzleRead()')
+            assert loading['loading'] and not loading['ready'] and loading['total'] == 0, loading
+            record['pendingSpinnerObserved'] = True
+            # A cache deadline must bound startup independently of downloads.
+            await page.wait_for_function(
+                'window.__puzzleRead().ready && !window.__puzzleRead().loading', timeout=20000)
+            record['storageRecoverySeconds'] = round(time.monotonic() - spinner_started, 3)
         initial = await wait_ready(page)
         assert initial['difficulty'] == 'medium' and initial['placed'] == 0
         assert initial['ready'] and not initial['loading'] and initial['elapsedMs'] == 0
@@ -262,7 +313,25 @@ async def run_case(browser, server, output, case):
             assert restored['elapsedMs'] >= seeded['state']['elapsedMs']
             record['legacyRestore'] = {'schema': case['legacy'], 'placed': 2,
                                        'sameAttemptOrderAndIds': True, 'originalGeometryPlayed': True}
-        await finish_and_verify(page, server.base, record)
+        if case.get('storageFault'):
+            hits = await page.evaluate('window.__qaGeometryFaultHits')
+            assert case['storageFault'] in hits, ('Fault was never reached', hits)
+            saved = await stored(page, server.base)
+            assert saved['draft']['state']['placed'] == 1, saved['draft']
+            assert saved['draft']['state']['featureIds'] == initial['featureIds']
+            assert not saved['attempts'] and 'seminar-2' not in saved['grades'], saved
+            geometry_ref = saved['draft']['state'].get('geometryRef')
+            assert geometry_ref, 'The running attempt lost its map reference'
+            # A slow disk must not invalidate geometry already held in memory.
+            available = await page.evaluate("""async ref=>Boolean(
+                (await document.querySelector('#geoPuzzleApp').puzzleProgress.loadGeometry(ref))?.geometry
+            )""", geometry_ref)
+            assert available, 'In-memory geometry disappeared after optional-cache timeout'
+            record['storageRecovery'] = {'faultStages': hits, 'renderedRegions': initial['total'],
+                                         'trustedPointerPlaced': 1, 'progressSaved': True,
+                                         'inMemoryGeometryAvailable': True}
+        else:
+            await finish_and_verify(page, server.base, record)
         primary_test = [r for r in record['geometryRequests'] if r['phase'] == 'test']
         compact_test = [r for r in record['compactRequests'] if r['phase'] == 'test']
         assert primary_test, 'Primary geometry path was bypassed'

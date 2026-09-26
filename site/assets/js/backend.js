@@ -180,6 +180,13 @@ class Backend{
     this.loginPending=(async()=>{if(this.anonymousPending)await this.anonymousPending;const credential=await this.auth.signInWithEmailAndPassword(this.authClient,email,password);this.handleAuthUser(credential.user);return credential.user})().finally(()=>this.loginPending=null);
     return this.loginPending;
   }
+  async adminResetPassword(email,{locale='ru'}={}){
+    const identifier=String(email||'').trim().toLowerCase();
+    if(!CONFIG.adminEmails.some(value=>value.toLowerCase()===identifier))throw serviceError('auth/admin-required');
+    await this.init();if(!this.authClient)throw serviceError('network/unavailable');
+    this.authClient.languageCode=({ru:'ru',en:'en',zh:'zh-CN'})[locale]||'ru';
+    return this.auth.sendPasswordResetEmail(this.authClient,identifier);
+  }
   async adminSignOut(){return this.signOut()}
   async signOut(){
     this.checkpointSync?.stop();

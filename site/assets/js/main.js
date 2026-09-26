@@ -894,6 +894,7 @@ function downloadCsv(filename,rows){const text='\ufeff'+rows.map(row=>row.map(ce
 const authStudentDetails=document.getElementById('authStudentDetails');
 const authPasswordField=document.getElementById('authPasswordField');
 const authSubmit=document.getElementById('authSubmit');
+const authResetPassword=document.getElementById('authResetPassword');
 const authIdentifier=document.getElementById('authIdentifier');
 const authFullName=document.getElementById('authFullName');
 const authGroup=document.getElementById('authGroup');
@@ -923,6 +924,7 @@ function setAuthStage(stage,source=''){
   authForm.dataset.source=source;
   authStudentDetails.hidden=stage!=='student';
   authPasswordField.hidden=stage!=='admin';
+  authResetPassword.hidden=stage!=='admin';
   authPassword.required=stage==='admin';
   authFullName.required=stage==='student';
   authSubmit.textContent=stage==='admin'?t('teacherLogin'):stage==='student'?t('signIn'):t('continue');
@@ -930,6 +932,39 @@ function setAuthStage(stage,source=''){
 let rosterLookupTimer=null;
 let rosterLookupRequest=0;
 let resolvedIdentifier='';
+let authOperation=null;
+function clearAuthOperation(){
+  if(authOperation)clearTimeout(authOperation.timer);
+  authOperation=null;
+  authSubmit.disabled=false;authResetPassword.disabled=false;
+  authResetPassword.textContent=t('resetPassword');
+}
+function authStageHint(){
+  return t(authForm.dataset.stage==='admin'?'adminPasswordHint':authForm.dataset.stage==='student'?(authForm.dataset.source==='profile'?'profileFound':authForm.dataset.source==='roster'?'rosterFound':'rosterMissing'):'authHint');
+}
+async function runAuthOperation(action,{reset=false,onSuccess=()=>{}}={}){
+  if(authOperation)return;
+  const operation={identifier:authKey(authIdentifier.value),request:rosterLookupRequest,timer:null};
+  authOperation=operation;
+  const current=()=>authOperation===operation&&authDialog.open&&operation.request===rosterLookupRequest&&operation.identifier===authKey(authIdentifier.value);
+  document.getElementById('authError').hidden=true;
+  authSubmit.disabled=true;authResetPassword.disabled=true;
+  rosterStatus.textContent=t(reset?'resetPasswordSending':'authSigningIn');
+  operation.timer=setTimeout(()=>{if(current())rosterStatus.textContent=t('authSlow')},4000);
+  let succeeded=false;
+  try{
+    const result=await action();
+    succeeded=true;
+    if(current())await onSuccess(result);
+  }catch(error){if(current())formError(document.getElementById('authError'),error)}
+  finally{
+    clearTimeout(operation.timer);
+    if(authOperation===operation){
+      if(current())rosterStatus.textContent=reset&&succeeded?t('resetPasswordSent'):authStageHint();
+      clearAuthOperation();
+    }
+  }
+}
 const identifierRequests=new Map();
 const completeStudentIdentifier=value=>/^(?:\d{5,20}|\d{5,20}@(rudn|pfur)\.ru)$/i.test(value);
 async function resolveIdentifier({explicit=false}={}){
@@ -979,6 +1014,7 @@ function openAuthDialog(){
   if(!backend.authReady){toast(t('loading'));return}
   if(backend.isAdmin()){location.hash='profile';return}
   clearTimeout(rosterLookupTimer);rosterLookupRequest++;
+  clearAuthOperation();
   document.getElementById('authError').hidden=true;
   const p=backend.isAdmin()?null:backend.getProfile();
   authIdentifier.value=backend.isAdmin()?backend.user.email:(p?.email||p?.ticket||'');
@@ -1006,29 +1042,33 @@ authIdentifier.addEventListener('input',event=>{
   if(!event.isComposing)rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700);
 });
 authIdentifier.addEventListener('compositionend',()=>{clearTimeout(rosterLookupTimer);rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700)});
-authDialog.addEventListener('close',()=>{clearTimeout(rosterLookupTimer);rosterLookupRequest++});
+authDialog.addEventListener('close',()=>{clearTimeout(rosterLookupTimer);rosterLookupRequest++;clearAuthOperation();authPassword.value=''});
 document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
 profileButton.addEventListener('click',()=>openAccount(openAuthDialog));
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
   if(authSubmit.disabled)return;
+  document.getElementById('authError').hidden=true;
   const identifier=authIdentifier.value.trim();
   if(resolvedIdentifier!==authKey(identifier)){
     clearTimeout(rosterLookupTimer);authSubmit.disabled=true;
     try{await resolveIdentifier({explicit:true})}finally{authSubmit.disabled=false}
     return;
   }
-  authSubmit.disabled=true;const priorText=authSubmit.textContent;
-  const slow=setTimeout(()=>{rosterStatus.textContent=getLocale()==='en'?'Still connecting. Please wait…':getLocale()==='zh'?'正在连接，请稍候……':'Подключение занимает больше времени. Подождите…'},4000);
-  try{
-    if(isAdminIdentifier(identifier)){
-      await backend.adminSignIn(identifier,authPassword.value);
-      authPassword.value='';authDialog.close();toast(ui('profileReady'),'success');await render();return;
-    }
-    const p=await backend.saveProfile({identifier,fullName:authFullName.value,group:authGroup.value});
-    authDialog.close();toast(ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated'),'success');render();
-  }catch(error){formError(document.getElementById('authError'),error)}
-  finally{clearTimeout(slow);authSubmit.disabled=false;authSubmit.textContent=priorText}
+  if(isAdminIdentifier(identifier)){
+    await runAuthOperation(()=>backend.adminSignIn(identifier,authPassword.value),{onSuccess:async()=>{
+      authPassword.value='';authDialog.close();toast(ui('profileReady'),'success');await render();
+    }});
+  }else{
+    await runAuthOperation(()=>backend.saveProfile({identifier,fullName:authFullName.value,group:authGroup.value}),{onSuccess:p=>{
+      authDialog.close();toast(ui(p.createdAt===p.updatedAt?'profileCreated':'profileUpdated'),'success');render();
+    }});
+  }
+});
+authResetPassword.addEventListener('click',async()=>{
+  const identifier=authIdentifier.value.trim();
+  if(authResetPassword.disabled||!isAdminIdentifier(identifier))return;
+  await runAuthOperation(()=>backend.adminResetPassword(identifier,{locale:getLocale()}),{reset:true});
 });
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
