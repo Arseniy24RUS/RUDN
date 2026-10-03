@@ -24,8 +24,9 @@ assert 'async function renderDashboard()' in renderer and 'data-settlements-cour
 css_path=ROOT/'site/assets/css/site.css'
 css=css_path.read_text(encoding='utf-8') if css_path.exists() else subprocess.check_output(['git','show','HEAD:site/assets/css/site.css'],cwd=ROOT).decode('utf-8')
 fixture=r"""
-import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage} from '/assets/js/settlements-course-status.js';
-const app=document.querySelector('#app'),owner='student:dashboard-fixture';let locale='ru';
+import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage,mountSettlementsCourseReceipt} from '/assets/js/settlements-course-status.js';
+const app=document.querySelector('#app'),owner='student:dashboard-fixture';let locale='ru',currentCleanup=null;
+const render=async()=>renderDashboard();
 const result={terminal:true,reason:'complete',coverageNp:100,coveragePopulation:100,turns:10,spentMillionRub:3};
 const f=window.fixture={grades:{},party:{owner,activitySlug:'seminar-3',mode:'settlements-assessment',saveStatus:{state:'pending'},state:{status:'completion-pending',difficulty:'hard',result}},tutorial:null};
 const backend={getProfile:()=>({fullName:'Синтетический участник',group:'TEST'}),getGrades:async()=>structuredClone(f.grades),getAttempts:async()=>[],isAdmin:()=>false};

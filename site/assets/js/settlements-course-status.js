@@ -1,5 +1,6 @@
 import {settlementsPoints,validateSettlementsResult} from './settlements-leaderboard.js';
 import {COPY,normalizeLocale} from '../../apps/settlements/copy.mjs';
+import {durableStore} from './durable-store.js';
 
 /** Display receipt only. Pending results never change the gradebook or totals. */
 export function settlementsCourseStatus(draft,tutorial,grade,owner){
@@ -37,4 +38,62 @@ export function settlementsCourseMessage(status,locale='ru'){
   const copy=COPY[normalizeLocale(locale)];
   const label=copy[{pending:'gradePending',conflict:'gradeConflict',recover:'gradeResume',active:'gradeActive',tutorial:'gradeTutorial'}[status?.kind]];
   return label?`${status.kind==='pending'?`${status.points}/5 · `:''}${label}`:'';
+}
+
+/** Finish an already terminal assessed receipt after its map has been closed. */
+export function mountSettlementsCourseReceipt({backend,owner,store=durableStore,onSettled=()=>{},
+  persistenceFactory=async options=>(await import('./settlements-storage.js')).createSettlementsPersistence(options),
+  eventTarget=globalThis,setIntervalFn=setInterval,clearIntervalFn=clearInterval}={}){
+  const generation=backend?.generation;
+  let disposed=false,running=null,timer=null,waiting=true,lastReceipt=null;
+  const active=()=>!disposed&&owner?.startsWith('student:')&&!backend?.isAdmin?.()&&
+    `student:${backend?.getProfile?.()?.studentKey}`===owner&&backend?.generation===generation;
+  const clearTimer=()=>{if(timer!==null){clearIntervalFn(timer);timer=null}};
+  async function work(){
+    let persistence=null,receipt=null;
+    try{
+      if(!active())return;
+      if(globalThis.navigator?.onLine===false||!backend.user){waiting=true;return;}
+      persistence=await persistenceFactory({backend,owner,mode:'assessment',store});
+      if(!active())return;
+      const before=await persistence.loadSession();
+      if(!active())return;
+      waiting=before?.status==='completion-pending';
+      if(!waiting)return;
+      validateSettlementsResult(before.result);
+      await persistence.acquireWriter();
+      if(!active()||!persistence.canWrite())return;
+      // Another tab/device may have advanced the party before we got the lock.
+      const current=await persistence.loadSession();
+      if(!active()||!persistence.canWrite())return;
+      if(current?.status!=='completion-pending'){waiting=false;return;}
+      validateSettlementsResult(current.result);
+      const saved=await persistence.flush();
+      if(!active())return;
+      waiting=saved.session?.status==='completion-pending'||saved.status?.state!=='saved';
+      if(saved.session?.status==='completed'&&saved.status?.state==='saved')receipt=saved.session.attemptId;
+    }catch{
+      // Keep the durable queue and both conflicting branches. Never infer a grade.
+      waiting=true;
+    }finally{
+      if(persistence)await persistence.destroy().catch(()=>{});
+      if(active()&&waiting&&timer===null)timer=setIntervalFn(retry,15000);
+      if(!active()||!waiting)clearTimer();
+    }
+    return receipt;
+  }
+  function retry(){
+    if(!active()){clearTimer();return Promise.resolve();}
+    if(!running)running=work().then(receipt=>{
+      if(receipt&&active()&&lastReceipt!==receipt){
+        lastReceipt=receipt;
+        // Main's render waits for cleanup; do not await that render from this job.
+        queueMicrotask(()=>{if(active())void onSettled();});
+      }
+    }).finally(()=>{running=null});
+    return running;
+  }
+  eventTarget.addEventListener?.('online',retry);
+  const ready=Promise.resolve().then(retry);
+  return {ready,retry,async destroy(){disposed=true;clearTimer();eventTarget.removeEventListener?.('online',retry);await running;}};
 }

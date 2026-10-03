@@ -11,7 +11,7 @@ import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,reg
 import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.9';
 import {officialTicket} from './student-identity.js';
 import {durableStore} from './durable-store.js';
-import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage} from './settlements-course-status.js';
+import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage,mountSettlementsCourseReceipt} from './settlements-course-status.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
 import {mountTeacherJournal} from './teacher-journal.js?v=1.3.9';
 import {openAccount,mountProfile} from './account.js?v=1.3.9';
@@ -356,6 +356,10 @@ async function renderDashboard(){
   }).join('');
   app.innerHTML=`<section class="page"><div class="hero"><div class="hero-grid"><div><h1>${esc(loc(data.course,'title',data.course.title))}</h1><p>${esc(ui('dashboardLead'))}</p><div class="hero-meta"><span>${esc(data.course.programme)}</span><span>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</span><span>${accessText('currentWeek')}: ${access.context.week}</span><span>${profile?`${esc(profile.fullName)} · ${esc(profile.group)}`:ui('signInToContinue')}</span></div>${!profile?`<div style="margin-top:18px"><button class="btn btn-neutral" id="heroLogin">${ui('login')}</button></div>`:''}</div><div class="score-ring" style="--progress:${Math.min(100,total)}%"><strong>${total}</strong><span>/ 100 · ${ui('currentScore')}</span></div></div></div><div class="stats-grid"><div class="stat-card"><span>${ui('continuous')}</span><strong>${coursework}/80</strong><small>${completed}/16 ${ui('completedCount')}</small></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong><small>${grades.exam?ui('completedCount'):ui('notPassed')}</small></div><div class="stat-card"><span>${ui('currentGroup')}</span><strong>${esc(profile?.group||'—')}</strong><small>${esc(officialTicket(profile)||ui('noProfile'))}</small></div><div class="stat-card"><span>${ui('fullName')}</span><strong>${esc(profile?.fullName||'—')}</strong><small>${esc(officialTicket(profile)||ui('noProfile'))}</small></div></div><header class="page-head"><div><h1>${ui('learningPath')}</h1><p>${accessText('scheduleLead')}</p></div></header><div class="topic-list">${topics}</div></section>`;
   app.querySelector('#heroLogin')?.addEventListener('click',openAuthDialog);
+  if(profile&&!backend.isAdmin()){
+    const receipt=mountSettlementsCourseReceipt({backend,owner,onSettled:()=>render()});
+    currentCleanup=()=>receipt.destroy();
+  }
   if(backend.isAdmin()){
     app.querySelector('.score-ring')?.remove();app.querySelector('.stats-grid')?.remove();app.querySelector('#heroLogin')?.remove();
     app.querySelectorAll('.activity-mini .grade').forEach(element=>element.remove());
@@ -387,6 +391,10 @@ async function renderGradebook(){
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
   app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
   app.querySelector('#refreshGrades')?.addEventListener('click',render);
+  if(profile){
+    const receipt=mountSettlementsCourseReceipt({backend,owner,onSettled:()=>render()});
+    currentCleanup=()=>receipt.destroy();
+  }
   app.querySelector('#exportPersonal')?.addEventListener('click',()=>downloadCsv(`gradebook-${officialTicket(profile)}.csv`,[
     ['student_id','full_name','email','group',...items.map(x=>x.slug),'total'],
     [officialTicket(profile),profile.fullName,profile.email,profile.group,...items.map(x=>number(grades[x.slug]?.points)),total]
