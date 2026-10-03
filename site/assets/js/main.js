@@ -511,7 +511,10 @@ async function startQuiz(activitySlug){
 function renderSeminar3(topic){
   renderSettlements('assessment');
 }
-function renderSettlements(mode='free'){
+function renderSettlements(){
+  const current=route();
+  const mode=current.name==='activity'&&current.parts[0]==='seminar-3'?'assessment':current.name==='games'&&current.parts[0]==='settlements'?'free':null;
+  if(!mode)return;
   const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
   const free=mode==='free';
   app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;

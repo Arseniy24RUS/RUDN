@@ -3,7 +3,9 @@
 const SERVICES=new Map([
   ['identitytoolkit.googleapis.com','auth'],
   ['securetoken.googleapis.com','token'],
-  ['firebasestorage.googleapis.com','storage']
+  ['firebasestorage.googleapis.com','storage'],
+  // Only this platform database; other projects and local emulators stay direct.
+  ['rudn-gmu-learning-platform-default-rtdb.europe-west1.firebasedatabase.app','database']
 ]);
 const INSTALL=Symbol.for('rudn.firebase.gateway');
 export function firebaseGatewayUrl(input,gateway){

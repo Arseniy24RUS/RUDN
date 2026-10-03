@@ -14,3 +14,5 @@
 :host([data-presentation="game"]) .notice.warn,:host([data-presentation="game"]) .result{flex:0 1 auto;min-height:0;max-height:45%;overflow:auto;margin:0;border-radius:0;padding:8px}
 @media(max-width:480px){:host([data-presentation="game"]) .game-heading .actions{max-width:65%}:host([data-presentation="game"]) .game-heading .actions>button{flex:1;min-width:0}:host([data-presentation="game"]) .game-heading .game-title .status{font-size:10px}}
 @media(orientation:landscape) and (max-height:500px){:host([data-presentation="game"]) .game-heading{padding:2px 6px}:host([data-presentation="game"]) .game-title{display:flex;align-items:center;gap:12px}:host([data-presentation="game"]) .game-heading .status{padding:0}:host([data-presentation="game"]) .result{max-height:35%}}
+
+.result-actions{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:white;padding:4px 0 8px}.result-actions h2{flex:1;min-width:140px}.result-actions button{flex-shrink:0}
