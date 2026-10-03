@@ -26,7 +26,7 @@ export function resultMetrics(evaluation,save,reason,elapsedMs){
 /** Native platform module. Geography is loaded only when a game is mounted. */
 export async function mountSettlements(container,{backend,owner='guest:settlements',mode='free',locale='ru',signal,onLogin,onExit,onViewChange,onLocaleChange}={}){
   const shadow=container.shadowRoot||container.attachShadow({mode:'open'}),abort=new AbortController();
-  let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankMode=mode,rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',partySaveState='device-only',tutorialSaveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,replayTutorial=false,notice='';
+  let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankMode=mode,rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',partySaveState='device-only',tutorialSaveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,notice='';
   let queue=Promise.resolve(),actionQueue=Promise.resolve(),pendingCompletion=false,restoringWriter=false,acquiringWriter=false,appliedReadOnly=null,destroyPromise=null;
   const pendingCheckpoints={session:0,tutorial:0},submittedSaves={session:null,tutorial:null};
   let presentedView=null;
@@ -106,7 +106,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     const points=mode==='assessment'&&result.coverageNp>=90?{easy:3,normal:4,hard:5}[session.difficulty]:0;
     target.innerHTML=`<h2>${esc(c().completed)}</h2><p>${esc(c()[result.reason?.replaceAll('-','_')]||c().complete)}</p><div class="result-grid">${[[number(result.coverageNp,2)+'%',c().coverageNp],[number(result.coveragePopulation,2)+'%',c().coveragePopulation],[number(result.spentMillionRub),c().spent],[number(result.turns,0),c().turns],[durationText(session.elapsedMs),c().time],...(mode==='assessment'?[[`${points}/5`,c().points]]:[])].map(([value,label])=>`<div><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div><p>${esc(mode==='free'?c().freeResult:points?c().rule:c().noPoints)}</p><p class="muted">${esc(!student?c().device:session.status==='completed'?c().receiptSaved:c().receiptPending)}</p><button data-action="lobby">${esc(c().newGame)}</button>`;
   }
-  function renderGameHeading(){notifyView(view);const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select><button data-action="lobby">${esc(view==='tutorial'?(session?c().returnGame:c().tutorialReturn):c().back)}</button>${view==='game'?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}</div>`;}
+  function renderGameHeading(){notifyView(view);const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select><button data-action="lobby">${esc(view==='tutorial'?c().tutorialReturn:c().back)}</button></div>`;}
   async function saveCurrent(){tick();if(!game||!persistence.canWrite()||conflict||restoringWriter)return;const snapshot=game.snapshot?.();if(!snapshot)return;const save=snapshot.save||snapshot;
     submittedSaves[view==='tutorial'?'tutorial':'session']=checkpointIdentity(save);
     if(view==='tutorial'){tutorial={...tutorial,engineSave:save,step:save.actions?.length||0};await persistence.saveTutorial(tutorial);}
@@ -145,7 +145,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
           session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs),status:'completion-pending',result};lastTick=0;
           try{session=await persistence.completeSession(session,result);pendingCompletion=false;renderResult();showStatus();$('.result').style.scrollMarginTop=`${(document.querySelector('.topbar')?.getBoundingClientRect().bottom||0)+8}px`;$('.result').scrollIntoView({block:'start'});void refreshRanking();}
           catch(error){try{session=await persistence.loadSession({attemptId:previous.attemptId})||previous;}catch{session=previous;}pendingCompletion=false;throw error;}}),
-        onExit:()=>{void act(()=>toLobby());},onReplayTutorial:()=>{void act(()=>startTutorial());}});
+        onExit:()=>{void act(()=>toLobby());}});
       if(!active()||generation!==loadGeneration){handle.destroy();return;}
       // Imported games replay the already persisted snapshot without emitting a
       // boot checkpoint. Establish that replay as the comparison baseline.
@@ -153,8 +153,8 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       game=handle;appliedReadOnly=null;busy=false;tick();showStatus();fitGame(true);
     }catch(error){busy=false;if(!active()||generation!==loadGeneration)return;gameRoot.innerHTML=`<div class="busy"><p>${esc(c().startError)}</p><button data-action="reload-game">${esc(c().retry)}</button></div>`;gameRoot.querySelector('button').onclick=()=>void act(()=>openGame({intro:view==='tutorial'}));console.error('Settlements load:',error?.code||error?.message);}
   }
-  async function toLobby(){const returnToGame=view==='tutorial'&&replayTutorial&&session;await releaseGame();if(returnToGame){replayTutorial=false;await openGame();return;}view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();}
-  async function startTutorial(){replayTutorial=view==='game';await openGame({intro:true,freshTutorial:!!tutorial?.completed});}
+  async function toLobby(){await releaseGame();view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();}
+  async function startTutorial(){await openGame({intro:true,freshTutorial:!!tutorial?.completed});}
   async function startGame(){if(view!=='lobby'||!writable||conflict||restoringWriter)return;if(session?.status==='completion-pending'){notice='receiptPending';showStatus();await persistence.flush();return;}if(!tutorial?.completed){await startTutorial();return;}if(mode==='assessment'&&!student&&!teacher){onLogin?.();return;}
     if(session?.status==='active'){await askAbandon(true);return;}
     const regionId=mode==='assessment'?randomRegion(regions,session?.regionId):selectedRegion||regions[0].id;
