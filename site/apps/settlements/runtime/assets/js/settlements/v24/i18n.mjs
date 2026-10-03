@@ -2,6 +2,9 @@
  * geographic-name transliteration: every sentence/template is translated as a
  * unit. Parameters are literal data and are never translated recursively. */
 const entries = `
+Обучение пройдено|Tutorial completed|教程已完成
+К выбору сложности|Choose game difficulty|选择游戏难度
+Обучение не начисляет баллы. Далее — основная игра.|The tutorial does not award points. Continue to the main game.|教程不计分。接下来请开始正式游戏。
 Население|Population|人口
 Связь|Connectivity|通信
 Медицина|Healthcare|医疗

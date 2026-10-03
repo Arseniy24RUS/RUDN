@@ -11,6 +11,7 @@ import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,reg
 import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.9';
 import {officialTicket} from './student-identity.js';
 import {durableStore} from './durable-store.js';
+import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage} from './settlements-course-status.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
 import {mountTeacherJournal} from './teacher-journal.js?v=1.3.9';
 import {openAccount,mountProfile} from './account.js?v=1.3.9';
@@ -321,7 +322,8 @@ function courseResult(result,max){
 async function renderDashboard(){
   const profile=backend.getProfile();
   const owner=attemptOwner();
-  const [grades,attempts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts()]):[{},[]];
+  const [grades,attempts,settlementsDrafts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts(),readSettlementsCourseDrafts(durableStore,owner)]):[{},[],[null,null]];
+  const settlementsStatus=settlementsCourseStatus(...settlementsDrafts,grades['seminar-3'],owner);
   if(owner!==attemptOwner())return;
   const classroomBest=bestCourseQuizAttempt(attempts);
   const total=Object.values(grades).reduce((sum,g)=>sum+number(g.points),0);
@@ -348,7 +350,7 @@ async function renderDashboard(){
       const testAction=!hasTest?'':testAllowed
         ?`<a class="btn btn-primary btn-small" data-lecture-test="${lecture.slug}" href="#activity/${lecture.slug}/test">${t('test')}</a>`
         :`<button class="btn btn-neutral btn-small" data-lecture-test="${lecture.slug}" type="button" disabled aria-describedby="lecture-test-status-${topic.number}">${t('test')}</button>`;
-      return `<div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${courseResult(item.result,item.max)}</span><div class="activity-actions">${action(item.route)}${testAction}</div></footer>${testStatus?`<small class="muted lecture-test-status" id="lecture-test-status-${topic.number}">${esc(testStatus)}</small>`:''}</div>`;
+      return `<div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${item.route==='seminar-3'&&!item.result&&settlementsStatus?.kind==='pending'?`${settlementsStatus.points}/${item.max}`:courseResult(item.result,item.max)}${item.route==='seminar-3'&&settlementsStatus?`<small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</span><div class="activity-actions">${action(item.route)}${testAction}</div></footer>${testStatus?`<small class="muted lecture-test-status" id="lecture-test-status-${topic.number}">${esc(testStatus)}</small>`:''}</div>`;
     }).join('');
     return `<article class="topic-card ${allowed?'':'access-locked'} ${perfect?'topic-perfect':''}" ${perfect?`aria-label="${esc(ui('platinumTopic'))}"`:''}><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong></div><div class="topic-copy"><div class="access-status ${gate.open?'open':'closed'}">${esc(gateStatus(gate))}</div><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair ${activities.length===3?'activity-trio':''}">${activityCards}</div></article>`;
   }).join('');
@@ -375,9 +377,11 @@ async function renderGradebook(){
   }
   const owner=attemptOwner();
   const profile=backend.getProfile();const grades=await backend.getGrades();const attempts=await backend.getAttempts();const items=gradeItems();
+  const settlementsDrafts=await readSettlementsCourseDrafts(durableStore,owner);
+  const settlementsStatus=settlementsCourseStatus(...settlementsDrafts,grades['seminar-3'],owner);
   if(owner!==attemptOwner())return;
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
-  const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:'<span class="grade-empty">—</span>'}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
+  const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:item.slug==='seminar-3'&&settlementsStatus?.kind==='pending'?`<span>${settlementsStatus.points}</span>`:'<span class="grade-empty">—</span>'}${item.slug==='seminar-3'&&settlementsStatus?`<br><small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
   const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);

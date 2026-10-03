@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "795f9d2c46dc90454c8f657511e7f64022f3d7bb28183a0f468b8633b614f442",
+  "sourceHash": "ddf8719b83d0e2512363f23792815c510c64ffe1e2b2d2ec8940b89a853ed161",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1565,13 +1565,13 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 74580,
-      "sha256": "31d71b52115a18f0ade9e3f9cd8bfc2b5eb09360fb598f1b50d52f18738a2b88"
+      "bytes": 74972,
+      "sha256": "606aa5cc858756191e27c414e72494426e7e0692eb31bc671fd482d9c878ec98"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
-      "bytes": 88183,
-      "sha256": "039b2588cce9ddad5b0a45b0ef187a5fa9f436a1a64650732f76dd9383a3b835"
+      "bytes": 88539,
+      "sha256": "2a9fa42e5eb4793d21d10badd05137a682dd940a9b5e8cfd97807902c8223146"
     },
     {
       "path": "assets/js/settlements/v24/map.mjs",

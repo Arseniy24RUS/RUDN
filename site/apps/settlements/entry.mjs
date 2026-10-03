@@ -90,8 +90,8 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     $('.lobby').hidden=view!=='lobby';
     $('.lobby').innerHTML=`<p>${esc(mode==='assessment'?c().rule:c().freeRule)}</p>${!student?`<p class="notice">${esc(teacher?c().teacher:c().guest)}</p>`:''}
       ${mode==='assessment'&&!student&&!teacher?`<button class="primary" data-action="login">${esc(c().login)}</button>`:
-      !tutorial?.completed?`<p class="notice">${esc(c().firstTutorial)}</p><button class="primary" data-action="tutorial">${esc(tutorial?.engineSave?c().resume:c().learn)}</button>`:
-      `<div class="controls"><label>${esc(c().difficulty)}<select data-select="difficulty">${options(selectedDifficulty)}</select></label>${mode==='free'?`<label class="region">${esc(c().region)}<select data-select="region">${regions.map(r=>`<option value="${esc(r.id)}"${r.id===selectedRegion?' selected':''}>${esc(regionName(r,lang))}</option>`).join('')}</select></label>`:''}<button class="primary" data-action="start"${busy?' disabled':''}>${esc(c().start)}</button></div>${mode==='assessment'?`<p class="muted">${esc(c().random)}</p>`:''}`}
+      !tutorial?.completed?`<p class="notice">${esc(c().firstTutorial)} ${esc(c().trainingNoPoints)}</p><button class="primary" data-action="tutorial">${esc(tutorial?.engineSave?c().resume:c().learn)}</button>`:
+      ` ${mode==='assessment'&&!hasActive&&!completed?`<p class="notice" data-assessment-ready>${esc(c().trainingNoPoints)} ${esc(c().assessmentReady)}</p>`:''}<div class="controls"><label>${esc(c().difficulty)}<select data-select="difficulty">${options(selectedDifficulty)}</select></label>${mode==='free'?`<label class="region">${esc(c().region)}<select data-select="region">${regions.map(r=>`<option value="${esc(r.id)}"${r.id===selectedRegion?' selected':''}>${esc(regionName(r,lang))}</option>`).join('')}</select></label>`:''}<button class="primary" data-action="start"${busy?' disabled':''}>${esc(mode==='assessment'?c().startAssessment:c().start)}</button></div>${mode==='assessment'?`<p class="muted">${esc(c().random)}</p>`:''}`}
       ${session&&session.status!=='abandoned'?`<div class="notice"><strong>${esc(c().history)} · ${esc(textRegion(session.regionId))} · ${esc(c()[session.difficulty])}</strong><p>${esc(c().time)}: ${durationText(session.elapsedMs)}</p><div class="actions"><button data-action="resume">${esc(completed?c().view:c().resume)}</button>${hasActive?`<button data-action="abandon">${esc(c().abandon)}</button>`:''}</div></div>`:''}
       ${tutorial?.completed?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}`;
     showStatus();
@@ -106,7 +106,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     const points=mode==='assessment'&&result.coverageNp>=90?{easy:3,normal:4,hard:5}[session.difficulty]:0;
     target.innerHTML=`<div class="result-actions"><h2>${esc(c().completed)}</h2><button class="primary" data-action="new-game">${esc(c().newGame)}</button>${student&&session.status!=='completed'?`<button data-action="retry-save">${esc(c().retry)}</button>`:''}</div><p>${esc(c()[result.reason?.replaceAll('-','_')]||c().complete)}</p><div class="result-grid">${[...(mode==='assessment'?[[`${points}/5`,c().points]]:[]),[number(result.coverageNp,2)+'%',c().coverageNp],[number(result.coveragePopulation,2)+'%',c().coveragePopulation],[number(result.spentMillionRub),c().spent],[number(result.turns,0),c().turns],[durationText(session.elapsedMs),c().time]].map(([value,label])=>`<div><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div><p>${esc(mode==='free'?c().freeResult:points?c().rule:c().noPoints)}</p><p class="muted">${esc(!student?c().device:session.status==='completed'?c().receiptSaved:c().receiptPending)}</p>`;
   }
-  function renderGameHeading(){notifyView(view);const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${mode==='assessment'?c().rankAssessment:c().free} · ${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select><button data-action="lobby">${esc(view==='tutorial'?c().tutorialReturn:c().back)}</button></div>`;}
+  function renderGameHeading(){notifyView(view);const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${mode==='assessment'?c().rankAssessment:c().free} · ${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select><button data-action="lobby">${esc(view==='tutorial'?(mode==='assessment'?c().returnAssessment:c().tutorialReturn):c().back)}</button></div>`;}
   async function saveCurrent(){tick();if(!game||!persistence.canWrite()||conflict||restoringWriter)return;const snapshot=game.snapshot?.();if(!snapshot)return;const save=snapshot.save||snapshot;
     submittedSaves[view==='tutorial'?'tutorial':'session']=checkpointIdentity(save);
     if(view==='tutorial'){tutorial={...tutorial,engineSave:save,step:save.actions?.length||0};await persistence.saveTutorial(tutorial);}
@@ -138,16 +138,21 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       const handle=await mountSettlementsGame(gameRoot,{locale:lang,owner,regionId:intro?'chelyabinskaya_oblast':session.regionId,mode:intro?'intro':'free',difficulty:intro?'normal':session.difficulty,initialSave,signal:abort.signal,readOnly:!writable||(!intro&&session.status!=='active'),
         onCheckpoint:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,engineSave:payload.save,step:payload.save.actions?.length||0};await persistence.saveTutorial(tutorial);}else if(session.status==='active'){session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}}),
         onComplete:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,completed:true,engineSave:payload.save,step:6};await persistence.saveTutorial(tutorial);notice='tutorialDone';showStatus();return;}
-          if(pendingCompletion||['completed','abandoned'].includes(session.status))return;pendingCompletion=true;const previous=session;
-          const result=resultMetrics(payload.evaluation,payload.save,payload.reason,Math.round(elapsedMs));result.spentMillionRub=payload.metrics?.spentMillionRub??payload.spentMillionRub??payload.evaluation.spent;
-          // The game supplies spent directly from its replayed engine state.
-          if(payload.metrics?.spentMillionRub!==undefined)result.spentMillionRub=payload.metrics.spentMillionRub;
-          session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs),status:'completion-pending',result};lastTick=0;
-          // Show the earned result immediately; cloud confirmation is a separate status.
-          renderResult();showStatus();$('.result').scrollIntoView({block:'start'});
-          try{session=await persistence.completeSession(session,result);pendingCompletion=false;renderResult();showStatus();$('.result').style.scrollMarginTop=`${(document.querySelector('.topbar')?.getBoundingClientRect().bottom||0)+8}px`;$('.result').scrollIntoView({block:'start'});void refreshRanking();}
-          catch(error){try{session=await persistence.loadSession({attemptId:previous.attemptId})||previous;}catch{session=previous;}pendingCompletion=false;throw error;}}),
-        onExit:()=>{void act(()=>toLobby());}});
+          if(pendingCompletion||['completed','abandoned'].includes(session.status))return;
+          pendingCompletion=true;const previous=session;
+          try{
+            const result=resultMetrics(payload.evaluation,payload.save,payload.reason,Math.round(elapsedMs));
+            result.spentMillionRub=payload.metrics?.spentMillionRub??payload.spentMillionRub??payload.evaluation.spent;
+            session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs),status:'completion-pending',result};lastTick=0;
+            renderResult();showStatus();
+            session=await persistence.completeSession(session,result);
+            renderResult();showStatus();$('.result').scrollIntoView({block:'start'});void refreshRanking();
+          }catch(error){
+            try{session=await persistence.loadSession({attemptId:previous.attemptId})||previous;}catch{session=previous;}
+            throw error;
+          }finally{pendingCompletion=false;}
+        }),
+        onExit:()=>act(()=>toLobby())});
       if(!active()||generation!==loadGeneration){handle.destroy();return;}
       // Imported games replay the already persisted snapshot without emitting a
       // boot checkpoint. Establish that replay as the comparison baseline.
@@ -155,7 +160,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       game=handle;appliedReadOnly=null;busy=false;tick();showStatus();fitGame(true);
     }catch(error){busy=false;if(!active()||generation!==loadGeneration)return;gameRoot.innerHTML=`<div class="busy"><p>${esc(c().startError)}</p><button data-action="reload-game">${esc(c().retry)}</button></div>`;gameRoot.querySelector('button').onclick=()=>void act(()=>openGame({intro:view==='tutorial'}));console.error('Settlements load:',error?.code||error?.message);}
   }
-  async function toLobby(){await releaseGame();view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();}
+  async function toLobby(){const finishedTutorial=view==='tutorial'&&tutorial?.completed;await releaseGame();view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();if(finishedTutorial){const target=session&&session.status!=='abandoned'?$('[data-action="resume"]'):$('[data-assessment-ready]')||$('[data-action="start"]');target?.scrollIntoView({block:'start',behavior:'instant'});$('.lobby [data-action="start"]')?.focus({preventScroll:true});}}
   async function startTutorial(){await openGame({intro:true,freshTutorial:!!tutorial?.completed});}
   async function startGame(){if(view!=='lobby'||!writable||conflict||restoringWriter)return;if(session?.status==='completion-pending'){notice='receiptPending';showStatus();const saved=await persistence.flush();if(saved.session?.attemptId===session.attemptId)session=saved.session;renderResult();renderLobby();if(session.status!=='completed')return;notice='';}if(!tutorial?.completed){await startTutorial();return;}if(mode==='assessment'&&!student&&!teacher){onLogin?.();return;}
     if(session?.status==='active'){await askAbandon(true);return;}

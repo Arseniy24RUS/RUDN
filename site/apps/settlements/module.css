@@ -16,3 +16,5 @@
 @media(orientation:landscape) and (max-height:500px){:host([data-presentation="game"]) .game-heading{padding:2px 6px}:host([data-presentation="game"]) .game-title{display:flex;align-items:center;gap:12px}:host([data-presentation="game"]) .game-heading .status{padding:0}:host([data-presentation="game"]) .result{max-height:35%}}
 
 .result-actions{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:white;padding:4px 0 8px}.result-actions h2{flex:1;min-width:140px}.result-actions button{flex-shrink:0}
+
+[data-assessment-ready]{scroll-margin-top:100px}
