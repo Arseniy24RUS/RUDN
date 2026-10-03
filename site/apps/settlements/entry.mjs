@@ -5,6 +5,9 @@ const BASE=new URL('./',import.meta.url),DIFFICULTIES=['easy','normal','hard'];
 const SERVICES=['telecom','medical','school','culture'];
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clone=value=>structuredClone(value);
+// Tool previews can change the visible layer without producing a checkpoint.
+// The replay identity still includes every action and terminal/guide metadata.
+const checkpointIdentity=save=>JSON.stringify(save,(key,value)=>key==='activeLayer'?undefined:value);
 export function randomRegion(regions,previous,random=crypto){
   const choices=regions.filter(region=>region.id!==previous);if(!choices.length)throw Error('settlements/no-regions');
   const maximum=Math.floor(0x100000000/choices.length)*choices.length,array=new Uint32Array(1);
@@ -21,10 +24,13 @@ export function resultMetrics(evaluation,save,reason,elapsedMs){
 }
 
 /** Native platform module. Geography is loaded only when a game is mounted. */
-export async function mountSettlements(container,{backend,owner='guest:settlements',mode='free',locale='ru',signal,onLogin,onExit}={}){
+export async function mountSettlements(container,{backend,owner='guest:settlements',mode='free',locale='ru',signal,onLogin,onExit,onViewChange,onLocaleChange}={}){
   const shadow=container.shadowRoot||container.attachShadow({mode:'open'}),abort=new AbortController();
   let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankMode=mode,rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',partySaveState='device-only',tutorialSaveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,replayTutorial=false,notice='';
   let queue=Promise.resolve(),actionQueue=Promise.resolve(),pendingCompletion=false,restoringWriter=false,acquiringWriter=false,appliedReadOnly=null,destroyPromise=null;
+  const pendingCheckpoints={session:0,tutorial:0},submittedSaves={session:null,tutorial:null};
+  let presentedView=null;
+  function notifyView(value){if(presentedView!==value){presentedView=value;onViewChange?.(value)}}
   const c=()=>COPY[lang],number=(n,d=1)=>new Intl.NumberFormat(lang==='zh'?'zh-CN':lang==='en'?'en-GB':'ru-RU',{maximumFractionDigits:d}).format(n||0);
   const $=selector=>shadow.querySelector(selector),student=owner.startsWith('student:'),teacher=owner.startsWith('teacher:'),active=()=>!disposed&&!abort.signal.aborted;
   const renderedMarkup=new WeakMap();
@@ -32,10 +38,28 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   const textRegion=id=>{const region=regions.find(item=>item.id===id);return region?regionName(region,lang):id;};
   const options=selected=>DIFFICULTIES.map(id=>`<option value="${id}"${selected===id?' selected':''}>${esc(c()[id])}${mode==='assessment'?` · ${{easy:3,normal:4,hard:5}[id]}/5`:''}</option>`).join('');
   const enqueue=task=>{const next=queue.then(task);queue=next.catch(error=>{if(active()){notice=error?.code==='settlements/online-required'?'onlineRequired':'failed';showStatus();console.error('Settlements operation:',error?.code||error?.message);}});return next;};
+  function checkpointStatus(which,state){return ['unsafe','conflict'].includes(state)?state:pendingCheckpoints[which]?'pending':state;}
+  function reconcileSnapshotStatus(){
+    if(!game||view==='lobby')return;
+    const which=view==='tutorial'?'tutorial':'session',state=which==='tutorial'?tutorialSaveState:partySaveState;
+    // Native saveQueue may still hold callbacks for later moves. Only compare
+    // the small exported replay when an online ACK could otherwise be shown.
+    if(state==='saved'&&!pendingCheckpoints[which]&&checkpointIdentity(game.snapshot()?.save)!==submittedSaves[which]){
+      if(which==='tutorial')tutorialSaveState='pending';else partySaveState='pending';
+    }
+  }
+  function enqueueCheckpoint(intro,generation,payload,task){
+    if(!active()||generation!==loadGeneration)return Promise.resolve();
+    const which=intro?'tutorial':'session';pendingCheckpoints[which]++;showStatus();
+    return enqueue(async()=>{
+      if(!active()||generation!==loadGeneration)return;
+      submittedSaves[which]=checkpointIdentity(payload.save);await task();
+    }).finally(()=>{pendingCheckpoints[which]--;reconcileSnapshotStatus();showStatus()});
+  }
   const act=task=>{actionQueue=actionQueue.then(task).catch(error=>{if(active()){notice='failed';showStatus();console.error('Settlements action:',error?.code||error?.message);}});return actionQueue;};
   function tick(){const now=performance.now();if(lastTick)elapsedMs+=Math.max(0,now-lastTick);lastTick=view==='game'&&session?.status==='active'&&!document.hidden&&!busy&&writable&&!conflict&&!restoringWriter?now:0;}
   function statusLabel(){return c()[saveState==='saved'?'saved':saveState==='unsafe'?'unsafe':saveState==='pending'&&navigator.onLine!==false?'pending':saveState==='conflict'?'conflict':'device'];}
-  function showStatus(){if(!active())return;saveState=view==='tutorial'?tutorialSaveState:partySaveState;$('[data-status]').hidden=view!=='lobby';for(const node of shadow.querySelectorAll('[data-status],[data-game-status]')){setMarkup(node,`${esc(notice?c()[notice]||notice:statusLabel())}${notice==='failed'||saveState==='unsafe'?` <button data-action="retry-save">${esc(c().retry)}</button>`:''}`);node.dataset.state=saveState;}
+  function showStatus(){if(!active())return;saveState=view==='tutorial'?checkpointStatus('tutorial',tutorialSaveState):checkpointStatus('session',partySaveState);$('[data-status]').hidden=view!=='lobby';for(const node of shadow.querySelectorAll('[data-status],[data-game-status]')){setMarkup(node,`${esc(notice?c()[notice]||notice:statusLabel())}${notice==='failed'||saveState==='unsafe'?` <button data-action="retry-save">${esc(c().retry)}</button>`:''}`);node.dataset.state=saveState;}
     const box=$('[data-conflict]');if(box){box.hidden=!conflict;setMarkup(box,conflict?`<p>${esc(c().conflict)}</p><div class="actions"><button data-action="cloud">${esc(c().cloudVersion)}</button><button data-action="local">${esc(c().localVersion)}</button></div>`:'');}
     const lock=$('[data-writer]');if(lock){lock.hidden=writable||busy;setMarkup(lock,`<p>${esc(c().writer)}</p><button data-action="takeover"${acquiringWriter?' disabled':''}>${esc(acquiringWriter?c().takeoverWaiting:c().takeover)}</button>`);}
     const readOnly=!writable||restoringWriter||!!conflict||saveState==='unsafe'||(view!=='tutorial'&&(session?.status==='completed'||session?.status==='completion-pending'));
@@ -44,7 +68,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   }
   const persistence=createSettlementsPersistence({backend,owner,mode,
     onBeforeRelease:async()=>{if(game&&persistence.canWrite()&&!conflict&&!restoringWriter){await game.flush?.();await queue;await saveCurrent();}},
-    onStatus:event=>{partySaveState=event.state||event.saveState||partySaveState;tutorialSaveState=event.state==='unsafe'?'unsafe':event.tutorialState||tutorialSaveState;saveState=view==='tutorial'?tutorialSaveState:partySaveState;if(typeof event.writable==='boolean')writable=event.writable;
+    onStatus:event=>{partySaveState=event.state||event.saveState||partySaveState;tutorialSaveState=event.state==='unsafe'?'unsafe':event.tutorialState||tutorialSaveState;reconcileSnapshotStatus();saveState=view==='tutorial'?checkpointStatus('tutorial',tutorialSaveState):checkpointStatus('session',partySaveState);if(typeof event.writable==='boolean')writable=event.writable;
       if(saveState==='saved'&&['failed','onlineRequired'].includes(notice))notice='';
       if(event.session?.attemptId===session?.attemptId&&event.session?.status==='completed'){session={...session,...event.session};pendingCompletion=false;lastTick=0;if(notice==='receiptPending')notice='';if(view!=='tutorial')renderResult();}
       showStatus();},
@@ -82,8 +106,9 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     const points=mode==='assessment'&&result.coverageNp>=90?{easy:3,normal:4,hard:5}[session.difficulty]:0;
     target.innerHTML=`<h2>${esc(c().completed)}</h2><p>${esc(c()[result.reason?.replaceAll('-','_')]||c().complete)}</p><div class="result-grid">${[[number(result.coverageNp,2)+'%',c().coverageNp],[number(result.coveragePopulation,2)+'%',c().coveragePopulation],[number(result.spentMillionRub),c().spent],[number(result.turns,0),c().turns],[durationText(session.elapsedMs),c().time],...(mode==='assessment'?[[`${points}/5`,c().points]]:[])].map(([value,label])=>`<div><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div><p>${esc(mode==='free'?c().freeResult:points?c().rule:c().noPoints)}</p><p class="muted">${esc(!student?c().device:session.status==='completed'?c().receiptSaved:c().receiptPending)}</p><button data-action="lobby">${esc(c().newGame)}</button>`;
   }
-  function renderGameHeading(){const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><button data-action="lobby">${esc(view==='tutorial'?(session?c().returnGame:c().tutorialReturn):c().back)}</button>${view==='game'?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}</div>`;}
+  function renderGameHeading(){notifyView(view);const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select><button data-action="lobby">${esc(view==='tutorial'?(session?c().returnGame:c().tutorialReturn):c().back)}</button>${view==='game'?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}</div>`;}
   async function saveCurrent(){tick();if(!game||!persistence.canWrite()||conflict||restoringWriter)return;const snapshot=game.snapshot?.();if(!snapshot)return;const save=snapshot.save||snapshot;
+    submittedSaves[view==='tutorial'?'tutorial':'session']=checkpointIdentity(save);
     if(view==='tutorial'){tutorial={...tutorial,engineSave:save,step:save.actions?.length||0};await persistence.saveTutorial(tutorial);}
     else if(session?.status==='active'){session={...session,engineSave:save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}
   }
@@ -93,6 +118,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     ++loadGeneration;appliedReadOnly=null;gameRoot.replaceChildren();$('.game-stage').hidden=true;lastTick=0;
   }
   function fitGame(scroll=false){if(!active()||view==='lobby')return;const stage=$('.game-stage'),heading=$('.game-heading');
+    if(container.dataset.presentation==='game'){stage.style.removeProperty('height');return;}
     const viewport=globalThis.visualViewport,top=document.querySelector('.topbar')?.getBoundingClientRect().bottom||0;
     const nav=document.querySelector('.mobile-nav'),navRect=nav?.getBoundingClientRect();
     const bottom=navRect&&getComputedStyle(nav).display!=='none'?navRect.height:0;
@@ -108,9 +134,10 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     try{
       const {mountSettlementsGame}=await import('./runtime/assets/js/settlements/v24/game.mjs');
       if(!active()||generation!==loadGeneration)return;
-      const handle=await mountSettlementsGame(gameRoot,{locale:lang,owner,regionId:intro?'chelyabinskaya_oblast':session.regionId,mode:intro?'intro':'free',difficulty:intro?'normal':session.difficulty,initialSave:intro?tutorial?.engineSave:session.engineSave,signal:abort.signal,readOnly:!writable||(!intro&&session.status!=='active'),
-        onCheckpoint:payload=>enqueue(async()=>{if(!active()||generation!==loadGeneration)return;tick();if(intro){tutorial={...tutorial,engineSave:payload.save,step:payload.save.actions?.length||0};await persistence.saveTutorial(tutorial);}else if(session.status==='active'){session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}}),
-        onComplete:payload=>enqueue(async()=>{if(!active()||generation!==loadGeneration)return;tick();if(intro){tutorial={...tutorial,completed:true,engineSave:payload.save,step:6};await persistence.saveTutorial(tutorial);notice='tutorialDone';showStatus();return;}
+      const initialSave=intro?tutorial?.engineSave:session.engineSave;
+      const handle=await mountSettlementsGame(gameRoot,{locale:lang,owner,regionId:intro?'chelyabinskaya_oblast':session.regionId,mode:intro?'intro':'free',difficulty:intro?'normal':session.difficulty,initialSave,signal:abort.signal,readOnly:!writable||(!intro&&session.status!=='active'),
+        onCheckpoint:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,engineSave:payload.save,step:payload.save.actions?.length||0};await persistence.saveTutorial(tutorial);}else if(session.status==='active'){session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}}),
+        onComplete:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,completed:true,engineSave:payload.save,step:6};await persistence.saveTutorial(tutorial);notice='tutorialDone';showStatus();return;}
           if(pendingCompletion||['completed','abandoned'].includes(session.status))return;pendingCompletion=true;const previous=session;
           const result=resultMetrics(payload.evaluation,payload.save,payload.reason,Math.round(elapsedMs));result.spentMillionRub=payload.metrics?.spentMillionRub??payload.spentMillionRub??payload.evaluation.spent;
           // The game supplies spent directly from its replayed engine state.
@@ -119,7 +146,11 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
           try{session=await persistence.completeSession(session,result);pendingCompletion=false;renderResult();showStatus();$('.result').style.scrollMarginTop=`${(document.querySelector('.topbar')?.getBoundingClientRect().bottom||0)+8}px`;$('.result').scrollIntoView({block:'start'});void refreshRanking();}
           catch(error){try{session=await persistence.loadSession({attemptId:previous.attemptId})||previous;}catch{session=previous;}pendingCompletion=false;throw error;}}),
         onExit:()=>{void act(()=>toLobby());},onReplayTutorial:()=>{void act(()=>startTutorial());}});
-      if(!active()||generation!==loadGeneration){handle.destroy();return;}game=handle;appliedReadOnly=null;busy=false;tick();showStatus();fitGame(true);
+      if(!active()||generation!==loadGeneration){handle.destroy();return;}
+      // Imported games replay the already persisted snapshot without emitting a
+      // boot checkpoint. Establish that replay as the comparison baseline.
+      if(initialSave)submittedSaves[intro?'tutorial':'session']=checkpointIdentity(handle.snapshot()?.save);
+      game=handle;appliedReadOnly=null;busy=false;tick();showStatus();fitGame(true);
     }catch(error){busy=false;if(!active()||generation!==loadGeneration)return;gameRoot.innerHTML=`<div class="busy"><p>${esc(c().startError)}</p><button data-action="reload-game">${esc(c().retry)}</button></div>`;gameRoot.querySelector('button').onclick=()=>void act(()=>openGame({intro:view==='tutorial'}));console.error('Settlements load:',error?.code||error?.message);}
   }
   async function toLobby(){const returnToGame=view==='tutorial'&&replayTutorial&&session;await releaseGame();if(returnToGame){replayTutorial=false;await openGame();return;}view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();}
@@ -157,14 +188,14 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       try{do{await persistence.acquireWriter();writable=persistence.canWrite();if(writable||!active()||conflict)break;await new Promise(resolve=>setTimeout(resolve,150));}while(performance.now()<deadline);}
       finally{acquiringWriter=false;showStatus();}return;}}
   shadow.addEventListener('click',event=>{const button=event.target.closest?.('[data-action],[data-rank-mode]');if(!button)return;event.preventDefault();if(button.dataset.rankMode){rankMode=button.dataset.rankMode;void refreshRanking();return;}void act(()=>handleAction(button.dataset.action));},{signal:abort.signal});
-  shadow.addEventListener('change',event=>{const field=event.target.dataset.select;if(field==='difficulty')selectedDifficulty=event.target.value;else if(field==='region')selectedRegion=event.target.value;else if(field==='rank-difficulty'){rankDifficulty=event.target.value;void refreshRanking();}},{signal:abort.signal});
+  shadow.addEventListener('change',event=>{const field=event.target.dataset.select;if(field==='locale'){if(onLocaleChange)onLocaleChange(event.target.value);else void api.setLocale(event.target.value);}else if(field==='difficulty')selectedDifficulty=event.target.value;else if(field==='region')selectedRegion=event.target.value;else if(field==='rank-difficulty'){rankDifficulty=event.target.value;void refreshRanking();}},{signal:abort.signal});
   const onVisibility=()=>{tick();if(document.hidden)void enqueue(saveCurrent);};document.addEventListener('visibilitychange',onVisibility,{signal:abort.signal});
   const heartbeat=setInterval(()=>{if(active()&&view==='game'&&!busy&&!document.hidden&&session?.status==='active'&&writable)void enqueue(saveCurrent);},15000);
   globalThis.addEventListener('resize',()=>fitGame(),{signal:abort.signal});globalThis.visualViewport?.addEventListener('resize',()=>fitGame(),{signal:abort.signal});
   const api={async setLocale(value){lang=normalizeLocale(value);renderHeader();renderLobby();renderRanking();renderGameHeading();renderResult();await game?.setLocale?.(lang);showStatus();fitGame();},async flush(){
     if(disposed||!persistence.canWrite()||conflict||restoringWriter)return;
     await game?.flush?.();await queue;if(!persistence.canWrite()||conflict)return;await saveCurrent();await persistence.flush();
-  },destroy(){if(destroyPromise)return destroyPromise;destroyPromise=(async()=>{try{await api.flush();}finally{disposed=true;clearInterval(heartbeat);++loadGeneration;game?.destroy();game=null;abort.abort();try{await persistence.destroy();}finally{shadow.replaceChildren();}}})();return destroyPromise;}};
+  },destroy(){if(destroyPromise)return destroyPromise;destroyPromise=(async()=>{try{await api.flush();}finally{disposed=true;notifyView('lobby');clearInterval(heartbeat);++loadGeneration;game?.destroy();game=null;abort.abort();try{await persistence.destroy();}finally{shadow.replaceChildren();}}})();return destroyPromise;}};
   signal?.addEventListener('abort',()=>void api.destroy(),{once:true});
   renderHeader();renderRanking();$('.lobby').innerHTML=`<p role="status">${esc(c().loading)}</p>`;
   try{const response=await fetch(new URL('runtime/data/settlements/v1/manifest.json',BASE),{signal:abort.signal});if(!response.ok)throw Error('settlements/manifest');const manifest=await response.json();regions=manifest.regions;selectedRegion=regions[0].id;

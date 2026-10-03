@@ -44,6 +44,8 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   let disposed=false,current=null,draft=null,tutorial=null,conflicted=false,conflictScope=null,running=null,tail=Promise.resolve();
   let tutorialCompleted=false;
   const conflictsByScope={session:[],tutorial:[]};
+  const pendingWrites={session:0,tutorial:0};
+  const failedWrites={session:false,tutorial:false};
   const generation=backend?.generation;
   const isActive=()=>!disposed && (!student || (`student:${backend?.getProfile?.()?.studentKey}`===owner && (generation===undefined || backend.generation===generation)));
   const assertActive=()=>{if(!isActive())throw failure('auth/profile-changed')};
@@ -56,9 +58,20 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     return state;
   };
   function emit(state=draft?.saveStatus?.state || (student?'pending':'device-only')){
-    onStatus({state:conflicted?'conflict':state,
-      tutorialState:conflicted?'conflict':tutorial?.saveStatus?.state || (student?'pending':'device-only'),
+    const pendingState=(which,value)=>conflicted?'conflict':failedWrites[which]||value==='unsafe'?'unsafe':pendingWrites[which]?'pending':value;
+    onStatus({state:pendingState('session',state),
+      tutorialState:pendingState('tutorial',tutorial?.saveStatus?.state || (student?'pending':'device-only')),
       session:current?copy(current):null,writable:canWrite()});
+  }
+  function write(which,action){
+    // A previous flush can occupy the serial queue. Announce the new intent
+    // before queueing, so that flush's ACK cannot describe the newer snapshot.
+    pendingWrites[which]++;emit();
+    return serial(action).finally(()=>{pendingWrites[which]--;emit()});
+  }
+  async function checkpoint(which,...args){
+    try{const value=await store.checkpoint(...args);failedWrites[which]=false;return value}
+    catch(error){if(error.code!=='storage/conflict')failedWrites[which]=true;throw error}
   }
   async function detectConflicts(){
     tutorial=await store.loadDraft(tutorialScope);
@@ -116,10 +129,10 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     if(previous && ['completed','abandoned'].includes(previous.state.status)){
       draft=previous;current=view(previous);emit();return copy(current);
     }
-    draft=await store.checkpoint({...scope,attemptId:next.attemptId,state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'}, {queue:student});
+    draft=await checkpoint('session',{...scope,attemptId:next.attemptId,state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'}, {queue:student});
     assertActive();current=view(draft);emit();return copy(current);
   }
-  function saveSession(value){return serial(()=>save(value)).then(result=>{void flush().catch(()=>{});return result})}
+  function saveSession(value){return write('session',()=>save(value)).then(result=>{void flush().catch(()=>{});return result})}
   async function cloudAck(){
     if(!cloudAvailable()||!draft||conflicted)return false;
     await backend.durableSync().flush();assertActive();
@@ -160,7 +173,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   }
   async function completeSession(value,result){
     validateSettlementsResult(result);
-    await serial(()=>save({...value,result:copy(result),completedAt:value.completedAt||Date.now(),status:'completion-pending'}));
+    await write('session',()=>save({...value,result:copy(result),completedAt:value.completedAt||Date.now(),status:'completion-pending'}));
     await flush();return current?copy(current):null;
   }
   function flush(){
@@ -184,12 +197,12 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     await detectConflicts();emit();
     return tutorial?{...decodeState(tutorial.state),completed:tutorialCompleted}:null;
   }
-  function saveTutorial(state){return serial(async()=>{
+  function saveTutorial(state){return write('tutorial',async()=>{
     await detectConflicts();
     requireWriter();
     const previous=await store.loadDraft(tutorialScope);
     const next={...copy(state),completed:Boolean(state.completed||tutorialCompleted||previous?.state.completed)};
-    tutorial=await store.checkpoint({...tutorialScope,attemptId:previous?.attemptId||'tutorial-v1',state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'},{queue:student});
+    tutorial=await checkpoint('tutorial',{...tutorialScope,attemptId:previous?.attemptId||'tutorial-v1',state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'},{queue:student});
     assertActive();tutorialCompleted=next.completed;return copy(tutorial.state);
   }).then(result=>{void flush().catch(()=>{});return result})}
 
@@ -223,6 +236,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
       delete next.conflicts;return next;
     });
     assertActive();const resolved=await store.resolveRemoteConflict({...remote.current,remoteRevision:remote.revision});
+    failedWrites[selectedScope]=false;
     if(selectedScope==='tutorial'){tutorial=resolved;tutorialCompleted=Boolean(resolved.state.completed)}
     else{draft=resolved;current=view(draft)}
     await detectConflicts();emit();return current?copy(current):null;

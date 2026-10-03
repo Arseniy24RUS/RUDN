@@ -512,14 +512,14 @@ function renderSeminar3(topic){
   renderSettlements('assessment');
 }
 function renderSettlements(mode='free'){
-  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
+  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
   const free=mode==='free';
   app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#settlementsMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&(free?route().name==='games'&&route().parts[0]==='settlements':route().name==='activity'&&route().parts[0]==='seminar-3');
   // A route can leave while mounting still holds the profile's write lock.
   // Join the entire startup/teardown chain before the next module is mounted.
-  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();try{await mountTask;}finally{await handle?.destroy();}})();
+  const cleanup=()=>cleanupTask||=(async()=>{const presentationExit=presentation?.destroy();controller.abort();try{await mountTask;}finally{await handle?.destroy();await presentationExit;}})();
   cleanup.isStale=()=>controller.signal.aborted||generation!==backend.generation;
   cleanup.flush=()=>handle?.flush();
   cleanup.refreshLocale=()=>{
@@ -531,10 +531,11 @@ function renderSettlements(mode='free'){
   currentCleanup=cleanup;
   navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'settlements'});
   mountTask=(async()=>{try{
-    const {mountSettlements}=await import('../../apps/settlements/entry.mjs');if(!active())return;
-    handle=await mountSettlements(mount,{backend,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
+    const [{mountSettlements},{createSettlementsPresentation}]=await Promise.all([import('../../apps/settlements/entry.mjs'),import('./settlements-presentation.js')]);if(!active())return;
+    presentation=createSettlementsPresentation(mount);
+    handle=await mountSettlements(mount,{backend,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
     if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');
-  }catch(error){if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};console.error('Settlements module:',error?.code||error?.message);}})();
+  }catch(error){presentation?.destroy();if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};console.error('Settlements module:',error?.code||error?.message);}})();
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
 function gamesText(key){return GAMES_COPY[getLocale()]?.[key]||GAMES_COPY.ru[key]||key;}

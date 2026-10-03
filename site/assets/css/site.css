@@ -281,3 +281,9 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 .game-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:16px;background:#e7f5fc;color:var(--rudn-blue);font-size:29px}
 .games-guest-note{margin:20px 0;max-width:900px;line-height:1.6}
 @media(max-width:680px){.games-grid{grid-template-columns:1fr}.game-card h2{font-size:20px}}
+
+/* SETTLEMENTS_PRESENTATION_BEGIN */
+html.settlements-playing,html.settlements-playing body{overflow:hidden;overscroll-behavior:none}
+.settlements-playing .topbar,.settlements-playing .sidebar,.settlements-playing .mobile-nav{display:none!important}
+.settlements-playing #settlementsMount{position:fixed;inset:var(--game-viewport-top,0px) 0 auto;z-index:1000;width:100%;height:var(--game-viewport-height,100dvh);background:#eef4f8;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);box-sizing:border-box}
+/* SETTLEMENTS_PRESENTATION_END */

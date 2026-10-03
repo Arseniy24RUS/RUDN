@@ -73,6 +73,10 @@ with sync_playwright() as p:
             if args.case and f"{width}x{height}:{locale}" not in args.case:
                 continue
             context = browser.new_context(viewport={"width": width, "height": height}, service_workers="block")
+            if width == 320:
+                # A denied browser fullscreen permission must never expose the
+                # platform chrome or prevent the mandatory viewport layout.
+                context.add_init_script("Element.prototype.requestFullscreen=()=>Promise.reject(new DOMException('Denied for regression', 'NotAllowedError'))")
             page = context.new_page()
             cdp = context.new_cdp_session(page)
             errors, requests, console_errors = [], [], []
@@ -100,6 +104,14 @@ with sync_playwright() as p:
                 page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
                 row["listenersMounted"] = listener_counts(cdp)
                 assert page.locator('[data-game-status]').is_visible(), "save status must be visible above the map"
+                assert page.locator('html.settlements-playing').count() == 1
+                assert not page.locator('.topbar').is_visible()
+                assert not page.locator('.mobile-nav').is_visible()
+                assert not page.locator('.sidebar').is_visible()
+                assert not page.locator('.leaderboard').is_visible()
+                stage = page.locator('.game-stage').bounding_box()
+                row['fullscreenStage'] = stage
+                assert stage['height'] >= height - 150, f'map does not fill viewport: {stage}'
                 page.screenshot(path=str(out / f"tutorial-{stem}.png"))
                 page.locator('[data-act="guide-position"]').click()
                 confirm = page.locator('[data-act="confirm"]')
@@ -118,6 +130,16 @@ with sync_playwright() as p:
                 if page.evaluate("document.documentElement.scrollWidth > innerWidth"):
                     row["issues"].append("horizontal_document_overflow")
                 page.screenshot(path=str(out / f"preview-{stem}.png"))
+                selected_action = page.locator('.preview-panel').inner_text() if page.locator('.preview-panel').count() else None
+                next_locale = {"ru": "en", "en": "zh", "zh": "ru"}[locale]
+                page.locator('[data-select="locale"]').select_option(next_locale)
+                confirm.wait_for()
+                assert page.locator('.puzzle-map').count() == 1
+                assert page.locator('.step-badge').filter(has_text='1/6').is_visible()
+                page.locator('[data-select="locale"]').select_option(locale)
+                confirm.wait_for()
+                if selected_action is not None:
+                    assert page.locator('.preview-panel').inner_text() == selected_action
                 confirm.click()
                 page.locator(".step-badge").filter(has_text="2/6").wait_for()
                 row["cycles"] = []
@@ -125,6 +147,9 @@ with sync_playwright() as p:
                     page.locator('[data-action="lobby"]').filter(visible=True).click()
                     page.locator('[data-action="tutorial"]').wait_for()
                     page.locator(".puzzle-map").wait_for(state="detached")
+                    assert page.locator('html.settlements-playing').count() == 0
+                    assert page.locator('.topbar').is_visible()
+                    assert page.locator('.mobile-nav' if width <= 760 else '.sidebar').is_visible()
                     counts = listener_counts(cdp)
                     row["cycles"].append({"cycle": cycle + 1, "listenersAfterDestroy": counts,
                                           "canvasCount": page.locator(".puzzle-map canvas").count()})
@@ -135,7 +160,7 @@ with sync_playwright() as p:
                     if listener_counts(cdp) != row["listenersMounted"]:
                         row["issues"].append(f"mounted_listeners_changed_cycle_{cycle + 1}")
                 next_locale = {"ru": "en", "en": "zh", "zh": "ru"}[locale]
-                page.locator(f'[data-lang="{next_locale}"]').click()
+                page.locator('[data-select="locale"]').select_option(next_locale)
                 page.locator(".step-badge").filter(has_text="2/6").wait_for()
                 page.locator('[data-action="lobby"]').filter(visible=True).click()
                 page.locator('[data-action="tutorial"]').wait_for()
@@ -147,6 +172,11 @@ with sync_playwright() as p:
                 row["regionRequests"] = sorted(set(url for url in requests if "/regions/" in url))
                 if len(row["regionRequests"]) != 1 or "chelyabinskaya_oblast" not in row["regionRequests"][0]:
                     row["issues"].append("unexpected_region_downloads")
+                page.goto(args.url.split('#')[0]+'#games')
+                page.locator('#settlementsMount').wait_for(state='detached')
+                assert page.locator('html.settlements-playing').count() == 0
+                assert page.locator('.topbar').is_visible()
+                row['fullscreenExitRestoresPlatform'] = True
                 row["status"] = "fail" if row["issues"] or errors or console_errors else "pass"
             except Exception as error:
                 row.update({"status": "fail", "failure": str(error)})

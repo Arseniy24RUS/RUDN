@@ -30,6 +30,58 @@ export function harness(cloud,{device='device-one',studentKey='123456789',uid='u
 const session=(attemptId='attempt-one')=>({attemptId,regionId:'chelyabinsk',difficulty:'hard',engineSave:{actions:[],engineVersion:'3'},elapsedMs:0,status:'active'});
 const result=(coverageNp=100)=>({terminal:true,coverageNp,coveragePopulation:99.9,turns:3,spentMillionRub:57,reason:coverageNp===100?'complete':'budget_exhausted'});
 
+const deferred=()=>{let resolve;const promise=new Promise(done=>resolve=done);return {promise,resolve}};
+for(const which of ['tutorial','assessment','free'])test(`${which}: a queued newer checkpoint cannot inherit an older online ACK`,async()=>{
+  const cloud=memoryCloud(),h=harness(cloud,{mode:which==='free'?'free':'assessment'});
+  const field=which==='tutorial'?'tutorialState':'state';
+  const save=actions=>which==='tutorial'?h.adapter.saveTutorial({completed:false,step:actions.length,engineSave:{actions}}):h.adapter.saveSession({...session(),engineSave:{actions}});
+  const networkEntered=deferred(),networkRelease=deferred(),localEntered=deferred(),localRelease=deferred();
+  let queued;
+  try{
+    await h.adapter.acquireWriter();await save([]);await h.adapter.flush();
+    assert.equal(h.status.at(-1)[field],'saved');
+    const transaction=cloud.transaction;
+    cloud.transaction=async(...args)=>{cloud.transaction=transaction;networkEntered.resolve();await networkRelease.promise;return transaction(...args)};
+    await save(['first']);await networkEntered.promise;
+    const checkpoint=h.store.checkpoint;
+    h.store.checkpoint=async(...args)=>{h.store.checkpoint=checkpoint;localEntered.resolve();await localRelease.promise;return checkpoint(...args)};
+    const statusStart=h.status.length;
+    queued=save(['first','second']);
+    // The invocation is observable immediately, before it can enter the serial
+    // queue occupied by the previous revision's network request.
+    assert.equal(h.status.at(-1)[field],'pending','new save announces pending synchronously');
+    networkRelease.resolve();await localEntered.promise;
+    assert.equal(h.status.at(-1)[field],'pending','old ACK does not acknowledge queued local work');
+    assert.ok(h.status.slice(statusStart).every(event=>event[field]!=='saved'),'no transient saved emission before the latest local checkpoint');
+    localRelease.resolve();await queued;await h.adapter.flush();
+    assert.equal(h.status.at(-1)[field],'saved');
+    const fresh=harness(cloud,{device:'fresh-status-device',mode:which==='free'?'free':'assessment'});
+    try{await fresh.adapter.acquireWriter();const restored=which==='tutorial'?await fresh.adapter.loadTutorial():await fresh.adapter.loadSession();assert.deepEqual(restored.engineSave.actions,['first','second']);}
+    finally{await fresh.close()}
+  }finally{networkRelease.resolve();localRelease.resolve();await queued?.catch(()=>{});await h.close()}
+});
+
+test('pending counters stay scoped; local failure stays unsafe until retry and offline snapshots remain writable',async()=>{
+  const cloud=memoryCloud(),h=harness(cloud),entered=deferred(),release=deferred();let saving;
+  try{
+    await h.adapter.acquireWriter();await h.adapter.saveSession(session());await h.adapter.flush();
+    await h.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await h.adapter.flush();
+    const checkpoint=h.store.checkpoint;
+    h.store.checkpoint=async()=>{entered.resolve();await release.promise;throw Object.assign(new Error('local write failed'),{code:'storage/unavailable'})};
+    saving=h.adapter.saveTutorial({completed:false,step:1,engineSave:{actions:['failed']}});
+    assert.equal(h.status.at(-1).tutorialState,'pending');assert.equal(h.status.at(-1).state,'saved','independent session ACK remains valid');
+    await entered.promise;release.resolve();await assert.rejects(saving,{code:'storage/unavailable'});
+    assert.equal(h.status.at(-1).tutorialState,'unsafe','a rejected latest local write cannot expose the previous ACK');
+    await h.adapter.flush();assert.equal(h.status.at(-1).tutorialState,'unsafe');
+    h.store.checkpoint=checkpoint;cloud.setOffline(true);
+    await h.adapter.saveTutorial({completed:false,step:1,engineSave:{actions:['retry-offline']}});await h.adapter.flush();
+    assert.equal(h.status.at(-1).tutorialState,'pending');assert.equal(h.adapter.canWrite(),true);
+    const local=await h.store.loadDraft({owner:h.owner,activitySlug:'settlements-tutorial',mode:'tutorial'});
+    assert.deepEqual(local.state.engineSave.actions,['retry-offline']);assert.equal(local.saveStatus.durable,true);
+    cloud.setOffline(false);await h.adapter.flush();assert.equal(h.status.at(-1).tutorialState,'saved');
+  }finally{release.resolve();await saving?.catch(()=>{});await h.close()}
+});
+
 test('exact score threshold and leaderboard order',()=>{
   assert.equal(settlementsPoints('hard',89.9999),0);assert.equal(settlementsPoints('hard',90),5);
   assert.equal(settlementsPoints('normal',90),4);assert.equal(settlementsPoints('easy',90),3);
