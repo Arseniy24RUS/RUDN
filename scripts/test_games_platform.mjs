@@ -44,7 +44,7 @@ async function lateModuleDoesNotReplaceCatalog(browser){
   await page.goBack();await page.locator('[data-game]').first().waitFor();
   const lateResponse=page.waitForResponse(response=>new URL(response.url()).pathname==='/apps/career/entry.mjs');
   release();await lateResponse;await page.waitForLoadState('networkidle');
-  assert.equal(new URL(page.url()).hash,'#games');assert.equal(await page.locator('[data-game]').count(),4);
+  assert.equal(new URL(page.url()).hash,'#games');assert.equal(await page.locator('[data-game]').count(),5);
   assert.equal(await page.locator('#careerMount').count(),0,'Late module cannot replace the catalog after Back');
   assert.equal(requests.some(url=>url.includes('/apps/career/surface.html')),false,'Cancelled route never mounts the late module');
   assert.deepEqual(errors,[]);
@@ -79,14 +79,14 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
    await lateModuleDoesNotReplaceCatalog(browser);console.log(`PASS ${engine}: held Career import→Back→late response preserves the catalog`);continue;
   }
   const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[],modules=[];
-  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(/\/apps\/(?:career|reception|governor)\//.test(request.url()))modules.push(request.url());});
+  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(/\/apps\/(?:career|reception|governor|settlements)\//.test(request.url()))modules.push(request.url());});
   await context.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
   await page.goto(base+'/#games');await ready(page);
-  assert.deepEqual(await page.locator('[data-game]').evaluateAll(nodes=>nodes.map(node=>node.dataset.game)),['maps','governor','reception','career']);
+  assert.deepEqual(await page.locator('[data-game]').evaluateAll(nodes=>nodes.map(node=>node.dataset.game)),['settlements','maps','governor','reception','career']);
   assert.deepEqual(modules,[],'Catalog does not load heavyweight modules before selection');
   for(const locale of ['en','zh','ru']){
    await page.locator(`[data-lang="${locale}"]`).first().click();await ready(page);
-   assert.equal(await page.locator('[data-game] a').count(),4);assert.equal(await page.locator('[data-game=career] a').getAttribute('href'),'#games/career');
+   assert.equal(await page.locator('[data-game] a').count(),5);assert.equal(await page.locator('[data-game=career] a').getAttribute('href'),'#games/career');
   }
   await page.locator('[data-game=career] a').click();await page.locator('#careerMount[data-career-ready=true]').waitFor();
   assert.equal(await page.locator('#civilForm,#careerKnowledge').count(),0,'Guest free Career omits course grade form');

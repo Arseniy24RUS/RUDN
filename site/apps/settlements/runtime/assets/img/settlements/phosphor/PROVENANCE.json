@@ -1,0 +1,14 @@
+{
+  "name": "@phosphor-icons/core",
+  "version": "2.1.1",
+  "license": "MIT",
+  "licenseFile": "LICENSE",
+  "officialProject": "https://github.com/phosphor-icons/core",
+  "sourceArchive": "https://registry.npmjs.org/@phosphor-icons/core/-/core-2.1.1.tgz",
+  "sourceArchiveIntegrity": "sha512-v4ARvrip4qBCImOE5rmPUylOEK4iiED9ZyKjcvzuezqMaiRASCHKcRIuvvxL/twvLpkfnEODCOJp5dM4eZilxQ==",
+  "sourceDirectory": "package/assets/fill",
+  "weight": "fill",
+  "icons": ["arrow-up-right", "buildings", "bus", "caret-left", "coins", "first-aid", "gear", "graduation-cap", "list-bullets", "map-trifold", "play", "users", "warning-circle"],
+  "retrievedAt": "2026-09-13",
+  "notes": "Official SVG paths are unchanged; only the final newline is normalized. No hand-drawn or generated icon paths."
+}

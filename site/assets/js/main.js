@@ -267,7 +267,7 @@ async function render(){
   if(freeAllowed&&currentCareer?.handle&&currentCareer.owner===attemptOwner()&&isModuleRoute('career',currentCareer.context)&& (currentCareer.context==='free'||backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow())))){
     renderedKey=nextKey;currentCleanup.refreshLocale();currentCareer.handle.navigate(careerRoute(currentRoute.parts[1]));return;
   }
-  if(freeAllowed&&!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale){currentCleanup.refreshLocale();translateDocument();return}
+  if(freeAllowed&&!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale&&!currentCleanup.isStale?.()){currentCleanup.refreshLocale();translateDocument();return}
   const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;renderedLocale=getLocale();
   try{for(const controller of formCleanups)await controller.destroy();formCleanups=[];await durableStore.flush()}
   catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return}
@@ -298,8 +298,8 @@ async function render(){
   renderRunning=false;if(renderAgain){renderAgain=false;render()}
 }
 async function guardSubmissions(){
-  for(const form of app.querySelectorAll('#settlementForm,#appealForm,#civilForm,#simulatorForm,#reflectionForm')){
-    const slug={settlementForm:'seminar-3',appealForm:'seminar-5',civilForm:'seminar-6',simulatorForm:'seminar-7',reflectionForm:'lecture-8'}[form.id];
+  for(const form of app.querySelectorAll('#appealForm,#civilForm,#simulatorForm,#reflectionForm')){
+    const slug={appealForm:'seminar-5',civilForm:'seminar-6',simulatorForm:'seminar-7',reflectionForm:'lecture-8'}[form.id];
     const controller=await mountFormDraft(form,slug);if(controller&&!formCleanups.includes(controller))formCleanups.push(controller);
     const submit=form.onsubmit;if(!submit||form.dataset.guarded)continue;form.dataset.guarded='true';
     form.onsubmit=async event=>{event.preventDefault();if(form.dataset.saving)return;form.dataset.saving='true';form.setAttribute('aria-busy','true');const button=form.querySelector('[type=submit]'),label=button.textContent;button.disabled=true;button.textContent=t('loading');
@@ -509,17 +509,30 @@ async function startQuiz(activitySlug){
   renderQuiz(mount,session,options);
 }
 function renderSeminar3(topic){
-  const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
-  app.innerHTML=seminarShell(topic,`${externalCard(ui('openDashboard'),ui('seminar3Lead'),data.course.external_apps.settlement_dashboard,ui('openDashboard'))}<div class="panel"><h2>${ui('seminarAssignment')}</h2><form id="settlementForm" class="form-grid"><label><span>${ui('territory')}</span><input name="territory" required></label><label><span>${ui('indicator')}</span><input name="indicators" required></label><label class="full"><span>${ui('dynamics')}</span><textarea name="dynamics" required minlength="180"></textarea></label><label class="full"><span>${ui('conclusion')}</span><textarea name="conclusion" required minlength="180"></textarea></label><label class="full"><span>${ui('attachment')}</span><input type="file" name="file" accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div class="full"><button class="btn btn-primary" type="submit">${ui('submit')}</button></div></form></div>`);
-  app.querySelector('#settlementForm').onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const form=new FormData(event.currentTarget);
-    const territory=String(form.get('territory')||'').trim(),indicators=String(form.get('indicators')||'').trim(),dynamics=String(form.get('dynamics')||'').trim(),conclusion=String(form.get('conclusion')||'').trim();
-    if(!territory||!indicators||dynamics.length<180||conclusion.length<180){toast(ui('fillRequired'),'error');return}
-    const draft=formDraft(event.currentTarget),attachment=await draft?.attachment('file');
-    const fileUrl=attachment?.ref||'';
-    const points=Math.min(5,(territory?1:0)+(indicators?1:0)+(dynamics.length>=180?1:0)+(conclusion.length>=180?1:0)+(dynamics.length+conclusion.length>=600||fileUrl?1:0));
-    await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',attachmentIds:attachment?[attachment.id]:[],studentKey,type:'settlement-analysis',activitySlug:'seminar-3',title:loc(topic.seminar,'title'),points,maxPoints:5,territory,indicators,dynamics,conclusion,fileUrl,reviewStatus:'pending'});toast(`${ui('saved')} · ${ui('practiceAuto')}: ${points}/5`,'success');renderedKey='';render();
+  renderSettlements('assessment');
+}
+function renderSettlements(mode='free'){
+  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,locale=getLocale();
+  const free=mode==='free';
+  app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
+  const mount=app.querySelector('#settlementsMount');
+  const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&(free?route().name==='games'&&route().parts[0]==='settlements':route().name==='activity'&&route().parts[0]==='seminar-3');
+  const cleanup=async()=>{controller.abort();await handle?.destroy();};
+  cleanup.isStale=()=>generation!==backend.generation;
+  cleanup.flush=()=>handle?.flush();
+  cleanup.refreshLocale=()=>{
+    if(!active())return;
+    const access=accessSnapshot(),gate=topicGate(3,access.overrides,access.now);
+    if(!accessAllowed(gate)&&backend.getProfile()&&!backend.isAdmin()){void cleanup();currentCleanup=null;lockedAccessPage(loc(data.course.topics.find(item=>item.number===3).seminar,'title'),gate,free?'#games':'#dashboard');return;}
+    if(locale!==getLocale()){locale=getLocale();void handle?.setLocale(locale);}
   };
+  currentCleanup=cleanup;
+  navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'settlements'});
+  void (async()=>{try{
+    const {mountSettlements}=await import('../../apps/settlements/entry.mjs');if(!active())return;
+    handle=await mountSettlements(mount,{backend,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
+    if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');
+  }catch(error){if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};console.error('Settlements module:',error?.code||error?.message);}})();
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
 function gamesText(key){return GAMES_COPY[getLocale()]?.[key]||GAMES_COPY.ru[key]||key;}
@@ -529,6 +542,7 @@ function isModuleRoute(module,context='course'){
     :current.name==='activity'&&current.parts[0]===({reception:'seminar-5',career:'seminar-6'}[module]);
 }
 function renderGamesRoute(module){
+  if(module==='settlements'){renderSettlements('free');return;}
   if(module==='reception'||module==='career'){
     navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
     const topic=data.course.topics.find(item=>item.number===(module==='reception'?5:6));

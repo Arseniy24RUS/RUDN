@@ -1,7 +1,9 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.8-map-startup-recovery`;
+const CACHE=`${CACHE_PREFIX}v1.3.8-settlements-1-0`;
+// Geography and regional plans are requested only by an explicitly opened game.
+const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./assets/js/settlements-storage.js','./assets/js/settlements-leaderboard.js'];
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -40,6 +42,7 @@ const CAREER_SHELL=[
   './apps/career/reports/stage8/independent-audit.json'
 ];
 const SHELL=[
+  './assets/js/settlements-leaderboard.js',
   './apps/reception/index.html',
   './apps/reception/js/app.js',
   './apps/reception/js/assignment.js',
@@ -588,7 +591,7 @@ self.addEventListener('message',event=>{
   }
   if(event.data?.type!=='PREPARE_MODULE')return;
   const module=event.data.module;
-  const paths=module==='puzzle'?PUZZLE_SHELL:module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
+  const paths=module==='settlements'?SETTLEMENTS_SHELL:module==='puzzle'?PUZZLE_SHELL:module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
   const extras=Array.isArray(event.data.urls)?event.data.urls.slice(0,250).filter(url=>typeof url==='string'):[];
   event.waitUntil((async()=>{
     const cacheName=inScopeClient(event.source)?await clientRelease(event.source.id)||CACHE:CACHE;

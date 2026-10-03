@@ -1,0 +1,4371 @@
+{
+  "schemaVersion": 1,
+  "dataVersion": "settlements-20260917.1",
+  "settlementCount": 155794,
+  "regionCount": 82,
+  "sourcePopulation": 129259799,
+  "excludedRegions": [
+    "Москва",
+    "Санкт-Петербург",
+    "Севастополь"
+  ],
+  "difficulty": {
+    "version": "settlements-20260917.1",
+    "method": "sort ascending settlement count, then source region name",
+    "groups": [
+      28,
+      27,
+      27
+    ],
+    "thresholds": [
+      831,
+      1821
+    ],
+    "maxPoints": [
+      3,
+      4,
+      5
+    ]
+  },
+  "sources": [
+    {
+      "id": "settlements-source",
+      "file": "SettlementsAllData.csv",
+      "sha256": "51230f2a7655a2196688e8286cf1fc85a6c49448837a2d1f410a17723cef9d0a",
+      "bytes": 45829154,
+      "license": "Not supplied with source; distribution permission requires source-owner confirmation",
+      "populationRawField": "Population_2020",
+      "populationInterpretation": "2021 census under the project convention; source column is retained unchanged",
+      "observationYear": 2021,
+      "publicationDate": null,
+      "childrenAgeBand": null,
+      "territorialComparability": "Not established; original municipal labels preserved",
+      "transformVersion": "settlements-20260917.1"
+    },
+    {
+      "id": "settlements-original-coordinate-source",
+      "file": "settlements-rf-real.csv",
+      "sha256": "d52b37f56fb474401b5c1837fd8b3b26c73a0450519e4cffd58d43608c57a46b",
+      "bytes": 28614096,
+      "license": "Not supplied with source",
+      "sourceStatus": "Existing project upload; field flags rosstat/dadata are retained, not independent certification"
+    },
+    {
+      "id": "project-osm-boundaries",
+      "file": "site/assets/puzzle/data/russia_subjects_89.topojson",
+      "sha256": "ac697adf68124f8e72221288896e32d4c9995764997966342d9075b36be0d56e",
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "snapshotDate": null,
+      "territorialConvention": "Preserves supplied project boundary geometries; no statement about disputed sovereignty",
+      "runtimeSimplificationDegrees": 0.002,
+      "coordinateValidation": "Full-resolution source geometry, no silent repair"
+    }
+  ],
+  "regions": [
+    {
+      "id": "altayskiy_kray",
+      "name": "Алтайский край",
+      "names": {
+        "ru": "Алтайский край",
+        "en": "Altai Krai",
+        "zh": "阿尔泰边疆区"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1605,
+      "population": 2332813,
+      "difficultyRank": 48,
+      "path": "regions/altayskiy_kray.json",
+      "sha256": "8449393696097d0a5a2848b46f2b4e8a26c24f403a5762190e81d4470f73e361",
+      "bytes": 615863,
+      "coordinateStatus": {
+        "source": 1605
+      },
+      "positions": {
+        "inside": 1605
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 15652,
+      "transportBytes": 88032,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.546711050000006,
+          82.52880185000001
+        ],
+        "bounds": [
+          [
+            50.64031230000001,
+            77.8889532
+          ],
+          [
+            54.4531098,
+            87.1686505
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/altayskiy_kray.json.gz",
+      "compressedSha256": "c5aed5817c0da08a926d38563f0f64d360e3c9a7af37ab71f50af380a5eb7ec1",
+      "compressedBytes": 72719
+    },
+    {
+      "id": "amurskaya_oblast",
+      "name": "Амурская область",
+      "names": {
+        "ru": "Амурская область",
+        "en": "Amur Oblast",
+        "zh": "阿穆尔州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 632,
+      "population": 793406,
+      "difficultyRank": 23,
+      "path": "regions/amurskaya_oblast.json",
+      "sha256": "e2d84c633c2e38e6716a10c8c12003aa2b8c4624c9644c4fe8c9b4d7a4c3f425",
+      "bytes": 361078,
+      "coordinateStatus": {
+        "source": 632
+      },
+      "positions": {
+        "inside": 632
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 6176,
+      "transportBytes": 35176,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.956982999999994,
+          127.28815180000001
+        ],
+        "bounds": [
+          [
+            48.85345759999999,
+            119.65539079999998
+          ],
+          [
+            57.0605084,
+            134.92091280000002
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/amurskaya_oblast.json.gz",
+      "compressedSha256": "7a1ce7e7da2790930a7ef56c881b05223500e4d7b58e859ac470700c94db13d3",
+      "compressedBytes": 67702
+    },
+    {
+      "id": "arkhangelskaya_oblast",
+      "name": "Архангельская область",
+      "names": {
+        "ru": "Архангельская область",
+        "en": "Arkhangelsk Oblast",
+        "zh": "阿尔汉格尔斯克州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3954,
+      "population": 1100247,
+      "difficultyRank": 73,
+      "path": "regions/arkhangelskaya_oblast.json",
+      "sha256": "43b35b61396b36e0d81fc84e8b29cbebdecb57d12151c0f7bfe2a76b193aef00",
+      "bytes": 1482283,
+      "coordinateStatus": {
+        "source": 3954
+      },
+      "positions": {
+        "inside": 3954
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 40148,
+      "transportBytes": 214449,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          71.34721970000001,
+          52.502732600000016
+        ],
+        "bounds": [
+          [
+            60.63581620000001,
+            35.04824
+          ],
+          [
+            82.05862320000001,
+            69.95722520000002
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/arkhangelskaya_oblast.json.gz",
+      "compressedSha256": "dd6cede39a45106c8d473f72c6a475d78aafcbc2be215a34a043d5745845d47d",
+      "compressedBytes": 135999
+    },
+    {
+      "id": "astrakhanskaya_oblast",
+      "name": "Астраханская область",
+      "names": {
+        "ru": "Астраханская область",
+        "en": "Astrakhan Oblast",
+        "zh": "阿斯特拉罕州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 432,
+      "population": 1016036,
+      "difficultyRank": 20,
+      "path": "regions/astrakhanskaya_oblast.json",
+      "sha256": "fcfb47a9272daf72692685d8a7302c91a44217b205e78fe0a870924ef5de2f28",
+      "bytes": 175935,
+      "coordinateStatus": {
+        "source": 432
+      },
+      "positions": {
+        "inside": 432
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 4324,
+      "transportBytes": 24091,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          47.06291485,
+          47.42354765
+        ],
+        "bounds": [
+          [
+            45.262264200000004,
+            44.96097830000001
+          ],
+          [
+            48.8635655,
+            49.886117
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/astrakhanskaya_oblast.json.gz",
+      "compressedSha256": "bbf02201a6b2edbc78106267ed6f550ec6efeac3fffbb49d5f6305be7de2faf4",
+      "compressedBytes": 23541
+    },
+    {
+      "id": "belgorodskaya_oblast",
+      "name": "Белгородская область",
+      "names": {
+        "ru": "Белгородская область",
+        "en": "Belgorod Oblast",
+        "zh": "别尔哥罗德州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1601,
+      "population": 1558728,
+      "difficultyRank": 47,
+      "path": "regions/belgorodskaya_oblast.json",
+      "sha256": "e7d7d20a11f1f9eabf9d662cd8d7e7298326790d09d15b4b70e2af8a7c338e59",
+      "bytes": 613331,
+      "coordinateStatus": {
+        "source": 1601
+      },
+      "positions": {
+        "inside": 1601
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 15504,
+      "transportBytes": 82595,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          50.61287240000001,
+          37.3034445
+        ],
+        "bounds": [
+          [
+            49.79601400000001,
+            35.326119600000006
+          ],
+          [
+            51.42973080000001,
+            39.2807694
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/belgorodskaya_oblast.json.gz",
+      "compressedSha256": "4b676aeff12fb4a665aafb9de92b6ed8384e3c3aa9a43b79b8fec505f62b2219",
+      "compressedBytes": 64341
+    },
+    {
+      "id": "bryanskaya_oblast",
+      "name": "Брянская область",
+      "names": {
+        "ru": "Брянская область",
+        "en": "Bryansk Oblast",
+        "zh": "布良斯克州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2707,
+      "population": 1194976,
+      "difficultyRank": 61,
+      "path": "regions/bryanskaya_oblast.json",
+      "sha256": "c111650869d398874f26d70df500ecebf8cc5a05f2599b5959efc2a4bc3b3aeb",
+      "bytes": 1003390,
+      "coordinateStatus": {
+        "source": 2707
+      },
+      "positions": {
+        "inside": 2705,
+        "outside": 2
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 26380,
+      "transportBytes": 139129,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.938553150000004,
+          33.28301855
+        ],
+        "bounds": [
+          [
+            51.8430753,
+            31.24091
+          ],
+          [
+            54.034031,
+            35.3251271
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/bryanskaya_oblast.json.gz",
+      "compressedSha256": "3ad75f5a3eb484a024a61176f6f19daf99ff5a8f18b1d6a4cc68f726a9e50a9b",
+      "compressedBytes": 98867
+    },
+    {
+      "id": "vladimirskaya_oblast",
+      "name": "Владимирская область",
+      "names": {
+        "ru": "Владимирская область",
+        "en": "Vladimir Oblast",
+        "zh": "弗拉基米尔州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2514,
+      "population": 1388103,
+      "difficultyRank": 60,
+      "path": "regions/vladimirskaya_oblast.json",
+      "sha256": "3bb05fdb8d26bb76afe19a5034163c4a38d5ca47edcf73163d268fa459df953a",
+      "bytes": 953044,
+      "coordinateStatus": {
+        "source": 2514
+      },
+      "positions": {
+        "inside": 2513,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 24544,
+      "transportBytes": 128740,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.95705115,
+          40.62211835000001
+        ],
+        "bounds": [
+          [
+            55.10142,
+            38.268102700000014
+          ],
+          [
+            56.8126823,
+            42.976134
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/vladimirskaya_oblast.json.gz",
+      "compressedSha256": "4ca6adbf15778a9a74535ea67834e5d64df6b18c4c00ab8c0cf8c2559f127d93",
+      "compressedBytes": 89711
+    },
+    {
+      "id": "volgogradskaya_oblast",
+      "name": "Волгоградская область",
+      "names": {
+        "ru": "Волгоградская область",
+        "en": "Volgograd Oblast",
+        "zh": "伏尔加格勒州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1509,
+      "population": 2552578,
+      "difficultyRank": 42,
+      "path": "regions/volgogradskaya_oblast.json",
+      "sha256": "295360b983bc0845bbfadf382a09c38802ccb2b6226b59c2072d1b8c3eca515b",
+      "bytes": 589498,
+      "coordinateStatus": {
+        "source": 1509
+      },
+      "positions": {
+        "inside": 1507,
+        "outside": 2
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 14580,
+      "transportBytes": 81752,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          49.3456864,
+          44.29977755
+        ],
+        "bounds": [
+          [
+            47.443765,
+            41.16810480000001
+          ],
+          [
+            51.2476078,
+            47.4314503
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/volgogradskaya_oblast.json.gz",
+      "compressedSha256": "567c5d474e3f5594a52913f2ed91824df25ee7e04e877fac2bd6900d1a79d22d",
+      "compressedBytes": 65321
+    },
+    {
+      "id": "vologodskaya_oblast",
+      "name": "Вологодская область",
+      "names": {
+        "ru": "Вологодская область",
+        "en": "Vologda Oblast",
+        "zh": "沃洛格达州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 7795,
+      "population": 1169929,
+      "difficultyRank": 80,
+      "path": "regions/vologodskaya_oblast.json",
+      "sha256": "aa42738a6117ac291ff9c64db5f9308046b4ae683fd6490dc830076600d3d83a",
+      "bytes": 2857081,
+      "coordinateStatus": {
+        "source": 7795
+      },
+      "positions": {
+        "inside": 7791,
+        "outside": 4
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 78912,
+      "transportBytes": 414866,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          60.0457734,
+          40.935985200000005
+        ],
+        "bounds": [
+          [
+            58.4773149,
+            34.719092800000006
+          ],
+          [
+            61.6142319,
+            47.1528776
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/vologodskaya_oblast.json.gz",
+      "compressedSha256": "1bcdbbf6b0c8c39ea861f8793312240a0045bb133f2f2a91327e24b83486cd7d",
+      "compressedBytes": 235302
+    },
+    {
+      "id": "voronezhskaya_oblast",
+      "name": "Воронежская область",
+      "names": {
+        "ru": "Воронежская область",
+        "en": "Voronezh Oblast",
+        "zh": "沃罗涅日州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1734,
+      "population": 2327821,
+      "difficultyRank": 53,
+      "path": "regions/voronezhskaya_oblast.json",
+      "sha256": "81db46b3ee6cbb3d84a8c3d25ef3d67b0050fba01949ac8026d39c4c7c1e14bd",
+      "bytes": 665888,
+      "coordinateStatus": {
+        "source": 1734
+      },
+      "positions": {
+        "inside": 1734
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 16820,
+      "transportBytes": 91059,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          50.83056725,
+          40.5425445
+        ],
+        "bounds": [
+          [
+            49.55795,
+            38.1377516
+          ],
+          [
+            52.1031845,
+            42.947337399999995
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/voronezhskaya_oblast.json.gz",
+      "compressedSha256": "54cb75bc689279e8cd69be58e27418567b32195d11321aeee9f203ad4aaedf93",
+      "compressedBytes": 71167
+    },
+    {
+      "id": "evreyskaya_avtonomnaya_oblast",
+      "name": "Еврейская автономная область",
+      "names": {
+        "ru": "Еврейская автономная область",
+        "en": "Jewish Autonomous Oblast",
+        "zh": "犹太自治州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 110,
+      "population": 168203,
+      "difficultyRank": 7,
+      "path": "regions/evreyskaya_avtonomnaya_oblast.json",
+      "sha256": "7bccf2cc104f835ce96ac579596cb61bfef1001a4bfd60c489865b71e63c9568",
+      "bytes": 71666,
+      "coordinateStatus": {
+        "source": 110
+      },
+      "positions": {
+        "inside": 110
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 1108,
+      "transportBytes": 7026,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          48.575311000000006,
+          132.75808535
+        ],
+        "bounds": [
+          [
+            47.65651820000001,
+            130.52038610000002
+          ],
+          [
+            49.494103800000005,
+            134.99578459999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/evreyskaya_avtonomnaya_oblast.json.gz",
+      "compressedSha256": "59675dd1d3dcd102b5039dcae242e1c338b7770f1ef70566ddc459b8e87623aa",
+      "compressedBytes": 15979
+    },
+    {
+      "id": "zabaykalskiy_kray",
+      "name": "Забайкальский край",
+      "names": {
+        "ru": "Забайкальский край",
+        "en": "Zabaykalsky Krai",
+        "zh": "外贝加尔边疆区"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 903,
+      "population": 1173136,
+      "difficultyRank": 29,
+      "path": "regions/zabaykalskiy_kray.json",
+      "sha256": "b8b8393869fb4820c011dce7ec26765a2c151348222802bd6d8c92db11c78686",
+      "bytes": 451196,
+      "coordinateStatus": {
+        "source": 903
+      },
+      "positions": {
+        "inside": 903
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 9016,
+      "transportBytes": 50253,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.7957966,
+          114.93959914999999
+        ],
+        "bounds": [
+          [
+            49.154199999999996,
+            107.73337869999999
+          ],
+          [
+            58.4373932,
+            122.14581960000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/zabaykalskiy_kray.json.gz",
+      "compressedSha256": "c1c888734fd89eac5b2245eca49af08581fd92c6960230c7d1729ff6774f308f",
+      "compressedBytes": 74674
+    },
+    {
+      "id": "ivanovskaya_oblast",
+      "name": "Ивановская область",
+      "names": {
+        "ru": "Ивановская область",
+        "en": "Ivanovo Oblast",
+        "zh": "伊万诺沃州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3071,
+      "population": 1027869,
+      "difficultyRank": 66,
+      "path": "regions/ivanovskaya_oblast.json",
+      "sha256": "1b27f3a6300762d7b976f284e21d2803457036b5826ee21c10de09390568dd29",
+      "bytes": 1131287,
+      "coordinateStatus": {
+        "source": 3071
+      },
+      "positions": {
+        "inside": 3071
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 30144,
+      "transportBytes": 156203,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.04624535000001,
+          41.3493244
+        ],
+        "bounds": [
+          [
+            56.3523629,
+            39.3740366
+          ],
+          [
+            57.7401278,
+            43.324612200000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/ivanovskaya_oblast.json.gz",
+      "compressedSha256": "5fb67a3689191e7718a6cc19050f6d2c9afc8640bd6214ce74533a03b6e12252",
+      "compressedBytes": 100853
+    },
+    {
+      "id": "irkutskaya_oblast",
+      "name": "Иркутская область",
+      "names": {
+        "ru": "Иркутская область",
+        "en": "Irkutsk Oblast",
+        "zh": "伊尔库茨克州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1543,
+      "population": 2397782,
+      "difficultyRank": 43,
+      "path": "regions/irkutskaya_oblast.json",
+      "sha256": "7142f73b594c68cb8f7d6d93881204b3b1282156903b726838b74eecfcffbb51",
+      "bytes": 791621,
+      "coordinateStatus": {
+        "source": 1543
+      },
+      "positions": {
+        "inside": 1543
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 15312,
+      "transportBytes": 86701,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.72588605,
+          107.39247255000001
+        ],
+        "bounds": [
+          [
+            51.1302271,
+            95.6462714
+          ],
+          [
+            64.321545,
+            119.1386737
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/irkutskaya_oblast.json.gz",
+      "compressedSha256": "37d16202b2d1e1e8e8a1bcf8ca06d1f66fc3969463df4e877fdb715b79a235b3",
+      "compressedBytes": 133664
+    },
+    {
+      "id": "kabardino_balkarskaya_respublika",
+      "name": "Кабардино-Балкарская республика",
+      "names": {
+        "ru": "Кабардино-Балкарская республика",
+        "en": "Kabardino-Balkaria",
+        "zh": "卡巴尔达-巴尔卡尔共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 171,
+      "population": 857668,
+      "difficultyRank": 11,
+      "path": "regions/kabardino_balkarskaya_respublika.json",
+      "sha256": "2e79b08ab1fd4d371c4fb9cc7a84628edeb159628b72b73f7f8f7bb43bdde1a3",
+      "bytes": 80752,
+      "coordinateStatus": {
+        "source": 171
+      },
+      "positions": {
+        "inside": 171
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 1716,
+      "transportBytes": 10005,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.45521765000001,
+          43.436317949999996
+        ],
+        "bounds": [
+          [
+            42.890121,
+            42.39726749999999
+          ],
+          [
+            44.02031430000001,
+            44.4753684
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kabardino_balkarskaya_respublika.json.gz",
+      "compressedSha256": "c4692a03187eef839ecf870a64cd05ef225aaf9b2f3c279346ed3935d0c5ebb1",
+      "compressedBytes": 13706
+    },
+    {
+      "id": "kaliningradskaya_oblast",
+      "name": "Калининградская область",
+      "names": {
+        "ru": "Калининградская область",
+        "en": "Kaliningrad",
+        "zh": "加里宁格勒州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1082,
+      "population": 986688,
+      "difficultyRank": 33,
+      "path": "regions/kaliningradskaya_oblast.json",
+      "sha256": "731ad05baf108b127c90081e52f9dfd237236e25bc86cb78d76e2508e049d2d4",
+      "bytes": 404457,
+      "coordinateStatus": {
+        "source": 1045,
+        "verifiedCorrection": 37
+      },
+      "positions": {
+        "inside": 1082
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 10648,
+      "transportBytes": 54870,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.85138915,
+          21.1504054
+        ],
+        "bounds": [
+          [
+            54.318778300000005,
+            19.414151800000003
+          ],
+          [
+            55.38399999999999,
+            22.886658999999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kaliningradskaya_oblast.json.gz",
+      "compressedSha256": "ee4ca4901fa5dcacd1e103705acfae723c7fde4c1fbfd47ac08036ce912dfb5c",
+      "compressedBytes": 39123
+    },
+    {
+      "id": "kaluzhskaya_oblast",
+      "name": "Калужская область",
+      "names": {
+        "ru": "Калужская область",
+        "en": "Kaluga Oblast",
+        "zh": "卡卢加州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3234,
+      "population": 1014346,
+      "difficultyRank": 67,
+      "path": "regions/kaluzhskaya_oblast.json",
+      "sha256": "6fcb5de6781f92fd0703cbfae2f4934155c7dca6a3578d0dc03623d25725e358",
+      "bytes": 1203663,
+      "coordinateStatus": {
+        "source": 3234
+      },
+      "positions": {
+        "inside": 3231,
+        "outside": 3
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 31388,
+      "transportBytes": 164842,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.31413945,
+          35.35851315000001
+        ],
+        "bounds": [
+          [
+            53.276999100000005,
+            33.441596
+          ],
+          [
+            55.35127979999999,
+            37.27543030000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kaluzhskaya_oblast.json.gz",
+      "compressedSha256": "a9ba2295436447fb6dc97d2d5de634be4ef66a7aa3b84419cf1d3211025d7759",
+      "compressedBytes": 111922
+    },
+    {
+      "id": "kamchatskiy_kray",
+      "name": "Камчатский край",
+      "names": {
+        "ru": "Камчатский край",
+        "en": "Kamchatka Krai",
+        "zh": "堪察加边疆区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 87,
+      "population": 314667,
+      "difficultyRank": 5,
+      "path": "regions/kamchatskiy_kray.json",
+      "sha256": "1e8403856503ae938eabf94f6316d3b6713e3126dda5061ed6022947a2e672ed",
+      "bytes": 113588,
+      "coordinateStatus": {
+        "source": 87
+      },
+      "positions": {
+        "inside": 87
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 724,
+      "transportBytes": 5318,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.81210150000001,
+          164.86705739999996
+        ],
+        "bounds": [
+          [
+            50.6867341,
+            155.21524259999998
+          ],
+          [
+            64.93746890000001,
+            174.51887219999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kamchatskiy_kray.json.gz",
+      "compressedSha256": "0b878f2618dc589c0f88dcd31a3acf0d4d7cdaf91ccb43867ef37c3f7b826769",
+      "compressedBytes": 33084
+    },
+    {
+      "id": "karachaevo_cherkesskaya_respublika",
+      "name": "Карачаево-Черкесская республика",
+      "names": {
+        "ru": "Карачаево-Черкесская республика",
+        "en": "Karachay-Cherkessia",
+        "zh": "卡拉恰伊-切尔克斯共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 145,
+      "population": 462275,
+      "difficultyRank": 10,
+      "path": "regions/karachaevo_cherkesskaya_respublika.json",
+      "sha256": "1faa8bfaaefa66b98f75d36f2e6e7142bba936eed4a023715a8ee89a12bc534c",
+      "bytes": 77537,
+      "coordinateStatus": {
+        "source": 145
+      },
+      "positions": {
+        "inside": 145
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 1440,
+      "transportBytes": 8664,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.8425228,
+          41.6784267
+        ],
+        "bounds": [
+          [
+            43.187408999999995,
+            40.6754806
+          ],
+          [
+            44.4976366,
+            42.681372800000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/karachaevo_cherkesskaya_respublika.json.gz",
+      "compressedSha256": "51a0a3303cbefb69b08500116f45afc9041fe10cc9fc5ee04d69af8bbc7afa4f",
+      "compressedBytes": 14614
+    },
+    {
+      "id": "kemerovskaya_oblast",
+      "name": "Кемеровская область",
+      "names": {
+        "ru": "Кемеровская область",
+        "en": "Kemerovo Oblast",
+        "zh": "克麦罗沃州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1108,
+      "population": 2694078,
+      "difficultyRank": 34,
+      "path": "regions/kemerovskaya_oblast.json",
+      "sha256": "4cb01abe26be1bc741fc4bc2588a636f04b748cdce111650293466f04b7f4e90",
+      "bytes": 453002,
+      "coordinateStatus": {
+        "source": 1108
+      },
+      "positions": {
+        "inside": 1108
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 10888,
+      "transportBytes": 59978,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.498943499999996,
+          86.92584205000001
+        ],
+        "bounds": [
+          [
+            52.1634668,
+            84.44904040000002
+          ],
+          [
+            56.8344202,
+            89.40264370000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kemerovskaya_oblast.json.gz",
+      "compressedSha256": "7c7ad2da2f819bfe388246cbb5d790768de0ae0e4cd73b6cd6445434b303a6b3",
+      "compressedBytes": 57295
+    },
+    {
+      "id": "kirovskaya_oblast",
+      "name": "Кировская область",
+      "names": {
+        "ru": "Кировская область",
+        "en": "Kirov Oblast",
+        "zh": "基洛夫州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 4231,
+      "population": 1242308,
+      "difficultyRank": 74,
+      "path": "regions/kirovskaya_oblast.json",
+      "sha256": "c6025d24d789881dc8c37b11507c619bb18ca9450d46a2d051e5f2a1b0b5579d",
+      "bytes": 1562913,
+      "coordinateStatus": {
+        "source": 4231
+      },
+      "positions": {
+        "inside": 4229,
+        "outside": 2
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 42300,
+      "transportBytes": 227649,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.564077350000005,
+          50.0975129
+        ],
+        "bounds": [
+          [
+            56.0607618,
+            46.263783700000005
+          ],
+          [
+            61.06739290000001,
+            53.9312421
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kirovskaya_oblast.json.gz",
+      "compressedSha256": "fc556297c7ac2250a59571d57c636906821ae6af20f49beaaa5343e3ce79810d",
+      "compressedBytes": 149656
+    },
+    {
+      "id": "kostromskaya_oblast",
+      "name": "Костромская область",
+      "names": {
+        "ru": "Костромская область",
+        "en": "Kostroma Oblast",
+        "zh": "科斯特罗马州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3496,
+      "population": 672702,
+      "difficultyRank": 69,
+      "path": "regions/kostromskaya_oblast.json",
+      "sha256": "0fdaee0b91bdcfab85aa324e10eb8a732674d758fdf002102dc629086deeab0e",
+      "bytes": 1306791,
+      "coordinateStatus": {
+        "source": 3496
+      },
+      "positions": {
+        "inside": 3496
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 35008,
+      "transportBytes": 183875,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.44788625000001,
+          44.0148087
+        ],
+        "bounds": [
+          [
+            57.27216880000001,
+            40.39010280000001
+          ],
+          [
+            59.623603700000004,
+            47.639514600000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kostromskaya_oblast.json.gz",
+      "compressedSha256": "85ad1f37743d73e33c1a9aaf38798b0d1e94a66907365b2105edd68f342e9572",
+      "compressedBytes": 117142
+    },
+    {
+      "id": "krasnodarskiy_kray",
+      "name": "Краснодарский край",
+      "names": {
+        "ru": "Краснодарский край",
+        "en": "Krasnodar Krai",
+        "zh": "克拉斯诺达尔边疆区"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 1827,
+      "population": 5809023,
+      "difficultyRank": 56,
+      "path": "regions/krasnodarskiy_kray.json",
+      "sha256": "f417527551533c83ea43976c53eb1d6b3f90f2a881d98fecffd02620f1ae0b98",
+      "bytes": 720682,
+      "coordinateStatus": {
+        "source": 1827
+      },
+      "positions": {
+        "inside": 1826,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 18324,
+      "transportBytes": 99281,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          45.113726,
+          39.137232850000004
+        ],
+        "bounds": [
+          [
+            43.224430500000004,
+            36.530485999999996
+          ],
+          [
+            47.003021499999996,
+            41.743979700000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/krasnodarskiy_kray.json.gz",
+      "compressedSha256": "d523447e3d379944c3331b8472e512746cdcb93e15e1035fa81eee268313fdaf",
+      "compressedBytes": 85098
+    },
+    {
+      "id": "krasnoyarskiy_kray",
+      "name": "Красноярский край",
+      "names": {
+        "ru": "Красноярский край",
+        "en": "Krasnoyarsk Krai",
+        "zh": "克拉斯诺亚尔斯克边疆区"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1785,
+      "population": 2907471,
+      "difficultyRank": 54,
+      "path": "regions/krasnoyarskiy_kray.json",
+      "sha256": "e0e7db5db04a16835183db7ca66f22ca7390db0158c3d77496610222d42167bb",
+      "bytes": 935556,
+      "coordinateStatus": {
+        "source": 1785
+      },
+      "positions": {
+        "inside": 1784,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 17220,
+      "transportBytes": 98089,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          66.62299585,
+          94.86323975000002
+        ],
+        "bounds": [
+          [
+            51.772621,
+            74.98685060000001
+          ],
+          [
+            81.47337069999999,
+            114.73962890000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/krasnoyarskiy_kray.json.gz",
+      "compressedSha256": "79722fe24a76fe867e5918956c3c6cec758f7091f57c48286100825f06fa5a11",
+      "compressedBytes": 162634
+    },
+    {
+      "id": "kurganskaya_oblast",
+      "name": "Курганская область",
+      "names": {
+        "ru": "Курганская область",
+        "en": "Kurgan Oblast",
+        "zh": "库尔干州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1303,
+      "population": 938233,
+      "difficultyRank": 37,
+      "path": "regions/kurganskaya_oblast.json",
+      "sha256": "39036fea4963583583b694015c028c54e6c7d88dedecf32196dccde93cda9406",
+      "bytes": 501800,
+      "coordinateStatus": {
+        "source": 1303
+      },
+      "positions": {
+        "inside": 1303
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 12712,
+      "transportBytes": 70261,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.515216300000006,
+          65.3444228
+        ],
+        "bounds": [
+          [
+            54.18813590000001,
+            61.966185100000004
+          ],
+          [
+            56.8422967,
+            68.7226605
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kurganskaya_oblast.json.gz",
+      "compressedSha256": "1dced183d16d417b6d44b077df4e61a5c12c16d7f329d726e6dba6acfb0b32e5",
+      "compressedBytes": 56696
+    },
+    {
+      "id": "kurskaya_oblast",
+      "name": "Курская область",
+      "names": {
+        "ru": "Курская область",
+        "en": "Kursk Oblast",
+        "zh": "库尔斯克州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2769,
+      "population": 1106963,
+      "difficultyRank": 62,
+      "path": "regions/kurskaya_oblast.json",
+      "sha256": "cb1160b38c0df92f8f16b107ed250790b2af8287a0543917da849b5079bcca50",
+      "bytes": 1022496,
+      "coordinateStatus": {
+        "source": 2769
+      },
+      "positions": {
+        "inside": 2769
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 27024,
+      "transportBytes": 141512,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          51.6733087,
+          36.3000179
+        ],
+        "bounds": [
+          [
+            50.9015572,
+            34.0807655
+          ],
+          [
+            52.4450602,
+            38.5192703
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/kurskaya_oblast.json.gz",
+      "compressedSha256": "49b952aed9d5ef7ed2af52569ed0d6ec991e2fc4d093a46059aba814d8ce7bfc",
+      "compressedBytes": 100270
+    },
+    {
+      "id": "leningradskaya_oblast",
+      "name": "Ленинградская область",
+      "names": {
+        "ru": "Ленинградская область",
+        "en": "Leningrad oblast",
+        "zh": "列宁格勒州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2905,
+      "population": 1802085,
+      "difficultyRank": 64,
+      "path": "regions/leningradskaya_oblast.json",
+      "sha256": "f1594ecbc52d0e1418fb4e2bdf146457821a806cde46c13e56957ca1f2b21847",
+      "bytes": 1102615,
+      "coordinateStatus": {
+        "source": 2892,
+        "verifiedCorrection": 13
+      },
+      "positions": {
+        "inside": 2904,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 29000,
+      "transportBytes": 155170,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          59.87331435,
+          31.0690241
+        ],
+        "bounds": [
+          [
+            58.4173356,
+            26.4401694
+          ],
+          [
+            61.3292931,
+            35.697878800000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/leningradskaya_oblast.json.gz",
+      "compressedSha256": "f92de47ced3893821750ab040cff3b42b8a311b6adaace667d8a199047fc2169",
+      "compressedBytes": 109834
+    },
+    {
+      "id": "lipetskaya_oblast",
+      "name": "Липецкая область",
+      "names": {
+        "ru": "Липецкая область",
+        "en": "Lipetsk Oblast",
+        "zh": "利佩茨克州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1589,
+      "population": 1143940,
+      "difficultyRank": 46,
+      "path": "regions/lipetskaya_oblast.json",
+      "sha256": "f0ffaaec77d99fc236a3f854269f365faa77be0749bc944e74490855d31b1300",
+      "bytes": 600626,
+      "coordinateStatus": {
+        "source": 1589
+      },
+      "positions": {
+        "inside": 1589
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 15588,
+      "transportBytes": 82274,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.73685795,
+          39.24347200000001
+        ],
+        "bounds": [
+          [
+            51.887062099999994,
+            37.72216880000001
+          ],
+          [
+            53.5866538,
+            40.76477520000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/lipetskaya_oblast.json.gz",
+      "compressedSha256": "518eeab4393d21c433a89700cdefff3e1fe130d95eff7c2f924720770a0aae85",
+      "compressedBytes": 62173
+    },
+    {
+      "id": "magadanskaya_oblast",
+      "name": "Магаданская область",
+      "names": {
+        "ru": "Магаданская область",
+        "en": "Magadan Oblast",
+        "zh": "马加丹州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 53,
+      "population": 141234,
+      "difficultyRank": 4,
+      "path": "regions/magadanskaya_oblast.json",
+      "sha256": "3e59e6981ffa6d162e62003dc24f350bc2d1883d07b742f0e5cf79e43bc7f3f3",
+      "bytes": 127567,
+      "coordinateStatus": {
+        "source": 53
+      },
+      "positions": {
+        "inside": 53
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 460,
+      "transportBytes": 3777,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          62.48833379999999,
+          154.1121589
+        ],
+        "bounds": [
+          [
+            58.6375291,
+            144.7286241
+          ],
+          [
+            66.33913849999999,
+            163.49569369999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/magadanskaya_oblast.json.gz",
+      "compressedSha256": "9cf915cb8dddd4c0458486daf59cdd8efea265ae0ab8b7b3f1e90109a7bc69fe",
+      "compressedBytes": 40160
+    },
+    {
+      "id": "moskovskaya_oblast",
+      "name": "Московская область",
+      "names": {
+        "ru": "Московская область",
+        "en": "Moscow Oblast",
+        "zh": "莫斯科州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 6009,
+      "population": 6797772,
+      "difficultyRank": 78,
+      "path": "regions/moskovskaya_oblast.json",
+      "sha256": "9777c6d348e70b3f134050aa97c03aa84d66aa4ec719cac2bf06a444528bbf10",
+      "bytes": 2234197,
+      "coordinateStatus": {
+        "source": 6009
+      },
+      "positions": {
+        "inside": 6004,
+        "outside": 5
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 58464,
+      "transportBytes": 306077,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.60710385,
+          37.677091850000004
+        ],
+        "bounds": [
+          [
+            54.255695900000006,
+            35.1484955
+          ],
+          [
+            56.958511800000004,
+            40.205688200000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/moskovskaya_oblast.json.gz",
+      "compressedSha256": "9bf87ab33d3eb811c50e2fc6577b7056fc20c629baa15c650cc77d5a824b072b",
+      "compressedBytes": 212318
+    },
+    {
+      "id": "murmanskaya_oblast",
+      "name": "Мурманская область",
+      "names": {
+        "ru": "Мурманская область",
+        "en": "Murmansk Oblast",
+        "zh": "摩尔曼斯克州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 133,
+      "population": 746675,
+      "difficultyRank": 8,
+      "path": "regions/murmanskaya_oblast.json",
+      "sha256": "d8080c0452a1a3404803f140a63ca81fb7a5ee266c46e07760e2e1b1ff6b31eb",
+      "bytes": 62471,
+      "coordinateStatus": {
+        "source": 133
+      },
+      "positions": {
+        "inside": 133
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 1364,
+      "transportBytes": 8492,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          67.9219402,
+          35.46089485
+        ],
+        "bounds": [
+          [
+            65.69181300000001,
+            28.4160861
+          ],
+          [
+            70.15206739999999,
+            42.505703600000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/murmanskaya_oblast.json.gz",
+      "compressedSha256": "c1720bca550a3375ba4097d2ed9716a7b299b6695ca564d310b088a8c26bf54a",
+      "compressedBytes": 11329
+    },
+    {
+      "id": "nenetskiy_avtonomnyy_okrug",
+      "name": "Ненецкий автономный округ",
+      "names": {
+        "ru": "Ненецкий автономный округ",
+        "en": "Nenets Autonomous Okrug",
+        "zh": "涅涅茨自治区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 41,
+      "population": 43997,
+      "difficultyRank": 1,
+      "path": "regions/nenetskiy_avtonomnyy_okrug.json",
+      "sha256": "943f5d47cf32befd29fb29f22522e88fd92fa4a492544494e6464f39042e9e52",
+      "bytes": 53344,
+      "coordinateStatus": {
+        "source": 41
+      },
+      "positions": {
+        "inside": 41
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 348,
+      "transportBytes": 3115,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          68.2926822,
+          53.49156434999999
+        ],
+        "bounds": [
+          [
+            65.8209691,
+            41.3125962
+          ],
+          [
+            70.7643953,
+            65.67053249999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/nenetskiy_avtonomnyy_okrug.json.gz",
+      "compressedSha256": "17e81753335cd16e346fd28d967f053cc025387c539dd878d9bc6faa2d8a495a",
+      "compressedBytes": 16420
+    },
+    {
+      "id": "nizhegorodskaya_oblast",
+      "name": "Нижегородская область",
+      "names": {
+        "ru": "Нижегородская область",
+        "en": "Nizhny Novgorod Oblast",
+        "zh": "下诺夫哥罗德州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 4772,
+      "population": 3207173,
+      "difficultyRank": 76,
+      "path": "regions/nizhegorodskaya_oblast.json",
+      "sha256": "f6f9035690cf44e4d4c27023d78d04db241b4f068aa5ea3f6eb85023fb8f4ee3",
+      "bytes": 1781357,
+      "coordinateStatus": {
+        "source": 4772
+      },
+      "positions": {
+        "inside": 4772
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 46784,
+      "transportBytes": 250700,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          56.27663905000001,
+          44.77406450000001
+        ],
+        "bounds": [
+          [
+            54.46210260000001,
+            41.7764767
+          ],
+          [
+            58.091175500000006,
+            47.77165230000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/nizhegorodskaya_oblast.json.gz",
+      "compressedSha256": "125faf02b60dfa64bc59afc8e5ca68ba3fa2acdf0e01b30c17b1d1096b7bf5d6",
+      "compressedBytes": 169086
+    },
+    {
+      "id": "novgorodskaya_oblast",
+      "name": "Новгородская область",
+      "names": {
+        "ru": "Новгородская область",
+        "en": "Novgorod Oblast",
+        "zh": "诺夫哥罗德州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3717,
+      "population": 605978,
+      "difficultyRank": 72,
+      "path": "regions/novgorodskaya_oblast.json",
+      "sha256": "feefddec4c7a0a49b8ce235772015ab1e39369b0fd7cbbd19e079808f9064502",
+      "bytes": 1381500,
+      "coordinateStatus": {
+        "source": 3710,
+        "verifiedCorrection": 7
+      },
+      "positions": {
+        "inside": 3717
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 36724,
+      "transportBytes": 194934,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.17091495,
+          32.92382215000001
+        ],
+        "bounds": [
+          [
+            56.909066499999994,
+            29.6187256
+          ],
+          [
+            59.4327634,
+            36.228918700000015
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/novgorodskaya_oblast.json.gz",
+      "compressedSha256": "2060f250ee4a2fd0ba79e7b35dd39af6fd6f3540ea24a842f40ae10270e005a5",
+      "compressedBytes": 126028
+    },
+    {
+      "id": "novosibirskaya_oblast",
+      "name": "Новосибирская область",
+      "names": {
+        "ru": "Новосибирская область",
+        "en": "Novosibirsk Oblast",
+        "zh": "新西伯利亚州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1545,
+      "population": 2793384,
+      "difficultyRank": 44,
+      "path": "regions/novosibirskaya_oblast.json",
+      "sha256": "b6243d0b6d5e272e1a5e2c82ee45686a3b80616e66b00e06cbcdac6428490a53",
+      "bytes": 600188,
+      "coordinateStatus": {
+        "source": 1545
+      },
+      "positions": {
+        "inside": 1545
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 14968,
+      "transportBytes": 84544,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.263471650000014,
+          80.10209085
+        ],
+        "bounds": [
+          [
+            53.291410000000006,
+            75.08801
+          ],
+          [
+            57.235533300000014,
+            85.1161717
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/novosibirskaya_oblast.json.gz",
+      "compressedSha256": "08f7ddd7ed4315db6af377a70cb30124849bfe59e22c1c654a346daef299d090",
+      "compressedBytes": 68531
+    },
+    {
+      "id": "omskaya_oblast",
+      "name": "Омская область",
+      "names": {
+        "ru": "Омская область",
+        "en": "Omsk Oblast",
+        "zh": "鄂木斯克州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1502,
+      "population": 1955246,
+      "difficultyRank": 41,
+      "path": "regions/omskaya_oblast.json",
+      "sha256": "ccc2dd470939be45690c5c19fdf76d81912102e9a003a49fbdd1b8efa9992a86",
+      "bytes": 573722,
+      "coordinateStatus": {
+        "source": 1502
+      },
+      "positions": {
+        "inside": 1502
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 14552,
+      "transportBytes": 81594,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          56.0058707,
+          73.3325103
+        ],
+        "bounds": [
+          [
+            53.4354965,
+            70.35838159999999
+          ],
+          [
+            58.5762449,
+            76.306639
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/omskaya_oblast.json.gz",
+      "compressedSha256": "061d27876538b09186b6bd758361731fb2f71a4c76f8eb0a500278b210028014",
+      "compressedBytes": 65071
+    },
+    {
+      "id": "orenburgskaya_oblast",
+      "name": "Оренбургская область",
+      "names": {
+        "ru": "Оренбургская область",
+        "en": "Orenburg Oblast",
+        "zh": "奥伦堡州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1719,
+      "population": 1978021,
+      "difficultyRank": 51,
+      "path": "regions/orenburgskaya_oblast.json",
+      "sha256": "520305377318e6ce52980e7195faa6bd9884b47c283e1cf72852492b3fdbef01",
+      "bytes": 702059,
+      "coordinateStatus": {
+        "source": 1719
+      },
+      "positions": {
+        "inside": 1719
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 16760,
+      "transportBytes": 93381,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.430197850000006,
+          56.22886040000001
+        ],
+        "bounds": [
+          [
+            50.494756900000006,
+            50.76816280000001
+          ],
+          [
+            54.365638800000006,
+            61.689558000000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/orenburgskaya_oblast.json.gz",
+      "compressedSha256": "4ad077825074f36ab56d953545d1facfcc29338b57eef6c1f44012f49fa80ead",
+      "compressedBytes": 86515
+    },
+    {
+      "id": "orlovskaya_oblast",
+      "name": "Орловская область",
+      "names": {
+        "ru": "Орловская область",
+        "en": "Oryol Oblast",
+        "zh": "奥廖尔州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2941,
+      "population": 752315,
+      "difficultyRank": 65,
+      "path": "regions/orlovskaya_oblast.json",
+      "sha256": "cda58a001b6bb718ae9b443f2f758f48e7a13f0ac1a4d06563743382419e3491",
+      "bytes": 1082601,
+      "coordinateStatus": {
+        "source": 2941
+      },
+      "positions": {
+        "inside": 2941
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 28636,
+      "transportBytes": 149524,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.793692750000005,
+          36.430206600000005
+        ],
+        "bounds": [
+          [
+            51.9349918,
+            34.79319970000001
+          ],
+          [
+            53.652393700000005,
+            38.0672135
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/orlovskaya_oblast.json.gz",
+      "compressedSha256": "8d079e6eda5262557b018bcf3e042afe3b64107cc9de7efbbd4366cc406f9e97",
+      "compressedBytes": 99989
+    },
+    {
+      "id": "penzenskaya_oblast",
+      "name": "Пензенская область",
+      "names": {
+        "ru": "Пензенская область",
+        "en": "Penza Oblast",
+        "zh": "奔萨州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1411,
+      "population": 1318103,
+      "difficultyRank": 40,
+      "path": "regions/penzenskaya_oblast.json",
+      "sha256": "ff2e52c89ccdbb0918933a0ac7a7779f826e0f88bbafe291802cda7a1c95db03",
+      "bytes": 551804,
+      "coordinateStatus": {
+        "source": 1411
+      },
+      "positions": {
+        "inside": 1411
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 13828,
+      "transportBytes": 74855,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.1610231,
+          44.5315523
+        ],
+        "bounds": [
+          [
+            52.2912662,
+            42.0817395
+          ],
+          [
+            54.03078,
+            46.9813651
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/penzenskaya_oblast.json.gz",
+      "compressedSha256": "6667359f81a35ab3d6d27d2f487cf4652371001acb73a34124cf96a71bc984d5",
+      "compressedBytes": 62838
+    },
+    {
+      "id": "permskiy_kray",
+      "name": "Пермский край",
+      "names": {
+        "ru": "Пермский край",
+        "en": "Perm Krai",
+        "zh": "彼尔姆边疆区"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3626,
+      "population": 2642447,
+      "difficultyRank": 71,
+      "path": "regions/permskiy_kray.json",
+      "sha256": "fcba54c50832bd2bc746b68a5a577332956484f5af7907e451edf83c50f017d3",
+      "bytes": 1317876,
+      "coordinateStatus": {
+        "source": 3626
+      },
+      "positions": {
+        "inside": 3626
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 36304,
+      "transportBytes": 195502,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.8834753,
+          55.6271361
+        ],
+        "bounds": [
+          [
+            56.1038833,
+            51.7715414
+          ],
+          [
+            61.6630673,
+            59.482730800000006
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/permskiy_kray.json.gz",
+      "compressedSha256": "2705407d410b9c00236ad389f0ae2cd0f9589171e301d9272cf68b7c75122cd1",
+      "compressedBytes": 130782
+    },
+    {
+      "id": "primorskiy_kray",
+      "name": "Приморский край",
+      "names": {
+        "ru": "Приморский край",
+        "en": "Primorsky Krai",
+        "zh": "滨海边疆区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 657,
+      "population": 1822699,
+      "difficultyRank": 25,
+      "path": "regions/primorskiy_kray.json",
+      "sha256": "f4bec5c27dcd684e3628972b39bcb24462d7822a67eff6e287564f431214a7bf",
+      "bytes": 299990,
+      "coordinateStatus": {
+        "source": 657
+      },
+      "positions": {
+        "inside": 657
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 6428,
+      "transportBytes": 36204,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          45.3175905,
+          134.85210105
+        ],
+        "bounds": [
+          [
+            42.1706361,
+            130.394809
+          ],
+          [
+            48.4645449,
+            139.3093931
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/primorskiy_kray.json.gz",
+      "compressedSha256": "904d6bdbb270fa0e4b114ecf5d78f5b9b57e2d647feb2968fece7f3da2096ec4",
+      "compressedBytes": 46643
+    },
+    {
+      "id": "pskovskaya_oblast",
+      "name": "Псковская область",
+      "names": {
+        "ru": "Псковская область",
+        "en": "Pskov Oblast",
+        "zh": "普斯科夫州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 8259,
+      "population": 655833,
+      "difficultyRank": 81,
+      "path": "regions/pskovskaya_oblast.json",
+      "sha256": "ebfbbd6bf337962e360d31c6ea1574a6513ae13322a845f8bef76ebe2403474a",
+      "bytes": 2978464,
+      "coordinateStatus": {
+        "source": 8226,
+        "verifiedCorrection": 33
+      },
+      "positions": {
+        "inside": 8258,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 81320,
+      "transportBytes": 422563,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.30473115000001,
+          29.417657800000008
+        ],
+        "bounds": [
+          [
+            55.58830330000001,
+            27.317455300000006
+          ],
+          [
+            59.021159000000004,
+            31.517860300000006
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/pskovskaya_oblast.json.gz",
+      "compressedSha256": "15c02ec94aa3a8429f75cf17bf448f9a1c6fca66062da516da333a88f2f107c5",
+      "compressedBytes": 242897
+    },
+    {
+      "id": "respublika_adygeya",
+      "name": "Республика Адыгея",
+      "names": {
+        "ru": "Республика Адыгея",
+        "en": "Adygea",
+        "zh": "阿迪格共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 281,
+      "population": 643511,
+      "difficultyRank": 17,
+      "path": "regions/respublika_adygeya.json",
+      "sha256": "81bfa89dd97f6e2ea30d4c2f1fa5cad3a1139c7abdd36aa7a3f0520f8935e667",
+      "bytes": 133089,
+      "coordinateStatus": {
+        "source": 281
+      },
+      "positions": {
+        "inside": 279,
+        "outside": 2
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2912,
+      "transportBytes": 15546,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          44.4889505,
+          39.729878600000006
+        ],
+        "bounds": [
+          [
+            43.7607877,
+            38.684018200000004
+          ],
+          [
+            45.21711330000001,
+            40.77573900000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_adygeya.json.gz",
+      "compressedSha256": "14b584f201345eb83c05c4c7f194e1bd48d204b3f588f244798a96c5b44cc535",
+      "compressedBytes": 21551
+    },
+    {
+      "id": "respublika_altay",
+      "name": "Республика Алтай",
+      "names": {
+        "ru": "Республика Алтай",
+        "en": "Altai Republic",
+        "zh": "阿尔泰共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 245,
+      "population": 218828,
+      "difficultyRank": 15,
+      "path": "regions/respublika_altay.json",
+      "sha256": "cc2ee9ecc11fbe230b20cda22ca76c0f3ac57bdb6c1389c1e5ad78718bfc9550",
+      "bytes": 140346,
+      "coordinateStatus": {
+        "source": 245
+      },
+      "positions": {
+        "inside": 245
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2464,
+      "transportBytes": 14437,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          50.865793000000004,
+          86.89922615
+        ],
+        "bounds": [
+          [
+            49.071318000000005,
+            83.93280279999999
+          ],
+          [
+            52.660268,
+            89.8656495
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_altay.json.gz",
+      "compressedSha256": "2f4469a3b15a6ee8fb5cd26365594f0a305503eda5a483ca7ecfced2de879e85",
+      "compressedBytes": 28433
+    },
+    {
+      "id": "respublika_bashkortostan",
+      "name": "Республика Башкортостан",
+      "names": {
+        "ru": "Республика Башкортостан",
+        "en": "Bashkortostan",
+        "zh": "巴什科尔托斯坦共和国"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 4589,
+      "population": 4083980,
+      "difficultyRank": 75,
+      "path": "regions/respublika_bashkortostan.json",
+      "sha256": "a6508332ac3bf8d9a5f1671c9e88f18f6c213912de8d65aaabfce2823aed8911",
+      "bytes": 1774936,
+      "coordinateStatus": {
+        "source": 4589
+      },
+      "positions": {
+        "inside": 4589
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 44432,
+      "transportBytes": 244287,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.05209875,
+          56.58005155
+        ],
+        "bounds": [
+          [
+            51.569554000000004,
+            53.1582942
+          ],
+          [
+            56.534643499999994,
+            60.0018089
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_bashkortostan.json.gz",
+      "compressedSha256": "feb705b18e465f9556f00ae138e1dd48edf4f31d1356ea47405ef971464296f0",
+      "compressedBytes": 186696
+    },
+    {
+      "id": "respublika_buryatiya",
+      "name": "Республика Бурятия",
+      "names": {
+        "ru": "Республика Бурятия",
+        "en": "Buryatia",
+        "zh": "布里亚特共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 734,
+      "population": 979019,
+      "difficultyRank": 26,
+      "path": "regions/respublika_buryatiya.json",
+      "sha256": "58061f7ab18f1e4396a2e033d5146f42eec1391cbdb2d220acbdd1e946b59914",
+      "bytes": 378770,
+      "coordinateStatus": {
+        "source": 734
+      },
+      "positions": {
+        "inside": 734
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 7388,
+      "transportBytes": 41445,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.60484125,
+          107.77595285
+        ],
+        "bounds": [
+          [
+            49.9599,
+            98.63053029999999
+          ],
+          [
+            57.2497825,
+            116.9213754
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_buryatiya.json.gz",
+      "compressedSha256": "ecdd6e633e6e12bab7afa0f3eeab39f25c675ba40146957e713658840d9bed78",
+      "compressedBytes": 63951
+    },
+    {
+      "id": "respublika_dagestan",
+      "name": "Республика Дагестан",
+      "names": {
+        "ru": "Республика Дагестан",
+        "en": "Dagestan",
+        "zh": "达吉斯坦共和国"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1646,
+      "population": 3060356,
+      "difficultyRank": 50,
+      "path": "regions/respublika_dagestan.json",
+      "sha256": "37731e4102727d2be04ef3162525911d84e7a40219d4f7b894f6a4fc52e1b678",
+      "bytes": 620595,
+      "coordinateStatus": {
+        "source": 1644,
+        "approximateSourcePosition": 1,
+        "verifiedCorrection": 1
+      },
+      "positions": {
+        "inside": 1642,
+        "outside": 4
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 16672,
+      "transportBytes": 87961,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.08879625,
+          46.9587587
+        ],
+        "bounds": [
+          [
+            41.1858711,
+            45.103421499999996
+          ],
+          [
+            44.991721399999996,
+            48.8140959
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_dagestan.json.gz",
+      "compressedSha256": "792c31b84cd143ed0c0cb80b0d97034e8af9a81d9ce0bcb043f722f986e6eade",
+      "compressedBytes": 67522
+    },
+    {
+      "id": "respublika_ingushetiya",
+      "name": "Республика Ингушетия",
+      "names": {
+        "ru": "Республика Ингушетия",
+        "en": "Ingushetia",
+        "zh": "印古什共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 43,
+      "population": 452460,
+      "difficultyRank": 2,
+      "path": "regions/respublika_ingushetiya.json",
+      "sha256": "d85a2b65f5d574bf0aa9c80a94c85619529bc0db9c77e3d918af159254d3c75f",
+      "bytes": 28865,
+      "coordinateStatus": {
+        "source": 43
+      },
+      "positions": {
+        "inside": 43
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "osmRoadWays": 10464,
+      "transportEdges": 404,
+      "facilityCount": 415,
+      "candidateConnectors": 39,
+      "verifiedConnectors": 0,
+      "transportBytes": 3223,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.11440965,
+          44.862808900000005
+        ],
+        "bounds": [
+          [
+            42.61473,
+            44.478436
+          ],
+          [
+            43.614089299999996,
+            45.2471818
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_ingushetiya.json.gz",
+      "compressedSha256": "b0d9b1cf06fa7da37deb8f78ca5010939f68c753af09ce6540630bb1a04d9a92",
+      "compressedBytes": 7424
+    },
+    {
+      "id": "respublika_kalmykiya",
+      "name": "Республика Калмыкия",
+      "names": {
+        "ru": "Республика Калмыкия",
+        "en": "Kalmykia",
+        "zh": "卡尔梅克共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 264,
+      "population": 272647,
+      "difficultyRank": 16,
+      "path": "regions/respublika_kalmykiya.json",
+      "sha256": "b36d5248f35b4087988e96b54c0045ffb770dc9867d44770a0226767821c6aff",
+      "bytes": 116666,
+      "coordinateStatus": {
+        "source": 264
+      },
+      "positions": {
+        "inside": 264
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2560,
+      "transportBytes": 15238,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          46.49487355000001,
+          44.7308655
+        ],
+        "bounds": [
+          [
+            44.7188913,
+            41.6349277
+          ],
+          [
+            48.27085580000001,
+            47.8268033
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_kalmykiya.json.gz",
+      "compressedSha256": "f20f48989112eb46e5c2da585fdbd0434ecc9145082270e4d1c3161585e2348e",
+      "compressedBytes": 18352
+    },
+    {
+      "id": "respublika_kareliya",
+      "name": "Республика Карелия",
+      "names": {
+        "ru": "Республика Карелия",
+        "en": "Republic of Karelia",
+        "zh": "卡累利阿共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 831,
+      "population": 621581,
+      "difficultyRank": 28,
+      "path": "regions/respublika_kareliya.json",
+      "sha256": "618bbe83028ec206c6044f9a35866d065348fe27a7d7376ead0912bfb369f18f",
+      "bytes": 325965,
+      "coordinateStatus": {
+        "source": 829,
+        "verifiedCorrection": 2
+      },
+      "positions": {
+        "inside": 830,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 8512,
+      "transportBytes": 46446,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          63.6734464,
+          33.6262832
+        ],
+        "bounds": [
+          [
+            60.6795685,
+            29.3059283
+          ],
+          [
+            66.6673243,
+            37.9466381
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_kareliya.json.gz",
+      "compressedSha256": "d66036f1239e3a0dc23d4142eac24e7920dc5667efdb2e2b86284d326a6172d0",
+      "compressedBytes": 37639
+    },
+    {
+      "id": "respublika_komi",
+      "name": "Республика Коми",
+      "names": {
+        "ru": "Республика Коми",
+        "en": "Komi Republic",
+        "zh": "科米共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 756,
+      "population": 860807,
+      "difficultyRank": 27,
+      "path": "regions/respublika_komi.json",
+      "sha256": "e1a290493a365314c34a1ac36fa7e1aab49d07aaef02b96532b2d2e3f3f8e79a",
+      "bytes": 331751,
+      "coordinateStatus": {
+        "source": 756
+      },
+      "positions": {
+        "inside": 755,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 7824,
+      "transportBytes": 43727,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          63.81064430000001,
+          55.82551790000001
+        ],
+        "bounds": [
+          [
+            59.19862620000001,
+            45.399349900000004
+          ],
+          [
+            68.42266240000001,
+            66.25168590000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_komi.json.gz",
+      "compressedSha256": "291432ba8d8f484545bd639c7e4fce8f543ffa7a0dbd281d900dd4c00ad40897",
+      "compressedBytes": 49822
+    },
+    {
+      "id": "respublika_krym",
+      "name": "Республика Крым",
+      "names": {
+        "ru": "Республика Крым",
+        "en": "Republic of Crimea",
+        "zh": "克里米亚共和国"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1020,
+      "population": 2342615,
+      "difficultyRank": 32,
+      "path": "regions/respublika_krym.json",
+      "sha256": "6d78f523b759cf10684d41fa954fa0c47bc35642d88adfc7961da52e24a4473b",
+      "bytes": 376521,
+      "coordinateStatus": {
+        "source": 1020
+      },
+      "positions": {
+        "inside": 1020
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 9960,
+      "transportBytes": 52635,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          45.2077398,
+          34.4416821
+        ],
+        "bounds": [
+          [
+            44.1854172,
+            32.2017961
+          ],
+          [
+            46.2300624,
+            36.6815681
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_krym.json.gz",
+      "compressedSha256": "87c489ee7ef6201bd6659fee918b57fede8070a8d8ffc30ab2b310402ded7e0f",
+      "compressedBytes": 36377
+    },
+    {
+      "id": "respublika_mariy_el",
+      "name": "Республика Марий Эл",
+      "names": {
+        "ru": "Республика Марий Эл",
+        "en": "Mari El",
+        "zh": "马里埃尔共和国"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1619,
+      "population": 682308,
+      "difficultyRank": 49,
+      "path": "regions/respublika_mariy_el.json",
+      "sha256": "a9112a9348cb096bd69a880dff9eff36ebb996ddf5f03ab88481df5216398acb",
+      "bytes": 620308,
+      "coordinateStatus": {
+        "source": 1619
+      },
+      "positions": {
+        "inside": 1618,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 16092,
+      "transportBytes": 83898,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          56.58639865,
+          47.91336240000001
+        ],
+        "bounds": [
+          [
+            55.82993270000001,
+            45.62373980000001
+          ],
+          [
+            57.34286459999999,
+            50.202985000000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_mariy_el.json.gz",
+      "compressedSha256": "54151d76c2cdd5ab20cfe2599f687083149dbab2c5de2d432af8596e5ea5d8ac",
+      "compressedBytes": 65041
+    },
+    {
+      "id": "respublika_mordoviya",
+      "name": "Республика Мордовия",
+      "names": {
+        "ru": "Республика Мордовия",
+        "en": "Republic of Mordovia",
+        "zh": "莫尔多瓦共和国"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1258,
+      "population": 795473,
+      "difficultyRank": 36,
+      "path": "regions/respublika_mordoviya.json",
+      "sha256": "836f200a276a58b2247edf3eebef3f26e8aeb8c527d2057627b076b10fa6db3a",
+      "bytes": 515137,
+      "coordinateStatus": {
+        "source": 1258
+      },
+      "positions": {
+        "inside": 1255,
+        "outside": 3
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 12296,
+      "transportBytes": 65382,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.416717250000005,
+          44.44691170000001
+        ],
+        "bounds": [
+          [
+            53.6431667,
+            42.164255100000005
+          ],
+          [
+            55.1902678,
+            46.72956830000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_mordoviya.json.gz",
+      "compressedSha256": "c5a12a7125b516030e5f5f5129398ac9bed07f020bd5fe939dafe03a94edf34b",
+      "compressedBytes": 61843
+    },
+    {
+      "id": "respublika_sakha_yakutiya",
+      "name": "Республика Саха (Якутия)",
+      "names": {
+        "ru": "Республика Саха (Якутия)",
+        "en": "Sakha Republic",
+        "zh": "萨哈（雅库特）共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 635,
+      "population": 965567,
+      "difficultyRank": 24,
+      "path": "regions/respublika_sakha_yakutiya.json",
+      "sha256": "3417d14349a22b0ef5141c73d3f12a067262bfd68449382b71a977498d5c16a2",
+      "bytes": 540361,
+      "coordinateStatus": {
+        "source": 635
+      },
+      "positions": {
+        "inside": 635
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 6116,
+      "transportBytes": 36756,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          66.3989148,
+          134.30716199999998
+        ],
+        "bounds": [
+          [
+            55.4878923,
+            105.50834099999999
+          ],
+          [
+            77.30993729999999,
+            163.10598299999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_sakha_yakutiya.json.gz",
+      "compressedSha256": "20f9956f51b0f6b63555376c577003c7758e5973a5bf9e857d9cfbb1a57a8cc4",
+      "compressedBytes": 127573
+    },
+    {
+      "id": "respublika_severnaya_osetiya_alaniya",
+      "name": "Республика Северная Осетия - Алания",
+      "names": {
+        "ru": "Республика Северная Осетия - Алания",
+        "en": "North Ossetia–Alania",
+        "zh": "北奥塞梯—阿兰共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 216,
+      "population": 731779,
+      "difficultyRank": 13,
+      "path": "regions/respublika_severnaya_osetiya_alaniya.json",
+      "sha256": "f806b370cf5293eb6cd51faf9db4ea599fcb70113d8a8f9b7e6a0c9e6d4aef2f",
+      "bytes": 98887,
+      "coordinateStatus": {
+        "source": 216
+      },
+      "positions": {
+        "inside": 216
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2184,
+      "transportBytes": 12354,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.191026400000005,
+          44.1792557
+        ],
+        "bounds": [
+          [
+            42.546937,
+            43.3984872
+          ],
+          [
+            43.83511580000001,
+            44.9600242
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_severnaya_osetiya_alaniya.json.gz",
+      "compressedSha256": "60edf7ab53dc83434dcfe61d8a7f75833d4cc4713f319e923dcaa63b06febcf1",
+      "compressedBytes": 15017
+    },
+    {
+      "id": "respublika_tatarstan",
+      "name": "Республика Татарстан",
+      "names": {
+        "ru": "Республика Татарстан",
+        "en": "Tatarstan",
+        "zh": "鞑靼斯坦共和国"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3264,
+      "population": 4004613,
+      "difficultyRank": 68,
+      "path": "regions/respublika_tatarstan.json",
+      "sha256": "95567e99a3e7366e131dbe26be2fb112c186cd7cddfacd9a026791708b15d70e",
+      "bytes": 1277668,
+      "coordinateStatus": {
+        "source": 3264
+      },
+      "positions": {
+        "inside": 3264
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 31720,
+      "transportBytes": 171738,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.3262765,
+          50.75135800000001
+        ],
+        "bounds": [
+          [
+            53.97424439999999,
+            47.23701890000001
+          ],
+          [
+            56.67830860000001,
+            54.265697100000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_tatarstan.json.gz",
+      "compressedSha256": "8ae7d43eb8c5cb578663de79af1b6424098b60265b7fd75de4f628711d1cfe42",
+      "compressedBytes": 144035
+    },
+    {
+      "id": "respublika_tyva",
+      "name": "Республика Тыва",
+      "names": {
+        "ru": "Республика Тыва",
+        "en": "Tuva",
+        "zh": "图瓦共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 142,
+      "population": 322644,
+      "difficultyRank": 9,
+      "path": "regions/respublika_tyva.json",
+      "sha256": "e243ab1b691baf41914dc8014aaf5edb0b3818018bb684fef9567bf2fec4e2a2",
+      "bytes": 118314,
+      "coordinateStatus": {
+        "source": 142
+      },
+      "positions": {
+        "inside": 142
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 1428,
+      "transportBytes": 8849,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          51.73671495000001,
+          94.03268845
+        ],
+        "bounds": [
+          [
+            49.7445,
+            88.79153120000001
+          ],
+          [
+            53.72892990000001,
+            99.2738457
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_tyva.json.gz",
+      "compressedSha256": "f0a4b69f0ca06882629589554f321e16e3c40c1903e3af7ce0d4573ef5ad67ae",
+      "compressedBytes": 28943
+    },
+    {
+      "id": "respublika_khakasiya",
+      "name": "Республика Хакасия",
+      "names": {
+        "ru": "Республика Хакасия",
+        "en": "Khakassia",
+        "zh": "哈卡斯共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 282,
+      "population": 535309,
+      "difficultyRank": 18,
+      "path": "regions/respublika_khakasiya.json",
+      "sha256": "21f7ce76acdf88de8fe1e938bab0b1aa9c9d91dedcce42d9deecaa79462d3546",
+      "bytes": 147897,
+      "coordinateStatus": {
+        "source": 282
+      },
+      "positions": {
+        "inside": 282
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2740,
+      "transportBytes": 15970,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.361501700000005,
+          89.90365729999999
+        ],
+        "bounds": [
+          [
+            51.28512570000001,
+            87.88258929999999
+          ],
+          [
+            55.437877699999994,
+            91.9247253
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/respublika_khakasiya.json.gz",
+      "compressedSha256": "64bc34e155c078ba6adedbae334c82e75876c4d7ec43e6821ff8b6a81387d9f1",
+      "compressedBytes": 27715
+    },
+    {
+      "id": "rostovskaya_oblast",
+      "name": "Ростовская область",
+      "names": {
+        "ru": "Ростовская область",
+        "en": "Rostov Oblast",
+        "zh": "罗斯托夫州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2295,
+      "population": 4230429,
+      "difficultyRank": 59,
+      "path": "regions/rostovskaya_oblast.json",
+      "sha256": "4916ed2420eb18bf257ef070d5eff93553e7ef9038717cbbe6eae253ddaff5ad",
+      "bytes": 876792,
+      "coordinateStatus": {
+        "source": 2295
+      },
+      "positions": {
+        "inside": 2294,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 22300,
+      "transportBytes": 122547,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          48.0830826,
+          41.272521950000005
+        ],
+        "bounds": [
+          [
+            45.951688299999994,
+            38.220892000000006
+          ],
+          [
+            50.2144769,
+            44.324151900000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/rostovskaya_oblast.json.gz",
+      "compressedSha256": "d0b3bca1a15ca43b6f8c6453e9929bd1f9fc1f880c485e123a2a45ae2da6576c",
+      "compressedBytes": 95026
+    },
+    {
+      "id": "ryazanskaya_oblast",
+      "name": "Рязанская область",
+      "names": {
+        "ru": "Рязанская область",
+        "en": "Ryazan Oblast",
+        "zh": "梁赞州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2787,
+      "population": 1146962,
+      "difficultyRank": 63,
+      "path": "regions/ryazanskaya_oblast.json",
+      "sha256": "c788c6f04bffaa0b9207f39f2a814784d4d96624d4aa2a872420c318551bc2fd",
+      "bytes": 1038677,
+      "coordinateStatus": {
+        "source": 2787
+      },
+      "positions": {
+        "inside": 2787
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 27356,
+      "transportBytes": 144884,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.337782149999995,
+          40.679037750000006
+        ],
+        "bounds": [
+          [
+            53.3090699,
+            38.665981800000004
+          ],
+          [
+            55.36649439999999,
+            42.69209370000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/ryazanskaya_oblast.json.gz",
+      "compressedSha256": "79965e3a179b230064e59a8d5c468d3a57b4ad9fdfb6ac03154e0a1904f82674",
+      "compressedBytes": 100133
+    },
+    {
+      "id": "samarskaya_oblast",
+      "name": "Самарская область",
+      "names": {
+        "ru": "Самарская область",
+        "en": "Samara Oblast",
+        "zh": "萨马拉州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1334,
+      "population": 3210637,
+      "difficultyRank": 39,
+      "path": "regions/samarskaya_oblast.json",
+      "sha256": "c03af56b8c7c1c0b7f123325482f581221ef9985adfab1aad8b3563a3bf62b4f",
+      "bytes": 523344,
+      "coordinateStatus": {
+        "source": 1334
+      },
+      "positions": {
+        "inside": 1333,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 13068,
+      "transportBytes": 71600,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.225096400000005,
+          50.249358400000006
+        ],
+        "bounds": [
+          [
+            51.773036600000005,
+            47.9304408
+          ],
+          [
+            54.677156200000006,
+            52.568276000000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/samarskaya_oblast.json.gz",
+      "compressedSha256": "ab6dba9b4e7641b83e0066623130a00e209c29bd25462cd6c317dd563f8c6850",
+      "compressedBytes": 60750
+    },
+    {
+      "id": "saratovskaya_oblast",
+      "name": "Саратовская область",
+      "names": {
+        "ru": "Саратовская область",
+        "en": "Saratov Oblast",
+        "zh": "萨拉托夫州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1821,
+      "population": 2442755,
+      "difficultyRank": 55,
+      "path": "regions/saratovskaya_oblast.json",
+      "sha256": "4e3af2831a46b15d3c628b42e5fc8919ed12d311eeb234def7e07ea9511233d4",
+      "bytes": 709519,
+      "coordinateStatus": {
+        "source": 1821
+      },
+      "positions": {
+        "inside": 1820,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 17708,
+      "transportBytes": 98478,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          51.310290499999994,
+          46.6681251
+        ],
+        "bounds": [
+          [
+            49.801210399999995,
+            42.5036705
+          ],
+          [
+            52.8193706,
+            50.832579700000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/saratovskaya_oblast.json.gz",
+      "compressedSha256": "4644687306f86e308481d8f8d26aaa3525c15bad923b28e3593fbc072275062d",
+      "compressedBytes": 79839
+    },
+    {
+      "id": "sakhalinskaya_oblast",
+      "name": "Сахалинская область",
+      "names": {
+        "ru": "Сахалинская область",
+        "en": "Sakhalin Oblast",
+        "zh": "萨哈林州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 243,
+      "population": 489512,
+      "difficultyRank": 14,
+      "path": "regions/sakhalinskaya_oblast.json",
+      "sha256": "d9f0bb08c0bfbe3d266909fd14b56f99a7ec800a63b1b6cf773faaa637aebbdc",
+      "bytes": 114548,
+      "coordinateStatus": {
+        "source": 243
+      },
+      "positions": {
+        "inside": 243
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2464,
+      "transportBytes": 14454,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          48.90177200000001,
+          148.87725810000003
+        ],
+        "bounds": [
+          [
+            43.1775632,
+            140.92274830000005
+          ],
+          [
+            54.62598080000001,
+            156.83176790000002
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/sakhalinskaya_oblast.json.gz",
+      "compressedSha256": "32311b831f079a121fe19407b1d667be1726b01ff6978a0b34e08d0ef7804b5c",
+      "compressedBytes": 20584
+    },
+    {
+      "id": "sverdlovskaya_oblast",
+      "name": "Свердловская область",
+      "names": {
+        "ru": "Свердловская область",
+        "en": "Sverdlovsk Oblast",
+        "zh": "斯维尔德洛夫斯克州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 2118,
+      "population": 4455865,
+      "difficultyRank": 58,
+      "path": "regions/sverdlovskaya_oblast.json",
+      "sha256": "049f6b6ea94c8b7f66725032deca23111bbbf44b77ba0c9d505b47b64c275270",
+      "bytes": 808452,
+      "coordinateStatus": {
+        "source": 2118
+      },
+      "positions": {
+        "inside": 2118
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 21256,
+      "transportBytes": 116764,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.9996465,
+          61.707120599999996
+        ],
+        "bounds": [
+          [
+            56.053224099999994,
+            57.2293844
+          ],
+          [
+            61.9460689,
+            66.18485679999999
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/sverdlovskaya_oblast.json.gz",
+      "compressedSha256": "97a3984a89ca7fa560f1a140bef6e0f92a25efc9143fbe6a7554c7a364671876",
+      "compressedBytes": 88003
+    },
+    {
+      "id": "smolenskaya_oblast",
+      "name": "Смоленская область",
+      "names": {
+        "ru": "Смоленская область",
+        "en": "Smolensk Oblast",
+        "zh": "斯摩棱斯克州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 5165,
+      "population": 1025978,
+      "difficultyRank": 77,
+      "path": "regions/smolenskaya_oblast.json",
+      "sha256": "3692bcad0825e982a506d1fff0689bee79100b319fa124f17e3c516ac50bd19b",
+      "bytes": 1897064,
+      "coordinateStatus": {
+        "source": 5162,
+        "verifiedCorrection": 3
+      },
+      "positions": {
+        "inside": 5164,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 50476,
+      "transportBytes": 265724,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.73787235,
+          33.073286200000005
+        ],
+        "bounds": [
+          [
+            53.4086906,
+            30.7515697
+          ],
+          [
+            56.0670541,
+            35.395002700000006
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/smolenskaya_oblast.json.gz",
+      "compressedSha256": "66b7f79ab242e874c389b160d4e0dfab314ebe8b24986f8fe9e476aa29717a31",
+      "compressedBytes": 164713
+    },
+    {
+      "id": "stavropolskiy_kray",
+      "name": "Ставропольский край",
+      "names": {
+        "ru": "Ставропольский край",
+        "en": "Stavropol Krai",
+        "zh": "斯塔夫罗波尔边疆区"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 929,
+      "population": 2799655,
+      "difficultyRank": 30,
+      "path": "regions/stavropolskiy_kray.json",
+      "sha256": "e64af2b0bf8588ea2340d99c195f965553af8ef101e85917654e224f6943c2d4",
+      "bytes": 366677,
+      "coordinateStatus": {
+        "source": 929
+      },
+      "positions": {
+        "inside": 929
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 9708,
+      "transportBytes": 49626,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          44.947399950000005,
+          43.28099830000001
+        ],
+        "bounds": [
+          [
+            43.6585777,
+            40.8460433
+          ],
+          [
+            46.23622220000001,
+            45.71595330000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/stavropolskiy_kray.json.gz",
+      "compressedSha256": "53ea9f26e7759b8d69114a209760c557cdece38e3d247e7c4548001cfd01972c",
+      "compressedBytes": 42003
+    },
+    {
+      "id": "tambovskaya_oblast",
+      "name": "Тамбовская область",
+      "names": {
+        "ru": "Тамбовская область",
+        "en": "Tambov Oblast",
+        "zh": "坦波夫州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1584,
+      "population": 1015966,
+      "difficultyRank": 45,
+      "path": "regions/tambovskaya_oblast.json",
+      "sha256": "f24f3660b8220ddc94646252e5e403caf3019aada9ecc01cff7e2f0a18d55e14",
+      "bytes": 602127,
+      "coordinateStatus": {
+        "source": 1584
+      },
+      "positions": {
+        "inside": 1584
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 15576,
+      "transportBytes": 83119,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          52.7053308,
+          41.58189065
+        ],
+        "bounds": [
+          [
+            51.5880843,
+            39.915693999999995
+          ],
+          [
+            53.822577300000006,
+            43.2480873
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/tambovskaya_oblast.json.gz",
+      "compressedSha256": "5a42a31f26806f01611daf4ba052f78254f18757fe8b4a4108f3c1589fdaa7d4",
+      "compressedBytes": 63131
+    },
+    {
+      "id": "tverskaya_oblast",
+      "name": "Тверская область",
+      "names": {
+        "ru": "Тверская область",
+        "en": "Tver Oblast",
+        "zh": "特维尔州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 8957,
+      "population": 1303663,
+      "difficultyRank": 82,
+      "path": "regions/tverskaya_oblast.json",
+      "sha256": "dc1c2fee58b5cc38f2dca813120df98cfae9bd12ceb1adcd25215544c6022d65",
+      "bytes": 3244873,
+      "coordinateStatus": {
+        "source": 8957
+      },
+      "positions": {
+        "inside": 8956,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 88564,
+      "transportBytes": 468054,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.247587100000004,
+          34.527622550000004
+        ],
+        "bounds": [
+          [
+            55.63203490000001,
+            30.728386799999996
+          ],
+          [
+            58.86313930000001,
+            38.326858300000005
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/tverskaya_oblast.json.gz",
+      "compressedSha256": "b29cf99eeca0cc600b1213d1a38944b13501cdbc0e119ffb5b779f8e0d8a5dae",
+      "compressedBytes": 277087
+    },
+    {
+      "id": "tomskaya_oblast",
+      "name": "Томская область",
+      "names": {
+        "ru": "Томская область",
+        "en": "Tomsk Oblast",
+        "zh": "托木斯克州"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 577,
+      "population": 1077442,
+      "difficultyRank": 22,
+      "path": "regions/tomskaya_oblast.json",
+      "sha256": "3989459bd74f6fb070d16538520e06ee96f55fe5d22231705efcf617d917ff42",
+      "bytes": 252466,
+      "coordinateStatus": {
+        "source": 577
+      },
+      "positions": {
+        "inside": 577
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 5816,
+      "transportBytes": 32531,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          58.3501659,
+          82.2178488
+        ],
+        "bounds": [
+          [
+            55.6646601,
+            75.05666450000001
+          ],
+          [
+            61.0356717,
+            89.37903309999999
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/tomskaya_oblast.json.gz",
+      "compressedSha256": "8a6e15acc0f9bf8d40ecbaa72ad6dc61eadc79009a24d28e0186782444445dc0",
+      "compressedBytes": 37877
+    },
+    {
+      "id": "tulskaya_oblast",
+      "name": "Тульская область",
+      "names": {
+        "ru": "Тульская область",
+        "en": "Tula Oblast",
+        "zh": "图拉州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 3574,
+      "population": 1602687,
+      "difficultyRank": 70,
+      "path": "regions/tulskaya_oblast.json",
+      "sha256": "733e228f9402d0c2c4151fefb3d4ff545558384f5bd83f5f277352c73e1aed88",
+      "bytes": 1297627,
+      "coordinateStatus": {
+        "source": 3574
+      },
+      "positions": {
+        "inside": 3568,
+        "outside": 6
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 34816,
+      "transportBytes": 180714,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.8990967,
+          37.4250503
+        ],
+        "bounds": [
+          [
+            52.946356900000005,
+            35.898555400000006
+          ],
+          [
+            54.85183649999999,
+            38.9515452
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/tulskaya_oblast.json.gz",
+      "compressedSha256": "d876a00124ed4c63b2c195579bf7c41f6571dc2d3991189fcb8f96efed75d974",
+      "compressedBytes": 118743
+    },
+    {
+      "id": "tyumenskaya_oblast",
+      "name": "Тюменская область",
+      "names": {
+        "ru": "Тюменская область",
+        "en": "Tyumen Oblast",
+        "zh": "秋明州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1228,
+      "population": 1478160,
+      "difficultyRank": 35,
+      "path": "regions/tyumenskaya_oblast.json",
+      "sha256": "98b458a331fd1fc530c8d4701c904e0d2afdc935def897a2d16f749a781096db",
+      "bytes": 477782,
+      "coordinateStatus": {
+        "source": 1228
+      },
+      "positions": {
+        "inside": 1228
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 12184,
+      "transportBytes": 67538,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.5683293,
+          70.01324365
+        ],
+        "bounds": [
+          [
+            55.1471,
+            64.8271919
+          ],
+          [
+            59.9895586,
+            75.19929540000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/tyumenskaya_oblast.json.gz",
+      "compressedSha256": "81607809c4de89965c50d96a431140a43949c2bfb6a6708d08ce39384163b08a",
+      "compressedBytes": 56341
+    },
+    {
+      "id": "udmurtskaya_respublika",
+      "name": "Удмуртская республика",
+      "names": {
+        "ru": "Удмуртская республика",
+        "en": "Udmurtia",
+        "zh": "乌德穆尔特共和国"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 1962,
+      "population": 1507391,
+      "difficultyRank": 57,
+      "path": "regions/udmurtskaya_respublika.json",
+      "sha256": "af8dc4a506d0aa5bb3ecc28765941d2ebf47cf52662f31fd11b0bbc708c43cf3",
+      "bytes": 760706,
+      "coordinateStatus": {
+        "source": 1962
+      },
+      "positions": {
+        "inside": 1962
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 19104,
+      "transportBytes": 102190,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.19820995,
+          52.7801478
+        ],
+        "bounds": [
+          [
+            55.850577799999996,
+            51.1241646
+          ],
+          [
+            58.5458421,
+            54.436131
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/udmurtskaya_respublika.json.gz",
+      "compressedSha256": "b557455e55b5e058a016e21cee30d255faef36ebec7f836e17ebd38f425b3853",
+      "compressedBytes": 82363
+    },
+    {
+      "id": "ulyanovskaya_oblast",
+      "name": "Ульяновская область",
+      "names": {
+        "ru": "Ульяновская область",
+        "en": "Ulyanovsk Oblast",
+        "zh": "乌里扬诺夫斯克州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 969,
+      "population": 1238271,
+      "difficultyRank": 31,
+      "path": "regions/ulyanovskaya_oblast.json",
+      "sha256": "cdb140c3970304a97fb09dbd19ac1251656b8c0782557c4bd3e43eaf6e5b3f0b",
+      "bytes": 400352,
+      "coordinateStatus": {
+        "source": 969
+      },
+      "positions": {
+        "inside": 969
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 9492,
+      "transportBytes": 51188,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          53.7120575,
+          48.01985225
+        ],
+        "bounds": [
+          [
+            52.5326688,
+            45.797063
+          ],
+          [
+            54.8914462,
+            50.2426415
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/ulyanovskaya_oblast.json.gz",
+      "compressedSha256": "5e5384764cae90af1a70f9f4e4007a3027c6fe70f03f591c9f0bae07ab425247",
+      "compressedBytes": 51295
+    },
+    {
+      "id": "khabarovskiy_kray",
+      "name": "Хабаровский край",
+      "names": {
+        "ru": "Хабаровский край",
+        "en": "Khabarovsk Krai",
+        "zh": "哈巴罗夫斯克边疆区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 435,
+      "population": 1320782,
+      "difficultyRank": 21,
+      "path": "regions/khabarovskiy_kray.json",
+      "sha256": "d477a7a68346e242ac124eaf77fceb802d5b6001153e56c4542ce5ca5adbde0b",
+      "bytes": 365114,
+      "coordinateStatus": {
+        "source": 435
+      },
+      "positions": {
+        "inside": 435
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 4252,
+      "transportBytes": 25049,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.583274349999996,
+          138.80176075
+        ],
+        "bounds": [
+          [
+            46.6349613,
+            130.38674160000002
+          ],
+          [
+            62.53158739999999,
+            147.21677989999998
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/khabarovskiy_kray.json.gz",
+      "compressedSha256": "deb7c0a54c65ff18560f3bcc2b615e57227c37322630228983ceeecace270c41",
+      "compressedBytes": 86541
+    },
+    {
+      "id": "khanty_mansiyskiy_avtonomnyy_okrug_yugra",
+      "name": "Ханты-Мансийский автономный округ - Югра",
+      "names": {
+        "ru": "Ханты-Мансийский автономный округ - Югра",
+        "en": "Khanty-Mansiysk Autonomous Okrug – Ugra",
+        "zh": "汉特-曼西自治区—尤格拉"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 196,
+      "population": 1674530,
+      "difficultyRank": 12,
+      "path": "regions/khanty_mansiyskiy_avtonomnyy_okrug_yugra.json",
+      "sha256": "e206c3528240fc9f6c9b21c1086ab46fb786072b750e1f2a6c58e6b408625377",
+      "bytes": 135556,
+      "coordinateStatus": {
+        "source": 196
+      },
+      "positions": {
+        "inside": 195,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 2008,
+      "transportBytes": 12345,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          62.14879435,
+          72.59023350000001
+        ],
+        "bounds": [
+          [
+            58.5798531,
+            59.20379390000001
+          ],
+          [
+            65.71773560000001,
+            85.9766731
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/khanty_mansiyskiy_avtonomnyy_okrug_yugra.json.gz",
+      "compressedSha256": "b63546b7952f47e03f91f028dd49fb55852dab9ae7f67fa342662602c9fe1cb6",
+      "compressedBytes": 30359
+    },
+    {
+      "id": "chelyabinskaya_oblast",
+      "name": "Челябинская область",
+      "names": {
+        "ru": "Челябинская область",
+        "en": "Chelyabinsk Oblast",
+        "zh": "车里雅宾斯克州"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1313,
+      "population": 3501534,
+      "difficultyRank": 38,
+      "path": "regions/chelyabinskaya_oblast.json",
+      "sha256": "e10b6ddaf64208076c21f40e59f53c39fe06ae898457060d2430969d7133b332",
+      "bytes": 537541,
+      "coordinateStatus": {
+        "source": 1313
+      },
+      "positions": {
+        "inside": 1313
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 12796,
+      "transportBytes": 71432,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          54.17853565,
+          60.2416513
+        ],
+        "bounds": [
+          [
+            51.990784,
+            57.131287699999994
+          ],
+          [
+            56.366287299999996,
+            63.3520149
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/chelyabinskaya_oblast.json.gz",
+      "compressedSha256": "43e82e1f7c9e244c33c89d027041ea8c8107111405cc30a0d8a1afb54dd5927a",
+      "compressedBytes": 68191
+    },
+    {
+      "id": "chechenskaya_respublika",
+      "name": "Чеченская республика",
+      "names": {
+        "ru": "Чеченская республика",
+        "en": "Chechnya",
+        "zh": "车臣共和国"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 366,
+      "population": 1456949,
+      "difficultyRank": 19,
+      "path": "regions/chechenskaya_respublika.json",
+      "sha256": "82265f436fce8bd7fdf2ae53c1986fbd18b427b116fb47197c1e8cdae71724b2",
+      "bytes": 152280,
+      "coordinateStatus": {
+        "source": 366
+      },
+      "positions": {
+        "inside": 366
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 3716,
+      "transportBytes": 20425,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          43.243411300000005,
+          45.747622899999996
+        ],
+        "bounds": [
+          [
+            42.478227,
+            44.833204599999995
+          ],
+          [
+            44.00859560000001,
+            46.662041200000004
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/chechenskaya_respublika.json.gz",
+      "compressedSha256": "78038e6ee5b7b781cf1fd235644e3bfebc0ff6f47f90c04573a4497572de0d82",
+      "compressedBytes": 20741
+    },
+    {
+      "id": "chuvashskaya_respublika",
+      "name": "Чувашская республика",
+      "names": {
+        "ru": "Чувашская республика",
+        "en": "Chuvashia",
+        "zh": "楚瓦什共和国"
+      },
+      "difficulty": 2,
+      "maxPoints": 4,
+      "settlementCount": 1721,
+      "population": 1221431,
+      "difficultyRank": 52,
+      "path": "regions/chuvashskaya_respublika.json",
+      "sha256": "e1e9168db142519cff5d903b6ccf30e627903898820c6962d591fac725649dd7",
+      "bytes": 665634,
+      "coordinateStatus": {
+        "source": 1721
+      },
+      "positions": {
+        "inside": 1721
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 16552,
+      "transportBytes": 86803,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          55.47795655,
+          47.165928949999994
+        ],
+        "bounds": [
+          [
+            54.627395400000005,
+            45.911255499999996
+          ],
+          [
+            56.328517700000006,
+            48.4206024
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/chuvashskaya_respublika.json.gz",
+      "compressedSha256": "e668c924ef267c55e7bcbcc83538636d52e0f48037a41644dcec059929818729",
+      "compressedBytes": 69421
+    },
+    {
+      "id": "chukotskiy_avtonomnyy_okrug",
+      "name": "Чукотский автономный округ",
+      "names": {
+        "ru": "Чукотский автономный округ",
+        "en": "Chukotka Autonomous Okrug",
+        "zh": "楚科奇自治区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 44,
+      "population": 49790,
+      "difficultyRank": 3,
+      "path": "regions/chukotskiy_avtonomnyy_okrug.json",
+      "sha256": "ac0c673c484a66ec3a9a0495316396da0a4bf33732b535afe683639bcc4a360f",
+      "bytes": 112414,
+      "coordinateStatus": {
+        "source": 44
+      },
+      "positions": {
+        "inside": 44
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 192,
+      "transportBytes": 2615,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          66.70628415,
+          174.37691825
+        ],
+        "bounds": [
+          [
+            61.6078007,
+            157.73078089999998
+          ],
+          [
+            71.8047676,
+            191.0230556
+          ]
+        ],
+        "wrapLongitude": true,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/chukotskiy_avtonomnyy_okrug.json.gz",
+      "compressedSha256": "d7d2cd1eb7926f15431e3458c9a2c84840e6bdcce3ff582ba85e84b3cd180bce",
+      "compressedBytes": 36256
+    },
+    {
+      "id": "yamalo_nenetskiy_avtonomnyy_okrug",
+      "name": "Ямало-Ненецкий автономный округ",
+      "names": {
+        "ru": "Ямало-Ненецкий автономный округ",
+        "en": "Yamalo-Nenets Autonomous Okrug",
+        "zh": "亚马尔-涅涅茨自治区"
+      },
+      "difficulty": 1,
+      "maxPoints": 3,
+      "settlementCount": 92,
+      "population": 545045,
+      "difficultyRank": 6,
+      "path": "regions/yamalo_nenetskiy_avtonomnyy_okrug.json",
+      "sha256": "112c79d463a431817d1deb6f4883457a328e4ba5c6daf3a5afd15ba5f1102b93",
+      "bytes": 150519,
+      "coordinateStatus": {
+        "source": 92
+      },
+      "positions": {
+        "inside": 92
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 800,
+      "transportBytes": 5831,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          67.9584895,
+          74.0038644
+        ],
+        "bounds": [
+          [
+            62.19565670000001,
+            62.0004438
+          ],
+          [
+            73.7213223,
+            86.00728500000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/yamalo_nenetskiy_avtonomnyy_okrug.json.gz",
+      "compressedSha256": "5ee3d1fdbed752a8122372132015f02ad4b91b6477f19d939cde5a2da929d4d7",
+      "compressedBytes": 44991
+    },
+    {
+      "id": "yaroslavskaya_oblast",
+      "name": "Ярославская область",
+      "names": {
+        "ru": "Ярославская область",
+        "en": "Yaroslavl Oblast",
+        "zh": "雅罗斯拉夫尔州"
+      },
+      "difficulty": 3,
+      "maxPoints": 5,
+      "settlementCount": 6032,
+      "population": 1275917,
+      "difficultyRank": 79,
+      "path": "regions/yaroslavskaya_oblast.json",
+      "sha256": "6e5fe9f00770b62eef9d22c7f8964e6be94d6c65aa3ba42b3d385d728caf361b",
+      "bytes": 2206341,
+      "coordinateStatus": {
+        "source": 6032
+      },
+      "positions": {
+        "inside": 6031,
+        "outside": 1
+      },
+      "transportStatus": "teaching",
+      "gradeReady": true,
+      "transportEdges": 59240,
+      "transportBytes": 307007,
+      "gradeReadyScope": "teaching scenario; not certified real infrastructure",
+      "mapView": {
+        "center": [
+          57.74515755,
+          39.260703400000004
+        ],
+        "bounds": [
+          [
+            56.5343034,
+            37.3279086
+          ],
+          [
+            58.9560117,
+            41.19349820000001
+          ]
+        ],
+        "wrapLongitude": false,
+        "coordinateOrder": "lat,lon",
+        "sourceCoordinatesUnchanged": true
+      },
+      "compressedPath": "regions/yaroslavskaya_oblast.json.gz",
+      "compressedSha256": "ba5ebf83c25717cd0befd5aaf97f13df7a72a6902e746f40af7b4079c6c181ee",
+      "compressedBytes": 177621
+    }
+  ],
+  "readiness": "all-settlement-teaching-networks",
+  "quality": {
+    "coordinateCorrections": 97,
+    "unresolvedCoordinates": 0,
+    "positions": {
+      "inside": 155746,
+      "outside": 48
+    },
+    "childrenConflicts": 1,
+    "zeroPopulationSettlements": 23406,
+    "historicalPopulationEqual": 44691
+  },
+  "osmSources": [
+    {
+      "id": "osm-crimean-260916",
+      "url": "https://download.geofabrik.de/russia/crimean-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "09446baf23edcd55453b364f925f2c31cb639d34e9c4db752373b732ffeed532",
+      "md5": "7f6ddeb8115ec30fa50d8dcaf39c7d5e",
+      "bytes": 40545506,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-north-caucasus-260916",
+      "url": "https://download.geofabrik.de/russia/north-caucasus-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "6b57ddc7e26ed9a599b733fd201ead0c5669ff108d34a05bd9005bb2ceea91a6",
+      "md5": "1e96bf0e0cc7972e18ec11f3d33d563c",
+      "bytes": 128531657,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    }
+  ],
+  "majorRoadSources": [
+    {
+      "id": "osm-central-260916",
+      "url": "https://download.geofabrik.de/russia/central-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "c1d38b375b10fb22e5fdbc1929929d120b447a46d7b0acbf3f1122a7873159f8",
+      "md5": "e72e28a1d9de248e991af46b4f77a68b",
+      "bytes": 877087796,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-crimean-260916",
+      "url": "https://download.geofabrik.de/russia/crimean-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "09446baf23edcd55453b364f925f2c31cb639d34e9c4db752373b732ffeed532",
+      "md5": "7f6ddeb8115ec30fa50d8dcaf39c7d5e",
+      "bytes": 40545506,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-far-eastern-260916",
+      "url": "https://download.geofabrik.de/russia/far-eastern-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "fd264d9cb2c1670512aeaa43ca562920df9b3e676e381a45f4141676843fd1f1",
+      "md5": "879d448abc7a6059dd1e48f978330f6e",
+      "bytes": 387672435,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-north-caucasus-260916",
+      "url": "https://download.geofabrik.de/russia/north-caucasus-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "6b57ddc7e26ed9a599b733fd201ead0c5669ff108d34a05bd9005bb2ceea91a6",
+      "md5": "1e96bf0e0cc7972e18ec11f3d33d563c",
+      "bytes": 128531657,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-northwestern-260916",
+      "url": "https://download.geofabrik.de/russia/northwestern-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "6cc4da024338c2755a30f6db428fcd477cef2ff6d3d94cbf2b08220ffc8ab506",
+      "md5": "5f10b5777ba259e37c7461f7618c638d",
+      "bytes": 653225188,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-siberian-260916",
+      "url": "https://download.geofabrik.de/russia/siberian-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "37e12e429cc8617419edd3853f299c1e752a4d89b6dee4456a3a98ed62fc99a1",
+      "md5": "c5850699d3c22a686d229498cdc55b31",
+      "bytes": 583874472,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-south-260916",
+      "url": "https://download.geofabrik.de/russia/south-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "3ccca698671dbc4d23d4a4fbc8f83bca9ea620c541d0f15c2d60ac03919f99d7",
+      "md5": "3ba975cd945a4f9f637abd451290e6d7",
+      "bytes": 313497295,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-ural-260916",
+      "url": "https://download.geofabrik.de/russia/ural-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "469ad742f9669991a02ca4a3dec7ccc4b59f71e474104c71015fabcb50d2a375",
+      "md5": "e9022380494d3e173426735f1f1bf72c",
+      "bytes": 394607686,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    },
+    {
+      "id": "osm-volga-260916",
+      "url": "https://download.geofabrik.de/russia/volga-fed-district-260916.osm.pbf",
+      "snapshot": "2026-09-16T20:21:21Z",
+      "sha256": "b743d60f0bc6df6745ab002675bc74bb1b0b0a04b37b15f331a53fa704fad7db",
+      "md5": "8e41694055a08e29f9f9e553571956f5",
+      "bytes": 773336406,
+      "license": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors, Geofabrik",
+      "downloadDate": "2026-09-17"
+    }
+  ],
+  "transportModelVersion": "teaching-neighbors-20260917.2",
+  "scientificPrecisionOverride": "Student game: explicit model assumptions accepted; empirical road certification is not an acceptance gate",
+  "transformations": [
+    {
+      "path": "scripts/settlements/data_build.py",
+      "sha256": "aa0c9a6f7b1dc7560502861a30036e15ea9e158f98d7a701c0d21857f894e733"
+    },
+    {
+      "path": "scripts/settlements/data_coordinate_overrides.json",
+      "sha256": "360460ec254389dcebdc08e8452672517c49a79d8646692f2770512a2f97b1b0"
+    },
+    {
+      "path": "scripts/settlements/data_game_network.py",
+      "sha256": "cf9665a3ba989119c3da8e87cdf5edd04a7deca0ace6b0f685b2b2894e22cbf6"
+    },
+    {
+      "path": "scripts/settlements/data_major_roads.py",
+      "sha256": "3520af82ea21e732cab0d3224bb32b195cbb6711ddddafe96c842e8bfd8463dc"
+    },
+    {
+      "path": "scripts/settlements/data_osm.py",
+      "sha256": "7d9de856336791f1a7c502465cb62e4a73cba53c29adadc0725511a4a915ec95"
+    },
+    {
+      "path": "scripts/settlements/requirements-data.txt",
+      "sha256": "b90c9b92110b6bf1e6c95aa56146dc1ad1ad48db575ff1bd03e346aa499b7e1f"
+    }
+  ],
+  "networkVersion": "teaching-neighbors-20260917.2"
+}

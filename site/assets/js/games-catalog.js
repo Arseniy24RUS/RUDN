@@ -8,13 +8,14 @@ export const GAMES_COPY = {
 };
 
 export const GAMES = [
+  { id: 'settlements', href: '#games/settlements', icon: '⌖', title: 'Система расселения', title_en: 'Settlement System', title_zh: '聚落系统', description: 'Развивайте связь, медицину, образование и досуг. Выберите территорию и сложность, обеспечьте поселения услугами.', description_en: 'Develop telecommunications, healthcare, education and leisure. Choose a territory and difficulty, and bring services to its settlements.', description_zh: '发展通信、医疗、教育和文娱服务。选择地区和难度，保障各聚落的服务需求。' },
   { id: 'maps', href: '#puzzle', icon: '◎', title: 'Географический паззл', title_en: 'Geography puzzle', title_zh: '地理拼图', description: 'Соберите страны мира, регионы стран и муниципалитеты России. Выберите карту и сложность.', description_en: 'Assemble countries, their regions and Russian municipalities. Choose your map and difficulty.', description_zh: '拼合世界各国、各国行政区及俄罗斯市政单位，选择地图和难度。' },
   { id: 'governor', href: 'apps/governor/index.html?context=free', icon: '▥', title: 'Симулятор губернатора', title_en: 'Governor simulator', title_zh: '行政长官模拟器', description: 'Управляйте регионом, распределяйте бюджет и исследуйте последствия своих решений в новой кампании.', description_en: 'Govern a region, allocate its budget and explore the consequences of your decisions in a new campaign.', description_zh: '管理地区、分配预算，在新任期中探索决策带来的影响。' },
   { id: 'reception', href: '#games/reception', icon: '✉', title: 'Работа с обращениями граждан', title_en: 'Citizens’ appeals', title_zh: '公民诉求办理', description: 'Откройте приёмную, выберите сюжет или случайную смену и отработайте действия на разных обращениях.', description_en: 'Open the reception office, choose a case or a random shift and practise handling different appeals.', description_zh: '进入接待室，选择案例或随机班次，练习处理不同的公民诉求。' },
   { id: 'career', href: '#games/career', icon: '◇', title: 'Профориентационный тест', title_en: 'Career exploration', title_zh: '职业倾向测试', description: 'Исследуйте профессиональные интересы, сравнивайте направления работы и пробуйте практические сценарии.', description_en: 'Explore your professional interests, compare careers and try practical scenarios.', description_zh: '探索职业兴趣，比较工作方向，并体验实践情景。' },
 ];
 
-const GAME_TOPICS={maps:2,reception:5,career:6,governor:7};
+const GAME_TOPICS={maps:2,settlements:3,reception:5,career:6,governor:7};
 export const GAMES_STUDENT_LEAD={
   ru:'Играйте без оценки в журнале. Игры открываются вместе с соответствующими разделами курса.',
   en:'Play without a course grade. Games unlock together with their course sections.',

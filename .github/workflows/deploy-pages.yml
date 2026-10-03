@@ -110,6 +110,12 @@ jobs:
       - name: Verify Governor grading and offline contract
         if: env.FOCUSED_HOTFIX != 'true'
         run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
+      - name: Verify Settlements source integrity, score and persistence
+        if: env.FOCUSED_HOTFIX != 'true'
+        run: |
+          node scripts/sync-settlements.mjs --check
+          node --test scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs
+          node scripts/test_games_access.mjs --unit
       - name: Verify legacy reception assignments and lazy content integrity
         if: env.FOCUSED_HOTFIX != 'true'
         run: node site/apps/reception/content/test.mjs
@@ -123,6 +129,15 @@ jobs:
       - name: Verify career locale templates and question coverage
         if: env.FOCUSED_HOTFIX != 'true'
         run: node scripts/test_career_localization.mjs
+      - name: Prepare Java for isolated Firebase rules checks
+        if: env.FOCUSED_HOTFIX != 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Verify Settlements permissions and result delivery in emulators
+        if: env.FOCUSED_HOTFIX != 'true'
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
       - name: Prepare native browser checks
         if: env.FOCUSED_HOTFIX != 'true'
         run: |
@@ -131,6 +146,9 @@ jobs:
       - name: Test native Governor on desktop and mobile
         if: env.FOCUSED_HOTFIX != 'true'
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
+      - name: Test native Settlements, all locales and one-region loading
+        if: env.FOCUSED_HOTFIX != 'true'
+        run: python scripts/test-settlements-browser.py --output "${{ runner.temp }}/settlements-browser-qa"
       - name: Verify durable local queue and attachment replay
         if: env.FOCUSED_HOTFIX != 'true'
         shell: bash
@@ -213,6 +231,7 @@ jobs:
             ${{ runner.temp }}/games-access-qa
             ${{ runner.temp }}/quiz-layout-qa
             ${{ runner.temp }}/puzzle-no-mistakes-qa
+            ${{ runner.temp }}/settlements-browser-qa
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure Pages
