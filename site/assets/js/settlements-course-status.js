@@ -41,13 +41,16 @@ export function settlementsCourseMessage(status,locale='ru'){
 }
 
 /** Finish an already terminal assessed receipt after its map has been closed. */
-export function mountSettlementsCourseReceipt({backend,owner,store=durableStore,onSettled=()=>{},
+export function mountSettlementsCourseReceipt({backend,owner,knownGrade,store=durableStore,onSettled=()=>{},
   persistenceFactory=async options=>(await import('./settlements-storage.js')).createSettlementsPersistence(options),
   eventTarget=globalThis,setIntervalFn=setInterval,clearIntervalFn=clearInterval}={}){
   const generation=backend?.generation;
   let disposed=false,running=null,timer=null,waiting=true,lastReceipt=null;
   const active=()=>!disposed&&owner?.startsWith('student:')&&!backend?.isAdmin?.()&&
     `student:${backend?.getProfile?.()?.studentKey}`===owner&&backend?.generation===generation;
+  const needsReceipt=session=>session?.status==='completion-pending'||session?.status==='completed'&&
+    session.attemptId!==lastReceipt&&(!knownGrade||Number(knownGrade.points)<
+      settlementsPoints(session.difficulty,session.result?.coverageNp,true,'assessment'));
   const clearTimer=()=>{if(timer!==null){clearIntervalFn(timer);timer=null}};
   async function work(){
     let persistence=null,receipt=null;
@@ -58,7 +61,7 @@ export function mountSettlementsCourseReceipt({backend,owner,store=durableStore,
       if(!active())return;
       const before=await persistence.loadSession();
       if(!active())return;
-      waiting=before?.status==='completion-pending';
+      waiting=needsReceipt(before);
       if(!waiting)return;
       validateSettlementsResult(before.result);
       await persistence.acquireWriter();
@@ -66,7 +69,7 @@ export function mountSettlementsCourseReceipt({backend,owner,store=durableStore,
       // Another tab/device may have advanced the party before we got the lock.
       const current=await persistence.loadSession();
       if(!active()||!persistence.canWrite())return;
-      if(current?.status!=='completion-pending'){waiting=false;return;}
+      if(!needsReceipt(current)){waiting=false;return;}
       validateSettlementsResult(current.result);
       const saved=await persistence.flush();
       if(!active())return;

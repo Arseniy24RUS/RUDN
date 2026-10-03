@@ -39,12 +39,12 @@ async function seedOfflineCompletion(h,cloud){
   assert.equal(completed.status,'completion-pending');assert.equal((await h.store.listAttempts({owner:h.owner})).length,0);
   await game.destroy();return completed;
 }
-function watcher(h,{factory,settled=()=>{}}={}){
+function watcher(h,{factory,settled=()=>{},knownGrade}={}){
   const target=new EventTarget(),listeners=new Set(),timers=new Map();let nextTimer=0;
   const add=target.addEventListener.bind(target),remove=target.removeEventListener.bind(target);
   target.addEventListener=(name,fn,...args)=>{listeners.add(fn);return add(name,fn,...args)};
   target.removeEventListener=(name,fn,...args)=>{listeners.delete(fn);return remove(name,fn,...args)};
-  const handle=mountSettlementsCourseReceipt({backend:h.backend,owner:h.owner,store:h.store,onSettled:settled,
+  const handle=mountSettlementsCourseReceipt({backend:h.backend,owner:h.owner,knownGrade,store:h.store,onSettled:settled,
     persistenceFactory:factory||((options)=>h.create(options)),eventTarget:target,
     setIntervalFn:(fn,ms)=>{assert.equal(ms,15000);const id=++nextTimer;timers.set(id,fn);return id},clearIntervalFn:id=>timers.delete(id)});
   return {handle,listeners,timers,online:()=>target.dispatchEvent(new Event('online')),tick:()=>{for(const fn of [...timers.values()])fn()}};
@@ -127,4 +127,32 @@ test('terminal active replay without validated result never receives credit from
     receipt=watcher(h,{settled:()=>assert.fail('unverified active replay must not settle')});await receipt.handle.ready;await receipt.handle.retry();
     assertNoCredit(h,cloud);assert.equal((await h.store.listAttempts({owner:h.owner})).length,0);
   }finally{await receipt?.handle.destroy();await h.close()}
+});
+
+for(const knownGrade of [undefined,{points:3,max:5}])test(`second device recovers cloud completed checkpoint with ${knownGrade?'insufficient':'no'} known grade; sufficient confirmed grade causes no writes`,async()=>{
+  const cloud=memoryCloud(),original=harness(cloud,{device:'original-device'});
+  let second,receipt,confirmed,settled=0;
+  const transaction=cloud.transaction;
+  try{
+    const game=original.create();await game.acquireWriter();await game.saveSession(party());await game.confirmOnline();
+    // Fail the attempt write after the real final checkpoint has reached cloud.
+    // No manually manufactured completed checkpoint or bypass of outbox ordering.
+    cloud.transaction=async(path,...args)=>{if(path.startsWith('attempts/'))throw Object.assign(new Error('original device disconnected after checkpoint'),{code:'network/offline'});return transaction(path,...args)};
+    await game.completeSession({...party(),elapsedMs:1200,engineSave:{actions:['one','two','three'],ui:{terminalReason:'complete'}}},result());
+    const remote=cloud.root().checkpoints[original.studentKey]['seminar-3']['synthetic-attempt'];
+    assert.equal(remote.current.state.status,'completed');assert.equal(remote.current.state.result.coverageNp,100);
+    assertNoCredit(original,cloud);assert.equal((await original.store.listAttempts({owner:original.owner})).length,1,'first device has only its undelivered local immutable attempt');
+    await original.close();cloud.transaction=transaction;
+    second=harness(cloud,{device:'fresh-second-device'});
+    assert.equal((await second.store.listAttempts({owner:second.owner})).length,0,'second device starts without the first device local outbox');
+    receipt=watcher(second,{knownGrade,settled:()=>settled++});await receipt.handle.ready;
+    const delivered=assertDelivered(second,cloud);assert.equal(settled,1);assert.equal((await second.store.listAttempts({owner:second.owner})).length,1);
+    await receipt.handle.retry();assert.deepEqual(assertDelivered(second,cloud),delivered);assert.equal(settled,1);
+    await receipt.handle.destroy();
+    const writes=cloud.writes.length,before=cloud.root();
+    confirmed=watcher(second,{knownGrade:delivered.grade,settled:()=>assert.fail('confirmed sufficient grade must not trigger recovery')});
+    await confirmed.handle.ready;await confirmed.handle.retry();confirmed.online();confirmed.tick();await confirmed.handle.retry();
+    assert.equal(cloud.writes.length,writes,'sufficient confirmed grade does not write checkpoints, attempts, grades or rankings');
+    assert.deepEqual(cloud.root(),before);assert.equal(confirmed.timers.size,0);
+  }finally{cloud.transaction=transaction;await receipt?.handle.destroy();await confirmed?.handle.destroy();await original.close();await second?.close()}
 });
