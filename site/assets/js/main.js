@@ -1,19 +1,19 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.8';
-import {CONFIG} from './config.js?v=1.3.8';
-import {backend,groupOptions} from './backend.js?v=1.3.8';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.8';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.8';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.8';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.8';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.8';
-import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.8';
-import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.8';
+import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.9';
+import {CONFIG} from './config.js?v=1.3.9';
+import {backend,groupOptions} from './backend.js?v=1.3.9';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.9';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.9';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.9';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.9';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.9';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.9';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.9';
 import {officialTicket} from './student-identity.js';
 import {durableStore} from './durable-store.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.8';
-import {openAccount,mountProfile} from './account.js?v=1.3.8';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.9';
+import {openAccount,mountProfile} from './account.js?v=1.3.9';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
 
 const app = document.getElementById('app');
@@ -756,8 +756,8 @@ async function loadPuzzleRuntime(signal){
     for(const [url,ready] of [
       ['../puzzle/vendor/d3.v7.9.0.min.js',()=>window.d3],
       ['../puzzle/vendor/topojson-client.v3.1.0.min.js',()=>window.topojson],
-      ['./puzzle-render-geometry.js?v=1.3.8',()=>window.RudnPuzzleGeometry],
-      ['./puzzle-engine.js?v=1.3.8',()=>window.mountRudnPuzzle]
+      ['./puzzle-render-geometry.js?v=1.3.9',()=>window.RudnPuzzleGeometry],
+      ['./puzzle-engine.js?v=1.3.9',()=>window.mountRudnPuzzle]
     ]){
       signal.throwIfAborted();if(ready())continue;
       await new Promise((resolve,reject)=>{

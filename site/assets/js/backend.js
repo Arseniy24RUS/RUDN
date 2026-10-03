@@ -1,10 +1,15 @@
-import {CONFIG} from './config.js?v=1.3.8';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.8';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.8';
+import {CONFIG} from './config.js?v=1.3.9';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.9';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.9';
 import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
+import {installFirebaseGateway,firebaseGatewayUrl} from './firebase-gateway.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
-import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.8';
+import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.9';
+
+// Install before puzzle modules capture/replace window.fetch, including their
+// standalone entry. Every later wrapper keeps this transport in its chain.
+if(!CONFIG.emulators)installFirebaseGateway(CONFIG.firebaseGateway);
 import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
 
@@ -559,7 +564,7 @@ class Backend{
     const path=`${CONFIG.rootPath}/submissions/${uid}/${profile.studentKey}/${activitySlug}/${Date.now()}-${safe}`;
     const storageRef=this.storageMod.ref(this.storage,path);
     const metadata={contentType:file.type||'application/octet-stream',customMetadata:{ownerUid:this.user.uid,studentKey:this.profile.studentKey,activitySlug}};
-    const snapshot=await this.storageMod.uploadBytes(storageRef,file,metadata);if(generation!==this.generation)throw serviceError('auth/profile-changed');return this.storageMod.getDownloadURL(snapshot.ref);
+    const snapshot=await this.storageMod.uploadBytes(storageRef,file,metadata);if(generation!==this.generation)throw serviceError('auth/profile-changed');return firebaseGatewayUrl(await this.storageMod.getDownloadURL(snapshot.ref),CONFIG.firebaseGateway);
   }
   async queueAttachment(activitySlug,file,{attemptId}={}){
     if(!this.profile||this.isAdmin())throw serviceError('auth/profile-required');
@@ -580,7 +585,7 @@ class Backend{
   }
   async uploadDurableAttachment(record,{operation,signal,active}){
     if(!active())throw serviceError('auth/profile-changed');
-    if(record.remoteUrl)return {url:record.remoteUrl,name:record.name,type:record.type,size:record.size};
+    if(record.remoteUrl)return {url:firebaseGatewayUrl(record.remoteUrl,CONFIG.firebaseGateway),name:record.name,type:record.type,size:record.size};
     if(record.size>=12*1024*1024)throw serviceError('storage/file-too-large');
     await this.ensureStorage();
     if(!active())throw serviceError('auth/profile-changed');
@@ -594,7 +599,7 @@ class Backend{
     if(signal?.aborted)throw serviceError('network/aborted');
     const uploaded=await bounded(this.storageMod.uploadBytes(storageRef,record.blob,metadata),30000);
     if(!active())throw serviceError('auth/profile-changed');
-    const url=await bounded(this.storageMod.getDownloadURL(uploaded.ref));
+    const url=firebaseGatewayUrl(await bounded(this.storageMod.getDownloadURL(uploaded.ref)),CONFIG.firebaseGateway);
     if(!active())throw serviceError('auth/profile-changed');
     return {url,path,name:record.name,type:record.type,size:record.size};
   }

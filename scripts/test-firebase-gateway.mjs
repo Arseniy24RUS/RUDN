@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {firebaseGatewayUrl,installFirebaseGateway} from '../site/assets/js/firebase-gateway.js';
+const gateway='https://gateway.test/';
+assert.equal(firebaseGatewayUrl('https://securetoken.googleapis.com/v1/token?key=k','https://gateway.test/networkGateway/'),'https://gateway.test/networkGateway/firebase/token/v1/token?key=k');
+assert.equal(firebaseGatewayUrl('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=k',gateway),'https://gateway.test/firebase/auth/v1/accounts:lookup?key=k');
+assert.equal(firebaseGatewayUrl('https://securetoken.googleapis.com/v1/token?key=k',gateway),'https://gateway.test/firebase/token/v1/token?key=k');
+assert.equal(firebaseGatewayUrl('https://firebasestorage.googleapis.com/v0/b/bucket/o/a%2Fb?alt=media&token=t',gateway),'https://gateway.test/firebase/storage/v0/b/bucket/o/a%2Fb?alt=media&token=t');
+for(const value of ['https://other.test/','http://127.0.0.1:9099/identitytoolkit.googleapis.com','/assets/map.json'])assert.equal(firebaseGatewayUrl(value,gateway),value);
+for(const value of ['http://gateway.test','https://user:pass@gateway.test','https://gateway.test/?key=1'])assert.throws(()=>firebaseGatewayUrl('https://identitytoolkit.googleapis.com/',value));
+const calls=[];
+class XHR{open(...args){calls.push(args)}}
+const target={fetch:async(...args)=>{calls.push(args);return new Response('{}');},XMLHttpRequest:XHR};
+installFirebaseGateway(gateway,{target});
+const controller=new AbortController();
+const original=new Request('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=k',{method:'POST',body:'{"idToken":"fixture"}',headers:{'x-client-version':'fixture'},signal:controller.signal});
+await target.fetch(original);const rewritten=calls.at(-1)[0];
+assert.ok(rewritten instanceof Request);assert.equal(rewritten.url,'https://gateway.test/firebase/auth/v1/accounts:lookup?key=k');assert.equal(rewritten.method,'POST');assert.equal(rewritten.headers.get('x-client-version'),'fixture');assert.equal(await rewritten.text(),'{"idToken":"fixture"}');controller.abort();assert.ok(rewritten.signal.aborted);
+const xhr=new XHR();xhr.open('POST','https://firebasestorage.googleapis.com/v0/b/bucket/o',true);assert.equal(calls.at(-1)[1],'https://gateway.test/firebase/storage/v0/b/bucket/o');
+const first=target.fetch;installFirebaseGateway(gateway,{target});assert.equal(target.fetch,first);
+console.log('PASS gateway URL allowlist, HTTPS, fetch Request/body/headers/abort, Storage XHR, idempotence, emulator bypass');

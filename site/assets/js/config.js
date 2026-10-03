@@ -1,7 +1,8 @@
 export const CONFIG = {
-  version: '1.3.8-pages',
+  version: '1.3.9-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
+  firebaseGateway: 'https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/networkGateway/',
   adminEmails: ['omnistat@yandex.ru'],
   firebase: {
     apiKey: 'AIzaSyBH5MD8tpcV2DSFiE7K4FLzfUIYPNfHYHQ',
