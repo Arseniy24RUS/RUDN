@@ -12,10 +12,6 @@ const typoEvidence = new Map([
 export function approvedEvidenceLiterals(entry) {
   const context=typoEvidence.get(entry.id);
   if(context&&entry.contexts?.includes(context)&&entry.ru.includes('«Соловёв»')&&entry.ru.includes('«Соловьёв»'))return ['Соловёв','Соловьёв'];
-  // This exercise compares the actual А/Б labels on two different plots.
-  // Keep those source labels consistent across the diagram, document and reply.
-  if(entry.contexts?.some(value=>value.startsWith('cases:CASE_TEMPLATES[trees-other-site].')))
-    return [...new Set([...entry.ru.matchAll(/(?<![\p{L}\p{N}_])[АБ](?![\p{L}\p{N}_])/gu)].map(match=>match[0]))];
   if(['1d15dbf70d129544','c236f030c4521c9a'].includes(entry.id)&&entry.contexts?.some(value=>value.startsWith('evidence-catalog:EVIDENCE_TASKS.v16-several-minimum-attachments.extracted.accepted[')))return ['А'];
   return [];
 }
