@@ -50,9 +50,19 @@ def ready(page):
 def choose(page,tool):
     if not page.locator(f'[data-tool="{tool}"]').count():act(page,'tools')
     page.locator(f'[data-tool="{tool}"]').click()
-def find(page,name):
+def find(page,name,settlement_id=None):
     act(page,'search');page.locator('#settlement-search').fill(name)
-    page.locator('[data-search-result]').filter(has=page.get_by_text(name,exact=True)).first.click()
+    if settlement_id is not None:
+        page.locator(f'[data-search-result][data-select="{settlement_id}"]').click()
+    else:
+        page.locator('[data-search-result]').filter(has=page.get_by_text(name,exact=True)).first.click()
+
+def region_rows(region):
+    runtime=ROOT/'site/apps/settlements/runtime'
+    rows=json.loads((runtime/f'data/settlements/v1/regions/{region}.json').read_text('utf-8'))['settlements']
+    federal=(runtime/'assets/js/settlements/v24/federal-cities.mjs').read_text('utf-8')
+    extra=json.loads(federal.split('export const FEDERAL_CITIES = freeze(')[1].split(');',1)[0])
+    return rows+extra.get(region,{}).get('rows',[])
 
 def login(page,ticket,name):
     page.locator('#profileButton').click();page.locator('#authIdentifier').fill(ticket)
@@ -78,21 +88,20 @@ def run_party(base,ticket,assessment=False):
     region='nenetskiy_avtonomnyy_okrug'
     planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.mjs'
     plan=json.loads(planpath.read_text('utf-8').split('export default ')[1].rstrip(';\n'))
-    pack=json.loads((ROOT/f'site/apps/settlements/runtime/data/settlements/v1/regions/{region}.json').read_text('utf-8'))
-    rows=pack['settlements'];by_id={r['id']:r for r in rows}
+    rows=region_rows(region);by_id={r['id']:r for r in rows}
     report={'evaluationType':'informed-reference-sequence-ui','base':base,'ticket':ticket,'buildHashStart':build_hash(),'planSha256':hashlib.sha256(planpath.read_bytes()).hexdigest(),'checks':[],'pageErrors':[],'consoleErrors':[],'steps':[]}
     entry='#activity/seminar-3' if assessment else '#games/settlements'
     def check(name,details=None):report['checks'].append({'name':name,'status':'pass','details':details});print(json.dumps(report['checks'][-1],ensure_ascii=False),flush=True)
     def execute(page,a):
-        if a['type']=='build':choose(page,a['service']);find(page,by_id[a['settlementId']]['name'])
-        elif a['type']=='connect':choose(page,'connect');find(page,by_id[a['from']]['name']);find(page,by_id[a['to']]['name'])
+        if a['type']=='build':choose(page,a['service']);find(page,by_id[a['settlementId']]['name'],a['settlementId'])
+        elif a['type']=='connect':choose(page,'connect');find(page,by_id[a['from']]['name'],a['from']);find(page,by_id[a['to']]['name'],a['to'])
         elif a['type']=='tower':
             r=next(r for r in rows if abs(r['lat']-a['lat'])<1e-10 and abs(r['lon']-a['lon'])<1e-10)
-            choose(page,'tower');find(page,r['name'])
+            choose(page,'tower');find(page,r['name'],r['id'])
         elif a['type']=='upgrade':
             f=next(f for f in plan['initialFacilities'] if f['id']==a['facilityId'])
             if page.locator('[data-act="clear-tool"]').count():act(page,'clear-tool')
-            find(page,by_id[f['settlementId']]['name']);page.locator('[data-upgrade="'+a['facilityId']+'"]').click()
+            find(page,by_id[f['settlementId']]['name'],f['settlementId']);page.locator('[data-upgrade="'+a['facilityId']+'"]').click()
         else:raise AssertionError('Unsupported UI reference action '+str(a))
         page.locator('[data-act="confirm"]').wait_for()
     with sync_playwright() as pw:
@@ -115,8 +124,7 @@ def run_party(base,ticket,assessment=False):
                 region=value['state']['regionId']
                 planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.mjs'
                 plan=json.loads(planpath.read_text('utf-8').split('export default ')[1].rstrip(';\n'))
-                pack=json.loads((ROOT/f'site/apps/settlements/runtime/data/settlements/v1/regions/{region}.json').read_text('utf-8'))
-                rows=pack['settlements'];by_id={r['id']:r for r in rows};report['planSha256']=hashlib.sha256(planpath.read_bytes()).hexdigest()
+                rows=region_rows(region);by_id={r['id']:r for r in rows};report['planSha256']=hashlib.sha256(planpath.read_bytes()).hexdigest()
             report['regionId']=region
             check('new party cloud checkpoint',{'attemptId':attempt,'regionId':value['state']['regionId'],'difficulty':value['state']['difficulty'],'mode':'assessment' if assessment else 'free'})
             for i,a in enumerate(plan['referenceActions'],1):
@@ -131,6 +139,7 @@ def run_party(base,ticket,assessment=False):
                     check('terminal offline result pending and immutable')
                     ctx.set_offline(False)
                 value=wait_turns(page,ticket,i,slug,timeout=40)
+                assert value['state']['engineSave']['actions']==plan['referenceActions'][:i],f'UI replay differs from canonical reference at turn {i}'
                 report['steps'].append({'action':a,'turns':i,'cloudRevision':value['revision']})
                 print(f'PARTY MOVE {i}/{len(plan["referenceActions"])} cloud revision {value["revision"]}',flush=True)
                 if i==1:

@@ -512,23 +512,25 @@ function renderSeminar3(topic){
   renderSettlements('assessment');
 }
 function renderSettlements(mode='free'){
-  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,locale=getLocale();
+  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
   const free=mode==='free';
   app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#settlementsMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&(free?route().name==='games'&&route().parts[0]==='settlements':route().name==='activity'&&route().parts[0]==='seminar-3');
-  const cleanup=async()=>{controller.abort();await handle?.destroy();};
-  cleanup.isStale=()=>generation!==backend.generation;
+  // A route can leave while mounting still holds the profile's write lock.
+  // Join the entire startup/teardown chain before the next module is mounted.
+  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();try{await mountTask;}finally{await handle?.destroy();}})();
+  cleanup.isStale=()=>controller.signal.aborted||generation!==backend.generation;
   cleanup.flush=()=>handle?.flush();
   cleanup.refreshLocale=()=>{
     if(!active())return;
     const access=accessSnapshot(),gate=topicGate(3,access.overrides,access.now);
-    if(!accessAllowed(gate)&&backend.getProfile()&&!backend.isAdmin()){void cleanup();currentCleanup=null;lockedAccessPage(loc(data.course.topics.find(item=>item.number===3).seminar,'title'),gate,free?'#games':'#dashboard');return;}
+    if(!accessAllowed(gate)&&backend.getProfile()&&!backend.isAdmin()){void cleanup();lockedAccessPage(loc(data.course.topics.find(item=>item.number===3).seminar,'title'),gate,free?'#games':'#dashboard');return;}
     if(locale!==getLocale()){locale=getLocale();void handle?.setLocale(locale);}
   };
   currentCleanup=cleanup;
   navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'settlements'});
-  void (async()=>{try{
+  mountTask=(async()=>{try{
     const {mountSettlements}=await import('../../apps/settlements/entry.mjs');if(!active())return;
     handle=await mountSettlements(mount,{backend,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
     if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');
