@@ -64,7 +64,7 @@ def run(base, browser_name):
     with sync_playwright() as pw:
         browser = getattr(pw, browser_name).launch(headless=True)
         report['browserVersion'] = browser.version
-        context = browser.new_context(viewport={'width': 1365, 'height': 950}, service_workers='block')
+        context = browser.new_context(viewport={'width': 1365, 'height': 950}, service_workers='block', locale='ru-RU')
         page = context.new_page(); attach(page)
         try:
             page.goto(base+'#games/settlements')
@@ -111,7 +111,7 @@ def run(base, browser_name):
             page.locator('.game-heading [data-action="lobby"]').click()
             page.locator('.game-stage').wait_for(state='hidden'); page.locator('.lobby').wait_for(state='visible')
             context.close()
-            context = browser.new_context(viewport={'width': 1365, 'height': 950}, service_workers='block')
+            context = browser.new_context(viewport={'width': 1365, 'height': 950}, service_workers='block', locale='ru-RU')
             page = context.new_page(); attach(page)
             page.goto(base+'#games/settlements'); page.locator('[data-action="tutorial"]').wait_for(timeout=60000)
             helper.login(page, ticket, name)
