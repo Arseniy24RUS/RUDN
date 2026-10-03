@@ -23,7 +23,7 @@ export function resultMetrics(evaluation,save,reason,elapsedMs){
 /** Native platform module. Geography is loaded only when a game is mounted. */
 export async function mountSettlements(container,{backend,owner='guest:settlements',mode='free',locale='ru',signal,onLogin,onExit}={}){
   const shadow=container.shadowRoot||container.attachShadow({mode:'open'}),abort=new AbortController();
-  let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankMode=mode,rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,replayTutorial=false,notice='';
+  let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankMode=mode,rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',partySaveState='device-only',tutorialSaveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,replayTutorial=false,notice='';
   let queue=Promise.resolve(),actionQueue=Promise.resolve(),pendingCompletion=false,restoringWriter=false,acquiringWriter=false,appliedReadOnly=null,destroyPromise=null;
   const c=()=>COPY[lang],number=(n,d=1)=>new Intl.NumberFormat(lang==='zh'?'zh-CN':lang==='en'?'en-GB':'ru-RU',{maximumFractionDigits:d}).format(n||0);
   const $=selector=>shadow.querySelector(selector),student=owner.startsWith('student:'),teacher=owner.startsWith('teacher:'),active=()=>!disposed&&!abort.signal.aborted;
@@ -34,27 +34,30 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   const enqueue=task=>{const next=queue.then(task);queue=next.catch(error=>{if(active()){notice=error?.code==='settlements/online-required'?'onlineRequired':'failed';showStatus();console.error('Settlements operation:',error?.code||error?.message);}});return next;};
   const act=task=>{actionQueue=actionQueue.then(task).catch(error=>{if(active()){notice='failed';showStatus();console.error('Settlements action:',error?.code||error?.message);}});return actionQueue;};
   function tick(){const now=performance.now();if(lastTick)elapsedMs+=Math.max(0,now-lastTick);lastTick=view==='game'&&session?.status==='active'&&!document.hidden&&!busy&&writable&&!conflict&&!restoringWriter?now:0;}
-  function statusLabel(){return c()[saveState==='saved'?'saved':saveState==='unsafe'?'unsafe':saveState==='pending'?'pending':saveState==='conflict'?'conflict':'device'];}
-  function showStatus(){if(!active())return;const node=$('[data-status]');if(node){setMarkup(node,`${esc(notice?c()[notice]||notice:statusLabel())}${notice==='failed'||saveState==='unsafe'?` <button data-action="retry-save">${esc(c().retry)}</button>`:''}`);node.dataset.state=saveState;}
+  function statusLabel(){return c()[saveState==='saved'?'saved':saveState==='unsafe'?'unsafe':saveState==='pending'&&navigator.onLine!==false?'pending':saveState==='conflict'?'conflict':'device'];}
+  function showStatus(){if(!active())return;saveState=view==='tutorial'?tutorialSaveState:partySaveState;$('[data-status]').hidden=view!=='lobby';for(const node of shadow.querySelectorAll('[data-status],[data-game-status]')){setMarkup(node,`${esc(notice?c()[notice]||notice:statusLabel())}${notice==='failed'||saveState==='unsafe'?` <button data-action="retry-save">${esc(c().retry)}</button>`:''}`);node.dataset.state=saveState;}
     const box=$('[data-conflict]');if(box){box.hidden=!conflict;setMarkup(box,conflict?`<p>${esc(c().conflict)}</p><div class="actions"><button data-action="cloud">${esc(c().cloudVersion)}</button><button data-action="local">${esc(c().localVersion)}</button></div>`:'');}
     const lock=$('[data-writer]');if(lock){lock.hidden=writable||busy;setMarkup(lock,`<p>${esc(c().writer)}</p><button data-action="takeover"${acquiringWriter?' disabled':''}>${esc(acquiringWriter?c().takeoverWaiting:c().takeover)}</button>`);}
     const readOnly=!writable||restoringWriter||!!conflict||saveState==='unsafe'||(view!=='tutorial'&&(session?.status==='completed'||session?.status==='completion-pending'));
     if(game&&appliedReadOnly!==readOnly){appliedReadOnly=readOnly;game.setReadOnly?.(readOnly);}
+    if(game)fitGame();
   }
   const persistence=createSettlementsPersistence({backend,owner,mode,
     onBeforeRelease:async()=>{if(game&&persistence.canWrite()&&!conflict&&!restoringWriter){await game.flush?.();await queue;await saveCurrent();}},
-    onStatus:event=>{saveState=event.state||event.saveState||saveState;if(typeof event.writable==='boolean')writable=event.writable;
+    onStatus:event=>{partySaveState=event.state||event.saveState||partySaveState;tutorialSaveState=event.state==='unsafe'?'unsafe':event.tutorialState||tutorialSaveState;saveState=view==='tutorial'?tutorialSaveState:partySaveState;if(typeof event.writable==='boolean')writable=event.writable;
       if(saveState==='saved'&&['failed','onlineRequired'].includes(notice))notice='';
       if(event.session?.attemptId===session?.attemptId&&event.session?.status==='completed'){session={...session,...event.session};pendingCompletion=false;lastTick=0;if(notice==='receiptPending')notice='';if(view!=='tutorial')renderResult();}
       showStatus();},
-    onConflict:event=>{tick();conflict=event;tick();showStatus();},onWriterChange:event=>{
+    onConflict:event=>{const reveal=!!event&&!conflict;tick();conflict=event;tick();showStatus();
+      if(reveal)queueMicrotask(()=>{if(!active()||!conflict)return;const box=$('[data-conflict]');box.scrollIntoView({block:'center',behavior:'instant'});box.querySelector('button')?.focus({preventScroll:true});});
+    },onWriterChange:event=>{
       tick();writable=typeof event==='boolean'?event:!!(event?.writable??event?.writer);
       if(event?.writable&&Object.hasOwn(event,'restore')&&game){
         restoringWriter=true;showStatus();
         void act(async()=>{const intro=view==='tutorial';await releaseGame({save:false});session=event.restore;tutorial=await persistence.loadTutorial();restoringWriter=false;if(active()){if(intro||session)await openGame({intro});else{view='lobby';renderLobby();renderGameHeading();renderResult();}}});
       }else if(event?.restore){session=event.restore;}
       tick();showStatus();}});
-  shadow.innerHTML=`<link rel="stylesheet" href="${new URL('module.css',BASE)}"><div class="page"><header class="heading"></header><section class="panel leaderboard"></section><section class="panel lobby"></section><div class="status" data-status role="status" aria-live="polite"></div><div class="notice warn" data-conflict hidden></div><div class="notice warn" data-writer hidden></div><section class="panel result" hidden></section><div class="game-heading" hidden></div><div class="game-stage" hidden><div class="game-host" style="height:100%"></div></div><dialog class="host-dialog"></dialog></div>`;
+  shadow.innerHTML=`<link rel="stylesheet" href="${new URL('module.css',BASE)}"><div class="page"><header class="heading"></header><section class="panel leaderboard"></section><section class="panel lobby"></section><div class="status" data-status role="status" aria-live="polite"></div><div class="notice warn" data-conflict role="alert" hidden></div><div class="notice warn" data-writer hidden></div><section class="panel result" hidden></section><div class="game-heading" hidden></div><div class="game-stage" hidden><div class="game-host" style="height:100%"></div></div><dialog class="host-dialog"></dialog></div>`;
   const gameShadow=$('.game-host').attachShadow({mode:'open'});
   gameShadow.innerHTML=`<link rel="stylesheet" href="${new URL('runtime/assets/css/settlements-v24.css',BASE)}"><div data-game-root></div>`;
   const gameRoot=gameShadow.querySelector('[data-game-root]');
@@ -79,7 +82,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     const points=mode==='assessment'&&result.coverageNp>=90?{easy:3,normal:4,hard:5}[session.difficulty]:0;
     target.innerHTML=`<h2>${esc(c().completed)}</h2><p>${esc(c()[result.reason?.replaceAll('-','_')]||c().complete)}</p><div class="result-grid">${[[number(result.coverageNp,2)+'%',c().coverageNp],[number(result.coveragePopulation,2)+'%',c().coveragePopulation],[number(result.spentMillionRub),c().spent],[number(result.turns,0),c().turns],[durationText(session.elapsedMs),c().time],...(mode==='assessment'?[[`${points}/5`,c().points]]:[])].map(([value,label])=>`<div><strong>${esc(value)}</strong><span>${esc(label)}</span></div>`).join('')}</div><p>${esc(mode==='free'?c().freeResult:points?c().rule:c().noPoints)}</p><p class="muted">${esc(!student?c().device:session.status==='completed'?c().receiptSaved:c().receiptPending)}</p><button data-action="lobby">${esc(c().newGame)}</button>`;
   }
-  function renderGameHeading(){const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="actions"><button data-action="lobby">${esc(view==='tutorial'?(session?c().returnGame:c().tutorialReturn):c().back)}</button>${view==='game'?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}</div>`;}
+  function renderGameHeading(){const node=$('.game-heading');node.hidden=view==='lobby';if(node.hidden)return;node.innerHTML=`<div class="game-title"><h2>${esc(view==='tutorial'?c().learning:`${textRegion(session.regionId)} · ${c()[session.difficulty]}`)}</h2><div class="status" data-game-status role="status" aria-live="polite">${esc(statusLabel())}</div></div><div class="actions"><button data-action="lobby">${esc(view==='tutorial'?(session?c().returnGame:c().tutorialReturn):c().back)}</button>${view==='game'?`<button data-action="tutorial">${esc(c().tutorial)}</button>`:''}</div>`;}
   async function saveCurrent(){tick();if(!game||!persistence.canWrite()||conflict||restoringWriter)return;const snapshot=game.snapshot?.();if(!snapshot)return;const save=snapshot.save||snapshot;
     if(view==='tutorial'){tutorial={...tutorial,engineSave:save,step:save.actions?.length||0};await persistence.saveTutorial(tutorial);}
     else if(session?.status==='active'){session={...session,engineSave:save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}
@@ -132,7 +135,17 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   async function askAbandon(startAfter=false){const d=$('.host-dialog');d.returnValue='';d.innerHTML=`<h2>${esc(c().abandonTitle)}</h2><p>${esc(c().abandonText)}</p><div class="actions"><button data-dialog="cancel">${esc(c().cancel)}</button><button data-dialog="confirm">${esc(c().confirm)}</button></div>`;d.showModal();
     const confirmed=await new Promise(resolve=>{d.onclose=()=>resolve(d.returnValue==='confirm');d.querySelectorAll('button').forEach(button=>button.onclick=()=>d.close(button.dataset.dialog));});if(!confirmed)return;
     await releaseGame();session={...session,status:'abandoned'};await persistence.saveSession(session);view='lobby';renderLobby();if(startAfter)await startGame();}
-  async function resolveConflict(choice){await releaseGame({save:false});session=await persistence.resolveConflict(choice);conflict=null;pendingCompletion=false;writable=persistence.canWrite();view='lobby';renderLobby();renderResult();}
+  async function resolveConflict(choice){
+    const previousConflict=conflict,resumeTutorial=previousConflict?.scope==='tutorial'&&view==='tutorial';
+    await releaseGame({save:false});
+    // Resolving one scope can reveal a second conflict. Keep the adapter's next
+    // onConflict event instead of clearing it after the asynchronous operation.
+    conflict=null;
+    try{session=await persistence.resolveConflict(choice,previousConflict?.scope);tutorial=await persistence.loadTutorial();}
+    catch(error){conflict=conflict||previousConflict;showStatus();throw error;}
+    pendingCompletion=false;writable=persistence.canWrite();view='lobby';renderLobby();renderGameHeading();renderResult();
+    if(resumeTutorial&&!conflict)await openGame({intro:true});
+  }
   async function handleAction(action){if(action==='login'){onLogin?.();return;}if(action==='rank-refresh'){await refreshRanking();return;}if(action==='start'){await startGame();return;}
     if(action==='retry-save'){await queue;await saveCurrent();await persistence.flush();notice='';appliedReadOnly=null;showStatus();return;}
     if(action==='resume'){if(mode==='assessment'&&student&&session?.status==='active'&&!session.engineSave&&!await persistence.confirmOnline()){notice='onlineRequired';showStatus();return;}await openGame();return;}

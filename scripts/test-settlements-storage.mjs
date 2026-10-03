@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createDurableStore} from '../site/assets/js/durable-store.js';
-import {createCheckpointSync,commitStudentAttempt} from '../site/assets/js/checkpoint-sync.js';
+import {createCheckpointSync,commitStudentAttempt,mergeCheckpoint} from '../site/assets/js/checkpoint-sync.js';
 import {createSettlementsPersistence} from '../site/assets/js/settlements-storage.js';
 import {commitSettlementsLeaderboard,selectSettlementsLeaders,settlementsPoints} from '../site/assets/js/settlements-leaderboard.js';
 import {rekeyStudentAttempt} from '../site/assets/js/student-identity.js';
@@ -148,4 +148,146 @@ test('assessment and free play share one profile writer and cannot concurrently 
     assert.equal(await free.adapter.acquireWriter(),true);
     assert.equal((await free.adapter.loadTutorial()).completed,true);
   }finally{await assessment.close();await free.close()}
+});
+
+test('stale tutorial reconciliation retains both complete replays without advancing its remote base',()=>{
+  const identity={owner:'student:123456789',studentKey:'123456789',activitySlug:'settlements-tutorial',mode:'tutorial',attemptId:'tutorial-v1'};
+  const branch=(deviceId,lastIntentId,localRevision,remoteRevision,state)=>({...identity,deviceId,lastIntentId,localRevision,remoteRevision,state});
+  const base=mergeCheckpoint(null,branch('device-a','base',1,null,{completed:false,step:0,engineSave:{actions:[]}}),{ownerUid:'user'}).next;
+  const advanced=mergeCheckpoint(base,branch('device-a','cloud',2,1,{completed:false,step:2,engineSave:{actions:['base','cloud']}}),{ownerUid:'user'}).next;
+  const stale=branch('device-b','local',2,1,{completed:true,step:6,engineSave:{actions:['base','local']}});
+  const merged=mergeCheckpoint(advanced,stale,{ownerUid:'user'});
+  assert.equal(merged.conflict,true);assert.equal(merged.next.revision,3);
+  assert.deepEqual(merged.next.current.state.engineSave.actions,['base','cloud']);assert.equal(merged.next.current.state.step,2);
+  assert.deepEqual(merged.next.conflicts.local.state.engineSave.actions,['base','local']);assert.equal(merged.next.conflicts.local.remoteRevision,1);
+  assert.equal(merged.next.current.state.completed,true,'the completion gate is monotonic without replacing the cloud replay');
+  assert.equal(mergeCheckpoint(merged.next,stale,{ownerUid:'user'}).next,undefined,'uncertain retry is idempotent');
+});
+
+for(const choice of ['local','cloud'])for(const completedBranch of ['local','cloud']){
+  test(`tutorial ${choice} selection retains whole replay, OR completion from ${completedBranch}, and the party return contract`,async()=>{
+    const cloud=memoryCloud(),a=harness(cloud),b=harness(cloud,{device:'tutorial-device-b'});
+    const tutorialScope={owner:a.owner,activitySlug:'settlements-tutorial',mode:'tutorial'};
+    try{
+      await a.adapter.acquireWriter();await a.adapter.saveSession(session());await a.adapter.confirmOnline();
+      await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();
+      assert.equal(a.status.at(-1).tutorialState,'saved','tutorial reports its own cloud acknowledgement');
+      await b.adapter.acquireWriter();await b.adapter.loadTutorial();
+      cloud.setOffline(true);
+      await a.adapter.saveTutorial({completed:completedBranch==='local',step:2,engineSave:{actions:['local-tutorial']}});await a.adapter.flush();
+      await b.adapter.saveTutorial({completed:completedBranch==='cloud',step:5,engineSave:{actions:['cloud-tutorial']}});await b.adapter.flush();
+      cloud.setOffline(false);await b.adapter.flush();await a.adapter.flush();
+      assert.equal(a.conflicts.at(-1).scope,'tutorial');assert.equal(a.adapter.canWrite(),false);
+      assert.deepEqual(a.conflicts.at(-1).local.engineSave.actions,['local-tutorial']);
+      assert.deepEqual(a.conflicts.at(-1).cloud.engineSave.actions,['cloud-tutorial']);
+      await a.adapter.loadSession();assert.equal(a.adapter.canWrite(),false,'loading a party cannot clear a tutorial conflict');
+      const reopened=await a.adapter.loadTutorial();
+      assert.deepEqual(reopened.engineSave.actions,['local-tutorial'],'ACK of a conflict cannot authorize later automatic replacement');
+      assert.equal(reopened.completed,true);
+      await assert.rejects(a.adapter.saveSession(session()),{code:'storage/conflict'});
+      await assert.rejects(a.adapter.completeSession(session(),result()),{code:'storage/conflict'});
+      await assert.rejects(a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}}),{code:'storage/conflict'});
+      assert.equal(cloud.root().attempts,undefined,'a tutorial conflict blocks immutable party completion');
+      const before=await a.store.loadDraft(tutorialScope);
+      const restoredSession=await a.adapter.resolveConflict(choice);
+      assert.equal(restoredSession.attemptId,'attempt-one','tutorial resolution never returns a tutorial in place of the party');
+      const selected=await a.adapter.loadTutorial();
+      assert.deepEqual(selected.engineSave.actions,[`${choice}-tutorial`]);assert.equal(selected.step,choice==='local'?2:5);
+      assert.equal(selected.completed,true);assert.equal(a.adapter.canWrite(),true);
+      const after=await a.store.loadDraft(tutorialScope);assert.ok(after.revision>before.revision);
+      const remote=cloud.root().checkpoints['123456789']['settlements-tutorial']['tutorial-v1'];
+      assert.equal(remote.conflicts,undefined);assert.equal(remote.current.state.completed,true);
+      const history=Object.values(remote.conflictHistory);assert.equal(history.length,1);
+      const obsolete={...history[0].branches.cloud,lastIntentId:'obsolete-cloud-edit',localRevision:999,remoteRevision:2};
+      assert.equal(mergeCheckpoint(remote,obsolete,{ownerUid:'user-one'}).conflict,true,'the original cloud device cannot bypass a resolution through sameBranch');
+      assert.deepEqual(JSON.parse(history[0].branches.local.state.engineSave).actions,['local-tutorial']);
+      assert.deepEqual(JSON.parse(history[0].branches.cloud.state.engineSave).actions,['cloud-tutorial']);
+      assert.ok((await a.store.listConflicts({owner:a.owner})).every(item=>item.resolvedAt));
+      await a.adapter.saveTutorial({...selected,completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();
+      const undone=await a.adapter.loadTutorial();assert.equal(undone.completed,true);assert.equal(undone.step,0);assert.deepEqual(undone.engineSave.actions,[]);
+    }finally{await a.close();await b.close()}
+  });
+}
+
+test('pending local tutorial is preserved when restoration first discovers cloud completion, including after reopen',async()=>{
+  const cloud=memoryCloud(),storage=memoryStorage(),a=harness(cloud,{storage}),b=harness(cloud,{device:'tutorial-cloud'});let reopened;
+  try{
+    await a.adapter.acquireWriter();await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();
+    assert.equal(a.status.at(-1).tutorialState,'saved','tutorial ACK does not depend on a party draft');
+    await b.adapter.acquireWriter();
+    cloud.setOffline(true);await a.adapter.saveTutorial({completed:false,step:2,engineSave:{actions:['pending-local']}});await a.adapter.flush();
+    cloud.setOffline(false);await b.adapter.saveTutorial({completed:true,step:6,engineSave:{actions:['completed-cloud']}});await b.adapter.flush();
+    const tutorial=await a.adapter.loadTutorial();assert.equal(tutorial.completed,true);assert.deepEqual(tutorial.engineSave.actions,['pending-local']);
+    assert.equal(a.conflicts.at(-1).scope,'tutorial');assert.equal(a.adapter.canWrite(),false);
+    assert.equal(a.status.at(-1).tutorialState,'conflict');
+    const pending=await a.store.listPending({owner:a.owner,includeDeferred:true});assert.equal(pending.length,1);assert.deepEqual(pending[0].payload.state.engineSave.actions,['pending-local']);
+    await a.close();reopened=harness(cloud,{storage});
+    assert.equal(await reopened.adapter.acquireWriter(),false,'the reacquired writer stays frozen by the retained tutorial conflict');
+    assert.equal(reopened.conflicts.at(-1).scope,'tutorial');
+    assert.equal(await reopened.adapter.resolveConflict('local'),null,'no party is invented by tutorial resolution');
+    const resolved=await reopened.adapter.loadTutorial();assert.equal(resolved.completed,true);assert.deepEqual(resolved.engineSave.actions,['pending-local']);
+    assert.equal(reopened.adapter.canWrite(),true);
+  }finally{await a.close();await b.close();await reopened?.close()}
+});
+
+test('resolving a party conflict keeps writes frozen until the independent tutorial choice',async()=>{
+  const cloud=memoryCloud(),a=harness(cloud),b=harness(cloud,{device:'both-device'});
+  try{
+    await a.adapter.acquireWriter();await a.adapter.saveSession(session());await a.adapter.confirmOnline();
+    await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();await b.adapter.acquireWriter();
+    cloud.setOffline(true);
+    await a.adapter.saveSession({...session(),engineSave:{actions:['party-local']}});await a.adapter.flush();
+    await a.adapter.saveTutorial({completed:false,step:1,engineSave:{actions:['tutorial-local']}});await a.adapter.flush();
+    await b.adapter.saveSession({...session(),engineSave:{actions:['party-cloud']}});await b.adapter.flush();
+    await b.adapter.saveTutorial({completed:true,step:6,engineSave:{actions:['tutorial-cloud']}});await b.adapter.flush();
+    cloud.setOffline(false);await b.adapter.flush();await a.adapter.loadSession();await a.adapter.loadTutorial();
+    assert.equal(a.conflicts.at(-1).scope,'session');
+    assert.deepEqual((await a.adapter.resolveConflict('cloud')).engineSave.actions,['party-cloud']);
+    assert.equal(a.conflicts.at(-1).scope,'tutorial');assert.equal(a.adapter.canWrite(),false);
+    await assert.rejects(a.adapter.completeSession(session(),result()),{code:'storage/conflict'});
+    assert.deepEqual((await a.adapter.resolveConflict('local')).engineSave.actions,['party-cloud']);
+    assert.deepEqual((await a.adapter.loadTutorial()).engineSave.actions,['tutorial-local']);assert.equal(a.adapter.canWrite(),true);
+  }finally{await a.close();await b.close()}
+});
+
+for(const explicitScope of [false,true])test(`tutorial choice retains ${explicitScope?'explicit host':'call-time default'} scope across a queued restore race`,async()=>{
+  const cloud=memoryCloud(),a=harness(cloud),b=harness(cloud,{device:'scope-race-device'});
+  let unblock;
+  try{
+    await a.adapter.acquireWriter();await a.adapter.saveSession(session());await a.adapter.confirmOnline();
+    await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();await b.adapter.acquireWriter();
+    cloud.setOffline(true);
+    await a.adapter.saveSession({...session(),engineSave:{actions:['party-local']}});await a.adapter.flush();
+    await a.adapter.saveTutorial({completed:false,step:1,engineSave:{actions:['tutorial-local']}});await a.adapter.flush();
+    await b.adapter.saveSession({...session(),engineSave:{actions:['party-cloud']}});await b.adapter.flush();
+    await b.adapter.saveTutorial({completed:true,step:6,engineSave:{actions:['tutorial-cloud']}});await b.adapter.flush();
+    cloud.setOffline(false);await b.adapter.flush();await a.adapter.loadTutorial();
+    const presentedScope=a.conflicts.at(-1).scope;assert.equal(presentedScope,'tutorial');
+    let entered;
+    const started=new Promise(resolve=>entered=resolve),barrier=new Promise(resolve=>unblock=resolve);
+    const originalFlushLocal=a.store.flushLocal;
+    a.store.flushLocal=async()=>{a.store.flushLocal=originalFlushLocal;entered();await barrier;return originalFlushLocal()};
+    const ongoing=a.adapter.flush();await started;
+    let clicked;
+    if(explicitScope){
+      // Host captured the shown scope before awaiting its scene release.
+      await a.adapter.loadSession();
+      clicked=a.adapter.resolveConflict('local',presentedScope);
+    }else{
+      clicked=a.adapter.resolveConflict('local');
+      await a.adapter.loadSession();
+    }
+    assert.equal(a.conflicts.at(-1).scope,'session','an independent restore changes the current conflict while the choice waits');
+    unblock();await ongoing;
+    assert.deepEqual((await clicked).engineSave.actions,['party-local'],'the return contract still exposes the unselected party');
+    const records=cloud.root().checkpoints['123456789'];
+    assert.equal(records['seminar-3']['attempt-one'].conflictHistory,undefined,'tutorial click never resolves the party');
+    const history=Object.values(records['settlements-tutorial']['tutorial-v1'].conflictHistory);
+    assert.equal(history.length,1);assert.equal(history[0].selected,'local');
+    await assert.rejects(a.adapter.resolveConflict('local',presentedScope),{code:'storage/no-conflict'},'a late repeated click cannot resolve the already selected scope again');
+    assert.equal(Object.keys(cloud.root().checkpoints['123456789']['settlements-tutorial']['tutorial-v1'].conflictHistory).length,1);
+    assert.deepEqual((await a.adapter.loadTutorial()).engineSave.actions,['tutorial-local']);
+    assert.equal(a.conflicts.at(-1).scope,'session');assert.equal(a.adapter.canWrite(),false);
+    await a.adapter.resolveConflict('cloud','session');assert.equal(a.adapter.canWrite(),true);
+  }finally{unblock?.();await a.close();await b.close()}
 });

@@ -10,6 +10,7 @@ import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
+import hashlib
 import os
 import subprocess
 import sys
@@ -27,6 +28,17 @@ parser.add_argument("--skip-region-switch", action="store_true", help="Run only 
 parser.add_argument("--case", action="append", choices=[f"{w}x{h}:{locale}" for w, h in VIEWPORTS for locale in LOCALES],
                     help="Optional focused case, e.g. 320x568:zh (repeatable)")
 args = parser.parse_args()
+served_from_local_site = not bool(args.url)
+def build_hash():
+    digest = hashlib.sha256()
+    site_root = Path(args.site_dir)
+    for file in sorted(path for path in site_root.rglob("*") if path.is_file()):
+        digest.update(file.relative_to(site_root).as_posix().encode() + b"\0")
+        with file.open("rb") as source:
+            digest.update(hashlib.file_digest(source, "sha256").digest())
+    return digest.hexdigest()
+
+build_hash_before = build_hash()
 out = Path(args.output)
 out.mkdir(parents=True, exist_ok=True)
 report = []
@@ -87,6 +99,7 @@ with sync_playwright() as p:
                 page.locator('[data-action="tutorial"]').click()
                 page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
                 row["listenersMounted"] = listener_counts(cdp)
+                assert page.locator('[data-game-status]').is_visible(), "save status must be visible above the map"
                 page.screenshot(path=str(out / f"tutorial-{stem}.png"))
                 page.locator('[data-act="guide-position"]').click()
                 confirm = page.locator('[data-act="confirm"]')
@@ -150,5 +163,14 @@ if not args.skip_region_switch:
 if server:
     server.shutdown()
     server.server_close()
-if any(row["status"] != "pass" for row in report) or region_exit:
+build_hash_after = build_hash()
+failed = any(row["status"] != "pass" for row in report) or region_exit or build_hash_before != build_hash_after
+(out / "build-evidence.json").write_text(json.dumps({
+    "status": "fail" if failed else "pass", "localSiteHashBefore": build_hash_before,
+    "localSiteHashAfter": build_hash_after, "servedFromLocalSite": served_from_local_site,
+    "hashAlgorithm": "SHA256(sorted relative POSIX paths, NUL, raw SHA256 of each file)",
+    "cases": len(report), "matrixReport": "report.json", "regionSwitchExitCode": region_exit,
+    "regionSwitchRequested": not args.skip_region_switch,
+}, indent=2), encoding="utf-8")
+if failed:
     sys.exit(1)

@@ -30,7 +30,10 @@ const cloudCopy=value=>{
  * saveSession atomically checkpoints before it returns; confirmOnline is the
  * mandatory first-assessment barrier. Revisions are independent of engine undo.
  * completeSession remains completion-pending until all three remote writes ACK.
- * onStatus({state,session,writable}), onConflict({local,cloud,conflicts}).
+ * onStatus({state,tutorialState,session,writable}), onConflict({scope,local,cloud,conflicts}).
+ * Conflicts in either scope freeze both. resolveConflict(choice, expectedScope?)
+ * captures its scope before queueing and returns the session, including after a
+ * tutorial choice; reload the tutorial separately.
  */
 export function createSettlementsPersistence({backend,owner,mode='assessment',onStatus=()=>{},onConflict=()=>{},onWriterChange=()=>{},onBeforeRelease=async()=>{},store=durableStore,writerOptions={}}){
   if(!['assessment','free'].includes(mode)||!owner)throw new TypeError('A mode and canonical owner are required');
@@ -38,7 +41,9 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   const scope={owner,activitySlug,mode:`settlements-${mode}`};
   const tutorialScope={owner,activitySlug:'settlements-tutorial',mode:'tutorial'};
   const student=owner.startsWith('student:');
-  let disposed=false,current=null,draft=null,tutorial=null,conflicted=false,running=null,tail=Promise.resolve();
+  let disposed=false,current=null,draft=null,tutorial=null,conflicted=false,conflictScope=null,running=null,tail=Promise.resolve();
+  let tutorialCompleted=false;
+  const conflictsByScope={session:[],tutorial:[]};
   const generation=backend?.generation;
   const isActive=()=>!disposed && (!student || (`student:${backend?.getProfile?.()?.studentKey}`===owner && (generation===undefined || backend.generation===generation)));
   const assertActive=()=>{if(!isActive())throw failure('auth/profile-changed')};
@@ -51,12 +56,24 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     return state;
   };
   function emit(state=draft?.saveStatus?.state || (student?'pending':'device-only')){
-    onStatus({state:conflicted?'conflict':state,session:current?copy(current):null,writable:canWrite()});
+    onStatus({state:conflicted?'conflict':state,
+      tutorialState:conflicted?'conflict':tutorial?.saveStatus?.state || (student?'pending':'device-only'),
+      session:current?copy(current):null,writable:canWrite()});
   }
-  async function detectConflict(value){
-    const conflicts=value ? (await store.listConflicts({owner,draftId:value.id})).filter(item=>!item.resolvedAt) : [];
-    conflicted=Boolean(conflicts.length);
-    if(conflicted)onConflict({local:decodeState(value.state),cloud:decodeState(conflicts.at(-1).incoming.state),conflicts});
+  async function detectConflicts(){
+    tutorial=await store.loadDraft(tutorialScope);
+    const all=await store.listConflicts({owner});
+    assertActive();
+    conflictsByScope.session=all.filter(item=>item.draftId===draft?.id&&!item.resolvedAt);
+    conflictsByScope.tutorial=all.filter(item=>item.draftId===tutorial?.id&&!item.resolvedAt);
+    tutorialCompleted=Boolean(tutorialCompleted || tutorial?.state.completed || all.some(item=>
+      item.draftId===tutorial?.id && (item.current?.state?.completed || item.incoming?.state?.completed)));
+    conflicted=Boolean(conflictsByScope.session.length||conflictsByScope.tutorial.length);
+    conflictScope=conflictsByScope.session.length?'session':conflictsByScope.tutorial.length?'tutorial':null;
+    if(conflicted){
+      const value=conflictScope==='session'?draft:tutorial,conflicts=conflictsByScope[conflictScope];
+      onConflict({scope:conflictScope,local:decodeState(value.state),cloud:decodeState(conflicts.at(-1).incoming.state),conflicts});
+    }
     return conflicted;
   }
   async function loadScope(which,attemptId){
@@ -70,11 +87,11 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   }
   async function loadSession({attemptId}={}){
     const value=await loadScope(scope,attemptId);
-    draft=value;current=view(value);await detectConflict(value);emit();return current?copy(current):null;
+    draft=value;current=view(value);await detectConflicts();emit();return current?copy(current):null;
   }
   function canWrite(){return isActive()&&!conflicted&&Boolean(writer?.canWrite())}
   const writer=createPuzzleWriter({scope:`settlements:${owner}`,...writerOptions,
-    isActive,readState:()=>loadSession(),beforeRelease:async()=>{await onBeforeRelease();await tail;await store.flushLocal()},
+    isActive,readState:async()=>{const session=await loadSession();await loadTutorial();return session},beforeRelease:async()=>{await onBeforeRelease();await tail;await store.flushLocal()},
     onChange:detail=>{onWriterChange(detail);emit()}});
   const requireWriter=()=>{assertActive();if(!canWrite())throw failure(conflicted?'storage/conflict':'storage/readonly')};
   function normalizeSession(value){
@@ -86,6 +103,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     return result;
   }
   async function save(value){
+    await detectConflicts();
     requireWriter();
     const next=normalizeSession(value);
     const latest=await store.loadDraft(scope);
@@ -106,7 +124,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     if(!cloudAvailable()||!draft||conflicted)return false;
     await backend.durableSync().flush();assertActive();
     draft=await store.loadDraft({...scope,attemptId:draft.attemptId});
-    current=view(draft);await detectConflict(draft);
+    current=view(draft);await detectConflicts();
     if(conflicted||draft.acknowledgedRevision<draft.revision)return false;
     // The acknowledgement can be old if a second device wrote after it.
     const {value:remote}=await backend.restTransport().get(`checkpoints/${owner.slice(8)}/${activitySlug}/${draft.attemptId}`,{timeoutMs:5000});
@@ -136,7 +154,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     current=view(draft);emit();
     if(student&&cloudAvailable()){
       await backend.durableSync().flush();
-      assertActive();draft=await store.loadDraft({...scope,attemptId:session.attemptId});current=view(draft);await detectConflict(draft);
+      assertActive();draft=await store.loadDraft({...scope,attemptId:session.attemptId});current=view(draft);await detectConflicts();
     }
     emit();
   }
@@ -155,43 +173,59 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
         }
         await backend.durableSync().flush();
       }
-      if(draft){draft=await store.loadDraft({...scope,attemptId:draft.attemptId});current=view(draft);await detectConflict(draft)}
+      if(draft){draft=await store.loadDraft({...scope,attemptId:draft.attemptId});current=view(draft)}
+      await detectConflicts();
       await finalize();emit();return {session:current?copy(current):null,status:draft?.saveStatus};
     }).finally(()=>running=null);
     return running;
   }
   async function loadTutorial(){
     tutorial=await loadScope(tutorialScope);
-    return tutorial?decodeState(tutorial.state):null;
+    await detectConflicts();emit();
+    return tutorial?{...decodeState(tutorial.state),completed:tutorialCompleted}:null;
   }
   function saveTutorial(state){return serial(async()=>{
+    await detectConflicts();
     requireWriter();
     const previous=await store.loadDraft(tutorialScope);
-    const next={...copy(state),completed:Boolean(state.completed||previous?.state.completed),step:Math.max(Number(state.step)||0,Number(previous?.state.step)||0)};
+    const next={...copy(state),completed:Boolean(state.completed||tutorialCompleted||previous?.state.completed)};
     tutorial=await store.checkpoint({...tutorialScope,attemptId:previous?.attemptId||'tutorial-v1',state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'},{queue:student});
-    assertActive();if(cloudAvailable())void backend.durableSync().flush().catch(()=>{});return copy(tutorial.state);
-  })}
+    assertActive();tutorialCompleted=next.completed;return copy(tutorial.state);
+  }).then(result=>{void flush().catch(()=>{});return result})}
 
-  function resolveConflict(choice){return serial(async()=>{
+  function resolveConflict(choice,expectedScope){
+    const selectedScope=expectedScope===undefined?conflictScope:expectedScope;
+    return serial(async()=>{
     assertActive();if(!['local','cloud'].includes(choice))throw new TypeError('Choose local or cloud');
     if(!writer.canWrite())throw failure('storage/readonly');
-    if(!cloudAvailable()||!draft)throw failure('network/offline');
-    const local=await store.loadDraft({...scope,attemptId:draft.attemptId});
-    const path=`checkpoints/${owner.slice(8)}/${activitySlug}/${local.attemptId}`;
+    // Resolve exactly the scope presented to the user, even if another scope
+    // also has a conflict. Its event is emitted after this selection commits.
+    if(!selectedScope)throw failure('storage/no-conflict');
+    if(!['session','tutorial'].includes(selectedScope))throw new TypeError('Choose session or tutorial scope');
+    if(!conflictsByScope[selectedScope].length)throw failure('storage/no-conflict');
+    const value=selectedScope==='tutorial'?tutorial:draft;
+    const selectedDraftScope=selectedScope==='tutorial'?tutorialScope:scope;
+    if(!cloudAvailable()||!value)throw failure('network/offline');
+    const local=await store.loadDraft({...selectedDraftScope,attemptId:value.attemptId});
+    const path=`checkpoints/${owner.slice(8)}/${selectedDraftScope.activitySlug}/${local.attemptId}`;
     const resolutionId=id();
     const {value:remote}=await backend.restTransport().transaction(path,head=>{
       assertActive();if(!head)throw failure('database/checkpoint-invalid');
       const selected=cloudCopy(choice==='local'?local:head.current);
-      if(['completed','abandoned'].includes(head.current.state.status) && choice==='local' && local.lastIntentId!==head.current.lastIntentId)throw failure('settlements/result-already-final');
+      if(selectedScope==='tutorial')selected.state.completed=Boolean(tutorialCompleted ||
+        [local,head.current,...Object.values(head.conflicts||{})].some(branch=>branch.state?.completed));
+      if(selectedScope==='session' && ['completed','abandoned'].includes(head.current.state.status) && choice==='local' && local.lastIntentId!==head.current.lastIntentId)throw failure('settlements/result-already-final');
       const revision=head.revision+1;
       const next={...head,revision,updatedAt:Date.now(),ownerUid:backend.user.uid,
         current:{...selected,remoteRevision:revision,lastIntentId:resolutionId,ownerUid:backend.user.uid,
-          deviceId:head.current.deviceId,localRevision:selected.localRevision||selected.revision},
+          deviceId:`resolution-${resolutionId}`,localRevision:selected.localRevision||selected.revision},
         conflictHistory:{...head.conflictHistory,[resolutionId]:{selected:choice,at:Date.now(),branches:{local:cloudCopy(local),cloud:cloudCopy(head.current),alternatives:head.conflicts||{}}}}};
       delete next.conflicts;return next;
     });
-    assertActive();draft=await store.resolveRemoteConflict({...remote.current,remoteRevision:remote.revision});
-    conflicted=false;current=view(draft);emit();return copy(current);
+    assertActive();const resolved=await store.resolveRemoteConflict({...remote.current,remoteRevision:remote.revision});
+    if(selectedScope==='tutorial'){tutorial=resolved;tutorialCompleted=Boolean(resolved.state.completed)}
+    else{draft=resolved;current=view(draft)}
+    await detectConflicts();emit();return current?copy(current):null;
   })}
   async function readLeaderboard(options={}){
     const selectedMode=options.mode||mode,difficulty=options.difficulty||'normal';

@@ -541,15 +541,18 @@ export function createDurableStore(options = {}) {
       const previous = await tx.get('drafts', id);
       if (previous) {
         const pending = (await tx.all('outbox')).some(op => op.draftId === id);
+        const unresolved = (await tx.all('conflicts')).some(conflict => conflict.draftId === id && !conflict.resolvedAt);
         const same = remote.lastIntentId && remote.lastIntentId === previous.lastIntentId;
         const older = Number.isFinite(remote.remoteRevision) && Number.isFinite(previous.remoteRevision) && remote.remoteRevision <= previous.remoteRevision;
-        const tutorialAdvance = input.activitySlug === 'settlements-tutorial' && remote.state?.completed === true && previous.state?.completed !== true;
-        if ((same || older) && !tutorialAdvance) return {draft: previous};
-        if (!tutorialAdvance && (pending || previous.acknowledgedRevision < previous.revision || previous.phase === 'completed')) {
+        if (same || older) return {draft: previous};
+        if (pending || unresolved || previous.acknowledgedRevision < previous.revision || previous.phase === 'completed') {
           const conflict = remoteConflict({owner: input.owner, draftId: id, current: previous, incoming: remote, remoteRevision: remote.remoteRevision});
           if (!await tx.get('conflicts', conflict.id)) await tx.put('conflicts', conflict);
           return {draft: previous, conflict};
         }
+        // Completion unlocks the activity permanently. It cannot authorize
+        // replacing a pending tutorial replay or merging its progress steps.
+        if (input.activitySlug === 'settlements-tutorial') input.state = {...input.state, completed: Boolean(input.state.completed || previous.state?.completed)};
       }
       const revision = (previous?.revision || 0) + 1;
       for(const file of remote.remoteAttachments||[]){

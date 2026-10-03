@@ -63,3 +63,37 @@ test('Firebase emulator authorizes owned final head, best grade and private-boun
     await assert.rejects(transport.put(`attempts/${studentKey}/${forgedId}`,{...original,id:forgedId,leaderboard:{...row,id:forgedId,spentMillionRub:0}}),{code:'database/permission-denied'},'leaderboard metrics must equal immutable result and final checkpoint');
   }finally{await h.close()}
 });
+
+for(const choice of ['local','cloud'])test(`Firebase emulator retains tutorial branches until explicit ${choice} choice and preserves completed gate`,async()=>{
+  const user=await login(),studentKey=String(Date.now()),transport=makeTransport(user);
+  await transport.put(`profiles/${studentKey}`,{studentKey,ticket:studentKey,email:`${studentKey}@rudn.ru`,fullName:'Synthetic Tutorial Conflict',group:'ГГУбд-01-26',ownerUid:user.uid,ownerUids:{[user.uid]:true}});
+  let offline=false;
+  const connected={get:async(...args)=>{if(offline)throw Object.assign(new Error('Synthetic offline'),{code:'network/offline'});return transport.get(...args)},transaction:async(...args)=>{if(offline)throw Object.assign(new Error('Synthetic offline'),{code:'network/offline'});return transport.transaction(...args)}};
+  const a=harness(connected,{studentKey,uid:user.uid,device:'tutorial-emulator-local'}),b=harness(connected,{studentKey,uid:user.uid,device:'tutorial-emulator-cloud'});
+  const path=`checkpoints/${studentKey}/settlements-tutorial/tutorial-v1`;
+  try{
+    await a.adapter.acquireWriter();await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();
+    await b.adapter.acquireWriter();assert.deepEqual((await b.adapter.loadTutorial()).engineSave.actions,[]);
+    offline=true;
+    await a.adapter.saveTutorial({completed:false,step:2,engineSave:{actions:['local']}});await a.adapter.flush();
+    await b.adapter.saveTutorial({completed:true,step:6,engineSave:{actions:['cloud']}});await b.adapter.flush();
+    offline=false;await b.adapter.flush();await a.adapter.flush();
+    const conflicted=(await transport.get(path)).value;
+    assert.equal(Object.keys(conflicted.conflicts).length,1);assert.equal(conflicted.current.state.completed,true);
+    assert.deepEqual(JSON.parse(conflicted.current.state.engineSave).actions,['cloud']);
+    assert.deepEqual(JSON.parse(Object.values(conflicted.conflicts)[0].state.engineSave).actions,['local']);
+    assert.equal(a.adapter.canWrite(),false);assert.equal(a.conflicts.at(-1).scope,'tutorial');
+    assert.deepEqual((await a.adapter.loadTutorial()).engineSave.actions,['local'],'restoring an ACKed conflict retains the local replay');
+    await assert.rejects(a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}}),{code:'storage/conflict'});
+    assert.equal(await a.adapter.resolveConflict(choice),null);
+    const chosen=await a.adapter.loadTutorial();assert.equal(chosen.completed,true);assert.deepEqual(chosen.engineSave.actions,[choice]);
+    assert.equal(chosen.step,choice==='local'?2:6);assert.equal(a.adapter.canWrite(),true);
+    const resolved=(await transport.get(path)).value;assert.equal(resolved.revision,conflicted.revision+1);assert.equal(resolved.conflicts,undefined);
+    const history=Object.values(resolved.conflictHistory);assert.equal(history.length,1);
+    assert.deepEqual(JSON.parse(history[0].branches.local.state.engineSave).actions,['local']);
+    assert.deepEqual(JSON.parse(history[0].branches.cloud.state.engineSave).actions,['cloud']);
+    assert.equal((await transport.get(`attempts/${studentKey}`)).value,null);assert.equal((await transport.get(`grades/${studentKey}`)).value,null);
+    await a.adapter.saveTutorial({completed:false,step:0,engineSave:{actions:[]}});await a.adapter.flush();
+    const undone=(await transport.get(path)).value;assert.equal(undone.current.state.completed,true);assert.equal(undone.current.state.step,0);assert.deepEqual(JSON.parse(undone.current.state.engineSave).actions,[]);
+  }finally{await a.close();await b.close()}
+});

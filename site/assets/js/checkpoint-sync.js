@@ -36,14 +36,8 @@ function cloudDraft(operation,identity,deviceId){
   return {...value,deviceId,ownerUid:identity.uid,localRevision:operation.revision};
 }
 
-/** Pure reconciliation: no answers or game states are ever merged field by field. */
+/** Reconcile whole branches; only the tutorial's completion flag is monotonic. */
 export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
-  if(current && incoming.activitySlug==='settlements-tutorial'){
-    incoming={...incoming,state:{...incoming.state,
-      completed:Boolean(incoming.state.completed || current.current?.state?.completed),
-      step:Math.max(Number(incoming.state.step)||0,Number(current.current?.state?.step)||0)},
-      remoteRevision:current.revision};
-  }
   const envelope={
     schemaVersion:1,studentKey:incoming.studentKey,activitySlug:incoming.activitySlug,
     mode:incoming.mode,attemptId:incoming.attemptId,ownerUid,updatedAt:now
@@ -57,6 +51,9 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   }
   const head=current.current;
   if(!head)throw fault('database/checkpoint-invalid');
+  const tutorial=incoming.activitySlug==='settlements-tutorial';
+  const completed=tutorial && [head,incoming,...Object.values(current.conflicts||{})].some(branch=>branch.state?.completed===true);
+  if(tutorial)incoming={...incoming,state:{...incoming.state,completed}};
   if(head.lastIntentId===incoming.lastIntentId||
     (head.deviceId===incoming.deviceId&&head.localRevision>=incoming.localRevision)){
     return {next:undefined,conflict:false,remoteRevision:current.revision};
@@ -77,7 +74,9 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   // A second device edited from an older base. Retain the cloud head and the
   // incoming complete state, with a stable key making uncertain retries safe.
   return {
-    next:{...current,...envelope,revision,conflicts:{...current.conflicts,[key(incoming.lastIntentId)]:incoming}},
+    next:{...current,...envelope,revision,
+      ...(tutorial?{current:{...head,state:{...head.state,completed}}}:{}),
+      conflicts:{...current.conflicts,[key(incoming.lastIntentId)]:incoming}},
     conflict:true,remoteRevision:revision,remote:head
   };
 }
@@ -205,6 +204,8 @@ export function createCheckpointSync({
               // A terminal state is never delivered ahead of its authoritative
               // checkpoint, nor after a conflicting branch was retained.
               const draft=await store.loadDraft({owner:operation.owner,activitySlug:operation.activitySlug,mode:operation.mode,attemptId:operation.attemptId});
+              const tutorial=await store.loadDraft({owner:operation.owner,activitySlug:'settlements-tutorial',mode:'tutorial'});
+              if(tutorial?.saveStatus?.state==='conflict')throw fault('storage/final-checkpoint-pending');
               if(!draft || draft.acknowledgedRevision<draft.revision || draft.saveStatus?.state==='conflict')throw fault('storage/final-checkpoint-pending');
               const {value:head}=await transport.get(checkpointPath(draft),{signal});
               assertActive(session);
