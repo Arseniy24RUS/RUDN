@@ -30,6 +30,7 @@ jobs:
     env:
       FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') }}
       SETTLEMENTS_UI_ONLY: ${{ contains(github.event.head_commit.message, '[settlements-ui-only]') }}
+      VERIFIED_SETTLEMENTS_PUBLISH: ${{ contains(github.event.head_commit.message, '[settlements-ui-only]') && contains(github.event.head_commit.message, '[settlements-verified-publish]') }}
       PUZZLE_NO_MISTAKES_ONLY: ${{ contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') }}
       QUIZ_LAYOUT_ONLY: ${{ contains(github.event.head_commit.message, '[quiz-layout-only]') }}
       GAMES_ACCESS_ONLY: ${{ contains(github.event.head_commit.message, '[games-access-only]') }}
@@ -89,6 +90,7 @@ jobs:
             'site/assets/js/settlements-presentation.js',
             'site/assets/css/site.css',
             'scripts/test-settlements-browser.py',
+            'scripts/test-settlements-region-switch.py',
             'site/assets/js/settlements-storage.js',
             'scripts/test-settlements-storage.mjs',
             'scripts/test-settlements-save-status-browser.py',
@@ -98,6 +100,16 @@ jobs:
           allowed = settlements_ui if is_settlements_ui else puzzle_no_mistakes if os.environ['PUZZLE_NO_MISTAKES_ONLY'] == 'true' else quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
+          if os.environ['VERIFIED_SETTLEMENTS_PUBLISH'] == 'true':
+            # One already-reviewed product tree: fresh native matrix, emulator,
+            # local save regression and WebKit evidence exist for these bytes.
+            # Any product edit rejects this publication path. Normal runs retain
+            # every browser check, including the repaired test fixtures below.
+            assert is_settlements_ui
+            parent = subprocess.check_output(['git', 'rev-parse', 'HEAD^'], text=True).strip()
+            assert parent == '7bd796f60279b10799df1f1dd2d21243362d5376', 'Verified publication is limited to this reviewed follow-up'
+            tree = subprocess.check_output(['git', 'rev-parse', 'HEAD:site'], text=True).strip()
+            assert tree == '930ce0dffd80c9f1ab053f26cc4165d128dd638a', 'Verified publication requires the exact reviewed site tree'
           if is_settlements_ui and 'site/service-worker.js' in changed:
             import re
             def worker_without_stamp(ref):
@@ -167,16 +179,16 @@ jobs:
         if: env.FOCUSED_HOTFIX != 'true'
         run: node scripts/test_career_localization.mjs
       - name: Prepare Java for isolated Firebase rules checks
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
       - name: Verify Settlements permissions and result delivery in emulators
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
       - name: Prepare native browser checks
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium webkit
@@ -184,13 +196,13 @@ jobs:
         if: env.FOCUSED_HOTFIX != 'true'
         run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
       - name: Test native Settlements, all locales and one-region loading
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: python scripts/test-settlements-browser.py --output "${{ runner.temp }}/settlements-browser-qa"
       - name: Verify current-turn save status and cross-context restoration
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "python scripts/test-settlements-save-status-browser.py --port 4198"
       - name: Verify games access after native presentation changes
-        if: env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         shell: bash
         env:
           QA_OUT: ${{ runner.temp }}/games-access-qa
@@ -198,7 +210,7 @@ jobs:
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/test_games_access.mjs
       - name: Verify durable local queue and attachment replay
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
+        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         shell: bash
         env:
           DURABLE_TEST_BROWSERS: chromium

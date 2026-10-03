@@ -95,6 +95,15 @@ with sync_playwright() as p:
         page.locator(".game-heading h2").filter(has_text=free_heading).wait_for(timeout=60000)
         page.locator(".puzzle-loading").wait_for(state="hidden", timeout=60000)
         page.locator('[data-act="tools"]').wait_for(timeout=60000)
+        report["returnedFreeRegionTitleBeforeWait"] = page.locator(".game-heading").inner_text()
+        # The mounted scene can precede its local checkpoint's final status.
+        # Wait for the original whole heading, including that status, unchanged.
+        page.wait_for_function(
+            "({heading, expected}) => heading.innerText === expected",
+            arg={"heading": page.locator(".game-heading").element_handle(), "expected": report["freeRegionTitle"]},
+            timeout=15000,
+        )
+        report["returnedFreeRegionTitleAfterWait"] = page.locator(".game-heading").inner_text()
         assert page.locator(".game-heading").inner_text() == report["freeRegionTitle"]
         report["replayTutorialReturnsToFreeGame"] = True
         report["status"] = "fail" if report["errors"] or report["consoleErrors"] else "pass"
