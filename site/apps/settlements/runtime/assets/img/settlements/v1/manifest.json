@@ -1,0 +1,3395 @@
+{
+  "schemaVersion": 1,
+  "artVersion": "1.0",
+  "assets": {
+    "D-01": {
+      "id": "D-01",
+      "family": "D",
+      "wave": "P1",
+      "title": "Адаптация помещения",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-01-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 34606,
+          "sha256": "28dbd1738215ebd04a6589f317a42852ccb8e89428d5cd084eb33bdb620a0fda",
+          "url": "assets/img/settlements/v1/D-01-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-01-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 99912,
+          "sha256": "7bfd71bc6fbc185271b05956a6baeafb643fd0ba4e55e08394bf8a40f9d1fc1b",
+          "url": "assets/img/settlements/v1/D-01-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-01.generation.json",
+      "source": "assets/settlements/art-originals/D-01-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-02": {
+      "id": "D-02",
+      "family": "D",
+      "wave": "P0",
+      "title": "Местный объект",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-02-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 34008,
+          "sha256": "231a1752ca8347ad52120c5bd2457a86c6709924754d4844174ef30892568942",
+          "url": "assets/img/settlements/v1/D-02-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-02-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 105172,
+          "sha256": "cf34bdebad8c7c61bb1f9580200898e7b4b63b526eeff8db5d7fa3e9441bf6ae",
+          "url": "assets/img/settlements/v1/D-02-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-02.generation.json",
+      "source": "assets/settlements/art-originals/D-02-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-03": {
+      "id": "D-03",
+      "family": "D",
+      "wave": "P0",
+      "title": "Межпоселенческий центр",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-03-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 36442,
+          "sha256": "8be63c90a1111e007f2096a93c0898f4761ecca1c7d4c6b4474eecb44e0d46f6",
+          "url": "assets/img/settlements/v1/D-03-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-03-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 110424,
+          "sha256": "aa3acbc86468c3d261e442e2b76dd09b99d2d248f7cddf1f1d5cabe21ba421ff",
+          "url": "assets/img/settlements/v1/D-03-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-03.generation.json",
+      "source": "assets/settlements/art-originals/D-03-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-04": {
+      "id": "D-04",
+      "family": "D",
+      "wave": "P1",
+      "title": "Расширение учреждения",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-04-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 30554,
+          "sha256": "cc598120ad07d0b75dd2d7a5e13cea003256b26d2c568428da4453002e93f234",
+          "url": "assets/img/settlements/v1/D-04-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-04-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 86114,
+          "sha256": "6168a73834ae7a92d20684a34bddc9ecaa464b49fd27ae8b7444ee93f87cc497",
+          "url": "assets/img/settlements/v1/D-04-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-04.generation.json",
+      "source": "assets/settlements/art-originals/D-04-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-05": {
+      "id": "D-05",
+      "family": "D",
+      "wave": "P0",
+      "title": "Регулярный подвоз",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-05-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 28984,
+          "sha256": "c1b98ecf615a8e14d5b52ef22f4031201654741f145f4e688caace55b9eeb049",
+          "url": "assets/img/settlements/v1/D-05-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-05-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 78106,
+          "sha256": "a8aae7dc618d063b55e2e4949bce218f4f4edd27137a18536aad39010f92d409",
+          "url": "assets/img/settlements/v1/D-05-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-05.generation.json",
+      "source": "assets/settlements/art-originals/D-05-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-06": {
+      "id": "D-06",
+      "family": "D",
+      "wave": "P0",
+      "title": "Выездная услуга",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-06-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 27476,
+          "sha256": "5f5899c44484f84e31e8fcbb4d0bd14fe8e2103e190b422bcc9e95a0ed762d10",
+          "url": "assets/img/settlements/v1/D-06-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-06-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 75664,
+          "sha256": "e23451c6646e4b06c36962ae40e27b681cfd5a0a07aeff431eda5fcdea612858",
+          "url": "assets/img/settlements/v1/D-06-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-06.generation.json",
+      "source": "assets/settlements/art-originals/D-06-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-07": {
+      "id": "D-07",
+      "family": "D",
+      "wave": "P1",
+      "title": "Автономное инженерное решение",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-07-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 30152,
+          "sha256": "69ff5080d1029e74d3c9edc9b06490c1b27bfa219f4ab8206d7d7d18b6f77836",
+          "url": "assets/img/settlements/v1/D-07-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-07-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 87866,
+          "sha256": "d43d5c7c3d52de13fc848c60cd6f36a71f860e18e63e30f1e661554ad802dea1",
+          "url": "assets/img/settlements/v1/D-07-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-07.generation.json",
+      "source": "assets/settlements/art-originals/D-07-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "D-08": {
+      "id": "D-08",
+      "family": "D",
+      "wave": "P1",
+      "title": "Межмуниципальное соглашение",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/D-08-384.webp",
+          "width": 384,
+          "height": 288,
+          "bytes": 33240,
+          "sha256": "5f146e94e1a9de121dd76cb14e62ecc96a965d7c72107ce05f3535b7dcc2a807",
+          "url": "assets/img/settlements/v1/D-08-384.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/D-08-768.webp",
+          "width": 768,
+          "height": 576,
+          "bytes": 96518,
+          "sha256": "c602eac4e1850f5c42b596132217a826458a916e33ba5016a36827a00ba57447",
+          "url": "assets/img/settlements/v1/D-08-768.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/D-08.generation.json",
+      "source": "assets/settlements/art-originals/D-08-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-01-ready": {
+      "id": "O-01-ready",
+      "family": "O",
+      "wave": "P0",
+      "title": "Местный медицинский объект — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-01-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7104,
+          "sha256": "c3cbe80cd5d76093bb2d56af694d3d8f112883e83a81791bf174129bf4eb9703",
+          "url": "assets/img/settlements/v1/O-01-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-01-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19832,
+          "sha256": "1aa575ef164b1675cc1f35f6dac251ac5dd1e1ee268aa69c203c3ef31719d1ff",
+          "url": "assets/img/settlements/v1/O-01-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-01-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 58682,
+          "sha256": "6e943cff50c0c6c187b9f09d27c8896f9f76a04484102cdddc65c8ad9022af9f",
+          "url": "assets/img/settlements/v1/O-01-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-01-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-01-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-01-build": {
+      "id": "O-01-build",
+      "family": "O",
+      "wave": "P0",
+      "title": "Местный медицинский объект — строительство",
+      "parentAssetId": "O-01-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-01-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7058,
+          "sha256": "1617ec3fb2d96031077a625aaf6e5e12371569953f846614114683ab0170a73c",
+          "url": "assets/img/settlements/v1/O-01-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-01-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 20342,
+          "sha256": "2088b51d185772d948f95459e9171d374ab969c549f67180d22b0dac96ef042b",
+          "url": "assets/img/settlements/v1/O-01-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-01-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 53204,
+          "sha256": "7a356fc7312f22e921ab0b590dd8afc99a38e665c85843bc3f99fe842c3a623a",
+          "url": "assets/img/settlements/v1/O-01-build-512.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-01-build.generation.json",
+      "source": "assets/settlements/art-originals/O-01-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-02-ready": {
+      "id": "O-02-ready",
+      "family": "O",
+      "wave": "P0",
+      "title": "Межпоселенческий медицинский центр — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-02-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7250,
+          "sha256": "0896b2cb85f62a1eec87ce9ce113197cc7915f3358b0df8a2f4277316704f17a",
+          "url": "assets/img/settlements/v1/O-02-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-02-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19990,
+          "sha256": "645ee931c0610017dee120763b56c4843f05cfec23d7bd4a5bc1f0dc436ccd8d",
+          "url": "assets/img/settlements/v1/O-02-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-02-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 59970,
+          "sha256": "d9a8e699e66a77b145fdea60c319d40e01d1be975f2ef2fa37139899b3ee354b",
+          "url": "assets/img/settlements/v1/O-02-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-02-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-02-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-02-build": {
+      "id": "O-02-build",
+      "family": "O",
+      "wave": "P0",
+      "title": "Межпоселенческий медицинский центр — строительство",
+      "parentAssetId": "O-02-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-02-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7326,
+          "sha256": "43bac0b1a8bd42a3d95107371a4d1010ddb963013e8c841f03d51e7f45621eb9",
+          "url": "assets/img/settlements/v1/O-02-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-02-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 20332,
+          "sha256": "40c5a67029051dcaaee8a2ae2c84f2d80509ea350bfa4da8c16b056e07d2cc59",
+          "url": "assets/img/settlements/v1/O-02-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-02-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 54062,
+          "sha256": "6184d550614d73b67b20e28927b2b7b19240401a5769d44ec8b5224b7772cce5",
+          "url": "assets/img/settlements/v1/O-02-build-512.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-02-build.generation.json",
+      "source": "assets/settlements/art-originals/O-02-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-03-ready": {
+      "id": "O-03-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Местная школа — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-03-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6848,
+          "sha256": "b203cb072d0fb05e1f842df7d117d0210816ba2a11338a270f41301e0749e9ba",
+          "url": "assets/img/settlements/v1/O-03-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-03-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18960,
+          "sha256": "b1f7e0c000b98018ea09a1c80f3f418ef1c091b712ae6f68705551172b19ad04",
+          "url": "assets/img/settlements/v1/O-03-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-03-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 55484,
+          "sha256": "22069cc41ac344abd120766ac2f7d5dbe98d960ede22c00ae7ea7e5751c2c0c4",
+          "url": "assets/img/settlements/v1/O-03-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-03-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-03-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-03-build": {
+      "id": "O-03-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Местная школа — строительство",
+      "parentAssetId": "O-03-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-03-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6824,
+          "sha256": "f25f672658f0d3fa100d4687623aca7e4dc0b5c8eb28e7760b4f3c17cf81d238",
+          "url": "assets/img/settlements/v1/O-03-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-03-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19100,
+          "sha256": "2b9ef9cacdee938f4935b1c5a3118bcc451b86ccb1f5c6771e6ecfa2a73ba5bd",
+          "url": "assets/img/settlements/v1/O-03-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-03-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 56184,
+          "sha256": "28d9b0993a7314a33285b2e5a51cea3e2ae99856a09ca5f5f4bf3e50b5ea9576",
+          "url": "assets/img/settlements/v1/O-03-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-03-build.generation.json",
+      "source": "assets/settlements/art-originals/O-03-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-04-ready": {
+      "id": "O-04-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Межпоселенческий образовательный центр — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-04-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6862,
+          "sha256": "02064ef816e637d61281a21d6844ce1c7374fe1887db1effbfc401697f45e07f",
+          "url": "assets/img/settlements/v1/O-04-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-04-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19288,
+          "sha256": "7eb285b8789c1052c1f8218131750101b6d0fcbb411ddb6ba114741f348c66df",
+          "url": "assets/img/settlements/v1/O-04-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-04-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 57356,
+          "sha256": "70c2522070d575e5acb711b9cb1c8d7616ff719fe5043a6622797e3c338be528",
+          "url": "assets/img/settlements/v1/O-04-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-04-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-04-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-04-build": {
+      "id": "O-04-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Межпоселенческий образовательный центр — строительство",
+      "parentAssetId": "O-04-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-04-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6910,
+          "sha256": "60064735ae7263911716a36f5beedb425da8097e9ecb7931e7818db49d63c55e",
+          "url": "assets/img/settlements/v1/O-04-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-04-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19302,
+          "sha256": "2b795af33ae248d0c2eb3e0cfecb0d37186baa60dca593bb7657efb003d6d95b",
+          "url": "assets/img/settlements/v1/O-04-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-04-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 57412,
+          "sha256": "0706477289670330e9194320bbde197965ef2bfe1686cc4969913a86401611e9",
+          "url": "assets/img/settlements/v1/O-04-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-04-build.generation.json",
+      "source": "assets/settlements/art-originals/O-04-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-05-ready": {
+      "id": "O-05-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Местное общественное помещение — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-05-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7224,
+          "sha256": "9a772be88a78b5fe55b6e908fb37737fec1f98a881a596528b37fa1beb17e8c1",
+          "url": "assets/img/settlements/v1/O-05-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-05-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 20062,
+          "sha256": "23b6b7bf9f7cf6ae84091189305c53d01845742dd46f53d545e90ce3ebf01656",
+          "url": "assets/img/settlements/v1/O-05-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-05-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 59690,
+          "sha256": "083e448c2688c50702763875f43f117d63b8bfef3991ef6944f89660c3fbdf60",
+          "url": "assets/img/settlements/v1/O-05-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-05-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-05-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-05-build": {
+      "id": "O-05-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Местное общественное помещение — строительство",
+      "parentAssetId": "O-05-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-05-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6936,
+          "sha256": "99d11f4d16a2e8e7cd3e42def1e27c048607174538142a1ff52a3fff7002c4a9",
+          "url": "assets/img/settlements/v1/O-05-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-05-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19526,
+          "sha256": "2ea22f57ba0553a7496005bcc2de92dbbcc38c4bf6b6e5ea4aed817bdedfce16",
+          "url": "assets/img/settlements/v1/O-05-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-05-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 58440,
+          "sha256": "441fcdfe8cef2beb4aec9f002c8529d6df7f7d1745a5b4d01fca7f6670e1770e",
+          "url": "assets/img/settlements/v1/O-05-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-05-build.generation.json",
+      "source": "assets/settlements/art-originals/O-05-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-06-ready": {
+      "id": "O-06-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Общественный центр — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-06-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7030,
+          "sha256": "5f260e5246467e3ed58c1f5f9a0ac4ec81ee8a71f21f53ea4783e8ff886cfe6b",
+          "url": "assets/img/settlements/v1/O-06-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-06-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19130,
+          "sha256": "26ff403d52e0792e5b8d5a50b9bd4499005c5c865f14a217293892dd48125297",
+          "url": "assets/img/settlements/v1/O-06-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-06-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 55782,
+          "sha256": "b2df942a3e7b6778e07ea3b6952fecb7fd4f1d2aad0c3ca5dcc3911dc327f8c8",
+          "url": "assets/img/settlements/v1/O-06-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-06-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-06-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-06-build": {
+      "id": "O-06-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Общественный центр — строительство",
+      "parentAssetId": "O-06-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-06-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 7052,
+          "sha256": "01641135649486c18e22c7755357ca9cf67445acd3d89040368e02fcf8b80e9b",
+          "url": "assets/img/settlements/v1/O-06-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-06-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 19554,
+          "sha256": "daf11b3e691678df1ed2156ec6a1bfd51b3e52b1b061225b16086fe03430a831",
+          "url": "assets/img/settlements/v1/O-06-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-06-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 57710,
+          "sha256": "f7a015d3ec907b56d14c36c97d7db296823791176adfcf2255f9e4a11427e116",
+          "url": "assets/img/settlements/v1/O-06-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-06-build.generation.json",
+      "source": "assets/settlements/art-originals/O-06-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-07-ready": {
+      "id": "O-07-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Адаптированное многофункциональное здание — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-07-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6924,
+          "sha256": "2d1c556d6cbc7798d290fa8821cf3e361b15e3d2de8417d6bad5a7f4fde7b6f8",
+          "url": "assets/img/settlements/v1/O-07-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-07-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18820,
+          "sha256": "f6bdab7659110724c8f32d832a4e0f1bde0786665299993b2250dcde2b2354f7",
+          "url": "assets/img/settlements/v1/O-07-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-07-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 54096,
+          "sha256": "74f271f1206555e2eaa60ebe509f5a3e4205b9493c9f03a404e3af4e5393911b",
+          "url": "assets/img/settlements/v1/O-07-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-07-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-07-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-07-build": {
+      "id": "O-07-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Адаптированное многофункциональное здание — строительство",
+      "parentAssetId": "O-07-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-07-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6756,
+          "sha256": "f898c87363cf8e069d0fdadc0acbe42306f63a5598d19bce3cac2bfaf567d51b",
+          "url": "assets/img/settlements/v1/O-07-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-07-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18850,
+          "sha256": "556e7ec5a41a195cb8b0023134fba75dff8e43d462eff70ec5f0f2d3d6e95db8",
+          "url": "assets/img/settlements/v1/O-07-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-07-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 55286,
+          "sha256": "54c8d1219d28e9042f96fa4c7fc56e16660cc86731f7389ee45f691123686d4c",
+          "url": "assets/img/settlements/v1/O-07-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-07-build.generation.json",
+      "source": "assets/settlements/art-originals/O-07-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-08-ready": {
+      "id": "O-08-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Пристройка к учреждению — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-08-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6718,
+          "sha256": "9c75064bf1bf269e0b67ee68e381594a0eb8a2e1f315ca04fd0ceba6a887f78c",
+          "url": "assets/img/settlements/v1/O-08-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-08-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 17982,
+          "sha256": "7251eddb2d4da8ac3a7e2a55bedc1049199e867c844c1a1d3d391daf23d5a381",
+          "url": "assets/img/settlements/v1/O-08-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-08-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 51404,
+          "sha256": "0d0c1d61ea33c29f3d634c4a55e81cfb522d3ed081d10926a9beaddc0bfea150",
+          "url": "assets/img/settlements/v1/O-08-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-08-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-08-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-08-build": {
+      "id": "O-08-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Пристройка к учреждению — строительство",
+      "parentAssetId": "O-08-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-08-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6748,
+          "sha256": "58bd9a50f10e2ea599699660e5ff07fe90ab89b8e8aa9a2ab8f368427b32cb49",
+          "url": "assets/img/settlements/v1/O-08-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-08-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18424,
+          "sha256": "73ef6c667c59bf4824d300cde35637be2612a3878f001029e1d5e5b4cfc5bb9e",
+          "url": "assets/img/settlements/v1/O-08-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-08-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 52110,
+          "sha256": "1678abc65c04fa40703242ec1da7554cde9d6abd3b394b27111b38b1c28ac50d",
+          "url": "assets/img/settlements/v1/O-08-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-08-build.generation.json",
+      "source": "assets/settlements/art-originals/O-08-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-09": {
+      "id": "O-09",
+      "family": "O",
+      "wave": "P0",
+      "title": "Пассажирский автобус",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-09-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 5266,
+          "sha256": "d29605051726973537d8029a34f9c2ed2e0bb84797db46077d9eeaf94a83c714",
+          "url": "assets/img/settlements/v1/O-09-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-09-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 12782,
+          "sha256": "173b4cab27595299dea49e56c549b689ea57b38327d59db1c08d232a06daa5e9",
+          "url": "assets/img/settlements/v1/O-09-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-09-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 32098,
+          "sha256": "2b3aee4e8ae93ab7db5093286ae8994e0ee1be0047b81014bb1c215d5d2ff963",
+          "url": "assets/img/settlements/v1/O-09-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "vehicle_exterior_only",
+      "provenance": "docs/settlements/art/O-09.generation.json",
+      "source": "assets/settlements/art-originals/O-09-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-10": {
+      "id": "O-10",
+      "family": "O",
+      "wave": "P0",
+      "title": "Мобильная команда",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-10-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 5324,
+          "sha256": "325c5ed81262fabd6720316b8aa41d676c90b3c1c176f1179564cb85ce828c7a",
+          "url": "assets/img/settlements/v1/O-10-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-10-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 12758,
+          "sha256": "7e7351ef77127cdeec4f0afcadf706d1ea07172f9cdb9dcedd0a23b0447d258b",
+          "url": "assets/img/settlements/v1/O-10-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-10-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 31608,
+          "sha256": "86726b983b9c0df0c77cb11831cec99d585dc8eb8c159a9d073857e32e0d6409",
+          "url": "assets/img/settlements/v1/O-10-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "vehicle_exterior_only",
+      "provenance": "docs/settlements/art/O-10.generation.json",
+      "source": "assets/settlements/art-originals/O-10-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-11-ready": {
+      "id": "O-11-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Локальный модуль водоснабжения — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-11-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6104,
+          "sha256": "d453fda8978be2461559fa6e3752ff970ead594c10b2d3f4f5365ad67c855a32",
+          "url": "assets/img/settlements/v1/O-11-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-11-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 16336,
+          "sha256": "366ac28da132623eada5ebbf31e0f970247384bf663e216e3caa7916a1742a02",
+          "url": "assets/img/settlements/v1/O-11-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-11-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 46608,
+          "sha256": "dd5e0d60e82a9c118c35d9481161d1d1226a7b83a5a4eee21dbd78e0b70a8e07",
+          "url": "assets/img/settlements/v1/O-11-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-11-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-11-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-11-build": {
+      "id": "O-11-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Локальный модуль водоснабжения — строительство",
+      "parentAssetId": "O-11-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-11-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6238,
+          "sha256": "71a11af2218895559e8d5ef0662e2018dc111c47963c89d474ba38d8c9502e16",
+          "url": "assets/img/settlements/v1/O-11-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-11-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 17254,
+          "sha256": "365c1a386b48208ff79e439ca4b16cc265e8a7969f1142e894449ba1ea750a37",
+          "url": "assets/img/settlements/v1/O-11-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-11-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 49434,
+          "sha256": "7ad08c7c62e6634d72d5d9f92c9546c01c6bc11a23aeeca34e85c6d6a4fafb08",
+          "url": "assets/img/settlements/v1/O-11-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-11-build.generation.json",
+      "source": "assets/settlements/art-originals/O-11-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-12-ready": {
+      "id": "O-12-ready",
+      "family": "O",
+      "wave": "P1",
+      "title": "Модуль теплоснабжения — завершённый внешний вид",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-12-ready-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6730,
+          "sha256": "ec9d2bb6ad2aa5a7c6ec2061ddf2b8cff55ca7dc3796bd0b083749b335738391",
+          "url": "assets/img/settlements/v1/O-12-ready-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-12-ready-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18266,
+          "sha256": "3a91c67fd9e11f3143c04221b7293b098af81235649c64b0501b9a56ffb5180f",
+          "url": "assets/img/settlements/v1/O-12-ready-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-12-ready-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 51340,
+          "sha256": "42d00010b227cffa04cfe68b46b0e85f2bad50500008f766d88237d5db2a4dd6",
+          "url": "assets/img/settlements/v1/O-12-ready-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "physical_complete_not_operational_proof",
+      "provenance": "docs/settlements/art/O-12-ready.generation.json",
+      "source": "assets/settlements/art-originals/O-12-ready-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "O-12-build": {
+      "id": "O-12-build",
+      "family": "O",
+      "wave": "P1",
+      "title": "Модуль теплоснабжения — строительство",
+      "parentAssetId": "O-12-ready",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/O-12-build-128.webp",
+          "width": 128,
+          "height": 128,
+          "bytes": 6846,
+          "sha256": "62ebc5701573956bb65e2ea62067f976ccc6832b24c4aeec771c6b95d4b75d63",
+          "url": "assets/img/settlements/v1/O-12-build-128.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-12-build-256.webp",
+          "width": 256,
+          "height": 256,
+          "bytes": 18732,
+          "sha256": "34c8c48c4aa4d419709749dc03e7ca05a315f8a3a001de0c81cc0310c010c9b4",
+          "url": "assets/img/settlements/v1/O-12-build-256.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/O-12-build-512.webp",
+          "width": 512,
+          "height": 512,
+          "bytes": 54106,
+          "sha256": "774fa29b3e11369f380c8a185e69aefb29382272097edeb0591c2f7d05e53eac",
+          "url": "assets/img/settlements/v1/O-12-build-512.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "construction_or_installation_in_progress",
+      "provenance": "docs/settlements/art/O-12-build.generation.json",
+      "source": "assets/settlements/art-originals/O-12-build-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-01-attentive": {
+      "id": "P-01-attentive",
+      "family": "P",
+      "wave": "P0",
+      "title": "Медицинский специалист — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-01-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8210,
+          "sha256": "f490ebf0a0db0be1408624100c5cacfbe0f1605cb6179c7543611b0d0a1f24ae",
+          "url": "assets/img/settlements/v1/P-01-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-01-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 18640,
+          "sha256": "261b18db9885e2a4511e963db2658eb0a57d8e6272e83e6de3a92bfa3b3b5e19",
+          "url": "assets/img/settlements/v1/P-01-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-01-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-01-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-01-satisfied": {
+      "id": "P-01-satisfied",
+      "family": "P",
+      "wave": "P0",
+      "title": "Медицинский специалист — спокойное удовлетворение",
+      "parentAssetId": "P-01-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-01-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8314,
+          "sha256": "8c1f1c7aeb533389d1c15d5b6c6a70c6c9ec71332d68d64699aff25a1cf80dc5",
+          "url": "assets/img/settlements/v1/P-01-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-01-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 18796,
+          "sha256": "49668c9497083cacc8694b8a2f3ae64f7b54a44a8e94cb4a7b4192ce0cbaae50",
+          "url": "assets/img/settlements/v1/P-01-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-01-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-01-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-02-attentive": {
+      "id": "P-02-attentive",
+      "family": "P",
+      "wave": "P1",
+      "title": "Преподаватель — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-02-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8744,
+          "sha256": "35ed48e805320a4216e45863fe11ce60ee0252af60ca48611e2f6ee1227357f6",
+          "url": "assets/img/settlements/v1/P-02-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-02-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19694,
+          "sha256": "0432bcb3f337133e93d74109b94cdd92ad0db919f2260c5cbce5cb7623a99746",
+          "url": "assets/img/settlements/v1/P-02-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-02-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-02-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-02-satisfied": {
+      "id": "P-02-satisfied",
+      "family": "P",
+      "wave": "P1",
+      "title": "Преподаватель — спокойное удовлетворение",
+      "parentAssetId": "P-02-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-02-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8700,
+          "sha256": "4baea7b05b7485b6c7056844d2bdf4b4a05d6bacff1d9d8af78b892a802690ef",
+          "url": "assets/img/settlements/v1/P-02-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-02-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19606,
+          "sha256": "5913d48badc7984665617507128497697455e9765a46ada018577a6f23d6a409",
+          "url": "assets/img/settlements/v1/P-02-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-02-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-02-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-03-attentive": {
+      "id": "P-03-attentive",
+      "family": "P",
+      "wave": "P1",
+      "title": "Диспетчер транспорта — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-03-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8074,
+          "sha256": "9b33b306dc630134aab36b66624d43b536218c2c786699a584011bf7b0594cca",
+          "url": "assets/img/settlements/v1/P-03-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-03-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 18082,
+          "sha256": "fdd1199c7d234046e913ddbdb29469f2ae6361e7b1589070a9f4aaab6eef23ed",
+          "url": "assets/img/settlements/v1/P-03-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-03-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-03-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-03-satisfied": {
+      "id": "P-03-satisfied",
+      "family": "P",
+      "wave": "P1",
+      "title": "Диспетчер транспорта — спокойное удовлетворение",
+      "parentAssetId": "P-03-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-03-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8062,
+          "sha256": "bea311bf3f46355389ac300accbb60548466d721f15f4e0b1d8a0fff3524b50d",
+          "url": "assets/img/settlements/v1/P-03-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-03-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 18128,
+          "sha256": "63232b626dcbb57836f538440d0fb08af1a27de019eedd7061da7a0d9cf45afd",
+          "url": "assets/img/settlements/v1/P-03-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-03-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-03-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-04-attentive": {
+      "id": "P-04-attentive",
+      "family": "P",
+      "wave": "P1",
+      "title": "Инженер — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-04-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 9686,
+          "sha256": "b117736b2186ebd75735f117cef9dbd865e3c3b11339f11d54cb8f65df49f885",
+          "url": "assets/img/settlements/v1/P-04-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-04-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 23200,
+          "sha256": "03cb27a9efca1030b0a37049412b9e63ab4d2bd5ed448450fafecd0b5c968edd",
+          "url": "assets/img/settlements/v1/P-04-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-04-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-04-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-04-satisfied": {
+      "id": "P-04-satisfied",
+      "family": "P",
+      "wave": "P1",
+      "title": "Инженер — спокойное удовлетворение",
+      "parentAssetId": "P-04-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-04-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 9852,
+          "sha256": "75755a8a22922e019dc52e33edd4b907bf82419f27df13b17b3047fb1c339e70",
+          "url": "assets/img/settlements/v1/P-04-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-04-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 22780,
+          "sha256": "74053ae99e9ac8cc33bacd0ae5ed2b6d001235a3cd65444e56bb0ed4079789a1",
+          "url": "assets/img/settlements/v1/P-04-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-04-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-04-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-05-attentive": {
+      "id": "P-05-attentive",
+      "family": "P",
+      "wave": "P1",
+      "title": "Житель — родитель — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-05-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8698,
+          "sha256": "d5ee1e9f22d49f655726ad983e0641e0871212f07a4b38ce05355d1447b3c272",
+          "url": "assets/img/settlements/v1/P-05-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-05-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19732,
+          "sha256": "d92ba59e33f44f769a168822aa54d5eb2c855c84494368cb18c6fcf756f68110",
+          "url": "assets/img/settlements/v1/P-05-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-05-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-05-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-05-satisfied": {
+      "id": "P-05-satisfied",
+      "family": "P",
+      "wave": "P1",
+      "title": "Житель — родитель — спокойное удовлетворение",
+      "parentAssetId": "P-05-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-05-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8680,
+          "sha256": "e72bd22db14c7042f9afa221c41514a69954b7990b242beb9dde2efbb7700d54",
+          "url": "assets/img/settlements/v1/P-05-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-05-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19974,
+          "sha256": "6b2dd6cdd6ee017dc0ee7f9850f3334a9ddb17aa673d5dda3bc0e1f83b8048ee",
+          "url": "assets/img/settlements/v1/P-05-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-05-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-05-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-06-attentive": {
+      "id": "P-06-attentive",
+      "family": "P",
+      "wave": "P0",
+      "title": "Пожилая жительница — внимание",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-06-attentive-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8246,
+          "sha256": "a5e663b7af56d5efc4bafe924d9a0a466544b5204256235ee2b6d6397e5a0f31",
+          "url": "assets/img/settlements/v1/P-06-attentive-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-06-attentive-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19962,
+          "sha256": "1edcce49d034fa9cf01b9ac316e3a7edd0e34f7172cd10271fe18638e6c138d8",
+          "url": "assets/img/settlements/v1/P-06-attentive-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/P-06-attentive.generation.json",
+      "source": "assets/settlements/art-originals/P-06-attentive-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "P-06-satisfied": {
+      "id": "P-06-satisfied",
+      "family": "P",
+      "wave": "P0",
+      "title": "Пожилая жительница — спокойное удовлетворение",
+      "parentAssetId": "P-06-attentive",
+      "status": "visual_contact_reviewed",
+      "alpha": true,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/P-06-satisfied-160.webp",
+          "width": 160,
+          "height": 200,
+          "bytes": 8398,
+          "sha256": "23302d06f7ee555db8b3d001834e2ea0c7717361684fdf600dc801801a9508fd",
+          "url": "assets/img/settlements/v1/P-06-satisfied-160.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/P-06-satisfied-320.webp",
+          "width": 320,
+          "height": 400,
+          "bytes": 19554,
+          "sha256": "263412ee170b7f2378a03adda14e08bff7517ca43c401b81cccc14e6f6057d38",
+          "url": "assets/img/settlements/v1/P-06-satisfied-320.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "verified_positive_effect_for_story_group",
+      "provenance": "docs/settlements/art/P-06-satisfied.generation.json",
+      "source": "assets/settlements/art-originals/P-06-satisfied-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-01-before": {
+      "id": "R-01-before",
+      "family": "R",
+      "wave": "P0",
+      "title": "Начало местного приёма — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-01-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 59908,
+          "sha256": "86ce02d8e01ded690ead8d092caa339ad93d0c31c803beb2cc477d31e86c6872",
+          "url": "assets/img/settlements/v1/R-01-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-01-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 108316,
+          "sha256": "ee2f5ae430fa5f352db696db019ab5212889b6b6f6c21c754143d2238d1b980d",
+          "url": "assets/img/settlements/v1/R-01-before-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-01-before.generation.json",
+      "source": "assets/settlements/art-originals/R-01-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-01-after": {
+      "id": "R-01-after",
+      "family": "R",
+      "wave": "P0",
+      "title": "Начало местного приёма — после",
+      "parentAssetId": "R-01-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-01-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 60420,
+          "sha256": "3bdd49255cd4dfe6ea66335f16581dd551f40e7f4dd14386950e39430c6e8ed8",
+          "url": "assets/img/settlements/v1/R-01-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-01-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 109812,
+          "sha256": "3f0486fa2ea27bb2523ad19740be24b61e225b36c0e7d83bbbd534b0c62d53d9",
+          "url": "assets/img/settlements/v1/R-01-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "medical_served_increase",
+      "provenance": "docs/settlements/art/R-01-after.generation.json",
+      "source": "assets/settlements/art-originals/R-01-after-v2.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-02-before": {
+      "id": "R-02-before",
+      "family": "R",
+      "wave": "P1",
+      "title": "Высвобождение мощности соседнего учреждения — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-02-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 94828,
+          "sha256": "e8e1d19292c5e13b1f3427dfa6486fea390fce0855ef33209a3886293ac3097b",
+          "url": "assets/img/settlements/v1/R-02-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-02-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 157066,
+          "sha256": "56a9d4c541cdff7b51ef4730d1af61d2b05e1837ae1f50f88c7f4df09e0db6b6",
+          "url": "assets/img/settlements/v1/R-02-before-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-02-before.generation.json",
+      "source": "assets/settlements/art-originals/R-02-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-02-after": {
+      "id": "R-02-after",
+      "family": "R",
+      "wave": "P1",
+      "title": "Высвобождение мощности соседнего учреждения — после",
+      "parentAssetId": "R-02-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-02-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 93514,
+          "sha256": "3ed2d9249eb3bf139dea3bcdc5638724bec3c2d96b675ed5be5b78eb26e1d4e7",
+          "url": "assets/img/settlements/v1/R-02-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-02-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 176044,
+          "sha256": "dd8f1667da9631253535950b1abb6529cacbe655b5c5be6d88bdb322213f7af9",
+          "url": "assets/img/settlements/v1/R-02-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "indirect_capacity_release_verified",
+      "provenance": "docs/settlements/art/R-02-after.generation.json",
+      "source": "assets/settlements/art-originals/R-02-after-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-03-before": {
+      "id": "R-03-before",
+      "family": "R",
+      "wave": "P1",
+      "title": "Доступный регулярный рейс — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-03-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 86264,
+          "sha256": "7d69ba3dda57fe70846464d9442bef603de7ad83d2df87e04baeb6715555543c",
+          "url": "assets/img/settlements/v1/R-03-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-03-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 164238,
+          "sha256": "f524aa93c8a6a2b1bca63f6b02ac98a8ea1703e57c9543b117ce685676d965d8",
+          "url": "assets/img/settlements/v1/R-03-before-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-03-before.generation.json",
+      "source": "assets/settlements/art-originals/R-03-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-03-after": {
+      "id": "R-03-after",
+      "family": "R",
+      "wave": "P1",
+      "title": "Доступный регулярный рейс — после",
+      "parentAssetId": "R-03-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-03-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 85078,
+          "sha256": "acc67dfaf1ce11dcdcdddecdcb38ab6bb3e28b414cc4a3d8b3079480ceb745ad",
+          "url": "assets/img/settlements/v1/R-03-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-03-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 158126,
+          "sha256": "b24d294fc6663a020a48972cf9a7ab920ed0870892e8a26060d04eb7e39d4429",
+          "url": "assets/img/settlements/v1/R-03-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "transport_service_active",
+      "provenance": "docs/settlements/art/R-03-after.generation.json",
+      "source": "assets/settlements/art-originals/R-03-after-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-04-before": {
+      "id": "R-04-before",
+      "family": "R",
+      "wave": "P1",
+      "title": "Приезд выездной команды — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-04-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 91444,
+          "sha256": "7f4c09a513199ecf97e036e774fcc71ebc7fcf422d4a6942c110e9c637d59a08",
+          "url": "assets/img/settlements/v1/R-04-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-04-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 174272,
+          "sha256": "58661340f01f4240b19a8463a1f11126dece7081861753f49182f22c248cf268",
+          "url": "assets/img/settlements/v1/R-04-before-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-04-before.generation.json",
+      "source": "assets/settlements/art-originals/R-04-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-04-after": {
+      "id": "R-04-after",
+      "family": "R",
+      "wave": "P1",
+      "title": "Приезд выездной команды — после",
+      "parentAssetId": "R-04-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-04-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 90668,
+          "sha256": "f25e45dfc35f3254878226bad692635f88e965d6cc580c8fe23f1cdbb22a693c",
+          "url": "assets/img/settlements/v1/R-04-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-04-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 170854,
+          "sha256": "d2860708ec6a78101a5f260dccb2de4b54bf6268f2962eb286fb91b60e5d76f2",
+          "url": "assets/img/settlements/v1/R-04-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "mobile_visit_verified",
+      "provenance": "docs/settlements/art/R-04-after.generation.json",
+      "source": "assets/settlements/art-originals/R-04-after-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-05-before": {
+      "id": "R-05-before",
+      "family": "R",
+      "wave": "P1",
+      "title": "Использование имеющегося помещения — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-05-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 68704,
+          "sha256": "188c47fef4c2d2d5def85ac5915d319f64e2180eedc35fbbdd6b415e6a15f31c",
+          "url": "assets/img/settlements/v1/R-05-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-05-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 123934,
+          "sha256": "391aede796a87236b50c5d81ea20bb8bf9f0bb32c574b214aed6170cbf1b97d5",
+          "url": "assets/img/settlements/v1/R-05-before-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-05-before.generation.json",
+      "source": "assets/settlements/art-originals/R-05-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-05-after": {
+      "id": "R-05-after",
+      "family": "R",
+      "wave": "P1",
+      "title": "Использование имеющегося помещения — после",
+      "parentAssetId": "R-05-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-05-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 70386,
+          "sha256": "0ed3c169e1aa0f005f5ae81359d8e15ad6fcd24a3e7675af1ea7c35887ef9f6e",
+          "url": "assets/img/settlements/v1/R-05-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-05-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 128650,
+          "sha256": "ed60c289f4a0bd9c8f342f6c225d5624e008e1402624ac08ac9eb73899d2a993",
+          "url": "assets/img/settlements/v1/R-05-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "adaptation_commissioned",
+      "provenance": "docs/settlements/art/R-05-after.generation.json",
+      "source": "assets/settlements/art-originals/R-05-after-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-06-before": {
+      "id": "R-06-before",
+      "family": "R",
+      "wave": "P1",
+      "title": "Запуск локальной инженерной услуги — до",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-06-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 92112,
+          "sha256": "5105e4145049f1f04f351d6ca83614fd2b1d37760d992a0b5afdec89e260f1e5",
+          "url": "assets/img/settlements/v1/R-06-before-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-06-before-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 178320,
+          "sha256": "2fb253f4d580aa56acada8e4f3b1f8481419155b09cfc2d3e092730c7a5e5ccb",
+          "url": "assets/img/settlements/v1/R-06-before-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "snapshot_before_corresponding_project",
+      "provenance": "docs/settlements/art/R-06-before.generation.json",
+      "source": "assets/settlements/art-originals/R-06-before-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "R-06-after": {
+      "id": "R-06-after",
+      "family": "R",
+      "wave": "P1",
+      "title": "Запуск локальной инженерной услуги — после",
+      "parentAssetId": "R-06-before",
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/R-06-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 90228,
+          "sha256": "bd58d025749f365fa743d1e4b4212c950076fa828f89e6de6d92f31c9f771c2d",
+          "url": "assets/img/settlements/v1/R-06-after-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/R-06-after-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 174246,
+          "sha256": "36ede535da3e28481ce99b3bcfd85ed57e680e4914393006f0140d6936991ddc",
+          "url": "assets/img/settlements/v1/R-06-after-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "engineering_service_active",
+      "provenance": "docs/settlements/art/R-06-after.generation.json",
+      "source": "assets/settlements/art-originals/R-06-after-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-01": {
+      "id": "E-01",
+      "family": "E",
+      "wave": "P1",
+      "title": "01. Первая помощь территории",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-01-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 102278,
+          "sha256": "da53554ffef446a91e8e6ae8782ae176a019e2d667b3e1c36d8a0b92e827c9b7",
+          "url": "assets/img/settlements/v1/E-01-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-01-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 173366,
+          "sha256": "ea72bade999a7c5d4843487991d9ddf6062bd7fbb6d269915288f2eaf7bd442f",
+          "url": "assets/img/settlements/v1/E-01-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-01.generation.json",
+      "source": "assets/settlements/art-originals/E-01-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-02": {
+      "id": "E-02",
+      "family": "E",
+      "wave": "P1",
+      "title": "02. Соседние поселения",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-02-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 110470,
+          "sha256": "3eb947b332fbb7e5209d64543f31a5a0abb9d9b221a03850ef80cb7c1619ef29",
+          "url": "assets/img/settlements/v1/E-02-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-02-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 162736,
+          "sha256": "ce1222c49015a0ac828315fe73c1db9d9a1002e7b8cf29d2f994089311eeb707",
+          "url": "assets/img/settlements/v1/E-02-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-02.generation.json",
+      "source": "assets/settlements/art-originals/E-02-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-03": {
+      "id": "E-03",
+      "family": "E",
+      "wave": "P1",
+      "title": "03. Дорога до услуги",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-03-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 100712,
+          "sha256": "36104059d4870f7a1580f42d646fcddd7cdbdf747693f39937007199c1515079",
+          "url": "assets/img/settlements/v1/E-03-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-03-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 169828,
+          "sha256": "60efc49074249cc8de1b5bfcd4e198b27507e9f1c6daded03c4532eee7e18008",
+          "url": "assets/img/settlements/v1/E-03-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-03.generation.json",
+      "source": "assets/settlements/art-originals/E-03-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-04": {
+      "id": "E-04",
+      "family": "E",
+      "wave": "P1",
+      "title": "04. Работа после открытия",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-04-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 102958,
+          "sha256": "977abef107cea0c1df61171e7123ae3e171c21b58f42466c14d0527002204161",
+          "url": "assets/img/settlements/v1/E-04-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-04-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 167170,
+          "sha256": "f927badc5506f02b0a9b3d5306b540c5156bb3d4bead3124b2cb8d419adde1c6",
+          "url": "assets/img/settlements/v1/E-04-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-04.generation.json",
+      "source": "assets/settlements/art-originals/E-04-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-05": {
+      "id": "E-05",
+      "family": "E",
+      "wave": "P1",
+      "title": "05. Несколько задач одновременно",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-05-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 114804,
+          "sha256": "db8f043e2355e747fbb3e0b146b05689067e7c1126251bae1d3f45fdc6460324",
+          "url": "assets/img/settlements/v1/E-05-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-05-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 167156,
+          "sha256": "818646cbb8f09c4b5e87ac8b0a6430684a7a91f6a80c6287caa49325b9293cf7",
+          "url": "assets/img/settlements/v1/E-05-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-05.generation.json",
+      "source": "assets/settlements/art-originals/E-05-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-06": {
+      "id": "E-06",
+      "family": "E",
+      "wave": "P1",
+      "title": "06. Небольшая периферия",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-06-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 113152,
+          "sha256": "66c6b25d1c3fddfed5b20d9f142bd675cc776e56d1a6d3aeb036db94afce7bcc",
+          "url": "assets/img/settlements/v1/E-06-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-06-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 164602,
+          "sha256": "6a12ce4f6b499e2e7faa17135fe2a7f63f027715d91c0342b0f638a936f801ce",
+          "url": "assets/img/settlements/v1/E-06-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-06.generation.json",
+      "source": "assets/settlements/art-originals/E-06-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-07": {
+      "id": "E-07",
+      "family": "E",
+      "wave": "P1",
+      "title": "07. Одна площадка, разные услуги",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-07-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 107082,
+          "sha256": "de6496eac14aff3f63ae55703ff6b3d9bf7ed262cb3cb82f0778c01b7d3577c7",
+          "url": "assets/img/settlements/v1/E-07-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-07-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 158698,
+          "sha256": "c6a90cac737a65422e75ae0c523081f73e11f9c634c24cc7810fd6617dc15eed",
+          "url": "assets/img/settlements/v1/E-07-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-07.generation.json",
+      "source": "assets/settlements/art-originals/E-07-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-08": {
+      "id": "E-08",
+      "family": "E",
+      "wave": "P1",
+      "title": "08. Изменяющаяся потребность",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-08-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 108992,
+          "sha256": "3a2a7324cd35dce6a38f9022a1db72840a4e83fbd93fa72d2c2d52a51a03b93a",
+          "url": "assets/img/settlements/v1/E-08-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-08-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 178440,
+          "sha256": "30226089f2425189299d984bfd00e7ec0359d3c291eb85175457c93fd28fa8cf",
+          "url": "assets/img/settlements/v1/E-08-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-08.generation.json",
+      "source": "assets/settlements/art-originals/E-08-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-09": {
+      "id": "E-09",
+      "family": "E",
+      "wave": "P1",
+      "title": "09. Межмуниципальное соглашение",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-09-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 74916,
+          "sha256": "cfbe73ddf12e5d8ecdabc4770426e882991360357a07a954b2ba3d1e6763342c",
+          "url": "assets/img/settlements/v1/E-09-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-09-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 132710,
+          "sha256": "199cdc379491f02420439e21e3f2de8c2270d89f766a04d4c5251feb205bca5b",
+          "url": "assets/img/settlements/v1/E-09-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-09.generation.json",
+      "source": "assets/settlements/art-originals/E-09-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-10": {
+      "id": "E-10",
+      "family": "E",
+      "wave": "P1",
+      "title": "10. Устойчивость",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-10-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 114348,
+          "sha256": "869dbd8db62ab01e715395cb0d204ee347a7191073a167ed9cee2cb5fcc656de",
+          "url": "assets/img/settlements/v1/E-10-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-10-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 167896,
+          "sha256": "a9bf7c5523dc1b61f2877a9b80161765c189353a17b81ae8bdc58f78f62248de",
+          "url": "assets/img/settlements/v1/E-10-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-10.generation.json",
+      "source": "assets/settlements/art-originals/E-10-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-11": {
+      "id": "E-11",
+      "family": "E",
+      "wave": "P1",
+      "title": "11. Оставшиеся дефициты",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-11-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 109290,
+          "sha256": "2ac47b19ebcbb0363dbd430a0a8edab16722c134331b1eb932f65b8f91ed5277",
+          "url": "assets/img/settlements/v1/E-11-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-11-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 177278,
+          "sha256": "2383395f1a19f494f27b67e1cf9eb0ec6953f63f5129f38dd158b35c25a28447",
+          "url": "assets/img/settlements/v1/E-11-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-11.generation.json",
+      "source": "assets/settlements/art-originals/E-11-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "E-12": {
+      "id": "E-12",
+      "family": "E",
+      "wave": "P1",
+      "title": "12. Проверка программы",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/E-12-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 111684,
+          "sha256": "4bc31235b061fad3498d24e77a884104f16a80d00ea49b13ff82d0cea38edf01",
+          "url": "assets/img/settlements/v1/E-12-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/E-12-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 164018,
+          "sha256": "db00de450908feff2fbedf2c1a6d320220b986d596ddb9fc025caf243309212b",
+          "url": "assets/img/settlements/v1/E-12-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/E-12.generation.json",
+      "source": "assets/settlements/art-originals/E-12-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-01": {
+      "id": "L-01",
+      "family": "L",
+      "wave": "P1",
+      "title": "Малый город",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-01-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 117748,
+          "sha256": "c0bdc02a274ef1b423c736a0221405384f08585980dc89b24c401f607c315f8c",
+          "url": "assets/img/settlements/v1/L-01-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-01-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 167196,
+          "sha256": "48990f887b1788888a6d145ecfec20e0d2a6c849398c912a6555f391e775af22",
+          "url": "assets/img/settlements/v1/L-01-960.webp",
+          "quality": 76,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-01.generation.json",
+      "source": "assets/settlements/art-originals/L-01-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-02": {
+      "id": "L-02",
+      "family": "L",
+      "wave": "P1",
+      "title": "Сельское поселение",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-02-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 116732,
+          "sha256": "2c96b27e233eb2c98c41a4bd29318544aa35670156dd7b2870f3710313693d97",
+          "url": "assets/img/settlements/v1/L-02-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-02-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 175218,
+          "sha256": "1dd4245edf09a4252d4eeebb90faa0a0adba4111ac0a08762c9106ff35b35c35",
+          "url": "assets/img/settlements/v1/L-02-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-02.generation.json",
+      "source": "assets/settlements/art-originals/L-02-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-03": {
+      "id": "L-03",
+      "family": "L",
+      "wave": "P1",
+      "title": "Лесная территория",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-03-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 129916,
+          "sha256": "1cfc36f807eb764b8b604b52b497f813d3a7da060e6e66871c1deee6b9ba17c5",
+          "url": "assets/img/settlements/v1/L-03-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-03-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 174706,
+          "sha256": "b308e5b1da83a78ad00278a5810520187cfec5644c5807e4b72cad627654701f",
+          "url": "assets/img/settlements/v1/L-03-960.webp",
+          "quality": 72,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-03.generation.json",
+      "source": "assets/settlements/art-originals/L-03-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-04": {
+      "id": "L-04",
+      "family": "L",
+      "wave": "P1",
+      "title": "Речная территория",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-04-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 119840,
+          "sha256": "47e2502e0dbce8e5f6d2b419fbfe27691d9603b9cddfee4d0017f8d557f92c29",
+          "url": "assets/img/settlements/v1/L-04-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-04-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 160318,
+          "sha256": "7b645738c54cbd0094e68b099656137fa7d74fd7556cd7c4fce869cef86ba9f5",
+          "url": "assets/img/settlements/v1/L-04-960.webp",
+          "quality": 76,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-04.generation.json",
+      "source": "assets/settlements/art-originals/L-04-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-05": {
+      "id": "L-05",
+      "family": "L",
+      "wave": "P1",
+      "title": "Степная территория",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-05-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 108244,
+          "sha256": "eccc18eab71f0bcc4a971dc99c8e14a3b8e3f3b9b955726cd2cd7cc5c2831965",
+          "url": "assets/img/settlements/v1/L-05-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-05-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 162028,
+          "sha256": "1a2576bcb6a8c99f67f235f8852bcaaf15cb868662ef8bae9363a8d4bbd32e31",
+          "url": "assets/img/settlements/v1/L-05-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-05.generation.json",
+      "source": "assets/settlements/art-originals/L-05-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "L-06": {
+      "id": "L-06",
+      "family": "L",
+      "wave": "P1",
+      "title": "Горная территория",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/L-06-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 112100,
+          "sha256": "bcdb09e1e8ea559c266d65b5b00c0199a139ea12cad5f2bc1f4b30f6f01ab802",
+          "url": "assets/img/settlements/v1/L-06-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/L-06-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 169160,
+          "sha256": "ff2392f36038a4c8f447d0b6b3d14e427841ece963e8370ace469948621a985f",
+          "url": "assets/img/settlements/v1/L-06-960.webp",
+          "quality": 80,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "neutral_illustration",
+      "provenance": "docs/settlements/art/L-06.generation.json",
+      "source": "assets/settlements/art-originals/L-06-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "F-01": {
+      "id": "F-01",
+      "family": "F",
+      "wave": "P1",
+      "title": "Начало программы",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/F-01-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 106482,
+          "sha256": "384999d62f0e9af0579ef7a2264b7b294a2ab917a82dcbf1916b19dd5d648914",
+          "url": "assets/img/settlements/v1/F-01-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/F-01-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 177660,
+          "sha256": "82a02a7c1d15acb1aa40813346018bcf9cbd5b83a026c35406190044dd44ee60",
+          "url": "assets/img/settlements/v1/F-01-960.webp",
+          "quality": 84,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "program_start",
+      "provenance": "docs/settlements/art/F-01.generation.json",
+      "source": "assets/settlements/art-originals/F-01-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "F-02": {
+      "id": "F-02",
+      "family": "F",
+      "wave": "P1",
+      "title": "Промежуточный итог",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/F-02-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 87578,
+          "sha256": "5d7c183fbb3c80b640d83bfbe40ea0b2117b10c218042b6b4236aea51a95f135",
+          "url": "assets/img/settlements/v1/F-02-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/F-02-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 162828,
+          "sha256": "083ff807315efc83563eda339bc409fbacb2cd8e840552efa5c11668ef6dad07",
+          "url": "assets/img/settlements/v1/F-02-960.webp",
+          "quality": 88,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "intermediate_report",
+      "provenance": "docs/settlements/art/F-02.generation.json",
+      "source": "assets/settlements/art-originals/F-02-v1.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "F-03": {
+      "id": "F-03",
+      "family": "F",
+      "wave": "P1",
+      "title": "Завершение программы",
+      "parentAssetId": null,
+      "status": "visual_contact_reviewed",
+      "alpha": false,
+      "variants": [
+        {
+          "path": "site/assets/img/settlements/v1/F-03-640.webp",
+          "width": 640,
+          "height": 360,
+          "bytes": 117400,
+          "sha256": "f636d071284fa852536d267380256722fb6e996144be9391e1c5993e168ace8c",
+          "url": "assets/img/settlements/v1/F-03-640.webp",
+          "quality": 88,
+          "withinBudget": true
+        },
+        {
+          "path": "site/assets/img/settlements/v1/F-03-960.webp",
+          "width": 960,
+          "height": 540,
+          "bytes": 161330,
+          "sha256": "8a0fdb17de73f88f30e3bbaa78b8c9842b45e77e48b95d722cf3cdc1239c15ec",
+          "url": "assets/img/settlements/v1/F-03-960.webp",
+          "quality": 76,
+          "withinBudget": true
+        }
+      ],
+      "semanticCondition": "declared_program_goal_verified",
+      "provenance": "docs/settlements/art/F-03.generation.json",
+      "source": "assets/settlements/art-originals/F-03-v2.png",
+      "allowedUse": "Generated for this project; see docs/settlements/art/ART_DELIVERY.md"
+    },
+    "V-01": {
+      "assetId": "V-01",
+      "title": "Медицина",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-01.svg",
+      "bytes": 270,
+      "sha256": "bf0c8ec00922c1e49ed79fe449c37f6eab56246a799f5a058257d48f2d71e432",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-01",
+      "url": "assets/img/settlements/v1/V-01.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-02": {
+      "assetId": "V-02",
+      "title": "Образование",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-02.svg",
+      "bytes": 228,
+      "sha256": "bf67239a7154cf0204e3f77be56722881f58da1ef589b89e3a4c0a050359d24e",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-02",
+      "url": "assets/img/settlements/v1/V-02.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-03": {
+      "assetId": "V-03",
+      "title": "Общественные занятия",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-03.svg",
+      "bytes": 286,
+      "sha256": "3c38c593df8a7d19119c120c23e4f36f610c6e95cbddaa003a647e43632de606",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-03",
+      "url": "assets/img/settlements/v1/V-03.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-04": {
+      "assetId": "V-04",
+      "title": "Транспорт",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-04.svg",
+      "bytes": 270,
+      "sha256": "4306e252c939aaf96b5f71ad229701ac6dee645a4009183ede48d7870a629f5d",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-04",
+      "url": "assets/img/settlements/v1/V-04.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-05": {
+      "assetId": "V-05",
+      "title": "Водоснабжение",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-05.svg",
+      "bytes": 259,
+      "sha256": "0d926b571b1f1745067aac43c0dae00634e9f8e11907dbbe6e64ca8266486b1e",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-05",
+      "url": "assets/img/settlements/v1/V-05.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-06": {
+      "assetId": "V-06",
+      "title": "Теплоснабжение",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-06.svg",
+      "bytes": 270,
+      "sha256": "27916b98cc594456ba08d74f81937780a4c8ea29f4647f7043826c007301f43e",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-06",
+      "url": "assets/img/settlements/v1/V-06.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-07": {
+      "assetId": "V-07",
+      "title": "Административная услуга",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-07.svg",
+      "bytes": 234,
+      "sha256": "2344bbaf66a6a4a24996513fa90063ba1eb11a7d34b9a3dc440670e09c9ad977",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-07",
+      "url": "assets/img/settlements/v1/V-07.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-08": {
+      "assetId": "V-08",
+      "title": "Несколько услуг",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-08.svg",
+      "bytes": 368,
+      "sha256": "6ff846c4327cb4327a7ce0d7e9cafee3d80e4c9e9d20c714c0921c28aedc814c",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-08",
+      "url": "assets/img/settlements/v1/V-08.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-09": {
+      "assetId": "V-09",
+      "title": "Капитальные средства",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-09.svg",
+      "bytes": 297,
+      "sha256": "b22df4123617dc9c43381df89f2ee939a178638d7aa749ffbda08654560bf8a6",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-09",
+      "url": "assets/img/settlements/v1/V-09.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-10": {
+      "assetId": "V-10",
+      "title": "Текущие расходы",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-10.svg",
+      "bytes": 278,
+      "sha256": "bbc1ce7380ecd88c99d1a31add2ff0d3c2df5edb5260bc692b37ea6dafdca9e8",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-10",
+      "url": "assets/img/settlements/v1/V-10.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-11": {
+      "assetId": "V-11",
+      "title": "Персонал",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-11.svg",
+      "bytes": 250,
+      "sha256": "1a42281310669fa72d47e16c1ec146e908c6c6f259d3e9ea8b953a222aac5bee",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-11",
+      "url": "assets/img/settlements/v1/V-11.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-12": {
+      "assetId": "V-12",
+      "title": "Исполнительская мощность",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-12.svg",
+      "bytes": 229,
+      "sha256": "d4370fe35f402bcc4bdb829b300d7157808a8ecd6dd614c49dcd092537adb67f",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-12",
+      "url": "assets/img/settlements/v1/V-12.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-13": {
+      "assetId": "V-13",
+      "title": "Время",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-13.svg",
+      "bytes": 222,
+      "sha256": "39721a4637f724d95d6d3f31f93c46d35bd48b9efdcad3814a67ecea308c80bf",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-13",
+      "url": "assets/img/settlements/v1/V-13.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-14": {
+      "assetId": "V-14",
+      "title": "Мощность услуги",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-14.svg",
+      "bytes": 225,
+      "sha256": "7b822811c202d536cf3ef0ec3b07917acbc19a51e6034aaedd4697033378e849",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-14",
+      "url": "assets/img/settlements/v1/V-14.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-15": {
+      "assetId": "V-15",
+      "title": "Проект",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-15.svg",
+      "bytes": 220,
+      "sha256": "98aa0d85e27f8066967669f9094ea5199ec55ef119bd14aa157fb1eb5ce54841",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-15",
+      "url": "assets/img/settlements/v1/V-15.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-16": {
+      "assetId": "V-16",
+      "title": "Строительство",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-16.svg",
+      "bytes": 229,
+      "sha256": "cb2a5999df7f3aa35846edc41d9e4df7bb9246ee61c339c7b8932735717f776e",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-16",
+      "url": "assets/img/settlements/v1/V-16.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-17": {
+      "assetId": "V-17",
+      "title": "Готовность к запуску",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-17.svg",
+      "bytes": 242,
+      "sha256": "435073d0d1fdccddbe4dfd6d5f1f8b3e84b6c0678e57f0a2ce200237d4ed55af",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-17",
+      "url": "assets/img/settlements/v1/V-17.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-18": {
+      "assetId": "V-18",
+      "title": "Работает",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-18.svg",
+      "bytes": 224,
+      "sha256": "60895008af209cabda2dfb9e25cb5af56deea1d4f96389ba088272018d097a55",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-18",
+      "url": "assets/img/settlements/v1/V-18.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-19": {
+      "assetId": "V-19",
+      "title": "Ограничение",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-19.svg",
+      "bytes": 212,
+      "sha256": "4af32877c25b60199a3600da1c0ddfb112c89f01d6a07bc64e01dbb90e20bdfe",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-19",
+      "url": "assets/img/settlements/v1/V-19.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-20": {
+      "assetId": "V-20",
+      "title": "Выведено из эксплуатации",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-20.svg",
+      "bytes": 221,
+      "sha256": "b15446a013222bac92d8ec3ce4688b83fbfb93e3a6d752123f20d92c29448aa4",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-20",
+      "url": "assets/img/settlements/v1/V-20.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-21": {
+      "assetId": "V-21",
+      "title": "Существующий объект",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-21.svg",
+      "bytes": 232,
+      "sha256": "4ae391c7c4833425becc5cb59fdd2f5872a2f7ff58f0041bc7c0386f69b61394",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-21",
+      "url": "assets/img/settlements/v1/V-21.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-22": {
+      "assetId": "V-22",
+      "title": "Карта",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-22.svg",
+      "bytes": 230,
+      "sha256": "9c5cb49a6e04cb8d17cc70af72cd44ae6121db3511c19052e72fb4318cbf43ea",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-22",
+      "url": "assets/img/settlements/v1/V-22.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-23": {
+      "assetId": "V-23",
+      "title": "План",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-23.svg",
+      "bytes": 297,
+      "sha256": "2a6541a64f9c5a223f8446c1228cac5be05e439b50673106ddec65bc2a483de8",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-23",
+      "url": "assets/img/settlements/v1/V-23.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-24": {
+      "assetId": "V-24",
+      "title": "Результаты",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-24.svg",
+      "bytes": 217,
+      "sha256": "724b3665bdeab3aecb6b2efaeb5cfd98d1e43196b61530bee6e39fea9129cbe8",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-24",
+      "url": "assets/img/settlements/v1/V-24.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-25": {
+      "assetId": "V-25",
+      "title": "Сравнение",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-25.svg",
+      "bytes": 245,
+      "sha256": "a325d505da658fb12bd0067ec6f7b0201dadc476fe0d45193ba21771558bba95",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-25",
+      "url": "assets/img/settlements/v1/V-25.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-26": {
+      "assetId": "V-26",
+      "title": "Найти на карте",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-26.svg",
+      "bytes": 256,
+      "sha256": "1347ff8e91c01743401ddb5be5b10ae045bf868aa7edcbc9adfff6cb3cebb3a6",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-26",
+      "url": "assets/img/settlements/v1/V-26.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-27": {
+      "assetId": "V-27",
+      "title": "Сведения",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-27.svg",
+      "bytes": 227,
+      "sha256": "3663283948941e432f8360105c718e8983b5d137323da82412d5ee9035358dcd",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-27",
+      "url": "assets/img/settlements/v1/V-27.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-28": {
+      "assetId": "V-28",
+      "title": "Закрыть",
+      "wave": "P0",
+      "path": "assets/img/settlements/v1/V-28.svg",
+      "bytes": 200,
+      "sha256": "55c0eb061a8124ad559262c5b358d6c3ad1ae513a9e4790dd160bd283678f953",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-28",
+      "url": "assets/img/settlements/v1/V-28.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-29": {
+      "assetId": "V-29",
+      "title": "Продолжить",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-29.svg",
+      "bytes": 201,
+      "sha256": "01962d1d443bfede1bbe0e86bc257da3dbf422a0161e319b0dfbd7acae89d190",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-29",
+      "url": "assets/img/settlements/v1/V-29.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-30": {
+      "assetId": "V-30",
+      "title": "Первая помощь",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-30.svg",
+      "bytes": 292,
+      "sha256": "787bb3245bb0f6d494a0146146ec302c42e4d9b1ce5d52530070953e0cb76dd3",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-30",
+      "url": "assets/img/settlements/v1/V-30.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-31": {
+      "assetId": "V-31",
+      "title": "Связанная сеть",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-31.svg",
+      "bytes": 294,
+      "sha256": "ece36767d2bf5773af679c12a8e04dc5878e601d8a8e8af492c507c98a299076",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-31",
+      "url": "assets/img/settlements/v1/V-31.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    },
+    "V-32": {
+      "assetId": "V-32",
+      "title": "Завершённая программа",
+      "wave": "P1",
+      "path": "assets/img/settlements/v1/V-32.svg",
+      "bytes": 240,
+      "sha256": "5acdda1a2c4f31a11081580a849ce55333fa17f7a0fade89da6016b85da81c32",
+      "status": "vector_render_reviewed",
+      "source": "Original programmatically authored SVG geometry",
+      "license": "Project original; no third-party raster or icon source",
+      "viewBox": "0 0 24 24",
+      "strokeWidth": 1.75,
+      "id": "V-32",
+      "url": "assets/img/settlements/v1/V-32.svg",
+      "family": "V",
+      "semanticCondition": "programmatic_state_or_control"
+    }
+  }
+}

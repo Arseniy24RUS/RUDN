@@ -39,13 +39,15 @@ export function rekeyStudentValue(value, {from, to, ids = {}}) {
     if (Array.isArray(item)) return item.map(child => visit(child, field));
     if (item && typeof item === 'object' && !(typeof Blob !== 'undefined' && item instanceof Blob)) {
       const puzzleResult = item.type === 'map-puzzle' && item.leaderboard;
+      const settlementResult = item.type === 'settlements' && item.leaderboard;
       const next = Object.fromEntries(Object.entries(item).map(([name, child]) => [name,
         // This JSON payload may already be public under append-only rules.
-        puzzleResult && name === 'leaderboard' ? JSON.parse(JSON.stringify(child)) : visit(child, name)]));
+        (puzzleResult || settlementResult) && name === 'leaderboard' ? JSON.parse(JSON.stringify(child)) : visit(child, name)]));
       if (puzzleResult) {
         try { next.leaderboardAttemptId = puzzleLeaderboardAttemptId(item); }
         catch { /* Retain an unpublishable receipt without blocking the owner's other work. */ }
       }
+      if (settlementResult) next.leaderboardAttemptId = item.leaderboardAttemptId || item.leaderboard.id;
       return next;
     }
     return item;

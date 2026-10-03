@@ -5,6 +5,7 @@ import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
 import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.8';
+import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
 
 const PROFILE_KEY='rudn.profile.v1';
@@ -250,6 +251,9 @@ class Backend{
           // acknowledge it before both the grade and public result are durable.
           if(attempt.type==='map-puzzle'&&attempt.leaderboard){
             await commitPuzzleLeaderboard(this.puzzleLeaderboardTransport(),puzzleLeaderboardAttemptId(attempt),attempt.leaderboard,{signal,active});
+          }
+          if(attempt.type==='settlements'&&attempt.leaderboard){
+            await commitSettlementsLeaderboard(this.restTransport(),result,{signal,active});
           }
           try{
             storeAttempt(result);

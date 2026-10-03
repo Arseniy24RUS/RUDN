@@ -426,7 +426,7 @@ export function createDurableStore(options = {}) {
 
   async function findDraft(scope) {
     if (scope.attemptId) return transaction(['drafts'], false, tx => tx.get('drafts', draftKey(scope)));
-    return transaction(['drafts'], false, async tx => (await tx.all('drafts')).filter(draft => draft.scope === scopeKey(scope)).sort((a, b) => b.updatedAt - a.updatedAt || b.revision - a.revision)[0]);
+    return transaction(['drafts'], false, async tx => (await tx.all('drafts')).filter(draft => draft.scope === scopeKey(scope) && (!scope.attemptId || draft.attemptId === scope.attemptId)).sort((a, b) => b.updatedAt - a.updatedAt || b.revision - a.revision)[0]);
   }
 
   async function statusFor(draft, overrides = {}) {
@@ -434,7 +434,7 @@ export function createDurableStore(options = {}) {
     const records = await transaction(['outbox', 'attachments', 'conflicts'], false, async tx => ({
       operations: (await tx.all('outbox')).filter(op => op.draftId === draft.id),
       attachments: await Promise.all((draft.attachmentIds || []).map(id => tx.get('attachments', id))),
-      conflicts: (await tx.all('conflicts')).filter(item => item.draftId === draft.id),
+      conflicts: (await tx.all('conflicts')).filter(item => item.draftId === draft.id && !item.resolvedAt),
     }));
     const hasMissingAttachment = records.attachments.some(record => !record || record.durable === false || (!db && !record.dataUrl && !record.remoteUrl));
     const fileUnavailableOffline=records.attachments.some(record=>record?.remoteUrl&&!record.blob&&!record.dataUrl)&&globalThis.navigator?.onLine===false;
@@ -541,14 +541,18 @@ export function createDurableStore(options = {}) {
       const previous = await tx.get('drafts', id);
       if (previous) {
         const pending = (await tx.all('outbox')).some(op => op.draftId === id);
+        const unresolved = (await tx.all('conflicts')).some(conflict => conflict.draftId === id && !conflict.resolvedAt);
         const same = remote.lastIntentId && remote.lastIntentId === previous.lastIntentId;
         const older = Number.isFinite(remote.remoteRevision) && Number.isFinite(previous.remoteRevision) && remote.remoteRevision <= previous.remoteRevision;
         if (same || older) return {draft: previous};
-        if (pending || previous.acknowledgedRevision < previous.revision || previous.phase === 'completed') {
+        if (pending || unresolved || previous.acknowledgedRevision < previous.revision || previous.phase === 'completed') {
           const conflict = remoteConflict({owner: input.owner, draftId: id, current: previous, incoming: remote, remoteRevision: remote.remoteRevision});
           if (!await tx.get('conflicts', conflict.id)) await tx.put('conflicts', conflict);
           return {draft: previous, conflict};
         }
+        // Completion unlocks the activity permanently. It cannot authorize
+        // replacing a pending tutorial replay or merging its progress steps.
+        if (input.activitySlug === 'settlements-tutorial') input.state = {...input.state, completed: Boolean(input.state.completed || previous.state?.completed)};
       }
       const revision = (previous?.revision || 0) + 1;
       for(const file of remote.remoteAttachments||[]){
@@ -567,6 +571,52 @@ export function createDurableStore(options = {}) {
     if (result.conflict) await mirrorConflict(result.conflict);
     else if (result.changed) await updateMirrorFromDatabase(id);
     return {...result.draft, saveStatus: await statusFor(result.draft), ...(result.conflict ? {conflictId: result.conflict.id} : {})};
+  }
+
+  /** Apply an explicitly selected whole branch; retain both branches as resolved evidence. */
+  async function resolveRemoteConflict(remote) {
+    const input = normalize(remote);
+    await ready();
+    const id = draftKey(input);
+    const draft = await transaction(['drafts', 'outbox', 'conflicts', 'attempts'], true, async tx => {
+      const previous = await tx.get('drafts', id);
+      const revision = (previous?.revision || 0) + 1;
+      const value = {...copy(remote), id, scope: scopeKey(input), owner: input.owner,
+        studentKey: input.owner.startsWith('student:') ? input.owner.slice(8) : null,
+        state: input.state, revision, acknowledgedRevision: revision, queue: false,
+        updatedAt: now(), phase: remote.phase || input.state.phase || 'answering'};
+      delete value.saveStatus;
+      await tx.put('drafts', value);
+      for (const op of await tx.all('outbox')) if (op.draftId === id) {
+        if (op.type === 'attempt') {
+          // This result did not finish its cloud delivery. Its full immutable
+          // receipt stays in conflict evidence, outside the active attempt slot.
+          // Otherwise a later completion of the selected branch would reuse the
+          // stale receipt and never create another outbox operation.
+          const storageId = attemptKey(input.owner, input.attemptId);
+          const pendingAttempt = await tx.get('attempts', storageId);
+          if (pendingAttempt) {
+            await tx.put('conflicts', {id: `superseded-attempt:${id}:${value.lastIntentId}`,
+              owner: input.owner, draftId: id, current: previous, incoming: copy(remote),
+              attempt: pendingAttempt, operation: op, createdAt: now(), resolvedAt: now(),
+              resolutionIntentId: value.lastIntentId, reason: 'unacknowledged-attempt-superseded'});
+            await tx.delete('attempts', storageId);
+          }
+        }
+        await tx.delete('outbox', op.id);
+      }
+      for (const conflict of await tx.all('conflicts')) if (conflict.draftId === id && !conflict.resolvedAt) {
+        await tx.put('conflicts', {...conflict, resolvedAt: now(), resolutionIntentId: value.lastIntentId});
+      }
+      return value;
+    });
+    // Update conflict mirrors as well, so localStorage recovery cannot resurrect them.
+    const resolved = await transaction(['conflicts'], false, async tx => (await tx.all('conflicts')).filter(item => item.draftId === id && item.resolvedAt));
+    for (const conflict of resolved) journalWrite(`${MIRROR}conflict:${conflict.id}`, {conflict, fallback: !db});
+    await updateMirrorFromDatabase(id);
+    const saveStatus = await statusFor(draft);
+    notify({id, owner: input.owner, saveStatus});
+    return {...draft, saveStatus};
   }
 
   async function importLegacy({owner}) {
@@ -755,6 +805,7 @@ export function createDurableStore(options = {}) {
     importLegacy,
     importRemoteDraft,
     recordRemoteConflict,
+    resolveRemoteConflict,
     async exportBackup({owner} = {}) {
       await ready();
       const data = await transaction(TABLES, false, async tx => Object.fromEntries(await Promise.all(TABLES.filter(name => name !== 'meta').map(async name => [name, (await tx.all(name)).filter(record => !owner || record.owner === owner)]))));

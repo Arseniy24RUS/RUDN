@@ -231,6 +231,28 @@ try {
           await Promise.all(Array.from({length: 12}, (_, i) => (i % 2 ? left : right).checkpoint({...s, state: {index: i}})));
           equal((await left.loadDraft(s)).revision, 12, 'cross-tab fallback revision'); left.close(); right.close();
         });
+        await test('tutorial completion cannot overwrite a pending or unresolved replay in IDB or fallback', async () => {
+          for (const fallback of [false, true]) {
+            const local = mapStorage(), s = {...scope(`tutorial-${fallback}`), activitySlug: 'settlements-tutorial', mode: 'tutorial'};
+            const store = make(`tutorial-${fallback}`, fallback ? {indexedDB: null, localStorage: local} : {});
+            await store.checkpoint({...s, state: {completed: false, step: 2, engineSave: {actions: ['local']}}});
+            const remote = {...s, state: {completed: true, step: 6, engineSave: {actions: ['cloud']}}, remoteRevision: 2, lastIntentId: 'remote-tutorial'};
+            const conflicted = await store.importRemoteDraft(remote);
+            equal(conflicted.state.engineSave.actions, ['local'], 'pending replay retained');
+            assert(conflicted.conflictId, 'completed cloud still creates conflict');
+            const pending = (await store.listPending({owner: s.owner}))[0];
+            equal(pending.payload.state.engineSave.actions, ['local'], 'outbox retains exactly the local replay');
+            await store.ack(pending.id, pending.revision);
+            equal((await store.importRemoteDraft({...remote, remoteRevision: 3})).state.engineSave.actions, ['local'], 'conflict ACK cannot authorize replacement');
+            equal((await store.listConflicts({owner: s.owner})).length, 2, 'both observed remote revisions retained');
+            await store.resolveRemoteConflict({...remote, remoteRevision: 4});
+            const later = await store.importRemoteDraft({...remote, lastIntentId: 'remote-redo', remoteRevision: 5, state: {completed: false, step: 0, engineSave: {actions: []}}});
+            equal(later.state.completed, true, 'safe import retains completion');
+            equal(later.state.step, 0, 'safe import keeps the selected branch step');
+            equal(later.state.engineSave.actions, [], 'safe import keeps exact replay including empty undo');
+            store.close();
+          }
+        });
         return results;
       });
       assert.equal(errors.length, 0, `${engine} browser errors: ${errors.join('; ')}`);

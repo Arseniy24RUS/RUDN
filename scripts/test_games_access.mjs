@@ -12,8 +12,9 @@ const model={isAdmin:()=>role==='teacher',getProfile:()=>role==='student'?{}:nul
 const available=()=>GAMES.filter(game=>gameAccessGate(game.id,model)?.open!==false).map(game=>game.id);
 assert.deepEqual(available(),['maps']);
 overrides={'topic-2':'closed','topic-5':'open'};assert.deepEqual(available(),['reception']);
-overrides={};now=Date.parse('2026-11-24T12:00:00Z');assert.equal(available().length,4);
-for(role of ['guest','teacher']){overrides={'topic-2':'closed','topic-5':'closed','topic-6':'closed','topic-7':'closed'};assert.equal(available().length,4);}
+overrides={'topic-2':'closed','topic-3':'open'};assert.deepEqual(available(),['settlements']);
+overrides={};now=Date.parse('2026-11-24T12:00:00Z');assert.equal(available().length,5);
+for(role of ['guest','teacher']){overrides={'topic-2':'closed','topic-3':'closed','topic-5':'closed','topic-6':'closed','topic-7':'closed'};assert.equal(available().length,5);}
 console.log('PASS course schedule, instructor overrides, guest and teacher access');
 if(process.argv.includes('--unit'))process.exit(0);
 
@@ -64,9 +65,9 @@ try{
   await access({'topic-2':'closed'});await page.locator('.access-lock-panel').waitFor();
   await page.locator('.access-lock-panel a').click();await ready();assert.deepEqual(await cards(),[]);
   await access({});assert.deepEqual(await cards(),['maps']);
-  for(const module of ['career','reception']){
+  for(const module of ['career','reception','settlements']){
     await go('games/'+module);await page.locator('.access-lock-panel').waitFor();
-    assert.equal(await page.locator('#careerMount,#receptionMount').count(),0);
+    assert.equal(await page.locator('#careerMount,#receptionMount,#settlementsMount').count(),0);
   }
   await go('puzzle');await page.locator('#geoPuzzleApp').waitFor();
   await go('games');await page.locator('[data-game=maps]').waitFor();
@@ -81,7 +82,7 @@ try{
   await page.evaluate(()=>{localStorage.setItem('qa.access',JSON.stringify({'topic-7':'closed'}));window.dispatchEvent(new Event('rudn:accesschange'));});
   await page.locator('#app').waitFor({state:'hidden'});
   for(const role of ['guest','teacher']){
-    await page.goto(base+'/__qa/'+role);await page.locator('[data-game=career]').waitFor();assert.equal((await cards()).length,4);
+    await page.goto(base+'/__qa/'+role);await page.locator('[data-game=career]').waitFor();assert.equal((await cards()).length,5);
   }
   // A guest's graded route must explain the missing profile instead of
   // showing the static "Preparing the map" canvas with no actual download.
@@ -111,7 +112,7 @@ try{
   await page.locator('.access-lock-panel').waitFor();
   await go('games');await page.locator('[data-game=maps]').waitFor();
   await page.evaluate(()=>{localStorage.setItem('qa.now','"2026-11-24T12:00:00Z"');localStorage.removeItem('qa.access');window.dispatchEvent(new Event('rudn:accesschange'));});
-  await ready();assert.equal((await cards()).length,4);
+  await ready();assert.equal((await cards()).length,5);
   await page.evaluate(()=>{localStorage.removeItem('qa.now');localStorage.setItem('qa.restoring','true');});
   await page.reload();await page.locator('#app [role=status]').waitFor();assert.equal(await page.locator('[data-game]').count(),0);
   await page.evaluate(()=>window.dispatchEvent(new Event('qa:auth-ready')));await page.locator('[data-game=maps]').waitFor();assert.deepEqual(await cards(),['maps']);

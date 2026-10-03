@@ -1,0 +1,144 @@
+{
+  "version": "2.1.0",
+  "note": "Derived from the artwork supplied with RUDN Settlements. No new AI images, no map screenshot baked into the UI. Decorative sprites do not represent surveyed buildings or land cover.",
+  "assets": {
+    "tree-broadleaf.webp": {
+      "source": "D-02-768.webp",
+      "operation": "Polygon cutout, feathered 0.65 px, source alpha retained, resized",
+      "bytes": 8758,
+      "sha256": "139319158230b9d84fd9a652ec08d2840a05f81b58a03a9efedaf915001b529f"
+    },
+    "tree-pine.webp": {
+      "source": "O-01-ready-512.webp",
+      "operation": "Polygon cutout, feathered 0.65 px, source alpha retained, resized",
+      "bytes": 4396,
+      "sha256": "f49992131a79cc22d25877987295e2c8c51c86cd149230d88b541faaa550d365"
+    },
+    "house-blue.webp": {
+      "source": "D-02-768.webp",
+      "operation": "Polygon cutout, feathered 0.65 px, source alpha retained, resized",
+      "bytes": 11112,
+      "sha256": "911b15a4ad2a1908f53db60119d830da00d3a3c20bc3e2ae90595b8042e53400"
+    },
+    "house-red.webp": {
+      "source": "D-02-768.webp",
+      "operation": "Polygon cutout, feathered 0.65 px, source alpha retained, resized",
+      "bytes": 9650,
+      "sha256": "cf088f7f8895d8537fcb728ca2f182bf8f011f408b8d07b5d10da2ec683dd1be"
+    },
+    "village.webp": {
+      "source": "D-02-768.webp; O-01-ready-512.webp",
+      "operation": "Composite of existing cottage and tree cutouts; decorative settlement symbol",
+      "bytes": 12708,
+      "sha256": "a2230accd4ecd17a4a2c1ffc5aa781e7d6468c98d5d2f1a0b2a93524332fa2f5"
+    },
+    "town.webp": {
+      "source": "D-02-768.webp; O-01-ready-512.webp",
+      "operation": "Composite of existing cottage and tree cutouts; decorative settlement symbol",
+      "bytes": 17138,
+      "sha256": "6f5376dc7bfe446ebefe641e6f46207f3b835cabd8159dd3637369e8c16a7b65"
+    },
+    "city.webp": {
+      "source": "D-02-768.webp; O-01-ready-512.webp",
+      "operation": "Composite of existing cottage and tree cutouts; decorative settlement symbol",
+      "bytes": 18970,
+      "sha256": "10be8f6433c545e6d31135960b11f1e5410655c6952f11bbd21a7d63c261b5b9"
+    },
+    "ground.webp": {
+      "source": "L-05-960.webp",
+      "operation": "Blurred mirrored grass crop; seamless decorative ground, not observed land cover",
+      "bytes": 492,
+      "sha256": "29ac7be96cd3b1b607f24d3f6a6624f8c4820d2d72010a2711b6fa4c6e814658"
+    },
+    "O-01-ready.webp": {
+      "source": "O-01-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 34404,
+      "sha256": "01a55aa57d90331e7bc434d610d90875d059e27aeb53fde108505a5b965b4b00"
+    },
+    "O-01-build.webp": {
+      "source": "O-01-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 35124,
+      "sha256": "ce3d27cae4b6cd9f1fa0c5c86bbf8356b799cbbc41ef78d205f72ba2c890d80c"
+    },
+    "O-02-ready.webp": {
+      "source": "O-02-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 33794,
+      "sha256": "a014cd0edc0e7c7734c9f5e7642793da0a61eb30b6ab50a88b51eeea86785d51"
+    },
+    "O-02-build.webp": {
+      "source": "O-02-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 34772,
+      "sha256": "76dd161514f1c1a6e85393276ab8cac5608324134eecf1bfb39c01642a499682"
+    },
+    "O-03-ready.webp": {
+      "source": "O-03-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 32144,
+      "sha256": "a04971609fc94c1e5bfc14695221c63c1aa8cbdb1bea0da0fc30813d98df2f25"
+    },
+    "O-03-build.webp": {
+      "source": "O-03-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 31988,
+      "sha256": "903dba4b29dd06f3c878687760fdabf8650025b53add9b93fe0c99cd87c3969c"
+    },
+    "O-04-ready.webp": {
+      "source": "O-04-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 32800,
+      "sha256": "d0e1463641b9cf893a90ede4df8b1f724c87bb0ae4e4765e77aaa78201fa7ab5"
+    },
+    "O-04-build.webp": {
+      "source": "O-04-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 32914,
+      "sha256": "470530ee894b71ee58d4efe028d5d188a339243a6b2b973ed6a817891883ba63"
+    },
+    "O-05-ready.webp": {
+      "source": "O-05-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 34838,
+      "sha256": "9b6922bcf7269860f9c79090b43012ac4ae8240fa14d2c99e0fc7848f2fab6a8"
+    },
+    "O-05-build.webp": {
+      "source": "O-05-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 33714,
+      "sha256": "e194464e76c5b4f217eacf5cbf7a2c3991690aa297a9eba1ded3adbc6a96a937"
+    },
+    "O-06-ready.webp": {
+      "source": "O-06-ready-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 32302,
+      "sha256": "307b35e2c14458c4bd6338db4647c9061fa0fab96e091ff8b66c91e0cb3be6f0"
+    },
+    "O-06-build.webp": {
+      "source": "O-06-build-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 33282,
+      "sha256": "77f30640b5825aba123c98e9fda7da61e28ea3753c7460fc5edc59de62fa3c39"
+    },
+    "O-09.webp": {
+      "source": "O-09-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 21218,
+      "sha256": "03c1dcce4c8d23afe97fd5d0a36402dd267aa137c1e4876d5bddb5e3a12428c2"
+    },
+    "O-10.webp": {
+      "source": "O-10-512.webp",
+      "operation": "Trimmed transparent outer padding; 320 px production sprite",
+      "bytes": 21876,
+      "sha256": "396fcbb72916666e2491416559dfda1101c386bd8e4497ce5625ecd08f987bad"
+    },
+    "panorama.webp": {
+      "source": "L-05-960.webp",
+      "operation": "Top panorama crop for decorative app header",
+      "bytes": 72914,
+      "sha256": "8d435c6359e530cfc4ff1cd1dfe28db084e583e21a3d917ab13b6de07205b854"
+    }
+  }
+}

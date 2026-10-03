@@ -1,0 +1,5 @@
+# The imported game is a byte-verified source artifact on every operating system.
+site/apps/settlements/runtime/** -text
+site/apps/settlements/source-manifest.json text eol=lf
+scripts/test-settlements-replay.mjs text eol=lf
+scripts/summarize-settlements-replay.mjs text eol=lf

@@ -93,7 +93,7 @@
       "title": "Система расселения России",
       "short_title": "Система расселения России",
       "summary": "Типологизация территорий, сеть населённых пунктов, агломерации, опорный каркас расселения, опорные населённые пункты и пространственная стратегия.",
-      "seminar_title": "Практикум: дашборд системы расселения",
+      "seminar_title": "Игра «Система расселения»",
       "lecture": {
         "slug": "lecture-3",
         "title": "Лекция 3. Система расселения России",
@@ -112,10 +112,10 @@
       },
       "seminar": {
         "slug": "seminar-3",
-        "title": "Семинар 3. Практикум: дашборд системы расселения",
+        "title": "Семинар 3. Игра «Система расселения»",
         "points": 5,
-        "title_en": "Seminar 3. Settlement-system dashboard",
-        "title_zh": "研讨课3：居民点体系数据看板"
+        "title_en": "Seminar 3. Settlement System game",
+        "title_zh": "研讨课3：聚落系统游戏"
       },
       "title_en": "Russia’s settlement system",
       "title_zh": "俄罗斯居民点体系",
@@ -123,8 +123,8 @@
       "short_title_zh": "居民点体系",
       "summary_en": "Settlements, the supporting framework of settlement, urban agglomerations and support settlements.",
       "summary_zh": "居民点、居民点支撑骨架、城市群和支撑性居民点。",
-      "seminar_title_en": "Seminar 3. Settlement-system dashboard",
-      "seminar_title_zh": "研讨课3：居民点体系数据看板"
+      "seminar_title_en": "Seminar 3. Settlement System game",
+      "seminar_title_zh": "研讨课3：聚落系统游戏"
     },
     {
       "number": 4,
@@ -328,7 +328,6 @@
   },
   "external_apps": {
     "puzzle": "https://arseniy24rus.github.io/Russian-regions-puzzle/",
-    "settlement_dashboard": "https://datalens.yandex/kqam1c0gzr265",
     "civil_service_test": "https://edu.gossluzhba.gov.ru/test",
     "governor_simulator": "apps/governor/index.html",
     "career_guidance": "#activity/seminar-6"

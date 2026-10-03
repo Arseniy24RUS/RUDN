@@ -88,6 +88,19 @@ export function planRosterUpdate(root, options) {
       for (const [id, attempt] of Object.entries(root.attempts?.[source] || {})) {
         if (attempt.id !== id || attempt.studentKey !== source) throw Error('Invalid source attempt identity');
         const next = rekeyStudentAttempt(attempt, source, canonical);
+        if(next.type==='settlements' && next.leaderboard){
+          const publicId=next.leaderboardAttemptId || next.leaderboard.id;
+          const participantId=ticketHash('rudn-settlements-v1:'+canonical);
+          next.leaderboard={...next.leaderboard,participantId};
+          const ownerPath='settlementsOwners/'+publicId;
+          const existingOwner=getPath(root,ownerPath);
+          if(existingOwner && (existingOwner.studentKey===source || existingOwner.studentKey===canonical)) {
+            set(ownerPath,{...existingOwner,studentKey:canonical,attemptId:next.id,participantId});
+          }
+          const rowPath='settlementsLeaderboard/'+next.leaderboard.mode+'/'+next.leaderboard.difficulty+'/'+publicId;
+          const row=getPath(root,rowPath);
+          if(row && row.participantId!==participantId)set(rowPath,{...row,participantId});
+        }
         const path = 'attempts/'+canonical+'/'+next.id;
         const old = getPath(root, path);
         if (old) {

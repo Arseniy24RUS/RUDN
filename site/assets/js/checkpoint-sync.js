@@ -27,10 +27,16 @@ function cloudDraft(operation,identity,deviceId){
   const value=copy(draft);
   delete value.saveStatus;
   delete value.queue;
+  if((value.mode==='settlements-assessment'||value.mode==='settlements-free'||value.activitySlug==='settlements-tutorial') &&
+    value.state?.engineSave && typeof value.state.engineSave==='object'){
+    // RTDB drops empty arrays. The engine requires an exact empty action log,
+    // so encode only its replay document, never map data, as lossless JSON.
+    value.state.engineSave=JSON.stringify(value.state.engineSave);
+  }
   return {...value,deviceId,ownerUid:identity.uid,localRevision:operation.revision};
 }
 
-/** Pure reconciliation: no answers or game states are ever merged field by field. */
+/** Reconcile whole branches; only the tutorial's completion flag is monotonic. */
 export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   const envelope={
     schemaVersion:1,studentKey:incoming.studentKey,activitySlug:incoming.activitySlug,
@@ -45,6 +51,9 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   }
   const head=current.current;
   if(!head)throw fault('database/checkpoint-invalid');
+  const tutorial=incoming.activitySlug==='settlements-tutorial';
+  const completed=tutorial && [head,incoming,...Object.values(current.conflicts||{})].some(branch=>branch.state?.completed===true);
+  if(tutorial)incoming={...incoming,state:{...incoming.state,completed}};
   if(head.lastIntentId===incoming.lastIntentId||
     (head.deviceId===incoming.deviceId&&head.localRevision>=incoming.localRevision)){
     return {next:undefined,conflict:false,remoteRevision:current.revision};
@@ -56,13 +65,18 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   const revision=current.revision+1;
   const sameBranch=head.deviceId===incoming.deviceId&&incoming.localRevision>head.localRevision;
   const followsRemote=incoming.remoteRevision===current.revision;
-  if(sameBranch||followsRemote){
+  const terminalChanged=(incoming.mode==='settlements-assessment'||incoming.mode==='settlements-free') &&
+    ((head.state?.status==='abandoned' && incoming.state?.status!=='abandoned') ||
+    (head.state?.status==='completed' && (incoming.state?.status!=='completed' || ['terminal','coverageNp','coveragePopulation','turns','spentMillionRub','reason'].some(name=>incoming.state?.result?.[name]!==head.state?.result?.[name]))));
+  if((sameBranch||followsRemote)&&!terminalChanged){
     return {next:{...current,...envelope,revision,current:{...incoming,remoteRevision:revision}},conflict:false,remoteRevision:revision};
   }
   // A second device edited from an older base. Retain the cloud head and the
   // incoming complete state, with a stable key making uncertain retries safe.
   return {
-    next:{...current,...envelope,revision,conflicts:{...current.conflicts,[key(incoming.lastIntentId)]:incoming}},
+    next:{...current,...envelope,revision,
+      ...(tutorial?{current:{...head,state:{...head.state,completed}}}:{}),
+      conflicts:{...current.conflicts,[key(incoming.lastIntentId)]:incoming}},
     conflict:true,remoteRevision:revision,remote:head
   };
 }
@@ -186,6 +200,18 @@ export function createCheckpointSync({
             }
           }else if(operation.type==='attempt'){
             if(typeof commitAttempt!=='function')throw fault('database/attempt-writer-unavailable');
+            if(operation.payload.type==='settlements'){
+              // A terminal state is never delivered ahead of its authoritative
+              // checkpoint, nor after a conflicting branch was retained.
+              const draft=await store.loadDraft({owner:operation.owner,activitySlug:operation.activitySlug,mode:operation.mode,attemptId:operation.attemptId});
+              const tutorial=await store.loadDraft({owner:operation.owner,activitySlug:'settlements-tutorial',mode:'tutorial'});
+              if(tutorial?.saveStatus?.state==='conflict')throw fault('storage/final-checkpoint-pending');
+              if(!draft || draft.acknowledgedRevision<draft.revision || draft.saveStatus?.state==='conflict')throw fault('storage/final-checkpoint-pending');
+              const {value:head}=await transport.get(checkpointPath(draft),{signal});
+              assertActive(session);
+              if(!head || Object.keys(head.conflicts||{}).length || head.current?.lastIntentId!==draft.lastIntentId ||
+                head.current?.state?.status!=='completed')throw fault('storage/final-checkpoint-pending');
+            }
             const attachments=await attachmentsFor(operation,session,signal);
             assertActive(session);
             // The callback resolves only after immutable attempt AND best-grade

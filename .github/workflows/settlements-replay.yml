@@ -1,0 +1,150 @@
+name: Settlements current-engine replay (82 territories × 3 difficulties)
+
+on:
+  pull_request:
+    paths:
+      - 'site/apps/settlements/**'
+      - 'site/assets/js/settlements-*.js'
+      - 'site/assets/js/backend.js'
+      - 'site/assets/js/checkpoint-sync.js'
+      - 'site/assets/js/durable-store.js'
+      - 'site/assets/js/main.js'
+      - 'firebase/database.rules.json'
+      - 'scripts/test-settlements-*.py'
+      - 'scripts/test-settlements-*.mjs'
+      - 'scripts/test-settlements-replay.mjs'
+      - 'scripts/summarize-settlements-replay.mjs'
+      - '.github/workflows/settlements-replay.yml'
+      - '.gitattributes'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: settlements-replay-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: |
+          node scripts/sync-settlements.mjs --check
+          node --test scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs
+          node scripts/test_games_access.mjs --unit
+      - run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
+      - run: |
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+          python scripts/test-settlements-browser.py --output artifacts/settlements-native-browser
+          python scripts/test-settlements-resources.py --output artifacts/settlements-native-resources
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: settlements-native-browser
+          path: |
+            artifacts/settlements-native-browser/
+            artifacts/settlements-native-resources/
+          if-no-files-found: warn
+          retention-days: 3
+          overwrite: true
+
+  catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      regions: ${{ steps.catalog.outputs.regions }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/sync-settlements.mjs --check
+      - id: catalog
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          // Start the largest inputs first so the final batch is not dominated
+          // by one territory. Every territory still runs all three difficulties.
+          const regions=JSON.parse(fs.readFileSync('site/apps/settlements/runtime/data/settlements/v1/manifest.json','utf8')).regions.sort((a,b)=>b.settlementCount-a.settlementCount||a.id.localeCompare(b.id)).map(r=>r.id);
+          assert.equal(regions.length,82);
+          assert.equal(new Set(regions).size,82);
+          assert(regions.every(id=>/^[a-z0-9_]+$/.test(id)));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`regions=${JSON.stringify(regions)}\n`);
+          JS
+
+  replay:
+    needs: catalog
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        region: ${{ fromJSON(needs.catalog.outputs.regions) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Replay, restore and undo all three current scenarios
+        env:
+          REGION: ${{ matrix.region }}
+        run: node --expose-gc --max-old-space-size=1536 scripts/test-settlements-replay.mjs --regions "$REGION" --out "artifacts/settlements-replay/$REGION"
+      - name: Keep current-run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: settlements-replay-${{ matrix.region }}
+          path: artifacts/settlements-replay/${{ matrix.region }}/
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 9
+          overwrite: true
+
+  verify-all-246:
+    needs: [catalog, replay]
+    if: always() && needs.catalog.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: settlements-replay-*
+          path: artifacts/settlements-replay-downloaded
+      - name: Require exactly 246 passing scenarios from this build
+        run: node scripts/summarize-settlements-replay.mjs --input artifacts/settlements-replay-downloaded --out artifacts/settlements-replay-summary.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: settlements-replay-summary
+          path: artifacts/settlements-replay-summary.json
+          if-no-files-found: error
+          retention-days: 3
+          overwrite: true
