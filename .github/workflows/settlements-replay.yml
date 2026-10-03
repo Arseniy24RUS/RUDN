@@ -82,7 +82,9 @@ jobs:
           node --input-type=module <<'JS'
           import fs from 'node:fs';
           import assert from 'node:assert/strict';
-          const regions=JSON.parse(fs.readFileSync('site/apps/settlements/runtime/data/settlements/v1/manifest.json','utf8')).regions.map(r=>r.id).sort();
+          // Start the largest inputs first so the final batch is not dominated
+          // by one territory. Every territory still runs all three difficulties.
+          const regions=JSON.parse(fs.readFileSync('site/apps/settlements/runtime/data/settlements/v1/manifest.json','utf8')).regions.sort((a,b)=>b.settlementCount-a.settlementCount||a.id.localeCompare(b.id)).map(r=>r.id);
           assert.equal(regions.length,82);
           assert.equal(new Set(regions).size,82);
           assert(regions.every(id=>/^[a-z0-9_]+$/.test(id)));
