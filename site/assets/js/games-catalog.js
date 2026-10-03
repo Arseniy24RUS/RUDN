@@ -1,4 +1,4 @@
-import {academicContext,topicGate} from './access.js?v=1.3.8';
+import {academicContext,topicGate} from './access.js?v=1.3.9';
 
 /** Free-play entries. Students unlock each module with its course topic. */
 export const GAMES_COPY = {

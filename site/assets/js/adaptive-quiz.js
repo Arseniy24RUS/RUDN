@@ -1,5 +1,5 @@
-import {CONFIG} from './config.js?v=1.3.8';
-import {backend,groupOptions} from './backend.js?v=1.3.8';
+import {CONFIG} from './config.js?v=1.3.9';
+import {backend,groupOptions} from './backend.js?v=1.3.9';
 import {
   buildQuiz,
   canonicalMatrixValue,
@@ -11,9 +11,9 @@ import {
   renderQuestionMedia,
   renderQuiz,
   reviewNoteText
-} from './quiz.js?v=1.3.8';
-import {getLocale} from './i18n.js?v=1.3.8';
-import {attemptOwner,prepareQuizDraft,persistQuiz} from './attempt-session.js?v=1.3.8';
+} from './quiz.js?v=1.3.9';
+import {getLocale} from './i18n.js?v=1.3.9';
+import {attemptOwner,prepareQuizDraft,persistQuiz} from './attempt-session.js?v=1.3.9';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'

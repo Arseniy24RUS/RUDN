@@ -187,6 +187,10 @@ jobs:
       - name: Verify Settlements permissions and result delivery in emulators
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
+      - name: Verify Firebase gateway request transport and project boundaries
+        run: |
+          node scripts/test-firebase-gateway.mjs
+          node --test firebase/functions/gateway.test.mjs
       - name: Prepare native browser checks
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: |
