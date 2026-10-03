@@ -200,7 +200,10 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
       activeLayer=stored?.ui?.activeLayer&&NAMES[stored.ui.activeLayer]?stored.ui.activeLayer:currentTask()?.service||'telecom';
       const inst=instruction();activeTool=inst?.locked?inst.tool:null;
       terminalReason=null;completionSent=false;updateCompletion(stored?.ui?.terminalReason==='budget_exhausted');
-      map=new GameMap($('.puzzle-map'),{onSelect:select,onPlace:place,onSelectNetwork:selectNetwork,onRouteGeometryChange:updateRouteEstimate,translate:t});loading=false;$('.puzzle-loading').hidden=true;render();map.fitFocus(targetIds());
+      map=new GameMap($('.puzzle-map'),{onSelect:select,onPlace:place,onSelectNetwork:selectNetwork,onRouteGeometryChange:updateRouteEstimate,translate:t});loading=false;$('.puzzle-loading').hidden=true;render();
+      // First acquaint the player with the whole territory; task focus stays explicit.
+      map.camera.setViewport(map.element.clientWidth,map.element.clientHeight);
+      if(mode!=='intro'&&(!stored||updatedScenario))map.fitAll();else map.fitFocus(targetIds());
       if(imported||restart||!stored||updatedScenario)save();
       if(mode==='intro'&&inst?.complete)try{storage.finishIntro();}catch{saveError='Браузер не сохраняет прогресс. Экспортируйте прохождение через меню.';}
       message(basemap.status==='unavailable'?'Фоновые дороги не удалось загрузить. Игровая сеть доступна; попробуйте открыть регион снова.':updatedScenario?'Условия партии обновлены. Начинаем с новой исходной сети.':'',basemap.status==='unavailable');

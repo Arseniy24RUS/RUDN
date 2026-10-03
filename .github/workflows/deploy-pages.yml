@@ -85,6 +85,8 @@ jobs:
           settlements_ui = {
             '.github/workflows/deploy-pages.yml',
             'site/apps/settlements/entry.mjs',
+            'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs',
+            'site/apps/settlements/source-manifest.json',
             'site/apps/settlements/module.css',
             'site/assets/js/main.js',
             'site/assets/js/settlements-presentation.js',
@@ -122,6 +124,30 @@ jobs:
             import re
             def source(ref, path):
               return subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True)
+            game_path = 'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs'
+            if game_path in changed:
+              before = source('HEAD^', game_path)
+              old = 'render();map.fitFocus(targetIds());'
+              new = '\n'.join([
+                'render();',
+                '      // First acquaint the player with the whole territory; task focus stays explicit.',
+                '      map.camera.setViewport(map.element.clientWidth,map.element.clientHeight);',
+                "      if(mode!=='intro'&&(!stored||updatedScenario))map.fitAll();else map.fitFocus(targetIds());",
+              ])
+              assert before.count(old) == 1 and source('HEAD', game_path) == before.replace(old, new), 'Runtime hotfix is limited to the initial camera overview'
+            if 'site/apps/settlements/source-manifest.json' in changed:
+              import json, hashlib
+              previous = json.loads(source('HEAD^', 'site/apps/settlements/source-manifest.json'))
+              current = json.loads(source('HEAD', 'site/apps/settlements/source-manifest.json'))
+              game_bytes = subprocess.check_output(['git', 'show', f'HEAD:{game_path}'])
+              game_entries = [entry for entry in current['files'] if entry['path'] == 'assets/js/settlements/v24/game.mjs']
+              assert len(game_entries) == 1
+              assert game_entries[0]['bytes'] == len(game_bytes) and game_entries[0]['sha256'] == hashlib.sha256(game_bytes).hexdigest()
+              assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
+              for manifest in [previous, current]:
+                manifest.pop('sourceHash')
+                manifest['files'] = [entry for entry in manifest['files'] if entry['path'] != 'assets/js/settlements/v24/game.mjs']
+              assert previous == current, 'Only the camera module provenance may change'
             def without_module(source_text):
               result, count = re.subn(r'(?ms)^function renderSettlements\(.*?(?=^function stableVariant\()', '', source_text)
               assert count == 1, 'Expected exactly one native Settlements entry function'

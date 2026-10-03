@@ -1,9 +1,12 @@
 """Actual UI tutorial completion, free-region lazy loading and replay QA."""
 from pathlib import Path
 import argparse
+import base64
+import hashlib
 import json
 import os
 import sys
+import time
 from playwright.sync_api import sync_playwright
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -47,6 +50,26 @@ with sync_playwright() as p:
         report["steps"].append({"turn": turn, "badge": page.locator(".step-badge").inner_text()})
         page.screenshot(path=str(out / f"tutorial-turn-{turn}.png"))
 
+    def settled_scene(name):
+        # Read only rendered pixels, not the engine or camera's internal state.
+        # Optional effects have a separate canvas; the base scene must settle.
+        scene = page.locator(".sg24-map-scene")
+        page.evaluate("() => document.fonts.ready")
+        deadline = time.monotonic() + 15
+        previous, repeated, samples = None, 0, 0
+        while time.monotonic() < deadline:
+            encoded = scene.evaluate("canvas => canvas.toDataURL('image/png').split(',')[1]")
+            pixels = base64.b64decode(encoded)
+            digest = hashlib.sha256(pixels).hexdigest()
+            samples += 1
+            repeated = repeated + 1 if digest == previous else 0
+            if repeated >= 3:
+                (out / f"{name}.png").write_bytes(pixels)
+                return {"sha256": digest, "samples": samples, "image": f"{name}.png"}
+            previous = digest
+            page.wait_for_timeout(250)
+        raise AssertionError(f"Static scene did not settle within 15 seconds: {name}")
+
     try:
         page.goto(args.url)
         page.locator('[data-action="tutorial"]').click(timeout=60000)
@@ -77,8 +100,17 @@ with sync_playwright() as p:
         page.locator('[data-act="tools"]').wait_for()
         page.locator(".puzzle-loading").wait_for(state="hidden", timeout=60000)
         # A real interaction also waits for the completed mount and map paint.
-        click("menu"); click("close")
+        assert page.locator('.game-heading [data-action="tutorial"]').filter(visible=True).count() == 0
+        click("menu")
+        assert page.locator('[data-act="replay-tutorial"]').filter(visible=True).count() == 0
+        click("close")
+        report["tutorialReplayHiddenOnMap"] = True
+        report["initialOverview"] = settled_scene("altay-initial-overview-scene")
         page.screenshot(path=str(out / "altay-hard-zh.png"))
+        click("menu"); click("overview")
+        report["manualOverview"] = settled_scene("altay-manual-overview-scene")
+        assert report["initialOverview"]["sha256"] == report["manualOverview"]["sha256"], "A new party must initially show the same whole-region scene as the overview button"
+        report["newPartyStartsAtWholeRegion"] = True
         report["freeRegionTitle"] = page.locator(".game-heading").inner_text()
         free_heading = page.locator(".game-heading h2").inner_text()
         report["allRegionRequests"] = sorted(set(url for url in report["requests"] if "/regions/" in url))
@@ -87,11 +119,22 @@ with sync_playwright() as p:
         assert all(chosen in url or "chelyabinskaya_oblast" in url for url in report["allRegionRequests"])
         assert page.locator(".puzzle-map").count() == 1
         assert page.locator(".puzzle-map canvas").count() == 2
-        # Replay remains available and returns to the same free game afterwards.
+        # Replay is offered in the lobby only and preserves the free party.
+        page.locator('[data-action="lobby"]').filter(visible=True).click()
+        page.locator('[data-action="resume"]').wait_for()
+        assert page.locator(".puzzle-map").count() == 0
+        assert page.locator('[data-action="tutorial"]').filter(visible=True).count() == 1
+        page.screenshot(path=str(out / "lobby-before-replay.png"))
+        report["tutorialReplayAvailableInLobby"] = True
         page.locator('[data-action="tutorial"]').filter(visible=True).click()
         page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
         page.locator(".step-badge").filter(has_text="1/6").wait_for()
         page.locator('[data-action="lobby"]').filter(visible=True).click()
+        page.locator('[data-action="resume"]').wait_for()
+        assert page.locator(".puzzle-map").count() == 0
+        assert page.locator('[data-action="tutorial"]').filter(visible=True).count() == 1
+        report["replayTutorialReturnsToLobby"] = True
+        page.locator('[data-action="resume"]').click()
         page.locator(".game-heading h2").filter(has_text=free_heading).wait_for(timeout=60000)
         page.locator(".puzzle-loading").wait_for(state="hidden", timeout=60000)
         page.locator('[data-act="tools"]').wait_for(timeout=60000)
