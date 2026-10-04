@@ -28,6 +28,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   const shadow=container.shadowRoot||container.attachShadow({mode:'open'}),abort=new AbortController();
   let lang=normalizeLocale(locale),session=null,tutorial=null,game=null,disposed=false,busy=false,view='lobby',regions=[],rankRows=[],rankDifficulty='normal',selectedDifficulty='normal',selectedRegion='',rankState='loading',saveState='device-only',partySaveState='device-only',tutorialSaveState='device-only',conflict=null,writable=false,lastTick=0,elapsedMs=0,loadGeneration=0,notice='';
   let queue=Promise.resolve(),actionQueue=Promise.resolve(),pendingCompletion=false,restoringWriter=false,acquiringWriter=false,appliedReadOnly=null,destroyPromise=null;
+  let trainingGate=null,trainingGateGeneration=0,autoTutorialPending=false;
   const pendingCheckpoints={session:0,tutorial:0},submittedSaves={session:null,tutorial:null};
   let presentedView=null;
   function notifyView(value){if(presentedView!==value){presentedView=value;onViewChange?.(value)}}
@@ -60,6 +61,8 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   function tick(){const now=performance.now();if(lastTick)elapsedMs+=Math.max(0,now-lastTick);lastTick=view==='game'&&session?.status==='active'&&!document.hidden&&!busy&&writable&&!conflict&&!restoringWriter?now:0;}
   function statusLabel(){return c()[saveState==='saved'?'saved':saveState==='unsafe'?'unsafe':saveState==='pending'&&navigator.onLine!==false?'pending':saveState==='conflict'?'conflict':'device'];}
   function showStatus(){if(!active())return;saveState=view==='tutorial'?checkpointStatus('tutorial',tutorialSaveState):checkpointStatus('session',partySaveState);$('[data-status]').hidden=view!=='lobby';for(const node of shadow.querySelectorAll('[data-status],[data-game-status]')){setMarkup(node,`${esc(notice?c()[notice]||notice:statusLabel())}${notice==='failed'||saveState==='unsafe'?` <button data-action="retry-save">${esc(c().retry)}</button>`:''}`);node.dataset.state=saveState;}
+    // Storage ownership/conflict choices must remain reachable above the map.
+    if(trainingGate&&(!writable||restoringWriter||conflict||saveState==='unsafe'))closeTrainingGate();
     const box=$('[data-conflict]');if(box){box.hidden=!conflict;setMarkup(box,conflict?`<p>${esc(c().conflict)}</p><div class="actions"><button data-action="cloud">${esc(c().cloudVersion)}</button><button data-action="local">${esc(c().localVersion)}</button></div>`:'');}
     const lock=$('[data-writer]');if(lock){lock.hidden=writable||busy;setMarkup(lock,`<p>${esc(c().writer)}</p><button data-action="takeover"${acquiringWriter?' disabled':''}>${esc(acquiringWriter?c().takeoverWaiting:c().takeover)}</button>`);}
     const readOnly=!writable||restoringWriter||!!conflict||saveState==='unsafe'||(view!=='tutorial'&&(session?.status==='completed'||session?.status==='completion-pending'));
@@ -81,10 +84,26 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
         void act(async()=>{const intro=view==='tutorial';await releaseGame({save:false});session=event.restore;tutorial=await persistence.loadTutorial();restoringWriter=false;if(active()){if(intro||session)await openGame({intro});else{view='lobby';renderLobby();renderGameHeading();renderResult();}}});
       }else if(event?.restore){session=event.restore;}
       tick();showStatus();}});
-  shadow.innerHTML=`<link rel="stylesheet" href="${new URL('module.css',BASE)}"><div class="page"><header class="heading"></header><section class="panel leaderboard"></section><section class="panel lobby"></section><div class="status" data-status role="status" aria-live="polite"></div><div class="notice warn" data-conflict role="alert" hidden></div><div class="notice warn" data-writer hidden></div><section class="panel result" hidden></section><div class="game-heading" hidden></div><div class="game-stage" hidden><div class="game-host" style="height:100%"></div></div><dialog class="host-dialog"></dialog></div>`;
+  shadow.innerHTML=`<link rel="stylesheet" href="${new URL('module.css',BASE)}"><div class="page"><header class="heading"></header><section class="panel leaderboard"></section><section class="panel lobby"></section><div class="status" data-status role="status" aria-live="polite"></div><div class="notice warn" data-conflict role="alert" hidden></div><div class="notice warn" data-writer hidden></div><section class="panel result" hidden></section><div class="game-heading" hidden></div><div class="game-stage" hidden><div class="game-host" style="height:100%"></div></div><dialog class="host-dialog"></dialog><dialog class="training-dialog" aria-labelledby="training-gate-title" aria-describedby="training-gate-message"></dialog></div>`;
   const gameShadow=$('.game-host').attachShadow({mode:'open'});
   gameShadow.innerHTML=`<link rel="stylesheet" href="${new URL('runtime/assets/css/settlements-v24.css',BASE)}"><div data-game-root></div>`;
   const gameRoot=gameShadow.querySelector('[data-game-root]');
+  function renderTrainingGate(){
+    if(!trainingGate)return;
+    const dialog=$('.training-dialog'),focused=dialog.contains(shadow.activeElement),field=shadow.activeElement?.dataset.select;
+    dialog.dataset.trainingKind=trainingGate;
+    dialog.innerHTML=`<div class="training-card"><div class="training-toolbar"><span>${esc(c().learning)}</span><select data-select="locale" aria-label="Language / Язык / 语言">${[['ru','RU'],['en','EN'],['zh','中文']].map(([value,label])=>`<option value="${value}"${value===lang?' selected':''}>${label}</option>`).join('')}</select></div><h2 id="training-gate-title">${esc(trainingGate==='complete'?c().trainingCompleteTitle:c().trainingWelcomeTitle)}</h2><p id="training-gate-message">${esc(trainingGate==='complete'?c().trainingCompleteMessage:c().trainingWelcomeMessage)}</p><p class="training-next">${esc(mode==='assessment'?c().trainingNoPoints:c().freeRule)}</p><button class="primary" data-action="training-continue" autofocus>${esc(c().trainingContinue)}</button></div>`;
+    if(dialog.open&&focused)(field==='locale'?dialog.querySelector('select'):dialog.querySelector('button')).focus({preventScroll:true});
+  }
+  function closeTrainingGate(){const dialog=$('.training-dialog');trainingGate=null;if(dialog.open)dialog.close();dialog.removeAttribute('data-training-kind');}
+  function showTrainingGate(kind,generation){
+    if(!active()||view!=='tutorial'||generation!==loadGeneration||!writable||restoringWriter||conflict||saveState==='unsafe')return;
+    if(trainingGate==='complete'&&kind==='welcome'&&trainingGateGeneration===generation)return;
+    trainingGate=kind;trainingGateGeneration=generation;renderTrainingGate();
+    const dialog=$('.training-dialog');if(!dialog.open)dialog.showModal();
+    dialog.querySelector('button').focus({preventScroll:true});
+  }
+  $('.training-dialog').addEventListener('cancel',event=>event.preventDefault(),{signal:abort.signal});
   function renderHeader(){container.lang=lang==='zh'?'zh-Hans':lang;$('.heading').innerHTML=`<div class="topline"><a class="button" href="${mode==='assessment'?'#dashboard':'#games'}">← ${esc(c().back)}</a><span class="version">${esc(c().version)}</span></div><span class="eyebrow">${esc(mode==='assessment'?c().assessment:c().free)}</span><h1>${esc(c().title)}</h1><p class="muted">${esc(c().lead)}</p>`;}
   function renderLobby(){const completed=session?.status==='completed'||session?.status==='completion-pending',hasActive=session?.status==='active';
     $('.lobby').hidden=view!=='lobby';
@@ -113,6 +132,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     else if(session?.status==='active'){session={...session,engineSave:save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}
   }
   async function releaseGame({save=true}={}){tick();lastTick=0;
+    closeTrainingGate();
     if(!save||!persistence.canWrite()||conflict||restoringWriter){++loadGeneration;save=false;}
     if(game){if(save){await game.flush?.();await saveCurrent();}game.destroy();game=null;}
     ++loadGeneration;appliedReadOnly=null;gameRoot.replaceChildren();$('.game-stage').hidden=true;lastTick=0;
@@ -137,7 +157,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       const initialSave=intro?tutorial?.engineSave:session.engineSave;
       const handle=await mountSettlementsGame(gameRoot,{locale:lang,owner,regionId:intro?'chelyabinskaya_oblast':session.regionId,mode:intro?'intro':'free',difficulty:intro?'normal':session.difficulty,initialSave,signal:abort.signal,readOnly:!writable||(!intro&&session.status!=='active'),
         onCheckpoint:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,engineSave:payload.save,step:payload.save.actions?.length||0};await persistence.saveTutorial(tutorial);}else if(session.status==='active'){session={...session,engineSave:payload.save,elapsedMs:Math.round(elapsedMs)};await persistence.saveSession(session);}}),
-        onComplete:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){tutorial={...tutorial,completed:true,engineSave:payload.save,step:6};await persistence.saveTutorial(tutorial);notice='tutorialDone';showStatus();return;}
+        onComplete:payload=>enqueueCheckpoint(intro,generation,payload,async()=>{tick();if(intro){const completed={...tutorial,...(!tutorial?.completed?{completedAt:Date.now()}:{}),completed:true,engineSave:payload.save,step:6};tutorial=await persistence.saveTutorial(completed);notice='tutorialDone';showStatus();showTrainingGate('complete',generation);return;}
           if(pendingCompletion||['completed','abandoned'].includes(session.status))return;
           pendingCompletion=true;const previous=session;
           try{
@@ -158,10 +178,12 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       // boot checkpoint. Establish that replay as the comparison baseline.
       if(initialSave)submittedSaves[intro?'tutorial':'session']=checkpointIdentity(handle.snapshot()?.save);
       game=handle;appliedReadOnly=null;busy=false;tick();showStatus();fitGame(true);
+      if(intro)showTrainingGate('welcome',generation);
     }catch(error){busy=false;if(!active()||generation!==loadGeneration)return;gameRoot.innerHTML=`<div class="busy"><p>${esc(c().startError)}</p><button data-action="reload-game">${esc(c().retry)}</button></div>`;gameRoot.querySelector('button').onclick=()=>void act(()=>openGame({intro:view==='tutorial'}));console.error('Settlements load:',error?.code||error?.message);}
   }
   async function toLobby(){const finishedTutorial=view==='tutorial'&&tutorial?.completed;await releaseGame();view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();if(finishedTutorial){const target=session&&session.status!=='abandoned'?$('[data-action="resume"]'):$('[data-assessment-ready]')||$('[data-action="start"]');target?.scrollIntoView({block:'start',behavior:'instant'});$('.lobby [data-action="start"]')?.focus({preventScroll:true});}}
   async function startTutorial(){await openGame({intro:true,freshTutorial:!!tutorial?.completed});}
+  async function startRequiredTutorial(){if(!autoTutorialPending||!active()||!writable||conflict||restoringWriter||busy||view!=='lobby')return;autoTutorialPending=false;await openGame({intro:true});}
   async function startGame(){if(view!=='lobby'||!writable||conflict||restoringWriter)return;if(session?.status==='completion-pending'){notice='receiptPending';showStatus();const saved=await persistence.flush();if(saved.session?.attemptId===session.attemptId)session=saved.session;renderResult();renderLobby();if(session.status!=='completed')return;notice='';}if(!tutorial?.completed){await startTutorial();return;}if(mode==='assessment'&&!student&&!teacher){onLogin?.();return;}
     if(session?.status==='active'){await askAbandon(true);return;}
     const regionId=mode==='assessment'?randomRegion(regions,session?.regionId):selectedRegion||regions[0].id;
@@ -182,9 +204,10 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     try{session=await persistence.resolveConflict(choice,previousConflict?.scope);tutorial=await persistence.loadTutorial();}
     catch(error){conflict=conflict||previousConflict;showStatus();throw error;}
     pendingCompletion=false;writable=persistence.canWrite();view='lobby';renderLobby();renderGameHeading();renderResult();
-    if(resumeTutorial&&!conflict)await openGame({intro:true});
+    if(resumeTutorial&&!conflict)await openGame({intro:true});else await startRequiredTutorial();
   }
   async function handleAction(action){if(action==='login'){onLogin?.();return;}if(action==='rank-refresh'){await refreshRanking();return;}if(action==='start'){await startGame();return;}
+    if(action==='training-continue'){const finished=trainingGate==='complete';closeTrainingGate();if(finished)await toLobby();else gameRoot.querySelector('.puzzle-map')?.focus({preventScroll:true});return;}
     if(action==='new-game'){await toLobby();await startGame();return;}
     if(action==='retry-save'){await queue;await saveCurrent();const saved=await persistence.flush();if(saved.session?.attemptId===session?.attemptId)session=saved.session;notice=session?.status==='completion-pending'?'receiptPending':'';appliedReadOnly=null;renderResult();if(view==='lobby')renderLobby();showStatus();return;}
     if(action==='resume'){if(mode==='assessment'&&student&&session?.status==='active'&&!session.engineSave&&!await persistence.confirmOnline()){notice='onlineRequired';showStatus();return;}await openGame();return;}
@@ -194,21 +217,23 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
       // user's explicit handover request alive, without stealing another writer.
       acquiringWriter=true;showStatus();const deadline=performance.now()+10000;
       try{do{await persistence.acquireWriter();writable=persistence.canWrite();if(writable||!active()||conflict)break;await new Promise(resolve=>setTimeout(resolve,150));}while(performance.now()<deadline);}
-      finally{acquiringWriter=false;showStatus();}return;}}
+      finally{acquiringWriter=false;showStatus();}await startRequiredTutorial();return;}}
   shadow.addEventListener('click',event=>{const button=event.target.closest?.('[data-action]');if(!button)return;event.preventDefault();void act(()=>handleAction(button.dataset.action));},{signal:abort.signal});
   shadow.addEventListener('change',event=>{const field=event.target.dataset.select;if(field==='locale'){if(onLocaleChange)onLocaleChange(event.target.value);else void api.setLocale(event.target.value);}else if(field==='difficulty')selectedDifficulty=event.target.value;else if(field==='region')selectedRegion=event.target.value;else if(field==='rank-difficulty'){rankDifficulty=event.target.value;void refreshRanking();}},{signal:abort.signal});
   const onVisibility=()=>{tick();if(document.hidden)void enqueue(saveCurrent);};document.addEventListener('visibilitychange',onVisibility,{signal:abort.signal});
   const heartbeat=setInterval(()=>{if(active()&&view==='game'&&!busy&&!document.hidden&&session?.status==='active'&&writable)void enqueue(saveCurrent);},15000);
   globalThis.addEventListener('resize',()=>fitGame(),{signal:abort.signal});globalThis.visualViewport?.addEventListener('resize',()=>fitGame(),{signal:abort.signal});
-  const api={async setLocale(value){lang=normalizeLocale(value);renderHeader();renderLobby();renderRanking();renderGameHeading();renderResult();await game?.setLocale?.(lang);showStatus();fitGame();},async flush(){
+  const api={async setLocale(value){lang=normalizeLocale(value);renderHeader();renderLobby();renderRanking();renderGameHeading();renderResult();renderTrainingGate();await game?.setLocale?.(lang);showStatus();fitGame();},async flush(){
     if(disposed||!persistence.canWrite()||conflict||restoringWriter)return;
     await game?.flush?.();await queue;if(!persistence.canWrite()||conflict)return;await saveCurrent();await persistence.flush();
-  },destroy(){if(destroyPromise)return destroyPromise;destroyPromise=(async()=>{try{await api.flush();}finally{disposed=true;notifyView('lobby');clearInterval(heartbeat);++loadGeneration;game?.destroy();game=null;abort.abort();try{await persistence.destroy();}finally{shadow.replaceChildren();}}})();return destroyPromise;}};
+  },destroy(){if(destroyPromise)return destroyPromise;destroyPromise=(async()=>{try{await api.flush();}finally{closeTrainingGate();disposed=true;notifyView('lobby');clearInterval(heartbeat);++loadGeneration;game?.destroy();game=null;abort.abort();try{await persistence.destroy();}finally{shadow.replaceChildren();}}})();return destroyPromise;}};
   signal?.addEventListener('abort',()=>void api.destroy(),{once:true});
   renderHeader();renderRanking();$('.lobby').innerHTML=`<p role="status">${esc(c().loading)}</p>`;
   try{const response=await fetch(new URL('runtime/data/settlements/v1/manifest.json',BASE),{signal:abort.signal});if(!response.ok)throw Error('settlements/manifest');const manifest=await response.json();regions=manifest.regions;selectedRegion=regions[0].id;
     await persistence.acquireWriter();writable=persistence.canWrite();[session,tutorial]=await Promise.all([persistence.loadSession(),persistence.loadTutorial()]);
     if(session){selectedDifficulty=session.difficulty;selectedRegion=session.regionId;}if(!active())return api;renderLobby();renderResult();void refreshRanking();
+    autoTutorialPending=mode==='assessment'&&student&&!tutorial?.completed;
+    await startRequiredTutorial();
   }catch(error){if(!active())return api;notice='failed';$('.lobby').innerHTML=`<p>${esc(c().failed)}</p><button data-action="reload-page">${esc(c().retry)}</button>`;$('.lobby button').onclick=()=>onExit?.();showStatus();console.error('Settlements initialization:',error?.code||error?.message);}
   return api;
 }
