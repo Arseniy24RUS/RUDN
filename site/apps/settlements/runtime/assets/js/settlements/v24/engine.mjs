@@ -12,6 +12,11 @@ import {networkRoute,validateInitialNetworkRoute} from './network-routing.mjs';
 export const RULES_VERSION = 'settlements-3.0.0';
 export const FIXED_TRANSPORT_RULES_VERSION = 'settlements-3.1.0';
 export const NEW_RULES_VERSION = 'settlements-3.2.0';
+export const OUTREACH_POLICY_VERSION = 'road-access-v1';
+// Wire-only envelope: old readers must reject new action fields instead of
+// silently dropping them. Scenario policies and internal rules stay unchanged.
+export const SERIALIZED_ACTIONS_RULES_VERSION = 'settlements-3.4.1';
+const engineRulesVersions=Object.freeze([RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION]);
 export const TRANSPORT_PRICES = Object.freeze({transport:2,construction:6});
 export const DISTANCE_TRANSPORT_PRICES = Object.freeze({transportPerKm:.2,constructionPerKm:1.2});
 export const SERVICES = Object.freeze(['telecom', 'medical', 'school', 'culture']);
@@ -40,6 +45,7 @@ const towerSourceIndices = new WeakMap();
 const usesGeographicTelecom = version => version===TELECOM_RULES_VERSION || version===SOCIAL_RULES_VERSION;
 const usesDistanceTransport = version => version===NEW_RULES_VERSION || usesGeographicTelecom(version);
 const socialAccessCaches = new WeakMap();
+const incomingRoadIndices = new WeakMap();
 
 class AccessHeap {
   constructor(){this.items=[];}
@@ -423,9 +429,21 @@ function canonicalAction(action) {
   }
   if (action.type==='build') {
     if (!facilityTypes.includes(action.service) || typeof action.settlementId!=='string') throw new Error('Выберите объект и поселение');
-    return {type:'build',service:action.service,settlementId:action.settlementId};
+    if (action.outreachPolicyVersion!==undefined && (action.service!=='outreach' || action.outreachPolicyVersion!==OUTREACH_POLICY_VERSION))
+      throw new Error('Неизвестные условия выездной помощи');
+    return {type:'build',service:action.service,settlementId:action.settlementId,
+      ...(action.outreachPolicyVersion!==undefined?{outreachPolicyVersion:action.outreachPolicyVersion}:{})};
   }
   if (action.type==='connect') {
+    if (action.stopIds!==undefined || action.selectedIds!==undefined) {
+      const stopIds=action.stopIds??action.selectedIds;
+      if (!Array.isArray(stopIds) || stopIds.length<2 || stopIds.some(id=>typeof id!=='string')) throw new Error('Выберите не менее двух поселений маршрута');
+      if (new Set(stopIds).size!==stopIds.length) throw new Error('Остановки маршрута не должны повторяться');
+      if (action.selectedIds!==undefined && JSON.stringify(action.selectedIds)!==JSON.stringify(stopIds) ||
+          action.from!==undefined && action.from!==stopIds[0] || action.to!==undefined && action.to!==stopIds.at(-1))
+        throw new Error('Остановки не совпадают с концами маршрута');
+      return {type:'connect',from:stopIds[0],to:stopIds.at(-1),stopIds:[...stopIds]};
+    }
     if (typeof action.from!=='string' || typeof action.to!=='string') throw new Error('Выберите два поселения');
     return {type:'connect',from:action.from,to:action.to};
   }
@@ -447,7 +465,7 @@ function tutorialAllows(scenario,state,action) {
   const same=expected && expected.type===action.type && (action.type==='tower' ?
     Math.abs(expected.lat-action.lat)<=1e-6 && Math.abs(expected.lon-action.lon)<=1e-6 :
     action.type==='build' ? expected.service===action.service && expected.settlementId===action.settlementId :
-    action.type==='connect' ? expected.from===action.from && expected.to===action.to : expected.facilityId===action.facilityId);
+    action.type==='connect' ? expected.from===action.from && expected.to===action.to && (!action.stopIds || action.stopIds.length===2) : expected.facilityId===action.facilityId);
   if (!same) throw new Error('Сначала выполните текущий шаг вводного задания');
 }
 
@@ -483,7 +501,54 @@ export function pointInBoundary(boundary,lat,lon) {
   return polygons.some(p=>ringContains(p[0],lat,lon) && !p.slice(1).some(r=>ringContains(r,lat,lon)));
 }
 
-function reducer(world,scenario,input,rawAction) {
+// A source driving edge is a usable road only when it already exists in the
+// authored policy or has been constructed by a previous confirmed action.
+// Zero-length source links alone never manufacture a road. Co-located source
+// records may share a real incoming road through their directed zero links.
+function hasOutreachRoad(world,scenario,state,settlementId) {
+  const policy=state.rulesVersion===RULES_VERSION?null:scenarioPolicy(world,scenario),active=activeEdges(state.routes);
+  let incoming=incomingRoadIndices.get(world);
+  if (!incoming) {
+    incoming=world.rows.map(()=>[]);
+    for (let from=0;from<world.rows.length;from++) for (const [to] of world.drive[from]) incoming[to].push(from);
+    incomingRoadIndices.set(world,incoming);
+  }
+  const target=world.ids.get(settlementId),seen=new Set([target]),queue=[target];
+  for (let i=0;i<queue.length;i++) {
+    const to=queue[i],b=world.rows[to];
+    for (const from of incoming[to]) {
+      const a=world.rows[from],key=edgeKey(a.id,b.id),metres=policy?.distanceMeters?.[key]??haversine(a,b)*1000;
+      if (metres>0 && (!policy || policy.roadRequired[key]===false || active.has(key))) return true;
+      if (metres===0 && validCoordinate(a) && a.lat===b.lat && a.lon===b.lon && !seen.has(from)) {seen.add(from);queue.push(from);}
+    }
+  }
+  return false;
+}
+
+function routeThroughStops(world,scenario,input,action) {
+  if (action.stopIds.some(id=>!world.ids.has(id))) throw new Error('Поселение отсутствует в регионе');
+  const policy=input.rulesVersion===SOCIAL_RULES_VERSION?scenarioPolicy(world,scenario):null;
+  const routes=[...input.routes],legs=[],path=[action.stopIds[0]];
+  for (let i=1;i<action.stopIds.length;i++) {
+    const from=action.stopIds[i-1],to=action.stopIds[i];
+    const leg=policy?networkRoute(world,policy,routes,{type:'connect',from,to},{exactTarget:true}):world.route(from,to);
+    if (!leg) throw new Error(`Связь отсутствует в учебной транспортной сети: ${world.row(from).name||from} → ${world.row(to).name||to}`);
+    const route={from,to,path:[...leg.path]};legs.push(route);routes.push(route);path.push(...leg.path.slice(1));
+  }
+  const active=activeEdges(input.routes),edgeKeys=path.slice(1).map((id,i)=>edgeKey(path[i],id));
+  const freshEdgeKeys=[...new Set(edgeKeys.filter(key=>!active.has(key)))],freshPath=[];
+  // Draw each newly bought physical section once, even if the ordered route
+  // revisits it. The full path and legs still retain every selected stop.
+  let run=null;
+  for (let i=0;i<edgeKeys.length;i++) {
+    if (active.has(edgeKeys[i])) {run=null;continue;}
+    active.add(edgeKeys[i]);
+    if (!run) {run=[path[i]];freshPath.push(run);}run.push(path[i+1]);
+  }
+  return {path,legs,stopIds:[...action.stopIds],edgeKeys,freshEdgeKeys,freshPath,joinId:action.to,requestedTo:action.to};
+}
+
+function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   checkState(world,scenario,input);
   const action=canonicalAction(rawAction);
   if (action.type==='connect-network' && input.rulesVersion!==SOCIAL_RULES_VERSION) throw new Error('Действие недоступно в этой версии правил');
@@ -499,10 +564,15 @@ function reducer(world,scenario,input,rawAction) {
   } else if (action.type==='build') {
     if (!world.ids.has(action.settlementId)) throw new Error('Поселение отсутствует в регионе');
     if (input.facilities.some(f=>f.type===action.service && f.settlementId===action.settlementId)) throw new Error('Объект уже есть. Его можно расширить.');
+    if (action.service==='outreach' && (!replay || action.outreachPolicyVersion!==undefined)) {
+      action.outreachPolicyVersion=OUTREACH_POLICY_VERSION;
+      if (!hasOutreachRoad(world,scenario,input,action.settlementId)) throw new Error('К этому поселению нет дороги. Сначала постройте транспортное соединение.');
+    }
     cost=CATALOG[action.service].cost;
   } else if (action.type==='connect' || action.type==='connect-network') {
-    if (input.rulesVersion===SOCIAL_RULES_VERSION) network=networkRoute(world,scenarioPolicy(world,scenario),input.routes,action);
-    const route=input.rulesVersion===SOCIAL_RULES_VERSION?network:world.route(action.from,action.to);
+    if (action.stopIds) network=routeThroughStops(world,scenario,input,action);
+    else if (input.rulesVersion===SOCIAL_RULES_VERSION) network=networkRoute(world,scenarioPolicy(world,scenario),input.routes,action);
+    const route=network || (input.rulesVersion===SOCIAL_RULES_VERSION?null:world.route(action.from,action.to));
     if (!route) throw new Error(action.from===action.to?'Выберите второе поселение':'Связь отсутствует в учебной транспортной сети');
     path=[...route.path];
     const active=activeEdges(input.routes), fresh=new Set(path.slice(1).map((id,i)=>edgeKey(path[i],id)).filter(key=>!active.has(key)));
@@ -555,7 +625,8 @@ function reducer(world,scenario,input,rawAction) {
     while (state.facilities.some(f=>f.id===id)) id+=':new';
     state.facilities.push({id,type:action.service,settlementId:action.settlementId,level:1,capacityUnits:newFacilityCapacity(world,scenario,action.service,action.settlementId)});
   }
-  if (action.type==='connect' || action.type==='connect-network') state.routes.push({from:action.from,to:network?.joinId || action.to,path});
+  if (action.type==='connect' || action.type==='connect-network') state.routes.push({from:action.from,to:network?.joinId || action.to,path,
+    ...(action.stopIds?{stopIds:[...action.stopIds]}:{})});
   if (action.type==='upgrade') {
     const f=state.facilities.find(f=>f.id===action.facilityId);
     const extra=isPopulationSocialScenario(scenario)?socialUpgradeCapacity(world,f.type,f.settlementId):Math.round(CATALOG[f.type].capacityUnits*.8);
@@ -569,7 +640,8 @@ function reducer(world,scenario,input,rawAction) {
   return {action,cost,nextState:state,evaluation:result.evaluation,...(path?{path}:{}),
     ...(transportCost?{transportCost}:{}),
     ...(network?{freshPath:network.freshPath,edgeKeys:network.edgeKeys,freshEdgeKeys:network.freshEdgeKeys,joinId:network.joinId,
-      requestedTo:network.requestedTo,...(network.targetEdge?{targetEdge:network.targetEdge}:{})}:{}),
+      requestedTo:network.requestedTo,...(network.targetEdge?{targetEdge:network.targetEdge}:{}),
+      ...(network.legs?{legs:network.legs,stopIds:network.stopIds}:{})}:{}),
     ...(action.type==='tower'?{coverageIds:world.rows.filter((r,i)=>positive(r)&&(coverage?coverage[i]:haversine(action,r)<=towerSpec(input).radiusKm+1e-9)).map(r=>r.id)}:{})};
 }
 
@@ -600,7 +672,7 @@ export function preview(world,scenario,state,action) {
 export function apply(world,scenario,state,action) {return reducer(world,scenario,state,action).nextState;}
 
 export function exportSave(state) {
-  const version=[RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION].indexOf(state?.rulesVersion)+1;
+  const version=engineRulesVersions.indexOf(state?.rulesVersion)+1;
   if (!version) throw new Error('Неизвестная версия правил');
   if (state.scenarioVersion!==version) throw new Error('Неизвестная версия сценария');
   if (state.rulesVersion!==RULES_VERSION && (state.transportPolicyVersion!==(version>=3?'transport-policy-v2':'transport-policy-v1') ||
@@ -609,8 +681,11 @@ export function exportSave(state) {
   if (state.rulesVersion===SOCIAL_RULES_VERSION) {checkSocialPolicyIdentity(state);checkDifficulty(state);}
   if (typeof state.dataVersion!=='string' || !/^source-v1-[0-9a-f]{16}$/.test(state.dataVersion)) throw new Error('Неизвестная версия исходных данных');
   if (!Number.isInteger(state.tutorialStep) || state.tutorialStep<0 || state.tutorialStep>totalTutorialSteps(state)) throw new Error('Некорректный шаг обучения');
+  const extendedActions=state.actions.some(action=>action.stopIds!==undefined || action.outreachPolicyVersion!==undefined);
   // Only the action log is authoritative. No imported balance or allocations.
-  return clone({rulesVersion:state.rulesVersion,dataVersion:state.dataVersion,scenarioId:state.scenarioId,scenarioVersion:state.scenarioVersion,
+  return clone({rulesVersion:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
+    ...(extendedActions?{engineRulesVersion:state.rulesVersion}:{}),
+    dataVersion:state.dataVersion,scenarioId:state.scenarioId,scenarioVersion:state.scenarioVersion,
     regionId:state.regionId,owner:state.owner,actions:state.actions,tutorialStep:state.tutorialStep,
     ...(state.rulesVersion!==RULES_VERSION?{transportPolicyVersion:state.transportPolicyVersion,
       transportPolicyFingerprint:state.transportPolicyFingerprint}:{}),
@@ -621,12 +696,22 @@ export function exportSave(state) {
 }
 
 export function restore(world,scenario,save) {
+  if (save?.rulesVersion===SERIALIZED_ACTIONS_RULES_VERSION) {
+    const version=engineRulesVersions.indexOf(save.engineRulesVersion)+1;
+    if (!version || save.scenarioVersion!==version) throw new Error('Неизвестная версия правил журнала действий');
+    // Normalize only a local copy, then run every ordinary source/policy/owner
+    // check and replay. The wrapper never substitutes a scenario or its prices.
+    save={...save,rulesVersion:save.engineRulesVersion};
+    delete save.engineRulesVersion;
+  } else if (save?.engineRulesVersion!==undefined) throw new Error('Некорректная версия правил журнала действий');
   checkState(world,scenario,save);
   if (typeof save.owner!=='string' || !save.owner || save.owner.length>200) throw new Error('Некорректный владелец сохранения');
   if (!Array.isArray(save.actions) || save.actions.length>10000) throw new Error('Некорректный или слишком большой журнал действий');
   if (!Number.isInteger(save.tutorialStep) || save.tutorialStep<0 || save.tutorialStep>totalTutorialSteps(scenario)) throw new Error('Некорректный шаг обучения в сохранении');
   let state=createState(world,scenario,{owner:save.owner});
-  for (const action of save.actions) state=apply(world,scenario,state,action);
+  // Unmarked outreach actions predate road validation. Replay them exactly;
+  // public preview/apply always use the current rule for subsequent actions.
+  for (const action of save.actions) state=reducer(world,scenario,state,action,{replay:true}).nextState;
   if (state.tutorialStep!==save.tutorialStep) throw new Error('Шаг обучения сохранения не соответствует журналу действий');
   return state;
 }
@@ -637,7 +722,7 @@ export function undo(world,scenario,state) {
   // The shorter log has its own derived tutorial metadata. Do not feed the old
   // step into the public importer, which deliberately rejects mismatches.
   let previous=createState(world,scenario,{owner:state.owner});
-  for (const action of state.actions.slice(0,-1)) previous=apply(world,scenario,previous,action);
+  for (const action of state.actions.slice(0,-1)) previous=reducer(world,scenario,previous,action,{replay:true}).nextState;
   return previous;
 }
 

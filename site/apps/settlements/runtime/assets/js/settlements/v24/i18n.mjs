@@ -10,6 +10,21 @@ const entries = `
 Медицина|Healthcare|医疗
 Образование|Education|教育
 Досуг|Leisure|文娱
+Культура|Culture|文化
+Построить транспорт|Build transport route|修建交通路线
+Остановок: {count}. Можно добавить ещё поселения.|Stops: {count}. You can add more settlements.|已选{count}个站点。可以继续添加聚落。
+Убрать последнюю остановку|Remove last stop|移除最后一个站点
+Добавляйте остановки по порядку|Add stops in order|按顺序添加站点
+Выберите следующие поселения по порядку, затем постройте весь маршрут одним нажатием.|Select the next settlements in order, then build the whole route with one confirmation.|按顺序选择其他聚落，然后一次确认修建整条路线。
+Это поселение уже выбрано. Для изменения маршрута уберите последнюю остановку.|This settlement is already selected. Remove the last stop to change the route.|该聚落已选中。要修改路线，请移除最后一个站点。
+Для присоединения к действующей линии начните отдельное соединение.|Start a separate connection to join an active route.|如需接入已运行的线路，请新建一条连接。
+К этому поселению нет дороги. Сначала постройте транспортное соединение.|There is no road to this settlement. Build a transport connection first.|没有道路通往该聚落。请先修建交通连接。
+Неизвестные условия выездной помощи|Unknown mobile doctor rules|巡诊服务规则无法识别
+Выберите не менее двух поселений маршрута|Select at least two stops for the route|请为路线选择至少两个聚落
+Остановки маршрута не должны повторяться|Route stops must not repeat|路线站点不能重复
+Остановки не совпадают с концами маршрута|Stops do not match the route endpoints|站点与路线端点不一致
+Связь отсутствует в учебной транспортной сети: {from} → {to}|No connection in the educational transport network: {from} → {to}|教学交通网络中没有连接：{from} → {to}
+Выезд врача требует дороги к поселению. Если её нет, сначала постройте транспортное соединение.|A mobile doctor needs a road to the settlement. If there is none, build a transport connection first.|巡诊医生需要道路通往聚落。如无道路，请先修建交通连接。
 Вышка|Tower|通信塔
 Вышка связи|Communications tower|通信塔
 Клиника|Clinic|诊所
@@ -268,6 +283,8 @@ const errorEntries = `
 Неизвестные поселения сценария|Unknown settlements in the scenario|情景包含无法识别的聚落
 Вводный сценарий должен содержать три шага|The tutorial must contain three guided steps|教学必须包含三个引导步骤
 Неизвестная версия правил|Unknown rules version|无法识别规则版本
+Неизвестная версия правил журнала действий|Unknown action journal rules version|无法识别操作记录的规则版本
+Некорректная версия правил журнала действий|Invalid action journal rules version|操作记录的规则版本无效
 Сохранение относится к другому сценарию или региону|The save belongs to another scenario or region|存档属于其他情景或地区
 Версия исходных данных сохранения не совпадает с загруженным регионом|The save's source data version does not match the loaded region|存档的数据版本与已加载地区不匹配
 Версия транспортных условий сохранения не совпадает со сценарием|The save's transport conditions do not match the scenario|存档的交通条件与情景不匹配
@@ -457,7 +474,7 @@ const templateLength=(a,b)=>b.source.replace(/\{[^}]+\}/g,'').length-a.source.re
 const templates=Object.keys(GAME_DICTIONARY).filter(key=>key.includes('{')).map(source=>compileTemplate(source)).sort(templateLength);
 const reverseExact=new Map(Object.entries(GAME_DICTIONARY).flatMap(([source,values])=>source.includes('{')?[]:[[values.en,source],[values['zh-Hans'],source]]));
 const reverseTemplates=templates.flatMap(({source})=>['en','zh-Hans'].map(locale=>compileTemplate(source,GAME_DICTIONARY[source][locale]))).sort(templateLength);
-const serviceNames=new Set(['Связь','Медицина','Образование','Школа','Досуг']);
+const serviceNames=new Set(['Связь','Медицина','Образование','Школа','Досуг','Культура']);
 const vocabularyParameters=['service','facility','tool','region','reason','coverage','amount','transport','construction','transportRate','constructionRate','total','medical','culture','school'];
 const diagnosticAliases=Object.freeze({
   'Invalid transport record':'Транспортные данные региона повреждены. Повторите загрузку.',
@@ -515,7 +532,7 @@ export function createGameTranslator(initialLocale='ru') {
       for(const key of vocabularyParameters)if(values[key])values[key]=text(values[key]);
       return original.replace(trimmed,()=>interpolate(GAME_DICTIONARY[template.source][locale],values));
     }
-    const service=/^(Связь|Медицина|Образование|Школа|Досуг): (.+)$/u.exec(source);
+    const service=/^(Связь|Медицина|Образование|Школа|Досуг|Культура): (.+)$/u.exec(source);
     if(service&&serviceNames.has(service[1]))return original.replace(source,()=>`${text(service[1])}: ${service[2]}`);
     const network=/^(.*?) → К сети(?: · (.+))?$/u.exec(source);
     if(network)return `${network[1]} → ${text('К сети')}${network[2]?' · '+network[2]:''}`;
@@ -553,6 +570,11 @@ export function createGameTranslator(initialLocale='ru') {
   return Object.freeze({
     text,localize,translateDOM:localize,
     setLocale(value){locale=normalizeGameLocale(value);return locale;},
+    layerLabel(id){
+      const source={population:'Население',telecom:'Связь',medical:'Медицина',school:'Школа',culture:'Культура'}[id];
+      // Compact visible labels; each button retains its full translated aria-label.
+      return locale==='en'?{population:'People',telecom:'Telecom',medical:'Health',school:'School',culture:'Culture'}[id]||text(source):text(source);
+    },
     get locale(){return locale;},
     number(value,options={}){return new Intl.NumberFormat(locale==='ru'?'ru-RU':locale==='en'?'en-GB':'zh-CN',options).format(value);},
     regionName(region){const record=REGION_NAMES[typeof region==='string'?region:region?.id];return record?.[locale]||region?.name||String(region??'');}

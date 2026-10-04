@@ -27,7 +27,7 @@ export function validateInitialNetworkRoute(world,route){
   return {from:route.from,to:route.to,path:[...path]};
 }
 
-function targetNodes(world,active,action){
+function targetNodes(world,active,action,exactTarget){
   let targets;
   if(action.type==='connect-network'){
     const pair=action.targetEdge;
@@ -42,6 +42,9 @@ function targetNodes(world,active,action){
     if(action.from===action.to)throw new Error('Выберите второе поселение');
     targets=[world.ids.get(action.to)];
   }
+  // An explicitly selected stop must be visited, even when an earlier active
+  // section already joins its network. Ordinary two-point joins retain replay.
+  if(exactTarget)return new Set(targets);
   // Only predecessors with a real active directed path can be valid joins.
   // An arbitrary member of the same undirected component would create access.
   const reverse=world.rows.map(()=>[]);
@@ -52,10 +55,10 @@ function targetNodes(world,active,action){
   return reachable;
 }
 
-export function networkRoute(world,policy,routes,action){
+export function networkRoute(world,policy,routes,action,{exactTarget=false}={}){
   if(!action||!['connect','connect-network'].includes(action.type)||typeof action.from!=='string'||!world.ids.has(action.from))
     throw new Error('Поселение отсутствует в регионе');
-  const active=activeNetworkEdges(routes),targets=targetNodes(world,active,action),start=world.ids.get(action.from);
+  const active=activeNetworkEdges(routes),targets=targetNodes(world,active,action,exactTarget),start=world.ids.get(action.from);
   const best=new Array(world.rows.length),heap=new Heap(),first={node:start,price:0,metres:0,minutes:0,key:action.from,path:[action.from]};
   best[start]=first;heap.push(first);
   while(heap.size){

@@ -1,6 +1,6 @@
 import {World,change,haversine} from '../v2/engine.mjs';
 import {loadRegion,DATA,json,compressed,art} from '../v2/data.mjs';
-import {RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,towerSpec,TRANSPORT_PRICES,CATALOG,createState,evaluate,preview,apply,undo,restore,exportSave,tutorialInstruction,totalTutorialSteps} from './engine.mjs';
+import {RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,towerSpec,TRANSPORT_PRICES,CATALOG,createState,evaluate,preview,apply,undo,restore,exportSave,tutorialInstruction,totalTutorialSteps} from './engine.mjs';
 import {createIntroScenario,createRegionalScenario,CURATED_REGIONS} from './scenarios.mjs';
 import {loadDistanceTransportPolicy} from './transport-policy-v2.mjs';
 import {loadTelecomPlan} from './telecom-plans.mjs';
@@ -16,7 +16,7 @@ import {createTaskGuide} from './task-guide.mjs';
 import {classifyCompletion} from './platform-rules.mjs';
 import {createGameTranslator} from './i18n.mjs';
 
-const NAMES={population:'Население',telecom:'Связь',medical:'Медицина',school:'Образование',culture:'Досуг'};
+const NAMES={population:'Население',telecom:'Связь',medical:'Медицина',school:'Образование',culture:'Культура'};
 const TOOLS={tower:'Вышка',medical:'Клиника',school:'Школа',culture:'Центр досуга',connect:'Транспорт',outreach:'Выезд врача'};
 const objectName=service=>service==='culture'||service==='outreach'?TOOLS[service]:CATALOG[service]?.name;
 const PRICES={tower:12,medical:32,school:48,culture:22,connect:8,outreach:9};
@@ -36,7 +36,8 @@ export const DIFFICULTIES=Object.freeze([{id:'easy',name:'Лёгкая',descript
 export function normalizeDifficulty(value){if(value===null||value===undefined||value==='')return 'normal';if(DIFFICULTIES.some(d=>d.id===value))return value;throw new Error('Неизвестная сложность партии. Выберите лёгкую, обычную или сложную.');}
 export const scenarioKey=(regionId,mode,version,difficulty='normal')=>mode==='intro'?`intro-chelyabinsk-7${version>1?`-v${version}`:''}`:`${mode}-${regionId}-v${version}${version===5?`-${normalizeDifficulty(difficulty)}`:''}`;
 export function partyUrl(current,{version,regionId,mode,difficulty}){const url=new URL(current);url.searchParams.set('rules',`3.${version-1}`);url.searchParams.set('region',regionId);url.searchParams.set('scenario',mode);if(version===5)url.searchParams.set('difficulty',mode==='intro'?'normal':normalizeDifficulty(difficulty));else url.searchParams.delete('difficulty');return url;}
-export const savedScenarioVersion=value=>{if(value?.rulesVersion===RULES_VERSION&&value.scenarioVersion===1)return 1;if(value?.rulesVersion===FIXED_TRANSPORT_RULES_VERSION&&value.scenarioVersion===2)return 2;if(value?.rulesVersion===NEW_RULES_VERSION&&value.scenarioVersion===3)return 3;if(value?.rulesVersion===TELECOM_RULES_VERSION&&value.scenarioVersion===4)return 4;if(value?.rulesVersion===SOCIAL_RULES_VERSION&&value.scenarioVersion===5)return 5;throw new Error('Неизвестная версия правил или сценария. Текущее прохождение не изменено.');};
+const savedEngineRules=value=>value?.rulesVersion===SERIALIZED_ACTIONS_RULES_VERSION?value.engineRulesVersion:value?.rulesVersion;
+export const savedScenarioVersion=value=>{const rules=savedEngineRules(value);if(rules===RULES_VERSION&&value.scenarioVersion===1)return 1;if(rules===FIXED_TRANSPORT_RULES_VERSION&&value.scenarioVersion===2)return 2;if(rules===NEW_RULES_VERSION&&value.scenarioVersion===3)return 3;if(rules===TELECOM_RULES_VERSION&&value.scenarioVersion===4)return 4;if(rules===SOCIAL_RULES_VERSION&&value.scenarioVersion===5)return 5;throw new Error('Неизвестная версия правил или сценария. Текущее прохождение не изменено.');};
 /** Storage lookup is read-only: each 3.4 difficulty owns a separate replay key. */
 export function partySelection({storage,params,regionId,mode,imported=null,restart=false,requestedDifficulty=null}){
   const explicitProfile=requestedDifficulty!==null||params.has('difficulty'),profile=mode==='intro'?'normal':normalizeDifficulty(requestedDifficulty??params.get('difficulty'));
@@ -44,7 +45,7 @@ export function partySelection({storage,params,regionId,mode,imported=null,resta
   let stored=imported;
   if(!stored&&!restart){
     const resume=storage.resume();
-    if(!explicitProfile&&resume?.scenarioVersion===5&&resume?.rulesVersion===SOCIAL_RULES_VERSION&&resume?.regionId===regionId&&savedMode(resume)===mode)stored=storage.load(resume.id||resume.scenarioId);
+    if(!explicitProfile&&resume?.scenarioVersion===5&&savedEngineRules(resume)===SOCIAL_RULES_VERSION&&resume?.regionId===regionId&&savedMode(resume)===mode)stored=storage.load(resume.id||resume.scenarioId);
     if(!stored)stored=storage.load(scenarioKey(regionId,mode,5,profile));
   }
   if(stored&&savedScenarioVersion(stored)!==5)stored=null;
@@ -84,7 +85,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
   options.signal?.addEventListener('abort',hostAbort,{once:true});
   if(options.signal?.aborted){abort.abort();throw new DOMException('Game mount aborted','AbortError');}
   let preferences=storage.preferences(),world,scenario,state,ev,map,basemap,manifest,mode='intro',difficulty='normal',activeLayer='telecom',activeTool='tower';
-  let selectedId=null,selectedFacilityId=null,selectedPosition=null,routeFrom=null,targetEdge=null,q=null,guide=null,lastResult=null,saveError='',loading=false,disposed=false,request=0;
+  let selectedId=null,selectedFacilityId=null,selectedPosition=null,routeFrom=null,routeStops=[],targetEdge=null,q=null,guide=null,lastResult=null,saveError='',loading=false,disposed=false,request=0;
   let toolsOpen=false,inlineHelp='',dialogOpener=null,retryTarget=null;
   const reduced=()=>Boolean(preferences.reducedMotion||media.matches);
   const listen=(node,event,handler,options={})=>node.addEventListener(event,handler,{...options,signal:abort.signal});
@@ -133,11 +134,12 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
       if(payload.save.ui.terminalReason&&!completionSent){completionSent=true;try{await options.onComplete?.({...payload,reason:payload.save.ui.terminalReason});}catch(error){completionSent=false;throw error;}}
     }).catch(error=>{lastSaveFailure=error;saveError='Не удалось сохранить ход. Вернитесь к списку партий и повторите синхронизацию.';if(!disposed){readOnly=true;render();message(saveError,true);}});
   }
-  function clearSelection(){selectedId=null;selectedFacilityId=null;selectedPosition=null;routeFrom=null;targetEdge=null;q=null;inlineHelp='';}
+  function clearSelection(){selectedId=null;selectedFacilityId=null;selectedPosition=null;routeFrom=null;routeStops=[];targetEdge=null;q=null;inlineHelp='';}
   function resetPreview(){q=null;selectedPosition=null;selectedFacilityId=null;targetEdge=null;}
   function makeAction(){
     if(activeTool==='tower'&&selectedPosition)return {type:'tower',...selectedPosition};
     if(activeTool==='connect'&&routeFrom&&targetEdge)return {type:'connect-network',from:routeFrom,targetEdge:targetEdge.slice()};
+    if(activeTool==='connect'&&!instruction()?.locked&&routeStops.length>=2)return {type:'connect',stopIds:routeStops.slice()};
     if(activeTool==='connect'&&routeFrom&&selectedId&&routeFrom!==selectedId)return {type:'connect',from:routeFrom,to:selectedId};
     if(['medical','school','culture','outreach'].includes(activeTool)&&selectedId)return {type:'build',service:activeTool,settlementId:selectedId};
     return null;
@@ -158,13 +160,18 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
     }
     if(inst?.locked&&inst.settlementId&&id!==inst.settlementId){message(t('Сейчас выберите {name} — отмеченное поселение.',{name:titleFor(inst.settlementId)}));return;}
     if(inst?.locked&&inst.from&&id!==(routeFrom?inst.to:inst.from)){message(t('Выберите {name}.',{name:titleFor(routeFrom?inst.to:inst.from)}));return;}
+    if(activeTool==='connect'&&!inst?.locked){
+      if(routeStops.includes(id)){message('Это поселение уже выбрано. Для изменения маршрута уберите последнюю остановку.');return;}
+      routeStops=[...routeStops,id];
+    }
     selectedId=id;selectedFacilityId=facilityId;selectedPosition=null;targetEdge=null;
-    if(activeTool==='connect'&&!routeFrom){routeFrom=id;q=null;message(state.rulesVersion===SOCIAL_RULES_VERSION&&!inst?.locked?'Теперь выберите поселение или действующую линию. Цена учитывает только новые участки.':'Теперь выберите второе поселение. Цена учитывает только новые участки.');}
+    if(activeTool==='connect'&&!routeFrom){routeFrom=id;q=null;message(!inst?.locked?'Выберите следующие поселения по порядку, затем постройте весь маршрут одним нажатием.':'Теперь выберите второе поселение. Цена учитывает только новые участки.');}
     else{calculate();message('');}
     render();
   }
   function selectNetwork(selection){
     if(loading||disposed||readOnly||terminalReason||state.rulesVersion!==SOCIAL_RULES_VERSION||activeTool!=='connect'||!routeFrom||instruction()?.locked)return;
+    if(routeStops.length>1){message('Для присоединения к действующей линии начните отдельное соединение.');return;}
     targetEdge=selection.targetEdge.slice();selectedId=null;selectedFacilityId=null;selectedPosition=null;toolsOpen=false;inlineHelp='';calculate();message('');render();
   }
   function place(coordinate){
@@ -225,7 +232,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
       const label=id==='population'?t(name):known?(settlements?t('{service}: полностью обеспечено {covered} из {total} поселений ({percent}%)',{service:t(name),covered:num(covered),total:num(total),percent:routeNumber(percent)}):t('{service}: удовлетворено {percent}% спроса',{service:t(name),percent:routeNumber(percent)})):t('{service}: нет известного спроса',{service:t(name)});
       const value=id==='population'?'':`<span class="layer-progress-value" aria-hidden="true">${known?routeNumber(percent)+'%':'—'}</span>`;
       const progress=id==='population'?'':`<span class="layer-progress ${known?'':'unknown'}" aria-hidden="true"><i style="width:${percent??0}%"></i></span>`;
-      return `<button data-layer="${id}" aria-pressed="${id===activeLayer}" aria-label="${esc(label)}" title="${esc(label)}${id==='population'?'':'. '+t(settlements?'Доля полностью обеспеченных поселений с известным спросом.':'Доля обслуженного спроса; для победы нужно всё.')}" class="layer-option ${id===activeLayer?'active':''}" style="--layer-color:${SERVICE_COLORS[id]||'#52666a'}"><span class="layer-symbol">${layerIcon(id)}${value}</span><span class="layer-label">${id==='school'?'Школа':name}</span>${progress}</button>`;
+      return `<button data-layer="${id}" aria-pressed="${id===activeLayer}" aria-label="${esc(label)}" title="${esc(label)}${id==='population'?'':'. '+t(settlements?'Доля полностью обеспеченных поселений с известным спросом.':'Доля обслуженного спроса; для победы нужно всё.')}" class="layer-option ${id===activeLayer?'active':''}" style="--layer-color:${SERVICE_COLORS[id]||'#52666a'}"><span class="layer-symbol">${layerIcon(id)}${value}</span><span class="layer-label" translate="no">${esc(translator.layerLabel(id))}</span>${progress}</button>`;
     }).join('')}</div>`;
   }
   function toolButton(kind,guided=false,disabled=false){return `<button class="tool ${activeTool===kind?'active':''}" data-tool="${kind}" aria-pressed="${activeTool===kind}" ${disabled?'disabled':''}>${symbolSvg(kind)}<span>${TOOLS[kind]}</span><small>${kind==='connect'?(distanceRules(state.rulesVersion)?'по расстоянию':state.rulesVersion===FIXED_TRANSPORT_RULES_VERSION?`от ${num(TRANSPORT_PRICES.transport)} млн / участок`:'8 млн / участок'):money(kind==='tower'?towerSpec(state).cost:PRICES[kind])}</small></button>`;}
@@ -241,13 +248,18 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
   function previewDock(){
     const name=q.action.type==='tower'?'Вышка связи':isRouteAction(q.action)?'Соединение':q.action.type==='upgrade'?'Расширение':objectName(q.action.service)||TOOLS[q.action.service];
     const joinsNetwork=q.action.type==='connect-network'||(q.joinId&&q.joinId!==q.action.to);
-    const placeName=q.action.type==='tower'?t('На выбранной площадке'):isRouteAction(q.action)?`${titleFor(q.action.from)} → ${joinsNetwork?t('К сети')+(q.joinId?` · ${titleFor(q.joinId)}`:''):titleFor(q.action.to)}`:q.action.settlementId?titleFor(q.action.settlementId):titleFor(state.facilities.find(f=>f.id===q.action.facilityId)?.settlementId);
+    const placeName=q.action.type==='tower'?t('На выбранной площадке'):isRouteAction(q.action)?`${titleFor(q.action.from||routeStops[0])} → ${q.action.stopIds?titleFor(q.action.to||routeStops.at(-1)):joinsNetwork?t('К сети')+(q.joinId?` · ${titleFor(q.joinId)}`:''):titleFor(q.action.to)}`:q.action.settlementId?titleFor(q.action.settlementId):titleFor(state.facilities.find(f=>f.id===q.action.facilityId)?.settlementId);
     const changes=Object.entries(q.delta||{}).filter(([,v])=>v.newlyFullIds?.length||v.improvedIds?.length||v.people>0);
     const effects=q.ok?(changes.length?`<div class="preview-effects">${changes.map(([service,v])=>`<div class="preview-effect" style="--effect-color:${SERVICE_COLORS[service]||'#203b38'}" title="${esc(deltaText(service,v))}">${layerIcon(service)}<div><span>${NAMES[service]}</span><strong>+${num(v.people)} <small>жителей</small></strong></div></div>`).join('')}</div>`:'<p class="preview-result">Новых получателей пока нет</p>'):`<p class="preview-result error" role="alert">${esc(q.error||'Это действие недоступно')}</p>`;
     const connecting=isRouteAction(q.action),transport=q.transportCost,place=`<p class="place-name" data-source-name title="${esc(placeName)}">${esc(placeName)}</p>`,estimate=q.ok?'<p class="route-estimate" data-route-estimate></p>':'';
     const heading=connecting?`<div class="route-heading ${transport?'transport-heading':''}"><h2>Предпросмотр · Соединение</h2>${place}${transport?estimate:''}</div>`:`<div><span class="eyebrow">Предпросмотр</span><h2>${esc(name)}</h2></div>`;
     const breakdown=transport?`<p class="transport-price">${t('Транспорт {transport} · Дорога {road} млн ₽',{transport:moneyNumber(transport.transport),road:moneyNumber(transport.construction)})}</p>`:'';
-    return `<div class="preview-body"><div class="dock-heading">${heading}<button class="icon-button" data-act="cancel" aria-label="Отменить примеривание">${uiIcon('close')}</button></div>${connecting?(transport?breakdown:estimate):place}${effects}</div><div class="confirm-row"><strong class="preview-price" aria-label="${money(q.cost||0)}"><span>${moneyNumber(q.cost||0)}</span><small>млн ₽</small></strong><button class="primary" data-act="confirm" ${q.ok?'':'disabled'}>Подтвердить</button>${q.ok?`<div class="preview-links"><button class="icon-button" data-act="recipients" aria-label="Показать получателей" title="Показать получателей">${uiIcon('population')}</button><button class="icon-button" data-act="details" aria-label="Почему такой результат?" title="Почему такой результат?">${uiIcon('info')}</button></div>`:''}</div>`;
+    const multiple=connecting&&Array.isArray(q.action.stopIds);
+    return `<div class="preview-body"><div class="dock-heading">${heading}<button class="icon-button" data-act="cancel" aria-label="Отменить примеривание">${uiIcon('close')}</button></div>${multiple?routeStopsControl():''}${connecting?(transport?breakdown:estimate):place}${effects}</div><div class="confirm-row"><strong class="preview-price" aria-label="${money(q.cost||0)}"><span>${moneyNumber(q.cost||0)}</span><small>млн ₽</small></strong><button class="primary" data-act="confirm" ${q.ok?'':'disabled'}>${multiple?'Построить транспорт':'Подтвердить'}</button>${q.ok?`<div class="preview-links"><button class="icon-button" data-act="recipients" aria-label="Показать получателей" title="Показать получателей">${uiIcon('population')}</button><button class="icon-button" data-act="details" aria-label="Почему такой результат?" title="Почему такой результат?">${uiIcon('info')}</button></div>`:''}</div>`;
+  }
+  function routeStopsControl(){
+    if(!routeStops.length)return '';
+    return `<div class="route-stops"><p>${t('Остановок: {count}. Можно добавить ещё поселения.',{count:num(routeStops.length)})}</p><ol>${routeStops.map(id=>`<li data-source-name>${esc(titleFor(id))}</li>`).join('')}</ol><button class="text-button" data-act="route-remove-last">Убрать последнюю остановку</button></div>`;
   }
   function render(){
     if(!world||!state||loading)return;
@@ -278,14 +290,14 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
       dock=`<div class="guided-action"><div class="tool-grid guided">${toolButton(inst.tool,true)}</div><p class="action-hint">${esc(hint)}</p>${inst.coordinate?'<button class="text-button guide-position" data-act="guide-position" aria-label="Примерить отмеченное место">Примерить</button>':''}${state.actions.length===0?'<p class="intro-goal action-hint">Цель: все 7 поселений получают четыре услуги на 100%.</p>':''}</div>`;
     }else if(activeTool&&!toolsOpen&&!frozen){
       dockState='active-tool';
-      const hint=activeTool==='tower'?'Коснитесь места на карте':activeTool==='connect'?(routeFrom?(state.rulesVersion===SOCIAL_RULES_VERSION?'Выберите поселение или действующую линию':'Выберите второе поселение'):'Выберите первое поселение'):'Выберите поселение';
+      const hint=activeTool==='tower'?'Коснитесь места на карте':activeTool==='connect'?(routeFrom?'Добавляйте остановки по порядку':'Выберите первое поселение'):'Выберите поселение';
       dock=`<span class="tool-symbol">${symbolSvg(activeTool)}</span><div><h2>${TOOLS[activeTool]}</h2><p class="action-hint">${hint}</p></div><button class="icon-button" data-act="clear-tool" aria-label="Сменить действие">${uiIcon('close')}</button>`;
     }
     if(inlineHelp){dockState='help';dock=`<div class="dock-heading"><h2>${inlineHelp==='budget'?'Бюджет':inlineHelp==='legend'?'Обозначения':'Результат хода'}</h2><button class="icon-button" data-act="dismiss-help" aria-label="Вернуться к карте">${uiIcon('close')}</button></div>${inlineHelp==='budget'?`<strong class="budget-number">${money(state.budget)}</strong><p>${t('Потрачено {amount}.',{amount:money(state.spent)})}</p>`:inlineHelp==='legend'?`${activeLayer==='population'?'<div class="inline-legend"><span>Зелёный — рост</span><span>Жёлтый — стабильно</span><span>Красный — убыль</span><span>Серый — нет сравнения</span></div>':'<div class="inline-legend"><span>○ нет услуги</span><span>✓ есть</span><span>◌ изменится</span></div>'}<p>Размер — численность населения; шкала сжата.</p><button class="text-button" data-act="legend-details">Все обозначения</button>`:`<p>${esc(lastResult||'Пока нет новых действий')}</p>`}`;}
     if(embedded&&!done&&!readOnly&&classification?.canFinish&&!q&&!selectedId&&!activeTool&&!toolsOpen&&!inlineHelp){dockState='complete';dock=`<h2>Бюджет исчерпан</h2><p>${classification.hasFreeConnection?'Остались бесплатные соединения. Можно продолжить или сохранить итог.':'Доступных действий больше нет. Сохраните итог партии.'}</p><button class="primary" data-act="finish-budget">Завершить партию</button>`;}
     root.classList.toggle('has-inline-help',!!inlineHelp);
     $('.puzzle-dock').dataset.state=dockState;$('.puzzle-dock').innerHTML=dock;
-    map.update({world,scenario,state,evaluation:ev,basemap,activeLayer,activeTool,selectedId,selectedFacilityId,preview:q?.ok?q:null,routeFrom,guidance:inst?.locked?inst:null,focusIds:targetIds(),reducedMotion:reduced()});
+    map.update({world,scenario,state,evaluation:ev,basemap,activeLayer,activeTool,selectedId,selectedFacilityId,preview:q?.ok?q:null,routeFrom,routeStops,guidance:inst?.locked?inst:null,focusIds:targetIds(),reducedMotion:reduced()});
     updateRouteEstimate();
     if(frozen)root.querySelectorAll('[data-tool],[data-upgrade],[data-act="confirm"],[data-act="guide-position"],[data-act="tools"]').forEach(button=>button.disabled=true);
     root.toggleAttribute('data-readonly',readOnly);root.toggleAttribute('data-terminal',Boolean(terminalReason));
@@ -383,6 +395,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
     switch(act){
       case 'guide-position':{const inst=instruction();if(inst?.locked&&inst.coordinate){activeTool='tower';activeLayer='telecom';place(inst.coordinate);}break;}
       case 'confirm':commit();break;
+      case 'route-remove-last':if(!readOnly&&!terminalReason&&activeTool==='connect'&&!instruction()?.locked){routeStops=routeStops.slice(0,-1);routeFrom=routeStops[0]||null;selectedId=routeStops.at(-1)||null;targetEdge=null;calculate();message('');render();$('.puzzle-map').focus({preventScroll:true});}break;
       case 'cancel':clearSelection();message('');render();$('.puzzle-map').focus({preventScroll:true});break;
       case 'clear-tool':activeTool=null;clearSelection();render();break;
       case 'dismiss-help':inlineHelp='';render();$('.puzzle-map').focus({preventScroll:true});break;

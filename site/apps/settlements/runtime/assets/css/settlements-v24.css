@@ -57,6 +57,12 @@
   .puzzle-message{top:64px;left:324px;right:60px;transform:none;width:auto;max-width:none}
 }
 
+.route-stops{margin:0 0 5px;font-size:12px;line-height:16px}
+.route-stops p{margin:0 0 3px}
+.route-stops ol{display:flex;flex-wrap:wrap;gap:2px 12px;list-style-position:inside;margin:0;padding:0;max-height:48px;overflow:auto}
+.route-stops li{max-width:100%;overflow-wrap:anywhere}
+.route-stops .text-button{min-height:44px;font-size:12px;padding:4px 0;text-align:left}
+
 @container(min-width:640px) and (max-height:360px){
   .puzzle-embedded .puzzle-dock{bottom:8px;max-height:calc(100cqh - 112px)}
   .puzzle-embedded .puzzle-dock[data-state=preview]{min-height:0;max-height:calc(100cqh - 112px)}

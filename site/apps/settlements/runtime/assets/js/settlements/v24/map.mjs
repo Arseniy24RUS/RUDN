@@ -250,6 +250,7 @@ export class GameMap {
     if (newWorld) this.setWorld(input.world, input.scenario);
     const previousLayer = this.activeLayer;
     Object.assign(this, input); this.activeLayer ||= 'telecom'; this.reducedMotion = Boolean(input.reducedMotion); if (this.reducedMotion) { this.effects = []; this.camera.stopTransition(); }
+    this.routeStopIds = new Set(input.routeStops || []);
     if (this.boundarySource !== input.scenario?.boundary) { this.boundaries = boundaryRings(input.scenario?.boundary, this.wrap); this.boundarySource = input.scenario?.boundary; }
     this.basemap = inputBasemap;
     if (newWorld || basemapChanged || boundaryChanged) {
@@ -318,7 +319,7 @@ export class GameMap {
   pointPriority(p) {
     const id = p.row.id, s = status(this.evaluation, id, this.activeLayer), g = this.guidance;
     if (id === this.selectedId) return 4;
-    if (this.previewIds?.has(id) || id === this.routeFrom || id === g?.settlementId || id === g?.from || id === g?.to) return 3;
+    if (this.previewIds?.has(id) || this.routeStopIds?.has(id) || id === this.routeFrom || id === g?.settlementId || id === g?.from || id === g?.to) return 3;
     if (this.targetIds?.has(id)) return 2;
     return this.activeLayer !== 'population' && s?.demand > 0 && !s.full ? 1 : 0;
   }
@@ -350,7 +351,7 @@ export class GameMap {
       if (s?.full && this.activeLayer !== 'population' && r >= 5) { c.strokeStyle = '#fff'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(at.x - 2.5, at.y); c.lineTo(at.x - .5, at.y + 2); c.lineTo(at.x + 3, at.y - 2); c.stroke(); }
       if (s?.served > 0 && !s.full && this.activeLayer !== 'population') { c.beginPath(); c.arc(at.x, at.y, r + 2.5, -Math.PI / 2, -Math.PI / 2 + TAU * clamp(s.served / s.demand, 0, 1)); c.strokeStyle = SERVICE_COLORS[this.activeLayer]; c.lineWidth = 2; c.stroke(); }
       }
-      if (selected || preview || row.id === this.routeFrom || row.id === this.guidance?.settlementId || row.id === this.guidance?.from || row.id === this.guidance?.to) { c.beginPath(); c.arc(at.x, at.y, (icon ? iconSize * .6 : r) + 5, 0, TAU); c.strokeStyle = selected ? '#174a65' : COLORS.preview; c.lineWidth = 2; c.setLineDash(preview ? [3, 3] : []); c.stroke(); c.setLineDash([]); }
+      if (selected || preview || this.routeStopIds?.has(row.id) || row.id === this.routeFrom || row.id === this.guidance?.settlementId || row.id === this.guidance?.from || row.id === this.guidance?.to) { c.beginPath(); c.arc(at.x, at.y, (icon ? iconSize * .6 : r) + 5, 0, TAU); c.strokeStyle = selected ? '#174a65' : COLORS.preview; c.lineWidth = 2; c.setLineDash(preview ? [3, 3] : []); c.stroke(); c.setLineDash([]); }
       this.drawnPoints.push({id: row.id, x: at.x, y: at.y, radius: r, iconSize, hitRadius: Math.max(22, r + 8, iconSize / 2), priority, tiny, color, population: row.population, full: s?.full ?? null, shape, preview, capacityIndicator: local?.length && !s?.full ? s?.reason === 'capacity' ? 'capacity' : 'unserved' : null, historicalGlyph: null, historicalTrend: trend(row), historicalSource: {population: row.population, population2010: Number.isFinite(row.population2010) ? row.population2010 : null, territoryComparable: row.territoryComparable ?? null}});
     };
     this.drawnFacilities = [];

@@ -1,12 +1,12 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "ddf8719b83d0e2512363f23792815c510c64ffe1e2b2d2ec8940b89a853ed161",
+  "sourceHash": "000f0e8fe541c7657cbd247489347551d590a48130358477dfb79fd3c5fc9258",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
-      "bytes": 21268,
-      "sha256": "697e6c41efe379564fbf3e1758966e8e455a4eb06395235d49690665f4aeb57c"
+      "bytes": 21571,
+      "sha256": "998ce7e0942d986570d6f9507097675de7619b4a71f65bd108d5aeeb75de397a"
     },
     {
       "path": "assets/geodata/federal-cities/moskva.geojson",
@@ -1550,8 +1550,8 @@
     },
     {
       "path": "assets/js/settlements/v24/engine.mjs",
-      "bytes": 43931,
-      "sha256": "115d5038bf821c683ebb40802968a6a665478cfb28055408962363937ff6855d"
+      "bytes": 50267,
+      "sha256": "f3fbc07f1426933186287cb6d41d547bdf9ae4c03fbae2c8d4d7a0bfdb843335"
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
@@ -1565,23 +1565,23 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 74972,
-      "sha256": "606aa5cc858756191e27c414e72494426e7e0692eb31bc671fd482d9c878ec98"
+      "bytes": 76136,
+      "sha256": "f6dfa98854a840a60df232871a589062e6bdfb51a31d32f7ea7508013480ec18"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
-      "bytes": 88539,
-      "sha256": "2a9fa42e5eb4793d21d10badd05137a682dd940a9b5e8cfd97807902c8223146"
+      "bytes": 92049,
+      "sha256": "a8dd3df462801787612662ced47088e8e59f2b58b1dcd82fc0e6af1447e2df07"
     },
     {
       "path": "assets/js/settlements/v24/map.mjs",
-      "bytes": 59236,
-      "sha256": "6069153f113fa3bf71036abb1ab4249c8a4fbbce63d1af4c9c75bf2ac8f387ed"
+      "bytes": 58852,
+      "sha256": "ea03a4d6946b4ea5a18709e228c1191404fbb89730cedcc21fd013b0101cb522"
     },
     {
       "path": "assets/js/settlements/v24/network-routing.mjs",
-      "bytes": 5645,
-      "sha256": "03fa200e6bad7988885097bb8385ca6063ab3e09e171f90e7cd1b0d4be128be2"
+      "bytes": 5892,
+      "sha256": "e0f2dd0209bd59a97a180c9634e557cab1744e1cb8dae7e141d4618e71d1fc5c"
     },
     {
       "path": "assets/js/settlements/v24/platform-rules.mjs",
