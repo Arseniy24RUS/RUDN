@@ -7,6 +7,7 @@ import {TELECOM_RULES_VERSION,towerSpec,initialTowersFor,initialTowerThresholdFo
 import {telecomPlanFor} from './telecom-plans.mjs';
 import {SOCIAL_RULES_VERSION,SOCIAL_POLICY_VERSION,isRemoteSocialRegion,validateDifficulty} from './social-policy.mjs';
 import {socialPlanFor,socialContentHash} from './social-plans.mjs';
+import {INITIAL_TOWER_POLICY_VERSION,spacedInitialTowerSeeds} from './initial-tower-spacing.mjs';
 
 export const CURATED_REGIONS = Object.freeze([
   'moskovskaya_oblast', 'respublika_tyva', 'chukotskiy_avtonomnyy_okrug',
@@ -377,12 +378,17 @@ export function createIntroScenario(world,boundary,{version=1}={}){
   return withScenarioVersion(world,createIntroScenarioV1(world,boundary),version);
 }
 
-export function createRegionalScenario(world,boundary,{mode='campaign',version=1,difficulty='normal'}={}){
+export function createRegionalScenario(world,boundary,{mode='campaign',version=1,difficulty='normal',initialTowerPolicyVersion=INITIAL_TOWER_POLICY_VERSION}={}){
   if(version===5){
     if(!['campaign','free'].includes(mode)||mode==='campaign'&&!CURATED_REGIONS.includes(world.region.id))throw new Error('Для этого региона предусмотрен свободный режим');
     validateDifficulty(difficulty);
     const plan=socialPlanFor(world,difficulty),telecom=plan.telecom;
     const parameters={rulesVersion:SOCIAL_RULES_VERSION,telecomInitialPopulationThreshold:telecom.initialPopulationThreshold,telecomInitialSeedIds:clone(telecom.initialSeedIds)};
+    if(initialTowerPolicyVersion!==null){
+      if(initialTowerPolicyVersion!==INITIAL_TOWER_POLICY_VERSION)throw new Error('Неизвестная версия исходной сети связи');
+      parameters.initialTowerPolicyVersion=INITIAL_TOWER_POLICY_VERSION;
+      parameters.initialTowerPolicyFingerprint=spacedInitialTowerSeeds(world,telecom.initialSeedIds).fingerprint;
+    }
     const initialTowers=initialTowersFor(world,parameters);
     return {id:`${mode}-${world.region.id}-v5-${difficulty}`,...parameters,version:5,difficulty,regionId:world.region.id,kind:mode,
       title:`${world.region.name}: учреждения и общая сеть`,initialBudget:plan.initialBudget,
@@ -396,6 +402,7 @@ export function createRegionalScenario(world,boundary,{mode='campaign',version=1
         socialInitialThresholds:clone(plan.thresholds),difficulty,
         socialTransportTimeLimit:isRemoteSocialRegion(world)?'unlimited':'medical60-school55-culture60',
         initialTowerCount:initialTowers.length,telecomRadiusKm:towerSpec(SOCIAL_RULES_VERSION).radiusKm,
+        ...(parameters.initialTowerPolicyVersion?{initialTowerPolicyVersion:parameters.initialTowerPolicyVersion,originalInitialTowerCount:telecom.initialSeedIds.length}:{}),
         telecomInitialPopulationThreshold:telecom.initialPopulationThreshold,telecomTowerCost:towerSpec(SOCIAL_RULES_VERSION).cost,
         telecomReferenceActions:telecom.centres.length,referenceLength:plan.referenceActions.length,
         humanDurationMeasured:false,unknownPopulationIds:world.rows.filter(row=>!Number.isFinite(row.population)).map(row=>row.id),

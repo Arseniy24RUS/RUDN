@@ -1,12 +1,13 @@
 import {World,change,haversine} from '../v2/engine.mjs';
 import {loadRegion,DATA,json,compressed,art} from '../v2/data.mjs';
-import {RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,towerSpec,TRANSPORT_PRICES,CATALOG,createState,evaluate,preview,apply,undo,restore,exportSave,tutorialInstruction,totalTutorialSteps} from './engine.mjs';
+import {RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,INITIAL_NETWORK_SAVE_RULES_VERSION,towerSpec,TRANSPORT_PRICES,CATALOG,createState,evaluate,preview,apply,undo,restore,exportSave,tutorialInstruction,totalTutorialSteps} from './engine.mjs';
 import {createIntroScenario,createRegionalScenario,CURATED_REGIONS} from './scenarios.mjs';
 import {loadDistanceTransportPolicy} from './transport-policy-v2.mjs';
 import {loadTelecomPlan} from './telecom-plans.mjs';
 import {loadSocialPlan} from './social-plans.mjs';
 import {SOCIAL_RULES_VERSION,isPopulationSocialScenario,socialAccessLimits} from './social-policy.mjs';
 import {initialTowerThresholdFor} from './telecom-policy.mjs';
+import {INITIAL_TOWER_POLICY_VERSION} from './initial-tower-spacing.mjs';
 import {GameMap,isRouteAction,facilityInLayer} from './map.mjs';
 import {symbolSvg,SERVICE_COLORS} from './symbols.mjs';
 import {uiIcon} from './ui-icons.mjs';
@@ -36,7 +37,7 @@ export const DIFFICULTIES=Object.freeze([{id:'easy',name:'Лёгкая',descript
 export function normalizeDifficulty(value){if(value===null||value===undefined||value==='')return 'normal';if(DIFFICULTIES.some(d=>d.id===value))return value;throw new Error('Неизвестная сложность партии. Выберите лёгкую, обычную или сложную.');}
 export const scenarioKey=(regionId,mode,version,difficulty='normal')=>mode==='intro'?`intro-chelyabinsk-7${version>1?`-v${version}`:''}`:`${mode}-${regionId}-v${version}${version===5?`-${normalizeDifficulty(difficulty)}`:''}`;
 export function partyUrl(current,{version,regionId,mode,difficulty}){const url=new URL(current);url.searchParams.set('rules',`3.${version-1}`);url.searchParams.set('region',regionId);url.searchParams.set('scenario',mode);if(version===5)url.searchParams.set('difficulty',mode==='intro'?'normal':normalizeDifficulty(difficulty));else url.searchParams.delete('difficulty');return url;}
-const savedEngineRules=value=>value?.rulesVersion===SERIALIZED_ACTIONS_RULES_VERSION?value.engineRulesVersion:value?.rulesVersion;
+const savedEngineRules=value=>[SERIALIZED_ACTIONS_RULES_VERSION,INITIAL_NETWORK_SAVE_RULES_VERSION].includes(value?.rulesVersion)?value.engineRulesVersion:value?.rulesVersion;
 export const savedScenarioVersion=value=>{const rules=savedEngineRules(value);if(rules===RULES_VERSION&&value.scenarioVersion===1)return 1;if(rules===FIXED_TRANSPORT_RULES_VERSION&&value.scenarioVersion===2)return 2;if(rules===NEW_RULES_VERSION&&value.scenarioVersion===3)return 3;if(rules===TELECOM_RULES_VERSION&&value.scenarioVersion===4)return 4;if(rules===SOCIAL_RULES_VERSION&&value.scenarioVersion===5)return 5;throw new Error('Неизвестная версия правил или сценария. Текущее прохождение не изменено.');};
 /** Storage lookup is read-only: each 3.4 difficulty owns a separate replay key. */
 export function partySelection({storage,params,regionId,mode,imported=null,restart=false,requestedDifficulty=null}){
@@ -195,7 +196,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
       if(version===4)await loadTelecomPlan(nextWorld,{retry:ticket>1});
       if(version===5&&mode!=='intro')await loadSocialPlan(nextWorld,{difficulty:nextDifficulty,retry:ticket>1,signal:abort.signal});
       if(ticket!==request||disposed)return;
-      const nextScenario=mode==='intro'?createIntroScenario(nextWorld,boundary,{version}):createRegionalScenario(nextWorld,boundary,{mode,version,difficulty:nextDifficulty});
+      const nextScenario=mode==='intro'?createIntroScenario(nextWorld,boundary,{version}):createRegionalScenario(nextWorld,boundary,{mode,version,difficulty:nextDifficulty,initialTowerPolicyVersion:stored?stored.initialTowerPolicyVersion??null:INITIAL_TOWER_POLICY_VERSION});
       if(embedded&&stored&&(stored.regionId!==regionId||stored.scenarioId!==nextScenario.id))throw new Error('Сохранение не соответствует назначенной партии.');
       let nextState=createState(nextWorld,nextScenario);
       const initialEvaluation=evaluate(nextWorld,nextScenario,nextState);

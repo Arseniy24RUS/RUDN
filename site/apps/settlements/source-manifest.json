@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "a0ad8666970e34b1c70428a077c684efd36117304b0ddd24d71ea2e990c274e2",
+  "sourceHash": "3c13cc114175505c803b9ba8e1f06003ed3a91aae7b1044ad6a95898f4f0c851",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1555,8 +1555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/engine.mjs",
-      "bytes": 50267,
-      "sha256": "f3fbc07f1426933186287cb6d41d547bdf9ae4c03fbae2c8d4d7a0bfdb843335"
+      "bytes": 52847,
+      "sha256": "f1559363f5ce7aac8db19036f43e35f9656cadad904a99d2171c58ddaa7b62a3"
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
@@ -1570,18 +1570,23 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 76136,
-      "sha256": "f6dfa98854a840a60df232871a589062e6bdfb51a31d32f7ea7508013480ec18"
+      "bytes": 76391,
+      "sha256": "bf4e889d0b4363e7c8b205d8babf6d34552454efbf557fb413e6e8dddf63d872"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
-      "bytes": 92049,
-      "sha256": "a8dd3df462801787612662ced47088e8e59f2b58b1dcd82fc0e6af1447e2df07"
+      "bytes": 92578,
+      "sha256": "4dcf905d015333d7d8ea26664222be7ea7e70deec3296b5ca1c75222a0671e97"
+    },
+    {
+      "path": "assets/js/settlements/v24/initial-tower-spacing.mjs",
+      "bytes": 2918,
+      "sha256": "0c0ce82f1d08889611401f8bc7141a667c9117328462824c31c7dfe12bc0eed6"
     },
     {
       "path": "assets/js/settlements/v24/map.mjs",
-      "bytes": 58852,
-      "sha256": "ea03a4d6946b4ea5a18709e228c1191404fbb89730cedcc21fd013b0101cb522"
+      "bytes": 61782,
+      "sha256": "812546d87e40e567634ed83c29353783b8faebba87fead726e0c3975d39ee2d5"
     },
     {
       "path": "assets/js/settlements/v24/network-routing.mjs",
@@ -1605,8 +1610,8 @@
     },
     {
       "path": "assets/js/settlements/v24/scenarios.mjs",
-      "bytes": 30187,
-      "sha256": "3a2f6d658b569e1ae875f3806481a3fbdd4d69637c6279c66bb3102f5143a98c"
+      "bytes": 30909,
+      "sha256": "894ad2b13bc08098dc9b1dadfb7ff7046c0999d41bb028a2fb0a3819529119be"
     },
     {
       "path": "assets/js/settlements/v24/social-network.mjs",
@@ -4530,8 +4535,13 @@
     },
     {
       "path": "assets/js/settlements/v24/telecom-policy.mjs",
-      "bytes": 3359,
-      "sha256": "765b4d97e62d0ff563697caa2215f7a1059ed736e1ce612c1484e838aff3786d"
+      "bytes": 4170,
+      "sha256": "aeb18bf7dde2c9e275b4995363484f52ea8c55cf18eff12f4fa53b5a0624026a"
+    },
+    {
+      "path": "assets/js/settlements/v24/tower-lod.mjs",
+      "bytes": 4975,
+      "sha256": "134cc9c9a0c83ffa0cbd643f61b7441ae61815a932daff891db4303269929f6b"
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-fetch.mjs",

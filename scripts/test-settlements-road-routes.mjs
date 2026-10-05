@@ -237,7 +237,7 @@ test('real published easy/normal/hard completed and active saves exactly match t
   await loadDistanceTransportPolicy(world);const boundary=await json(`boundaries/${id}.geojson`);
   const digest=state=>createHash('sha256').update(JSON.stringify(state)).digest('hex');
   for (const [difficulty,hashes] of Object.entries(expected)) {
-    const plan=await loadSocialPlan(world,{difficulty}),scenario=createRegionalScenario(world,boundary,{mode:'free',version:5,difficulty});
+    const plan=await loadSocialPlan(world,{difficulty}),scenario=createRegionalScenario(world,boundary,{mode:'free',version:5,difficulty,initialTowerPolicyVersion:null});
     assert.equal(plan.referenceActions.length,hashes.actions);
     const initial=createState(world,scenario),save=exportSave(initial);save.actions=structuredClone(plan.referenceActions);
     const restored=restore(world,scenario,save);assert.equal(digest(restored),hashes.full);

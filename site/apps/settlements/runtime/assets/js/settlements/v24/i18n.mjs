@@ -283,6 +283,9 @@ const errorEntries = `
 Неизвестные поселения сценария|Unknown settlements in the scenario|情景包含无法识别的聚落
 Вводный сценарий должен содержать три шага|The tutorial must contain three guided steps|教学必须包含三个引导步骤
 Неизвестная версия правил|Unknown rules version|无法识别规则版本
+Неизвестная версия исходной сети связи|Unknown initial connectivity network version|无法识别初始通信网络版本
+Некорректные условия исходной сети связи|Invalid initial connectivity network conditions|初始通信网络条件无效
+Исходная сеть связи не соответствует сохранённой партии|The initial connectivity network does not match this saved game|初始通信网络与已保存的游戏不匹配
 Неизвестная версия правил журнала действий|Unknown action journal rules version|无法识别操作记录的规则版本
 Некорректная версия правил журнала действий|Invalid action journal rules version|操作记录的规则版本无效
 Сохранение относится к другому сценарию или региону|The save belongs to another scenario or region|存档属于其他情景或地区

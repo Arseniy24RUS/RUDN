@@ -7,6 +7,7 @@ export {TELECOM_RULES_VERSION,towerSpec} from './telecom-policy.mjs';
 import {SOCIAL_RULES_VERSION,socialFacilityCapacity,socialUpgradeCapacity,socialAccessLimits,isPopulationSocialScenario} from './social-policy.mjs';
 export {SOCIAL_RULES_VERSION} from './social-policy.mjs';
 import {networkRoute,validateInitialNetworkRoute} from './network-routing.mjs';
+import {INITIAL_TOWER_POLICY_VERSION} from './initial-tower-spacing.mjs';
 
 // Keep legacy replay, including the short-lived fixed transport prototype.
 export const RULES_VERSION = 'settlements-3.0.0';
@@ -16,6 +17,9 @@ export const OUTREACH_POLICY_VERSION = 'road-access-v1';
 // Wire-only envelope: old readers must reject new action fields instead of
 // silently dropping them. Scenario policies and internal rules stay unchanged.
 export const SERIALIZED_ACTIONS_RULES_VERSION = 'settlements-3.4.1';
+// A changed initial network needs its identity even before the first action.
+// Readers predating this envelope must reject it instead of replaying old seeds.
+export const INITIAL_NETWORK_SAVE_RULES_VERSION = 'settlements-3.4.2';
 const engineRulesVersions=Object.freeze([RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION]);
 export const TRANSPORT_PRICES = Object.freeze({transport:2,construction:6});
 export const DISTANCE_TRANSPORT_PRICES = Object.freeze({transportPerKm:.2,constructionPerKm:1.2});
@@ -122,6 +126,17 @@ function checkSocialPolicyIdentity(value) {
   if (value?.socialPolicyVersion!=='social-policy-v1' || !/^sha256:[0-9a-f]{64}$/.test(value?.socialPolicyFingerprint||''))
     throw new Error('Неизвестная версия социальной политики');
 }
+const hasInitialTowerPolicy=value=>value!=null && (Object.hasOwn(value,'initialTowerPolicyVersion') || Object.hasOwn(value,'initialTowerPolicyFingerprint'));
+function checkInitialTowerPolicyIdentity(value) {
+  if (!hasInitialTowerPolicy(value)) return false;
+  if (value.rulesVersion!==SOCIAL_RULES_VERSION ||
+      (value.version??value.scenarioVersion)!==5 || value.kind==='intro' ||
+      (value.id??value.scenarioId)==='intro-chelyabinsk-7-v5' ||
+      value.initialTowerPolicyVersion!==INITIAL_TOWER_POLICY_VERSION ||
+      !/^sha256:[0-9a-f]{64}$/.test(value.initialTowerPolicyFingerprint||''))
+    throw new Error('Неизвестная версия исходной сети связи');
+  return true;
+}
 function checkDifficulty(value) {
   const id=value?.id||value?.scenarioId||'',intro=id==='intro-chelyabinsk-7-v5'&&value?.difficulty==='normal';
   if (!['easy','normal','hard'].includes(value?.difficulty) || !intro&&!id.endsWith(`-v5-${value.difficulty}`))
@@ -141,6 +156,7 @@ function checkScenario(world,scenario) {
   if (scenarioRules(scenario)!==RULES_VERSION) scenarioPolicy(world,scenario);
   if (usesGeographicTelecom(scenarioRules(scenario))) checkTelecomPlanIdentity(scenario);
   if (scenarioRules(scenario)===SOCIAL_RULES_VERSION) checkSocialScenario(scenario);
+  checkInitialTowerPolicyIdentity(scenario);
   if (!Array.isArray(scenario.targetIds) || scenario.targetIds.some(id=>!world.ids.has(id))) throw new Error('Неизвестные поселения сценария');
   if (scenario.kind==='intro' && steps(scenario).length!==3) throw new Error('Вводный сценарий должен содержать три шага');
 }
@@ -150,6 +166,10 @@ function checkState(world,scenario,state) {
   if (state.regionId!==world.region.id || state.scenarioId!==scenario.id || state.scenarioVersion!==scenario.version)
     throw new Error('Сохранение относится к другому сценарию или региону');
   if (state.dataVersion!==dataVersion(world)) throw new Error('Версия исходных данных сохранения не совпадает с загруженным регионом');
+  const scenarioTowerPolicy=checkInitialTowerPolicyIdentity(scenario),stateTowerPolicy=checkInitialTowerPolicyIdentity(state);
+  if (scenarioTowerPolicy!==stateTowerPolicy || state.initialTowerPolicyVersion!==scenario.initialTowerPolicyVersion ||
+      state.initialTowerPolicyFingerprint!==scenario.initialTowerPolicyFingerprint)
+    throw new Error('Исходная сеть связи не соответствует сохранённой партии');
   if (state.rulesVersion!==RULES_VERSION) {
     const policy=scenarioPolicy(world,scenario);
     if (state.transportPolicyVersion!==policy.version || state.transportPolicyFingerprint!==policy.fingerprint)
@@ -409,6 +429,10 @@ export function createState(world,scenario,{owner='guest:settlements-v24'}={}) {
     state.difficulty=scenario.difficulty;
     state.socialPolicyVersion=scenario.socialPolicyVersion;
     state.socialPolicyFingerprint=scenario.socialPolicyFingerprint;
+  }
+  if (hasInitialTowerPolicy(scenario)) {
+    state.initialTowerPolicyVersion=scenario.initialTowerPolicyVersion;
+    state.initialTowerPolicyFingerprint=scenario.initialTowerPolicyFingerprint;
   }
   const result=summarize(world,scenario,state);
   state.assignments=result.assignments; state.tutorialStep=result.evaluation.tutorialStep;
@@ -679,12 +703,15 @@ export function exportSave(state) {
       !/^sha256:[0-9a-f]{64}$/.test(state.transportPolicyFingerprint||''))) throw new Error('Неизвестные транспортные условия');
   if (usesGeographicTelecom(state.rulesVersion)) checkTelecomPlanIdentity(state);
   if (state.rulesVersion===SOCIAL_RULES_VERSION) {checkSocialPolicyIdentity(state);checkDifficulty(state);}
+  const initialNetwork=checkInitialTowerPolicyIdentity(state);
   if (typeof state.dataVersion!=='string' || !/^source-v1-[0-9a-f]{16}$/.test(state.dataVersion)) throw new Error('Неизвестная версия исходных данных');
   if (!Number.isInteger(state.tutorialStep) || state.tutorialStep<0 || state.tutorialStep>totalTutorialSteps(state)) throw new Error('Некорректный шаг обучения');
   const extendedActions=state.actions.some(action=>action.stopIds!==undefined || action.outreachPolicyVersion!==undefined);
   // Only the action log is authoritative. No imported balance or allocations.
-  return clone({rulesVersion:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
-    ...(extendedActions?{engineRulesVersion:state.rulesVersion}:{}),
+  return clone({rulesVersion:initialNetwork?INITIAL_NETWORK_SAVE_RULES_VERSION:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
+    ...(initialNetwork||extendedActions?{engineRulesVersion:state.rulesVersion}:{}),
+    ...(initialNetwork?{initialTowerPolicyVersion:state.initialTowerPolicyVersion,
+      initialTowerPolicyFingerprint:state.initialTowerPolicyFingerprint}:{}),
     dataVersion:state.dataVersion,scenarioId:state.scenarioId,scenarioVersion:state.scenarioVersion,
     regionId:state.regionId,owner:state.owner,actions:state.actions,tutorialStep:state.tutorialStep,
     ...(state.rulesVersion!==RULES_VERSION?{transportPolicyVersion:state.transportPolicyVersion,
@@ -696,7 +723,15 @@ export function exportSave(state) {
 }
 
 export function restore(world,scenario,save) {
-  if (save?.rulesVersion===SERIALIZED_ACTIONS_RULES_VERSION) {
+  if (save?.rulesVersion===INITIAL_NETWORK_SAVE_RULES_VERSION) {
+    if (save.engineRulesVersion!==SOCIAL_RULES_VERSION || save.scenarioVersion!==5 || !hasInitialTowerPolicy(save))
+      throw new Error('Неизвестная версия исходной сети связи');
+    save={...save,rulesVersion:save.engineRulesVersion};
+    delete save.engineRulesVersion;
+    checkInitialTowerPolicyIdentity(save);
+  } else if (hasInitialTowerPolicy(save)) {
+    throw new Error('Некорректные условия исходной сети связи');
+  } else if (save?.rulesVersion===SERIALIZED_ACTIONS_RULES_VERSION) {
     const version=engineRulesVersions.indexOf(save.engineRulesVersion)+1;
     if (!version || save.scenarioVersion!==version) throw new Error('Неизвестная версия правил журнала действий');
     // Normalize only a local copy, then run every ordinary source/policy/owner

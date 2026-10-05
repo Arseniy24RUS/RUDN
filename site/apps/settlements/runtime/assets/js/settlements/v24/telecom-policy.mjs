@@ -1,4 +1,5 @@
 /** Versioned teaching parameters. No mutation or migration of earlier playthroughs. */
+import {INITIAL_TOWER_POLICY_VERSION,spacedInitialTowerSeeds} from './initial-tower-spacing.mjs';
 export const TELECOM_RULES_VERSION = 'settlements-3.3.0';
 export const TOWER_RADIUS_KM = 5.5;
 export const INITIAL_TOWER_POPULATION = 8000;
@@ -57,6 +58,13 @@ export function initialTowersFor(world,scenario) {
   }else rows=world.rows.filter(row => Number.isFinite(row.population) && row.population >= threshold &&
     Number.isFinite(row.lat) && Number.isFinite(row.lon) && Math.abs(row.lat) <= 90 && Math.abs(row.lon) <= 180)
     .slice();
+  if(scenario?.initialTowerPolicyVersion!==undefined || scenario?.initialTowerPolicyFingerprint!==undefined){
+    if(!current || scenario.initialTowerPolicyVersion!==INITIAL_TOWER_POLICY_VERSION || !Array.isArray(scenario.telecomInitialSeedIds))
+      throw new Error('Некорректные условия исходной сети связи');
+    const spaced=spacedInitialTowerSeeds(world,rows.map(row=>row.id),radiusKm);
+    if(scenario.initialTowerPolicyFingerprint!==spaced.fingerprint)throw new Error('Исходная сеть связи не соответствует сохранённой партии');
+    const selected=new Set(spaced.seedIds);rows=rows.filter(row=>selected.has(row.id));
+  }
   return rows.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)
     .map(row => ({id: `initial-tower:${row.id}`, settlementId: row.id, lat: row.lat, lon: row.lon, radiusKm}));
 }
