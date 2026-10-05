@@ -300,6 +300,7 @@ jobs:
         env:
           QA_OUT: ${{ runner.temp }}/settlements-network-qa
         run: |
+          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
           node scripts/sync-settlements.mjs --check
           node --test scripts/test-settlements-network.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
           node --test scripts/test_governor_service_worker.mjs
