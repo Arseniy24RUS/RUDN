@@ -1,6 +1,7 @@
 /** Authored source supplement for the three combined regional parties.
  * Original region packs and directed transport adjacency remain untouched. */
 import {World} from '../v2/engine.mjs';
+import {readSettlementsResource} from '../v2/network.mjs';
 
 const freeze = value => { if (value && typeof value === 'object') { for (const item of Object.values(value)) freeze(item); Object.freeze(value); } return value; };
 // BEGIN GENERATED FEDERAL CITY DATA
@@ -36,9 +37,7 @@ export async function loadFederalBoundary(regionId, {signal} = {}) {
   const city = FEDERAL_CITIES[regionId]; if (!city) return null;
   if (signal?.aborted) throw signal.reason || new DOMException('Aborted', 'AbortError');
   if (boundaryCache.has(regionId)) return boundaryCache.get(regionId);
-  const response = await fetch(new URL(`../../../geodata/federal-cities/${city.boundaryFile}`, import.meta.url), {signal});
-  if (!response.ok) throw new Error(`Не удалось загрузить границу ${city.title}: HTTP ${response.status}`);
-  const feature = await response.json();
+  const feature = await readSettlementsResource(new URL(`../../../geodata/federal-cities/${city.boundaryFile}`, import.meta.url), {signal});
   if (feature?.type !== 'Feature' || String(feature.id) !== String(city.geometryId) || feature.geometry?.type !== 'MultiPolygon' || feature.properties?.name_ru !== city.title || feature.properties?.sourceTopologySha256 !== FEDERAL_CITY_PROVENANCE.topology.sha256) throw new Error(`Неверная граница федерального города: ${city.title}`);
   if (signal?.aborted) throw signal.reason || new DOMException('Aborted', 'AbortError');
   freeze(feature); boundaryCache.clear(); boundaryCache.set(regionId, feature); return feature;

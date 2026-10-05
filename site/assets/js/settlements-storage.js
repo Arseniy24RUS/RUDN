@@ -49,7 +49,9 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   const generation=backend?.generation;
   const isActive=()=>!disposed && (!student || (`student:${backend?.getProfile?.()?.studentKey}`===owner && (generation===undefined || backend.generation===generation)));
   const assertActive=()=>{if(!isActive())throw failure('auth/profile-changed')};
-  const cloudAvailable=()=>student&&backend?.user&&!backend.isAdmin?.()&&globalThis.navigator?.onLine!==false;
+  // Mobile network heuristics can report offline on a working Wi-Fi connection.
+  // The authenticated checkpoint ACK, not navigator.onLine, gates assessment.
+  const cloudAvailable=()=>student&&backend?.user&&!backend.isAdmin?.();
   const serial=action=>{const result=tail.then(action);tail=result.catch(()=>{});return result};
   const view=value=>{
     if(!value)return null;

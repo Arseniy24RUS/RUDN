@@ -91,6 +91,19 @@ test('exact score threshold and leaderboard order',()=>{
   assert.deepEqual(selectSettlementsLeaders(rows,{difficulty:'hard'}).map(row=>row.id),['c','b']);
 });
 
+test('assessment probes the actual server despite a false mobile offline hint',async()=>{
+  const descriptor=Object.getOwnPropertyDescriptor(globalThis,'navigator');
+  Object.defineProperty(globalThis,'navigator',{configurable:true,value:{onLine:false}});
+  const cloud=memoryCloud(),h=harness(cloud);
+  try{
+    await h.adapter.acquireWriter();await h.adapter.saveSession({...session(),engineSave:null});
+    assert.equal(await h.adapter.confirmOnline(),true);
+    cloud.setOffline(true);
+    await h.adapter.saveSession({...session(),engineSave:{actions:['pending']}});
+    assert.equal(await h.adapter.confirmOnline(),false,'a real server failure still blocks a new assessment');
+  }finally{await h.adapter.destroy();if(descriptor)Object.defineProperty(globalThis,'navigator',descriptor);else delete globalThis.navigator;}
+});
+
 test('each turn and undo have increasing revisions; exact attempt lookup',async()=>{
   const h=harness(memoryCloud());try{
     assert.equal(await h.adapter.acquireWriter(),true);assert.equal(h.adapter.canWrite(),true);

@@ -1,9 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {handle,upstreamFor} from './gateway.mjs';
+import {handle,upstreamFor,settlementsUpstreamFor} from './gateway.mjs';
 const origin='https://arseniy24rus.github.io';
 const key='AIzaSyBH5MD8tpcV2DSFiE7K4FLzfUIYPNfHYHQ';
 const url=path=>'https://gateway.test'+path;
+test('static reserve is limited to public Settlements files on the platform host',()=>{
+ const path='/settlements/runtime/data/settlements/v1/regions/a.json.gz';
+ assert.equal(settlementsUpstreamFor(new URL(url(path)),'GET').href,'https://arseniy24rus.github.io/RUDN/apps/settlements/runtime/data/settlements/v1/regions/a.json.gz');
+ for(const invalid of ['/settlements/runtime/../../private.json','/settlements/runtime/assets/js/backend.js','/settlements/runtime/data/settlements/%2fprivate.json','/settlements/runtime/data/settlements/a.txt'])assert.equal(settlementsUpstreamFor(new URL(url(invalid)),'GET'),null);
+ assert.equal(settlementsUpstreamFor(new URL(url(path)),'POST'),null);
+});
+test('public static reserve never forwards credentials, queries or redirects',async()=>{
+ const request=new Request(url('/settlements/runtime/assets/js/settlements/v24/game.mjs?auth=secret'),{headers:{Origin:origin,Authorization:'Bearer secret',Cookie:'secret'}});
+ const response=await handle(request,{fetchImpl:async(target,options)=>{
+  assert.equal(new URL(target).search,'');assert.equal(options.headers,undefined);assert.equal(options.redirect,'manual');
+  return new Response('export const fixture=1;',{headers:{'Content-Type':'text/javascript','Set-Cookie':'secret'}});
+ }});
+ assert.equal(response.status,200);assert.equal(response.headers.get('access-control-allow-origin'),origin);assert.equal(response.headers.get('set-cookie'),null);assert.equal(response.headers.get('content-type'),'text/javascript');assert.equal(await response.text(),'export const fixture=1;');
+ assert.equal((await handle(request,{fetchImpl:async()=>new Response(null,{status:302})})).status,502);
+ assert.equal((await handle(new Request(request.url,{headers:{Origin:'https://other.test'}}))).status,403);
+});
 test('project routes reject arbitrary hosts, keys, buckets and database roots',()=>{
  for(const path of ['/https://evil.test','/firebase/auth/v1/accounts:signInWithPassword?key=other','/firebase/storage/v0/b/other/o','/firebase/database/private.json','/firebase/database/rudn-platform/v1/../outside.json'])assert.equal(upstreamFor(new URL(url(path)),'POST'),null);
  assert.equal(upstreamFor(new URL(url('/firebase/token/v1/token?key='+key)),'POST').host,'securetoken.googleapis.com');
