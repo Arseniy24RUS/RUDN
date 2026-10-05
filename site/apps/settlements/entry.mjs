@@ -1,5 +1,6 @@
 import {COPY,normalizeLocale,regionName,durationText} from './copy.mjs';
 import {createSettlementsPersistence} from '../../assets/js/settlements-storage.js';
+import {readSettlementsResource,loadSettlementsGame} from './runtime/assets/js/settlements/v2/network.mjs';
 
 const BASE=new URL('./',import.meta.url),DIFFICULTIES=['easy','normal','hard'];
 const SERVICES=['telecom','medical','school','culture'];
@@ -152,7 +153,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     if(intro&&freshTutorial)tutorial={...tutorial,engineSave:null,step:0};
     elapsedMs=intro?0:Number(session.elapsedMs||0);
     try{
-      const {mountSettlementsGame}=await import('./runtime/assets/js/settlements/v24/game.mjs');
+      const {mountSettlementsGame}=await loadSettlementsGame({signal:abort.signal});
       if(!active()||generation!==loadGeneration)return;
       const initialSave=intro?tutorial?.engineSave:session.engineSave;
       const handle=await mountSettlementsGame(gameRoot,{locale:lang,owner,regionId:intro?'chelyabinskaya_oblast':session.regionId,mode:intro?'intro':'free',difficulty:intro?'normal':session.difficulty,initialSave,signal:abort.signal,readOnly:!writable||(!intro&&session.status!=='active'),
@@ -184,12 +185,13 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   async function toLobby(){const finishedTutorial=view==='tutorial'&&tutorial?.completed;await releaseGame();view='lobby';busy=false;renderLobby();renderGameHeading();renderResult();if(finishedTutorial){const target=session&&session.status!=='abandoned'?$('[data-action="resume"]'):$('[data-assessment-ready]')||$('[data-action="start"]');target?.scrollIntoView({block:'start',behavior:'instant'});$('.lobby [data-action="start"]')?.focus({preventScroll:true});}}
   async function startTutorial(){await openGame({intro:true,freshTutorial:!!tutorial?.completed});}
   async function startRequiredTutorial(){if(!autoTutorialPending||!active()||!writable||conflict||restoringWriter||busy||view!=='lobby')return;autoTutorialPending=false;await openGame({intro:true});}
+  function showOnlineRequired(){notice='onlineRequired';renderLobby();const status=$('[data-status]');status.setAttribute('role','alert');status.scrollIntoView({block:'center',behavior:'instant'});}
   async function startGame(){if(view!=='lobby'||!writable||conflict||restoringWriter)return;if(session?.status==='completion-pending'){notice='receiptPending';showStatus();const saved=await persistence.flush();if(saved.session?.attemptId===session.attemptId)session=saved.session;renderResult();renderLobby();if(session.status!=='completed')return;notice='';}if(!tutorial?.completed){await startTutorial();return;}if(mode==='assessment'&&!student&&!teacher){onLogin?.();return;}
     if(session?.status==='active'){await askAbandon(true);return;}
     const regionId=mode==='assessment'?randomRegion(regions,session?.regionId):selectedRegion||regions[0].id;
     session={attemptId:crypto.randomUUID(),regionId,difficulty:selectedDifficulty,mode,status:'active',engineSave:null,elapsedMs:0,startedAt:new Date().toISOString(),previousRegionId:session?.regionId||null};
     pendingCompletion=false;session=await persistence.saveSession(session);
-    if(mode==='assessment'&&student&&!await persistence.confirmOnline()){notice='onlineRequired';showStatus();renderLobby();return;}
+    if(mode==='assessment'&&student&&!await persistence.confirmOnline()){showOnlineRequired();return;}
     await openGame();
   }
   async function askAbandon(startAfter=false){const d=$('.host-dialog');d.returnValue='';d.innerHTML=`<h2>${esc(c().abandonTitle)}</h2><p>${esc(c().abandonText)}</p><div class="actions"><button data-dialog="cancel">${esc(c().cancel)}</button><button data-dialog="confirm">${esc(c().confirm)}</button></div>`;d.showModal();
@@ -210,7 +212,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
     if(action==='training-continue'){const finished=trainingGate==='complete';closeTrainingGate();if(finished)await toLobby();else gameRoot.querySelector('.puzzle-map')?.focus({preventScroll:true});return;}
     if(action==='new-game'){await toLobby();await startGame();return;}
     if(action==='retry-save'){await queue;await saveCurrent();const saved=await persistence.flush();if(saved.session?.attemptId===session?.attemptId)session=saved.session;notice=session?.status==='completion-pending'?'receiptPending':'';appliedReadOnly=null;renderResult();if(view==='lobby')renderLobby();showStatus();return;}
-    if(action==='resume'){if(mode==='assessment'&&student&&session?.status==='active'&&!session.engineSave&&!await persistence.confirmOnline()){notice='onlineRequired';showStatus();return;}await openGame();return;}
+    if(action==='resume'){if(mode==='assessment'&&student&&session?.status==='active'&&!session.engineSave&&!await persistence.confirmOnline()){showOnlineRequired();return;}await openGame();return;}
     if(action==='tutorial'){await startTutorial();return;}if(action==='lobby'){await toLobby();return;}if(action==='abandon'){await askAbandon();return;}if(action==='reload-game'){await openGame({intro:view==='tutorial'});return;}
     if(action==='cloud'||action==='local'){await resolveConflict(action);return;}if(action==='takeover'){
       // Closing a tab may take seconds to release its browser lock. Keep the
@@ -229,7 +231,7 @@ export async function mountSettlements(container,{backend,owner='guest:settlemen
   },destroy(){if(destroyPromise)return destroyPromise;destroyPromise=(async()=>{try{await api.flush();}finally{closeTrainingGate();disposed=true;notifyView('lobby');clearInterval(heartbeat);++loadGeneration;game?.destroy();game=null;abort.abort();try{await persistence.destroy();}finally{shadow.replaceChildren();}}})();return destroyPromise;}};
   signal?.addEventListener('abort',()=>void api.destroy(),{once:true});
   renderHeader();renderRanking();$('.lobby').innerHTML=`<p role="status">${esc(c().loading)}</p>`;
-  try{const response=await fetch(new URL('runtime/data/settlements/v1/manifest.json',BASE),{signal:abort.signal});if(!response.ok)throw Error('settlements/manifest');const manifest=await response.json();regions=manifest.regions;selectedRegion=regions[0].id;
+  try{const manifest=await readSettlementsResource(new URL('runtime/data/settlements/v1/manifest.json',BASE),{signal:abort.signal});regions=manifest.regions;selectedRegion=regions[0].id;
     await persistence.acquireWriter();writable=persistence.canWrite();[session,tutorial]=await Promise.all([persistence.loadSession(),persistence.loadTutorial()]);
     if(session){selectedDifficulty=session.difficulty;selectedRegion=session.regionId;}if(!active())return api;renderLobby();renderResult();void refreshRanking();
     autoTutorialPending=mode==='assessment'&&student&&!tutorial?.completed;

@@ -9,6 +9,28 @@ const REQUEST_HEADERS=['content-type','authorization','if-match','if-none-match'
 const RESPONSE_HEADERS=['content-type','content-disposition','content-range','accept-ranges','etag','x-goog-upload-status','x-goog-upload-size-received','x-goog-upload-chunk-granularity'];
 function headers(origin){return new Headers({'access-control-allow-origin':origin,'vary':'Origin','cache-control':'no-store','x-content-type-options':'nosniff','referrer-policy':'no-referrer'});}
 function fail(status,origin,code){return new Response(JSON.stringify({error:{code:status,message:code}}),{status,headers:new Headers([...headers(origin),['content-type','application/json']])});}
+export function settlementsUpstreamFor(url,method){
+  if(!['GET','HEAD'].includes(method)||url.username||url.password||url.hash)return null;
+  const prefix='/settlements/runtime/';
+  if(!url.pathname.startsWith(prefix))return null;
+  const path=url.pathname.slice(prefix.length);
+  if(!/^(?:data\/settlements\/|assets\/(?:js\/settlements\/|geodata\/federal-cities\/|img\/settlements\/|css\/))/.test(path)||!/^[-A-Za-z0-9_./]+\.(?:m?js|json|geojson|gz|webp|png|svg|css)$/.test(path))return null;
+  return new URL(path,'https://arseniy24rus.github.io/RUDN/apps/settlements/runtime/');
+}
+async function serveSettlements(request,url,origin,fetchImpl){
+  const upstream=settlementsUpstreamFor(url,request.method);
+  if(!upstream)return fail(404,origin,'ROUTE_NOT_ALLOWED');
+  try{
+    // These are already public site files. Never forward Firebase credentials,
+    // cookies or query strings to the static host; never follow redirects.
+    const response=await fetchImpl(upstream.href,{method:request.method,redirect:'manual',signal:AbortSignal.any([request.signal,AbortSignal.timeout(20000)])});
+    if(response.status>=300&&response.status<400)return fail(502,origin,'UPSTREAM_REDIRECT_REJECTED');
+    const result=headers(origin);
+    for(const name of ['content-type','etag']){const value=response.headers.get(name);if(value!==null)result.set(name,value);}
+    if(response.ok)result.set('cache-control','public, max-age=60');
+    return new Response(response.body,{status:response.status,headers:result});
+  }catch{return fail(502,origin,'UPSTREAM_UNAVAILABLE');}
+}
 export function upstreamFor(url,method){
   if(url.hash||url.username||url.password)return null;
   const prefix='/firebase/',path=url.pathname;
@@ -36,6 +58,13 @@ export async function handle(request,{fetchImpl=fetch,publicBase}={}){
   const url=new URL(request.url),origin=request.headers.get('origin')||ORIGIN;
   if(url.pathname==='/health'&&request.method==='GET')return new Response(JSON.stringify({ok:true,project:'rudn-gmu-learning-platform',version:1}),{headers:new Headers([...headers(ORIGIN),['content-type','application/json']])});
   if(origin!==ORIGIN)return fail(403,ORIGIN,'ORIGIN_NOT_ALLOWED');
+  if(url.pathname.startsWith('/settlements/')){
+    if(request.method==='OPTIONS'){
+      if(!settlementsUpstreamFor(url,request.headers.get('access-control-request-method')||'GET'))return fail(404,origin,'ROUTE_NOT_ALLOWED');
+      const result=headers(origin);result.set('access-control-allow-methods','GET, HEAD, OPTIONS');return new Response(null,{status:204,headers:result});
+    }
+    return serveSettlements(request,url,origin,fetchImpl);
+  }
   if(request.method==='OPTIONS'){
     const requestedMethod=request.headers.get('access-control-request-method')||'GET';
     if(!upstreamFor(url,requestedMethod))return fail(404,origin,'ROUTE_NOT_ALLOWED');

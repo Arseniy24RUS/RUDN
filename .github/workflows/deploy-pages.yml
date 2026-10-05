@@ -19,16 +19,17 @@ concurrency:
 
 jobs:
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-road-routes]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: puzzle-checks
-    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-road-routes]')))) }}
+    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]')))) }}
     env:
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-road-routes]') }}
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') }}
+      SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
       SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
       SETTLEMENTS_GRADE_HOTFIX: ${{ contains(github.event.head_commit.message, '[settlements-grade-hotfix]') }}
       FIREBASE_TRANSPORT_ONLY: ${{ contains(github.event.head_commit.message, '[firebase-transport-only]') }}
@@ -118,6 +119,31 @@ jobs:
             runtime = 'site/apps/settlements/runtime/'
             paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/network-routing.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'}
             allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-road-routes-browser.py', 'scripts/audit-settlements-road-routes.mjs'} | {runtime + path for path in paths}
+          if os.environ['SETTLEMENTS_NETWORK'] == 'true':
+            import json, hashlib, re
+            runtime = 'site/apps/settlements/runtime/'
+            patched = {'assets/js/settlements/v2/network.mjs', 'assets/js/settlements/v2/data.mjs', 'assets/js/settlements/v24/social-plan-fetch.mjs', 'assets/js/settlements/v24/transport-policy-fetch.mjs', 'assets/js/settlements/v24/federal-cities.mjs'}
+            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/entry.mjs', 'site/assets/js/settlements-storage.js', 'site/apps/settlements/source-manifest.json', 'firebase/functions/gateway.mjs', 'firebase/functions/gateway.test.mjs', 'scripts/test-settlements-network.mjs', 'scripts/test-settlements-network-browser.mjs', 'scripts/test-settlements-storage.mjs'} | {runtime + path for path in patched}
+            def source(ref, path):
+              return subprocess.check_output(['git','show',f'{ref}:{path}'])
+            previous, current = [json.loads(source(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^','HEAD']]
+            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',',':')).encode()).hexdigest()
+            for entry in current['files']:
+              if entry['path'] in patched:
+                data = source('HEAD', runtime + entry['path'])
+                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
+            for manifest in [previous,current]:
+              manifest.pop('sourceHash')
+              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
+            assert previous == current, 'Game rules, authored plans and protected geography must stay unchanged'
+            def worker_without_network_stamp(ref):
+              text = source(ref,'site/service-worker.js').decode()
+              text = re.sub(r'^const CACHE=.*?;$','CACHE_STAMP',text,flags=re.M)
+              return text.replace("'./apps/settlements/runtime/assets/js/settlements/v2/network.mjs',",'')
+            assert worker_without_network_stamp('HEAD^') == worker_without_network_stamp('HEAD'), 'Existing release/geometry cache protections must stay unchanged'
+            def firebase_routes(ref):
+              return source(ref,'firebase/functions/gateway.mjs').decode().split('export function upstreamFor(',1)[1].split('export async function handle(',1)[0]
+            assert firebase_routes('HEAD^') == firebase_routes('HEAD'), 'Firebase authentication/database/storage routes must stay unchanged'
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
@@ -269,6 +295,19 @@ jobs:
           node --test scripts/test-settlements-road-routes.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
+      - name: Verify Settlements network fallback and assessment start
+        if: env.SETTLEMENTS_NETWORK == 'true'
+        env:
+          QA_OUT: ${{ runner.temp }}/settlements-network-qa
+        run: |
+          node scripts/sync-settlements.mjs --check
+          node --test scripts/test-settlements-network.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
+          node --test scripts/test_governor_service_worker.mjs
+          python scripts/validate_static.py
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test-settlements-network-browser.mjs
       - name: Verify Governor grading and offline contract
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
         run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
@@ -422,6 +461,7 @@ jobs:
             ${{ runner.temp }}/puzzle-no-mistakes-qa
             ${{ runner.temp }}/settlements-browser-qa
             artifacts/settlements-save-status
+            ${{ runner.temp }}/settlements-network-qa
           if-no-files-found: ignore
           retention-days: 7
       - name: Configure Pages

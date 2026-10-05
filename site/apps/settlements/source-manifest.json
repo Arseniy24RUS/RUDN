@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "000f0e8fe541c7657cbd247489347551d590a48130358477dfb79fd3c5fc9258",
+  "sourceHash": "a0ad8666970e34b1c70428a077c684efd36117304b0ddd24d71ea2e990c274e2",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1495,8 +1495,8 @@
     },
     {
       "path": "assets/js/settlements/v2/data.mjs",
-      "bytes": 2287,
-      "sha256": "146bd1867796c90e30a865ff80d8ecdc5443f60da33afc5dc441761c62ff849b"
+      "bytes": 2298,
+      "sha256": "986a7d0fc49f9de58f121ea2fb6ea3d6140f1ae465d8a782dcd3bb26b2469df1"
     },
     {
       "path": "assets/js/settlements/v2/engine.mjs",
@@ -1529,6 +1529,11 @@
       "sha256": "e26ad89ad2fbf167c3165f6678a70f8bdb2adbab03b5a19bbb2896fd35010121"
     },
     {
+      "path": "assets/js/settlements/v2/network.mjs",
+      "bytes": 2809,
+      "sha256": "c4160fbabbc47c0d60e07168f1dafc611c0792d40f07aff6416cecd3cd931f7a"
+    },
+    {
       "path": "assets/js/settlements/v2/render-index.mjs",
       "bytes": 3532,
       "sha256": "a1bd128a03e15515db7edf76bcb8bcbadd736bd5261fc264b3cfacffef7f37ae"
@@ -1555,8 +1560,8 @@
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
-      "bytes": 24192,
-      "sha256": "7259573028afaac97a610c5a342d6672e178f8ad1da3c98bad193ddafa4be08b"
+      "bytes": 24094,
+      "sha256": "3fd3b1844ce010b73c2ac9c14a0b145a9afa078167062417e2591a75c0279cf3"
     },
     {
       "path": "assets/js/settlements/v24/federal-transport.mjs",
@@ -1610,8 +1615,8 @@
     },
     {
       "path": "assets/js/settlements/v24/social-plan-fetch.mjs",
-      "bytes": 1774,
-      "sha256": "119ac247f2834f2f914d3e12e554b278e8f4aab03527809415aa718c08804747"
+      "bytes": 1726,
+      "sha256": "578535d9b05aee01b962c6d00fe32bd1dc4aa1ef14f24446ea5b79ba36c7b1a3"
     },
     {
       "path": "assets/js/settlements/v24/social-plans-regions/altayskiy_kray-easy.json.gz",
@@ -4530,8 +4535,8 @@
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-fetch.mjs",
-      "bytes": 752,
-      "sha256": "a7e53f10d6b875ad5116f4d05d21c0f2653f75372721e3f308cf34e95ebe2436"
+      "bytes": 753,
+      "sha256": "2d44191a79cedac9e7d30016ace07f75b37b6d8d6736ace7c81031f60164eb76"
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-v1.generated.mjs",
