@@ -27,6 +27,17 @@ const entries = `
 Выезд врача требует дороги к поселению. Если её нет, сначала постройте транспортное соединение.|A mobile doctor needs a road to the settlement. If there is none, build a transport connection first.|巡诊医生需要道路通往聚落。如无道路，请先修建交通连接。
 Вышка|Tower|通信塔
 Вышка связи|Communications tower|通信塔
+Вышки связи|Communications towers|通信塔
+Построить вышку|Build tower|建造通信塔
+Построить вышки|Build towers|批量建造通信塔
+Выбрано вышек: {count}|Towers selected: {count}|已选通信塔：{count}
+Убрать последнюю вышку|Remove last tower|移除最后一座通信塔
+Коснитесь карты, чтобы добавить ещё вышку.|Tap the map to add another tower.|点按地图可继续添加通信塔。
+Выберите места для вышек, затем подтвердите строительство.|Select tower sites, then confirm construction.|选择通信塔的位置，然后确认建造。
+Это место уже выбрано. Можно убрать последнюю вышку.|This site is already selected. You can remove the last tower.|此位置已选中。您可以移除最后一座通信塔。
+За один ход можно построить до {count} вышек.|You can build up to {count} towers in one turn.|每回合最多可建造{count}座通信塔。
+Выберите от 2 до 100 мест для вышек|Select between 2 and 100 tower sites|请选择2至100个通信塔位置
+Места для вышек не должны повторяться|Tower sites must not repeat|通信塔位置不能重复
 Клиника|Clinic|诊所
 Школа|School|学校
 Центр досуга|Leisure centre|文娱中心

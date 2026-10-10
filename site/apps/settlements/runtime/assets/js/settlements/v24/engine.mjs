@@ -20,6 +20,7 @@ export const SERIALIZED_ACTIONS_RULES_VERSION = 'settlements-3.4.1';
 // A changed initial network needs its identity even before the first action.
 // Readers predating this envelope must reject it instead of replaying old seeds.
 export const INITIAL_NETWORK_SAVE_RULES_VERSION = 'settlements-3.4.2';
+export const MAX_TOWER_BATCH = 100;
 const engineRulesVersions=Object.freeze([RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION]);
 export const TRANSPORT_PRICES = Object.freeze({transport:2,construction:6});
 export const DISTANCE_TRANSPORT_PRICES = Object.freeze({transportPerKm:.2,constructionPerKm:1.2});
@@ -454,6 +455,19 @@ function canonicalAction(action) {
       throw new Error('Выберите допустимые координаты вышки');
     return {type:'tower',lat:action.lat,lon:action.lon};
   }
+  if (action.type==='tower-batch') {
+    if (!Array.isArray(action.positions) || action.positions.length<2 || action.positions.length>MAX_TOWER_BATCH)
+      throw new Error(`Выберите от 2 до ${MAX_TOWER_BATCH} мест для вышек`);
+    const positions=[],seen=new Set();
+    for (const point of action.positions) {
+      if (!point || !Number.isFinite(point.lat) || !Number.isFinite(point.lon) || Math.abs(point.lat)>90 || Math.abs(point.lon)>180)
+        throw new Error('Выберите допустимые координаты вышки');
+      const key=`${point.lat}:${point.lon}`;
+      if (seen.has(key)) throw new Error('Места для вышек не должны повторяться');
+      seen.add(key);positions.push({lat:point.lat,lon:point.lon});
+    }
+    return {type:'tower-batch',positions};
+  }
   if (action.type==='build') {
     if (!facilityTypes.includes(action.service) || typeof action.settlementId!=='string') throw new Error('Выберите объект и поселение');
     if (action.outreachPolicyVersion!==undefined && (action.service!=='outreach' || action.outreachPolicyVersion!==OUTREACH_POLICY_VERSION))
@@ -581,13 +595,16 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   if (action.type==='connect-network' && input.rulesVersion!==SOCIAL_RULES_VERSION) throw new Error('Действие недоступно в этой версии правил');
   tutorialAllows(scenario,input,action);
   let cost,path,transportCost,network;
-  if (action.type==='tower') {
-    // A generalized administrative polygon can exclude an actual source point.
-    // 3.3 permits that exact inhabited source coordinate, without a buffer or a
-    // moved settlement; older saves retain their strict polygon placement.
-    const sourcePoint=usesGeographicTelecom(input.rulesVersion) && world.rows.some(row=>positive(row) && validCoordinate(row) && row.lat===action.lat && row.lon===action.lon);
-    if (!pointInBoundary(scenario.boundary,action.lat,action.lon) && !sourcePoint) throw new Error('Разместите вышку внутри границы региона');
-    cost=towerSpec(input).cost;
+  const towerPositions=action.type==='tower'?[action]:action.type==='tower-batch'?action.positions:null;
+  if (towerPositions) {
+    // Validate the complete purchase before cloning or changing any state.
+    // The exact-source-coordinate exception and prices match single towers;
+    // historical replay must keep its original placement semantics.
+    for (const position of towerPositions) {
+      const sourcePoint=usesGeographicTelecom(input.rulesVersion) && world.rows.some(row=>positive(row) && validCoordinate(row) && row.lat===position.lat && row.lon===position.lon);
+      if (!pointInBoundary(scenario.boundary,position.lat,position.lon) && !sourcePoint) throw new Error('Разместите вышку внутри границы региона');
+    }
+    cost=money(towerSpec(input).cost*towerPositions.length);
   } else if (action.type==='build') {
     if (!world.ids.has(action.settlementId)) throw new Error('Поселение отсутствует в регионе');
     if (input.facilities.some(f=>f.type===action.service && f.settlementId===action.settlementId)) throw new Error('Объект уже есть. Его можно расширить.');
@@ -642,10 +659,12 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   const state=clone(input);
   state.revision++; state.budget=money(state.budget-cost); state.spent=money(state.spent+cost);
   state.actions.push(action);
-  if (action.type==='tower') {
-    let id=`tower:${state.revision}`;
-    while (state.towers.some(t=>t.id===id)) id+=':new';
-    state.towers.push({id,lat:action.lat,lon:action.lon,radiusKm:towerSpec(input).radiusKm});
+  if (towerPositions) {
+    for (const [index,position] of towerPositions.entries()) {
+      let id=action.type==='tower'?`tower:${state.revision}`:`tower:${state.revision}:${index}`;
+      while (state.towers.some(t=>t.id===id)) id+=':new';
+      state.towers.push({id,lat:position.lat,lon:position.lon,radiusKm:towerSpec(input).radiusKm});
+    }
   }
   if (action.type==='build') {
     let id=`facility:${state.revision}`;
@@ -663,13 +682,13 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   }
   const result=summarize(world,scenario,state);
   state.assignments=result.assignments; state.tutorialStep=result.evaluation.tutorialStep;
-  const coverage=action.type==='tower' && usesGeographicTelecom(input.rulesVersion) ? towerCoverage(world,[action],towerSpec(input).radiusKm) : null;
+  const coverage=towerPositions && usesGeographicTelecom(input.rulesVersion) ? towerCoverage(world,towerPositions,towerSpec(input).radiusKm) : null;
   return {action,cost,nextState:state,evaluation:result.evaluation,...(path?{path}:{}),
     ...(transportCost?{transportCost}:{}),
     ...(network?{freshPath:network.freshPath,edgeKeys:network.edgeKeys,freshEdgeKeys:network.freshEdgeKeys,joinId:network.joinId,
       requestedTo:network.requestedTo,...(network.targetEdge?{targetEdge:network.targetEdge}:{}),
       ...(network.legs?{legs:network.legs,stopIds:network.stopIds}:{})}:{}),
-    ...(action.type==='tower'?{coverageIds:world.rows.filter((r,i)=>positive(r)&&(coverage?coverage[i]:haversine(action,r)<=towerSpec(input).radiusKm+1e-9)).map(r=>r.id)}:{})};
+    ...(towerPositions?{coverageIds:world.rows.filter((r,i)=>positive(r)&&(coverage?coverage[i]:towerPositions.some(position=>haversine(position,r)<=towerSpec(input).radiusKm+1e-9))).map(r=>r.id)}:{})};
 }
 
 export function preview(world,scenario,state,action) {
@@ -710,7 +729,7 @@ export function exportSave(state) {
   const initialNetwork=checkInitialTowerPolicyIdentity(state);
   if (typeof state.dataVersion!=='string' || !/^source-v1-[0-9a-f]{16}$/.test(state.dataVersion)) throw new Error('Неизвестная версия исходных данных');
   if (!Number.isInteger(state.tutorialStep) || state.tutorialStep<0 || state.tutorialStep>totalTutorialSteps(state)) throw new Error('Некорректный шаг обучения');
-  const extendedActions=state.actions.some(action=>action.stopIds!==undefined || action.outreachPolicyVersion!==undefined);
+  const extendedActions=state.actions.some(action=>action.type==='tower-batch' || action.stopIds!==undefined || action.outreachPolicyVersion!==undefined);
   // Only the action log is authoritative. No imported balance or allocations.
   return clone({rulesVersion:initialNetwork?INITIAL_NETWORK_SAVE_RULES_VERSION:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
     ...(initialNetwork||extendedActions?{engineRulesVersion:state.rulesVersion}:{}),

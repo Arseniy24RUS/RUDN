@@ -71,3 +71,5 @@
   .layer-progress-value{display:none}.layer-label{font-size:10px;line-height:11px}
   .puzzle-message{max-width:calc(100cqw - 384px);font-size:12px}
 }
+
+.tower-positions{display:flex;align-items:center;gap:6px;margin:3px 0 7px;font-size:12px;line-height:16px}.tower-positions>div{min-width:0;flex:1}.tower-positions strong{font-size:13px;line-height:18px}.tower-positions p{margin:2px 0 0;color:var(--muted)}.tower-positions .icon-button{flex:none;border:1px solid var(--line)}

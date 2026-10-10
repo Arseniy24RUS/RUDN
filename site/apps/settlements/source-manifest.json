@@ -1,12 +1,12 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "6d64bbd4d3f70988061154477f4040bd62ca8ed0e6a10b737c11f865fd33de67",
+  "sourceHash": "e55863677b33824c2072fe76757b40ab846b6d95523b0ee5a86c220f67293b47",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
-      "bytes": 21571,
-      "sha256": "998ce7e0942d986570d6f9507097675de7619b4a71f65bd108d5aeeb75de397a"
+      "bytes": 21897,
+      "sha256": "eda455dd49e475c54d0e8cfb39995e14406d00282dc342377e460568d05833da"
     },
     {
       "path": "assets/geodata/federal-cities/moskva.geojson",
@@ -1555,8 +1555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/engine.mjs",
-      "bytes": 53215,
-      "sha256": "1b02f1e2651958f845b7f3c968fcd5f048cf368ffbc55119294f74952747d0b4"
+      "bytes": 54457,
+      "sha256": "f44687a27d9526f9652b49172f8d818cc2afa8f63f2174adace6c8729f794b5a"
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
@@ -1570,13 +1570,13 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 76741,
-      "sha256": "abe94de8dcb9c0a89b650e5be0eeb55993b0d61b6634ac1dfa679005b9403a33"
+      "bytes": 79078,
+      "sha256": "0572b1ee29b7fb430dc55572d6c7f03f05f70ffd59674f775d4cf9e27dd3880c"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
-      "bytes": 92578,
-      "sha256": "4dcf905d015333d7d8ea26664222be7ea7e70deec3296b5ca1c75222a0671e97"
+      "bytes": 93935,
+      "sha256": "b9a3cfab0b4be8a73a2a17119ca74e517fb60965150d205ae6f88d93f67b9191"
     },
     {
       "path": "assets/js/settlements/v24/initial-tower-spacing.mjs",
@@ -1585,8 +1585,8 @@
     },
     {
       "path": "assets/js/settlements/v24/map.mjs",
-      "bytes": 62901,
-      "sha256": "830ec54502ec6ba8613bd6d0fd09c2fa633aceef82d2e3b62e81d8d469a482fa"
+      "bytes": 65221,
+      "sha256": "8940636df89bcb52b677de3ea0c5437e895701be6def9d1482a9edf7cfe624e9"
     },
     {
       "path": "assets/js/settlements/v24/network-routing.mjs",
