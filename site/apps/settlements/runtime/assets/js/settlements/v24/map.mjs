@@ -5,6 +5,7 @@ import {BasemapLayer} from './basemap.mjs';
 import {RouteDisplay, routeDisplayEvidence, routePresentation, activeRouteEdges, routeStrokeDashed} from './route-display.mjs';
 import {towerSpec} from './telecom-policy.mjs';
 import {isInitialTower as initialTower, TowerSymbolCache, initialCoveragePath} from './tower-lod.mjs';
+import {playableRows} from './region-playability.mjs';
 /** Scenarios v3/v4/v5 retain the v2 road presentation contract. Adapt only
  * the presentation input; the domain scenario, fixed geometry and save stay intact. */
 export function presentGameRoute(route, {scenario, ...options} = {}) {
@@ -138,7 +139,7 @@ export const isRouteAction = action => ['connect', 'connect-network'].includes(a
 /** Engine owns the path. An explicit empty freshPath must not fall back to old edges. */
 export function previewRoutePaths(preview) { return Array.isArray(preview?.freshPath) ? preview.freshPath : preview?.path ? [preview.path] : []; }
 /** Accept only a newly committed, matching preview. No solver, service or path calculation. */
-export function createCommitSignal({previousState, previousPreview: q, state, points, layer, wrap = false, now, reduced = false, newWorld = false, resolveRoute}) {
+export function createCommitSignal({previousState, previousPreview: q, state, points, routePoints = points, layer, wrap = false, now, reduced = false, newWorld = false, resolveRoute}) {
   if (reduced || newWorld || !q?.ok || !previousState || state === previousState || state.actions.length !== previousState.actions.length + 1 || q.baseRevision !== previousState.revision || actionKey(state.actions.at(-1)) !== actionKey(q.action)) return null;
   const ids = [...new Set([...(q.delta?.[layer]?.newlyFullIds || []), ...(q.delta?.[layer]?.improvedIds || [])])].filter(id => points.has(id));
   if (!ids.length) return null;
@@ -146,7 +147,7 @@ export function createCommitSignal({previousState, previousPreview: q, state, po
   const origin = action.type === 'tower' ? project(action, wrap) : points.get(action.settlementId || facility?.settlementId || action.from);
   if (!origin) return null;
   const paths = []; let kind = 'service';
-  if (isRouteAction(action)) { kind = 'route'; for (const route of previewRoutePaths(q)) if (route.length > 1 && route.every(id => points.has(id))) paths.push(resolveRoute ? resolveRoute(route) : pathGeometry(route.map(id => points.get(id)))); }
+  if (isRouteAction(action)) { kind = 'route'; for (const route of previewRoutePaths(q)) if (route.length > 1 && route.every(id => routePoints.has(id))) paths.push(resolveRoute ? resolveRoute(route) : pathGeometry(route.map(id => routePoints.get(id)))); }
   else if (action.type === 'tower') { kind = 'radio'; for (const id of ids.slice(0, 24)) paths.push(pathGeometry([origin, points.get(id)])); }
   return {kind, ids, origin: {x: origin.x, y: origin.y}, sourceFacilityId: facility?.id || (action.type === 'build' ? state.facilities.find(f => f.settlementId === action.settlementId && !previousState.facilities.some(old => old.id === f.id))?.id : null), paths, start: now, duration: 650, revision: state.revision, layer, action: {...action}};
 }
@@ -217,7 +218,7 @@ export class NetworkGeometryCache {
 export class GameMap {
   constructor(element, {onSelect = () => {}, onPlace = () => {}, onSelectNetwork = () => {}, onCamera, onRouteGeometryChange, translate = value => value} = {}) {
     Object.assign(this, {element, onSelect, onPlace, onSelectNetwork, onCamera, onRouteGeometryChange});
-    this.destroyed = false; this.world = null; this.state = null; this.index = new SpatialIndex(); this.points = new Map(); this.boundaries = []; this.routes = []; this.towerGeometry = []; this.labels = []; this.facilityLayout = []; this.drawnPoints = []; this.drawnFacilities = []; this.effects = []; this.frameId = 0; this.frameCosts = []; this.layoutCount = 0; this.sceneRevision = 0; this.sceneDirty = true; this.labelsDirty = true; this.raf = null; this.reducedMotion = false; this.scenic = true; this.theme = 'grass'; this.wrap = false; this.lod = 'compact'; this.originalTabindex = element.getAttribute('tabindex');
+    this.destroyed = false; this.world = null; this.state = null; this.index = new SpatialIndex(); this.points = new Map(); this.sourcePoints = new Map(); this.boundaries = []; this.routes = []; this.towerGeometry = []; this.towerSymbolGeometry = []; this.labels = []; this.facilityLayout = []; this.drawnPoints = []; this.drawnFacilities = []; this.effects = []; this.frameId = 0; this.frameCosts = []; this.layoutCount = 0; this.sceneRevision = 0; this.sceneDirty = true; this.labelsDirty = true; this.raf = null; this.reducedMotion = false; this.scenic = true; this.theme = 'grass'; this.wrap = false; this.lod = 'compact'; this.originalTabindex = element.getAttribute('tabindex');
     this.translate=translate;element.setAttribute('tabindex', '0'); element.setAttribute('aria-label', translate('Карта поселений. Стрелки перемещают карту, плюс и минус меняют масштаб. Enter или пробел выбирает место в центре карты. Для выбора поселения также доступен поиск.'));
     this.canvas = document.createElement('canvas'); this.fxCanvas = document.createElement('canvas');
     for (const [canvas, name] of [[this.canvas, 'sg24-map-scene'], [this.fxCanvas, 'sg24-map-effects']]) { canvas.className = name; canvas.setAttribute('aria-hidden', 'true'); Object.assign(canvas.style, {position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none'}); element.append(canvas); }
@@ -234,7 +235,10 @@ export class GameMap {
   screen(value) { const p = this.resolve(value); return p ? this.camera.worldToScreen(p) : null; }
   setWorld(world, scenario) {
     this.world = world; const v = world.region?.mapView || {}; this.wrap = Boolean(v.wrapLongitude) || (v.center?.[1] || 0) > 150;
-    this.points = new Map((world.valid || world.rows || []).map(row => { const p = project(row, this.wrap); return p && [row.id, {...p, row}]; }).filter(Boolean));
+    // Preserve all original anchors for existing routes, including excluded transit nodes.
+    // Only the playable subset participates in settlement symbols, taps and framing.
+    this.sourcePoints = new Map((world.valid || world.rows || []).map(row => { const p = project(row, this.wrap); return p && [row.id, {...p, row}]; }).filter(Boolean));
+    this.points = new Map(playableRows(world, scenario).map(row => [row.id, this.sourcePoints.get(row.id)]).filter(([, point]) => point));
     this.coordinatePoints=new Map();for(const p of this.points.values()){const key=`${p.row.lat}|${p.row.lon}`;if(!this.coordinatePoints.has(key))this.coordinatePoints.set(key,[]);this.coordinatePoints.get(key).push(p.row.id);}
     this.index = new SpatialIndex([...this.points.values()]); this.boundaries = boundaryRings(scenario?.boundary, this.wrap); this.boundarySource = scenario?.boundary; this.labels = []; this.labelsDirty = true;
   }
@@ -246,8 +250,9 @@ export class GameMap {
     const unchanged = !newWorld && !basemapChanged && !boundaryChanged && input.scenario === this.scenario && input.state === this.state && input.evaluation === this.evaluation && input.preview === this.preview && input.activeLayer === this.activeLayer && input.activeTool === this.activeTool && input.selectedId === this.selectedId && input.selectedFacilityId === this.selectedFacilityId && input.routeFrom === this.routeFrom && Boolean(input.reducedMotion) === this.reducedMotion && guideKey === this.guideKey && obstacleKey === this.obstacleKey && focusKey === this.focusKey;
     if (unchanged) return;
     this.guideKey = guideKey; this.obstacleKey = obstacleKey;
-    const geometryChanged = newWorld || input.state !== previousState || input.preview !== previousPreview;
-    if (newWorld) this.setWorld(input.world, input.scenario);
+    const playableChanged = newWorld || input.scenario?.playableSettlementIds !== this.scenario?.playableSettlementIds;
+    const geometryChanged = playableChanged || input.state !== previousState || input.preview !== previousPreview;
+    if (playableChanged) this.setWorld(input.world, input.scenario);
     const previousLayer = this.activeLayer;
     Object.assign(this, input); this.activeLayer ||= 'telecom'; this.reducedMotion = Boolean(input.reducedMotion); if (this.reducedMotion) { this.effects = []; this.camera.stopTransition(); }
     this.routeStopIds = new Set(input.routeStops || []);
@@ -257,16 +262,19 @@ export class GameMap {
       this.basemapLayer.setData(inputBasemap?.regionId === this.world?.region?.id ? inputBasemap : {regionId: this.world?.region?.id, status: inputBasemap ? 'region-mismatch' : 'not-provided'}, this.boundaries, this.wrap);
       this.routeDisplay.setSource(this.basemapLayer.index, this.world?.region?.id);
     }
-    this.sceneRevision++; this.targetIds = new Set(focusIds); if (newWorld || focusKey !== this.focusKey) this.focusOutline = focusHull(focusIds.map(id => this.points.get(id)).filter(Boolean)); this.focusKey = focusKey;
+    this.sceneRevision++; this.targetIds = new Set(focusIds); if (playableChanged || focusKey !== this.focusKey) this.focusOutline = focusHull(focusIds.map(id => this.points.get(id)).filter(Boolean)); this.focusKey = focusKey;
     this.previewIds = new Set([...(input.preview?.delta?.[this.activeLayer]?.newlyFullIds || []), ...(input.preview?.delta?.[this.activeLayer]?.improvedIds || [])]);
     this.coverageIds = new Set(input.preview?.coverageIds || []);
     if (geometryChanged || basemapChanged || boundaryChanged || scenarioChanged) this.refreshRouteGeometry();
-    const signal = createCommitSignal({previousState, previousPreview, state: input.state, points: this.points, layer: input.activeLayer, wrap: this.wrap, now: performance.now(), reduced: input.reducedMotion, newWorld, resolveRoute: path => presentGameRoute(this.routeDisplay.path(path, this.points, {allowSearch: !this.camera.moving}), {scenario: this.scenario})});
+    const signal = createCommitSignal({previousState, previousPreview, state: input.state, points: this.points, routePoints: this.sourcePoints, layer: input.activeLayer, wrap: this.wrap, now: performance.now(), reduced: input.reducedMotion, newWorld, resolveRoute: path => presentGameRoute(this.routeDisplay.path(path, this.sourcePoints, {allowSearch: !this.camera.moving}), {scenario: this.scenario})});
     if (signal) this.effects = [signal];
     else if (newWorld || basemapChanged || scenarioChanged || input.state?.revision !== previousState?.revision || input.activeLayer !== previousLayer) this.effects = [];
     if (geometryChanged) {
     this.towerCache ||= new TowerGeometryCache();
     this.towerGeometry = this.towerCache.sync(input.world, input.state?.towers || [], this.wrap, towerPreviewAction(input.state, input.preview));
+    // Keep legacy coverage exact, but do not resurrect an excluded settlement as
+    // a passive tower icon. Player-built towers remain available at any location.
+    this.towerSymbolGeometry = Array.isArray(input.scenario?.playableSettlementIds) ? this.towerGeometry.filter(t => !initialTower(t) || this.points.has(t.settlementId)) : this.towerGeometry;
     this.previewTower = this.towerCache.preview ? {...this.towerCache.preview, valid: input.preview.ok} : null;
     const facilities = [...(input.state?.facilities || [])];
     if (input.preview?.ok && input.preview.action?.type === 'build') {
@@ -281,23 +289,23 @@ export class GameMap {
       this.facilityLayout = layerFacilityLayout(this.allFacilities || [], this.points, this.activeLayer);
       this.localMarkers = new Map(); for (const f of this.facilityLayout) { if (!this.localMarkers.has(f.settlementId)) this.localMarkers.set(f.settlementId, []); this.localMarkers.get(f.settlementId).push(f); }
       this.localTowers=new Map();this.localTowerIds=new Set();
-      if(this.activeLayer==='telecom')for(const t of this.towerGeometry){const ids=t.settlementId&&this.points.has(t.settlementId)?[t.settlementId]:this.coordinatePoints?.get(`${t.lat}|${t.lon}`)||[];for(const id of ids)if(!this.localTowers.has(id)){this.localTowers.set(id,t);this.localTowerIds.add(t.id);}}
+      if(this.activeLayer==='telecom')for(const t of this.towerSymbolGeometry){const ids=t.settlementId&&this.points.has(t.settlementId)?[t.settlementId]:this.coordinatePoints?.get(`${t.lat}|${t.lon}`)||[];for(const id of ids)if(!this.localTowers.has(id)){this.localTowers.set(id,t);this.localTowerIds.add(t.id);}}
     }
-    this.labelsDirty = true; if (newWorld) this.fitFocus(input.scenario?.kind === 'intro' ? input.scenario.targetIds : [...this.points.keys()]); this.invalidate();
+    this.labelsDirty = true; if (playableChanged) this.fitFocus(input.scenario?.kind === 'intro' ? input.scenario.targetIds : [...this.points.keys()]); this.invalidate();
   }
   refreshRouteGeometry() {
     this.routeGeometryPending = Boolean(this.camera.moving);
-    const activeEdges = activeRouteEdges(this.state?.routes), resolve = (path, preview = false) => presentGameRoute(this.routeDisplay.path(path, this.points, {allowSearch: !this.routeGeometryPending}), {scenario: this.scenario, activeEdges, preview});
+    const activeEdges = activeRouteEdges(this.state?.routes), resolve = (path, preview = false) => presentGameRoute(this.routeDisplay.path(path, this.sourcePoints, {allowSearch: !this.routeGeometryPending}), {scenario: this.scenario, activeEdges, preview});
     this.routes = (this.state?.routes || []).map((route, i) => ({id: route.id || `${route.from}|${route.to}|${i}`, geometry: resolve(route.path || [route.from, route.to])}));
     this.networkCache ||= new NetworkGeometryCache(); this.networkHitIndex ||= new NetworkHitIndex();
-    this.networkEdges = this.networkCache.sync(this.state?.routes, {points: this.points, source: this.routeDisplay.edgeCache, scenario: this.scenario, moving: this.routeGeometryPending, resolve});
+    this.networkEdges = this.networkCache.sync(this.state?.routes, {points: this.sourcePoints, source: this.routeDisplay.edgeCache, scenario: this.scenario, moving: this.routeGeometryPending, resolve});
     this.networkHitIndex.sync(this.networkEdges);
     const path = this.preview?.path || (isRouteAction(this.preview?.action) ? this.preview?.nextState?.routes?.at(-1)?.path : null);
     this.previewRoute = resolve(path || [], true);
     this.previewRoutes = previewRoutePaths({...this.preview, path}).map(path => resolve(path, true));
   }
   /** Call after update has synced the current regional source; never uses a previous preview. */
-  routeSummary(path) { return this.destroyed ? null : this.routeDisplay.path(path, this.points, {allowSearch: !this.camera.moving}).summary; }
+  routeSummary(path) { return this.destroyed ? null : this.routeDisplay.path(path, this.sourcePoints, {allowSearch: !this.camera.moving}).summary; }
   invalidate() { if (this.destroyed) return; this.sceneDirty = true; this.schedule(); }
   schedule() { if (!this.raf && !this.destroyed && !document.hidden) this.raf = requestAnimationFrame(now => this.frame(now)); }
   // Base-map clarity remains constant while held, moving and idle. Adaptive
@@ -334,13 +342,13 @@ export class GameMap {
     if (!this.camera.moving) { if (this.lod === 'compact' && width >= 28) this.lod = 'detail'; else if (this.lod === 'detail' && width < 23) this.lod = 'compact'; }
     const towerPriority = new Set([this.selectedId, this.routeFrom, ...(this.routeStopIds || []), this.guidance?.settlementId, this.guidance?.from, this.guidance?.to, this.preview?.action?.settlementId, this.preview?.action?.from, this.preview?.action?.to].filter(Boolean));
     this.towerSymbolCache ||= new TowerSymbolCache();
-    this.towerSymbolIds = showTowers ? this.towerSymbolCache.select(this.towerGeometry, this.camera.scale, symbolFootprint(this.camera.scale).size, {priorityIds: towerPriority, centeredIds: layerIcons ? this.localTowerIds : undefined}) : new Set();
+    this.towerSymbolIds = showTowers ? this.towerSymbolCache.select(this.towerSymbolGeometry, this.camera.scale, symbolFootprint(this.camera.scale).size, {priorityIds: towerPriority, centeredIds: layerIcons ? this.localTowerIds : undefined}) : new Set();
     this.towerZoneMode = 'hidden'; this.initialCoverageFills = 0; this.initialCoverageOutlines = 0;
     if (showTowers && (this.activeLayer === 'telecom' || this.activeTool === 'tower')) {
       this.paintInitialCoverage(c);
       // Preserve exact coverage for every passive tower in one fill. Only the
       // selected tower needs its individual radius outlined on an overview.
-      for (const t of this.towerGeometry) if ((!initialTower(t) || towerPriority.has(t.settlementId) || towerPriority.has(t.id)) && towerZoneVisible(t, this.camera)) {
+      for (const t of this.towerSymbolGeometry) if ((!initialTower(t) || towerPriority.has(t.settlementId) || towerPriority.has(t.id)) && towerZoneVisible(t, this.camera)) {
         this.paintZone(c, t.ring, false, true, t, !initialTower(t));
         if (initialTower(t)) this.initialCoverageOutlines++;
       }
@@ -377,7 +385,7 @@ export class GameMap {
     this.drawnTowers = [];
     if (showTowers && !layerIcons) for (const t of this.towerGeometry) if (!initialTower(t)) this.paintTower(c, t, false, width);
     if (showTowers && !layerIcons && this.previewTower?.center) this.paintTower(c, this.previewTower, true, width);
-    // Every source point remains drawn. Foreground deficits/task/preview must not be buried by served background points.
+    // Every playable source point remains drawn. Foreground deficits/task/preview must not be buried by served background points.
     const pointBuckets = [[], [], [], [], []]; for (const p of points) pointBuckets[this.pointPriority(p)].push(p);
     for (let priority = 0; priority < pointBuckets.length; priority++) for (const p of pointBuckets[priority]) drawPoint(p, priority);
     // Seed towers coincide with town coordinates: retain the geographic foot,
@@ -536,5 +544,5 @@ export class GameMap {
     return {schemaVersion: 1, renderer: 'v24-canvas', sceneRaster: {dpr: this.sceneDpr, width: this.canvas.width, height: this.canvas.height, constantDeviceResolution: true, settledFullResolution: !this.camera.moving}, frameId: this.frameId, sceneRevision: this.sceneRevision, camera: this.camera.snapshot(), quality: this.quality.evidence(this.sceneDpr), basemap: this.basemapLayer.evidence(this.camera), routeDisplay: {...this.routeDisplay.evidence(), deferred: this.routeGeometryPending, routes: this.routes.map(r => ({id: r.id, ...routeDisplayEvidence(r.geometry)})), preview: routeDisplayEvidence(this.previewRoute), freshPreview: (this.previewRoutes || []).map(routeDisplayEvidence), network: this.networkEdges?.map(e => ({key: e.key, targetEdge: e.targetEdge.slice()})) || [], drawnNetworkEdges: [...(this.drawnNetworkEdges || [])], hitIndex: this.networkHitIndex?.evidence() || null, preparedNetworkEdges: this.networkCache?.preparedCount || 0}, motion: this.motionEvidence(), activeLayer: this.activeLayer, activeTool: this.activeTool, selectedId: this.selectedId, region: {id: this.world?.region?.id, rowCount: this.world?.rows?.length || 0, indexCount: this.index.records.length}, lod: this.lod, points: structuredClone(this.drawnPoints), facilities: structuredClone(this.drawnFacilities), towers: this.towerGeometry.map(t => ({id: t.id, radiusKm: t.radiusKm, center: this.camera.worldToScreen(t.center)})), towerSymbols: structuredClone(this.drawnTowers || []), towerCache: this.towerCache?.evidence() || null, towerDisplay: {symbolCache: this.towerSymbolCache?.evidence() || null, zoneMode: this.towerZoneMode, initialCoverageFills: this.initialCoverageFills || 0, initialCoverageOutlines: this.initialCoverageOutlines || 0}, focusIds: [...(this.targetIds || [])], previewIds: [...(this.previewIds || [])], previewCoverageIds: [...(this.coverageIds || [])], labels: this.labels.map(l => ({id: l.point.row.id, text: l.text})), guidance: this.guidance ? structuredClone(this.guidance) : null, guidanceVisible: Boolean(this.guidance?.locked && this.guidance.coordinate && !this.preview), layoutCount: this.layoutCount, frameCostsMs: [...this.frameCosts], boundaryRings: this.boundaries.length};
   }
   motionEvidence() { return {destroyed: this.destroyed, hidden: document.hidden, reduced: this.reducedMotion, activeEffects: this.effects.length, signals: structuredClone(this.drawnSignals), cameraTransition: Boolean(this.camera.transition), cameraTransitions: this.camera.transitionCount, cameraInterrupts: this.camera.interruptCount, quality: this.quality.evidence(this.sceneDpr), frames: this.frameId, ownSubscriptions: this.destroyed ? 0 : this.camera.disposers.length + 1, observerActive: !this.destroyed, raf: Boolean(this.raf)}; }
-  destroy() { if (this.destroyed) return; this.destroyed = true; this.routeGeometryPending = false; this.onRouteGeometryChange = null; cancelAnimationFrame(this.raf); this.raf = null; this.observer.disconnect(); document.removeEventListener('visibilitychange', this.visibility); this.camera.destroy(); this.basemapLayer.destroy(); this.basemap = null; this.routeDisplay.destroy(); this.previewRoute = this.routeDisplay.path([], this.points); this.routeGeometryPending = false; this.index.clear(); this.points.clear(); this.coordinatePoints?.clear(); this.localTowerIds?.clear(); this.effects = []; this.labels = []; this.facilityLayout = []; this.allFacilities = []; this.localMarkers?.clear(); this.localTowers?.clear(); this.routes = []; this.networkEdges = []; this.previewRoutes = []; this.drawnNetworkEdges = []; this.networkCache?.clear(); this.networkHitIndex?.clear(); this.onSelectNetwork = null; this.towerGeometry = []; this.towerCache?.clear(); this.towerSymbolCache?.clear(); this.towerSymbolIds?.clear(); this.towerZoneMode = 'hidden'; this.initialCoverageFills = this.initialCoverageOutlines = 0; this.previewTower = null; this.boundaries = []; this.drawnPoints = []; this.drawnFacilities = []; this.drawnSignals = []; this.drawnTowers = []; this.focusOutline = []; this.targetIds?.clear(); this.world = this.state = this.preview = this.scenario = this.evaluation = null; this.canvas.remove(); this.fxCanvas.remove(); if (this.originalTabindex === null) this.element.removeAttribute('tabindex'); else this.element.setAttribute('tabindex', this.originalTabindex); }
+  destroy() { if (this.destroyed) return; this.destroyed = true; this.routeGeometryPending = false; this.onRouteGeometryChange = null; cancelAnimationFrame(this.raf); this.raf = null; this.observer.disconnect(); document.removeEventListener('visibilitychange', this.visibility); this.camera.destroy(); this.basemapLayer.destroy(); this.basemap = null; this.routeDisplay.destroy(); this.previewRoute = this.routeDisplay.path([], this.points); this.routeGeometryPending = false; this.index.clear(); this.points.clear(); this.sourcePoints?.clear(); this.coordinatePoints?.clear(); this.localTowerIds?.clear(); this.effects = []; this.labels = []; this.facilityLayout = []; this.allFacilities = []; this.localMarkers?.clear(); this.localTowers?.clear(); this.routes = []; this.networkEdges = []; this.previewRoutes = []; this.drawnNetworkEdges = []; this.networkCache?.clear(); this.networkHitIndex?.clear(); this.onSelectNetwork = null; this.towerGeometry = []; this.towerSymbolGeometry = []; this.towerCache?.clear(); this.towerSymbolCache?.clear(); this.towerSymbolIds?.clear(); this.towerZoneMode = 'hidden'; this.initialCoverageFills = this.initialCoverageOutlines = 0; this.previewTower = null; this.boundaries = []; this.drawnPoints = []; this.drawnFacilities = []; this.drawnSignals = []; this.drawnTowers = []; this.focusOutline = []; this.targetIds?.clear(); this.world = this.state = this.preview = this.scenario = this.evaluation = null; this.canvas.remove(); this.fxCanvas.remove(); if (this.originalTabindex === null) this.element.removeAttribute('tabindex'); else this.element.setAttribute('tabindex', this.originalTabindex); }
 }

@@ -305,7 +305,10 @@ function initialTowers(world,scenario) {
 }
 
 function summarize(world,scenario,state) {
-  const scope = scenario.kind==='intro' ? new Set(scenario.targetIds) : null;
+  // Keep historical allocations and replay intact. Out-of-polygon source rows
+  // are no longer regional goals or denominators after the geometry correction.
+  const scope = scenario.kind==='intro' ? new Set(scenario.targetIds) :
+    Array.isArray(scenario.playableSettlementIds)?new Set(scenario.playableSettlementIds):null;
   const byId = Object.fromEntries(world.rows.map(r=>[r.id,{}]));
   const assignments = Object.fromEntries(SERVICES.map(s=>[s,{}]));
   const services = {}, facilityUsage = {};
@@ -377,7 +380,7 @@ function summarize(world,scenario,state) {
     services[service]={covered,total,people:Math.round(people),missingIds,population,servedUnits,demandUnits};
   }
   const groups=(scenario.groups||[]).map(group=>{
-    const ids=group.ids.filter(id=>byId[id]?.[group.service]?.demand>0);
+    const ids=group.ids.filter(id=>(!scope||scope.has(id))&&byId[id]?.[group.service]?.demand>0);
     const remaining=ids.filter(id=>!byId[id][group.service].full);
     return {...clone(group),ids,complete:remaining.length===0,remaining};
   });
@@ -672,7 +675,8 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
 export function preview(world,scenario,state,action) {
   try {
     const result=reducer(world,scenario,state,action), before=evaluate(world,scenario,state),delta={};
-    const scope=scenario.kind==='intro'?new Set(scenario.targetIds):null;
+    const scope=scenario.kind==='intro'?new Set(scenario.targetIds):
+      Array.isArray(scenario.playableSettlementIds)?new Set(scenario.playableSettlementIds):null;
     for (const service of SERVICES) {
       const newlyFullIds=[],improvedIds=[];let people=0;
       for (const row of world.rows) {

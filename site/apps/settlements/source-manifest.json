@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "3c13cc114175505c803b9ba8e1f06003ed3a91aae7b1044ad6a95898f4f0c851",
+  "sourceHash": "6d64bbd4d3f70988061154477f4040bd62ca8ed0e6a10b737c11f865fd33de67",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1555,8 +1555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/engine.mjs",
-      "bytes": 52847,
-      "sha256": "f1559363f5ce7aac8db19036f43e35f9656cadad904a99d2171c58ddaa7b62a3"
+      "bytes": 53215,
+      "sha256": "1b02f1e2651958f845b7f3c968fcd5f048cf368ffbc55119294f74952747d0b4"
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
@@ -1570,8 +1570,8 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 76391,
-      "sha256": "bf4e889d0b4363e7c8b205d8babf6d34552454efbf557fb413e6e8dddf63d872"
+      "bytes": 76741,
+      "sha256": "abe94de8dcb9c0a89b650e5be0eeb55993b0d61b6634ac1dfa679005b9403a33"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
@@ -1585,8 +1585,8 @@
     },
     {
       "path": "assets/js/settlements/v24/map.mjs",
-      "bytes": 61782,
-      "sha256": "812546d87e40e567634ed83c29353783b8faebba87fead726e0c3975d39ee2d5"
+      "bytes": 62901,
+      "sha256": "830ec54502ec6ba8613bd6d0fd09c2fa633aceef82d2e3b62e81d8d469a482fa"
     },
     {
       "path": "assets/js/settlements/v24/network-routing.mjs",
@@ -7862,6 +7862,11 @@
       "path": "data/settlements/v1/transport/zabaykalskiy_kray.json.gz",
       "bytes": 50253,
       "sha256": "7ae688d8c48a9d6d5aea7eb3bd408fa895aba079c245e7edd83e68c4eb4040b0"
+    },
+    {
+      "path": "assets/js/settlements/v24/region-playability.mjs",
+      "bytes": 1555,
+      "sha256": "969390648fcd4ca6b5a9ace84f41f036fce7924b1cf66700800111ec4545ba2c"
     }
   ],
   "protectedFiles": [
