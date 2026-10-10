@@ -19,18 +19,19 @@ concurrency:
 
 jobs:
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: puzzle-checks
-    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]')))) }}
+    if: ${{ !cancelled() && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]')))) }}
     env:
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') }}
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
       SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
       SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
+      SETTLEMENTS_RUNTIME_CACHE: ${{ contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
       SETTLEMENTS_TOWER_BATCH: ${{ contains(github.event.head_commit.message, '[settlements-tower-batch]') }}
       SETTLEMENTS_BOUNDARIES: ${{ contains(github.event.head_commit.message, '[settlements-boundaries]') }}
       SETTLEMENTS_TOWERS: ${{ contains(github.event.head_commit.message, '[settlements-towers]') }}
@@ -159,6 +160,8 @@ jobs:
             runtime = 'site/apps/settlements/runtime/'
             paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'}
             allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-tower-batch.mjs', 'scripts/test-settlements-tower-batch-map.mjs', 'scripts/test-settlements-tower-batch-browser.py'} | {runtime + path for path in paths}
+          if os.environ['SETTLEMENTS_RUNTIME_CACHE'] == 'true':
+            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'scripts/test_governor_service_worker.mjs'}
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
@@ -289,6 +292,18 @@ jobs:
               assert count == 1
               return text
             assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Only the service-worker release stamp may change'
+          if os.environ['SETTLEMENTS_RUNTIME_CACHE'] == 'true':
+            import re
+            def source_bytes(ref, path):
+              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
+            def worker_without_current_fetch(ref):
+              text=source_bytes(ref,'site/service-worker.js').decode()
+              text,count=re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$','const CACHE=RELEASE_STAMP;',text,flags=re.M)
+              assert count==1
+              text,count=re.subn(r'(?ms)^async function serveRequest\(.*?(?=^self.addEventListener)', 'CURRENT_RELEASE_FETCH\n\n',text)
+              assert count==1
+              return text
+            assert worker_without_current_fetch('HEAD^')==worker_without_current_fetch('HEAD'), 'Existing installation, cache ownership, historical release binding and other module logic must stay unchanged'
           if os.environ['VERIFIED_SETTLEMENTS_PUBLISH'] == 'true':
             # One already-reviewed product tree: fresh native matrix, emulator,
             # local save regression and WebKit evidence exist for these bytes.
@@ -431,6 +446,13 @@ jobs:
           node scripts/audit-settlements-boundaries.mjs --verify-runtime
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
+      - name: Verify fresh Settlements runtime without changing historical caches
+        if: env.SETTLEMENTS_RUNTIME_CACHE == 'true'
+        run: |
+          node --test scripts/test_governor_service_worker.mjs
+          node --test scripts/test-settlements-network.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
+          node scripts/sync-settlements.mjs --check
+          node --check site/service-worker.js
       - name: Verify Governor grading and offline contract
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
         run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs

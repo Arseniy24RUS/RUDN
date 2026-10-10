@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.9-settlements-1-0-tower-batch-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.9-settlements-1-0-tower-batch-2`;
 // Geography and regional plans are requested only by an explicitly opened game.
 const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-leaderboard.js'];
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
@@ -549,7 +549,11 @@ async function serveRequest(event,networkFirst){
   if(cacheName!==CACHE)return unavailableRelease(event.clientId);
   try{
     const available=await matchOwnCache(cache,request);
-    const response=await fetchWithDeadline(request,available?1800:12000);
+    // These lazy modules retain stable URLs across releases. A fresh release
+    // cache must not inherit stale JS/CSS from the browser's HTTP cache.
+    const freshSettlementsRuntime=!available&&/^apps\/settlements\/runtime\/assets\/(?:js\/.*\.m?js|css\/.*\.css)$/.test(url.pathname.slice(SCOPE.pathname.length));
+    const networkRequest=freshSettlementsRuntime?new Request(request,{cache:'reload'}):request;
+    const response=await fetchWithDeadline(networkRequest,available?1800:12000);
     if(response.ok){
       // An unavailable/full cache must not turn a successful request into an error.
       try{await cache.put(puzzleRuntimeCacheKey(request),response.clone())}catch{}

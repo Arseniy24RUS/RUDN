@@ -112,6 +112,76 @@ function makeWorker(workerScope=scope,{stores=new Map(),source=workerSource}={})
   return harness;
 }
 
+test('fresh settlements runtime bypasses stale HTTP cache once and stores bytes under its canonical URL',async()=>{
+  const worker=makeWorker(),current=await worker.cacheStorage.open(worker.cacheName);
+  const requests=[];
+  worker.fetch=async request=>{
+    requests.push({url:request.url,cache:request.cache});
+    return new Response(request.cache==='reload'?'new runtime bytes':'old HTTP-cached runtime bytes');
+  };
+  // Native Request preserves the real service-worker cloning semantics; the
+  // older harness's plain objects still model all unchanged navigation tests.
+  const requestRuntime=async relative=>{
+    let response;
+    await worker.emit('fetch',{clientId:'fresh-settlements-tab',
+      request:new Request(new URL(relative,scope)),respondWith:value=>{response=value}});
+    return await response;
+  };
+  for(const file of ['./apps/settlements/runtime/assets/js/settlements/v24/game.mjs',
+    './apps/settlements/runtime/assets/js/settlements/legacy.js',
+    './apps/settlements/runtime/assets/css/settlements-v24.css']){
+    const before=worker.networkCalls;
+    assert.equal(await (await requestRuntime(file)).text(),'new runtime bytes');
+    assert.equal(requests.at(-1).cache,'reload');
+    assert.equal(requests.at(-1).url,new URL(file,scope).href);
+    assert.equal(await (await current.match(file)).text(),'new runtime bytes');
+    assert.equal(await (await requestRuntime(file)).text(),'new runtime bytes');
+    assert.equal(worker.networkCalls,before+1,'A current release cache hit must not refetch the module');
+  }
+  assert.deepEqual((await current.keys()).map(request=>request.url).sort(),requests.map(request=>request.url).sort(),
+    'Reload must not add cache-busting query variants');
+});
+
+test('settlements runtime refresh preserves bound old bytes and never fills missing historical modules',async()=>{
+  const worker=makeWorker(),messages=[],oldClient={id:'older-settlements-tab',url:scope,postMessage:message=>messages.push(message)};
+  worker.activeClients=[oldClient];
+  const previous=await worker.cacheStorage.open(worker.cachePrefix+`v${currentVersion}-tower-batch-1`);
+  const game='./apps/settlements/runtime/assets/js/settlements/v24/game.mjs';
+  const missing='./apps/settlements/runtime/assets/js/settlements/v24/not-previously-cached.mjs';
+  await previous.put(`./assets/js/main.js?v=${currentVersion}`,new Response('older shell'));
+  await previous.put(game,new Response('older bound game'));
+  await worker.cacheStorage.open(worker.cacheName);
+  await worker.emit('activate');
+  await worker.emit('message',{source:oldClient,data:{type:'BIND_RELEASE',release:currentVersion}});
+  worker.fetch=async()=>new Response('new deployed bytes');
+  const requestRuntime=async relative=>{
+    let response;
+    await worker.emit('fetch',{clientId:oldClient.id,
+      request:new Request(new URL(relative,scope)),respondWith:value=>{response=value}});
+    return await response;
+  };
+  assert.equal(await (await requestRuntime(game)).text(),'older bound game');
+  assert.equal((await requestRuntime(missing)).type,'error');
+  assert.equal(worker.networkCalls,0,'An old binding must not fetch newer deployed modules, even with reload');
+  assert.equal(await previous.match(missing),undefined);
+  assert.equal(messages.at(-1).type,'RELEASE_RESOURCE_UNAVAILABLE');
+});
+
+test('settlements runtime reload does not change HTTP caching for data, art or other modules',async()=>{
+  const worker=makeWorker(),requests=[];
+  worker.fetch=async request=>{requests.push(request);return new Response('ordinary browser cache result')};
+  for(const file of ['./apps/settlements/runtime/data/settlements/v1/regions/example.json',
+    './apps/settlements/runtime/assets/art/tower.png','./apps/settlements/runtime/assets/js/source-map.json',
+    './apps/settlements/entry.mjs','./apps/career/runtime.bundle.mjs','./assets/css/site.css']){
+    let response;
+    await worker.emit('fetch',{clientId:'ordinary-cache-tab',request:new Request(new URL(file,scope)),
+      respondWith:value=>{response=value}});
+    assert.equal(await (await response).text(),'ordinary browser cache result');
+    assert.equal(requests.at(-1).cache,'default',file);
+  }
+  assert.equal(worker.networkCalls,6);
+});
+
 test('module manifest includes runtime files; platform and puzzle entry are installed',async()=>{
   const worker=makeWorker();
   await worker.emit('install');
