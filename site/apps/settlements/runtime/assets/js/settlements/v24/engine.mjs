@@ -20,7 +20,13 @@ export const SERIALIZED_ACTIONS_RULES_VERSION = 'settlements-3.4.1';
 // A changed initial network needs its identity even before the first action.
 // Readers predating this envelope must reject it instead of replaying old seeds.
 export const INITIAL_NETWORK_SAVE_RULES_VERSION = 'settlements-3.4.2';
+// Local routing may choose a real direct section instead of the former cheap
+// detour. Older readers must reject it, never silently drop the policy marker.
+export const ROUTE_LIMIT_SAVE_RULES_VERSION = 'settlements-3.4.3';
 export const MAX_TOWER_BATCH = 100;
+export const MAX_ROUTE_STOPS = 5;
+export const MAX_ROUTE_DISTANCE_KM = 100;
+export const ROUTE_POLICY_VERSION = 'local-route-v1';
 const engineRulesVersions=Object.freeze([RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION]);
 export const TRANSPORT_PRICES = Object.freeze({transport:2,construction:6});
 export const DISTANCE_TRANSPORT_PRICES = Object.freeze({transportPerKm:.2,constructionPerKm:1.2});
@@ -450,6 +456,10 @@ export function evaluate(world,scenario,state) {
 
 function canonicalAction(action) {
   if (!action || typeof action!=='object') throw new Error('Выберите действие');
+  if (action.routePolicyVersion!==undefined &&
+      (!['connect','connect-network'].includes(action.type) || action.routePolicyVersion!==ROUTE_POLICY_VERSION))
+    throw new Error('Неизвестные условия транспортного маршрута');
+  const routePolicy=action.routePolicyVersion!==undefined?{routePolicyVersion:action.routePolicyVersion}:{};
   if (action.type==='tower') {
     if (!Number.isFinite(action.lat) || !Number.isFinite(action.lon) || Math.abs(action.lat)>90 || Math.abs(action.lon)>180)
       throw new Error('Выберите допустимые координаты вышки');
@@ -483,15 +493,15 @@ function canonicalAction(action) {
       if (action.selectedIds!==undefined && JSON.stringify(action.selectedIds)!==JSON.stringify(stopIds) ||
           action.from!==undefined && action.from!==stopIds[0] || action.to!==undefined && action.to!==stopIds.at(-1))
         throw new Error('Остановки не совпадают с концами маршрута');
-      return {type:'connect',from:stopIds[0],to:stopIds.at(-1),stopIds:[...stopIds]};
+      return {type:'connect',from:stopIds[0],to:stopIds.at(-1),stopIds:[...stopIds],...routePolicy};
     }
     if (typeof action.from!=='string' || typeof action.to!=='string') throw new Error('Выберите два поселения');
-    return {type:'connect',from:action.from,to:action.to};
+    return {type:'connect',from:action.from,to:action.to,...routePolicy};
   }
   if (action.type==='connect-network') {
     if (typeof action.from!=='string' || !Array.isArray(action.targetEdge) || action.targetEdge.length!==2 ||
         action.targetEdge.some(id=>typeof id!=='string') || action.targetEdge[0]===action.targetEdge[1]) throw new Error('Выберите действующий участок сети');
-    return {type:'connect-network',from:action.from,targetEdge:[...action.targetEdge].sort(cmp)};
+    return {type:'connect-network',from:action.from,targetEdge:[...action.targetEdge].sort(cmp),...routePolicy};
   }
   if (action.type==='upgrade') {
     if (typeof action.facilityId!=='string') throw new Error('Выберите объект для расширения');
@@ -589,9 +599,25 @@ function routeThroughStops(world,scenario,input,action) {
   return {path,legs,stopIds:[...action.stopIds],edgeKeys,freshEdgeKeys,freshPath,joinId:action.to,requestedTo:action.to};
 }
 
+function routeDistanceMeters(world,scenario,input,path) {
+  const policy=usesDistanceTransport(input.rulesVersion)?scenarioPolicy(world,scenario):null;
+  return path.slice(1).reduce((sum,id,i)=>{
+    const meters=policy?policy.distanceMeters[edgeKey(path[i],id)]:haversine(world.row(path[i]),world.row(id))*1000;
+    if (!Number.isFinite(meters) || meters<0) throw new Error('Для участка не задано расстояние');
+    return sum+meters;
+  },0);
+}
+
 function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   checkState(world,scenario,input);
   const action=canonicalAction(rawAction);
+  const localRoute=['connect','connect-network'].includes(action.type) && (!replay || action.routePolicyVersion!==undefined);
+  if (localRoute) {
+    // Only historical, unmarked replay retains the former unlimited routes.
+    // Public preview/apply mark every route, including two-point/network joins.
+    action.routePolicyVersion=ROUTE_POLICY_VERSION;
+    if (action.stopIds?.length>MAX_ROUTE_STOPS) throw new Error(`В одном маршруте можно выбрать не более ${MAX_ROUTE_STOPS} поселений`);
+  }
   if (action.type==='connect-network' && input.rulesVersion!==SOCIAL_RULES_VERSION) throw new Error('Действие недоступно в этой версии правил');
   tutorialAllows(scenario,input,action);
   let cost,path,transportCost,network;
@@ -619,6 +645,22 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
     const route=network || (input.rulesVersion===SOCIAL_RULES_VERSION?null:world.route(action.from,action.to));
     if (!route) throw new Error(action.from===action.to?'Выберите второе поселение':'Связь отсутствует в учебной транспортной сети');
     path=[...route.path];
+    if (localRoute && (path.length>2 || action.stopIds?.length>2)) {
+      let routeMeters=routeDistanceMeters(world,scenario,input,path);
+      if (routeMeters>MAX_ROUTE_DISTANCE_KM*1000 && action.type==='connect' && (!action.stopIds || action.stopIds.length===2) &&
+          world.drive[world.ids.get(action.from)].some(([to])=>to===world.ids.get(action.to))) {
+        // Price-first routing may prefer a long, mostly active detour. Offer the
+        // actual directed source edge instead, never a fabricated straight road.
+        path=[action.from,action.to];const key=edgeKey(...path),active=activeEdges(input.routes);
+        network={path,edgeKeys:[key],freshEdgeKeys:active.has(key)?[]:[key],freshPath:active.has(key)?[]:[[...path]],
+          joinId:action.to,requestedTo:action.to,...(action.stopIds?{stopIds:[...action.stopIds],legs:[{from:action.from,to:action.to,path:[...path]}]}:{})};
+        routeMeters=routeDistanceMeters(world,scenario,input,path);
+      }
+      // Count the actual trip, including active and revisited sections. A single
+      // canonical source edge stays purchasable in remote, sparse regions.
+      if (routeMeters>MAX_ROUTE_DISTANCE_KM*1000 && (path.length>2 || action.stopIds?.length>2))
+        throw new Error(`Длина маршрута — ${Math.ceil(routeMeters/1000)} км. Максимум — ${MAX_ROUTE_DISTANCE_KM} км. Соедините более близкие поселения или постройте отдельный участок.`);
+    }
     const active=activeEdges(input.routes), fresh=new Set(path.slice(1).map((id,i)=>edgeKey(path[i],id)).filter(key=>!active.has(key)));
     if (!fresh.size) throw new Error('Все участки этого пути уже работают');
     if (input.rulesVersion!==RULES_VERSION) {
@@ -729,10 +771,11 @@ export function exportSave(state) {
   const initialNetwork=checkInitialTowerPolicyIdentity(state);
   if (typeof state.dataVersion!=='string' || !/^source-v1-[0-9a-f]{16}$/.test(state.dataVersion)) throw new Error('Неизвестная версия исходных данных');
   if (!Number.isInteger(state.tutorialStep) || state.tutorialStep<0 || state.tutorialStep>totalTutorialSteps(state)) throw new Error('Некорректный шаг обучения');
-  const extendedActions=state.actions.some(action=>action.type==='tower-batch' || action.stopIds!==undefined || action.outreachPolicyVersion!==undefined);
+  const extendedActions=state.actions.some(action=>action.type==='tower-batch' || action.stopIds!==undefined || action.outreachPolicyVersion!==undefined || action.routePolicyVersion!==undefined);
+  const localRoutes=state.actions.some(action=>action.routePolicyVersion!==undefined);
   // Only the action log is authoritative. No imported balance or allocations.
-  return clone({rulesVersion:initialNetwork?INITIAL_NETWORK_SAVE_RULES_VERSION:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
-    ...(initialNetwork||extendedActions?{engineRulesVersion:state.rulesVersion}:{}),
+  return clone({rulesVersion:localRoutes?ROUTE_LIMIT_SAVE_RULES_VERSION:initialNetwork?INITIAL_NETWORK_SAVE_RULES_VERSION:extendedActions?SERIALIZED_ACTIONS_RULES_VERSION:state.rulesVersion,
+    ...(initialNetwork||extendedActions||localRoutes?{engineRulesVersion:state.rulesVersion}:{}),
     ...(initialNetwork?{initialTowerPolicyVersion:state.initialTowerPolicyVersion,
       initialTowerPolicyFingerprint:state.initialTowerPolicyFingerprint}:{}),
     dataVersion:state.dataVersion,scenarioId:state.scenarioId,scenarioVersion:state.scenarioVersion,
@@ -746,7 +789,15 @@ export function exportSave(state) {
 }
 
 export function restore(world,scenario,save) {
-  if (save?.rulesVersion===INITIAL_NETWORK_SAVE_RULES_VERSION) {
+  const localRoutes=Array.isArray(save?.actions)&&save.actions.some(action=>action?.routePolicyVersion!==undefined);
+  if ((save?.rulesVersion===ROUTE_LIMIT_SAVE_RULES_VERSION)!==localRoutes)
+    throw new Error('Некорректная версия правил транспортного маршрута');
+  if (save?.rulesVersion===ROUTE_LIMIT_SAVE_RULES_VERSION) {
+    const version=engineRulesVersions.indexOf(save.engineRulesVersion)+1;
+    if (!version || save.scenarioVersion!==version) throw new Error('Некорректная версия правил транспортного маршрута');
+    save={...save,rulesVersion:save.engineRulesVersion};delete save.engineRulesVersion;
+    if (hasInitialTowerPolicy(save)) checkInitialTowerPolicyIdentity(save);
+  } else if (save?.rulesVersion===INITIAL_NETWORK_SAVE_RULES_VERSION) {
     if (save.engineRulesVersion!==SOCIAL_RULES_VERSION || save.scenarioVersion!==5 || !hasInitialTowerPolicy(save))
       throw new Error('Неизвестная версия исходной сети связи');
     save={...save,rulesVersion:save.engineRulesVersion};
@@ -767,8 +818,8 @@ export function restore(world,scenario,save) {
   if (!Array.isArray(save.actions) || save.actions.length>10000) throw new Error('Некорректный или слишком большой журнал действий');
   if (!Number.isInteger(save.tutorialStep) || save.tutorialStep<0 || save.tutorialStep>totalTutorialSteps(scenario)) throw new Error('Некорректный шаг обучения в сохранении');
   let state=createState(world,scenario,{owner:save.owner});
-  // Unmarked outreach actions predate road validation. Replay them exactly;
-  // public preview/apply always use the current rule for subsequent actions.
+  // Unmarked outreach/routes predate their respective validations. Replay them
+  // exactly; public preview/apply mark and validate every subsequent action.
   for (const action of save.actions) state=reducer(world,scenario,state,action,{replay:true}).nextState;
   if (state.tutorialStep!==save.tutorialStep) throw new Error('Шаг обучения сохранения не соответствует журналу действий');
   return state;

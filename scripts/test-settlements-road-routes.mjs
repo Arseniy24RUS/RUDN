@@ -7,7 +7,7 @@ import {gunzipSync} from 'node:zlib';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {World} from '../site/apps/settlements/runtime/assets/js/settlements/v2/engine.mjs';
-import {SOCIAL_RULES_VERSION,OUTREACH_POLICY_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,createState,preview,apply,evaluate,exportSave,restore,undo} from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
+import {SOCIAL_RULES_VERSION,OUTREACH_POLICY_VERSION,ROUTE_POLICY_VERSION,ROUTE_LIMIT_SAVE_RULES_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,createState,preview,apply,evaluate,exportSave,restore,undo} from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
 import {createSyntheticDistanceTransportPolicy,loadDistanceTransportPolicy} from '../site/apps/settlements/runtime/assets/js/settlements/v24/transport-policy-v2.mjs';
 import {initialTowersFor} from '../site/apps/settlements/runtime/assets/js/settlements/v24/telecom-policy.mjs';
 import {loadSocialPlan} from '../site/apps/settlements/runtime/assets/js/settlements/v24/social-plans.mjs';
@@ -149,7 +149,7 @@ test('invalid, repeated and conflicting stops are rejected, including distant no
     assert.equal(preview(world,scenario,state,action).ok,false,JSON.stringify(action));
   }
   assert.deepEqual(preview(world,scenario,state,{type:'connect',selectedIds:['a','c','d','e']}).action,
-    {type:'connect',from:'a',to:'e',stopIds:['a','c','d','e']});
+    {type:'connect',from:'a',to:'e',stopIds:['a','c','d','e'],routePolicyVersion:ROUTE_POLICY_VERSION});
 });
 
 test('multi-stop paths never invent a reverse direction or a direct shortcut',()=>{
@@ -166,14 +166,14 @@ test('ordinary two-point connect retains its original network-join behavior and 
   const {world,scenario,state}=fixture();
   const p=preview(world,scenario,state,{type:'connect',from:'c',to:'a'});assert.equal(p.ok,true,p.error);
   assert.deepEqual(p.path,['c','b']);assert.equal(p.joinId,'b');assert.equal(p.requestedTo,'a');assert.equal(p.cost,2.1);
-  assert.deepEqual(p.action,{type:'connect',from:'c',to:'a'});roundTrip(world,scenario,p.nextState);
+  assert.deepEqual(p.action,{type:'connect',from:'c',to:'a',routePolicyVersion:ROUTE_POLICY_VERSION});roundTrip(world,scenario,p.nextState);
 });
 
 test('new route and doctor saves fail closed in the real published reader and round-trip exactly in the new reader',async()=>{
   const legacy=await frozenReader(),{world,scenario,state}=fixture();
   for (const action of [stops(['a','c','b','d','e']),doctor('b')]) {
     const next=apply(world,scenario,state,action),save=exportSave(next),copy=structuredClone(save);
-    assert.equal(next.rulesVersion,SOCIAL_RULES_VERSION);assert.equal(save.rulesVersion,SERIALIZED_ACTIONS_RULES_VERSION);
+    assert.equal(next.rulesVersion,SOCIAL_RULES_VERSION);assert.equal(save.rulesVersion,action.type==='connect'?ROUTE_LIMIT_SAVE_RULES_VERSION:SERIALIZED_ACTIONS_RULES_VERSION);
     assert.equal(save.engineRulesVersion,SOCIAL_RULES_VERSION);assert.equal(save.scenarioVersion,5);
     assert.throws(()=>legacy.restore(world,scenario,save),/Неизвестная версия правил/);
     const restored=restore(world,scenario,save);assert.deepEqual(restored,next);assert.deepEqual(save,copy);
@@ -193,7 +193,7 @@ test('wire wrapper retains the internal rules and prices when a pre-3.4 party ad
     const older={...scenario,id:`synthetic-v${version}`,version,rulesVersion},state=createState(world,older);
     for (const action of [stops(['a','c','d','e']),doctor('b')]) {
       const next=apply(world,older,state,action),save=exportSave(next);
-      assert.equal(save.rulesVersion,SERIALIZED_ACTIONS_RULES_VERSION);assert.equal(save.engineRulesVersion,rulesVersion);
+      assert.equal(save.rulesVersion,action.type==='connect'?ROUTE_LIMIT_SAVE_RULES_VERSION:SERIALIZED_ACTIONS_RULES_VERSION);assert.equal(save.engineRulesVersion,rulesVersion);
       assert.equal(save.scenarioVersion,version);assert.equal(next.rulesVersion,rulesVersion);
       assert.throws(()=>legacy.restore(world,older,save),/Неизвестная версия правил/);
       const restored=restore(world,older,save);assert.deepEqual(restored,next);assert.deepEqual(exportSave(restored),save);

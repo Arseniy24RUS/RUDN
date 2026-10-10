@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {gunzipSync} from 'node:zlib';
 import {World} from '../site/apps/settlements/runtime/assets/js/settlements/v2/engine.mjs';
-import {SOCIAL_RULES_VERSION,SERVICES,createState,apply,preview,evaluate,exportSave,restore,undo,pointInBoundary}
+import {SOCIAL_RULES_VERSION,ROUTE_POLICY_VERSION,ROUTE_LIMIT_SAVE_RULES_VERSION,SERVICES,createState,apply,preview,evaluate,exportSave,restore,undo,pointInBoundary}
   from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
 import {withPlayableRegionScope,isPlayableSettlement,playableRows}
   from '../site/apps/settlements/runtime/assets/js/settlements/v24/region-playability.mjs';
@@ -144,7 +144,14 @@ test('outside-only tower preview has no regional gains, while old actions and ev
     old=previous.apply(world,scenario,old,action);history.push(old);
     const save=previous.exportSave(old),restored=restore(world,scoped,save);
     assert.deepEqual(restored,old);assert.equal(JSON.stringify(exportSave(restored)),JSON.stringify(save));
-    assert.deepEqual(apply(world,scoped,before,action),old);
+    const continued=apply(world,scoped,before,action),sameMechanics=structuredClone(continued);
+    if(action.type==='connect'){
+      assert.equal(continued.actions.at(-1).routePolicyVersion,ROUTE_POLICY_VERSION);
+      delete sameMechanics.actions.at(-1).routePolicyVersion;
+      assert.equal(exportSave(continued).rulesVersion,ROUTE_LIMIT_SAVE_RULES_VERSION);
+      assert.deepEqual(restore(world,scoped,exportSave(continued)),continued);
+    }
+    assert.deepEqual(sameMechanics,old);
   }
   for(let i=history.length-1;i>0;i--)assert.deepEqual(undo(world,scoped,history[i]),history[i-1]);
 });
@@ -176,8 +183,20 @@ test('actual seven-settlement tutorial keeps scenario identity and its published
   const previous=await publishedEngine(),{world,boundary}=await regionalWorld('chelyabinskaya_oblast');
   const scenario=createIntroScenario(world,boundary,{version:5}),scoped=withPlayableRegionScope(world,scenario);
   assert.equal(scoped,scenario);assert.equal(scoped.targetIds.length,7);
-  let state=createState(world,scoped),old=previous.createState(world,scenario);
-  for(const action of scenario.referenceActions){state=apply(world,scoped,state,action);old=previous.apply(world,scenario,old,action);assert.deepEqual(state,old);}
+  let state=createState(world,scoped),current=createState(world,scoped),old=previous.createState(world,scenario);
+  for(const action of scenario.referenceActions){
+    current=apply(world,scoped,current,action);old=previous.apply(world,scenario,old,action);
+    // Historical tutorial journals remain byte-exact. Newly confirmed routes
+    // add only their explicitly versioned validation marker, not new mechanics.
+    state=restore(world,scoped,previous.exportSave(old));assert.deepEqual(state,old);
+    const sameMechanics=structuredClone(current);
+    for(const entry of sameMechanics.actions){if(entry.type==='connect'){
+      assert.equal(entry.routePolicyVersion,ROUTE_POLICY_VERSION);delete entry.routePolicyVersion;
+    }}
+    assert.deepEqual(sameMechanics,old);
+    assert.deepEqual(restore(world,scoped,exportSave(current)),current);
+  }
   assert.equal(state.tutorialStep,6);assert.equal(JSON.stringify(exportSave(state)),JSON.stringify(previous.exportSave(old)));
+  assert.equal(current.tutorialStep,6);assert.equal(exportSave(current).rulesVersion,ROUTE_LIMIT_SAVE_RULES_VERSION);
   assert.deepEqual(restore(world,scoped,exportSave(state)),state);
 });

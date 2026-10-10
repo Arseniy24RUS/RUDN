@@ -12,7 +12,12 @@ const entries = `
 Досуг|Leisure|文娱
 Культура|Culture|文化
 Построить транспорт|Build transport route|修建交通路线
-Остановок: {count}. Можно добавить ещё поселения.|Stops: {count}. You can add more settlements.|已选{count}个站点。可以继续添加聚落。
+Остановок: {count} из {limit} · до {distance} км|Stops: {count} of {limit} · up to {distance} km|站点：{count}/{limit} · 最长{distance}公里
+Выберите до {limit} близких поселений. Маршрут — до {distance} км.|Choose up to {limit} nearby settlements. Route length: up to {distance} km.|最多选择{limit}个邻近聚落。路线总长不超过{distance}公里。
+В одном маршруте можно выбрать не более {limit} поселений|A route can include no more than {limit} selected settlements|每条路线最多可选择{limit}个聚落
+Длина маршрута — {distance} км. Максимум — {limit} км. Соедините более близкие поселения или постройте отдельный участок.|Route length: {distance} km. Maximum: {limit} km. Connect closer settlements or build a separate segment.|路线长度为{distance}公里，上限为{limit}公里。请选择更近的聚落，或分段修建。
+Выберите до {limit} близких поселений по порядку. Длина всего маршрута — не более {distance} км.|Select up to {limit} nearby settlements in order. The entire route must be no longer than {distance} km.|按顺序选择最多{limit}个邻近聚落。整条路线长度不得超过{distance}公里。
+Для двух удалённых поселений разрешён один прямой участок исходной сети длиннее {distance} км.|For two remote settlements, one direct segment of the original network may exceed {distance} km.|对于两个偏远聚落，允许原始网络中的一个直连路段超过{distance}公里。
 Убрать последнюю остановку|Remove last stop|移除最后一个站点
 Добавляйте остановки по порядку|Add stops in order|按顺序添加站点
 Выберите следующие поселения по порядку, затем постройте весь маршрут одним нажатием.|Select the next settlements in order, then build the whole route with one confirmation.|按顺序选择其他聚落，然后一次确认修建整条路线。
@@ -20,6 +25,8 @@ const entries = `
 Для присоединения к действующей линии начните отдельное соединение.|Start a separate connection to join an active route.|如需接入已运行的线路，请新建一条连接。
 К этому поселению нет дороги. Сначала постройте транспортное соединение.|There is no road to this settlement. Build a transport connection first.|没有道路通往该聚落。请先修建交通连接。
 Неизвестные условия выездной помощи|Unknown mobile doctor rules|巡诊服务规则无法识别
+Неизвестные условия транспортного маршрута|Unknown transport route rules|交通路线规则无法识别
+Некорректная версия правил транспортного маршрута|Invalid transport route rules version|交通路线规则版本无效
 Выберите не менее двух поселений маршрута|Select at least two stops for the route|请为路线选择至少两个聚落
 Остановки маршрута не должны повторяться|Route stops must not repeat|路线站点不能重复
 Остановки не совпадают с концами маршрута|Stops do not match the route endpoints|站点与路线端点不一致
