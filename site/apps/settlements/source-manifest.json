@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "f1d0a87afe2f41cc95fe1c2032788ff0283e9132f3ea9a4eaa3e100bb33ae732",
+  "sourceHash": "730791f58b21a0b360715d90534c28123504f65087d75348b97f68824e8609ab",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1555,8 +1555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/engine.mjs",
-      "bytes": 58731,
-      "sha256": "f4d170f8543f467028ba8072bf1c7a8155b32addd42d3a593373e48f0ba8b830"
+      "bytes": 60443,
+      "sha256": "213acd2707b5261c05b9ac16c4cc83f4e7dd7273de7d2988202a50bcfb4b33b1"
     },
     {
       "path": "assets/js/settlements/v24/federal-cities.mjs",
@@ -1570,13 +1570,13 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 80051,
-      "sha256": "82b6f9a3858adad0406e9f6f3ce0a5aa0e67a75d150d24eaf6209ad5df4f06fb"
+      "bytes": 79610,
+      "sha256": "7dc4da62b16efab7b2de785a800524a66cf63504799d36af22c83bfe1829e1c8"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
-      "bytes": 95830,
-      "sha256": "39f545dad87d08b21dc6cd8cfb9f9ed006a48effa0bad2c2f5c5b055bc6ab75a"
+      "bytes": 95235,
+      "sha256": "3109cf66dbe6ecbce4544e6f54d0f10aef8182caea031ee011928a942c5b2afb"
     },
     {
       "path": "assets/js/settlements/v24/initial-tower-spacing.mjs",

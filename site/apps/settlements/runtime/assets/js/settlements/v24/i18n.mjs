@@ -12,12 +12,11 @@ const entries = `
 Досуг|Leisure|文娱
 Культура|Culture|文化
 Построить транспорт|Build transport route|修建交通路线
-Остановок: {count} из {limit} · до {distance} км|Stops: {count} of {limit} · up to {distance} km|站点：{count}/{limit} · 最长{distance}公里
-Выберите до {limit} близких поселений. Маршрут — до {distance} км.|Choose up to {limit} nearby settlements. Route length: up to {distance} km.|最多选择{limit}个邻近聚落。路线总长不超过{distance}公里。
+Остановок: {count} из {limit}|Stops: {count} of {limit}|站点：{count}/{limit}
+Выберите до {limit} поселений по порядку.|Select up to {limit} settlements in order.|按顺序选择最多{limit}个聚落。
+В одной цепочке — не более {limit} поселений, включая промежуточные пункты между выбранными остановками.|A route can include no more than {limit} settlements, including intermediate settlements between selected stops.|每条路线最多包含{limit}个聚落，包括所选站点之间的中间聚落。
+Маршрут проходит через {count} поселений. Максимум — {limit}. Выберите более короткую цепочку.|The route passes through {count} settlements. Maximum: {limit}. Select a shorter chain.|路线经过{count}个聚落，最多允许{limit}个。请选择更短的聚落链。
 В одном маршруте можно выбрать не более {limit} поселений|A route can include no more than {limit} selected settlements|每条路线最多可选择{limit}个聚落
-Длина маршрута — {distance} км. Максимум — {limit} км. Соедините более близкие поселения или постройте отдельный участок.|Route length: {distance} km. Maximum: {limit} km. Connect closer settlements or build a separate segment.|路线长度为{distance}公里，上限为{limit}公里。请选择更近的聚落，或分段修建。
-Выберите до {limit} близких поселений по порядку. Длина всего маршрута — не более {distance} км.|Select up to {limit} nearby settlements in order. The entire route must be no longer than {distance} km.|按顺序选择最多{limit}个邻近聚落。整条路线长度不得超过{distance}公里。
-Для двух удалённых поселений разрешён один прямой участок исходной сети длиннее {distance} км.|For two remote settlements, one direct segment of the original network may exceed {distance} km.|对于两个偏远聚落，允许原始网络中的一个直连路段超过{distance}公里。
 Убрать последнюю остановку|Remove last stop|移除最后一个站点
 Добавляйте остановки по порядку|Add stops in order|按顺序添加站点
 Выберите следующие поселения по порядку, затем постройте весь маршрут одним нажатием.|Select the next settlements in order, then build the whole route with one confirmation.|按顺序选择其他聚落，然后一次确认修建整条路线。

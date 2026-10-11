@@ -451,9 +451,10 @@ jobs:
           node scripts/audit-settlements-boundaries.mjs --verify-runtime
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
           node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
-      - name: Verify local transport limits and unchanged legacy journals
+      - name: Verify settlement chain counts and unchanged legacy journals
         if: env.SETTLEMENTS_ROUTE_LIMITS == 'true'
         run: |
+          git fetch --no-tags --depth=1 origin 4fb79938e53f1555601cf39fd56718eb9711b548
           git fetch --no-tags --depth=1 origin 0d2a786d1a71ce52bf6902fff658f9b24836c555
           git fetch --no-tags --depth=1 origin 64589fada29591814d88da7b67cde327ae3fc1d0
           git fetch --no-tags --depth=1 origin c1458c828b25d5aa3c3d15809ba7834859cf7906

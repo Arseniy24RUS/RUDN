@@ -25,8 +25,9 @@ export const INITIAL_NETWORK_SAVE_RULES_VERSION = 'settlements-3.4.2';
 export const ROUTE_LIMIT_SAVE_RULES_VERSION = 'settlements-3.4.3';
 export const MAX_TOWER_BATCH = 100;
 export const MAX_ROUTE_STOPS = 5;
-export const MAX_ROUTE_DISTANCE_KM = 100;
-export const ROUTE_POLICY_VERSION = 'local-route-v1';
+export const ROUTE_POLICY_VERSION = 'route-stops-v1';
+export const LEGACY_ROUTE_POLICY_VERSION = 'local-route-v1';
+const LEGACY_ROUTE_DISTANCE_KM = 100;
 const engineRulesVersions=Object.freeze([RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SOCIAL_RULES_VERSION]);
 export const TRANSPORT_PRICES = Object.freeze({transport:2,construction:6});
 export const DISTANCE_TRANSPORT_PRICES = Object.freeze({transportPerKm:.2,constructionPerKm:1.2});
@@ -457,7 +458,7 @@ export function evaluate(world,scenario,state) {
 function canonicalAction(action) {
   if (!action || typeof action!=='object') throw new Error('Выберите действие');
   if (action.routePolicyVersion!==undefined &&
-      (!['connect','connect-network'].includes(action.type) || action.routePolicyVersion!==ROUTE_POLICY_VERSION))
+      (!['connect','connect-network'].includes(action.type) || ![ROUTE_POLICY_VERSION,LEGACY_ROUTE_POLICY_VERSION].includes(action.routePolicyVersion)))
     throw new Error('Неизвестные условия транспортного маршрута');
   const routePolicy=action.routePolicyVersion!==undefined?{routePolicyVersion:action.routePolicyVersion}:{};
   if (action.type==='tower') {
@@ -615,7 +616,7 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
   if (localRoute) {
     // Only historical, unmarked replay retains the former unlimited routes.
     // Public preview/apply mark every route, including two-point/network joins.
-    action.routePolicyVersion=ROUTE_POLICY_VERSION;
+    if (!replay) action.routePolicyVersion=ROUTE_POLICY_VERSION;
     if (action.stopIds?.length>MAX_ROUTE_STOPS) throw new Error(`В одном маршруте можно выбрать не более ${MAX_ROUTE_STOPS} поселений`);
   }
   if (action.type==='connect-network' && input.rulesVersion!==SOCIAL_RULES_VERSION) throw new Error('Действие недоступно в этой версии правил');
@@ -645,9 +646,27 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
     const route=network || (input.rulesVersion===SOCIAL_RULES_VERSION?null:world.route(action.from,action.to));
     if (!route) throw new Error(action.from===action.to?'Выберите второе поселение':'Связь отсутствует в учебной транспортной сети');
     path=[...route.path];
-    if (localRoute && (path.length>2 || action.stopIds?.length>2)) {
+    if (localRoute && action.routePolicyVersion===ROUTE_POLICY_VERSION) {
+      const scope=scenario.kind==='intro'?new Set(scenario.targetIds):
+        Array.isArray(scenario.playableSettlementIds)?new Set(scenario.playableSettlementIds):null;
+      let count=new Set(scope?path.filter(id=>scope.has(id)):path).size;
+      if (count>MAX_ROUTE_STOPS && action.type==='connect' && (!action.stopIds || action.stopIds.length===2) &&
+          world.drive[world.ids.get(action.from)].some(([to])=>to===world.ids.get(action.to))) {
+        // A cheap active detour must not block buying the actual directed
+        // source edge between two selected neighbours, at its normal full cost.
+        path=[action.from,action.to];const key=edgeKey(...path),active=activeEdges(input.routes);
+        network={path,edgeKeys:[key],freshEdgeKeys:active.has(key)?[]:[key],freshPath:active.has(key)?[]:[[...path]],
+          joinId:action.to,requestedTo:action.to,...(action.stopIds?{stopIds:[...action.stopIds],legs:[{from:action.from,to:action.to,path:[...path]}]}:{})};
+        count=new Set(scope?path.filter(id=>scope.has(id)):path).size;
+      }
+      if (count>MAX_ROUTE_STOPS)
+        throw new Error(`Маршрут проходит через ${count} поселений. Максимум — ${MAX_ROUTE_STOPS}. Выберите более короткую цепочку.`);
+    }
+    // The short-lived kilometre rule is replay-only. New purchases depend on
+    // the number of actual playable settlements, regardless of route distance.
+    if (localRoute && action.routePolicyVersion===LEGACY_ROUTE_POLICY_VERSION && (path.length>2 || action.stopIds?.length>2)) {
       let routeMeters=routeDistanceMeters(world,scenario,input,path);
-      if (routeMeters>MAX_ROUTE_DISTANCE_KM*1000 && action.type==='connect' && (!action.stopIds || action.stopIds.length===2) &&
+      if (routeMeters>LEGACY_ROUTE_DISTANCE_KM*1000 && action.type==='connect' && (!action.stopIds || action.stopIds.length===2) &&
           world.drive[world.ids.get(action.from)].some(([to])=>to===world.ids.get(action.to))) {
         // Price-first routing may prefer a long, mostly active detour. Offer the
         // actual directed source edge instead, never a fabricated straight road.
@@ -658,8 +677,8 @@ function reducer(world,scenario,input,rawAction,{replay=false}={}) {
       }
       // Count the actual trip, including active and revisited sections. A single
       // canonical source edge stays purchasable in remote, sparse regions.
-      if (routeMeters>MAX_ROUTE_DISTANCE_KM*1000 && (path.length>2 || action.stopIds?.length>2))
-        throw new Error(`Длина маршрута — ${Math.ceil(routeMeters/1000)} км. Максимум — ${MAX_ROUTE_DISTANCE_KM} км. Соедините более близкие поселения или постройте отдельный участок.`);
+      if (routeMeters>LEGACY_ROUTE_DISTANCE_KM*1000 && (path.length>2 || action.stopIds?.length>2))
+        throw new Error(`Длина маршрута — ${Math.ceil(routeMeters/1000)} км. Максимум — ${LEGACY_ROUTE_DISTANCE_KM} км. Соедините более близкие поселения или постройте отдельный участок.`);
     }
     const active=activeEdges(input.routes), fresh=new Set(path.slice(1).map((id,i)=>edgeKey(path[i],id)).filter(key=>!active.has(key)));
     if (!fresh.size) throw new Error('Все участки этого пути уже работают');
