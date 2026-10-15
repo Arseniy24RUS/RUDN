@@ -303,7 +303,21 @@ export function createDurableStore(options = {}) {
             if (!envelope.fallback) continue;
             await transaction(TABLES, true, async tx => {
               const previous = await tx.get('drafts', envelope.draft.id);
-              if (!previous || (previous.revision === envelope.baseRevision && previous.phase !== 'completed')) {
+              // A transaction can commit just before another operation switches
+              // the store to its fallback. Its mirror then retains an older base
+              // revision. Recover only a proven continuation of this exact draft,
+              // never a sibling branch which merely shares an earlier ancestor.
+              const delta = envelope.draft.revision - previous?.revision;
+              const history = envelope.draft.recentIntentIds;
+              const continuesPrevious = previous
+                && Number.isSafeInteger(previous.revision) && previous.revision > 0
+                && Number.isSafeInteger(envelope.draft.revision) && delta > 0
+                && ['id', 'scope', 'owner', 'activitySlug', 'mode', 'attemptId'].every(key => envelope.draft[key] === previous[key])
+                && typeof previous.lastIntentId === 'string' && previous.lastIntentId.length > 0
+                && Array.isArray(history) && delta < history.length
+                && history.at(-1) === envelope.draft.lastIntentId
+                && history.at(-1 - delta) === previous.lastIntentId;
+              if (!previous || ((previous.revision === envelope.baseRevision || continuesPrevious) && previous.phase !== 'completed')) {
                 await tx.put('drafts', envelope.draft);
                 for (const op of envelope.operations || []) await tx.put('outbox', op);
                 if (envelope.attempt) await tx.put('attempts', envelope.attempt);

@@ -8,6 +8,7 @@ import os
 import sys
 import time
 from playwright.sync_api import sync_playwright
+from settlements_ui_helpers import accept_training_dialog
 
 sys.stdout.reconfigure(encoding="utf-8")
 parser = argparse.ArgumentParser()
@@ -73,6 +74,7 @@ with sync_playwright() as p:
     try:
         page.goto(args.url)
         page.locator('[data-action="tutorial"]').click(timeout=60000)
+        accept_training_dialog(page, "welcome", expect_open=True)
         page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
         click("guide-position"); confirm(1)
         choose("medical"); find("Большая Казакбаева"); confirm(2)
@@ -83,7 +85,7 @@ with sync_playwright() as p:
         choose("culture"); find("Большая Тюлякова"); confirm(6)
         assert page.locator('[data-act="undo"]').is_disabled()
         assert page.locator('[data-act="tools"]').is_disabled()
-        page.locator('[data-action="lobby"]').filter(visible=True).click()
+        accept_training_dialog(page, "complete", expect_open=True)
         page.locator('[data-select="region"]').wait_for()
         report["completedTutorialGate"] = True
         report["tutorialRegionRequests"] = sorted(set(url for url in report["requests"] if "/regions/" in url))
@@ -127,6 +129,7 @@ with sync_playwright() as p:
         page.screenshot(path=str(out / "lobby-before-replay.png"))
         report["tutorialReplayAvailableInLobby"] = True
         page.locator('[data-action="tutorial"]').filter(visible=True).click()
+        accept_training_dialog(page, "welcome", expect_open=True)
         page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
         page.locator(".step-badge").filter(has_text="1/6").wait_for()
         page.locator('[data-action="lobby"]').filter(visible=True).click()

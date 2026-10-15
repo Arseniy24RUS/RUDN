@@ -24,6 +24,7 @@ const report = [];
 try {
   for (const engine of engines) {
     const browser = await playwright[engine].launch({headless: true,
+      ...(engine === 'firefox' ? {firefoxUserPrefs: {'network.proxy.type': 0}} : {}),
       ...(engine === 'chromium' && process.env.DURABLE_CHROMIUM_PATH ? {executablePath: process.env.DURABLE_CHROMIUM_PATH} : {})});
     try {
       const page = await browser.newPage();
@@ -253,6 +254,118 @@ try {
             store.close();
           }
         });
+
+        // Model the exact IDB/fallback overlap observed in the Governor UI: the
+        // revision-2 transaction committed, but its fallback mirror still names
+        // revision 1 as its base. All subsequent writes use the public API.
+        const recoveryFixture = async name => {
+          const local = mapStorage(), s = {...scope(name), activitySlug: 'governor-freeplay', mode: 'campaign'};
+          const options = {databaseName: 'recovery-' + name, broadcast: false, localStorage: local};
+          let store = createDurableStore(options);
+          await store.checkpoint({...s, state: {turn: 19, branch: 'shared'}});
+          const ancestor = await store.checkpoint({...s, state: {turn: 20, branch: 'shared'}});
+          store.close();
+          const mirrorKey = 'rudn.durable.mirror.v1:' + ancestor.id;
+          const overlap = JSON.parse(local.getItem(mirrorKey));
+          overlap.fallback = true; overlap.baseRevision = 1;
+          local.setItem(mirrorKey, JSON.stringify(overlap));
+          store = createDurableStore({...options, indexedDB: null});
+          await store.checkpoint({...s, phase: 'completed', state: {turn: 20, branch: 'finished'}});
+          await store.complete({...s, state: {turn: 20, branch: 'finished'}, attempt: {id: s.attemptId, studentKey: s.owner.slice(8), activitySlug: s.activitySlug, score: 5, recordGrade: false}});
+          const completion = await store.loadDraft(s);
+          equal(completion.revision, 4, 'four genuine store writes');
+          equal(completion.saveStatus.storage, 'localStorage', 'completed in durable fallback');
+          assert(completion.saveStatus.durable, 'fallback completion acknowledged durable');
+          const mirror = JSON.parse(local.getItem(mirrorKey));
+          equal(mirror.baseRevision, 1, 'observed stale base retained');
+          equal(mirror.draft.recentIntentIds.at(-3), ancestor.lastIntentId, 'exact revision-2 predecessor');
+          store.close(); return {local, s, options, mirrorKey, mirror, ancestor};
+        };
+        await test('recovery: committed ancestor overlap retains completion and new replay; old acknowledgment cannot redeliver', async () => {
+          const f = await recoveryFixture('overlap');
+          // An unrelated replay may already be durable when the delayed old
+          // completion becomes visible; both IDs must remain independent.
+          let writer = createDurableStore({...f.options, localStorage: mapStorage()});
+          const replay = {...f.s, attemptId: f.s.attemptId + '-replay'};
+          await writer.checkpoint({...replay, state: {turn: 1, branch: 'replay'}});
+          const other = {...f.s, owner: 'student:other-owner', attemptId: f.s.attemptId};
+          await writer.checkpoint({...other, state: {turn: 3, branch: 'other-owner'}});
+          writer.close();
+          let recovered = createDurableStore(f.options);
+          const result = await recovered.loadDraft(f.s);
+          equal(result.revision, 4, 'proven continuation recovered');
+          equal(result.phase, 'completed', 'terminal result retained');
+          equal((await recovered.listAttempts({owner: f.s.owner})).map(a => a.id), [f.s.attemptId], 'exactly one immutable old result');
+          equal((await recovered.listConflicts({owner: f.s.owner})).length, 0, 'no false competing branch');
+          equal((await recovered.loadDraft(replay)).state, {turn: 1, branch: 'replay'}, 'new replay retained');
+          equal((await recovered.loadDraft(other)).state, {turn: 3, branch: 'other-owner'}, 'other owner retained');
+          const pending = await recovered.listPending({owner: f.s.owner});
+          equal(pending.filter(op => op.draftId === result.id).length, 2, 'checkpoint and result both recovered');
+          for (const op of pending) await recovered.ack(op.id, op.revision);
+          recovered.close();
+          // Old tabs may retain their pre-ack mirror. Restore that old envelope
+          // explicitly and ensure it cannot enqueue an already confirmed result.
+          f.local.setItem(f.mirrorKey, JSON.stringify(f.mirror));
+          for (let reload = 0; reload < 2; reload++) {
+            recovered = createDurableStore(f.options);
+            equal((await recovered.listAttempts({owner: f.s.owner})).map(a => a.id), [f.s.attemptId], 'reload keeps one original completion');
+            equal((await recovered.listPending({owner: f.s.owner})).length, 0, 'old mirror cannot resurrect acknowledged deliveries');
+            equal((await recovered.loadDraft(f.s)).revision, 4, 'terminal IDB revision unchanged');
+            recovered.close();
+          }
+        });
+        await test('recovery: a sibling with a shared ancestor remains a conflict and creates no result', async () => {
+          const f = await recoveryFixture('sibling');
+          const writer = createDurableStore({...f.options, localStorage: mapStorage()});
+          const competing = await writer.checkpoint({...f.s, baseRevision: 2, state: {turn: 20, branch: 'competing'}});
+          writer.close();
+          assert(f.mirror.draft.recentIntentIds.includes(f.ancestor.lastIntentId), 'both branches really share an ancestor');
+          const recovered = createDurableStore(f.options);
+          equal((await recovered.loadDraft(f.s)).state.branch, 'competing', 'current sibling not overwritten');
+          equal((await recovered.loadDraft(f.s)).lastIntentId, competing.lastIntentId, 'current intent remains authoritative');
+          equal((await recovered.listAttempts({owner: f.s.owner})).length, 0, 'unresolved fallback cannot produce a grade/result');
+          const conflicts = await recovered.listConflicts({owner: f.s.owner});
+          equal(conflicts.length, 1, 'both branches retained in conflict');
+          equal(conflicts[0].incoming.phase, 'completed', 'incoming terminal branch retained');
+          equal(conflicts[0].current.state.branch, 'competing', 'current branch retained');
+          equal((await recovered.listPending({owner: f.s.owner})).filter(op => op.type === 'attempt').length, 0, 'no conflicting attempt enqueued');
+          recovered.close();
+        });
+        await test('recovery: an ancestor at the wrong revision offset cannot overwrite newer state', async () => {
+          const f = await recoveryFixture('offset');
+          f.mirror.draft.revision = 5;
+          f.local.setItem(f.mirrorKey, JSON.stringify(f.mirror));
+          const recovered = createDurableStore(f.options);
+          equal((await recovered.loadDraft(f.s)).lastIntentId, f.ancestor.lastIntentId, 'revision mismatch stays on current branch');
+          equal((await recovered.listAttempts({owner: f.s.owner})).length, 0, 'invalid lineage produces no result');
+          equal((await recovered.listConflicts({owner: f.s.owner})).length, 1, 'revision mismatch retained for explicit resolution');
+          recovered.close();
+        });
+        await test('recovery: mismatched owner or attempt cannot borrow another draft lineage', async () => {
+          for (const field of ['owner', 'attemptId']) {
+            const f = await recoveryFixture('scope-' + field);
+            f.mirror.draft[field] += '-other';
+            f.local.setItem(f.mirrorKey, JSON.stringify(f.mirror));
+            const recovered = createDurableStore(f.options);
+            equal((await recovered.loadDraft(f.s)).lastIntentId, f.ancestor.lastIntentId, field + ' mismatch cannot replace draft');
+            equal((await recovered.listAttempts({owner: f.s.owner})).length, 0, field + ' mismatch creates no result');
+            recovered.close();
+          }
+        });
+        await test('recovery: an existing completed IDB branch is immutable', async () => {
+          const f = await recoveryFixture('terminal');
+          const writer = createDurableStore({...f.options, localStorage: mapStorage()});
+          const terminal = await writer.complete({...f.s, state: {turn: 20, branch: 'authoritative'}, attempt: {id: f.s.attemptId, studentKey: f.s.owner.slice(8), activitySlug: f.s.activitySlug, score: 4, recordGrade: false}});
+          for (const op of await writer.listPending({owner: f.s.owner})) await writer.ack(op.id, op.revision);
+          writer.close();
+          const recovered = createDurableStore(f.options);
+          equal((await recovered.loadDraft(f.s)).lastIntentId, terminal.lastIntentId, 'completed current branch retained');
+          equal((await recovered.listAttempts({owner: f.s.owner})).map(a => a.score), [4], 'completed score cannot be replaced by mirror');
+          equal((await recovered.listPending({owner: f.s.owner})).length, 0, 'confirmed terminal result remains acknowledged');
+          assert((await recovered.listConflicts({owner: f.s.owner})).some(c => c.reason === 'fallback-attempt-mismatch'), 'contradictory result retained as conflict');
+          recovered.close();
+        });
+
         return results;
       });
       assert.equal(errors.length, 0, `${engine} browser errors: ${errors.join('; ')}`);
