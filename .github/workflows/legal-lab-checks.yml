@@ -113,6 +113,46 @@ jobs:
           python -u -m http.server 8765 --bind 127.0.0.1 --directory site > "${{ runner.temp }}/legal-server.log" 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
+          python - "http://127.0.0.1:8765/apps/legal-lab/demo.html" "site/apps/legal-lab/demo.html" <<'PY'
+          import hashlib
+          import http.client
+          import pathlib
+          import sys
+          import time
+          import urllib.parse
+
+          url, expected_path = sys.argv[1:]
+          target = urllib.parse.urlsplit(url)
+          if target.scheme != "http" or target.hostname != "127.0.0.1" or target.path != "/apps/legal-lab/demo.html" or target.query or target.fragment or target.username or target.password:
+              sys.exit("Readiness probe only accepts the local Legal Lab demo URL")
+          expected = pathlib.Path(expected_path).read_bytes()
+          expected_sha256 = hashlib.sha256(expected).hexdigest()
+          deadline = time.monotonic() + 30.0
+          attempts = 0
+          last_error = "No HTTP response"
+          last_response = "No complete HTTP response"
+          while time.monotonic() < deadline:
+              attempts += 1
+              connection = http.client.HTTPConnection("127.0.0.1", target.port, timeout=min(1.0, max(0.001, deadline - time.monotonic())))
+              try:
+                  connection.request("GET", "/apps/legal-lab/demo.html")
+                  response = connection.getresponse()
+                  status = response.status
+                  actual = response.read(len(expected) + 1)
+                  if status == 200 and actual == expected:
+                      print(f"HTTP ready: {url}; attempts={attempts}; bytes={len(actual)}; sha256={expected_sha256}", flush=True)
+                      break
+                  last_error = f"HTTP {status}; sampled_bytes={len(actual)}; sampled_sha256={hashlib.sha256(actual).hexdigest()}"
+                  last_response = last_error
+              except (OSError, http.client.HTTPException) as error:
+                  last_error = f"{type(error).__name__}: {error}"
+              finally:
+                  connection.close()
+              time.sleep(min(0.2, max(0.0, deadline - time.monotonic())))
+          else:
+              print(f"HTTP readiness timed out after 30s: {url}; expected={expected_path}; expected_bytes={len(expected)}; expected_sha256={expected_sha256}; attempts={attempts}; last_response={last_response}; last_error={last_error}", file=sys.stderr, flush=True)
+              sys.exit(1)
+          PY
           node scripts/test_legal_lab_browser.mjs --base http://127.0.0.1:8765/ --browsers "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-browser"
       - uses: actions/upload-artifact@v4
         if: always()
