@@ -1,0 +1,394 @@
+{
+  "module": "legal-lab",
+  "contentVersion": "legal-lab-2026-10-15.2",
+  "base": "site-root-relative",
+  "files": [
+    {
+      "url": "apps/legal-lab/assets/help/lecture-36.webp",
+      "bytes": 60908,
+      "sha256": "6655caae9e499fa789a8fb392782079949e229965229aa16f92ef876cca91045"
+    },
+    {
+      "url": "apps/legal-lab/assets/help/lecture-48.webp",
+      "bytes": 61596,
+      "sha256": "bc77656ea32f1903675ee7e9fea3bb9f19f17023a07d3df70eca590a6a010785"
+    },
+    {
+      "url": "apps/legal-lab/assets/help/lecture-58.webp",
+      "bytes": 77212,
+      "sha256": "b90adb9bd439996722a1566d674f6a97430fdf515eba6165d36ad72ad64f7558"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-27-1.webp",
+      "bytes": 83322,
+      "sha256": "9fe51eda32d05ec6538ba5f4065d2b3d4c2d69dcb297cd02728900e1cfeb5182"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-27-2.webp",
+      "bytes": 27622,
+      "sha256": "165953db7e530a9006007f5807a52cb9e8e89b82afe47f3b6cc54c3ab824a8e2"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-29-1.webp",
+      "bytes": 84742,
+      "sha256": "97ead78f34228ef658ef02959507f512ab6c59d7514d3bdb09894b5211edcac7"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-29-2.webp",
+      "bytes": 33898,
+      "sha256": "4efe39686209ed925ec49020c67f6ee63c9a8945d75b2eec664644cbb7161d95"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-31-1.webp",
+      "bytes": 52252,
+      "sha256": "d5033d1b453b038131ee120905600ca69e14ddec436befc4a4d84ef6f3e65d3b"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-31-2.webp",
+      "bytes": 67882,
+      "sha256": "23533c241b653652b9cc33da61a5fd3074f642adc25d972ba3c4ee4f81561f7f"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-31-3.webp",
+      "bytes": 258012,
+      "sha256": "4877d5707f7cc9fe4a8d90e269a2f83fedecb376957311c3cf286b32cd37972c"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-33-1.webp",
+      "bytes": 237904,
+      "sha256": "7e1532b97af8efa01c0473c2e6c32e8b06f29d17a7a70170b2be4546f12c9729"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-33-2.webp",
+      "bytes": 102176,
+      "sha256": "42dd7ca09553828ab20c84d9af4d8abc8044d16de3bfea5d73320eafa1be1977"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-35-1.webp",
+      "bytes": 113112,
+      "sha256": "394b2cc85f22d98dfd4741422aa161e0b29b9316839d19473af65b591f180944"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-35-2.webp",
+      "bytes": 340110,
+      "sha256": "b80cb1ff568fabf050b11329419c51f1eb43cdbcb26941be6ab0f02d035f0497"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-39-1.webp",
+      "bytes": 246564,
+      "sha256": "709af01ee242d0c9a572fc2f041b674979dfcf022ae4c3e8e03f1c69163c6b7c"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-39-2.webp",
+      "bytes": 180916,
+      "sha256": "c9c313259334d41c076a52c8038860cc2a51999223e4a1d6da1a625f3136a0d5"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-39-3.webp",
+      "bytes": 105470,
+      "sha256": "255eba2ee4972c3ab4fd6fb553bf52c5b5f13862128a35e35ed38f45be06bf79"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-41-1.webp",
+      "bytes": 128872,
+      "sha256": "f1a5ce64a2940c5af733a83b200c09801051d25b0783a5f88ccff06ce12d3d3d"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-41-2.webp",
+      "bytes": 67292,
+      "sha256": "4dfe1db67e5584e3a1ebdf6a8fbb02bc67703c384386fcbbbdb1f054aa25be8e"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-43-1.webp",
+      "bytes": 73210,
+      "sha256": "b6cab2431271c0f34a2fff6987b3a62efd3cdb7ba37fccd900bb053348f4a375"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-43-2.webp",
+      "bytes": 123042,
+      "sha256": "1690aea0749c4f160d504e5d41159f38edfe193744f0b7714f360ef07f13883b"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-45-1.webp",
+      "bytes": 193336,
+      "sha256": "91500b73472627607baaf11b1ce1a456530615d742cb931983faa52d70059326"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-45-2.webp",
+      "bytes": 121524,
+      "sha256": "efb81ccd32d57c3a20f41f60339335cfef43c3a4e949cca9736be22c61234e9f"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-45-3.webp",
+      "bytes": 115354,
+      "sha256": "45b095b24639a76e2b0f51db3aebd935e0100543606958c4c7a148c4bcb05872"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-47-1.webp",
+      "bytes": 280220,
+      "sha256": "0a77e838239ec2e0423f1e516647164deabb33cc9ffd7a42c1293d0ba9c3eaa7"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-47-2.webp",
+      "bytes": 312096,
+      "sha256": "e15c041d5b1c6ceaeeb0c02701306e29bcbb1411afdc630c67630598277a5025"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-47-3.webp",
+      "bytes": 159754,
+      "sha256": "28c859103f1b514e5003485859f002c3518bba4fa2b6c0898421c276b028e89f"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-51-1.webp",
+      "bytes": 786804,
+      "sha256": "a57d0ca52ca1c5a6cd58151e23b68a1e0bfbfdc1a01cdada6050e0e0797c5cfb"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-51-2.webp",
+      "bytes": 431206,
+      "sha256": "00fd4eb8015c0b4781810cacf102209834366999e8907d6fd524a9e5b521e3de"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-53-1.webp",
+      "bytes": 254818,
+      "sha256": "59bf40b8a4aeb7a18d0bec7a8159d0b893292f7029ae4a9a14714fa4784bad50"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-53-2.webp",
+      "bytes": 372096,
+      "sha256": "dba199ba61d87ff1c9282402fcd6be39600ecfd16fb4e03ffca8c5b297f19e13"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-53-3.webp",
+      "bytes": 161330,
+      "sha256": "d56e1b605570e1f006195d3e0924b7288bbc2f26c9643114e98b7cc6758c1c96"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-55-1.webp",
+      "bytes": 288642,
+      "sha256": "cc96a9ef4ee378090686b456c2db735f410867364486800c2997b4fc3fa1335e"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-55-2.webp",
+      "bytes": 345444,
+      "sha256": "8f475b0fa4870208094fc361f5969e8ef888713f9dbc0d1e03704314e2d0bde9"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-57-1.webp",
+      "bytes": 88582,
+      "sha256": "b1b01a248209dae12774ff96fbd47474e88a454f5582d0f284952302ff31c4bc"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-57-2.webp",
+      "bytes": 235722,
+      "sha256": "b7b7e7d01f929c188a593d572cf166c8d27aa83ba0b055c2e0998d47181380a3"
+    },
+    {
+      "url": "apps/legal-lab/assets/scans/slide-57-3.webp",
+      "bytes": 386222,
+      "sha256": "7e621731ec717f2b032eeaa0c35858b84720aa7b788f409a0bcafd355c7b3f6e"
+    },
+    {
+      "url": "apps/legal-lab/data/anchors.json",
+      "bytes": 83909,
+      "sha256": "1ca9ffa57b7dc200123c514256adf41e54d17d4c07f0dc208cd0cbe25a641b5a"
+    },
+    {
+      "url": "apps/legal-lab/data/bank.json",
+      "bytes": 37420,
+      "sha256": "c36ad462bc8ff137bb0f89094d1b4c97a701ad79e82b5c0054609027a17a727a"
+    },
+    {
+      "url": "apps/legal-lab/data/cases.json",
+      "bytes": 48974,
+      "sha256": "523b88fde17f071ae8334b0299fedec553807f1d7338874ffe85f90c3f472d3c"
+    },
+    {
+      "url": "apps/legal-lab/data/catalog.json",
+      "bytes": 17526,
+      "sha256": "6310006e0ded08efb2813df7cf55946a2ff3bd6355a891f2a65300e518da2066"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/archive122.json",
+      "bytes": 465024,
+      "sha256": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/civil79.json",
+      "bytes": 1016624,
+      "sha256": "c1c1e75081657bd2d9e1021968041bbf1f264746d22d8789a30a1a3ca1e638d1"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/constitution.json",
+      "bytes": 600922,
+      "sha256": "693dc24b02bbd0551658ae0ee127d28aba9a78f5bfd6cda7dd02cfe2769c425b"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/corruption273.json",
+      "bytes": 441495,
+      "sha256": "2279e93b7d4e2a484f0f2538709eae35f09ffef3c2e45ff8dbc08917f95b12c7"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/ekb.json",
+      "bytes": 601110,
+      "sha256": "52937be4c1367115b5cb27e28543f78a3cb522c8559e3b46ee9957ca8ec26658"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow3-rank-table-p7.png",
+      "bytes": 128992,
+      "sha256": "25d665aafdd9da98b4fcfc7e9518022028b808222c22ae0944e3c309d7883bf6"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow3-rank-table-p8.png",
+      "bytes": 114975,
+      "sha256": "833ddcbe7db375f35dbb9bfd34a074885abfbd47b61761faa6a32c2092159e90"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p36.png",
+      "bytes": 89437,
+      "sha256": "f1f784c48cd0f29fbe932a1c7a18609e7d81b532b5e86bc8de70f4d08349b7d0"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p37.png",
+      "bytes": 152426,
+      "sha256": "654e0f387f425a66ef3f7bf0af2516fab5a3c8e134d94c6477dc769afc57a3a3"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p38.png",
+      "bytes": 156743,
+      "sha256": "472e5a821fbf0fe3e625bff2e5297b904f3c9375079041c4e1fb93838a63e989"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p39.png",
+      "bytes": 133644,
+      "sha256": "0b104df98d598703a4b3d57023baeba908bfe2f51b1ccadedaaaa16ea04f7816"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p40.png",
+      "bytes": 104153,
+      "sha256": "7e7261b5ed051a2e2e7d21a0b88931d5a7433ad7451ded86cf38e4d260116887"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p41.png",
+      "bytes": 148330,
+      "sha256": "d4b93cbff3dedceb3d9b050e926c3bd9f7bf35312c5dd105e9190905dddc62f4"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/figures/moscow35-annex6-p42.png",
+      "bytes": 188633,
+      "sha256": "97e2dde034d141dcaeb0e77b6cc2ca266a3add6979d2ec2d6a7e824323d0fdc6"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/goals309.json",
+      "bytes": 79786,
+      "sha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/koap.json",
+      "bytes": 11399322,
+      "sha256": "f322d2c34e67d180baf7b8ba1edf389157805e36d57e5b95dd5b2af9b17e7d09"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/local33.json",
+      "bytes": 1487927,
+      "sha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/moscow3.json",
+      "bytes": 715892,
+      "sha256": "4945989c2c342c31fec4683e91fcbd86aa13fd16648c0fcd55890b499f8325e1"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/moscow35.json",
+      "bytes": 584036,
+      "sha256": "7bf5631df4944d6ac402a1e83053c747cad6ca949d15d1ce88e4e4f1a5b21cae"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/moscow50.json",
+      "bytes": 691067,
+      "sha256": "4ddb89b586019be059bf653d52d097f1c646b49d6e3941c92cb1718b3724969f"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/municipal25.json",
+      "bytes": 375691,
+      "sha256": "9b5d628add853665dd15cfd4b968b7a906ebddbe8cc0b27e5887da49e67a5da4"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/procurement44.json",
+      "bytes": 2546065,
+      "sha256": "706b04d952285f39246a3df60e7237a91c607e09682a2354510622b29169a65d"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/realty218.json",
+      "bytes": 2622795,
+      "sha256": "c7e0f4dc800436e2e07ee1145891bf19b9081bba176934dd09b5fb0f668e00e8"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/spatial.json",
+      "bytes": 515769,
+      "sha256": "d229cd97b7b4a5cbe67f1b0fbcbca9b986e017bc8bca703b3560bab1c4940929"
+    },
+    {
+      "url": "apps/legal-lab/data/documents/system58.json",
+      "bytes": 161487,
+      "sha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e"
+    },
+    {
+      "url": "apps/legal-lab/data/scans.json",
+      "bytes": 25620,
+      "sha256": "155e652f4353bd2fd1bdb290afcb5105e6c6a9ba6af87609b5e403c3e93e0627"
+    },
+    {
+      "url": "apps/legal-lab/demo.html",
+      "bytes": 2762,
+      "sha256": "6a61a71c84d2f3babae215538b1e918ec1a1b826d96fbabe6e7995ba14309f54"
+    },
+    {
+      "url": "apps/legal-lab/entry.mjs",
+      "bytes": 70856,
+      "sha256": "0ebb6f162a3790bea8127d5345ceca92d85fdfa4101a109fa834afde2d21d1e2"
+    },
+    {
+      "url": "apps/legal-lab/lib/core.mjs",
+      "bytes": 10044,
+      "sha256": "a2bd10d8445a6569213d0bf07db31b2933dd7def997dc38150a195d775507488"
+    },
+    {
+      "url": "apps/legal-lab/lib/corpus.mjs",
+      "bytes": 3231,
+      "sha256": "493a5cdad8a9ded222f805368dbb17a32b176572fe6c7a17cc88ebe8d12bb65f"
+    },
+    {
+      "url": "apps/legal-lab/lib/live.mjs",
+      "bytes": 16397,
+      "sha256": "ae05e85497785f251c2ca336efa195933abfa96996e6f3791a3eea7b26577df0"
+    },
+    {
+      "url": "apps/legal-lab/lib/storage.mjs",
+      "bytes": 3945,
+      "sha256": "6e30dfec24f4e1b43a531bcdfeb904c3eaf7eb66a8ab4b644cced5ab63422d41"
+    },
+    {
+      "url": "apps/legal-lab/locales/content.mjs",
+      "bytes": 37372,
+      "sha256": "e978522f48d13722cd4c62f8953e65be0a8759d3925be25f9d52511db0e96342"
+    },
+    {
+      "url": "apps/legal-lab/locales/ui.mjs",
+      "bytes": 30264,
+      "sha256": "16adf155b98fc67640bbb117d3225b1beb9c0d4a8c2956d6394eb4d7d579de4a"
+    },
+    {
+      "url": "apps/legal-lab/platform.mjs",
+      "bytes": 6750,
+      "sha256": "cd977f38bfc9e01056d27379664a422738d352696905a72aeb146792adafed19"
+    },
+    {
+      "url": "apps/legal-lab/style.css",
+      "bytes": 33890,
+      "sha256": "025c9fcfd11bb3ad7b3e076d593da75b1857592c191ad4c549a861438b59aa12"
+    }
+  ],
+  "totalBytes": 33010569,
+  "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
+}

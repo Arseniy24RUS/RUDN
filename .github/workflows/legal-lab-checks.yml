@@ -1,0 +1,124 @@
+name: Legal Lab release checks
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'site/apps/legal-lab/**'
+      - 'site/assets/js/main.js'
+      - 'site/assets/js/backend.js'
+      - 'site/assets/js/checkpoint-sync.js'
+      - 'site/assets/js/durable-store.js'
+      - 'site/assets/js/legal-lab-storage.js'
+      - 'site/assets/js/seminar-modules.js'
+      - 'site/assets/js/teacher-journal.js'
+      - 'site/data/course.json'
+      - 'site/service-worker.js'
+      - 'firebase/database.rules.json'
+      - 'scripts/*legal*'
+      - 'tests/legal-lab*'
+      - 'tools/legal-lab/**'
+      - '.github/workflows/legal-lab-checks.yml'
+      - '.github/workflows/deploy-pages.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legal-lab-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  corpus-and-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - name: Verify acquisition regressions without downloading new acts
+        run: |
+          python -m pip install -r tools/legal-lab/corpus-requirements.txt
+          python -X utf8 -m unittest discover -s tools/legal-lab/tests -p corpus_regression_test.py -v
+      - name: Verify scoring, stable history, drafts and room lifecycle
+        run: node --test tests/legal-lab-core.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+      - name: Reject a result from a conflicting branch before grading
+        run: node scripts/test_legal_lab_conflict.mjs
+      - name: Verify full corpus, references, translations and release hashes
+        run: |
+          node scripts/build_legal_lab_manifest.mjs --check
+          node scripts/test_legal_lab_corpus.mjs --output "${{ runner.temp }}/legal-corpus"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-corpus
+          path: ${{ runner.temp }}/legal-corpus
+          retention-days: 14
+
+  rooms-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --ignore-scripts
+      - name: Verify Auth and Database rules with thirty synthetic participants
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test --test-force-exit scripts/test_legal_rooms_emulator.mjs"
+      - name: Restore cloud drafts, retain conflicts and deliver results without duplicate attempts
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_sync_emulator.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-emulator
+          path: '*-debug.log'
+          retention-days: 14
+
+  browsers:
+    needs: corpus-and-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare actual browser runtime
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Exercise real module UI, languages, viewports and dossier reports
+        shell: bash
+        run: |
+          python -u -m http.server 8765 --bind 127.0.0.1 --directory site > "${{ runner.temp }}/legal-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          node scripts/test_legal_lab_browser.mjs --base http://127.0.0.1:8765/ --browsers "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-browser"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-browser-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/legal-browser
+            ${{ runner.temp }}/legal-server.log
+          retention-days: 14

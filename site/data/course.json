@@ -37,7 +37,8 @@
         "title": "Семинар 1. Квиз: ветви и уровни власти",
         "points": 5,
         "title_en": "Seminar 1. Branches and levels of public authority",
-        "title_zh": "研讨课1：公共权力的分支与层级"
+        "title_zh": "研讨课1：公共权力的分支与层级",
+        "module": "quiz"
       },
       "title_en": "Institutional foundations of state and municipal administration",
       "title_zh": "国家与市政管理的制度基础",
@@ -76,7 +77,8 @@
         "title": "Семинар 2. Онлайн-пазл: карта регионов России",
         "points": 5,
         "title_en": "Seminar 2. Interactive map puzzle",
-        "title_zh": "研讨课2：互动地图拼图"
+        "title_zh": "研讨课2：互动地图拼图",
+        "module": "maps"
       },
       "title_en": "Administrative-territorial organisation of Russia",
       "title_zh": "俄罗斯行政区划体系",
@@ -115,7 +117,8 @@
         "title": "Семинар 3. Игра «Система расселения»",
         "points": 5,
         "title_en": "Seminar 3. Settlement System game",
-        "title_zh": "研讨课3：聚落系统游戏"
+        "title_zh": "研讨课3：聚落系统游戏",
+        "module": "settlements"
       },
       "title_en": "Russia’s settlement system",
       "title_zh": "俄罗斯居民点体系",
@@ -132,7 +135,7 @@
       "title": "Нормативные правовые акты и распорядительные документы",
       "short_title": "Нормативные правовые акты России",
       "summary": "Понятие и иерархия нормативных правовых актов, ключевые правовые массивы, организационные, распорядительные и информационно-справочные документы.",
-      "seminar_title": "Квиз: нормативные правовые акты",
+      "seminar_title": "На подпись: нормативные правовые акты",
       "lecture": {
         "slug": "lecture-4",
         "title": "Лекция 4. Нормативные правовые акты России",
@@ -151,10 +154,11 @@
       },
       "seminar": {
         "slug": "seminar-4",
-        "title": "Семинар 4. Квиз: нормативные правовые акты",
+        "title": "Семинар 4. На подпись: нормативные правовые акты",
         "points": 5,
-        "title_en": "Seminar 4. Normative legal acts quiz",
-        "title_zh": "研讨课4：规范性法律文件测验"
+        "title_en": "Seminar 4. Ready for Signature: Legal Acts",
+        "title_zh": "研讨课4：呈签——规范性法律文件",
+        "module": "legal-lab"
       },
       "title_en": "Normative legal acts and administrative instruments",
       "title_zh": "规范性法律文件与行政公文",
@@ -162,8 +166,8 @@
       "short_title_zh": "规范性法律文件",
       "summary_en": "The hierarchy and types of normative legal acts and organisational, administrative, information and reference documents.",
       "summary_zh": "规范性法律文件的层级与类型，以及组织性、行政处分性、信息与参考性公文。",
-      "seminar_title_en": "Seminar 4. Normative legal acts quiz",
-      "seminar_title_zh": "研讨课4：规范性法律文件测验"
+      "seminar_title_en": "Ready for Signature: Legal Acts",
+      "seminar_title_zh": "呈签：规范性法律文件"
     },
     {
       "number": 5,
@@ -171,7 +175,7 @@
       "title": "Государственная и муниципальная служба",
       "short_title": "Государственная и муниципальная служба",
       "summary": "Нормативные основы службы, виды государственной службы, права и ограничения, категории и группы должностей, классные чины, конкурс и кадровый резерв.",
-      "seminar_title": "Практикум: обращения граждан",
+      "seminar_title": "Профориентация и государственная служба",
       "lecture": {
         "slug": "lecture-5",
         "title": "Лекция 5. Государственная и муниципальная служба",
@@ -189,11 +193,12 @@
         "title_zh": "第5讲：国家公务与市政公务"
       },
       "seminar": {
-        "slug": "seminar-5",
-        "title": "Семинар 5. Практикум: обращения граждан",
+        "slug": "seminar-6",
+        "title": "Семинар 5. Профориентация и государственная служба",
         "points": 5,
-        "title_en": "Seminar 5. Citizens’ petitions",
-        "title_zh": "研讨课5：公民来信办理"
+        "title_en": "Seminar 5. Career guidance and public service",
+        "title_zh": "研讨课5：职业倾向与公共服务",
+        "module": "career"
       },
       "title_en": "State and municipal service",
       "title_zh": "国家公务与市政公务",
@@ -201,8 +206,8 @@
       "short_title_zh": "公务制度",
       "summary_en": "Principles of public service, categories and groups of posts, class ranks, competitive selection and personnel reserves.",
       "summary_zh": "公务制度原则、职位类别与组别、职级称号、竞争性选拔和后备人才库。",
-      "seminar_title_en": "Seminar 5. Citizens’ petitions",
-      "seminar_title_zh": "研讨课5：公民来信办理"
+      "seminar_title_en": "Career guidance and public service",
+      "seminar_title_zh": "职业倾向与公共服务"
     },
     {
       "number": 6,
@@ -210,7 +215,7 @@
       "title": "Документооборот и делопроизводство в системе ГМУ",
       "short_title": "Документооборот и делопроизводство",
       "summary": "Жизненный цикл документа, реквизиты, регистрация, резолюция, контроль исполнения, архивирование, обращения граждан и электронный документооборот.",
-      "seminar_title": "Профориентация и государственная служба",
+      "seminar_title": "Практикум: обращения граждан",
       "lecture": {
         "slug": "lecture-6",
         "title": "Лекция 6. Документооборот и делопроизводство",
@@ -228,11 +233,12 @@
         "title_zh": "第6讲：文件流转与文书管理"
       },
       "seminar": {
-        "slug": "seminar-6",
-        "title": "Семинар 6. Профориентация и государственная служба",
+        "slug": "seminar-5",
+        "title": "Семинар 6. Практикум: обращения граждан",
         "points": 5,
-        "title_en": "Seminar 6. Career guidance and public service",
-        "title_zh": "研讨课6：职业倾向与公共服务"
+        "title_en": "Seminar 6. Citizens’ petitions",
+        "title_zh": "研讨课6：公民来信办理",
+        "module": "reception"
       },
       "title_en": "Document flow and records management",
       "title_zh": "文件流转与文书管理",
@@ -240,8 +246,8 @@
       "short_title_zh": "文书管理",
       "summary_en": "The official language, document particulars, records management, citizens’ petitions and personal-data protection.",
       "summary_zh": "公务语言、公文要素、文书管理、公民来信及个人数据保护。",
-      "seminar_title_en": "Career guidance and public service",
-      "seminar_title_zh": "职业倾向与公共服务"
+      "seminar_title_en": "Citizens’ petitions",
+      "seminar_title_zh": "公民来信办理"
     },
     {
       "number": 7,
@@ -271,7 +277,8 @@
         "title": "Семинар 7. Симулятор деятельности губернатора",
         "points": 5,
         "title_en": "Seminar 7. Governor simulator",
-        "title_zh": "研讨课7：行政长官模拟器"
+        "title_zh": "研讨课7：行政长官模拟器",
+        "module": "governor"
       },
       "title_en": "Strategic management and the budget process",
       "title_zh": "战略管理与预算过程",
@@ -310,7 +317,8 @@
         "title": "Семинар 8. Итоговый тест",
         "points": 5,
         "title_en": "Seminar 8. Final course test",
-        "title_zh": "研讨课8：课程期末测验"
+        "title_zh": "研讨课8：课程期末测验",
+        "module": "final"
       },
       "title_en": "Professional success strategy in state and municipal service",
       "title_zh": "国家与市政公务职业发展战略",

@@ -1,5 +1,5 @@
-import {backend,groupOptions} from './backend.js?v=1.3.9';
-import {getLocale} from './i18n.js?v=1.3.9';
+import {backend,groupOptions} from './backend.js?v=1.3.10';
+import {getLocale} from './i18n.js?v=1.3.10';
 import {officialTicket,absentFromRoster} from './student-identity.js';
 
 const COPY={
@@ -7,9 +7,9 @@ const COPY={
   en:{title:'Gradebook',groups:'Study groups',search:'Search by name or student ID',name:'Name / student ID',topic:'Topic',lecture:'Lecture',seminar:'Seminar',quiz:'Quiz',work:'Independent work',exam:'Exam',total:'Total',registered:'Registered',results:'With results',average:'Average total',activityAverage:'Average',submitted:'With a result',export:'Download CSV',refresh:'Refresh',edit:'Grades',empty:'No students match these filters',cached:'Cached copy',updated:'Updated',settings:'Course settings'},
   zh:{title:'成绩册',groups:'班级',search:'按姓名或学号搜索',name:'姓名 / 学号',topic:'主题',lecture:'讲座',seminar:'研讨课',quiz:'测验',work:'自主作业',exam:'考试',total:'总分',registered:'已注册',results:'有成绩',average:'平均总分',activityAverage:'平均分',submitted:'有结果',export:'下载 CSV',refresh:'刷新',edit:'成绩',empty:'没有符合筛选条件的学生',cached:'缓存副本',updated:'更新时间',settings:'课程设置'}
 };
-Object.assign(COPY.ru,{reportPresent:'Есть отчёт',viewReports:'Открыть отчёты симулятора'});
-Object.assign(COPY.en,{reportPresent:'Report available',viewReports:'Read simulator reports'});
-Object.assign(COPY.zh,{reportPresent:'有报告',viewReports:'查看模拟器报告'});
+Object.assign(COPY.ru,{viewLegalReports:'Открыть досье',reportPresent:'Есть отчёт',viewReports:'Открыть отчёты симулятора'});
+Object.assign(COPY.en,{viewLegalReports:'Read legal dossier',reportPresent:'Report available',viewReports:'Read simulator reports'});
+Object.assign(COPY.zh,{viewLegalReports:'查看法律档案',reportPresent:'有报告',viewReports:'查看模拟器报告'});
 Object.assign(COPY.ru,{
   loading:'Загружаем журнал…',updating:'Обновляем журнал…',
   waiting:'Журнал обновится автоматически после восстановления соединения.',
@@ -52,7 +52,8 @@ export function journalModel(snapshot,topics){
     values['seminar-1-classroom']=attempts.length?Math.max(...attempts.map(a=>numeric(a.points))):null;
     const total=numeric(columns.filter(c=>!c.ungraded).reduce((sum,c)=>sum+(values[c.slug]??0),0));
     const hasGovernorReports=Object.values(snapshot.attempts?.[profile.studentKey]||{}).some(a=>a?.studentKey===profile.studentKey&&a.activitySlug==='seminar-7'&&a.type==='governor-simulator'&&a.source==='native-v1'&&a.governor&&typeof a.governor==='object');
-    return {profile,values,total,hasResults:columns.some(c=>values[c.slug]!==null),hasGovernorReports,absentFromOfficialRoster:absentFromRoster(profile,snapshot.rosterAbsences)};
+    const hasLegalLabReports=Object.values(snapshot.attempts?.[profile.studentKey]||{}).some(a=>a?.studentKey===profile.studentKey&&a.activitySlug==='seminar-4'&&a.type==='legal-lab'&&a.legalLab);
+    return {hasLegalLabReports,profile,values,total,hasResults:columns.some(c=>values[c.slug]!==null),hasGovernorReports,absentFromOfficialRoster:absentFromRoster(profile,snapshot.rosterAbsences)};
   }).sort((a,b)=>String(a.profile.group).localeCompare(String(b.profile.group))||String(a.profile.fullName).localeCompare(String(b.profile.fullName),'ru'));
   return {columns,rows};
 }
@@ -157,7 +158,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
             <tr>${columns.filter(column=>column.topic).map(column=>`<th class="${column.ungraded?'ungraded':''}">${label(column)}</th>`).join('')}</tr></thead>
           <tbody>${groupRows.map(row=>`<tr data-student-key="${esc(row.profile.studentKey)}">
             <th scope="row" class="student-sticky"><span${row.absentFromOfficialRoster?' class="student-name-absent"':''}>${esc(row.profile.fullName||officialTicket(row.profile))}</span><small>${esc(officialTicket(row.profile))}</small></th>
-            ${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}
+            ${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-4'&&row.hasLegalLabReports?`<br><button class="badge" type="button" data-legal-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewLegalReports)}">${esc(c.reportPresent)}</button>`:''}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}
             <td class="journal-total">${row.profile.rosterOnly?'—':row.total}</td><td>${row.profile.rosterOnly?'':`<button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button>`}</td></tr>`).join('')}
             <tr class="journal-statistics"><th class="student-sticky">${c.submitted}</th>${statistics.map(stat=>`<td>${stat.count}</td>`).join('')}<td>${withResults.length}</td><td></td></tr>
             <tr class="journal-statistics"><th class="student-sticky">${c.activityAverage}</th>${statistics.map(stat=>`<td>${stat.mean}</td>`).join('')}<td>${average}</td><td></td></tr>
@@ -169,6 +170,9 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
     });
     rowsHost.querySelectorAll('[data-grade-edit]').forEach(button=>{
       button.onclick=()=>{if(canEdit())onEdit(button.dataset.gradeEdit,snapshot)};
+    });
+    rowsHost.querySelectorAll('[data-legal-review]').forEach(button=>{
+      button.onclick=()=>{if(current())onEdit(button.dataset.legalReview,snapshot)};
     });
     rowsHost.querySelectorAll('[data-governor-review]').forEach(button=>{
       button.onclick=()=>{if(current())onEdit(button.dataset.governorReview,snapshot)};

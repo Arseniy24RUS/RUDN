@@ -1,0 +1,153 @@
+{
+  "reviewKind": "synthetic-content-review",
+  "reviewedAt": "2026-10-15T16:48:59.070292+00:00",
+  "status": "pass",
+  "manifestSha256": "5cda8ea18c392cbc7a1ad333ec4f63a98612888c5d1da7df8aa4c2ff35c6c738",
+  "documents": [
+    {
+      "id": "archive122",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\archive122.json",
+      "fileSha256": "a35a2e6da5c5a234327185f5c2c0c0f73481f4362b2b91497340276af3f8db3c",
+      "unitsSha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+      "units": 467,
+      "sections": 49,
+      "revisionLabel": "Редакция от 10.07.2012, действующая с 12.07.2012"
+    },
+    {
+      "id": "civil79",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\civil79.json",
+      "fileSha256": "d956e99427097f1808d51d472e89b81bd0e7dbaf9776a580b88e0057b63e6f4f",
+      "unitsSha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+      "units": 1038,
+      "sections": 103,
+      "revisionLabel": "Редакция от 08.03.2026; сведения о постановлении КС РФ от 29.09.2026 №56-П сохранены в метаданных источника"
+    },
+    {
+      "id": "constitution",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\constitution.json",
+      "fileSha256": "3daa732a9b69976d2f531bb809d9943012c779ad76b145385db659013b89b8e9",
+      "unitsSha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+      "units": 717,
+      "sections": 158,
+      "revisionLabel": "Текст с изменениями 2020 года и изменениями состава Российской Федерации 2022 года"
+    },
+    {
+      "id": "corruption273",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\corruption273.json",
+      "fileSha256": "8eb99131f96b718297a7ce01558234de1f23e6e62f2d3346d7acc0733f42013e",
+      "unitsSha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+      "units": 351,
+      "sections": 29,
+      "revisionLabel": "Редакция от 25.04.2026"
+    },
+    {
+      "id": "ekb",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\ekb.json",
+      "fileSha256": "fabc7649769bd4dbea9069165e2527621cfe6e631a771ead5554cf2c4afb1249",
+      "unitsSha256": "9e0763b7796ddd0eff3ede9f4001c4d7badaa86e5984cbec27425866a5ddd19d",
+      "units": 877,
+      "sections": 82,
+      "revisionLabel": "С изменениями по решению Екатеринбургской городской Думы от 23.12.2025"
+    },
+    {
+      "id": "goals309",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\goals309.json",
+      "fileSha256": "c6b863d8378846a2f4c0366fa9dc34ff96add1d7f76c2a057adb05f495f53c35",
+      "unitsSha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+      "units": 127,
+      "sections": 13,
+      "revisionLabel": "Указ от 07.05.2024 №309, первоначальная редакция"
+    },
+    {
+      "id": "koap",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\koap.json",
+      "fileSha256": "0e8315b5a175cf29b049427a532eb9c5d58c91188d96cddb13aa6fb2f278e48c",
+      "unitsSha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+      "units": 9493,
+      "sections": 1292,
+      "revisionLabel": "Редакция от 04.08.2026"
+    },
+    {
+      "id": "local33",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\local33.json",
+      "fileSha256": "238be6e4486baa479f34d46a520a8431957864dc946e1a645f6232006e1d46e9",
+      "unitsSha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+      "units": 1448,
+      "sections": 107,
+      "revisionLabel": "Редакция от 09.04.2026"
+    },
+    {
+      "id": "moscow3",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow3.json",
+      "fileSha256": "19646c3b5bc8da4705a9287db8b97e5821d608798a764c1e61844841d0c9bbfb",
+      "unitsSha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+      "units": 828,
+      "sections": 83,
+      "revisionLabel": "Редакция от 25.03.2026, действующая с 10.04.2026"
+    },
+    {
+      "id": "moscow35",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow35.json",
+      "fileSha256": "acf85a6e4331e30eab348ad1c2e2e5499d147e2c2f76eb79e7edb8913a9ec494",
+      "unitsSha256": "0ee1a8bf5c488775c9c26a5d158d089bb3ca18c3a832306b7c0b29dbebbb3d17",
+      "units": 692,
+      "sections": 84,
+      "revisionLabel": "Редакция от 08.06.2026, действующая с 08.06.2026"
+    },
+    {
+      "id": "moscow50",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow50.json",
+      "fileSha256": "17b734768d0cecb8140f0da0f9bb07cce10d1431e0f9e91141385b3f6667a97b",
+      "unitsSha256": "e833541407417bdfc726ed668851d70ee1206746992e11419ab66ca44527acb5",
+      "units": 844,
+      "sections": 68,
+      "revisionLabel": "Редакция от 25.03.2026, действующая с 30.03.2026"
+    },
+    {
+      "id": "municipal25",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\municipal25.json",
+      "fileSha256": "857057725f98db94b4b6d86c3109a734c893c755a5348a871110a717869dc2c9",
+      "unitsSha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+      "units": 383,
+      "sections": 56,
+      "revisionLabel": "Редакция от 28.12.2025"
+    },
+    {
+      "id": "procurement44",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\procurement44.json",
+      "fileSha256": "b0415731b3458e4e3a3c838d14e0c37623fff113a2178137a68be132bfe40f4c",
+      "unitsSha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+      "units": 2270,
+      "sections": 121,
+      "revisionLabel": "Редакция от 04.08.2026"
+    },
+    {
+      "id": "realty218",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\realty218.json",
+      "fileSha256": "a966f2b216cf3fd46055db364252fb2af9d0fc29b8ca0fc1dd5e61c41376177c",
+      "unitsSha256": "b31c47516c4cc42de750ff36b82dc67e090f55f61e18c29e0ca9738e6d6201b9",
+      "units": 1745,
+      "sections": 103,
+      "revisionLabel": "Редакция от 04.08.2026"
+    },
+    {
+      "id": "spatial",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\spatial.json",
+      "fileSha256": "4881448d2b85d2967a6e7b970dca4dcd069cfc6e74e8c1457f0f805182f5aec5",
+      "unitsSha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+      "units": 630,
+      "sections": 59,
+      "revisionLabel": "Распоряжение от 28.12.2024 №4146-р, первоначальная редакция"
+    },
+    {
+      "id": "system58",
+      "file": "legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\system58.json",
+      "fileSha256": "e22ace20bd3cbc04a1c6ad1cb26683a3e9fa9b042d49a249e8b6b9f8d72d1816",
+      "unitsSha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+      "units": 178,
+      "sections": 27,
+      "revisionLabel": "Редакция от 29.09.2025"
+    }
+  ],
+  "meaning": "SHA256 is over canonical JSON of documents list; pass applies to these exact candidate files. Later metadata changes must retain reviewed units, aliases, sections, source linkage and assets."
+}

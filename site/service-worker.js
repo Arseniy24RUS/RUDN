@@ -1,9 +1,10 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.9-settlements-1-0-route-count`;
+const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-1-0`;
 // Geography and regional plans are requested only by an explicitly opened game.
-const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-leaderboard.js'];
+const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-copy.js','./assets/js/settlements-leaderboard.js'];
+const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.mjs','./apps/legal-lab/style.css','./apps/legal-lab/precache-manifest.json','./apps/legal-lab/lib/core.mjs','./apps/legal-lab/lib/corpus.mjs','./apps/legal-lab/lib/live.mjs','./apps/legal-lab/lib/storage.mjs','./assets/js/legal-lab-storage.js'];
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
@@ -88,10 +89,12 @@ const SHELL=[
   './apps/reception/style.css?v=1.0.1',
   './apps/reception/platform.css?v=1.0.1',
   './','./index.html','./apps/puzzle.html',
-  './assets/css/site.css?v=1.3.9',
-  './assets/css/puzzle.css?v=1.3.9',
-  './assets/js/main.js?v=1.3.9',
-  './assets/js/games-catalog.js?v=1.3.9',
+  './assets/css/site.css?v=1.3.10',
+  './assets/css/puzzle.css?v=1.3.10',
+  './assets/js/main.js?v=1.3.10',
+  './assets/js/games-catalog.js?v=1.3.10',
+  './assets/js/seminar-modules.js',
+  './assets/js/settlements-copy.js',
   './assets/js/career-course.js',
   './assets/js/durable-store.js',
   './assets/js/student-identity.js',
@@ -100,29 +103,29 @@ const SHELL=[
   './assets/js/firebase-gateway.js',
   './assets/js/form-draft.js',
   './assets/js/governor-report-locale.js',
-  './assets/js/backend.js?v=1.3.9',
-  './assets/js/session.js?v=1.3.9',
-  './assets/js/attempt-session.js?v=1.3.9',
-  './assets/js/notifications.js?v=1.3.9',
-  './assets/js/account.js?v=1.3.9',
-  './assets/js/teacher-journal.js?v=1.3.9',
+  './assets/js/backend.js?v=1.3.10',
+  './assets/js/session.js?v=1.3.10',
+  './assets/js/attempt-session.js?v=1.3.10',
+  './assets/js/notifications.js?v=1.3.10',
+  './assets/js/account.js?v=1.3.10',
+  './assets/js/teacher-journal.js?v=1.3.10',
   './assets/vendor/firebase/firebase-core.js',
   './assets/vendor/firebase/firebase-storage.js',
   './assets/vendor/firebase/firebase-shared.js',
-  './assets/js/grading-revisions.js?v=1.3.9',
-  './assets/js/config.js?v=1.3.9',
-  './assets/js/i18n.js?v=1.3.9',
-  './assets/js/quiz.js?v=1.3.9',
-  './assets/js/adaptive-quiz.js?v=1.3.9',
-  './assets/js/access.js?v=1.3.9',
-  './assets/js/puzzle-bootstrap.js?v=1.3.9',
-  './assets/js/puzzle-map-loader.js?v=1.3.9',
-  './assets/js/puzzle-engine.js?v=1.3.9',
-  './assets/js/puzzle-render-geometry.js?v=1.3.9',
-  './assets/js/puzzle-raster-worker.js?v=1.3.9',
-  './assets/js/puzzle-leaderboard.js?v=1.3.9',
+  './assets/js/grading-revisions.js?v=1.3.10',
+  './assets/js/config.js?v=1.3.10',
+  './assets/js/i18n.js?v=1.3.10',
+  './assets/js/quiz.js?v=1.3.10',
+  './assets/js/adaptive-quiz.js?v=1.3.10',
+  './assets/js/access.js?v=1.3.10',
+  './assets/js/puzzle-bootstrap.js?v=1.3.10',
+  './assets/js/puzzle-map-loader.js?v=1.3.10',
+  './assets/js/puzzle-engine.js?v=1.3.10',
+  './assets/js/puzzle-render-geometry.js?v=1.3.10',
+  './assets/js/puzzle-raster-worker.js?v=1.3.10',
+  './assets/js/puzzle-leaderboard.js?v=1.3.10',
   './assets/vendor/xlsx/xlsx-0.20.3.full.min.js',
-  './assets/js/puzzle-storage.js?v=1.3.9',
+  './assets/js/puzzle-storage.js?v=1.3.10',
   './assets/puzzle/vendor/d3.v7.9.0.min.js',
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
@@ -375,14 +378,14 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/world.css"
 ];
 const PUZZLE_SHELL=[
-  './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.9',
-  './assets/js/puzzle-bootstrap.js?v=1.3.9','./assets/js/puzzle-engine.js?v=1.3.9',
-  './assets/js/puzzle-map-loader.js?v=1.3.9',
-  './assets/js/puzzle-render-geometry.js?v=1.3.9',
-  './assets/js/puzzle-raster-worker.js?v=1.3.9',
-  './assets/js/puzzle-leaderboard.js?v=1.3.9',
+  './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.10',
+  './assets/js/puzzle-bootstrap.js?v=1.3.10','./assets/js/puzzle-engine.js?v=1.3.10',
+  './assets/js/puzzle-map-loader.js?v=1.3.10',
+  './assets/js/puzzle-render-geometry.js?v=1.3.10',
+  './assets/js/puzzle-raster-worker.js?v=1.3.10',
+  './assets/js/puzzle-leaderboard.js?v=1.3.10',
   './assets/vendor/xlsx/xlsx-0.20.3.full.min.js',
-  './assets/js/puzzle-storage.js?v=1.3.9','./assets/js/durable-store.js?v=1.3.9',
+  './assets/js/puzzle-storage.js?v=1.3.10','./assets/js/durable-store.js?v=1.3.10',
   './assets/puzzle/vendor/d3.v7.9.0.min.js','./assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/puzzle/data/municipal/catalog.json','./assets/puzzle/data/adm1/manifest.json',
   './assets/puzzle/data/geoboundaries_adm1_catalog.json',
@@ -551,8 +554,9 @@ async function serveRequest(event,networkFirst){
     const available=await matchOwnCache(cache,request);
     // These lazy modules retain stable URLs across releases. A fresh release
     // cache must not inherit stale JS/CSS from the browser's HTTP cache.
-    const freshSettlementsRuntime=!available&&/^apps\/settlements\/runtime\/assets\/(?:js\/.*\.m?js|css\/.*\.css)$/.test(url.pathname.slice(SCOPE.pathname.length));
-    const networkRequest=freshSettlementsRuntime?new Request(request,{cache:'reload'}):request;
+    const modulePath=url.pathname.slice(SCOPE.pathname.length);
+    const freshRuntime=!available&&(/^apps\/settlements\/runtime\/assets\/(?:js\/.*\.m?js|css\/.*\.css)$/.test(modulePath)||/^apps\/legal-lab\/.*\.(?:m?js|css|json)$/.test(modulePath));
+    const networkRequest=freshRuntime?new Request(request,{cache:'reload'}):request;
     const response=await fetchWithDeadline(networkRequest,available?1800:12000);
     if(response.ok){
       // An unavailable/full cache must not turn a successful request into an error.
@@ -598,12 +602,12 @@ self.addEventListener('message',event=>{
   }
   if(event.data?.type!=='PREPARE_MODULE')return;
   const module=event.data.module;
-  const paths=module==='settlements'?SETTLEMENTS_SHELL:module==='puzzle'?PUZZLE_SHELL:module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
+  const paths=module==='settlements'?SETTLEMENTS_SHELL:module==='puzzle'?PUZZLE_SHELL:module==='governor'?GOVERNOR_ASSETS:module==='career'?CAREER_SHELL:module==='legal-lab'?LEGAL_LAB_SHELL:module==='reception'?SHELL.filter(path=>path.includes('/reception/')||path.includes('/calendar')||path.includes('/legal-calendar')):[];
   const extras=Array.isArray(event.data.urls)?event.data.urls.slice(0,250).filter(url=>typeof url==='string'):[];
   event.waitUntil((async()=>{
     const cacheName=inScopeClient(event.source)?await clientRelease(event.source.id)||CACHE:CACHE;
     const result=await prepareResources([...paths,...extras],{cacheName});
-    event.source?.postMessage({type:'MODULE_CACHE_STATUS',module,...result});
+    event.source?.postMessage({type:'MODULE_CACHE_STATUS',module,requestId:event.data.requestId||null,...result});
     if(!result.ready&&cacheName!==CACHE)event.source?.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
   })());
 });

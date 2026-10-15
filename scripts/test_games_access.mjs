@@ -8,10 +8,12 @@ import path from 'node:path';
 import {GAMES,gameAccessGate} from '../site/assets/js/games-catalog.js';
 
 let role='student',now=Date.parse('2026-09-19T12:00:00Z'),overrides={};
+const course=JSON.parse(await readFile(new URL('../site/data/course.json',import.meta.url),'utf8'));
 const model={isAdmin:()=>role==='teacher',getProfile:()=>role==='student'?{}:null,globalNow:()=>now,getAccessOverrides:()=>overrides};
-const available=()=>GAMES.filter(game=>gameAccessGate(game.id,model)?.open!==false).map(game=>game.id);
+const available=()=>GAMES.filter(game=>gameAccessGate(game.id,model,course)?.open!==false).map(game=>game.id);
 assert.deepEqual(available(),['maps']);
-overrides={'topic-2':'closed','topic-5':'open'};assert.deepEqual(available(),['reception']);
+overrides={'topic-2':'closed','topic-6':'open'};assert.deepEqual(available(),['reception']);
+overrides={'topic-2':'closed','topic-5':'open'};assert.deepEqual(available(),['career']);
 overrides={'topic-2':'closed','topic-3':'open'};assert.deepEqual(available(),['settlements']);
 overrides={};now=Date.parse('2026-11-24T12:00:00Z');assert.equal(available().length,5);
 for(role of ['guest','teacher']){overrides={'topic-2':'closed','topic-3':'closed','topic-5':'closed','topic-6':'closed','topic-7':'closed'};assert.equal(available().length,5);}
@@ -71,9 +73,9 @@ try{
   }
   await go('puzzle');await page.locator('#geoPuzzleApp').waitFor();
   await go('games');await page.locator('[data-game=maps]').waitFor();
-  await access({'topic-5':'open'});assert.deepEqual(await cards(),['maps','reception']);
+  await access({'topic-6':'open'});assert.deepEqual(await cards(),['maps','reception']);
   await page.locator('[data-game=reception] a').click();await page.locator('#receptionMount').waitFor();
-  await access({'topic-5':'closed'});await page.locator('.access-lock-panel').waitFor();
+  await access({'topic-6':'closed'});await page.locator('.access-lock-panel').waitFor();
   await page.goto(base+'/apps/governor/index.html?context=free');
   await page.waitForFunction(()=>document.querySelector('#platform-loading-text')?.textContent.includes('Раздел 7 откроется'));
   assert.equal(await page.locator('#app').isVisible(),false);

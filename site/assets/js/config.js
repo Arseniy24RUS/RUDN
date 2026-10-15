@@ -1,5 +1,5 @@
 export const CONFIG = {
-  version: '1.3.9-pages',
+  version: '1.3.10-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
   firebaseGateway: 'https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/networkGateway/',

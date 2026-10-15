@@ -1,0 +1,129 @@
+{
+  "status": "ready",
+  "contentVersion": "legal-lab-2026-10-15.2",
+  "files": [
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/acquire_corpus.py",
+      "target": "tools/legal-lab/acquire_corpus.py",
+      "bytes": 15031,
+      "sha256": "6e49d8c3f0186e7fc43a5c10a936141eceecd0a00f1d17b387af7ca26b3840b6"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/review_corpus.py",
+      "target": "tools/legal-lab/review_corpus.py",
+      "bytes": 8992,
+      "sha256": "34a2d31c20c17e3a2e3b2d9f6c68d5b92213842dbdc1091a012a10fa0643aa4c"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/sources.json",
+      "target": "tools/legal-lab/sources.json",
+      "bytes": 5924,
+      "sha256": "6a1f70675a8c350a41eef770bd0a3532109761b87ad439b923a38198d5aa72c8"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/clean_corpus.py",
+      "target": "tools/legal-lab/clean_corpus.py",
+      "bytes": 2104,
+      "sha256": "593af12f83755e7ca62dc4b68c23beb5aeba305e58e83395dca649caf963f616"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/prepare_supplements.py",
+      "target": "tools/legal-lab/prepare_supplements.py",
+      "bytes": 2517,
+      "sha256": "b74de155a3d19f8fca1cacbabf51f5e19f2e32eb749cd6d2036fc25263cf3f4f"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/apply_moscow_amendments.py",
+      "target": "tools/legal-lab/apply_moscow_amendments.py",
+      "bytes": 18462,
+      "sha256": "33d89ef770218114d576fff685cfc950a8a42be23e9b8862ad6d266710adecfc"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/reconstruct_archive122.py",
+      "target": "tools/legal-lab/reconstruct_archive122.py",
+      "bytes": 8191,
+      "sha256": "501ea3406fac459c8f172abaa787ad8a695776386cc8b39940d520344fbbf7de"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/prepare_final_cleanup.py",
+      "target": "tools/legal-lab/prepare_final_cleanup.py",
+      "bytes": 2547,
+      "sha256": "b1a44003d92d396172af1b9e230ee6577e8f354cf59fbb7a80ba030d4766c1a1"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/finalize_candidates.py",
+      "target": "tools/legal-lab/finalize_candidates.py",
+      "bytes": 9582,
+      "sha256": "5d9920d60fa2f110f50843e0297ebbc52117c203541c995e8f58e469bd73e0c4"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/package_corpus_sources.py",
+      "target": "tools/legal-lab/package_corpus_sources.py",
+      "bytes": 2477,
+      "sha256": "64748b8cd032d95f05a9c83e75f460dd414782b7fed39f63b74f35ea9058b263"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/rebuild_corpus_snapshot.py",
+      "target": "tools/legal-lab/rebuild_corpus_snapshot.py",
+      "bytes": 4233,
+      "sha256": "90e40413daaedcee48b1cd2f6e7655f49908d630e2c5e24a0790dc73f2a1256a"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/corpus-requirements.txt",
+      "target": "tools/legal-lab/corpus-requirements.txt",
+      "bytes": 75,
+      "sha256": "f5348bf4204466eec054af079c079de461de5c7a43933a1b8c027d474d5ea815"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tools/CORPUS_REPRODUCTION_RU.md",
+      "target": "tools/legal-lab/CORPUS_REPRODUCTION_RU.md",
+      "bytes": 7797,
+      "sha256": "9cb9ed66fc26d6e82c9794bff24fa95d8a428f1aaefeacab5b149120925c8d8a"
+    },
+    {
+      "source": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/tests/corpus_regression_test.py",
+      "target": "tools/legal-lab/tests/corpus_regression_test.py",
+      "bytes": 4944,
+      "sha256": "7a9cbfe38884f74392bfd909b918a8d71cbda1fe96f53c5bc21f92c0f1fe60b9"
+    }
+  ],
+  "dependencies": {
+    "beautifulsoup4": "4.15.0",
+    "pdfplumber": "0.11.9",
+    "pypdfium2": "5.14.0",
+    "Pillow": "12.3.0"
+  },
+  "tests": {
+    "newRegressionCount": 11,
+    "result": "pass",
+    "evidence": "final-regression-tests.log",
+    "baselineImporterCount": 8,
+    "baselineImporterResult": "pass",
+    "baselineFullSuite": "20/21 passed; immutable integration regex test fails on platform changed rules shape; see python-tests.log; not migrated"
+  },
+  "dataSource": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/legal-lab-source/RUDN_Legal_Lab_1.0.0_rc1/site/apps/legal-lab/data",
+  "dataManifest": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/evidence/runs/20261015-legal-lab/corpus/installed-corpus-manifest.json",
+  "rawSourceArchive": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/evidence/runs/20261015-legal-lab/corpus/source-snapshots.zip",
+  "rawArchiveSha256": "98508214430211dc9e28eb119d247698f380c90c4503560452ee2a6e3bec9106",
+  "excludeFromStudentDownload": [
+    "source-snapshots.zip",
+    "source-provenance-manifest.json",
+    "corpus-review",
+    "tools"
+  ],
+  "notes": [
+    "No bank/cases/locales/entry/style/live/platform files edited.",
+    "Source finalization and review are synthetic; no claim of human legal review.",
+    "Shell cmd wrappers are session-specific evidence and not production transfer files."
+  ],
+  "offlineReproduction": {
+    "status": "pass",
+    "exitCode": 0,
+    "execSessionId": 69470,
+    "execCompletionChunkId": "b87aff",
+    "networkCalls": 0,
+    "identicalDocuments": 16,
+    "evidence": "reproduction.json",
+    "commandLog": "reproduction-command.log"
+  }
+}

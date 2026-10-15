@@ -1,0 +1,2066 @@
+{
+  "id": "system58",
+  "shortTitle": "Система госслужбы · 58-ФЗ",
+  "title": "Федеральный закон «О системе государственной службы Российской Федерации»",
+  "number": "27.05.2003 № 58-ФЗ",
+  "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/",
+  "file": "documents/system58.json",
+  "coverage": "full",
+  "revisionLabel": "Редакция от 29.09.2025",
+  "reviewStatus": "reviewed",
+  "main": true,
+  "sourceAccessed": "2026-10-15",
+  "version": "legal-lab-2026-10-15.2",
+  "group": "Федеральные акты",
+  "sections": [
+    {
+      "id": "system58-s1",
+      "title": "Начало документа",
+      "unitIds": [
+        "system58-ud2e3bc69681a2d4ecf-1",
+        "system58-ud150c7895ef3a3226f-1",
+        "system58-u7a266da6cb0afe5349-1",
+        "system58-u9c3fafee8bcbe271d6-1",
+        "system58-u9e114367b59dcc68c2-1",
+        "system58-ue9fc7fc9a33da6bc03-1",
+        "system58-ub2d3871c01973e1d46-1",
+        "system58-u971030b02fca136721-1",
+        "system58-u8c05668431a604a317-1",
+        "system58-u02a154d7a62411420b-1",
+        "system58-u8855be778b1989a8a8-1"
+      ]
+    },
+    {
+      "id": "system58-s2",
+      "title": "Глава 1. ОБЩИЕ ПОЛОЖЕНИЯ",
+      "unitIds": [
+        "system58-u8e8631c155bf62489e-1"
+      ]
+    },
+    {
+      "id": "system58-s3",
+      "title": "Статья 1. Государственная служба Российской Федерации",
+      "unitIds": [
+        "system58-u451b36e68f9ff3db30-1",
+        "system58-u8223bbed21428250f8-1",
+        "system58-uf323476f64919cbeb3-1",
+        "system58-u5ac003474ba05c2962-1",
+        "system58-ud02f98f8892d80236a-1",
+        "system58-u2b4e18d912a2df3723-1",
+        "system58-u45f50455bfb04000fc-1",
+        "system58-u2dd8de67e17f9d51b6-1",
+        "system58-uff3a5da354ccf40223-1",
+        "system58-u3cdf7953bff6175100-1",
+        "system58-u15791d40cf4d9f146a-1",
+        "system58-u3a7074bf61cef941df-1"
+      ]
+    },
+    {
+      "id": "system58-s4",
+      "title": "Статья 2. Система государственной службы",
+      "unitIds": [
+        "system58-u405f130b6b617204f0-1",
+        "system58-ued70e72fb4ee138f82-1",
+        "system58-u97c7c684a986f14cb3-1",
+        "system58-u8b4073e58a9fde4a5c-1",
+        "system58-u39ddba6a7e5e10d2f9-1",
+        "system58-u6b79ed78a1c15fc6bb-1",
+        "system58-u37b7cc32969f04eeef-1",
+        "system58-u21af8d9a0fc92a90e4-1"
+      ]
+    },
+    {
+      "id": "system58-s5",
+      "title": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "unitIds": [
+        "system58-u34e1e01f2ab4c6c5c8-1",
+        "system58-u9e6f46349ccd56421c-1",
+        "system58-u3b4d1782bd4b6b0984-1",
+        "system58-u119c7c5406bfb7a5ca-1",
+        "system58-u1c8daf0a6a49c6221d-1",
+        "system58-u04f44ed88278425466-1",
+        "system58-u61572b48dea0cfcde3-1",
+        "system58-u01e5a7fa92c5a0bbf6-1",
+        "system58-u3a900200fb9cc5ace0-1",
+        "system58-ud2b696019a02b5d3cb-1",
+        "system58-u44f00c5845ea554a04-1",
+        "system58-u136dfb64814f8b0f54-1",
+        "system58-u4f776f825ad09a0bab-1"
+      ]
+    },
+    {
+      "id": "system58-s6",
+      "title": "Статья 4. Федеральная государственная служба",
+      "unitIds": [
+        "system58-u3cf385891adbec76f2-1",
+        "system58-ued830b7a65b4320f5f-1"
+      ]
+    },
+    {
+      "id": "system58-s7",
+      "title": "Статья 5. Государственная гражданская служба",
+      "unitIds": [
+        "system58-udcd26b8b4334b53abf-1",
+        "system58-ua9f77580d36973ec1b-1",
+        "system58-u150325c6d0c0e196de-1",
+        "system58-u308be67538d2812ca4-1"
+      ]
+    },
+    {
+      "id": "system58-s8",
+      "title": "Статья 6. Военная служба",
+      "unitIds": [
+        "system58-uebc2a1072db3f575bd-1",
+        "system58-ub3a9634f6d60395989-1"
+      ]
+    },
+    {
+      "id": "system58-s9",
+      "title": "Статья 7. Утратила силу",
+      "unitIds": [
+        "system58-u7f42c2cbbe127dfe51-1"
+      ]
+    },
+    {
+      "id": "system58-s10",
+      "title": "Статья 7. Утратила силу с 1 января 2016 года. - Федеральный закон от 13.07.2015 N 262-ФЗ.",
+      "unitIds": [
+        "system58-u2bea750277b92e80e5-1"
+      ]
+    },
+    {
+      "id": "system58-s11",
+      "title": "Статья 8. Должности государственной службы",
+      "unitIds": [
+        "system58-u2cb47d4a2f81ae0fac-1",
+        "system58-u66bd3edd7cf943d52c-1",
+        "system58-ua7adc72d4f7b05d275-1",
+        "system58-ucdfda5f84bd4cab7f8-1",
+        "system58-u4e25a4757b00fe552d-1",
+        "system58-u3bb1c8a1690cdb0e48-1",
+        "system58-u8a3901c08bb3d60573-1",
+        "system58-u376356413b0c4eb5e0-1",
+        "system58-u06b815b404d2022321-1",
+        "system58-u7adf3ad808458ed7bb-1",
+        "system58-u3c259cfdeac797bf8a-1",
+        "system58-u202563b135f4cb8dc1-1",
+        "system58-u9a9700e477f3a267ed-1"
+      ]
+    },
+    {
+      "id": "system58-s12",
+      "title": "Статья 9. Реестры должностей государственной службы",
+      "unitIds": [
+        "system58-u01c6efc2cf7e3b2738-1",
+        "system58-u3accdade297579a3bd-1",
+        "system58-ub8f52fbabbaf9ee63b-1",
+        "system58-u676aebc57d667ac5b6-1",
+        "system58-u7bc2b89c16f153b64a-1",
+        "system58-ua4330bc07726662220-1",
+        "system58-ucd2a656018b0915a8c-1",
+        "system58-u65f1d66e8dfd304420-1"
+      ]
+    },
+    {
+      "id": "system58-s13",
+      "title": "Статья 10. Государственные служащие",
+      "unitIds": [
+        "system58-u7473e0bf5b8b17ad61-1",
+        "system58-uf0c481800a2bec92d4-1",
+        "system58-u56aa6bb1852dc48497-1",
+        "system58-u6e76bbbd0364f0b3ec-1",
+        "system58-u7a241d81288380a26a-1",
+        "system58-u2de5611473d7702263-1"
+      ]
+    },
+    {
+      "id": "system58-s14",
+      "title": "Глава 2. ОБЩИЕ УСЛОВИЯ ГОСУДАРСТВЕННОЙ СЛУЖБЫ",
+      "unitIds": [
+        "system58-u695ae65dfaaf0440c9-1"
+      ]
+    },
+    {
+      "id": "system58-s15",
+      "title": "Статья 11. Формирование кадрового состава государственной службы",
+      "unitIds": [
+        "system58-uc47a4ca96ea6623737-1",
+        "system58-u854566f56f7314d674-1",
+        "system58-ueb107c06a1e34f0f7e-1",
+        "system58-u5ba6dc2c0a06880961-1",
+        "system58-uf25dcfc462e3b35d4f-1",
+        "system58-u74cf9a84f2a679f494-1",
+        "system58-u68bc72c745386cde04-1",
+        "system58-uaa294e3db7a4b603d5-1",
+        "system58-u2f1e750ab48645007d-1",
+        "system58-uac8b6fac3650481c95-1",
+        "system58-u7c0f937f7c7e98775e-1",
+        "system58-u1bf8058efcd277741e-1",
+        "system58-u6bcb5290231783d035-1"
+      ]
+    },
+    {
+      "id": "system58-s16",
+      "title": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "unitIds": [
+        "system58-ud6549cb9e45a9e9a79-1",
+        "system58-u8b17984b3676650ab5-1",
+        "system58-ua3e3d45db3b33d01ae-1",
+        "system58-u224ba76e15e2a17793-1",
+        "system58-u60ae4e2c68d0cd9ca7-1",
+        "system58-uc1918befc67ee0ae29-1",
+        "system58-u4c21eda55db93e24b9-1",
+        "system58-u8edd85b1fadac41924-1",
+        "system58-u650c3c913cb4ed79c0-1",
+        "system58-u1a370ad001245b5630-1",
+        "system58-u74e2480c19be6d9bfd-1",
+        "system58-u41e69f7bae4dc32bd8-1",
+        "system58-u0bb82fa59d41264ddd-1",
+        "system58-u8133e0e688257f46b6-1",
+        "system58-ueaa53e086af061e447-1"
+      ]
+    },
+    {
+      "id": "system58-s17",
+      "title": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "unitIds": [
+        "system58-u86c21781250d56f15d-1",
+        "system58-u4806ea9df363037126-1",
+        "system58-uc2ed1eafd2949da32a-1",
+        "system58-u4ba17e434ea8e05d8c-1",
+        "system58-u5774cf2fbf0e485e7b-1",
+        "system58-uf4f2967c7f38a40e6c-1",
+        "system58-ue14e82dd73a76a3120-1",
+        "system58-u6635c8eb66a57a7226-1",
+        "system58-u21cb73cb4262e448bd-1",
+        "system58-uc40925ae8154697050-1",
+        "system58-ub5f8b45ca790f00c3a-1",
+        "system58-ue3b2d193acdd977abd-1",
+        "system58-u4642c8ff78e52a104e-1",
+        "system58-u88992c039574d7dba8-1",
+        "system58-u5c0a95d0f09bc39ba3-1",
+        "system58-u9d501f8bf668b605dc-1",
+        "system58-u6bf3d5da432e2965c0-1",
+        "system58-u4422c7de103eddc6ce-1",
+        "system58-u1120e8367c8bdc2a39-1",
+        "system58-u77d17d9bdcaf31fec8-1",
+        "system58-u55a66b0f247bcb1d97-1",
+        "system58-uf8848a544819e358c4-1"
+      ]
+    },
+    {
+      "id": "system58-s18",
+      "title": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "unitIds": [
+        "system58-u2445d479de7f1ac4c6-1",
+        "system58-uc682ce62f37cb4d39e-1",
+        "system58-uaf021f689e76880748-1",
+        "system58-u8646c03cb2589e812e-1",
+        "system58-u467c48c98fc29818fa-1",
+        "system58-uaea30e3989bf440bf0-1",
+        "system58-u302c4cb2c772021e59-1",
+        "system58-u1004e65b791364e3eb-1",
+        "system58-ubdccf4bef537a49cd9-1",
+        "system58-u42e68e1c674bfd3241-1",
+        "system58-u9eefa097184655c22b-1",
+        "system58-ub78227761607edd17b-1"
+      ]
+    },
+    {
+      "id": "system58-s19",
+      "title": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "unitIds": [
+        "system58-u9602f640dab37e4840-1",
+        "system58-ubb56d5229f0d4463c9-1",
+        "system58-u1cba8bd400cd0cf525-1",
+        "system58-u3db721c9fda1eea78b-1",
+        "system58-u562e46c6c169a618e1-1",
+        "system58-u2371e9aa013e1f0ff6-1"
+      ]
+    },
+    {
+      "id": "system58-s20",
+      "title": "Статья 15. Реестры государственных служащих",
+      "unitIds": [
+        "system58-u9186053f79827f6235-1",
+        "system58-u9224e6b4bf21e75ffb-1",
+        "system58-u131674970575041c32-1",
+        "system58-u76e4c24a36447cfc38-1"
+      ]
+    },
+    {
+      "id": "system58-s21",
+      "title": "Глава 3. СИСТЕМА УПРАВЛЕНИЯ ГОСУДАРСТВЕННОЙ СЛУЖБОЙ",
+      "unitIds": [
+        "system58-ud172c27d6db8ddfe72-1"
+      ]
+    },
+    {
+      "id": "system58-s22",
+      "title": "Статья 16. Управление государственной службой",
+      "unitIds": [
+        "system58-u73ca40a191d80b70ce-1",
+        "system58-u0758dda9bcfb51923c-1"
+      ]
+    },
+    {
+      "id": "system58-s23",
+      "title": "Статья 17. Кадровый резерв для замещения должностей государственной службы",
+      "unitIds": [
+        "system58-u64a0cc20743557cbbb-1",
+        "system58-ufa24c2a1a8913fdd7f-1"
+      ]
+    },
+    {
+      "id": "system58-s24",
+      "title": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "unitIds": [
+        "system58-u5898bddca4384691c5-1",
+        "system58-uabbeceb0a03dca6b0c-1",
+        "system58-u391da46f3850ae6b27-1"
+      ]
+    },
+    {
+      "id": "system58-s25",
+      "title": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "unitIds": [
+        "system58-u13707cbefb8a3b68d0-1",
+        "system58-ud4f538c802e856780c-1",
+        "system58-u3a76351b540ec42434-1"
+      ]
+    },
+    {
+      "id": "system58-s26",
+      "title": "Глава 4. ВСТУПЛЕНИЕ В СИЛУ НАСТОЯЩЕГО ФЕДЕРАЛЬНОГО ЗАКОНА",
+      "unitIds": [
+        "system58-u736dbc47737b35919e-1"
+      ]
+    },
+    {
+      "id": "system58-s27",
+      "title": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "unitIds": [
+        "system58-ub9fd8fec90d641b8ab-1",
+        "system58-ueaa3dff5eb598ff548-1",
+        "system58-ue13ad9c679fe85f844-1",
+        "system58-u7adf3ad808458ed7bb-2",
+        "system58-ua36f895f1430c77a19-1",
+        "system58-ue891c3e4360d128a68-1",
+        "system58-u64cbf15dce429edd4f-1",
+        "system58-udcb97e8c96abc4676a-1",
+        "system58-ua5b527ca723a103864-1",
+        "system58-u550e261b782e142050-1",
+        "system58-u9b2616dadb4c35763b-1"
+      ]
+    }
+  ],
+  "units": [
+    {
+      "id": "system58-ud2e3bc69681a2d4ecf-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "27 мая 2003 года N 58-ФЗ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-ud150c7895ef3a3226f-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "РОССИЙСКАЯ ФЕДЕРАЦИЯ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u7a266da6cb0afe5349-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "ФЕДЕРАЛЬНЫЙ ЗАКОН",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u9c3fafee8bcbe271d6-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "О СИСТЕМЕ ГОСУДАРСТВЕННОЙ СЛУЖБЫ РОССИЙСКОЙ ФЕДЕРАЦИИ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u9e114367b59dcc68c2-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "Принят",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-ue9fc7fc9a33da6bc03-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "Государственной Думой",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-ub2d3871c01973e1d46-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "25 апреля 2003 года",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u971030b02fca136721-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "Одобрен",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u8c05668431a604a317-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "Советом Федерации",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u02a154d7a62411420b-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "14 мая 2003 года",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u8855be778b1989a8a8-1",
+      "sectionId": "system58-s1",
+      "locator": "Начало документа",
+      "text": "Настоящим Федеральным законом в соответствии с Конституцией Российской Федерации определяются правовые и организационные основы системы государственной службы Российской Федерации, в том числе системы управления государственной службой Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/"
+    },
+    {
+      "id": "system58-u8e8631c155bf62489e-1",
+      "sectionId": "system58-s2",
+      "locator": "Глава 1. ОБЩИЕ ПОЛОЖЕНИЯ",
+      "text": "Глава 1. ОБЩИЕ ПОЛОЖЕНИЯ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/01fbae25b3040955277cbd70aa1b907cceda878e/"
+    },
+    {
+      "id": "system58-u451b36e68f9ff3db30-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "Статья 1. Государственная служба Российской Федерации",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u8223bbed21428250f8-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "1. Государственная служба Российской Федерации (далее - государственная служба) - профессиональная служебная деятельность граждан Российской Федерации (далее - граждане) по обеспечению исполнения полномочий:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-uf323476f64919cbeb3-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "Российской Федерации;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u5ac003474ba05c2962-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "федеральных органов государственной власти, иных федеральных государственных органов (далее - федеральные государственные органы);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-ud02f98f8892d80236a-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "субъектов Российской Федерации;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u2b4e18d912a2df3723-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "органов государственной власти субъектов Российской Федерации, иных государственных органов субъектов Российской Федерации (далее - государственные органы субъектов Российской Федерации);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u45f50455bfb04000fc-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "лиц, замещающих должности, устанавливаемые Конституцией Российской Федерации, федеральными законами для непосредственного исполнения полномочий федеральных государственных органов, органов публичной власти федеральных территорий (далее - лица, замещающие государственные должности Российской Федерации);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u2dd8de67e17f9d51b6-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "лиц, замещающих должности, устанавливаемые конституциями, уставами, законами субъектов Российской Федерации для непосредственного исполнения полномочий государственных органов субъектов Российской Федерации (далее - лица, замещающие государственные должности субъектов Российской Федерации);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-uff3a5da354ccf40223-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "федеральных территорий;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u3cdf7953bff6175100-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "органов публичной власти федеральных территорий;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u15791d40cf4d9f146a-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "лиц, замещающих в федеральной территории должности, устанавливаемые федеральными законами и указами Президента Российской Федерации, а также уставом федеральной территории для непосредственного исполнения полномочий органов публичной власти федеральной территории.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u3a7074bf61cef941df-1",
+      "sectionId": "system58-s3",
+      "locator": "Статья 1. Государственная служба Российской Федерации",
+      "text": "2. Деятельность лиц, замещающих государственные должности Российской Федерации, и лиц, замещающих государственные должности субъектов Российской Федерации, настоящим Федеральным законом не регулируется.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/"
+    },
+    {
+      "id": "system58-u405f130b6b617204f0-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "Статья 2. Система государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-ued70e72fb4ee138f82-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "1. Система государственной службы включает в себя:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u97c7c684a986f14cb3-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "государственную гражданскую службу;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u8b4073e58a9fde4a5c-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "военную службу;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u39ddba6a7e5e10d2f9-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "государственную службу иных видов.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u6b79ed78a1c15fc6bb-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "2. Государственная гражданская служба подразделяется на федеральную государственную гражданскую службу и государственную гражданскую службу субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u37b7cc32969f04eeef-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "3. Военная служба и государственная служба иных видов, которые устанавливаются федеральными законами, являются видами федеральной государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u21af8d9a0fc92a90e4-1",
+      "sectionId": "system58-s4",
+      "locator": "Статья 2. Система государственной службы",
+      "text": "4. Правовое регулирование и организация федеральной государственной гражданской службы находятся в ведении Российской Федерации. Правовое регулирование государственной гражданской службы субъекта Российской Федерации находится в совместном ведении Российской Федерации и субъектов Российской Федерации, а ее организация - в ведении субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/"
+    },
+    {
+      "id": "system58-u34e1e01f2ab4c6c5c8-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u9e6f46349ccd56421c-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "1. Основными принципами построения и функционирования системы государственной службы являются:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u3b4d1782bd4b6b0984-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "федерализм, обеспечивающий единство системы государственной службы и соблюдение конституционного разграничения предметов ведения и полномочий между федеральными органами государственной власти и органами государственной власти субъектов Российской Федерации (далее - государственные органы);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u119c7c5406bfb7a5ca-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "законность;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u1c8daf0a6a49c6221d-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "приоритет прав и свобод человека и гражданина, их непосредственное действие, обязательность их признания, соблюдения и защиты;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u04f44ed88278425466-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "равный доступ граждан к государственной службе;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u61572b48dea0cfcde3-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "единство правовых и организационных основ государственной службы, предполагающее законодательное закрепление единого подхода к организации государственной службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u01e5a7fa92c5a0bbf6-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "взаимосвязь государственной службы и муниципальной службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u3a900200fb9cc5ace0-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "открытость государственной службы и ее доступность общественному контролю, объективное информирование общества о деятельности государственных служащих;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-ud2b696019a02b5d3cb-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "профессионализм и компетентность государственных служащих;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u44f00c5845ea554a04-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "защита государственных служащих от неправомерного вмешательства в их профессиональную служебную деятельность как государственных органов и должностных лиц, так и физических и юридических лиц;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u136dfb64814f8b0f54-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "защита системы государственной службы и профессиональной служебной деятельности государственных служащих от иностранного влияния, предполагающая в том числе запрет на поступление на государственную службу и пребывание на ней иностранных агентов.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u4f776f825ad09a0bab-1",
+      "sectionId": "system58-s5",
+      "locator": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "text": "2. Реализация принципов построения и функционирования системы государственной службы обеспечивается федеральными законами о видах государственной службы. Указанными федеральными законами могут быть предусмотрены также другие принципы построения и функционирования видов государственной службы, учитывающие их особенности.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/"
+    },
+    {
+      "id": "system58-u3cf385891adbec76f2-1",
+      "sectionId": "system58-s6",
+      "locator": "Статья 4. Федеральная государственная служба",
+      "text": "Статья 4. Федеральная государственная служба",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/524d2a6736ee8b97ad871a0b1d98a53ee0063e3b/"
+    },
+    {
+      "id": "system58-ued830b7a65b4320f5f-1",
+      "sectionId": "system58-s6",
+      "locator": "Статья 4. Федеральная государственная служба",
+      "text": "Федеральная государственная служба - профессиональная служебная деятельность граждан по обеспечению исполнения полномочий Российской Федерации, федеральных территорий, а также полномочий федеральных государственных органов, органов публичной власти федеральных территорий, иных органов федеральных территорий и лиц, замещающих государственные должности Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/524d2a6736ee8b97ad871a0b1d98a53ee0063e3b/"
+    },
+    {
+      "id": "system58-udcd26b8b4334b53abf-1",
+      "sectionId": "system58-s7",
+      "locator": "Статья 5. Государственная гражданская служба",
+      "text": "Статья 5. Государственная гражданская служба",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/"
+    },
+    {
+      "id": "system58-ua9f77580d36973ec1b-1",
+      "sectionId": "system58-s7",
+      "locator": "Статья 5. Государственная гражданская служба",
+      "text": "1. Государственная гражданская служба - вид государственной службы, представляющей собой профессиональную служебную деятельность граждан на должностях государственной гражданской службы по обеспечению исполнения полномочий федеральных государственных органов, органов публичной власти федеральной территории, государственных органов субъектов Российской Федерации, лиц, замещающих государственные должности Российской Федерации, и лиц, замещающих государственные должности субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/"
+    },
+    {
+      "id": "system58-u150325c6d0c0e196de-1",
+      "sectionId": "system58-s7",
+      "locator": "Статья 5. Государственная гражданская служба",
+      "text": "2. Федеральная государственная гражданская служба - профессиональная служебная деятельность граждан на должностях федеральной государственной гражданской службы по обеспечению исполнения полномочий федеральных государственных органов, органов публичной власти федеральной территории и лиц, замещающих государственные должности Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/"
+    },
+    {
+      "id": "system58-u308be67538d2812ca4-1",
+      "sectionId": "system58-s7",
+      "locator": "Статья 5. Государственная гражданская служба",
+      "text": "3. Государственная гражданская служба субъекта Российской Федерации - профессиональная служебная деятельность граждан на должностях государственной гражданской службы субъекта Российской Федерации по обеспечению исполнения полномочий субъекта Российской Федерации, а также полномочий государственных органов субъекта Российской Федерации и лиц, замещающих государственные должности субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/"
+    },
+    {
+      "id": "system58-uebc2a1072db3f575bd-1",
+      "sectionId": "system58-s8",
+      "locator": "Статья 6. Военная служба",
+      "text": "Статья 6. Военная служба",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/93eecc1ae4a11f23db531efd10b0124825ff5049/"
+    },
+    {
+      "id": "system58-ub3a9634f6d60395989-1",
+      "sectionId": "system58-s8",
+      "locator": "Статья 6. Военная служба",
+      "text": "Военная служба - вид федеральной государственной службы, представляющей собой профессиональную служебную деятельность граждан на воинских должностях или не на воинских должностях в случаях и на условиях, предусмотренных федеральными законами и (или) нормативными правовыми актами Президента Российской Федерации, в Вооруженных Силах Российской Федерации, других войсках, воинских (специальных) формированиях и органах, осуществляющих функции по обеспечению обороны и безопасности государства. Таким гражданам присваиваются воинские звания.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/93eecc1ae4a11f23db531efd10b0124825ff5049/"
+    },
+    {
+      "id": "system58-u7f42c2cbbe127dfe51-1",
+      "sectionId": "system58-s9",
+      "locator": "Статья 7. Утратила силу",
+      "text": "Статья 7. Утратила силу",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/04715db866698a79cfd439a4af592dec57b2bb11/"
+    },
+    {
+      "id": "system58-u2bea750277b92e80e5-1",
+      "sectionId": "system58-s10",
+      "locator": "Статья 7. Утратила силу с 1 января 2016 года. - Федеральный закон от 13.07.2015 N 262-ФЗ.",
+      "text": "Статья 7. Утратила силу с 1 января 2016 года. - Федеральный закон от 13.07.2015 N 262-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/04715db866698a79cfd439a4af592dec57b2bb11/"
+    },
+    {
+      "id": "system58-u2cb47d4a2f81ae0fac-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "Статья 8. Должности государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u66bd3edd7cf943d52c-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "1. Должности государственной службы учреждаются федеральным законом или иным нормативным правовым актом Российской Федерации, законом или иным нормативным правовым актом субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-ua7adc72d4f7b05d275-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "2. Должности государственной службы подразделяются на:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-ucdfda5f84bd4cab7f8-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "должности федеральной государственной гражданской службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u4e25a4757b00fe552d-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "должности государственной гражданской службы субъекта Российской Федерации;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u3bb1c8a1690cdb0e48-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "воинские должности;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u8a3901c08bb3d60573-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "должности федеральной государственной службы иных видов.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u376356413b0c4eb5e0-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "3. В федеральном государственном органе могут быть учреждены должности государственной службы различных видов.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u06b815b404d2022321-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "4. Должности государственной службы распределяются по группам и (или) категориям в соответствии с федеральными законами о видах государственной службы и законами субъектов Российской Федерации о государственной гражданской службе субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u7adf3ad808458ed7bb-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "Абзац утратил силу с 1 января 2016 года. - Федеральный закон от 13.07.2015 N 262-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u3c259cfdeac797bf8a-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "Абзац утратил силу. - Федеральный закон от 28.12.2010 N 419-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u202563b135f4cb8dc1-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "5. Квалификационные требования к гражданам для замещения должностей государственной службы устанавливаются федеральными законами и иными нормативными правовыми актами Российской Федерации, а также законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u9a9700e477f3a267ed-1",
+      "sectionId": "system58-s11",
+      "locator": "Статья 8. Должности государственной службы",
+      "text": "6. В федеральном государственном органе, органе публичной власти федеральной территории и государственном органе субъекта Российской Федерации могут быть предусмотрены должности, не являющиеся должностями государственной службы. Трудовая деятельность работников, замещающих такие должности, регулируется трудовым законодательством.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/"
+    },
+    {
+      "id": "system58-u01c6efc2cf7e3b2738-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "Статья 9. Реестры должностей государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-u3accdade297579a3bd-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "1. Реестр должностей федеральной государственной службы образуют:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-ub8f52fbabbaf9ee63b-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "перечни должностей федеральной государственной гражданской службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-u676aebc57d667ac5b6-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "перечни типовых воинских должностей;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-u7bc2b89c16f153b64a-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "перечни типовых должностей федеральной государственной службы иных видов.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-ua4330bc07726662220-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "2. Перечни, указанные в пункте 1 настоящей статьи, утверждаются Президентом Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-ucd2a656018b0915a8c-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "3. Реестр должностей государственной гражданской службы субъекта Российской Федерации утверждается законом или иным нормативным правовым актом субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-u65f1d66e8dfd304420-1",
+      "sectionId": "system58-s12",
+      "locator": "Статья 9. Реестры должностей государственной службы",
+      "text": "4. Утратил силу. - Федеральный закон от 28.12.2010 N 419-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/"
+    },
+    {
+      "id": "system58-u7473e0bf5b8b17ad61-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "Статья 10. Государственные служащие",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-uf0c481800a2bec92d4-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "1. Федеральный государственный служащий - гражданин, осуществляющий профессиональную служебную деятельность на должности федеральной государственной службы и получающий денежное содержание (вознаграждение, довольствие) за счет средств федерального бюджета, бюджета федеральной территории.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-u56aa6bb1852dc48497-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "2. Государственный гражданский служащий субъекта Российской Федерации - гражданин, осуществляющий профессиональную служебную деятельность на должности государственной гражданской службы субъекта Российской Федерации и получающий денежное содержание (вознаграждение) за счет средств бюджета соответствующего субъекта Российской Федерации. В случаях, предусмотренных федеральным законом, государственный гражданский служащий субъекта Российской Федерации может получать денежное содержание (вознаграждение) также за счет средств федерального бюджета.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-u6e76bbbd0364f0b3ec-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "3. Нанимателем федерального государственного служащего является Российская Федерация, государственного гражданского служащего субъекта Российской Федерации - соответствующий субъект Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-u7a241d81288380a26a-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "4. Правовое положение (статус) федерального государственного служащего и государственного гражданского служащего субъекта Российской Федерации, в том числе ограничения, обязательства, правила служебного поведения, ответственность, а также порядок разрешения конфликта интересов и служебных споров устанавливается соответствующим федеральным законом о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-u2de5611473d7702263-1",
+      "sectionId": "system58-s13",
+      "locator": "Статья 10. Государственные служащие",
+      "text": "В случае, если федеральным законом о виде государственной службы предусмотрено применение трудового законодательства к отношениям, возникающим в связи с прохождением государственной службы соответствующего вида, указанное законодательство применяется в части, не противоречащей настоящему Федеральному закону и федеральному закону о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/"
+    },
+    {
+      "id": "system58-u695ae65dfaaf0440c9-1",
+      "sectionId": "system58-s14",
+      "locator": "Глава 2. ОБЩИЕ УСЛОВИЯ ГОСУДАРСТВЕННОЙ СЛУЖБЫ",
+      "text": "Глава 2. ОБЩИЕ УСЛОВИЯ ГОСУДАРСТВЕННОЙ СЛУЖБЫ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/05d44dbb8120af9f4084a61b391cf26fd1ba95f4/"
+    },
+    {
+      "id": "system58-uc47a4ca96ea6623737-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "Статья 11. Формирование кадрового состава государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u854566f56f7314d674-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "1. Формирование кадрового состава государственной службы обеспечивается:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-ueb107c06a1e34f0f7e-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "созданием федерального кадрового резерва, кадрового резерва в федеральном государственном органе, кадрового резерва в органе публичной власти федеральной территории, кадрового резерва субъекта Российской Федерации, кадрового резерва в государственном органе субъекта Российской Федерации для замещения должностей государственной службы, а также эффективным использованием указанных кадровых резервов;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u5ba6dc2c0a06880961-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "развитием профессиональных качеств государственных служащих;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-uf25dcfc462e3b35d4f-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "оценкой результатов профессиональной служебной деятельности государственных служащих в ходе проведения аттестации или сдачи квалификационного экзамена;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u74cf9a84f2a679f494-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "созданием возможностей для должностного (служебного) роста государственных служащих;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u68bc72c745386cde04-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "использованием современных кадровых технологий;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-uaa294e3db7a4b603d5-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "применением образовательных программ, федеральных государственных образовательных стандартов;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u2f1e750ab48645007d-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "ротацией государственных служащих.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-uac8b6fac3650481c95-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "2. Федеральными законами о видах государственной службы и иными нормативными правовыми актами Российской Федерации устанавливаются порядок поступления на государственную службу и замещения вакантных должностей государственной службы на конкурсной основе, условия формирования конкурсных комиссий, правила опубликования информации о конкурсах в средствах массовой информации, а также предусматривается другой порядок поступления на государственную службу и замещения вакантных должностей государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u7c0f937f7c7e98775e-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "3. Подготовка граждан для прохождения государственной службы осуществляется в формах, установленных федеральными законами и иными нормативными правовыми актами Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u1bf8058efcd277741e-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "4. Дополнительное профессиональное образование государственных служащих осуществляются в соответствии с федеральными законами и иными нормативными правовыми актами Российской Федерации, законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-u6bcb5290231783d035-1",
+      "sectionId": "system58-s15",
+      "locator": "Статья 11. Формирование кадрового состава государственной службы",
+      "text": "5. Федеральными законами о видах государственной службы могут быть установлены особенности ротации государственных служащих, учитывающие специфику прохождения государственной службы соответствующего вида.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/"
+    },
+    {
+      "id": "system58-ud6549cb9e45a9e9a79-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u8b17984b3676650ab5-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "1. На государственную службу по контракту вправе поступать граждане, владеющие государственным языком Российской Федерации и достигшие возраста, установленного федеральным законом о виде государственной службы для прохождения государственной службы данного вида.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-ua3e3d45db3b33d01ae-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "Федеральным законом о виде государственной службы или законом субъекта Российской Федерации могут быть установлены дополнительные требования к гражданам при поступлении на государственную службу по контракту.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u224ba76e15e2a17793-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "1.1. Гражданин при поступлении на государственную службу и государственный служащий в случаях, установленных законодательством Российской Федерации, представляют в государственный орган (орган публичной власти федеральной территории) сведения и документы, в том числе анкету, необходимые для поступления на государственную службу и (или) для ее прохождения.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u60ae4e2c68d0cd9ca7-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "Государственный служащий сообщает в государственный орган (орган публичной власти федеральной территории) в письменной форме о ставших ему известными изменениях сведений, содержащихся в анкете.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-uc1918befc67ee0ae29-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "Форма анкеты, в том числе перечень включаемых в нее сведений, порядок и сроки их актуализации устанавливаются Президентом Российской Федерации, если иное не предусмотрено федеральным конституционным законом или федеральным законом.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u4c21eda55db93e24b9-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "2. Условия контрактов, порядок их заключения, а также основания и порядок прекращения их действия устанавливаются в соответствии с федеральным законом о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u8edd85b1fadac41924-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "3. В соответствии с федеральным законом о виде государственной службы контракт может заключаться с гражданином:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u650c3c913cb4ed79c0-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "на неопределенный срок;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u1a370ad001245b5630-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "на определенный срок;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u74e2480c19be6d9bfd-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "на срок обучения в профессиональной образовательной организации или образовательной организации высшего образования и на определенный срок государственной службы после его окончания.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u41e69f7bae4dc32bd8-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "4. Федеральным законом о виде государственной службы определяется предельный возраст пребывания на государственной службе данного вида.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u0bb82fa59d41264ddd-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "5. Прохождение государственной службы включает в себя назначение на должность, присвоение классного чина, дипломатического ранга, воинского и специального звания, аттестацию или квалификационный экзамен, а также другие обстоятельства (события) в соответствии с настоящим Федеральным законом, федеральными законами о видах государственной службы и иными нормативными правовыми актами Российской Федерации, законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u8133e0e688257f46b6-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "5.1. Государственная служба может быть приостановлена и возобновлена в случаях и порядке, которые предусмотрены настоящим Федеральным законом, федеральными законами о видах государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-ueaa53e086af061e447-1",
+      "sectionId": "system58-s16",
+      "locator": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "text": "6. Основания прекращения государственной службы, в том числе основания увольнения в запас или в отставку государственного служащего, устанавливаются настоящим Федеральным законом, федеральными законами о видах государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/"
+    },
+    {
+      "id": "system58-u86c21781250d56f15d-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u4806ea9df363037126-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "1. Государственная служба подлежит приостановлению в случаях, предусмотренных пунктом 2 настоящей статьи, федеральными законами о видах государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-uc2ed1eafd2949da32a-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "2. Государственная служба, за исключением военной службы, приостанавливается в связи с призывом государственного служащего на военную службу по мобилизации, направлением его на службу в войска национальной гвардии Российской Федерации по мобилизации или заключением им в период мобилизации, в период военного положения или в военное время контракта о прохождении военной службы либо заключением им контракта о добровольном содействии в выполнении задач, возложенных на Вооруженные Силы Российской Федерации или войска национальной гвардии Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u4ba17e434ea8e05d8c-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "3. Государственная служба приостанавливается до прекращения обстоятельств, послуживших основанием для ее приостановления.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u5774cf2fbf0e485e7b-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "В период приостановления государственной службы в связи с обстоятельствами, предусмотренными пунктом 2 настоящей статьи, также включается период со дня окончания военной службы, службы в войсках национальной гвардии Российской Федерации по мобилизации или добровольного содействия в выполнении задач, возложенных на Вооруженные Силы Российской Федерации или войска национальной гвардии Российской Федерации, до дня выхода на государственную службу, но не более трех месяцев, за исключением случая, предусмотренного абзацем третьим настоящего пункта.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-uf4f2967c7f38a40e6c-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "Срок, указанный в абзаце втором настоящего пункта, продлевается на период временной нетрудоспособности государственного служащего, наступившей после окончания прохождения им военной службы, службы в войсках национальной гвардии Российской Федерации по мобилизации или добровольного содействия в выполнении задач, возложенных на Вооруженные Силы Российской Федерации или войска национальной гвардии Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-ue14e82dd73a76a3120-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "4. Государственная служба возобновляется в день выхода государственного служащего на государственную службу. Государственный служащий обязан предупредить представителя нанимателя о своем выходе на государственную службу не позднее чем за три рабочих дня.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u6635c8eb66a57a7226-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "5. В период приостановления государственной службы:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u21cb73cb4262e448bd-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "гарантируется сохранение замещаемой должности государственной службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-uc40925ae8154697050-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "права и обязанности государственного служащего, установленные федеральным законом о виде государственной службы, которая приостанавливается, не осуществляются;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-ub5f8b45ca790f00c3a-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "ограничения, запреты и требования, связанные с замещением должности государственной службы, установленные федеральным законом о виде государственной службы, которая приостанавливается, не применяются;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-ue3b2d193acdd977abd-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "денежное содержание (вознаграждение, довольствие) и иные выплаты, осуществляемые в связи с прохождением государственной службы, которая приостанавливается, не начисляются и не выплачиваются;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u4642c8ff78e52a104e-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "сохраняются социальные гарантии, право на предоставление которых было получено государственным служащим в связи с прохождением государственной службы до наступления обстоятельств, предусмотренных пунктом 2 настоящей статьи (социально-бытовое и медицинское обеспечение, санаторно-курортное лечение государственного служащего и членов его семьи);",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u88992c039574d7dba8-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "не допускается расторжение контракта с государственным служащим по инициативе представителя нанимателя, за исключением расторжения контракта в связи с упразднением государственного органа (органа публичной власти федеральной территории) или в связи с истечением срока действия контракта;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u5c0a95d0f09bc39ba3-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "течение срока действия срочного контракта с государственным служащим не приостанавливается, а по истечении срока его действия государственная служба прекращается, если иное не установлено настоящей статьей и (или) федеральным законом о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u9d501f8bf668b605dc-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "5.1. В случаях, предусмотренных пунктом 2 настоящей статьи, течение срока действия срочного контракта приостанавливается до дня выхода государственного служащего на государственную службу в соответствии с пунктом 4 настоящей статьи, за исключением течения срока срочного контракта, заключенного на время выполнения определенного задания либо период замещения отсутствующего государственного служащего, за которым в соответствии с федеральными законами сохраняется должность государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u6bf3d5da432e2965c0-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "5.2. Срочный контракт, течение срока действия которого было приостановлено в соответствии с пунктом 5.1 настоящей статьи, возобновляется на период, равный остатку срока действия данного контракта, исчисляемого на день его приостановления, но не свыше чем до достижения государственным служащим предельного возраста пребывания на государственной службе, если государственно-служебные отношения не продлены в порядке, предусмотренном федеральным законом о виде государственной службы, и (или) иное не установлено федеральным законом о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u4422c7de103eddc6ce-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "Возобновление срока действия срочного контракта осуществляется посредством заключения дополнительного соглашения к нему.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u1120e8367c8bdc2a39-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "6. В случае невыхода государственного служащего на государственную службу по истечении периода ее приостановления контракт с государственным служащим может быть расторгнут в порядке, предусмотренном федеральным законом о виде государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u77d17d9bdcaf31fec8-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "7. Утратил силу. - Федеральный закон от 14.02.2024 N 10-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u55a66b0f247bcb1d97-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "8. Период приостановления государственной службы в связи с обстоятельствами, предусмотренными пунктом 2 настоящей статьи, включается в стаж государственной службы, которая приостанавливалась, в части, не превышающей продолжительности периода прохождения военной службы по мобилизации, службы в войсках национальной гвардии Российской Федерации по мобилизации или прохождения военной службы по контракту, заключенному в период мобилизации, в период военного положения или в военное время, либо добровольного содействия в выполнении задач, возложенных на Вооруженные Силы Российской Федерации или войска национальной гвардии Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-uf8848a544819e358c4-1",
+      "sectionId": "system58-s17",
+      "locator": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "text": "9. Федеральными законами о видах государственной службы могут предусматриваться иные особенности приостановления государственной службы соответствующего вида.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/"
+    },
+    {
+      "id": "system58-u2445d479de7f1ac4c6-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-uc682ce62f37cb4d39e-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "1. В соответствии с федеральными законами о видах государственной службы гражданам, проходящим федеральную государственную службу, присваиваются классные чины, дипломатические ранги, воинские и специальные звания.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-uaf021f689e76880748-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "В соответствии с федеральным законом о виде государственной службы для граждан, проходящих государственную гражданскую службу субъектов Российской Федерации, устанавливаются классные чины.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u8646c03cb2589e812e-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "2. Общими условиями присвоения, сохранения классных чинов, дипломатических рангов, воинских и специальных званий являются:",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u467c48c98fc29818fa-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "последовательное присвоение классного чина, дипломатического ранга, воинского и специального звания по прошествии установленного времени пребывания в определенном классном чине, дипломатическом ранге, воинском и специальном звании после их присвоения впервые;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-uaea30e3989bf440bf0-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "присвоение классного чина, дипломатического ранга, воинского и специального звания государственному служащему в соответствии с замещаемой должностью федеральной государственной службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u302c4cb2c772021e59-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "досрочное присвоение в качестве меры поощрения классного чина, дипломатического ранга, воинского и специального звания либо присвоение классного чина, дипломатического ранга, воинского и специального звания на одну ступень выше классного чина, дипломатического ранга, воинского и специального звания, предусмотренных для замещаемой должности федеральной государственной службы в соответствии с федеральным законом о виде государственной службы;",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u1004e65b791364e3eb-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "сохранение присвоенного классного чина, дипломатического ранга, воинского и специального звания при освобождении от замещаемой должности федеральной государственной службы или увольнении с федеральной государственной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-ubdccf4bef537a49cd9-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "Лишение присвоенного классного чина, дипломатического ранга, воинского и специального звания возможно по решению суда.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u42e68e1c674bfd3241-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "3. При переводе государственного служащего с государственной службы одного вида на государственную службу другого вида ранее присвоенный классный чин, дипломатический ранг, воинское и специальное звание, а также период пребывания в соответствующем классном чине, дипломатическом ранге, воинском и специальном звании учитывается при присвоении классного чина, дипломатического ранга, воинского и специального звания по новому виду государственной службы в соответствии с федеральными законами о видах государственной службы и иными нормативными правовыми актами Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u9eefa097184655c22b-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "4. Соотношение классных чинов, дипломатических рангов, воинских и специальных званий устанавливается указом Президента Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-ub78227761607edd17b-1",
+      "sectionId": "system58-s18",
+      "locator": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "text": "5. Классные чины государственной гражданской службы субъекта Российской Федерации присваиваются с учетом положений настоящей статьи в порядке, установленном нормативными правовыми актами соответствующего субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/"
+    },
+    {
+      "id": "system58-u9602f640dab37e4840-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-ubb56d5229f0d4463c9-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "1. Стаж (общая продолжительность) государственной службы определяется в соответствии с федеральными законами о видах государственной службы, о государственном пенсионном обеспечении граждан Российской Федерации, проходивших государственную службу, и их семей и законами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-u1cba8bd400cd0cf525-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "2. В стаж (общую продолжительность) государственной службы одного вида в соответствии с федеральными законами о видах государственной службы, о государственном пенсионном обеспечении граждан Российской Федерации, проходивших государственную службу, и их семей и законами субъектов Российской Федерации включаются продолжительность государственной службы других видов, а также периоды замещения государственных должностей Российской Федерации, государственных должностей субъектов Российской Федерации, муниципальных должностей, замещаемых на постоянной основе, и должностей муниципальной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-u3db721c9fda1eea78b-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "3. Персональные данные государственных служащих, сведения об их профессиональной служебной деятельности и о стаже (об общей продолжительности) государственной службы вносятся в личные дела и документы учета государственных служащих. Ведение и хранение указанных дел и документов осуществляются в соответствии с федеральными законами и иными нормативными правовыми актами Российской Федерации, законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-u562e46c6c169a618e1-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "4. Форма и порядок ведения, учета и хранения документов, подтверждающих профессиональную служебную деятельность государственных служащих, устанавливаются федеральными законами и иными нормативными правовыми актами Российской Федерации, законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-u2371e9aa013e1f0ff6-1",
+      "sectionId": "system58-s19",
+      "locator": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "text": "5. Персональные данные, внесенные в личные дела и документы учета государственных служащих, являются информацией, доступ к которой ограничен в соответствии с федеральными законами. В отношении указанных персональных данных устанавливается обязанность соблюдать их конфиденциальность и обеспечивать их безопасность при обработке. В случаях, установленных федеральными законами и иными нормативными правовыми актами Российской Федерации, указанные персональные данные относятся к сведениям, составляющим государственную тайну.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/"
+    },
+    {
+      "id": "system58-u9186053f79827f6235-1",
+      "sectionId": "system58-s20",
+      "locator": "Статья 15. Реестры государственных служащих",
+      "text": "Статья 15. Реестры государственных служащих",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/"
+    },
+    {
+      "id": "system58-u9224e6b4bf21e75ffb-1",
+      "sectionId": "system58-s20",
+      "locator": "Статья 15. Реестры государственных служащих",
+      "text": "1. В федеральном государственном органе, органе публичной власти федеральной территории и государственном органе субъекта Российской Федерации ведутся, в том числе на электронных носителях, реестры государственных служащих, которые формируются на основе персональных данных государственных служащих.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/"
+    },
+    {
+      "id": "system58-u131674970575041c32-1",
+      "sectionId": "system58-s20",
+      "locator": "Статья 15. Реестры государственных служащих",
+      "text": "2. Сведения, внесенные в реестр федеральных государственных служащих в федеральном государственном органе, органе публичной власти федеральной территории и в реестры государственных служащих субъектов Российской Федерации в государственных органах субъектов Российской Федерации, в случаях, установленных федеральными законами и иными нормативными правовыми актами Российской Федерации, относятся к сведениям, составляющим государственную тайну, а в иных случаях к сведениям конфиденциального характера.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/"
+    },
+    {
+      "id": "system58-u76e4c24a36447cfc38-1",
+      "sectionId": "system58-s20",
+      "locator": "Статья 15. Реестры государственных служащих",
+      "text": "3 - 7. Утратили силу. - Федеральный закон от 28.12.2010 N 419-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/"
+    },
+    {
+      "id": "system58-ud172c27d6db8ddfe72-1",
+      "sectionId": "system58-s21",
+      "locator": "Глава 3. СИСТЕМА УПРАВЛЕНИЯ ГОСУДАРСТВЕННОЙ СЛУЖБОЙ",
+      "text": "Глава 3. СИСТЕМА УПРАВЛЕНИЯ ГОСУДАРСТВЕННОЙ СЛУЖБОЙ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d45dff42d7539cb8d63118d36990a4fa07814db/"
+    },
+    {
+      "id": "system58-u73ca40a191d80b70ce-1",
+      "sectionId": "system58-s22",
+      "locator": "Статья 16. Управление государственной службой",
+      "text": "Статья 16. Управление государственной службой",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/94a371ef57e613c8de5c252775b652e650d4b4c6/"
+    },
+    {
+      "id": "system58-u0758dda9bcfb51923c-1",
+      "sectionId": "system58-s22",
+      "locator": "Статья 16. Управление государственной службой",
+      "text": "Система управления государственной службой создается на федеральном уровне и на уровне субъектов Российской Федерации в целях координации деятельности государственных органов при решении вопросов поступления на государственную службу, формирования кадрового резерва, прохождения и прекращения государственной службы, использования кадрового резерва для замещения должностей государственной службы, профессионального образования и дополнительного профессионального образования государственных служащих, проведения ротации государственных служащих, а также в целях осуществления вневедомственного контроля за соблюдением в государственных органах федеральных законов, иных нормативных правовых актов Российской Федерации, законов и иных нормативных правовых актов субъектов Российской Федерации о государственной службе.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/94a371ef57e613c8de5c252775b652e650d4b4c6/"
+    },
+    {
+      "id": "system58-u64a0cc20743557cbbb-1",
+      "sectionId": "system58-s23",
+      "locator": "Статья 17. Кадровый резерв для замещения должностей государственной службы",
+      "text": "Статья 17. Кадровый резерв для замещения должностей государственной службы",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d0e050b74c296d3b69159b976eaa7bd562965e2/"
+    },
+    {
+      "id": "system58-ufa24c2a1a8913fdd7f-1",
+      "sectionId": "system58-s23",
+      "locator": "Статья 17. Кадровый резерв для замещения должностей государственной службы",
+      "text": "Для замещения должностей государственной службы создаются федеральный кадровый резерв, кадровый резерв в федеральном государственном органе, кадровый резерв в органе публичной власти федеральной территории, кадровый резерв субъекта Российской Федерации и кадровый резерв в государственном органе субъекта Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d0e050b74c296d3b69159b976eaa7bd562965e2/"
+    },
+    {
+      "id": "system58-u5898bddca4384691c5-1",
+      "sectionId": "system58-s24",
+      "locator": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "text": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/"
+    },
+    {
+      "id": "system58-uabbeceb0a03dca6b0c-1",
+      "sectionId": "system58-s24",
+      "locator": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "text": "1. Финансирование федеральной государственной службы и государственной гражданской службы субъекта Российской Федерации осуществляется за счет средств соответственно федерального бюджета, бюджета федеральной территории и бюджета соответствующего субъекта Российской Федерации в порядке, установленном федеральными законами и иными нормативными правовыми актами Российской Федерации, законами и иными нормативными правовыми актами субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/"
+    },
+    {
+      "id": "system58-u391da46f3850ae6b27-1",
+      "sectionId": "system58-s24",
+      "locator": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "text": "2. Совершенствование системы государственной службы осуществляется путем реализации федеральных программ реформирования и развития федеральной государственной службы и соответствующих программ субъектов Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/"
+    },
+    {
+      "id": "system58-u13707cbefb8a3b68d0-1",
+      "sectionId": "system58-s25",
+      "locator": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "text": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/"
+    },
+    {
+      "id": "system58-ud4f538c802e856780c-1",
+      "sectionId": "system58-s25",
+      "locator": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "text": "1. В Российской Федерации в соответствии с федеральным законом предусматриваются поступление иностранных граждан и лиц без гражданства на военную службу по контракту и прохождение ими военной службы.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/"
+    },
+    {
+      "id": "system58-u3a76351b540ec42434-1",
+      "sectionId": "system58-s25",
+      "locator": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "text": "2. На указанных граждан и лиц распространяются положения настоящего Федерального закона, определяющие правовые основы государственной службы Российской Федерации.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/"
+    },
+    {
+      "id": "system58-u736dbc47737b35919e-1",
+      "sectionId": "system58-s26",
+      "locator": "Глава 4. ВСТУПЛЕНИЕ В СИЛУ НАСТОЯЩЕГО ФЕДЕРАЛЬНОГО ЗАКОНА",
+      "text": "Глава 4. ВСТУПЛЕНИЕ В СИЛУ НАСТОЯЩЕГО ФЕДЕРАЛЬНОГО ЗАКОНА",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4d0ee9b60d36c4614a6482e1fb3fb906be7bef40/"
+    },
+    {
+      "id": "system58-ub9fd8fec90d641b8ab-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-ueaa3dff5eb598ff548-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "1. Настоящий Федеральный закон вступает в силу со дня его официального опубликования.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-ue13ad9c679fe85f844-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Определение военной службы как вида федеральной государственной службы, содержащееся в статье 6 настоящего Федерального закона, применяется со дня вступления в силу федерального закона о военной службе.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-u7adf3ad808458ed7bb-2",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Абзац утратил силу с 1 января 2016 года. - Федеральный закон от 13.07.2015 N 262-ФЗ.",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-ua36f895f1430c77a19-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "2. Признать утратившими силу подпункт 1 пункта 1 статьи 1, пункты 1 и 3 статьи 2, пункт 3 статьи 3 Федерального закона от 31 июля 1995 года N 119-ФЗ \"Об основах государственной службы Российской Федерации\" (Собрание законодательства Российской Федерации, 1995, N 31, ст. 2990).",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-ue891c3e4360d128a68-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Президент",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-u64cbf15dce429edd4f-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Российской Федерации",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-udcb97e8c96abc4676a-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "В.ПУТИН",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-ua5b527ca723a103864-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "Москва, Кремль",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-u550e261b782e142050-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "27 мая 2003 года",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    },
+    {
+      "id": "system58-u9b2616dadb4c35763b-1",
+      "sectionId": "system58-s27",
+      "locator": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "text": "N 58-ФЗ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/"
+    }
+  ],
+  "aliases": {
+    "s58types": [
+      "system58-ued70e72fb4ee138f82-1",
+      "system58-u97c7c684a986f14cb3-1",
+      "system58-u8b4073e58a9fde4a5c-1",
+      "system58-u39ddba6a7e5e10d2f9-1"
+    ],
+    "s58federal": [
+      "system58-u37b7cc32969f04eeef-1"
+    ],
+    "s58time": [
+      "system58-u1cba8bd400cd0cf525-1"
+    ]
+  },
+  "sourceNote": "Текст нормативного акта. Графические приложения, если они есть, приведены вместе с соответствующим разделом.",
+  "sha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+  "provenance": [
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/",
+      "retrievedAt": "2026-10-15T15:41:04.707674+00:00",
+      "sha256": "53538cebbcd0be08523c5b6cad3151faeecc2ae0abdd48f7126d39606dd01ef1",
+      "bytes": 42999,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\3b648ccacdb9e9f3a7a90d855e66c865a2165a8b767486f9a70b355bc567195c.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/01fbae25b3040955277cbd70aa1b907cceda878e/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/01fbae25b3040955277cbd70aa1b907cceda878e/",
+      "retrievedAt": "2026-10-15T15:41:05.626771+00:00",
+      "sha256": "dcd15d611dfc31423c88aaeb8eac64d196ea8fd8041edf5045fb5fc2b2867244",
+      "bytes": 33438,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\4e93d10bdcedcf285b0bb73eea542fa928b4dc7adeb681ec6cdd7692c9742244.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/04715db866698a79cfd439a4af592dec57b2bb11/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/04715db866698a79cfd439a4af592dec57b2bb11/",
+      "retrievedAt": "2026-10-15T15:41:06.471226+00:00",
+      "sha256": "530fa75b47de4c0d8c38948dd35be3e46480e23426b55d232c2d7bf1fa472329",
+      "bytes": 34309,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\f1f1168228cec5d1b151be25ac15c591e2bec764c20a9e75cfe9ecf89661a0b5.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/05d44dbb8120af9f4084a61b391cf26fd1ba95f4/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/05d44dbb8120af9f4084a61b391cf26fd1ba95f4/",
+      "retrievedAt": "2026-10-15T15:41:07.145971+00:00",
+      "sha256": "30c4e4c881666687a4fd69a2607a658c05156335acc5f964facd0ddec05e9830",
+      "bytes": 33540,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\02fc086a8ae98b26f8f4669fec4c61abc34c295e6dadc14079100151c1d7362d.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/",
+      "retrievedAt": "2026-10-15T15:41:07.103444+00:00",
+      "sha256": "d143bdf8b8213dbe183c3d6a6fdb4c93faff16acdc731eec5cb1015d3c8e5385",
+      "bytes": 45080,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\8d994a167f90a0fd863478315adb04f958819562e2a383b3ef687875d1e6d926.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/",
+      "retrievedAt": "2026-10-15T15:41:07.064503+00:00",
+      "sha256": "50e7912f6264c39b79e85ac3082f7d6bc589fa586caebeaa4d22280deb76249f",
+      "bytes": 39092,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\0033bab5abf9b8744aa24e7e1fa897d6775eaed3a3893c6437c8bf6a7dea7f01.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/",
+      "retrievedAt": "2026-10-15T15:41:09.776390+00:00",
+      "sha256": "c0b347567ec4deaec0bd03da3589ed50933c05915026a4ba6aa8e83f10b8e42a",
+      "bytes": 43876,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\3872e093e8cc83da8c8414bbf30a5bc3e9044679456f519ff662f3e12138930a.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/",
+      "retrievedAt": "2026-10-15T15:41:09.473923+00:00",
+      "sha256": "8ac6dda7e7283e7c16230b217607045f9dc210910a23c4b5cfd73a4b8e2c5e1c",
+      "bytes": 37094,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\47359375af5cf334b1357a603ba8a6ba9772d02c8f2aaea46c39e5949935b41e.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/",
+      "retrievedAt": "2026-10-15T15:41:07.434805+00:00",
+      "sha256": "9e3abfb0ae0e2aae29462b75959404091bbf061aefeebc6cdfec2ea2babcc868",
+      "bytes": 45751,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\c9d90a4b7e8ea21d41c54bd98b44b35afee81c1565fdb49b44769c55decbf1b6.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/",
+      "retrievedAt": "2026-10-15T15:41:07.812817+00:00",
+      "sha256": "41f43211743ad3c512cf9fc89a10c80e6808fcda07046092fec93176ea0bfdf0",
+      "bytes": 57890,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\04900b337ada4d00130dc7d4826e3468936b9e0a0b97836d5fd28f38a59f3d3d.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/",
+      "retrievedAt": "2026-10-15T15:41:07.819817+00:00",
+      "sha256": "dd00d66386a61173b4fe92d8a8a5dff98b4bfd3ef578bfb4a340ad8abaaa6f61",
+      "bytes": 51650,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\7751cf76c757db408151b144d6847a41b1d7cb448a76749b684fe8735ea8f0a6.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/4d0ee9b60d36c4614a6482e1fb3fb906be7bef40/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4d0ee9b60d36c4614a6482e1fb3fb906be7bef40/",
+      "retrievedAt": "2026-10-15T15:41:09.679245+00:00",
+      "sha256": "813e1bc603df815ac803a34a945207534d5407358acb445fb1f1bf087716ecfe",
+      "bytes": 32156,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\b341fd2096bcb0afd5963f5197ce5f32d5db3e08f85a710bb1548237755a81bf.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/",
+      "retrievedAt": "2026-10-15T15:41:06.410975+00:00",
+      "sha256": "4a7a4c09b96c819e8dda9db083c4cfab8fd8f104ccf004762caddc32b8228a59",
+      "bytes": 41612,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\29bf300c0d80cf4e3b26f84710c71d7f21cc421d20e3be12b09764a2ff3e49b1.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/524d2a6736ee8b97ad871a0b1d98a53ee0063e3b/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/524d2a6736ee8b97ad871a0b1d98a53ee0063e3b/",
+      "retrievedAt": "2026-10-15T15:41:06.191134+00:00",
+      "sha256": "d81a44ac69977ea222712339a869d65866aa32342f7b42594fdf2049b0b6e0c3",
+      "bytes": 36983,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\f94fff87b500187b2f0e298af3a636521c898711b4e5c7883a6afda70e1a36f8.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/",
+      "retrievedAt": "2026-10-15T15:41:05.963941+00:00",
+      "sha256": "bb18a2338580d155f77c48817c52e86b5ae9b3af5d0d8721a3d8db82bf74f530",
+      "bytes": 50485,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\dd134850d0532c67693b866e85ffc629f9d01c7fb4b4730b2b2943032e701c8b.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/",
+      "retrievedAt": "2026-10-15T15:41:06.877442+00:00",
+      "sha256": "8722cea736a7437da105e6bc8dd2abb6c6b2f746bef236db65340cf8577ed224",
+      "bytes": 47260,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\109b3bdf64773338a17995bc97ff4e17b9cf95e1c7189f3dc6d04cc7f1c52d9a.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d0e050b74c296d3b69159b976eaa7bd562965e2/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d0e050b74c296d3b69159b976eaa7bd562965e2/",
+      "retrievedAt": "2026-10-15T15:41:09.174408+00:00",
+      "sha256": "dff86968043ddbe883f2d43277c278f4642308a07658dc9591e1e51850a7fadd",
+      "bytes": 37354,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\f52ced83a0a218623a470d13835d55afcd4c6369ddb437c977dde7e82c74d1f0.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d45dff42d7539cb8d63118d36990a4fa07814db/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d45dff42d7539cb8d63118d36990a4fa07814db/",
+      "retrievedAt": "2026-10-15T15:41:08.782086+00:00",
+      "sha256": "5bf865775591348da83a6f4893bde0c223f81f3538da9182bb0e7ca46125404e",
+      "bytes": 33051,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\4550af7c94c99826574f566eca8b7a6ad37a498a57e3e6fbd406ec0c8f322abf.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/",
+      "retrievedAt": "2026-10-15T15:41:05.785986+00:00",
+      "sha256": "46d55e2a962b8e123160f54cb1977e24b83ed727bb3cf750b190723591fc7929",
+      "bytes": 43573,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\7f127fae62b0e7660ce4bb6d29b83749d7f85275c7783726f44c7e7229dbd205.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/93eecc1ae4a11f23db531efd10b0124825ff5049/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/93eecc1ae4a11f23db531efd10b0124825ff5049/",
+      "retrievedAt": "2026-10-15T15:41:06.429675+00:00",
+      "sha256": "b1802912ea51265b7543a9dd766285fa6c18e2186eccbdec0ff5a01555c96472",
+      "bytes": 36860,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\9d65ae97bb8d4b437263fa1ca3b7572d217f962eacbbc2c3759b75cbc8d242ab.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/94a371ef57e613c8de5c252775b652e650d4b4c6/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/94a371ef57e613c8de5c252775b652e650d4b4c6/",
+      "retrievedAt": "2026-10-15T15:41:09.153382+00:00",
+      "sha256": "81ae66c383c6f97f1fe8b461c5a03e69afc9980d4be4e0c779efec00778a38dd",
+      "bytes": 38504,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\f2379aa42d6a4c805f60c6f43683a901bc02660fa10fe9c008e23aace7735c52.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/",
+      "retrievedAt": "2026-10-15T15:41:07.871190+00:00",
+      "sha256": "f27fa8094336f82aea0102a9f9726f0eac537c09b03e0856998a3f15173a0702",
+      "bytes": 47780,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\8283781a559f24cadf04c56a667be0fba739cd77135394c2b5a5f23a8ec23cff.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/",
+      "retrievedAt": "2026-10-15T15:41:09.436236+00:00",
+      "sha256": "75ba0b65b2808a541feed6089a16f5c937a280f4ea06ce2f1e4a69740a7ac441",
+      "bytes": 37670,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\8b5a192b57108ca40721b24fd17c7175c1f6928fbacfbc944aea58f64f4a11ce.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/",
+      "retrievedAt": "2026-10-15T15:41:05.771983+00:00",
+      "sha256": "0fd9c458e6a6e4bef1753d2b6895b5630637666b893183e77a271785a4993162",
+      "bytes": 45167,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\ab7e3af8f5950210d58327a5dccd377794e0340c062606a17f0f6581ebb4638c.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/",
+      "retrievedAt": "2026-10-15T15:41:08.165904+00:00",
+      "sha256": "9d1f256afbab24fa498937ad63e8319dbcc2792fded4f74eb70fb388fa98da7c",
+      "bytes": 46344,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\a0e1a5bf116fccbd000e65bacf59e924e3aee87f8f63ed741e5254a6469314d6.html"
+    },
+    {
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/",
+      "resolvedUrl": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/",
+      "retrievedAt": "2026-10-15T15:41:08.739336+00:00",
+      "sha256": "09e0570a08b88078763e7254fde69fa1466e6c721efb3fe2090690460e77a2a6",
+      "bytes": 39188,
+      "encoding": "utf-8",
+      "httpStatus": 200,
+      "file": ".source-cache\\f2e4b770be864a4991958c6dd8a89437ebe0e759e2e6726610f25831a9622358.html"
+    }
+  ],
+  "sourceTitle": "Федеральный закон \"О системе государственной службы Российской Федерации\" от 27.05.2003 N 58-ФЗ (последняя редакция) \\ КонсультантПлюс",
+  "asOf": "2026-10-15",
+  "tocInventory": [
+    {
+      "label": "Глава 1. Общие положения",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/01fbae25b3040955277cbd70aa1b907cceda878e/",
+      "paragraphs": 1,
+      "characters": 24
+    },
+    {
+      "label": "Статья 1. Государственная служба Российской Федерации",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/bcdd86d4fa5903023a917cf671689cae3b094ef5/",
+      "paragraphs": 12,
+      "characters": 1760
+    },
+    {
+      "label": "Статья 2. Система государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/924b1adb1992d9007eb2f5003df8ff7f1884a337/",
+      "paragraphs": 8,
+      "characters": 859
+    },
+    {
+      "label": "Статья 3. Основные принципы построения и функционирования системы государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/528f4f20dfe14b9c5d88af30f1ffa7ad2b22b283/",
+      "paragraphs": 13,
+      "characters": 1843
+    },
+    {
+      "label": "Статья 4. Федеральная государственная служба",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/524d2a6736ee8b97ad871a0b1d98a53ee0063e3b/",
+      "paragraphs": 2,
+      "characters": 418
+    },
+    {
+      "label": "Статья 5. Государственная гражданская служба",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/4dd5010b20037ed8c8139d2c504894e14876c397/",
+      "paragraphs": 4,
+      "characters": 1308
+    },
+    {
+      "label": "Статья 6. Военная служба",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/93eecc1ae4a11f23db531efd10b0124825ff5049/",
+      "paragraphs": 2,
+      "characters": 563
+    },
+    {
+      "label": "Статья 7. Утратила силу",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/04715db866698a79cfd439a4af592dec57b2bb11/",
+      "paragraphs": 2,
+      "characters": 112
+    },
+    {
+      "label": "Статья 8. Должности государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/71b968588a94a87775761c4f8083f9526f3b9e2e/",
+      "paragraphs": 13,
+      "characters": 1627
+    },
+    {
+      "label": "Статья 9. Реестры должностей государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/148518cdd588c84c2c528f684f9ff0e09eb03bdf/",
+      "paragraphs": 8,
+      "characters": 621
+    },
+    {
+      "label": "Статья 10. Государственные служащие",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/07140a37fb869c8ff32a9d9ec1aeb6f2ee1d495e/",
+      "paragraphs": 6,
+      "characters": 1814
+    },
+    {
+      "label": "Глава 2. Общие условия государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/05d44dbb8120af9f4084a61b391cf26fd1ba95f4/",
+      "paragraphs": 1,
+      "characters": 45
+    },
+    {
+      "label": "Статья 11. Формирование кадрового состава государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/354808bc531bbb6e57c783ceed1cfc54dedc6add/",
+      "paragraphs": 13,
+      "characters": 2164
+    },
+    {
+      "label": "Статья 12. Поступление на государственную службу, ее прохождение, приостановление, возобновление и прекращение",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/39622604dd29eb4a59e84e172b8928486c68fca4/",
+      "paragraphs": 15,
+      "characters": 2926
+    },
+    {
+      "label": "Статья 12.1. Порядок приостановления и возобновления государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/381743de4ceaa5627203194b41daf486e0593240/",
+      "paragraphs": 22,
+      "characters": 5989
+    },
+    {
+      "label": "Статья 13. Классные чины, дипломатические ранги, воинские и специальные звания",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/9efea634689326095de1aeb1f079164cf45ed0fe/",
+      "paragraphs": 12,
+      "characters": 2786
+    },
+    {
+      "label": "Статья 14. Стаж (общая продолжительность) государственной службы. Персональные данные государственных служащих",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/ee9305f62caad108fc428e06c165383bad789303/",
+      "paragraphs": 6,
+      "characters": 2315
+    },
+    {
+      "label": "Статья 15. Реестры государственных служащих",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/fcc4ab3cbe8bd0959136cbc3ad67e15c9362ddfa/",
+      "paragraphs": 4,
+      "characters": 910
+    },
+    {
+      "label": "Глава 3. Система управления государственной службой",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d45dff42d7539cb8d63118d36990a4fa07814db/",
+      "paragraphs": 1,
+      "characters": 51
+    },
+    {
+      "label": "Статья 16. Управление государственной службой",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/94a371ef57e613c8de5c252775b652e650d4b4c6/",
+      "paragraphs": 2,
+      "characters": 863
+    },
+    {
+      "label": "Статья 17. Кадровый резерв для замещения должностей государственной службы",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/8d0e050b74c296d3b69159b976eaa7bd562965e2/",
+      "paragraphs": 2,
+      "characters": 400
+    },
+    {
+      "label": "Статья 18. Финансирование государственной службы и программы ее реформирования и развития",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/a4f3e782d88dd8abb6bef7c5572d338f04fdc428/",
+      "paragraphs": 3,
+      "characters": 774
+    },
+    {
+      "label": "Статья 18.1. Военная служба в Российской Федерации иностранных граждан и лиц без гражданства",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/2f2573270aa7b39acd626577378a1941771c5689/",
+      "paragraphs": 3,
+      "characters": 453
+    },
+    {
+      "label": "Глава 4. Вступление в силу настоящего Федерального закона",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/4d0ee9b60d36c4614a6482e1fb3fb906be7bef40/",
+      "paragraphs": 1,
+      "characters": 57
+    },
+    {
+      "label": "Статья 19. Вступление в силу настоящего Федерального закона",
+      "url": "https://www.consultant.ru/document/cons_doc_LAW_42413/1c73f1f8ae36399cb4d82290158cae8d94c32b13/",
+      "paragraphs": 11,
+      "characters": 780
+    }
+  ],
+  "preflight": {
+    "anchors": {
+      "resolved": 3,
+      "total": 3,
+      "issues": []
+    },
+    "completeness": {
+      "characters": 31919,
+      "sections": 27,
+      "expectedPages": 25,
+      "loadedPages": 25,
+      "requiredMarkers": [],
+      "issues": [],
+      "heuristicOnly": true
+    },
+    "legalReviewRequired": false
+  },
+  "reviewKind": "synthetic-source-audit",
+  "reviewer": "Codex legal_corpus preparation and independent legal_corpus_review source audit",
+  "reviewedAt": "2026-10-15T16:48:59.070292+00:00",
+  "structuralReview": {
+    "reviewKind": "synthetic-automated-structural",
+    "tocPagesChecked": 25,
+    "sections": 27,
+    "units": 178,
+    "charactersDiagnostic": 32096,
+    "graphicFiles": [],
+    "issues": []
+  }
+}

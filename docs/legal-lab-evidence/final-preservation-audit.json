@@ -1,0 +1,55 @@
+{
+  "reviewKind": "synthetic-content-review",
+  "createdAt": "2026-10-15T16:47:49.168807+00:00",
+  "status": "pass",
+  "checks": {
+    "pdfCleanupReceipts": 143,
+    "tableRows": 12,
+    "tableImageHashes": {
+      "documents/figures/moscow3-rank-table-p7.png": "25d665aafdd9da98b4fcfc7e9518022028b808222c22ae0944e3c309d7883bf6",
+      "documents/figures/moscow3-rank-table-p8.png": "833ddcbe7db375f35dbb9bfd34a074885abfbd47b61761faa6a32c2092159e90"
+    },
+    "remainingPublisherPatternHits": 0,
+    "statutoryKoapNotesInRawSource": 175,
+    "statutoryKoapNotesInCandidate": 175,
+    "archiveMFCAbsent": true,
+    "documentUnits": {
+      "archive122": 467,
+      "civil79": 1038,
+      "constitution": 717,
+      "corruption273": 351,
+      "ekb": 877,
+      "goals309": 127,
+      "koap": 9493,
+      "local33": 1448,
+      "moscow3": 828,
+      "moscow35": 692,
+      "moscow50": 844,
+      "municipal25": 383,
+      "procurement44": 2270,
+      "realty218": 1745,
+      "spatial": 630,
+      "system58": 178
+    },
+    "totalUnits": 22088
+  },
+  "issues": [],
+  "candidateHashes": {
+    "archive122.json": "a35a2e6da5c5a234327185f5c2c0c0f73481f4362b2b91497340276af3f8db3c",
+    "civil79.json": "d956e99427097f1808d51d472e89b81bd0e7dbaf9776a580b88e0057b63e6f4f",
+    "constitution.json": "3daa732a9b69976d2f531bb809d9943012c779ad76b145385db659013b89b8e9",
+    "corruption273.json": "8eb99131f96b718297a7ce01558234de1f23e6e62f2d3346d7acc0733f42013e",
+    "ekb.json": "fabc7649769bd4dbea9069165e2527621cfe6e631a771ead5554cf2c4afb1249",
+    "goals309.json": "c6b863d8378846a2f4c0366fa9dc34ff96add1d7f76c2a057adb05f495f53c35",
+    "koap.json": "0e8315b5a175cf29b049427a532eb9c5d58c91188d96cddb13aa6fb2f278e48c",
+    "local33.json": "238be6e4486baa479f34d46a520a8431957864dc946e1a645f6232006e1d46e9",
+    "moscow3.json": "19646c3b5bc8da4705a9287db8b97e5821d608798a764c1e61844841d0c9bbfb",
+    "moscow35.json": "acf85a6e4331e30eab348ad1c2e2e5499d147e2c2f76eb79e7edb8913a9ec494",
+    "moscow50.json": "17b734768d0cecb8140f0da0f9bb07cce10d1431e0f9e91141385b3f6667a97b",
+    "municipal25.json": "857057725f98db94b4b6d86c3109a734c893c755a5348a871110a717869dc2c9",
+    "procurement44.json": "b0415731b3458e4e3a3c838d14e0c37623fff113a2178137a68be132bfe40f4c",
+    "realty218.json": "a966f2b216cf3fd46055db364252fb2af9d0fc29b8ca0fc1dd5e61c41376177c",
+    "spatial.json": "4881448d2b85d2967a6e7b970dca4dcd069cfc6e74e8c1457f0f805182f5aec5",
+    "system58.json": "e22ace20bd3cbc04a1c6ad1cb26683a3e9fa9b042d49a249e8b6b9f8d72d1816"
+  }
+}

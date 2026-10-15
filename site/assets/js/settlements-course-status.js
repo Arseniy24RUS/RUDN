@@ -1,5 +1,5 @@
 import {settlementsPoints,validateSettlementsResult} from './settlements-leaderboard.js';
-import {COPY,normalizeLocale} from '../../apps/settlements/copy.mjs';
+import {COPY,normalizeLocale} from './settlements-copy.js';
 import {durableStore} from './durable-store.js';
 
 /** Display receipt only. Pending results never change the gradebook or totals. */

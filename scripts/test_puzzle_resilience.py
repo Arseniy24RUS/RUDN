@@ -2,7 +2,7 @@
 """Fault-injection regressions on the real puzzle UI and isolated fixture server.
 
 No production writes are possible: PuzzleServer injects a local identity and CSP.
-Faults affect browser fetch/storage APIs only. Synthetic visibility and accelerated
+Faults affect isolated HTTP responses or browser fetch/storage APIs. Synthetic visibility and accelerated
 request deadlines are labelled; neither is physical-device coverage.
 """
 from __future__ import annotations
@@ -18,7 +18,7 @@ import time
 import traceback
 
 from playwright.async_api import async_playwright
-from test_puzzle_catalog import PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, ready, select_map, trusted_drop, write_json
+from test_puzzle_catalog import DIAGNOSTIC_PREFIX, PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, observe, ready, select_map, trusted_drop, write_json
 
 
 FETCH_FAULT = r"""(() => {
@@ -125,6 +125,89 @@ async def replacement_failure(page, context, browser_name, server, record):
     assert latest['attemptId'] == before['attemptId'] and latest['state']['placed'] == 2
     record['preserved'] = ['attempt', 'map', 'first placement', 'continued input', 'new checkpoint']
     record['failedRequests'] = await page.evaluate('window.__qaFault.calls')
+
+
+async def country_choice_after_failure(page, context, browser_name, server, record):
+    """A failed default Russia geometry must not trap the country chooser."""
+    record['simulation'] = 'Per-context localhost HTTP 503 for both Russia geometry sources; actual checkout engine with read-only observation'
+    record['viewport'], record['locale'] = [390, 844], 'ru'
+    # Set before navigation so worker warming cannot cache a successful Russia
+    # response. World, municipal, country catalog and USA resources stay real.
+    await context.add_cookies([{'name': 'qa-puzzle-russia-outage', 'value': '1', 'url': server.base}])
+    await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
+    await ready(page)
+    await page.locator('[data-puzzle-difficulty="hard"]').click()
+    await page.wait_for_function("window.__puzzleRead().ready&&!window.__puzzleRead().loading&&window.__puzzleRead().difficulty==='hard'")
+    municipal = {'mode': 'russia-municipalities', 'selection': '191706'}
+    await select_map(page, municipal)
+    before = await ready(page, municipal)
+    assert before['difficulty'] == 'hard' and before['total'] > 0
+    await page.wait_for_function("window.__puzzleRead().writable&&!window.__puzzleRead().restoring")
+
+    confirmations = []
+
+    async def accept(dialog):
+        confirmations.append(dialog.message)
+        await dialog.accept()
+
+    page.on('dialog', accept)
+
+    def failed_default(message):
+        if not message.text.startswith(DIAGNOSTIC_PREFIX):
+            return False
+        event = json.loads(message.text[len(DIAGNOSTIC_PREFIX):])
+        return event.get('kind') == 'load-status' and event.get('status') == 'waiting' and event.get('mode') == 'russia-subjects'
+
+    async def fail_default():
+        fault_start = len(server.map_fault_requests)
+        async with page.expect_console_message(predicate=failed_default):
+            await page.locator('[data-puzzle-mode="country-regions"]').click()
+        await page.wait_for_function("!window.__puzzleRead().loading&&[...document.querySelector('#puzzleCountry').options].some(o=>o.value==='AZE')")
+        assert await page.locator('#puzzleCountry').is_visible(), 'Country selector disappeared after Russia geometry failure'
+        faults = server.map_fault_requests[fault_start:]
+        assert {Path(item['path']).name for item in faults} == {'russia_subjects_89.topojson', 'russia_subjects_89.compact.json'}, faults
+        assert all(item['status'] == 503 for item in faults)
+        current = await state(page)
+        assert current['attemptId'] == before['attemptId'] and current['mode'] == municipal['mode'] and current['selection'] == municipal['selection']
+        await quiet(page)
+        return faults
+
+    first_faults = await fail_default()
+    path = server.output / 'resilience-screenshots' / f'{browser_name}-country-selector-after-503.png'
+    path.parent.mkdir(parents=True, exist_ok=True)
+    await page.screenshot(path=str(path))
+    record['selectorScreenshot'] = str(path)
+
+    await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+    await page.locator('#puzzleCanvas').focus()
+    await page.keyboard.press('h')
+    continued = await saved(page)
+    assert continued['attemptId'] == before['attemptId'] and continued['state']['hints'] == before['hints'] + 1
+    assert not await page.locator('#puzzleCountry').is_visible(), 'Continuing the old game did not restore its selectors'
+    faults_after_continue = len(server.map_fault_requests)
+    await page.evaluate("window.dispatchEvent(new Event('online'))")
+    # Real 15-second production retry interval, not an increased test timeout.
+    await page.wait_for_timeout(15300)
+    late = await state(page)
+    assert late['attemptId'] == before['attemptId'] and late['mode'] == municipal['mode'] and late['selection'] == municipal['selection'] and not late['loading']
+    assert late['hints'] == continued['state']['hints']
+    assert len(server.map_fault_requests) == faults_after_continue, 'Canceled replacement retried after continuing the old game'
+
+    second_faults = await fail_default()
+    await page.locator('#puzzleCountry').select_option('USA')
+    usa = await ready(page, {'mode': 'country-regions', 'selection': 'USA'})
+    assert usa['total'] == 51 and usa['difficulty'] == 'hard' and usa['attemptId'] != before['attemptId']
+    await page.wait_for_function("window.__puzzleRead().writable&&!window.__puzzleRead().restoring")
+    await page.locator('#puzzleCanvas').scroll_into_view_if_needed()
+    await trusted_drop(page)
+    assert (await state(page))['placed'] == 1
+    path = server.output / 'resilience-screenshots' / f'{browser_name}-country-usa-after-503.png'
+    await page.screenshot(path=str(path))
+    record['successScreenshot'] = str(path)
+    assert len(confirmations) == 2, confirmations
+    record['httpFaults'] = [first_faults, second_faults]
+    record['preserved'] = {'attemptId': before['attemptId'], 'municipalSelection': '191706', 'hints': late['hints'], 'retryCanceledAfterMs': 15300}
+    record['recovery'] = {'mode': usa['mode'], 'selection': usa['selection'], 'pieces': usa['total'], 'trustedPlacements': 1}
 
 
 async def preparation_failure(page, context, browser_name, server, record):
@@ -502,6 +585,7 @@ async def worker_version_skew(page, context, browser_name, server, record):
 
 SCENARIOS = {'initial-failure': initial_failure, 'initial-hang': initial_hang,
              'replacement-failure': replacement_failure, 'preparation-failure': preparation_failure,
+             'country-choice-after-failure': country_choice_after_failure,
              'storage-denied': storage_denied,
              'storage-quota': storage_quota, 'hidden-timer': hidden_timer,
              'profile-isolation': profile_isolation, 'old-schema': old_schema, 'legacy-world': legacy_world,
@@ -525,17 +609,16 @@ async def run(args, server):
                     page = await context.new_page()
                     page._qa_base = server.base
                     page._qa_locale = 'ru'
-                    page.set_default_timeout(20000)
-                    page.on('pageerror', lambda error, r=record: r.setdefault('pageErrors', []).append(str(error)))
+                    observe(page, record, accept_dialogs=False)
                     async def dialog_seen(dialog, r=record):
                         r.setdefault('dialogs', []).append(dialog.message)
-                        if r['scenario'] not in ('replacement-failure', 'preparation-failure'):
+                        if r['scenario'] not in ('replacement-failure', 'preparation-failure', 'country-choice-after-failure'):
                             await dialog.dismiss()
                     page.on('dialog', dialog_seen)
                     try:
                         await SCENARIOS[name](page, context, browser_name, server, record)
                         assert not record.get('pageErrors'), record.get('pageErrors')
-                        if name not in ('replacement-failure', 'preparation-failure'):
+                        if name not in ('replacement-failure', 'preparation-failure', 'country-choice-after-failure'):
                             assert not record.get('dialogs'), ('Unexpected browser dialog', record['dialogs'])
                         record['status'] = 'passed'
                     except Exception as error:
@@ -558,7 +641,7 @@ async def run(args, server):
                 await browser.close()
     report = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'expected': len(results), 'passed': sum(r['status'] == 'passed' for r in results),
               'failed': sum(r['status'] != 'passed' for r in results), 'results': results, 'physicalDevices': 'Not tested',
-              'networkSimulation': 'Isolated fetch rejection/hang with AbortSignal and explicit online event; no physical disconnection claim',
+              'networkSimulation': 'Isolated HTTP 503 or fetch rejection/hang with AbortSignal and explicit online event; no physical disconnection claim',
               'webkitOfflineLimit': 'Native WebKit offline navigation has observed limitations on Windows and Linux; this suite labels its controlled fetch/server faults separately.'}
     write_json(args.output / f'{args.report_stem}.json', report)
     return 1 if report['failed'] else 0
