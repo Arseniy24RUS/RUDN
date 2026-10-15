@@ -250,10 +250,12 @@ export function normalizeLocale(value){return /^zh/i.test(value)?'zh':/^en/i.tes
 export function translate(text,locale){
  const lang=normalizeLocale(locale);if(lang==='ru')return String(text??'');const raw=String(text??''),s=raw.trim();let result=exact.get(s)?.[lang];
  if(result===undefined&&s.endsWith(' →'))return raw.replace(s,translate(s.slice(0,-2),lang)+' →');
+ if(result===undefined&&s.endsWith(' ↗'))return raw.replace(s,translate(s.slice(0,-2),lang)+' ↗');
  if(result===undefined&&s.startsWith('✓ '))return raw.replace(s,'✓ '+translate(s.slice(2),lang));
  if(result===undefined&&s.includes(' · слайд ')){const [label,n]=s.split(' · слайд ');return raw.replace(s,translate(label,lang)+(lang==='en'?' · slide ':' · 幻灯片 ')+n);}
  if(result===undefined){for(const p of patterns){const m=s.match(p.re);if(m){result=p[lang].replace(/\{(\w+)\}/g,(_,k)=>m[p.keys.indexOf(k)+1]);break;}}}
  if(result===undefined){const dynamic=[
+ [/^Скан документа\. (.+)\. Области обозначены номерами\.$/,'Document scan. $1. Areas are numbered.','文件扫描件。$1。区域用数字标示。'],[/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
  [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Область (\d+)$/,'Area $1','区域 $1'],[/^Выбрать область (\d+)$/,'Select area $1','选择区域 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
  ];for(const [re,en,zh] of dynamic){if(re.test(s)){result=s.replace(re,lang==='en'?en:zh);break;}}
  }

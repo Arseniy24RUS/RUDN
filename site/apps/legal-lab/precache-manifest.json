@@ -345,8 +345,8 @@
     },
     {
       "url": "apps/legal-lab/entry.mjs",
-      "bytes": 70856,
-      "sha256": "0ebb6f162a3790bea8127d5345ceca92d85fdfa4101a109fa834afde2d21d1e2"
+      "bytes": 70893,
+      "sha256": "51b13091644b913a7beee72f9ca219a5fee1177b3415e11d89a7c320f8e8de73"
     },
     {
       "url": "apps/legal-lab/lib/core.mjs",
@@ -375,8 +375,8 @@
     },
     {
       "url": "apps/legal-lab/locales/ui.mjs",
-      "bytes": 30264,
-      "sha256": "16adf155b98fc67640bbb117d3225b1beb9c0d4a8c2956d6394eb4d7d579de4a"
+      "bytes": 30723,
+      "sha256": "e0045c4f6500e938ac3100cddfe679e3be8fc5c1a49171bc7fbd36a15a195ba6"
     },
     {
       "url": "apps/legal-lab/platform.mjs",
@@ -389,6 +389,6 @@
       "sha256": "025c9fcfd11bb3ad7b3e076d593da75b1857592c191ad4c549a861438b59aa12"
     }
   ],
-  "totalBytes": 33010569,
+  "totalBytes": 33011065,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }
