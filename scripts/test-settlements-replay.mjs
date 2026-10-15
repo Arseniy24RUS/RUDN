@@ -10,14 +10,15 @@ import {createHash,randomUUID} from 'node:crypto';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import assert from 'node:assert/strict';
-import {World} from '../site/apps/settlements/runtime/assets/js/settlements/v2/engine.mjs';
-import {SERVICES,createState,preview,apply,evaluate,exportSave,restore,undo} from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
+import {World,haversine} from '../site/apps/settlements/runtime/assets/js/settlements/v2/engine.mjs';
+import {SERVICES,MAX_TOWER_BATCH,towerSpec,createState,preview,apply,evaluate,exportSave,restore,undo} from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
 import {loadDistanceTransportPolicy} from '../site/apps/settlements/runtime/assets/js/settlements/v24/transport-policy-v2.mjs';
 import {loadSocialPlan} from '../site/apps/settlements/runtime/assets/js/settlements/v24/social-plans.mjs';
 import {SOCIAL_PLAN_INDEX} from '../site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/index.mjs';
 import {appendFederalCities,FEDERAL_CITIES,combineFederalBoundary} from '../site/apps/settlements/runtime/assets/js/settlements/v24/federal-cities.mjs';
 import {createRegionalScenario} from '../site/apps/settlements/runtime/assets/js/settlements/v24/scenarios.mjs';
 import {metrics} from '../site/apps/settlements/runtime/assets/js/settlements/v24/platform-rules.mjs';
+import {INITIAL_TOWER_POLICY_VERSION} from '../site/apps/settlements/runtime/assets/js/settlements/v24/initial-tower-spacing.mjs';
 
 export const REPO=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 export const DIFFICULTIES=Object.freeze(['easy','normal','hard']);
@@ -63,7 +64,7 @@ export async function captureCandidateIdentity(catalog){
 }
 const write=async(file,value)=>{await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,JSON.stringify(value,null,2)+'\n');};
 const emit=value=>console.log(JSON.stringify({...value,at:new Date().toISOString()}));
-const core=['v2/engine.mjs',...['engine','scenarios','social-policy','social-plans','social-plan-fetch','social-network','network-routing','telecom-policy','telecom-plans','transport-policy-v1','transport-policy-v1.generated','transport-policy-v2','transport-policy-v2.generated','transport-policy-fetch','federal-cities','federal-transport','platform-rules'].map(name=>`v24/${name}.mjs`)].map(p=>`assets/js/settlements/${p}`);
+const core=['v2/engine.mjs',...['engine','scenarios','social-policy','social-plans','social-plan-fetch','social-network','network-routing','telecom-policy','telecom-plans','transport-policy-v1','transport-policy-v1.generated','transport-policy-v2','transport-policy-v2.generated','transport-policy-fetch','federal-cities','federal-transport','platform-rules','initial-tower-spacing'].map(name=>`v24/${name}.mjs`)].map(p=>`assets/js/settlements/${p}`);
 core.push('assets/js/settlements/v24/social-plans-regions/index.mjs');
 async function sourceHashes(catalog,paths){const result={};for(const p of paths)result[p]=await hashFile(catalog.runtimeFile(p));return result;}
 
@@ -80,25 +81,56 @@ async function regionRun(id,catalog,output,jobRunId){
     const started=performance.now(),plan=await loadSocialPlan(world,{difficulty});
     assert.equal(plan.fingerprint,SOCIAL_PLAN_INDEX[`${id}/${difficulty}`]);
     const scenario=createRegionalScenario(world,boundary,{mode:'free',version:5,difficulty});
+    assert.equal(scenario.initialTowerPolicyVersion,INITIAL_TOWER_POLICY_VERSION,'Replay must use the current initial network');
+    assert.equal(INITIAL_TOWER_POLICY_VERSION,'spaced-18km-v1');
     let state=createState(world,scenario,{owner:'synthetic:platform-reference'}),evaluation=evaluate(world,scenario,state),previous=null,first90=metrics(evaluation).eligibleForPoints?0:null;
     const initialMetrics=metrics(evaluation),trace=[];
     emit({event:'profile-start',region:id,difficulty,actions:plan.referenceActions.length,initialSettlementsPercent:initialMetrics.settlementsPercent});
-    for(const action of plan.referenceActions){
+    const executeAction=(action,phase)=>{
       const result=preview(world,scenario,state,action);assert.equal(result.ok,true,result.error);
       previous=state;state=apply(world,scenario,state,action);assert.deepEqual(state,result.nextState);
       const beforeEvaluation=evaluation;evaluation=result.evaluation;
       let gain=0;for(const service of SERVICES){assert(evaluation.services[service].servedUnits>=beforeEvaluation.services[service].servedUnits);gain+=evaluation.services[service].servedUnits-beforeEvaluation.services[service].servedUnits;}
       assert(gain>0,'Reference action must increase access');assert(state.budget>=0);
       const coverage=metrics(evaluation);if(first90===null&&coverage.eligibleForPoints)first90=state.actions.length;
-      trace.push({turn:state.actions.length,action,cost:result.cost,budget:state.budget,settlementsRatio:coverage.settlementsRatio,populationRatio:coverage.populationRatio});
+      trace.push({turn:state.actions.length,phase,action,cost:result.cost,budget:state.budget,gainUnits:gain,settlementsRatio:coverage.settlementsRatio,populationRatio:coverage.populationRatio});
       if(state.actions.length%100===0)emit({event:'progress',region:id,difficulty,actions:state.actions.length,total:plan.referenceActions.length,rssBytes:process.memoryUsage().rss});
+      return {cost:result.cost,gainUnits:gain};
+    };
+    for(const action of plan.referenceActions)executeAction(action,'authored-reference');
+    assert.equal(state.spent,plan.metadata.expectedReferenceCost,'Authored reference prices must remain unchanged');
+    // The authored plans predate spaced-18km-v1. The actual current scenario keeps
+    // fewer initial towers; fill only its remaining telecom gaps with ordinary
+    // player actions at source seed coordinates. Never change the scenario,
+    // imported plan, source geometry, prices or final completion assertions.
+    const retained=new Set(scenario.initialTowers.map(tower=>tower.settlementId)),missing=new Set(evaluation.services.telecom.missingIds);
+    const supplement={policyVersion:scenario.initialTowerPolicyVersion,originalSeedCount:plan.telecom.initialSeedIds.length,retainedSeedCount:retained.size,
+      missingBefore:missing.size,missingAfter:null,seedIds:[],batches:[],cost:0,gainUnits:0};
+    const positions=[];
+    for(const seedId of plan.telecom.initialSeedIds){
+      if(retained.has(seedId))continue;
+      const row=world.row(seedId);assert(row,'A supplementary tower must use a source seed');
+      const hits=[...missing].filter(id=>haversine(row,world.row(id))<=towerSpec(state).radiusKm+1e-9);
+      if(!hits.length)continue;
+      for(const id of hits)missing.delete(id);
+      positions.push({lat:row.lat,lon:row.lon});supplement.seedIds.push(seedId);
     }
+    assert.equal(missing.size,0,'Current telecom gaps must be reachable from the omitted source seeds');
+    for(let offset=0;offset<positions.length;offset+=MAX_TOWER_BATCH){
+      const points=positions.slice(offset,offset+MAX_TOWER_BATCH);
+      const action=points.length===1?{type:'tower',...points[0]}:{type:'tower-batch',positions:points},result=executeAction(action,'initial-network-supplement');
+      assert.equal(result.cost,Math.round(points.length*towerSpec(state).cost*10)/10,'Use the current price for every supplementary tower');
+      supplement.batches.push({action,seedIds:supplement.seedIds.slice(offset,offset+MAX_TOWER_BATCH),...result});
+      supplement.cost=Math.round((supplement.cost+result.cost)*10)/10;supplement.gainUnits+=result.gainUnits;
+    }
+    supplement.missingAfter=evaluation.services.telecom.missingIds.length;
     assert.equal(evaluation.complete,true);for(const id of SERVICES){assert.equal(evaluation.services[id].covered,evaluation.services[id].total);assert.equal(evaluation.services[id].servedUnits,evaluation.services[id].demandUnits);}
-    assert.equal(state.spent,plan.metadata.expectedReferenceCost);assert(state.budget>=0);
+    assert.equal(state.spent,Math.round((plan.metadata.expectedReferenceCost+supplement.cost)*10)/10);assert(state.budget>=0);
     const save=exportSave(state),restored=restore(world,scenario,JSON.parse(JSON.stringify(save)));assert.deepEqual(restored,state);
     if(previous){const undone=undo(world,scenario,state);assert.deepEqual(undone,previous);assert.deepEqual(apply(world,scenario,undone,state.actions.at(-1)),state);}
     const record={status:'pass',runId,jobRunId,region:id,difficulty,synthetic:true,privilegedReference:true,independentTrials:0,deterministicReferenceRuns:1,humanFunMeasured:false,humanDurationMeasured:false,
       planFingerprint:plan.fingerprint,scenarioId:scenario.id,rulesVersion:state.rulesVersion,dataVersion:state.dataVersion,initialBudget:scenario.initialBudget,initialMetrics,first90Turn:first90,
+      authoredReferenceActions:plan.referenceActions.length,authoredReferenceCost:plan.metadata.expectedReferenceCost,initialNetworkSupplement:supplement,
       moves:state.actions.length,spent:state.spent,budget:state.budget,metrics:metrics(evaluation),complete:evaluation.complete,previewApply:'pass',restore:'pass',undoReapply:'pass',seconds:(performance.now()-started)/1000,
       rssBytes:process.memoryUsage().rss,maxRssKB:process.resourceUsage().maxRSS,save};
     await write(path.join(dir,`${difficulty}.json`),record);await fs.writeFile(path.join(dir,`${difficulty}-trace.json.gz`),zlib.gzipSync(JSON.stringify(trace)));
