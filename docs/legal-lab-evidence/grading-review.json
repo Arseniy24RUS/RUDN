@@ -1,0 +1,1028 @@
+{
+  "reviewKind": "synthetic-content-review",
+  "corePath": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\site\\apps\\legal-lab\\lib\\core.mjs",
+  "createdAt": "2026-10-15T16:47:26.979Z",
+  "status": "pass",
+  "tasks": 78,
+  "rows": [
+    {
+      "id": "S01",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "S02",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "S03",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "S04",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "S05",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "S06",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T01",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T02",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T03",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T04",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T05",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T06",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T07",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "T08",
+      "exact": {
+        "fraction": 1,
+        "exact": true
+      },
+      "extra": null
+    },
+    {
+      "id": "Q01",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q02",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q03",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q04",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q05",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 2,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.6666666666666666,
+        "exact": false,
+        "matched": 2,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q06",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q07",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q08",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q09",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 2,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.6666666666666666,
+        "exact": false,
+        "matched": 2,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q10",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 6,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8571428571428571,
+        "exact": false,
+        "matched": 6,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q11",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q12",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q13",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 6,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8571428571428571,
+        "exact": false,
+        "matched": 6,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q14",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q15",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q16",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 4,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8,
+        "exact": false,
+        "matched": 4,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q17",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q18",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q19",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q20",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q21",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 4,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8,
+        "exact": false,
+        "matched": 4,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q22",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q23",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q24",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 5,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8333333333333334,
+        "exact": false,
+        "matched": 5,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q25",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q26",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q27",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q28",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 8,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8888888888888888,
+        "exact": false,
+        "matched": 8,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q29",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q30",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q31",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 5,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8333333333333334,
+        "exact": false,
+        "matched": 5,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q32",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q33",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q34",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 2,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.6666666666666666,
+        "exact": false,
+        "matched": 2,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q35",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q36",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 6,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.8571428571428571,
+        "exact": false,
+        "matched": 6,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q37",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "Q38",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "X01",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "H01",
+      "exact": {
+        "fraction": 1,
+        "exact": true,
+        "matched": 1,
+        "extra": 0,
+        "missing": 0
+      },
+      "extra": {
+        "fraction": 0.5,
+        "exact": false,
+        "matched": 1,
+        "extra": 1,
+        "missing": 0
+      }
+    },
+    {
+      "id": "A01",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A02",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A03",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A04",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A05",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A06",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A07",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A08",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A09",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A10",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A11",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A12",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A13",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A14",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A15",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A16",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A17",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A18",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3
+    },
+    {
+      "id": "A19",
+      "correctPoints": 5,
+      "extraPoints": 4.33,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A20",
+      "correctPoints": 5,
+      "extraPoints": 4.33,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A21",
+      "correctPoints": 5,
+      "extraPoints": 4.33,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A22",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A23",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    },
+    {
+      "id": "A24",
+      "correctPoints": 5,
+      "extraPoints": 4,
+      "selectAllPoints": 3.01
+    }
+  ],
+  "issues": [],
+  "inputHashes": [
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\site\\apps\\legal-lab\\lib\\core.mjs",
+      "sha256": "f5c2e5f2979ae1fa4f2a6ee536cd48573875e232c077186bc8e17c87114f3545"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\site\\apps\\legal-lab\\data\\bank.json",
+      "sha256": "0a709e242afec021c3c4e6ee17a945f1e53ad2ee9678d61c83db2a09f0161c90"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\site\\apps\\legal-lab\\data\\cases.json",
+      "sha256": "523b88fde17f071ae8334b0299fedec553807f1d7338874ffe85f90c3f472d3c"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\site\\apps\\legal-lab\\data\\scans.json",
+      "sha256": "6fb4de4d037410dd0db43e91fb73d27312d670139711d75d35b747440dcf5f7b"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\archive122.json",
+      "sha256": "a35a2e6da5c5a234327185f5c2c0c0f73481f4362b2b91497340276af3f8db3c"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\civil79.json",
+      "sha256": "d956e99427097f1808d51d472e89b81bd0e7dbaf9776a580b88e0057b63e6f4f"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\constitution.json",
+      "sha256": "3daa732a9b69976d2f531bb809d9943012c779ad76b145385db659013b89b8e9"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\corruption273.json",
+      "sha256": "8eb99131f96b718297a7ce01558234de1f23e6e62f2d3346d7acc0733f42013e"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\ekb.json",
+      "sha256": "fabc7649769bd4dbea9069165e2527621cfe6e631a771ead5554cf2c4afb1249"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\goals309.json",
+      "sha256": "c6b863d8378846a2f4c0366fa9dc34ff96add1d7f76c2a057adb05f495f53c35"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\koap.json",
+      "sha256": "0e8315b5a175cf29b049427a532eb9c5d58c91188d96cddb13aa6fb2f278e48c"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\local33.json",
+      "sha256": "238be6e4486baa479f34d46a520a8431957864dc946e1a645f6232006e1d46e9"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow3.json",
+      "sha256": "19646c3b5bc8da4705a9287db8b97e5821d608798a764c1e61844841d0c9bbfb"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow35.json",
+      "sha256": "acf85a6e4331e30eab348ad1c2e2e5499d147e2c2f76eb79e7edb8913a9ec494"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\moscow50.json",
+      "sha256": "17b734768d0cecb8140f0da0f9bb07cce10d1431e0f9e91141385b3f6667a97b"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\municipal25.json",
+      "sha256": "857057725f98db94b4b6d86c3109a734c893c755a5348a871110a717869dc2c9"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\procurement44.json",
+      "sha256": "b0415731b3458e4e3a3c838d14e0c37623fff113a2178137a68be132bfe40f4c"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\realty218.json",
+      "sha256": "a966f2b216cf3fd46055db364252fb2af9d0fc29b8ca0fc1dd5e61c41376177c"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\spatial.json",
+      "sha256": "4881448d2b85d2967a6e7b970dca4dcd069cfc6e74e8c1457f0f805182f5aec5"
+    },
+    {
+      "file": "C:\\Codex projects\\RUDN-Settlements-Codex-Production-Kit\\legal-lab-source\\RUDN_Legal_Lab_1.0.0_rc1\\.review-corpus\\documents\\system58.json",
+      "sha256": "e22ace20bd3cbc04a1c6ad1cb26683a3e9fa9b042d49a249e8b6b9f8d72d1816"
+    }
+  ]
+}

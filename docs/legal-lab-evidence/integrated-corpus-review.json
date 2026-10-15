@@ -1,0 +1,121 @@
+{
+  "status": "pass",
+  "reviewKind": "synthetic-integration-identity-check",
+  "acceptedManifestSha256": "5cda8ea18c392cbc7a1ad333ec4f63a98612888c5d1da7df8aa4c2ff35c6c738",
+  "contentVersion": "legal-lab-2026-10-15.2",
+  "documents": [
+    {
+      "id": "archive122",
+      "unitsSha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+      "fileSha256": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410",
+      "units": 467,
+      "status": "pass"
+    },
+    {
+      "id": "civil79",
+      "unitsSha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+      "fileSha256": "c1c1e75081657bd2d9e1021968041bbf1f264746d22d8789a30a1a3ca1e638d1",
+      "units": 1038,
+      "status": "pass"
+    },
+    {
+      "id": "constitution",
+      "unitsSha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+      "fileSha256": "693dc24b02bbd0551658ae0ee127d28aba9a78f5bfd6cda7dd02cfe2769c425b",
+      "units": 717,
+      "status": "pass"
+    },
+    {
+      "id": "corruption273",
+      "unitsSha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+      "fileSha256": "2279e93b7d4e2a484f0f2538709eae35f09ffef3c2e45ff8dbc08917f95b12c7",
+      "units": 351,
+      "status": "pass"
+    },
+    {
+      "id": "ekb",
+      "unitsSha256": "9e0763b7796ddd0eff3ede9f4001c4d7badaa86e5984cbec27425866a5ddd19d",
+      "fileSha256": "52937be4c1367115b5cb27e28543f78a3cb522c8559e3b46ee9957ca8ec26658",
+      "units": 877,
+      "status": "pass"
+    },
+    {
+      "id": "goals309",
+      "unitsSha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+      "fileSha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11",
+      "units": 127,
+      "status": "pass"
+    },
+    {
+      "id": "koap",
+      "unitsSha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+      "fileSha256": "f322d2c34e67d180baf7b8ba1edf389157805e36d57e5b95dd5b2af9b17e7d09",
+      "units": 9493,
+      "status": "pass"
+    },
+    {
+      "id": "local33",
+      "unitsSha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+      "fileSha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42",
+      "units": 1448,
+      "status": "pass"
+    },
+    {
+      "id": "moscow3",
+      "unitsSha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+      "fileSha256": "4945989c2c342c31fec4683e91fcbd86aa13fd16648c0fcd55890b499f8325e1",
+      "units": 828,
+      "status": "pass"
+    },
+    {
+      "id": "moscow35",
+      "unitsSha256": "0ee1a8bf5c488775c9c26a5d158d089bb3ca18c3a832306b7c0b29dbebbb3d17",
+      "fileSha256": "7bf5631df4944d6ac402a1e83053c747cad6ca949d15d1ce88e4e4f1a5b21cae",
+      "units": 692,
+      "status": "pass"
+    },
+    {
+      "id": "moscow50",
+      "unitsSha256": "e833541407417bdfc726ed668851d70ee1206746992e11419ab66ca44527acb5",
+      "fileSha256": "4ddb89b586019be059bf653d52d097f1c646b49d6e3941c92cb1718b3724969f",
+      "units": 844,
+      "status": "pass"
+    },
+    {
+      "id": "municipal25",
+      "unitsSha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+      "fileSha256": "9b5d628add853665dd15cfd4b968b7a906ebddbe8cc0b27e5887da49e67a5da4",
+      "units": 383,
+      "status": "pass"
+    },
+    {
+      "id": "procurement44",
+      "unitsSha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+      "fileSha256": "706b04d952285f39246a3df60e7237a91c607e09682a2354510622b29169a65d",
+      "units": 2270,
+      "status": "pass"
+    },
+    {
+      "id": "realty218",
+      "unitsSha256": "b31c47516c4cc42de750ff36b82dc67e090f55f61e18c29e0ca9738e6d6201b9",
+      "fileSha256": "c7e0f4dc800436e2e07ee1145891bf19b9081bba176934dd09b5fb0f668e00e8",
+      "units": 1745,
+      "status": "pass"
+    },
+    {
+      "id": "spatial",
+      "unitsSha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+      "fileSha256": "d229cd97b7b4a5cbe67f1b0fbcbca9b986e017bc8bca703b3560bab1c4940929",
+      "units": 630,
+      "status": "pass"
+    },
+    {
+      "id": "system58",
+      "unitsSha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+      "fileSha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e",
+      "units": 178,
+      "status": "pass"
+    }
+  ],
+  "meaning": "Source reviewed units, TOC, aliases, URL and revision labels are unchanged; delivery metadata and LF/raw file hashes are regenerated."
+}

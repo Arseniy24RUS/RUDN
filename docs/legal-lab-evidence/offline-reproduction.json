@@ -1,0 +1,120 @@
+{
+  "reviewKind": "synthetic-offline-reproduction",
+  "networkCalls": 0,
+  "sourceArchiveSha256": "98508214430211dc9e28eb119d247698f380c90c4503560452ee2a6e3bec9106",
+  "documents": [
+    {
+      "id": "archive122",
+      "unitsSha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+      "referenceUnitsSha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "civil79",
+      "unitsSha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+      "referenceUnitsSha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "constitution",
+      "unitsSha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+      "referenceUnitsSha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "corruption273",
+      "unitsSha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+      "referenceUnitsSha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "ekb",
+      "unitsSha256": "9e0763b7796ddd0eff3ede9f4001c4d7badaa86e5984cbec27425866a5ddd19d",
+      "referenceUnitsSha256": "9e0763b7796ddd0eff3ede9f4001c4d7badaa86e5984cbec27425866a5ddd19d",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "goals309",
+      "unitsSha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+      "referenceUnitsSha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "koap",
+      "unitsSha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+      "referenceUnitsSha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "local33",
+      "unitsSha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+      "referenceUnitsSha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "moscow3",
+      "unitsSha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+      "referenceUnitsSha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "moscow35",
+      "unitsSha256": "0ee1a8bf5c488775c9c26a5d158d089bb3ca18c3a832306b7c0b29dbebbb3d17",
+      "referenceUnitsSha256": "0ee1a8bf5c488775c9c26a5d158d089bb3ca18c3a832306b7c0b29dbebbb3d17",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "moscow50",
+      "unitsSha256": "e833541407417bdfc726ed668851d70ee1206746992e11419ab66ca44527acb5",
+      "referenceUnitsSha256": "e833541407417bdfc726ed668851d70ee1206746992e11419ab66ca44527acb5",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "municipal25",
+      "unitsSha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+      "referenceUnitsSha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "procurement44",
+      "unitsSha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+      "referenceUnitsSha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "realty218",
+      "unitsSha256": "b31c47516c4cc42de750ff36b82dc67e090f55f61e18c29e0ca9738e6d6201b9",
+      "referenceUnitsSha256": "b31c47516c4cc42de750ff36b82dc67e090f55f61e18c29e0ca9738e6d6201b9",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "spatial",
+      "unitsSha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+      "referenceUnitsSha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    },
+    {
+      "id": "system58",
+      "unitsSha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+      "referenceUnitsSha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+      "identicalLawUnits": true,
+      "structuralIssues": []
+    }
+  ],
+  "status": "pass"
+}

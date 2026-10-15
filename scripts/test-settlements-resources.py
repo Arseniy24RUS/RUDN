@@ -16,6 +16,7 @@ from threading import Thread
 from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
+from settlements_ui_helpers import accept_training_dialog
 
 sys.stdout.reconfigure(encoding="utf-8")
 parser = argparse.ArgumentParser()
@@ -144,6 +145,7 @@ with sync_playwright() as playwright:
         sample("lobby", 0)
         phase = "tutorial"
         page.locator('[data-action="tutorial"]').click()
+        accept_training_dialog(page, "welcome", expect_open=True)
         page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
         sample("tutorial-mounted", 1)
         click("guide-position"); confirm(1)
@@ -152,7 +154,7 @@ with sync_playwright() as playwright:
         choose("tower"); find("Большая Тюлякова"); confirm(4)
         choose("connect"); find("Султанаева"); find("Большая Казакбаева"); confirm(5)
         choose("culture"); find("Большая Тюлякова"); confirm(6)
-        page.locator('[data-action="lobby"]').filter(visible=True).click()
+        accept_training_dialog(page, "complete", expect_open=True)
         page.locator('[data-select="region"]').wait_for()
         sample("tutorial-released", 0)
         # Include the supplied territory with the most settlement records.

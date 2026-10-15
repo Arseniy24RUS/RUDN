@@ -61,15 +61,41 @@ READ_ONLY_HOOK = r"""
   };
 """
 
+DIAGNOSTIC_PREFIX = 'QA-PUZZLE-DIAGNOSTIC:'
+DIAGNOSTIC_HOOK = r"""(() => {
+  const selectors=()=>({
+    mode:document.querySelector('#puzzleMode')?.value,
+    difficulty:document.querySelector('#puzzleDifficulty')?.value,
+    country:document.querySelector('#puzzleCountry')?.value,
+    subject:document.querySelector('#puzzleSubject')?.value,
+    countryVisible:Boolean(document.querySelector('#puzzleCountry')?.getClientRects().length),
+    countryOptions:document.querySelector('#puzzleCountry')?.options.length
+  });
+  const emit=(kind,detail)=>console.debug('QA-PUZZLE-DIAGNOSTIC:'+JSON.stringify({kind,at:performance.now(),...detail,selectors:selectors()}));
+  document.addEventListener('puzzle:load-status',event=>{
+    const {status,mode,selection,reason}=event.detail||{};
+    emit('load-status',{status,mode,selection,reason});
+  },true);
+  for(const name of ['click','change'])document.addEventListener(name,event=>{
+    const target=event.target?.closest?.('[data-puzzle-mode],[data-puzzle-difficulty],#puzzleMode,#puzzleCountry,#puzzleSubject,#puzzleDifficulty');
+    if(!target)return;
+    const requested={control:target.id||null,mode:target.dataset.puzzleMode||null,difficulty:target.dataset.puzzleDifficulty||null,value:target.value||null};
+    // Read after the real handlers have processed the user's selection.
+    setTimeout(()=>emit('requested-selector',{event:name,requested}),0);
+  },true);
+})();"""
+
 
 class PuzzleServer:
     def __init__(self, output, port=0):
         self.output, self.port = output, port
         self.transport_probes = []
+        self.map_fault_requests = []
 
     def __enter__(self):
         fixture_output = self.output
         transport_probes = self.transport_probes
+        map_fault_requests = self.map_fault_requests
         class Handler(SimpleHTTPRequestHandler):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, directory=str(ROOT / 'site'), **kwargs)
@@ -94,6 +120,18 @@ class PuzzleServer:
                 connection_loss = bool(re.search(r'(?:^|;\s*)qa-puzzle-offline=connection-loss(?:;|$)', cookie))
                 server_outage = bool(re.search(r'(?:^|;\s*)qa-puzzle-offline=1(?:;|$)', cookie))
                 requested = urlsplit(self.path)
+                if (re.search(r'(?:^|;\s*)qa-puzzle-russia-outage=1(?:;|$)', cookie)
+                        and requested.path in ('/RUDN/assets/puzzle/data/russia_subjects_89.topojson',
+                                               '/RUDN/assets/puzzle/data/russia_subjects_89.compact.json')):
+                    # Explicit per-context HTTP fault; the engine is still read
+                    # from the checkout and receives only READ_ONLY_HOOK below.
+                    map_fault_requests.append({'path': requested.path, 'status': 503})
+                    body = b'Isolated QA Russia geometry outage'
+                    self.send_response(503)
+                    self.send_header('Cache-Control', 'no-store')
+                    self.send_header('Content-Length', str(len(body)))
+                    self.end_headers();self.wfile.write(body)
+                    return
                 nonce = parse_qs(requested.query).get('nonce', [''])[0] if requested.path == '/RUDN/__qa/connection-probe' else ''
                 if nonce and re.fullmatch(r'[A-Za-z0-9_-]{1,100}', nonce):
                     transport_probes.append({'nonce': nonce, 'state': 'connection-loss' if connection_loss else 'server-outage' if server_outage else 'online'})
@@ -200,6 +238,7 @@ async def context_for(browser, server, output, viewport, locale, record):
                                         service_workers='allow', reduced_motion='reduce', has_touch=viewport[0] <= 768)
     context._qa_server = server
     await context.add_init_script(initializer(locale))
+    await context.add_init_script(DIAGNOSTIC_HOOK)
 
     async def route(request_route):
         request = request_route.request
@@ -230,15 +269,46 @@ async def context_for(browser, server, output, viewport, locale, record):
     return context
 
 
-def observe(page, record):
+def diagnostic_url(value):
+    """Keep the route, never query strings, fragments, credentials or headers."""
+    parts = urlsplit(value)
+    host = parts.hostname or ''
+    if parts.port:
+        host += ':' + str(parts.port)
+    return f'{parts.scheme}://{host}{parts.path}' if parts.scheme else parts.path
+
+
+def diagnostic_text(value):
+    return re.sub(r'https?://[^\s<>"\']+', lambda match: diagnostic_url(match.group(0)), str(value))
+
+
+def observe(page, record, accept_dialogs=True):
     page.set_default_timeout(20000)
+    page._qa_record = record
     for event, handler in getattr(page, '_qa_observers', []):
         page.remove_listener(event, handler)
+
+    def console(message):
+        if message.text.startswith(DIAGNOSTIC_PREFIX):
+            event = json.loads(message.text[len(DIAGNOSTIC_PREFIX):])
+            if event.get('reason'):
+                event['reason'] = diagnostic_text(event['reason'])
+            key = 'loadStatus' if event['kind'] == 'load-status' else 'requestedSelectors'
+            record.setdefault(key, []).append(event)
+        elif message.type == 'error':
+            record.setdefault('consoleErrors', []).append(diagnostic_text(message.text))
+
     page._qa_observers = [
         ('pageerror', lambda error: record.setdefault('pageErrors', []).append(str(error))),
-        ('console', lambda message: record.setdefault('consoleErrors', []).append(message.text) if message.type == 'error' else None),
-        ('dialog', lambda dialog: asyncio.create_task(dialog.accept())),
+        ('console', console),
+        ('requestfailed', lambda request: record.setdefault('requestFailed', []).append({
+            'url': diagnostic_url(request.url), 'resourceType': request.resource_type,
+            'failure': diagnostic_text(request.failure)})),
+        ('response', lambda response: record.setdefault('httpErrors', []).append({
+            'url': diagnostic_url(response.url), 'status': response.status}) if response.status >= 400 else None),
     ]
+    if accept_dialogs:
+        page._qa_observers.append(('dialog', lambda dialog: asyncio.create_task(dialog.accept())))
     for event, handler in page._qa_observers:
         page.on(event, handler)
 
@@ -253,6 +323,7 @@ async def ready(page, entry=None):
 async def select_map(page, entry):
     mode = entry['mode']
     category = 'country-regions' if mode == 'russia-subjects' else mode
+    getattr(page, '_qa_record', {}).setdefault('requestedMaps', []).append(dict(entry))
     # A rendered previous scene can remain visible while its write lease and
     # saved state are restored. A mode click during that interval is ignored.
     # Pending replacement loads must stay selectable so users can cancel them.

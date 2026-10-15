@@ -803,7 +803,9 @@
       // A stale tab must not write its old scene if loading the durable head failed.
       state.restoring = Boolean(resume);
       setLoading(false);
-      if (state.ready) syncSelectors();
+      // Keep the requested controls available after a failed replacement load.
+      // A different country can still be chosen while the old scene survives.
+      if (state.ready) syncSelectors(settings);
       else {
         els.empty.hidden = false;
         els.empty.querySelector("h2").textContent = copy("Не удалось открыть карту", "The map could not be opened", "无法打开地图");
@@ -2330,6 +2332,7 @@
   els.modeCards.forEach(card => on(card, "click", () => {
     if (seminarContext) return;
     const mode = card.dataset.puzzleMode;
+    if (mode === "country-regions") void loadAdm1Catalog().catch(() => {});
     void requestGame(canonicalSettings({ mode, difficulty: els.difficulty.value, selection: state.selections[mode] || (mode === "country-regions" ? "RUS" : null) }));
   }));
   on(els.subject, "change", () => void requestGame());

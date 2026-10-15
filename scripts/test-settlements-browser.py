@@ -16,6 +16,7 @@ import subprocess
 import sys
 from threading import Thread
 from playwright.sync_api import sync_playwright
+from settlements_ui_helpers import accept_training_dialog
 
 sys.stdout.reconfigure(encoding="utf-8")
 VIEWPORTS = [(320, 568), (390, 844), (430, 932), (844, 390), (1365, 900)]
@@ -101,6 +102,7 @@ with sync_playwright() as p:
                 row["listenersBefore"] = listener_counts(cdp)
                 page.screenshot(path=str(out / f"lobby-{stem}.png"))
                 page.locator('[data-action="tutorial"]').click()
+                accept_training_dialog(page, "welcome", expect_open=True)
                 page.locator('[data-act="guide-position"]').wait_for(timeout=60000)
                 row["listenersMounted"] = listener_counts(cdp)
                 assert page.locator('[data-game-status]').is_visible(), "save status must be visible above the map"
@@ -132,11 +134,11 @@ with sync_playwright() as p:
                 page.screenshot(path=str(out / f"preview-{stem}.png"))
                 selected_action = page.locator('.preview-panel').inner_text() if page.locator('.preview-panel').count() else None
                 next_locale = {"ru": "en", "en": "zh", "zh": "ru"}[locale]
-                page.locator('[data-select="locale"]').select_option(next_locale)
+                page.locator('[data-select="locale"]').filter(visible=True).select_option(next_locale)
                 confirm.wait_for()
                 assert page.locator('.puzzle-map').count() == 1
                 assert page.locator('.step-badge').filter(has_text='1/6').is_visible()
-                page.locator('[data-select="locale"]').select_option(locale)
+                page.locator('[data-select="locale"]').filter(visible=True).select_option(locale)
                 confirm.wait_for()
                 if selected_action is not None:
                     assert page.locator('.preview-panel').inner_text() == selected_action
@@ -156,16 +158,18 @@ with sync_playwright() as p:
                     if counts != row["listenersBefore"]:
                         row["issues"].append(f"listeners_accumulated_cycle_{cycle + 1}")
                     page.locator('[data-action="tutorial"]').click()
+                    accept_training_dialog(page, "welcome", expect_open=True)
                     page.locator(".step-badge").filter(has_text="2/6").wait_for(timeout=60000)
                     if listener_counts(cdp) != row["listenersMounted"]:
                         row["issues"].append(f"mounted_listeners_changed_cycle_{cycle + 1}")
                 next_locale = {"ru": "en", "en": "zh", "zh": "ru"}[locale]
-                page.locator('[data-select="locale"]').select_option(next_locale)
+                page.locator('[data-select="locale"]').filter(visible=True).select_option(next_locale)
                 page.locator(".step-badge").filter(has_text="2/6").wait_for()
                 page.locator('[data-action="lobby"]').filter(visible=True).click()
                 page.locator('[data-action="tutorial"]').wait_for()
                 page.reload()
                 page.locator('[data-action="tutorial"]').click(timeout=60000)
+                accept_training_dialog(page, "welcome", expect_open=True)
                 page.locator(".step-badge").filter(has_text="2/6").wait_for(timeout=60000)
                 page.screenshot(path=str(out / f"restored-{stem}-{next_locale}.png"))
                 row["restoredStep"] = "2/6"

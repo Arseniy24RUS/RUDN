@@ -1,7 +1,7 @@
 // Actual platform shell/quiz UI; data writes remain in an isolated local backend.
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
-import {readFile} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
@@ -51,7 +51,11 @@ async function lateModuleDoesNotReplaceCatalog(browser){
  }finally{release();await context.close();}
 }
 async function passQuiz(page,slug,mode='default',wrong=false){
- await page.locator('#quizNext').waitFor();
+ try{await page.locator('#quizNext').waitFor();}catch(error){
+  console.error(JSON.stringify({failure:'Quiz did not open',slug,mode,url:page.url(),visible:await page.locator('body').innerText()},null,2));
+  if(process.env.GAMES_PLATFORM_OUTPUT){await mkdir(process.env.GAMES_PLATFORM_OUTPUT,{recursive:true});await page.screenshot({path:process.env.GAMES_PLATFORM_OUTPUT+'/quiz-not-open.png',fullPage:true});}
+  throw error;
+ }
  const questions=await page.evaluate(async({slug,mode})=>{
   const store=(await import('/assets/js/durable-store.js')).durableStore;await store.flush();
   const draft=await store.loadDraft({owner:'student:games-platform-fixture',activitySlug:slug,mode});
@@ -95,7 +99,7 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
   await page.locator('#app .page-actions a[href="#games"]').click();await page.locator('[data-game]').first().waitFor();
   // A real course profile and open fixture schedule, using the actual access.js.
   await page.evaluate(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']).concat(Array.from({length:7},(_,i)=>['lecture-'+(i+1)+'-test','open'])))));},profile);
-  await page.goto(base+'/#dashboard');await ready(page);
+  await page.goto(base+'/#dashboard');await ready(page);await page.locator('.topic-card').first().waitFor();
   assert.equal(await page.locator('[data-lecture-test]').count(),7);assert.equal(await page.locator('[data-lecture-test="lecture-8"]').count(),0);
   assert.equal(await page.locator('a[href="#activity/lecture-8"]').count(),1,'Lecture 8 retains its Open link');
   for(let i=1;i<=7;i++)assert.equal(await page.locator(`[data-lecture-test="lecture-${i}"]`).getAttribute('href'),`#activity/lecture-${i}/test`);

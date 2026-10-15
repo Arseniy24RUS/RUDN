@@ -1,0 +1,164 @@
+name: Legal Lab release checks
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'site/apps/legal-lab/**'
+      - 'site/assets/js/main.js'
+      - 'site/assets/js/backend.js'
+      - 'site/assets/js/checkpoint-sync.js'
+      - 'site/assets/js/durable-store.js'
+      - 'site/assets/js/legal-lab-storage.js'
+      - 'site/assets/js/seminar-modules.js'
+      - 'site/assets/js/teacher-journal.js'
+      - 'site/data/course.json'
+      - 'site/service-worker.js'
+      - 'firebase/database.rules.json'
+      - 'scripts/*legal*'
+      - 'tests/legal-lab*'
+      - 'tools/legal-lab/**'
+      - '.github/workflows/legal-lab-checks.yml'
+      - '.github/workflows/deploy-pages.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legal-lab-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  corpus-and-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - name: Verify acquisition regressions without downloading new acts
+        run: |
+          python -m pip install -r tools/legal-lab/corpus-requirements.txt
+          python -X utf8 -m unittest discover -s tools/legal-lab/tests -p corpus_regression_test.py -v
+      - name: Verify scoring, stable history, drafts and room lifecycle
+        run: node --test tests/legal-lab-core.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+      - name: Reject a result from a conflicting branch before grading
+        run: node scripts/test_legal_lab_conflict.mjs
+      - name: Verify full corpus, references, translations and release hashes
+        run: |
+          node scripts/build_legal_lab_manifest.mjs --check
+          node scripts/test_legal_lab_corpus.mjs --output "${{ runner.temp }}/legal-corpus"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-corpus
+          path: ${{ runner.temp }}/legal-corpus
+          retention-days: 14
+
+  rooms-emulator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --ignore-scripts
+      - name: Verify Auth and Database rules with thirty synthetic participants
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test --test-force-exit scripts/test_legal_rooms_emulator.mjs"
+      - name: Restore cloud drafts, retain conflicts and deliver results without duplicate attempts
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_sync_emulator.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-emulator
+          path: '*-debug.log'
+          retention-days: 14
+
+  browsers:
+    needs: corpus-and-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare actual browser runtime
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Exercise real module UI, languages, viewports and dossier reports
+        shell: bash
+        run: |
+          python -u -m http.server 8765 --bind 127.0.0.1 --directory site > "${{ runner.temp }}/legal-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          python - "http://127.0.0.1:8765/apps/legal-lab/demo.html" "site/apps/legal-lab/demo.html" <<'PY'
+          import hashlib
+          import http.client
+          import pathlib
+          import sys
+          import time
+          import urllib.parse
+
+          url, expected_path = sys.argv[1:]
+          target = urllib.parse.urlsplit(url)
+          if target.scheme != "http" or target.hostname != "127.0.0.1" or target.path != "/apps/legal-lab/demo.html" or target.query or target.fragment or target.username or target.password:
+              sys.exit("Readiness probe only accepts the local Legal Lab demo URL")
+          expected = pathlib.Path(expected_path).read_bytes()
+          expected_sha256 = hashlib.sha256(expected).hexdigest()
+          deadline = time.monotonic() + 30.0
+          attempts = 0
+          last_error = "No HTTP response"
+          last_response = "No complete HTTP response"
+          while time.monotonic() < deadline:
+              attempts += 1
+              connection = http.client.HTTPConnection("127.0.0.1", target.port, timeout=min(1.0, max(0.001, deadline - time.monotonic())))
+              try:
+                  connection.request("GET", "/apps/legal-lab/demo.html")
+                  response = connection.getresponse()
+                  status = response.status
+                  actual = response.read(len(expected) + 1)
+                  if status == 200 and actual == expected:
+                      print(f"HTTP ready: {url}; attempts={attempts}; bytes={len(actual)}; sha256={expected_sha256}", flush=True)
+                      break
+                  last_error = f"HTTP {status}; sampled_bytes={len(actual)}; sampled_sha256={hashlib.sha256(actual).hexdigest()}"
+                  last_response = last_error
+              except (OSError, http.client.HTTPException) as error:
+                  last_error = f"{type(error).__name__}: {error}"
+              finally:
+                  connection.close()
+              time.sleep(min(0.2, max(0.0, deadline - time.monotonic())))
+          else:
+              print(f"HTTP readiness timed out after 30s: {url}; expected={expected_path}; expected_bytes={len(expected)}; expected_sha256={expected_sha256}; attempts={attempts}; last_response={last_response}; last_error={last_error}", file=sys.stderr, flush=True)
+              sys.exit(1)
+          PY
+          node scripts/test_legal_lab_browser.mjs --base http://127.0.0.1:8765/ --browsers "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-browser"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legal-browser-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/legal-browser
+            ${{ runner.temp }}/legal-server.log
+          retention-days: 14

@@ -13,16 +13,28 @@ OLD_RELEASE = '93698d66ca2f9f04143beba14db969d3f3927a6c'
 catalog.READ_ONLY_HOOK += '\n  window.__upgradeRead=()=>snapshotState();\n'
 
 
+async def loaded_release(page):
+    # Both historical and current entry pages load the engine after their matching
+    # bootstrap. Read this document's release, including after an offline reload.
+    return await page.evaluate(r"""()=>{
+      const engine=[...document.scripts].map(script=>new URL(script.src,location.href))
+        .find(url=>url.pathname.endsWith('/assets/js/puzzle-engine.js'));
+      const release=engine?.searchParams.get('v');
+      if(!/^\d+\.\d+\.\d+$/.test(release||''))throw new Error('Loaded puzzle release is missing');
+      return release;
+    }""")
+
+
 async def stored(page, mode):
     await catalog.flush(page)
-    return await page.evaluate("""async ({base,mode})=>{
-      const {durableStore:store}=await import(base+'assets/js/durable-store.js?v=1.3.8');
-      const {backend}=await import(base+'assets/js/backend.js?v=1.3.8');
+    return await page.evaluate("""async ({base,mode,release})=>{
+      const {durableStore:store}=await import(base+'assets/js/durable-store.js?v='+release);
+      const {backend}=await import(base+'assets/js/backend.js?v='+release);
       const owner='student:'+backend.getProfile().studentKey;
       return {draft:await store.loadDraft({owner,mode,activitySlug:mode==='seminar'?'seminar-2':'maps-freeplay'}),
         attempts:await store.listAttempts({owner}),pending:await store.listPending({owner,includeDeferred:true}),
         grades:backend.localGrades()};
-    }""", {'base': page._qa_base, 'mode': mode})
+    }""", {'base': page._qa_base, 'mode': mode, 'release': await loaded_release(page)})
 
 
 async def miss(page):
@@ -45,10 +57,10 @@ async def finish(page):
     await catalog.place_pieces(page, 89)
     await page.locator('#puzzleResultDialog[open]').wait_for()
     # The real bridge saves the grade asynchronously after its durable completion.
-    await page.evaluate("""async base=>{
-      const {backend}=await import(base+'assets/js/backend.js?v=1.3.8');
+    await page.evaluate("""async ({base,release})=>{
+      const {backend}=await import(base+'assets/js/backend.js?v='+release);
       window.__qaNoMistakesAttemptReady=()=>backend.localAttempts().some(a=>a.id===window.__puzzleRead().attemptId);
-    }""", page._qa_base)
+    }""", {'base': page._qa_base, 'release': await loaded_release(page)})
     # Poll a Boolean; an async predicate's Promise is immediately truthy to
     # Playwright and can return before the attempt/grade mirror has been saved.
     await page.wait_for_function('window.__qaNoMistakesAttemptReady()')

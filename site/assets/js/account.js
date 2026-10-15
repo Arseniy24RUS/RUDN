@@ -1,6 +1,6 @@
-import {backend,groupOptions} from './backend.js?v=1.3.9';
-import {getLocale} from './i18n.js?v=1.3.9';
-import {toast,formError} from './notifications.js?v=1.3.9';
+import {backend,groupOptions} from './backend.js?v=1.3.10';
+import {getLocale} from './i18n.js?v=1.3.10';
+import {toast,formError} from './notifications.js?v=1.3.10';
 import {officialTicket} from './student-identity.js';
 
 const COPY={

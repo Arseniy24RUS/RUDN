@@ -1,4 +1,5 @@
-import {academicContext,topicGate} from './access.js?v=1.3.9';
+import {academicContext,topicGate} from './access.js?v=1.3.10';
+import {seminarTopic} from './seminar-modules.js';
 
 /** Free-play entries. Students unlock each module with its course topic. */
 export const GAMES_COPY = {
@@ -15,7 +16,6 @@ export const GAMES = [
   { id: 'career', href: '#games/career', icon: '◇', title: 'Профориентационный тест', title_en: 'Career exploration', title_zh: '职业倾向测试', description: 'Исследуйте профессиональные интересы, сравнивайте направления работы и пробуйте практические сценарии.', description_en: 'Explore your professional interests, compare careers and try practical scenarios.', description_zh: '探索职业兴趣，比较工作方向，并体验实践情景。' },
 ];
 
-const GAME_TOPICS={maps:2,settlements:3,reception:5,career:6,governor:7};
 export const GAMES_STUDENT_LEAD={
   ru:'Играйте без оценки в журнале. Игры открываются вместе с соответствующими разделами курса.',
   en:'Play without a course grade. Games unlock together with their course sections.',
@@ -23,8 +23,10 @@ export const GAMES_STUDENT_LEAD={
 };
 
 /** Use the same server-adjusted time and instructor overrides as the course. */
-export function gameAccessGate(id,backend){
-  if(backend.isAdmin()||!backend.getProfile()||!GAME_TOPICS[id])return null;
+export function gameAccessGate(id,backend,course){
+  if(backend.isAdmin()||!backend.getProfile()||!GAMES.some(game=>game.id===id))return null;
+  const topic=seminarTopic(course,id);
+  if(!topic)throw new TypeError('A course topic is required for module '+id);
   const now=backend.globalNow();
-  return topicGate(GAME_TOPICS[id],backend.getAccessOverrides(academicContext(now).startYear),now);
+  return topicGate(topic.number,backend.getAccessOverrides(academicContext(now).startYear),now);
 }

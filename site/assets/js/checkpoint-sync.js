@@ -9,6 +9,37 @@ const key=value=>{
 };
 const sameIdentity=(a,b)=>Boolean(a&&b&&a.owner===b.owner&&a.uid===b.uid&&a.generation===b.generation);
 
+
+// RTDB represents empty containers as null and may return arrays as keyed maps.
+// Compare their stored meaning while keeping the encoded module state lossless.
+function databaseValue(value){
+  if(value==null)return null;
+  if(typeof value!=='object')return value;
+  const fields=Object.keys(value).sort().map(name=>[name,databaseValue(value[name])]).filter(([,item])=>item!==null);
+  return fields.length?Object.fromEntries(fields):null;
+}
+const sameDatabaseValue=(a,b)=>JSON.stringify(databaseValue(a))===JSON.stringify(databaseValue(b));
+function legalFinalStateMatches(draft,attempt){
+  if(draft?.mode!=='legal-lab-workspace'||draft.activitySlug!=='seminar-4'||
+    draft.attemptId!==attempt.id||draft.phase!=='completed'||draft.state?.phase!=='completed'||
+    draft.contentVersion!==attempt.contentVersion||!sameDatabaseValue(draft.state.resultAttempt,attempt))return false;
+  let state;
+  try{state=JSON.parse(draft.state.legalLab);}catch{return false;}
+  const assessment=state?.assessment;
+  if(attempt.legalLab?.answerJson!==undefined){
+    try{if(!sameDatabaseValue(JSON.parse(attempt.legalLab.answerJson),assessment?.answer))return false;}catch{return false;}
+  }
+  return state?.schema===1&&state.contentVersion===attempt.contentVersion&&
+    assessment?.phase==='completed'&&assessment.attemptId===attempt.id&&
+    assessment.contentVersion===attempt.contentVersion&&assessment.caseId===attempt.caseId&&
+    assessment.startedAt===attempt.startedAt&&assessment.finishedAt===attempt.finishedAt&&
+    Number.isFinite(attempt.points)&&attempt.points>=0&&attempt.points<=5&&attempt.maxPoints===5&&
+    assessment.result?.points===attempt.points&&assessment.result?.maxPoints===attempt.maxPoints&&
+    sameDatabaseValue(assessment.result.criteria,attempt.legalLab?.criteria)&&
+    sameDatabaseValue(assessment.answer,attempt.legalLab?.answer)&&
+    sameDatabaseValue(assessment.documentVersions,attempt.legalLab?.documentVersions);
+}
+
 function defaultDeviceId(){
   try{
     const saved=localStorage.getItem('rudn.sync-device.v1');
@@ -211,6 +242,21 @@ export function createCheckpointSync({
               assertActive(session);
               if(!head || Object.keys(head.conflicts||{}).length || head.current?.lastIntentId!==draft.lastIntentId ||
                 head.current?.state?.status!=='completed')throw fault('storage/final-checkpoint-pending');
+            }
+            if(operation.payload.type==='legal-lab'){
+              // The workspace and its result share one durable draft. A result
+              // cannot bypass an unresolved branch or precede the terminal ack.
+              const draft=await store.loadDraft({owner:operation.owner,activitySlug:operation.activitySlug,mode:operation.mode,attemptId:operation.attemptId});
+              assertActive(session);
+              if(!draft||draft.id!==operation.draftId||draft.revision!==operation.revision||
+                draft.acknowledgedRevision<draft.revision||draft.saveStatus?.state==='conflict'||
+                !legalFinalStateMatches(draft,operation.payload))throw fault('storage/final-checkpoint-pending');
+              const conflicts=await store.listConflicts({owner:operation.owner,draftId:operation.draftId});
+              if(conflicts.some(item=>!item.resolvedAt))throw fault('storage/final-checkpoint-pending');
+              const {value:head}=await transport.get(checkpointPath(draft),{signal});
+              assertActive(session);
+              if(!head||Object.keys(head.conflicts||{}).length||head.current?.lastIntentId!==draft.lastIntentId||
+                !legalFinalStateMatches(head.current,operation.payload))throw fault('storage/final-checkpoint-pending');
             }
             const attachments=await attachmentsFor(operation,session,signal);
             assertActive(session);

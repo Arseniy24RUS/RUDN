@@ -1,11 +1,11 @@
-import {CONFIG} from './config.js?v=1.3.9';
-import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.9';
-import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.9';
+import {CONFIG} from './config.js?v=1.3.10';
+import {needsSeminar1Q48Review,reconcileSeminar1Q48} from './grading-revisions.js?v=1.3.10';
+import {sessionState,readState,writeState,deleteState,listState,storeAttempt,pendingStorageKey} from './session.js?v=1.3.10';
 import {durableStore} from './durable-store.js';
 import {createFirebaseRestTransport} from './firebase-rest.js';
 import {installFirebaseGateway,firebaseGatewayUrl} from './firebase-gateway.js';
 import {createCheckpointSync,commitStudentAttempt} from './checkpoint-sync.js';
-import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.9';
+import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.10';
 
 // Install before puzzle modules capture/replace window.fetch, including their
 // standalone entry. Every later wrapper keeps this transport in its chain.

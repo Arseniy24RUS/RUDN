@@ -1,20 +1,21 @@
 import {CAREER_COPY,careerRoute} from './career-course.js';
-import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.9';
-import {CONFIG} from './config.js?v=1.3.9';
-import {backend,groupOptions} from './backend.js?v=1.3.9';
-import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.9';
-import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.9';
-import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.9';
-import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.9';
-import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.9';
-import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.9';
-import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.9';
+import {seminarModule,seminarTopic,seminarModuleForSlug} from './seminar-modules.js';
+import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.10';
+import {CONFIG} from './config.js?v=1.3.10';
+import {backend,groupOptions} from './backend.js?v=1.3.10';
+import {buildQuiz, renderQuiz, questionText,updateQuizSaveStatus} from './quiz.js?v=1.3.10';
+import {getLocale, localized, setLocale, t, translateDocument} from './i18n.js?v=1.3.10';
+import {mountAdaptiveSeminar1,mountAutomaticBoard} from './adaptive-quiz.js?v=1.3.10';
+import {academicContext,academicWeekStart,accessDefinitions,formatAccessDate,lectureTestGate,topicGate} from './access.js?v=1.3.10';
+import {mountPuzzlePage} from './puzzle-bootstrap.js?v=1.3.10';
+import {toast,formError,errorText,initNotifications,setRecoveryOwnerProvider,registerRecoveryProvider} from './notifications.js?v=1.3.10';
+import {attemptOwner,prepareQuizDraft} from './attempt-session.js?v=1.3.10';
 import {officialTicket} from './student-identity.js';
 import {durableStore} from './durable-store.js';
 import {readSettlementsCourseDrafts,settlementsCourseStatus,settlementsCourseMessage,mountSettlementsCourseReceipt} from './settlements-course-status.js';
 import {mountFormDraft,formDraft} from './form-draft.js';
-import {mountTeacherJournal} from './teacher-journal.js?v=1.3.9';
-import {openAccount,mountProfile} from './account.js?v=1.3.9';
+import {mountTeacherJournal} from './teacher-journal.js?v=1.3.10';
+import {openAccount,mountProfile} from './account.js?v=1.3.10';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
 
 const app = document.getElementById('app');
@@ -261,21 +262,24 @@ async function render(){
   const nextKey=`${location.hash}:${attemptOwner()}`;
   const currentRoute=route();
   const freeGame=freeGameForRoute(currentRoute);
-  const freeGate=freeGame&&gameAccessGate(freeGame,backend);
+  const freeGate=freeGame&&gameAccessGate(freeGame,backend,data.course);
   const freeAllowed=!freeGate||freeGate.open;
   // Background Auth/Database updates must not detach the form being edited.
   if(freeAllowed&&renderedKey===nextKey&&renderedLocale===getLocale()&&formCleanups.length)return;
-  if(freeAllowed&&currentCareer?.handle&&currentCareer.owner===attemptOwner()&&isModuleRoute('career',currentCareer.context)&& (currentCareer.context==='free'||backend.authReady&&accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow())))){
+  if(freeAllowed&&currentCareer?.handle&&currentCareer.owner===attemptOwner()&&isModuleRoute('career',currentCareer.context)&& (currentCareer.context==='free'||backend.authReady&&accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())))){
     renderedKey=nextKey;currentCleanup.refreshLocale();currentCareer.handle.navigate(careerRoute(currentRoute.parts[1]));return;
   }
   if(freeAllowed&&!currentCareer&&renderedKey===nextKey&&currentCleanup?.refreshLocale&&!currentCleanup.isStale?.()){currentCleanup.refreshLocale();translateDocument();return}
   const resetScroll=renderedKey!==nextKey;renderRunning=true;renderedKey=nextKey;renderedLocale=getLocale();
+  // Navigation begins before saving and releasing the previous screen.
+  // Exposing aria-busy=false here described the previous route as the new one.
+  app.setAttribute('aria-busy','true');
   try{for(const controller of formCleanups)await controller.destroy();formCleanups=[];await durableStore.flush()}
-  catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return}
+  catch(error){renderRunning=false;app.setAttribute('aria-busy','false');toast(error,'error',0,{critical:true});return}
   if(currentCleanup){try{await currentCleanup.flush?.();await currentCleanup()}catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return} currentCleanup=null}
   const r=route();setActiveNav(r.name);
   // Saving the previous screen is asynchronous; recheck the current route/profile.
-  const requestedGame=freeGameForRoute(r),requestedGate=requestedGame&&gameAccessGate(requestedGame,backend);
+  const requestedGame=freeGameForRoute(r),requestedGate=requestedGame&&gameAccessGate(requestedGame,backend,data.course);
   app.setAttribute('aria-busy','true');
   try{
     if(!backend.authReady&&['activity','gradebook','profile','admin','live','games','puzzle'].includes(r.name))app.innerHTML=`<div class="panel" role="status">${t('loading')}</div>`;
@@ -386,7 +390,8 @@ async function renderGradebook(){
   if(owner!==attemptOwner())return;
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
   const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:item.slug==='seminar-3'&&settlementsStatus?.kind==='pending'?`<span>${settlementsStatus.points}</span>`:'<span class="grade-empty">—</span>'}${item.slug==='seminar-3'&&settlementsStatus?`<br><small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
-  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(x.title||x.activitySlug||x.type)}</td><td>${esc(x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
+  const historySeminarTitles=new Map(data.course.topics.filter(topic=>['career','reception'].includes(seminarModule(topic))).map(topic=>[topic.seminar.slug,loc(topic.seminar,'title',topic.seminar.title)]));
+  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(historySeminarTitles.get(x.activitySlug)||x.title||x.activitySlug||x.type)}</td><td>${esc(x.type==='legal-lab'?({ru:'Досье',en:'Dossier',zh:'卷宗'})[getLocale()]:x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
   app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
@@ -419,7 +424,7 @@ function renderProfile(){
   app.querySelector('#profileLogin')?.addEventListener('click',openAuthDialog);
 }
 async function renderActivity(slug,view){
-  const module={'seminar-5':'reception','seminar-6':'career','seminar-7':'governor'}[slug];
+  const module=seminarModuleForSlug(data.course,slug);
   if(module)navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
   if(slug==='seminar-1'){location.hash='activity/seminar-1-classroom';return}
   if(slug==='seminar-1-classroom'||slug==='seminar-1-assessment'){await startQuiz(slug);return}
@@ -457,20 +462,58 @@ function renderLecture(topic){
 }
 
 async function renderSeminar(topic){
-  const seminar=topic.seminar,n=topic.number;
-  if(n===2) return renderPuzzleRoute(true);
-  if(n===3) return renderSeminar3(topic);
-  if(n===4) return renderSeminar4(topic);
-  if(n===5) return renderSeminar5(topic);
-  if(n===6) return renderSeminar6(topic);
-  if(n===7) return renderSeminar7(topic);
-  if(n===8) return renderSeminar8(topic);
+  const module=seminarModule(topic);
+  if(module==='maps') return renderPuzzleRoute(true);
+  if(module==='settlements') return renderSeminar3(topic);
+  if(module==='legal-lab') return renderSeminar4(topic);
+  if(module==='reception') return renderSeminar5(topic);
+  if(module==='career') return renderSeminar6(topic);
+  if(module==='governor') return renderSeminar7(topic);
+  if(module==='final') return renderSeminar8(topic);
 }
 function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
 function renderSeminar4(topic){
-  app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('seminar4Lead')}</p><button class="btn btn-primary" id="seminar4Quiz">${ui('launchQuiz')}</button></div>`);
-  app.querySelector('#seminar4Quiz').onclick=()=>startQuiz('seminar-4');
+  // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
+  const owner=attemptOwner(),controller=new AbortController();
+  let handle=null,mountPromise=Promise.resolve();
+  app.innerHTML=`<section class="page legal-lab-course-page"><div id="legalLabMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
+  const mount=app.querySelector('#legalLabMount');
+  const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner();
+  const allowed=()=>{const a=accessSnapshot();return topicGate(topic.number,a.overrides,a.now).open;};
+  const cleanup=async()=>{controller.abort();await mountPromise.catch(()=>{});await handle?.destroy();};
+  cleanup.flush=()=>handle?.flush();
+  cleanup.refreshLocale=()=>{
+    if(!active())return;
+    const a=accessSnapshot(),gate=topicGate(topic.number,a.overrides,a.now);
+    if(!accessAllowed(gate)){void cleanup();currentCleanup=null;lockedAccessPage(loc(topic.seminar,'title'),gate);return;}
+    void handle?.setLocale(getLocale());
+  };
+  currentCleanup=cleanup;
+  navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'legal-lab'});
+  mountPromise=(async()=>{
+    try{
+      const {mountLegalLabInCourse}=await import('../../apps/legal-lab/platform.mjs?v=1.0.0');
+      if(!active())return;
+      const a=accessSnapshot();
+      handle=await mountLegalLabInCourse(mount,{
+        backend,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
+        period:String(a.context.startYear)+'-'+String(a.context.endYear),
+        groups:groupOptions(),locale:getLocale(),signal:controller.signal,
+        assessmentAllowed:allowed,onExit:()=>{location.hash='dashboard';}
+      });
+      if(!active()){await handle.destroy();return;}
+      mount.setAttribute('aria-busy','false');
+    }catch(error){
+      if(!active())return;
+      mount.setAttribute('aria-busy','false');
+      const copy={ru:['Практикум не открылся','Работа сохранена. Повторите загрузку.','Повторить'],en:['The workshop could not open','Your work is saved. Please try again.','Try again'],zh:['实践课未能打开','作业已保存，请重新加载。','重试']}[getLocale()]||['Практикум не открылся','Работа сохранена. Повторите загрузку.','Повторить'];
+      mount.innerHTML=`<div class="panel" role="alert"><h2>${esc(copy[0])}</h2><p>${esc(copy[1])}</p><button class="btn btn-primary" type="button">${esc(copy[2])}</button></div>`;
+      mount.querySelector('button').onclick=()=>{void cleanup().then(()=>{renderedKey='';render();});};
+      console.error('Legal Lab:',error);
+    }
+  })();
 }
+
 function renderSeminar8(topic){
   app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('finalLead')}</p><button class="btn btn-primary" id="finalQuiz">${ui('startTest')}</button></div>`);
   app.querySelector('#finalQuiz').onclick=()=>startQuiz('seminar-8');
@@ -557,18 +600,18 @@ function gamesText(key){return GAMES_COPY[getLocale()]?.[key]||GAMES_COPY.ru[key
 function isModuleRoute(module,context='course'){
   const current=route();
   return context==='free'?current.name==='games'&&current.parts[0]===module
-    :current.name==='activity'&&current.parts[0]===({reception:'seminar-5',career:'seminar-6'}[module]);
+    :current.name==='activity'&&current.parts[0]===seminarTopic(data.course,module)?.seminar.slug;
 }
 function renderGamesRoute(module){
   if(module==='settlements'){renderSettlements('free');return;}
   if(module==='reception'||module==='career'){
     navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
-    const topic=data.course.topics.find(item=>item.number===(module==='reception'?5:6));
+    const topic=seminarTopic(data.course,module);
     if(module==='reception')renderSeminar5(topic,{context:'free'});
     else renderSeminar6(topic,{context:'free'});
     return;
   }
-  const games=GAMES.filter(game=>gameAccessGate(game.id,backend)?.open!==false);
+  const games=GAMES.filter(game=>gameAccessGate(game.id,backend,data.course)?.open!==false);
   const lead=backend.getProfile()&&!backend.isAdmin()?GAMES_STUDENT_LEAD[getLocale()]||GAMES_STUDENT_LEAD.ru:gamesText('lead');
   app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${game.href}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
 }
@@ -588,7 +631,7 @@ function renderSeminar5(topic,{context='course'}={}){
   cleanup.flush=()=>mountedCleanup.flush?.();
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&isModuleRoute('reception',context);
   cleanup.refreshLocale=()=>{
-    const access=accessSnapshot(),gate=topicGate(5,access.overrides,access.now);
+    const access=accessSnapshot(),gate=topicGate(topic.number,access.overrides,access.now);
     if(!free&&!accessAllowed(gate)){
       cleanup();currentCleanup=null;
       lockedAccessPage(loc(topic.seminar,'title'),gate);
@@ -604,7 +647,7 @@ function renderSeminar5(topic,{context='course'}={}){
       mountedCleanup=await mountReception(mount,{
         backend,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
-        assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(5,access.overrides,access.now).open;},
+        assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
         onExit:()=>{location.hash=free?'games':'dashboard'}
       });
       if(!active()){cleanup();return;}
@@ -620,9 +663,9 @@ function renderSeminar5(topic,{context='course'}={}){
 }
 function renderSeminar6(topic,{context='course'}={}){
   const free=context==='free';
-  const routeBase=free?'games/career':'activity/seminar-6';
+  const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
   const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview';
-  const text=key=>free&&key==='section'?gamesText('free'):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
+  const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
   let disposed=false,handle=null;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
@@ -633,7 +676,7 @@ function renderSeminar6(topic,{context='course'}={}){
     app.querySelector('[data-career-ui="back"]').textContent=gamesText('back');
   }
   const mount=app.querySelector('#careerMount');
-  const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(6,accessSnapshot().overrides,backend.globalNow())));
+  const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
   const cleanup=()=>{disposed=true;controller.abort();handle?.destroy();if(currentCareer===token)currentCareer=null;};
   cleanup.flush=()=>handle?.flush?.();
   cleanup.refreshLocale=()=>{
@@ -771,8 +814,8 @@ async function loadPuzzleRuntime(signal){
     for(const [url,ready] of [
       ['../puzzle/vendor/d3.v7.9.0.min.js',()=>window.d3],
       ['../puzzle/vendor/topojson-client.v3.1.0.min.js',()=>window.topojson],
-      ['./puzzle-render-geometry.js?v=1.3.9',()=>window.RudnPuzzleGeometry],
-      ['./puzzle-engine.js?v=1.3.9',()=>window.mountRudnPuzzle]
+      ['./puzzle-render-geometry.js?v=1.3.10',()=>window.RudnPuzzleGeometry],
+      ['./puzzle-engine.js?v=1.3.10',()=>window.mountRudnPuzzle]
     ]){
       signal.throwIfAborted();if(ready())continue;
       await new Promise((resolve,reject)=>{
@@ -827,7 +870,7 @@ async function renderPuzzleRoute(asSeminar=false){
   cleanup.flush=()=>mountedCleanup?.flush?.();
   const permitted=()=>{
     if(!active()){cleanup();return false;}
-    const access=accessSnapshot(),gate=asSeminar?topicGate(2,access.overrides,access.now):gameAccessGate('maps',backend);
+    const access=accessSnapshot(),gate=asSeminar?topicGate(2,access.overrides,access.now):gameAccessGate('maps',backend,data.course);
     if(gate&&!accessAllowed(gate)){cleanup();lockedAccessPage(ui('puzzleTitle'),gate,asSeminar?'#dashboard':'#games');return false;}
     return true;
   };
@@ -901,7 +944,8 @@ async function renderAdmin(){
   });
 }
 async function renderStudentGrades(studentKey,all){
-  currentCleanup?.();currentCleanup=null;
+  const editorOwner=attemptOwner();await currentCleanup?.();currentCleanup=null;
+  if(!backend.isAdmin()||editorOwner!==attemptOwner())return;
   const p=all.profiles[studentKey],grades=all.grades?.[studentKey]||{},items=gradeItems();
   app.innerHTML=contentPage(`${ui('editGrades')} · ${p.fullName||p.ticket}`,`${p.group} · ${officialTicket(p)} · ${p.email||p.ticket}`,`<div class="panel"><form id="gradeEdit" class="grade-edit-grid">${items.map(i=>`<label><span>${esc(i.title)} (${i.max})</span><input name="${esc(i.slug)}" type="number" min="${grades[i.slug]?number(grades[i.slug].points):0}" max="${i.max}" step="0.01" value="${grades[i.slug]?number(grades[i.slug].points):''}" placeholder="—"></label>`).join('')}<label class="full"><span>${ui('note')}</span><textarea name="note"></textarea></label><div class="form-error full" id="gradeEditError" hidden></div><div class="full page-actions"><button class="btn btn-primary" type="submit">${ui('save')}</button><button class="btn btn-neutral" type="button" id="gradeEditCancel">${ui('cancel')}</button></div></form></div>`);
   app.querySelector('#gradeEditCancel').onclick=()=>renderGradebook();
@@ -911,6 +955,28 @@ async function renderStudentGrades(studentKey,all){
     catch(error){formError(form.querySelector('#gradeEditError'),error)}finally{button.disabled=false}
   };
   const reports=nativeGovernorAttempts(all.attempts?.[studentKey],studentKey);
+  const legalReports=Object.values(all.attempts?.[studentKey]||{}).filter(attempt=>attempt.studentKey===studentKey&&attempt.activitySlug==='seminar-4'&&attempt.type==='legal-lab'&&attempt.legalLab);
+  if(legalReports.length){
+    const copy={ru:['Семинар 4 · Досье','Открыть разбор досье'],en:['Seminar 4 · Legal dossiers','Read dossier feedback'],zh:['研讨课4 · 法律档案','查看档案评析']}[getLocale()];
+    const panel=document.createElement('section');panel.className='panel';
+    panel.innerHTML=`<h2>${esc(copy[0])}</h2>${legalReports.map((attempt,index)=>`<details data-legal-report="${index}"><summary>${esc(attempt.caseId)} · ${number(attempt.points)}/5 · ${esc(new Date(attempt.finishedAt||attempt.createdAt).toLocaleDateString(getLocale()))}</summary><button type="button" class="btn btn-secondary">${esc(copy[1])}</button><div></div></details>`).join('')}`;
+    app.querySelector('#gradeEdit').closest('.panel').before(panel);
+    const controller=new AbortController(),reportHandles=[];
+    currentCleanup=async()=>{controller.abort();await Promise.allSettled(reportHandles.map(handle=>handle.destroy()));};
+    panel.querySelectorAll('[data-legal-report]').forEach(details=>{
+      const button=details.querySelector('button'),target=details.querySelector('div');
+      button.onclick=async()=>{
+        button.disabled=true;
+        try{
+          const {mountLegalLabReport}=await import('../../apps/legal-lab/entry.mjs');
+          if(controller.signal.aborted||!target.isConnected)return;
+          const handle=await mountLegalLabReport(target,{attempt:legalReports[Number(details.dataset.legalReport)],locale:getLocale(),signal:controller.signal});
+          if(controller.signal.aborted){await handle.destroy();return;}
+          reportHandles.push(handle);button.remove();
+        }catch(error){if(!controller.signal.aborted){button.disabled=false;toast(error,'error');}}
+      };
+    });
+  }
   if(reports.length){
     const gradeForm=app.querySelector('#gradeEdit'),locale=getLocale(),owner=attemptOwner();
     await prepareGovernorReportLocale().catch(()=>{});
