@@ -182,8 +182,10 @@ export function replayCurrentReference(world,scenario,plan,initialState,{onActio
     activeEntry.delta=money(activeEntry.actualCost-activeEntry.authoredCost);
     entries.push(activeEntry);
   }
-  function stage(actions){
-    let cursor=state,check=evaluation,cost=0;const accepted=[];
+  function stage(actions,prefix=null){
+    if(prefix)assert.equal(prefix.ok,true);
+    let cursor=prefix?.state??state,check=prefix?.evaluation??evaluation,cost=prefix?.cost??0;
+    const accepted=prefix?[...prefix.actions]:[];
     for(const action of actions){
       const result=preview(world,scenario,cursor,action);if(!result.ok)return {ok:false,error:result.error};
       cost=money(cost+checkedQuote(cursor,action,result));
@@ -282,7 +284,7 @@ export function replayCurrentReference(world,scenario,plan,initialState,{onActio
       if(!roadOnly.ok)continue;
       if(roadOnly.gainUnits>0&&roadOnly.evaluation.byId[action.settlementId].medical.full)candidates.push({...roadOnly,kind:'road-alone'});
       else{
-        const pair=stage([road,action]);
+        const pair=stage([action],roadOnly);
         if(pair.ok&&pair.gainUnits>0&&pair.evaluation.byId[action.settlementId].medical.full)candidates.push({...pair,kind:'road-outreach'});
       }
     }
