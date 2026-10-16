@@ -1,0 +1,343 @@
+{
+  "schema": 1,
+  "status": "approved",
+  "kind": "independent-synthetic-review",
+  "reviewer": "/root/legal_article_selection_semantics",
+  "reviewDate": "2026-10-16",
+  "evidenceRef": "evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/reviews/goals-system/final-review.json",
+  "scope": {
+    "documents": [
+      "goals309",
+      "system58"
+    ],
+    "locales": [
+      "en",
+      "zh"
+    ],
+    "sourceUnits": 305,
+    "translatedUnitTextsReviewed": 610,
+    "sourceSections": 40,
+    "translatedSectionTitlesReviewed": 80,
+    "allUnitLocatorsReviewed": true,
+    "titlesAndRevisionLabelsReviewed": true,
+    "coverage": "full"
+  },
+  "method": "Direct source-to-translation reading of every Russian unit and both translated texts in source order; direct reading of all titles, revision labels and section titles; exact ID/source pin and locator consistency checks. Source documents in the supplied repository are authoritative for this review.",
+  "notClaims": [
+    "Not a certified translation or a human expert review",
+    "No new verification of the legal currency of the Russian source",
+    "No browser, deployment, physical-phone or student testing in this review"
+  ],
+  "pins": {
+    "goals309": {
+      "sourceFileSha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11",
+      "en": "4cd54b7589ba14fd785470411529b1bbd3a2fdbcb0a765d9a58f614fc4fbfa91",
+      "zh": "76da9b235f7bd11839b69f5ab54d67a716aa248ad280cf4ad6067c6dcbe56f52"
+    },
+    "system58": {
+      "sourceFileSha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e",
+      "en": "516f407b1cfa3be488d6294c6b3c9c5c093aaed355874292a2de53091d2d04ca",
+      "zh": "8e6aade49ef8dac2d209f2584131dc41bb37d9bad7e07a78289c8f894df4f272"
+    }
+  },
+  "sourcePins": {
+    "goals309": {
+      "version": "legal-lab-2026-10-15.2",
+      "sha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+      "fileSha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11"
+    },
+    "system58": {
+      "version": "legal-lab-2026-10-15.2",
+      "sha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+      "fileSha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e"
+    }
+  },
+  "payloadDecisions": [
+    {
+      "docId": "goals309",
+      "locale": "en",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "4cd54b7589ba14fd785470411529b1bbd3a2fdbcb0a765d9a58f614fc4fbfa91",
+      "reviewedUnits": 127,
+      "reviewedSections": 13
+    },
+    {
+      "docId": "goals309",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "76da9b235f7bd11839b69f5ab54d67a716aa248ad280cf4ad6067c6dcbe56f52",
+      "reviewedUnits": 127,
+      "reviewedSections": 13
+    },
+    {
+      "docId": "system58",
+      "locale": "en",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "516f407b1cfa3be488d6294c6b3c9c5c093aaed355874292a2de53091d2d04ca",
+      "reviewedUnits": 178,
+      "reviewedSections": 27
+    },
+    {
+      "docId": "system58",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "8e6aade49ef8dac2d209f2584131dc41bb37d9bad7e07a78289c8f894df4f272",
+      "reviewedUnits": 178,
+      "reviewedSections": 27
+    }
+  ],
+  "resolvedFindings": [
+    {
+      "docId": "goals309",
+      "locale": "zh",
+      "unitId": "goals309-u2501f178cbea247522-1",
+      "sourceIndexZeroBased": 61,
+      "severity": "required",
+      "field": "text",
+      "source": "д) обеспечение в 2024 - 2030 годах реального роста дохода на одного работника субъекта малого и среднего предпринимательства в 1,2 раза выше, чем рост валового внутреннего продукта;",
+      "current": "д) 确保在2024—2030年期间，中小企业每名雇员的实际收入增速达到国内生产总值增速的1.2倍；",
+      "replacement": "д) 确保在2024—2030年期间，按每名雇员计算的中小企业实际收入增速达到国内生产总值增速的1.2倍；",
+      "reason": "原译将“中小企业每名雇员”直接置于“实际收入”前，容易把按每名雇员计算的企业收入指标读成员工个人收入。调整语序保留原文中的按员工人数折算的指标，不增加工资含义。",
+      "status": "resolved",
+      "resolution": "Writer applied exact requested replacement; independently reread and compared against source."
+    },
+    {
+      "docId": "system58",
+      "locale": "en",
+      "unitId": "system58-u6bf3d5da432e2965c0-1",
+      "sourceIndexZeroBased": 127,
+      "severity": "required",
+      "field": "text",
+      "source": "5.2. Срочный контракт, течение срока действия которого было приостановлено в соответствии с пунктом 5.1 настоящей статьи, возобновляется на период, равный остатку срока действия данного контракта, исчисляемого на день его приостановления, но не свыше чем до достижения государственным служащим предельного возраста пребывания на государственной службе, если государственно-служебные отношения не продлены в порядке, предусмотренном федеральным законом о виде государственной службы, и (или) иное не установлено федеральным законом о виде государственной службы.",
+      "current": "5.2. A fixed-term contract whose term was suspended in accordance with point 5.1 of this Article resumes for a period equal to the remainder of its term calculated as of the day of suspension, but no later than the state servant’s attainment of the maximum age for remaining in state service, unless the state-service relationship has been extended according to the procedure provided for by the federal law on the relevant type of state service and/or otherwise established by that federal law.",
+      "replacement": "5.2. A fixed-term contract whose term was suspended in accordance with point 5.1 of this Article resumes for a period equal to the remainder of its term calculated as of the day of suspension, but no later than the state servant’s attainment of the maximum age for remaining in state service, unless the state-service relationship has been extended according to the procedure provided for by the federal law on the relevant type of state service and/or that federal law provides otherwise.",
+      "reason": "The final exception must remain a separate alternative: a federal law may provide otherwise. “and/or otherwise established” grammatically attaches to “the state-service relationship has been … established”, obscuring the exception to the age/term restriction.",
+      "status": "resolved",
+      "resolution": "Writer applied exact requested replacement; independently reread and compared against source."
+    }
+  ],
+  "advisory": [
+    {
+      "docId": "goals309",
+      "locale": "zh",
+      "unitId": "goals309-u54d1d8f542dbd3ae97-1",
+      "sourceIndexZeroBased": 92,
+      "severity": "advisory",
+      "field": "text",
+      "source": "е) увеличение к 2030 году до 95 процентов доли использования российского программного обеспечения в государственных органах, государственных корпорациях, государственных компаниях и хозяйственных обществах, в уставном капитале которых доля участия Российской Федерации в совокупности превышает 50 процентов, а также в их аффилированных юридических лицах;",
+      "current": "е) 到2030年，将国家机关、国家集团公司、国家公司、俄罗斯联邦在其注册资本中合计持股超过50%的商事公司及其关联法人使用俄罗斯软件的比例提高至95%；",
+      "replacement": null,
+      "reason": "“国家集团公司” reads as a state-owned corporate group, whereas the source names the distinct Russian legal form “государственная корпорация”, separately from “государственная компания”. For glossary harmonization, consider a rendering such as “国家法团” for the former; do not silently merge the two forms. This is a terminology recommendation, not an additional verified substantive failure. No exact mandatory replacement is asserted here.",
+      "status": "advisory-open",
+      "blocksApproval": false,
+      "decision": "No mandatory terminology substitution. Alternative has no claim to official status; distinct list entries are retained."
+    }
+  ],
+  "changeReview": {
+    "status": "pass",
+    "changedFields": [
+      {
+        "docId": "goals309",
+        "locale": "zh",
+        "path": "units.goals309-u2501f178cbea247522-1.text",
+        "before": "д) 确保在2024—2030年期间，中小企业每名雇员的实际收入增速达到国内生产总值增速的1.2倍；",
+        "after": "д) 确保在2024—2030年期间，按每名雇员计算的中小企业实际收入增速达到国内生产总值增速的1.2倍；"
+      },
+      {
+        "docId": "system58",
+        "locale": "en",
+        "path": "units.system58-u6bf3d5da432e2965c0-1.text",
+        "before": "5.2. A fixed-term contract whose term was suspended in accordance with point 5.1 of this Article resumes for a period equal to the remainder of its term calculated as of the day of suspension, but no later than the state servant’s attainment of the maximum age for remaining in state service, unless the state-service relationship has been extended according to the procedure provided for by the federal law on the relevant type of state service and/or otherwise established by that federal law.",
+        "after": "5.2. A fixed-term contract whose term was suspended in accordance with point 5.1 of this Article resumes for a period equal to the remainder of its term calculated as of the day of suspension, but no later than the state servant’s attainment of the maximum age for remaining in state service, unless the state-service relationship has been extended according to the procedure provided for by the federal law on the relevant type of state service and/or that federal law provides otherwise."
+      }
+    ],
+    "exactlyRequiredChanges": true,
+    "allOtherPayloadContentUnchanged": true,
+    "sourceBytesUnchanged": true
+  },
+  "coverage": [
+    {
+      "docId": "goals309",
+      "start": 0,
+      "endExclusive": 16,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 16,
+      "endExclusive": 34,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 34,
+      "endExclusive": 50,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 50,
+      "endExclusive": 69,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 69,
+      "endExclusive": 86,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 86,
+      "endExclusive": 105,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "goals309",
+      "start": 105,
+      "endExclusive": 127,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 0,
+      "endExclusive": 23,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 23,
+      "endExclusive": 45,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 45,
+      "endExclusive": 65,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 65,
+      "endExclusive": 85,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 85,
+      "endExclusive": 105,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 105,
+      "endExclusive": 122,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 122,
+      "endExclusive": 140,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 140,
+      "endExclusive": 159,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    },
+    {
+      "docId": "system58",
+      "start": 159,
+      "endExclusive": 178,
+      "locales": [
+        "en",
+        "zh"
+      ],
+      "status": "reviewed"
+    }
+  ],
+  "structuralVerification": {
+    "status": "pass",
+    "command": "& 'C:/Users/arsen/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe' 'evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/reviews/goals-system/verify-structure.mjs'",
+    "cwd": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit",
+    "chunkId": "bb4f08",
+    "exitCode": 0,
+    "counts": [
+      {
+        "docId": "goals309",
+        "units": 127,
+        "sections": 13
+      },
+      {
+        "docId": "system58",
+        "units": 178,
+        "sections": 27
+      }
+    ]
+  }
+}

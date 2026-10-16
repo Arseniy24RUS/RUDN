@@ -1,5 +1,6 @@
 /** Pure domain functions. No DOM, network, Firebase or global mutable state. */
 import {canonicalArticleSelections} from './article-evidence.mjs';
+import {FIVE_MODE,parseFiveAssessmentAnswer,scoreFiveAssessment} from './assessment-five.mjs';
 export const VERSION = '1.0.0';
 export const ACT_TYPES = Object.freeze(['Указ', 'Постановление', 'Распоряжение', 'Приказ', 'Решение']);
 // Absence of this marker is the original one-requisite/three-requisite rubric.
@@ -51,6 +52,7 @@ export function parseDossierAnswer(legalLab) {
   if(typeof legalLab?.answerJson==='string'&&legalLab.answerJson.length>150000)throw new TypeError('Report answer is too large');
   const raw=typeof legalLab?.answerJson==='string'?JSON.parse(legalLab.answerJson):(legalLab?.answer??{});
   if(!isRecord(raw))throw new TypeError('Invalid report answer');
+  if(Object.hasOwn(raw,'assessmentMode'))return parseFiveAssessmentAnswer(raw);
   const result={metadata:raw.metadata??{},classifications:raw.classifications??{},documentIds:raw.documentIds??[],selections:raw.selections??[]};
   if(allRequisites(raw))result.metadataMode=SCAN_METADATA_MODE;
   if(wholeArticleMode(raw))result.evidenceMode=EVIDENCE_MODE;
@@ -109,6 +111,11 @@ export function gradeTask(task, answer={}, docs=[], scans=[]) {
   return gradeEvidence(answer.selections||[],task.answerSets,docs);
 }
 export function scoreDossier(item, answer={}, scans=[], docs=[]) {
+  if(Object.hasOwn(item,'format')){
+    if(item.format!==FIVE_MODE)throw new TypeError('Invalid assessment format');
+    return scoreFiveAssessment(item,answer,scans,docs);
+  }
+  if(Object.hasOwn(answer,'assessmentMode'))throw new TypeError('Assessment format mismatch');
   const fields=dossierScanQuestions(item,answer,scans).map(x=>x.field);
   const scan=scans.find(s=>s.id===item.scanId);
   const valid=new Set(scan?.hotspots.map(x=>x.id)||[]);

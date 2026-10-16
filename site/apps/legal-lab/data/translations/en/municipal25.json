@@ -1,0 +1,1606 @@
+{
+  "schema": 1,
+  "docId": "municipal25",
+  "locale": "en",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+    "fileSha256": "9b5d628add853665dd15cfd4b968b7a906ebddbe8cc0b27e5887da49e67a5da4"
+  },
+  "status": "translated",
+  "kind": "educational-unofficial",
+  "title": "Federal Law “On Municipal Service in the Russian Federation”",
+  "revisionLabel": "Version of 28.12.2025",
+  "sections": {
+    "municipal25-s1": "Beginning of document",
+    "municipal25-s2": "Chapter 1. GENERAL PROVISIONS",
+    "municipal25-s3": "Article 1. Subject Matter Governed by This Federal Law",
+    "municipal25-s4": "Article 2. Municipal Service",
+    "municipal25-s5": "Article 3. Legal Foundations of Municipal Service in the Russian Federation",
+    "municipal25-s6": "Article 4. Basic Principles of Municipal Service",
+    "municipal25-s7": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation",
+    "municipal25-s8": "Chapter 2. MUNICIPAL SERVICE POSITIONS",
+    "municipal25-s9": "Article 6. Municipal Service Positions",
+    "municipal25-s10": "Article 7. Register of Municipal Service Positions in a Constituent Entity of the Russian Federation",
+    "municipal25-s11": "Article 8. Classification of Municipal Service Positions",
+    "municipal25-s12": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions",
+    "municipal25-s13": "Article 9.1. Class Ranks of Municipal Servants",
+    "municipal25-s14": "Chapter 3. LEGAL POSITION (STATUS) OF A MUNICIPAL SERVANT",
+    "municipal25-s15": "Article 10. Municipal Servant",
+    "municipal25-s16": "Article 11. Basic Rights of a Municipal Servant",
+    "municipal25-s17": "Article 12. Basic Duties of a Municipal Servant",
+    "municipal25-s18": "Article 13. Restrictions Related to Municipal Service",
+    "municipal25-s19": "Article 14. Prohibitions Related to Municipal Service",
+    "municipal25-s20": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service",
+    "municipal25-s21": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant",
+    "municipal25-s22": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations",
+    "municipal25-s23": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network",
+    "municipal25-s24": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information",
+    "municipal25-s25": "Chapter 4. PROCEDURE FOR ENTRY INTO, PERFORMANCE AND TERMINATION OF MUNICIPAL SERVICE",
+    "municipal25-s26": "Article 16. Entry into Municipal Service",
+    "municipal25-s27": "Article 17. Competition to Fill a Municipal Service Position",
+    "municipal25-s28": "Article 18. Appraisal of Municipal Servants",
+    "municipal25-s29": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant",
+    "municipal25-s30": "Chapter 5. WORKING (SERVICE) TIME AND REST TIME",
+    "municipal25-s31": "Article 20. Working (Service) Time",
+    "municipal25-s32": "Article 21. Leave of a Municipal Servant",
+    "municipal25-s33": "Chapter 6. GENERAL PRINCIPLES OF REMUNERATION OF MUNICIPAL SERVANTS. GUARANTEES PROVIDED TO MUNICIPAL SERVANTS. LENGTH OF MUNICIPAL SERVICE",
+    "municipal25-s34": "Article 22. General Principles of Remuneration of Municipal Servants",
+    "municipal25-s35": "Article 23. Guarantees Provided to Municipal Servants",
+    "municipal25-s36": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family",
+    "municipal25-s37": "Article 25. Length of Municipal Service",
+    "municipal25-s38": "Chapter 7. INCENTIVES FOR MUNICIPAL SERVANTS. DISCIPLINARY LIABILITY OF MUNICIPAL SERVANTS",
+    "municipal25-s39": "Article 26. Incentives for Municipal Servants",
+    "municipal25-s40": "Article 27. Disciplinary Liability of Municipal Servants",
+    "municipal25-s41": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption",
+    "municipal25-s42": "Chapter 8. PERSONNEL WORK IN A MUNICIPALITY",
+    "municipal25-s43": "Article 28. Personnel Work in a Municipality",
+    "municipal25-s44": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis",
+    "municipal25-s45": "Article 29. Personal Data of a Municipal Servant",
+    "municipal25-s46": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File",
+    "municipal25-s47": "Article 31. Register of Municipal Servants in a Municipality",
+    "municipal25-s48": "Article 32. Priority Areas for Developing the Municipal Service Workforce",
+    "municipal25-s49": "Article 33. Personnel Reserve in Municipal Service",
+    "municipal25-s50": "Chapter 9. FUNDING AND DEVELOPMENT PROGRAMS FOR MUNICIPAL SERVICE",
+    "municipal25-s51": "Article 34. Funding of Municipal Service",
+    "municipal25-s52": "Article 35. Municipal Service Development Programs",
+    "municipal25-s53": "Chapter 10. FINAL PROVISIONS",
+    "municipal25-s54": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation",
+    "municipal25-s55": "Article 37. Application of Laws and Other Normative Legal Acts on Municipal Service in Connection with the Entry into Force of This Federal Law",
+    "municipal25-s56": "Article 38. Entry into Force of This Federal Law"
+  },
+  "units": {
+    "municipal25-ue276c777d2647e156f-1": {
+      "text": "2 March 2007 No. 25-ФЗ",
+      "locator": "Beginning of document"
+    },
+    "municipal25-ud150c7895ef3a3226f-1": {
+      "text": "RUSSIAN FEDERATION",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u7a266da6cb0afe5349-1": {
+      "text": "FEDERAL LAW",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u81715525424f8a6bfa-1": {
+      "text": "ON MUNICIPAL SERVICE IN THE RUSSIAN FEDERATION",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u9e114367b59dcc68c2-1": {
+      "text": "Adopted",
+      "locator": "Beginning of document"
+    },
+    "municipal25-ue9fc7fc9a33da6bc03-1": {
+      "text": "by the State Duma",
+      "locator": "Beginning of document"
+    },
+    "municipal25-ue32e932e249c11c94f-1": {
+      "text": "7 February 2007",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u971030b02fca136721-1": {
+      "text": "Approved",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u8c05668431a604a317-1": {
+      "text": "by the Federation Council",
+      "locator": "Beginning of document"
+    },
+    "municipal25-ue2369042f9e2258582-1": {
+      "text": "21 February 2007",
+      "locator": "Beginning of document"
+    },
+    "municipal25-u8e8631c155bf62489e-1": {
+      "text": "Chapter 1. GENERAL PROVISIONS",
+      "locator": "Chapter 1. GENERAL PROVISIONS"
+    },
+    "municipal25-ud65a32d694e70e640b-1": {
+      "text": "Article 1. Subject Matter Governed by This Federal Law",
+      "locator": "Article 1. Subject Matter Governed by This Federal Law"
+    },
+    "municipal25-u4acc375168fc120c4a-1": {
+      "text": "1. This Federal Law governs relationships connected with entry into municipal service by citizens of the Russian Federation and citizens of foreign states that are parties to international treaties of the Russian Federation under which foreign citizens are entitled to serve in municipal service (hereinafter referred to as citizens), with the performance and termination of municipal service, and with determining the legal position (status) of municipal servants.",
+      "locator": "Article 1. Subject Matter Governed by This Federal Law"
+    },
+    "municipal25-u4591764d0363e0b8d6-1": {
+      "text": "2. This Federal Law does not determine the status of deputies, members of elected local self-government bodies or elected local self-government officials, since those persons (hereinafter referred to as persons holding municipal offices) are not municipal servants.",
+      "locator": "Article 1. Subject Matter Governed by This Federal Law"
+    },
+    "municipal25-uf0888b1bd58e84b164-1": {
+      "text": "Article 2. Municipal Service",
+      "locator": "Article 2. Municipal Service"
+    },
+    "municipal25-u6d3e7c2345533d16d3-1": {
+      "text": "1. Municipal service means the professional activity of citizens carried out on a permanent basis in municipal service positions filled through the conclusion of an employment agreement (contract).",
+      "locator": "Article 2. Municipal Service"
+    },
+    "municipal25-uf179911c5a9a3bfb43-1": {
+      "text": "2. The employer of a municipal servant is the municipality, on whose behalf the powers of the employer are exercised by the employer’s representative (employer).",
+      "locator": "Article 2. Municipal Service"
+    },
+    "municipal25-uab36be95cf5fee249c-1": {
+      "text": "3. The employer’s representative (employer) may be the head of the municipality, the head of a local self-government body, or another person authorized to perform the duties of the employer’s representative (employer).",
+      "locator": "Article 2. Municipal Service"
+    },
+    "municipal25-udee6db6e464d8e139c-1": {
+      "text": "Article 3. Legal Foundations of Municipal Service in the Russian Federation",
+      "locator": "Article 3. Legal Foundations of Municipal Service in the Russian Federation"
+    },
+    "municipal25-u011c78842c87cc8b3e-1": {
+      "text": "1. The legal foundations of municipal service in the Russian Federation consist of the Constitution of the Russian Federation, this Federal Law and other federal laws, other normative legal acts of the Russian Federation, constitutions (charters), laws and other normative legal acts of constituent entities of the Russian Federation (hereinafter referred to as municipal service legislation), charters of municipalities, decisions adopted at citizens’ assemblies, and other municipal legal acts.",
+      "locator": "Article 3. Legal Foundations of Municipal Service in the Russian Federation"
+    },
+    "municipal25-u5be0a4005a5a1f84d3-1": {
+      "text": "2. Labor legislation applies to municipal servants subject to the special provisions of this Federal Law.",
+      "locator": "Article 3. Legal Foundations of Municipal Service in the Russian Federation"
+    },
+    "municipal25-u6216ecafd3af74ce3a-1": {
+      "text": "Article 4. Basic Principles of Municipal Service",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-ufd803eeeee5681e954-1": {
+      "text": "The basic principles of municipal service are:",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u0e238a6a32724c827c-1": {
+      "text": "1) the priority of human and civil rights and freedoms;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u346dac2cfd29a23c36-1": {
+      "text": "2) equal access to municipal service for citizens who have command of the state language of the Russian Federation, and equal conditions of service regardless of sex, race, ethnicity, origin, property or official status, place of residence, attitude to religion, beliefs, membership in public associations, or other circumstances unrelated to a municipal servant’s professional and work-related qualities;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-uabd373da7160d284fa-1": {
+      "text": "3) the professionalism and competence of municipal servants;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u3126c32eee506fc107-1": {
+      "text": "4) the stability of municipal service;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u4e1d248bcfd41a2c99-1": {
+      "text": "5) the accessibility of information on municipal servants’ activities;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u91d38bd4b4fe57d5ce-1": {
+      "text": "6) interaction with public associations and citizens;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u9553384bf25da990df-1": {
+      "text": "7) uniform basic requirements for municipal service, and consideration of historical and other local traditions in the performance of municipal service;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-ucd1ece87acbba15c5f-1": {
+      "text": "8) legal and social protection of municipal servants;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-ue0492b23e3255ead49-1": {
+      "text": "9) municipal servants’ liability for failure to perform, or improper performance of, their official duties;",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u70bfa17ff14ddbf42e-1": {
+      "text": "10) the nonpartisan nature of municipal service.",
+      "locator": "Article 4. Basic Principles of Municipal Service"
+    },
+    "municipal25-u4690009237227af166-1": {
+      "text": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u41c6766e32ff24aeb8-1": {
+      "text": "The interrelationship between municipal service and state civil service of the Russian Federation (hereinafter referred to as state civil service) is ensured through:",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u95f7c7c730314ba4c4-1": {
+      "text": "1) uniform basic qualification requirements for filling municipal service positions and state civil service positions;",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u7b3579e4317c102d52-1": {
+      "text": "2) uniform restrictions and obligations in the performance of municipal service and state civil service;",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u9d422db06a1d6236ad-1": {
+      "text": "3) uniform requirements for the training of personnel for municipal and civil service and for additional professional education;",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u8ca6cd43158ca0830d-1": {
+      "text": "4) counting length of municipal service when calculating length of state civil service, and counting length of state civil service when calculating length of municipal service;",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u5c791b895af7e33dbf-1": {
+      "text": "5) comparability of the basic remuneration conditions and social guarantees for municipal servants and state civil servants;",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-u7b3bcfefb16abbccc2-1": {
+      "text": "6) comparability of the basic conditions of state pension provision for citizens who have served in municipal service and citizens who have served in state civil service, and for their family members in the event of the loss of a breadwinner.",
+      "locator": "Article 5. Interrelationship between Municipal Service and State Civil Service of the Russian Federation"
+    },
+    "municipal25-uf44b5cdfe4587813e1-1": {
+      "text": "Chapter 2. MUNICIPAL SERVICE POSITIONS",
+      "locator": "Chapter 2. MUNICIPAL SERVICE POSITIONS"
+    },
+    "municipal25-u447addc1ad0fe87abc-1": {
+      "text": "Article 6. Municipal Service Positions",
+      "locator": "Article 6. Municipal Service Positions"
+    },
+    "municipal25-udb7c47d928bbb0860f-1": {
+      "text": "1. A municipal service position is a position in a local self-government body established in accordance with the municipality’s charter, with a defined set of duties to support the exercise of the powers of the local self-government body or a person holding a municipal office.",
+      "locator": "Article 6. Municipal Service Positions"
+    },
+    "municipal25-u3ba9c1e305e1430cf7-1": {
+      "text": "2. Municipal service positions are established by municipal legal acts in accordance with the register of municipal service positions in the constituent entity of the Russian Federation, approved by a law of that constituent entity.",
+      "locator": "Article 6. Municipal Service Positions"
+    },
+    "municipal25-u878936ab854c2760c9-1": {
+      "text": "3. When drawing up and approving the staffing schedule of a local self-government body, the municipal service position titles specified in the register of municipal service positions in the constituent entity of the Russian Federation shall be used.",
+      "locator": "Article 6. Municipal Service Positions"
+    },
+    "municipal25-u1100f67c12139ed998-1": {
+      "text": "Article 7. Register of Municipal Service Positions in a Constituent Entity of the Russian Federation",
+      "locator": "Article 7. Register of Municipal Service Positions in a Constituent Entity of the Russian Federation"
+    },
+    "municipal25-u68565a742f815b030d-1": {
+      "text": "1. The register of municipal service positions in a constituent entity of the Russian Federation is a list of municipal service position titles classified by local self-government body, position group and functional characteristics, determined with due regard to historical and other local traditions.",
+      "locator": "Article 7. Register of Municipal Service Positions in a Constituent Entity of the Russian Federation"
+    },
+    "municipal25-u125cdcc7d3de164979-1": {
+      "text": "2. The register of municipal service positions in a constituent entity of the Russian Federation may include municipal service positions established to provide direct support for the exercise of the powers of a person holding a municipal office. Municipal servants fill such positions through an employment contract concluded for the term of office of that person.",
+      "locator": "Article 7. Register of Municipal Service Positions in a Constituent Entity of the Russian Federation"
+    },
+    "municipal25-u69eea89021f0c51a4e-1": {
+      "text": "Article 8. Classification of Municipal Service Positions",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u76d6dc4b6fcf7d761e-1": {
+      "text": "1. Municipal service positions are divided into the following groups:",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u65453b84ee40c95561-1": {
+      "text": "1) highest municipal service positions;",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u020076e4f795103f56-1": {
+      "text": "2) principal municipal service positions;",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-ufe9089ebba57cce646-1": {
+      "text": "3) leading municipal service positions;",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u41c9714d7e6b15c5d1-1": {
+      "text": "4) senior municipal service positions;",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u3f445968bf4a731586-1": {
+      "text": "5) junior municipal service positions.",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-u7003d004f8d95a9830-1": {
+      "text": "2. The correspondence between municipal service positions and state civil service positions of a constituent entity of the Russian Federation, taking account of the qualification requirements for the respective municipal service and state civil service positions, is established by a law of that constituent entity of the Russian Federation.",
+      "locator": "Article 8. Classification of Municipal Service Positions"
+    },
+    "municipal25-uec10b83b88883340e3-1": {
+      "text": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions",
+      "locator": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions"
+    },
+    "municipal25-u0de814a9921a49ad82-1": {
+      "text": "1. Filling a municipal service position requires compliance with qualification requirements concerning the level of professional education, length of municipal service or work experience in a specialty or field of training, and the knowledge and skills necessary to perform official duties, and, where the employer’s representative (employer) has adopted a corresponding decision, concerning the specialty or field of training.",
+      "locator": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions"
+    },
+    "municipal25-uf11e6f1e9f785205e9-1": {
+      "text": "2. Qualification requirements concerning the level of professional education and length of municipal service or work experience in a specialty or field of training necessary to fill municipal service positions are established by municipal legal acts on the basis of standard qualification requirements for filling municipal service positions, which are determined by a law of the constituent entity of the Russian Federation in accordance with the classification of municipal service positions. Qualification requirements concerning the knowledge and skills necessary to perform official duties are established in the municipal servant’s job description depending on the area and type of the servant’s professional official activity. The municipal servant’s job description may also provide for qualification requirements concerning the specialty or field of training.",
+      "locator": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions"
+    },
+    "municipal25-u30649d12ec48210ed6-1": {
+      "text": "3. Where a person is appointed as head of the local administration under a contract, additional requirements for candidates for that position may be established by the charter of the settlement or intra-city district, and, for the position of head of the local administration of a municipal district (municipal okrug, urban okrug, or urban okrug with intra-city divisions) or an intra-city municipality of a city of federal significance, by the charter of that municipal district (municipal okrug, urban okrug, or urban okrug with intra-city divisions) or intra-city municipality of a city of federal significance and by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 9. Basic Qualification Requirements for Filling Municipal Service Positions"
+    },
+    "municipal25-ud700b237896c701e03-1": {
+      "text": "Article 9.1. Class Ranks of Municipal Servants",
+      "locator": "Article 9.1. Class Ranks of Municipal Servants"
+    },
+    "municipal25-ua8d153775273c08b75-1": {
+      "text": "1. A law of a constituent entity of the Russian Federation may provide for class ranks of municipal servants and establish the procedure for their assignment, as well as the procedure for retaining them when municipal servants are transferred to other municipal service positions or leave municipal service.",
+      "locator": "Article 9.1. Class Ranks of Municipal Servants"
+    },
+    "municipal25-u9ceb3487f96646dd59-1": {
+      "text": "2. Class ranks indicate that municipal servants’ level of professional training meets the qualification requirements for filling municipal service positions.",
+      "locator": "Article 9.1. Class Ranks of Municipal Servants"
+    },
+    "municipal25-u327dc67a45d5bdfe51-1": {
+      "text": "Chapter 3. LEGAL POSITION (STATUS) OF A MUNICIPAL SERVANT",
+      "locator": "Chapter 3. LEGAL POSITION (STATUS) OF A MUNICIPAL SERVANT"
+    },
+    "municipal25-uc511d8b99191f27f57-1": {
+      "text": "Article 10. Municipal Servant",
+      "locator": "Article 10. Municipal Servant"
+    },
+    "municipal25-u73084553f3d647e0c5-1": {
+      "text": "1. A municipal servant is a citizen who performs the duties of a municipal service position according to the procedure established by municipal legal acts in accordance with federal laws and laws of the constituent entity of the Russian Federation, in return for monetary remuneration paid from the local budget.",
+      "locator": "Article 10. Municipal Servant"
+    },
+    "municipal25-u3b38112f670f95070a-1": {
+      "text": "2. Persons performing technical support duties for local self-government bodies do not hold municipal service positions and are not municipal servants.",
+      "locator": "Article 10. Municipal Servant"
+    },
+    "municipal25-u35ded2ad4fa63abe00-1": {
+      "text": "Article 11. Basic Rights of a Municipal Servant",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u8b7d523c74d7aed64c-1": {
+      "text": "1. A municipal servant has the right to:",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u6351638219c7a536a1-1": {
+      "text": "1) familiarize themselves with documents establishing their rights and duties in the municipal service position held, criteria for evaluating the quality of performance of official duties, and conditions for promotion;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u3088f03171cdcf1cfc-1": {
+      "text": "2) be provided with the organizational and technical conditions necessary to perform official duties;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u17c0f3496dcd544551-1": {
+      "text": "3) receive remuneration and other payments in accordance with labor legislation, municipal service legislation and the employment agreement (contract);",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u6edcf0968ed6a7a0d9-1": {
+      "text": "4) rest, ensured through standard working (service) hours, days off and non-working public holidays, and annual paid leave;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-ucde3882cef5a436499-1": {
+      "text": "5) obtain, according to the established procedure, information and materials necessary to perform official duties, and submit proposals to improve the activities of the local self-government body;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-uebda9d3f1cafce02b4-1": {
+      "text": "6) participate, on their own initiative, in a competition to fill a vacant municipal service position;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u2f196243a47730920c-1": {
+      "text": "7) receive additional professional education in accordance with a municipal legal act at the expense of the local budget;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-uec1781ad9bd5968a04-1": {
+      "text": "8) protection of their personal data;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-uaf9d72139cc0828763-1": {
+      "text": "9) familiarize themselves with all materials in their personal file and with assessments of their professional activity and other documents before they are placed in that file, and have their written explanations added to the file;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u7b4e76152efc85facb-1": {
+      "text": "10) associate, including the right to establish trade unions, to protect their rights and their social, economic and professional interests;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-ud3156a2daf3c3deb6c-1": {
+      "text": "11) have individual labor disputes considered in accordance with labor legislation and protect their rights and legitimate interests in municipal service, including bringing violations of those rights and interests before a court;",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u7885af58e7e5ac4b9a-1": {
+      "text": "12) pension provision in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u3b8923120023b24269-1": {
+      "text": "2. A municipal servant, other than a municipal servant holding the position of head of the local administration under a contract, may perform other paid work after giving prior written notification to the employer’s representative (employer), provided that this does not give rise to a conflict of interest and unless otherwise provided by this Federal Law.",
+      "locator": "Article 11. Basic Rights of a Municipal Servant"
+    },
+    "municipal25-u094f2904742b3b792e-1": {
+      "text": "Article 12. Basic Duties of a Municipal Servant",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-ub2974093b0544e9039-1": {
+      "text": "1. A municipal servant is obliged to:",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u38a0000a693189b947-1": {
+      "text": "1) comply with and ensure the implementation of the Constitution of the Russian Federation, federal constitutional laws, federal laws, other normative legal acts of the Russian Federation, constitutions (charters), laws and other normative legal acts of constituent entities of the Russian Federation, the municipality’s charter and other municipal legal acts;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u5d8b06318a0b7ce5b7-1": {
+      "text": "2) perform official duties in accordance with the job description;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u4495a06711783cc077-1": {
+      "text": "3) when performing official duties, respect human and civil rights, freedoms and legitimate interests regardless of race, ethnicity, language, attitude to religion or other circumstances, as well as the rights and legitimate interests of organizations;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u54df33be6d8a4aa27c-1": {
+      "text": "4) comply with the internal work rules, job description and procedures for handling official information established in the local self-government body;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-uf0735d4fcc11e57069-1": {
+      "text": "5) maintain the level of qualifications necessary for the proper performance of official duties;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-ufe59a50b7a96ed859d-1": {
+      "text": "6) not disclose information constituting state secrets or other secrets protected by federal laws, or information learned in connection with the performance of official duties, including information concerning citizens’ private lives and health or affecting their honor and dignity;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u62fdf3f03d5a0bd752-1": {
+      "text": "7) safeguard state and municipal property, including property provided for the performance of official duties;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-uc18fba69a89da366d0-1": {
+      "text": "8) submit, according to the established procedure, information about themselves and their family members as provided for by the legislation of the Russian Federation;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-ubd04c959e438241f90-1": {
+      "text": "9) notify the employer’s representative (employer) in writing of the termination of citizenship of the Russian Federation or citizenship (subjecthood) of a foreign state that is a party to an international treaty of the Russian Federation under which a foreign citizen is entitled to serve in municipal service, on the day the municipal servant learns of this, but no later than five working days after the termination of citizenship of the Russian Federation or citizenship (subjecthood) of such a foreign state that is a party to an international treaty of the Russian Federation under which a foreign citizen is entitled to serve in municipal service;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u0ee9efcfa8934b1503-1": {
+      "text": "9.1) notify the employer’s representative (employer) in writing of acquiring citizenship (subjecthood) of a foreign state or receiving a residence permit or another document confirming the citizen’s right to permanent residence in a foreign state, on the day the municipal servant learns of this, but no later than five working days after acquiring that citizenship (subjecthood) or receiving that residence permit or other document confirming the right to permanent residence in a foreign state;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u9ca429e5db9a299b24-1": {
+      "text": "10) observe the restrictions, fulfill the obligations and not violate the prohibitions established by this Federal Law and other federal laws;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u89285e7c9b217a0831-1": {
+      "text": "11) notify the employer’s representative (employer) in writing of any personal interest in the performance of official duties that may lead to a conflict of interest, and take measures to prevent such a conflict;",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-uec02033f6f764bd567-1": {
+      "text": "12) notify the employer’s representative (employer) in writing of changes of which the servant becomes aware to information contained in the questionnaire provided for by Article 15.2 of this Federal Law, except information changed by a decision of the employer’s representative (employer) (hereinafter referred to as information contained in the questionnaire).",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-u7f631f0b5a6a25e135-1": {
+      "text": "2. A municipal servant is not entitled to carry out an unlawful instruction given to them. Upon receiving from the relevant superior an instruction that the municipal servant considers unlawful, the servant must submit to the superior who gave the instruction a written explanation of its unlawfulness, identifying the provisions of federal laws and other normative legal acts of the Russian Federation, laws and other normative legal acts of the constituent entity of the Russian Federation, and municipal legal acts that could be violated by carrying out the instruction. If the superior confirms the instruction in writing, the municipal servant is obliged to refuse to carry it out. If an unlawful instruction is carried out, both the municipal servant and the superior who gave the instruction are liable in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 12. Basic Duties of a Municipal Servant"
+    },
+    "municipal25-uef9bdac256954dc8a3-1": {
+      "text": "Article 13. Restrictions Related to Municipal Service",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u92990e27db0b8232ff-1": {
+      "text": "1. A citizen may not be admitted to municipal service, and a municipal servant may not remain in municipal service, in the event of:",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u50ffb16d1c4b89e75c-1": {
+      "text": "1) being declared legally incapable or of limited legal capacity by a court decision that has entered into legal force;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-uf4e3d92cb587e12943-1": {
+      "text": "2) being sentenced, by a court judgment that has entered into legal force, to a punishment that precludes the performance of duties in a municipal service position;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-ub959dd958f5216d16f-1": {
+      "text": "3) refusal to undergo the procedure for obtaining clearance to information constituting state secrets or other secrets protected by federal laws, if the duties of the municipal service position for which the citizen is applying or which the municipal servant holds involve the use of such information;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u8e9ee06a776829f97c-1": {
+      "text": "4) having a disease that prevents entry into or performance of municipal service, as confirmed by a medical organization’s conclusion. The procedure for medical screening, the list of such diseases and the form of the medical organization’s conclusion are established by the federal executive body authorized by the Government of the Russian Federation;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u2728fce7307a29ecdd-1": {
+      "text": "5) close kinship or affinity (parents, spouses, children, brothers and sisters, and also the brothers, sisters, parents and children of spouses and the spouses of children) with the head of the municipality who heads the local administration, if holding the municipal service position involves direct subordination or accountability to that official, or with a municipal servant, if holding the municipal service position involves direct subordination or accountability of one to the other;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u0e93708dc838c3e699-1": {
+      "text": "6) termination of citizenship of the Russian Federation or citizenship (subjecthood) of a foreign state that is a party to an international treaty of the Russian Federation under which a foreign citizen is entitled to serve in municipal service;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u4a25687ce2901d5e21-1": {
+      "text": "7) possession of citizenship (subjecthood) of a foreign state or a residence permit or other document confirming the citizen’s right to permanent residence in a foreign state, unless otherwise provided by an international treaty of the Russian Federation;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u4d394bf9ef2ed40d7a-1": {
+      "text": "8) submission, upon entry into municipal service and/or during its performance, of forged documents and/or knowingly false information confirming compliance with restrictions, prohibitions and requirements the violation of which precludes holding a municipal service position, or failure to submit documents and/or information demonstrating noncompliance with restrictions, prohibitions and requirements the violation of which precludes holding a municipal service position;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-ub5b8e644c5e9ccfb78-1": {
+      "text": "9) failure to submit information provided for by this Federal Law, Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ and other federal laws, or submission of knowingly inaccurate or incomplete information upon entry into municipal service;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u72be2360165200818d-1": {
+      "text": "9.1) failure to submit the information provided for by Article 15.1 of this Federal Law;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u39c308a24471710fb2-1": {
+      "text": "10) being found, by a conclusion of the draft commission, not to have performed compulsory military service without lawful grounds for not doing so (except citizens who have performed military service under a contract), for 10 years from the expiry of the time limit for appealing that conclusion to the draft commission of the respective constituent entity of the Russian Federation; and, if that conclusion and/or the decision of the draft commission of the respective constituent entity of the Russian Federation on the citizen’s appeal against that conclusion was challenged in court, for 10 years from the entry into legal force of the court decision finding that the citizen’s rights were not violated when that conclusion and/or the decision of the draft commission of the respective constituent entity of the Russian Federation on the citizen’s appeal against that conclusion was adopted;",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u799d9ac30d2a64a463-1": {
+      "text": "11) acquisition of foreign agent status.",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u95a90514a36d4b60d4-1": {
+      "text": "1.1. A citizen may not be appointed as head of the local administration under a contract, and a municipal servant may not hold that position under a contract, if they are closely related by kinship or affinity (parents, spouses, children, brothers and sisters, and also the brothers, sisters, parents and children of spouses and the spouses of children) to the head of the municipality.",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u65dc1d73092486cfe4-1": {
+      "text": "1.2. A citizen may not be appointed as chair, deputy chair or auditor of the municipality’s control and accounts body, and a municipal servant may not hold such positions, if they are closely related by kinship or affinity (parents, spouses, children, brothers and sisters, and also the brothers, sisters, parents and children of spouses and the spouses of children) to the chair of the municipality’s representative body, the head of the municipality, the head of the local administration, or heads of judicial or law enforcement bodies located within the respective municipality.",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u78fbc8e52c0357346f-1": {
+      "text": "2. A citizen may not be admitted to municipal service after reaching the age of 65, the maximum age established for holding a municipal service position.",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u95f71b20bf9568c4f7-1": {
+      "text": "3. To avoid conflicts of interest, a municipal servant who is the head of a local self-government body and a deputy head of such a body may not represent municipal servants’ interests in that body’s elected trade union body while holding their respective positions.",
+      "locator": "Article 13. Restrictions Related to Municipal Service"
+    },
+    "municipal25-u156a791394bd1982df-1": {
+      "text": "Article 14. Prohibitions Related to Municipal Service",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-uaae92544da14d65b15-1": {
+      "text": "1. In connection with municipal service, a municipal servant is prohibited from:",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u7666b0df283da58249-1": {
+      "text": "1) repealed with effect from 1 January 2015. — Federal Law No. 431-ФЗ of 22.12.2014;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u5f0864da94b11b13b2-1": {
+      "text": "2) holding a municipal service position in the event of:",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u96912bee3deb9c8591-1": {
+      "text": "а) election or appointment to a state office of the Russian Federation or a state office of a constituent entity of the Russian Federation, or appointment to a state service position;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u2a972d50ad52ff8152-1": {
+      "text": "б) election or appointment to a municipal office;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u284578f60e884057b1-1": {
+      "text": "в) election to a paid elective position in a trade union body, including the elected body of a primary trade union organization established in a local self-government body;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u2574bb7f023ad451b4-1": {
+      "text": "3) participating in the management of a commercial or nonprofit organization, except in the following cases:",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-ub939c497a57e2de95d-1": {
+      "text": "а) participating without remuneration in the management of a political party or trade union body, including the elected body of a primary trade union organization established in a local self-government body, or participating in a congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real estate owners;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-ucbfd4843de37f60457-1": {
+      "text": "б) participating without remuneration in the management of a nonprofit organization (other than participation in the management of a political party or trade union body, including the elected body of a primary trade union organization established in a local self-government body, or participation in a congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real estate owners), with permission from the employer’s representative obtained according to the procedure established by a law of the constituent entity of the Russian Federation;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-ua129c9927b6edba557-1": {
+      "text": "в) representing, without remuneration, the interests of the municipality in the council of municipalities of the constituent entity of the Russian Federation, other associations of municipalities, and their governing bodies;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-uc62a43a8a0943be748-1": {
+      "text": "г) representing, without remuneration, the interests of the municipality in the governing bodies and audit commission of an organization of which the municipality is a founder (shareholder, participant), in accordance with municipal legal acts determining the procedure for exercising, on behalf of the municipality, the powers of the organization’s founder or the procedure for managing municipally owned shares (interests in charter capital);",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u16fc3d8b8a9281510f-1": {
+      "text": "д) other cases provided for by federal laws;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-udfbad3d2ed0897124c-1": {
+      "text": "3.1) engaging in entrepreneurial activity personally or through authorized agents;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u180e55b8b9eb4b2439-1": {
+      "text": "4) acting as an agent or representative in third-party matters before the local self-government body in which they hold a municipal service position or which is directly subordinate or accountable to them, unless otherwise provided by federal laws;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-uf7f57c029db8a36b74-1": {
+      "text": "5) receiving rewards from individuals or legal entities in connection with official status or the performance of official duties (gifts, monetary remuneration, loans, services, payment for entertainment, holidays or transport expenses, or other rewards). Gifts received by a municipal servant in connection with protocol events, official business trips or other official events are recognized as municipal property and are transferred by the municipal servant under a transfer record to the local self-government body in which the servant holds a municipal service position, except in cases established by the Civil Code of the Russian Federation. A municipal servant who has surrendered a gift received in connection with a protocol event, official business trip or other official event may purchase it according to the procedure established by normative legal acts of the Russian Federation;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-uba3e5a1fdbcbff4f34-1": {
+      "text": "6) undertaking business trips funded by individuals or legal entities, except business trips undertaken on a reciprocal basis by agreement between the local self-government body and local self-government bodies of other municipalities, or with state authorities and local self-government bodies of foreign states or international and foreign nonprofit organizations;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u4fc6bc9ad4299a6744-1": {
+      "text": "7) using material, technical, financial or other support resources, or other municipal property, for purposes unrelated to the performance of official duties;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u7b4f90c01de47bbfe5-1": {
+      "text": "8) disclosing, or using for purposes unrelated to municipal service, information classified as confidential under federal laws, or official information, learned in connection with the performance of official duties;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u73725d9a8d9cb77299-1": {
+      "text": "9) making public statements, judgments or assessments, including in the mass media, concerning the activities of the local self-government body and its head, unless this forms part of the servant’s official duties;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u2dc7cba376eb5590ba-1": {
+      "text": "10) accepting, without the written permission of the head of the municipality, awards or honorary or special titles (other than academic titles) from foreign states, international organizations, political parties, other public associations or religious associations, if interaction with those organizations or associations forms part of the servant’s official duties;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u183a5b610a2314b9a3-1": {
+      "text": "11) using the advantages of official status for election campaigning or campaigning on referendum issues;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u91ab8e2293a619f6f7-1": {
+      "text": "12) using official status in the interests of political parties, religious associations or other public associations, or publicly expressing attitudes toward those associations in the capacity of a municipal servant;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u68d887d72b0db9e600-1": {
+      "text": "13) establishing structures of political parties, religious associations or other public associations in local self-government bodies or other municipal bodies (except trade unions and veterans’ and other bodies of public initiative), or facilitating the establishment of such structures;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u7f01b18e31e2575350-1": {
+      "text": "14) ceasing to perform official duties for the purpose of resolving a labor dispute;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u34faca348907ad7985-1": {
+      "text": "15) serving on governing bodies, boards of trustees, supervisory boards or other bodies of foreign nonprofit nongovernmental organizations or their structural subdivisions operating in the Russian Federation, unless otherwise provided by an international treaty of the Russian Federation or the legislation of the Russian Federation;",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-ucf6e53400268ebdfc8-1": {
+      "text": "16) engaging, without the written permission of the employer’s representative (employer), in paid activities financed exclusively by foreign states, international or foreign organizations, foreign citizens or stateless persons, unless otherwise provided by an international treaty of the Russian Federation or the legislation of the Russian Federation.",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u85aef6054a9865231e-1": {
+      "text": "2. A municipal servant holding the position of head of the local administration under a contract is not entitled to engage in other paid activities, except teaching, scientific and other creative activities. Such teaching, scientific and other creative activities may not be financed exclusively by foreign states, international or foreign organizations, foreign citizens or stateless persons, unless otherwise provided by an international treaty of the Russian Federation or the legislation of the Russian Federation. A municipal servant holding the position of head of the local administration under a contract is not entitled to serve on governing bodies, boards of trustees, supervisory boards or other bodies of foreign nonprofit nongovernmental organizations or their structural subdivisions operating in the Russian Federation, unless otherwise provided by an international treaty of the Russian Federation or the legislation of the Russian Federation.",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-uab79f517c20ae85072-1": {
+      "text": "2.1. Repealed. — Federal Law No. 329-ФЗ of 21.11.2011.",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-ub5de57524680455981-1": {
+      "text": "3. After leaving municipal service, a citizen is not entitled to disclose, or use in the interests of organizations or individuals, confidential or official information learned in connection with the performance of official duties.",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u024d03a0a0eb926e6b-1": {
+      "text": "4. A citizen who held a municipal service position included in the list of positions established by normative legal acts of the Russian Federation may not, for two years after leaving municipal service, hold a position in an organization under an employment contract and/or perform work for that organization under a civil-law contract in the cases provided for by federal laws, if certain functions of municipal (administrative) management of that organization formed part of the municipal servant’s official (service) duties, without the consent of the relevant commission on compliance with requirements for the official conduct of municipal servants and resolution of conflicts of interest, given according to the procedure established by normative legal acts of the Russian Federation.",
+      "locator": "Article 14. Prohibitions Related to Municipal Service"
+    },
+    "municipal25-u8e7f8f3975d2d18c0a-1": {
+      "text": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-u88004835fe6e3957f9-1": {
+      "text": "1. For the purposes of this Federal Law, the concept of ‘conflict of interest’ established by part 1 of Article 10 of Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ is used.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-uefb996ffefb966a3ab-1": {
+      "text": "2. For the purposes of this Federal Law, the concept of ‘personal interest’ established by part 2 of Article 10 of Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ is used.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-ub9ad48397d87d03d14-1": {
+      "text": "2.1. Prevention or resolution of a conflict of interest may consist of changing the official or service position of a municipal servant who is a party to the conflict, up to suspension from the performance of official (service) duties according to the established procedure, and/or the servant’s renunciation of the benefit that caused the conflict of interest.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-u75593c006f5fd0f90f-1": {
+      "text": "2.2. If ownership of securities (participation interests or shares in the charter (pooled) capitals of organizations) by a person holding a municipal service position leads or may lead to a conflict of interest, that person is obliged to transfer the securities (participation interests or shares in the charter (pooled) capitals of organizations) belonging to them into trust management in accordance with the civil legislation of the Russian Federation.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-udd9c3f1d7cf389a236-1": {
+      "text": "2.3. Failure by a municipal servant who is a party to a conflict of interest to take measures to prevent or resolve it constitutes an offense resulting in dismissal from municipal service, except in cases established by federal laws.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-u2c5bbf5de77eb14e62-1": {
+      "text": "3. An employer’s representative (employer) who becomes aware that a municipal servant has a personal interest that leads or may lead to a conflict of interest is obliged to take measures to prevent or resolve that conflict, up to suspending the servant from the municipal service position held for the period required to resolve the conflict, while retaining the servant’s monetary remuneration throughout the suspension from that position.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-ue698aacbe574d1c41b-1": {
+      "text": "3.1. Failure by a municipal servant acting as the employer’s representative, who becomes aware that a subordinate municipal servant has a personal interest that leads or may lead to a conflict of interest, to take measures to prevent or resolve that conflict constitutes an offense resulting in the dismissal of the municipal servant acting as the employer’s representative from municipal service, except in cases established by federal laws.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-ubc3a8994edcd229619-1": {
+      "text": "4. To ensure municipal servants’ compliance with general principles of official conduct and the resolution of conflicts of interest, commissions on compliance with requirements for municipal servants’ official conduct and resolution of conflicts of interest may be established within a local self-government body according to the procedure determined by normative legal acts of the constituent entity of the Russian Federation and a municipal legal act.",
+      "locator": "Article 14.1. Resolution of Conflicts of Interest in Municipal Service"
+    },
+    "municipal25-ub945f6670c6b003bfb-1": {
+      "text": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-ub2974093b0544e9039-2": {
+      "text": "1. A municipal servant is obliged to:",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u276f093b752ab2df76-1": {
+      "text": "1) perform official duties conscientiously and with a high level of professionalism;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-ue01e39d412c59adab2-1": {
+      "text": "2) ensure equal and impartial treatment of all individuals, legal entities and organizations, give no preference to any public or religious associations, professional or social groups, citizens or organizations, and avoid bias toward such associations, groups, organizations and citizens;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-ue6e6b352f23df392d9-1": {
+      "text": "3) refrain from actions influenced by any personal, property-related (financial) or other interests that hinder conscientious performance of official duties;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u2ac00f50ad7f5c7c1e-1": {
+      "text": "4) maintain neutrality so as to exclude the possibility that decisions of political parties, other public or religious associations or other organizations influence their professional official activities;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u6c234a18ea7d3cc281-1": {
+      "text": "5) be courteous in dealings with citizens;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-uc26eca657cbf3ab033-1": {
+      "text": "6) respect the moral customs and traditions of the peoples of the Russian Federation;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u70a78b5bd563e798a8-1": {
+      "text": "7) take account of the cultural and other characteristics of different ethnic and social groups and religious denominations;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u2e8975097c8049fa9a-1": {
+      "text": "8) promote interethnic and interfaith harmony;",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-u0da52ab0f6000cde7e-1": {
+      "text": "9) avoid conflict situations capable of damaging their reputation or the standing of the municipal body.",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-ub9ccfdff8c83034759-1": {
+      "text": "2. A municipal servant who is a manager is obliged to prevent cases in which municipal servants are compelled to participate in the activities of political parties or other public or religious associations.",
+      "locator": "Article 14.2. Requirements for the Official Conduct of a Municipal Servant"
+    },
+    "municipal25-uab1e2df0a542896d59-1": {
+      "text": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-ubbfb4105108fd87531-1": {
+      "text": "1. A citizen applying for a municipal service position and a municipal servant shall submit to the employer’s representative (employer) information on income, property and property-related obligations provided for by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’, in the cases established by that Federal Law. This information shall be submitted according to the procedure, within the time limits and using the form established for the submission by state civil servants of constituent entities of the Russian Federation of information on income, property and property-related obligations provided for by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u09e78238146ee505f8-1": {
+      "text": "1.1. A municipal servant holding a municipal service position included in the relevant list is obliged to submit information on expenditure provided for by Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, according to the procedure and using the form established for the submission of such information by state civil servants of constituent entities of the Russian Federation.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-uec14326a4fcf2a1e28-1": {
+      "text": "1.2. Monitoring the correspondence between the expenditure and income of a municipal servant, the servant’s spouse and minor children is carried out according to the procedure provided for by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’, Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, normative legal acts of the President of the Russian Federation, laws and other normative legal acts of constituent entities of the Russian Federation, and municipal legal acts.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-ub02ec8a8b45b247f67-1": {
+      "text": "2. Information submitted by a municipal servant under this Article is confidential unless federal laws classify it as information constituting state secrets or other secrets protected by federal laws.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-ubb4d1a97a2753907ea-1": {
+      "text": "3. Information submitted by a municipal servant under this Article may not be used to establish or determine the solvency of the municipal servant, the servant’s spouse or minor children, or to collect, directly or indirectly, donations (contributions) to the funds of religious or other public associations, other organizations or individuals.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u1c41d391a0328130f8-1": {
+      "text": "4. Persons responsible for disclosing information submitted by a municipal servant under this Article, or for using it for purposes not provided for by the legislation of the Russian Federation, are liable in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-ud48fa144a2ba519016-1": {
+      "text": "5. Failure by a municipal servant to submit information on income, property and property-related obligations provided for by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ and information on expenditure provided for by Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, where submission is mandatory, or the submission of knowingly incomplete information, constitutes an offense resulting in dismissal from municipal service, except in cases established by federal laws.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u6cf5af6226b43ae9a9-1": {
+      "text": "5.1. A municipal servant’s submission of knowingly inaccurate information specified in part 5 of this Article constitutes an offense resulting in dismissal from municipal service.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-ue57dab9d606243a441-1": {
+      "text": "6. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted by citizens applying for municipal service positions included in the relevant list; of the accuracy and completeness of information on income, expenditure, property and property-related obligations submitted by municipal servants holding those positions; of the accuracy and completeness of information submitted by citizens upon entry into municipal service in accordance with normative legal acts of the Russian Federation; and of municipal servants’ observance of restrictions, prohibitions and requirements to prevent or resolve conflicts of interest and their fulfillment of duties established by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ and other normative legal acts of the Russian Federation is carried out according to the procedure determined by normative legal acts of the constituent entity of the Russian Federation.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u7fe34a4532fdcabfaf-1": {
+      "text": "7. Requests for information constituting banking, tax or other legally protected secrets, and requests to law enforcement bodies to carry out operational-search measures concerning citizens applying for municipal service positions included in the relevant list, municipal servants holding those positions, and the spouses and minor children of such citizens and municipal servants, are sent in the interests of municipal bodies by the highest officials of constituent entities of the Russian Federation according to the procedure determined by normative legal acts of the Russian Federation.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u0928feb113681de4f2-1": {
+      "text": "8. Citizens applying to become head of the local administration under a contract shall submit the information specified in part 1 of this Article, and a person holding that position shall submit the information specified in parts 1 and 1.1 of this Article, to the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of that constituent entity.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-uda29e9b4a2040bbede-1": {
+      "text": "9. Repealed with effect from 1 January 2026. — Federal Law No. 505-ФЗ of 28.12.2025.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u2403f7864b129d4d42-1": {
+      "text": "10. Verification of the accuracy and completeness of information on income, expenditure, property and property-related obligations submitted under part 8 of this Article is carried out by decision of the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of that constituent entity.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u750f46aff209f0ea49-1": {
+      "text": "11. If a verification carried out under part 10 of this Article establishes that a person holding the position of head of the local administration under a contract has failed to observe restrictions or prohibitions or to fulfill duties established by this Federal Law, Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, or Federal Law No. 79-ФЗ of 7 May 2013 ‘On Prohibiting Certain Categories of Persons from Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments’, the highest official of the constituent entity of the Russian Federation shall apply to the local self-government body authorized to take the relevant decision, or to a court, for early termination of the powers of the person holding the position of head of the local administration under a contract or for the imposition of another disciplinary penalty on that person.",
+      "locator": "Article 15. Submission of Information on Income, Expenditure, Property and Property-Related Obligations"
+    },
+    "municipal25-u0b7c314ade75c33ce5-1": {
+      "text": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-u2a4bdd761ff764f8c2-1": {
+      "text": "1. Information on the addresses of websites and/or web pages on the Internet information and telecommunications network on which a citizen applying for a municipal service position or a municipal servant has posted publicly accessible information, as well as data enabling their identification, shall be submitted to the employer’s representative by:",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-u03b5b2822f79e431d0-1": {
+      "text": "1) a citizen applying for a municipal service position, upon entry into service, for the three calendar years preceding the year of entry into municipal service;",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-u40a460766c2ebc6b76-1": {
+      "text": "2) a municipal servant, annually for the calendar year preceding the year in which the information is submitted, except where publicly accessible information was posted in the performance of the municipal servant’s official duties.",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-uc18b4ebb88fef3ca11-1": {
+      "text": "2. The information specified in part 1 of this Article is submitted by citizens applying for a municipal service position upon entry into municipal service, and by municipal servants no later than 1 April of the year following the reporting year. The information specified in part 1 of this Article is submitted using the form established by the Government of the Russian Federation.",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-u7c2776c4f25fc51cb0-1": {
+      "text": "3. By decision of the employer’s representative, municipal servants authorized by that representative shall process publicly accessible information posted on the Internet information and telecommunications network by applicants for municipal service positions and municipal servants, and verify the accuracy and completeness of the information provided for by part 1 of this Article.",
+      "locator": "Article 15.1. Submission of Information on the Posting of Information on the Internet Information and Telecommunications Network"
+    },
+    "municipal25-u440b8d41e45a81d774-1": {
+      "text": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information",
+      "locator": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information"
+    },
+    "municipal25-uc21189dc87bba05061-1": {
+      "text": "1. A citizen shall submit a questionnaire upon entry into municipal service.",
+      "locator": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information"
+    },
+    "municipal25-ua6aacdeebc20fca81e-1": {
+      "text": "2. A municipal servant shall notify the employer’s representative (employer) in writing of changes of which the servant becomes aware to information contained in the questionnaire.",
+      "locator": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information"
+    },
+    "municipal25-ufa2185337d72e259fa-1": {
+      "text": "3. The questionnaire form, including the list of information included in it and the procedure and time limits for updating that information, is established by the President of the Russian Federation.",
+      "locator": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information"
+    },
+    "municipal25-ud0149bce6fcc634592-1": {
+      "text": "4. Information contained in the questionnaire may be verified by decision of the employer’s representative (employer) or a person authorized by that representative. The personnel service of the municipal body verifies the information by sending written requests, including through state information systems, to public authorities and organizations possessing the relevant information. Public authorities and organizations possessing the relevant information are obliged to provide the requested information no later than one month after receiving the request.",
+      "locator": "Article 15.2. Submission of a Questionnaire, Reporting Changes to Information Contained in the Questionnaire, and Verification of That Information"
+    },
+    "municipal25-ud53a7f5ebf6dca7520-1": {
+      "text": "Chapter 4. PROCEDURE FOR ENTRY INTO, PERFORMANCE AND TERMINATION OF MUNICIPAL SERVICE",
+      "locator": "Chapter 4. PROCEDURE FOR ENTRY INTO, PERFORMANCE AND TERMINATION OF MUNICIPAL SERVICE"
+    },
+    "municipal25-u7cfe836e5c7eb102fc-1": {
+      "text": "Article 16. Entry into Municipal Service",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u5ab3cf8d92cb922a89-1": {
+      "text": "1. Citizens who have reached the age of 18, have command of the state language of the Russian Federation and meet the qualification requirements established under this Federal Law for filling municipal service positions are entitled to enter municipal service, provided that none of the circumstances specified in Article 13 of this Federal Law as restrictions related to municipal service is present.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u0bc1d5f8006a3919a3-1": {
+      "text": "2. Upon entry into municipal service and during its performance, no direct or indirect restrictions or advantages may be established on grounds of sex, race, ethnicity, origin, property or official status, place of residence, attitude to religion, beliefs, membership in public associations, or other circumstances unrelated to a municipal servant’s professional and work-related qualities.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u7455ee30c9539cd7fe-1": {
+      "text": "3. Upon entry into municipal service, a citizen shall submit:",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ua05323edd3bc70038f-1": {
+      "text": "1) an application requesting admission to municipal service and appointment to a municipal service position;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u1d922643435b5ddad4-1": {
+      "text": "2) the questionnaire provided for by Article 15.2 of this Federal Law;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u3780de830115a1a6b1-1": {
+      "text": "3) a passport;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ud2568642e0c4ce08b1-1": {
+      "text": "4) an employment record book and/or information on employment activity prepared in accordance with the procedure established by legislation, except where an employment agreement (contract) is being concluded for the first time;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u9ef14fdb5200c4720d-1": {
+      "text": "5) a document on education and qualifications;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u4b4edd60f469bd1c2b-1": {
+      "text": "6) a document confirming registration in the individual (personalized) record-keeping system, except where an employment agreement (contract) is being concluded for the first time;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ub688db023cdb6905a4-1": {
+      "text": "7) a certificate of registration of the individual with the tax authority at the place of residence in the Russian Federation;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-uf63121fdd0741d372b-1": {
+      "text": "8) military registration documents, for citizens in the reserve and persons liable to conscription for military service;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u9615e2f6e8e1bf2bea-1": {
+      "text": "9) a medical organization’s conclusion confirming the absence of a disease preventing entry into municipal service;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ua2fa36fc460fa236b9-1": {
+      "text": "10) information on income, property and property-related obligations provided for by Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u52cfe1c676ee4f1a46-1": {
+      "text": "10.1) the information provided for by Article 15.1 of this Federal Law;",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-uec0c734addf376c86e-1": {
+      "text": "11) other documents provided for by federal laws, Presidential decrees of the Russian Federation and Government resolutions of the Russian Federation.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u8b2dfa7530240663e8-1": {
+      "text": "4. Information (other than information contained in the questionnaire) submitted under this Federal Law by a citizen upon entry into municipal service may be verified according to the procedure established by federal laws. Federal laws may establish additional requirements for verification of information submitted by a citizen upon entry into municipal service in particular municipalities.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-uf020f37f3495ba748f-1": {
+      "text": "5. If the verification provided for by part 4 of this Article establishes circumstances preventing the citizen from entering municipal service, the citizen shall be informed in writing of the reasons for refusal of admission to municipal service.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u2392b6ec4ff055fb15-1": {
+      "text": "6. A citizen enters municipal service through appointment to a municipal service position on the terms of an employment contract in accordance with labor legislation, taking account of the special provisions of this Federal Law.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u8d00e3af6b7b233965-1": {
+      "text": "7. A citizen appointed as head of the local administration following a competition to fill that position shall conclude a contract. The procedure for filling the position of head of the local administration under a contract, and for concluding and terminating a contract with a person appointed to that position under a contract, is determined by Federal Law No. 131-ФЗ of 6 October 2003 ‘On the General Principles of the Organization of Local Self-Government in the Russian Federation’. The standard form of contract with a person appointed as head of the local administration under a contract is approved by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ucec8b99636b8850bb0-1": {
+      "text": "8. A citizen’s entry into municipal service is formalized by an act of the employer’s representative (employer) appointing the citizen to a municipal service position.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-ubc950a2361720c8106-1": {
+      "text": "9. The parties to the employment contract upon entry into municipal service are the employer’s representative (employer) and the municipal servant.",
+      "locator": "Article 16. Entry into Municipal Service"
+    },
+    "municipal25-u1edcf774118fc5acf3-1": {
+      "text": "Article 17. Competition to Fill a Municipal Service Position",
+      "locator": "Article 17. Competition to Fill a Municipal Service Position"
+    },
+    "municipal25-ua3253267a1e8f9bcda-1": {
+      "text": "1. When filling a municipal service position in a municipality, the conclusion of an employment contract may be preceded by a competition in which applicants’ professional level and compliance with the established qualification requirements for the municipal service position are assessed.",
+      "locator": "Article 17. Competition to Fill a Municipal Service Position"
+    },
+    "municipal25-u9182f55b212cafba81-1": {
+      "text": "2. The procedure for a competition to fill a municipal service position is established by a municipal legal act adopted by the municipality’s representative body. The procedure must provide for publication of the conditions of the competition, its date, time and location, and the draft employment contract at least 20 days before the competition. The total number of members of the competition commission in the municipality and the procedure for its formation are established by the municipality’s representative body. Where a competition is held to fill the position of head of a territorial body of the local administration entrusted with exercising some of the local administration’s powers in rural settlements located within a settlement, municipal okrug, urban okrug or inter-settlement territory, the procedure for forming the competition commission in the municipality must provide for the inclusion of candidates nominated by the citizens’ assembly in each of those rural settlements among the commission’s members.",
+      "locator": "Article 17. Competition to Fill a Municipal Service Position"
+    },
+    "municipal25-u7db17565b7ad70db26-1": {
+      "text": "3. The employer’s representative (employer) shall conclude an employment contract with and appoint to the municipal service position one of the candidates selected by the competition commission following the competition to fill that position.",
+      "locator": "Article 17. Competition to Fill a Municipal Service Position"
+    },
+    "municipal25-u55fe9cb57053af814f-1": {
+      "text": "Article 18. Appraisal of Municipal Servants",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-ucb7dda5d553205a7a2-1": {
+      "text": "1. A municipal servant’s appraisal is conducted to determine whether the servant is suited to the municipal service position held. A municipal servant’s appraisal is conducted once every three years.",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u7f63469ab95626c67a-1": {
+      "text": "2. The following municipal servants are not subject to appraisal:",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u006aad4e365869ec8a-1": {
+      "text": "1) those who have held municipal service positions for less than one year;",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u0c0705c959c3d7f056-1": {
+      "text": "2) those who have reached the age of 60;",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u354ae950c74ad05fe5-1": {
+      "text": "3) pregnant women;",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-ubf8ba0d8857726b814-1": {
+      "text": "4) those on maternity leave or on leave to care for a child until the child reaches the age of three. Such municipal servants may be appraised no earlier than one year after returning from leave;",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u1e18ead0aef8af407a-1": {
+      "text": "5) those holding municipal service positions under a fixed-term employment agreement (contract).",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u22a8648b1028b544f6-1": {
+      "text": "3. Following a municipal servant’s appraisal, the appraisal commission decides whether the servant is suited to the municipal service position held. The commission may recommend incentives for individual municipal servants for their achievements at work, including promotion, and, where necessary, recommend improvements to the activities of the municipal servants being appraised. The appraisal results are communicated to the appraised municipal servants immediately after the voting results are determined. The appraisal materials are submitted to the employer’s representative (employer).",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u947292f420a7a54893-1": {
+      "text": "4. On the basis of appraisal results, the employer’s representative (employer) decides to reward individual municipal servants for their achievements at work or, within no more than one month from the appraisal, to demote a municipal servant with the servant’s consent. On the basis of appraisal results, the appraisal commission may recommend that individual municipal servants be sent for additional professional education.",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u5c8502792b0d1523b3-1": {
+      "text": "5. If a municipal servant does not consent to demotion or cannot be transferred with their consent to another municipal service position, the employer’s representative (employer) may, within no more than one month from the appraisal, dismiss the servant from municipal service for being unsuited to the position held due to insufficient qualifications confirmed by the appraisal results. After that period expires, dismissal or demotion of the municipal servant on the basis of that appraisal is not permitted.",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u40076f39068b868ac7-1": {
+      "text": "6. A municipal servant is entitled to challenge the appraisal results in court.",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-ub99dbf80f6d31e00f3-1": {
+      "text": "7. Regulations on the appraisal of municipal servants are approved by a municipal legal act in accordance with standard regulations on the appraisal of municipal servants approved by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 18. Appraisal of Municipal Servants"
+    },
+    "municipal25-u377394d98cc918526b-1": {
+      "text": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-ubffb0e4dd56403c733-1": {
+      "text": "1. In addition to the grounds for terminating an employment contract provided for by the Labor Code of the Russian Federation, an employment contract with a municipal servant may also be terminated at the initiative of the employer’s representative (employer) in the event of:",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-u5592f7a305bf51e248-1": {
+      "text": "1) attainment of the maximum age established for holding a municipal service position;",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-u1a8b06370244bc3585-1": {
+      "text": "2) repealed with effect from 1 July 2021. — Federal Law No. 116-ФЗ of 30.04.2021;",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-u112b7a8c79c4c1b111-1": {
+      "text": "3) failure to comply with the restrictions and prohibitions related to municipal service established by Articles 13, 14, 14.1 and 15 of this Federal Law;",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-u9ebff6fa7c24dc207f-1": {
+      "text": "4) imposition of an administrative penalty in the form of disqualification;",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-uf42f7e6aa3f687f0af-1": {
+      "text": "5) acquisition by the municipal servant of foreign agent status.",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-u894f73396e2d01d21f-1": {
+      "text": "2. Extension of the period of municipal service is permitted for municipal servants who have reached the maximum age established for holding a municipal service position. Each extension of a municipal servant’s period of service may be for no more than one year.",
+      "locator": "Article 19. Grounds for Terminating an Employment Contract with a Municipal Servant"
+    },
+    "municipal25-ub7f33f397360371e09-1": {
+      "text": "Chapter 5. WORKING (SERVICE) TIME AND REST TIME",
+      "locator": "Chapter 5. WORKING (SERVICE) TIME AND REST TIME"
+    },
+    "municipal25-u34e9dac7a368959e7e-1": {
+      "text": "Article 20. Working (Service) Time",
+      "locator": "Article 20. Working (Service) Time"
+    },
+    "municipal25-u24638c34098687deea-1": {
+      "text": "The working (service) time of municipal servants is regulated in accordance with labor legislation.",
+      "locator": "Article 20. Working (Service) Time"
+    },
+    "municipal25-ud46006b8882dc09e2d-1": {
+      "text": "Article 21. Leave of a Municipal Servant",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u60d25e1e86ff0708b8-1": {
+      "text": "1. A municipal servant is granted annual leave with retention of the municipal service position held and monetary remuneration, the amount of which is determined according to the procedure established by labor legislation for calculating average earnings.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-ucc4a164e491dc48a10-1": {
+      "text": "2. A municipal servant’s annual paid leave consists of basic paid leave and additional paid leave.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-uaf52eb3aba454a4036-1": {
+      "text": "3. A municipal servant is granted basic annual paid leave of 30 calendar days.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u7ae8d5f5b25db31706-1": {
+      "text": "4. A municipal servant is granted additional annual paid leave for length of service (of no more than 10 calendar days), and in the cases provided for by federal laws and laws of the constituent entity of the Russian Federation.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-ubf48e8e30c8b7fb956-1": {
+      "text": "5. The procedure and conditions for granting a municipal servant additional annual paid leave for length of service are determined by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u3591668574516e5507-1": {
+      "text": "5.1. A municipal servant subject to an irregular working day is granted additional annual paid leave of three calendar days for that working arrangement.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u7cbc8fecc73e98c240-1": {
+      "text": "6. Upon a municipal servant’s written application, the employer’s representative (employer) may grant the servant leave without monetary remuneration for no more than one year.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u67b6fff70ecec37f1b-1": {
+      "text": "7. A municipal servant is granted leave without monetary remuneration in the cases provided for by federal laws.",
+      "locator": "Article 21. Leave of a Municipal Servant"
+    },
+    "municipal25-u853f9b1ffaaadc95a8-1": {
+      "text": "Chapter 6. GENERAL PRINCIPLES OF REMUNERATION OF MUNICIPAL SERVANTS. GUARANTEES PROVIDED TO MUNICIPAL SERVANTS. LENGTH OF MUNICIPAL SERVICE",
+      "locator": "Chapter 6. GENERAL PRINCIPLES OF REMUNERATION OF MUNICIPAL SERVANTS. GUARANTEES PROVIDED TO MUNICIPAL SERVANTS. LENGTH OF MUNICIPAL SERVICE"
+    },
+    "municipal25-ub621bb913dc8c57414-1": {
+      "text": "Article 22. General Principles of Remuneration of Municipal Servants",
+      "locator": "Article 22. General Principles of Remuneration of Municipal Servants"
+    },
+    "municipal25-ua81647c31d0df3f392-1": {
+      "text": "1. A municipal servant is paid monetary remuneration consisting of an official salary corresponding to the municipal service position held (hereinafter referred to as the official salary), together with monthly and other additional payments determined by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 22. General Principles of Remuneration of Municipal Servants"
+    },
+    "municipal25-u3fcae6506b2e12443f-1": {
+      "text": "2. Local self-government bodies independently determine the amount and conditions of municipal servants’ remuneration. The amount of the official salary, the amounts of monthly and other additional payments, and the procedure for making those payments are established by municipal legal acts issued by the municipality’s representative body in accordance with the legislation of the Russian Federation and the legislation of constituent entities of the Russian Federation.",
+      "locator": "Article 22. General Principles of Remuneration of Municipal Servants"
+    },
+    "municipal25-u3b9e03b8c3790af0bc-1": {
+      "text": "3. Repealed. — Federal Law No. 182-ФЗ of 27.10.2008.",
+      "locator": "Article 22. General Principles of Remuneration of Municipal Servants"
+    },
+    "municipal25-ud7a09adc57d3eb6cbf-1": {
+      "text": "Article 23. Guarantees Provided to Municipal Servants",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-u451a1ea7c8d881253b-1": {
+      "text": "1. A municipal servant is guaranteed:",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-uf760b89e541e42a455-1": {
+      "text": "1) working conditions that enable performance of official duties in accordance with the job description;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-uf23cbe807afbc8d08f-1": {
+      "text": "2) the right to receive monetary remuneration on time and in full;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-ud812a7e107e4c3753b-1": {
+      "text": "3) rest, ensured through standard working (service) hours, days off and non-working public holidays, and annual paid leave;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-u07990b67bd3dc42abb-1": {
+      "text": "4) medical care for the municipal servant and members of the servant’s family, including after the servant retires;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-u65388b705b0e46b2e1-1": {
+      "text": "5) pension provision for length of service and disability, and pension provision for the municipal servant’s family members if the servant dies in connection with the performance of official duties;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-uad5879386a7b1b3ed0-1": {
+      "text": "6) compulsory state insurance against harm to the municipal servant’s health or property in connection with the performance of official duties;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-ucc12e494d009c08dbf-1": {
+      "text": "7) compulsory state social insurance against illness or loss of capacity for work during municipal service or after its termination, where these arise in connection with the performance of official duties;",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-u219361598ccbbf7ec8-1": {
+      "text": "8) protection of the municipal servant and the servant’s family members against violence, threats and other unlawful acts connected with the performance of official duties, in the cases, according to the procedure and on the conditions established by federal laws.",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-u2f43f690af87ccbe3a-1": {
+      "text": "2. When an employment contract with a municipal servant is terminated because a local self-government body is dissolved or its staff is reduced, the servant is provided with the guarantees established by labor legislation for employees dismissed because an organization is dissolved or its staff is reduced.",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-uc883f6d22232f56681-1": {
+      "text": "3. Laws of the constituent entity of the Russian Federation and the municipality’s charter may provide additional guarantees to municipal servants.",
+      "locator": "Article 23. Guarantees Provided to Municipal Servants"
+    },
+    "municipal25-uaf9fb8dd6cfaea66fe-1": {
+      "text": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family",
+      "locator": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family"
+    },
+    "municipal25-u3540f68155495c32bb-1": {
+      "text": "1. In the area of pension provision, all rights of a state civil servant established by federal laws and laws of the constituent entity of the Russian Federation apply in full to a municipal servant.",
+      "locator": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family"
+    },
+    "municipal25-uee15ae88f6ebcde2f8-1": {
+      "text": "2. The amount of a municipal servant’s state pension is determined in accordance with the correspondence between municipal service positions and state civil service positions of the constituent entity of the Russian Federation established by a law of that constituent entity. The maximum amount of a municipal servant’s state pension may not exceed the maximum state pension of a state civil servant of the constituent entity of the Russian Federation in the corresponding state civil service position of that constituent entity.",
+      "locator": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family"
+    },
+    "municipal25-u2bc5b78a0dac9620ba-1": {
+      "text": "3. If a municipal servant dies in connection with the performance of official duties, including after leaving municipal service, the deceased servant’s family members are entitled to a survivor’s pension according to the procedure determined by federal laws.",
+      "locator": "Article 24. Pension Provision for a Municipal Servant and Members of the Servant’s Family"
+    },
+    "municipal25-u37fddfcfea77c26cf6-1": {
+      "text": "Article 25. Length of Municipal Service",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-uf73f412e826aea4fc3-1": {
+      "text": "1. The length (total duration) of municipal service includes periods of holding:",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-ub8e3b13d189fe55fa6-1": {
+      "text": "1) municipal service positions;",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-u1f39f168ef594ef82c-1": {
+      "text": "2) municipal offices;",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-u5a66cea858cf5462e2-1": {
+      "text": "3) state offices of the Russian Federation and state offices of constituent entities of the Russian Federation;",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-ue7a1b6b6a7ed5655e0-1": {
+      "text": "4) state civil service positions, military positions, and positions in other types of federal state service;",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-u43f67a7bf9a9c588c2-1": {
+      "text": "5) other positions in accordance with federal laws.",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-u3b94ed4413aa3c36db-1": {
+      "text": "2. For the purpose of determining the duration of additional annual paid leave for length of service and establishing other guarantees for municipal servants provided for by federal laws, laws of constituent entities of the Russian Federation and charters of municipalities, the length of municipal service includes (credits), in addition to the periods of holding positions specified in part 1 of this Article, periods of holding positions included (credited) in the length of state civil service under part 2 of Article 54 of Federal Law No. 79-ФЗ of 27 July 2004 ‘On State Civil Service of the Russian Federation’.",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-ua70c4d9d7b288def1b-1": {
+      "text": "3. For the award of a length-of-service pension to municipal servants, the length of municipal service includes (credits), in addition to the periods of holding positions specified in part 1 of this Article, other periods in accordance with normative legal acts of constituent entities of the Russian Federation and municipal legal acts.",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-ub528bb2f229c7395dd-1": {
+      "text": "4. The procedure for calculating length of municipal service is established by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 25. Length of Municipal Service"
+    },
+    "municipal25-uec81eb9a3a90588717-1": {
+      "text": "Chapter 7. INCENTIVES FOR MUNICIPAL SERVANTS. DISCIPLINARY LIABILITY OF MUNICIPAL SERVANTS",
+      "locator": "Chapter 7. INCENTIVES FOR MUNICIPAL SERVANTS. DISCIPLINARY LIABILITY OF MUNICIPAL SERVANTS"
+    },
+    "municipal25-ud1f07709b90e4a9962-1": {
+      "text": "Article 26. Incentives for Municipal Servants",
+      "locator": "Article 26. Incentives for Municipal Servants"
+    },
+    "municipal25-uaa9a2742059d15995f-1": {
+      "text": "The types of incentives for a municipal servant and the procedure for applying them are established by municipal legal acts in accordance with federal laws and laws of the constituent entity of the Russian Federation.",
+      "locator": "Article 26. Incentives for Municipal Servants"
+    },
+    "municipal25-u1671b028ff5679eafa-1": {
+      "text": "Article 27. Disciplinary Liability of Municipal Servants",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-ud22d872a4ad84a0926-1": {
+      "text": "1. For a disciplinary offense, namely a municipal servant’s culpable failure to perform or improper performance of the service duties assigned to them, the employer’s representative (employer) is entitled to impose the following disciplinary penalties:",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-uf230fd80de0c8e8920-1": {
+      "text": "1) an admonition;",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-ufc982edcbafa5c8093-1": {
+      "text": "2) a reprimand;",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-ud55e5eb31125440dab-1": {
+      "text": "3) dismissal from municipal service on the relevant grounds.",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-ufe7d7cf3bde5ec670d-1": {
+      "text": "2. A municipal servant who has committed a disciplinary offense may be temporarily suspended from official duties, for no more than one month, pending a decision on disciplinary liability, with retention of monetary remuneration. Such suspension from official duties is effected by a municipal legal act.",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-u186b5c39ecd2aeba44-1": {
+      "text": "3. The procedure for imposing and removing disciplinary penalties is determined by labor legislation, except in cases provided for by this Federal Law.",
+      "locator": "Article 27. Disciplinary Liability of Municipal Servants"
+    },
+    "municipal25-u2e5793c95e4f65ccd2-1": {
+      "text": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u3a77e27db427b44d84-1": {
+      "text": "1. A municipal servant’s failure to observe restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or to fulfill duties established for combating corruption by this Federal Law, Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’ and other federal laws, is subject to the penalties provided for by Article 27 of this Federal Law.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-uc7d544594719aaa7e9-1": {
+      "text": "1.1. A municipal servant is exempt from liability for failure to observe restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or to fulfill duties established by this Federal Law and other federal laws for combating corruption, if such failure is recognized as resulting from circumstances beyond the servant’s control according to the procedure provided for by parts 3–6 of Article 13 of Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u0db06483d34cdb7aef-1": {
+      "text": "2. A municipal servant is subject to dismissal from municipal service due to loss of trust in cases of offenses established by Articles 14.1 and 15 of this Federal Law.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-ua2cc7637da213027f7-1": {
+      "text": "3. The penalties provided for by Articles 14.1, 15 and 27 of this Federal Law are imposed by the employer’s representative (employer), according to the procedure established by normative legal acts of the constituent entity of the Russian Federation and/or municipal normative legal acts, on the basis of:",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u64ed51d309a160e720-1": {
+      "text": "1) a report on the results of a verification conducted by the unit for prevention of corruption and other offenses within the personnel service of the relevant municipal body, or by the authorized unit of the Executive Office of the President of the Russian Federation in accordance with Article 13.4 of Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’;",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u874945a29ae0bd28d3-1": {
+      "text": "2) a recommendation of the commission on compliance with requirements for municipal servants’ official conduct and resolution of conflicts of interest, if the verification report was referred to that commission;",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-ud905ddfc843c0cbcc3-1": {
+      "text": "2.1) a report by the unit for prevention of corruption and other offenses within the personnel service of the relevant municipal body on the commission of a corruption offense, setting out its factual circumstances, and the municipal servant’s written explanation, only with the servant’s consent and provided that the servant admits having committed the corruption offense (except where the penalty is dismissal due to loss of trust);",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-ua9d876b0d748f7f6df-1": {
+      "text": "3) explanations provided by the municipal servant;",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u5c79c5e9cc74948cac-1": {
+      "text": "4) other materials.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-ud5a55b7e8dd354d374-1": {
+      "text": "4. When imposing the penalties provided for by Articles 14.1, 15 and 27 of this Federal Law, account shall be taken of the nature and gravity of the corruption offense committed by the municipal servant, the circumstances in which it was committed, the servant’s observance of other restrictions, prohibitions and requirements to prevent or resolve conflicts of interest and fulfillment of duties established to combat corruption, and the servant’s previous performance of official duties.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-uc2f4cfd5f1096189e6-1": {
+      "text": "5. An act imposing a penalty on a municipal servant for a corruption offense shall specify part 1 or part 2 of this Article as the basis for imposing the penalty.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u5d0a799807e4a6138c-1": {
+      "text": "6. The penalties provided for by Articles 14.1, 15 and 27 of this Federal Law shall be imposed no later than six months after information about the municipal servant’s corruption offense is received, excluding periods of temporary incapacity for work and leave, and no later than three years after the offense was committed. The duration of criminal proceedings is excluded from those time limits.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-u71b8f45ca12ebc62ac-1": {
+      "text": "7. The local self-government body in which a municipal servant served shall enter information on the imposition of dismissal due to loss of trust on that servant in the register of persons dismissed due to loss of trust provided for by Article 15 of Federal Law No. 273-ФЗ of 25 December 2008 ‘On Combating Corruption’.",
+      "locator": "Article 27.1. Penalties for Failure to Observe Restrictions, Prohibitions and Requirements to Prevent or Resolve Conflicts of Interest, and for Failure to Perform Duties Established to Combat Corruption"
+    },
+    "municipal25-udf80db550105239e5a-1": {
+      "text": "Chapter 8. PERSONNEL WORK IN A MUNICIPALITY",
+      "locator": "Chapter 8. PERSONNEL WORK IN A MUNICIPALITY"
+    },
+    "municipal25-uebf6fc307dbf298b4d-1": {
+      "text": "Article 28. Personnel Work in a Municipality",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u4e7d0a0474a7780c1e-1": {
+      "text": "Personnel work in a municipality includes:",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u960c07c73c6a47e489-1": {
+      "text": "1) developing the workforce to fill municipal service positions;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ufe3680723313659b5c-1": {
+      "text": "2) preparing proposals for implementing municipal service legislation and submitting those proposals to the employer’s representative (employer);",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ub12a2225b48f3f9aff-1": {
+      "text": "3) organizing the preparation of draft municipal legal acts connected with entry into and performance of municipal service, conclusion of an employment agreement (contract), appointment to a municipal service position, release from the municipal service position held, dismissal from municipal service and retirement, and preparing the corresponding documents;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u5543294e16dfd782e9-1": {
+      "text": "4) maintaining municipal servants’ employment record books, where available, compiling information on their employment activity during municipal service, and submitting that information according to the procedure established by Russian Federation legislation on individual (personalized) record-keeping in the compulsory pension insurance system for storage in the information resources of the Pension and Social Insurance Fund of the Russian Federation;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ud80d9e5a2f0b8c165f-1": {
+      "text": "5) maintaining municipal servants’ personal files;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ue1d0d852225eeacb86-1": {
+      "text": "6) maintaining the register of municipal servants in the municipality;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ucf3441739159624735-1": {
+      "text": "7) preparing and issuing municipal servants’ official identity cards;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u88dfd7a5ee85d94587-1": {
+      "text": "8) conducting competitions to fill vacant municipal service positions and including municipal servants in the personnel reserve;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ua6faa67b0d44f0a064-1": {
+      "text": "9) conducting appraisals of municipal servants;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u9b6ae793b3d2c7b40e-1": {
+      "text": "10) organizing work with the personnel reserve and ensuring its effective use;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ud48723f6d5da1b6921-1": {
+      "text": "11) organizing and conducting verification of information submitted by a citizen upon entry into municipal service and during the municipal servant’s period of service;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ue847e33624e85e0b72-1": {
+      "text": "11.1) arranging clearance of the prescribed form to information constituting a state secret;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-uc9c5715a2fce84a4a8-1": {
+      "text": "12) organizing verification of information on municipal servants’ income, property and property-related obligations and their compliance with restrictions related to municipal service established by Article 13 of this Federal Law and other federal laws;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-ua09f776cfbff132205-1": {
+      "text": "13) advising municipal servants on legal and other matters of municipal service;",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u0e1c047555d98cd7e5-1": {
+      "text": "14) addressing other personnel matters determined by labor legislation and a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 28. Personnel Work in a Municipality"
+    },
+    "municipal25-u32b8fa546446b278ac-1": {
+      "text": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u069d851f895bea49c8-1": {
+      "text": "1. To develop a highly qualified municipal service workforce, local self-government bodies may organize the training of citizens for municipal service on a contractual basis in accordance with the legislation of the Russian Federation on education and taking account of this Federal Law.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u6b11185c6f610aa8f9-1": {
+      "text": "2. An agreement on targeted education with an obligation of subsequent municipal service (hereinafter referred to as a targeted education agreement) is concluded between a local self-government body and a citizen and provides for the citizen’s obligation to serve in municipal service in that body for a specified period after completing education.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u6cd9148ca1b5abf370-1": {
+      "text": "3. A targeted education agreement is concluded on a competitive basis according to the procedure established by a law of the constituent entity of the Russian Federation. Information on the competition for conclusion of a targeted education agreement must be published in the print media outlet used for official publication of municipal legal acts and posted on the official website of the local self-government body on the Internet information and telecommunications network at least one month before the competition.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u6219c9d3fca5f64e4c-1": {
+      "text": "4. Citizens who have command of the state language of the Russian Federation, are receiving professional education at the corresponding level for the first time, and have no obligations under an apprenticeship or other agreement giving rise to employment relations after completion of education are entitled to participate in the competition for conclusion of a targeted education agreement. A citizen participating in the competition must, upon entry into municipal service and throughout the period provided for by part 5 of this Article, meet the requirements established by this Federal Law for filling municipal service positions.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u6e98da85860b6c507e-1": {
+      "text": "5. The compulsory period of municipal service after completion of targeted education is established by the targeted education agreement. That period may not be shorter than the period during which the local self-government body provided social support measures to the citizen under the targeted education agreement, but may not exceed five years.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u6fd561cb93bbf5afed-1": {
+      "text": "6. The obligations and liability of the parties to a targeted education agreement are established by that agreement in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-ub50f33ad8674e6ab78-1": {
+      "text": "7. A targeted education agreement may be concluded with a citizen only once.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u194554e5958bc5a2e6-1": {
+      "text": "8. Expenditure provided for by a targeted education agreement is financed from the local budget.",
+      "locator": "Article 28.1. Training Personnel for Municipal Service on a Contractual Basis"
+    },
+    "municipal25-u584787b127c163be80-1": {
+      "text": "Article 29. Personal Data of a Municipal Servant",
+      "locator": "Article 29. Personal Data of a Municipal Servant"
+    },
+    "municipal25-ud22a3a8af25cfea44a-1": {
+      "text": "1. A municipal servant’s personal data means information concerning an individual municipal servant that the employer’s representative (employer) requires in connection with that servant’s performance of the duties of the municipal service position held.",
+      "locator": "Article 29. Personal Data of a Municipal Servant"
+    },
+    "municipal25-u9b05a9060283bb82d8-1": {
+      "text": "2. A municipal servant’s personal data shall be processed in accordance with the legislation of the Russian Federation on personal data, subject to the special provisions of Chapter 14 of the Labor Code of the Russian Federation.",
+      "locator": "Article 29. Personal Data of a Municipal Servant"
+    },
+    "municipal25-uce3bf5cad3bfa2f75e-1": {
+      "text": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File",
+      "locator": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File"
+    },
+    "municipal25-uaa308d2807dc9b9ecd-1": {
+      "text": "1. A personal file is opened for a municipal servant, to which documents connected with entry into municipal service, its performance and dismissal from municipal service are added.",
+      "locator": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File"
+    },
+    "municipal25-u7172b314f09f34b07c-1": {
+      "text": "2. A municipal servant’s personal file is retained for 10 years. Upon the servant’s departure from municipal service, the personal file is stored in the archives of the local self-government body at the servant’s last place of municipal service.",
+      "locator": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File"
+    },
+    "municipal25-ude2025d18540acf09f-1": {
+      "text": "3. If the local self-government body in which the municipal servant held a municipal service position is dissolved, the personal file is transferred for safekeeping to the local self-government body to which the dissolved body’s functions have been transferred, or to its legal successor.",
+      "locator": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File"
+    },
+    "municipal25-u309288cb439c33cb63-1": {
+      "text": "4. A municipal servant’s personal file is maintained according to the procedure established for maintaining a state civil servant’s personal file.",
+      "locator": "Article 30. Procedure for Maintaining a Municipal Servant’s Personal File"
+    },
+    "municipal25-ud1c9863169fe218167-1": {
+      "text": "Article 31. Register of Municipal Servants in a Municipality",
+      "locator": "Article 31. Register of Municipal Servants in a Municipality"
+    },
+    "municipal25-u649682d1db8a29bc93-1": {
+      "text": "1. A register of municipal servants is maintained in a municipality.",
+      "locator": "Article 31. Register of Municipal Servants in a Municipality"
+    },
+    "municipal25-uafa98c88b2e27ab6f0-1": {
+      "text": "2. A municipal servant who leaves municipal service is removed from the register of municipal servants on the day of departure.",
+      "locator": "Article 31. Register of Municipal Servants in a Municipality"
+    },
+    "municipal25-u1af6c4baa07910ddba-1": {
+      "text": "3. If a municipal servant dies (is killed), or is recognized as missing or declared dead by a court decision that has entered into legal force, the servant is removed from the register of municipal servants on the day following death (being killed) or the entry into legal force of the court decision.",
+      "locator": "Article 31. Register of Municipal Servants in a Municipality"
+    },
+    "municipal25-u82ea720054185eb66f-1": {
+      "text": "4. The procedure for maintaining the register of municipal servants is approved by a municipal legal act.",
+      "locator": "Article 31. Register of Municipal Servants in a Municipality"
+    },
+    "municipal25-ue4260528d48565072f-1": {
+      "text": "Article 32. Priority Areas for Developing the Municipal Service Workforce",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-uc7149b11a627fb27ef-1": {
+      "text": "The priority areas for developing the municipal service workforce are:",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-ud3305ec4ee710de7af-1": {
+      "text": "1) appointing highly qualified specialists to municipal service positions with due regard to their professional qualities and competence;",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-u0c02b98e5d241292c5-1": {
+      "text": "2) facilitating the career advancement of municipal servants;",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-u98aa8b3ce75213b47b-1": {
+      "text": "3) training personnel for municipal service and providing additional professional education for municipal servants;",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-u6bec32a759569a047c-1": {
+      "text": "4) creating a personnel reserve and using it effectively;",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-ua8380a8987af8ee7fa-1": {
+      "text": "5) assessing municipal servants’ work results through appraisal;",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-u7e3bda55f855c94c2e-1": {
+      "text": "6) applying modern personnel selection technologies when citizens enter municipal service and modern personnel management technologies during their service.",
+      "locator": "Article 32. Priority Areas for Developing the Municipal Service Workforce"
+    },
+    "municipal25-u3cf72df8c381e69350-1": {
+      "text": "Article 33. Personnel Reserve in Municipal Service",
+      "locator": "Article 33. Personnel Reserve in Municipal Service"
+    },
+    "municipal25-ucdfea21d6c49fec948-1": {
+      "text": "Municipalities may establish a personnel reserve for filling vacant municipal service positions in accordance with municipal legal acts.",
+      "locator": "Article 33. Personnel Reserve in Municipal Service"
+    },
+    "municipal25-ufe038eb1bb09f71010-1": {
+      "text": "Chapter 9. FUNDING AND DEVELOPMENT PROGRAMS FOR MUNICIPAL SERVICE",
+      "locator": "Chapter 9. FUNDING AND DEVELOPMENT PROGRAMS FOR MUNICIPAL SERVICE"
+    },
+    "municipal25-u4c65f1c89ce1a01cc5-1": {
+      "text": "Article 34. Funding of Municipal Service",
+      "locator": "Article 34. Funding of Municipal Service"
+    },
+    "municipal25-u7cfa5df40b76ebfb82-1": {
+      "text": "Municipal service is financed from local budgets.",
+      "locator": "Article 34. Funding of Municipal Service"
+    },
+    "municipal25-u91e10bcc914a2b148e-1": {
+      "text": "Article 35. Municipal Service Development Programs",
+      "locator": "Article 35. Municipal Service Development Programs"
+    },
+    "municipal25-u44d80ef7e8b969aadf-1": {
+      "text": "1. The development of municipal service is supported by municipal programs for the development of municipal service and municipal service development programs of constituent entities of the Russian Federation, financed, respectively, from local budgets and the budgets of constituent entities of the Russian Federation.",
+      "locator": "Article 35. Municipal Service Development Programs"
+    },
+    "municipal25-ub98af2d75528f56a40-1": {
+      "text": "2. Experiments may be conducted in individual local self-government bodies to improve the effectiveness of those bodies and municipal servants. The procedure, conditions and time limits for experiments during implementation of the municipal service development programs specified in part 1 of this Article are established by normative legal acts of constituent entities of the Russian Federation and municipal legal acts.",
+      "locator": "Article 35. Municipal Service Development Programs"
+    },
+    "municipal25-uf81cf13498e208d44e-1": {
+      "text": "Chapter 10. FINAL PROVISIONS",
+      "locator": "Chapter 10. FINAL PROVISIONS"
+    },
+    "municipal25-u51453c50fbc366dce6-1": {
+      "text": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-uebc6cf697498954e8c-1": {
+      "text": "The following are repealed from the date this Federal Law enters into force:",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-ua923404642a8244663-1": {
+      "text": "1) Federal Law No. 8-ФЗ of 8 January 1998 ‘On the Foundations of Municipal Service in the Russian Federation’ (Collected Legislation of the Russian Federation, 1998, No. 2, Article 224);",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-ue8688982d30c6222f5-1": {
+      "text": "2) Federal Law No. 75-ФЗ of 13 April 1999 ‘On Amendments and Additions to the Federal Law “On the Foundations of Municipal Service in the Russian Federation”’ (Collected Legislation of the Russian Federation, 1999, No. 16, Article 1933);",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-u96028b8f627dce1518-1": {
+      "text": "3) Federal Law No. 38-ФЗ of 19 April 2002 ‘On an Addition to Article 8 of the Federal Law “On the Foundations of Municipal Service in the Russian Federation”’ (Collected Legislation of the Russian Federation, 2002, No. 16, Article 1499);",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-u94538ecbe3b7e19cb4-1": {
+      "text": "4) point 13 of Article 1 of Federal Law No. 112-ФЗ of 25 July 2002 ‘On Amendments and Additions to Legislative Acts of the Russian Federation in Connection with the Adoption of the Federal Law “On Combating Extremist Activity”’ (Collected Legislation of the Russian Federation, 2002, No. 30, Article 3029).",
+      "locator": "Article 36. Repeal of Certain Legislative Acts (Provisions of Legislative Acts) of the Russian Federation"
+    },
+    "municipal25-u17d59191d8a066b1d5-1": {
+      "text": "Article 37. Application of Laws and Other Normative Legal Acts on Municipal Service in Connection with the Entry into Force of This Federal Law",
+      "locator": "Article 37. Application of Laws and Other Normative Legal Acts on Municipal Service in Connection with the Entry into Force of This Federal Law"
+    },
+    "municipal25-uea768be28a1b702e6a-1": {
+      "text": "Until federal laws and other normative legal acts of the Russian Federation, and laws and other normative legal acts of constituent entities of the Russian Federation on municipal service, are brought into conformity with this Federal Law, those federal laws and other normative legal acts of the Russian Federation and laws and other normative legal acts of constituent entities of the Russian Federation on municipal service apply insofar as they do not conflict with this Federal Law.",
+      "locator": "Article 37. Application of Laws and Other Normative Legal Acts on Municipal Service in Connection with the Entry into Force of This Federal Law"
+    },
+    "municipal25-ud6911b6c70b8f470a3-1": {
+      "text": "Article 38. Entry into Force of This Federal Law",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-u265e85d1c62df44f48-1": {
+      "text": "This Federal Law enters into force on 1 June 2007.",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-ue891c3e4360d128a68-1": {
+      "text": "President",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-u64cbf15dce429edd4f-1": {
+      "text": "of the Russian Federation",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-udcb97e8c96abc4676a-1": {
+      "text": "V. PUTIN",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-ua5b527ca723a103864-1": {
+      "text": "Moscow, the Kremlin",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-u21f3e9a7e7fddf8ba0-1": {
+      "text": "2 March 2007",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    },
+    "municipal25-u3280a5d492bf635b8b-1": {
+      "text": "No. 25-ФЗ",
+      "locator": "Article 38. Entry into Force of This Federal Law"
+    }
+  }
+}

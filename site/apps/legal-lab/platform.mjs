@@ -98,9 +98,9 @@ export async function warmCourseCache(contentVersion,signal){
     if(!response.ok)return false;const manifest=await response.json();
     if(manifest.contentVersion!==contentVersion||!Array.isArray(manifest.files))return false;
     const scope=new URL('../../',import.meta.url),prefix=new URL('./',import.meta.url);
-    // Full acts and their annex images are fetched by the reader when needed.
+    // Full acts, translations and annex images are fetched by the reader when needed.
     // The course worker then retains visited documents for offline reading.
-    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&!u.pathname.includes('/data/documents/')&&!u.search&&!u.hash).map(u=>u.href);
+    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&!u.pathname.includes('/data/documents/')&&!/\/data\/translations\/(?:en|zh)\//.test(u.pathname)&&!u.search&&!u.hash).map(u=>u.href);
     for(let offset=0;offset<urls.length;offset+=200){
       if(signal?.aborted)return false;
       const ready=await new Promise(resolve=>{

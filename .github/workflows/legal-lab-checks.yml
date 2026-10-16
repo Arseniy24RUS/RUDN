@@ -18,6 +18,8 @@ on:
       - 'firebase/database.rules.json'
       - 'scripts/*legal*'
       - 'tests/legal-lab*'
+      - 'tests/fixtures/legal-lab-retired-extras.json'
+      - 'docs/quality/legal-document-translations/**'
       - 'tools/legal-lab/**'
       - '.github/workflows/legal-lab-checks.yml'
       - '.github/workflows/deploy-pages.yml'
@@ -80,6 +82,8 @@ jobs:
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test --test-force-exit scripts/test_legal_rooms_emulator.mjs"
       - name: Restore cloud drafts, retain conflicts and deliver results without duplicate attempts
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_sync_emulator.mjs"
+      - name: Preserve graded retries and history across offline delivery and fresh devices
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_retry_emulator.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-1-3`;
+const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-1-4`;
 // Geography and regional plans are requested only by an explicitly opened game.
 const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-copy.js','./assets/js/settlements-leaderboard.js'];
 const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.mjs','./apps/legal-lab/style.css','./apps/legal-lab/precache-manifest.json','./apps/legal-lab/lib/core.mjs','./apps/legal-lab/lib/corpus.mjs','./apps/legal-lab/lib/live.mjs','./apps/legal-lab/lib/storage.mjs','./assets/js/legal-lab-storage.js'];

@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {EVIDENCE_MODE,gradeEvidence,gradeTask,scoreDossier,expandIds,selectionLimit,parseDossierAnswer,dossierScanQuestions,escapeHTML} from '../site/apps/legal-lab/lib/core.mjs';
 import {canonicalArticleSelections} from '../site/apps/legal-lab/lib/article-evidence.mjs';
 import {labelForUnit} from '../site/apps/legal-lab/lib/reader-tools.mjs';
+import {documentDisplay,displayLabel} from '../site/apps/legal-lab/lib/translation-ui.mjs';
 const data=new URL('../site/apps/legal-lab/data/',import.meta.url),json=async p=>JSON.parse(await readFile(new URL(p,data),'utf8'));
 const [catalog,bank,cases,scans]=await Promise.all(['catalog.json','bank.json','cases.json','scans.json'].map(json));
 const docs=await Promise.all(catalog.documents.map(d=>json(d.file)));
@@ -70,7 +71,7 @@ test('actual report method explains legacy and new heading selections using the 
   // Dependencies and already-verified corpus are explicit; production source is unchanged.
   const entry=await readFile(new URL('../site/apps/legal-lab/entry.mjs',import.meta.url),'utf8');
   const start=entry.indexOf('  report(item,a){'),end=entry.indexOf('\n  help(){',start);assert.ok(start>=0&&end>start);
-  const render=new Function('e','asset','dossierScanQuestions','gradeEvidence','expandIds','canonicalArticleSelections','labelForUnit','EVIDENCE_MODE','return ({'+entry.slice(start,end)+'}).report;')(escapeHTML,value=>value,dossierScanQuestions,gradeEvidence,expandIds,canonicalArticleSelections,labelForUnit,EVIDENCE_MODE);
+  const render=new Function('e','asset','dossierScanQuestions','gradeEvidence','expandIds','canonicalArticleSelections','labelForUnit','EVIDENCE_MODE','documentDisplay','displayLabel','return ({'+entry.slice(start,end)+'}).report;')(escapeHTML,value=>value,dossierScanQuestions,gradeEvidence,expandIds,canonicalArticleSelections,labelForUnit,EVIDENCE_MODE,documentDisplay,displayLabel);
   const app={corpus:{cache:new Map(docs.map(d=>[d.id,d]))},scans,reportOnly:true};
   const item=cases.find(c=>c.id==='A01'),legacy={...fullAnswer(item),selections:['constitution-ua258597def4c307226-1']};
   const report=answer=>{const result=scoreDossier(item,answer,scans,docs);return render.call(app,item,{caseId:item.id,answer,result:{...result,criteria:result.criteria.filter(c=>c.id==='evidence')},preview:false,delivery:'host-accepted'});};

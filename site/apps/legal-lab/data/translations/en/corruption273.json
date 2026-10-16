@@ -1,0 +1,1451 @@
+{
+  "schema": 1,
+  "docId": "corruption273",
+  "locale": "en",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+    "fileSha256": "2279e93b7d4e2a484f0f2538709eae35f09ffef3c2e45ff8dbc08917f95b12c7"
+  },
+  "status": "translated",
+  "kind": "educational-unofficial",
+  "title": "Federal Law “On Combating Corruption”",
+  "revisionLabel": "Version of 25.04.2026",
+  "sections": {
+    "corruption273-s1": "Beginning of document",
+    "corruption273-s2": "Article 1. Basic Concepts Used in This Federal Law",
+    "corruption273-s3": "Article 2. Legal Basis for Combating Corruption",
+    "corruption273-s4": "Article 3. Basic Principles of Combating Corruption",
+    "corruption273-s5": "Article 4. International Cooperation of the Russian Federation in Combating Corruption",
+    "corruption273-s6": "Article 5. Organizational Foundations of Combating Corruption",
+    "corruption273-s7": "Article 6. Corruption Prevention Measures",
+    "corruption273-s8": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption",
+    "corruption273-s9": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments",
+    "corruption273-s10": "Article 8. Submission of Information on Income, Property and Property-Related Obligations",
+    "corruption273-s11": "Article 8.1. Submission of Information on Expenditure",
+    "corruption273-s12": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds",
+    "corruption273-s13": "Article 8.3. Analysis of Information on Income, Property and Property-Related Obligations",
+    "corruption273-s14": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses",
+    "corruption273-s15": "Article 10. Conflict of Interest",
+    "corruption273-s16": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest",
+    "corruption273-s17": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract",
+    "corruption273-s18": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices",
+    "corruption273-s19": "Article 12.2. Restrictions and Duties Imposed on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies",
+    "corruption273-s20": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest",
+    "corruption273-s21": "Article 12.4. Restrictions, Prohibitions and Duties Imposed on Employees Holding Positions in State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation and Other Organizations Established by the Russian Federation under Federal Laws, and on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies",
+    "corruption273-s22": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct",
+    "corruption273-s23": "Article 13. Liability of Individuals for Corruption Offenses",
+    "corruption273-s24": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust",
+    "corruption273-s25": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures",
+    "corruption273-s26": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation",
+    "corruption273-s27": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons",
+    "corruption273-s28": "Article 14. Liability of Legal Entities for Corruption Offenses",
+    "corruption273-s29": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+  },
+  "units": {
+    "corruption273-u8e9c6f12fe723719ba-1": {
+      "text": "25 December 2008 No. 273-ФЗ",
+      "locator": "Beginning of document"
+    },
+    "corruption273-ud150c7895ef3a3226f-1": {
+      "text": "RUSSIAN FEDERATION",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u7a266da6cb0afe5349-1": {
+      "text": "FEDERAL LAW",
+      "locator": "Beginning of document"
+    },
+    "corruption273-ub916492088f3fb1eb1-1": {
+      "text": "ON COMBATING CORRUPTION",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u9e114367b59dcc68c2-1": {
+      "text": "Adopted",
+      "locator": "Beginning of document"
+    },
+    "corruption273-ue9fc7fc9a33da6bc03-1": {
+      "text": "by the State Duma",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u780a392e39b9622583-1": {
+      "text": "19 December 2008",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u971030b02fca136721-1": {
+      "text": "Approved",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u8c05668431a604a317-1": {
+      "text": "by the Federation Council",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u2d96ba8ca1a6f98a7b-1": {
+      "text": "22 December 2008",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u1ab7aa40f88448b23e-1": {
+      "text": "This Federal Law establishes the basic principles of combating corruption and the legal and organizational foundations for preventing and fighting corruption and minimizing and/or eliminating the consequences of corruption offenses.",
+      "locator": "Beginning of document"
+    },
+    "corruption273-u80a255ac09414b608a-1": {
+      "text": "Article 1. Basic Concepts Used in This Federal Law",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u19458d44b9037449ab-1": {
+      "text": "For the purposes of this Federal Law, the following basic concepts are used:",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u18d10eac8d3cfb8297-1": {
+      "text": "1) corruption:",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u9c63b3bc8b468d4370-1": {
+      "text": "а) abuse of official position, giving a bribe, receiving a bribe, abuse of authority, commercial bribery, or other unlawful use by an individual of their official position contrary to the lawful interests of society and the state for the purpose of obtaining benefits in the form of money, valuables, other property, property-related services or other property rights for themselves or third parties, or the unlawful provision of such benefits to that person by other individuals;",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u31d752c0083c916fc6-1": {
+      "text": "б) commission of the acts specified in subpoint ‘а’ of this point on behalf of or in the interests of a legal entity;",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-ub042132b909eea44a7-1": {
+      "text": "2) combating corruption means the activities of federal state authorities, state authorities of constituent entities of the Russian Federation, local self-government bodies, civil society institutions, organizations and individuals within their powers:",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-udcc3ca16aa697d760a-1": {
+      "text": "а) to prevent corruption, including identifying and subsequently eliminating its causes (corruption prevention);",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u9da73d9671878cd038-1": {
+      "text": "б) to identify, prevent, suppress, detect and investigate corruption offenses (fighting corruption);",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u4406dc67978ddbd24a-1": {
+      "text": "в) to minimize and/or eliminate the consequences of corruption offenses;",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-uf4ab93098acc13a1d5-1": {
+      "text": "3) normative legal acts of the Russian Federation:",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u73f8aac0482f43b910-1": {
+      "text": "а) federal normative legal acts (federal constitutional laws, federal laws, normative legal acts of the President of the Russian Federation, normative legal acts of the Government of the Russian Federation, and normative legal acts of federal executive bodies and other federal bodies);",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u322cb27828df8d9de3-1": {
+      "text": "б) laws and other normative legal acts of constituent entities of the Russian Federation;",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u61d67edfc996d29876-1": {
+      "text": "в) municipal legal acts;",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-uf26378f726cf42a344-1": {
+      "text": "4) functions of state or municipal (administrative) management of an organization mean the powers of a state or municipal servant to take binding decisions on personnel, organizational, technical, financial, material-support or other matters concerning that organization, including decisions related to the issue of permits (licenses) for that organization to undertake a particular type of activity and/or individual actions, or to prepare drafts of such decisions.",
+      "locator": "Article 1. Basic Concepts Used in This Federal Law"
+    },
+    "corruption273-u932c7b21e49fd435f2-1": {
+      "text": "Article 2. Legal Basis for Combating Corruption",
+      "locator": "Article 2. Legal Basis for Combating Corruption"
+    },
+    "corruption273-ucec4853896c9f6231b-1": {
+      "text": "The legal basis for combating corruption consists of the Constitution of the Russian Federation, federal constitutional laws, generally recognized principles and norms of international law and international treaties of the Russian Federation, this Federal Law and other federal laws, normative legal acts of the President of the Russian Federation, normative legal acts of the Government of the Russian Federation, normative legal acts of other federal state authorities, normative legal acts of state authorities of constituent entities of the Russian Federation, and municipal legal acts.",
+      "locator": "Article 2. Legal Basis for Combating Corruption"
+    },
+    "corruption273-ud2c44a9734c035c222-1": {
+      "text": "Article 3. Basic Principles of Combating Corruption",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-ucd1fb47e17822cdd04-1": {
+      "text": "Combating corruption in the Russian Federation is based on the following basic principles:",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u0945095f05e2e8a8ca-1": {
+      "text": "1) recognition, assurance and protection of fundamental human and civil rights and freedoms;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-uf872c587961db834fa-1": {
+      "text": "2) legality;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u8dbdee321cbf75d486-1": {
+      "text": "3) publicity and openness in the activities of state bodies and local self-government bodies;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u0bc98c8f4a5d5b5896-1": {
+      "text": "4) the inevitability of liability for corruption offenses;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u3f30184351b94e1d17-1": {
+      "text": "5) the integrated use of political, organizational, information and publicity, socioeconomic, legal, special and other measures;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u92e07fdc946595a341-1": {
+      "text": "6) priority use of corruption prevention measures;",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-u520a2179e858d08a16-1": {
+      "text": "7) cooperation between the state and civil society institutions, international organizations and individuals.",
+      "locator": "Article 3. Basic Principles of Combating Corruption"
+    },
+    "corruption273-ucb42fd0225d38e19f5-1": {
+      "text": "Article 4. International Cooperation of the Russian Federation in Combating Corruption",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-u754b423e401695ddfa-1": {
+      "text": "1. The Russian Federation cooperates in combating corruption with foreign states, their law enforcement bodies and special services, and international organizations, in accordance with international treaties of the Russian Federation and/or on the basis of reciprocity, for the purposes of:",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-u79817b6efd93295a7b-1": {
+      "text": "1) identifying persons suspected (accused) of corruption-related crimes and establishing their whereabouts, as well as the whereabouts of other persons involved in corruption-related crimes;",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-uf58c41ecdb31aadd90-1": {
+      "text": "2) identifying property obtained through corruption offenses or used as an instrument for their commission;",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-ua523832a32fd297076-1": {
+      "text": "3) providing, in appropriate cases, objects or samples of substances for examinations or forensic expert examinations;",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-u1e01375f4ba24ff076-1": {
+      "text": "4) exchanging information on combating corruption;",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-ucf005edb87c2aea30f-1": {
+      "text": "5) coordinating activities to prevent and fight corruption.",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-u9fd1e2b679e96720d9-1": {
+      "text": "2. Foreign citizens, stateless persons who do not permanently reside in the Russian Federation, foreign legal entities having civil legal capacity and established under the laws of foreign states, international organizations and their branches and representative offices (foreign organizations) that are accused (suspected) of corruption offenses outside the Russian Federation are subject to liability under the legislation of the Russian Federation in the cases and according to the procedure provided for by international treaties of the Russian Federation and federal laws.",
+      "locator": "Article 4. International Cooperation of the Russian Federation in Combating Corruption"
+    },
+    "corruption273-u0b6e2af08260319a91-1": {
+      "text": "Article 5. Organizational Foundations of Combating Corruption",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u250456205024f362a4-1": {
+      "text": "1. The President of the Russian Federation:",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u5c443b84f9f952f6e3-1": {
+      "text": "1) determines the principal directions of state policy on combating corruption;",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-ueb77fcac286017ac34-1": {
+      "text": "2) establishes the competence in combating corruption of the federal executive bodies whose activities the President directs;",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u80d47ba892812a92c3-1": {
+      "text": "3) determines special rules for compliance with restrictions, prohibitions and requirements and performance of duties established for combating corruption by this Federal Law and other federal laws.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-ub4afea41fa4c0b9e3e-1": {
+      "text": "2. The Federal Assembly of the Russian Federation ensures the drafting and adoption of federal laws on combating corruption and oversees the activities of executive bodies within its powers.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u2625fb63a28bab4293-1": {
+      "text": "3. The Government of the Russian Federation allocates anti-corruption functions among the federal executive bodies whose activities it directs.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u7d9afb8bf64f4d2ed9-1": {
+      "text": "4. Federal state authorities, state authorities of constituent entities of the Russian Federation and local self-government bodies combat corruption within their powers.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u63cfd20d81f5db2e26-1": {
+      "text": "4.1. Law enforcement bodies, other state bodies, local self-government bodies and their officials are obliged to inform the units for prevention of corruption and other offenses within the personnel services of the relevant federal state authorities, state authorities of constituent entities of the Russian Federation and local self-government bodies (or the officials of those personnel services responsible for preventing corruption and other offenses) of facts of which they become aware concerning a state or municipal servant’s failure to observe restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or to fulfill duties established for combating corruption.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u1633b969718c36eee4-1": {
+      "text": "5. To coordinate the activities of federal executive bodies, executive bodies of constituent entities of the Russian Federation and local self-government bodies in implementing state anti-corruption policy, bodies composed of representatives of federal state authorities, state authorities of constituent entities of the Russian Federation and other persons may be formed by decision of the President of the Russian Federation (hereinafter referred to as anti-corruption coordination bodies). To implement the decisions of anti-corruption coordination bodies, draft Presidential decrees, executive orders and instructions and draft Government resolutions, executive orders and instructions may be prepared and submitted according to the established procedure for consideration by the President of the Russian Federation or the Government of the Russian Federation, respectively; acts (joint acts) may also be issued by federal state authorities and state authorities of constituent entities of the Russian Federation whose representatives are members of the relevant anti-corruption coordination body. Upon receiving information on corruption offenses, anti-corruption coordination bodies forward it to the relevant state bodies authorized to verify such information and take decisions on the verification results according to the procedure established by law.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-udf0fefbb7cd996f626-1": {
+      "text": "6. The Prosecutor General of the Russian Federation and subordinate prosecutors, within their powers, coordinate the activities of the internal affairs bodies of the Russian Federation, federal security service bodies, customs authorities of the Russian Federation and other law enforcement bodies in fighting corruption, and exercise other anti-corruption powers established by federal laws.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u26f2a51910922fd1a2-1": {
+      "text": "6.1. In cases provided for by federal laws, the Prosecutor General’s Office of the Russian Federation cooperates with competent authorities of foreign states when authorized officials of state bodies, local self-government bodies and organizations verify compliance with restrictions, prohibitions and requirements established for combating corruption by persons subject to those restrictions, prohibitions and requirements.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-uf68ce8e78be82863ee-1": {
+      "text": "7. The Accounts Chamber of the Russian Federation ensures anti-corruption activity within its powers in accordance with Federal Law No. 41-ФЗ of 5 April 2013 ‘On the Accounts Chamber of the Russian Federation’.",
+      "locator": "Article 5. Organizational Foundations of Combating Corruption"
+    },
+    "corruption273-u29704e41c05d51abe0-1": {
+      "text": "Article 6. Corruption Prevention Measures",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u127ee63fea8563ea31-1": {
+      "text": "Corruption is prevented through the following main measures:",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u595c790d9dcf962e1a-1": {
+      "text": "1) fostering intolerance of corrupt conduct in society;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-ud729608206b43fdd74-1": {
+      "text": "2) anti-corruption expert examination of legal acts and their drafts;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u347e150d8d52902a53-1": {
+      "text": "2.1) consideration, at least once each quarter, by federal state authorities, state authorities of constituent entities of the Russian Federation, local self-government bodies and other bodies and organizations vested by a federal law with certain state or other public powers, of issues of law-enforcement practice arising from legally effective decisions of courts and commercial courts declaring non-normative legal acts invalid or decisions and actions (inaction) of those bodies, organizations and their officials unlawful, in order to develop and adopt measures to prevent and eliminate the causes of the violations identified;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u3cc4b37d78ef55ce67-1": {
+      "text": "3) imposing, according to the procedure established by law, qualification requirements on citizens applying to hold state or municipal offices or state or municipal service positions, and verifying the information submitted by those citizens according to the established procedure;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u46002ba2bb3772efc8-1": {
+      "text": "4) establishing, as grounds for removal from the position held and/or dismissal from a state or municipal service position included in a list established by normative legal acts of the Russian Federation, or for imposing other measures of legal liability, failure to submit information or submission of knowingly incomplete information, except in cases established by federal laws, or submission of knowingly inaccurate information on the person’s income, expenditure, property and property-related obligations, as well as submission of knowingly false information on the income, expenditure, property and property-related obligations of the person’s spouse and minor children;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-ub1a76c14e5f4464cf6-1": {
+      "text": "5) introducing into the personnel practices of federal state authorities, state authorities of constituent entities of the Russian Federation and local self-government bodies a rule requiring a state or municipal servant’s long, impeccable and effective performance of official duties to be taken into account when appointing the servant to a higher position, assigning a military or special rank, class rank or diplomatic rank, or granting incentives;",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-u8d2a1c99e5876a9c8e-1": {
+      "text": "6) developing public and parliamentary oversight institutions for compliance with the legislation of the Russian Federation on combating corruption.",
+      "locator": "Article 6. Corruption Prevention Measures"
+    },
+    "corruption273-ufc187c619b020c20a7-1": {
+      "text": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ub9dd672a6c16028feb-1": {
+      "text": "The main areas of state bodies’ activities to improve the effectiveness of combating corruption are:",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u25cf17e2856c7391ee-1": {
+      "text": "1) pursuing a unified state anti-corruption policy;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u90b6411cec4d2df54a-1": {
+      "text": "2) creating a mechanism for interaction between law enforcement and other state bodies and public and parliamentary commissions on anti-corruption matters, as well as citizens and civil society institutions;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-uab8b88411ad2251eae-1": {
+      "text": "3) adopting legislative, administrative and other measures to encourage state and municipal servants and citizens to participate more actively in combating corruption and to foster a negative attitude toward corrupt conduct in society;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u8a7c3619daeb64b81b-1": {
+      "text": "4) improving the system and structure of state bodies and creating mechanisms for public oversight of their activities;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u9cb4c13cd61428bf7c-1": {
+      "text": "5) introducing anti-corruption standards, namely establishing a unified system of prohibitions, restrictions and permissions for the relevant area of activity to ensure the prevention of corruption in that area;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ue1a5adba47d62f6a79-1": {
+      "text": "6) harmonizing the rights of state and municipal servants and persons holding state offices of the Russian Federation, state offices of constituent entities of the Russian Federation, positions as heads of municipalities and municipal offices, as well as the restrictions, prohibitions and duties established for those servants and persons;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u54bbc1a1351a5c60af-1": {
+      "text": "7) ensuring citizens’ access to information on the activities of federal state authorities, state authorities of constituent entities of the Russian Federation and local self-government bodies;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u132c520b76f43e904f-1": {
+      "text": "8) ensuring the independence of the mass media;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u774c1ba106254c9fa6-1": {
+      "text": "9) strict observance of the principles of judicial independence and noninterference in judicial activities;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ube92c3c3e9fec2cbe7-1": {
+      "text": "10) improving the organization of anti-corruption activities of law enforcement and supervisory bodies;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ueb13316f3fdf5c8762-1": {
+      "text": "11) improving the procedures for state and municipal service;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-uf9fb3315454f78961c-1": {
+      "text": "12) ensuring good faith, openness, fair competition and objectivity in procurement of goods, works and services for state or municipal needs;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ufefe11b56e3ec0909b-1": {
+      "text": "13) eliminating unjustified prohibitions and restrictions, particularly in economic activity;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-ud2ae0cd01ee48eafa2-1": {
+      "text": "14) improving procedures for using state and municipal property and state and municipal resources (including the provision of state and municipal assistance), and procedures for transferring rights to use such property and for its disposal;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u33192fae4c0beace1a-1": {
+      "text": "15) increasing the remuneration and social protection of state and municipal servants;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u038158f043c1dfe796-1": {
+      "text": "16) strengthening international cooperation and developing effective forms of cooperation with law enforcement bodies, special services, financial intelligence units and other competent authorities of foreign states and international organizations in combating corruption and locating, confiscating and repatriating property obtained through corruption and held abroad;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u9ddfad2fcbd329b744-1": {
+      "text": "17) strengthening oversight of the resolution of matters raised in submissions by citizens and legal entities;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u61bd5385059e6089b1-1": {
+      "text": "18) transferring some functions of state bodies to self-regulatory organizations and other nongovernmental organizations;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u1e57d7732cdc7100c5-1": {
+      "text": "19) reducing the number of state and municipal servants while recruiting qualified specialists into state and municipal service;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-uc131d875e2e7bd4822-1": {
+      "text": "20) increasing the accountability of federal state authorities, state authorities of constituent entities of the Russian Federation, local self-government bodies and their officials for failing to take measures to eliminate the causes of corruption;",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-uc58e7d1d33bda716fa-1": {
+      "text": "21) optimizing and specifying the powers of state bodies and their employees, which must be reflected in administrative regulations and official job regulations.",
+      "locator": "Article 7. Main Areas of State Bodies’ Activities to Improve the Effectiveness of Combating Corruption"
+    },
+    "corruption273-u1eba01f245f39c00e4-1": {
+      "text": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u534fec863e4bb3d080-1": {
+      "text": "1. In the cases provided for by Federal Law No. 79-ФЗ of 7 May 2013 ‘On Prohibiting Certain Categories of Persons from Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments’, the following persons are prohibited from opening and holding accounts (deposits), keeping cash and valuables in foreign banks located outside the territory of the Russian Federation, and owning and/or using foreign financial instruments:",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u8f759cbedb0eb64eaa-1": {
+      "text": "1) persons holding:",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u18fabefae9e472abdb-1": {
+      "text": "а) state offices of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u447dc0d8c0b6e75b2f-1": {
+      "text": "б) the positions of First Deputy and Deputy Prosecutors General of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-ua2c92ecf8535e7d3a2-1": {
+      "text": "в) positions as members of the Board of Directors of the Central Bank of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u698806db2427b015a9-1": {
+      "text": "г) state offices of constituent entities of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u3a77c15b9dec2d31b8-1": {
+      "text": "д) federal state service positions to which appointments and from which removals are made by the President of the Russian Federation, the Government of the Russian Federation or the Prosecutor General of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-uecd1e72a9af7384352-1": {
+      "text": "е) positions as deputy heads of federal executive bodies;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-uc96700461b37172f8c-1": {
+      "text": "ж) positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws, to which appointments and from which removals are made by the President of the Russian Federation or the Government of the Russian Federation;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u4a3fde9b433ad6e204-1": {
+      "text": "з) positions as heads of urban okrugs, heads of municipal okrugs, heads of municipal districts, heads of other municipalities exercising the powers of heads of local administrations, and heads of local administrations;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u46449ec9b2b64c25d7-1": {
+      "text": "и) federal state service positions; state civil service positions of constituent entities of the Russian Federation; positions in the Central Bank of the Russian Federation, state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws; and certain positions held under employment contracts in organizations established to carry out tasks assigned to federal state bodies, where the exercise of powers entails participation in preparing decisions affecting the sovereignty and national security of the Russian Federation, and which are included in lists established, respectively, by normative legal acts of federal state bodies and constituent entities of the Russian Federation, and normative acts of the Central Bank of the Russian Federation, state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-uac58e688b9107478ca-1": {
+      "text": "1.1) deputies of representative bodies of municipal districts, municipal okrugs and urban okrugs exercising their powers on a full-time basis, and deputies holding positions in the representative bodies of municipal districts, municipal okrugs and urban okrugs;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u074532c96460e003ab-1": {
+      "text": "2) spouses and minor children of the persons specified in subpoints ‘а’–‘з’ of point 1 and in point 1.1 of this part;",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u3994c10c8f1409089b-1": {
+      "text": "3) other persons in the cases provided for by federal laws.",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-uff7a4805f65c0ac2d5-1": {
+      "text": "1.1. The concept of ‘foreign financial instruments’ is used in part 1 of this Article with the meaning defined by Federal Law No. 79-ФЗ of 7 May 2013 ‘On Prohibiting Certain Categories of Persons from Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments’.",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-ude7c7917e68c37599c-1": {
+      "text": "2. The prohibition established by this Article on opening and holding accounts (deposits) in foreign banks located outside the territory of the Russian Federation does not apply to persons specified in point 1 of part 1 of this Article who hold state offices of the Russian Federation or federal state service positions in official representations of the Russian Federation or official representations of federal executive bodies located outside the territory of the Russian Federation, or positions in representations of state corporations (companies), public-law companies and organizations established to carry out tasks assigned to federal state bodies, or to the spouses and minor children of those persons.",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u14ef72d111b86f2713-1": {
+      "text": "3. Failure to comply with the prohibition established by this Article, except in cases established by federal laws, entails early termination of powers, removal from the position held, or dismissal due to loss of trust in accordance with the federal constitutional laws and federal laws determining the legal status of the person concerned.",
+      "locator": "Article 7.1. Prohibition on Certain Categories of Persons Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments"
+    },
+    "corruption273-u210846cc4ac54ad79d-1": {
+      "text": "Article 8. Submission of Information on Income, Property and Property-Related Obligations",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uebb44608defe0ee3eb-1": {
+      "text": "1. The following persons are obliged to submit information on their income, property and property-related obligations, and on the income, property and property-related obligations of their spouses and minor children, to the employer’s representative (employer) or other authorized persons designated by this Federal Law and other normative legal acts of the Russian Federation:",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ufc6adb1ae8a0ae76e8-1": {
+      "text": "1) citizens applying for state service positions;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ub880b3541ed99170b2-1": {
+      "text": "1.1) citizens applying for positions as members of the Board of Directors of the Central Bank of the Russian Federation or positions in the Central Bank of the Russian Federation included in a list approved by its Board of Directors;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uc06e2a9a632c142288-1": {
+      "text": "1.2) citizens applying for municipal service positions included in lists established by normative legal acts of the Russian Federation, or for the position of head of the local administration under a contract;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u5ea04b786e8cdfb450-1": {
+      "text": "2) citizens applying for positions included in lists established by normative legal acts of the Russian Federation in state corporations, public-law companies, state extrabudgetary funds of the Russian Federation or other organizations established by the Russian Federation under federal laws;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uc50ca2db3ae1a99ecc-1": {
+      "text": "2.1) citizens applying for the positions of Chief Financial Ombudsman or financial ombudsmen in financial services sectors (hereinafter also referred to as a financial ombudsman), or head of the service supporting the financial ombudsman’s activities;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u1c048b51156a1e86cc-1": {
+      "text": "3) citizens applying for certain positions included in lists established by federal state bodies and held under employment contracts in organizations established to carry out tasks assigned to federal state bodies;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u52de3ed6c39d75f6b7-1": {
+      "text": "3.1) citizens applying for positions as heads of state (municipal) institutions;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ud7da3db6c50571a7ba-1": {
+      "text": "3.2) state servants applying for state service positions included in lists established by normative legal acts of the Russian Federation;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u200f3a6a404438994e-1": {
+      "text": "3.3) state servants and citizens applying for inclusion in the federal personnel reserve of the state civil service of the Russian Federation;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u76b6c6f412a699995a-1": {
+      "text": "3.4) state servants appointed to positions through transfer from another state body;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u9db6c910764af00e5e-1": {
+      "text": "3.5) municipal servants applying for municipal service positions included in lists established by normative legal acts of the Russian Federation;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uc049eaf14e550bb64a-1": {
+      "text": "4) persons holding positions specified in point 1 of this part and included in lists established by normative legal acts of the Russian Federation, and positions specified in points 1.1–3.1 of this part:",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u254b031ef2dfc45764-1": {
+      "text": "а) if the information provided for by this part was not submitted when the person was vested with the powers of a position to which appointment is made by the President of the Russian Federation or the Government of the Russian Federation, within four months of appointment to that position;",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u267dce9046ef1a8fd0-1": {
+      "text": "б) if grounds arise for submitting information on expenditure under Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, no later than 30 April of the year following the year in which those grounds arose.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u398692290977bb4900-1": {
+      "text": "1.1. Citizens entering higher education institutions under the authority of the federal executive body responsible for security are obliged to submit information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouses and minor children according to the procedure established by a normative legal act of the federal executive body responsible for security.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u58e863282263282652-1": {
+      "text": "1.2. Citizens called up for military service do not submit information on their income, property and property-related obligations or on the income, property and property-related obligations of their spouses and minor children.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ua40f48e9fc6ccfbae0-1": {
+      "text": "2. The procedure for submitting the information on income, property and property-related obligations specified in part 1 of this Article is established by federal laws, other normative legal acts of the Russian Federation and normative acts of the Central Bank of the Russian Federation.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u11a3f7b96643d9d34e-1": {
+      "text": "3. Information on income, property and property-related obligations submitted under parts 1 and 1.1 of this Article is restricted-access information. Information on income, property and property-related obligations submitted by a citizen under part 1 or 1.1 of this Article may not subsequently be used and must be destroyed if that citizen does not enter state or municipal service, take employment with the Central Bank of the Russian Federation, a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation, another organization established by the Russian Federation under a federal law, or an organization established to carry out tasks assigned to federal state bodies, take up the position of financial ombudsman, head of the service supporting the financial ombudsman’s activities or head of a state (municipal) institution, or enroll in a higher education institution under the authority of the federal executive body responsible for security. Information on income, property and property-related obligations submitted under parts 1 and 1.1 of this Article and classified by a federal law as information constituting a state secret is protected in accordance with the legislation of the Russian Federation on state secrets.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u058fde2c5de3c4bd32-1": {
+      "text": "4. Information on income, property and property-related obligations submitted by a citizen, servant or employee under parts 1 and 1.1 of this Article may not be used to establish or determine their solvency or that of their spouse and minor children, or to collect, directly or indirectly, donations (contributions) to the funds of public associations, religious or other organizations, or for the benefit of individuals.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u642fe91aadc19950d0-1": {
+      "text": "5. Persons responsible for disclosing information on income, property and property-related obligations submitted by a citizen, servant or employee under parts 1 and 1.1 of this Article, or for using that information for purposes not provided for by federal laws, are liable in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ub9c480008e6396a1d4-1": {
+      "text": "6. Repealed with effect from 1 January 2026. — Federal Law No. 505-ФЗ of 28.12.2025.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uab743a20b2fff34dbe-1": {
+      "text": "7. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted under parts 1 and 1.1 of this Article, except information submitted by state civil servants and citizens applying for inclusion in the federal personnel reserve of the state civil service of the Russian Federation, citizens applying for positions as heads of state (municipal) institutions, financial ombudsmen or head of the service supporting the financial ombudsman’s activities, and persons holding those positions, is carried out by decision of the employer’s representative (head) or a person authorized by that representative (head), according to the procedure established by the President of the Russian Federation, either independently or by requesting from federal executive bodies authorized to conduct operational-search activities the information they hold on the income, property and property-related obligations of citizens or persons specified in parts 1 and 1.1 of this Article and of those citizens’ or persons’ spouses and minor children.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u5192516f3c394fe8ce-1": {
+      "text": "7.1. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted by citizens applying for positions as heads of state (municipal) institutions and by persons holding those positions is carried out by decision of the founder or a person authorized by the founder, according to the procedure established by normative legal acts of the Russian Federation. The powers to send requests to prosecution bodies of the Russian Federation, other federal state bodies, state bodies of constituent entities of the Russian Federation, territorial bodies of federal executive bodies, local self-government bodies, public associations and other organizations to verify the accuracy and completeness of information on those persons’ income, property and property-related obligations are determined by the President of the Russian Federation.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u88d76acac19df6ff6d-1": {
+      "text": "7.2. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted by a citizen applying for the position of Chief Financial Ombudsman and by a person holding that position is carried out according to the procedure established by the President of the Russian Federation. The powers to send requests to prosecution bodies of the Russian Federation, other federal state bodies, state bodies of constituent entities of the Russian Federation, territorial bodies of federal executive bodies, local self-government bodies, public associations and other organizations to verify the accuracy and completeness of information on that citizen’s and that person’s income, property and property-related obligations are determined by the President of the Russian Federation.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uf3e06a36546da76eb5-1": {
+      "text": "7.3. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted by citizens applying for positions as financial ombudsmen in financial services sectors or head of the service supporting the financial ombudsman’s activities, and by persons holding those positions, is carried out by decision of the Central Bank of the Russian Federation according to the procedure established by its normative acts.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u749f327ce66d70a5c9-1": {
+      "text": "7.4. Verification of the accuracy and completeness of information on income, property and property-related obligations submitted by state civil servants and citizens applying for inclusion in the federal personnel reserve of the state civil service of the Russian Federation is carried out according to the procedure established by the President of the Russian Federation. The powers to send requests to prosecution bodies of the Russian Federation, other federal state bodies, state bodies of constituent entities of the Russian Federation, territorial bodies of federal executive bodies, local self-government bodies, public associations and other organizations to verify the accuracy and completeness of information on those persons’ income, property and property-related obligations are determined by the President of the Russian Federation.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-udf3cfb1a95b365f5bd-1": {
+      "text": "8. Failure by a citizen, upon entry into state or municipal service, employment with the Central Bank of the Russian Federation, a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation, another organization established by the Russian Federation under a federal law, or an organization established to carry out tasks assigned to federal state bodies, or appointment as financial ombudsman, head of the service supporting the financial ombudsman’s activities or head of a state (municipal) institution, to submit to the employer’s representative (employer) information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouse and minor children, submission of knowingly incomplete information, except in cases established by federal laws, or submission of knowingly inaccurate information is grounds for refusing that citizen admission to state or municipal service, employment with the Central Bank of the Russian Federation, a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation, another organization established by the Russian Federation under a federal law, or an organization established to carry out tasks assigned to federal state bodies, or appointment as financial ombudsman, head of the service supporting the financial ombudsman’s activities or head of a state (municipal) institution.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-ue0979443170d23e580-1": {
+      "text": "9. Failure by a citizen or person specified in part 1 of this Article to fulfill the duty provided for by part 1 of this Article constitutes an offense resulting in removal from the position held, including the positions of financial ombudsman or head of the service supporting the financial ombudsman’s activities, dismissal from state or municipal service, dismissal from employment with the Central Bank of the Russian Federation, a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation or another organization established by the Russian Federation under a federal law, dismissal from employment with an organization established to carry out tasks assigned to federal state bodies, or a state (municipal) institution.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u75da9d8bfd54ab74bf-1": {
+      "text": "10. For the purposes of this Federal Law, digital currency is recognized as property.",
+      "locator": "Article 8. Submission of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-u4ea84390b624e04623-1": {
+      "text": "Article 8.1. Submission of Information on Expenditure",
+      "locator": "Article 8.1. Submission of Information on Expenditure"
+    },
+    "corruption273-ud1aa21a011c5ae14d4-1": {
+      "text": "1. Persons holding positions included in lists established by normative legal acts of the Russian Federation or normative acts of the Central Bank of the Russian Federation are obliged to submit information on their expenditure and on the expenditure of their spouses and minor children in the cases and according to the procedure established by Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, other normative legal acts of the Russian Federation and normative acts of the Central Bank of the Russian Federation.",
+      "locator": "Article 8.1. Submission of Information on Expenditure"
+    },
+    "corruption273-u1ab0f03831fabf92d9-1": {
+      "text": "2. Monitoring the correspondence between the expenditure of persons specified in part 1 of this Article and their spouses and minor children and the aggregate income of persons specified in part 1 of this Article, their spouses and minor children for the three years immediately preceding the transaction is carried out according to the procedure provided for by this Federal Law, Federal Law No. 230-ФЗ of 3 December 2012 ‘On Monitoring the Correspondence between Expenditure and Income of Persons Holding State Offices and Other Persons’, normative legal acts of the President of the Russian Federation, other normative legal acts of the Russian Federation and normative acts of the Central Bank of the Russian Federation.",
+      "locator": "Article 8.1. Submission of Information on Expenditure"
+    },
+    "corruption273-u0d32739cbde8540ad4-1": {
+      "text": "3. Where submission of information is mandatory, failure by persons specified in part 1 of this Article to submit information on their expenditure, submission of knowingly incomplete information, except in cases established by federal laws, or submission of knowingly inaccurate information on their expenditure, or failure to submit information on the expenditure of their spouses and minor children, submission of knowingly incomplete information, except in cases established by federal laws, or submission of knowingly inaccurate information on the expenditure of their spouses and minor children constitutes an offense resulting in the removal of persons specified in part 1 of this Article from the positions they hold, including the positions of financial ombudsman or head of the service supporting the financial ombudsman’s activities, or their dismissal according to the established procedure from state or municipal service, the Central Bank of the Russian Federation, employment with a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation, another organization established by the Russian Federation under a federal law, or an organization established to carry out tasks assigned to federal state bodies.",
+      "locator": "Article 8.1. Submission of Information on Expenditure"
+    },
+    "corruption273-ua57c5410a3673235fb-1": {
+      "text": "4. Repealed with effect from 1 January 2026. — Federal Law No. 505-ФЗ of 28.12.2025.",
+      "locator": "Article 8.1. Submission of Information on Expenditure"
+    },
+    "corruption273-u58dfec46a84dc4e126-1": {
+      "text": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ue78e8e2fad46782253-1": {
+      "text": "1. If verification of the accuracy and completeness of information on income, property and property-related obligations reveals that, during the year preceding the year of submission of that information (the reporting period), funds were credited to accounts of the person who submitted the information (hereinafter referred to as the person under verification), the person’s spouse and minor children with banks and/or other credit institutions in an amount exceeding their aggregate income for the reporting period and the two preceding years, the persons conducting the verification are obliged to require the person under verification to provide information confirming the lawful receipt of those funds.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u72092740a8b0990190-1": {
+      "text": "2. If the person under verification fails to provide information confirming the lawful receipt of those funds, or provides inaccurate information, the person who decided to conduct the verification shall forward its materials to prosecution bodies of the Russian Federation within three days after its completion.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u70b7e1c59093f7e630-1": {
+      "text": "3. If the person under verification is dismissed (their powers are terminated) before completion of the verification specified in part 1 of this Article, and there is information that, during the reporting period, funds were credited to accounts of that person, the person’s spouse and minor children with banks and/or other credit institutions in an amount exceeding their aggregate income for the reporting period and the two preceding years, the person who decided to conduct the verification shall forward its materials to prosecution bodies of the Russian Federation within three days after the person’s dismissal (termination of powers).",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ud498803be8b221b91b-1": {
+      "text": "4. No later than 10 working days after receiving the materials specified in part 3 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors shall decide, separately for each person under verification, to verify the lawful receipt of the funds specified in part 3 of this Article. The decision is made in writing.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ud2e17893a1b1001e39-1": {
+      "text": "5. No later than two working days after the decision specified in part 4 of this Article is made, the Prosecutor General of the Russian Federation or subordinate prosecutors are obliged to notify the person under verification in writing of the decision concerning them and of the need to provide information confirming the lawful receipt of the funds specified in part 2 of this Article.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ucd8c3ceac8ea13dc10-1": {
+      "text": "6. The verification specified in part 4 of this Article is conducted by prosecutors.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-uce1308dbc477c06382-1": {
+      "text": "7. The verification specified in part 4 of this Article may not be conducted after six months have elapsed from the dismissal (termination of powers) of the person under verification.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u9eaf39090696244bc8-1": {
+      "text": "8. During the verification specified in part 4 of this Article, the person under verification is entitled to:",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u3228679fc757bc6229-1": {
+      "text": "1) provide written explanations of the sources of funds credited to their accounts and the accounts of their spouse and minor children with banks and/or other credit institutions;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u2bd40c30be66ff8779-1": {
+      "text": "2) submit additional materials and provide written explanations of them;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u592651eaa39c05144b-1": {
+      "text": "3) request an interview with the prosecutor on matters connected with the verification. The request must be granted.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ub513cbb02c3478b423-1": {
+      "text": "9. When conducting the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors are obliged to:",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-uabc2be32773af4c2ad-1": {
+      "text": "1) require the person under verification to provide information confirming the lawful receipt of the funds specified in part 3 of this Article;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u3abd25e45beb2bb196-1": {
+      "text": "2) examine additional materials submitted by the person under verification;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u601dd26acd6e14425e-1": {
+      "text": "3) interview the person under verification upon receipt of the request provided for by point 3 of part 8 of this Article.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u51b798a53a05f2bc81-1": {
+      "text": "10. When conducting the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors are entitled to:",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u13130ad6b81da49fd0-1": {
+      "text": "1) interview the person under verification on their own initiative;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ua4148d6b53ca7bc3ca-1": {
+      "text": "2) obtain explanations from the person under verification concerning the information and materials submitted by that person;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ubcce4b1157c9b235f4-1": {
+      "text": "3) send requests, according to the established procedure, to federal state bodies, state bodies of constituent entities of the Russian Federation, local self-government bodies, public associations and other organizations for information they hold on the income, property and property-related obligations of the person under verification, the person’s spouse and minor children, and on the sources of funds credited to their accounts with banks and/or other credit institutions. Requests to credit institutions, tax authorities of the Russian Federation, bodies responsible for state registration of rights to immovable property and transactions involving it, operators of information systems in which digital financial assets are issued, and the authorized body responsible for countering the legalization (laundering) of proceeds of crime, the financing of terrorism, extremist activity, and the financing of proliferation of weapons of mass destruction are sent by the Prosecutor General of the Russian Federation, Deputy Prosecutors General of the Russian Federation, prosecutors of constituent entities of the Russian Federation, and military and other specialized prosecutors equivalent in status to prosecutors of constituent entities of the Russian Federation;",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-udeac0513cbe313a1cd-1": {
+      "text": "4) make inquiries of individuals and obtain information from them with their consent.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u925e3041cfe5165ffe-1": {
+      "text": "11. Heads of state bodies, local self-government bodies and organizations who receive a request specified in point 3 of part 10 of this Article are obliged to arrange for its execution in accordance with federal laws and other normative legal acts of the Russian Federation and provide the requested information according to the established procedure.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ub5a965009a154d7a76-1": {
+      "text": "12. The procedure for considering the materials of the verification specified in part 4 of this Article is determined by the Prosecutor General of the Russian Federation.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u37767737bc5026e3a5-1": {
+      "text": "13. After completing the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors shall inform the person who forwarded materials to prosecution bodies of the Russian Federation under part 3 of this Article of the results.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ub4cc354f1d3ba61b87-1": {
+      "text": "14. The Prosecutor General of the Russian Federation or subordinate prosecutors who receive the materials specified in part 2 of this Article shall consider them within their competence established by the Federal Law ‘On the Prosecutor’s Office of the Russian Federation’ and, no later than four months after receiving them, where grounds exist, apply to a court according to civil procedure legislation to recover for the revenue of the Russian Federation a sum equivalent to the portion of the funds specified in part 1 of this Article for which reliable information confirming lawful receipt has not been obtained, if the amount to be recovered exceeds ten thousand rubles.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u5620ce71ff9de8d4e1-1": {
+      "text": "15. The Prosecutor General of the Russian Federation or subordinate prosecutors shall consider the materials of the verification specified in part 4 of this Article and, no later than one month after its completion, where grounds exist, apply to a court according to civil procedure legislation to recover for the revenue of the Russian Federation a sum equivalent to the portion of the funds specified in part 3 of this Article for which information confirming lawful receipt has not been submitted, if the amount to be recovered exceeds ten thousand rubles.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u838cf738a023d06863-1": {
+      "text": "16. The Prosecutor General of the Russian Federation or subordinate prosecutors shall send information on the results of the courts’ consideration of the applications specified in parts 14 and 15 of this Article to the public authority or organization in which the person subject to the verifications specified in parts 1 and 4 of this Article holds or held a position.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-ucf50ab218a8aaaec96-1": {
+      "text": "17. The procedure for sending the information specified in part 16 of this Article is determined by the Prosecutor General of the Russian Federation.",
+      "locator": "Article 8.2. Monitoring the Lawfulness of the Receipt of Funds"
+    },
+    "corruption273-u825e23ea3be649b287-1": {
+      "text": "Article 8.3. Analysis of Information on Income, Property and Property-Related Obligations",
+      "locator": "Article 8.3. Analysis of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uf3fcd2f0ca63d679d4-1": {
+      "text": "Units for prevention of corruption and other offenses (officials responsible for preventing corruption and other offenses) in public authorities, the Central Bank of the Russian Federation, state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws, and bodies of constituent entities of the Russian Federation responsible for preventing corruption and other offenses, are obliged to analyze information on income, property and property-related obligations submitted under this Federal Law.",
+      "locator": "Article 8.3. Analysis of Information on Income, Property and Property-Related Obligations"
+    },
+    "corruption273-uec2a0901e479d20146-1": {
+      "text": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-uf38604716d51b7068e-1": {
+      "text": "1. A state or municipal servant is obliged to notify the employer’s representative (employer), prosecution bodies or other state bodies of every instance in which any person approaches the servant with the aim of inducing a corruption offense.",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-u24f4ea7068532ba54d-1": {
+      "text": "2. Reporting approaches intended to induce corruption offenses is an official (service) duty of a state or municipal servant, except where the facts concerned have been or are being verified.",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-u1ba78803de0ac6529f-1": {
+      "text": "3. Failure by a state or municipal servant to perform the official (service) duty provided for by part 1 of this Article constitutes an offense resulting in dismissal from state or municipal service or other forms of liability in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-u8a95547d21e0876632-1": {
+      "text": "4. A state or municipal servant who has notified the employer’s representative (employer), prosecution bodies or other state bodies of approaches intended to induce the servant to commit a corruption offense, of corruption offenses committed by other state or municipal servants, of failure to submit information, of submission of knowingly incomplete information except in cases established by federal laws, or of submission of knowingly inaccurate information on income, property and property-related obligations, is under state protection in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-uca4d8bd13bbebb49fd-1": {
+      "text": "5. The procedure for notifying the employer’s representative (employer) of approaches intended to induce a state or municipal servant to commit corruption offenses, the list of information to be included in notifications, the organization of verification of that information, and the procedure for registering notifications are determined by the employer’s representative (employer).",
+      "locator": "Article 9. Duty of State and Municipal Servants to Report Approaches Intended to Induce Corruption Offenses"
+    },
+    "corruption273-ue615c511b2c98d6523-1": {
+      "text": "Article 10. Conflict of Interest",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-ub82bf9df46a64cff93-1": {
+      "text": "1. For the purposes of this Federal Law, a conflict of interest means a situation in which the personal interest (direct or indirect) of a person holding a position that entails a duty to take measures to prevent and resolve conflicts of interest affects or may affect the proper, objective and impartial performance of that person’s official (service) duties (exercise of powers).",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-ud39aac6bce7c34a4dd-1": {
+      "text": "2. In part 1 of this Article, personal interest means the possibility that the person specified in part 1 of this Article and/or persons closely related to that person by blood or marriage (parents, spouses, children, brothers, sisters, and also the brothers, sisters, parents and children of spouses and the spouses of children), or citizens or organizations with which the person specified in part 1 of this Article and/or persons closely related to that person by blood or marriage have property, corporate or other close relations, may receive income in the form of money, other property, including property rights, services of a property nature, results of work performed, or any benefits (advantages).",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-u12cbe89107c3e611a1-1": {
+      "text": "3. The duty to take measures to prevent and resolve conflicts of interest is imposed on:",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-ucf2a77e408ff347d31-1": {
+      "text": "1) state and municipal servants;",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-u4a6e235d69acb5420c-1": {
+      "text": "2) employees of the Central Bank of the Russian Federation, employees holding positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws, and persons holding the positions of Financial Ombudsman or head of the service supporting the activities of the Financial Ombudsman;",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-ufb4e727fc143091daa-1": {
+      "text": "3) employees holding certain positions included in lists established by federal state bodies under employment contracts in organizations established to carry out tasks assigned to federal state bodies;",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-u46b6d9fb0a8f0aeae2-1": {
+      "text": "4) other categories of persons in cases provided for by federal laws.",
+      "locator": "Article 10. Conflict of Interest"
+    },
+    "corruption273-u234e5c27a2a2c4773c-1": {
+      "text": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u1489bd2dde5020de37-1": {
+      "text": "1. A person specified in part 1 of Article 10 of this Federal Law shall take measures to preclude any possibility of a conflict of interest arising.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u784a2673147007b19f-1": {
+      "text": "2. A person specified in part 1 of Article 10 of this Federal Law shall notify the employer’s representative (employer) or another authorized person designated by this Federal Law, other regulatory legal acts of the Russian Federation or regulatory acts of the Central Bank of the Russian Federation of a conflict of interest that has arisen or the possibility of one arising as soon as the person becomes aware of it, according to the procedure established by regulatory legal acts of the Russian Federation and regulatory acts of the Central Bank of the Russian Federation, state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u022081833de077ce79-1": {
+      "text": "3. The employer’s representative, employer or other authorized person specified in part 2 of this Article, upon learning that a person specified in part 1 of Article 10 of this Federal Law has a personal interest that leads or may lead to a conflict of interest, shall take measures to prevent or resolve the conflict of interest.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u4323aa5e590c650619-1": {
+      "text": "4. Preventing or resolving a conflict of interest may consist in changing the official or service status of the person specified in part 1 of Article 10 of this Federal Law who is a party to the conflict of interest, up to and including suspension from the performance of official (service) duties according to the established procedure, and/or in that person relinquishing the benefit that gave rise to the conflict of interest.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u05306d62b79f23a1d0-1": {
+      "text": "5. Prevention and resolution of a conflict of interest to which a person specified in part 1 of Article 10 of this Federal Law is a party shall be effected by the disqualification or voluntary recusal of that person in the cases and according to the procedure provided for by the legislation of the Russian Federation.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u80b531f174cf01b82f-1": {
+      "text": "6. Failure by a person specified in part 1 of Article 10 of this Federal Law who is a party to a conflict of interest to take measures to prevent or resolve the conflict of interest constitutes an offense entailing that person’s dismissal in accordance with the legislation of the Russian Federation, except in cases established by federal laws.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-ufa48137ef00cdc7b22-1": {
+      "text": "7. If a person specified in part 1 of Article 10 of this Federal Law owns securities (participation interests or shares in the charter (pooled) capitals of organizations), that person shall, to prevent a conflict of interest, transfer the securities (participation interests or shares in the charter (pooled) capitals of organizations) belonging to that person into trust management in accordance with civil legislation.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-ucb68fa85ba174471b7-1": {
+      "text": "Article 11.1. Duties of Employees of the Central Bank of the Russian Federation, Employees Holding Positions in State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation and Other Organizations Established by the Russian Federation under Federal Laws, Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies, and Persons Holding the Positions of Financial Ombudsman or Head of the Service Supporting the Activities of the Financial Ombudsman",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u09fcbd73a4f17202ad-1": {
+      "text": "Employees of the Central Bank of the Russian Federation, employees holding positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws, employees holding certain positions under employment contracts in organizations established to carry out tasks assigned to federal state bodies, and persons holding the positions of Financial Ombudsman or head of the service supporting the activities of the Financial Ombudsman shall, in accordance with Articles 9–11 of this Federal Law, report approaches made to them by any persons for the purpose of inducing them to commit corruption offenses, report the emergence, in the performance of official duties, of a personal interest that leads or may lead to a conflict of interest, and take measures to preclude any possibility of a conflict of interest arising, according to the procedure determined by regulatory acts of federal state bodies, the Central Bank of the Russian Federation, state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws.",
+      "locator": "Article 11. Procedure for Preventing and Resolving Conflicts of Interest"
+    },
+    "corruption273-u09b3b8b4f7e06a7d84-1": {
+      "text": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u06e8c1c202e8d10625-1": {
+      "text": "1. A citizen who previously held a state or municipal service position included in a list established by regulatory legal acts of the Russian Federation may, during the two years following dismissal from state or municipal service, hold positions in an organization under an employment contract and/or perform work in that organization (provide services to that organization) under a civil-law contract (civil-law contracts) worth more than one hundred thousand rubles in a month, if certain functions of state or municipal (administrative) management of that organization formed part of the state or municipal servant’s official (service) duties, with the consent of the relevant commission on compliance with requirements for the official conduct of state or municipal servants and the resolution of conflicts of interest.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-ubd88e7cbd0cafa029e-1": {
+      "text": "1.1. The commission shall, according to the procedure established by regulatory legal acts of the Russian Federation, consider a citizen’s written application for consent to hold a position in an organization under an employment contract and/or to perform work in that organization (provide services to that organization) under a civil-law contract, if certain functions of state or municipal (administrative) management of that organization formed part of the citizen’s official (service) duties, and shall inform the citizen of the decision taken.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-ucf7f96cc381122e42d-1": {
+      "text": "2. A citizen who previously held state or municipal service positions whose list is established by regulatory legal acts of the Russian Federation shall, during the two years following dismissal from state or municipal service, when concluding employment contracts or civil-law contracts for the performance of work (provision of services) specified in part 1 of this Article, inform the employer of the last place of that citizen’s service.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-ufbd8f048f669f80329-1": {
+      "text": "3. Failure by a citizen who previously held state or municipal service positions whose list is established by regulatory legal acts of the Russian Federation to comply, after dismissal from state or municipal service, with the requirement provided for in part 2 of this Article entails termination of the employment contract or civil-law contract for the performance of work (provision of services) specified in part 1 of this Article concluded with that citizen.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u87f74fa887304b2b12-1": {
+      "text": "4. When concluding an employment contract or a civil-law contract for the performance of work (provision of services) specified in part 1 of this Article with a citizen who previously held state or municipal service positions whose list is established by regulatory legal acts of the Russian Federation, within two years following that citizen’s dismissal from state or municipal service, the employer shall, within ten days, notify the employer’s representative (employer) of the state or municipal servant at the last place of service of the conclusion of that contract, according to the procedure established by regulatory legal acts of the Russian Federation.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-ud27d7eb5d5d44bbfe0-1": {
+      "text": "5. An employer’s failure to perform the duty established by part 4 of this Article constitutes an offense and entails liability in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u9187b14883b34c44c4-1": {
+      "text": "6. Verification of compliance by the citizen specified in part 1 of this Article with the prohibition on holding a position in an organization under an employment contract and/or performing work in that organization (providing services to that organization) under a civil-law contract (civil-law contracts), in cases provided for by federal laws, if certain functions of state management of that organization formed part of the civil or municipal servant’s official (service) duties, and verification of the employer’s compliance with the conditions for concluding an employment contract or the conditions for concluding a civil-law contract with such a citizen, shall be carried out according to the procedure established by regulatory legal acts of the Russian Federation.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u5d4207e739eccde525-1": {
+      "text": "7. Where a citizen subject to restrictions under this Article is appointed, by decision of the President of the Russian Federation, to an organization specified in part 1 of this Article, the following shall not be required:",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u6e7e4a8fa81e9d0b8d-1": {
+      "text": "1) the consent of the relevant commission on compliance with requirements for the official conduct of state or municipal servants and the resolution of conflicts of interest;",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-u430a4b1d67223433bd-1": {
+      "text": "2) the reporting of information provided for in parts 2 and 4 of this Article.",
+      "locator": "Article 12. Restrictions Imposed on a Citizen Who Previously Held a State or Municipal Service Position When Concluding an Employment or Civil-Law Contract"
+    },
+    "corruption273-uf9b1c229e1df0fc62f-1": {
+      "text": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u68d44401b65c38ce3a-1": {
+      "text": "1. Persons holding state offices of the Russian Federation or state offices of constituent entities of the Russian Federation may not hold other state offices of the Russian Federation or state offices of constituent entities of the Russian Federation, unless otherwise established by federal constitutional laws or federal laws. They may not hold municipal offices or state or municipal service positions either.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u413ef65aae1ac6eb87-1": {
+      "text": "2. Persons holding municipal offices may not hold state offices of the Russian Federation, state offices of constituent entities of the Russian Federation, other municipal offices, or state or municipal service positions, unless otherwise established by federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u0a7bf7f5a4f649597e-1": {
+      "text": "3. Persons holding state offices of the Russian Federation, and persons holding state offices of constituent entities of the Russian Federation or municipal offices and exercising their powers on a full-time basis, unless otherwise established by federal constitutional laws or federal laws, may not:",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u5a3138d69b649f5583-1": {
+      "text": "1) hold other positions in state authorities or local self-government bodies;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u43a6f415e3da6e2792-1": {
+      "text": "2) engage in entrepreneurial activity personally or through authorized representatives;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u415f60fec9c00831bf-1": {
+      "text": "3) engage in other paid activities, except teaching, scientific and other creative activities. Teaching, scientific and other creative activities may not be financed exclusively by funds of foreign states, international or foreign organizations, foreign citizens or stateless persons, unless otherwise provided for by international treaties of the Russian Federation, the legislation of the Russian Federation or reciprocal arrangements between federal state authorities and state bodies of foreign states or international or foreign organizations;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-ucd6c8d6e6a8e69438c-1": {
+      "text": "4) act as attorneys-in-fact or other representatives in third-party matters before state authorities or local self-government bodies, unless otherwise provided for by federal laws;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-ub332cbe0d4f53744d0-1": {
+      "text": "5) use information or material, technical, financial or information support resources intended solely for official activities for non-official purposes;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-uaf64254be6a8c661bf-1": {
+      "text": "6) receive fees for publications or speaking engagements in the capacity of a person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation, the office of head of a municipality or a municipal office held on a full-time basis;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u67262b971aaaf412c9-1": {
+      "text": "7) receive, in connection with the performance of service (official) duties, rewards (loans, monetary or other remuneration, services, payment for entertainment, recreation or transportation expenses) and gifts that are not provided for by the legislation of the Russian Federation, from individuals or legal entities. Gifts received in connection with protocol events, official business trips or other official events shall be recognized as the property of the Russian Federation, a constituent entity of the Russian Federation or a municipality, respectively, and shall be transferred to the relevant state or municipal body against a transfer record. A person who held a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation, the office of head of a municipality or a municipal office held on a full-time basis and who surrendered a gift received in connection with a protocol event, an official business trip or another official event may purchase it according to the procedure established by regulatory legal acts of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u7540f2da3cef9aff32-1": {
+      "text": "8) accept, contrary to the established procedure, honorary or special titles, awards or other distinctions (except scientific and sporting ones) of foreign states, international organizations, political parties, other public associations or other organizations;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u7947261bef7a1fb8b2-1": {
+      "text": "9) travel on official business trips outside the Russian Federation at the expense of individuals or legal entities, except for official business trips undertaken in accordance with the legislation of the Russian Federation under arrangements between state bodies of the Russian Federation, state bodies of constituent entities of the Russian Federation or municipal bodies and state or municipal bodies of foreign states or international or foreign organizations;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u2728d53be170c28b30-1": {
+      "text": "10) serve on management bodies, boards of trustees or supervisory boards, or other bodies of foreign nonprofit nongovernmental organizations or their structural subdivisions operating in the territory of the Russian Federation, unless otherwise provided for by international treaties of the Russian Federation, the legislation of the Russian Federation or reciprocal arrangements between federal state authorities and state bodies of foreign states or international or foreign organizations;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u45b55bbff039604fe4-1": {
+      "text": "11) disclose, or use for purposes unrelated to the performance of official duties, information classified under federal law as restricted-access information that became known to them in connection with the performance of official duties.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u45e1e7a60b6ed8007e-1": {
+      "text": "3.1. Persons holding the offices of heads of municipalities and exercising their powers on a non-full-time basis may not engage in the activities provided for in points 4–11 of part 3 of this Article.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u2719f2437d8b2c241a-1": {
+      "text": "3.2. Persons holding state offices of the Russian Federation, unless otherwise established by federal constitutional laws or federal laws, may not participate in the management of a commercial or nonprofit organization, except in the following cases:",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u3740ffa430e4f1b593-1": {
+      "text": "1) unpaid participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u981447ea11c30ce6b7-1": {
+      "text": "2) unpaid participation in the management of a nonprofit organization (other than participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners), with prior notification to the President of the Russian Federation according to the procedure established by the President of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u3bf54c41d8979b1a21-1": {
+      "text": "3) unpaid participation in the activities of an organization’s collegial body on the basis of an act of the President of the Russian Federation or the Government of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u54b0ae0edd1be2990f-1": {
+      "text": "4) unpaid representation of the interests of the Russian Federation in the management bodies and audit commission of an organization whose founder (shareholder, participant) is the Russian Federation, in accordance with regulatory legal acts of the Government of the Russian Federation that determine the procedure for exercising the powers of an organization’s founder on behalf of the Russian Federation or the procedure for managing federally owned shares (participation interests in charter capital);",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u1470a65f1985a1241b-1": {
+      "text": "5) other cases provided for by international treaties or federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u9bf4c6fe9a5e3c743e-1": {
+      "text": "3.3. Deputies of the legislative bodies of constituent entities of the Russian Federation who exercise their powers on a professional full-time basis, unless otherwise established by federal laws, may not participate in the management of a commercial or nonprofit organization, except in the following cases:",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u3740ffa430e4f1b593-2": {
+      "text": "1) unpaid participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-uaf951aa655d50b06f3-1": {
+      "text": "2) unpaid participation in the management of a nonprofit organization (other than participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners), with prior notification to the legislative body of the constituent entity of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u1f44d0db81b129ac05-1": {
+      "text": "3) unpaid representation of the interests of a constituent entity of the Russian Federation in the management bodies and audit commission of an organization whose founder (shareholder, participant) is that constituent entity of the Russian Federation, in accordance with regulatory legal acts of that constituent entity of the Russian Federation that determine the procedure for exercising the powers of an organization’s founder on behalf of the constituent entity of the Russian Federation or the procedure for managing shares (participation interests in charter capital) owned by the constituent entity of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-uec387421c34657d513-1": {
+      "text": "4) other cases provided for by federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-ud27a312a786745f51b-1": {
+      "text": "3.3-1. Persons holding state offices of constituent entities of the Russian Federation and exercising their powers on a non-full-time basis may not engage in the activities provided for in points 1 and 4–11 of part 3 of this Article.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u89874e6d74ed4c276a-1": {
+      "text": "3.4. Persons holding state offices of constituent entities of the Russian Federation (except deputies of the legislative bodies of constituent entities of the Russian Federation) and exercising their powers on a full-time basis, unless otherwise established by federal laws, may not participate in the management of a commercial or nonprofit organization, except in the following cases:",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u3740ffa430e4f1b593-3": {
+      "text": "1) unpaid participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u1f76a0cc66eccb80fa-1": {
+      "text": "2) unpaid participation in the management of a nonprofit organization (other than participation in the management of a political party or a trade union body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners), with prior notification to the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of the constituent entity of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u0893211079bf8c4e0b-1": {
+      "text": "3) unpaid membership of a collegial body of a commercial or nonprofit organization on the basis of an act of the President of the Russian Federation or the Government of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-uf518088b35f0c418ea-1": {
+      "text": "4) unpaid representation of the interests of a constituent entity of the Russian Federation in the management bodies and audit commission of an organization whose founder (shareholder, participant) is that constituent entity of the Russian Federation, in accordance with regulatory legal acts of that constituent entity of the Russian Federation that determine the procedure for exercising the powers of an organization’s founder on behalf of the constituent entity of the Russian Federation or the procedure for managing shares (participation interests in charter capital) owned by the constituent entity of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u31151cc26498ebab5f-1": {
+      "text": "5) other cases provided for by federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u4154f90ad4cf8ae6cf-1": {
+      "text": "3.5. Persons holding municipal offices and exercising their powers on a full-time basis, unless otherwise established by federal laws, may not participate in the management of a commercial or nonprofit organization, except in the following cases:",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u98c20dc92da1e38ac9-1": {
+      "text": "1) unpaid participation in the management of a political party or a trade union body, including an elected body of a primary trade union organization established in a local self-government body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u8b9e50f2d3ed390ae8-1": {
+      "text": "2) unpaid participation in the management of a nonprofit organization (other than participation in the management of a political party or a trade union body, including an elected body of a primary trade union organization established in a local self-government body, or participation in the congress (conference) or general meeting of another public organization, a housing, housing construction or garage cooperative, or an association of real property owners), with prior notification to the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of the constituent entity of the Russian Federation;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u5d213ff4377040f532-1": {
+      "text": "3) unpaid representation of the interests of a municipality in the council of municipalities of a constituent entity of the Russian Federation, in other associations of municipalities and in their management bodies;",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-ue06244e4525ce4a594-1": {
+      "text": "4) unpaid representation of the interests of a municipality in the management bodies and audit commission of an organization whose founder (shareholder, participant) is the municipality, in accordance with municipal legal acts that determine the procedure for exercising the powers of an organization’s founder on behalf of the municipality or the procedure for managing municipally owned shares (interests in charter capital);",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u31151cc26498ebab5f-2": {
+      "text": "5) other cases provided for by federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u70e8211c8947e7ccbf-1": {
+      "text": "4. Unless otherwise established by federal laws, citizens seeking to hold state offices of the Russian Federation, state offices of constituent entities of the Russian Federation or municipal offices, and persons holding those offices, shall submit information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouses and minor children when vested with the powers of office (appointed or elected to office). If a person cannot submit information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouse and minor children when vested with the powers of an office to which appointment is made by the President of the Russian Federation or the Government of the Russian Federation or upon a nomination by the President of the Russian Federation or the Government of the Russian Federation, that information shall be submitted within four months of the date of appointment. A person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation or a municipal office shall submit the information specified in this part if grounds arise for that person to submit information on expenditure under Federal Law No. 230-ФЗ of 3 December 2012 “On Monitoring the Correspondence between the Expenditure of Persons Holding State Offices and Other Persons and Their Income”, no later than 30 April of the year following the year in which those grounds arose. The information specified in this part shall be submitted according to the procedure established by this Federal Law, other federal laws and other regulatory legal acts of the Russian Federation.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u65b31717b4feb50b0e-1": {
+      "text": "4.1. Persons holding state offices of the Russian Federation, state offices of constituent entities of the Russian Federation or municipal offices shall, according to the procedure established by regulatory legal acts of the Russian Federation, report the emergence, in the performance of official duties, of a personal interest that leads or may lead to a conflict of interest, and shall take measures to prevent or resolve that conflict.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-uc92c6010a8c3dddc9e-1": {
+      "text": "4.1-1. Persons holding state offices of constituent entities of the Russian Federation shall notify prosecution bodies or other state bodies of all instances in which any persons approach them for the purpose of inducing them to commit corruption offenses, no later than five days from the date of the relevant approach, according to the procedure established by laws of constituent entities of the Russian Federation, unless otherwise provided for by federal laws. Notification of approaches intended to induce the commission of corruption offenses, except where the relevant facts have been or are being verified by prosecution bodies or other state bodies, is an official duty of persons holding state offices of constituent entities of the Russian Federation. Persons holding state offices of constituent entities of the Russian Federation who have notified prosecution bodies or other state bodies of approaches intended to induce them to commit a corruption offense, or of corruption offenses committed by other persons holding state offices of constituent entities of the Russian Federation or by state or municipal servants, shall be under state protection in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u4dd0119a3f8251d573-1": {
+      "text": "4.1-2. A deputy of the legislative body of a constituent entity of the Russian Federation shall submit information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouse and minor children according to the procedure established by this Federal Law and other regulatory legal acts of the Russian Federation, if grounds arise for the deputy to submit information on expenditure under Federal Law No. 230-ФЗ of 3 December 2012 “On Monitoring the Correspondence between the Expenditure of Persons Holding State Offices and Other Persons and Their Income”. That information on income, property and property-related obligations shall be submitted no later than 30 April of the year following the year in which those grounds arose.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u9d80c38a77b6b01016-1": {
+      "text": "4.2. Unless otherwise established by federal law, citizens seeking to hold a municipal office and persons holding municipal offices shall submit information on their income, property and property-related obligations and on the income, property and property-related obligations of their spouses and minor children to the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of the constituent entity of the Russian Federation. A person holding the municipal office of deputy of the representative body of a municipality shall submit the information provided for in this part if grounds arise for that person to submit information on expenditure under Federal Law No. 230-ФЗ of 3 December 2012 “On Monitoring the Correspondence between the Expenditure of Persons Holding State Offices and Other Persons and Their Income”. That information on income, property and property-related obligations shall be submitted no later than 30 April of the year following the year in which those grounds arose. Access to information concerning the disclosures provided for in this part submitted by persons holding municipal offices as deputies of a municipality’s representative body, and to information concerning such persons’ submission of knowingly inaccurate or incomplete disclosures, shall be ensured in accordance with federal laws and Presidential decrees of the Russian Federation. Aggregate information on the performance (improper performance) by persons holding municipal offices as deputies of a municipality’s representative body of the duty established by this part shall be published on the official websites of local self-government bodies (provided that such information contains neither personal data enabling identification of the person concerned nor data enabling individual identification of property belonging to that person), according to the procedure established by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u7eb064173147d29328-1": {
+      "text": "4.3. Repealed with effect from 1 January 2026. — Federal Law No. 505-ФЗ of 28.12.2025.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-ue1eddfc0f820d3ba9e-1": {
+      "text": "4.4. The accuracy and completeness of information on income, expenditure, property and property-related obligations submitted under part 4.2 of this Article shall be verified by decision of the highest official of the constituent entity of the Russian Federation according to the procedure established by a law of the constituent entity of the Russian Federation.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u61495d13de0613ec26-1": {
+      "text": "4.5. Where a verification conducted under part 4.4 of this Article reveals that a person holding a municipal office has failed to comply with restrictions or prohibitions or to perform duties established by this Federal Law, Federal Law No. 230-ФЗ of 3 December 2012 “On Monitoring the Correspondence between the Expenditure of Persons Holding State Offices and Other Persons and Their Income”, or Federal Law No. 79-ФЗ of 7 May 2013 “On Prohibiting Certain Categories of Persons from Opening and Holding Accounts (Deposits), Keeping Cash and Valuables in Foreign Banks Located Outside the Territory of the Russian Federation, and Owning and/or Using Foreign Financial Instruments”, the highest official of the constituent entity of the Russian Federation shall apply to the local self-government body authorized to take the relevant decision, or to a court, for early termination of the powers of the person holding a municipal office or for another disciplinary penalty to be imposed on that person.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-udf7b975535a01b080d-1": {
+      "text": "5. Persons holding state offices of the Russian Federation, state offices of constituent entities of the Russian Federation or municipal offices who violate the prohibitions, restrictions or duties established by parts 1–4.1-1 of this Article shall incur the liability provided for by federal constitutional laws, federal laws and other regulatory legal acts of the Russian Federation, except where those prohibitions, restrictions or duties were violated as a consequence of circumstances beyond their control recognized as such under parts 3–6 of Article 13 of this Federal Law, unless otherwise provided for by federal constitutional laws or federal laws.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u3f2828504eb51a6d3f-1": {
+      "text": "6. Persons holding state offices of the Russian Federation, state offices of constituent entities of the Russian Federation or municipal offices who are employer’s representatives (heads) may not, in order to avoid a conflict of interest in a state body or local self-government body, represent the interests of state or municipal servants in the elected trade union body of the relevant body during the period in which they exercise the powers of those offices.",
+      "locator": "Article 12.1. Restrictions and Duties Imposed on Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation, and Municipal Offices"
+    },
+    "corruption273-u347488ffbafa7078b5-1": {
+      "text": "Article 12.2. Restrictions and Duties Imposed on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies",
+      "locator": "Article 12.2. Restrictions and Duties Imposed on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies"
+    },
+    "corruption273-ud57fd5f11ae402f67f-1": {
+      "text": "Unless otherwise established by regulatory legal acts of the Russian Federation, employees holding certain positions under employment contracts in organizations established to carry out tasks assigned to federal state bodies shall be subject to the restrictions, prohibitions and duties established for federal state servants serving in the relevant federal state bodies, according to the procedure provided for by regulatory legal acts of federal state bodies.",
+      "locator": "Article 12.2. Restrictions and Duties Imposed on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies"
+    },
+    "corruption273-uc6c0fafca2ef56a240-1": {
+      "text": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest",
+      "locator": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest"
+    },
+    "corruption273-u1926c159c9b51415ca-1": {
+      "text": "1. If ownership of securities (participation interests or shares in the charter (pooled) capitals of organizations) by a person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation, a municipal office, a state service position, a municipal service position, a position in a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation or another organization established by the Russian Federation under a federal law, or a position under an employment contract in an organization established to carry out tasks assigned to federal state bodies, leads or may lead to a conflict of interest, that person shall transfer the securities (participation interests or shares in the charter (pooled) capitals of organizations) belonging to that person into trust management in accordance with the civil legislation of the Russian Federation.",
+      "locator": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest"
+    },
+    "corruption273-uee0983aa972d577f86-1": {
+      "text": "2. The requirements of part 1 of this Article apply to employees of the Central Bank of the Russian Federation holding positions included in the list approved by the Board of Directors of the Central Bank of the Russian Federation.",
+      "locator": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest"
+    },
+    "corruption273-ue39feae2ce9dc8d325-1": {
+      "text": "3. The requirements of part 1 of this Article apply to persons holding the positions of Financial Ombudsman or head of the service supporting the activities of the Financial Ombudsman.",
+      "locator": "Article 12.3. Duty to Transfer Securities (Participation Interests or Shares in the Charter (Pooled) Capitals of Organizations) into Trust Management to Prevent Conflicts of Interest"
+    },
+    "corruption273-u76c51af5aede8ddc87-1": {
+      "text": "Article 12.4. Restrictions, Prohibitions and Duties Imposed on Employees Holding Positions in State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation and Other Organizations Established by the Russian Federation under Federal Laws, and on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies",
+      "locator": "Article 12.4. Restrictions, Prohibitions and Duties Imposed on Employees Holding Positions in State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation and Other Organizations Established by the Russian Federation under Federal Laws, and on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies"
+    },
+    "corruption273-u1a0e792945a07f32cc-1": {
+      "text": "Employees holding positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation and other organizations established by the Russian Federation under federal laws, and employees holding certain positions under employment contracts in organizations established to carry out tasks assigned to federal state bodies, shall, according to the procedure determined by regulatory legal acts of the Russian Federation and taking into account the specific features arising from their legal status, be subject to the restrictions, prohibitions and duties established for persons holding federal state service positions by this Federal Law and by point 5 of part 1 of Article 16 and Articles 17, 18, 20 and 20.1 of Federal Law No. 79-ФЗ of 27 July 2004 “On the State Civil Service of the Russian Federation”.",
+      "locator": "Article 12.4. Restrictions, Prohibitions and Duties Imposed on Employees Holding Positions in State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation and Other Organizations Established by the Russian Federation under Federal Laws, and on Employees Holding Certain Positions under Employment Contracts in Organizations Established to Carry Out Tasks Assigned to Federal State Bodies"
+    },
+    "corruption273-ucb3f010e96b9489a96-1": {
+      "text": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct",
+      "locator": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct"
+    },
+    "corruption273-u2eef4bc710f021aabf-1": {
+      "text": "1. Federal constitutional laws, federal laws, laws of constituent entities of the Russian Federation and municipal regulatory legal acts may, for the purpose of combating corruption, establish other prohibitions, restrictions, obligations and rules of official conduct for persons holding state offices of the Russian Federation, state offices of constituent entities of the Russian Federation, municipal offices, state service positions, municipal service positions, positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation or other organizations established by the Russian Federation under federal laws, or certain positions under employment contracts in organizations established to carry out tasks assigned to federal state bodies.",
+      "locator": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct"
+    },
+    "corruption273-u7be24301caf616e3da-1": {
+      "text": "2. The provisions of part 1 of this Article apply to employees of the Central Bank of the Russian Federation holding positions included in the list approved by the Board of Directors of the Central Bank of the Russian Federation.",
+      "locator": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct"
+    },
+    "corruption273-ue39feae2ce9dc8d325-2": {
+      "text": "3. The requirements of part 1 of this Article apply to persons holding the positions of Financial Ombudsman or head of the service supporting the activities of the Financial Ombudsman.",
+      "locator": "Article 12.5. Establishment of Other Prohibitions, Restrictions, Obligations and Rules of Official Conduct"
+    },
+    "corruption273-u5a75af1cd25ec37904-1": {
+      "text": "Article 13. Liability of Individuals for Corruption Offenses",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-ub0a48e6fd5bcb2b85d-1": {
+      "text": "1. Citizens of the Russian Federation, foreign citizens and stateless persons shall bear criminal, administrative, civil-law and disciplinary liability for committing corruption offenses in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-u32debed0248decc0dd-1": {
+      "text": "2. An individual who has committed a corruption offense may, by a court decision and in accordance with the legislation of the Russian Federation, be deprived of the right to hold certain state and municipal service positions.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-u3aa91cb0e84dd941d0-1": {
+      "text": "3. An individual for whom this Federal Law and other federal laws establish, for the purpose of combating corruption, disciplinary liability for noncompliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or for failure to perform duties, shall be exempt from that liability if such noncompliance or failure is recognized, according to the procedure provided for in this Article, as a consequence of circumstances beyond that individual’s control. The individual shall ensure compliance with such restrictions, prohibitions and requirements and performance of such duties no later than one month after the circumstances beyond that individual’s control that impeded compliance with such restrictions, prohibitions and requirements and performance of such duties cease to apply, unless otherwise established by federal laws.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-u8bc6673eb1fafed47c-1": {
+      "text": "4. For the purposes of this Federal Law, circumstances beyond an individual’s control are extraordinary and unavoidable circumstances outside the control of the individual affected by them which, under the given conditions, could not have been expected or avoided or could not have been overcome, and which preclude compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest or performance of duties established by this Federal Law and other federal laws for the purpose of combating corruption. Such circumstances include, in particular, natural disasters (including earthquakes, floods and hurricanes), fire, mass diseases (epidemics), strikes, hostilities, terrorist acts, and prohibitive or restrictive measures adopted by state bodies (including state bodies of foreign states) or local self-government bodies. Regularly recurring and predictable events and phenomena, and circumstances whose occurrence depended on the will or actions of the individual invoking them, may not be recognized as circumstances beyond an individual’s control.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-uf1dfdc5a198276f8d4-1": {
+      "text": "5. Recognition of circumstances beyond an individual’s control as grounds for exempting that individual from disciplinary liability for noncompliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or for failure to perform duties established by this Federal Law and other federal laws for the purpose of combating corruption, is conditional on the commission on compliance with requirements for the official conduct of state or municipal servants and the resolution of conflicts of interest (or another collegial body performing the functions of that commission) establishing a causal link between the occurrence of those circumstances and the impossibility of compliance with such restrictions, prohibitions and requirements and performance of such duties.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-uede2e5f8bc74efdb77-1": {
+      "text": "6. An individual specified in part 3 of this Article shall, within three working days after learning of the occurrence of circumstances beyond their control that impede compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest, or performance of duties established by this Federal Law and other federal laws for the purpose of combating corruption, submit notification of this to the relevant commission on compliance with requirements for the official conduct of state or municipal servants and the resolution of conflicts of interest (or another collegial body performing the functions of that commission), in paper or electronic document form, attaching documents, other materials and/or information (if available) confirming the occurrence of circumstances beyond their control. If those circumstances prevent submission of the notification within the established period, the notification shall be submitted no later than 10 working days after those circumstances cease.",
+      "locator": "Article 13. Liability of Individuals for Corruption Offenses"
+    },
+    "corruption273-u34c4fae2162d9e68c6-1": {
+      "text": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-udb796a4b3bdf8a1a24-1": {
+      "text": "1. A person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation or a municipal office shall be dismissed (removed from office) due to loss of trust, according to the procedure provided for by federal constitutional laws, federal laws, laws of constituent entities of the Russian Federation and municipal regulatory legal acts, in the event of:",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u298977d3fd9f18ad2f-1": {
+      "text": "1) the person’s failure to take measures to prevent and/or resolve a conflict of interest to which that person is a party, except in cases established by federal laws;",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u9a4c23cfea954e2e31-1": {
+      "text": "2) the person’s failure to submit information on income, property and property-related obligations provided for by this Federal Law, submission of knowingly incomplete information, except in cases established by federal laws, or submission of knowingly inaccurate information, unless otherwise established by federal laws;",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-uaa5033430ddaacc6c3-1": {
+      "text": "3) the person’s paid participation in the activities of a commercial organization’s management body, except in cases established by federal law;",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u9d7cb165dbebcc5b0a-1": {
+      "text": "4) the person’s engagement in entrepreneurial activity;",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u2f75c97483504a4027-1": {
+      "text": "5) the person’s membership of management bodies, boards of trustees or supervisory boards, or other bodies of foreign nonprofit nongovernmental organizations or their structural subdivisions operating in the territory of the Russian Federation, unless otherwise provided for by an international treaty of the Russian Federation or the legislation of the Russian Federation.",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u9072924a3a89325d7b-1": {
+      "text": "2. A person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation or a municipal office who becomes aware that a subordinate has a personal interest that leads or may lead to a conflict of interest shall also be dismissed (removed from office) due to loss of trust if the person holding the state office of the Russian Federation, state office of a constituent entity of the Russian Federation or municipal office fails to take measures to prevent and/or resolve the conflict of interest to which the subordinate is a party, except in cases established by federal laws.",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u15f59a2407b96ab244-1": {
+      "text": "3. Information on the imposition, on a person holding a state office of the Russian Federation, a state office of a constituent entity of the Russian Federation or a municipal office, of a penalty in the form of dismissal (removal from office) due to loss of trust for committing a corruption offense shall be entered by the state body (local self-government body) in which that person held the relevant office into the register of persons dismissed due to loss of trust provided for in Article 15 of this Federal Law.",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-uff5564bd5ad83a6190-1": {
+      "text": "Article 13.2. Dismissal (Removal from Office) Due to Loss of Trust of Persons Holding Positions in the Central Bank of the Russian Federation, State Corporations (Companies), Public-Law Companies, State Extrabudgetary Funds of the Russian Federation, Other Organizations Established by the Russian Federation under Federal Laws, Organizations Established to Carry Out Tasks Assigned to Federal State Bodies, or the Positions of Financial Ombudsman or Head of the Service Supporting the Activities of the Financial Ombudsman",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u8ec332a421dbdfc163-1": {
+      "text": "1. Persons holding positions in the Central Bank of the Russian Federation, persons holding positions in state corporations (companies), public-law companies, state extrabudgetary funds of the Russian Federation or other organizations established by the Russian Federation under federal laws, or certain positions under employment contracts in organizations established to carry out tasks assigned to federal state bodies, and persons holding the positions of Financial Ombudsman or head of the service supporting the activities of the Financial Ombudsman shall be dismissed (removed from office) due to loss of trust in cases provided for by federal laws.",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-uff1ce8e334fa206f1b-1": {
+      "text": "2. Information on the imposition, on a person holding a position in the Central Bank of the Russian Federation, or a person holding a position in a state corporation (company), a public-law company, a state extrabudgetary fund of the Russian Federation or another organization established by the Russian Federation under a federal law, or a certain position under an employment contract in an organization established to carry out tasks assigned to a federal state body, of a penalty in the form of dismissal (removal from office) due to loss of trust shall be entered, respectively, by the Central Bank of the Russian Federation, the state corporation (company), the public-law company, the state extrabudgetary fund of the Russian Federation, the other organization established by the Russian Federation under a federal law or the federal state body into the register of persons dismissed due to loss of trust provided for in Article 15 of this Federal Law.",
+      "locator": "Article 13.1. Dismissal (Removal from Office) of Persons Holding State Offices of the Russian Federation, State Offices of Constituent Entities of the Russian Federation or Municipal Offices Due to Loss of Trust"
+    },
+    "corruption273-u95448ff290adc1c68e-1": {
+      "text": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u8cecb6aca35af2815e-1": {
+      "text": "1. Organizations shall develop and adopt corruption prevention measures.",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-udc1f27ee12f2ea4ab4-1": {
+      "text": "2. Corruption prevention measures adopted in an organization may include:",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u80c8fddf3e4478b17c-1": {
+      "text": "1) designating units or officials responsible for preventing corruption and other offenses;",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u35279f10d1e0d1712a-1": {
+      "text": "2) the organization’s cooperation with law enforcement bodies;",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u5db736ad66f7b18aae-1": {
+      "text": "3) developing and implementing standards and procedures aimed at ensuring the organization’s good-faith operation;",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-ub9e4ee66866c6118b9-1": {
+      "text": "4) adopting a code of ethics and official conduct for the organization’s employees;",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u9a4604ca33111ea59d-1": {
+      "text": "5) preventing and resolving conflicts of interest;",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-u6b2a21baa2b764abe8-1": {
+      "text": "6) preventing the preparation of unofficial reports and the use of forged documents.",
+      "locator": "Article 13.3. Duty of Organizations to Take Corruption Prevention Measures"
+    },
+    "corruption273-uc91ce942f84d9e500a-1": {
+      "text": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-uebb3e92fca2e326199-1": {
+      "text": "1. By decision of the President of the Russian Federation, the Chief of Staff of the Executive Office of the President of the Russian Federation, or an official of the Executive Office of the President of the Russian Federation specifically authorized by them, an authorized unit of the Executive Office of the President of the Russian Federation may, according to the established procedure, verify:",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-u95f70c9599668a069e-1": {
+      "text": "1) the accuracy and completeness of information on income, expenditure, property and property-related obligations submitted by citizens seeking to hold any positions the exercise of whose powers entails a duty to submit the information on income, property and property-related obligations provided for by this Federal Law and the information on expenditure provided for by Federal Law No. 230-ФЗ of 3 December 2012 “On Monitoring the Correspondence between the Expenditure of Persons Holding State Offices and Other Persons and Their Income”, and of other information submitted by those citizens in accordance with regulatory legal acts of the Russian Federation;",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-u74475bde5ab2534eff-1": {
+      "text": "2) the accuracy and completeness of information on income, expenditure, property and property-related obligations submitted by persons holding positions provided for in point 1 of this part;",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-u729d5442e0c0e307c5-1": {
+      "text": "3) compliance by persons holding positions provided for in points 1 and 1.1 of part 1 of Article 7.1 of this Federal Law, their spouses and minor children with the prohibitions and restrictions established for them, and performance by persons holding positions provided for in points 1 and 1.1 of part 1 of Article 7.1 of this Federal Law of their duties under anticorruption legislation.",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-u973de50ab63e422894-1": {
+      "text": "2. Verifications provided for in part 1 of this Article may be conducted independently of verifications conducted by units, officials or commissions of other bodies and organizations.",
+      "locator": "Article 13.4. Verifications Conducted by an Authorized Unit of the Executive Office of the President of the Russian Federation"
+    },
+    "corruption273-u36db1be97a870320a9-1": {
+      "text": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u95f26b30eb7fa3af7b-1": {
+      "text": "1. Where a person who was subject to restrictions, prohibitions, requirements to prevent or resolve conflicts of interest and/or duties established for the purpose of combating corruption, and in respect of whom a decision had been taken to verify the accuracy and completeness of the information on income, property and property-related obligations submitted by that person and/or compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest and/or performance of duties established for the purpose of combating corruption, is dismissed (has their powers terminated) after completion of that verification and before a decision is taken to impose a penalty on that person for a corruption offense committed, a report on the impossibility of holding that person under verification liable for the corruption offense shall be submitted to the person who decided to conduct that verification.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u31765f94a8430a7e2c-1": {
+      "text": "2. Where a person who was subject to restrictions, prohibitions, requirements to prevent or resolve conflicts of interest and/or duties established for the purpose of combating corruption, and in respect of whom a decision had been taken to verify the accuracy and completeness of the information on income, property and property-related obligations submitted by that person and/or compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest and/or performance of duties established for the purpose of combating corruption, is dismissed (has their powers terminated) during that verification, a report on the impossibility of completing the verification in respect of that person under verification shall be submitted to the person who decided to conduct that verification.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u3c43e33662822400b4-1": {
+      "text": "3. In the cases provided for in parts 1 and 2 of this Article, the materials obtained, respectively, after completion of the verification provided for in parts 1 and 2 of this Article and during its conduct shall, within three days after the dismissal (termination of powers) of the person under verification specified in parts 1 and 2 of this Article, be forwarded by the person who decided to conduct that verification to the prosecution bodies of the Russian Federation.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u6376d7216eb3ee3b55-1": {
+      "text": "4. No later than ten working days after receipt of the materials specified in part 3 of this Article concerning the person under verification specified in part 2 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors shall decide to verify the accuracy and completeness of the information on income, property and property-related obligations submitted by that person and/or compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest and/or performance of duties established for the purpose of combating corruption. That decision shall be made in writing separately in respect of each person under verification.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u486f2cc444ee8531c6-1": {
+      "text": "5. The Prosecutor General of the Russian Federation or subordinate prosecutors shall, no later than two working days after taking the decision specified in part 4 of this Article, notify the person under verification specified in part 2 of this Article in writing of the decision taken in respect of that person.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-ucd8c3ceac8ea13dc10-2": {
+      "text": "6. The verification specified in part 4 of this Article shall be conducted by prosecutors.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u95e154cdd6099b1e84-1": {
+      "text": "7. The verification specified in part 4 of this Article may not be conducted after six months have elapsed from the date of dismissal (termination of powers) of the person under verification specified in part 2 of this Article.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-uc36f9653b3000f878f-1": {
+      "text": "8. During the verification specified in part 4 of this Article, the person under verification specified in part 2 of this Article is entitled to:",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u4159be20628aefffcc-1": {
+      "text": "1) provide written explanations concerning the information on income, property and property-related obligations submitted by that person whose accuracy and completeness are being verified, and concerning the materials under verification relating to compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest and/or performance of duties established for the purpose of combating corruption;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u2bd40c30be66ff8779-2": {
+      "text": "2) submit additional materials and provide written explanations concerning them;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u7cf8af76147cb5471f-1": {
+      "text": "3) petition the prosecutor for an interview on matters relating to the conduct of the verification. The petition must be granted.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u5b500f341b0f0cf8b2-1": {
+      "text": "9. During the verification specified in part 4 of this Article, the person under verification specified in part 2 of this Article shall, within three working days after receiving the notification provided for in part 5 of this Article, submit to the prosecutor information on their current place of employment (service) and position held.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u1fe07abf19c47ce28e-1": {
+      "text": "10. When conducting the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors shall:",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u7773123108110b3cfd-1": {
+      "text": "1) examine additional materials submitted by the person under verification specified in part 2 of this Article;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u3094fbdd5d28c5d074-1": {
+      "text": "2) conduct an interview with the person under verification specified in part 2 of this Article if the petition provided for in point 3 of part 8 of this Article is received.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u6c349fc4b7941ff1e7-1": {
+      "text": "11. When conducting the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors may:",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-uf382bbce3ef45fe826-1": {
+      "text": "1) conduct an interview on their own initiative with the person under verification specified in part 2 of this Article;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-uddfafcae47f8ebc792-1": {
+      "text": "2) obtain explanations from the person under verification specified in part 2 of this Article concerning the information and materials submitted by that person;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u5fabba9d887f77c6ff-1": {
+      "text": "3) send requests according to the established procedure to public authorities and organizations for information in their possession on the income, property and property-related obligations of the person under verification specified in part 2 of this Article, their spouse and minor children, and for information on compliance with restrictions, prohibitions or requirements to prevent or resolve conflicts of interest and/or performance of duties established for the purpose of combating corruption. Requests to credit institutions, tax authorities of the Russian Federation, bodies conducting state registration of rights to immovable property and transactions involving it, operators of information systems in which digital financial assets are issued, and the authorized body in the sphere of combating the legalization (laundering) of proceeds of crime, the financing of terrorism, extremist activities and the financing of proliferation of weapons of mass destruction shall be sent by the Prosecutor General of the Russian Federation, Deputy Prosecutors General of the Russian Federation, prosecutors of constituent entities of the Russian Federation, and military and other specialized prosecutors equivalent to prosecutors of constituent entities of the Russian Federation;",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-udeac0513cbe313a1cd-2": {
+      "text": "4) make inquiries of individuals and obtain information from them with their consent.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u514dc5ab768d122154-1": {
+      "text": "12. Heads of public authorities and organizations receiving a request specified in point 3 of part 11 of this Article shall arrange for its execution in accordance with federal laws and other regulatory legal acts of the Russian Federation and provide the requested information according to the established procedure.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u32c5bcacd0fc7360f3-1": {
+      "text": "13. The procedure for considering the materials of the verification specified in part 4 of this Article shall be determined by the Prosecutor General of the Russian Federation.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u6fa0816f71b5f77b07-1": {
+      "text": "14. No later than one month after prosecutors complete the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors shall inform the person who forwarded the materials to the prosecution bodies of the Russian Federation under part 3 of this Article of its results.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u9cad94d50cd6d00b29-1": {
+      "text": "15. If, during the verification specified in part 4 of this Article, the Prosecutor General of the Russian Federation or subordinate prosecutors obtain the information specified in part 1 of Article 8.2 of this Federal Law, the Prosecutor General of the Russian Federation or subordinate prosecutors shall, no later than ten working days after obtaining that information, decide to verify the lawful receipt of the funds specified in part 3 of Article 8.2 of this Federal Law, in accordance with Article 8.2 of this Federal Law and according to the procedure provided for in that Article. The decision shall be made in writing separately in respect of each person under verification specified in part 2 of this Article. Materials obtained during the verification specified in part 4 of this Article may be used when verifying the lawful receipt of the funds specified in part 3 of Article 8.2 of this Federal Law.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u09083f31d0f821ab52-1": {
+      "text": "16. Within their competence established by the Federal Law “On the Prosecutor’s Office of the Russian Federation”, the Prosecutor General of the Russian Federation or subordinate prosecutors shall consider the materials of the verification specified in part 4 of this Article and, where grounds exist, no later than one month after its completion, apply to a court according to the established procedure to change the grounds and wording of the dismissal (termination of powers) of the person under verification specified in part 2 of this Article.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u64c42019ff4b8cf7dc-1": {
+      "text": "17. The Prosecutor General of the Russian Federation or subordinate prosecutors who receive the materials specified in part 3 of this Article concerning the person under verification specified in part 1 of this Article shall consider those materials within their competence established by the Federal Law “On the Prosecutor’s Office of the Russian Federation” and, where grounds exist, no later than four months after receipt of those materials, apply to a court according to the procedure provided for by civil procedure legislation to change the grounds and wording of the dismissal (termination of powers) of the person under verification specified in part 1 of this Article.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u3ae06185010e8aa80b-1": {
+      "text": "18. If a court grants the application of the Prosecutor General of the Russian Federation or subordinate prosecutors specified in part 16 or 17 of this Article, the court shall change the grounds and wording of the dismissal (termination of powers) of the person under verification and shall state in its decision the grounds and wording of the dismissal (termination of powers) in exact accordance with the wording of this Federal Law or another federal law, citing the relevant article, part of an article, point or other structural unit of an article of this Federal Law or another federal law.",
+      "locator": "Article 13.5. Verifications in the Event of Dismissal (Termination of Powers) of Certain Categories of Persons"
+    },
+    "corruption273-u4bfbf0f6b9a33e0aa5-1": {
+      "text": "Article 14. Liability of Legal Entities for Corruption Offenses",
+      "locator": "Article 14. Liability of Legal Entities for Corruption Offenses"
+    },
+    "corruption273-u909ae76299a16ea0b4-1": {
+      "text": "1. If corruption offenses or offenses creating conditions for the commission of corruption offenses are organized, prepared or committed on behalf of or in the interests of a legal entity, measures of liability may be applied to that legal entity in accordance with the legislation of the Russian Federation.",
+      "locator": "Article 14. Liability of Legal Entities for Corruption Offenses"
+    },
+    "corruption273-u8af728dbd89876252a-1": {
+      "text": "2. Imposing liability on a legal entity for a corruption offense does not release the culpable individual from liability for that corruption offense, just as holding an individual criminally or otherwise liable for a corruption offense does not release the legal entity from liability for that corruption offense.",
+      "locator": "Article 14. Liability of Legal Entities for Corruption Offenses"
+    },
+    "corruption273-uec9c741b4e2298ea2f-1": {
+      "text": "3. The provisions of this Article apply to foreign legal entities in cases provided for by the legislation of the Russian Federation.",
+      "locator": "Article 14. Liability of Legal Entities for Corruption Offenses"
+    },
+    "corruption273-uea10a340a1a2a1c9c3-1": {
+      "text": "Article 15. Register of Persons Dismissed Due to Loss of Trust",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-u105f7662daf67f9a80-1": {
+      "text": "1. Information on a person’s dismissal (termination of powers) due to loss of trust for committing a corruption offense, except information constituting a state secret, shall be entered into the register of persons dismissed due to loss of trust (hereinafter the register) for a period of five years from the adoption of the act that served as the basis for entry into the register.",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-ubd711351903e1e04f2-1": {
+      "text": "2. The register shall be published on the official website of the federal state information system in the field of state service on the Internet information and telecommunications network.",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-ua19108aadf35b4f355-1": {
+      "text": "3. Information on a person’s dismissal (termination of powers) due to loss of trust for committing a corruption offense shall be removed from the register in the following cases:",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-u184251e84d7889921d-1": {
+      "text": "1) revocation of the act that served as the basis for entering into the register information on the person who was dismissed (whose powers were terminated) due to loss of trust for committing a corruption offense;",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-uf4363affc8c68cae5a-1": {
+      "text": "2) entry into legal force according to the established procedure of a court decision revoking the act or court decision that served as the basis for entering into the register information on the person who was dismissed (whose powers were terminated) due to loss of trust for committing a corruption offense;",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-uea23398e67cfad4490-1": {
+      "text": "3) expiry of five years from the adoption of the act or court decision that served as the basis for entering into the register information on the person who was dismissed (whose powers were terminated) due to loss of trust for committing a corruption offense;",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-uf540229d33676e93ed-1": {
+      "text": "4) death of the person who was dismissed (whose powers were terminated) due to loss of trust for committing a corruption offense.",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-u3b53b640c47fb6bf13-1": {
+      "text": "4. Entry into the register of information on a person who was dismissed (whose powers were terminated) due to loss of trust for committing a corruption offense, removal from the register of information on such a person, and publication of the register on the official website of the federal state information system in the field of state service on the Internet information and telecommunications network shall be carried out according to the procedure determined by the Government of the Russian Federation.",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-ue891c3e4360d128a68-1": {
+      "text": "President",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-u64cbf15dce429edd4f-1": {
+      "text": "of the Russian Federation",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-uc17fab869afb1b4ceb-1": {
+      "text": "D. MEDVEDEV",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-ua5b527ca723a103864-1": {
+      "text": "Moscow, the Kremlin",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-u87ee67452f3cee4a41-1": {
+      "text": "25 December 2008",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    },
+    "corruption273-udd3031bbfae91b5dba-1": {
+      "text": "No. 273-ФЗ",
+      "locator": "Article 15. Register of Persons Dismissed Due to Loss of Trust"
+    }
+  }
+}

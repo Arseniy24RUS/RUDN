@@ -5,6 +5,8 @@ import {canonicalArticleSelections} from '../site/apps/legal-lab/lib/article-evi
 import {gradeEvidence,expandIds,contentHash} from '../site/apps/legal-lab/lib/core.mjs';
 const data=new URL('../site/apps/legal-lab/data/',import.meta.url),json=async path=>JSON.parse(await readFile(new URL(path,data),'utf8'));
 const [catalog,bank,cases]=await Promise.all(['catalog.json','bank.json','cases.json'].map(json));
+const retired=JSON.parse(await readFile(new URL('./fixtures/legal-lab-retired-extras.json',import.meta.url),'utf8'));
+assert.deepEqual(bank.extra,[]);assert.equal(retired.length,2);
 const docs=await Promise.all(catalog.documents.map(meta=>json(meta.file))),byDoc=new Map(docs.map(doc=>[doc.id,doc]));
 // Exact reviewed section/header identities, independent of runtime's guarded body table.
 const reviewed = [
@@ -288,7 +290,7 @@ test('all 37 reviewed mappings match real complete sections in SHA-verified corp
 });
 
 test('actual 38 Q tasks, two extras and 24 dossiers reproduce all 180 reviewed semantic checks',()=>{
-  const tasks=[...bank.classroom.filter(task=>task.kind==='text'),...bank.extra,...cases];
+  const tasks=[...bank.classroom.filter(task=>task.kind==='text'),...retired,...cases];
   assert.equal(tasks.length,64);assert.equal(cases.length,24);
   let checks=0;const check=(condition,label)=>{assert.ok(condition,label);checks++;};
   for(const task of tasks){

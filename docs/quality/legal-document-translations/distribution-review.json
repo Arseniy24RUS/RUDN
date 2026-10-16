@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "status": "approved",
+  "kind": "byte-normalization-of-independently-reviewed-translations",
+  "scope": "Line endings only; full linguistic decisions remain in the pinned original independent reports.",
+  "reviewer": "Integrator byte-level verification, not a new linguistic review",
+  "payloadDecisions": [
+    {
+      "docId": "goals309",
+      "locale": "en",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "10d733a51118502c837488c188726c4b894abf479d4d576e495838deb4977329",
+      "reviewedUnits": 127,
+      "reviewedSections": 13,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "4cd54b7589ba14fd785470411529b1bbd3a2fdbcb0a765d9a58f614fc4fbfa91",
+        "originalReview": "docs/quality/legal-document-translations/goals-system-review.json#sha256=e940c2ed272340bd387a99e91e5b700b00ec874ae945ebbc83f0ebdd5ffe156e",
+        "jsonDeepEqual": true
+      }
+    },
+    {
+      "docId": "goals309",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "51a84320f596d7af1be196c62aea33ca2e206fe7c44db83dc5c8be2b3383a94c",
+      "reviewedUnits": 127,
+      "reviewedSections": 13,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "76da9b235f7bd11839b69f5ab54d67a716aa248ad280cf4ad6067c6dcbe56f52",
+        "originalReview": "docs/quality/legal-document-translations/goals-system-review.json#sha256=e940c2ed272340bd387a99e91e5b700b00ec874ae945ebbc83f0ebdd5ffe156e",
+        "jsonDeepEqual": true
+      }
+    },
+    {
+      "docId": "system58",
+      "locale": "en",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "412b1a174b263fb6d978ec898f2a899723d14da3e7a086521533b1f4f01cd082",
+      "reviewedUnits": 178,
+      "reviewedSections": 27,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "516f407b1cfa3be488d6294c6b3c9c5c093aaed355874292a2de53091d2d04ca",
+        "originalReview": "docs/quality/legal-document-translations/goals-system-review.json#sha256=e940c2ed272340bd387a99e91e5b700b00ec874ae945ebbc83f0ebdd5ffe156e",
+        "jsonDeepEqual": true
+      }
+    },
+    {
+      "docId": "system58",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "f431c6989a6650ee56f28613158b42e2104dca05ba04ba89c9108f16359c7639",
+      "reviewedUnits": 178,
+      "reviewedSections": 27,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "8e6aade49ef8dac2d209f2584131dc41bb37d9bad7e07a78289c8f894df4f272",
+        "originalReview": "docs/quality/legal-document-translations/goals-system-review.json#sha256=e940c2ed272340bd387a99e91e5b700b00ec874ae945ebbc83f0ebdd5ffe156e",
+        "jsonDeepEqual": true
+      }
+    },
+    {
+      "docId": "municipal25",
+      "locale": "en",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "46b801b161ba70e93be3c149cd44fc2ad49903d084965c946296d02888d654d5",
+      "reviewedUnits": 383,
+      "reviewedSections": 56,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "d54608ecacd6c619da41d2217406440815deda12edbb323fd5ada7164eb921f8",
+        "originalReview": "docs/quality/legal-document-translations/municipal25-review.json#sha256=ff502a5e8584ad47721da9cbbb6f017d2939cdb37f75685a490ceb1d43c74864",
+        "jsonDeepEqual": true
+      }
+    }
+  ],
+  "notClaims": [
+    "No translation text, legal content, source IDs, source pins or unit/section coverage changed.",
+    "Not official or certified translation."
+  ]
+}

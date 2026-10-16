@@ -20,12 +20,21 @@ function databaseValue(value){
 }
 const sameDatabaseValue=(a,b)=>JSON.stringify(databaseValue(a))===JSON.stringify(databaseValue(b));
 function legalFinalStateMatches(draft,attempt){
-  if(draft?.mode!=='legal-lab-workspace'||draft.activitySlug!=='seminar-4'||
+  if(!['legal-lab-workspace','legal-lab-assessment'].includes(draft?.mode)||draft.activitySlug!=='seminar-4'||
     draft.attemptId!==attempt.id||draft.phase!=='completed'||draft.state?.phase!=='completed'||
     draft.contentVersion!==attempt.contentVersion||!sameDatabaseValue(draft.state.resultAttempt,attempt))return false;
   let state;
   try{state=JSON.parse(draft.state.legalLab);}catch{return false;}
   const assessment=state?.assessment;
+  if(draft.mode==='legal-lab-assessment'){
+    const parent=draft.state.legalLabParent;
+    if(!parent||typeof parent.workspaceId!=='string'||!parent.workspaceId.startsWith('legal-assessment-')||
+      !['legal-lab-workspace','legal-lab-practice'].includes(parent.mode)||
+      parent.attemptId!==parent.workspaceId+(parent.mode==='legal-lab-practice'?'-practice':'')||
+      !attempt.id.startsWith(parent.workspaceId+'-r-')||
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(attempt.id.slice(parent.workspaceId.length+3))||
+      assessment?.format!=='five-task-v1'||assessment.answer?.assessmentMode!=='five-task-v1')return false;
+  }
   if(attempt.legalLab?.answerJson!==undefined){
     try{if(!sameDatabaseValue(JSON.parse(attempt.legalLab.answerJson),assessment?.answer))return false;}catch{return false;}
   }
@@ -38,6 +47,21 @@ function legalFinalStateMatches(draft,attempt){
     sameDatabaseValue(assessment.result.criteria,attempt.legalLab?.criteria)&&
     sameDatabaseValue(assessment.answer,attempt.legalLab?.answer)&&
     sameDatabaseValue(assessment.documentVersions,attempt.legalLab?.documentVersions);
+}
+
+function legalParentContains(parent,terminal,attempt){
+  let state;
+  try{
+    if(parent.mode==='legal-lab-practice'){
+      const extension=JSON.parse(parent.state.legalLabPractice);
+      if(extension.schema!==1||extension.contentVersion!==attempt.contentVersion)return false;
+      state=extension.fields;
+    }else state=JSON.parse(parent.state.legalLab);
+  }catch{return false;}
+  // History allows a locally accepted receipt to finish cloud delivery after the
+  // student starts another variant. A rejected branch has no such endorsement.
+  return [state?.assessment,...(Array.isArray(state?.assessmentHistory)?state.assessmentHistory:[])].some(assessment=>
+    legalFinalStateMatches({...terminal,state:{...terminal.state,legalLab:JSON.stringify({schema:1,contentVersion:attempt.contentVersion,assessment})}},attempt));
 }
 
 function defaultDeviceId(){
@@ -86,7 +110,7 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   // that queue. Its exact archived intent is already durable history, not a new
   // branch. Do not rebase the discarded local state onto the selected head.
   const resolvedLegalIntent=incoming.lastIntentId&&incoming.activitySlug==='seminar-4'&&
-    ['legal-lab-workspace','legal-lab-practice'].includes(incoming.mode)&&
+    ['legal-lab-workspace','legal-lab-practice','legal-lab-assessment'].includes(incoming.mode)&&
     Object.values(current.conflictHistory||{}).some(({branches})=>
       [branches?.local,branches?.cloud,...Object.values(branches?.alternatives||{})]
         .some(branch=>branch?.lastIntentId===incoming.lastIntentId));
@@ -266,6 +290,21 @@ export function createCheckpointSync({
               assertActive(session);
               if(!head||Object.keys(head.conflicts||{}).length||head.current?.lastIntentId!==draft.lastIntentId||
                 !legalFinalStateMatches(head.current,operation.payload))throw fault('storage/final-checkpoint-pending');
+              if(draft.mode==='legal-lab-assessment'){
+                const parent=draft.state.legalLabParent;
+                const targets=[{mode:'legal-lab-workspace',attemptId:parent.workspaceId}];
+                if(parent.mode==='legal-lab-practice')targets.push({mode:parent.mode,attemptId:parent.attemptId});
+                for(const target of targets){
+                  const local=await store.loadDraft({owner:operation.owner,activitySlug:operation.activitySlug,...target});
+                  assertActive(session);
+                  if(!local||local.contentVersion!==operation.payload.contentVersion||local.acknowledgedRevision<local.revision||local.saveStatus?.state==='conflict')throw fault('storage/final-checkpoint-pending');
+                  const conflicts=await store.listConflicts({owner:operation.owner,draftId:local.id});
+                  if(conflicts.some(item=>!item.resolvedAt))throw fault('storage/final-checkpoint-pending');
+                  const {value:remote}=await transport.get(checkpointPath(local),{signal});assertActive(session);
+                  if(!remote||Object.keys(remote.conflicts||{}).length||remote.current?.lastIntentId!==local.lastIntentId)throw fault('storage/final-checkpoint-pending');
+                  if(target.mode===parent.mode&&(!legalParentContains(local,draft,operation.payload)||!legalParentContains(remote.current,draft,operation.payload)))throw fault('storage/final-checkpoint-pending');
+                }
+              }
             }
             const attachments=await attachmentsFor(operation,session,signal);
             assertActive(session);

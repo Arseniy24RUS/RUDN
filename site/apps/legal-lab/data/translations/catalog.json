@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "contentVersion": "legal-lab-2026-10-15.2",
+  "kind": "educational-unofficial",
+  "documents": [
+    {
+      "docId": "goals309",
+      "locale": "en",
+      "file": "en/goals309.json",
+      "sha256": "10d733a51118502c837488c188726c4b894abf479d4d576e495838deb4977329",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+        "fileSha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/distribution-review.json#sha256=3a68943a96db025055e43384ba345cb901a82a69578a2b1072688828797f805c"
+      }
+    },
+    {
+      "docId": "goals309",
+      "locale": "zh",
+      "file": "zh/goals309.json",
+      "sha256": "51a84320f596d7af1be196c62aea33ca2e206fe7c44db83dc5c8be2b3383a94c",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8c21e5170827620f4bb09e8ea205d62be0413becdfc9e06565f2967777dc9a58",
+        "fileSha256": "ed17e84663c5bdac83db3f5765f1b608b30180f912811afedc88ba59c43b1c11"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/distribution-review.json#sha256=3a68943a96db025055e43384ba345cb901a82a69578a2b1072688828797f805c"
+      }
+    },
+    {
+      "docId": "system58",
+      "locale": "en",
+      "file": "en/system58.json",
+      "sha256": "412b1a174b263fb6d978ec898f2a899723d14da3e7a086521533b1f4f01cd082",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+        "fileSha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/distribution-review.json#sha256=3a68943a96db025055e43384ba345cb901a82a69578a2b1072688828797f805c"
+      }
+    },
+    {
+      "docId": "system58",
+      "locale": "zh",
+      "file": "zh/system58.json",
+      "sha256": "f431c6989a6650ee56f28613158b42e2104dca05ba04ba89c9108f16359c7639",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "d3b37658aa1d10148b1b10cf3c7de4728c2dfe9d99c2a13263c5662877f2bfb1",
+        "fileSha256": "8343b4319c6989b381737ce01923a61b8fd4cc0c2098e9430c71aba441cb9f0e"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/distribution-review.json#sha256=3a68943a96db025055e43384ba345cb901a82a69578a2b1072688828797f805c"
+      }
+    },
+    {
+      "docId": "constitution",
+      "locale": "en",
+      "file": "en/constitution.json",
+      "sha256": "286b1d2a7684436e3559c76d1f4ecfd7463449bbf88fa5e6fcf3c160042d74b1",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+        "fileSha256": "693dc24b02bbd0551658ae0ee127d28aba9a78f5bfd6cda7dd02cfe2769c425b"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/constitution-review.json#sha256=73bad341c0ac6884ae8dc9c19eeed0d0e84e0ed6e6f1c1bfbe32930adc980d2f"
+      }
+    },
+    {
+      "docId": "constitution",
+      "locale": "zh",
+      "file": "zh/constitution.json",
+      "sha256": "df20c8073a61c38dee0d49f2034e7d2499520e0c015eeb286ef0b21f2544723b",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8ad392a7ee424f1774603086581077746af8872a757b1d9279c3f138a921672f",
+        "fileSha256": "693dc24b02bbd0551658ae0ee127d28aba9a78f5bfd6cda7dd02cfe2769c425b"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/constitution-review.json#sha256=73bad341c0ac6884ae8dc9c19eeed0d0e84e0ed6e6f1c1bfbe32930adc980d2f"
+      }
+    },
+    {
+      "docId": "municipal25",
+      "locale": "en",
+      "file": "en/municipal25.json",
+      "sha256": "46b801b161ba70e93be3c149cd44fc2ad49903d084965c946296d02888d654d5",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+        "fileSha256": "9b5d628add853665dd15cfd4b968b7a906ebddbe8cc0b27e5887da49e67a5da4"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/distribution-review.json#sha256=3a68943a96db025055e43384ba345cb901a82a69578a2b1072688828797f805c"
+      }
+    },
+    {
+      "docId": "municipal25",
+      "locale": "zh",
+      "file": "zh/municipal25.json",
+      "sha256": "f4e8539fb6f495206f719731d09248066d7cfb02f2ccd383c2647fc3dbaed4d1",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "979d9ecc9d194ccd09b2f86f76ab068bc895ac69e3fcc3ebf1b1f19c9f37bf54",
+        "fileSha256": "9b5d628add853665dd15cfd4b968b7a906ebddbe8cc0b27e5887da49e67a5da4"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/municipal25-review.json#sha256=ff502a5e8584ad47721da9cbbb6f017d2939cdb37f75685a490ceb1d43c74864"
+      }
+    },
+    {
+      "docId": "corruption273",
+      "locale": "en",
+      "file": "en/corruption273.json",
+      "sha256": "ef91b87387c3d53da7d8fbca6475fba606be885e92b3a26e3855d95655274e95",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+        "fileSha256": "2279e93b7d4e2a484f0f2538709eae35f09ffef3c2e45ff8dbc08917f95b12c7"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/corruption273-review.json#sha256=2461755f7d061e9703900ad00d6721371c8f3a57a3a6de0b29edaf4d6133ca9a"
+      }
+    },
+    {
+      "docId": "corruption273",
+      "locale": "zh",
+      "file": "zh/corruption273.json",
+      "sha256": "a18d6984eb2bec98eff4f15a3264e61bb3df0e216cd257c99dc94a3736bca681",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "dc8b51d46a24f6718ffea1faac4b5d9459398ac4d5c9ca635fd36ec8f31582bc",
+        "fileSha256": "2279e93b7d4e2a484f0f2538709eae35f09ffef3c2e45ff8dbc08917f95b12c7"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/corruption273-review.json#sha256=2461755f7d061e9703900ad00d6721371c8f3a57a3a6de0b29edaf4d6133ca9a"
+      }
+    }
+  ]
+}

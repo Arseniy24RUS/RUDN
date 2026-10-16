@@ -1,5 +1,36 @@
 // Translation touches presentation text/labels only, never values or data-* identifiers.
 const rows=`
+Определите вид документа|Identify the document type|判断文件类型
+Поиск нормы 1|Find a provision 1|查找条文1
+Поиск нормы 2|Find a provision 2|查找条文2
+Поиск нормы 3|Find a provision 3|查找条文3
+Сохранить ответ|Save answer|保存答案
+Ответ сохранён|Answer saved|答案已保存
+Начать|Start|开始
+Отправить|Submit|提交
+Вернуться|Go back|返回
+Работа завершена|Work completed|作业已完成
+Завершить и проверить|Finish and check|完成并检查
+Пять заданий, по одному баллу за каждое: реквизиты документа, вид другого документа и три вопроса по тексту закона.|Five tasks worth one point each: document details, the type of another document and three questions about a legal text.|共五题，每题一分：识别文件要素、判断另一份文件的类型，以及在法律全文中查找三道题的答案。
+Отправить все пять ответов на оценку?|Submit all five answers for grading?|提交全部五道题的答案进行评分吗？
+Ответ верный.|The answer is correct.|答案正确。
+Потеря за задание: {points} балла.|Points lost for this task: {points}.|本题扣分：{points}。
+Ответ частично верный.|The answer is partly correct.|答案部分正确。
+Ответ не совпал с основанием.|The answer does not match the legal basis.|答案与法律依据不符。
+Результат отправлен в журнал|Result submitted to the gradebook|成绩已提交至成绩册
+Результат сохранён на устройстве|Result saved on this device|成绩已保存在本设备
+Повторить отправку|Retry submission|重新提交
+Сначала отправьте сохранённый результат в журнал.|Submit the saved result to the gradebook first.|请先将已保存的成绩提交至成绩册。
+Главная|Home|首页
+Квиз|Quiz|测验
+На оценку|Graded work|评分作业
+Начать заново|Start again|重新开始
+Поиск нормы|Find a provision|查找条文
+Распознайте документ, найдите норму и обоснуйте ответ.|Recognise the document, find the provision and explain your answer.|识别文件、查找条文并说明答案依据。
+Ответьте на все задания квиза, чтобы открыть работу на оценку.|Answer every quiz question to unlock graded work.|回答测验的所有题目后即可开启评分作业。
+Учебный перевод|Study translation|学习译文
+Русский оригинал|Russian original|俄文原文
+Показать перевод|Show translation|显示译文
 Конституция РФ|Constitution of Russia|俄罗斯宪法
 КоАП РФ|Administrative Offences Code|行政违法法典
 Пространственное развитие|Spatial development|空间发展
@@ -323,6 +354,9 @@ const rows=`
 Источники и авторство|Sources and authorship|来源与作者
 Экспортировать локальную работу|Export saved work|导出已保存作业
 Орган-издатель|Issuing authority|发布机关
+Организация на бланке|Organization on the letterhead|信笺上的机构名称
+Почтовый адрес|Postal address|邮政地址
+Справочные данные об организации|Organization contact details|机构联系信息
 Дата документа|Document date|文件日期
 Номер документа|Document number|文件编号
 Номер приказа|Order number|命令编号
@@ -381,7 +415,7 @@ export function translate(text,locale){
 }
 export function translateDOM(root,locale){
  root.lang=normalizeLocale(locale);if(root.lang==='ru')return;
- const walker=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT,{acceptNode:node=>node.nodeType===1?(node.matches('[data-original],script,style')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_SKIP):NodeFilter.FILTER_ACCEPT});let node;
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT,{acceptNode:node=>node.nodeType===1?(node.matches('[data-original],[data-document-text],script,style')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_SKIP):NodeFilter.FILTER_ACCEPT});let node;
  while(node=walker.nextNode())node.textContent=translate(node.textContent,locale);
- for(const el of root.querySelectorAll('[aria-label],[placeholder],[title],[alt]'))for(const attr of ['aria-label','placeholder','title','alt'])if(el.hasAttribute(attr)&&!el.closest('[data-original]'))el.setAttribute(attr,translate(el.getAttribute(attr),locale));
+ for(const el of root.querySelectorAll('[aria-label],[placeholder],[title],[alt]'))for(const attr of ['aria-label','placeholder','title','alt'])if(el.hasAttribute(attr)&&!el.closest('[data-original],[data-document-text]'))el.setAttribute(attr,translate(el.getAttribute(attr),locale));
 }
