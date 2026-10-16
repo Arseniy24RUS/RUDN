@@ -1,9 +1,13 @@
 import {migrateClassroomScans,VERSION,EVIDENCE_MODE,ACT_TYPES,SCAN_METADATA_MODE,scanQuestionsFor,dossierScanQuestions,normalizeScanSelections,escapeHTML as e,uid,gradeTask,gradeEvidence,scoreDossier,chooseCase,assessmentReady,searchUnits,expandIds,selectionLimit,hash32,parseDossierAnswer} from './lib/core.mjs';
 import {Store,editorLease,freshState,RevisionConflict} from './lib/storage.mjs';
 import {Corpus} from './lib/corpus.mjs';
+import {DocumentTranslations} from './lib/translations.mjs';
+import {documentDisplay,documentLocale,displayLabel,setReaderQuery} from './lib/translation-ui.mjs';
 import {canonicalArticleSelections} from './lib/article-evidence.mjs';
 import {labelForUnit} from './lib/reader-tools.mjs';
 import {captureReaderPosition,restoreReaderPosition,readerView,selectionTrayView,readerSearchPanel,refreshReaderSearch,prepareReaderLayout,scrollReaderUnitIntoView,lessonNavigation} from './lib/reader-view.mjs';
+import {FIVE_MODE,chooseFiveVariant} from './lib/assessment-five.mjs';
+import {isFiveWork,fiveVariant,fiveTask,fiveAnswer,fiveIntro,fiveAssessment,fiveReport,fiveEvidenceSet} from './lib/five-view.mjs';
 import {LocalLive} from './lib/live.mjs';
 import {localizeContent} from './locales/content.mjs';
 import {translate,translateDOM,normalizeLocale} from './locales/ui.mjs';
@@ -11,7 +15,7 @@ const BASE=new URL('./',import.meta.url);
 const SEARCH_ICON='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>';
 const SCAN_EYE='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
 const ICON='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 3h11l6 6v20H8z"/><path d="M19 3v7h6M12 15h9M12 19h9M12 23h6"/></svg>';
-const SCAN_FIELD_COLORS=Object.freeze({issuer:'#17658c',type:'#8254a3',title:'#a24d1c',date:'#237366',number:'#994667',signature:'#62652c',approved:'#5261a7',agreed:'#9b592c',registration:'#596b83',acknowledgment:'#7f573d',emblem:'#6b587a',place:'#425e72',executor:'#725523',seal:'#3d6f74','signature-chair':'#6c387c','signature-secretary':'#304d84','signatures-members':'#6f6222','certified-copy':'#7d3840'});
+const SCAN_FIELD_COLORS=Object.freeze({issuer:'#17658c',type:'#8254a3',title:'#a24d1c',date:'#237366',number:'#994667',signature:'#62652c',approved:'#5261a7',agreed:'#9b592c',registration:'#596b83',acknowledgment:'#7f573d',emblem:'#6b587a',place:'#425e72',executor:'#725523',seal:'#3d6f74','signature-chair':'#6c387c','signature-secretary':'#304d84','signatures-members':'#6f6222','certified-copy':'#7d3840','letterhead-author':'#686029',address:'#8c4f24',contacts:'#2f6c55'});
 const clip=(s,n=120)=>String(s).length>n?String(s).slice(0,n-1)+'…':String(s);
 const count=(a)=>Object.keys(a||{}).length;
 const timeText=ms=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
@@ -41,6 +45,8 @@ class LegalLab {
     try {
       this.corpus=await new Corpus(BASE,{signal:this.signal}).initialize();if(!this.active())return;
       Object.assign(this,{catalog:this.corpus.catalog,scans:this.corpus.scans},localizeContent(this.corpus.bank,this.corpus.cases,this.locale));
+      this.translations=new DocumentTranslations(BASE,{catalog:this.catalog,signal:this.signal});
+      this.fiveSource=await this.corpus.json('data/assessment-variants.json');if(this.fiveSource.contentVersion!==this.catalog.contentVersion)throw Error('Assessment content version mismatch');this.localizeFive();
       this.namespace=`${this.owner}:${this.period}`;this.store=new Store(this.namespace);this.lease=await editorLease(this.namespace);this.readOnly=!this.lease.acquired;
       const local=await this.store.get('session');if(!this.active())return;
       const incoming=this.opt.initialState;const saved=incoming?{revision:local?.revision||0,value:structuredClone(incoming)}:local;
@@ -48,10 +54,11 @@ class LegalLab {
       if(saved&&saved.value.contentVersion!==this.catalog.contentVersion){this.revision=saved.revision;this.incompatible=saved.value;this.state=freshState(this.catalog.contentVersion);this.readOnly=true;this.notice='Сохранённая работа относится к прежнему комплекту заданий. Экспортируйте её и обратитесь к преподавателю.';this.noticeType='warning';}
       else {this.state=saved?.value||freshState(this.catalog.contentVersion);this.revision=saved?.revision||0;}
       migrateClassroomScans(this.state,this.bank);
-      this.view=['learn','assessment'].includes(this.opt.initialView)?this.opt.initialView:this.state.view||'home';if(!['home','learn','library','assessment','help'].includes(this.view))this.view='home';
+      if(this.state.assessment&&!isFiveWork(this.state.assessment)&&!this.state.assessment.result){this.state.assessmentHistory||=[];this.state.assessmentHistory.push(structuredClone(this.state.assessment));this.state.assessment=null;}
+      this.view=['learn','assessment'].includes(this.opt.initialView)?this.opt.initialView:this.state.view||'home';if(!['home','learn','assessment','help'].includes(this.view))this.view='home';
       // Only unfinished drafts adopt the complete-scan rubric. Completed work
       // retains its recorded mode, including the original three-field rubric.
-      if(this.state.assessment&&!this.state.assessment.result){if(!Object.hasOwn(this.state.assessment.answer,'metadataMode'))this.state.assessment.answer.metadataMode=SCAN_METADATA_MODE;if(!Object.hasOwn(this.state.assessment.answer,'evidenceMode'))this.state.assessment.answer.evidenceMode=EVIDENCE_MODE;}
+      if(this.state.assessment&&!isFiveWork(this.state.assessment)&&!this.state.assessment.result){if(!Object.hasOwn(this.state.assessment.answer,'metadataMode'))this.state.assessment.answer.metadataMode=SCAN_METADATA_MODE;if(!Object.hasOwn(this.state.assessment.answer,'evidenceMode'))this.state.assessment.answer.evidenceMode=EVIDENCE_MODE;}
       if(this.readOnly&&!this.incompatible)this.notice='Другая вкладка редактирует эту работу. Здесь доступен просмотр. Закройте другую вкладку и обновите страницу.';
       if(this.catalog.documents.every(d=>d.coverage==='excerpts'))await this.corpus.all();
       this.clickHandler=ev=>{const b=ev.target.closest('[data-action]');if(b&&this.root.contains(b)&&!b.disabled){ev.preventDefault();this.action(b.dataset.action,b).catch(err=>this.fail(err));}};
@@ -73,6 +80,7 @@ class LegalLab {
   }
   persist(){
     if(!this.state||this.readOnly||this.closed)return this.queue;
+    if(!this.state.quizCompletion&&this.bank.classroom.every(t=>this.answer(t).submitted))this.state.quizCompletion={contentVersion:this.catalog.contentVersion,finishedAt:Date.now()};
     const snapshot=structuredClone({...this.state,view:this.view});this.pending++;
     this.queue=this.queue.catch(()=>{}).then(async()=>{try{if(this.readOnly||!this.active())return;const record=await this.store.put('session',snapshot,this.revision);this.revision=record.revision;
       if(this.opt.checkpoint&&this.active()){try{await this.opt.checkpoint({attemptId:snapshot.assessment?.attemptId||snapshot.id,contentVersion:this.catalog.contentVersion,state:snapshot,mode:snapshot.assessment&&!snapshot.assessment.preview?'assessment':'practice'});}catch(err){if(['RevisionConflict','DraftConflict'].includes(err?.name)){this.readOnly=true;this.notice='Работа изменена на другом устройстве. Обновите страницу, чтобы загрузить актуальный черновик.';this.noticeType='warning';void this.render();throw err;}this.notice='Сохранено на устройстве. Облачная копия черновика пока недоступна.';this.noticeType='warning';}}
@@ -126,7 +134,7 @@ class LegalLab {
     try{
       // WebKit can clamp page scroll while innerHTML briefly removes all children.
       if(preserveReading)this.root.style.setProperty('min-height',this.root.getBoundingClientRect().height+'px',previousMinHeight.priority);
-      this.root.innerHTML=`<header class="ll-header"><button class="ll-brand" data-action="home" aria-label="На главную модуля">${ICON}<span><strong>На подпись</strong><small>Правовые акты · Семинар 4</small></span></button><div class="ll-header-meta"><span class="ll-chip">${this.teacher?'Преподаватель':this.demo?'Демонстрация':'Практикум'}</span><span class="ll-clock" title="Ориентир занятия – 90 минут; скорость не влияет на балл"><span data-clock>${timeText(this.state.elapsedMs)}</span><small> / 90 мин</small></span><button class="ll-icon-button" data-action="exit" aria-label="Вернуться к курсу">↗</button></div></header><nav class="ll-nav" aria-label="Разделы практикума">${[['home','Маршрут'],['learn','Занятие'],['library','Библиотека'],['assessment','Самостоятельная работа'],['help','Справка']].map(([v,t])=>`<button data-action="view" data-view="${v}" class="${this.view===v?'active':''}" ${this.view===v?'aria-current="page"':''}>${t}</button>`).join('')}</nav>${language}${warn}${this.incompatible&&this.lease?.acquired&&(this.demo||this.incompatible.assessment?.preview)?'<div class="ll-alert ll-warning"><button class="ll-secondary" data-action="archive-preview">Архивировать старую демонстрацию и открыть новый комплект</button></div>':''}<main class="ll-main">${body}</main><footer class="ll-footer"><span data-save-state>${this.readOnly?'Только просмотр':this.pending?'Сохраняем…':'Сохранение на устройстве'}</span></footer><div class="ll-sr" aria-live="polite" id="ll-live-region"></div>`;
+      this.root.innerHTML=`<header class="ll-header"><button class="ll-brand" data-action="home" aria-label="На главную модуля">${ICON}<span><strong>На подпись</strong><small>Правовые акты · Семинар 4</small></span></button><div class="ll-header-meta"><span class="ll-chip">${this.teacher?'Преподаватель':this.demo?'Демонстрация':'Практикум'}</span><span class="ll-clock" title="Ориентир занятия – 90 минут; скорость не влияет на балл"><span data-clock>${timeText(this.state.elapsedMs)}</span><small> / 90 мин</small></span><button class="ll-icon-button" data-action="exit" aria-label="Вернуться к курсу">↗</button></div></header><nav class="ll-nav" aria-label="Разделы практикума">${[['home','Главная'],['learn','Квиз'],['assessment','На оценку'],['help','?']].map(([v,t])=>`<button data-action="view" data-view="${v}" class="${this.view===v?'active':''}" ${this.view===v?'aria-current="page"':''} ${v==='assessment'&&!this.assessmentUnlocked()?'disabled':''} ${v==='help'?'aria-label="Справка" title="Справка"':''}>${t}</button>`).join('')}</nav>${language}${warn}${this.incompatible&&this.lease?.acquired&&(this.demo||this.incompatible.assessment?.preview)?'<div class="ll-alert ll-warning"><button class="ll-secondary" data-action="archive-preview">Архивировать старую демонстрацию и открыть новый комплект</button></div>':''}<main class="ll-main">${body}</main><footer class="ll-footer"><span data-save-state>${this.readOnly?'Только просмотр':this.pending?'Сохраняем…':'Сохранение на устройстве'}</span></footer><div class="ll-sr" aria-live="polite" id="ll-live-region"></div>`;
       translateDOM(this.root,this.locale);this.prepareScanCrops();this.prepareTypeScans();prepareReaderLayout(this);this.applyPresence();
       for(const reader of this.root.querySelectorAll('[data-reader-doc]')){const paper=reader.querySelector('.ll-paper'),id=reader.dataset.readerDoc;if(paper){if(readerPosition?.docId===id)restoreReaderPosition(this,readerPosition);else paper.scrollTop=this.state.reader[id]?.scrollTop||0;}}
       const fieldNav=this.root.querySelector('.ll-scan-fields'),activeField=fieldNav?.querySelector('[aria-current="step"]');
@@ -151,13 +159,19 @@ class LegalLab {
     }
     if(this.scrollUnit){const id=this.scrollUnit;this.scrollUnit=null;const el=this.root.querySelector(`[data-unit="${CSS.escape(id)}"]`),docId=el?.closest('[data-reader-doc]')?.dataset.readerDoc;if(docId)this.scrollReaderUnit(docId,id);}
   }
+  quizCompleted(){return this.state.quizCompletion?.contentVersion===this.catalog.contentVersion||this.bank.classroom.every(t=>this.answer(t).submitted);}
+  assessmentUnlocked(){return this.teacherAccess()||this.quizCompleted();}
   home(){
-    const done=this.bank.classroom.filter(t=>this.answer(t).submitted).length, a=this.state.assessment;
-    const ready=assessmentReady(this.catalog).ready;
-    return `<section class="ll-hero"><div class="ll-eyebrow">РАБОЧЕЕ МЕСТО · 04</div><h1>Найдите норму.<br><span>Обоснуйте ответ.</span></h1><p>Распознайте документ, найдите норму и подготовьте досье.</p><div class="ll-actions"><button class="ll-primary" data-action="view" data-view="learn">${done?'Продолжить занятие':'Начать занятие'} <span>→</span></button><button class="ll-secondary" data-action="view" data-view="library">Открыть библиотеку</button></div><div class="ll-hero-number" aria-hidden="true">§</div></section><div class="ll-metrics"><div><strong>${done}<small> / ${this.bank.classroom.length}</small></strong><span>Отправлено ответов</span></div><div><strong>${this.catalog.documents.filter(d=>d.main).length}</strong><span>Основных актов</span></div><div><strong>${this.cases.length}</strong><span>Вариантов досье</span></div></div><section class="ll-section"><div class="ll-section-title"><h2>Ваш маршрут</h2><span>Ориентир · 90 минут</span></div><div class="ll-route-cards">${[['01','Прочитать скан','Выберите реквизиты прямо на изображении.','6 мин',0],['02','Определить вид акта','Соотнесите автора, заголовок и вид документа.','8 мин',6],['03','Найти положение','Используйте оглавление и поиск по документу.','38 мин',14]].map(([n,title,desc,time,index])=>`<button class="ll-route-card" data-action="go-task" data-index="${index}"><span class="ll-route-number">${n}</span><h3>${title}</h3><p>${desc}</p><small>${time} <span>→</span></small></button>`).join('')}</div></section><section class="ll-dossier-banner"><div><div class="ll-eyebrow">САМОСТОЯТЕЛЬНАЯ РАБОТА</div><h2>${a?`Самостоятельная работа ${e(a.caseId)}`:'Самостоятельная работа'}</h2><p>Другие сканы, другие ситуации, случайное назначение. Реквизиты, виды актов, поиск документа и правовое основание. До 5 баллов.</p></div><button class="ll-primary" data-action="view" data-view="assessment">${a?'Открыть работу':'Самостоятельная работа'} →</button></section>${!ready?`<details class="ll-corpus-notice"><summary>Материалы временно недоступны</summary><p>Часть документов ещё не готова. Можно тренироваться; отправка досье на оценку откроется после проверки материалов.</p></details>`:''}${this.livePanel()}<section class="ll-section"><h2>Дополнительные ситуации</h2><div class="ll-actions"><button class="ll-secondary" data-action="extra" data-id="X01">Проверить утверждение</button><button class="ll-secondary" data-action="extra" data-id="H01">Документ на дату события</button></div></section>`;
+    const sections=[['Реквизиты','scan',0],['Виды актов','type',6],['Поиск нормы','text',14]],a=this.state.assessment,unlocked=this.assessmentUnlocked();
+    return `<section class="ll-hero"><div class="ll-eyebrow">РАБОЧЕЕ МЕСТО · 04</div><h1>Найдите норму.<br><span>Обоснуйте ответ.</span></h1><p>Распознайте документ, найдите норму и обоснуйте ответ.</p><div class="ll-hero-number" aria-hidden="true">§</div></section><section class="ll-section ll-home-quiz"><div class="ll-section-title"><h2>Квиз</h2><span>${this.bank.classroom.filter(t=>this.answer(t).submitted).length} / ${this.bank.classroom.length}</span></div><div class="ll-route-cards">${sections.map(([title,kind,index])=>{const tasks=this.bank.classroom.filter(t=>t.kind===kind),done=tasks.filter(t=>this.answer(t).submitted).length;return `<button class="ll-route-card" data-action="go-task" data-index="${index}"><h3>${title}</h3><span class="ll-home-progress">${done} / ${tasks.length}</span></button>`;}).join('')}</div><div class="ll-actions"><button class="ll-primary" data-action="view" data-view="learn">Продолжить →</button></div></section><section class="ll-dossier-banner ll-home-assessment"><div><h2>На оценку</h2>${a?.result?`<p class="ll-home-score">${a.result.points} / 5</p>`:''}${!unlocked?'<p>Ответьте на все задания квиза, чтобы открыть работу на оценку.</p>':''}</div><div class="ll-actions"><button class="ll-primary" data-action="view" data-view="assessment" ${!unlocked?'disabled':''}>Продолжить →</button>${a?`<button class="ll-secondary" data-action="restart-assessment" ${!unlocked||this.isLocked()?'disabled':''}>Начать заново</button>`:''}</div></section>`;
   }
   livePanel(){
     return '<section class="ll-live-panel"><div><strong>Совместная работа</strong><p>Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.</p></div></section>';
+  }
+  async loadDocument(id){
+    const doc=await this.corpus.load(id),locale=documentLocale(this,id);
+    if(locale!=='ru')try{await this.translations.load(doc,locale);}catch(error){if(error.name==='AbortError')throw error;this.translationErrors||={};this.translationErrors[id+':'+locale]=error.code||'load';}
+    return doc;
   }
   async learning(){
     const t=this.selectedTask(),a=this.answer(t),revealed=this.displayCorrect(t);
@@ -165,8 +179,8 @@ class LegalLab {
     if(t.kind==='scan'){const scan=this.scans.find(s=>s.id===t.scanId),questions=scanQuestionsFor(scan);body=this.scanAssignment(scan,a.metadata,{questions,index:this.scanFieldIndex(t,questions),review:revealed});}
     else if(t.kind==='type')body=this.typeView(t,a.type,{review:revealed,correct:t.answer,action:'type-choice'});
     else if(t.kind==='history')body=`<div class="ll-editions"><h3>Документ для даты события</h3>${t.editionChoices.map(id=>{const d=this.doc(id);return `<button data-action="history-edition" data-id="${id}" class="${a.docId===id?'selected':''}"><strong>${e(d.title)}</strong><span>${e(d.number)}</span></button>`;}).join('')}</div>`;
-    else {const d=await this.corpus.load(a.docId||t.docId);body=this.reader(d,a.selections||[],{context:'learning',review:revealed,correctIds:expandIds(t.answerSets[0],[d]),limit:selectionLimit(t,[...this.corpus.cache.values()])});}
-    if(t.kind==='history'&&(a.docId||this.teacherAccess()&&this.teacherReading?.taskId===t.id)){const preview=this.teacherAccess()&&this.teacherReading?.taskId===t.id,d=await this.corpus.load(preview?this.teacherReading.docId:a.docId);body+=this.reader(d,preview?[]:a.selections||[],{context:'learning',review:revealed&&!preview,correctIds:expandIds(t.answerSets[0],[d]),limit:selectionLimit(t,[d]),readonly:Boolean(preview)});}
+    else {const d=await this.loadDocument(a.docId||t.docId);body=this.reader(d,a.selections||[],{context:'learning',review:revealed,correctIds:expandIds(t.answerSets[0],[d]),limit:selectionLimit(t,[...this.corpus.cache.values()])});}
+    if(t.kind==='history'&&(a.docId||this.teacherAccess()&&this.teacherReading?.taskId===t.id)){const preview=this.teacherAccess()&&this.teacherReading?.taskId===t.id,d=await this.loadDocument(preview?this.teacherReading.docId:a.docId);body+=this.reader(d,preview?[]:a.selections||[],{context:'learning',review:revealed&&!preview,correctIds:expandIds(t.answerSets[0],[d]),limit:selectionLimit(t,[d]),readonly:Boolean(preview)});}
     const teacherKey=this.teacherAccess()?await this.teacherAnswer(t):'';
     const navDisabled=false;
     const grade=revealed&&t.kind==='type'?gradeTask(t,a,[...this.corpus.cache.values()],this.scans):null;
@@ -249,14 +263,14 @@ class LegalLab {
   selectionTray(selected,context,limit,docId,readonly=false){return selectionTrayView(this,selected,context,limit,docId,readonly);}
 
   refreshReaderSelection(context,{review=false}={}){
-    const assessment=context==='assessment',t=assessment?this.cases.find(c=>c.id===this.state.assessment.caseId):this.selectedTask(),a=assessment?this.state.assessment.answer:this.answer(t),selected=new Set(a.selections||[]);
+    const five=context==='assessment-five',assessment=five||context==='assessment',t=five?fiveTask(this):assessment?this.cases.find(c=>c.id===this.state.assessment.caseId):this.selectedTask(),a=five?fiveAnswer(this,t):assessment?this.state.assessment.answer:this.answer(t),selected=new Set(a.selections||[]);
     for(const el of this.root.querySelectorAll(`.ll-paragraph[data-context="${context}"].selected,.ll-paragraph[data-context="${context}"].correct`)){el.classList.remove('selected','correct');el.setAttribute('aria-pressed','false');el.querySelector('.ll-check').textContent='';}
     for(const id of selected){const el=this.root.querySelector(`.ll-paragraph[data-context="${context}"][data-unit="${CSS.escape(id)}"]`);if(el){el.classList.add('selected');el.setAttribute('aria-pressed','true');el.querySelector('.ll-check').textContent='✓';}}
     if(review)for(const id of (gradeTask(t,a,[...this.corpus.cache.values()],this.scans).exact?[...selected]:expandIds(t.answerSets?.[0]||[],[...this.corpus.cache.values()])))this.root.querySelector(`.ll-paragraph[data-context="${context}"][data-unit="${CSS.escape(id)}"]`)?.classList.add('correct');
     for(const tray of this.root.querySelectorAll(`[data-selection-context="${context}"]`)){const box=document.createElement('div'),docId=tray.closest('[data-reader-doc]')?.dataset.readerDoc;box.innerHTML=this.selectionTray([...selected],context,selectionLimit(t,[...this.corpus.cache.values()]),docId);translateDOM(box,this.locale);tray.replaceWith(box.firstElementChild);}
     if(!assessment&&!this.extraTask){const oldPicker=this.root.querySelector('.ll-mobile-task-picker'),oldList=this.root.querySelector('.ll-task-scroll'),box=document.createElement('div');box.innerHTML=lessonNavigation(this,t,false);translateDOM(box,this.locale);const nextPicker=box.querySelector('.ll-mobile-task-picker'),nextList=box.querySelector('.ll-task-scroll');if(oldPicker&&nextPicker)oldPicker.replaceWith(nextPicker);if(oldList&&nextList){const top=oldList.scrollTop;oldList.replaceWith(nextList);nextList.scrollTop=top;}}
 
-    prepareReaderLayout(this);this.applyPresence();
+    const gate=this.root.querySelector('.ll-nav [data-view="assessment"]');if(gate)gate.disabled=!this.assessmentUnlocked();prepareReaderLayout(this);this.applyPresence();
   }
   scrollReaderUnit(docId,id,options={}){return scrollReaderUnitIntoView(this,docId,id,options);}
 
@@ -268,43 +282,46 @@ class LegalLab {
     }else if(t.kind==='type'){
       content=`<p><strong>${e(t.answer)}</strong></p>${s?`<p data-original lang="ru">${e(s.author)} · ${e(s.date)} · № ${e(s.number)}</p><p data-original lang="ru">${e(s.classificationTitle||s.title)}</p><p><span>В оригинале этого акта указан вид:</span> <q data-original lang="ru">${e(s.actType.toLocaleUpperCase('ru'))}</q></p>`:''}`;
     }else{
-      const d=await this.corpus.load(t.docId);if(!this.teacherAccess())return '';
-      content=`<p data-original lang="ru"><strong>${e(d.title)}</strong><br>${e(d.revisionLabel)}</p>`+(t.answerSets||[]).map((set,i)=>`<section class="ll-teacher-variant">${t.answerSets.length>1?`<h4>Допустимый вариант ${i+1}</h4>`:''}${expandIds(set,[d]).map(id=>{const u=d.units.find(u=>u.id===id);return u?`<blockquote data-original lang="ru"><strong>${e(u.locator)}</strong><p>${e(u.text)}</p></blockquote><button type="button" class="ll-secondary" data-action="teacher-jump-unit" data-id="${e(id)}" data-doc="${e(d.id)}">Перейти к основанию</button>`:'';}).join('')}</section>`).join('');
+      const d=await this.loadDocument(t.docId);if(!this.teacherAccess())return '';const info=documentDisplay(this,d),sets=isFiveWork(this.state.assessment)&&fiveVariant(this)?.tasks.some(q=>q.id===t.id)?[fiveEvidenceSet(t)]:(t.answerSets||[]);
+      content=`<p data-document-text lang="${info.locale}"><strong>${e(info.view.title)}</strong><br>${e(info.view.revisionLabel)}</p>`+sets.map((set,i)=>`<section class="ll-teacher-variant">${sets.length>1?`<h4>Допустимый вариант ${i+1}</h4>`:''}${expandIds(set,[d]).map(id=>{const u=info.units.get(id);return u?`<blockquote data-document-text lang="${info.locale}"><strong>${e(displayLabel(this,d,id))}</strong><p>${e(u.text)}</p></blockquote><button type="button" class="ll-secondary" data-action="teacher-jump-unit" data-id="${e(id)}" data-doc="${e(d.id)}">Перейти к основанию</button>`:'';}).join('')}</section>`).join('');
     }
     return `<details class="ll-teacher-answer" data-teacher-answer="${e(t.id)}"><summary>Ответ преподавателю</summary>${content}${t.kind==='scan'?'':`<p>${e(t.explanation)}</p>`}</details>`;
   }
   async library(assessmentMode){
-    if(!assessmentMode&&this.libraryDoc){const d=await this.corpus.load(this.libraryDoc);return `<button class="ll-secondary ll-back" data-action="library-back">← К документам</button>${this.reader(d,[],{readonly:true,context:'library'})}`;}
+    if(!assessmentMode&&this.libraryDoc){const d=await this.loadDocument(this.libraryDoc);return `<button class="ll-secondary ll-back" data-action="library-back">← К документам</button>${this.reader(d,[],{readonly:true,context:'library'})}`;}
     const entries=this.libraryHits||this.catalog.documents.map(document=>({document,hits:[]}));
     const chosen=new Set(this.state.assessment?.answer.documentIds||[]);
     return `<section class="ll-library"><div class="ll-section-title"><div><div class="ll-eyebrow">ПРАВОВЫЕ ИСТОЧНИКИ</div><h1>${assessmentMode?'Найдите документ для задачи':'Библиотека документов'}</h1></div><span>${this.catalog.documents.length} документов</span></div><form class="ll-searchbar" data-search-form="library"><input data-input="library-query" value="${e(this.librarySearch)}" placeholder="Название, номер или слова из текста" aria-label="Поиск по библиотеке"><button class="ll-primary" type="submit">Найти</button><label class="ll-checkbox"><input type="checkbox" data-input="library-content" ${this.libraryContent?'checked':''}> По содержанию</label></form><p class="ll-muted">${assessmentMode?'Выберите акт, затем откройте его и найдите правовое основание. Варианты ответов не предлагаются.':'Оглавление и поиск доступны для каждого установленного текста.'}</p><div class="ll-doc-grid">${entries.map(({document:d,hits})=>`<article class="ll-doc-card ${chosen.has(d.id)&&assessmentMode?'selected':''}"><div class="ll-doc-top"><span>${e(d.group)}</span><small>${d.coverage==='full'?'Полный текст':'Выдержки'}</small></div><h2>${e(d.shortTitle)}</h2><p>${e(d.title)}</p><strong>${e(d.number)}</strong><div class="ll-actions">${assessmentMode?`<button class="${chosen.has(d.id)?'ll-primary':'ll-secondary'}" data-action="choose-document" data-id="${d.id}" aria-pressed="${chosen.has(d.id)}" ${this.isLocked()?'disabled':''}>${chosen.has(d.id)?'✓ Выбран':'Выбрать акт'}</button><button class="ll-secondary" data-action="assessment-open-doc" data-id="${d.id}">Читать</button>`:`<button class="ll-primary" data-action="library-open" data-id="${d.id}">Открыть →</button>`}</div>${hits?.length?`<details><summary>Первые найденные фрагменты: ${hits.length}</summary>${hits.map(u=>`<button class="ll-hit" data-action="library-hit" data-doc="${d.id}" data-id="${u.id}" data-context="${assessmentMode?'assessment':'library'}">${e(u.locator)} · ${e(clip(u.text,100))}</button>`).join('')}</details>`:''}</article>`).join('')}</div>${!entries.length?'<div class="ll-empty">Документы не найдены. Попробуйте сократить запрос.</div>':''}</section>`;
   }
   async assessment(){
+    if(!this.assessmentUnlocked())return '<section class="ll-assessment-intro"><h1>На оценку</h1><p>Ответьте на все задания квиза, чтобы открыть работу на оценку.</p><button class="ll-primary" data-action="view" data-view="learn">Квиз →</button></section>';
     const a=this.state.assessment,ready=assessmentReady(this.catalog).ready;
+    if(!a)return fiveIntro(this);if(isFiveWork(a))return fiveAssessment(this);
     if(!a)return `<section class="ll-assessment-intro"><span class="ll-eyebrow">25 МИНУТ · ДО 5 БАЛЛОВ</span><h1>Самостоятельная работа</h1><p>После начала система случайно закрепит за вами одно из ${this.cases.length} досье. Назначение сохранится после перезагрузки. Ситуация и сканы отличаются от совместного занятия.</p><div class="ll-criteria-preview">${[['1','Реквизиты','Все реквизиты реального скана'],['1','Виды документов','Два новых автора и заголовка'],['1','Поиск документа','Нужный акт в общей библиотеке'],['2','Правовое основание','Достаточный фрагмент текста']].map(([p,h,t])=>`<div><strong>${p}</strong><h3>${h}</h3><p>${t}</p></div>`).join('')}</div>${!ready?`<div class="ll-alert ll-warning"><strong>Материалы временно недоступны</strong><p>Часть документов ещё не готова. Можно тренироваться; отправка досье на оценку откроется после проверки материалов.</p></div>`:''}<button class="ll-primary" data-action="start-assessment" ${this.isLocked()||(!ready&&!this.demo&&!this.teacher)?'disabled':''}>${ready&&!this.demo&&!this.teacher?'Получить досье':'Пройти тренировочное досье'} →</button></section>`;
     const item=this.cases.find(c=>c.id===a.caseId);if(!item)throw new Error('Назначенное досье не найдено');
-    if(a.result){await Promise.all([...new Set([...item.docIds,...a.answer.documentIds])].map(id=>this.corpus.load(id)));return this.report(item,a);}
+    if(a.result){await Promise.all([...new Set([...item.docIds,...a.answer.documentIds])].map(id=>this.loadDocument(id)));return this.report(item,a);}
     const questions=dossierScanQuestions(item,a.answer,this.scans),fieldIndex=a.scanFieldIndex??this.assessmentField;this.assessmentField=Math.max(0,Math.min(Number.isInteger(fieldIndex)?fieldIndex:0,questions.length-1));
     const stage=a.stage||0;let body='';
     if(stage===0){body=this.scanAssignment(this.scans.find(s=>s.id===item.scanId),a.answer.metadata,{questions,index:this.assessmentField,context:'assessment'})+`<p class="ll-source-note">${e(item.sourceNote)}</p>`;}
     else if(stage===1){body=`<div class="ll-substeps">${item.classificationIds.map((id,i)=>`<button data-action="classification-index" data-index="${i}" class="${this.activeType===i?'active':''}">${a.answer.classifications?.[id]?'✓ ':''}Документ ${i+1}</button>`).join('')}</div>${this.typeView({},a.answer.classifications?.[item.classificationIds[this.activeType]],{action:'assessment-type',scanId:item.classificationIds[this.activeType]})}`;}
     else if(stage===2)body=await this.library(true);
-    else if(stage===3){const ids=a.answer.documentIds||[];if(!ids.length)body='<div class="ll-empty">Сначала найдите и выберите документ на предыдущем этапе.</div>';else{this.assessmentDoc=ids.includes(this.assessmentDoc)?this.assessmentDoc:ids[0];const d=await this.corpus.load(this.assessmentDoc);body=`<div class="ll-substeps">${ids.map(id=>`<button data-action="assessment-doc" data-id="${id}" class="${id===d.id?'active':''}">${e(this.doc(id).shortTitle)}</button>`).join('')}</div>${this.reader(d,a.answer.selections||[],{context:'assessment',limit:selectionLimit(item,[...this.corpus.cache.values()])})}`;}}
+    else if(stage===3){const ids=a.answer.documentIds||[];if(!ids.length)body='<div class="ll-empty">Сначала найдите и выберите документ на предыдущем этапе.</div>';else{this.assessmentDoc=ids.includes(this.assessmentDoc)?this.assessmentDoc:ids[0];const d=await this.loadDocument(this.assessmentDoc);body=`<div class="ll-substeps">${ids.map(id=>`<button data-action="assessment-doc" data-id="${id}" class="${id===d.id?'active':''}">${e(this.doc(id).shortTitle)}</button>`).join('')}</div>${this.reader(d,a.answer.selections||[],{context:'assessment',limit:selectionLimit(item,[...this.corpus.cache.values()])})}`;}}
     else body=`<section class="ll-review"><h2>Проверьте собранное досье</h2><div class="ll-review-counts"><p>Области скана: <strong>${questions.filter(q=>a.answer.metadata?.[q.field]).length} / ${questions.length}</strong></p><p>Виды документов: <strong>${count(a.answer.classifications)} / ${item.classificationIds.length}</strong></p><p>Выбрано актов: <strong>${(a.answer.documentIds||[]).length}</strong></p><p>Выбрано фрагментов: <strong>${(a.answer.selections||[]).length}</strong></p></div><p>До отправки можно вернуться к любому этапу. После отправки эта попытка становится доступной только для просмотра. Полнота и точность будут проверены вместе.</p>${this.confirming?`<div class="ll-alert ll-warning"><strong>Завершить работу?</strong><p>Будут отправлены текущие ответы, включая незаполненные позиции.</p><div class="ll-actions"><button class="ll-primary" data-action="finish-assessment" ${this.submitting?'disabled':''}>${this.submitting?'Сохраняем…':'Да, завершить'}</button><button class="ll-secondary" data-action="cancel-finish">Вернуться к проверке</button></div></div>`:`<button class="ll-primary" data-action="confirm-finish" ${this.isLocked()?'disabled':''}>Завершить и проверить досье</button>`}</section>`;
     return `<header class="ll-assessment-heading"><div class="ll-eyebrow">ДОСЬЕ ${e(a.caseId)} · ${a.preview?'ТРЕНИРОВКА':'САМОСТОЯТЕЛЬНАЯ РАБОТА'}</div><h1>${e(item.title)}</h1><p>${e(item.prompt)}</p></header><nav class="ll-stage-nav" aria-label="Этапы досье">${['Реквизиты','Виды актов','Документ','Основание','Отправка'].map((v,i)=>`<button data-action="assessment-stage" data-index="${i}" class="${stage===i?'active':''}" aria-current="${stage===i?'step':'false'}"><span>${i+1}</span>${v}</button>`).join('')}</nav>${body}<div class="ll-stage-bottom"><button class="ll-secondary" data-action="assessment-prev" ${stage===0?'disabled':''}>← Предыдущий этап</button><span>${stage+1} / 5</span><button class="ll-primary" data-action="assessment-next" ${stage===4?'disabled':''}>Следующий этап →</button></div>`;
   }
   report(item,a){
+    if(item?.format==='five-task-v1')return fiveReport(this,item,a);
     const docs=[...this.corpus.cache.values()],scan=this.scans.find(s=>s.id===item.scanId);
     const label=(scan,id)=>scan?.hotspots.find(h=>h.id===id)?.label||'Не выбрано';
     const original=value=>`<span data-original lang="ru">${e(value)}</span>`;
     const scanValue=(s,field)=>this.scanFieldValue(s,field),questions=dossierScanQuestions(item,a.answer,this.scans);
     const scanOriginal=s=>s?`<details class="ll-report-original"><summary>Открыть оригинал</summary><p>${original(s.author)}<br>${original(s.date+' · № '+s.number)}</p><a href="${asset(s.image)}" target="_blank" rel="noopener noreferrer"><img src="${asset(s.image)}" alt="Скан документа" loading="lazy"><span>Увеличить изображение</span></a></details>`:'';
     const selectedDocs=[...new Set(a.answer.documentIds||[])],rawSelections=[...new Set(a.answer.selections||[])],wholeArticles=a.answer.evidenceMode===EVIDENCE_MODE,selectedUnits=wholeArticles?canonicalArticleSelections(rawSelections,docs):rawSelections;
-    const names=ids=>ids.length?`<ul>${ids.map(id=>`<li>${this.doc(id)?original(this.doc(id).title):'<span>Документ не найден</span>'}</li>`).join('')}</ul>`:'<p>Нет</p>';
+    const names=ids=>ids.length?`<ul>${ids.map(id=>{const d=this.corpus.cache.get(id),info=d?documentDisplay(this,d):null;return `<li>${info?`<span data-document-text lang="${info.locale}">${e(info.view.title)}</span>`:'<span>Документ не найден</span>'}</li>`;}).join('')}</ul>`:'<p>Нет</p>';
     const textList=(ids,expected,reviewExpected=false)=>ids.length?ids.map(id=>{
-      const d=docs.find(d=>d.units.some(u=>u.id===id)),u=d?.units.find(u=>u.id===id);
+      const d=docs.find(d=>d.units.some(u=>u.id===id)),info=d?documentDisplay(this,d):null,u=info?.units.get(id);
       const matched=reviewExpected?selectedUnits.includes(id):expected.includes(id),status=matched?'Совпало':reviewExpected?'Пропущенный фрагмент':'Лишний фрагмент';
-      return `<article class="ll-passage-review"><p class="ll-review-status">${status}</p>${u?`<blockquote data-original lang="ru"><strong>${e(d.shortTitle||d.title)} · ${e(u.locator)}</strong><p>${e(u.text)}</p></blockquote>${!reviewExpected&&!selectedDocs.includes(d.id)?'<p class="ll-review-status">Документ этого фрагмента не выбран.</p>':''}`:'<p>Фрагмент не найден в материалах.</p>'}</article>`;
+      return `<article class="ll-passage-review"><p class="ll-review-status">${status}</p>${u?`<blockquote data-document-text lang="${info.locale}"><strong>${e(info.translation?info.view.title:d.shortTitle||d.title)} · ${e(displayLabel(this,d,id))}</strong><p>${e(u.text)}</p></blockquote>${!reviewExpected&&!selectedDocs.includes(d.id)?'<p class="ll-review-status">Документ этого фрагмента не выбран.</p>':''}`:'<p>Фрагмент не найден в материалах.</p>'}</article>`;
     }).join(''):'<p>Не выбрано</p>';
     const breakdown=a.result.criteria.map(c=>{
       let review='',reason='';
@@ -330,7 +347,7 @@ class LegalLab {
         // different complete answer must not be described as missing evidence.
         const best=item.answerSets.map(set=>({ids:wholeArticles?canonicalArticleSelections(expandIds(set,docs),docs):expandIds(set,docs),grade:gradeEvidence(selectedUnits,[set],docs,{wholeArticles})})).reduce((best,next)=>!best||next.grade.fraction>best.grade.fraction||next.grade.fraction===best.grade.fraction&&next.grade.missing<best.grade.missing?next:best,null);
         const expected=best?.ids||[];
-        review=`<div class="ll-review-columns"><section><h3>Ваш ответ</h3>${JSON.stringify(rawSelections)!==JSON.stringify(selectedUnits)?`<p><span>Ваш выбор в документе:</span> ${rawSelections.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));return original(d?labelForUnit(d,id):id);}).join(' · ')}</p>`:''}${textList(selectedUnits,expected)}</section><section><h3>Правильное основание</h3>${textList(expected,expected,true)}</section></div>`;
+        review=`<div class="ll-review-columns"><section><h3>Ваш ответ</h3>${JSON.stringify(rawSelections)!==JSON.stringify(selectedUnits)?`<p><span>Ваш выбор в документе:</span> ${rawSelections.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));return d?`<span data-document-text lang="${documentDisplay(this,d).locale}">${e(displayLabel(this,d,id))}</span>`:original(id);}).join(' · ')}</p>`:''}${textList(selectedUnits,expected)}</section><section><h3>Правильное основание</h3>${textList(expected,expected,true)}</section></div>`;
         reason=c.detail?.sourceOK===false?'Фрагменты относятся к документу, который вы не выбрали. За основание баллы не начислены.':c.points===c.max?'Все позиции совпадают. Баллы начислены полностью.':`Совпало: ${c.detail?.matched||0}; пропущено: ${c.detail?.missing||0}; лишних: ${c.detail?.extra||0}. Балл учитывает полноту и точность выделения.`;
       }
       return `<details class="ll-criterion-review" data-criterion="${e(c.id)}"><summary><span>${e(c.label)}</span><strong>${e(c.points)} / ${e(c.max)}</strong></summary><h3>Почему такой балл</h3><p>${e(reason)}</p>${c.id==='evidence'?`<p>${e(item.explanation)}</p>`:''}${review}</details>`;
@@ -338,15 +355,17 @@ class LegalLab {
     return `<section class="ll-result"><div class="ll-eyebrow">ДОСЬЕ ${e(a.caseId)} · ${a.preview?'ТРЕНИРОВКА':'РАБОТА ЗАВЕРШЕНА'}</div><h1>Досье проверено</h1><div class="ll-result-score">${e(a.result.points)}<small> / 5</small></div><p>${a.preview?'Результат тренировочный и не отправляется в журнал.':a.delivery==='host-accepted'?'Результат сохранён. При подключении к сети журнал синхронизируется автоматически.':'Результат сохранён. Отправка в журнал ещё не подтверждена.'}</p><div class="ll-result-criteria">${a.result.criteria.map(c=>`<div><span>${e(c.label)}</span><meter min="0" max="${e(c.max)}" value="${e(c.points)}" aria-label="${e(c.label)}"></meter><strong>${e(c.points)} / ${e(c.max)}</strong></div>`).join('')}</div><div class="ll-answer-review">${breakdown}</div>${this.reportOnly?'':`<div class="ll-actions"><button class="ll-primary" data-action="export-report">Сохранить отчёт</button>${!a.preview&&a.delivery!=='host-accepted'?'<button class="ll-secondary" data-action="retry-delivery">Повторить передачу в журнал</button>':''}<button class="ll-secondary" data-action="home">К маршруту</button></div>`}</section>`;
   }
   help(){return `<section class="ll-help"><div class="ll-eyebrow">СПРАВКА</div><h1>Как работать с документами</h1><div class="ll-help-grid"><article><h2>Выбор фрагмента на скане</h2><p>Выберите название реквизита, затем его область на скане. Цвет кнопки совпадает с цветом выбранной рамки. Можно менять выбор в любом порядке. Кнопка с глазом показывает доступные области. С клавиатуры выбирайте область клавишами Tab и Enter.</p></article><article><h2>Ответ фрагментом</h2><p>Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.</p></article><article><h2>Вид документа</h2><p>Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.</p></article><article><h2>Совместная работа</h2><p>Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.</p></article></div><h2>Схемы из лекции</h2><p>Ниже сохранены авторские схемы. Они помогают ориентироваться в примерах; правовая форма каждого задания проверяется по его оригиналу.</p>${[36,48,58].map((n,i)=>`<details><summary>${['Федеральный уровень','Уровень субъекта','Муниципальный уровень'][i]} · слайд ${n}</summary><img src="${asset(`assets/help/lecture-${n}.webp`)}" alt="Схема из лекции, слайд ${n}" loading="lazy"></details>`).join('')}<details><summary>Источники и авторство</summary><p data-original lang="ru">${e(this.catalog.sources.lecture)}</p><p data-original lang="ru">${e(this.catalog.sources.tickets)}</p></details><button class="ll-secondary" data-action="export-state">Экспортировать локальную работу</button></section>`;}
-  input(ev){const el=ev.target;if(!el.dataset.input)return;switch(el.dataset.input){case'task-picker':if(ev.type!=='change')break;this.action('go-task',{dataset:{index:el.value}}).catch(err=>this.fail(err));break;case'library-query':this.librarySearch=el.value;break;case'library-content':this.libraryContent=el.checked;break;case'reader-query':{const id=el.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};this.state.reader[id].query=el.value;this.state.reader[id].searchPage=0;}break;}}}
+  input(ev){const el=ev.target;if(!el.dataset.input)return;switch(el.dataset.input){case'task-picker':if(ev.type!=='change')break;this.action('go-task',{dataset:{index:el.value}}).catch(err=>this.fail(err));break;case'library-query':this.librarySearch=el.value;break;case'library-content':this.libraryContent=el.checked;break;case'reader-query':{const id=el.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};const doc=this.corpus.cache.get(id);if(doc)setReaderQuery(this,doc,el.value);}break;}}}
   async runSearch(which){if(which==='reader'){const reader=this.root.querySelector('[data-reader-doc]'),d=this.corpus.cache.get(reader?.dataset.readerDoc);if(!d)return;this.state.reader[d.id]||={};this.state.reader[d.id].searchOpen=true;await this.persist();refreshReaderSearch(this,d);return;}if(which==='library')this.libraryHits=await this.corpus.search(this.librarySearch,{content:this.libraryContent,signal:this.signal});await this.persist();return this.render();}
   async action(action,b){
     if(!this.active())return;
     if(action==='noop')return;
+    if(action==='restart-assessment')return this.restartAssessment();
+    if(isFiveWork(this.state.assessment)&&['five-task','five-submit','five-next','metadata-field','assessment-hotspot','assessment-type','select-unit','remove-unit'].includes(action))return this.fiveAction(action,b);
     if(action==='archive-preview'){if(!this.incompatible||!this.lease?.acquired||!(this.demo||this.incompatible.assessment?.preview))return;await this.store.put('archive:'+Date.now(),this.incompatible);this.state=freshState(this.catalog.contentVersion);this.incompatible=null;this.readOnly=false;this.view='home';this.notice='Предыдущая демонстрационная работа сохранена в локальном архиве.';await this.persist();return this.render();}
     if(action==='dismiss'){this.notice='';return this.render();}
     if(action==='exit'){this.live?.watchTask(null);this.presenceTask=null;await this.persist();return this.opt.onExit?.();}
-    if(action==='home'||action==='view'){this.view=action==='home'?'home':b.dataset.view;this.extraTask=null;this.syncPresenceTask();await this.persist();return this.render();}
+    if(action==='home'||action==='view'){const target=action==='home'?'home':b.dataset.view;if(!['home','learn','assessment','help'].includes(target)||target==='assessment'&&!this.assessmentUnlocked())return;this.view=target;this.extraTask=null;this.syncPresenceTask();await this.persist();return this.render();}
     if(action==='toggle-scan-hints'){this.setScanHints(!this.scanHints);return;}
     if(action==='zoom-in'||action==='zoom-out'){this.setScanZoom(this.scanZoom+(action==='zoom-in'?0.5:-0.5));return;}
     if(action==='go-task'||action==='prev-task'||action==='next-task'){
@@ -354,12 +373,12 @@ class LegalLab {
       this.state.index=action==='go-task'?Number(b.dataset.index):Math.max(0,Math.min(this.bank.classroom.length-1,this.state.index+step));
       this.syncPresenceTask();await this.persist();return this.render();
     }
-    if(action==='extra'){this.extraTask=this.bank.extra.find(t=>t.id===b.dataset.id);this.view='learn';this.syncPresenceTask();return this.render();}
+    if(action==='extra')return;
     if(action==='scan-field'||action==='scan-prev-field'||action==='scan-next-field'){
       const assessment=b.dataset.context==='assessment';if(assessment&&this.state.assessment?.result)return;
       const t=this.selectedTask();if(!assessment&&t.kind!=='scan')return;
       const a=assessment?this.state.assessment:null,item=assessment?this.cases.find(c=>c.id===a.caseId):null,questions=assessment?dossierScanQuestions(item,a.answer,this.scans):scanQuestionsFor(this.scans.find(s=>s.id===t.scanId));
-      const current=assessment?this.assessmentField:this.scanFieldIndex(t,questions),next=action==='scan-field'?Number(b.dataset.index):current+(action==='scan-next-field'?1:-1),index=Math.max(0,Math.min(next,questions.length-1));if(!Number.isInteger(index))return;
+      const current=assessment?this.assessmentField:this.scanFieldIndex(t,questions),next=action==='scan-field'?Number(b.dataset.index):current+(action==='scan-next-field'?1:-1),index=Math.max(0,Math.min(next,questions.length-1));if(!Number.isInteger(index)||index===current)return;
       if(assessment){this.assessmentField=index;a.scanFieldIndex=index;}else{this.state.scanFields||={};this.state.scanFields[t.id]=index;this.state.answers[t.id]=this.answer(t);}
       this.setScanHints(false);await this.persist();return this.render();
     }
@@ -381,6 +400,9 @@ class LegalLab {
       if(!this.scrollReaderUnit(d.id,b.dataset.id,{teacher:true})){this.teacherReading={taskId:t.id,docId:d.id};await this.render();this.scrollReaderUnit(d.id,b.dataset.id,{teacher:true});}return;
     }
     if(action==='search-page'){const d=this.corpus.cache.get(b.dataset.doc);if(!d)return;this.state.reader[d.id]||={};Object.assign(this.state.reader[d.id],{searchPage:Math.max(0,Number(b.dataset.page)||0),searchOpen:true});await this.persist();refreshReaderSearch(this,d);return;}
+    if(action==='toggle-document-original'){
+      const id=b.closest('[data-reader-doc]')?.dataset.readerDoc;if(!id)return;this.state.reader[id]||={};this.state.reader[id].original=!this.state.reader[id].original;await this.persist();return this.render();
+    }
     if(action==='section'){
       const d=await this.corpus.load(b.dataset.doc),section=d.sections.find(s=>s.id===b.dataset.id);if(!section)return;
       this.state.reader[d.id]||={};Object.assign(this.state.reader[d.id],{sectionId:section.id,tocOpen:false});
@@ -390,7 +412,7 @@ class LegalLab {
     if(['toggle-reader-search','toggle-toc','clear-search'].includes(action)){
       const reader=b.closest('[data-reader-doc]'),id=reader?.dataset.readerDoc,d=this.corpus.cache.get(id);if(!d)return;this.state.reader[id]||={};const rs=this.state.reader[id];
       if(action==='toggle-toc'){rs.tocOpen=!rs.tocOpen;rs.searchOpen=false;reader.querySelector('.ll-reader-grid')?.classList.toggle('toc-open',rs.tocOpen);b.setAttribute('aria-expanded',String(rs.tocOpen));}
-      else if(action==='clear-search'){rs.query='';rs.searchOpen=false;rs.searchPage=0;}
+      else if(action==='clear-search'){setReaderQuery(this,d,'');rs.searchOpen=false;rs.searchPage=0;}
       else{rs.searchOpen=!rs.searchOpen;rs.tocOpen=false;reader.querySelector('.ll-reader-grid')?.classList.remove('toc-open');reader.querySelector('[data-action="toggle-toc"]')?.setAttribute('aria-expanded','false');}
       refreshReaderSearch(this,d);prepareReaderLayout(this);if(rs.searchOpen){const paper=reader.querySelector('.ll-paper'),dock=reader.querySelector('.ll-reader-dock'),top=paper.getBoundingClientRect().top,bottom=dock.getBoundingClientRect().bottom;if(top<bottom||top>innerHeight-120)window.scrollBy({top:top-bottom-8,behavior:'instant'});reader.querySelector('[data-input="reader-query"]')?.focus({preventScroll:true});}return;
     }
@@ -415,7 +437,7 @@ class LegalLab {
     if(action==='assessment-stage'||action==='assessment-prev'||action==='assessment-next'){
       if(!this.state.assessment||this.state.assessment.result)return;this.state.assessment.stage=action==='assessment-stage'?Number(b.dataset.index):Math.max(0,Math.min(4,this.state.assessment.stage+(action==='assessment-next'?1:-1)));this.confirming=false;await this.persist();return this.render();
     }
-    if(action==='metadata-field'){const a=this.state.assessment;if(!a||a.result)return;const item=this.cases.find(c=>c.id===a.caseId),questions=dossierScanQuestions(item,a.answer,this.scans),index=Number(b.dataset.index);if(!Number.isInteger(index)||index<0||index>=questions.length)return;this.assessmentField=index;a.scanFieldIndex=index;this.setScanHints(false);await this.persist();return this.render();}
+    if(action==='metadata-field'){const a=this.state.assessment;if(!a||a.result)return;const item=this.cases.find(c=>c.id===a.caseId),questions=dossierScanQuestions(item,a.answer,this.scans),index=Number(b.dataset.index);if(!Number.isInteger(index)||index<0||index>=questions.length||index===(a.scanFieldIndex??this.assessmentField))return;this.assessmentField=index;a.scanFieldIndex=index;this.setScanHints(false);await this.persist();return this.render();}
     if(action==='classification-index'){this.activeType=Number(b.dataset.index);return this.render();}
     if(action==='assessment-hotspot'||action==='assessment-type'){
       if(this.isLocked()||this.state.assessment?.result)return;const a=this.state.assessment,item=this.cases.find(c=>c.id===a.caseId);
@@ -438,17 +460,38 @@ class LegalLab {
     if(action==='export-state')return this.download('legal-lab-local-work.json',this.incompatible||this.state);
   }
   addDocument(id){const a=this.state.assessment?.answer;if(!a||this.state.assessment.result||this.isLocked())return;if(!this.doc(id))throw new Error('Неизвестный документ');if(!a.documentIds.includes(id)){if(a.documentIds.length>=3)throw new Error('Для досье можно выбрать до трёх документов');a.documentIds.push(id);}}
+  localizeFive(){
+    const sets=new Map(this.fiveSource.questionSets.map(s=>[s.docId,s.tasks]));
+    this.fiveVariants=this.fiveSource.variants.map(v=>({id:v.id,format:FIVE_MODE,tasks:[{id:v.id+'-S',kind:'scan',scanId:v.scanId,prompt:translate('Найдите реквизиты документа',this.locale)},{id:v.id+'-T',kind:'type',scanId:v.typeScanId,answer:this.scans.find(s=>s.id===v.typeScanId).actType,prompt:translate('Определите вид документа',this.locale)},...sets.get(v.questionSet).map((t,i)=>({...t,...t.i18n?.[this.locale],id:v.id+'-Q'+(i+1)}))]}));
+  }
+  fiveTask(){return fiveTask(this);}
+  fiveAnswer(t){return fiveAnswer(this,t);}
+  async fiveAction(action,b){
+    const a=this.state.assessment;if(!isFiveWork(a)||a.result||this.isLocked())return;const item=fiveVariant(this),t=fiveTask(this),answer=fiveAnswer(this,t);
+    if(action==='five-task'||action==='five-next'){const index=action==='five-next'?Math.min(4,a.stage+1):Number(b.dataset.index);if(!Number.isInteger(index)||index<0||index>4)return;a.stage=index;await this.persist();return this.render();}
+    if(action==='metadata-field'){if(t.kind!=='scan')return;const fields=scanQuestionsFor(this.scans.find(s=>s.id===t.scanId)),index=Number(b.dataset.index);if(!fields[index]||index===(a.scanFieldIndex||0))return;a.scanFieldIndex=index;await this.persist();return this.render();}
+    if(action==='assessment-hotspot'){if(t.kind!=='scan')return;const scan=this.scans.find(s=>s.id===t.scanId),fields=scanQuestionsFor(scan);if(!scan.hotspots.some(h=>h.id===b.dataset.id))return;answer.metadata[fields[a.scanFieldIndex||0].field]=b.dataset.id;this.setScanHints(false);}
+    else if(action==='assessment-type'){if(t.kind!=='type'||!ACT_TYPES.includes(b.dataset.value))return;answer.type=b.dataset.value;}
+    else if(action==='select-unit'||action==='remove-unit'){if(t.kind!=='text')return;const id=b.dataset.unit||b.dataset.id,d=this.corpus.cache.get(t.docId);if(!d?.units.some(u=>u.id===id))return;const list=answer.selections||[],has=list.includes(id);if(!has&&list.length>=selectionLimit(t,[d]))return;answer.selections=has?list.filter(x=>x!==id):[...list,id];}
+    else if(action==='five-submit'){answer.submitted=true;}
+    if(action!=='five-submit')answer.submitted=false;a.answer.tasks[t.id]=answer;await this.persist();
+    if(t.kind==='text'){this.refreshReaderSelection('assessment-five');for(const button of this.root.querySelectorAll('.ll-five-nav [data-index]')){const index=Number(button.dataset.index);button.textContent=String(index+1)+(a.answer.tasks[item.tasks[index]?.id]?.submitted?' ✔':'');}if(item.tasks.every(q=>a.answer.tasks[q.id]?.submitted))return this.render();return;}return this.render();
+  }
+  async restartAssessment(){
+    if(this.isLocked()||!this.assessmentUnlocked())return;const a=this.state.assessment;if(a?.result&&!a.preview&&a.delivery!=='host-accepted'){this.notice='Сначала отправьте сохранённый результат в журнал.';return this.render();}
+    if(a){this.state.assessmentHistory||=[];this.state.assessmentHistory.push(structuredClone(a));this.state.assessment=null;}return this.startAssessment();
+  }
   async startAssessment(){
-    if(this.isLocked())return;if(this.state.assessment){this.view='assessment';return this.render();}
-    const ready=assessmentReady(this.catalog).ready;if(!ready&&!this.demo&&!this.teacher)throw new Error('Полный корпус не установлен и не проверен');
-    if(this.opt.assessmentAllowed&&!this.opt.assessmentAllowed()&&!this.teacher)throw new Error('Самостоятельная работа ещё не открыта');
-    this.view='assessment';this.syncPresenceTask();const item=chooseCase(this.cases,null,this.opt.assignmentSeed ? n=>parseInt(hash32(this.opt.assignmentSeed+'|'+this.catalog.contentVersion),36)%n : undefined);
-    this.state.assessment={caseId:item.id,attemptId:this.opt.attemptId||uid(),startedAt:Date.now(),contentVersion:this.catalog.contentVersion,preview:this.demo||this.teacher||!ready,stage:0,phase:'active',answer:{evidenceMode:EVIDENCE_MODE,metadataMode:SCAN_METADATA_MODE,metadata:{},classifications:{},documentIds:[],selections:[]},result:null,delivery:'not-submitted'};
-    await this.persist();this.view='assessment';return this.render();
+    if(this.isLocked()||!this.assessmentUnlocked())return;if(this.state.assessment){this.view='assessment';return this.render();}
+    const ready=assessmentReady(this.catalog).ready;if(!ready&&!this.demo&&!this.teacher)throw Error('Полный корпус не установлен и не проверен');
+    if(this.opt.assessmentAllowed&&!this.opt.assessmentAllowed()&&!this.teacher)throw Error('Самостоятельная работа ещё не открыта');
+    const previous=(this.state.assessmentHistory||[]).map(a=>a.caseId),seed=this.opt.assignmentSeed,pick=Number.isSafeInteger(seed)&&seed>=0?(length=>seed%length):undefined,item=chooseFiveVariant(this.fiveVariants,previous,pick);
+    this.state.assessment={format:FIVE_MODE,caseId:item.id,attemptId:(this.opt.attemptId||this.state.id)+'-r-'+uid(),startedAt:Date.now(),contentVersion:this.catalog.contentVersion,preview:this.demo||this.teacher||!ready,stage:0,phase:'active',answer:{assessmentMode:FIVE_MODE,tasks:{}},result:null,delivery:'not-submitted'};
+    this.view='assessment';this.syncPresenceTask();await this.persist();return this.render();
   }
   async finishAssessment(){
     if(this.isLocked()||this.submitting||this.state.assessment?.result)return;this.submitting=true;
-    try{const a=this.state.assessment,item=this.cases.find(c=>c.id===a.caseId);const ids=[...new Set([...item.docIds,...a.answer.documentIds])];const docs=await Promise.all(ids.map(id=>this.corpus.load(id)));if(!this.active())return;
+    try{const a=this.state.assessment,item=isFiveWork(a)?fiveVariant(this):this.cases.find(c=>c.id===a.caseId);const ids=isFiveWork(a)?[...new Set(item.tasks.filter(t=>t.kind==='text').map(t=>t.docId))]:[...new Set([...item.docIds,...a.answer.documentIds])];const docs=await Promise.all(ids.map(id=>this.corpus.load(id)));if(!this.active())return;
       a.result=scoreDossier(item,a.answer,this.scans,docs);a.finishedAt=Date.now();a.phase='completed';a.documentVersions=docs.map(d=>({id:d.id,sha256:d.sha256,revisionLabel:d.revisionLabel}));
       await this.persist();if(!a.preview)await this.deliver();
     }finally{this.submitting=false;this.confirming=false;await this.render();}
@@ -505,7 +548,7 @@ class LegalLab {
   }
   leaveLive(){this.liveUnsub?.();this.live?.close();this.live=null;this.liveData=null;this.presenceTask=null;this.liveUnsub=null;document.removeEventListener('visibilitychange',this.presenceVisibilityHandler);}
   download(name,value){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-  async setLocale(lang){if(normalizeLocale(lang)===this.locale)return;const extraId=this.extraTask?.id;this.locale=normalizeLocale(lang);this.root.lang=this.locale==='zh'?'zh-Hans':this.locale;Object.assign(this,localizeContent(this.corpus.bank,this.corpus.cases,this.locale));this.extraTask=extraId?this.bank.extra.find(t=>t.id===extraId):null;return this.render();}
+  async setLocale(lang){if(normalizeLocale(lang)===this.locale)return;const extraId=this.extraTask?.id;this.locale=normalizeLocale(lang);this.root.lang=this.locale==='zh'?'zh-Hans':this.locale;Object.assign(this,localizeContent(this.corpus.bank,this.corpus.cases,this.locale));this.extraTask=extraId?this.bank.extra.find(t=>t.id===extraId):null;this.localizeFive();return this.render();}
   async destroy(){if(this.closed||this.disposing)return this.queue;this.disposing=true;this.leaveLive();clearInterval(this.tick);await this.persist().catch(()=>{});this.closed=true;this.controller.abort();this.lease?.release();this.store?.close();this.opt.signal?.removeEventListener('abort',this.abortParent);this.readerLayoutObserver?.disconnect();this.root.removeEventListener('pointerdown',this.readerPointerHandler);this.root.removeEventListener('scroll',this.readerScrollHandler,true);this.root.removeEventListener('contextmenu',this.typeContextHandler);this.root.removeEventListener('click',this.clickHandler);this.root.removeEventListener('input',this.inputHandler);this.root.removeEventListener('change',this.inputHandler);this.root.removeEventListener('submit',this.submitHandler);window.removeEventListener('rudn:identitychange',this.identityHandler);window.removeEventListener('beforeunload',this.beforeUnload);this.root.classList.remove('legal-lab');}
 }
 
@@ -515,12 +558,12 @@ export async function mountLegalLabReport(container,{attempt,locale='ru',signal}
   container.classList.add('legal-lab');container.innerHTML='<div class="ll-loading" role="status">Открываем рабочее место…</div>';translateDOM(container,locale);
   let app;
   const render=async lang=>{
-    Object.assign(app,localizeContent(app.corpus.bank,app.corpus.cases,normalizeLocale(lang)));
-    const item=app.cases.find(c=>c.id===attempt?.caseId);
+    app.locale=normalizeLocale(lang);Object.assign(app,localizeContent(app.corpus.bank,app.corpus.cases,app.locale));app.localizeFive();
+    const item=[...app.cases,...app.fiveVariants].find(c=>c.id===attempt?.caseId);
     if(!item||attempt?.contentVersion!==app.catalog.contentVersion||!Array.isArray(attempt?.legalLab?.criteria)||!attempt?.legalLab)throw new Error('Report data unavailable');
     const answer=parseDossierAnswer(attempt.legalLab);
-    if(!Array.isArray(answer.documentIds)||answer.documentIds.length>3||!Array.isArray(answer.selections)||answer.selections.length>500)throw new Error('Invalid report answer');
-    await Promise.all([...new Set([...item.docIds,...answer.documentIds])].map(id=>app.corpus.load(id)));
+    if(item.format!==FIVE_MODE&&(!Array.isArray(answer.documentIds)||answer.documentIds.length>3||!Array.isArray(answer.selections)||answer.selections.length>500))throw new Error('Invalid report answer');
+    const docIds=item.format===FIVE_MODE?item.tasks.filter(t=>t.kind==='text').map(t=>t.docId):[...item.docIds,...answer.documentIds];await Promise.all([...new Set(docIds)].map(id=>app.loadDocument(id)));
     if(controller.signal.aborted)return;
     // Stored reports are untrusted student input. Recompute rubric fields from
     // the fixed case and verified documents instead of rendering stored markup.
@@ -531,7 +574,7 @@ export async function mountLegalLabReport(container,{attempt,locale='ru',signal}
   };
   try{
     const corpus=await new Corpus(BASE,{signal:controller.signal}).initialize();
-    app=Object.create(LegalLab.prototype);Object.assign(app,{corpus,catalog:corpus.catalog,scans:corpus.scans,reportOnly:true});await render(locale);
+    app=Object.create(LegalLab.prototype);Object.assign(app,{corpus,catalog:corpus.catalog,scans:corpus.scans,reportOnly:true,signal:controller.signal,state:{reader:{}},translations:new DocumentTranslations(BASE,{catalog:corpus.catalog,signal:controller.signal})});app.fiveSource=await corpus.json('data/assessment-variants.json');await render(locale);
   }catch(err){if(err.name!=='AbortError'){console.warn('Legal Lab report unavailable',err);container.innerHTML='<div class="ll-alert ll-warning" role="alert">Не удалось открыть материалы. Проверьте соединение и повторите загрузку.</div>';translateDOM(container,locale);}}
   return {setLocale:lang=>app?render(lang):Promise.resolve(),destroy(){controller.abort();signal?.removeEventListener('abort',abort);container.classList.remove('legal-lab');container.replaceChildren();}};
 }

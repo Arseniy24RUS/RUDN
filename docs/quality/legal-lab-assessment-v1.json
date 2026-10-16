@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "kind": "phone-preview candidate before full CI, explicitly requested by owner",
+  "changes": {
+    "navigation": [
+      "Главная",
+      "Квиз",
+      "На оценку",
+      "?"
+    ],
+    "removedStudentSections": [
+      "Библиотека",
+      "Дополнительные ситуации"
+    ],
+    "gate": "Every quiz task submitted, independent of correctness; persisted after completion",
+    "assessment": {
+      "format": "five-task-v1",
+      "maxPoints": 5,
+      "variants": 1456,
+      "heldOutScans": 14,
+      "newAuthenticPptScans": 8,
+      "questions": 24,
+      "criteria": [
+        "all scan requisites",
+        "act type from a different scan",
+        "three questions within one law"
+      ]
+    },
+    "history": "Existing legacy grades and reports retained; retry attempt IDs are separate and idempotent"
+  },
+  "verified": {
+    "contractsAndDomain": {
+      "status": "pass",
+      "tests": 130,
+      "sessionId": 71008,
+      "completionChunk": "adbe71"
+    },
+    "corpus": {
+      "status": "pass",
+      "checks": 119,
+      "sessionId": 61426,
+      "completionChunk": "fc4204",
+      "allNewVariantsScored": 1456,
+      "legacySemanticChecksRetained": 180
+    },
+    "emulator": {
+      "status": "pass",
+      "execSessionId": 17589,
+      "exitCode": 0,
+      "completionChunk": "04bcc9",
+      "checks": [
+        "30 synthetic text-presence participants with unchanged repository rules",
+        "15 legacy sync scenarios",
+        "Five-task offline and lost-ack delivery deduplication",
+        "Fresh-device exact variant/history and quizCompletion restore",
+        "Completed legacy primary preserved byte-for-byte"
+      ],
+      "limitations": [
+        "Official localhost Firebase emulators, not real Firebase.",
+        "Synthetic memory-backed devices; no physical phones."
+      ],
+      "logSHA256": "b2ab96665c7524aa9f7d80b8523165b3f73f00990be226b07745e15baacc533e",
+      "retryScriptSHA": "ce294f1f21d909043a65e5eac8ef513a9ccda6e8a03507095e328a60fbcabfa3",
+      "databaseRulesSHA": "8b677f8c41fb3de8e8f1c887d258a509bbcbd7fcd0eef179f818bcfad4b61036"
+    },
+    "translations": {
+      "status": "partial corpus: five complete independently reviewed acts in both languages",
+      "documents": [
+        "goals309",
+        "system58",
+        "constitution",
+        "municipal25",
+        "corruption273"
+      ],
+      "payloads": 10,
+      "studyTranslations": true,
+      "sourceRussianFilesUnchanged": true
+    },
+    "manifest": {
+      "files": 111,
+      "bytes": 41204215,
+      "sha256": "a923c26a28e910078c4148ac8e486773d73abf49d6b59a55a2a810f0758610c4"
+    },
+    "cacheWorker": {
+      "status": "pass",
+      "tests": 26,
+      "sessionId": 27919,
+      "completionChunk": "e42912"
+    }
+  },
+  "pending": [
+    "Complete Chromium/Firefox/WebKit UI matrix and independent visual review",
+    "Actual production Firebase two-client follow-up after deployment",
+    "Remaining eleven complete EN/ZH acts: civil79 approved in staging pending integration, spatial pending independent review, others still being translated",
+    "Human physical phone acceptance",
+    "Final release ZIP after all required release gates"
+  ]
+}

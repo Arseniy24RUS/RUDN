@@ -170,3 +170,14 @@
 .ll-reader-selection-row>.ll-reader-feedback>summary::before{content:"▸"}
 .ll-reader-selection-row>.ll-reader-feedback[open]>summary::before{content:"▾"}
 .ll-selection-tray .ll-reader-selection-row>.ll-reader-feedback[open]{flex-basis:100%;padding-bottom:8px}
+
+.ll-document-language{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;font:12px/1.4 system-ui,sans-serif}
+.ll-document-language small{color:var(--ll-muted)}
+.legal-lab .ll-document-language button{min-height:44px;padding:7px 10px;font-size:12px}
+@container(max-width:620px){.ll-document-language{justify-content:flex-start;margin-top:9px}}
+
+/* Compact four-item course navigation and home progress. */
+.legal-lab .ll-nav{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr) minmax(0,1.3fr) 44px;gap:0;overflow:visible;padding:0 8px}.legal-lab .ll-nav button{min-width:0;min-height:46px;padding:12px 4px;text-align:center;font-size:14px;white-space:nowrap}.ll-home-quiz>.ll-actions{margin-top:16px}.legal-lab .ll-home-quiz .ll-route-card{display:flex;flex-direction:row;justify-content:space-between;align-items:center;padding:20px;gap:12px}.ll-home-progress{white-space:nowrap;color:var(--ll-muted);font-variant-numeric:tabular-nums}.ll-home-score{font-size:24px!important;font-weight:700;color:var(--ll-blue-dark)!important}.ll-home-assessment>.ll-actions{flex-shrink:0}
+@container(max-width:400px){.legal-lab .ll-nav button{font-size:13px}}
+
+.ll-five-nav{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:8px;margin:12px 0 18px}.legal-lab .ll-five-nav button{min-height:44px;text-align:center;border:1px solid var(--ll-line);border-radius:8px;background:var(--ll-paper);font-weight:650}.legal-lab .ll-five-nav button.active{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-five-actions{margin:18px 0}.ll-five-finish{margin:22px 0;padding-top:20px;border-top:1px solid var(--ll-line)}.ll-five-result>.ll-criterion-review{margin:12px 0}.ll-five-result .ll-criterion-review>summary{display:flex;gap:8px;align-items:center}.ll-five-result .ll-criterion-review>summary strong{margin-left:auto;white-space:nowrap}.ll-five-result blockquote{margin:12px 0;padding:12px;border-left:3px solid var(--ll-line);line-height:1.65}.ll-answer-saved{font-size:12px;color:var(--ll-muted)}
