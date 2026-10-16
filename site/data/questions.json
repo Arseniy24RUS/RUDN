@@ -677,45 +677,53 @@
     "category": "Тест по лекции 3",
     "name": "Тест по лекции 3. Вопрос 4",
     "type": "multichoice",
-    "prompt": "4. Муниципальный общественный центр - это:",
-    "prompt_html": "<p>4. Муниципальный общественный центр - это:</p>",
+    "prompt": "4. К каким климатическим группам относятся регионы России? (несколько вариантов)",
+    "prompt_html": "<p>4. К каким климатическим группам относятся регионы России? (несколько вариантов)</p>",
     "answers": [
       {
         "id": "e086c2a4-a61e-52de-ac49-7278288c72d6",
-        "text": "множество разных объектов социальной инфраструктуры, находящиеся в одном месте или здании",
-        "fraction": 1.0,
+        "text": "холодный",
+        "fraction": 0.34,
         "feedback": "",
-        "text_en": "a group of different social-infrastructure facilities located in one place or building",
-        "text_zh": "集中设置于同一地点或同一建筑内的多种社会基础设施"
+        "text_en": "cold",
+        "text_zh": "寒冷"
       },
       {
         "id": "4f0a9450-e1d6-5f5a-ac04-506df8274af1",
-        "text": "место встречи наиболее активных граждан (активистов) и иных представителей гражданского общества муниципального образования",
-        "fraction": 0.0,
+        "text": "холодный умеренный",
+        "fraction": 0.33,
         "feedback": "",
-        "text_en": "a meeting place for the most active residents, activists and other representatives of civil society in a municipality",
-        "text_zh": "市政实体内积极居民、社会活动人士及其他公民社会代表的会面场所"
+        "text_en": "cold temperate",
+        "text_zh": "寒温带"
       },
       {
         "id": "d86a7b7e-8045-54e6-af1a-4ded88054b3d",
-        "text": "организация, распределяющая финансирование общественных структур на муниципальном уровне",
+        "text": "тёплый умеренный",
+        "fraction": 0.33,
+        "feedback": "",
+        "text_en": "warm temperate",
+        "text_zh": "暖温带"
+      },
+      {
+        "id": "24d7e11a-dc89-4e72-9068-b9bfe8b18a3d",
+        "text": "тёплый",
         "fraction": 0.0,
         "feedback": "",
-        "text_en": "an organisation that distributes funding to public organisations at the municipal level",
-        "text_zh": "在市政层级向社会组织分配资金的机构"
+        "text_en": "warm",
+        "text_zh": "温暖"
       }
     ],
-    "single": true,
+    "single": false,
     "general_feedback": "",
     "block_key": null,
     "block_title": null,
     "source": "Yandex Forms → Moodle XML",
     "category_en": "Lecture 3 test",
     "category_zh": "第3讲测验",
-    "prompt_en": "4. A municipal community centre is:",
-    "prompt_zh": "4. 市政公共中心是：",
-    "prompt_html_en": "<p>4. A municipal community centre is:</p>",
-    "prompt_html_zh": "<p>4. 市政公共中心是：</p>",
+    "prompt_en": "4. Which climate groups do Russia’s regions belong to? (Select multiple answers)",
+    "prompt_zh": "4. 俄罗斯各地区属于哪些气候组别？（可多选）",
+    "prompt_html_en": "<p>4. Which climate groups do Russia’s regions belong to? (Select multiple answers)</p>",
+    "prompt_html_zh": "<p>4. 俄罗斯各地区属于哪些气候组别？（可多选）</p>",
     "name_en": "Lecture 3 test. Question 14",
     "name_zh": "第3讲测验·第14题"
   },
@@ -724,32 +732,32 @@
     "category": "Тест по лекции 3",
     "name": "Тест по лекции 3. Вопрос 5",
     "type": "multichoice",
-    "prompt": "5. Основное отличие новой стратегии пространственного развития России (на период с 2025 по 2030 годы):",
-    "prompt_html": "<p>5. Основное отличие новой стратегии пространственного развития России (на период с 2025 по 2030 годы):</p>",
+    "prompt": "5. Агломерация - это:",
+    "prompt_html": "<p>5. Агломерация - это:</p>",
     "answers": [
       {
         "id": "3fd90f70-29f5-5a77-a6a4-b77d1fa71cd5",
-        "text": "разворот транспортных коридоров и продуктопроводов с запада на восток",
-        "fraction": 0.0,
+        "text": "крупный город и окружающие его населённые пункты, объединённые тесными социально-экономическими связями",
+        "fraction": 1.0,
         "feedback": "",
-        "text_en": "redirecting transport corridors and pipelines from west to east",
-        "text_zh": "将交通走廊和管道由西向东重新布局"
+        "text_en": "a large city and its surrounding settlements, united by close socioeconomic ties",
+        "text_zh": "大城市及其周边通过紧密社会经济联系结合在一起的居民点"
       },
       {
         "id": "792122de-0177-54ea-8b63-57180a3b914c",
-        "text": "кратное сокращение количества населённых пунктов России",
+        "text": "столица региона",
         "fraction": 0.0,
         "feedback": "",
-        "text_en": "reducing the number of settlements in Russia several-fold",
-        "text_zh": "大幅减少俄罗斯居民点数量"
+        "text_en": "the capital of a region",
+        "text_zh": "地区首府"
       },
       {
         "id": "f98cc905-a728-5b8d-b478-2994de7e6087",
-        "text": "увеличение числа и видов \"опорных населённых пунктов\"",
-        "fraction": 1.0,
+        "text": "множество малых населённых пунктов, находящихся рядом и объединённых тесными культурными и бытовыми взаимосвязями",
+        "fraction": 0.0,
         "feedback": "",
-        "text_en": "increasing the number and types of support settlements",
-        "text_zh": "增加“支撑性居民点”的数量和类型"
+        "text_en": "a group of small settlements located close to one another and united by close cultural and everyday ties",
+        "text_zh": "彼此邻近并通过紧密文化和日常生活联系结合在一起的多个小型居民点"
       }
     ],
     "single": true,
@@ -759,10 +767,10 @@
     "source": "Yandex Forms → Moodle XML",
     "category_en": "Lecture 3 test",
     "category_zh": "第3讲测验",
-    "prompt_en": "5. The principal difference of Russia’s new Spatial Development Strategy for 2025–2030 is:",
-    "prompt_zh": "5. 俄罗斯2025—2030年新空间发展战略的主要区别是：",
-    "prompt_html_en": "<p>5. The principal difference of Russia’s new Spatial Development Strategy for 2025–2030 is:</p>",
-    "prompt_html_zh": "<p>5. 俄罗斯2025—2030年新空间发展战略的主要区别是：</p>",
+    "prompt_en": "5. An agglomeration is:",
+    "prompt_zh": "5. 城市群是：",
+    "prompt_html_en": "<p>5. An agglomeration is:</p>",
+    "prompt_html_zh": "<p>5. 城市群是：</p>",
     "name_en": "Lecture 3 test. Question 15",
     "name_zh": "第3讲测验·第15题"
   },

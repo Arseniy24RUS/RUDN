@@ -1,0 +1,42 @@
+name: Publish the reviewed lecture 3 question replacement
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify this exact content-only publication
+        run: |
+          # The owner requested only questions 4 and 5 in RU/EN/ZH and no full CI.
+          # Local JSON comparison confirmed every other question is unchanged.
+          # These pins allow only the reviewed site and its existing dependencies.
+          test "$(git rev-parse HEAD:site)" = 'e7ba90df26a98c7cf96421f2c84bf05bc609b2bc'
+          test "$(git rev-parse HEAD:firebase)" = '8ba230ee20963e1974e366442744e8e1b5b403a1'
+          test "$(git rev-parse HEAD:scripts)" = '10c24a18efe76f903d3998e8df562bf08e9c41ef'
+          test "$(git rev-parse HEAD:tests)" = '6083adf21ed2987af67471b7d2ce31f51534ff78'
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload the reviewed site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Publish
+        id: deployment
+        uses: actions/deploy-pages@v4
