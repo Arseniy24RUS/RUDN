@@ -6,12 +6,24 @@ there is no injected game state or game API. Emulators must already be running.
 from pathlib import Path
 from http.server import ThreadingHTTPServer
 import argparse, importlib.util, json, sys, threading, time, traceback
+from settlements_ui_helpers import accept_training_dialog
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('cloud_browser', ROOT/'scripts/test-settlements-cloud-browser.py')
 helper = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(helper)
 
+
+def is_expected_webkit_offline_error(browser_name, offline, text, url, ticket):
+    if browser_name != 'webkit' or not offline or text != 'Failed to load resource: WebKit encountered an internal error':
+        return False
+    # Only the three reads observed in the deliberate local-emulator outage.
+    expected = {
+        f'http://127.0.0.1:9000/rudn-platform/v1/studentAliases/{ticket}.json',
+        f'http://127.0.0.1:9000/rudn-platform/v1/profiles/{ticket}.json',
+        f'http://127.0.0.1:9000/rudn-platform/v1/checkpoints/{ticket}/settlements-tutorial/tutorial-v1.json',
+    }
+    return url.split('?', 1)[0] in expected
 
 def run(base, browser_name):
     from playwright.sync_api import sync_playwright, expect
@@ -23,6 +35,7 @@ def run(base, browser_name):
               'browser': browser_name, 'ticket': ticket, 'buildHashStart': helper.build_hash(),
               'checks': [], 'requests': [], 'pageErrors': [], 'consoleErrors': [], 'expectedConsoleDiagnostics': []}
     held, released = {}, set()
+    intentional_offline = False
 
     def check(name, details=None):
         value = {'name': name, 'status': 'pass', 'details': details}
@@ -39,6 +52,11 @@ def run(base, browser_name):
             frame_denial = 'Framing \'http://127.0.0.1:9000/\' violates the following Content Security Policy directive: "frame-src \'none\'". The request has been blocked.'
             if 'ERR_INTERNET_DISCONNECTED' in message.text or message.text.strip() == frame_denial:
                 report['expectedConsoleDiagnostics'].append(message.text)
+            elif is_expected_webkit_offline_error(browser_name, intentional_offline, message.text, message.location.get('url', ''), ticket):
+                report['expectedConsoleDiagnostics'].append(message.text)
+                report.setdefault('expectedOfflineWebKitDiagnostics', []).append({
+                    'message': message.text, 'url': message.location['url'].split('?', 1)[0],
+                    'phase': 'intentional-offline'})
             else: report['consoleErrors'].append(message.text)
         page.on('console', console)
 
@@ -70,7 +88,7 @@ def run(base, browser_name):
             page.goto(base+'#games/settlements')
             page.locator('[data-action="tutorial"]').wait_for(timeout=60000)
             helper.login(page, ticket, name)
-            page.locator('[data-action="tutorial"]').click(); helper.ready(page)
+            page.locator('[data-action="tutorial"]').click(); accept_training_dialog(page, 'welcome', expect_open=True); helper.ready(page)
             expect(page.locator('[data-game-status]')).to_have_attribute('data-state', 'saved', timeout=30000)
             page.locator('[data-game-status]').evaluate('''node=>{
               window.__qaSaveTransitions=[];
@@ -115,7 +133,7 @@ def run(base, browser_name):
             page = context.new_page(); attach(page)
             page.goto(base+'#games/settlements'); page.locator('[data-action="tutorial"]').wait_for(timeout=60000)
             helper.login(page, ticket, name)
-            page.locator('[data-action="tutorial"]').click(); helper.ready(page)
+            page.locator('[data-action="tutorial"]').click(); accept_training_dialog(page, 'welcome', expect_open=True); helper.ready(page)
             expect(page.locator('.budget')).to_have_text(budget)
             guide = page.locator('.puzzle-mission').inner_text()
             assert '4/6' in guide.replace(' ', ''), guide
@@ -132,6 +150,7 @@ def run(base, browser_name):
             page.wait_for_timeout(500)
             expect(page.locator('[data-game-status]')).to_have_attribute('data-state', 'saved')
             check('changing an unsaved tool preview does not strand an acknowledged replay in pending')
+            intentional_offline = True
             context.set_offline(True)
             helper.act(page, 'undo')
             expect(page.locator('.budget')).not_to_have_text(budget)
@@ -143,8 +162,9 @@ def run(base, browser_name):
             check('offline undo remains writable and lobby exit settles without waiting for cloud')
             # This harness blocks service workers, so it cannot test offline
             # cold asset loading. Reconnect before remounting the native map.
+            intentional_offline = False
             context.set_offline(False)
-            page.locator('[data-action="tutorial"]').click(); helper.ready(page)
+            page.locator('[data-action="tutorial"]').click(); accept_training_dialog(page, 'welcome', expect_open=True); helper.ready(page)
             assert '57,8' in page.locator('.budget').inner_text()
             assert page.locator('[data-act="undo"]').is_enabled()
             expect(page.locator('[data-game-status]')).to_have_attribute('data-state', 'saved', timeout=30000)
