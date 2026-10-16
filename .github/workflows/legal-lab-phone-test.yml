@@ -1,0 +1,57 @@
+name: Publish reviewed Legal Lab for phone testing
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Separate from the normal full-CI Pages workflow; neither cancels the other.
+concurrency:
+  group: legal-lab-phone-test-pages
+  cancel-in-progress: false
+
+jobs:
+  publish-reviewed:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[legal-lab-phone-test]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout the authorized publication commit
+        uses: actions/checkout@v4
+      - name: Verify exact reviewed application, rules and tests
+        shell: bash
+        run: |
+          # Owner explicitly requested phone testing before the remaining full CI.
+          # These are Git trees of reviewed source commit10dce51cf758a051d764cc5e7f68ac43dac0dec5.
+          # Any product, rules or test change requires a new explicit reviewed pin.
+          test "$(git rev-parse HEAD:site)" = '7758a40c61a9a0292d828f9ca387fce665c78636'
+          test "$(git rev-parse HEAD:firebase)" = '8ba230ee20963e1974e366442744e8e1b5b403a1'
+          test "$(git rev-parse HEAD:scripts)" = 'dcfdbd5d14a4f183eb7a90bc833aad2d9b7cea9f'
+          test "$(git rev-parse HEAD:tests)" = '66b161547ae162fd666c4572237bc48e4138d140'
+      - name: Prepare Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify the reviewed module and existing cache contract
+        run: |
+          node scripts/build_legal_lab_manifest.mjs --check
+          node --test tests/legal-lab-core.test.mjs tests/legal-lab-all-requisites.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+          node --test scripts/test_governor_service_worker.mjs
+          node scripts/test_legal_lab_corpus.mjs --output "${RUNNER_TEMP}/legal-phone-corpus"
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload the exact reviewed site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Publish for owner phone testing
+        id: deployment
+        uses: actions/deploy-pages@v4
