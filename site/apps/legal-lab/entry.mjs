@@ -115,10 +115,10 @@ class LegalLab {
       this.renderedLearningTask=learningTask;this.pendingLearningScroll=learningTask;
       if(learningTask)requestAnimationFrame(()=>{
         if(!this.active()||this.view!=='learn'||this.pendingLearningScroll!==learningTask)return;
-        this.pendingLearningScroll=null;this.root.querySelector('.ll-question-card')?.scrollIntoView({block:'start',behavior:'auto'});
+        this.pendingLearningScroll=null;this.root.querySelector('.ll-question-card')?.scrollIntoView({block:'start',behavior:'instant'});
       });
     }
-    if(this.scrollUnit){const id=this.scrollUnit;this.scrollUnit=null;requestAnimationFrame(()=>this.root.querySelector(`[data-unit="${CSS.escape(id)}"]`)?.scrollIntoView({block:'center',behavior:'auto'}));}
+    if(this.scrollUnit){const id=this.scrollUnit;this.scrollUnit=null;const el=this.root.querySelector(`[data-unit="${CSS.escape(id)}"]`),docId=el?.closest('[data-reader-doc]')?.dataset.readerDoc;if(docId)this.scrollReaderUnit(docId,id);}
   }
   home(){
     const done=this.bank.classroom.filter(t=>this.answer(t).submitted).length, a=this.state.assessment;
@@ -232,7 +232,16 @@ class LegalLab {
     const reader=this.root.querySelector(`[data-reader-doc="${CSS.escape(docId)}"]`),el=reader?.querySelector(`[data-unit="${CSS.escape(id)}"]`);if(!el)return false;
     const sectionId=el.closest('[data-reader-section]')?.dataset.readerSection;if(sectionId){this.state.reader[docId]||={};this.state.reader[docId].sectionId=sectionId;for(const button of reader.querySelectorAll('[data-action="section"]'))button.classList.toggle('active',button.dataset.id===sectionId);}
     for(const previous of reader.querySelectorAll('.ll-search-target,.ll-teacher-target'))previous.classList.remove('ll-search-target','ll-teacher-target');el.classList.add(teacher?'ll-teacher-target':'ll-search-target');
-    el.scrollIntoView({block:'center',behavior:'auto'});el.focus({preventScroll:true});requestAnimationFrame(()=>{if(el.isConnected)el.scrollIntoView({block:'center',behavior:'auto'});});return true;
+    // Resolve nearby section heights before positioning an anchor in lazy text.
+    const section=el.closest('.ll-reader-section'),materialize=part=>{part.dataset.readerMaterialized='true';return part.getBoundingClientRect().height;};
+    if(section){
+      materialize(section);
+      for(const direction of ['previousElementSibling','nextElementSibling']){
+        let part=section[direction],remaining=window.innerHeight*3;
+        while(part?.classList.contains('ll-reader-section')&&remaining>0){remaining-=materialize(part);part=part[direction];}
+      }
+    }
+    el.focus({preventScroll:true});el.scrollIntoView({block:'center',behavior:'instant'});return true;
   }
   async teacherAnswer(t){
     if(!this.teacherAccess())return '';
@@ -313,7 +322,7 @@ class LegalLab {
   }
   help(){return `<section class="ll-help"><div class="ll-eyebrow">СПРАВКА</div><h1>Как работать с документами</h1><div class="ll-help-grid"><article><h2>Выбор фрагмента на скане</h2><p>Для каждого названия реквизита выберите область на скане, затем нажмите «Следующий реквизит». К любому шагу можно вернуться. Цвет названия совпадает с цветом назначенной рамки; он не означает правильность. После всех шагов проверьте комплект. Кнопка с глазом показывает доступные области. Страницу можно увеличить обычным жестом двумя пальцами. С клавиатуры выбирайте область клавишами Tab и Enter.</p></article><article><h2>Ответ фрагментом</h2><p>Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.</p></article><article><h2>Вид документа</h2><p>Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.</p></article><article><h2>Совместная работа</h2><p>Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.</p></article></div><h2>Схемы из лекции</h2><p>Ниже сохранены авторские схемы. Они помогают ориентироваться в примерах; правовая форма каждого задания проверяется по его оригиналу.</p>${[36,48,58].map((n,i)=>`<details><summary>${['Федеральный уровень','Уровень субъекта','Муниципальный уровень'][i]} · слайд ${n}</summary><img src="${asset(`assets/help/lecture-${n}.webp`)}" alt="Схема из лекции, слайд ${n}" loading="lazy"></details>`).join('')}<details><summary>Источники и авторство</summary><p data-original lang="ru">${e(this.catalog.sources.lecture)}</p><p data-original lang="ru">${e(this.catalog.sources.tickets)}</p></details><button class="ll-secondary" data-action="export-state">Экспортировать локальную работу</button></section>`;}
   input(ev){const el=ev.target;if(!el.dataset.input)return;switch(el.dataset.input){case'task-picker':this.action('go-task',{dataset:{index:el.value}}).catch(err=>this.fail(err));break;case'library-query':this.librarySearch=el.value;break;case'library-content':this.libraryContent=el.checked;break;case'reader-query':{const id=el.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};this.state.reader[id].query=el.value;this.state.reader[id].searchPage=0;}break;}}}
-  async runSearch(which){if(which==='library'){this.libraryHits=await this.corpus.search(this.librarySearch,{content:this.libraryContent,signal:this.signal});}await this.persist();await this.render();if(which==='reader'){await new Promise(resolve=>requestAnimationFrame(resolve));this.root.querySelector('.ll-reader .ll-search-results')?.scrollIntoView({block:'start',behavior:'auto'});}}
+  async runSearch(which){if(which==='library'){this.libraryHits=await this.corpus.search(this.librarySearch,{content:this.libraryContent,signal:this.signal});}await this.persist();await this.render();if(which==='reader')this.root.querySelector('.ll-reader .ll-search-results')?.scrollIntoView({block:'start',behavior:'instant'});}
   async action(action,b){
     if(!this.active())return;
     if(action==='noop')return;
@@ -335,7 +344,7 @@ class LegalLab {
       const a=assessment?this.state.assessment:null,item=assessment?this.cases.find(c=>c.id===a.caseId):null,questions=assessment?dossierScanQuestions(item,a.answer,this.scans):scanQuestionsFor(this.scans.find(s=>s.id===t.scanId));
       const current=assessment?this.assessmentField:this.scanFieldIndex(t,questions),next=action==='scan-field'?Number(b.dataset.index):current+(action==='scan-next-field'?1:-1),index=Math.max(0,Math.min(next,questions.length-1));if(!Number.isInteger(index))return;
       if(assessment){this.assessmentField=index;a.scanFieldIndex=index;}else{this.state.scanFields||={};this.state.scanFields[t.id]=index;this.state.answers[t.id]=this.answer(t);}
-      this.setScanHints(false);await this.persist();await this.render();this.root.querySelector('.ll-current-field')?.scrollIntoView({block:'nearest',behavior:'auto'});return;
+      this.setScanHints(false);await this.persist();await this.render();this.root.querySelector('.ll-current-field')?.scrollIntoView({block:'nearest',behavior:'instant'});return;
     }
     if(action==='hotspot'||action==='type-choice'||action==='history-edition'){
       if(this.isLocked())return;const t=this.selectedTask(),a=this.answer(t);a.submitted=false;
