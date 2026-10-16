@@ -1,8 +1,40 @@
 import {mountLegalLab} from './entry.mjs';
 import {FirebaseLive} from './lib/live.mjs';
 import {createLegalLabPersistence,legalLabAttemptForCourse} from '../../assets/js/legal-lab-storage.js';
+
+/** A practice receipt is independent of the graded dossier and contains no answers. */
+export function createLegalLabPracticeCompletion({backend,owner,getOwner=()=>owner,contentVersion,signal,isActive=()=>true}){
+  const generation=backend.generation,deliveries=new Map();
+  const fail=code=>{throw Object.assign(new Error(code),{code});};
+  const assertActive=()=>{
+    if(signal?.aborted||!isActive()||getOwner()!==owner||generation!==backend.generation||backend.isAdmin()||
+      !backend.getProfile()?.studentKey||owner!=='student:'+backend.getProfile().studentKey)fail('auth/profile-changed');
+  };
+  return async payload=>{
+    assertActive();
+    const fields=['id','contentVersion','points','total','finishedAt','delivered'];
+    if(!payload||typeof payload!=='object'||Array.isArray(payload)||Object.keys(payload).some(key=>!fields.includes(key))||
+      typeof payload.id!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(payload.id)||
+      !contentVersion||payload.contentVersion!==contentVersion||payload.points!==52||payload.total!==52||
+      !Number.isSafeInteger(payload.finishedAt)||payload.finishedAt<=0||!Number.isFinite(new Date(payload.finishedAt).getTime())||
+      (Object.hasOwn(payload,'delivered')&&typeof payload.delivered!=='boolean'))fail('legal-lab/invalid-practice-completion');
+    const attempt={id:'legal-practice-'+payload.id,type:'legal-lab-practice',activitySlug:'seminar-4-classroom',
+      draftMode:'legal-lab-practice-completion',points:52,maxPoints:52,recordGrade:false,contentVersion,
+      finishedAt:payload.finishedAt,createdAt:new Date(payload.finishedAt).toISOString()};
+    const previous=deliveries.get(attempt.id);
+    if(previous&&previous.finishedAt!==attempt.finishedAt)fail('legal-lab/practice-completion-changed');
+    let delivery=previous;
+    if(!delivery){
+      // Recheck immediately before the real course backend creates its durable receipt.
+      const promise=Promise.resolve().then(()=>{assertActive();return backend.saveAttempt(attempt);});
+      delivery={finishedAt:attempt.finishedAt,promise};deliveries.set(attempt.id,delivery);
+    }
+    try{const result=await delivery.promise;assertActive();return result;}
+    catch(error){if(deliveries.get(attempt.id)===delivery)deliveries.delete(attempt.id);throw error;}
+  };
+}
 /** No Firebase initializeApp, new authentication, iframe, or service worker. */
-export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwner,period,groups,locale,signal,assessmentAllowed,onExit,checkpoint}={}){
+export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwner,period,groups,locale,signal,assessmentAllowed,onExit,checkpoint,initialView}={}){
   if(!backend||typeof backend.getProfile!=='function'||typeof backend.saveAttempt!=='function')throw new TypeError('The existing course backend is required');
   const teacher=backend.isAdmin();const profile=backend.getProfile();
   const response=await fetch(new URL('./data/catalog.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
@@ -39,6 +71,8 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
   }});
   handle = await mountLegalLab(mount,{
     backend:moduleBackend,owner,getOwner,period,locale,signal,onExit,
+    initialView,
+    onPracticeComplete:createLegalLabPracticeCompletion({backend,owner,getOwner,contentVersion:catalog.contentVersion,signal,isActive:()=>!destroyed&&!persistence.conflicted}),
     initialState,attemptId:persistence.attemptId,
     checkpoint:async value=>{await persistence.checkpoint(value);await checkpoint?.(value);},
     isTeacher:teacher,group:profile?.group,groups:groups?.length?groups:undefined,

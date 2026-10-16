@@ -47,7 +47,9 @@ jobs:
           python -m pip install -r tools/legal-lab/corpus-requirements.txt
           python -X utf8 -m unittest discover -s tools/legal-lab/tests -p corpus_regression_test.py -v
       - name: Verify all requisites, stable history, drafts and ephemeral selections
-        run: node --test tests/legal-lab-core.test.mjs tests/legal-lab-all-requisites.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+        run: node --test tests/legal-lab*.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+      - name: Verify non-graded practice receipts and resolved conflict recurrence
+        run: node --test scripts/test_legal_lab_host_practice.mjs scripts/test_legal_lab_conflict_recurrence.mjs
       - name: Reject a result from a conflicting branch before grading
         run: node scripts/test_legal_lab_conflict.mjs
       - name: Verify full corpus, references, translations and release hashes

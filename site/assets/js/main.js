@@ -44,7 +44,7 @@ const UI = {
     seminar1Lead:'Классифицируйте органы с помощью девяти вариантов. На муниципальном уровне используются категории «Представительная», «Исполнительная» и «Иные органы».', seminar1ClassroomTitle:'Квиз · 50 вопросов', seminar1ClassroomLead:'Все 50 органов из исходного аудиторного квиза. Результат не выставляется в журнал.', launchQuiz:'Начать квиз', seminar1AssessmentTitle:'Самостоятельная работа · 5 вопросов', seminar1AssessmentLead:'Пять заданий из исходного теста. Итоговая оценка — от 0 до 5 баллов.', launchAssessment:'Начать работу', joinLive:'Открыть общую доску',
     seminar2Lead:'Соберите карту России из 89 субъектов. Выберите сложность; лучший результат сохранится в журнале.', openPuzzle:'Открыть географический конструктор',
     seminar3Lead:'Исследуйте систему расселения по интерактивному дашборду и подготовьте аналитический вывод.', openDashboard:'Открыть дашборд', territory:'Выбранная агломерация / территория', indicator:'Ключевые показатели', dynamics:'Основная динамика и пространственные различия', conclusion:'Управленческий вывод', attachment:'Презентация или тезисы (необязательно)',
-    seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.',
+    seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.', legalLabQuizTitle:'Квиз: нормативные правовые акты', legalLabAssessmentTitle:'Самостоятельная работа: нормативные правовые акты',
     seminar5Lead:'Система закрепляет за студентом один из 30 вариантов обращения. Заполните служебную карточку и подготовьте официальный ответ гражданину.', yourVariant:'Ваш вариант', appealType:'Тип обращения', completeness:'Полнота обязательных сведений', registration:'Регистрация и первоначальное действие', deadline:'Срок рассмотрения', competentBody:'Компетентный орган', addresseeDetails:'Реквизиты адресата', officialReply:'Проект официального ответа гражданину', rubric:'Автоматическая предварительная оценка проверяет полноту карточки, сроки, компетенцию и структуру ответа. Преподаватель может уточнить итог.',
     seminar6Lead:'Пройдите официальный внешний тест, укажите результат и прикрепите скриншот.', openCivilTest:'Открыть тест госслужбы', testScore:'Результат теста (процент или балл)', screenshot:'Скриншот результата',
     seminar7Lead:'Управляйте регионом и проследите последствия решений. По итогам кампании оценка и учебный отчёт сохранятся автоматически.', openSimulator:'Открыть симулятор',
@@ -77,7 +77,7 @@ const UI = {
     seminar1Lead:'Classify public bodies using nine answer cards. At municipal level, the categories are Representative, Executive and Other bodies.', seminar1ClassroomTitle:'Quiz · 50 questions', seminar1ClassroomLead:'All 50 public bodies from the original classroom quiz. This result is not recorded in the gradebook.', launchQuiz:'Start quiz', seminar1AssessmentTitle:'Independent work · 5 questions', seminar1AssessmentLead:'Five tasks from the original assessment. The final mark ranges from 0 to 5 points.', launchAssessment:'Start assessment', joinLive:'Open shared board',
     seminar2Lead:'Assemble the map of Russia from 89 federal subjects. Choose a difficulty; your best result is saved to the gradebook.', openPuzzle:'Open Geographic Constructor',
     seminar3Lead:'Explore the settlement system using the interactive dashboard and formulate a management-oriented conclusion.', openDashboard:'Open dashboard', territory:'Selected agglomeration / territory', indicator:'Key indicators', dynamics:'Main dynamics and spatial differences', conclusion:'Management conclusion', attachment:'Presentation or notes (optional)',
-    seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.',
+    seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.', legalLabQuizTitle:'Quiz: regulatory legal acts', legalLabAssessmentTitle:'Independent work: regulatory legal acts',
     seminar5Lead:'The platform assigns one of 30 petition cases to each student. Complete the processing card and draft an official reply.', yourVariant:'Your case', appealType:'Type of petition', completeness:'Completeness of mandatory information', registration:'Registration and initial action', deadline:'Review deadline', competentBody:'Competent authority', addresseeDetails:'Addressee details', officialReply:'Draft official reply to the citizen', rubric:'The preliminary automated mark checks completeness, deadlines, competence and reply structure. The instructor may adjust it.',
     seminar6Lead:'Complete the official external test, record the result and upload a screenshot.', openCivilTest:'Open civil-service test', testScore:'Test result (percentage or score)', screenshot:'Result screenshot',
     seminar7Lead:'Manage a region and explore the consequences of your decisions. Your score and learning report are saved automatically when the campaign ends.', openSimulator:'Open simulator',
@@ -110,7 +110,7 @@ const UI = {
     seminar1Lead:'使用九个选项卡对公共机关进行分类。市政层级采用代表、行政和其他机关三类。', seminar1ClassroomTitle:'测验 · 50题', seminar1ClassroomLead:'包含原课堂测验中的全部50个机关，不计入成绩册。', launchQuiz:'开始测验', seminar1AssessmentTitle:'自主作业 · 5题', seminar1AssessmentLead:'包含原考核中的5道题，最终成绩为0至5分。', launchAssessment:'开始作业', joinLive:'打开共享大屏',
     seminar2Lead:'用89个联邦主体拼合俄罗斯地图。选择难度，最佳成绩将保存到成绩册。', openPuzzle:'打开地理拼图构造器',
     seminar3Lead:'使用互动数据看板研究居民点体系，并提出管理结论。', openDashboard:'打开数据看板', territory:'所选城市群 / 地区', indicator:'关键指标', dynamics:'主要变化与空间差异', conclusion:'管理结论', attachment:'演示文稿或提纲（可选）',
-    seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。',
+    seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。', legalLabQuizTitle:'测验：规范性法律文件', legalLabAssessmentTitle:'自主作业：规范性法律文件',
     seminar5Lead:'系统为每位学生固定分配30个公民来信案例之一。请填写办理卡并起草正式答复。', yourVariant:'你的案例', appealType:'来信类型', completeness:'必备信息完整性', registration:'登记与初始处理', deadline:'办理期限', competentBody:'主管机关', addresseeDetails:'收件人信息', officialReply:'致公民的正式答复草案', rubric:'自动初评检查资料完整性、期限、职权归属和答复结构；教师可调整最终成绩。',
     seminar6Lead:'完成外部官方测试，填写结果并上传截图。', openCivilTest:'打开公务员测试', testScore:'测试结果（百分比或分数）', screenshot:'成绩截图',
     seminar7Lead:'管理地区，观察决策后果。任期结束后，成绩和学习报告将自动保存。', openSimulator:'打开模拟器',
@@ -184,7 +184,7 @@ function formatDate(value){
 function formatDuration(ms){const total=Math.max(0,Math.round(number(ms)/1000));const m=Math.floor(total/60);const s=total%60;return `${m}:${String(s).padStart(2,'0')}`}
 initNotifications();
 
-let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{}};
+let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{},legalLabCatalog:null};
 let currentCleanup=null;
 let formCleanups=[];
 let currentCareer=null;
@@ -212,11 +212,12 @@ async function loadJson(path,fallback){
   return response.json();
 }
 async function loadData(){
-  const [course,questions,variants,exam,media,symbols]=await Promise.all([
+  const [course,questions,variants,exam,media,symbols,legalLabCatalog]=await Promise.all([
     loadJson('data/course.json',{}),loadJson('data/questions.json',[]),loadJson('data/seminar5_variants.json',[]),
-    loadJson('data/exam_questions.json',[]),loadJson('data/question_media.json',{}),loadJson('data/symbol_manifest.json',{})
+    loadJson('data/exam_questions.json',[]),loadJson('data/question_media.json',{}),loadJson('data/symbol_manifest.json',{}),
+    loadJson('apps/legal-lab/data/catalog.json',null).catch(()=>null)
   ]);
-  data={course,questions,variants,exam,media,symbols};
+  data={course,questions,variants,exam,media,symbols,legalLabCatalog};
   window.RUDN_DATA=data;
 }
 
@@ -318,6 +319,11 @@ async function guardSubmissions(){
 function bestCourseQuizAttempt(attempts=[]){
   return attempts.filter(item=>item.activitySlug==='seminar-1-classroom').reduce((best,item)=>!best||number(item.points)>number(best.points)?item:best,null);
 }
+function bestLegalLabPracticeAttempt(attempts=[],contentVersion){
+  if(!contentVersion)return null;
+  return attempts.find(item=>item.activitySlug==='seminar-4-classroom'&&item.type==='legal-lab-practice'&&
+    item.contentVersion===contentVersion&&item.recordGrade===false&&item.points===52&&item.maxPoints===52)||null;
+}
 function isPerfectResult(result,max){return Boolean(result)&&number(result.points)>=Number(max)}
 function courseResult(result,max){
   const perfect=isPerfectResult(result,max);const value=result?`${number(result.points)}/${max}`:`—/${max}`;
@@ -330,6 +336,7 @@ async function renderDashboard(){
   const settlementsStatus=settlementsCourseStatus(...settlementsDrafts,grades['seminar-3'],owner);
   if(owner!==attemptOwner())return;
   const classroomBest=bestCourseQuizAttempt(attempts);
+  const legalLabBest=bestLegalLabPracticeAttempt(attempts,data.legalLabCatalog?.contentVersion);
   const total=Object.values(grades).reduce((sum,g)=>sum+number(g.points),0);
   const coursework=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).reduce((sum,slug)=>sum+number(grades[slug]?.points),0);
   const completed=data.course.topics.flatMap(x=>[x.lecture.slug,x.seminar.slug]).filter(slug=>Boolean(grades[slug])).length;
@@ -337,7 +344,11 @@ async function renderDashboard(){
   const topics=data.course.topics.map(topic=>{
     const lecture=topic.lecture,seminar=topic.seminar;const gate=topicGate(topic.number,access.overrides,access.now);const allowed=accessAllowed(gate);
     const action=(slug)=>allowed?`<a class="btn btn-secondary btn-small" href="#activity/${slug}">${ui('openActivity')}</a>`:`<span class="btn btn-neutral btn-small access-disabled" aria-disabled="true">${accessText('locked')}</span>`;
-    const activities=topic.number===1?[
+    const activities=seminarModule(topic)==='legal-lab'?[
+      {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
+      {kind:ui('quizWord'),title:ui('legalLabQuizTitle'),route:`${seminar.slug}/quiz`,result:legalLabBest,max:52},
+      {kind:ui('independentWork'),title:ui('legalLabAssessmentTitle'),route:`${seminar.slug}/assessment`,result:grades[seminar.slug],max:5}
+    ]:topic.number===1?[
       {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
       {kind:ui('quizWord'),title:ui('seminar1ClassroomTitle'),route:'seminar-1-classroom',result:classroomBest,max:50},
       {kind:ui('independentWork'),title:ui('seminar1AssessmentTitle'),route:'seminar-1-assessment',result:grades[seminar.slug],max:5}
@@ -449,7 +460,7 @@ async function renderActivity(slug,view){
   if(!accessAllowed(gate)){lockedAccessPage(loc(topic,'title',topic.title),gate);return}
   if(topic.lecture.slug===slug&&view==='test'&&topic.number<=7)await startQuiz(slug);
   else if(topic.lecture.slug===slug)renderLecture(topic);
-  else await renderSeminar(topic);
+  else await renderSeminar(topic,view);
 }
 function renderLecture(topic){
   const studentKey=backend.getProfile()?.studentKey||'teacher-preview';
@@ -476,18 +487,18 @@ function renderLecture(topic){
   };
 }
 
-async function renderSeminar(topic){
+async function renderSeminar(topic,view){
   const module=seminarModule(topic);
   if(module==='maps') return renderPuzzleRoute(true);
   if(module==='settlements') return renderSeminar3(topic);
-  if(module==='legal-lab') return renderSeminar4(topic);
+  if(module==='legal-lab') return renderSeminar4(topic,view);
   if(module==='reception') return renderSeminar5(topic);
   if(module==='career') return renderSeminar6(topic);
   if(module==='governor') return renderSeminar7(topic);
   if(module==='final') return renderSeminar8(topic);
 }
 function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
-function renderSeminar4(topic){
+function renderSeminar4(topic,view){
   // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
   const owner=attemptOwner(),controller=new AbortController();
   let handle=null,mountPromise=Promise.resolve();
@@ -514,6 +525,7 @@ function renderSeminar4(topic){
         backend,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
         period:String(a.context.startYear)+'-'+String(a.context.endYear),
         groups:groupOptions(),locale:getLocale(),signal:controller.signal,
+        initialView:view==='quiz'?'learn':view==='assessment'?'assessment':undefined,
         assessmentAllowed:allowed,onExit:()=>{location.hash='dashboard';}
       });
       if(!active()){await handle.destroy();return;}

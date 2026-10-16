@@ -1,5 +1,53 @@
 // Translation touches presentation text/labels only, never values or data-* identifiers.
 const rows=`
+Конституция РФ|Constitution of Russia|俄罗斯宪法
+КоАП РФ|Administrative Offences Code|行政违法法典
+Пространственное развитие|Spatial development|空间发展
+Гражданская служба · 79-ФЗ|Civil service · 79-FZ|公务员制度 · 第79-FZ号联邦法
+Муниципальная служба · 25-ФЗ|Municipal service · 25-FZ|市政公务员制度 · 第25-FZ号联邦法
+Система госслужбы · 58-ФЗ|Public service system · 58-FZ|国家公务体系 · 第58-FZ号联邦法
+Местное самоуправление · 33-ФЗ|Local self-government · 33-FZ|地方自治 · 第33-FZ号联邦法
+Государственные закупки · 44-ФЗ|Public procurement · 44-FZ|政府采购 · 第44-FZ号联邦法
+Противодействие коррупции · 273-ФЗ|Anti-corruption · 273-FZ|反腐败 · 第273-FZ号联邦法
+Национальные цели · Указ № 309|National goals · Decree No. 309|国家目标 · 第309号总统令
+Гражданская служба Москвы|Moscow civil service|莫斯科公务员制度
+Награды Москвы|Moscow awards|莫斯科荣誉奖励
+Муниципальная служба Москвы|Moscow municipal service|莫斯科市政公务员制度
+Устав Екатеринбурга|Yekaterinburg Charter|叶卡捷琳堡市宪章
+Ваш выбор в документе:|Your selection in the document:|您在文件中的选择：
+Документы|Documents|文件
+Вопрос|Question|问题
+Вопросы документа|Document questions|文件问题
+Закрыть поиск|Close search|关闭搜索
+Проверьте выбор|Check your selection|请检查所选内容
+Следующий этап|Next stage|下一阶段
+Президент утвердил Стратегию указом.|The President approved the Strategy by decree.|总统以总统令批准战略。
+Самостоятельная работа|Independent assignment|独立作业
+Разъяснения Минтранса|Transport Ministry clarifications|交通部解释
+Кадровый резерв|Personnel reserve|人才储备
+Внеочередное заседание|Extraordinary session|临时会议
+Планировка территории|Territorial planning|土地规划
+Результаты конкурса|Competition results|竞聘结果
+Полномочия избиркомов|Election commission powers|选举委员会职权
+Герб|Coat of arms|徽章
+Место издания|Place of issue|签发地点
+Отметка об исполнителе|Document preparer details|拟稿人信息
+Печать|Seal|印章
+Подпись председателя|Chair’s signature|主席签名
+Подпись секретаря|Secretary’s signature|秘书签名
+Подписи членов комиссии|Commission members’ signatures|委员会成员签名
+Заверение копии|Copy certification|副本认证
+Подпись заместителя председателя|Deputy chair’s signature|副主席签名
+Найдите все реквизиты документа|Find all document details|查找文件的所有要素
+Проверьте названия реквизитов и выбранные области документа.|Check the detail names and selected document areas.|请核对要素名称及所选文件区域。
+Открыть работу|Open assignment|打开作业
+Выберите название реквизита, затем нажмите на его место в документе.|Choose a detail, then tap its position in the document.|先选择要素名称，再点击文件中的相应位置。
+Выбранный вид не подходит. Попробуйте другой ответ.|This type does not fit. Try another answer.|此类型不符，请尝试其他答案。
+Попробуйте ещё раз|Try again|请再试一次
+Верно|Correct|正确
+Сбросить поиск|Clear search|清除搜索
+Изображение не загрузилось. Обновите страницу.|The image could not be loaded. Reload the page.|图片加载失败，请刷新页面。
+Выберите название реквизита, затем его область на скане. Цвет кнопки совпадает с цветом выбранной рамки. Можно менять выбор в любом порядке. Кнопка с глазом показывает доступные области. С клавиатуры выбирайте область клавишами Tab и Enter.|Choose a detail, then its area on the scan. The button and selected outline share a colour. You can change selections in any order. The eye button shows the available areas. With a keyboard, use Tab and Enter to select an area.|先选择要素名称，再选择扫描件中的区域。按钮与所选边框颜色一致。可按任意顺序更改选择。眼睛按钮显示可选区域。使用键盘时，可通过Tab和Enter选择区域。
 Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.|Shared selections are available only when finding paragraphs in long documents. Participants on the same question can see them; they disappear when you change questions or leave. Scan details, act types and dossiers are individual work.|协作标记仅用于在长篇文件中查找段落。同一题目的参与者可看到这些标记；切换题目或离开后，标记消失。扫描件要素、文件类型和卷宗作业均独立完成。
 Найдите реквизиты документа|Find the document details|查找文件要素
 МАРШРУТ ЗАНЯТИЯ|LESSON ROUTE|课程路线
@@ -323,7 +371,7 @@ export function translate(text,locale){
  if(result===undefined){for(const p of patterns){const m=s.match(p.re);if(m){result=p[lang].replace(/\{(\w+)\}/g,(_,k)=>m[p.keys.indexOf(k)+1]);break;}}}
  if(result===undefined){const dynamic=[
  [/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
- [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
+ [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Самостоятельная работа (.+)$/,'Independent assignment $1','独立作业 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
  ];for(const [re,en,zh] of dynamic){if(re.test(s)){result=s.replace(re,lang==='en'?en:zh);break;}}
  }
  if(result===undefined&&s.startsWith('После начала система случайно закрепит'))result=lang==='en'?'A dossier is assigned when you start and remains yours after reload. Its case and scans differ from the classroom tasks.':'开始后将随机分配卷宗，刷新后仍保留原分配。情境和扫描件与课堂任务不同。';

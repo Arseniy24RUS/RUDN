@@ -1,15 +1,31 @@
 /** Pure domain functions. No DOM, network, Firebase or global mutable state. */
+import {canonicalArticleSelections} from './article-evidence.mjs';
 export const VERSION = '1.0.0';
 export const ACT_TYPES = Object.freeze(['Указ', 'Постановление', 'Распоряжение', 'Приказ', 'Решение']);
 // Absence of this marker is the original one-requisite/three-requisite rubric.
 // Only an editable attempt may be upgraded; report decoding never adds it.
 export const SCAN_METADATA_MODE = 'all-hotspots-v1';
+export const EVIDENCE_MODE = 'whole-article-v1';
+function wholeArticleMode(answer){if(!Object.hasOwn(answer,'evidenceMode'))return false;if(answer.evidenceMode!==EVIDENCE_MODE)throw new TypeError('Invalid evidence mode');return true;}
 const isRecord = value => Boolean(value) && typeof value==='object' && !Array.isArray(value);
 function allRequisites(answer) {
   if(!Object.hasOwn(answer,'metadataMode'))return false;
   if(answer.metadataMode!==SCAN_METADATA_MODE)throw new TypeError('Invalid scan metadata mode');
   return true;
 }
+/** Keep responses to replaced classroom scans without applying them to a new document. */
+export function migrateClassroomScans(state,bank){
+  let changed=false;
+  for(const task of bank.classroom.filter(t=>t.kind==='scan'&&t.previousScanId)){
+    const saved=state.answers?.[task.id];if(!saved||saved.scanId===task.scanId)continue;
+    const retained={scanId:saved.scanId||task.previousScanId,answer:structuredClone(saved),fieldIndex:state.scanFields?.[task.id]??0};
+    state.scanAnswerHistory||={};const history=state.scanAnswerHistory[task.id]||=[];
+    if(!history.some(item=>JSON.stringify(item)===JSON.stringify(retained)))history.push(retained);
+    delete state.answers[task.id];if(state.scanFields)delete state.scanFields[task.id];changed=true;
+  }
+  return changed;
+}
+
 export function scanQuestionsFor(scan) {
   if(!Array.isArray(scan?.hotspots)||!scan.hotspots.length)throw new TypeError('Scan requisites are unavailable');
   const ids=new Set();
@@ -37,6 +53,7 @@ export function parseDossierAnswer(legalLab) {
   if(!isRecord(raw))throw new TypeError('Invalid report answer');
   const result={metadata:raw.metadata??{},classifications:raw.classifications??{},documentIds:raw.documentIds??[],selections:raw.selections??[]};
   if(allRequisites(raw))result.metadataMode=SCAN_METADATA_MODE;
+  if(wholeArticleMode(raw))result.evidenceMode=EVIDENCE_MODE;
   for(const key of ['metadata','classifications'])if(!isRecord(result[key])||Object.entries(result[key]).some(([id,value])=>id.length>200||typeof value!=='string'||value.length>200))throw new TypeError('Invalid report fields');
   for(const [key,max] of [['documentIds',3],['selections',500]])if(!Array.isArray(result[key])||result[key].length>max||result[key].some(id=>typeof id!=='string'||id.length>200))throw new TypeError('Invalid report selections');
   return result;
@@ -62,9 +79,10 @@ export function expandIds(ids, docs) {
 }
 /** Jaccard gives partial credit, penalises marking all paragraphs, and allows
  * equivalent complete answer sets. Invalid/unknown IDs can never add credit. */
-export function gradeEvidence(selected, answerSets, docs=[]) {
+export function gradeEvidence(selected, answerSets, docs=[], {wholeArticles=true}={}) {
   const known=new Set(docs.flatMap(d=>d.units.map(u=>u.id)));
-  const chosen=unique(selected), expanded=answerSets.map(s=>expandIds(s,docs));
+  const canonical=ids=>wholeArticles?canonicalArticleSelections(ids,docs):ids;
+  const chosen=canonical(unique(selected)), expanded=answerSets.map(s=>canonical(expandIds(s,docs)));
   if(!chosen.length)return {fraction:0,exact:false,matched:0,extra:0,missing:expanded[0]?.length||0};
   let best={fraction:0,exact:false,matched:0,extra:chosen.length,missing:expanded[0]?.length||0};
   for(const expected of expanded) {
@@ -100,7 +118,7 @@ export function scoreDossier(item, answer={}, scans=[], docs=[]) {
   const required=new Set(item.docIds), selected=new Set(unique(answer.documentIds||[]));
   const intersection=[...selected].filter(x=>required.has(x)).length;
   const document=selected.size ? intersection/(new Set([...selected,...required]).size) : 0;
-  const evidence=gradeEvidence(answer.selections||[],item.answerSets,docs);
+  const evidence=gradeEvidence(answer.selections||[],item.answerSets,docs,{wholeArticles:wholeArticleMode(answer)});
   // Evidence belongs to explicitly selected source documents; hidden answer IDs
   // from other documents do not gain credit.
   const knownSources=new Map(docs.flatMap(d=>d.units.map(u=>[u.id,d.id])));
@@ -170,6 +188,6 @@ export async function contentHash(value) {
   return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');
 }
 export function selectionLimit(task,docs=[]) {
-  const expected=Math.max(0,...(task.answerSets||[]).map(set=>expandIds(set,docs).length));
+  const expected=Math.max(0,...(task.answerSets||[]).map(set=>canonicalArticleSelections(expandIds(set,docs),docs).length));
   return Math.max(task.maxSelections||5,expected+2);
 }
