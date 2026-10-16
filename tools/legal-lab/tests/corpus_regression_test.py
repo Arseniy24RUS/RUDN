@@ -3,8 +3,24 @@ import sys,pathlib,tempfile,unittest,json,hashlib,datetime as dt
 from unittest.mock import patch
 TEST_PARENT=pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(TEST_PARENT/'tools' if (TEST_PARENT/'tools'/'acquire_corpus.py').exists() else TEST_PARENT))
-from acquire_corpus import Fetcher,extract_html,toc_links,structure,write
+from acquire_corpus import Fetcher,extract_html,toc_links,structure,write,anchor_catalog,anchor_path,active_sources,resolve_anchors
 class CorpusAcquisitionRegressions(unittest.TestCase):
+ def test_retired_public_anchors_fall_back_to_internal_evidence_without_writing_it(self):
+  with tempfile.TemporaryDirectory() as t:
+   root=pathlib.Path(t);data=root/'data';data.mkdir();archive=root/'archived.json';write(archive,{'retired':{'units':[]}});before=archive.read_bytes()
+   with patch('acquire_corpus.ROOT',root),patch('acquire_corpus.DATA',data),patch('acquire_corpus.ARCHIVED_ANCHORS',archive):
+    self.assertEqual(anchor_catalog(),{'retired':{'units':[]}});self.assertEqual(anchor_path(),root/'.corpus-anchors.json');write(anchor_path(),{'active':{'units':[]}});self.assertEqual(anchor_catalog(),{'active':{'units':[]}})
+   self.assertEqual(archive.read_bytes(),before);self.assertFalse((data/'anchors.json').exists())
+ def test_default_acquisition_follows_active_catalog_and_historical_request_is_explicit(self):
+  with tempfile.TemporaryDirectory() as t:
+   data=pathlib.Path(t);write(data/'catalog.json',{'documents':[{'id':'active'}]});sources=[{'id':'active'},{'id':'retired'}]
+   with patch('acquire_corpus.DATA',data):
+    self.assertEqual(active_sources(sources),[{'id':'active'}]);self.assertEqual(active_sources(sources,['retired']),[{'id':'retired'}])
+ def test_current_seed_retains_exact_identity_and_inherited_question_aliases(self):
+  seed={'units':[{'id':'a','text':'1. Одинаковая норма.','locator':'Статья1'},{'id':'b','text':'1. Одинаковая норма.','locator':'Статья2'}],'aliases':{'question':['a']}}
+  candidate={'units':seed['units']};result=resolve_anchors(seed,candidate)
+  self.assertEqual(result,{'resolved':2,'total':2,'issues':[]});self.assertEqual(candidate['aliases'],{'a':['a'],'b':['b'],'question':['a']})
+  seed['aliases']['bad']=['missing'];self.assertTrue(resolve_anchors(seed,{'units':seed['units']})['issues'])
  def test_nested_malformed_paragraph_does_not_hide_article8(self):
   h='<main><h2>Статья 8. Условия</h2><p>(в ред. Закона)<p>1. Плата за сведения.</p><p>2. Сведения предоставляются бесплатно.</p></p></main>'
   texts=[b['text'] for b in extract_html(h,{},'')]

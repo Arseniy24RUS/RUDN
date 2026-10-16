@@ -83,7 +83,8 @@ test('reviewed actual corpus fixtures have precise article, part and point label
     goals309:{'goals309-ue67adb0ddea15d6f2c-1':'Подп.«к» П.2','goals309-u43f18e1b5e31234894-1':'Подп.«б» П.2'}
   };
   for(const [id,expected] of Object.entries(fixtures)){
-    const doc=JSON.parse(await readFile(new URL('../site/apps/legal-lab/data/documents/'+id+'.json',import.meta.url),'utf8'));
+    const path=id==='archive122'?'./fixtures/legal-lab-retired-corpus/':'../site/apps/legal-lab/data/documents/';
+    const doc=JSON.parse(await readFile(new URL(path+id+'.json',import.meta.url),'utf8'));
     for(const [unitId,label] of Object.entries(expected))assert.equal(labelForUnit(doc,unitId),label,unitId);
   }
 });

@@ -1,0 +1,178 @@
+{
+  "schema": 1,
+  "docId": "local33",
+  "status": "approved",
+  "verdict": "approved",
+  "kind": "independent-synthetic-linguistic-review",
+  "author": "translate_goals_system",
+  "reviewer": "translate_constitution",
+  "createdUtc": "2026-10-16T23:40:08.732Z",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+    "fileSha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42"
+  },
+  "payloadDecisions": [
+    {
+      "docId": "local33",
+      "locale": "en",
+      "status": "approved",
+      "payloadSha256": "7a6cf3388a761b5d73b458c693e4b789b311b62bc1538ed119b3866f63dba5f5",
+      "reviewedUnits": 1448,
+      "reviewedSections": 107
+    },
+    {
+      "docId": "local33",
+      "locale": "zh",
+      "status": "approved",
+      "payloadSha256": "8d7328f7dc878289221c45fe9cb30822717243fe865ffeab8b12a211108b2c25",
+      "reviewedUnits": 1448,
+      "reviewedSections": 107
+    }
+  ],
+  "payloadSha256": {
+    "en": "7a6cf3388a761b5d73b458c693e4b789b311b62bc1538ed119b3866f63dba5f5",
+    "zh": "8d7328f7dc878289221c45fe9cb30822717243fe865ffeab8b12a211108b2c25"
+  },
+  "coverage": {
+    "reviewedSourceIndexRangeInclusive": [
+      0,
+      1447
+    ],
+    "reviewedUnitsPerLocale": 1448,
+    "reviewedSectionsPerLocale": 107,
+    "actualIdsEvidence": "coverage.json",
+    "repealReferences": 229,
+    "repealSourceIndexRangesInclusive": [
+      [
+        1209,
+        1333
+      ],
+      [
+        1335,
+        1438
+      ]
+    ],
+    "remainingUnitIds": [],
+    "metadataReviewed": [
+      "title",
+      "revisionLabel"
+    ],
+    "locatorsReviewed": 1448
+  },
+  "requiredFixes": [],
+  "resolvedFixes": [
+    {
+      "locale": "zh",
+      "unitId": "local33-u1b1bfbe83c52a13803-1",
+      "field": "text",
+      "sourceIndex": 484,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-ud2ae6e0857dc988bea-1",
+      "field": "text",
+      "sourceIndex": 750,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u1420fc21e593074d72-1",
+      "field": "text",
+      "sourceIndex": 757,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u2b1c21515d1a799adb-1",
+      "field": "text",
+      "sourceIndex": 780,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-ufcb99efe0a825d7b29-1",
+      "field": "text",
+      "sourceIndex": 781,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u4ff14587a32295c8a4-1",
+      "field": "text",
+      "sourceIndex": 846,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u7e2beb27b83aab57a3-1",
+      "field": "text",
+      "sourceIndex": 852,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u26be67189e2922d1b1-1",
+      "field": "text",
+      "sourceIndex": 1007,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u99ae8a71f61c0902c9-1",
+      "field": "text",
+      "sourceIndex": 1186,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "local33-u70c06da3ef4f0aaad9-1",
+      "field": "text",
+      "sourceIndex": 1383,
+      "status": "resolved"
+    }
+  ],
+  "semanticReview": {
+    "status": "approved",
+    "method": "Complete direct RU/EN/ZH comparison recorded in assessment.json, followed by exact diff and semantic recheck of all ten agreed corrections. The unchanged English payload and all unchanged Chinese fields retain the complete prior review."
+  },
+  "machineValidation": {
+    "status": "pass",
+    "evidence": "post-fix-verification.json",
+    "byteRebuild": "pass",
+    "exactApprovedDiff": "pass"
+  },
+  "evidence": [
+    {
+      "file": "assessment.json",
+      "sha256": "cb37b1d5d83be56981ec444f57fef7f137dc9d3ea6d17af1cb30ef5c42df840c"
+    },
+    {
+      "file": "required-fixes.json",
+      "sha256": "e1ff5637d7c0d2f509c92c9624307d87ac28ceaf4a234da2675e70b04129f00d"
+    },
+    {
+      "file": "coverage.json",
+      "sha256": "797fe372c7fde362d51278526dcebe1db47b5b6a13d37e6b85981613508010ae"
+    },
+    {
+      "file": "machine-validation.json",
+      "sha256": "177e6d94f028c105014f55599a32aa9cbcb12612a0fc2171dbcdb9ee1a836385"
+    },
+    {
+      "file": "integrator-fixes.json",
+      "sha256": "f26c47ab42710b798221e8be611f2ce679ddf6b80daa5a00a393dd2330cbb5fb"
+    },
+    {
+      "file": "post-fix-verification.json",
+      "sha256": "62cfba65edeeff4e9755bc342341888c2316c21f6a6c5eb05c3fbc2da3d0e5fe"
+    }
+  ],
+  "independence": {
+    "differentAgentFromAuthor": true,
+    "humanReview": false,
+    "officialCertification": false
+  },
+  "limitations": "Approval applies only to these educational unofficial translation payloads and the pinned supplied Russian source. Synthetic model review; not human review, official translation or certification."
+}

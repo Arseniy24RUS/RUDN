@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "contentVersion": "legal-lab-2026-10-15.2",
+  "retiredFrom": "Legal Lab supplemental situations removed at user request",
+  "documents": [
+    {
+      "id": "archive122",
+      "shortTitle": "Регистрация прав · редакция 2012",
+      "title": "Федеральный закон «О государственной регистрации прав на недвижимое имущество и сделок с ним»",
+      "number": "21.07.1997 № 122-ФЗ · учебная дата 12.07.2012",
+      "sourceUrl": "https://zakonbase.ru/content/base/65407?print=1",
+      "file": "documents/archive122.json",
+      "coverage": "full",
+      "revisionLabel": "Редакция от 10.07.2012, действующая с 12.07.2012",
+      "reviewStatus": "reviewed",
+      "main": false,
+      "sourceAccessed": "2026-10-15",
+      "version": "legal-lab-2026-10-15.2",
+      "group": "Архив",
+      "sha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+      "unitCount": 467,
+      "reviewKind": "synthetic-source-audit",
+      "fileSha256": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410"
+    },
+    {
+      "id": "realty218",
+      "shortTitle": "Регистрация недвижимости · 218-ФЗ",
+      "title": "Федеральный закон «О государственной регистрации недвижимости»",
+      "number": "13.07.2015 № 218-ФЗ",
+      "sourceUrl": "https://www.consultant.ru/document/cons_doc_LAW_182661/",
+      "file": "documents/realty218.json",
+      "coverage": "full",
+      "revisionLabel": "Редакция от 04.08.2026",
+      "reviewStatus": "reviewed",
+      "main": false,
+      "sourceAccessed": "2026-10-15",
+      "version": "legal-lab-2026-10-15.2",
+      "group": "Дополнительные акты",
+      "sha256": "b31c47516c4cc42de750ff36b82dc67e090f55f61e18c29e0ca9738e6d6201b9",
+      "unitCount": 1745,
+      "reviewKind": "synthetic-source-audit",
+      "fileSha256": "c7e0f4dc800436e2e07ee1145891bf19b9081bba176934dd09b5fb0f668e00e8"
+    }
+  ]
+}

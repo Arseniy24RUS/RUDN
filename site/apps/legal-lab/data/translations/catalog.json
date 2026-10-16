@@ -240,6 +240,74 @@
         "kind": "independent-synthetic-review",
         "evidence": "docs/quality/legal-document-translations/spatial-review.json#sha256=60324544d65782dbcb1f310e55cfeaf44654f53a3894a144d7b0425af85b5d0a"
       }
+    },
+    {
+      "docId": "moscow3",
+      "locale": "en",
+      "file": "en/moscow3.json",
+      "sha256": "b47467013c9c076c59825282506183618bf1d29e38b08119d789a605edc11d81",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+        "fileSha256": "4945989c2c342c31fec4683e91fcbd86aa13fd16648c0fcd55890b499f8325e1"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/moscow3-review.json#sha256=5399c78e9e6f86b6165fae6c896dc0abebb2cf1c6fa71ab707532e790aead9d6"
+      }
+    },
+    {
+      "docId": "moscow3",
+      "locale": "zh",
+      "file": "zh/moscow3.json",
+      "sha256": "b7eb62bf2c1663602fcd5ba7610bd07002f580ec5a5df5af4c71d3bfb3ca3418",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+        "fileSha256": "4945989c2c342c31fec4683e91fcbd86aa13fd16648c0fcd55890b499f8325e1"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/moscow3-review.json#sha256=5399c78e9e6f86b6165fae6c896dc0abebb2cf1c6fa71ab707532e790aead9d6"
+      }
+    },
+    {
+      "docId": "local33",
+      "locale": "en",
+      "file": "en/local33.json",
+      "sha256": "68f9f9bf3e4b2c0be04de42d7956e965227529c3fdfb0ed4f14912d216d78913",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+        "fileSha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/local33-distribution-review.json#sha256=86747475b9e7f4ab157e810af72e3077423ea79ea8b43391038e4719f2cfc6e4"
+      }
+    },
+    {
+      "docId": "local33",
+      "locale": "zh",
+      "file": "zh/local33.json",
+      "sha256": "43be14329202e033b2671e89ceb05291161ed2adf30531d26376b8026a13d2e7",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+        "fileSha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/local33-distribution-review.json#sha256=86747475b9e7f4ab157e810af72e3077423ea79ea8b43391038e4719f2cfc6e4"
+      }
     }
   ]
 }

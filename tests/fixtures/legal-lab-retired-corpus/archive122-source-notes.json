@@ -1,0 +1,79 @@
+{
+  "docId": "archive122",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "7e229fc411790a6436631f61ff5e9d2a3e7be0e78b76d6c3dfd9703040dea46d",
+    "fileSha256": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410"
+  },
+  "notes": [
+    {
+      "indices": [
+        196
+      ],
+      "kind": "source-punctuation",
+      "note": "The source leaves the quotation of the military real-estate transfer law title unclosed. EN/ZH close that quotation after the full translated title; no substantive content was added.",
+      "unitIds": [
+        "archive122-u3db55a7fee9707754f-1"
+      ]
+    },
+    {
+      "indices": [
+        231
+      ],
+      "kind": "source-cross-reference",
+      "note": "References to Articles 25.4 and 25.5 are preserved even though separate sections for those articles are absent from the supplied source.",
+      "unitIds": [
+        "archive122-u5222798a98f5781956-1"
+      ]
+    },
+    {
+      "indices": [
+        316,
+        317,
+        318
+      ],
+      "kind": "source-heading-body-mismatch",
+      "note": "Article 22.2 heading concerns division, consolidation, redistribution and allotment of land plots, while its supplied body concerns artificially created land. The complete supplied heading and body are both preserved in translation; no replacement law text has been introduced.",
+      "unitIds": [
+        "archive122-u9977b4752675195052-1",
+        "archive122-u3921ca7e7e3093d8dc-1",
+        "archive122-ube105c9bdbc03b202b-1"
+      ]
+    },
+    {
+      "indices": [
+        368,
+        369,
+        370,
+        371,
+        372,
+        373,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380
+      ],
+      "kind": "source-heading-body-mismatch",
+      "note": "Article 25.3 heading concerns certain newly created immovable properties, while its supplied body concerns mortgage foreclosure. Both supplied heading and full body are translated. The trailing quote and semicolon in unit 380 are retained.",
+      "unitIds": [
+        "archive122-u64035cbe193a12e687-1",
+        "archive122-u35ed281ca7418e84eb-1",
+        "archive122-ub27d91884ce615ad1f-1",
+        "archive122-u8ed31ed301b78a3c2e-1",
+        "archive122-u062bb8c9d352d9c53f-1",
+        "archive122-uffd99c4450560ee20f-1",
+        "archive122-u34febc88f4eae91e9a-1",
+        "archive122-uedb88de1b49cb51404-1",
+        "archive122-u2b42ca1938b294483f-1",
+        "archive122-u34febc88f4eae91e9a-2",
+        "archive122-ud03b992907cd939b36-1",
+        "archive122-u6c12a560d621f15bb0-1",
+        "archive122-ub2003f5e89cbb9594e-1"
+      ]
+    }
+  ],
+  "sourceModified": false
+}

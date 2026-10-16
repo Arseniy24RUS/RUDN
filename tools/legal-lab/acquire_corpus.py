@@ -11,6 +11,19 @@ from bs4 import BeautifulSoup
 ROOT=pathlib.Path(os.environ.get('LEGAL_LAB_WORK_ROOT',pathlib.Path(__file__).resolve().parents[1])).resolve()
 DATA=pathlib.Path(os.environ.get('LEGAL_LAB_DATA_DIR',ROOT/'site/apps/legal-lab/data')).resolve()
 SOURCE_PATH=pathlib.Path(__file__).with_name('sources.json')
+ARCHIVED_ANCHORS=pathlib.Path(__file__).resolve().parents[2]/'tests/fixtures/legal-lab-retired-corpus/anchors.json'
+
+def anchor_path():
+ public=DATA/'anchors.json'
+ return public if public.exists() else ROOT/'.corpus-anchors.json'
+
+def anchor_catalog():
+ path=anchor_path()
+ return load(path if path.exists() else ARCHIVED_ANCHORS)
+
+def active_sources(sources,ids=None):
+ selected=set(ids) if ids else {d['id'] for d in load(DATA/'catalog.json')['documents']}
+ return [source for source in sources if source['id'] in selected]
 def canonical(v):return json.dumps(v,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
 def digest(v):return hashlib.sha256(canonical(v)).hexdigest()
 def norm(s):
@@ -117,13 +130,15 @@ def structure(blocks,doc_id,source_url):
  return units,sections
 
 def resolve_anchors(seed,candidate,mapping=None):
- units=candidate['units'];known={u['id'] for u in units};aliases={};issues=[];normalized=[norm(u['text']) for u in units];mapping=mapping or {}
+ units=candidate['units'];known={u['id'] for u in units};aliases={};issues=[];normalized=[norm(u['text']) for u in units];normalized_by_id=dict(zip((u['id'] for u in units),normalized));mapping=mapping or {}
  for old in seed['units']:
   key=old['id']
   if key in mapping:
    ids=mapping[key]
    if not isinstance(ids,list) or not ids or any(x not in known for x in ids):issues.append({'id':key,'error':'invalid explicit mapping'});continue
    aliases[key]=list(dict.fromkeys(ids));continue
+  if key in known and normalized_by_id[key]==norm(old['text']):
+   aliases[key]=[key];continue
   quote=norm(old.get('anchor',{}).get('quote') or old['text']);hits=[]
   for i,text in enumerate(normalized):
    if quote in text:hits.append([units[i]['id']])
@@ -136,7 +151,15 @@ def resolve_anchors(seed,candidate,mapping=None):
   hits=list({tuple(h):h for h in hits}.values())
   if len(hits)==1:aliases[key]=hits[0]
   else:issues.append({'id':key,'locator':old['locator'],'quote':old['text'],'candidates':hits,'error':'not-found' if not hits else 'ambiguous'})
- candidate['aliases']=aliases;return {'resolved':len(aliases),'total':len(seed['units']),'issues':issues}
+ resolved=len(aliases)
+ for key,old_ids in seed.get('aliases',{}).items():
+  if not isinstance(old_ids,list) or not old_ids or any(old not in aliases for old in old_ids):
+   issues.append({'id':key,'error':'unresolved inherited alias'});continue
+  ids=list(dict.fromkeys(uid for old in old_ids for uid in aliases[old]))
+  if key in aliases and aliases[key]!=ids:
+   issues.append({'id':key,'error':'conflicting inherited alias'});continue
+  aliases[key]=ids
+ candidate['aliases']=aliases;return {'resolved':resolved,'total':len(seed['units']),'issues':issues}
 
 def thresholds(candidate,source,expected_pages=0,pages_loaded=0):
  n=sum(len(u['text']) for u in candidate['units']);s=len(candidate['sections']);errors=[]
@@ -174,7 +197,7 @@ def prepare_one(source,args,fetcher):
  units,sections=structure(blocks,seed['id'],url)
  candidate={**seed,'units':units,'sections':sections,'aliases':{},'coverage':'candidate','reviewStatus':'pending-review','sourceUrl':url,'provenance':provenance,'revisionLabel':source.get('revisionLabel',args.revision_label or 'Редакция источника; проверка применимости не завершена'),'sha256':digest(units),'sourceTitle':BeautifulSoup(html,'html.parser').title.get_text(' ',strip=True) if not file else seed['title'],'asOf':source.get('asOf',args.as_of),'tocInventory':page_inventory}
  map_path=pathlib.Path(args.mappings)/f"{source['id']}.json" if args.mappings else None;mapping=load(map_path) if map_path and map_path.exists() else {}
- anchors=resolve_anchors(load(DATA/'anchors.json').get(seed['id'],seed),candidate,mapping);quality=thresholds(candidate,source,expected,loaded)
+ anchors=resolve_anchors(anchor_catalog().get(seed['id'],seed),candidate,mapping);quality=thresholds(candidate,source,expected,loaded)
  if file and raw:
   candidate['revisionLabel']=raw.get('revision',candidate['revisionLabel'])
   candidate['consolidation']=raw.get('consolidation')
@@ -182,7 +205,7 @@ def prepare_one(source,args,fetcher):
  return {'id':source['id'],'status':'candidate' if not quality['issues'] and not anchors['issues'] else 'needs-fix','preflight':candidate['preflight'],'sha256':candidate['sha256']}
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--ids',nargs='*');p.add_argument('--local-dir');p.add_argument('--mappings');p.add_argument('--output',default=str(ROOT/'.pending-corpus'));p.add_argument('--sources',default=str(SOURCE_PATH));p.add_argument('--cache',default=str(ROOT/'.source-cache'));p.add_argument('--delay',type=float,default=.25);p.add_argument('--timeout',type=int,default=40);p.add_argument('--revision-label');p.add_argument('--as-of',default='2026-10-15');p.add_argument('--max-cache-age-hours',type=float,default=24);p.add_argument('--workers',type=int,default=4);args=p.parse_args()
- chosen=[s for s in load(args.sources) if not args.ids or s['id'] in args.ids];fetcher=Fetcher(pathlib.Path(args.cache),max(.2,args.delay),args.timeout,args.max_cache_age_hours);report=[]
+ chosen=active_sources(load(args.sources),args.ids);fetcher=Fetcher(pathlib.Path(args.cache),max(.2,args.delay),args.timeout,args.max_cache_age_hours);report=[]
  for source in chosen:
   try:item=prepare_one(source,args,fetcher)
   except Exception as exc:item={'id':source['id'],'status':'failed','error':str(exc)}

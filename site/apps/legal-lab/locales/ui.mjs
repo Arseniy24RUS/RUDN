@@ -325,6 +325,10 @@ const rows=`
 Лишние документы|Extra documents|多选的文件
 Пропущенные документы|Missing documents|遗漏的文件
 Документ не найден|Document not found|未找到文件
+Дополнительный материал удалён из занятия.|This supplementary material has been removed from the workshop.|本补充材料已从本课中移除。
+Идентификатор прежнего фрагмента:|Previous passage identifier:|原段落标识：
+Этот дополнительный материал удалён из занятия. Прежний выбор сохранён.|This supplementary material has been removed from the workshop. Your previous selection is retained.|本补充材料已从本课中移除，原先的选择仍予保留。
+Убрать из ответа|Remove from answer|从答案中移除
 Совпало|Matched|匹配
 Пропущенный фрагмент|Missing passage|遗漏的段落
 Лишний фрагмент|Extra passage|多选的段落

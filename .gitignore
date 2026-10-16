@@ -5,6 +5,7 @@
 firebase-debug.log
 .firebaserc
 node_modules/
+.qa/
 .DS_Store
 Thumbs.db
 *.log

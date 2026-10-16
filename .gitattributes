@@ -8,3 +8,6 @@ site/apps/legal-lab/** text=auto eol=lf
 
 # Independent review evidence is hashed verbatim, including its original line endings.
 docs/quality/legal-document-translations/** -text whitespace=cr-at-eol
+
+# Retired source evidence preserves its original bytes.
+tests/fixtures/legal-lab-retired-corpus/** -text whitespace=cr-at-eol

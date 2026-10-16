@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "status": "applied",
+  "reason": "User explicitly removed the Additional situations section and all its content, and the Library section. Both documents belong only to those retired situations.",
+  "activeDocuments": [
+    "constitution",
+    "koap",
+    "spatial",
+    "civil79",
+    "municipal25",
+    "system58",
+    "local33",
+    "procurement44",
+    "corruption273",
+    "goals309",
+    "moscow3",
+    "moscow35",
+    "moscow50",
+    "ekb"
+  ],
+  "retiredIds": [
+    "archive122",
+    "realty218"
+  ],
+  "activeReferences": {
+    "classroom": 0,
+    "legacyCases": 0,
+    "fiveVariants": 0
+  },
+  "historicalSourceBytes": [
+    {
+      "id": "archive122",
+      "sha256": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410",
+      "bytes": 465024
+    },
+    {
+      "id": "realty218",
+      "sha256": "c7e0f4dc800436e2e07ee1145891bf19b9081bba176934dd09b5fb0f668e00e8",
+      "bytes": 2622795
+    }
+  ],
+  "anchors": {
+    "sha256": "1ca9ffa57b7dc200123c514256adf41e54d17d4c07f0dc208cd0cbe25a641b5a",
+    "keys": [
+      "realty218",
+      "moscow35",
+      "municipal25",
+      "ekb",
+      "local33",
+      "moscow3",
+      "constitution",
+      "system58",
+      "corruption273",
+      "civil79",
+      "archive122",
+      "goals309",
+      "procurement44",
+      "koap",
+      "moscow50",
+      "spatial"
+    ]
+  },
+  "preserve": [
+    "all 52 active task IDs",
+    "all 24 legacy dossiers and old grades",
+    "1456 five-task variants",
+    "all180 historical semantic checks with original retired fixtures",
+    "raw originals and original source defects as archival evidence"
+  ],
+  "sourceIssues": "archive122 has reported source-heading/body contradictions in the old vendor edition; notes preserved rather than falsely certified or silently corrected",
+  "stagedAction": "After current frozen QA, copy exact retired bytes to tests/fixtures, update only test loaders and active catalog, then remove unused public files. Recheck hashes, references, corpus tests and all180semanticchecks.",
+  "preservation": "Original source documents, anchor map, metadata and translations are frozen historical test evidence. Retired archive source has recorded discrepancies; this is not a completeness approval.",
+  "fixtureHashes": {
+    "anchors.json": "1ca9ffa57b7dc200123c514256adf41e54d17d4c07f0dc208cd0cbe25a641b5a",
+    "archive122-source-notes.json": "6cccd7dd8df89a160570f3f96de55aac8a52fba67cd9107963e01415be11d5b6",
+    "archive122.json": "dfdce1fb30f39e554161d7ad665d67af3228ec9999c04437986e62e4d4b5f410",
+    "catalog.json": "2c6be85eeddc59e75933379a8de8c3f88666968d0ad4d57c5a18e698b39b0191",
+    "realty218.json": "c7e0f4dc800436e2e07ee1145891bf19b9081bba176934dd09b5fb0f668e00e8",
+    "task-copy.json": "d41a94d9ca2a3a453dd5b5edf543880dbb5239d9aac73ba618b030dd2f349933"
+  }
+}

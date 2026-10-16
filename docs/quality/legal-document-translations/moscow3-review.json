@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "docId": "moscow3",
+  "status": "approved",
+  "kind": "independent-synthetic-review",
+  "reviewer": "translate_goals_system",
+  "author": "translate_constitution",
+  "hashes": {
+    "en": "b47467013c9c076c59825282506183618bf1d29e38b08119d789a605edc11d81",
+    "zh": "b7eb62bf2c1663602fcd5ba7610bd07002f580ec5a5df5af4c71d3bfb3ca3418"
+  },
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "e4a2230e6d7575cdfb58ad84aaf176ded6be10229579e2d2d918c10c1a07de7d",
+    "fileSha256": "4945989c2c342c31fec4683e91fcbd86aa13fd16648c0fcd55890b499f8325e1"
+  },
+  "fullReadComplete": true,
+  "coverage": {
+    "unitsPerLocale": 828,
+    "sectionsPerLocale": 83,
+    "unitTexts": 1656,
+    "sectionTitles": 166,
+    "locators": 1656,
+    "metadata": "Full title and revisionLabel in both locales",
+    "method": "Sequential RU–EN–ZH comparison of every unit, including exact-source reuse; all repeated lists, table cells, repealed provisions and amendment notes read. Section headings cross-checked with read unit texts, one separate opening title read; every locator mechanically matched to its reviewed section."
+  },
+  "resolvedFindings": 1,
+  "remainingRequiredFindings": 0,
+  "exactChanges": [
+    {
+      "path": [
+        "zh",
+        "units",
+        "moscow3-ueb1b98edb3af69359a-1",
+        "text"
+      ],
+      "current": "2. 对担任被裁减文职公务职位或被撤销国家机关职位的文职公务员，雇主代表必须至少在解除公务关系前两个月，亲自通知其因职位裁减或机关撤销而拟被解除公务关系，并由其签收。",
+      "replacement": "2. 对担任被裁减文职公务职位或被撤销国家机关职位的文职公务员，雇主代表必须至少在解除公务关系前两个月，向其本人通知因职位裁减或机关撤销而拟解除其公务关系，并由其签收。"
+    }
+  ],
+  "machineValidation": {
+    "status": "pass",
+    "exactDeepDiff": "Exactly one agreed Chinese unit text field; EN and every other payload field unchanged",
+    "exactByteDiff": "Original raw payloads reconstructed with SHA agreement; new ZH bytes equal the original bytes with exactly one unique serialized text substitution; EN byte-identical",
+    "sourcePins": "pass",
+    "numericAndStructure": "final-machine-validation.json: all units, sections, locators, numeric/date multisets and leading markers pass",
+    "buildReproduction": "final-memory-build-proof.json: original build.cjs executed with writes captured in memory; both new payloads reproduced byte for byte",
+    "masterSource": "reuse.json pairs[405].translations[1] equals the agreed replacement",
+    "frozenInputWrites": 0
+  },
+  "optionalNotes": [
+    {
+      "index": 244,
+      "unitId": "moscow3-ufcfcc6138bf459f7d2-1",
+      "locale": "zh",
+      "field": "text",
+      "status": "optional-clarification",
+      "source": "2. Сведения, указанные в части 1 настоящей статьи, представляются гражданами, претендующими на замещение должности гражданской службы, при поступлении на гражданскую службу, а гражданскими служащими - не позднее 1 апреля года, следующего за отчетным. Сведения, указанные в части 1 настоящей статьи, представляются по форме, установленной Правительством Российской Федерации.",
+      "current": "2. 申请担任文职公务职位的公民，应在进入文职公务时提交本条第1款所指信息；文职公务员应在报告年度次年4月1日之前提交。本条第1款所指信息按俄罗斯联邦政府规定的表格提交。",
+      "replacement": "2. 申请担任文职公务职位的公民，应在进入文职公务时提交本条第1款所指信息；文职公务员应最迟于报告年度次年4月1日提交。本条第1款所指信息按俄罗斯联邦政府规定的表格提交。",
+      "reason": "Формулировка 最迟于 явно сохраняет включённость последнего дня в «не позднее». 之前 в контексте срока обычно понимается как 'к этому сроку', но допускает буквальное прочтение 'до'. Это необязательное уточнение, не основание отвергать уже одобренный upstream: текущая строка побайтово соответствует accepted civil79."
+    }
+  ],
+  "limitations": [
+    "Independent synthetic linguistic review; not an official, certified or human legal translation.",
+    "One non-blocking editorial deadline clarification is retained in optionalNotes; no pending required findings."
+  ],
+  "payloadDecisions": [
+    {
+      "docId": "moscow3",
+      "locale": "en",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "b47467013c9c076c59825282506183618bf1d29e38b08119d789a605edc11d81",
+      "reviewedUnits": 828,
+      "reviewedSections": 83
+    },
+    {
+      "docId": "moscow3",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "b7eb62bf2c1663602fcd5ba7610bd07002f580ec5a5df5af4c71d3bfb3ca3418",
+      "reviewedUnits": 828,
+      "reviewedSections": 83
+    }
+  ],
+  "reviewedUtc": "2026-10-16T23:25:09.936Z"
+}

@@ -70,7 +70,7 @@ test('actual report method explains legacy and new heading selections using the 
   // This exercises the real string-rendering method only, not a browser/DOM simulation.
   // Dependencies and already-verified corpus are explicit; production source is unchanged.
   const entry=await readFile(new URL('../site/apps/legal-lab/entry.mjs',import.meta.url),'utf8');
-  const start=entry.indexOf('  report(item,a){'),end=entry.indexOf('\n  help(){',start);assert.ok(start>=0&&end>start);
+  const start=entry.indexOf('  report(item,a,reportDocs=null){'),end=entry.indexOf('\n  help(){',start);assert.ok(start>=0&&end>start);
   const render=new Function('e','asset','dossierScanQuestions','gradeEvidence','expandIds','canonicalArticleSelections','labelForUnit','EVIDENCE_MODE','documentDisplay','displayLabel','return ({'+entry.slice(start,end)+'}).report;')(escapeHTML,value=>value,dossierScanQuestions,gradeEvidence,expandIds,canonicalArticleSelections,labelForUnit,EVIDENCE_MODE,documentDisplay,displayLabel);
   const app={corpus:{cache:new Map(docs.map(d=>[d.id,d]))},scans,reportOnly:true};
   const item=cases.find(c=>c.id==='A01'),legacy={...fullAnswer(item),selections:['constitution-ua258597def4c307226-1']};
