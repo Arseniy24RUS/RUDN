@@ -114,7 +114,7 @@ const rows=`
 Скан документа|Document scan|文件扫描件
 Показать подсказки на скане|Show scan hints|显示扫描件提示
 Скрыть подсказки на скане|Hide scan hints|隐藏扫描件提示
-Разведите два пальца, чтобы увеличить скан. Кнопка с глазом покажет доступные фрагменты.|Pinch out to zoom into the scan. The eye button shows selectable areas.|双指张开可放大扫描件。眼睛按钮可显示可选区域。
+Разведите два пальца, чтобы увеличить скан. Увеличенный скан перемещайте одним пальцем. Кнопка с глазом покажет доступные фрагменты.|Pinch out to zoom into the scan. Drag the enlarged scan with one finger. The eye button shows selectable areas.|双指张开可放大扫描件。放大后，用单指拖动扫描件。眼睛按钮可显示可选区域。
 Фрагмент вверху слева|Area at the top left|左上方区域
 Фрагмент вверху по центру|Area at the top centre|顶部中央区域
 Фрагмент вверху справа|Area at the top right|右上方区域
@@ -214,7 +214,7 @@ const rows=`
 СПРАВКА|HELP|帮助
 Как работать с документами|Working with documents|如何使用文件
 Выбор фрагмента на скане|Selecting a scan area|选择扫描件区域
-Нажмите на нужный фрагмент документа. Разведите два пальца или используйте кнопки масштаба, чтобы рассмотреть скан. Кнопка с глазом включает подсказки; после выбора остаётся выделенным только ваш ответ. Для выбора с клавиатуры переходите между фрагментами клавишей Tab и нажимайте Enter. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the relevant part of the document. Pinch out or use the zoom buttons to inspect the scan. The eye button shows hints; after selection only your answer stays highlighted. With a keyboard, press Tab to move between areas and Enter to select. Act number, state registration number and signature are different details.|选择文件中的相应部分。双指张开或使用缩放按钮查看扫描件。眼睛按钮可显示提示；选择后仅突出显示你的答案。使用键盘时，按Tab键切换区域，按Enter键选择。文件编号、国家登记编号和签名是不同要素。
+Нажмите на нужный фрагмент документа. Разведите два пальца или используйте кнопки масштаба, чтобы рассмотреть скан. Увеличенный скан перемещайте одним пальцем. Кнопка с глазом включает подсказки; после выбора остаётся выделенным только ваш ответ. Для выбора с клавиатуры переходите между фрагментами клавишей Tab и нажимайте Enter. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the relevant part of the document. Pinch out or use the zoom buttons to inspect the scan. Drag the enlarged scan with one finger. The eye button shows hints; after selection only your answer stays highlighted. With a keyboard, press Tab to move between areas and Enter to select. Act number, state registration number and signature are different details.|选择文件中的相应部分。双指张开或使用缩放按钮查看扫描件。放大后，用单指拖动扫描件。眼睛按钮可显示提示；选择后仅突出显示你的答案。使用键盘时，按Tab键切换区域，按Enter键选择。文件编号、国家登记编号和签名是不同要素。
 Ответ фрагментом|Answer with evidence|以条款作答
 Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.|Use contents or search to find a provision. Select one or more paragraphs. Extra passages reduce precision.|通过目录或搜索查找条款，可选择一段或多段。多选无关段落会降低准确性。
 Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.|Use the issuer and heading. Each question concerns a specific real act. Executive orders are not limited to personnel matters.|根据发布机关和标题判断。每题均针对具体真实文件，指令不限于人事事务。
