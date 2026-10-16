@@ -50,3 +50,13 @@ test('new variants avoid used choices, then exclude the immediate previous varia
   assert.equal(chooseFiveVariant([variants[0]],['F1'],()=>0).id,'F1');
   for(const pick of [()=>-1,()=>3,()=>0.5])assert.throws(()=>chooseFiveVariant(variants,[],pick),RangeError);
 });
+
+test('a profile first assignment is stable across devices, while retries draw fresh unused variants',()=>{
+ const variants=Array.from({length:19},(_,i)=>({...item,id:'F'+i})),seed='synthetic-student|2026-autumn|seminar-4';
+ const firstDevice=chooseFiveVariant(variants,[],()=>0,seed),secondDevice=chooseFiveVariant(variants,[],()=>18,seed);
+ assert.equal(firstDevice.id,secondDevice.id,'Independent first-device random sources cannot choose different initial work');
+ assert.equal(chooseFiveVariant(variants,['A24'],()=>0,seed).id,firstDevice.id,'Preserved legacy reports do not change the first new-format assignment');
+ const retryA=chooseFiveVariant(variants,[firstDevice.id],()=>0,seed),retryB=chooseFiveVariant(variants,[firstDevice.id],()=>17,seed);
+ assert.notEqual(retryA.id,firstDevice.id);assert.notEqual(retryB.id,firstDevice.id);assert.notEqual(retryA.id,retryB.id,'A restart uses randomness rather than a fixed profile sequence');
+ const assignments=new Set(Array.from({length:100},(_,i)=>chooseFiveVariant(variants,[],()=>0,'synthetic-profile-'+i).id));assert.ok(assignments.size>1,'Different profiles do not all receive a single shared variant');
+});

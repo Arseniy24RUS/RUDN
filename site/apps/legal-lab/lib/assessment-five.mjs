@@ -1,5 +1,5 @@
 /** Five familiar tasks, one point each. Source identities stay Russian/canonical. */
-import {gradeTask, randomIndex, round, SCAN_METADATA_MODE} from './core.mjs';
+import {gradeTask, hash32, randomIndex, round, SCAN_METADATA_MODE} from './core.mjs';
 
 export const FIVE_MODE='five-task-v1';
 const record=value=>Boolean(value)&&typeof value==='object'&&!Array.isArray(value);
@@ -65,7 +65,7 @@ export function quizComplete(bank,state){
 }
 
 /** Walk the whole bank before repeating, and never immediately repeat a variant. */
-export function chooseFiveVariant(variants,previousIds=[],pick=randomIndex){
+export function chooseFiveVariant(variants,previousIds=[],pick=randomIndex,initialSeed){
   if(!Array.isArray(variants)||!variants.length||variants.some(item=>item?.format!==FIVE_MODE||!id(item.id))||new Set(variants.map(item=>item.id)).size!==variants.length)throw new TypeError('Invalid assessment variants');
   if(!Array.isArray(previousIds)||previousIds.some(value=>!id(value)))throw new TypeError('Invalid variant history');
   const valid=new Set(variants.map(item=>item.id)),used=new Set();
@@ -77,7 +77,10 @@ export function chooseFiveVariant(variants,previousIds=[],pick=randomIndex){
   let pool=variants.filter(item=>!used.has(item.id));
   if(!pool.length)pool=variants.filter(item=>item.id!==previousIds.at(-1));
   if(!pool.length)pool=variants;
-  const index=pick(pool.length);
+  // A profile's first work is stable even before a draft reaches a second device.
+  // Restarts still draw randomly from the unused pool.
+  const initial=typeof initialSeed==='string'&&initialSeed.length>0&&!previousIds.some(previous=>valid.has(previous));
+  const index=initial?parseInt(hash32(initialSeed),36)%pool.length:pick(pool.length);
   if(!Number.isInteger(index)||index<0||index>=pool.length)throw new RangeError('Invalid variant choice');
   return pool[index];
 }

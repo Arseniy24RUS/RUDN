@@ -485,7 +485,7 @@ class LegalLab {
     if(this.isLocked()||!this.assessmentUnlocked())return;if(this.state.assessment){this.view='assessment';return this.render();}
     const ready=assessmentReady(this.catalog).ready;if(!ready&&!this.demo&&!this.teacher)throw Error('Полный корпус не установлен и не проверен');
     if(this.opt.assessmentAllowed&&!this.opt.assessmentAllowed()&&!this.teacher)throw Error('Самостоятельная работа ещё не открыта');
-    const previous=(this.state.assessmentHistory||[]).map(a=>a.caseId),seed=this.opt.assignmentSeed,pick=Number.isSafeInteger(seed)&&seed>=0?(length=>seed%length):undefined,item=chooseFiveVariant(this.fiveVariants,previous,pick);
+    const previous=(this.state.assessmentHistory||[]).map(a=>a.caseId),seed=this.opt.assignmentSeed,pick=Number.isSafeInteger(seed)&&seed>=0?(length=>seed%length):undefined,item=chooseFiveVariant(this.fiveVariants,previous,pick,seed);
     this.state.assessment={format:FIVE_MODE,caseId:item.id,attemptId:(this.opt.attemptId||this.state.id)+'-r-'+uid(),startedAt:Date.now(),contentVersion:this.catalog.contentVersion,preview:this.demo||this.teacher||!ready,stage:0,phase:'active',answer:{assessmentMode:FIVE_MODE,tasks:{}},result:null,delivery:'not-submitted'};
     this.view='assessment';this.syncPresenceTask();await this.persist();return this.render();
   }

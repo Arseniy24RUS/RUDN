@@ -93,8 +93,42 @@ const families=[
 ['После увольнения','After leaving service','离职之后','Проверьте двухлетний срок, должность в перечне и прежние управленческие функции. Для гражданско-правового договора важен и месячный порог стоимости.','Check the two-year period, the listed position and former management functions. The civil-law contract also has a monthly value threshold.','应核查两年期限、职务清单及原管理职能，民事合同还涉及每月金额门槛。']
 ];
 export const caseCopy=Object.fromEntries(caseRows.map(([id,en,zh])=>[id,{en:{prompt:en},zh:{prompt:zh}}]));
+const typeTitles={
+  "T01": {
+    "en": "Youth policy strategy",
+    "zh": "青年政策战略"
+  },
+  "T02": {
+    "en": "Appointment at the Federal Agency for Tourism",
+    "zh": "联邦旅游署人事任命"
+  },
+  "T03": {
+    "en": "School certificates",
+    "zh": "中学毕业证书"
+  },
+  "T04": {
+    "en": "Amendments to district administration rules",
+    "zh": "区行政机关工作规则修订"
+  },
+  "T05": {
+    "en": "Commendation",
+    "zh": "表彰"
+  },
+  "T06": {
+    "en": "State supervision rules",
+    "zh": "国家监督规定"
+  },
+  "T07": {
+    "en": "Municipal conflict-of-interest commission",
+    "zh": "市政利益冲突委员会"
+  },
+  "T08": {
+    "en": "Spatial development strategy",
+    "zh": "空间发展战略"
+  }
+};
 export function localizeContent(bank,cases,locale){
  const lang=['en','zh'].includes(locale)?locale:'ru',ix=lang==='en'?1:lang==='zh'?2:0;
- const task=t=>({...t,...taskCopy[t.id]?.ru,...taskCopy[t.id]?.[lang]});
+ const task=t=>({...t,...taskCopy[t.id]?.ru,...taskCopy[t.id]?.[lang],...(t.kind==='type'&&typeTitles[t.id]?.[lang]?{title:typeTitles[t.id][lang]}:{})});
  return {bank:{...bank,classroom:bank.classroom.map(task),extra:bank.extra.map(task)},cases:cases.map(c=>{const f=families.find(x=>x[0]===c.title);return {...c,...caseCopy[c.id]?.[lang],title:f?.[ix]||c.title,explanation:f?.[ix+3]||'',scanQuestions:c.scanQuestions.map(q=>({...q}))};})};
 }

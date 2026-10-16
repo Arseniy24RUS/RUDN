@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "reviewedCommit": "32ef29bdd95a26b4a4d40696bf80f649175c1d47",
+  "findings": [
+    {
+      "id": 4299785550,
+      "status": "fixed",
+      "change": "First new-format assignment hashes the platform string seed; restarts continue using unused random variants.",
+      "verification": "Focused cross-device initial assignment and independent-random restart test added."
+    },
+    {
+      "id": 4299785563,
+      "status": "adjudicated-with-clarification",
+      "checkedQuestionIds": [
+        "constitution-N1",
+        "constitution-N2",
+        "system58-N2",
+        "koap-N1",
+        "koap-N2",
+        "koap-N3"
+      ],
+      "findingAssessment": "All six multi-alternative questions accept the heading and/or body of the same entire article, not different substantive legal answers. Longest basis intentionally quotes the full provision so a student who correctly chose the heading can read the rule.",
+      "change": "Reworded full-credit reason to Answer accepted. Full credit awarded. It no longer says every rendered position was selected.",
+      "constraint": "The student selected answer remains separately quoted; grading and historical grades unchanged."
+    }
+  ]
+}

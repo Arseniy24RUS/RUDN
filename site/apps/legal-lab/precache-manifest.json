@@ -420,8 +420,13 @@
     },
     {
       "url": "apps/legal-lab/data/translations/catalog.json",
-      "bytes": 7360,
-      "sha256": "ab238f3af79c0804f835e6b879d5ba860d2e3d07949a1a647b3dff2c12cff77e"
+      "bytes": 10208,
+      "sha256": "6f60b3b51e67964de554abfe845241882316fbfcde4cc4d65be0b4de8b2f47ea"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/en/civil79.json",
+      "bytes": 391726,
+      "sha256": "f280d7def4cfe8e9c6d1e7dace1159a474fee108decadf6c65871313f8c91128"
     },
     {
       "url": "apps/legal-lab/data/translations/en/constitution.json",
@@ -444,9 +449,19 @@
       "sha256": "46b801b161ba70e93be3c149cd44fc2ad49903d084965c946296d02888d654d5"
     },
     {
+      "url": "apps/legal-lab/data/translations/en/spatial.json",
+      "bytes": 237035,
+      "sha256": "bb28e97439ce23c74dd7096bf0115323a1308515669ab7fa51a4ac15b5f84b05"
+    },
+    {
       "url": "apps/legal-lab/data/translations/en/system58.json",
       "bytes": 58072,
       "sha256": "412b1a174b263fb6d978ec898f2a899723d14da3e7a086521533b1f4f01cd082"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/zh/civil79.json",
+      "bytes": 308536,
+      "sha256": "04dd6f7806c3578dc04035cdd23422d833410be7fef4d0b1eedae3aab0a8bc42"
     },
     {
       "url": "apps/legal-lab/data/translations/zh/constitution.json",
@@ -469,6 +484,11 @@
       "sha256": "f4e8539fb6f495206f719731d09248066d7cfb02f2ccd383c2647fc3dbaed4d1"
     },
     {
+      "url": "apps/legal-lab/data/translations/zh/spatial.json",
+      "bytes": 182445,
+      "sha256": "9dfe383571e53c9481f76395d1583805bc497a397192669bd56db4b84ec87b64"
+    },
+    {
       "url": "apps/legal-lab/data/translations/zh/system58.json",
       "bytes": 46657,
       "sha256": "f431c6989a6650ee56f28613158b42e2104dca05ba04ba89c9108f16359c7639"
@@ -480,8 +500,8 @@
     },
     {
       "url": "apps/legal-lab/entry.mjs",
-      "bytes": 98761,
-      "sha256": "80ad4f63da5aaf9a8e8892bdb4b038887602014527f909783a2102b206468ebe"
+      "bytes": 98766,
+      "sha256": "72ed3409bccb77101278537f89fc6d1522d01aee634c251dd614ddfbdd038345"
     },
     {
       "url": "apps/legal-lab/lib/article-evidence.mjs",
@@ -490,8 +510,8 @@
     },
     {
       "url": "apps/legal-lab/lib/assessment-five.mjs",
-      "bytes": 5249,
-      "sha256": "e0743f02d45e3523c644ee3ad1404707dd1d763dd0a6f08de9df9e34431632d9"
+      "bytes": 5580,
+      "sha256": "730f7e5e51251156bc5bb69f75590f28592e246c8372d8df036f15a91caa3690"
     },
     {
       "url": "apps/legal-lab/lib/core.mjs",
@@ -505,8 +525,8 @@
     },
     {
       "url": "apps/legal-lab/lib/five-view.mjs",
-      "bytes": 7376,
-      "sha256": "f2b14b6d9c2495cefe4b4f3fae8b159b947593110bcc3bd9237805bb300b738b"
+      "bytes": 7520,
+      "sha256": "684c334d5e87c2562e4abe1ea1581a66a1f62247a1e2acea896ea349b4fd6ddb"
     },
     {
       "url": "apps/legal-lab/lib/live.mjs",
@@ -540,13 +560,13 @@
     },
     {
       "url": "apps/legal-lab/locales/content.mjs",
-      "bytes": 37372,
-      "sha256": "e978522f48d13722cd4c62f8953e65be0a8759d3925be25f9d52511db0e96342"
+      "bytes": 38215,
+      "sha256": "a7110d44f3510b6516da269131024530d57bfa2468a353226a0ca517515b9e2e"
     },
     {
       "url": "apps/legal-lab/locales/ui.mjs",
-      "bytes": 49498,
-      "sha256": "6ae33950c12d6ba4b29ac251c1fc94eb561b29ab96723dc5813716eb07f9d3ce"
+      "bytes": 49690,
+      "sha256": "b74d04a64f56e11431ea20e98962df890672cc0794a0b742e7ff03dd453a70f6"
     },
     {
       "url": "apps/legal-lab/platform.mjs",
@@ -559,6 +579,6 @@
       "sha256": "bad6c961cc3103b54d34a10b62578914f567648a2373500c6139cdb92b510407"
     }
   ],
-  "totalBytes": 41204215,
+  "totalBytes": 42328320,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

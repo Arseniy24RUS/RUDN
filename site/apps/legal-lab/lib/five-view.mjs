@@ -1,6 +1,8 @@
 import {escapeHTML as e,scanQuestionsFor,SCAN_METADATA_MODE,gradeTask,expandIds,selectionLimit} from './core.mjs';
 import {documentDisplay,displayLabel} from './translation-ui.mjs';
 
+// Whole-article alternatives accept a heading or its substance. Quote the complete
+// provision as feedback, including its body when a heading alone earned credit.
 export const fiveEvidenceSet=task=>(task.answerSets||[]).reduce((full,set)=>set.length>full.length?set:full,[]);
 export const isFiveWork=a=>a?.answer?.assessmentMode==='five-task-v1';
 export function fiveVariant(app){return app.fiveVariants.find(v=>v.id===app.state.assessment?.caseId);}
@@ -32,7 +34,7 @@ export function fiveReport(app,item,a){
     if(t.kind==='scan'){const scan=app.scans.find(s=>s.id===t.scanId);review=app.scanReview(scan,answer.metadata||{},scanQuestionsFor(scan));}
     else if(t.kind==='type')review=`<dl class="ll-review-facts"><div><dt>Ваш ответ</dt><dd>${e(answer.type||'Не выбрано')}</dd></div><div><dt>Правильный вид</dt><dd>${e(t.answer)}</dd></div></dl>`;
     else review=`<h3>Ваш ответ</h3>${passages(t,answer.selections||[])}<h3>Правильное основание</h3>${passages(t,expandIds(fiveEvidenceSet(t),docs))}`;
-    let reason=grade.exact?'Все позиции совпадают. Баллы начислены полностью.':'';
+    let reason=grade.exact?'Ответ принят. Балл начислен полностью.':'';
     if(!grade.exact&&t.kind==='scan'){const fields=scanQuestionsFor(app.scans.find(s=>s.id===t.scanId)),matched=fields.filter(q=>answer.metadata?.[q.field]===q.field).length;reason=`Правильных позиций: ${matched} из ${fields.length}. Каждая позиция даёт одинаковую долю балла.`;}
     else if(!grade.exact&&t.kind==='type')reason=answer.type?'Выбран другой вид документа.':'Вид документа не выбран.';
     else if(!grade.exact&&t.kind==='text')reason=`Совпало: ${grade.matched||0}; пропущено: ${grade.missing||0}; лишних: ${grade.extra||0}. Балл учитывает полноту и точность выделения.`;

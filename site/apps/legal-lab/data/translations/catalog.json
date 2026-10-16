@@ -172,6 +172,74 @@
         "kind": "independent-synthetic-review",
         "evidence": "docs/quality/legal-document-translations/corruption273-review.json#sha256=2461755f7d061e9703900ad00d6721371c8f3a57a3a6de0b29edaf4d6133ca9a"
       }
+    },
+    {
+      "docId": "civil79",
+      "locale": "en",
+      "file": "en/civil79.json",
+      "sha256": "f280d7def4cfe8e9c6d1e7dace1159a474fee108decadf6c65871313f8c91128",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+        "fileSha256": "c1c1e75081657bd2d9e1021968041bbf1f264746d22d8789a30a1a3ca1e638d1"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/civil79-review.json#sha256=c416f50fbdf03b0750d9a51cb0998fb0ab23c7ee7f0c0fa7ee64c1fff6f4cfb6"
+      }
+    },
+    {
+      "docId": "civil79",
+      "locale": "zh",
+      "file": "zh/civil79.json",
+      "sha256": "04dd6f7806c3578dc04035cdd23422d833410be7fef4d0b1eedae3aab0a8bc42",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "ac68605065fb7eded72ac8b671af18d034f4a2d83570a84bc75dc6a52b1ebdb3",
+        "fileSha256": "c1c1e75081657bd2d9e1021968041bbf1f264746d22d8789a30a1a3ca1e638d1"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/civil79-review.json#sha256=c416f50fbdf03b0750d9a51cb0998fb0ab23c7ee7f0c0fa7ee64c1fff6f4cfb6"
+      }
+    },
+    {
+      "docId": "spatial",
+      "locale": "en",
+      "file": "en/spatial.json",
+      "sha256": "bb28e97439ce23c74dd7096bf0115323a1308515669ab7fa51a4ac15b5f84b05",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+        "fileSha256": "d229cd97b7b4a5cbe67f1b0fbcbca9b986e017bc8bca703b3560bab1c4940929"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/spatial-review.json#sha256=60324544d65782dbcb1f310e55cfeaf44654f53a3894a144d7b0425af85b5d0a"
+      }
+    },
+    {
+      "docId": "spatial",
+      "locale": "zh",
+      "file": "zh/spatial.json",
+      "sha256": "9dfe383571e53c9481f76395d1583805bc497a397192669bd56db4b84ec87b64",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "72110f9c49812e90babb0ff553a461851b86a2548507cbdf7555f2abc2281cd1",
+        "fileSha256": "d229cd97b7b4a5cbe67f1b0fbcbca9b986e017bc8bca703b3560bab1c4940929"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/spatial-review.json#sha256=60324544d65782dbcb1f310e55cfeaf44654f53a3894a144d7b0425af85b5d0a"
+      }
     }
   ]
 }
