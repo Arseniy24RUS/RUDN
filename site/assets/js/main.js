@@ -391,9 +391,10 @@ async function renderGradebook(){
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
   const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:item.slug==='seminar-3'&&settlementsStatus?.kind==='pending'?`<span>${settlementsStatus.points}</span>`:'<span class="grade-empty">—</span>'}${item.slug==='seminar-3'&&settlementsStatus?`<br><small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
   const historySeminarTitles=new Map(data.course.topics.filter(topic=>['career','reception'].includes(seminarModule(topic))).map(topic=>[topic.seminar.slug,loc(topic.seminar,'title',topic.seminar.title)]));
-  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(historySeminarTitles.get(x.activitySlug)||x.title||x.activitySlug||x.type)}</td><td>${esc(x.type==='legal-lab'?({ru:'Досье',en:'Dossier',zh:'卷宗'})[getLocale()]:x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
+  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(historySeminarTitles.get(x.activitySlug)||x.title||x.activitySlug||x.type)}</td><td>${esc(x.type==='legal-lab'?({ru:'Досье',en:'Dossier',zh:'卷宗'})[getLocale()]:x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}${x.type==='legal-lab'?`<small class="muted" style="display:block" data-legal-save-id="${esc(x.id)}">${({ru:'Сохранено',en:'Saved',zh:'已保存'})[getLocale()]}</small>`:''}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
+  void updateLegalLabSaveStatus(app);
   app.querySelector('#gradeLogin')?.addEventListener('click',openAuthDialog);
   app.querySelector('#refreshGrades')?.addEventListener('click',render);
   if(profile){
@@ -404,6 +405,20 @@ async function renderGradebook(){
     ['student_id','full_name','email','group',...items.map(x=>x.slug),'total'],
     [officialTicket(profile),profile.fullName,profile.email,profile.group,...items.map(x=>number(grades[x.slug]?.points)),total]
   ]));
+}
+
+
+async function updateLegalLabSaveStatus(root=app){
+  const profile=backend.getProfile(),owner=attemptOwner(),locale=getLocale();
+  if(!profile||backend.isAdmin())return;
+  const messages={ru:{pending:'Ожидает синхронизации',unsafe:'Не удалось сохранить на устройстве',conflict:'Нужно выбрать сохранённый вариант',device:'Сохранено на устройстве',saved:'Сохранено'},en:{pending:'Waiting to sync',unsafe:'Could not save on this device',conflict:'Choose a saved version',device:'Saved on this device',saved:'Saved'},zh:{pending:'等待同步',unsafe:'未能保存到本设备',conflict:'请选择已保存版本',device:'已保存到本设备',saved:'已保存'}}[locale];
+  await Promise.all([...root.querySelectorAll('[data-legal-save-id]')].map(async node=>{
+    let state='unknown';
+    try{state=(await durableStore.getSaveStatus({owner,activitySlug:'seminar-4',mode:'legal-lab-workspace',attemptId:node.dataset.legalSaveId})).state;}catch{}
+    if(!node.isConnected||owner!==attemptOwner()||locale!==getLocale())return;
+    node.dataset.legalSaveState=state;
+    node.textContent=messages[state==='device-only'?'device':['pending','unsafe','conflict'].includes(state)?state:'saved'];
+  }));
 }
 
 function renderMaterials(){
@@ -1171,7 +1186,7 @@ authResetPassword.addEventListener('click',async()=>{
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
-window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
+window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
 window.addEventListener('rudn:identitychange',()=>{
   updateTopProfile();document.getElementById('accountDialog')?.close();
@@ -1201,7 +1216,7 @@ async function bootstrap(){
   registerRecoveryProvider(()=>durableStore.exportBackup({owner:attemptOwner()}));
   translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
-  durableStore.subscribe(()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app)});
+  durableStore.subscribe(()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app)});
   backend.init().then(()=>render()).catch(error=>toast(error,'error'));
   await loadData();dataReady=true;
   updateTopProfile();await render();

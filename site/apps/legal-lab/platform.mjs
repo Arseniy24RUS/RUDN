@@ -46,7 +46,7 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
     // same academic period/version. This is not cryptographic exam protection.
     assignmentSeed:teacher?undefined:`${owner}|${period}|seminar-4`,
     assessmentAllowed:()=>Boolean(backend.getProfile())&&!backend.isAdmin()&&Boolean(assessmentAllowed?.()),
-    liveFactory:({role,group,contentVersion,signal:liveSignal})=>new FirebaseLive({backend,rootPath,role,group:role==='student'?backend.getProfile()?.group:group,contentVersion,signal:liveSignal})
+    liveFactory:({contentVersion,signal:liveSignal})=>backend.user?.uid&&(backend.isAdmin()||backend.getProfile()?.studentKey)?new FirebaseLive({backend,rootPath,contentVersion,signal:liveSignal}):null
   });
   if(!signal?.aborted)void warmCourseCache(handle.contentVersion,signal);
   return {contentVersion:handle.contentVersion,getReport:()=>handle.getReport(),

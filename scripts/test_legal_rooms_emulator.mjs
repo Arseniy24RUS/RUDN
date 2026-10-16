@@ -1,102 +1,31 @@
-// Run with Firebase Auth + Realtime Database emulators (never a production project).
-// firebase emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test_legal_rooms_emulator.mjs"
+// Firebase Emulator Suite only: never points to a production project.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
+import {createRequire} from 'node:module';
 import {pathToFileURL,fileURLToPath} from 'node:url';
-import {initializeApp,deleteApp} from 'firebase/app';
-import {getAuth,connectAuthEmulator,signInAnonymously,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut} from 'firebase/auth';
-import * as db from 'firebase/database';
+const require=createRequire(process.env.LEGAL_FIREBASE_PACKAGE_ROOT?pathToFileURL(process.env.LEGAL_FIREBASE_PACKAGE_ROOT+'/package.json'):import.meta.url);
+const {initializeApp,deleteApp}=await import(pathToFileURL(require.resolve('firebase/app')));
+const {getAuth,connectAuthEmulator,signInAnonymously,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut}=await import(pathToFileURL(require.resolve('firebase/auth')));
+const db=await import(pathToFileURL(require.resolve('firebase/database')));
 const runtime=process.env.LEGAL_LAB_RUNTIME||fileURLToPath(new URL('../site/apps/legal-lab/lib/live.mjs',import.meta.url));
-const {FirebaseLive,aggregatePeers}=await import(pathToFileURL(runtime).href);
-const root='rudn-platform/v1',group='ГГУбд-01-26',version='test-legal-20261015',namespace='demo-rudn-default-rtdb';
+const {FirebaseLive,PRESENCE_TTL_MS}=await import(pathToFileURL(runtime));
+const root='rudn-platform/v1',version='legal-lab-2026-10-15.2',versionKey=version.replaceAll('.','_'),namespace='demo-rudn-default-rtdb';
 const apps=[],lives=[];let sequence=0;
-const until=async(predicate,label,ms=12000)=>{const start=Date.now();while(!predicate()){if(Date.now()-start>ms)throw new Error(`Timed out: ${label}`);await new Promise(r=>setTimeout(r,20));}};
-async function client({teacher=false,profileGroup=group}={}){
-  const app=initializeApp({apiKey:'demo-rudn',projectId:'demo-rudn',databaseURL:`https://demo-rudn-default-rtdb.firebaseio.com`},`legal-${Date.now()}-${++sequence}`);apps.push(app);
-  const auth=getAuth(app);connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});
-  if(teacher){try{await createUserWithEmailAndPassword(auth,'omnistat@yandex.ru','emulator-only-legal-lab')}catch(e){if(e.code!=='auth/email-already-in-use')throw e;await signInWithEmailAndPassword(auth,'omnistat@yandex.ru','emulator-only-legal-lab');}}
-  else await signInAnonymously(auth);
-  const database=db.getDatabase(app);db.connectDatabaseEmulator(database,'127.0.0.1',9000);
-  const studentKey=`${Date.now()}${sequence}`,profile=teacher?null:{studentKey,ticket:studentKey,email:`${studentKey}@rudn.ru`,fullName:'Synthetic Legal Student',group:profileGroup,ownerUid:auth.currentUser.uid,ownerUids:{[auth.currentUser.uid]:true}};
-  if(profile)await db.set(db.ref(database,`${root}/profiles/${studentKey}`),profile);
-  return {mode:'cloud',generation:0,user:auth.currentUser,database,db,isAdmin:()=>teacher,getProfile:()=>profile,profile};
-}
-const live=backend=>{const v=new FirebaseLive({backend,rootPath:root,contentVersion:version,group:'ГГУбд-06-26'});lives.push(v);return v;};
-const denied=promise=>assert.rejects(promise,error=>/permission.denied/i.test(error.code||error.message));
-const roomRef=(backend,code,path='')=>db.ref(backend.database,`${root}/live/legalRooms/${code}${path?'/'+path:''}`);
-async function rest(token,path,value,method='PUT'){
-  const response=await fetch(`http://127.0.0.1:9000/${path}.json?ns=${namespace}&auth=${token}`,{method,headers:{'content-type':'application/json'},...(method!=='GET'?{body:JSON.stringify(value)}:{})});assert.equal(response.status,200,`${method} ${path}: ${await response.clone().text()}`);return response.json();
-}
-async function syntheticParticipant(code,index,roundId){
-  const response=await fetch('http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=demo-rudn',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({returnSecureToken:true})});assert.equal(response.status,200);const {localId:uid,idToken:token}=await response.json(),studentKey=`${Date.now()}${100+index}`;
-  const profile={studentKey,ticket:studentKey,email:`${studentKey}@rudn.ru`,fullName:`Synthetic participant ${index}`,group,ownerUid:uid,ownerUids:{[uid]:true}};
-  await rest(token,`${root}/profiles/${studentKey}`,profile);
-  await rest(token,`${root}/live/legalRooms/${code}/members/${uid}`,{studentKey,group,contentVersion:version,joinedAt:Date.now()});
-  await rest(token,`${root}/live/legalRooms/${code}/answers/${roundId}/${uid}`,{studentKey,contentVersion:version,roundId,taskId:'Q01',answer:JSON.stringify({selections:['d1-p1','d1-p1'],type:'Указ',hotspot:'issuer'}),submittedAt:Date.now()});
-  return {uid,token,studentKey};
-}
+const until=async(predicate,label,ms=15000)=>{const start=Date.now();while(!predicate()){if(Date.now()-start>ms)throw new Error('Timed out: '+label);await new Promise(r=>setTimeout(r,25));}};
+async function client({teacher=false,group='ГГУбд-01-26'}={}){const app=initializeApp({apiKey:'demo-rudn',projectId:'demo-rudn',databaseURL:'https://demo-rudn-default-rtdb.firebaseio.com'},'legal-presence-'+Date.now()+'-'+(++sequence));apps.push(app);const auth=getAuth(app);connectAuthEmulator(auth,'http://127.0.0.1:9099',{disableWarnings:true});if(teacher){try{await createUserWithEmailAndPassword(auth,'omnistat@yandex.ru','emulator-only-legal-lab')}catch(e){if(e.code!=='auth/email-already-in-use')throw e;await signInWithEmailAndPassword(auth,'omnistat@yandex.ru','emulator-only-legal-lab');}}else await signInAnonymously(auth);const database=db.getDatabase(app);db.connectDatabaseEmulator(database,'127.0.0.1',9000);const studentKey=''+Date.now()+sequence,profile=teacher?null:{studentKey,ticket:studentKey,email:studentKey+'@rudn.ru',fullName:'Synthetic Legal Student',group,ownerUid:auth.currentUser.uid,ownerUids:{[auth.currentUser.uid]:true}};if(profile)await db.set(db.ref(database,root+'/profiles/'+studentKey),profile);return {mode:'cloud',generation:0,user:auth.currentUser,database,db,isAdmin:()=>teacher,getProfile:()=>profile,profile};}
+const live=backend=>{const v=new FirebaseLive({backend,rootPath:root,contentVersion:version});lives.push(v);return v;};
+const taskRef=(b,task='S01',token='')=>db.ref(b.database,root+'/live/legalPresence/'+versionKey+'/'+task+(token?'/'+token:''));
+const ownRef=(b,token)=>db.ref(b.database,root+'/live/legalPresenceOwners/'+token);
+const denied=promise=>assert.rejects(promise,e=>/permission.denied/i.test(e.code||e.message));
+const answer=hotspot=>({answer:{hotspot},updatedAt:Date.now(),expiresAt:Date.now()+PRESENCE_TTL_MS});
+async function seed(path,value){const r=await fetch('http://127.0.0.1:9000/'+root+'/live/'+path+'.json?ns='+namespace,{method:'PUT',headers:{'content-type':'application/json','Authorization':'Bearer owner'},body:JSON.stringify(value)});assert.equal(r.status,200,'emulator-only admin fixture');}
 
-test('authenticated Legal Lab: 30 participants, private answers, reveal, stale rounds, rejoin, ownership and expiry', {timeout:150000},async()=>{
-  const teacher=await client({teacher:true}),student=await client(),foreign=await client({profileGroup:'ГГУбд-02-26'}),teacherLive=live(teacher),studentLive=live(student),foreignLive=live(foreign);
-  teacherLive.group=group;
-  try{
-    const code=await teacherLive.create('Q01');assert.match(code,/^[0-9A-F]{12}$/);
-    await studentLive.join(code);await until(()=>studentLive.current.state?.taskId==='Q01','student joined first round');
-    assert.equal(studentLive.group,group,'constructor ignores forged student group option');
-    await assert.rejects(foreignLive.join(code),/другой учебной группы/);
-    await denied(db.get(roomRef(foreign,code,'state')));
-    await denied(db.set(roomRef(foreign,code,`members/${foreign.user.uid}`),{studentKey:foreign.profile.studentKey,group,contentVersion:version,joinedAt:Date.now()}));
-    await denied(db.set(roomRef(student,code,`members/${student.user.uid}`),{studentKey:student.profile.studentKey,group,contentVersion:'old-version',joinedAt:Date.now()}));
-    await denied(db.set(roomRef(student,code,'state'),studentLive.current.state));
-    await deniedRest(teacher,code,'meta',{group:'ГГУбд-02-26'},'PATCH');
-    await deniedRest(teacher,code,'',{meta:teacherLive.meta,state:studentLive.current.state});
-    const roundId=studentLive.current.state.roundId;
-    await studentLive.submit({selections:['d1-p1','d1-p1'],type:'Указ',hotspot:'issuer',private:'must not serialize'});
-    const start=performance.now();const peers=await Promise.all(Array.from({length:29},(_,i)=>syntheticParticipant(code,i,roundId)));
-    await until(()=>teacherLive.current.aggregates.respondents===30,'30 acknowledgements');
-    assert.equal(teacherLive.current.aggregates.selections['d1-p1'],30);assert.equal(teacherLive.current.aggregates.hotspots.issuer,30);
-    assert.deepEqual(studentLive.current.answers,{});assert.equal(studentLive.current.aggregates.respondents,0);
-    const own=(await db.get(roomRef(student,code,`answers/${roundId}/${student.user.uid}`))).val();assert.equal(JSON.parse(own.answer).private,undefined);
-    await denied(db.get(roomRef(student,code,`answers/${roundId}`)));await denied(db.get(roomRef(student,code,`answers/${roundId}/${peers[0].uid}`)));await denied(db.get(roomRef(student,code,`aggregates/${roundId}`)));
-    await denied(db.set(roomRef(student,code,`answers/${roundId}/${peers[0].uid}`),own));
-    await denied(db.set(roomRef(student,code,`answers/${roundId}/${student.user.uid}`),{...own,contentVersion:'stale'}));
-    await denied(db.set(roomRef(student,code,`answers/${roundId}/${student.user.uid}`),{...own,taskId:'Q02'}));
-    await teacherLive.control({showSelections:true});await until(()=>studentLive.current.aggregates.respondents===30,'students see only aggregates');
-    assert.equal(studentLive.current.state.phase,'closed');assert.deepEqual(studentLive.current.answers,{});assert.equal(studentLive.current.aggregates.classifications['Указ'],30);
-    const counts=(await db.get(roomRef(student,code,`aggregates/${roundId}`))).val();for(const forbidden of ['answers','studentKey','ownerUid','uid','members'])assert.equal(forbidden in counts,false);
-    await denied(db.get(roomRef(student,code,`answers/${roundId}`)));await denied(db.get(roomRef(student,code,`answers/${roundId}/${peers[0].uid}`)));
-    await assert.rejects(studentLive.submit({type:'Приказ'}),/закрыт/);await denied(db.set(roomRef(student,code,`answers/${roundId}/${student.user.uid}`),own));
-    await denied(db.set(roomRef(student,code,`aggregates/${roundId}`),counts));
-    await denied(db.update(roomRef(teacher,code,`aggregates/${roundId}`),{ownerUid:student.user.uid}));
-    await teacherLive.control({phase:'collect'});await until(()=>studentLive.current.state.phase==='collect','resume');assert.equal(studentLive.current.state.showSelections,false);assert.equal(studentLive.current.aggregates.respondents,0);
-    await teacherLive.round('T02');await until(()=>studentLive.current.state.taskId==='T02','advance');const nextRound=studentLive.current.state.roundId;
-    await denied(db.set(roomRef(student,code,`answers/${roundId}/${student.user.uid}`),own));await denied(db.get(roomRef(student,code,`aggregates/${roundId}`)));
-    await studentLive.submit({type:'Приказ'});await until(()=>teacherLive.current.aggregates.respondents===1,'new answer');
-    db.goOffline(student.database);await until(()=>!studentLive.current.connected,'disconnect');db.goOnline(student.database);await until(()=>studentLive.current.connected,'reconnect');
-    studentLive.close();const restored=live(student);await restored.join(code);await until(()=>restored.current.state?.roundId===nextRound,'rejoin correct round');
-    const stale=new FirebaseLive({backend:student,rootPath:root,contentVersion:'old-content'});lives.push(stale);await assert.rejects(stale.join(code),/Версия контента/);
-    const alternateKey=student.profile.studentKey+'7';const alternate={...student.profile,studentKey:alternateKey,ticket:alternateKey,email:alternateKey+'@rudn.ru'};
-    await db.set(db.ref(student.database,`${root}/profiles/${alternateKey}`),alternate);
-    await db.set(roomRef(student,code,`members/${student.user.uid}`),{studentKey:alternateKey,group,contentVersion:version,joinedAt:Date.now()});
-    await denied(db.get(roomRef(student,code,`answers/${nextRound}/${student.user.uid}`)));
-    await denied(restored.submit({type:'Приказ'}));
-    await db.set(roomRef(student,code,`members/${student.user.uid}`),{studentKey:student.profile.studentKey,group,contentVersion:version,joinedAt:Date.now()});
-    assert.equal((await db.get(roomRef(student,code,`answers/${nextRound}/${student.user.uid}`))).val().studentKey,student.profile.studentKey);
-    await db.update(db.ref(student.database,`${root}/profiles/${student.profile.studentKey}`),{group:'ГГУбд-02-26'});
-    await denied(db.set(roomRef(student,code,`answers/${nextRound}/${student.user.uid}`),{...own,taskId:'T02',roundId:nextRound}));await denied(db.get(roomRef(student,code,'state')));
-    student.profile.group='ГГУбд-02-26';student.generation++;await assert.rejects(restored.submit({type:'Приказ'}),/Профиль изменён/);
-    // An unprivileged student cannot mutate ownership or room state at any path.
-    await denied(db.update(roomRef(foreign,code,'meta'),{teacherUid:foreign.user.uid}));
-    const expiredCode='EEEE'+code.slice(4),expired={meta:{...teacherLive.meta,group:foreign.profile.group,createdAt:Date.now()-10000,expiresAt:Date.now()-1000},state:teacherLive.current.state};
-    await denied(db.set(roomRef(teacher,expiredCode),expired));
-    const seeded=await fetch(`http://127.0.0.1:9000/${root}/live/legalRooms/${expiredCode}.json?ns=${namespace}`,{method:'PUT',headers:{'content-type':'application/json','Authorization':'Bearer owner'},body:JSON.stringify({...expired,members:{[foreign.user.uid]:{studentKey:foreign.profile.studentKey,group:foreign.profile.group,contentVersion:version,joinedAt:Date.now()}}})});assert.equal(seeded.status,200,'expired fixture seeded only with emulator admin token');
-    const expiredClient=live(foreign);await assert.rejects(expiredClient.join(expiredCode),/истекло/);await denied(db.get(roomRef(foreign,expiredCode,'state')));
-    await denied(db.set(roomRef(teacher,expiredCode,'state'),{...expired.state,phase:'collect'}));
-    console.log(JSON.stringify({status:'pass',transport:'Firebase Auth + Database emulators',participants:30,loadMs:Math.round(performance.now()-start),code,rounds:2,privacy:'no student answer-list reads, before or after reveal'}));
-  }catch(error){console.error(error.stack);console.error('live-diagnostic',JSON.stringify({teacher:teacherLive.current,student:studentLive.current}));throw error;}finally{for(const l of lives)l.close();await Promise.all(apps.map(app=>signOut(getAuth(app))));for(const app of apps)db.goOffline(db.getDatabase(app));await Promise.all(apps.map(app=>deleteApp(app)));}
-});
-
-async function deniedRest(backend,code,path,value,method='PUT'){
-  const token=await backend.user.getIdToken();const response=await fetch(`http://127.0.0.1:9000/${root}/live/legalRooms/${code}${path?'/'+path:''}.json?ns=${namespace}&auth=${token}`,{method,headers:{'content-type':'application/json'},body:JSON.stringify(value)});assert.equal(response.status,401,await response.text());
-}
+test('automatic ephemeral classroom: 30 participants, question/hidden/disconnect cleanup, anonymous reads and owner-only writes',{timeout:150000},async()=>{const teacher=await client({teacher:true}),observer=live(teacher),participants=[];try{await until(()=>observer.connected,'teacher connected');observer.watchTask('S01');const loadStarted=performance.now();for(let offset=0;offset<30;offset+=5){const batch=await Promise.all(Array.from({length:Math.min(5,30-offset)},(_,i)=>client({group:i===0?'ГГУбд-02-26':'ГГУбд-01-26'})));participants.push(...batch);}const peers=participants.map(live);await until(()=>peers.every(p=>p.connected),'30 clients connected');for(const peer of peers)peer.watchTask('S01');await Promise.all(peers.map(p=>p.choose({hotspot:'issuer',studentKey:'must-not-leak',fullName:'must-not-leak'})));await until(()=>observer.current.aggregates.respondents===30,'30 simultaneous selections');assert.equal(observer.current.aggregates.hotspots.issuer,30);const loadMs=Math.round(performance.now()-loadStarted);const publicRows=(await db.get(taskRef(participants[0]))).val();assert.equal(Object.keys(publicRows).length,30);for(const[token,value]of Object.entries(publicRows)){assert.match(token,/^[a-f0-9-]{36}$/);assert.deepEqual(Object.keys(value).sort(),['answer','expiresAt','updatedAt']);assert.deepEqual(value.answer,{hotspot:'issuer'});for(const b of participants){assert.equal(JSON.stringify(value).includes(b.user.uid),false);assert.equal(JSON.stringify(value).includes(b.profile.studentKey),false);}}assert.equal('answers'in observer.current,false);assert.equal('uid'in observer.current,false);
+const first=peers[0],firstBackend=participants[0],secondBackend=participants[1],oldToken=first.token;await denied(db.get(ownRef(secondBackend,oldToken)));await denied(db.set(taskRef(secondBackend,'S01',oldToken),answer('date')));await denied(db.remove(taskRef(secondBackend,'S01',oldToken)));const owner=(await db.get(ownRef(firstBackend,oldToken))).val();await denied(db.set(ownRef(secondBackend,oldToken),{...owner,ownerUid:secondBackend.user.uid,studentKey:secondBackend.profile.studentKey}));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{studentKey:firstBackend.profile.studentKey}));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{'answer/fullName':'forbidden'}));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{'answer/hotspot':'Synthetic personal name'}));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{'answer/type':'Synthetic personal name'}));await denied(db.get(taskRef(firstBackend,'A01')));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{'answer/docId':'SyntheticName'}));await denied(db.update(taskRef(firstBackend,'S01',oldToken),{'answer/selections':['SyntheticName']}));await denied(db.set(taskRef(firstBackend,'S02',oldToken),answer('date')));await denied(db.set(db.ref(firstBackend.database,root+'/live/legalPresence/old-version/S01/'+oldToken),answer('date')));await denied(db.update(ownRef(firstBackend,oldToken),{contentVersion:'old-version'}));await denied(db.get(db.ref(firstBackend.database,root+'/live/legalRooms/ABCDEF123456/meta')));assert.throws(()=>first.watchTask('A01'),/classroom/);assert.throws(()=>first.watchTask('Q99'),/classroom/);
+first.watchTask('S02');await until(()=>observer.current.aggregates.respondents===29,'navigation removes old choice');await denied(db.get(ownRef(firstBackend,oldToken)));await denied(db.set(taskRef(firstBackend,'S01',oldToken),answer('date')));await first.choose({hotspot:'date'});assert.notEqual(first.token,oldToken,'new question has an unlinkable token');observer.watchTask('S02');await until(()=>observer.current.aggregates.hotspots.date===1,'only current question answer visible');first.setVisible(false);await until(()=>observer.current.aggregates.respondents===0,'hidden removes choice');first.setVisible(true);await new Promise(r=>setTimeout(r,150));assert.equal(observer.current.aggregates.respondents,0,'foreground alone does not republish');await first.choose({hotspot:'number'});await until(()=>observer.current.aggregates.hotspots.number===1,'fresh visible choice');db.goOffline(firstBackend.database);await until(()=>!first.connected,'disconnect observed');await until(()=>observer.current.aggregates.respondents===0,'onDisconnect removes public selection');assert.equal(await first.choose({hotspot:'signature'}),false,'offline choices are not queued');first.watchTask('S03');db.goOnline(firstBackend.database);await until(()=>first.connected,'reconnect');await new Promise(r=>setTimeout(r,150));assert.equal(observer.current.aggregates.respondents,0,'old question answer stays absent after reconnect');observer.watchTask('S03');await first.choose({hotspot:'signature'});await until(()=>observer.current.aggregates.respondents===1,'new question choice');first.watchTask(null);await until(()=>observer.current.aggregates.respondents===0,'dossier/view exit removes choice');assert.equal(await first.choose({hotspot:'issuer'}),false,'assessment isolation');
+first.watchTask('Q01');observer.watchTask('Q01');await first.choose({docId:'constitution',selections:['constitution-u0a2befdebb4c29a7bc-1','constitution-u0a2befdebb4c29a7bc-1']});await until(()=>observer.current.aggregates.selections['constitution-u0a2befdebb4c29a7bc-1']===1,'real corpus paragraph accepted and deduplicated');first.watchTask(null);observer.watchTask('S03');
+// Expiry is tested through the real listener/timer. This fixture deliberately simulates a process that died without disconnect cleanup.
+const staleToken='11111111-1111-4111-8111-111111111111',stamp=Date.now();await seed('legalPresence/'+versionKey+'/S03/'+staleToken,{answer:{hotspot:'title'},updatedAt:stamp-43700,expiresAt:stamp+1300});await until(()=>observer.current.aggregates.hotspots.title===1,'short remaining lease visible');await until(()=>observer.current.aggregates.respondents===0,'expired lease disappears without a database event',5000);await seed('legalPresence/'+versionKey+'/S03/'+staleToken,null);
+first.watchTask('S03');await first.choose({hotspot:'date'});await until(()=>observer.current.aggregates.respondents===1,'choice before profile change');firstBackend.generation++;await assert.rejects(first.choose({hotspot:'issuer'}),/Профиль/);first.close();await until(()=>observer.current.aggregates.respondents===0,'profile close removes answer');observer.watchTask('S04');await observer.choose({hotspot:'issuer'});await until(()=>observer.current.aggregates.respondents===1,'teacher is an ordinary participant without student profile');const teacherOwner=(await db.get(ownRef(teacher,observer.token))).val();assert.equal('studentKey'in teacherOwner,false);observer.watchTask(null);
+const peerToClose=peers[1];const closedToken=peerToClose.token;peerToClose.close();observer.watchTask('S01');await until(()=>observer.current.aggregates.respondents===28,'unmount removes selection');await denied(db.set(taskRef(participants[2],'S01',closedToken),answer('issuer')));const freshToken=peers[2].token;const oldStamp=Date.now()-11000,old={answer:{hotspot:'date'},updatedAt:oldStamp,expiresAt:oldStamp+45000};await denied(db.set(taskRef(participants[2],'S01',freshToken),old));console.log(JSON.stringify({status:'pass',transport:'Firebase Auth + Realtime Database emulators',participants:30,loadMs,groupsMayShare:true,roomCodes:false,privacy:'anonymous per-question choices only; private ownership unreadable to peers',tested:['30 participants','navigation','hidden','onDisconnect','offline-no-queue','reconnect','dossier isolation','expiry timer','profile switch','teacher participation','unmount','foreign writes denied','invalid task/version denied','expired queued timestamp denied']}));
+}finally{for(const p of lives)p.close();await new Promise(r=>setTimeout(r,150));for(const app of apps)db.goOffline(db.getDatabase(app));await Promise.all(apps.map(app=>signOut(getAuth(app)).catch(()=>{})));await Promise.all(apps.map(app=>deleteApp(app)));}});

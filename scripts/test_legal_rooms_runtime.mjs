@@ -1,62 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {fileURLToPath,pathToFileURL} from 'node:url';
-const runtime=process.env.LEGAL_LAB_RUNTIME||fileURLToPath(new URL('../site/apps/legal-lab/lib/live.mjs',import.meta.url));
-const {FirebaseLive,LocalLive,aggregatePeers,aggregateAnswers}=await import(pathToFileURL(runtime).href);
-const group='ГГУбд-01-26',version='v1',code='ABCDEF123456';
+import {FirebaseLive,LocalLive,aggregatePeers,aggregateAnswers,serializePresenceAnswer,PRESENCE_TTL_MS} from '../site/apps/legal-lab/lib/live.mjs';
+const version='legal-lab-2026-10-15.2',prefix='root/live';
 const empty={hotspots:{},classifications:{},selections:{},respondents:0};
-function fakeBackend(){
-  const profile={studentKey:'12345',group};const rows=new Map(),listeners=new Map(),reads=[],writes=[],transactionCodes=[];
-  const meta={teacherUid:'teacher',group,contentVersion:version,createdAt:Date.now(),expiresAt:Date.now()+100000};
-  const state={taskId:'Q01',roundId:'round-1',showSelections:false,reveal:false,phase:'collect',updatedAt:Date.now()};
-  rows.set(`root/live/legalRooms/${code}/meta`,meta);rows.set(`root/live/legalRooms/${code}/state`,state);
-  const emit=(path,value)=>{rows.set(path,value);for(const fn of listeners.get(path)||[])fn({val:()=>value});};
-  const b={mode:'cloud',user:{uid:'student'},generation:1,database:{},getProfile:()=>profile,isAdmin:()=>false,db:{
-    ref:(_,path)=>path,serverTimestamp:()=>Date.now(),get:async path=>{reads.push(path);return {val:()=>rows.get(path)||null};},
-    set:async(path,value)=>{writes.push({path,value});emit(path,value);},remove:async path=>rows.delete(path),
-    onValue:(path,fn)=>{const set=listeners.get(path)||new Set();set.add(fn);listeners.set(path,set);if(rows.has(path))queueMicrotask(()=>fn({val:()=>rows.get(path)}));return()=>set.delete(fn);},
-    onDisconnect:()=>({remove:async()=>{},cancel:async()=>{}}),
-    runTransaction:async(path,mutate)=>{transactionCodes.push(path);const existing=transactionCodes.length===1?{occupied:true}:null;const value=mutate(existing);if(value){rows.set(path,value);return {committed:true,snapshot:{val:()=>value}};}return {committed:false,snapshot:{val:()=>existing}};}
-  }};
-  return {b,profile,meta,state,reads,writes,listeners,emit,transactionCodes};
-}
-test('aggregates count participants once, deduplicate selections and ignore unsafe keys',()=>{
-  const answers={a:{parsed:{selections:['u1','u1','bad/path','__proto__'],type:'Приказ',hotspot:'issuer'}},b:{parsed:{selections:['u1','u2'],type:'Указ',hotspot:'issuer'}}};
-  assert.deepEqual(aggregatePeers(answers),{hotspots:{issuer:2},classifications:{'Приказ':1,'Указ':1},selections:{u1:2,u2:1},respondents:2});
-  assert.deepEqual(aggregateAnswers(answers),{scans:{issuer:2},choices:{'Приказ':1,'Указ':1},units:{u1:2,u2:1},total:2});
-});
-test('student snapshot never subscribes to answer collections, and ignores callbacks after close',async()=>{
-  const h=fakeBackend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version,group:'forged-group'});let last;
-  live.subscribe(v=>last=v);await live.join(code);await new Promise(r=>setTimeout(r,0));assert.equal(live.group,group);
-  assert.deepEqual(last.answers,{});assert.deepEqual(last.aggregates,empty);
-  h.emit(`root/live/legalRooms/${code}/state`,{...h.state,phase:'closed',showSelections:true});
-  const aggregatePath=`root/live/legalRooms/${code}/aggregates/round-1`;h.emit(aggregatePath,{contentVersion:version,roundId:'round-1',respondents:4,selections:{u1:3}});
-  assert.equal(last.aggregates.respondents,4);assert.deepEqual(last.answers,{});assert.equal([...h.listeners.keys()].some(k=>k.includes('/answers/')),false);
-  const late=[...h.listeners.get(aggregatePath)][0],before=last;live.close();late({val:()=>({contentVersion:version,roundId:'round-1',respondents:99})});assert.equal(last,before);
-  assert.equal([...h.listeners.values()].reduce((n,s)=>n+s.size,0),0);
-});
-test('pending join is cancelled after profile switch and cannot install subscriptions',async()=>{
-  const h=fakeBackend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});let release;
-  h.b.db.get=()=>new Promise(resolve=>release=resolve);const joining=live.join(code);h.profile.studentKey='67890';release({val:()=>h.meta});
-  await assert.rejects(joining,/Профиль изменён/);assert.equal(h.writes.length,0);assert.equal(h.listeners.size,0);live.close();
-});
-test('creation retries collisions without overwriting another room',async()=>{
-  const h=fakeBackend();h.b.isAdmin=()=>true;h.b.user.uid='teacher';const live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version,group});
-  try{const created=await live.create('T01');assert.match(created,/^[A-F0-9]{12}$/);assert.equal(h.transactionCodes.length,2);assert.notEqual(h.transactionCodes[0],h.transactionCodes[1]);assert.equal(h.writes.filter(w=>w.path===h.transactionCodes[0]).length,0);}finally{live.close();}
-});
-test('demo gives students aggregates only; disclosure closes answers and reopening hides aggregates',async()=>{
-  const rows=new Map(),oldStorage=globalThis.localStorage;globalThis.localStorage={get length(){return rows.size},key:i=>[...rows.keys()][i],getItem:key=>rows.get(key)||null,setItem:(key,value)=>rows.set(key,value)};
-  const teacher=new LocalLive({role:'teacher',contentVersion:version}),student=new LocalLive({contentVersion:version});let snapshot;
-  try{const id=await teacher.create('Q01');await student.join(id);student.subscribe(value=>snapshot=value);await student.submit({hotspot:'issuer'});assert.deepEqual(snapshot.answers,{});assert.equal(snapshot.aggregates.respondents,0);await teacher.control({showSelections:true});student.emit();assert.equal(snapshot.aggregates.hotspots.issuer,1);assert.deepEqual(snapshot.answers,{});await assert.rejects(student.submit({hotspot:'date'}),/закрыт/);await teacher.control({phase:'collect'});student.emit();assert.equal(snapshot.aggregates.respondents,0);await student.submit({hotspot:'date'});}finally{teacher.close();student.close();globalThis.localStorage=oldStorage;}
-});
-
-test('temporary host local mode does not discard realtime subscriptions',async()=>{
-  const h=fakeBackend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});
-  try{await live.join(code);await new Promise(r=>setTimeout(r,0));h.b.mode='local';h.emit('.info/connected',false);assert.equal(live.closed,false);assert.equal(live.current.connected,false);await assert.rejects(live.submit({hotspot:'issuer'}),/Связь недоступна/);h.b.mode='cloud';h.emit('.info/connected',true);assert.equal(live.current.connected,true);assert.equal(live.closed,false);await live.submit({hotspot:'issuer'});}finally{live.close();}
-});
-
-test('a superseded join cannot attach callbacks to the newer session',async()=>{
-  const h=fakeBackend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version}),pending=[];
-  h.b.db.get=()=>new Promise(resolve=>pending.push(resolve));
-  try{const first=live.join(code);const second=live.join(code);pending[1]({val:()=>h.meta});await second;pending[0]({val:()=>h.meta});await assert.rejects(first,/отменено/);assert.equal(h.writes.filter(w=>w.path.includes('/members/')).length,1);assert.equal(live.closed,false);}finally{live.close();}
-});
+const row=answer=>({answer,updatedAt:Date.now(),expiresAt:Date.now()+PRESENCE_TTL_MS});
+function backend(){const profile={studentKey:'12345',group:'ГГУбд-01-26'},rows=new Map(),listeners=new Map(),writes=[],disconnects=[];rows.set('.info/connected',true);const emit=(path,value)=>{rows.set(path,value);for(const fn of listeners.get(path)||[])fn({val:()=>value});};const b={mode:'cloud',user:{uid:'student'},generation:1,database:{},getProfile:()=>profile,isAdmin:()=>false,db:{ref:(_,path)=>path,onValue:(path,fn)=>{const set=listeners.get(path)||new Set();set.add(fn);listeners.set(path,set);if(rows.has(path))queueMicrotask(()=>fn({val:()=>rows.get(path)}));return()=>set.delete(fn);},set:async(path,value)=>{writes.push({path,value});emit(path,value);},update:async(path,changes)=>{writes.push({path,changes});for(const[k,v]of Object.entries(changes))emit(path+'/'+k,v);},onDisconnect:path=>({update:async changes=>disconnects.push({path,changes}),cancel:async()=>{}})}};return {b,profile,rows,listeners,writes,disconnects,emit};}
+const settle=()=>new Promise(r=>setTimeout(r,0));
+test('anonymous aggregates ignore expired/malformed data and deduplicate selections',()=>{const a=aggregatePeers({a:row({selections:['u1','u1','bad/path','__proto__'],type:'Приказ',hotspot:'issuer'}),b:row({selections:['u1','u2'],type:'Указ',hotspot:'issuer'}),expired:{...row({hotspot:'date'}),expiresAt:Date.now()-1},malformed:row('bad')});assert.deepEqual(a,{hotspots:{issuer:2},classifications:{'Приказ':1,'Указ':1},selections:{u1:2,u2:1},respondents:2});assert.equal(aggregateAnswers({a:row({hotspot:'date'})}).scans.date,1);assert.deepEqual(serializePresenceAnswer({hotspot:'issuer',ownerUid:'secret',studentKey:'secret',fullName:'secret'}),{hotspot:'issuer'});});
+test('automatic watch and choose expose aggregates only; navigation removes owner and answer atomically',async()=>{const h=backend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});let seen;live.subscribe(v=>seen=v);await settle();live.watchTask('S01');await live.choose({hotspot:'issuer',private:'drop'});const token=live.token,p=prefix+'/legalPresence/'+version.replaceAll('.','_')+'/S01';h.emit(p,{[token]:row({hotspot:'issuer'})});assert.equal(seen.aggregates.respondents,1);assert.equal('answers'in seen,false);assert.equal('uid'in seen,false);assert.equal(h.disconnects.length,1);assert.deepEqual(Object.values(h.disconnects[0].changes),[null,null]);live.watchTask('S02');await settle();assert.equal(live.token,null);assert.ok(h.writes.some(x=>x.changes&&x.changes['legalPresence/'+version.replaceAll('.','_')+'/S01/'+token]===null));assert.deepEqual(seen.aggregates,empty);live.close();assert.equal([...h.listeners.values()].reduce((n,s)=>n+s.size,0),0);});
+test('offline choice is not queued; reconnect/navigation cannot publish the old answer',async()=>{const h=backend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});await settle();live.watchTask('S01');await live.choose({hotspot:'issuer'});h.emit('.info/connected',false);assert.equal(await live.choose({hotspot:'date'}),false);live.watchTask('S02');h.emit('.info/connected',true);await settle();const published=h.writes.filter(x=>x.value?.answer);assert.equal(published.length,1);assert.equal(published[0].value.answer.hotspot,'issuer');assert.equal(live.token,null);live.close();});
+test('hidden and null task remove selections, profile changes reject, assessment IDs never write',async()=>{const h=backend(),live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});await settle();assert.throws(()=>live.watchTask('A01'),/classroom/);assert.throws(()=>live.watchTask('Q99'),/classroom/);live.watchTask('Q01');await live.choose({docId:'constitution',selections:['c10']});live.setVisible(false);await settle();assert.equal(live.token,null);assert.equal(await live.choose({hotspot:'issuer'}),false);live.setVisible(true);assert.equal(live.token,null);live.watchTask(null);assert.equal(await live.choose({hotspot:'issuer'}),false);h.profile.studentKey='other';await assert.rejects(live.choose({hotspot:'issuer'}),/Профиль/);live.close();});
+test('inflight owner claim is retired before it can publish after question navigation',async()=>{const h=backend(),set=h.b.db.set;let release;h.b.db.set=(p,v)=>p.includes('legalPresenceOwners')?new Promise(resolve=>release=async()=>{await set(p,v);resolve();}):set(p,v);const live=new FirebaseLive({backend:h.b,rootPath:'root',contentVersion:version});await settle();live.watchTask('S01');const choosing=live.choose({hotspot:'issuer'});live.watchTask('S02');await release();await choosing;assert.equal(h.writes.some(x=>x.value?.answer),false);live.close();});
+test('local automatic peers disappear on next task, hidden, null task and close',async()=>{const rows=new Map(),previous=globalThis.localStorage;globalThis.localStorage={get length(){return rows.size},key:i=>[...rows.keys()][i],getItem:k=>rows.get(k)||null,setItem:(k,v)=>rows.set(k,v),removeItem:k=>rows.delete(k)};const a=new LocalLive({contentVersion:version}),b=new LocalLive({contentVersion:version});try{a.watchTask('S01');b.watchTask('S01');await a.choose({hotspot:'issuer'});b.emit();assert.equal(b.current.aggregates.hotspots.issuer,1);a.watchTask('S02');b.emit();assert.equal(b.current.aggregates.respondents,0);a.watchTask('S01');await a.choose({hotspot:'date'});a.setVisible(false);b.emit();assert.equal(b.current.aggregates.respondents,0);a.setVisible(true);await a.choose({hotspot:'number'});a.watchTask(null);b.emit();assert.equal(b.current.aggregates.respondents,0);a.watchTask('S01');await a.choose({hotspot:'issuer'});a.close();b.emit();assert.equal(b.current.aggregates.respondents,0);}finally{a.close();b.close();globalThis.localStorage=previous;}});

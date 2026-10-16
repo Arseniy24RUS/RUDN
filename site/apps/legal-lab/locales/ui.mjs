@@ -1,5 +1,10 @@
 // Translation touches presentation text/labels only, never values or data-* identifiers.
 const rows=`
+Выбранные ответы видны другим участникам только на том же вопросе. При переходе к другому вопросу или выходе отметки исчезают. Досье выполняется индивидуально.|Selected answers are visible to others on the same question. They disappear when you change questions or leave. Dossiers are individual work.|所选答案仅对正在查看同一题目的参与者可见。切换题目或离开后，标记消失。卷宗作业独立完成。
+Совместные отметки доступны после входа в профиль.|Sign in to see shared selections.|登录个人档案后可查看共享选择。
+Общие отметки временно недоступны. Ваш ответ сохранён.|Shared selections are temporarily unavailable. Your answer is saved.|共享标记暂不可用。你的答案已保存。
+Сейчас на вопросе ответов: {n}|Answers on this question now: {n}|本题当前答案数：{n}
+Результат сохранён. При подключении к сети журнал синхронизируется автоматически.|Your result is saved. The gradebook syncs automatically when you are online.|结果已保存。联网后，成绩册将自动同步。
 Совместное занятие|Shared session|共同课堂
 Выберите группу и создайте комнату. Вы управляете вопросами и раскрытием ответов.|Choose a group and create a room. You control the questions and reveal responses.|选择班级并创建课堂。您控制题目以及答案的公布。
 Досье выполняется отдельно. К комнате можно вернуться.|Dossiers are completed separately. You can return to the room.|档案作业单独完成。您可以返回课堂。
@@ -91,7 +96,7 @@ const rows=`
 Вид акта|Act type|文件类型
 В документе|In the document|文件正文
 На дату события|At the event date|事件日期
-Нажмите на подходящую рамку.|Select the appropriate frame.|选择适当的框。
+Нажмите на нужный фрагмент документа.|Select the relevant part of the document.|选择文件中的相应部分。
 Восстановите вид реального документа по автору и заголовку.|Identify the act type from its issuer and heading.|根据发布机关和标题识别文件类型。
 Ответьте фрагментом документа. Нажмите на абзац. При необходимости отметьте несколько.|Answer with evidence from the document. Select a paragraph, or several where needed.|用文件段落作答，必要时可选择多段。
 Основание найдено|Legal basis found|已找到法律依据
@@ -106,6 +111,20 @@ const rows=`
 Реальный документ · исторический образец|Authentic document · historical sample|真实文件 · 历史样本
 Уменьшить скан|Zoom out|缩小
 Увеличить скан|Zoom in|放大
+Скан документа|Document scan|文件扫描件
+Показать подсказки на скане|Show scan hints|显示扫描件提示
+Скрыть подсказки на скане|Hide scan hints|隐藏扫描件提示
+Разведите два пальца, чтобы увеличить скан. Кнопка с глазом покажет доступные фрагменты.|Pinch out to zoom into the scan. The eye button shows selectable areas.|双指张开可放大扫描件。眼睛按钮可显示可选区域。
+Фрагмент вверху слева|Area at the top left|左上方区域
+Фрагмент вверху по центру|Area at the top centre|顶部中央区域
+Фрагмент вверху справа|Area at the top right|右上方区域
+Фрагмент посередине слева|Area at the middle left|中部左侧区域
+Фрагмент посередине страницы|Area at the centre of the page|页面中央区域
+Фрагмент посередине справа|Area at the middle right|中部右侧区域
+Фрагмент внизу слева|Area at the bottom left|左下方区域
+Фрагмент внизу по центру|Area at the bottom centre|底部中央区域
+Фрагмент внизу справа|Area at the bottom right|右下方区域
+Центр: {x}% ширины и {y}% высоты страницы.|Centre: {x}% of the page width and {y}% of the page height.|中心位置：页面宽度的{x}%，页面高度的{y}%。
 Изображение не найдено|Image unavailable|图像不可用
 ВИД ДОКУМЕНТА|ACT TYPE|文件类型
 Вид документа|Act type|文件类型
@@ -194,12 +213,12 @@ const rows=`
 К маршруту|Back to route|返回学习路线
 СПРАВКА|HELP|帮助
 Как работать с документами|Working with documents|如何使用文件
-Рамки на скане|Frames on scans|扫描件上的框
-Выберите область, отвечающую на вопрос. Масштаб меняет размер страницы, но сохраняет положение рамок. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the area answering the question. Zoom keeps frames aligned. Act number, registration number and signature are different details.|选择回答问题的区域。缩放时框仍与原件对齐。文件编号、国家登记编号和签名是不同要素。
+Выбор фрагмента на скане|Selecting a scan area|选择扫描件区域
+Нажмите на нужный фрагмент документа. Разведите два пальца или используйте кнопки масштаба, чтобы рассмотреть скан. Кнопка с глазом включает подсказки; после выбора остаётся выделенным только ваш ответ. Для выбора с клавиатуры переходите между фрагментами клавишей Tab и нажимайте Enter. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the relevant part of the document. Pinch out or use the zoom buttons to inspect the scan. The eye button shows hints; after selection only your answer stays highlighted. With a keyboard, press Tab to move between areas and Enter to select. Act number, state registration number and signature are different details.|选择文件中的相应部分。双指张开或使用缩放按钮查看扫描件。眼睛按钮可显示提示；选择后仅突出显示你的答案。使用键盘时，按Tab键切换区域，按Enter键选择。文件编号、国家登记编号和签名是不同要素。
 Ответ фрагментом|Answer with evidence|以条款作答
 Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.|Use contents or search to find a provision. Select one or more paragraphs. Extra passages reduce precision.|通过目录或搜索查找条款，可选择一段或多段。多选无关段落会降低准确性。
 Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.|Use the issuer and heading. Each question concerns a specific real act. Executive orders are not limited to personnel matters.|根据发布机关和标题判断。每题均针对具体真实文件，指令不限于人事事务。
-Код открывает комнату вашей группы. Преподаватель управляет вопросом и моментом раскрытия рамок. В самостоятельной работе ответы группы недоступны.|The code opens your group’s room. The teacher controls questions and reveal timing. Group answers are unavailable in individual work.|代码用于加入本班课堂。教师控制题目和公布时机，独立作业中不可查看班级答案。
+Код открывает комнату вашей группы. Преподаватель управляет вопросом и моментом раскрытия ответов. В самостоятельной работе ответы группы недоступны.|The code opens your group’s room. The teacher controls questions and reveal timing. Group answers are unavailable in individual work.|代码用于加入本班课堂。教师控制题目和公布时机，独立作业中不可查看班级答案。
 Схемы из лекции|Lecture diagrams|讲座图示
 Ниже сохранены авторские схемы. Они помогают ориентироваться в примерах; правовая форма каждого задания проверяется по его оригиналу.|These lecture diagrams help you navigate examples. Verify each act’s form against its original.|讲座图示帮助理解例子，具体文件形式应以原件核对。
 Федеральный уровень|Federal level|联邦层级
@@ -255,8 +274,8 @@ export function translate(text,locale){
  if(result===undefined&&s.includes(' · слайд ')){const [label,n]=s.split(' · слайд ');return raw.replace(s,translate(label,lang)+(lang==='en'?' · slide ':' · 幻灯片 ')+n);}
  if(result===undefined){for(const p of patterns){const m=s.match(p.re);if(m){result=p[lang].replace(/\{(\w+)\}/g,(_,k)=>m[p.keys.indexOf(k)+1]);break;}}}
  if(result===undefined){const dynamic=[
- [/^Скан документа\. (.+)\. Области обозначены номерами\.$/,'Document scan. $1. Areas are numbered.','文件扫描件。$1。区域用数字标示。'],[/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
- [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Область (\d+)$/,'Area $1','区域 $1'],[/^Выбрать область (\d+)$/,'Select area $1','选择区域 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
+ [/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
+ [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
  ];for(const [re,en,zh] of dynamic){if(re.test(s)){result=s.replace(re,lang==='en'?en:zh);break;}}
  }
  if(result===undefined&&s.startsWith('После начала система случайно закрепит'))result=lang==='en'?'A dossier is assigned when you start and remains yours after reload. Its case and scans differ from the classroom tasks.':'开始后将随机分配卷宗，刷新后仍保留原分配。情境和扫描件与课堂任务不同。';
