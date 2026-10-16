@@ -1,12 +1,43 @@
 /** Pure domain functions. No DOM, network, Firebase or global mutable state. */
 export const VERSION = '1.0.0';
 export const ACT_TYPES = Object.freeze(['Указ', 'Постановление', 'Распоряжение', 'Приказ', 'Решение']);
+// Absence of this marker is the original one-requisite/three-requisite rubric.
+// Only an editable attempt may be upgraded; report decoding never adds it.
+export const SCAN_METADATA_MODE = 'all-hotspots-v1';
+const isRecord = value => Boolean(value) && typeof value==='object' && !Array.isArray(value);
+function allRequisites(answer) {
+  if(!Object.hasOwn(answer,'metadataMode'))return false;
+  if(answer.metadataMode!==SCAN_METADATA_MODE)throw new TypeError('Invalid scan metadata mode');
+  return true;
+}
+export function scanQuestionsFor(scan) {
+  if(!Array.isArray(scan?.hotspots)||!scan.hotspots.length)throw new TypeError('Scan requisites are unavailable');
+  const ids=new Set();
+  return scan.hotspots.map(h=>{
+    if(typeof h?.id!=='string'||!h.id||ids.has(h.id))throw new TypeError('Invalid scan requisite');
+    ids.add(h.id);return {field:h.id,prompt:h.label};
+  });
+}
+export function dossierScanQuestions(item, answer={}, scans=[]) {
+  return allRequisites(answer)?scanQuestionsFor(scans.find(s=>s.id===item.scanId)):item.scanQuestions;
+}
+/** Restore each valid choice, including mistakes. A legacy click belongs only
+ * to its original question and must never fill the other requisites. */
+export function normalizeScanSelections(task, answer={}, scans=[]) {
+  const current=allRequisites(answer);
+  const fields=scanQuestionsFor(scans.find(s=>s.id===task.scanId)).map(q=>q.field),valid=new Set(fields);
+  const metadata=isRecord(answer.metadata)?answer.metadata:{};
+  const entries=fields.filter(field=>Object.hasOwn(metadata,field)&&valid.has(metadata[field])).map(field=>[field,metadata[field]]);
+  if(!current&&valid.has(task.answer)&&valid.has(answer.hotspot)&&!Object.hasOwn(metadata,task.answer))entries.push([task.answer,answer.hotspot]);
+  return Object.fromEntries(entries);
+}
 export function parseDossierAnswer(legalLab) {
   if(typeof legalLab?.answerJson==='string'&&legalLab.answerJson.length>150000)throw new TypeError('Report answer is too large');
-  const raw=typeof legalLab?.answerJson==='string'?JSON.parse(legalLab.answerJson):(legalLab?.answer||{});
-  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new TypeError('Invalid report answer');
-  const result={metadata:raw.metadata||{},classifications:raw.classifications||{},documentIds:raw.documentIds||[],selections:raw.selections||[]};
-  for(const key of ['metadata','classifications'])if(typeof result[key]!=='object'||Array.isArray(result[key]))throw new TypeError('Invalid report fields');
+  const raw=typeof legalLab?.answerJson==='string'?JSON.parse(legalLab.answerJson):(legalLab?.answer??{});
+  if(!isRecord(raw))throw new TypeError('Invalid report answer');
+  const result={metadata:raw.metadata??{},classifications:raw.classifications??{},documentIds:raw.documentIds??[],selections:raw.selections??[]};
+  if(allRequisites(raw))result.metadataMode=SCAN_METADATA_MODE;
+  for(const key of ['metadata','classifications'])if(!isRecord(result[key])||Object.entries(result[key]).some(([id,value])=>id.length>200||typeof value!=='string'||value.length>200))throw new TypeError('Invalid report fields');
   for(const [key,max] of [['documentIds',3],['selections',500]])if(!Array.isArray(result[key])||result[key].length>max||result[key].some(id=>typeof id!=='string'||id.length>200))throw new TypeError('Invalid report selections');
   return result;
 }
@@ -46,18 +77,25 @@ export function gradeEvidence(selected, answerSets, docs=[]) {
   }
   return best;
 }
-export function gradeTask(task, answer={}, docs=[]) {
-  if(task.kind==='scan')return {fraction:answer.hotspot===task.answer?1:0,exact:answer.hotspot===task.answer};
+export function gradeTask(task, answer={}, docs=[], scans=[]) {
+  if(task.kind==='scan'){
+    if(!allRequisites(answer))return {fraction:answer.hotspot===task.answer?1:0,exact:answer.hotspot===task.answer};
+    const fields=scanQuestionsFor(scans.find(s=>s.id===task.scanId)).map(q=>q.field);
+    const metadata=isRecord(answer.metadata)?answer.metadata:{};
+    const matched=fields.filter(field=>Object.hasOwn(metadata,field)&&metadata[field]===field).length;
+    return {fraction:matched/fields.length,exact:matched===fields.length};
+  }
   if(task.kind==='type')return {fraction:answer.type===task.answer?1:0,exact:answer.type===task.answer};
   const found=answer.docId===task.docId;
   if(!found)return {fraction:0,exact:false,missingDocument:true};
   return gradeEvidence(answer.selections||[],task.answerSets,docs);
 }
 export function scoreDossier(item, answer={}, scans=[], docs=[]) {
-  const fields=item.scanQuestions.map(x=>x.field);
+  const fields=dossierScanQuestions(item,answer,scans).map(x=>x.field);
   const scan=scans.find(s=>s.id===item.scanId);
   const valid=new Set(scan?.hotspots.map(x=>x.id)||[]);
-  const metadata=fields.filter(f=>valid.has(f)&&answer.metadata?.[f]===f).length/fields.length;
+  const selections=isRecord(answer.metadata)?answer.metadata:{};
+  const metadata=fields.filter(f=>valid.has(f)&&Object.hasOwn(selections,f)&&selections[f]===f).length/fields.length;
   const classification=item.classificationIds.filter(id=>answer.classifications?.[id]===scans.find(s=>s.id===id)?.actType).length/item.classificationIds.length;
   const required=new Set(item.docIds), selected=new Set(unique(answer.documentIds||[]));
   const intersection=[...selected].filter(x=>required.has(x)).length;
@@ -117,9 +155,9 @@ export function searchUnits(doc, query, limit=Infinity) {
   for(const u of doc.units){const s=normalize(u.text+' '+u.locator);if(words.every(w=>s.includes(w))){hits.push(u);if(hits.length>=limit)break;}}
   return hits;
 }
-export function summarizeProgress(bank, answers, docs=[]) {
+export function summarizeProgress(bank, answers, docs=[], scans=[]) {
   const done=bank.classroom.filter(t=>answers[t.id]?.submitted);
-  return {done:done.length,total:bank.classroom.length,correct:done.filter(t=>gradeTask(t,answers[t.id],docs).exact).length};
+  return {done:done.length,total:bank.classroom.length,correct:done.filter(t=>gradeTask(t,answers[t.id],docs,scans).exact).length};
 }
 
 /** Same canonical UTF-8 representation as tools/acquire_corpus.py. */

@@ -19,6 +19,11 @@
       "sha256": "b90adb9bd439996722a1566d674f6a97430fdf515eba6165d36ad72ad64f7558"
     },
     {
+      "url": "apps/legal-lab/assets/scans/government-4146-r-page-1.webp",
+      "bytes": 118204,
+      "sha256": "e1f91c33d18f4ec2e8f2b29bf8ae1035b18b9a95c9420b320fbd4a41f29f43da"
+    },
+    {
       "url": "apps/legal-lab/assets/scans/slide-27-1.webp",
       "bytes": 83322,
       "sha256": "9fe51eda32d05ec6538ba5f4065d2b3d4c2d69dcb297cd02728900e1cfeb5182"
@@ -195,8 +200,8 @@
     },
     {
       "url": "apps/legal-lab/data/bank.json",
-      "bytes": 37420,
-      "sha256": "c36ad462bc8ff137bb0f89094d1b4c97a701ad79e82b5c0054609027a17a727a"
+      "bytes": 37457,
+      "sha256": "1f6d60214ab45de2293801683ff35c617d4c12ec56ecd429292f6d267ec8caee"
     },
     {
       "url": "apps/legal-lab/data/cases.json",
@@ -335,8 +340,8 @@
     },
     {
       "url": "apps/legal-lab/data/scans.json",
-      "bytes": 25620,
-      "sha256": "155e652f4353bd2fd1bdb290afcb5105e6c6a9ba6af87609b5e403c3e93e0627"
+      "bytes": 28948,
+      "sha256": "a7b077020a853179f44265b14858a7c0ec4a9e6f7a62dbc63b3db180e27c59af"
     },
     {
       "url": "apps/legal-lab/demo.html",
@@ -345,13 +350,13 @@
     },
     {
       "url": "apps/legal-lab/entry.mjs",
-      "bytes": 75191,
-      "sha256": "0ed379f53186346fb010f03d1d578fc23db4033f4e940f375a3690dfd3c91296"
+      "bytes": 95567,
+      "sha256": "2731cad3453abf10eca1752fde58ad7699038d721550fe7e3c94f7b2dcb22da6"
     },
     {
       "url": "apps/legal-lab/lib/core.mjs",
-      "bytes": 10044,
-      "sha256": "a2bd10d8445a6569213d0bf07db31b2933dd7def997dc38150a195d775507488"
+      "bytes": 12445,
+      "sha256": "db216e32c84033ebf322cf594e94a7f6282e50666b7cdde2bc4f85f82f806e53"
     },
     {
       "url": "apps/legal-lab/lib/corpus.mjs",
@@ -360,8 +365,8 @@
     },
     {
       "url": "apps/legal-lab/lib/live.mjs",
-      "bytes": 12109,
-      "sha256": "6836e36ed6f82637bfdb4759982c4bdc79e4bb248b474dd8442c86180aecc021"
+      "bytes": 12035,
+      "sha256": "a6bdbcffb3434b738df9d4be6e192b0481356cd971437cfa34dfa68fea18e45e"
     },
     {
       "url": "apps/legal-lab/lib/storage.mjs",
@@ -375,8 +380,8 @@
     },
     {
       "url": "apps/legal-lab/locales/ui.mjs",
-      "bytes": 34367,
-      "sha256": "6fbd86835377948f97036333bb87498b8ed23acdcd6adae39c1b2bbcca3c5141"
+      "bytes": 41031,
+      "sha256": "95a95b2f1c456a3cb7c59ff8363c90a7d93f8b26b577d7b3519cd6930d240dcf"
     },
     {
       "url": "apps/legal-lab/platform.mjs",
@@ -385,10 +390,10 @@
     },
     {
       "url": "apps/legal-lab/style.css",
-      "bytes": 34288,
-      "sha256": "c9a1f71b539dbe9b9dfb307c82d7419b081ce28e49e98e3974dc83120f4d44e1"
+      "bytes": 43579,
+      "sha256": "d0c76f24377def9a9b3e5b0cc0d01d1d19cacc7ca327c38ec21fe360e0ecf217"
     }
   ],
-  "totalBytes": 33015122,
+  "totalBytes": 33175349,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

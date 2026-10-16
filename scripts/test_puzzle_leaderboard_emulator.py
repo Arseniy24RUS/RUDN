@@ -47,7 +47,7 @@ class RuntimeEvidence:
             else:self.runtime.append(event)
         await context.expose_binding('__qaRuntimeSignal',receive)
         await context.add_init_script("""(()=>{
-          const documentId=crypto.randomUUID(),pending=new Set();let failure=null;
+          const documentId=Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join(''),pending=new Set();let failure=null;
           const send=payload=>{const p=window.__qaRuntimeSignal({...payload,document:documentId});pending.add(p);
             p.then(()=>pending.delete(p),error=>{failure=String(error);pending.delete(p)});};
           send({kind:'document'});
@@ -74,7 +74,8 @@ class RuntimeEvidence:
         def origin():return {'page':meta['id'],'context':meta['context'],'document':meta['document'],'phase':meta['phase']}
         def navigated(frame):
             if frame==page.main_frame:
-                self.lifecycle.append({'kind':'navigation','at':time.monotonic(),**origin()});meta['document']=None
+                # Firefox can acknowledge the new document before this event.
+                self.lifecycle.append({'kind':'navigation','at':time.monotonic(),**origin()})
         def requested(request):
             if request.method=='GET' and request.url==RESULTS_URL:
                 self.requests[request]={'id':len(self.requests)+1,'url':request.url,'method':request.method,

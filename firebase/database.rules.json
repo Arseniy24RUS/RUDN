@@ -149,7 +149,7 @@
             "$token": {
               ".read": "auth != null && data.child('ownerUid').val() === auth.uid",
               ".write": "auth != null && ((!newData.exists() && (!data.exists() || data.child('ownerUid').val() === auth.uid)) || (newData.exists() && newData.child('ownerUid').val() === auth.uid && (!data.exists() || data.child('ownerUid').val() === auth.uid) && (auth.token.email === 'omnistat@yandex.ru' || (!root.child('rudn-platform/v1/studentAliases').child(newData.child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true)))))",
-              ".validate": "$token.matches(/^[a-f0-9-]{36}$/) && newData.hasChildren(['ownerUid','contentVersion','taskId','createdAt']) && newData.child('contentVersion').val() === 'legal-lab-2026-10-15.2' && newData.child('taskId').val().matches(/^(S0[1-6]|T0[1-8]|Q(0[1-9]|[12][0-9]|3[0-8]))$/) && (!data.exists() || (newData.child('ownerUid').val() === data.child('ownerUid').val() && newData.child('studentKey').val() === data.child('studentKey').val() && newData.child('taskId').val() === data.child('taskId').val() && newData.child('contentVersion').val() === data.child('contentVersion').val() && newData.child('createdAt').val() === data.child('createdAt').val()))",
+              ".validate": "$token.matches(/^[a-f0-9-]{36}$/) && newData.hasChildren(['ownerUid','contentVersion','taskId','createdAt']) && newData.child('contentVersion').val() === 'legal-lab-2026-10-15.2' && newData.child('taskId').val().matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/) && (!data.exists() || (newData.child('ownerUid').val() === data.child('ownerUid').val() && newData.child('studentKey').val() === data.child('studentKey').val() && newData.child('taskId').val() === data.child('taskId').val() && newData.child('contentVersion').val() === data.child('contentVersion').val() && newData.child('createdAt').val() === data.child('createdAt').val()))",
               "ownerUid": {
                 ".validate": "newData.isString() && newData.val() === auth.uid"
               },
@@ -173,28 +173,23 @@
           "legalPresence": {
             "$version": {
               "$task": {
-                ".read": "auth != null && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^(S0[1-6]|T0[1-8]|Q(0[1-9]|[12][0-9]|3[0-8]))$/)",
+                ".read": "auth != null && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/)",
                 ".indexOn": [
                   "expiresAt"
                 ],
                 "$token": {
-                  ".write": "auth != null && ((!newData.exists() && (!data.exists() || root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid)) || (newData.exists() && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^(S0[1-6]|T0[1-8]|Q(0[1-9]|[12][0-9]|3[0-8]))$/) && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('contentVersion').val() === 'legal-lab-2026-10-15.2' && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('taskId').val() === $task && (auth.token.email === 'omnistat@yandex.ru' || (!root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true)))))",
+                  ".write": "auth != null && ((!newData.exists() && (!data.exists() || root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid)) || (newData.exists() && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/) && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('contentVersion').val() === 'legal-lab-2026-10-15.2' && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('taskId').val() === $task && (auth.token.email === 'omnistat@yandex.ru' || (!root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true)))))",
                   ".validate": "newData.hasChildren(['answer','updatedAt','expiresAt'])",
                   "answer": {
-                    ".validate": "newData.hasChild('hotspot') || newData.hasChild('type') || newData.hasChild('selections')",
-                    "hotspot": {
-                      ".validate": "newData.val() === 'issuer' || newData.val() === 'type' || newData.val() === 'title' || newData.val() === 'date' || newData.val() === 'number' || newData.val() === 'signature'"
-                    },
-                    "type": {
-                      ".validate": "newData.val() === 'Указ' || newData.val() === 'Постановление' || newData.val() === 'Распоряжение' || newData.val() === 'Приказ' || newData.val() === 'Решение'"
-                    },
+                    ".validate": "newData.hasChild('selections')",
                     "docId": {
                       ".validate": "newData.isString() && newData.val().matches(/^(constitution|koap|spatial|civil79|municipal25|system58|local33|procurement44|corruption273|goals309|moscow3|moscow35|moscow50|ekb|archive122|realty218)$/)"
                     },
                     "selections": {
                       "$index": {
                         ".validate": "$index.matches(/^([0-9]|[12][0-9])$/) && newData.isString() && newData.val().matches(/^(constitution|koap|spatial|civil79|municipal25|system58|local33|procurement44|corruption273|goals309|moscow3|moscow35|moscow50|ekb|archive122|realty218)-u[a-f0-9]{18}-[1-9][0-9]{0,3}$/)"
-                      }
+                      },
+                      ".validate": "newData.hasChildren()"
                     },
                     "$other": {
                       ".validate": false
