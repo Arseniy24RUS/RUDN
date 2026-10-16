@@ -133,12 +133,13 @@ test('scan normalization rejects unsafe entries without overwriting an existing 
 
 test('field prompts enumerate exactly the source hotspots, including special requisite types',()=>{
   const ids=new Set();
-  for(const task of scanTasks){
-    const scan=scans.find(s=>s.id===task.scanId),questions=scanQuestionsFor(scan);
+  // Historical type/dossier scans still exercise their original special fields.
+  for(const scan of scans){
+    const questions=scanQuestionsFor(scan);
     assert.equal(questions.length,scan.hotspots.length);
     for(const question of questions){ids.add(question.field);assert.equal(question.prompt,scan.hotspots.find(h=>h.id===question.field).label);}
   }
-  for(const field of ['registration','approved','agreed','acknowledgment','signature','type','title'])assert.ok(ids.has(field),field);
+  for(const field of ['registration','approved','agreed','acknowledgment','signature','type','title','emblem','place','executor','seal','signature-chair','signature-secretary','signatures-members','certified-copy'])assert.ok(ids.has(field),field);
 });
 
 test('a completed legacy A11 receipt stays five points with its original attempt identity',()=>{

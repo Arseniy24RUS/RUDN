@@ -543,8 +543,15 @@ export function createDurableStore(options = {}) {
     await ready();
     if (!input.owner || !input.draftId || input.incoming?.owner !== input.owner || input.current?.owner !== input.owner) throw new TypeError('Remote conflict owner must match both versions.');
     const conflict = remoteConflict(input);
-    await transaction(['conflicts'], true, async tx => { if (!await tx.get('conflicts', conflict.id)) await tx.put('conflicts', conflict); });
-    return mirrorConflict(conflict);
+    const saved = await transaction(['conflicts'], true, async tx => {
+      const existing = await tx.get('conflicts', conflict.id);
+      if (existing) return existing;
+      await tx.put('conflicts', conflict);
+      return conflict;
+    });
+    // Mirror the canonical record, including any explicit resolution. A delayed
+    // duplicate must not replace its resolved mirror with an unresolved copy.
+    return mirrorConflict(saved);
   }
 
   async function importRemoteDraft(remote) {

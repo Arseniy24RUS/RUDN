@@ -82,6 +82,15 @@ export function mergeCheckpoint(current,incoming,{ownerUid,now=Date.now()}={}){
   }
   const head=current.current;
   if(!head)throw fault('database/checkpoint-invalid');
+  // A flush can retain an outbox snapshot while an explicit resolution removes
+  // that queue. Its exact archived intent is already durable history, not a new
+  // branch. Do not rebase the discarded local state onto the selected head.
+  const resolvedLegalIntent=incoming.lastIntentId&&incoming.activitySlug==='seminar-4'&&
+    ['legal-lab-workspace','legal-lab-practice'].includes(incoming.mode)&&
+    Object.values(current.conflictHistory||{}).some(({branches})=>
+      [branches?.local,branches?.cloud,...Object.values(branches?.alternatives||{})]
+        .some(branch=>branch?.lastIntentId===incoming.lastIntentId));
+  if(resolvedLegalIntent)return {next:undefined,conflict:false,superseded:true,remoteRevision:current.revision};
   const tutorial=incoming.activitySlug==='settlements-tutorial';
   const completed=tutorial && [head,incoming,...Object.values(current.conflicts||{})].some(branch=>branch.state?.completed===true);
   if(tutorial)incoming={...incoming,state:{...incoming.state,completed}};
@@ -155,9 +164,9 @@ export function createCheckpointSync({
       // overwrite the other device's head before the user resolves the conflict.
       await store.ack(operation.id,operation.revision);
     }else{
-      await store.ack(operation.id,operation.revision,{remoteRevision:result.value.revision});
+      await store.ack(operation.id,operation.revision,merged.superseded?{}:{remoteRevision:result.value.revision});
     }
-    return merged.conflict?'conflict':'saved';
+    return merged.conflict?'conflict':merged.superseded?'superseded':'saved';
   }
 
   async function syncLiveAnswer(operation,session,signal){
@@ -313,6 +322,9 @@ export function createCheckpointSync({
     if(typeof store.importRemoteDraft!=='function')throw fault('storage/restore-handler-unavailable');
     const restored=await store.importRemoteDraft({...latest.current,remoteRevision:latest.revision});
     assertActive(session);
+    // A GET started before resolution may arrive afterward. importRemoteDraft
+    // keeps the newer draft; the same stale response must not revive its alerts.
+    if(Number.isFinite(restored?.remoteRevision)&&Number.isFinite(latest.revision)&&restored.remoteRevision>latest.revision)return restored;
     for(const incoming of Object.values(latest.conflicts||{})){
       await store.recordRemoteConflict({owner:session.owner,draftId:latest.current.id,
         current:restored||latest.current,incoming,remoteRevision:latest.revision,reason:'remote-conflict'});

@@ -4,62 +4,80 @@
     {
       "id": "S01",
       "kind": "scan",
-      "scanId": "slide-27-1",
-      "prompt": "Кто издал документ?",
+      "scanId": "field-01",
+      "prompt": "Найдите все реквизиты документа",
       "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Орган-издатель указан сверху. Подпись подтверждает принятие акта, но не заменяет название органа."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-27-1",
+      "title": "Разъяснения Минтранса",
+      "previousAnswer": "issuer"
     },
     {
       "id": "S02",
       "kind": "scan",
-      "scanId": "slide-27-2",
-      "prompt": "Где указана дата документа?",
-      "answer": "date",
+      "scanId": "field-02",
+      "prompt": "Найдите все реквизиты документа",
+      "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Дата акта стоит рядом с номером. Дата регистрации или ознакомления относится к другому действию."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-27-2",
+      "title": "Кадровый резерв",
+      "previousAnswer": "date"
     },
     {
       "id": "S03",
       "kind": "scan",
-      "scanId": "slide-29-2",
-      "prompt": "Где указан номер документа?",
-      "answer": "number",
+      "scanId": "field-03",
+      "prompt": "Найдите все реквизиты документа",
+      "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Номер в строке с датой и знаком № идентифицирует сам акт, а не приложение."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-29-2",
+      "title": "Внеочередное заседание",
+      "previousAnswer": "number"
     },
     {
       "id": "S04",
       "kind": "scan",
-      "scanId": "slide-33-2",
-      "prompt": "Где номер самого приказа?",
-      "answer": "number",
+      "scanId": "field-04",
+      "prompt": "Найдите все реквизиты документа",
+      "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Нужен номер приказа в строке с его датой. Номер государственной регистрации относится к регистрации акта."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-33-2",
+      "title": "Планировка территории",
+      "previousAnswer": "number"
     },
     {
       "id": "S05",
       "kind": "scan",
-      "scanId": "slide-31-3",
-      "prompt": "Каким актом утверждено положение?",
-      "answer": "approved",
+      "scanId": "field-05",
+      "prompt": "Найдите все реквизиты документа",
+      "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Гриф утверждения на приложении называет акт, которым утверждено положение. Заголовок положения этих реквизитов не заменяет."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-31-3",
+      "title": "Результаты конкурса",
+      "previousAnswer": "approved"
     },
     {
       "id": "S06",
       "kind": "scan",
-      "scanId": "slide-53-1",
-      "prompt": "Где подпись руководителя?",
-      "answer": "signature",
+      "scanId": "field-06",
+      "prompt": "Найдите все реквизиты документа",
+      "answer": "issuer",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Подпись лица, издавшего акт, находится после основного текста. Отметка об ознакомлении адресата выполняет другую функцию."
+      "explanation": "Проверьте названия реквизитов и выбранные области документа.",
+      "previousScanId": "slide-53-1",
+      "title": "Полномочия избиркомов",
+      "previousAnswer": "signature"
     },
     {
       "id": "T01",
@@ -71,7 +89,7 @@
       "answer": "Указ",
       "phase": "classroom",
       "minutes": 1,
-      "explanation": "Президент утвердил Стратегию указом. После ответа откройте скан и сопоставьте автора, заголовок и вид акта."
+      "explanation": "Президент утвердил Стратегию указом."
     },
     {
       "id": "T02",

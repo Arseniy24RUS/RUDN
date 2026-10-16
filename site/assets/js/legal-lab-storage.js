@@ -27,7 +27,7 @@ export function legalLabState(value) {
   return state;
 }
 
-const practiceFields=['answers','scanFields','reader','index','view','elapsedMs','liveRoom'];
+const practiceFields=['answers','scanFields','reader','index','view','elapsedMs','liveRoom','practiceCompletion','scanAnswerHistory'];
 function practiceState(value,contentVersion){
   if(!value?.legalLabPractice)return null;
   let state;

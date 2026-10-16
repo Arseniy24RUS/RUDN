@@ -30,12 +30,12 @@ jobs:
         shell: bash
         run: |
           # Owner explicitly requested phone testing before the remaining full CI.
-          # These are Git trees of reviewed source commit10dce51cf758a051d764cc5e7f68ac43dac0dec5.
+          # These are Git trees of reviewed source commit8a33cd79beedf4cca03f285856a68a31d24f31b9.
           # Any product, rules or test change requires a new explicit reviewed pin.
-          test "$(git rev-parse HEAD:site)" = '7758a40c61a9a0292d828f9ca387fce665c78636'
+          test "$(git rev-parse HEAD:site)" = '8cdcfbaaa9a1403916dad3e6a0dbf958ffffd305'
           test "$(git rev-parse HEAD:firebase)" = '8ba230ee20963e1974e366442744e8e1b5b403a1'
-          test "$(git rev-parse HEAD:scripts)" = 'dcfdbd5d14a4f183eb7a90bc833aad2d9b7cea9f'
-          test "$(git rev-parse HEAD:tests)" = '66b161547ae162fd666c4572237bc48e4138d140'
+          test "$(git rev-parse HEAD:scripts)" = '10c24a18efe76f903d3998e8df562bf08e9c41ef'
+          test "$(git rev-parse HEAD:tests)" = '6083adf21ed2987af67471b7d2ce31f51534ff78'
       - name: Prepare Node
         uses: actions/setup-node@v4
         with:
@@ -43,7 +43,7 @@ jobs:
       - name: Verify the reviewed module and existing cache contract
         run: |
           node scripts/build_legal_lab_manifest.mjs --check
-          node --test tests/legal-lab-core.test.mjs tests/legal-lab-all-requisites.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+          node --test tests/legal-lab*.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
           node --test scripts/test_governor_service_worker.mjs
           node scripts/test_legal_lab_corpus.mjs --output "${RUNNER_TEMP}/legal-phone-corpus"
       - name: Configure Pages
