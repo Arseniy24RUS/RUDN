@@ -30,9 +30,9 @@ jobs:
         shell: bash
         run: |
           # Owner explicitly requested phone testing before the remaining full CI.
-          # These are Git trees of reviewed source commit 04032e8dc664e8341aab292009204e823e948cae.
+          # These are Git trees of reviewed source commit c158f33b0d469431965c5e5557df98d0778e057e.
           # Any product, rules or test change requires a new explicit reviewed pin.
-          test "$(git rev-parse HEAD:site)" = '78eace3549b4bd6eebab381f53c774510df0407d'
+          test "$(git rev-parse HEAD:site)" = '439f0b84de9f7bef3561d192b58e4cded9187a41'
           test "$(git rev-parse HEAD:firebase)" = '8ba230ee20963e1974e366442744e8e1b5b403a1'
           test "$(git rev-parse HEAD:scripts)" = 'c0de3863193c4b614b52d0ba457d86b1c8ad337e'
           test "$(git rev-parse HEAD:tests)" = '234648aff724ec81bcbba2b5ad954bd604123289'
