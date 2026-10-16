@@ -1,8 +1,9 @@
 """Real puzzle UI -> durable outbox -> isolated Firebase -> rendered leaderboard.
 
 Run inside firebase emulators:exec --project demo-rudn --only auth,database.
-Only config and a read-only engine geometry observer are injected. The real
-backend, authentication, completion bridge, rules and leaderboard remain active.
+QA injects local config, a read-only geometry observer and passive runtime
+listeners. The real backend, authentication, completion bridge, rules and
+leaderboard remain active; every raw page error still fails this test.
 """
 from __future__ import annotations
 import argparse
@@ -25,6 +26,95 @@ from test_puzzle_catalog import ROOT, READ_ONLY_HOOK, ready, place_pieces, trust
 NAMESPACE='demo-rudn-default-rtdb'
 DATABASE='http://127.0.0.1:9000'
 BACKEND_SPEC=re.search(r"from './(backend\.js[^']*)'",(ROOT/'site/assets/js/puzzle-bootstrap.js').read_text('utf8')).group(1)
+
+RESULTS_URL=DATABASE+'/results.json?ns='+NAMESPACE
+
+class RuntimeEvidence:
+    """Durable QA observations; every raw driver/runtime/collector error fails."""
+    def __init__(self,browser):
+        self.raw=[];self.runtime=[];self.failures=[];self.lifecycle=[]
+        self.pages={};self.contexts={};self.requests={};self.closing=set();self.closed=set()
+
+    async def attach(self,context):
+        context_id=len(self.contexts)+1;self.contexts[context]=context_id
+        def receive(source,payload):
+            page=source['page'];meta=self.pages[page]
+            event={**payload,'at':time.monotonic(),'context':context_id,'page':meta['id'],'phase':meta['phase']}
+            if payload['kind']=='document':
+                if source['frame']==page.main_frame:meta['document']=payload['document']
+                self.lifecycle.append(event)
+            elif payload['kind']=='lifecycle':self.lifecycle.append(event)
+            else:self.runtime.append(event)
+        await context.expose_binding('__qaRuntimeSignal',receive)
+        await context.add_init_script("""(()=>{
+          const documentId=Array.from(crypto.getRandomValues(new Uint32Array(4)),n=>n.toString(16).padStart(8,'0')).join(''),pending=new Set();let failure=null;
+          const send=payload=>{const p=window.__qaRuntimeSignal({...payload,document:documentId});pending.add(p);
+            p.then(()=>pending.delete(p),error=>{failure=String(error);pending.delete(p)});};
+          send({kind:'document'});
+          window.addEventListener('error',event=>send({kind:'error',message:event.message||'Resource error',
+            name:event.error?.name||'',stack:event.error?.stack||''}));
+          window.addEventListener('unhandledrejection',event=>send({kind:'unhandledrejection',
+            message:String(event.reason),name:event.reason?.name||'',stack:event.reason?.stack||'',reasonType:typeof event.reason}));
+          for(const event of ['beforeunload','pagehide','rudn:identitychange'])
+            window.addEventListener(event,()=>send({kind:'lifecycle',event}));
+          window.__qaRuntimeDrain=async()=>{for(let i=0;i<2;i++){
+            await Promise.all([...pending]);await new Promise(resolve=>setTimeout(resolve,0));
+          }await Promise.all([...pending]);if(failure)throw new Error('Runtime collector delivery failed: '+failure);};
+        })()""")
+        context.on('page',lambda page:self.watch(page,context))
+
+    def mark(self,page,phase):
+        meta=self.pages[page];meta['phase']=phase
+        self.lifecycle.append({'kind':'test-phase','event':phase,'at':time.monotonic(),
+            'page':meta['id'],'context':meta['context'],'document':meta['document']})
+
+    def watch(self,page,context):
+        meta={'id':len(self.pages)+1,'context':self.contexts[context],'document':None,'phase':'created'};self.pages[page]=meta
+        page._qa_runtime=self
+        def origin():return {'page':meta['id'],'context':meta['context'],'document':meta['document'],'phase':meta['phase']}
+        def navigated(frame):
+            if frame==page.main_frame:
+                # Firefox can acknowledge the new document before this event.
+                self.lifecycle.append({'kind':'navigation','at':time.monotonic(),**origin()})
+        def requested(request):
+            if request.method=='GET' and request.url==RESULTS_URL:
+                self.requests[request]={'id':len(self.requests)+1,'url':request.url,'method':request.method,
+                    'requestedAt':time.monotonic(),**origin()}
+        def completed(request,**values):
+            item=self.requests.get(request)
+            if item:item.update(**values)
+        def error(value):
+            self.raw.append({'name':value.name,'message':str(value),'stack':value.stack,'at':time.monotonic(),**origin()})
+        page.on('framenavigated',navigated);page.on('request',requested);page.on('pageerror',error)
+        page.on('response',lambda response:completed(response.request,responseAt=time.monotonic(),status=response.status))
+        page.on('requestfinished',lambda request:completed(request,finishedAt=time.monotonic()))
+        page.on('requestfailed',lambda request:completed(request,failedAt=time.monotonic(),failure=request.failure))
+        page.on('close',lambda:self.failures.append('Page closed before runtime drain') if context not in self.closing else None)
+
+    async def drain(self,page):
+        if page.url=='about:blank':return
+        try:
+            await asyncio.wait_for(page.evaluate('async()=>{if(!window.__qaRuntimeDrain)throw new Error("Runtime collector missing");await window.__qaRuntimeDrain()}'),5)
+            await asyncio.sleep(0)
+        except Exception as error:
+            self.failures.append('Runtime drain failed: '+str(error));raise
+
+    async def close(self,context):
+        if context in self.closed:return
+        try:
+            for page in context.pages:
+                self.mark(page,'context-close');await self.drain(page)
+        finally:
+            self.closing.add(context)
+            await context.close();await asyncio.sleep(0)
+            self.closed.add(context)
+
+    def summarize(self,record):
+        errors=[e['name']+': '+e['message'] for e in self.raw]
+        errors.extend('Runtime '+e['kind']+': '+e['message'] for e in self.runtime)
+        errors.extend(self.failures)
+        record.update(pageErrors=errors,rawPageErrors=self.raw,runtimeErrors=self.runtime,
+            runtimeCollectorFailures=self.failures,leaderboardRequests=list(self.requests.values()),lifecycle=self.lifecycle)
 
 def db(path='',value=None,method='GET'):
     url=DATABASE+'/'+path+'.json?ns='+NAMESPACE
@@ -121,6 +211,8 @@ async def free_module_contracts(page,ticket):
     return {'slugs':list(ids),'synced':True,'freeGradesCreated':0,'priorCourseGrades':{'seminar-2':5,'seminar-5':4,'seminar-7':4}}
 
 async def select_russia(page,server,mode='free'):
+    page._qa_runtime.mark(page,'select-russia-'+mode)
+    await page._qa_runtime.drain(page)
     await page.goto(server.base+'apps/puzzle.html?context='+mode,wait_until='domcontentloaded')
     await ready(page)
     if mode=='free':
@@ -141,6 +233,25 @@ async def finish_map(page):
     await page.locator('#puzzleResultDialog[open]').wait_for()
     return outcome['state']['attemptId']
 
+async def fresh_teacher_leaderboard(page,group):
+    """Observe a real refresh triggered by the test's online event before goto."""
+    key='ui-teacher-refresh-proof-'+str(time.time_ns())
+    row={'fio':'Teacher refresh probe','group':group,'difficulty':'hard','time_ms':1501,'elapsed_ms':1501,
+        'placed':89,'total':89,'timestamp':1767225600000,'user_agent':'isolated-teacher-probe',
+        'participant_id':hashlib.sha256(key.encode()).hexdigest()}
+    args={'base':page._qa_base,'spec':BACKEND_SPEC,'key':key}
+    cached="async ({base,spec,key})=>{const {backend}=await import(base+'assets/js/'+spec);return Boolean(backend.getCachedPuzzleLeaderboard()?.rows.some(row=>row.id===key))}"
+    try:
+        db('results/'+key,row,'PUT')
+        await page.evaluate("window.dispatchEvent(new Event('online'))")
+        await page.locator(f'#leader_hard tr[data-attempt-id="{key}"]').wait_for(timeout=10000)
+        await page.wait_for_function(cached,arg=args,timeout=10000)
+    finally:db('results/'+key,None,'DELETE')
+    await page.evaluate("window.dispatchEvent(new Event('online'))")
+    await page.wait_for_function('async args=>!await ('+cached+')(args)',arg=args,timeout=10000)
+    await page.locator(f'#leader_hard tr[data-attempt-id="{key}"]').wait_for(state='detached',timeout=10000)
+    return {'trigger':'test-dispatched online event','visibleFreshRowAndCache':True,'transientRowRemoved':True,'timeoutPerWaitMs':10000}
+
 async def run(browser_name,output):
     ticket=str(int(time.time()*1000))
     profile={'ticket':ticket,'studentKey':ticket,'email':ticket+'@rudn.ru','fullName':'UI Emulator Student '+browser_name,'group':'ГГУбд-01-26'}
@@ -152,6 +263,7 @@ async def run(browser_name,output):
     if prior_fixtures:db('results',prior_fixtures,'PATCH')
     db('rudn-platform/v1/access/overrides',{str(year):{'topic-2':{'state':'open','updatedAt':1,'teacherUid':'emulator'}} for year in range(2025,2040)},'PUT')
     record={'browser':browser_name,'profileTicketSuffix':ticket[-4:],'results':[],'pageErrors':[],'unexpectedRequests':[]}
+    evidence=RuntimeEvidence(browser_name)
     with EmulatorSite() as server:
         async with async_playwright() as playwright:
             kwargs={'firefox_user_prefs':{'network.proxy.type':0}} if browser_name=='firefox' else {}
@@ -161,9 +273,9 @@ async def run(browser_name,output):
             # them pass, bypassing Playwright routes. Worker behavior is tested
             # separately below with a real server-side asset outage.
             context=await browser.new_context(viewport={'width':1366,'height':1000},locale='ru-RU',service_workers='block',accept_downloads=True)
+            await evidence.attach(context)
             await context.add_init_script("""(()=>{if(location.hostname==='127.0.0.1'&&!localStorage.getItem('qa-profile')){localStorage.setItem('rudn.profile.v1',JSON.stringify(%s));localStorage.setItem('rudn.locale','ru');localStorage.setItem('qa-profile','1')}})()"""%json.dumps(profile))
             page=await context.new_page();page._qa_base=server.base
-            page.on('pageerror',lambda e:record['pageErrors'].append(str(e)))
             page.on('request',lambda request:record['unexpectedRequests'].append(request.url) if urlsplit(request.url).hostname not in ('127.0.0.1',None) else None)
             page.set_default_timeout(20000)
             try:
@@ -217,6 +329,7 @@ async def run(browser_name,output):
                     await page.locator(f'#leader_{difficulty} tr[data-attempt-id="{attempt_id}"]').wait_for()
                     if index==0:
                         assert db('results/'+attempt_id) is None
+                        evidence.mark(page,'reload');await evidence.drain(page)
                         await page.reload(wait_until='domcontentloaded');await ready(page)
                         await page.locator(f'#leader_{difficulty} tr[data-attempt-id="{attempt_id}"]').wait_for()
                         await context.unroute(re.compile(r'^http://127\.0\.0\.1:(9000|9099)/'))
@@ -230,6 +343,7 @@ async def run(browser_name,output):
                     record['results'].append({'id':attempt_id,'difficulty':difficulty,'points':points,'inputPieces':89,'hints':1,'publicRow':True})
                 assert len({x['id'] for x in record['results']})==3
                 record['freeModuleContracts']=await free_module_contracts(page,ticket)
+                evidence.mark(page,'reload');await evidence.drain(page)
                 await page.reload(wait_until='domcontentloaded');await ready(page)
                 await page.keyboard.press('Escape')
                 for result in record['results']:await page.locator(f'#leader_{result["difficulty"]} tr[data-attempt-id="{result["id"]}"]').wait_for()
@@ -302,6 +416,7 @@ async def run(browser_name,output):
                 record['filteredExport']={'groupYear':fixture_group[-2:],'rows':205,'visibleLastPageRows':5,'sheets':3,'literalFormulaText':True,'longDurationPreserved':True}
                 print(f'{browser_name}: filtered XLSX passed; offline cache',flush=True)
                 await context.route(re.compile(r'^http://127\.0\.0\.1:(9000|9099)/'),lambda route:route.abort('internetdisconnected'))
+                evidence.mark(page,'reload');await evidence.drain(page)
                 await page.reload(wait_until='domcontentloaded');await ready(page)
                 await page.keyboard.press('Escape')
                 await page.locator('#puzzleGroupFilter').click();await page.locator(f'#puzzleGroupFilterOptions input[value="{fixture_group}"]').check()
@@ -318,20 +433,23 @@ async def run(browser_name,output):
                 await page.locator('#puzzleGroupFilterClear').click()
                 await page.locator('#puzzleGroupFilter summary').click()
                 await page.locator('.puzzle-leaderboard').screenshot(path=str(output/f'leaderboard-{browser_name}.png'))
-                await context.close()
+                await evidence.close(context)
                 original_result_ids=set(db('results') or {})
                 record['excludedRoles']=[]
                 for role in ('guest','teacher'):
                     print(f'{browser_name}: {role} result exclusion',flush=True)
                     preview=await browser.new_context(viewport={'width':1366,'height':1000},locale='ru-RU',service_workers='block')
+                    await evidence.attach(preview)
                     preview_page=await preview.new_page();preview_page._qa_base=server.base
-                    preview_page.on('pageerror',lambda error:record['pageErrors'].append(str(error)))
                     preview_page.on('request',lambda request:record['unexpectedRequests'].append(request.url) if urlsplit(request.url).hostname not in ('127.0.0.1',None) else None)
                     try:
                         await preview_page.goto(server.base+'apps/puzzle.html?context=free',wait_until='domcontentloaded');await ready(preview_page)
                         if role=='teacher':
+                            evidence.mark(preview_page,'teacher-signin')
                             create_teacher()
                             await backend(preview_page,"backend.adminSignIn('omnistat@yandex.ru','Emulator-Only-Teacher-2026').then(()=>true)")
+                            evidence.mark(preview_page,'teacher-fresh-leaderboard')
+                            record['teacherRefreshBeforeNavigation']=await fresh_teacher_leaderboard(preview_page,fixture_group)
                             await select_russia(preview_page,server,'seminar')
                             assert await backend(preview_page,'backend.isAdmin()&&backend.getProfile()===null')
                         else:
@@ -345,7 +463,9 @@ async def run(browser_name,output):
                     except Exception:
                         await preview_page.screenshot(path=str(output/f'failure-{browser_name}-{role}.png'),full_page=True)
                         raise
-                    finally:await preview.close()
+                    finally:await evidence.close(preview)
+                await browser.close()
+                evidence.summarize(record)
                 assert not record['pageErrors'],record['pageErrors']
                 assert not record['unexpectedRequests'],record['unexpectedRequests']
                 record['passed']=True
@@ -354,8 +474,10 @@ async def run(browser_name,output):
                 if not page.is_closed():await page.screenshot(path=str(output/f'failure-{browser_name}.png'),full_page=True)
                 raise
             finally:
-                (output/f'emulator-{browser_name}.json').write_text(json.dumps(record,indent=2),encoding='utf8')
-                await context.close();await browser.close()
+                try:await evidence.close(context);await browser.close()
+                finally:
+                    evidence.summarize(record)
+                    (output/f'emulator-{browser_name}.json').write_text(json.dumps(record,indent=2),encoding='utf8')
     return record
 
 async def first_offline_export(browser_name,output):
@@ -369,13 +491,14 @@ async def first_offline_export(browser_name,output):
             'timestamp':1767225600000+index,'user_agent':'isolated-offline-export',
             'participant_id':hashlib.sha256(key.encode()).hexdigest()},'PUT')
     result={'browser':browser_name,'scenario':'first-export-after-asset-network-loss','pageErrors':[],'libraryResponses':[],'libraryFailures':[]}
+    evidence=RuntimeEvidence(browser_name)
     with EmulatorSite() as server:
         async with async_playwright() as playwright:
             kwargs={'firefox_user_prefs':{'network.proxy.type':0}} if browser_name=='firefox' else {}
             browser=await getattr(playwright,browser_name).launch(headless=True,**kwargs)
             context=await browser.new_context(viewport={'width':1366,'height':1000},locale='ru-RU',service_workers='allow',accept_downloads=True)
+            await evidence.attach(context)
             page=await context.new_page()
-            page.on('pageerror',lambda error:result['pageErrors'].append(str(error)))
             page.on('response',lambda response:result['libraryResponses'].append({'status':response.status,'fromServiceWorker':response.from_service_worker}) if '/xlsx-0.20.3.full.min.js' in response.url else None)
             page.on('requestfailed',lambda request:result['libraryFailures'].append(request.failure) if '/xlsx-0.20.3.full.min.js' in request.url else None)
             try:
@@ -411,22 +534,99 @@ async def first_offline_export(browser_name,output):
                     assert sheet['B2'].value.startswith('=1+2 学生 ')
                     assert abs(sheet['D2'].value.total_seconds()*1000-(7200123+index))<1
                 book.close()
+                await evidence.close(context);await browser.close()
+                evidence.summarize(result)
                 assert not result['pageErrors'],result['pageErrors']
                 result.update({'passed':True,'firstLibraryExecutionOffline':True,'independentParser':'openpyxl','sheets':3,'rows':3})
             except Exception as error:
                 result.update({'passed':False,'error':str(error)})
-                result['diagnostic']=await page.evaluate("async()=>({online:navigator.onLine,library:typeof window.XLSX,worker:navigator.serviceWorker.controller?.scriptURL,caches:await caches.keys(),status:document.querySelector('#puzzleLeaderboardStatus').textContent})")
-                await page.screenshot(path=str(output/f'first-full-offline-{browser_name}-failure.png'),full_page=True)
+                if not page.is_closed():result['diagnostic']=await page.evaluate("async()=>({online:navigator.onLine,library:typeof window.XLSX,worker:navigator.serviceWorker.controller?.scriptURL,caches:await caches.keys(),status:document.querySelector('#puzzleLeaderboardStatus').textContent})")
+                if not page.is_closed():await page.screenshot(path=str(output/f'first-full-offline-{browser_name}-failure.png'),full_page=True)
                 raise
             finally:
-                (output/f'first-full-offline-{browser_name}.json').write_text(json.dumps(result,indent=2),encoding='utf8')
-                await context.close();await browser.close()
+                try:await evidence.close(context);await browser.close()
+                finally:
+                    evidence.summarize(result)
+                    (output/f'first-full-offline-{browser_name}.json').write_text(json.dumps(result,indent=2),encoding='utf8')
     return result
+
+async def runtime_controls(browser_name,output):
+    """Real exceptions must fail even when their text mimics a native diagnostic."""
+    records=[];message=RESULTS_URL[len('http:/'):]+' due to access control checks.'
+    with EmulatorSite() as server:
+        async with async_playwright() as playwright:
+            kwargs={'firefox_user_prefs':{'network.proxy.type':0}} if browser_name=='firefox' else {}
+            browser=await getattr(playwright,browser_name).launch(headless=True,**kwargs)
+            try:
+                for phase in ('outside-offline','inside-offline','after-navigation','before-navigation'):
+                    for operation in ('throw','reject-string','reject-error','forged-native-error'):
+                        evidence=RuntimeEvidence(browser_name)
+                        context=await browser.new_context(service_workers='block')
+                        await evidence.attach(context);page=await context.new_page()
+                        result={'phase':phase,'operation':operation}
+                        try:
+                            await page.goto(server.base+'assets/css/puzzle.css')
+                            await evidence.drain(page)
+                            if phase=='after-navigation':
+                                previous=evidence.pages[page]['document']
+                                await page.reload();await evidence.drain(page)
+                                assert previous and evidence.pages[page]['document'] and previous!=evidence.pages[page]['document']
+                            offline=phase=='inside-offline'
+                            if offline:
+                                await context.route(re.compile('^'+re.escape(RESULTS_URL)+'$'),lambda route:route.abort('internetdisconnected'))
+                                assert await page.evaluate("async url=>{try{await fetch(url);return false}catch{return true}}",RESULTS_URL)
+                                result['transportProof']='caught real route-aborted request'
+                            original_document=evidence.pages[page]['document']
+                            await page.evaluate("""({operation,message})=>{setTimeout(()=>{
+                              if(operation==='reject-string'){Promise.reject(message);return;}
+                              const error=new Error(message);
+                              if(operation==='forged-native-error'){error.name='Fetch API cannot load http';error.stack='';}
+                              if(operation==='reject-error')Promise.reject(error);else throw error;
+                            },0)}""",{'operation':operation,'message':message})
+                            # No sleep after the trigger: the same bounded drain used
+                            # before real close/reload must preserve the late signal.
+                            if offline:
+                                await context.unroute(re.compile('^'+re.escape(RESULTS_URL)+'$'))
+                                await evidence.drain(page)
+                                assert await page.evaluate('async url=>(await fetch(url)).status',RESULTS_URL)==200
+                                result['restoredHTTP200']=True
+                            if phase=='before-navigation':
+                                await evidence.drain(page)
+                                await page.reload();await evidence.drain(page)
+                                assert original_document!=evidence.pages[page]['document']
+                        finally:
+                            try:await evidence.close(context)
+                            finally:evidence.summarize(result);records.append(result)
+                        assert result['runtimeErrors'] and result['pageErrors'],result
+                        if offline:assert any(r.get('failedAt') for r in result['leaderboardRequests']),result
+                        assert all(e['document'] for e in result['runtimeErrors']),result
+                        if phase=='before-navigation':assert any(e['document']==original_document for e in result['runtimeErrors']),result
+                        result['expectedFailureObservedAfterClose']=True
+                if browser_name=='webkit':
+                    evidence=RuntimeEvidence(browser_name);context=await browser.new_context(service_workers='block')
+                    await evidence.attach(context);page=await context.new_page()
+                    result={'phase':'outside-offline','operation':'unknown-native-uri'}
+                    try:
+                        await page.goto(server.base+'assets/css/puzzle.css')
+                        # Real browser CORS enforcement on an empty context. This
+                        # is deliberately a different URI; every error must fail.
+                        assert await page.evaluate("async url=>{try{await fetch(url,{credentials:'include'});return false}catch{return true}}",RESULTS_URL+'&unknown-control=1')
+                    finally:
+                        try:await evidence.close(context)
+                        finally:evidence.summarize(result);records.append(result)
+                    assert result['rawPageErrors'] and result['pageErrors'],result
+                    result['expectedFailureObservedAfterClose']=True
+            finally:
+                await browser.close()
+                (output/f'runtime-controls-{browser_name}.json').write_text(json.dumps({'browser':browser_name,'controls':records,
+                    'errorPolicy':'Every raw pageerror, runtime signal and collector failure fails; no native exception allowance'},indent=2),encoding='utf8')
+    return {'browser':browser_name,'runtimePositiveControls':len(records),'passed':True}
 
 async def main():
     parser=argparse.ArgumentParser();parser.add_argument('--browsers',default='chromium');parser.add_argument('--offline-export-only',action='store_true');parser.add_argument('--output',type=Path,default=Path(os.environ.get('QA_OUT',str(ROOT.parent/'artifacts/rudn-puzzle-qa/leaderboard-1.3.7'))));args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     for browser in args.browsers.split(','):
+        print(json.dumps(await runtime_controls(browser,args.output)))
         if not args.offline_export_only:print(json.dumps(await run(browser,args.output)))
         print(json.dumps(await first_offline_export(browser,args.output)))
 

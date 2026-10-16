@@ -1,5 +1,29 @@
 // Translation touches presentation text/labels only, never values or data-* identifiers.
 const rows=`
+Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.|Shared selections are available only when finding paragraphs in long documents. Participants on the same question can see them; they disappear when you change questions or leave. Scan details, act types and dossiers are individual work.|协作标记仅用于在长篇文件中查找段落。同一题目的参与者可看到这些标记；切换题目或离开后，标记消失。扫描件要素、文件类型和卷宗作业均独立完成。
+Найдите реквизиты документа|Find the document details|查找文件要素
+МАРШРУТ ЗАНЯТИЯ|LESSON ROUTE|课程路线
+Выберите область для каждого реквизита. Переходите к следующему шагу кнопкой или названием реквизита.|Choose an area for each detail. Use the next-step button or a detail’s name to switch steps.|为每项要素选择区域。点击下一步按钮或要素名称即可切换步骤。
+Реквизиты документа|Document details|文件要素
+Реквизит {n} из {total}|Detail {n} of {total}|第{n}项要素，共{total}项
+Нажмите на область этого реквизита на скане.|Select this detail’s area on the scan.|点击扫描件中该要素所在的区域。
+Отмечено реквизитов: {n} из {total}.|Details assigned: {n} of {total}.|已标记{n}项要素，共{total}项。
+Область выбрана|Area assigned|已选择区域
+Область не выбрана|No area assigned|未选择区域
+← Предыдущий реквизит|← Previous detail|← 上一项要素
+Следующий реквизит|Next detail|下一项要素
+Проверить все реквизиты|Check all details|检查全部要素
+Цвет связывает название с выбранной областью. Оценка появится после проверки.|The color links a detail’s name to its assigned area. Correctness is shown after checking.|颜色将要素名称与所选区域对应起来。检查后才会显示对错。
+Все реквизиты найдены верно.|All details were found correctly.|所有要素均选择正确。
+Проверьте отмеченные реквизиты.|Review the assigned details.|请核对已标记的要素。
+Верно: {n} из {total}.|Correct: {n} of {total}.|正确：{n}/{total}。
+Фрагмент оригинала|Original excerpt|原件片段
+Все реквизиты реального скана|All details on an authentic scan|真实扫描件的全部要素
+Для каждого названия реквизита выберите область на скане, затем нажмите «Следующий реквизит». К любому шагу можно вернуться. Цвет названия совпадает с цветом назначенной рамки; он не означает правильность. После всех шагов проверьте комплект. Кнопка с глазом показывает доступные области. Страницу можно увеличить обычным жестом двумя пальцами. С клавиатуры выбирайте область клавишами Tab и Enter.|For each named detail, select its area on the scan, then choose “Next detail”. You can revisit any step. The name and its assigned frame share a color; color does not indicate correctness. Check the complete set after all steps. The eye button shows available areas. Use the usual two-finger gesture to zoom the page. With a keyboard, select areas using Tab and Enter.|为每项要素选择扫描件上的区域，然后点击“下一项要素”。可返回任意步骤。要素名称与对应框的颜色一致，颜色不表示对错。完成全部步骤后检查整套答案。眼睛按钮可显示可选区域。可用普通双指手势缩放页面，也可用Tab和Enter键选择区域。
+Совместные отметки доступны после входа в профиль.|Sign in to see shared selections.|登录个人档案后可查看共享选择。
+Общие отметки временно недоступны. Ваш ответ сохранён.|Shared selections are temporarily unavailable. Your answer is saved.|共享标记暂不可用。你的答案已保存。
+Сейчас на вопросе ответов: {n}|Answers on this question now: {n}|本题当前答案数：{n}
+Результат сохранён. При подключении к сети журнал синхронизируется автоматически.|Your result is saved. The gradebook syncs automatically when you are online.|结果已保存。联网后，成绩册将自动同步。
 Совместное занятие|Shared session|共同课堂
 Выберите группу и создайте комнату. Вы управляете вопросами и раскрытием ответов.|Choose a group and create a room. You control the questions and reveal responses.|选择班级并创建课堂。您控制题目以及答案的公布。
 Досье выполняется отдельно. К комнате можно вернуться.|Dossiers are completed separately. You can return to the room.|档案作业单独完成。您可以返回课堂。
@@ -91,7 +115,7 @@ const rows=`
 Вид акта|Act type|文件类型
 В документе|In the document|文件正文
 На дату события|At the event date|事件日期
-Нажмите на подходящую рамку.|Select the appropriate frame.|选择适当的框。
+Нажмите на нужный фрагмент документа.|Select the relevant part of the document.|选择文件中的相应部分。
 Восстановите вид реального документа по автору и заголовку.|Identify the act type from its issuer and heading.|根据发布机关和标题识别文件类型。
 Ответьте фрагментом документа. Нажмите на абзац. При необходимости отметьте несколько.|Answer with evidence from the document. Select a paragraph, or several where needed.|用文件段落作答，必要时可选择多段。
 Основание найдено|Legal basis found|已找到法律依据
@@ -106,6 +130,27 @@ const rows=`
 Реальный документ · исторический образец|Authentic document · historical sample|真实文件 · 历史样本
 Уменьшить скан|Zoom out|缩小
 Увеличить скан|Zoom in|放大
+Скан документа|Document scan|文件扫描件
+Скан документа с закрытым видом акта|Document scan with the act type concealed|文件类型已遮盖的扫描件
+Вид акта скрыт до проверки|The act type is concealed until you check your answer|检查答案前隐藏文件类型
+Надпись с видом акта закрыта. Определите вид по документу.|The act type is concealed. Identify it from the document.|文件类型名称已遮盖，请根据文件判断类型。
+Ответ преподавателю|Teacher answer key|教师参考答案
+Правильный ответ|Correct answer|正确答案
+Допустимый вариант {n}|Accepted answer {n}|可接受答案{n}
+Перейти к основанию|Go to the supporting passage|跳转到依据段落
+Показать подсказки на скане|Show scan hints|显示扫描件提示
+Скрыть подсказки на скане|Hide scan hints|隐藏扫描件提示
+Страницу можно увеличить обычным жестом двумя пальцами. Кнопка с глазом покажет доступные фрагменты. Мелкие реквизиты удобнее выбирать после увеличения кнопкой «+».|Use the usual two-finger gesture to zoom the page. The eye button shows selectable areas. Use the “+” button to enlarge small details before selecting them.|使用普通双指手势可缩放整个页面。眼睛按钮可显示可选区域。选择较小的要素前，可点击“+”按钮放大。
+Фрагмент вверху слева|Area at the top left|左上方区域
+Фрагмент вверху по центру|Area at the top centre|顶部中央区域
+Фрагмент вверху справа|Area at the top right|右上方区域
+Фрагмент посередине слева|Area at the middle left|中部左侧区域
+Фрагмент посередине страницы|Area at the centre of the page|页面中央区域
+Фрагмент посередине справа|Area at the middle right|中部右侧区域
+Фрагмент внизу слева|Area at the bottom left|左下方区域
+Фрагмент внизу по центру|Area at the bottom centre|底部中央区域
+Фрагмент внизу справа|Area at the bottom right|右下方区域
+Центр: {x}% ширины и {y}% высоты страницы.|Centre: {x}% of the page width and {y}% of the page height.|中心位置：页面宽度的{x}%，页面高度的{y}%。
 Изображение не найдено|Image unavailable|图像不可用
 ВИД ДОКУМЕНТА|ACT TYPE|文件类型
 Вид документа|Act type|文件类型
@@ -183,6 +228,28 @@ const rows=`
 Ваш ответ|Your answer|你的答案
 Правильное основание|Required evidence|正确依据
 Почему такой балл|Why this score|评分说明
+Ответ проверен|Answer checked|答案已检查
+Реквизит найден верно.|The correct detail was selected.|已选中正确要素。
+Выбрана другая область.|A different area was selected.|选择了其他区域。
+Реквизит пропущен.|This detail was not selected.|未选择此要素。
+Верная область|Correct area|正确区域
+Правильный вид|Correct act type|正确文件类型
+Вид определён верно.|The act type is correct.|文件类型正确。
+Выбран другой вид документа.|A different act type was selected.|选择了其他文件类型。
+Вид документа не выбран.|No act type was selected.|未选择文件类型。
+В оригинале этого акта указан вид:|The original of this act states its type as:|该文件原件标明的类型是：
+Баллы за этот документ: {points} из {max}.|Points for this document: {points} out of {max}.|本文件得分：{points}，满分{max}。
+Потеря за этот документ: {points} балла.|Points lost for this document: {points}.|本文件扣分：{points}。
+Выбрано верно|Correctly selected|选择正确
+Лишние документы|Extra documents|多选的文件
+Пропущенные документы|Missing documents|遗漏的文件
+Документ не найден|Document not found|未找到文件
+Совпало|Matched|匹配
+Пропущенный фрагмент|Missing passage|遗漏的段落
+Лишний фрагмент|Extra passage|多选的段落
+Документ этого фрагмента не выбран.|The document containing this passage was not selected.|未选择包含此段落的文件。
+Фрагмент не найден в материалах.|This passage was not found in the materials.|在材料中未找到此段落。
+Нет|None|无
 Не выбрано|Not selected|未选择
 Все позиции совпадают. Баллы начислены полностью.|All items match. Full credit awarded.|所有项目均匹配，获得满分。
 Правильных позиций: {n} из {total}. Каждая позиция даёт одинаковую долю балла.|Correct items: {n} of {total}. Each item contributes equally.|正确项目：{n}/{total}。各项目占分相同。
@@ -194,12 +261,12 @@ const rows=`
 К маршруту|Back to route|返回学习路线
 СПРАВКА|HELP|帮助
 Как работать с документами|Working with documents|如何使用文件
-Рамки на скане|Frames on scans|扫描件上的框
-Выберите область, отвечающую на вопрос. Масштаб меняет размер страницы, но сохраняет положение рамок. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the area answering the question. Zoom keeps frames aligned. Act number, registration number and signature are different details.|选择回答问题的区域。缩放时框仍与原件对齐。文件编号、国家登记编号和签名是不同要素。
+Выбор фрагмента на скане|Selecting a scan area|选择扫描件区域
+Нажмите на нужный фрагмент документа. Чтобы увеличить страницу, используйте обычный жест двумя пальцами. Кнопка с глазом включает подсказки; после выбора остаётся выделенным только ваш ответ. Для выбора с клавиатуры переходите между фрагментами клавишей Tab и нажимайте Enter. Номер акта, номер государственной регистрации и подпись – разные элементы.|Select the relevant part of the document. Use the usual two-finger gesture to zoom the page. The eye button shows hints; after selection only your answer stays highlighted. With a keyboard, press Tab to move between areas and Enter to select. Act number, state registration number and signature are different details.|选择文件中的相应部分。使用普通双指手势可缩放整个页面。眼睛按钮可显示提示；选择后仅突出显示你的答案。使用键盘时，按Tab键切换区域，按Enter键选择。文件编号、国家登记编号和签名是不同要素。
 Ответ фрагментом|Answer with evidence|以条款作答
 Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.|Use contents or search to find a provision. Select one or more paragraphs. Extra passages reduce precision.|通过目录或搜索查找条款，可选择一段或多段。多选无关段落会降低准确性。
 Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.|Use the issuer and heading. Each question concerns a specific real act. Executive orders are not limited to personnel matters.|根据发布机关和标题判断。每题均针对具体真实文件，指令不限于人事事务。
-Код открывает комнату вашей группы. Преподаватель управляет вопросом и моментом раскрытия рамок. В самостоятельной работе ответы группы недоступны.|The code opens your group’s room. The teacher controls questions and reveal timing. Group answers are unavailable in individual work.|代码用于加入本班课堂。教师控制题目和公布时机，独立作业中不可查看班级答案。
+Код открывает комнату вашей группы. Преподаватель управляет вопросом и моментом раскрытия ответов. В самостоятельной работе ответы группы недоступны.|The code opens your group’s room. The teacher controls questions and reveal timing. Group answers are unavailable in individual work.|代码用于加入本班课堂。教师控制题目和公布时机，独立作业中不可查看班级答案。
 Схемы из лекции|Lecture diagrams|讲座图示
 Ниже сохранены авторские схемы. Они помогают ориентироваться в примерах; правовая форма каждого задания проверяется по его оригиналу.|These lecture diagrams help you navigate examples. Verify each act’s form against its original.|讲座图示帮助理解例子，具体文件形式应以原件核对。
 Федеральный уровень|Federal level|联邦层级
@@ -255,8 +322,8 @@ export function translate(text,locale){
  if(result===undefined&&s.includes(' · слайд ')){const [label,n]=s.split(' · слайд ');return raw.replace(s,translate(label,lang)+(lang==='en'?' · slide ':' · 幻灯片 ')+n);}
  if(result===undefined){for(const p of patterns){const m=s.match(p.re);if(m){result=p[lang].replace(/\{(\w+)\}/g,(_,k)=>m[p.keys.indexOf(k)+1]);break;}}}
  if(result===undefined){const dynamic=[
- [/^Скан документа\. (.+)\. Области обозначены номерами\.$/,'Document scan. $1. Areas are numbered.','文件扫描件。$1。区域用数字标示。'],[/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
- [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Область (\d+)$/,'Area $1','区域 $1'],[/^Выбрать область (\d+)$/,'Select area $1','选择区域 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
+ [/^Оригинал: (.+)$/,'Original: $1','原件：$1'],[/^Схема из лекции, слайд (\d+)$/,'Lecture diagram, slide $1','讲座图示，第$1页'],
+ [/^Ваше досье (.+)$/,'Your dossier $1','你的卷宗 $1'],[/^Совместное занятие (.+)$/,'Classroom $1','课堂 $1'],[/^Документ (\d+)$/,'Document $1','文件 $1'],[/^Найдено фрагментов: (\d+)$/,'Passages found: $1','找到段落：$1'],[/^(\d+) документов$/,'$1 documents','$1份文件'],[/^(\d+) ответов$/,'$1 answers','$1份答案'],[/^(\d+) выбрали$/,'$1 selected','$1人选择'],[/^Первые найденные фрагменты: (\d+)$/,'First matching passages: $1','首批匹配段落：$1'],[/^фрагм\. выбрано · максимум (\d+)$/,'selected · maximum $1','已选段落 · 最多$1段'],[/^Комната (.+) · (\d+) ответов( · приём закрыт)?$/,'Room $1 · $2 responses$3','课堂 $1 · $2份作答$3'],[/^ДОСЬЕ (.+) · (.+)$/,'DOSSIER $1 · $2','卷宗 $1 · $2'],[/^Занятие (.+)\. Готово к совместной работе\.$/,'Room $1 is ready.','课堂 $1 已就绪。']
  ];for(const [re,en,zh] of dynamic){if(re.test(s)){result=s.replace(re,lang==='en'?en:zh);break;}}
  }
  if(result===undefined&&s.startsWith('После начала система случайно закрепит'))result=lang==='en'?'A dossier is assigned when you start and remains yours after reload. Its case and scans differ from the classroom tasks.':'开始后将随机分配卷宗，刷新后仍保留原分配。情境和扫描件与课堂任务不同。';
@@ -266,7 +333,7 @@ export function translate(text,locale){
 }
 export function translateDOM(root,locale){
  root.lang=normalizeLocale(locale);if(root.lang==='ru')return;
- const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
- while(node=walker.nextNode()){if(node.parentElement?.closest('[data-original],script,style'))continue;node.textContent=translate(node.textContent,locale);}
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT,{acceptNode:node=>node.nodeType===1?(node.matches('[data-original],script,style')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_SKIP):NodeFilter.FILTER_ACCEPT});let node;
+ while(node=walker.nextNode())node.textContent=translate(node.textContent,locale);
  for(const el of root.querySelectorAll('[aria-label],[placeholder],[title],[alt]'))for(const attr of ['aria-label','placeholder','title','alt'])if(el.hasAttribute(attr)&&!el.closest('[data-original]'))el.setAttribute(attr,translate(el.getAttribute(attr),locale));
 }

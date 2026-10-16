@@ -142,167 +142,69 @@
             }
           },
           "legalRooms": {
-            "$room": {
-              ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru' && (!data.exists() || data.child('meta/teacherUid').val() === auth.uid)",
-              ".write": "auth != null && auth.token.email === 'omnistat@yandex.ru' && !data.exists() && newData.exists() && newData.child('meta/teacherUid').val() === auth.uid",
-              ".validate": "newData.hasChildren(['meta','state']) && $room.matches(/^[A-F0-9]{12}$/)",
-              "meta": {
-                ".read": "auth != null",
-                ".validate": "newData.hasChildren(['teacherUid','group','contentVersion','createdAt','expiresAt']) && ((!data.exists() && newData.child('teacherUid').val() === auth.uid && newData.child('expiresAt').val() > now && newData.child('expiresAt').val() <= now + 32400000) || newData.val() === data.val())",
-                "teacherUid": {
-                  ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 128"
-                },
-                "group": {
-                  ".validate": "newData.isString() && newData.val().matches(/^ГГУбд-0[1-6]-[0-9]{2}$/)"
-                },
-                "contentVersion": {
-                  ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                },
-                "createdAt": {
-                  ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                },
-                "expiresAt": {
-                  ".validate": "newData.isNumber()"
-                },
-                "$other": {
-                  ".validate": false
-                }
+            ".read": false,
+            ".write": false
+          },
+          "legalPresenceOwners": {
+            "$token": {
+              ".read": "auth != null && data.child('ownerUid').val() === auth.uid",
+              ".write": "auth != null && ((!newData.exists() && (!data.exists() || data.child('ownerUid').val() === auth.uid)) || (newData.exists() && newData.child('ownerUid').val() === auth.uid && (!data.exists() || data.child('ownerUid').val() === auth.uid) && (auth.token.email === 'omnistat@yandex.ru' || (!root.child('rudn-platform/v1/studentAliases').child(newData.child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true)))))",
+              ".validate": "$token.matches(/^[a-f0-9-]{36}$/) && newData.hasChildren(['ownerUid','contentVersion','taskId','createdAt']) && newData.child('contentVersion').val() === 'legal-lab-2026-10-15.2' && newData.child('taskId').val().matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/) && (!data.exists() || (newData.child('ownerUid').val() === data.child('ownerUid').val() && newData.child('studentKey').val() === data.child('studentKey').val() && newData.child('taskId').val() === data.child('taskId').val() && newData.child('contentVersion').val() === data.child('contentVersion').val() && newData.child('createdAt').val() === data.child('createdAt').val()))",
+              "ownerUid": {
+                ".validate": "newData.isString() && newData.val() === auth.uid"
               },
-              "state": {
-                ".read": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) || ((auth != null && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).exists() && !root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()) && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now)",
-                ".write": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && newData.exists()",
-                ".validate": "newData.hasChildren(['taskId','roundId','showSelections','reveal','phase','updatedAt']) && (newData.child('phase').val() === 'closed' || (newData.child('showSelections').val() === false && newData.child('reveal').val() === false)) && (!data.exists() || (newData.child('roundId').val() === data.child('roundId').val() ? newData.child('taskId').val() === data.child('taskId').val() : (newData.child('phase').val() === 'collect' && newData.child('showSelections').val() === false && newData.child('reveal').val() === false)))",
-                "taskId": {
-                  ".validate": "newData.isString() && newData.val().matches(/^[QST][0-9]{2}$/)"
-                },
-                "roundId": {
-                  ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                },
-                "showSelections": {
-                  ".validate": "newData.isBoolean()"
-                },
-                "reveal": {
-                  ".validate": "newData.isBoolean()"
-                },
-                "phase": {
-                  ".validate": "newData.val() === 'collect' || newData.val() === 'closed'"
-                },
-                "updatedAt": {
-                  ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                },
-                "$other": {
-                  ".validate": false
-                }
+              "studentKey": {
+                ".validate": "newData.isString() && newData.val().length <= 64"
               },
-              "members": {
-                "$uid": {
-                  ".read": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) || (auth != null && $uid === auth.uid)",
-                  ".write": "auth != null && $uid === auth.uid && newData.exists() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && !root.child('rudn-platform/v1/studentAliases').child(newData.child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(newData.child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val()",
-                  ".validate": "newData.hasChildren(['studentKey','group','contentVersion','joinedAt']) && newData.child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && newData.child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()",
-                  "studentKey": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80"
-                  },
-                  "group": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                  },
-                  "contentVersion": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                  },
-                  "joinedAt": {
-                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                  },
-                  "$other": {
-                    ".validate": false
-                  }
-                }
+              "contentVersion": {
+                ".validate": "newData.val() === 'legal-lab-2026-10-15.2'"
               },
-              "answers": {
-                "$round": {
-                  ".read": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid)",
-                  "$uid": {
-                    ".read": "(auth != null && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).exists() && !root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()) && $uid === auth.uid && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && data.child('studentKey').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()",
-                    ".write": "(auth != null && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).exists() && !root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()) && $uid === auth.uid && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && newData.exists() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('roundId').val() === $round && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('phase').val() === 'collect' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('reveal').val() === false && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('showSelections').val() === false",
-                    ".validate": "newData.hasChildren(['answer','studentKey','contentVersion','taskId','roundId','submittedAt']) && newData.child('studentKey').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val() && newData.child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val() && newData.child('taskId').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('taskId').val() && newData.child('roundId').val() === $round",
-                    "answer": {
-                      ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 8000"
-                    },
-                    "studentKey": {
-                      ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80"
-                    },
-                    "contentVersion": {
-                      ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                    },
-                    "taskId": {
-                      ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 3"
-                    },
-                    "roundId": {
-                      ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                    },
-                    "submittedAt": {
-                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                    },
-                    "$other": {
-                      ".validate": false
-                    }
-                  }
-                }
+              "taskId": {
+                ".validate": "newData.isString()"
               },
-              "aggregates": {
-                "$round": {
-                  ".read": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) || ((auth != null && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).exists() && !root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()) && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('roundId').val() === $round && (root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('showSelections').val() === true || root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('reveal').val() === true))",
-                  ".write": "(auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now && newData.exists() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('roundId').val() === $round && root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('phase').val() === 'closed' && (root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('showSelections').val() === true || root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('reveal').val() === true)",
-                  ".validate": "newData.hasChildren(['roundId','taskId','contentVersion','updatedAt','respondents']) && newData.child('roundId').val() === $round && newData.child('taskId').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('state').child('taskId').val() && newData.child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val()",
-                  "roundId": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                  },
-                  "taskId": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 3"
-                  },
-                  "contentVersion": {
-                    ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
-                  },
-                  "updatedAt": {
-                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                  },
-                  "respondents": {
-                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 500 && newData.val() % 1 === 0"
-                  },
-                  "hotspots": {
-                    "$choice": {
-                      ".validate": "$choice.length <= 180 && newData.isNumber() && newData.val() >= 1 && newData.val() <= newData.parent().parent().child('respondents').val() && newData.val() % 1 === 0"
-                    }
-                  },
-                  "classifications": {
-                    "$choice": {
-                      ".validate": "$choice.length <= 180 && newData.isNumber() && newData.val() >= 1 && newData.val() <= newData.parent().parent().child('respondents').val() && newData.val() % 1 === 0"
-                    }
-                  },
-                  "selections": {
-                    "$choice": {
-                      ".validate": "$choice.length <= 180 && newData.isNumber() && newData.val() >= 1 && newData.val() <= newData.parent().parent().child('respondents').val() && newData.val() % 1 === 0"
-                    }
-                  },
-                  "$other": {
-                    ".validate": false
-                  }
-                }
-              },
-              "presence": {
-                "$uid": {
-                  "$connection": {
-                    ".write": "auth != null && $uid === auth.uid && (!newData.exists() || (((auth != null && auth.token.email === 'omnistat@yandex.ru' && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/teacherUid').val() === auth.uid) || (auth != null && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).exists() && !root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true) && root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('studentKey').val()).child('group').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/group').val() && root.child('rudn-platform/v1/live/legalRooms').child($room).child('members').child(auth.uid).child('contentVersion').val() === root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/contentVersion').val())) && root.child('rudn-platform/v1/live/legalRooms').child($room).child('meta/expiresAt').val() > now))",
-                    ".validate": "newData.hasChildren(['joinedAt']) && $connection.length <= 100",
-                    "joinedAt": {
-                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= now + 60000"
-                    },
-                    "$other": {
-                      ".validate": false
-                    }
-                  }
-                }
+              "createdAt": {
+                ".validate": "newData.isNumber() && ((!data.exists() && newData.val() >= now - 10000 && newData.val() <= now + 5000) || (data.exists() && newData.val() === data.val()))"
               },
               "$other": {
                 ".validate": false
+              }
+            }
+          },
+          "legalPresence": {
+            "$version": {
+              "$task": {
+                ".read": "auth != null && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/)",
+                ".indexOn": [
+                  "expiresAt"
+                ],
+                "$token": {
+                  ".write": "auth != null && ((!newData.exists() && (!data.exists() || root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid)) || (newData.exists() && $version === 'legal-lab-2026-10-15_2' && $task.matches(/^Q(0[1-9]|[12][0-9]|3[0-8])$/) && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('ownerUid').val() === auth.uid && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('contentVersion').val() === 'legal-lab-2026-10-15.2' && root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('taskId').val() === $task && (auth.token.email === 'omnistat@yandex.ru' || (!root.child('rudn-platform/v1/studentAliases').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).exists() && (root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUid').val() === auth.uid || root.child('rudn-platform/v1/profiles').child(root.child('rudn-platform/v1/live/legalPresenceOwners').child($token).child('studentKey').val()).child('ownerUids').child(auth.uid).val() === true)))))",
+                  ".validate": "newData.hasChildren(['answer','updatedAt','expiresAt'])",
+                  "answer": {
+                    ".validate": "newData.hasChild('selections')",
+                    "docId": {
+                      ".validate": "newData.isString() && newData.val().matches(/^(constitution|koap|spatial|civil79|municipal25|system58|local33|procurement44|corruption273|goals309|moscow3|moscow35|moscow50|ekb|archive122|realty218)$/)"
+                    },
+                    "selections": {
+                      "$index": {
+                        ".validate": "$index.matches(/^([0-9]|[12][0-9])$/) && newData.isString() && newData.val().matches(/^(constitution|koap|spatial|civil79|municipal25|system58|local33|procurement44|corruption273|goals309|moscow3|moscow35|moscow50|ekb|archive122|realty218)-u[a-f0-9]{18}-[1-9][0-9]{0,3}$/)"
+                      },
+                      ".validate": "newData.hasChildren()"
+                    },
+                    "$other": {
+                      ".validate": false
+                    }
+                  },
+                  "updatedAt": {
+                    ".validate": "newData.isNumber() && newData.val() >= now - 10000 && newData.val() <= now + 5000"
+                  },
+                  "expiresAt": {
+                    ".validate": "newData.isNumber() && newData.val() === newData.parent().child('updatedAt').val() + 45000 && newData.val() > now"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                }
               }
             }
           }

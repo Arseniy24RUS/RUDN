@@ -2,7 +2,7 @@
 // The exported scenarios also run against the official Auth/RTDB emulators.
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
-import {parseDossierAnswer} from '../site/apps/legal-lab/lib/core.mjs';
+import {parseDossierAnswer,SCAN_METADATA_MODE} from '../site/apps/legal-lab/lib/core.mjs';
 import {createDurableStore} from '../site/assets/js/durable-store.js';
 import {createCheckpointSync,commitStudentAttempt} from '../site/assets/js/checkpoint-sync.js';
 import {createLegalLabPersistence,legalLabIdentity,legalLabState,legalLabAttemptForCourse} from '../site/assets/js/legal-lab-storage.js';
@@ -122,6 +122,46 @@ export async function runLegalLabSyncRegression({transport,user,studentKey,setOf
     uidSwitch.setBeforeTransaction(()=>{uidSwitch.backend.user={uid:user.uid+'-changed'};uidSwitch.backend.generation++;});
     const noDelivery=await uidSwitch.sync.flush();assert.equal(noDelivery.saved,0,'UID change during synchronization aborts the old identity write');assert.equal(await get(checkpointPath(uidSwitch)),null);
     events.push('profile and UID/generation changes reject stale writes');
+    // Serialization fixture only: the fixed two-point terminal rubric below is
+    // synthetic and does not claim that these choices earn this score.
+    const fullVersion='legal-all-requisites-v1',fullA=device('all-requisites-A',fullVersion);
+    const oldQuizBeforeFull=await get('attempts/'+studentKey+'/old-quiz'),bestBeforeFull=await get('grades/'+studentKey+'/seminar-4'),receiptsBeforeFull=await get('attempts/'+studentKey);
+    assert.equal(await fullA.persistence.load(),null);
+    const sixMetadata={issuer:'issuer',type:'type',title:'number',date:'date',number:'number',signature:'signature'};
+    const fullInitial=base(fullA);fullInitial.answers.S01={metadataMode:SCAN_METADATA_MODE,metadata:structuredClone(sixMetadata),submitted:true};fullInitial.scanFields={S01:4};
+    fullInitial.assessment.answer={metadataMode:SCAN_METADATA_MODE,metadata:structuredClone(sixMetadata),classifications:{'synthetic-scan':'Приказ'},documentIds:['synthetic-act'],selections:['synthetic-act-unit-1']};fullInitial.assessment.scanFieldIndex=3;
+    await fullA.persistence.checkpoint({state:fullInitial,contentVersion:fullVersion});await fullA.sync.flush();
+    const fullB=device('all-requisites-B',fullVersion),fullOnB=await fullB.persistence.load();
+    assert.deepEqual(fullOnB,fullInitial,'A second device restores the versioned full metadata maps and both field indices exactly');
+    assert.equal(fullOnB.assessment.answer.metadataMode,SCAN_METADATA_MODE);assert.deepEqual(fullOnB.assessment.answer.metadata,sixMetadata);
+    assert.equal(fullOnB.answers.S01.metadataMode,SCAN_METADATA_MODE);assert.deepEqual(fullOnB.answers.S01.metadata,sixMetadata);
+    assert.deepEqual(fullOnB.scanFields,{S01:4});assert.equal(fullOnB.assessment.scanFieldIndex,3);
+    const fullOffline=structuredClone(fullOnB);fullOffline.assessment.answer.metadata.title='title';fullOffline.assessment.answer.metadata.signature='number';fullOffline.answers.S01.metadata.number='date';fullOffline.scanFields.S01=5;fullOffline.assessment.scanFieldIndex=5;
+    setOffline(true);await fullB.persistence.checkpoint({state:fullOffline,contentVersion:fullVersion});assert.ok((await fullB.sync.flush()).deferred>=1,'A full-map offline edit remains pending');
+    assert.deepEqual(await fullB.persistence.load(),fullOffline,'Offline reload retains every versioned choice and navigation index locally');setOffline(false);await fullB.retry();assert.equal((await queue(fullB)).length,0);
+    assert.deepEqual(await fullA.persistence.load(),fullOffline,'The other device restores the exact offline edit after reconnect');
+    assert.deepEqual(legalLabState((await get(checkpointPath(fullB))).current.state),fullOffline,'The synced primary JSON retains full metadata, mistakes and indices');
+    const fullTerminal=finish(fullOffline,2,'issuer');
+    // finish() is intentionally kept as the old single-field fixture helper.
+    // Restore the complete new answer explicitly before using the real adapter.
+    fullTerminal.answers=structuredClone(fullOffline.answers);fullTerminal.assessment.answer=structuredClone(fullOffline.assessment.answer);
+    fullTerminal.scanFields=structuredClone(fullOffline.scanFields);fullTerminal.assessment.scanFieldIndex=fullOffline.assessment.scanFieldIndex;
+    const fullAttempt=await terminal(fullB,fullTerminal);assert.deepEqual(fullAttempt.legalLab.answer,fullOffline.assessment.answer);assert.deepEqual(JSON.parse(fullAttempt.legalLab.answerJson),fullOffline.assessment.answer);
+    setLoseAttemptAck(true);await fullB.retry();assert.equal(ackLossPending(),false,'A full-map receipt is committed before the injected acknowledgement loss');assert.ok((await queue(fullB)).some(op=>op.type==='attempt'));
+    const fullReceipt=await get('attempts/'+studentKey+'/'+fullB.persistence.attemptId);
+    assert.equal(fullReceipt.legalLab.answer.metadataMode,SCAN_METADATA_MODE);assert.deepEqual(fullReceipt.legalLab.answer.metadata,fullOffline.assessment.answer.metadata);assert.equal(Object.keys(fullReceipt.legalLab.answer.metadata).length,6);
+    assert.deepEqual(JSON.parse(fullReceipt.legalLab.answerJson),fullOffline.assessment.answer,'Committed answerJson retains the marker and all six metadata fields');
+    assert.deepEqual(parseDossierAnswer(fullReceipt.legalLab),fullOffline.assessment.answer,'The actual report decoder restores the complete versioned answer');
+    await fullB.retry();assert.equal((await queue(fullB)).length,0);assert.deepEqual(await get('attempts/'+studentKey+'/'+fullB.persistence.attemptId),fullReceipt,'Lost-ack retry cannot change the existing full-map receipt');
+    assert.equal(Object.keys(await get('attempts/'+studentKey)).length,Object.keys(receiptsBeforeFull).length+1,'Full-map completion creates exactly one additional attempt');
+    assert.deepEqual(await get('attempts/'+studentKey+'/old-quiz'),oldQuizBeforeFull);assert.deepEqual(await get('grades/'+studentKey+'/seminar-4'),bestBeforeFull,'The synthetic lower result preserves the previous best grade');
+    const fullCompletedRestore=device('all-requisites-terminal-restore',fullVersion);assert.deepEqual(await fullCompletedRestore.persistence.load(),fullTerminal,'A fresh device restores the full terminal workspace including learning metadata and field indices');
+    const fullPrimaryBeforePractice=await get(checkpointPath(fullB)),fullReceiptsBeforePractice=await get('attempts/'+studentKey),fullGradeBeforePractice=await get('grades/'+studentKey+'/seminar-4');
+    const fullPractice=structuredClone(fullTerminal);fullPractice.assessment.delivery='host-accepted';fullPractice.view='learn';fullPractice.answers.S01.metadata.signature='title';fullPractice.answers.S01.submitted=false;fullPractice.scanFields.S01=1;
+    await fullB.persistence.checkpoint({state:fullPractice,contentVersion:fullVersion});await fullB.sync.flush();
+    const fullPracticeRestore=device('all-requisites-practice-restore',fullVersion);assert.deepEqual(await fullPracticeRestore.persistence.load(),fullPractice,'Post-terminal practice restores the learning marker, complete map and changed scanFields index exactly');
+    assert.deepEqual(await get(checkpointPath(fullB)),fullPrimaryBeforePractice,'Full-map practice cannot mutate the terminal primary');assert.deepEqual(await get('attempts/'+studentKey),fullReceiptsBeforePractice,'Full-map practice cannot create or alter attempts');assert.deepEqual(await get('grades/'+studentKey+'/seminar-4'),fullGradeBeforePractice,'Full-map practice cannot change the best grade');assert.deepEqual(await get('attempts/'+studentKey+'/old-quiz'),oldQuizBeforeFull,'Full-map practice preserves the original quiz');
+    events.push('versioned six-requisite metadata, learning choices and field indices survive two-device restore and offline synchronization','full-map answer and answerJson survive terminal commit and idempotent lost-ack retry','post-terminal full-map practice restores exactly without changing the old quiz, terminal attempt or best grade');
     return {status:'pass',environment,scenarios:['two-device exact dossier restore','stale offline finish cannot deliver attempt or grade before conflict resolution',...events],limitations:['Device persistence uses the real durable localStorage fallback backed by separate in-memory maps; this is not browser IndexedDB coverage.','Offline and acknowledgement loss are deliberately injected transport failures.']};
   }finally{setOffline(false);for(const d of devices)await d.close();}
 }
