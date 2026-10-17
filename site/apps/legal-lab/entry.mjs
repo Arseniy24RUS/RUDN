@@ -364,7 +364,7 @@ class LegalLab {
     if(!this.active())return;
     if(action==='noop')return;
     if(action==='restart-assessment')return this.restartAssessment();
-    if(isFiveWork(this.state.assessment)&&['five-task','five-submit','five-next','metadata-field','assessment-hotspot','assessment-type','select-unit','remove-unit'].includes(action))return this.fiveAction(action,b);
+    if(this.view==='assessment'&&isFiveWork(this.state.assessment)&&(['five-task','five-submit','five-next','metadata-field','assessment-hotspot','assessment-type'].includes(action)||['select-unit','remove-unit'].includes(action)&&b.dataset.context==='assessment-five'))return this.fiveAction(action,b);
     if(action==='archive-preview'){if(!this.incompatible||!this.lease?.acquired||!(this.demo||this.incompatible.assessment?.preview))return;await this.store.put('archive:'+Date.now(),this.incompatible);this.state=freshState(this.catalog.contentVersion);this.incompatible=null;this.readOnly=false;this.view='home';this.notice='Предыдущая демонстрационная работа сохранена в локальном архиве.';await this.persist();return this.render();}
     if(action==='dismiss'){this.notice='';return this.render();}
     if(action==='exit'){this.live?.watchTask(null);this.presenceTask=null;await this.persist();return this.opt.onExit?.();}
