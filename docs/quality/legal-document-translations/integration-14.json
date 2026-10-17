@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "status": "release-candidate-browser-matrix-in-progress",
+  "kind": "factual-integration-evidence",
+  "activeActs": 14,
+  "completeTranslatedActs": 14,
+  "locales": [
+    "en",
+    "zh"
+  ],
+  "translatedUnitsPerLocale": 19876,
+  "scansRemainRussian": true,
+  "sourceAndGradingIdsUnchanged": true,
+  "sourceCutoff": "2026-10-15",
+  "newPayloads": {
+    "koap": {
+      "en": {
+        "sha256": "109d2723821e9823aec2f6c28570d962234380c237c33b0612b62e5d0e0e4525",
+        "bytes": 4739116,
+        "units": 9493,
+        "sections": 1292
+      },
+      "zh": {
+        "sha256": "f6597a908a8d8b4bbb42325ed0e43b7364f5fe9cf93c2f33e00316bdf7b2d95d",
+        "bytes": 3536661,
+        "units": 9493,
+        "sections": 1292
+      }
+    },
+    "procurement44": {
+      "en": {
+        "sha256": "ed39e6d69498b3ae13b0b4cd9ff379b3116854178d6b0d7f703faeaaae5e13af",
+        "units": 2270,
+        "sections": 121
+      },
+      "zh": {
+        "sha256": "6cc3bd20d9cc749419e1d95f68be0d54710e56b6064de2b27ac28b21b3da82bf",
+        "units": 2270,
+        "sections": 121
+      }
+    }
+  },
+  "reviewEvidence": {
+    "koap": {
+      "path": "koap-review.json",
+      "sha256": "f1dd1cdfa86c277c6e93650185e4bbe5ae4e4ed396d450315a8bb01e709a35d4",
+      "basis": "Nine independently reviewed/repaired/rechecked ranges and full literal assembly/reproduction acceptance"
+    },
+    "procurement44": {
+      "path": "procurement44-review.json",
+      "sha256": "0c134b96c9231ac0c37e7f4f89e7f7f4382dcdee494c2f01603551947f3e18f9",
+      "basis": "Full independent semantic reading and exact repair recheck"
+    },
+    "humanReview": false,
+    "officialCertification": false
+  },
+  "manifest": {
+    "files": 128,
+    "bytes": 52657004,
+    "sha256": "7781ae2616dd8929ebb5af8f1f4ba0b34249b5c5c61fdc5c65d9087eb02521a3"
+  },
+  "validation": {
+    "unitContractRuntimeHostTests": {
+      "status": "pass",
+      "tests": 139,
+      "session": 99962,
+      "completionChunk": "ea6360",
+      "exitCode": 0
+    },
+    "corpusScoring": {
+      "status": "pass",
+      "checks": 124,
+      "session": 85023,
+      "completionChunk": "2a3696",
+      "exitCode": 0
+    },
+    "conflictBranchBeforeGrade": {
+      "status": "pass",
+      "completionChunk": "f54f7e",
+      "exitCode": 0
+    },
+    "manifestCheck": {
+      "status": "pass",
+      "completionChunk": "6cab34",
+      "exitCode": 0
+    },
+    "additionalBrowserTranslationMatrix": {
+      "status": "in-progress",
+      "plannedCases": 84,
+      "freezeSha256": "6a773b11b7cdf6088cb09d12fde3a4e34ba2d11dab1f76e70c08f692881044b7"
+    },
+    "governorOfflineFix": {
+      "status": "pass",
+      "baseline": "Both real Chromium151 offline cases failed before correction",
+      "fixed": "Both offline cases and all11Governor browser cases passed;28SWtests and23Governorcontracts passed",
+      "evidenceSha256": "a18944fcd526aa96a4d70a8cb4a475a3e477cbb91af4839c8dc24fa51d4f4656",
+      "addedBytes": 100214,
+      "fullDocumentsRemainLazy": true
+    }
+  },
+  "limitations": [
+    "Synthetic independent linguistic reviews are not official translations or human legal certification.",
+    "Viewport emulation does not establish physical-phone acceptance.",
+    "Final real-Firebase two-client proof remains pending; no credential or private student data is included.",
+    "Prior Pages publish e35f0aa was stopped by two Governor offline failures; this candidate contains the independently reproduced repair."
+  ],
+  "indexNormalization": {
+    "file": "scripts/test_governor_service_worker.mjs",
+    "kind": "CRLF→LF only; executable content unchanged",
+    "beforeSha256": "ad6ea130feb713852da1fcf6bfcc7aa91be2d29aa119d71102a8b29e1e8d992c",
+    "afterSha256": "4c4f2b5af0cd8e4afed8ee2d8bd63ce647140024fa594e20ab035cd5f14eacc1",
+    "reason": "Git stores LF; actual working files must equal staged bytes"
+  }
+}

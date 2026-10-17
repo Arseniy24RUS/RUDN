@@ -1,0 +1,401 @@
+{
+  "schema": 1,
+  "docId": "koap",
+  "kind": "independent-synthetic-review",
+  "status": "approved",
+  "verdict": "approved",
+  "reviewer": "/root/translate_constitution",
+  "assemblyIntegrator": "/root",
+  "reviewedAt": "2026-10-17T04:12:41.459993+00:00",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+    "fileSha256": "f322d2c34e67d180baf7b8ba1edf389157805e36d57e5b95dd5b2af9b17e7d09"
+  },
+  "scope": {
+    "mode": "independent-final-assembly-acceptance",
+    "locales": [
+      "en",
+      "zh"
+    ],
+    "sourceIndexRangeInclusive": [
+      0,
+      9492
+    ],
+    "unitsPerLocale": 9493,
+    "sectionsPerLocale": 1292,
+    "approvedRanges": 9,
+    "completeDocument": true,
+    "wholeDocumentMetadata": true,
+    "freshWholeDocumentSemanticReread": false,
+    "semanticAcceptance": "Inherited from the nine exact pinned independent full-range reviews; this review checks assembly, coverage, preservation and reproducibility."
+  },
+  "payloadDecisions": [
+    {
+      "docId": "koap",
+      "locale": "en",
+      "status": "approved",
+      "payloadSha256": "109d2723821e9823aec2f6c28570d962234380c237c33b0612b62e5d0e0e4525",
+      "payloadBytes": 4739116,
+      "reviewedUnits": 9493,
+      "reviewedSections": 1292,
+      "sourceIndexRangeInclusive": [
+        0,
+        9492
+      ],
+      "approvalBasis": "Complete independent range reviews inherited only through literal equality, plus independent assembly and reproduction acceptance."
+    },
+    {
+      "docId": "koap",
+      "locale": "zh",
+      "status": "approved",
+      "payloadSha256": "f6597a908a8d8b4bbb42325ed0e43b7364f5fe9cf93c2f33e00316bdf7b2d95d",
+      "payloadBytes": 3536661,
+      "reviewedUnits": 9493,
+      "reviewedSections": 1292,
+      "sourceIndexRangeInclusive": [
+        0,
+        9492
+      ],
+      "approvalBasis": "Complete independent range reviews inherited only through literal equality, plus independent assembly and reproduction acceptance."
+    }
+  ],
+  "componentReviews": [
+    {
+      "range": "0-8",
+      "firstIndex": 0,
+      "lastIndex": 1963,
+      "unitsPerLocale": 1964,
+      "sectionsPerLocale": 313,
+      "reviewFile": "reviews/koap-0-8/final-review.json",
+      "reviewSha256": "d71e51c5fb10026d979bd2d2438e204823a915b807a5a9258753cd231c5afbce",
+      "author": "/root/translate_koap",
+      "reviewer": "/root/translate_goals_system",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/en.json",
+          "sha256": "f5adb20bede1ac098908033698bf5529e9229fcb144f59112f679a1c949ffde2",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/zh.json",
+          "sha256": "ef80c203921c87921f4d68546f322def818c6b8333c59e75fa7611ec6f7bd433",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "9-13",
+      "firstIndex": 1964,
+      "lastIndex": 3773,
+      "unitsPerLocale": 1810,
+      "sectionsPerLocale": 236,
+      "reviewFile": "reviews/koap-9-13/exact-recheck/final-review.json",
+      "reviewSha256": "0506edbdbd889fdcddda0c11f457cace9c5ad61a153ea290235097c1321436e5",
+      "author": "/root/translate_koap",
+      "reviewer": "/root/legal_article_selection_semantics",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/en.json",
+          "sha256": "f5adb20bede1ac098908033698bf5529e9229fcb144f59112f679a1c949ffde2",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/zh.json",
+          "sha256": "ef80c203921c87921f4d68546f322def818c6b8333c59e75fa7611ec6f7bd433",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "14",
+      "firstIndex": 3774,
+      "lastIndex": 4836,
+      "unitsPerLocale": 1063,
+      "sectionsPerLocale": 120,
+      "reviewFile": "reviews/koap-14/final-review.json",
+      "reviewSha256": "f565f9d1e3c615553b680253a056720ba091cb5d7727cee54dab3c76818bd28c",
+      "author": "/root",
+      "reviewer": "/root/translate_koap",
+      "artifacts": {
+        "en": {
+          "file": "reviews/koap-14/recheck/expected-packet.json",
+          "sha256": "87edfdd4be336544456805785a64a45d7f246434fada98e8448c8daed00205ae",
+          "kind": "packet"
+        },
+        "zh": {
+          "file": "reviews/koap-14/recheck/expected-packet.json",
+          "sha256": "87edfdd4be336544456805785a64a45d7f246434fada98e8448c8daed00205ae",
+          "kind": "packet"
+        }
+      }
+    },
+    {
+      "range": "15",
+      "firstIndex": 4837,
+      "lastIndex": 5509,
+      "unitsPerLocale": 673,
+      "sectionsPerLocale": 97,
+      "reviewFile": "reviews/koap-15/exact-recheck/final-review.json",
+      "reviewSha256": "dfa5c504ddf19a3a0e06f3cc7f69276526ad2fadf239579e9bcd1614bd57974c",
+      "author": "translate_koap",
+      "reviewer": "/root/legal_article_selection_semantics",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/segment15/en.json",
+          "sha256": "f70d5b93fa854849b8cd896d6fd1a00ee9054218429fa24caf7da9c4e5f29961",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/segment15/zh.json",
+          "sha256": "48f0f30b109a581727ac1da54e2ddf9486f72db0c6b95301d6fa31468e9dde2d",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "16-19",
+      "firstIndex": 5510,
+      "lastIndex": 6673,
+      "unitsPerLocale": 1164,
+      "sectionsPerLocale": 163,
+      "reviewFile": "reviews/koap-16-19/final-review.json",
+      "reviewSha256": "f7a8f2d38e8787e028c421091268982dae51702a82e6e8006eb11281d7106b61",
+      "author": "/root/translate_goals_system",
+      "reviewer": "/root",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/segment16-19/repaired-payload/en.json",
+          "sha256": "1313c1ec55c351bbc7a42dfc969548bab42d7e953c4f7989122c2dbd32f99ff3",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/segment16-19/repaired-payload/zh.json",
+          "sha256": "e20ac5835c4ad1fd98a06bdf04266e2bebfb96e61a0f5a54ac7bdbd33704ee61",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "20-23",
+      "firstIndex": 6674,
+      "lastIndex": 7867,
+      "unitsPerLocale": 1194,
+      "sectionsPerLocale": 205,
+      "reviewFile": "reviews/koap-20-23/final-review.json",
+      "reviewSha256": "5bde8d9f0a20aaa9d1da7f7e41408c7b60ec37ec681357834e98ba6cdc310019",
+      "author": "translate_constitution",
+      "reviewer": "/root/translate_koap",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/segment20-23/en.json",
+          "sha256": "17103031eaf2d032ba0244753c37cea83fffd4d39afce19a2f88b24921fdabb3",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/segment20-23/zh.json",
+          "sha256": "a787f57f0bab48e32d31a2cfa8cfc4a6b8d5c16971a387b23b6b1afbb4c18def",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "24-27",
+      "firstIndex": 7868,
+      "lastIndex": 8495,
+      "unitsPerLocale": 628,
+      "sectionsPerLocale": 66,
+      "reviewFile": "reviews/koap-24-27/final-review.json",
+      "reviewSha256": "b982768c5d3bd7b412b21f9f92a326f5bf23f61a8e99f9d57cb3ed3676554ec7",
+      "author": "/root",
+      "reviewer": "/root/translate_koap",
+      "artifacts": {
+        "en": {
+          "file": "reviews/koap-24-27/recheck/expected-packet.json",
+          "sha256": "17b2ea25911e6745eb5e2374b76b0547519373fed705f2068ba3e8d1a2fa9d0e",
+          "kind": "packet"
+        },
+        "zh": {
+          "file": "reviews/koap-24-27/recheck/expected-packet.json",
+          "sha256": "17b2ea25911e6745eb5e2374b76b0547519373fed705f2068ba3e8d1a2fa9d0e",
+          "kind": "packet"
+        }
+      }
+    },
+    {
+      "range": "28-29.1",
+      "firstIndex": 8496,
+      "lastIndex": 9077,
+      "unitsPerLocale": 582,
+      "sectionsPerLocale": 38,
+      "reviewFile": "reviews/koap-28-29-1/exact-recheck/final-review.json",
+      "reviewSha256": "eccd641d29eda9060c84cae7f3afb1a865cce79150fd9c2de0f5aabb14c897da",
+      "author": "/root/translate_goals_system",
+      "reviewer": "/root/legal_article_selection_semantics",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/segment28-29.1/repaired-payload/en.json",
+          "sha256": "65fa9136a280a7d68a3704a12aff49fd1e7ffd75055678a1b831d8ff67900e7c",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/segment28-29.1/repaired-payload/zh.json",
+          "sha256": "a8247f7aad8dbf328fdcbd1b3d0b232079ca5c8318250066f5171a599c6f9d72",
+          "kind": "payload"
+        }
+      }
+    },
+    {
+      "range": "30-32",
+      "firstIndex": 9078,
+      "lastIndex": 9492,
+      "unitsPerLocale": 415,
+      "sectionsPerLocale": 54,
+      "reviewFile": "reviews/koap-30-32/final-review.json",
+      "reviewSha256": "855f945908a6e5b7a1287cfc4258ad5027266fcab12404091ff17f058d936762",
+      "author": "legal_article_selection_semantics",
+      "reviewer": "translate_constitution",
+      "artifacts": {
+        "en": {
+          "file": "staging/koap/segment30-32/en.json",
+          "sha256": "d9df81c6e6540eb4cd403e75ffab9bdb79bdf771df2cc2496c1c1b4323e4796c",
+          "kind": "payload"
+        },
+        "zh": {
+          "file": "staging/koap/segment30-32/zh.json",
+          "sha256": "cdc552723e4756fd692d0e59d78cc2b68d8ab252a9877fd357458e0eaa8eb28f",
+          "kind": "payload"
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "status": "pass",
+    "unitCount": 9493,
+    "sectionCount": 1292,
+    "exactSourceOrder": true,
+    "everyIdExactlyOnce": true,
+    "noGaps": true,
+    "noOverlaps": true,
+    "remainingUnitIds": [],
+    "unitIdOrderSha256": "7e2620ff9f59704d8c119a88750dc8d9780eef91e8fd317946327636865ddc0d",
+    "sectionIdOrderSha256": "278a2751e93a2cdc77ce7431d762ff59ecf172b8858eb0b1e1a621238ba5089a",
+    "actualCoverageFile": "coverage.json",
+    "actualCoverageSha256": "a734490ee7058f4440aa6a6b6b87d8219d4295bdf8800092fdc4dac80ee6c718"
+  },
+  "literalPreservation": {
+    "unitText": "pass",
+    "unitLocator": "pass",
+    "sectionTitle": "pass",
+    "approvedTitleAndRevision": "pass",
+    "allowedPayloadFieldsOnly": "pass",
+    "noUnapprovedTranslationOrMetadataChange": true,
+    "onlyMetadataTransition": "Top-level payload status: draft → translated. Registry status complete is justified by the complete approved coverage."
+  },
+  "numericFormatAcceptance": {
+    "status": "approved",
+    "whitelistEntries": 36,
+    "decimalEntries": 22,
+    "dateEntries": 14,
+    "unresolvedDifferences": 0,
+    "reviewSha256": "b25a01ba3caa536c8fa8fca0050cde15d2c026e46332a986e507681dacf04a43",
+    "rule": "Exact unit, locale, source text, target text, input bytes and token-array binding; no generic numeric relaxation."
+  },
+  "sourceContext": {
+    "glossaryRead": true,
+    "glossarySha256": "50bfa093f2c21a3048dfe9a674a813a7bfa7345010b6137d53afee617952fc04",
+    "article2_4DefinitionRead": true,
+    "officialChineseTerm": "职务人员",
+    "protectedRussianLexemes": [
+      "судебный пристав",
+      "пристав"
+    ],
+    "protectedLexemeSection": "koap-s803",
+    "protectedLexemeContexts": 14,
+    "protectedLexemeRule": "Only the source-quoted legally protected Russian words and corresponding title/locators in s803 are retained; exact source-present numbered ФЗ/ФКЗ legal identifiers are also allowed."
+  },
+  "machineValidation": {
+    "status": "pass",
+    "originalAssemblerUnchanged": true,
+    "originalAssemblerSha256": "02a561f361eb96cb5ee7ef3d60f1511724def142878edaba55e0605ce875c4df",
+    "finalAssemblerSha256": "ad8a4041c982a1c210b1547d9de239383a297aff56afe668d0d717920d259c8f",
+    "inputPackets": 280,
+    "inputFreezeSha256": "31a967f5867cd3891c243e396f36547a0d21928f95c89bcad82670def80f3adf",
+    "payloadFreezeSha256": "3e6b61d22927d572f79cf37358706c79b73448434090354cc1f125ad5367f9fe",
+    "readOnlyRebuildRuns": 2,
+    "capturedOutputsPerRun": 563,
+    "byteComparedOutputsPerRun": 562,
+    "rebuildDetail": "560 locale chunks and two full rebuilt drafts matched exact bytes. Changing only the top-level draft status reproduced both full frozen final payloads exactly. Progress timestamp was excluded from byte comparison.",
+    "executions": [
+      {
+        "toolChunkId": "5296ea",
+        "operation": "prepare nine approved references",
+        "exitCode": 0
+      },
+      {
+        "toolChunkId": "217307",
+        "operation": "all 280 input packets / numeric candidates audit",
+        "exitCode": 0
+      },
+      {
+        "toolChunkId": "e38198",
+        "operation": "confirm exact numeric format whitelist",
+        "exitCode": 0
+      },
+      {
+        "toolChunkId": "776f3e",
+        "operation": "full source-bound assembly check",
+        "exitCode": 0
+      },
+      {
+        "toolChunkId": "d49b39",
+        "operation": "two read-only runs of actual final assembler",
+        "exitCode": 0
+      },
+      {
+        "toolChunkId": "66e4ec",
+        "operation": "exact bounded assembler delta review",
+        "exitCode": 0
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "file": "reference-ledger.json",
+      "sha256": "4525e7d64786d953364d1b9eba873f00d54047d450a3414550b14f9a3f132c60"
+    },
+    {
+      "file": "assembly-validation.json",
+      "sha256": "cd9215c2bb0f34cbc4883b2bbc465a6efb078fca586419f81c12d556e0d768b1"
+    },
+    {
+      "file": "coverage.json",
+      "sha256": "a734490ee7058f4440aa6a6b6b87d8219d4295bdf8800092fdc4dac80ee6c718"
+    },
+    {
+      "file": "numeric-format-review.json",
+      "sha256": "b25a01ba3caa536c8fa8fca0050cde15d2c026e46332a986e507681dacf04a43"
+    },
+    {
+      "file": "builder-review.json",
+      "sha256": "5c1fc2e547ea0f03f08f3ae7891f0282064397c9c905d054c6c4f9d348aef4b8"
+    },
+    {
+      "file": "assembler.diff",
+      "sha256": "8ebb05371b105dbc081bf44fc15efa802b446526c9dfc6c6eda27b4a8b005066"
+    },
+    {
+      "file": "rebuild-validation.json",
+      "sha256": "e7505430e8ed2e20bacf9d0df3dfea3dc736f53058eb4de62bd818eeb886df8a"
+    },
+    {
+      "file": "context-references.json",
+      "sha256": "dada4f060024e8d378147b24f7828411c70725ef2bb81c150f742187edbdee3e"
+    }
+  ],
+  "independence": "This reviewer previously authored the 20–23 range; its semantic acceptance is inherited from the separate pinned review by /root/translate_koap. This assembly acceptance does not self-certify those translations. Every component range has a reviewer distinct from its author.",
+  "unresolvedRequiredFixes": [],
+  "humanReview": false,
+  "officialCertification": false,
+  "limitations": "Synthetic evidence for an educational unofficial translation. No claim of human legal certification. Source, staging and product files were not modified by this reviewer."
+}

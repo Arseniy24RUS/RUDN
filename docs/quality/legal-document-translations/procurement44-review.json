@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "docId": "procurement44",
+  "status": "approved",
+  "verdict": "approved",
+  "reviewKind": "independent-synthetic-full-semantic-review-with-exact-repair-recheck",
+  "reviewer": "translate_constitution",
+  "translationAuthor": "legal_article_selection_semantics",
+  "independent": true,
+  "humanReview": false,
+  "officialCertification": false,
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+    "fileSha256": "706b04d952285f39246a3df60e7237a91c607e09682a2354510622b29169a65d"
+  },
+  "reviewedUnitsPerLocale": 2270,
+  "reviewedSectionsPerLocale": 121,
+  "previousAssessmentSha256": "e7188c83d0d8da3743bff1d320694b778864ac08cc7e3c54b9f153812b70ba3b",
+  "repairHandoffSha256": "13761d080e216acf6b6b68afda66a10c0303bdf4c1f6e048568a801e98ef7c73",
+  "resolvedRequiredFields": 134,
+  "resolvedMasterFields": 57,
+  "unresolvedRequiredFixes": [],
+  "machineValidation": "pass",
+  "exactDeltaValidation": "pass",
+  "actualReadOnlyRebuild": "pass",
+  "payloadDecisions": [
+    {
+      "docId": "procurement44",
+      "locale": "en",
+      "status": "approved",
+      "payloadSha256": "ed39e6d69498b3ae13b0b4cd9ff379b3116854178d6b0d7f703faeaaae5e13af",
+      "reviewedUnits": 2270,
+      "reviewedSections": 121
+    },
+    {
+      "docId": "procurement44",
+      "locale": "zh",
+      "status": "approved",
+      "payloadSha256": "6cc3bd20d9cc749419e1d95f68be0d54710e56b6064de2b27ac28b21b3da82bf",
+      "reviewedUnits": 2270,
+      "reviewedSections": 121
+    }
+  ],
+  "evidence": {
+    "coverage.json": "7a9ec0542d5db849f279fc391d9c4e3d85920da51bdf5e20d818d43c87e0b0e9",
+    "assessment.json": "e7188c83d0d8da3743bff1d320694b778864ac08cc7e3c54b9f153812b70ba3b",
+    "repair-targets.json": "24c1adfc96afa9adb3af1217456efe6f4f845f9024d4eef897e807394632f67d",
+    "context-notes.json": "b6057b39a067193c6428cc2cf2b4d9ec5151d763032b46d9e6ff36c2dc0f5287",
+    "final-exact-delta.json": "cda6b3dedf6f5874b79959a44e5c705a04ee94482fae448015c7a70863aa55c3",
+    "final-machine-validation.json": "5a1f89ad49c9e687810c865363b5740366eac26b3bb6e58810d28e6a3bf84427",
+    "final-rebuild-validation.json": "ea3cfadb0a3428d50abc1de01b0dca173e3fea9b31df9e81716db8372a9c3e94"
+  },
+  "basis": "The prior independent direct review covered every source unit, both locales, metadata, titles, locators and source anomalies. Every requested replacement was authored as an exact complete field. This final recheck confirms those precise replacements in the actual corrected master files and payloads, and proves every other payload field unchanged. The unchanged original builder executed twice in memory against actual corrected masters and reproduced all four outputs byte-for-byte.",
+  "limitations": [
+    "Synthetic independent review, not a human or official/certified translation assessment.",
+    "All acceptance is tied to the exact listed source and payload hashes.",
+    "No source, staging or product files were changed by the reviewer."
+  ]
+}
