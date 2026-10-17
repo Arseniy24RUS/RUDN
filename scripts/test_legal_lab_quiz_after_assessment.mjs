@@ -34,11 +34,11 @@ try{browser=await pw[browserName].launch({headless:true,...(process.env.PLAYWRIG
   const record={mode,input:touch?'trusted touchscreen tap':'trusted mouse click',status:'fail',consoleErrors:[],pageErrors:[]};report.records.push(record);
   const context=await browser.newContext({viewport:touch?{width:390,height:844}:{width:1366,height:900},hasTouch:touch,...(browserName!=='firefox'?{isMobile:touch}:{})}),page=await context.newPage();page.setDefaultTimeout(10000);
   page.on('pageerror',e=>record.pageErrors.push(e.message));page.on('console',m=>{if(m.type()==='error')record.consoleErrors.push(m.text())});
-  const activate=async locator=>{await locator.scrollIntoViewIfNeeded();if(touch)await locator.tap();else await locator.click();};
+  const activate=async locator=>{if(touch)await locator.tap();else await locator.click();};
   try{
    await page.goto('http://127.0.0.1:'+server.address().port+'/__qa/host.html?mode='+mode);await page.locator('.ll-header').waitFor();record.title=await page.title();record.url=page.url();
    assert.match(record.title,/Legal Lab isolated desktop selection regression/);assert.ok((await page.locator('.ll-main').innerText()).trim());
-   await activate(page.locator('.ll-nav [data-view="learn"]'));await page.locator('[data-reader-doc="'+task.docId+'"] .ll-paper').waitFor();
+   await activate(page.locator('.ll-nav [data-view="learn"]'));await page.locator('.ll-nav [data-view="learn"][aria-current="page"]').waitFor();await page.locator('[data-reader-doc="'+task.docId+'"] .ll-paper').waitFor();
    const before=await snapshot(page);record.assessmentBefore=JSON.stringify(before.assessment);record.trustedEvents=[];
    await page.evaluate(()=>{window.__qaPointerProof=[];document.addEventListener('click',event=>{const unit=event.target.closest('[data-action="select-unit"],[data-action="remove-unit"],[data-action="submit-task"]');if(unit)window.__qaPointerProof.push({action:unit.dataset.action,context:unit.dataset.context,unit:unit.dataset.unit||unit.dataset.id,isTrusted:event.isTrusted,pointerType:event.pointerType,button:event.button});});});
    const ids=expandIds(task.answerSets[0],[doc]);record.expectedIds=ids;

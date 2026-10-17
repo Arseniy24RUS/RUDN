@@ -640,10 +640,10 @@
     },
     {
       "url": "apps/legal-lab/style.css",
-      "bytes": 53522,
-      "sha256": "2c8126f359aefe2584e9e41ee224af229e90cc1a0fbaa682c7b1b851abfcae61"
+      "bytes": 53944,
+      "sha256": "f6d02af9d19e6e2550a75e0d8d8c7de5469ff266cdb066411162b0a62f5d8e76"
     }
   ],
-  "totalBytes": 52657169,
+  "totalBytes": 52657591,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

@@ -181,3 +181,9 @@
 @container(max-width:400px){.legal-lab .ll-nav button{font-size:13px}}
 
 .ll-five-nav{display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:8px;margin:12px 0 18px}.legal-lab .ll-five-nav button{min-height:44px;text-align:center;border:1px solid var(--ll-line);border-radius:8px;background:var(--ll-paper);font-weight:650}.legal-lab .ll-five-nav button.active{background:var(--ll-blue);color:white;border-color:var(--ll-blue)}.ll-five-actions{margin:18px 0}.ll-five-finish{margin:22px 0;padding-top:20px;border-top:1px solid var(--ll-line)}.ll-five-result>.ll-criterion-review{margin:12px 0}.ll-five-result .ll-criterion-review>summary{display:flex;gap:8px;align-items:center}.ll-five-result .ll-criterion-review>summary strong{margin-left:auto;white-space:nowrap}.ll-five-result blockquote{margin:12px 0;padding:12px;border-left:3px solid var(--ll-line);line-height:1.65}.ll-answer-saved{font-size:12px;color:var(--ll-muted)}
+
+/* Give course documents the mobile navigation space only while working. */
+@media(max-width:760px){
+ body:has(#legalLabMount .legal-lab>.ll-nav>[aria-current="page"]:is([data-view="learn"],[data-view="assessment"])) .mobile-nav{display:none}
+ body:has(#legalLabMount .legal-lab>.ll-nav>[aria-current="page"]:is([data-view="learn"],[data-view="assessment"])) .main{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+}
