@@ -7,7 +7,9 @@ const data=new URL('../site/apps/legal-lab/data/',import.meta.url),json=async pa
 const [catalog,bank,cases]=await Promise.all(['catalog.json','bank.json','cases.json'].map(json));
 const retired=JSON.parse(await readFile(new URL('./fixtures/legal-lab-retired-extras.json',import.meta.url),'utf8'));
 assert.deepEqual(bank.extra,[]);assert.equal(retired.length,2);
-const docs=await Promise.all(catalog.documents.map(meta=>json(meta.file))),byDoc=new Map(docs.map(doc=>[doc.id,doc]));
+const archivedCatalog=JSON.parse(await readFile(new URL('./fixtures/legal-lab-retired-corpus/catalog.json',import.meta.url),'utf8'));
+const archivedDocs=await Promise.all(archivedCatalog.documents.map(meta=>readFile(new URL('./fixtures/legal-lab-retired-corpus/'+meta.id+'.json',import.meta.url),'utf8').then(JSON.parse)));
+const docs=[...await Promise.all(catalog.documents.map(meta=>json(meta.file))),...archivedDocs],byDoc=new Map(docs.map(doc=>[doc.id,doc]));
 // Exact reviewed section/header identities, independent of runtime's guarded body table.
 const reviewed = [
   {

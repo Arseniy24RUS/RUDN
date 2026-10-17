@@ -1,6 +1,7 @@
 import {migrateClassroomScans,VERSION,EVIDENCE_MODE,ACT_TYPES,SCAN_METADATA_MODE,scanQuestionsFor,dossierScanQuestions,normalizeScanSelections,escapeHTML as e,uid,gradeTask,gradeEvidence,scoreDossier,chooseCase,assessmentReady,searchUnits,expandIds,selectionLimit,hash32,parseDossierAnswer} from './lib/core.mjs';
 import {Store,editorLease,freshState,RevisionConflict} from './lib/storage.mjs';
 import {Corpus} from './lib/corpus.mjs';
+import {loadReportDocuments} from './lib/report-corpus.mjs';
 import {DocumentTranslations} from './lib/translations.mjs';
 import {documentDisplay,documentLocale,displayLabel,setReaderQuery} from './lib/translation-ui.mjs';
 import {canonicalArticleSelections} from './lib/article-evidence.mjs';
@@ -193,8 +194,9 @@ class LegalLab {
   scanOriginal(scan){return scan?`<details class="ll-report-original"><summary>Открыть оригинал</summary><p data-original lang="ru">${e(scan.author)}<br>${e(scan.date+' · № '+scan.number)}</p><a href="${asset(scan.image)}" target="_blank" rel="noopener noreferrer"><img src="${asset(scan.image)}" alt="Скан документа" loading="lazy"><span>Увеличить изображение</span></a></details>`:'';}
   scanCrop(scan,field){
     const h=scan?.hotspots.find(h=>h.id===field);if(!h)return '';
-    const [x,y,w,hh]=h.rect;
-    return `<figure class="ll-scan-source-crop" data-source-crop="${e(field)}"><div class="ll-scan-crop"><img src="${asset(scan.image)}" alt="Фрагмент оригинала" loading="lazy" data-crop-width="${w}" data-crop-height="${hh}" style="width:${100/w}%;left:${-x/w*100}%;transform:translateY(${-y*100}%)"></div><figcaption>Фрагмент оригинала</figcaption></figure>`;
+    const [x,y,w,hh]=h.rect,ratio=scan.imageWidth*w/(scan.imageHeight*hh);
+    const size=Number.isFinite(ratio)&&ratio>0?` style="aspect-ratio:${ratio}"`:'';
+    return `<figure class="ll-scan-source-crop" data-source-crop="${e(field)}"><div class="ll-scan-crop"${size}><img src="${asset(scan.image)}" alt="Фрагмент оригинала" loading="lazy" data-crop-width="${w}" data-crop-height="${hh}" style="width:${100/w}%;left:${-x/w*100}%;transform:translateY(${-y*100}%)"></div><figcaption>Фрагмент оригинала</figcaption></figure>`;
   }
   prepareScanCrops(root=this.root){
     for(const img of root.querySelectorAll('img[data-crop-width]')){
@@ -299,28 +301,29 @@ class LegalLab {
     if(!a)return fiveIntro(this);if(isFiveWork(a))return fiveAssessment(this);
     if(!a)return `<section class="ll-assessment-intro"><span class="ll-eyebrow">25 МИНУТ · ДО 5 БАЛЛОВ</span><h1>Самостоятельная работа</h1><p>После начала система случайно закрепит за вами одно из ${this.cases.length} досье. Назначение сохранится после перезагрузки. Ситуация и сканы отличаются от совместного занятия.</p><div class="ll-criteria-preview">${[['1','Реквизиты','Все реквизиты реального скана'],['1','Виды документов','Два новых автора и заголовка'],['1','Поиск документа','Нужный акт в общей библиотеке'],['2','Правовое основание','Достаточный фрагмент текста']].map(([p,h,t])=>`<div><strong>${p}</strong><h3>${h}</h3><p>${t}</p></div>`).join('')}</div>${!ready?`<div class="ll-alert ll-warning"><strong>Материалы временно недоступны</strong><p>Часть документов ещё не готова. Можно тренироваться; отправка досье на оценку откроется после проверки материалов.</p></div>`:''}<button class="ll-primary" data-action="start-assessment" ${this.isLocked()||(!ready&&!this.demo&&!this.teacher)?'disabled':''}>${ready&&!this.demo&&!this.teacher?'Получить досье':'Пройти тренировочное досье'} →</button></section>`;
     const item=this.cases.find(c=>c.id===a.caseId);if(!item)throw new Error('Назначенное досье не найдено');
-    if(a.result){await Promise.all([...new Set([...item.docIds,...a.answer.documentIds])].map(id=>this.loadDocument(id)));return this.report(item,a);}
+    if(a.result){const docs=await loadReportDocuments(this.corpus,[...item.docIds,...a.answer.documentIds],id=>this.loadDocument(id));return this.report(item,a,docs);}
     const questions=dossierScanQuestions(item,a.answer,this.scans),fieldIndex=a.scanFieldIndex??this.assessmentField;this.assessmentField=Math.max(0,Math.min(Number.isInteger(fieldIndex)?fieldIndex:0,questions.length-1));
     const stage=a.stage||0;let body='';
     if(stage===0){body=this.scanAssignment(this.scans.find(s=>s.id===item.scanId),a.answer.metadata,{questions,index:this.assessmentField,context:'assessment'})+`<p class="ll-source-note">${e(item.sourceNote)}</p>`;}
     else if(stage===1){body=`<div class="ll-substeps">${item.classificationIds.map((id,i)=>`<button data-action="classification-index" data-index="${i}" class="${this.activeType===i?'active':''}">${a.answer.classifications?.[id]?'✓ ':''}Документ ${i+1}</button>`).join('')}</div>${this.typeView({},a.answer.classifications?.[item.classificationIds[this.activeType]],{action:'assessment-type',scanId:item.classificationIds[this.activeType]})}`;}
     else if(stage===2)body=await this.library(true);
-    else if(stage===3){const ids=a.answer.documentIds||[];if(!ids.length)body='<div class="ll-empty">Сначала найдите и выберите документ на предыдущем этапе.</div>';else{this.assessmentDoc=ids.includes(this.assessmentDoc)?this.assessmentDoc:ids[0];const d=await this.loadDocument(this.assessmentDoc);body=`<div class="ll-substeps">${ids.map(id=>`<button data-action="assessment-doc" data-id="${id}" class="${id===d.id?'active':''}">${e(this.doc(id).shortTitle)}</button>`).join('')}</div>${this.reader(d,a.answer.selections||[],{context:'assessment',limit:selectionLimit(item,[...this.corpus.cache.values()])})}`;}}
+    else if(stage===3){const ids=a.answer.documentIds||[];if(!ids.length)body='<div class="ll-empty">Сначала найдите и выберите документ на предыдущем этапе.</div>';else{this.assessmentDoc=ids.includes(this.assessmentDoc)?this.assessmentDoc:ids[0];const docs=await loadReportDocuments(this.corpus,ids,id=>this.loadDocument(id)),d=docs.find(x=>x.id===this.assessmentDoc);body=`<div class="ll-substeps">${docs.map(source=>`<button data-action="assessment-doc" data-id="${e(source.id)}" class="${source.id===d.id?'active':''}">${e(source.shortTitle||source.title)}</button>`).join('')}</div>${d.referenceOnly?`<section class="ll-empty"><p>Этот дополнительный материал удалён из занятия. Прежний выбор сохранён.</p><button class="ll-secondary" data-action="choose-document" data-id="${e(d.id)}">Убрать из ответа</button></section>`:this.reader(d,a.answer.selections||[],{context:'assessment',limit:selectionLimit(item,docs)})}`;}}
     else body=`<section class="ll-review"><h2>Проверьте собранное досье</h2><div class="ll-review-counts"><p>Области скана: <strong>${questions.filter(q=>a.answer.metadata?.[q.field]).length} / ${questions.length}</strong></p><p>Виды документов: <strong>${count(a.answer.classifications)} / ${item.classificationIds.length}</strong></p><p>Выбрано актов: <strong>${(a.answer.documentIds||[]).length}</strong></p><p>Выбрано фрагментов: <strong>${(a.answer.selections||[]).length}</strong></p></div><p>До отправки можно вернуться к любому этапу. После отправки эта попытка становится доступной только для просмотра. Полнота и точность будут проверены вместе.</p>${this.confirming?`<div class="ll-alert ll-warning"><strong>Завершить работу?</strong><p>Будут отправлены текущие ответы, включая незаполненные позиции.</p><div class="ll-actions"><button class="ll-primary" data-action="finish-assessment" ${this.submitting?'disabled':''}>${this.submitting?'Сохраняем…':'Да, завершить'}</button><button class="ll-secondary" data-action="cancel-finish">Вернуться к проверке</button></div></div>`:`<button class="ll-primary" data-action="confirm-finish" ${this.isLocked()?'disabled':''}>Завершить и проверить досье</button>`}</section>`;
     return `<header class="ll-assessment-heading"><div class="ll-eyebrow">ДОСЬЕ ${e(a.caseId)} · ${a.preview?'ТРЕНИРОВКА':'САМОСТОЯТЕЛЬНАЯ РАБОТА'}</div><h1>${e(item.title)}</h1><p>${e(item.prompt)}</p></header><nav class="ll-stage-nav" aria-label="Этапы досье">${['Реквизиты','Виды актов','Документ','Основание','Отправка'].map((v,i)=>`<button data-action="assessment-stage" data-index="${i}" class="${stage===i?'active':''}" aria-current="${stage===i?'step':'false'}"><span>${i+1}</span>${v}</button>`).join('')}</nav>${body}<div class="ll-stage-bottom"><button class="ll-secondary" data-action="assessment-prev" ${stage===0?'disabled':''}>← Предыдущий этап</button><span>${stage+1} / 5</span><button class="ll-primary" data-action="assessment-next" ${stage===4?'disabled':''}>Следующий этап →</button></div>`;
   }
-  report(item,a){
+  report(item,a,reportDocs=null){
     if(item?.format==='five-task-v1')return fiveReport(this,item,a);
-    const docs=[...this.corpus.cache.values()],scan=this.scans.find(s=>s.id===item.scanId);
+    const docs=reportDocs||[...this.corpus.cache.values()],scan=this.scans.find(s=>s.id===item.scanId);
     const label=(scan,id)=>scan?.hotspots.find(h=>h.id===id)?.label||'Не выбрано';
     const original=value=>`<span data-original lang="ru">${e(value)}</span>`;
     const scanValue=(s,field)=>this.scanFieldValue(s,field),questions=dossierScanQuestions(item,a.answer,this.scans);
     const scanOriginal=s=>s?`<details class="ll-report-original"><summary>Открыть оригинал</summary><p>${original(s.author)}<br>${original(s.date+' · № '+s.number)}</p><a href="${asset(s.image)}" target="_blank" rel="noopener noreferrer"><img src="${asset(s.image)}" alt="Скан документа" loading="lazy"><span>Увеличить изображение</span></a></details>`:'';
     const selectedDocs=[...new Set(a.answer.documentIds||[])],rawSelections=[...new Set(a.answer.selections||[])],wholeArticles=a.answer.evidenceMode===EVIDENCE_MODE,selectedUnits=wholeArticles?canonicalArticleSelections(rawSelections,docs):rawSelections;
-    const names=ids=>ids.length?`<ul>${ids.map(id=>{const d=this.corpus.cache.get(id),info=d?documentDisplay(this,d):null;return `<li>${info?`<span data-document-text lang="${info.locale}">${e(info.view.title)}</span>`:'<span>Документ не найден</span>'}</li>`;}).join('')}</ul>`:'<p>Нет</p>';
+    const names=ids=>ids.length?`<ul>${ids.map(id=>{const d=docs.find(x=>x.id===id),info=d&&!d.referenceOnly?documentDisplay(this,d):null;return `<li>${d?.referenceOnly?`${original(d.title)} <span>Дополнительный материал удалён из занятия.</span>`:info?`<span data-document-text lang="${info.locale}">${e(info.view.title)}</span>`:'<span>Документ не найден</span>'}</li>`;}).join('')}</ul>`:'<p>Нет</p>';
     const textList=(ids,expected,reviewExpected=false)=>ids.length?ids.map(id=>{
-      const d=docs.find(d=>d.units.some(u=>u.id===id)),info=d?documentDisplay(this,d):null,u=info?.units.get(id);
+      const d=docs.find(d=>d.units.some(u=>u.id===id)),info=d&&!d.referenceOnly?documentDisplay(this,d):null,u=info?.units.get(id);
       const matched=reviewExpected?selectedUnits.includes(id):expected.includes(id),status=matched?'Совпало':reviewExpected?'Пропущенный фрагмент':'Лишний фрагмент';
+      if(d?.referenceOnly)return `<article class="ll-passage-review"><p class="ll-review-status">${status}</p><p>Дополнительный материал удалён из занятия.</p><p><span>Идентификатор прежнего фрагмента:</span> <code>${e(id)}</code></p></article>`;
       return `<article class="ll-passage-review"><p class="ll-review-status">${status}</p>${u?`<blockquote data-document-text lang="${info.locale}"><strong>${e(info.translation?info.view.title:d.shortTitle||d.title)} · ${e(displayLabel(this,d,id))}</strong><p>${e(u.text)}</p></blockquote>${!reviewExpected&&!selectedDocs.includes(d.id)?'<p class="ll-review-status">Документ этого фрагмента не выбран.</p>':''}`:'<p>Фрагмент не найден в материалах.</p>'}</article>`;
     }).join(''):'<p>Не выбрано</p>';
     const breakdown=a.result.criteria.map(c=>{
@@ -347,7 +350,7 @@ class LegalLab {
         // different complete answer must not be described as missing evidence.
         const best=item.answerSets.map(set=>({ids:wholeArticles?canonicalArticleSelections(expandIds(set,docs),docs):expandIds(set,docs),grade:gradeEvidence(selectedUnits,[set],docs,{wholeArticles})})).reduce((best,next)=>!best||next.grade.fraction>best.grade.fraction||next.grade.fraction===best.grade.fraction&&next.grade.missing<best.grade.missing?next:best,null);
         const expected=best?.ids||[];
-        review=`<div class="ll-review-columns"><section><h3>Ваш ответ</h3>${JSON.stringify(rawSelections)!==JSON.stringify(selectedUnits)?`<p><span>Ваш выбор в документе:</span> ${rawSelections.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));return d?`<span data-document-text lang="${documentDisplay(this,d).locale}">${e(displayLabel(this,d,id))}</span>`:original(id);}).join(' · ')}</p>`:''}${textList(selectedUnits,expected)}</section><section><h3>Правильное основание</h3>${textList(expected,expected,true)}</section></div>`;
+        review=`<div class="ll-review-columns"><section><h3>Ваш ответ</h3>${JSON.stringify(rawSelections)!==JSON.stringify(selectedUnits)?`<p><span>Ваш выбор в документе:</span> ${rawSelections.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));return d&&!d.referenceOnly?`<span data-document-text lang="${documentDisplay(this,d).locale}">${e(displayLabel(this,d,id))}</span>`:original(id);}).join(' · ')}</p>`:''}${textList(selectedUnits,expected)}</section><section><h3>Правильное основание</h3>${textList(expected,expected,true)}</section></div>`;
         reason=c.detail?.sourceOK===false?'Фрагменты относятся к документу, который вы не выбрали. За основание баллы не начислены.':c.points===c.max?'Все позиции совпадают. Баллы начислены полностью.':`Совпало: ${c.detail?.matched||0}; пропущено: ${c.detail?.missing||0}; лишних: ${c.detail?.extra||0}. Балл учитывает полноту и точность выделения.`;
       }
       return `<details class="ll-criterion-review" data-criterion="${e(c.id)}"><summary><span>${e(c.label)}</span><strong>${e(c.points)} / ${e(c.max)}</strong></summary><h3>Почему такой балл</h3><p>${e(reason)}</p>${c.id==='evidence'?`<p>${e(item.explanation)}</p>`:''}${review}</details>`;
@@ -446,7 +449,7 @@ class LegalLab {
     }
     if(action==='choose-document'){
       if(this.isLocked()||this.state.assessment?.result)return;const a=this.state.assessment.answer,id=b.dataset.id;
-      if(a.documentIds.includes(id)){a.documentIds=a.documentIds.filter(x=>x!==id);const d=await this.corpus.load(id),remove=new Set(d.units.map(u=>u.id));a.selections=a.selections.filter(x=>!remove.has(x));}else this.addDocument(id);
+      if(a.documentIds.includes(id)){const [d]=await loadReportDocuments(this.corpus,[id]);a.documentIds=a.documentIds.filter(x=>x!==id);const remove=new Set(d.units.map(u=>u.id));a.selections=a.selections.filter(x=>!remove.has(x));}else this.addDocument(id);
       await this.persist();return this.render();
     }
     if(action==='assessment-open-doc'||action==='assessment-doc'){
@@ -485,13 +488,13 @@ class LegalLab {
     if(this.isLocked()||!this.assessmentUnlocked())return;if(this.state.assessment){this.view='assessment';return this.render();}
     const ready=assessmentReady(this.catalog).ready;if(!ready&&!this.demo&&!this.teacher)throw Error('Полный корпус не установлен и не проверен');
     if(this.opt.assessmentAllowed&&!this.opt.assessmentAllowed()&&!this.teacher)throw Error('Самостоятельная работа ещё не открыта');
-    const previous=(this.state.assessmentHistory||[]).map(a=>a.caseId),seed=this.opt.assignmentSeed,pick=Number.isSafeInteger(seed)&&seed>=0?(length=>seed%length):undefined,item=chooseFiveVariant(this.fiveVariants,previous,pick);
+    const previous=(this.state.assessmentHistory||[]).map(a=>a.caseId),seed=this.opt.assignmentSeed,pick=Number.isSafeInteger(seed)&&seed>=0?(length=>seed%length):undefined,item=chooseFiveVariant(this.fiveVariants,previous,pick,seed);
     this.state.assessment={format:FIVE_MODE,caseId:item.id,attemptId:(this.opt.attemptId||this.state.id)+'-r-'+uid(),startedAt:Date.now(),contentVersion:this.catalog.contentVersion,preview:this.demo||this.teacher||!ready,stage:0,phase:'active',answer:{assessmentMode:FIVE_MODE,tasks:{}},result:null,delivery:'not-submitted'};
     this.view='assessment';this.syncPresenceTask();await this.persist();return this.render();
   }
   async finishAssessment(){
     if(this.isLocked()||this.submitting||this.state.assessment?.result)return;this.submitting=true;
-    try{const a=this.state.assessment,item=isFiveWork(a)?fiveVariant(this):this.cases.find(c=>c.id===a.caseId);const ids=isFiveWork(a)?[...new Set(item.tasks.filter(t=>t.kind==='text').map(t=>t.docId))]:[...new Set([...item.docIds,...a.answer.documentIds])];const docs=await Promise.all(ids.map(id=>this.corpus.load(id)));if(!this.active())return;
+    try{const a=this.state.assessment,item=isFiveWork(a)?fiveVariant(this):this.cases.find(c=>c.id===a.caseId);const ids=isFiveWork(a)?[...new Set(item.tasks.filter(t=>t.kind==='text').map(t=>t.docId))]:[...new Set([...item.docIds,...a.answer.documentIds])];const docs=isFiveWork(a)?await Promise.all(ids.map(id=>this.corpus.load(id))):await loadReportDocuments(this.corpus,ids);if(!this.active())return;
       a.result=scoreDossier(item,a.answer,this.scans,docs);a.finishedAt=Date.now();a.phase='completed';a.documentVersions=docs.map(d=>({id:d.id,sha256:d.sha256,revisionLabel:d.revisionLabel}));
       await this.persist();if(!a.preview)await this.deliver();
     }finally{this.submitting=false;this.confirming=false;await this.render();}
@@ -563,14 +566,14 @@ export async function mountLegalLabReport(container,{attempt,locale='ru',signal}
     if(!item||attempt?.contentVersion!==app.catalog.contentVersion||!Array.isArray(attempt?.legalLab?.criteria)||!attempt?.legalLab)throw new Error('Report data unavailable');
     const answer=parseDossierAnswer(attempt.legalLab);
     if(item.format!==FIVE_MODE&&(!Array.isArray(answer.documentIds)||answer.documentIds.length>3||!Array.isArray(answer.selections)||answer.selections.length>500))throw new Error('Invalid report answer');
-    const docIds=item.format===FIVE_MODE?item.tasks.filter(t=>t.kind==='text').map(t=>t.docId):[...item.docIds,...answer.documentIds];await Promise.all([...new Set(docIds)].map(id=>app.loadDocument(id)));
+    const docIds=item.format===FIVE_MODE?item.tasks.filter(t=>t.kind==='text').map(t=>t.docId):[...item.docIds,...answer.documentIds];const reportDocs=item.format===FIVE_MODE?await Promise.all([...new Set(docIds)].map(id=>app.loadDocument(id))):await loadReportDocuments(app.corpus,docIds,id=>app.loadDocument(id));
     if(controller.signal.aborted)return;
     // Stored reports are untrusted student input. Recompute rubric fields from
     // the fixed case and verified documents instead of rendering stored markup.
     if(typeof attempt.points!=='number'||!Number.isFinite(attempt.points)||attempt.points<0||attempt.points>5)throw new Error('Invalid report score');
-    const result=scoreDossier(item,answer,app.scans,[...app.corpus.cache.values()]);
+    const result=scoreDossier(item,answer,app.scans,reportDocs);
     if(Math.abs(result.points-attempt.points)>0.001)throw new Error('Report score does not match its answers');
-    container.innerHTML=app.report(item,{caseId:item.id,preview:false,delivery:'host-accepted',answer,result});translateDOM(container,lang);app.prepareScanCrops(container);
+    container.innerHTML=app.report(item,{caseId:item.id,preview:false,delivery:'host-accepted',answer,result},reportDocs);translateDOM(container,lang);app.prepareScanCrops(container);
   };
   try{
     const corpus=await new Corpus(BASE,{signal:controller.signal}).initialize();

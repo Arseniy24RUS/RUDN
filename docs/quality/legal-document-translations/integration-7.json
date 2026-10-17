@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "status": "reviewed-translation-batch-local-ui-pass",
+  "kind": "Synthetic implementation and linguistic review evidence; not human certification",
+  "documents": [
+    "civil79",
+    "spatial"
+  ],
+  "totalAvailableDocuments": 7,
+  "corpusDocuments": 16,
+  "locales": [
+    "en",
+    "zh"
+  ],
+  "unitsPerLocale": {
+    "civil79": 1038,
+    "spatial": 630
+  },
+  "sectionsPerLocale": {
+    "civil79": 103,
+    "spatial": 59
+  },
+  "checks": [
+    {
+      "command": "node --test tests/legal-lab*.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs scripts/test_legal_lab_host_practice.mjs scripts/test_legal_lab_conflict_recurrence.mjs",
+      "status": "pass",
+      "tests": 131,
+      "sessionId": 42469,
+      "completionChunk": "f30da4"
+    },
+    {
+      "command": "node --test tests/legal-lab-five-assessment.test.mjs tests/legal-lab-translations.test.mjs",
+      "status": "pass",
+      "tests": 22,
+      "completionChunk": "c3a1c4"
+    },
+    {
+      "command": "verify-seven-acts.mjs pubRepo browser-seven-acts/run02",
+      "status": "pass",
+      "cases": 28,
+      "unitTextsVerified": 13696,
+      "viewports": [
+        "390x844",
+        "1366x900"
+      ],
+      "engine": "Chromium151 via Playwright1.62.1",
+      "session": 85507,
+      "completionChunk": "7439d5",
+      "scriptSha256": "9d7894da96fa3eda7e37b3fb929097460f8445f748f4a1904b9f11ab85f90b08",
+      "reportSha256": "408be33c4e7572d499d108b571c80933fef7937b51ef2d2a276cd55479452b42",
+      "coverage": [
+        "all translated paragraphs equal independently reviewed payload",
+        "all TOC titles",
+        "search matches translated text",
+        "result jump closes overlay and exposes target",
+        "Russian-original toggle preserves selected canonical ID",
+        "no teacher key exposed to student",
+        "no overflow",
+        "no console or HTTP errors"
+      ]
+    }
+  ],
+  "publishedStatus": "This batch is not published yet; preceding five reviewed acts are live at main7d5c926.",
+  "scope": "Russian legal corpus, scans, grading criteria, old grades and live presence IDs unchanged",
+  "remaining": "Nine further complete documents and their independent review; separate CI Firefox and local WebKit harness diagnostics remain open."
+}

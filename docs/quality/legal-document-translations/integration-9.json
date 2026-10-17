@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "scope": "Nine complete bilingual document translations; five active acts still being translated",
+  "officialTranslation": false,
+  "independentHumanAcceptance": false,
+  "acts": [
+    "goals309",
+    "system58",
+    "constitution",
+    "municipal25",
+    "corruption273",
+    "civil79",
+    "spatial",
+    "moscow3",
+    "local33"
+  ],
+  "translatedUnitsPerLocale": 5700,
+  "sourceScanLanguage": "ru",
+  "browser": {
+    "status": "pass",
+    "cases": 36,
+    "renderedParagraphChecks": 22800,
+    "reportSha256": "8dfad3693184f18155cbddf15561c04d0d19613edd3773b0c9c6a6f1bf7d9ab5",
+    "command": "verify-nine-acts.mjs pubRepo pubRepo/.qa/browser-nine-acts/run01",
+    "session": 24421,
+    "exitCode": 0,
+    "toolChunk": "8ce935",
+    "viewports": [
+      {
+        "width": 390,
+        "height": 844
+      },
+      {
+        "width": 1366,
+        "height": 900
+      }
+    ],
+    "physicalPhones": "not-run; emulated viewports"
+  },
+  "contracts": {
+    "tests": 139,
+    "pass": 139,
+    "session": 2324,
+    "exitCode": 0,
+    "toolChunk": "edff27"
+  },
+  "corpus": {
+    "checks": 124,
+    "session": 66879,
+    "exitCode": 0,
+    "toolChunk": "33291a",
+    "sha256": "ed425e827d1c160ae7595791d60cdbc0f061aef17a67b529aff93a554eb1ad7d"
+  },
+  "manifest": {
+    "files": 118,
+    "bytes": 41030478,
+    "sha256": "e3f8f062b2e19a04ccb7fcd526d84c45a505d031b0bd76ea1ebae244546f6e46",
+    "checkExitCode": 0,
+    "toolChunk": "7e1faa"
+  },
+  "retiredReportCompatibility": {
+    "reviewSha256": "ca2849141d3077f9785c70256bfb5f2b9f837203fa65779f054ae2dbf7f3412d",
+    "browserCases": 42,
+    "allEngines": "pass",
+    "rubricComparisons": 480
+  },
+  "additionalValidation": {
+    "pythonAcquisitionRegression": {
+      "tests": 14,
+      "exitCode": 0,
+      "toolChunk": "7c0d42"
+    }
+  },
+  "remainingActs": [
+    "koap",
+    "procurement44",
+    "moscow35",
+    "moscow50",
+    "ekb"
+  ],
+  "fullCI": "pending",
+  "publication": "pending"
+}

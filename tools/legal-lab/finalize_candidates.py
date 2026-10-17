@@ -11,7 +11,7 @@ CORRECTIONS={'g309life':('goals309','б) увеличение ожидаемой
 
 def main():
  original=E/'original-anchors.json'
- if not original.exists():write(original,load(DATA/'anchors.json'))
+ if not original.exists():write(original,anchor_catalog())
  anchors=load(original);pdf_cleanup=[];table_blocks,table_receipts=rank_table_blocks();candidates={p.stem:load(p) for p in (ROOT/'.clean-corpus/documents').glob('*.json')};changes=[]
  for id,d in candidates.items():
   blocks=[];sections={s['id']:s for s in d['sections']}
@@ -54,7 +54,7 @@ def main():
  assert len(names)==2
  a=next(a for a in anchors['moscow35']['units'] if a['id']=='m35names');before=copy.deepcopy(a);quote='\n'.join(u['text'] for u in names);a.update(text=quote,locator='Приложение 1, заголовки двух положений');a['anchor'].update(quote=quote,locator=a['locator']);changes.append({'id':'m35names','documentId':'moscow35','before':before,'after':copy.deepcopy(a),'reason':'Question34 asks for appendix1: map both actual regulation headings, not the main approval clause','sourceUnits':[u['id'] for u in names]})
  write(E/'pdf-cleanup-receipts.json',{'reviewKind':'synthetic-source-preserving-transformation','notes':pdf_cleanup,'rankTable':table_receipts})
- write(DATA/'anchors.json',anchors);write(E/'anchor-corrections.json',{'reviewKind':'synthetic-source-comparison','changes':changes})
+ write(anchor_path(),anchors);write(E/'anchor-corrections.json',{'reviewKind':'synthetic-source-comparison','changes':changes})
  sources=load(SOURCE_PATH);sm={s['id']:s for s in sources}
  sm['spatial']['requiredMarkers']=['XI.','Приложение № 1','Приложение № 2'];sm['goals309']['requiredMarkers']=['12. Настоящий Указ вступает в силу','7 мая 2024 года'];sm['moscow50']['requiredMarkers']=['Статья 47.','Приложение 1','Приложение 6']
  sm['moscow3'].update(url=candidates['moscow3']['sourceUrl'],adapter='pdf-local')

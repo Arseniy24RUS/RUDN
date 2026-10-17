@@ -3,6 +3,7 @@ from acquire_corpus import *
 from difflib import SequenceMatcher
 OUT=ROOT/'.clean-corpus'
 def clean_candidate(d):
+ seed=anchor_catalog().get(d['id']) or load(DATA/'documents'/f"{d['id']}.json")
  oldsections={s['id']:s for s in d['sections']};blocks=[];last=None
  for u in d['units']:
   t=clean_text(u['text'],d['id'])
@@ -18,7 +19,7 @@ def clean_candidate(d):
   blocks.append(b)
  units,sections=structure(blocks,d['id'],d['sourceUrl']);d.update(units=units,sections=sections,aliases={},sha256=digest(units))
  d['sourceNote']='Текст нормативного акта. Графические приложения, если они есть, приведены вместе с соответствующим разделом.'
- d['preflight']['anchors']=resolve_anchors(load(DATA/'anchors.json')[d['id']],d)
+ d['preflight']['anchors']=resolve_anchors(seed,d)
  return d
 
 def main():

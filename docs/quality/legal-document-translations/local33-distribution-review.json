@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "status": "approved",
+  "verdict": "approved",
+  "kind": "byte-normalization-of-independently-reviewed-translations",
+  "reviewer": "legal_article_selection_semantics",
+  "scope": "Independent byte-level distribution review only; no repeated linguistic certification.",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "8da5bee0d4cbec206b290f9d5fc524652fec0852460b690f1c13f93f01b9d8ed",
+    "fileSha256": "4e801eca126d7d745b03a2d8d1080ffd1b479aaab35a453f1cb57a0fb4cb1a42"
+  },
+  "upstreamReview": {
+    "path": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/reviews/local33/final-review.json",
+    "sha256": "91228088fff9db3c79f29c5083f1b118bf1d4698cf4bb4890384fc2dcc250738",
+    "status": "approved",
+    "kind": "independent-synthetic-linguistic-review",
+    "productCopyByteIdentical": true
+  },
+  "payloadDecisions": [
+    {
+      "docId": "local33",
+      "locale": "en",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "68f9f9bf3e4b2c0be04de42d7956e965227529c3fdfb0ed4f14912d216d78913",
+      "reviewedUnits": 1448,
+      "reviewedSections": 107,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "7a6cf3388a761b5d73b458c693e4b789b311b62bc1538ed119b3866f63dba5f5",
+        "originalReview": "docs/quality/legal-document-translations/local33-review.json#sha256=91228088fff9db3c79f29c5083f1b118bf1d4698cf4bb4890384fc2dcc250738",
+        "jsonDeepEqual": true,
+        "exactNormalizedBytesEqual": true,
+        "originalBytes": 621606,
+        "distributionBytes": 615689,
+        "removedCarriageReturns": 5917,
+        "originalPath": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/staging/local33/en.json",
+        "productPath": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/rudn-legal-lab-assessment-publication/site/apps/legal-lab/data/translations/en/local33.json"
+      }
+    },
+    {
+      "docId": "local33",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "content-identical-to-independent-linguistic-review",
+      "payloadSha256": "43be14329202e033b2671e89ceb05291161ed2adf30531d26376b8026a13d2e7",
+      "reviewedUnits": 1448,
+      "reviewedSections": 107,
+      "transport": {
+        "kind": "crlf-to-lf-only",
+        "fromSha256": "8d7328f7dc878289221c45fe9cb30822717243fe865ffeab8b12a211108b2c25",
+        "originalReview": "docs/quality/legal-document-translations/local33-review.json#sha256=91228088fff9db3c79f29c5083f1b118bf1d4698cf4bb4890384fc2dcc250738",
+        "jsonDeepEqual": true,
+        "exactNormalizedBytesEqual": true,
+        "originalBytes": 472083,
+        "distributionBytes": 466166,
+        "removedCarriageReturns": 5917,
+        "originalPath": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/staging/local33/zh.json",
+        "productPath": "C:/Codex projects/RUDN-Settlements-Codex-Production-Kit/rudn-legal-lab-assessment-publication/site/apps/legal-lab/data/translations/zh/local33.json"
+      }
+    }
+  ],
+  "checks": {
+    "exactCRLFtoLF": true,
+    "jsonDeepIdentity": true,
+    "originalPayloadPins": true,
+    "distributionPayloadPins": true,
+    "upstreamApprovedPins": true,
+    "sourceRawAndCanonicalPins": true,
+    "orderedSourceUnitAndSectionCoverage": true,
+    "noRemainingCarriageReturns": true
+  },
+  "limitations": [
+    "The full linguistic decision remains the pinned upstream independent synthetic review.",
+    "No human, official or certified translation approval is claimed.",
+    "Original staging payloads, original review and source document are unchanged; product/registry files were read only."
+  ],
+  "execution": {
+    "command": "node evidence/runs/20261015-legal-lab/phone-test-publication/document-translations/reviews/local33-distribution/verify.mjs",
+    "completionChunk": "e1f72b",
+    "exitCode": 0
+  },
+  "evidenceScript": {
+    "path": "verify.mjs",
+    "sha256": "097a2d309412e7b48d4c05132c0f73d664cd3fe4fff88e185da9d9afc9f94652"
+  }
+}

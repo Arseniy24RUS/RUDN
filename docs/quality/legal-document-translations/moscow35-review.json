@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "docId": "moscow35",
+  "status": "approved",
+  "kind": "independent-synthetic-review",
+  "reviewer": "translate_goals_system",
+  "author": "translate_constitution",
+  "hashes": {
+    "en": "1b687cc0e7a37898940290011d3361bad336df91c5edb4b791ec7c518d800017",
+    "zh": "8183029bfbcd825e48abc59fa9a626a8f39442a1c28e399cc58752a8c4341e4f"
+  },
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "0ee1a8bf5c488775c9c26a5d158d089bb3ca18c3a832306b7c0b29dbebbb3d17",
+    "fileSha256": "7bf5631df4944d6ac402a1e83053c747cad6ca949d15d1ce88e4e4f1a5b21cae"
+  },
+  "fullReadComplete": true,
+  "coverage": {
+    "unitsPerLocale": 692,
+    "sectionsPerLocale": 84,
+    "locatorsPerLocale": 692,
+    "unitTexts": 1384,
+    "sectionTitles": 168,
+    "metadata": "title and revisionLabel in both locales",
+    "method": "Sequential complete RU–EN–ZH comparison, including repeated units, annexes, forms and notes. Every source section title occurs in a fully reviewed unit; all locators match their corresponding reviewed section."
+  },
+  "resolvedFindings": 8,
+  "remainingRequiredFindings": 0,
+  "exactChanges": [
+    {
+      "locale": "en",
+      "index": 471,
+      "unitId": "moscow35-ub57a0188887de2288e-1",
+      "field": "text",
+      "current": "6. A person shall not be nominated again for an award of the same name unless otherwise provided by the regulations governing that award.",
+      "replacement": "6. Repeat nomination for awards of the same name is not permitted unless otherwise provided by the regulations governing those awards."
+    },
+    {
+      "locale": "en",
+      "index": 525,
+      "unitId": "moscow35-uf314e5c232149b694d-1",
+      "field": "text",
+      "current": "33. If an award cannot be presented because the recipient has changed workplace or residence or has been dismissed, the head of the personnel unit entrusted with organising the presentation sends a notification and returns the unpresented award and its document to the Human Resources Policy Directorate of the Government of Moscow, which takes steps to organise its presentation.",
+      "replacement": "33. If an award cannot be presented because the recipient has changed workplace or residence or the recipient’s employment has ended, the head of the personnel unit entrusted with organising the presentation sends a notification and returns the unpresented award and its document to the Human Resources Policy Directorate of the Government of Moscow, which takes steps to organise its presentation."
+    },
+    {
+      "locale": "en",
+      "index": 616,
+      "unitId": "moscow35-u8b25044c37311b7384-1",
+      "field": "text",
+      "current": "- refuse to consider and return for revision documents that have been prepared poorly or carelessly;",
+      "replacement": "- refuse to consider and return for revision documents that have been prepared poorly and carelessly;"
+    },
+    {
+      "locale": "zh",
+      "index": 28,
+      "unitId": "moscow35-uf14e6f475f0d57cd04-1",
+      "field": "text",
+      "current": "“为莫斯科作出贡献”荣誉奖章授予下列功绩：",
+      "replacement": "因下列功绩授予“为莫斯科作出贡献”荣誉奖章："
+    },
+    {
+      "locale": "zh",
+      "index": 75,
+      "unitId": "moscow35-u9ffef11b89bc0d6fa3-1",
+      "field": "text",
+      "current": "1. 莫斯科市医学奖（以下简称本奖）授予医生、医学科学家和卫生事业组织者所取得的最有效、具有新意、独创性和可靠性、促进莫斯科市临床卫生保健和医学科学发展并获得社会认可的工作成果。",
+      "replacement": "1. 莫斯科市医学奖（以下简称本奖）授予医生、医学科学家和卫生事业组织者所取得的最有效、具有新意、独创性和可靠性、促进莫斯科市医疗卫生实践和医学科学发展并获得社会认可的工作成果。"
+    },
+    {
+      "locale": "zh",
+      "index": 83,
+      "unitId": "moscow35-u50a7015dc169837cd3-1",
+      "field": "text",
+      "current": "7. 医学领域的工作成果只有在公布、完成临床试验并应用于本市临床卫生保健后，才可提名参评本奖。",
+      "replacement": "7. 医学领域的工作成果只有在公布、完成临床试验并应用于本市医疗卫生实践后，才可提名参评本奖。"
+    },
+    {
+      "locale": "zh",
+      "index": 322,
+      "unitId": "moscow35-uba915c8908ddc58ce4-1",
+      "field": "text",
+      "current": "‘莫斯科市荣誉消防员’荣誉称号授予国家消防局及部门消防机构中具有高专业水平的工作人员，以表彰其在加强消防安全和积极开展火灾预防工作方面的功绩，在扑灭和预防火灾、保护居民和城市设施免遭火灾侵害方面取得的优异成绩，多次参与消除事故、灾难和自然灾害后果并在其中表现出的英勇和勇气，有效操作和维护消防装备及设备，以及善于教育和培训人员；获授者须在莫斯科市按日历年计算服役不少于10年。",
+      "replacement": "‘莫斯科市荣誉消防员’荣誉称号授予国家消防系统及部门消防机构中具有高专业水平的工作人员，以表彰其在加强消防安全和积极开展火灾预防工作方面的功绩，在扑灭和预防火灾、保护居民和城市设施免遭火灾侵害方面取得的优异成绩，多次参与消除事故、灾难和自然灾害后果并在其中表现出的英勇和勇气，有效操作和维护消防装备及设备，以及善于教育和培训人员；获授者须在莫斯科市按日历年计算服役不少于10年。"
+    },
+    {
+      "locale": "zh",
+      "index": 484,
+      "unitId": "moscow35-ub82b3798acba3fa895-1",
+      "field": "text",
+      "current": "10. 对联邦国家权力机关及联邦国家机关办公机构工作人员、军人、俄罗斯联邦内务机关工作人员、俄罗斯联邦民防、紧急情况和消除自然灾害后果部国家消防局工作人员、联邦安全机关工作人员、刑罚执行体系机构和机关工作人员、检察机关工作人员、俄罗斯联邦海关工作人员、俄罗斯联邦侦查委员会工作人员、俄罗斯联邦国民近卫军人员、法官和检察官，以及俄罗斯联邦武装力量文职人员，授予奖励和荣誉称号的提名由有关联邦国家权力机关、联邦国家机关负责人，或这些机关设在莫斯科市的地域机构负责人提交莫斯科市长。",
+      "replacement": "10. 对联邦国家权力机关及联邦国家机关办公机构工作人员、军人、俄罗斯联邦内务机关工作人员、俄罗斯联邦民防、紧急情况和消除自然灾害后果部国家消防系统工作人员、联邦安全机关工作人员、刑罚执行体系机构和机关工作人员、检察机关工作人员、俄罗斯联邦海关工作人员、俄罗斯联邦侦查委员会工作人员、俄罗斯联邦国民近卫军人员、法官和检察官，以及俄罗斯联邦武装力量文职人员，授予奖励和荣誉称号的提名由有关联邦国家权力机关、联邦国家机关负责人，或这些机关设在莫斯科市的地域机构负责人提交莫斯科市长。"
+    }
+  ],
+  "machineValidation": {
+    "status": "pass",
+    "exactDeepDiff": "Exactly eight agreed unit text replacements; every other payload field unchanged.",
+    "exactByteDiff": {
+      "en": {
+        "beforeSha256": "17e805beb2000b5221224a9bc45009a2904de2cd4a9065b6bdb2982860e8e9d7",
+        "afterSha256": "1b687cc0e7a37898940290011d3361bad336df91c5edb4b791ec7c518d800017",
+        "exactSerializedReplacements": 3,
+        "unrelatedBytesUnchanged": true
+      },
+      "zh": {
+        "beforeSha256": "039bde853f5443b5a6de9be387ac4e7426aa4bae8ec3087ff68adafa302d5552",
+        "afterSha256": "8183029bfbcd825e48abc59fa9a626a8f39442a1c28e399cc58752a8c4341e4f",
+        "exactSerializedReplacements": 5,
+        "unrelatedBytesUnchanged": true
+      }
+    },
+    "sourcePins": "pass",
+    "numericAndStructure": "final-machine-validation.json",
+    "buildReproduction": "final-memory-build-proof.json; original author builder with writes captured in memory; both payloads reproduced byte for byte.",
+    "frozenInputWrites": 0,
+    "sourceGraphicsUnchanged": 7
+  },
+  "payloadDecisions": [
+    {
+      "docId": "moscow35",
+      "locale": "en",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "1b687cc0e7a37898940290011d3361bad336df91c5edb4b791ec7c518d800017",
+      "reviewedUnits": 692,
+      "reviewedSections": 84
+    },
+    {
+      "docId": "moscow35",
+      "locale": "zh",
+      "status": "approved",
+      "kind": "independent-synthetic-review",
+      "payloadSha256": "8183029bfbcd825e48abc59fa9a626a8f39442a1c28e399cc58752a8c4341e4f",
+      "reviewedUnits": 692,
+      "reviewedSections": 84
+    }
+  ],
+  "limitations": [
+    "Independent synthetic linguistic review of an educational unofficial translation; not official certification or human legal acceptance.",
+    "Scans and original source text were not translated or modified."
+  ],
+  "evidenceFiles": {
+    "assessment.json": "238f2714b67f8a4cb9e6a0e84a8e557ea16d9e26fdd699fae5614115899d47bb",
+    "progress.json": "5e74e6ec265102cbb65bcdfbf75194a4eca137a0d81749bbc5c23caef349ebcc",
+    "reviewed-payload-snapshot.json": "df651382d86db5bc8c44ff06452625a491072cb03d35a16b005b0c82cbcedc0c",
+    "exact-recheck.json": "6e74d51eb83dbba495d1ffa02566181660c7e615657ba9ba59bd1c9d199850da",
+    "final-machine-validation.json": "9ee18b042088c8abe43028a1f86de56d7069ad60141475214675b94554535845",
+    "final-memory-build-proof.json": "7c38bed848759a5ae680378f71871395a403f2bb1ce5f254e9f49c4f1815ba4a"
+  },
+  "completedUtc": "2026-10-17T00:33:48.989934+00:00"
+}

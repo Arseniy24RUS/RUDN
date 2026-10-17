@@ -1,0 +1,207 @@
+{
+  "status": "pass",
+  "meaning": "Root cause and one-line fix confirmed by real local Chromium negative/fixed probes; not full CI acceptance.",
+  "head": "c57f158f6e12207a8d9fd02fb139ae177a77b27a",
+  "base": "7d5c92658d8f972c367235bfff17c46f3345ae89",
+  "checks": [
+    {
+      "name": "Both runs cover four fresh app/worker combinations",
+      "status": "pass"
+    },
+    {
+      "name": "Both enabled-worker baseline reloads fail and emit release-unavailable",
+      "status": "pass"
+    },
+    {
+      "name": "Baseline disabled-worker controls recover and perform real UI actions",
+      "status": "pass"
+    },
+    {
+      "name": "All fixed contexts recover after reload and perform real UI actions",
+      "status": "pass"
+    },
+    {
+      "name": "Fixed enabled workers bind release1.3.10, cached JS fetches return200, no unavailable messages",
+      "status": "pass"
+    },
+    {
+      "name": "No fixed same-origin request failures; optional external leaderboard failures are separate",
+      "status": "pass"
+    },
+    {
+      "name": "Direct same-origin files were200 before and after",
+      "status": "pass"
+    },
+    {
+      "name": "Only service-worker source pin changed across negative/fixed probes",
+      "status": "pass"
+    },
+    {
+      "name": "Eleven relevant game/harness/workflow blobs are unchanged from main to PR16",
+      "status": "pass"
+    },
+    {
+      "name": "Sixteen fresh before/fixed screenshots exist",
+      "status": "pass"
+    }
+  ],
+  "workerPins": {
+    "before": "d0bf1210f83dbc1860c988c4a4e072f6a706b71d7ac9c4182542221138f0b23c",
+    "after": "49582a5defaba1c75c0561570e0604b613843a8423a3666805d9aab38a86c896"
+  },
+  "browser": "151.0.7922.34",
+  "coverage": {
+    "diagnosticContexts": 8,
+    "apps": 2,
+    "screenshots": 16,
+    "ciJobsRead": 5,
+    "fullCiRerun": "not-run",
+    "physicalDevices": "not-run"
+  },
+  "remainingLimitations": [
+    "Fresh-context Chromium diagnostic only; complete CI must rerun after publication.",
+    "Optional external leaderboard GET failures occurred in both controls and fixed cases; no auth or cloud-write evidence claimed."
+  ],
+  "artifacts": [
+    {
+      "path": "baseline-confirm-probe.json",
+      "bytes": 24510,
+      "sha256": "f2bcb93ed06eb391d4bdee9d1454da61c59914f60a578fa903aa16c0f9af21a7"
+    },
+    {
+      "path": "baseline-confirm-puzzle-allow-initial.png",
+      "bytes": 241778,
+      "sha256": "2ab75c11425dc16d4a9e6759a6e17be9149a684649f623fcd9d7d5fb3c6232e6"
+    },
+    {
+      "path": "baseline-confirm-puzzle-allow-reload.png",
+      "bytes": 15231,
+      "sha256": "3bc72d208e3d98ae04f7f859de04f1fe8628774578ace17dc41b70bf3bb24d90"
+    },
+    {
+      "path": "baseline-confirm-puzzle-block-initial.png",
+      "bytes": 237906,
+      "sha256": "17b14826db45f237208807c69467c760a6ae83b3f29f15afe30993bb24de56be"
+    },
+    {
+      "path": "baseline-confirm-puzzle-block-reload.png",
+      "bytes": 237925,
+      "sha256": "c26ae718fb6898673c945e6d7e9bce8eb978a9787c115c2afab4e9f64795ea2b"
+    },
+    {
+      "path": "baseline-confirm-settlements-allow-initial.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "baseline-confirm-settlements-allow-reload.png",
+      "bytes": 15137,
+      "sha256": "169842dbe73c95374a022f5f281eb6b97b6aa43764fd8338f868b2613b58f8de"
+    },
+    {
+      "path": "baseline-confirm-settlements-block-initial.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "baseline-confirm-settlements-block-reload.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "baseline-proof.json",
+      "bytes": 7154,
+      "sha256": "f653089cc37140deda6dac3d71572e52eb92cba0eea105a030bbb7ea971b8b33"
+    },
+    {
+      "path": "diagnosis.md",
+      "bytes": 10188,
+      "sha256": "1dd02cbd178f9934d152f893b0e694041f1ecd4327b511dae02fb787a3aec9f3"
+    },
+    {
+      "path": "execution-log.json",
+      "bytes": 2591,
+      "sha256": "c6c0fdf1534101048ed198b51512edddfe9c04c03b74008cabcc929f97979839"
+    },
+    {
+      "path": "fixed-probe.json",
+      "bytes": 25678,
+      "sha256": "597bdacdc91c2a6d6335551da1ad3a6d1661d8ccbb46ed1abc10e114d8d54a56"
+    },
+    {
+      "path": "fixed-puzzle-allow-initial.png",
+      "bytes": 237012,
+      "sha256": "824efdbc1d4bfcd7f6dc30bc0debc5f897f83ad4134fe5d971674b36f7149e27"
+    },
+    {
+      "path": "fixed-puzzle-allow-reload.png",
+      "bytes": 237012,
+      "sha256": "824efdbc1d4bfcd7f6dc30bc0debc5f897f83ad4134fe5d971674b36f7149e27"
+    },
+    {
+      "path": "fixed-puzzle-block-initial.png",
+      "bytes": 238746,
+      "sha256": "08d4f5e46827c61eedc2d83482581874538db3fca1a6666257b94d56824c9e6d"
+    },
+    {
+      "path": "fixed-puzzle-block-reload.png",
+      "bytes": 238746,
+      "sha256": "08d4f5e46827c61eedc2d83482581874538db3fca1a6666257b94d56824c9e6d"
+    },
+    {
+      "path": "fixed-settlements-allow-initial.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "fixed-settlements-allow-reload.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "fixed-settlements-block-initial.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "fixed-settlements-block-reload.png",
+      "bytes": 57482,
+      "sha256": "5a1a0d6492058b5fb8d423868a8057341c6b5f62aecfb4746397839ad2ad4908"
+    },
+    {
+      "path": "job-117250906723.log",
+      "bytes": 102932,
+      "sha256": "93c0f65a93930fe6f8a45dbf3ac791f889ad0ea6f80f2527cedbcfdd66283db8"
+    },
+    {
+      "path": "job-117251085708.log",
+      "bytes": 161721,
+      "sha256": "31b0e0d8860cf930f0cda0228670909c709001764ff32561ea01189ffbeff457"
+    },
+    {
+      "path": "job-117251085717.log",
+      "bytes": 49151,
+      "sha256": "19a565da271e8886fc4e0b8be175392203762f1483f2329871d76a8f1ec76436"
+    },
+    {
+      "path": "job-117251085828.log",
+      "bytes": 49535,
+      "sha256": "b24efb9b103d255aa427d1decbdc07b5bf1a1c0a0b3d8240249a8cc27cb9b444"
+    },
+    {
+      "path": "job-117251085846.log",
+      "bytes": 74433,
+      "sha256": "23fd67154868db3208e156203bdcf14f2e16405b8b90b6bb71b5738551f7c048"
+    },
+    {
+      "path": "probe-sw.mjs",
+      "bytes": 6340,
+      "sha256": "89b001b2f8f3648062faa60ed0d79ede88d83379116e4ea56eb8d946525c8c78"
+    },
+    {
+      "path": "verify-diagnosis.mjs",
+      "bytes": 4457,
+      "sha256": "d95715474485bc0aba478f5f861c3bc3ea652e08e8673ac99e83733779e9ffcd"
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {contentHash,verifyBank,expandIds,gradeTask,scoreDossier,assessmentReady,selectionLimit,scanQuestionsFor,SCAN_METADATA_MODE} from '../site/apps/legal-lab/lib/core.mjs';
-import {localizeContent} from '../site/apps/legal-lab/locales/content.mjs';
+import {localizeContent,taskCopy} from '../site/apps/legal-lab/locales/content.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),args=process.argv.slice(2);
 const value=(k,d)=>args.includes(k)?args[args.indexOf(k)+1]:d;
 const output=resolve(value('--output',resolve(root,'../evidence/runs/20261015-legal-lab/independent-qa/corpus')));
@@ -14,8 +14,11 @@ const read=async f=>JSON.parse(await readFile(resolve(root,'site/apps/legal-lab/
 const [catalog,bank,cases,scans]=await Promise.all(['catalog.json','bank.json','cases.json','scans.json'].map(read));
 const docs=await Promise.all(catalog.documents.map(d=>read(d.file)));
 const retired=JSON.parse(await readFile(resolve(root,'tests/fixtures/legal-lab-retired-extras.json'),'utf8')),five=await read('assessment-variants.json');
+const archiveRoot=resolve(root,'tests/fixtures/legal-lab-retired-corpus'),archivedRead=async f=>JSON.parse(await readFile(resolve(archiveRoot,f),'utf8'));
+const [archivedCatalog,archivedCopy,retirement]=await Promise.all(['catalog.json','task-copy.json','retirement-proof.json'].map(archivedRead));
+const archivedDocs=await Promise.all(archivedCatalog.documents.map(meta=>archivedRead(meta.id+'.json'))),historicalDocs=[...docs,...archivedDocs];
 function check(name,fn){try{fn();checks.push({name,status:'pass'});}catch(e){checks.push({name,status:'fail',error:e.message});}}
-check('16 documents, 14 primary, 52 classroom, no published bonus tasks, 24 historical dossiers',()=>{assert.equal(docs.length,16);assert.equal(catalog.documents.filter(d=>d.main).length,14);assert.equal(bank.classroom.length,52);assert.deepEqual(bank.extra,[]);assert.equal(retired.length,2);assert.equal(cases.length,24);});
+check('14 active documents, 52 classroom, no published bonus content, 24 historical dossiers',()=>{assert.equal(docs.length,14);assert.ok(catalog.documents.every(d=>d.main));assert.equal(bank.classroom.length,52);assert.deepEqual(bank.extra,[]);assert.equal(retired.length,2);assert.equal(cases.length,24);for(const t of retired)assert.ok(!Object.hasOwn(taskCopy,t.id));});
 check('Unique references, TOC, scan rectangles and assessment separation',()=>assert.deepEqual(verifyBank(catalog,bank,cases,scans,docs),[]));
 check('Single content version',()=>{assert.equal(bank.contentVersion,catalog.contentVersion);for(const d of docs)assert.equal(d.version,catalog.contentVersion,d.id);});
 for(const d of docs){
@@ -31,10 +34,21 @@ for(const d of docs){
  check(`${d.id}: complete reviewed document and raw file hash`,()=>{if(preliminary)return;assert.equal(d.coverage,'full');assert.equal(meta.coverage,'full');assert.equal(meta.reviewStatus,'reviewed');assert.equal(meta.fileSha256,fileHash);assert.ok(d.sections.length>0);assert.ok(d.units.some(u=>/стать[яи]|приложени|пункт|раздел/i.test(u.locator||u.text)));assert.doesNotMatch(d.revisionLabel,/выдержки|не установлена/i);});
 }
 check('Scoring release gate',()=>{if(!preliminary)assert.equal(assessmentReady(catalog,docs).ready,true);});
+for(const d of archivedDocs){
+ const meta=archivedCatalog.documents.find(m=>m.id===d.id),bytes=await readFile(resolve(archiveRoot,d.id+'.json'));
+ check(`${d.id}: frozen historical bytes and canonical hash preserved`,()=>{assert.equal(createHash('sha256').update(bytes).digest('hex'),meta.fileSha256);assert.equal(meta.fileSha256,retirement.fixtureHashes[d.id+'.json']);assert.equal(d.sha256,meta.sha256);assert.equal(d.units.length,meta.unitCount);});
+ const hash=await contentHash(d.units);
+ check(`${d.id}: historical TOC, aliases and version remain available to regression`,()=>{assert.equal(hash,d.sha256);assert.equal(d.version,catalog.contentVersion);const units=new Map(d.units.map(u=>[u.id,u])),sections=new Map(d.sections.map(s=>[s.id,s]));for(const u of d.units)assert.ok(sections.get(u.sectionId)?.unitIds.includes(u.id));for(const s of d.sections)for(const id of s.unitIds)assert.equal(units.get(id)?.sectionId,s.id);});
+}
+check('Removed materials are absent from the public corpus and active tasks reference only active acts',()=>{
+ const activeIds=new Set(docs.map(d=>d.id));assert.deepEqual(archivedDocs.map(d=>d.id),['archive122','realty218']);
+ for(const t of [...bank.classroom,...cases,...five.questionSets])for(const id of [t.docId,...(t.docIds||[])].filter(Boolean))assert.ok(activeIds.has(id),`${t.id||t.docId}: ${id}`);
+});
+for(const p of ['anchors.json','documents/archive122.json','documents/realty218.json']){let missing=false;try{await readFile(resolve(root,'site/apps/legal-lab/data',p));}catch(e){if(e.code!=='ENOENT')throw e;missing=true;}check(`${p}: not distributed to students`,()=>assert.equal(missing,true));}
 for(const t of [...bank.classroom,...retired])check(`${t.id}: exact, empty and irrelevant answers`,()=>{
- const selections=expandIds(t.answerSets?.[0]||[],docs),answer=t.kind==='scan'?{hotspot:t.answer}:t.kind==='type'?{type:t.answer}:{docId:t.docId,selections};
- assert.equal(gradeTask(t,answer,docs).fraction,1);assert.equal(gradeTask(t,{},docs).fraction,0);
- if(t.answerSets){assert.ok(selections.length>0);assert.ok(selections.length<=selectionLimit(t,docs));assert.ok(gradeTask(t,{...answer,selections:[...selections,'not-a-real-norm']},docs).fraction<1);}
+ const selections=expandIds(t.answerSets?.[0]||[],historicalDocs),answer=t.kind==='scan'?{hotspot:t.answer}:t.kind==='type'?{type:t.answer}:{docId:t.docId,selections};
+ assert.equal(gradeTask(t,answer,historicalDocs).fraction,1);assert.equal(gradeTask(t,{},historicalDocs).fraction,0);
+ if(t.answerSets){assert.ok(selections.length>0);assert.ok(selections.length<=selectionLimit(t,historicalDocs));assert.ok(gradeTask(t,{...answer,selections:[...selections,'not-a-real-norm']},historicalDocs).fraction<1);}
 });
 for(const item of cases)check(`${item.id}: all rubric components, empty/extra/unselected-source cases`,()=>{
  const answer={metadata:Object.fromEntries(item.scanQuestions.map(q=>[q.field,q.field])),classifications:Object.fromEntries(item.classificationIds.map(id=>[id,scans.find(s=>s.id===id).actType])),documentIds:item.docIds,selections:expandIds(item.answerSets[0],docs)};
@@ -44,7 +58,9 @@ for(const item of cases)check(`${item.id}: all rubric components, empty/extra/un
  assert.ok(answer.selections.length<=selectionLimit(item,docs));
 });
 for(const locale of ['ru','en','zh'])check(`${locale}: localized prompts/explanations preserve answers`,()=>{
- const historicalBank={...bank,extra:retired},translated=localizeContent(historicalBank,cases,locale);
+ const translated=localizeContent(bank,cases,locale);
+ // Removed situation translations are frozen fixtures, not shipped application copy.
+ translated.bank.extra=retired.map(t=>({...t,...archivedCopy[t.id]?.ru,...archivedCopy[t.id]?.[locale]}));
  for(const [original,list] of [[bank.classroom,translated.bank.classroom],[retired,translated.bank.extra],[cases,translated.cases]])for(let i=0;i<original.length;i++){
   const a=original[i],b=list[i];assert.equal(a.id,b.id);assert.deepEqual(a.answerSets,b.answerSets);assert.equal(a.answer,b.answer);assert.ok(b.prompt?.trim(),`${b.id} prompt is empty`);assert.ok(b.explanation?.trim(),`${b.id} explanation is empty`);
   // Canonical act designations (4146-р, 122-ФЗ) remain Russian source identifiers.
@@ -76,7 +92,9 @@ check('Every new variant: all five points, empty answer, one wrong detail and ex
  }
 });
 
-const sourceFiles=['assessment-variants.json','catalog.json','bank.json','cases.json','scans.json','anchors.json',...catalog.documents.map(d=>d.file)];
+const sourceFiles=['assessment-variants.json','catalog.json','bank.json','cases.json','scans.json','report-references.json',...catalog.documents.map(d=>d.file)];
 const hashes=Object.fromEntries(await Promise.all(sourceFiles.map(async p=>[p,createHash('sha256').update(await readFile(resolve(root,'site/apps/legal-lab/data',p))).digest('hex')])));
-const report={status:checks.some(c=>c.status==='fail')?'fail':'pass',exitCode:checks.some(c=>c.status==='fail')?1:0,preliminary,contentVersion:catalog.contentVersion,environment:{node:process.version,nodeExecutable:process.execPath,platform:process.platform,arch:process.arch},command:process.argv,checks,hashes,limitations:['Structural/hash/scoring checks do not independently certify legal currency or completeness of the sources.']};
+const historicalHashes=Object.fromEntries(await Promise.all(Object.keys(retirement.fixtureHashes).map(async p=>[p,createHash('sha256').update(await readFile(resolve(archiveRoot,p))).digest('hex')])));
+check('All historical evidence files retain their recorded byte hashes',()=>assert.deepEqual(historicalHashes,retirement.fixtureHashes));
+const report={status:checks.some(c=>c.status==='fail')?'fail':'pass',exitCode:checks.some(c=>c.status==='fail')?1:0,preliminary,contentVersion:catalog.contentVersion,environment:{node:process.version,nodeExecutable:process.execPath,platform:process.platform,arch:process.arch},command:process.argv,checks,hashes,historicalHashes,limitations:['Structural/hash/scoring checks do not independently certify legal currency or completeness of the sources.','Retired source files are historical regression evidence only; their original metadata is not a current completeness approval.']};
 await mkdir(output,{recursive:true});await writeFile(resolve(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({status:report.status,checks:checks.length,failed:checks.filter(c=>c.status==='fail'),preliminary,output},null,2));process.exitCode=report.status==='pass'?0:1;

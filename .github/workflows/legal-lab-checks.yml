@@ -19,6 +19,7 @@ on:
       - 'scripts/*legal*'
       - 'tests/legal-lab*'
       - 'tests/fixtures/legal-lab-retired-extras.json'
+      - 'tests/fixtures/legal-lab-retired-corpus/**'
       - 'docs/quality/legal-document-translations/**'
       - 'tools/legal-lab/**'
       - '.github/workflows/legal-lab-checks.yml'

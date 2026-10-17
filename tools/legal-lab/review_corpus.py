@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Validate source-backed review evidence and install all sixteen corpus documents.
+"""Validate source-backed review evidence and install the active catalog documents.
 Synthetic and human review are explicitly distinguished. No claims are inferred
 from byte length, coverage flags, or a checked attestation alone.
 """
 import argparse,datetime as dt,json,pathlib,shutil,sys,re,hashlib
-from acquire_corpus import ROOT,DATA,load,write,digest,thresholds,norm,SOURCE_PATH
+from acquire_corpus import ROOT,DATA,load,write,digest,thresholds,norm,SOURCE_PATH,anchor_catalog
 VERSION='legal-lab-2026-10-15.2'
 
 def structural_review(d):
@@ -73,7 +73,7 @@ def validate_review(catalog,candidates,attestation,sources):
   for field in ('completeIncludingAnnexes','applicableRevisionChecked','allQuestionAnchorsChecked','editorialMaterialRemoved'):
    if a.get(field) is not True:issues.append(id+': unchecked '+field)
   if not a.get('evidence'):issues.append('Missing per-document evidence '+id)
-  expected=load(DATA/'anchors.json').get(id,{}).get('units',[]);known={u['id'] for u in d['units']}
+  expected=(anchor_catalog().get(id) or load(DATA/'documents'/f'{id}.json')).get('units',[]);known={u['id'] for u in d['units']}
   for target in expected:
    mapped=d.get('aliases',{}).get(target['id'])
    if not isinstance(mapped,list) or not mapped or any(u not in known for u in mapped):issues.append('Invalid anchor '+id+'/'+target['id'])
@@ -100,7 +100,7 @@ def main():
   d=candidates[meta['id']];d.update(version=VERSION,coverage='full',reviewStatus='reviewed',reviewKind=a['reviewKind'],reviewer=a['reviewer'],reviewedAt=a['reviewedAt']);d['sha256']=digest(d['units']);d['preflight']['legalReviewRequired']=False;d['structuralReview']=structural_review(d);write(DATA/meta['file'],d)
   meta.update({k:d[k] for k in ['version','coverage','reviewStatus','reviewKind','revisionLabel','sourceUrl','sha256']});meta['unitCount']=len(d['units'])
  cat.update(contentVersion=VERSION,release={'status':'reviewed','reviewKind':a['reviewKind'],'reviewedBy':a['reviewer'],'reviewedAt':a['reviewedAt'],'asOf':a['asOf'],'mainDocumentsComplete':True,'allDocumentsComplete':True,'reviewAttestationHash':digest(a)})
- cat['coverageNotice']='Тексты документов, приложения и историческая редакция доступны в библиотеке.'
+ cat.pop('coverageNotice',None)
  write(DATA/'catalog.json',cat);write(ROOT/'docs/corpus-review.json',a)
  print('Installed',VERSION,'all',len(candidates),'documents. Bank and platform files were not changed.')
  return 0

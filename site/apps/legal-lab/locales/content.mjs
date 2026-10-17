@@ -52,8 +52,6 @@ const rows = [
 ['Q36','Московский закон перечисляет пять групп муниципальных должностей: от высших до младших.','Which groups of municipal service positions are established in Moscow?','Moscow’s law lists five groups, from highest to junior.','莫斯科规定了哪些市政公务员职务组别？','莫斯科法律列出从最高到初级的五个组别。'],
 ['Q37','Московский закон устанавливает аттестацию один раз в три года. Выберите правило о периодичности.','How often is a municipal servant assessed?','Moscow’s law requires assessment once every three years. Select the timing rule.','市政公务员多久接受一次任职考核？','莫斯科法律规定每三年考核一次，应选择周期规则。'],
 ['Q38','Представительный орган — Екатеринбургская городская Дума. Администрация города является другим органом.','What is Yekaterinburg’s representative body called?','The representative body is the Yekaterinburg City Duma. The city administration is a different body.','叶卡捷琳堡的代表机关叫什么？','代表机关是叶卡捷琳堡市杜马，市行政机关是另一个机关。'],
-['X01','Часть 4 статьи 109 запрещает роспуск с момента выдвижения обвинения до решения Совета Федерации. Справка переворачивает правило.','A memo says: “After the Duma brings charges against the President, the President may dissolve it before the Federation Council decides.” Which provision disproves this?','Article 109(4) bars dissolution from the charges until the Federation Council’s decision. The memo reverses the rule.','一份说明称：“杜马对总统提出指控后，总统可在联邦委员会决定前解散杜马。”哪一条款能反驳？','第109条第4款禁止在提出指控至联邦委员会决定期间解散杜马。说明颠倒了规则。'],
-['H01','Для события 2012 года нужен Закон № 122-ФЗ в соответствующей редакции. Статья 6 признаёт ранее возникшее право и без введённой этим законом регистрации. Более поздний Закон № 218-ФЗ к событию не применяется.','On 12 July 2012, a citizen was told their land right was invalid because it was not in the property register. The right arose lawfully and was documented in 1997. No transaction is taking place. Select the act applicable at the event date and the provision needed to check the claim.','Use the relevant 2012 version of Law No. 122-FZ. Article 6 recognises pre-existing rights without the registration introduced by that law. Later Law No. 218-FZ does not apply to this event.','2012年7月12日，一名公民被告知，其土地权利因未记入权利登记簿而无效。该权利于1997年合法产生并办理了文件，现无交易。请选择事件发生时适用的法律和核查该结论的条款。','应使用第122-ФЗ号法律的2012年相应版本。第6条承认此前产生的权利，即使未进行该法引入的登记。较晚的第218-ФЗ号法律不适用于本事件。']
 ];
 export const taskCopy=Object.fromEntries(rows.map(([id,ru,p,x,z,y])=>[id,{ru:ru?{explanation:ru}:{},en:{prompt:p,explanation:x},zh:{prompt:z,explanation:y}}]));
 const caseRows=[
@@ -93,8 +91,42 @@ const families=[
 ['После увольнения','After leaving service','离职之后','Проверьте двухлетний срок, должность в перечне и прежние управленческие функции. Для гражданско-правового договора важен и месячный порог стоимости.','Check the two-year period, the listed position and former management functions. The civil-law contract also has a monthly value threshold.','应核查两年期限、职务清单及原管理职能，民事合同还涉及每月金额门槛。']
 ];
 export const caseCopy=Object.fromEntries(caseRows.map(([id,en,zh])=>[id,{en:{prompt:en},zh:{prompt:zh}}]));
+const typeTitles={
+  "T01": {
+    "en": "State policy towards Russian Cossacks",
+    "zh": "面向俄罗斯哥萨克的国家政策"
+  },
+  "T02": {
+    "en": "Deputy head of the Federal Agency for Tourism",
+    "zh": "联邦旅游署副署长"
+  },
+  "T03": {
+    "en": "School certificates",
+    "zh": "中学毕业证书"
+  },
+  "T04": {
+    "en": "District administration amendments",
+    "zh": "区行政机关文件修订"
+  },
+  "T05": {
+    "en": "Commendation",
+    "zh": "表彰"
+  },
+  "T06": {
+    "en": "State supervision rules",
+    "zh": "国家监督规定"
+  },
+  "T07": {
+    "en": "Municipal anti-corruption commission",
+    "zh": "市政反腐败委员会"
+  },
+  "T08": {
+    "en": "Spatial development strategy",
+    "zh": "空间发展战略"
+  }
+};
 export function localizeContent(bank,cases,locale){
  const lang=['en','zh'].includes(locale)?locale:'ru',ix=lang==='en'?1:lang==='zh'?2:0;
- const task=t=>({...t,...taskCopy[t.id]?.ru,...taskCopy[t.id]?.[lang]});
+ const task=t=>({...t,...taskCopy[t.id]?.ru,...taskCopy[t.id]?.[lang],...(t.kind==='type'&&typeTitles[t.id]?.[lang]?{title:typeTitles[t.id][lang]}:{})});
  return {bank:{...bank,classroom:bank.classroom.map(task),extra:bank.extra.map(task)},cases:cases.map(c=>{const f=families.find(x=>x[0]===c.title);return {...c,...caseCopy[c.id]?.[lang],title:f?.[ix]||c.title,explanation:f?.[ix+3]||'',scanQuestions:c.scanQuestions.map(q=>({...q}))};})};
 }
