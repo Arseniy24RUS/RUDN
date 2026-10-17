@@ -29,13 +29,13 @@ jobs:
       - name: Verify exact reviewed application, rules and tests
         shell: bash
         run: |
-          # Owner authorized publication before full CI and requested this urgent quiz fix.
-          # Exact reviewed trees: isolated quiz dispatch fix, eight real-pointer regressions,
-          # one mobile reader frame, refreshed manifest and cache suffix. Rules unchanged.
+          # Owner authorized publication before full CI and requested mobile reading space.
+          # Exact reviewed trees: mobile course navigation scope, browser regressions,
+          # refreshed manifest and cache suffix. Firebase rules remain unchanged.
           # Any product, rules or test change requires a new explicit reviewed pin.
-          test "$(git rev-parse HEAD:site)" = 'f74e8e23684d33da0bfe7348db82ae285d855bce'
+          test "$(git rev-parse HEAD:site)" = '8db2ac55f2a29ca16d3bbc882c28878a72685065'
           test "$(git rev-parse HEAD:firebase)" = '8ba230ee20963e1974e366442744e8e1b5b403a1'
-          test "$(git rev-parse HEAD:scripts)" = '30a4e5ab61f4c0ad34ad8924015d8f9c7e651cc0'
+          test "$(git rev-parse HEAD:scripts)" = '1fe4a39bf1e635a4c8df6a7e988ba188f1282ec9'
           test "$(git rev-parse HEAD:tests)" = '645851b74abe41121213ecf66ac35021f2e7d4ef'
       - name: Prepare Node
         uses: actions/setup-node@v4
