@@ -201,9 +201,42 @@ test('module manifest includes runtime files; platform and puzzle entry are inst
     assert.ok(worker.precache.includes(entry),`Missing entry: ${entry}`);
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
-  assert.ok(!worker.installedRequests.some(request=>request.url.includes('/apps/')&&!request.url.endsWith('/apps/puzzle.html')),'Other optional modules cannot delay installation');
+  const installedApps=[...new Set(worker.installedRequests.map(request=>new URL(request.url).pathname.slice(new URL(scope).pathname.length)).filter(path=>path.startsWith('apps/')))];
+  assert.deepEqual(installedApps.sort(),['apps/legal-lab/data/catalog.json','apps/puzzle.html'],
+    'Only the puzzle entry and shared course metadata may install; full documents, translations and optional module assets stay lazy');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
   assert.ok(worker.cacheName.startsWith(worker.cachePrefix+`v${currentVersion}-`));
+});
+
+test('the first offline course reload has its shared catalog and every manifest icon without a prior controlled visit',async()=>{
+  const worker=makeWorker();
+  await worker.emit('install');
+  await worker.emit('activate');
+  const catalog='./apps/legal-lab/data/catalog.json';
+  const manifest=JSON.parse(await readFile(path.join(siteRoot,'manifest.webmanifest'),'utf8'));
+  const entries=[catalog,...manifest.icons.map(icon=>'./'+icon.src)];
+  assert.ok((await stat(path.join(siteRoot,catalog))).size<=32*1024,'Shared metadata must stay small; full legal content remains lazy');
+  const before=worker.networkCalls;
+  worker.fetch=async()=>{throw new TypeError('Network unavailable')};
+  for(const entry of entries){
+    assert.ok(worker.core.includes(entry),`Missing shared shell dependency: ${entry}`);
+    const response=await worker.request(entry,{clientId:'offline-course'});
+    assert.equal(response.status,200,`Shared resource unavailable on first offline return: ${entry}`);
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()),await readFile(path.join(siteRoot,entry)),
+      `The offline response must contain the actual resource bytes: ${entry}`);
+  }
+  assert.equal(worker.networkCalls,before,'All shared dependencies must be ready before the network disappears');
+  const cache=await worker.cacheStorage.open(worker.cacheName);
+  assert.ok(!(await cache.keys()).some(request=>/\/apps\/legal-lab\/data\/(?:documents|translations)\//.test(request.url)),
+    'Full legal documents and translations must not be warmed by the course shell');
+});
+
+test('a missing shared catalog prevents activation of an incomplete offline shell',async()=>{
+  const worker=makeWorker(),fetch=worker.fetch;
+  worker.fetch=request=>request.url.endsWith('/apps/legal-lab/data/catalog.json')
+    ?Promise.resolve(new Response('Unavailable',{status:503})):fetch(request);
+  await assert.rejects(worker.emit('install'),/resource\/unavailable/);
+  assert.equal(worker.skipped,false,'The healthy installed worker must remain active until shared metadata is available');
 });
 
 test('a newly activated release can reopen a saved puzzle before its first online visit',async()=>{

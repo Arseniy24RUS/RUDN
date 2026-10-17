@@ -410,6 +410,74 @@
         "kind": "independent-synthetic-review",
         "evidence": "docs/quality/legal-document-translations/ekb-review.json#sha256=c86671c5edb1e45a8f0907a96fbe554c8ffe7c7dfd7d5895abe2a3b9dcd8ede9"
       }
+    },
+    {
+      "docId": "procurement44",
+      "locale": "en",
+      "file": "en/procurement44.json",
+      "sha256": "ed39e6d69498b3ae13b0b4cd9ff379b3116854178d6b0d7f703faeaaae5e13af",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+        "fileSha256": "706b04d952285f39246a3df60e7237a91c607e09682a2354510622b29169a65d"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/procurement44-review.json#sha256=0c134b96c9231ac0c37e7f4f89e7f7f4382dcdee494c2f01603551947f3e18f9"
+      }
+    },
+    {
+      "docId": "procurement44",
+      "locale": "zh",
+      "file": "zh/procurement44.json",
+      "sha256": "6cc3bd20d9cc749419e1d95f68be0d54710e56b6064de2b27ac28b21b3da82bf",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "dc76acfb6e963640a58981effd6f8255c8e91df6de571b1edc95d50b7402cc11",
+        "fileSha256": "706b04d952285f39246a3df60e7237a91c607e09682a2354510622b29169a65d"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/procurement44-review.json#sha256=0c134b96c9231ac0c37e7f4f89e7f7f4382dcdee494c2f01603551947f3e18f9"
+      }
+    },
+    {
+      "docId": "koap",
+      "locale": "en",
+      "file": "en/koap.json",
+      "sha256": "109d2723821e9823aec2f6c28570d962234380c237c33b0612b62e5d0e0e4525",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+        "fileSha256": "f322d2c34e67d180baf7b8ba1edf389157805e36d57e5b95dd5b2af9b17e7d09"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/koap-review.json#sha256=f1dd1cdfa86c277c6e93650185e4bbe5ae4e4ed396d450315a8bb01e709a35d4"
+      }
+    },
+    {
+      "docId": "koap",
+      "locale": "zh",
+      "file": "zh/koap.json",
+      "sha256": "f6597a908a8d8b4bbb42325ed0e43b7364f5fe9cf93c2f33e00316bdf7b2d95d",
+      "source": {
+        "version": "legal-lab-2026-10-15.2",
+        "sha256": "077135d75455dad17880806c1d98daf97a2f34ca9b0a12b33e58a8ef4829bf60",
+        "fileSha256": "f322d2c34e67d180baf7b8ba1edf389157805e36d57e5b95dd5b2af9b17e7d09"
+      },
+      "status": "complete",
+      "review": {
+        "status": "approved",
+        "kind": "independent-synthetic-review",
+        "evidence": "docs/quality/legal-document-translations/koap-review.json#sha256=f1dd1cdfa86c277c6e93650185e4bbe5ae4e4ed396d450315a8bb01e709a35d4"
+      }
     }
   ]
 }

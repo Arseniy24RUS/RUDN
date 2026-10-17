@@ -1,0 +1,28 @@
+{
+  "status": "ready-for-integrator",
+  "createdAt": "2026-10-17T04:21:33.702Z",
+  "ownedFiles": {
+    "site/service-worker.js": "17b7fddbc911af5057df570e7b36979078973a40ec6d6fe35b6b022541aff41e",
+    "scripts/test_governor_service_worker.mjs": "ad6ea130feb713852da1fcf6bfcc7aa91be2d29aa119d71102a8b29e1e8d992c",
+    "scripts/test_governor_browser.py": "2dfaffba7f3c9f69240e03b41b205e4e9fdaca0fe9e0e2b73a582461467fc20f",
+    "site/assets/js/main.js": "c250d2248759adb78f6c6690f8fd08f977636cd5ec3306b18783c650bd3c3cb7"
+  },
+  "diagnosis": "diagnosis.json",
+  "evidencePins": {
+    "diagnosis.json": "9ba6945b2863de72aea262d2fe07469662b25dd09934edb6b50804f82494eb26",
+    "owned-git.patch": "889f11340bebfdde6b26be3512a18b3f88f2fa643ad253f9d54c42c707fa60ff",
+    "git-evidence.json": "980bab8f9631463095b2957f29f09f12632d4b38145c607b6f6ebb8ed913b8c3",
+    "deploy-job-excerpt.log": "f2f47eeeb8e6f4e9e9a86bec635dd3927dbbb385361e14db33eb818d45f21973",
+    "baseline-chromium150/results.json": "1d481d09b3524b37d50abd415ce3eed2e2dbcd2257d2357836cbb0671046ff40",
+    "fixed-chromium151/results.json": "222d6061dbaed525527892981decdc39f5672d4060fd7e6e35d1219c210e30c0",
+    "fixed-full-chromium151/results.json": "3d3423ff5c3da709a5d51c38276a36e287bb5cb34fc01d31c733a65a322291de",
+    "unit-negative-control.json": "03b3aa91b3aaf2489b5fc157f6e929f02b6420e67937515f7987e68e1a86d1b2",
+    "unit-negative-control.log": "2891f7c9a69e4635a115a22294799a7ba4d64db58e519ee855fc5e9b2054e2cd",
+    "unit-fixed-start.log": "d23a4075c74c84e6ab224ea8fba2885742e9a31d690ed68f329cd84194906305",
+    "unit-fixed-completion.log": "c09683fe4c34baee9a8ee2f885a9e49d533d4477470877272d9b6f7fafc2a58c",
+    "contracts.log": "8b008f99527f0c56ff8129d63ca2a91b2adfbb80e488434897a33c51f1d57348",
+    "probe.py": "9c7ad49f7a434f8f6a7d8c7d7c55d82099a548ff7e64ba81102c46dbc12309b8"
+  },
+  "summary": "Baseline real offline2/2FAIL -> same browser fixed2/2PASS; full11/11PASS, SW28/28PASS, Governor contracts23/23PASS; regression controls3/3fail as expected.",
+  "next": "Integrator may review exact diff and rerun CI; browser test and assertions were not changed."
+}

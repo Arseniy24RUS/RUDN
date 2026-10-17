@@ -410,8 +410,8 @@
     },
     {
       "url": "apps/legal-lab/data/translations/catalog.json",
-      "bytes": 17342,
-      "sha256": "6aeb2dd04928701861e032a40447156489308a7d3012afa1d53dc015fa787fc0"
+      "bytes": 20208,
+      "sha256": "defbf27c71fbcf88b20fae294a0b5588eb9b4a74f67e1081d6150983a2862226"
     },
     {
       "url": "apps/legal-lab/data/translations/en/civil79.json",
@@ -439,6 +439,11 @@
       "sha256": "10d733a51118502c837488c188726c4b894abf479d4d576e495838deb4977329"
     },
     {
+      "url": "apps/legal-lab/data/translations/en/koap.json",
+      "bytes": 4739116,
+      "sha256": "109d2723821e9823aec2f6c28570d962234380c237c33b0612b62e5d0e0e4525"
+    },
+    {
       "url": "apps/legal-lab/data/translations/en/local33.json",
       "bytes": 615689,
       "sha256": "68f9f9bf3e4b2c0be04de42d7956e965227529c3fdfb0ed4f14912d216d78913"
@@ -462,6 +467,11 @@
       "url": "apps/legal-lab/data/translations/en/municipal25.json",
       "bytes": 141579,
       "sha256": "46b801b161ba70e93be3c149cd44fc2ad49903d084965c946296d02888d654d5"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/en/procurement44.json",
+      "bytes": 1020132,
+      "sha256": "ed39e6d69498b3ae13b0b4cd9ff379b3116854178d6b0d7f703faeaaae5e13af"
     },
     {
       "url": "apps/legal-lab/data/translations/en/spatial.json",
@@ -499,6 +509,11 @@
       "sha256": "51a84320f596d7af1be196c62aea33ca2e206fe7c44db83dc5c8be2b3383a94c"
     },
     {
+      "url": "apps/legal-lab/data/translations/zh/koap.json",
+      "bytes": 3536661,
+      "sha256": "f6597a908a8d8b4bbb42325ed0e43b7364f5fe9cf93c2f33e00316bdf7b2d95d"
+    },
+    {
       "url": "apps/legal-lab/data/translations/zh/local33.json",
       "bytes": 466166,
       "sha256": "43be14329202e033b2671e89ceb05291161ed2adf30531d26376b8026a13d2e7"
@@ -522,6 +537,11 @@
       "url": "apps/legal-lab/data/translations/zh/municipal25.json",
       "bytes": 111133,
       "sha256": "f4e8539fb6f495206f719731d09248066d7cfb02f2ccd383c2647fc3dbaed4d1"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/zh/procurement44.json",
+      "bytes": 818366,
+      "sha256": "6cc3bd20d9cc749419e1d95f68be0d54710e56b6064de2b27ac28b21b3da82bf"
     },
     {
       "url": "apps/legal-lab/data/translations/zh/spatial.json",
@@ -624,6 +644,6 @@
       "sha256": "bad6c961cc3103b54d34a10b62578914f567648a2373500c6139cdb92b510407"
     }
   ],
-  "totalBytes": 42539863,
+  "totalBytes": 52657004,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

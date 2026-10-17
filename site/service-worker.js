@@ -1,7 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-1-5-lecture3-questions-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-1-5-lecture3-questions-1-offline-shell-1`;
 // Geography and regional plans are requested only by an explicitly opened game.
 const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-copy.js','./assets/js/settlements-leaderboard.js'];
 const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.mjs','./apps/legal-lab/style.css','./apps/legal-lab/precache-manifest.json','./apps/legal-lab/lib/core.mjs','./apps/legal-lab/lib/corpus.mjs','./apps/legal-lab/lib/live.mjs','./apps/legal-lab/lib/storage.mjs','./assets/js/legal-lab-storage.js'];
@@ -129,6 +129,7 @@ const SHELL=[
   './assets/puzzle/vendor/d3.v7.9.0.min.js',
   './assets/puzzle/vendor/topojson-client.v3.1.0.min.js',
   './assets/img/rudn-logo.png','./assets/img/rudn-logo-en.png',
+  './assets/img/icon-192.png','./assets/img/icon-512.png',
   './assets/img/quiz-legislative.png','./assets/img/quiz-executive.png','./assets/img/quiz-judicial.png','./assets/img/quiz-other.svg',
   './assets/course/previews/seminar_07_simulator.jpg',
   './manifest.webmanifest',
@@ -391,12 +392,15 @@ const PUZZLE_SHELL=[
   './assets/puzzle/data/geoboundaries_adm1_catalog.json',
   './data/legacy-en.json','./data/legacy-zh.json'
 ];
-const PRECACHE=[...SHELL,...CAREER_SHELL,...GOVERNOR_ASSETS];
+// The course shell reads this small version catalog on every route, including
+// Governor/quiz return. Full legal documents and translations remain lazy.
+const SHARED_DATA=['./apps/legal-lab/data/catalog.json'];
+const PRECACHE=[...SHELL,...SHARED_DATA,...CAREER_SHELL,...GOVERNOR_ASSETS];
 // The puzzle entry and catalogs must survive the first offline navigation after
 // an update. Its scripts already belong to the platform shell; prepare the whole
 // small entry pack before activation so a new release cannot strand a saved game.
 // Other optional modules remain lazy.
-const CORE_SHELL=SHELL.filter(path=>!/^\.\/apps\//.test(path)&&!path.includes('/calendars/')&&!path.includes('/calendar-')&&!path.includes('/legal-calendar')&&!path.includes('/previews/')&&!path.includes('firebase-storage'));
+const CORE_SHELL=[...SHELL.filter(path=>!/^\.\/apps\//.test(path)&&!path.includes('/calendars/')&&!path.includes('/calendar-')&&!path.includes('/legal-calendar')&&!path.includes('/previews/')&&!path.includes('firebase-storage')),...SHARED_DATA];
 
 async function fetchWithDeadline(request,timeout=12000){
   const controller=new AbortController();
