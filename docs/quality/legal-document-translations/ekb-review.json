@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "docId": "ekb",
+  "status": "approved",
+  "verdict": "approved",
+  "kind": "independent-synthetic-linguistic-review",
+  "author": "translate_goals_system",
+  "reviewer": "translate_constitution",
+  "independence": {
+    "differentAgentFromAuthor": true,
+    "humanReview": false,
+    "officialCertification": false
+  },
+  "createdUtc": "2026-10-17T00:43:21.355Z",
+  "source": {
+    "version": "legal-lab-2026-10-15.2",
+    "sha256": "9e0763b7796ddd0eff3ede9f4001c4d7badaa86e5984cbec27425866a5ddd19d",
+    "fileSha256": "52937be4c1367115b5cb27e28543f78a3cb522c8559e3b46ee9957ca8ec26658"
+  },
+  "payloadDecisions": [
+    {
+      "docId": "ekb",
+      "locale": "en",
+      "status": "approved",
+      "payloadSha256": "1cf95558703c8be1ca9e325880f093309d931b2eb07b051a8d15d6a519ef0eb4",
+      "reviewedUnits": 877,
+      "reviewedSections": 82
+    },
+    {
+      "docId": "ekb",
+      "locale": "zh",
+      "status": "approved",
+      "payloadSha256": "c0356fe94ff5161bfcbf91917de554087c736fd9509b14abfd67ee82f7266bd5",
+      "reviewedUnits": 877,
+      "reviewedSections": 82
+    }
+  ],
+  "payloadSha256": {
+    "en": "1cf95558703c8be1ca9e325880f093309d931b2eb07b051a8d15d6a519ef0eb4",
+    "zh": "c0356fe94ff5161bfcbf91917de554087c736fd9509b14abfd67ee82f7266bd5"
+  },
+  "coverage": {
+    "reviewedSourceIndexRangeInclusive": [
+      0,
+      876
+    ],
+    "reviewedUnitsPerLocale": 877,
+    "reviewedSectionsPerLocale": 82,
+    "actualIdsEvidence": "coverage.json",
+    "actualIdsEvidenceSha256": "ab2ab767156dbdafb5d70736a1cac23b4890a93c8657c1423104e973b82a8479",
+    "metadataReviewed": [
+      "title",
+      "revisionLabel"
+    ],
+    "locatorsReviewedPerLocale": 877,
+    "remainingUnitIds": [],
+    "remainingSectionIds": [],
+    "historicalAmendmentDecisionsReviewed": 17
+  },
+  "requiredFixes": [],
+  "resolvedFixes": [
+    {
+      "locale": "zh",
+      "unitId": "ekb-u8516e694199f9b6ca6-1",
+      "field": "text",
+      "sourceIndex": 130,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "ekb-ucb270a7a37c95e213a-1",
+      "field": "text",
+      "sourceIndex": 218,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "ekb-ude5262f4a1b1c89554-1",
+      "field": "text",
+      "sourceIndex": 257,
+      "status": "resolved"
+    },
+    {
+      "locale": "en",
+      "unitId": "ekb-u54fb842f97c5ed5ea0-1",
+      "field": "text",
+      "sourceIndex": 417,
+      "status": "resolved"
+    },
+    {
+      "locale": "en",
+      "unitId": "ekb-u9a89de7fe9875506ff-1",
+      "field": "text",
+      "sourceIndex": 453,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "ekb-u0dd2af1eddbd612fca-1",
+      "field": "text",
+      "sourceIndex": 554,
+      "status": "resolved"
+    },
+    {
+      "locale": "zh",
+      "unitId": "ekb-u3abe528f8fc923d7ab-1",
+      "field": "text",
+      "sourceIndex": 734,
+      "status": "resolved"
+    }
+  ],
+  "semanticReview": {
+    "status": "approved",
+    "method": "Complete original RU/EN/ZH reading recorded in assessment and coverage, followed by direct rereading of all seven corrected Russian/translated pairs after integration.",
+    "allSevenReplacementsMatchAssessment": true,
+    "remainingSemanticFindings": 0
+  },
+  "machineValidation": {
+    "status": "pass",
+    "fullCorpusEvidence": "final-machine-validation.json",
+    "fullCorpusEvidenceSha256": "cb7a9792cd674ab35370cb7102692b04550a657ecd541080e58865a5dfe264b9",
+    "finalVerificationEvidence": "final-verification.json",
+    "finalVerificationSha256": "816906e26b31c98b879940b3edec8b91819201d5966518eec9fe05607dc9ae94",
+    "exactSemanticTextDifferences": 7,
+    "extraJSONDifferences": 0,
+    "exactChunkMasterCellDifferences": 7,
+    "allChunksChecked": 23,
+    "rebuildByteEquality": true,
+    "rebuildExitCode": 0,
+    "sourceUnchanged": true
+  },
+  "distributionNormalization": {
+    "semanticChangeCount": 7,
+    "lineEndings": "LF",
+    "byteProof": "Final payload bytes equal pre-fix bytes after exactly the seven JSON string replacements and CRLF-to-LF normalization; no other byte changes.",
+    "payloads": {
+      "en": {
+        "oldCRLFCount": 3608,
+        "newCRCount": 0,
+        "onlyApprovedStringReplacementsAndCRLFToLF": true
+      },
+      "zh": {
+        "oldCRLFCount": 3608,
+        "newCRCount": 0,
+        "onlyApprovedStringReplacementsAndCRLFToLF": true
+      }
+    },
+    "builderChange": {
+      "onlyChange": "Add newline=\\n to payload dest.write_text",
+      "oldWriter": "dest.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')",
+      "newWriter": "dest.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8',newline='\\n')",
+      "otherwiseTextIdentical": true
+    }
+  },
+  "assessmentEvidence": {
+    "file": "assessment.json",
+    "sha256": "364587ababf343bf0a5834a3a6ee603896d083cabbe4410eade77918335c0ddd"
+  },
+  "reviewerChanges": "Only reviewer-owned evidence files were written. Source, staging and product were not modified by the reviewer.",
+  "limitations": "Independent synthetic linguistic review for an unofficial educational translation; not human review, official translation, legal certification or confirmation of current law beyond the frozen supplied source."
+}

@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "scope": "Twelve complete bilingual document translations; KoAP and procurement44 still in translation",
+  "officialTranslation": false,
+  "independentHumanAcceptance": false,
+  "acts": [
+    "goals309",
+    "system58",
+    "constitution",
+    "municipal25",
+    "corruption273",
+    "civil79",
+    "spatial",
+    "moscow3",
+    "local33",
+    "moscow35",
+    "moscow50",
+    "ekb"
+  ],
+  "translatedUnitsPerLocale": 8113,
+  "sourceScanLanguage": "ru",
+  "browser": {
+    "status": "pass",
+    "cases": 48,
+    "renderedParagraphChecks": 32452,
+    "reportSha256": "1db1672e4616617701437a73763cd430fd2bff70156f469248b7695d253b31e5",
+    "scriptSha256": "ff723a13e8e1568a520876cb69b7f1e372d621ac9492b866be384d8ca9ac7ee2",
+    "command": "verify-twelve-acts.mjs pubRepo pubRepo/.qa/browser-twelve-acts/run01",
+    "session": 62532,
+    "exitCode": 0,
+    "toolChunk": "d755f8",
+    "viewports": [
+      {
+        "width": 390,
+        "height": 844
+      },
+      {
+        "width": 1366,
+        "height": 900
+      }
+    ],
+    "physicalPhones": "not-run; emulated viewports",
+    "freshScreenshots": 12,
+    "visualInspection": [
+      "en-390-moscow50.png",
+      "zh-390-ekb.png"
+    ]
+  },
+  "contracts": {
+    "tests": 139,
+    "pass": 139,
+    "session": 44989,
+    "exitCode": 0,
+    "toolChunk": "4ea9fb"
+  },
+  "corpus": {
+    "checks": 124,
+    "session": 39744,
+    "exitCode": 0,
+    "toolChunk": "bf1165",
+    "sha256": "6ecc73c18bb65de527690e4f7010b851c941065f94bc77224415a34813881f35"
+  },
+  "manifest": {
+    "files": 124,
+    "bytes": 42539863,
+    "sha256": "a622ec5cfe8ac394051fc5db1a88bb75f1cb22f5d819e8849fb78f929f6d2960",
+    "checkExitCode": 0,
+    "toolChunk": "321d7b"
+  },
+  "translationUnitTests": {
+    "tests": 15,
+    "exitCode": 0,
+    "toolChunk": "321d7b"
+  },
+  "cacheReloadRegression": {
+    "review": "docs/quality/legal-lab-cache-version-review.json",
+    "sha256": "022a6c7d7b45894ed9ff06ab51f50bb5546d813e93bfe6e0d1aea98ed0a0ef65",
+    "status": "pass",
+    "scope": "Fresh Chromium contexts: Settlements and Puzzle, with and without service worker; reload before and after minimal cache prefix correction. Full CI on corrected commit pending."
+  },
+  "remainingActs": [
+    "koap",
+    "procurement44"
+  ],
+  "fullCI": "pending on new commit",
+  "publication": "pending"
+}

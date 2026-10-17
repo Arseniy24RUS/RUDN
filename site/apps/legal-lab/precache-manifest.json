@@ -410,8 +410,8 @@
     },
     {
       "url": "apps/legal-lab/data/translations/catalog.json",
-      "bytes": 13082,
-      "sha256": "5365cc9be26a52e6c5d6d3ebe5807b75b55ab8b94d76cef71c71412991a62082"
+      "bytes": 17342,
+      "sha256": "6aeb2dd04928701861e032a40447156489308a7d3012afa1d53dc015fa787fc0"
     },
     {
       "url": "apps/legal-lab/data/translations/en/civil79.json",
@@ -429,6 +429,11 @@
       "sha256": "ef91b87387c3d53da7d8fbca6475fba606be885e92b3a26e3855d95655274e95"
     },
     {
+      "url": "apps/legal-lab/data/translations/en/ekb.json",
+      "bytes": 286936,
+      "sha256": "1cf95558703c8be1ca9e325880f093309d931b2eb07b051a8d15d6a519ef0eb4"
+    },
+    {
       "url": "apps/legal-lab/data/translations/en/goals309.json",
       "bytes": 34725,
       "sha256": "10d733a51118502c837488c188726c4b894abf479d4d576e495838deb4977329"
@@ -442,6 +447,16 @@
       "url": "apps/legal-lab/data/translations/en/moscow3.json",
       "bytes": 301674,
       "sha256": "b47467013c9c076c59825282506183618bf1d29e38b08119d789a605edc11d81"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/en/moscow35.json",
+      "bytes": 279206,
+      "sha256": "1b687cc0e7a37898940290011d3361bad336df91c5edb4b791ec7c518d800017"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/en/moscow50.json",
+      "bytes": 275615,
+      "sha256": "5052c79d1e14fd649b47ee218b4f18851a0625afd77643ceee72b9d23d751c86"
     },
     {
       "url": "apps/legal-lab/data/translations/en/municipal25.json",
@@ -474,6 +489,11 @@
       "sha256": "a18d6984eb2bec98eff4f15a3264e61bb3df0e216cd257c99dc94a3736bca681"
     },
     {
+      "url": "apps/legal-lab/data/translations/zh/ekb.json",
+      "bytes": 228076,
+      "sha256": "c0356fe94ff5161bfcbf91917de554087c736fd9509b14abfd67ee82f7266bd5"
+    },
+    {
       "url": "apps/legal-lab/data/translations/zh/goals309.json",
       "bytes": 28735,
       "sha256": "51a84320f596d7af1be196c62aea33ca2e206fe7c44db83dc5c8be2b3383a94c"
@@ -487,6 +507,16 @@
       "url": "apps/legal-lab/data/translations/zh/moscow3.json",
       "bytes": 236471,
       "sha256": "b7eb62bf2c1663602fcd5ba7610bd07002f580ec5a5df5af4c71d3bfb3ca3418"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/zh/moscow35.json",
+      "bytes": 215227,
+      "sha256": "8183029bfbcd825e48abc59fa9a626a8f39442a1c28e399cc58752a8c4341e4f"
+    },
+    {
+      "url": "apps/legal-lab/data/translations/zh/moscow50.json",
+      "bytes": 220065,
+      "sha256": "2c146a94e730d4e7796574b09c277509ded6efa3f06ca2da61d138bfe22be5e4"
     },
     {
       "url": "apps/legal-lab/data/translations/zh/municipal25.json",
@@ -594,6 +624,6 @@
       "sha256": "bad6c961cc3103b54d34a10b62578914f567648a2373500c6139cdb92b510407"
     }
   ],
-  "totalBytes": 41030478,
+  "totalBytes": 42539863,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }
