@@ -160,6 +160,7 @@ jobs:
               print(f"HTTP readiness timed out after 30s: {url}; expected={expected_path}; expected_bytes={len(expected)}; expected_sha256={expected_sha256}; attempts={attempts}; last_response={last_response}; last_error={last_error}", file=sys.stderr, flush=True)
               sys.exit(1)
           PY
+          node scripts/test_legal_lab_quiz_after_assessment.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-quiz-after-assessment"
           node scripts/test_legal_lab_browser.mjs --base http://127.0.0.1:8765/ --browsers "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-browser"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -167,5 +168,6 @@ jobs:
           name: legal-browser-${{ matrix.browser }}
           path: |
             ${{ runner.temp }}/legal-browser
+            ${{ runner.temp }}/legal-quiz-after-assessment
             ${{ runner.temp }}/legal-server.log
           retention-days: 14
