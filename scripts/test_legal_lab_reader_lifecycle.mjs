@@ -45,5 +45,31 @@ try{
   await page.locator('[data-action="toggle-reader-search"]').click();await page.locator('[data-input="reader-query"]').fill('Российской');await page.locator('[data-input="reader-query"]').press('Enter');await page.waitForFunction(()=>handle.getDiagnostics().corpus.searchReady&&!handle.getDiagnostics().reader.searchPending);await page.locator('[data-action="clear-search"]').click();
   await page.evaluate(()=>qa.hold=true);await page.locator('.ll-paper [data-unit]').first().click();await page.waitForFunction(()=>qa.pending);const immediate=await page.evaluate(()=>{window.destroyed=false;window.destroyPromise=handle.destroy().then(()=>destroyed=true);return {stats:handle.getDiagnostics(),closed:qa.liveClosed,pending:qa.pending,destroyed};});assert.equal(immediate.stats.reader,null);assert.equal(immediate.stats.corpus.searchIndexes,0);assert.equal(immediate.stats.corpus.blocks,0);assert.equal(immediate.closed,true);assert.equal(immediate.pending,true);assert.equal(immediate.destroyed,false);report.checks.push('Teardown immediately destroys reader, worker, cache and presence while old-owner checkpoint is pending');
   await page.evaluate(()=>{qa.hold=false;qa.release();return destroyPromise;});assert.equal(await page.evaluate(()=>destroyed),true);report.checks.push('Pending dirty checkpoint can complete independently after UI teardown');
+  // Rendered controller fixture: multiple-block shifts must preserve canonical
+  // order in both directions, as well as overlapping nodes, focus and selection.
+  report.windowOrder=await page.evaluate(async()=>{
+    const {ReaderController}=await import('/apps/legal-lab/lib/reader-controller.mjs');
+    document.body.innerHTML='<style>.order-fixture{font:16px system-ui;padding:20px}.order-fixture .ll-paper{height:220px;overflow:auto;border:1px solid #abc;overflow-anchor:none}.order-fixture .ll-paragraph{display:block;box-sizing:border-box;width:100%;height:60px;margin:0;padding:10px;text-align:left}.order-fixture .selected{background:#d9f0e5}</style><main class="order-fixture"><h1>Synthetic window-order regression</h1><section class="ll-reader"><div class="ll-reader-dock"></div><article class="ll-paper"></article></section></main>';
+    const units=Array.from({length:8},(_,block)=>Array.from({length:4},(_,unit)=>({id:'block-'+block+'-unit-'+unit,text:'Block '+block+' · paragraph '+unit}))).flat(),descriptor={docId:'synthetic-order',locale:'ru',units,blocks:Array.from({length:8},(_,id)=>({id,count:4})),unitToBlock:Object.fromEntries(units.map((unit,index)=>[unit.id,Math.floor(index/4)]))};
+    const app={state:{reader:{}},opt:{},isLocked:()=>false,fail:error=>{throw error;},corpus:{cancelSearch(){},loadBlock:async(_doc,_locale,id)=>({id,units:units.slice(id*4,id*4+4)})}},spec={descriptor,selected:[],correctIds:[],renderBlock:block=>block.units.map(unit=>'<button class="ll-paragraph" data-unit="'+unit.id+'">'+unit.text+'</button>').join('')};
+    const reader=document.querySelector('.ll-reader'),paper=reader.querySelector('.ll-paper'),controller=new ReaderController(app,reader,spec),records=[];
+    // The fixture calls explicit window transitions; disable automatic scrolling
+    // so it cannot request a different center during these deterministic checks.
+    controller.scheduleScroll=()=>{};
+    try{
+      await controller.window(3,null);
+      for(const center of [1,3,5,3,1,5,1]){
+        const expectedBlocks=[center-1,center,center+1],overlap=expectedBlocks.find(id=>controller.nodes.has(id)),retained=overlap===undefined?null:controller.nodes.get(overlap).querySelector('[data-unit]');
+        if(retained){paper.scrollTop+=retained.getBoundingClientRect().top-paper.getBoundingClientRect().top+4;retained.focus({preventScroll:true});retained.classList.add('selected');}
+        const position=controller.capture(),offset=retained?retained.getBoundingClientRect().top-paper.getBoundingClientRect().top:null;
+        await controller.window(center,position);await new Promise(resolve=>requestAnimationFrame(resolve));
+        const expectedIds=expectedBlocks.flatMap(id=>units.slice(id*4,id*4+4).map(unit=>unit.id)),actualIds=[...paper.querySelectorAll('[data-unit]')].map(unit=>unit.dataset.unit);
+        records.push({center,expectedIds,actualIds,retained:retained?{sameNode:paper.querySelector('[data-unit="'+retained.dataset.unit+'"]')===retained,focused:document.activeElement===retained,selected:retained.classList.contains('selected'),anchorDelta:retained.getBoundingClientRect().top-paper.getBoundingClientRect().top-offset}:null});
+      }
+    }finally{controller.destroy();}
+    return records;
+  });
+  for(const step of report.windowOrder){assert.deepEqual(step.actualIds,step.expectedIds,'Canonical unit order after center '+step.center);if(step.retained){assert.equal(step.retained.sameNode,true);assert.equal(step.retained.focused,true);assert.equal(step.retained.selected,true);assert.ok(Math.abs(step.retained.anchorDelta)<=1.5,'Visible anchor stays in place after center '+step.center);}}
+  report.checks.push('Forward/backward multi-block shifts retain canonical unit order, overlapping nodes, selection, focus and anchor');
   assert.deepEqual(report.errors,[]);report.status='pass';await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,engine+'.png')});
 }catch(error){report.error=error.stack;process.exitCode=1;}finally{await browser?.close();await new Promise(resolve=>server.close(resolve));await mkdir(output,{recursive:true});await writeFile(resolve(output,engine+'.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}

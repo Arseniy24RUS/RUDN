@@ -71,7 +71,11 @@ export class ReaderController {
     if(this.closed||request.signal.aborted||generation!==this.generation||!valid())return false;
     const oldPosition=position||this.capture();
     for(const [index,node]of this.nodes)if(!indexes.includes(index)){node.remove();this.nodes.delete(index);}
-    for(let i=0;i<indexes.length;i++){const index=indexes[i];if(!this.nodes.has(index)){const box=document.createElement('div');box.className='ll-reader-block';box.dataset.readerBlock=String(index);box.innerHTML=this.spec.renderBlock(blocks[i]);this.nodes.set(index,box);}const next=indexes[i+1]===undefined?this.after:this.nodes.get(indexes[i+1]);if(this.nodes.get(index).nextElementSibling!==next)this.paper.insertBefore(this.nodes.get(index),next||this.after);}
+    for(let i=0;i<indexes.length;i++){const index=indexes[i];if(!this.nodes.has(index)){const box=document.createElement('div');box.className='ll-reader-block';box.dataset.readerBlock=String(index);box.innerHTML=this.spec.renderBlock(blocks[i]);this.nodes.set(index,box);}}
+    // The right neighbour must already be mounted before inserting a new block.
+    // Existing overlapping blocks stay in place, preserving focus and anchors.
+    let next=this.after;
+    for(let i=indexes.length-1;i>=0;i--){const node=this.nodes.get(indexes[i]);if(node.nextElementSibling!==next)this.paper.insertBefore(node,next);next=node;}
     this.center=center;this.paper.setAttribute('aria-busy','false');
     for(const [index,node]of this.nodes)this.heights.set(index,node.getBoundingClientRect().height);
     this.spacers();this.restore(oldPosition);this.spec.afterRender?.();

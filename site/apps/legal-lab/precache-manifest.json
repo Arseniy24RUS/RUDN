@@ -5835,8 +5835,8 @@
     },
     {
       "url": "apps/legal-lab/lib/reader-controller.mjs",
-      "bytes": 13598,
-      "sha256": "6b25e9e41f7773aceab499b8a83d39a77a78475403b47928898a6655ba9c751f"
+      "bytes": 13753,
+      "sha256": "7685a21897fee074d4f7054ea5803bce105caae6e0c8c598a343efb5939b5ccb"
     },
     {
       "url": "apps/legal-lab/lib/reader-data.mjs",
@@ -5904,6 +5904,6 @@
       "sha256": "38dd2219119cc956cd759c44ea2712aaff913b2c7384d7efbbdb8730da8cf35a"
     }
   ],
-  "totalBytes": 146476763,
+  "totalBytes": 146476918,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

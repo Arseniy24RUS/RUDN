@@ -23,10 +23,10 @@ const json=async name=>JSON.parse(await readFile(resolve(site,'apps/legal-lab/da
 const [catalog,bank,pack]=await Promise.all(['catalog.json','bank.json','assessment-variants.json'].map(json));
 const mainDocuments=catalog.documents.filter(d=>d.main&&bank.classroom.some(t=>t.kind==='text'&&t.docId===d.id));
 const documents=docsArg?docsArg.split(',').map(id=>{const d=mainDocuments.find(d=>d.id===id);assert.ok(d,`Unknown main document ${id}`);return d;}):mainDocuments;
-const originals=new Map(),views=new Map();
+const originals=new Map(),views=new Map(),canonicalPositions=new Map();
 async function documentView(id,locale){
   if(views.has(id+'/'+locale))return views.get(id+'/'+locale);
-  const meta=catalog.documents.find(d=>d.id===id),doc=originals.get(id)||await json(meta.file);originals.set(id,doc);
+  const meta=catalog.documents.find(d=>d.id===id),doc=originals.get(id)||await json(meta.file);originals.set(id,doc);if(!canonicalPositions.has(id))canonicalPositions.set(id,new Map(doc.units.map((unit,index)=>[unit.id,index])));
   const tr=locale==='ru'?null:await json(`translations/${locale}/${id}.json`);
   const view=tr?{...doc,units:doc.units.map(u=>({...u,...tr.units[u.id]}))}:doc;views.set(id+'/'+locale,view);return view;
 }
@@ -82,12 +82,15 @@ function bounded(snapshot){
   assert.ok(snapshot.mountedUnits>0&&snapshot.mountedUnits<=192,`Mounted paragraphs ${snapshot.mountedUnits}, allowed 1..192`);
   assert.ok(snapshot.workers<=1&&snapshot.peakWorkers<=1,`Worker bound exceeded ${snapshot.workers}/${snapshot.peakWorkers}`);
   assert.ok(snapshot.stats?.corpus,'Public getDiagnostics().corpus is required for independent cache verification');
+  const positions=canonicalPositions.get(snapshot.stats.reader?.docId);assert.ok(positions,'Canonical source order must be available independently of runtime metadata');
+  const actual=snapshot.readerWindow.map(id=>positions.get(id));assert.equal(actual.length,snapshot.mountedUnits);const outOfOrder=actual.findIndex((n,i)=>!Number.isInteger(n)||i>0&&n!==actual[i-1]+1);assert.equal(outOfOrder,-1,`Reader window must be a contiguous canonical source interval; first mismatch ${outOfOrder}: ${JSON.stringify(actual.slice(Math.max(0,outOfOrder-3),outOfOrder+4))}`);
   const c=snapshot.stats.corpus;assert.ok(c.blocks<=12&&c.blockBytes<=2097152,`Block cache exceeded: ${JSON.stringify(c)}`);
   assert.ok(c.readerDocuments<=1&&c.searchIndexes<=1,'Reader document/search index cache exceeded');
   if(Number.isFinite(c.activeBlockLoads))assert.ok(c.activeBlockLoads<=3,'At most three block loads may run concurrently');
 }
 async function openCase(meta,locale,mode='quiz'){
   const record={docId:meta.id,locale,mode,viewport,status:'fail',checks:[],cycles:[],consoleErrors:[],pageErrors:[],requests:[]};report.records.push(record);
+  await documentView(meta.id,'ru');
   const context=await browser.newContext({viewport,hasTouch:input==='touch',...(browserName!=='firefox'?{isMobile:input==='touch'}:{})}),page=await context.newPage();page.setDefaultTimeout(15000);
   await page.addInitScript(()=>{const Native=window.Worker;window.__qaWorkers={live:0,peak:0};window.Worker=class extends Native{constructor(...args){super(...args);this.__qaLive=true;window.__qaWorkers.live++;window.__qaWorkers.peak=Math.max(window.__qaWorkers.peak,window.__qaWorkers.live);}terminate(){if(this.__qaLive){this.__qaLive=false;window.__qaWorkers.live--;}return super.terminate();}};});
   page.on('pageerror',e=>record.pageErrors.push(e.message));page.on('console',m=>{if(m.type()==='error')record.consoleErrors.push(m.text());});page.on('request',req=>record.requests.push(new URL(req.url()).pathname));
@@ -154,6 +157,12 @@ async function cancelNavigation(page,view){
 }
 async function deep(meta,locale,mode='quiz'){let c;try{
   c=await openCase(meta,locale,mode);const {record,page}=c,view=await documentView(meta.id,locale);
+  if(meta.id==='koap'){
+    // Regress the real shared-block reordering defect, not just distant jumps
+    // which discard the whole previous window and would miss it.
+    record.overlapTransitions=[];for(const index of [211,75])record.overlapTransitions.push(await searchJump(page,view,index/(view.units.length-1)));
+    const [a,b]=record.overlapTransitions.map(x=>x.metrics.readerWindow);assert.ok(a.some(id=>b.includes(id))&&a[0]!==b[0],'Ordering regression must exercise different windows sharing a retained block');record.checks.push('Backward overlapping windows retain canonical order');
+  }
   for(const fraction of [...Array(2)].flatMap(()=>[.9,.1,.8,.2,.7,.05,.95,.3,.6,.4])){const cycle=await searchJump(page,view,fraction,{resize:record.cycles.length===3});const f=targetNear(view,fraction);cycle.scrollInput=await manualScroll(page,Math.max(1500,cycle.jump.height+viewport.height));await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));cycle.warmSearch=await search(page,f.query,f.hits);await pageToHit(page,f.target,f.hits);cycle.warmJump=await jump(page,f.target);record.cycles.push(cycle);await save();console.log('CYCLE',meta.id,locale,mode,record.cycles.length,Math.round(cycle.warmSearch.ms),Math.round(cycle.warmJump.ms));}
   if(meta.id==='koap'&&locale==='ru'){
     const f=await paginationFixture(view);record.pagination39={count:f.hits.length,search:await search(page,f.query,f.hits)};record.pagination39.page=await pageToHit(page,f.hits[38],f.hits);record.pagination39.jump=await jump(page,f.hits[38]);assert.equal(record.pagination39.page.page,2);record.checks.push('39 actual search results, second-page last target visible');
