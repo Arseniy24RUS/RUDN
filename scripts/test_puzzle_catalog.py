@@ -72,6 +72,8 @@ DIAGNOSTIC_HOOK = r"""(() => {
     countryOptions:document.querySelector('#puzzleCountry')?.options.length
   });
   const emit=(kind,detail)=>console.debug('QA-PUZZLE-DIAGNOSTIC:'+JSON.stringify({kind,at:performance.now(),...detail,selectors:selectors()}));
+  addEventListener('error',event=>emit('runtime-error',{event:'error',message:String(event.message)}));
+  addEventListener('unhandledrejection',event=>emit('runtime-error',{event:'unhandledrejection',message:String(event.reason)}));
   document.addEventListener('puzzle:load-status',event=>{
     const {status,mode,selection,reason}=event.detail||{};
     emit('load-status',{status,mode,selection,reason});
@@ -293,17 +295,32 @@ def observe(page, record, accept_dialogs=True):
             event = json.loads(message.text[len(DIAGNOSTIC_PREFIX):])
             if event.get('reason'):
                 event['reason'] = diagnostic_text(event['reason'])
-            key = 'loadStatus' if event['kind'] == 'load-status' else 'requestedSelectors'
+            key = ('loadStatus' if event['kind'] == 'load-status' else
+                   'runtimeExceptions' if event['kind'] == 'runtime-error' else 'requestedSelectors')
             record.setdefault(key, []).append(event)
         elif message.type == 'error':
             record.setdefault('consoleErrors', []).append(diagnostic_text(message.text))
 
-    page._qa_observers = [
-        ('pageerror', lambda error: record.setdefault('pageErrors', []).append(str(error))),
-        ('console', console),
-        ('requestfailed', lambda request: record.setdefault('requestFailed', []).append({
+    def page_error(error):
+        message = str(error)
+        errors = record.setdefault('pageErrors', [])
+        record.setdefault('pageErrorEvents', []).append({
+            'index': len(errors), 'message': message, 'atMs': time.monotonic() * 1000,
+            'tcpPhase': record.get('offlineTcpPhase', {}).get('id'),
+        })
+        errors.append(message)
+
+    def request_failed(request):
+        record.setdefault('requestFailed', []).append({
             'url': diagnostic_url(request.url), 'resourceType': request.resource_type,
-            'failure': diagnostic_text(request.failure)})),
+            'failure': diagnostic_text(request.failure), 'atMs': time.monotonic() * 1000,
+            'tcpPhase': record.get('offlineTcpPhase', {}).get('id'),
+        })
+
+    page._qa_observers = [
+        ('pageerror', page_error),
+        ('console', console),
+        ('requestfailed', request_failed),
         ('response', lambda response: record.setdefault('httpErrors', []).append({
             'url': diagnostic_url(response.url), 'status': response.status}) if response.status >= 400 else None),
     ]
@@ -311,6 +328,61 @@ def observe(page, record, accept_dialogs=True):
         page._qa_observers.append(('dialog', lambda dialog: asyncio.create_task(dialog.accept())))
     for event, handler in page._qa_observers:
         page.on(event, handler)
+
+
+def unexpected_page_errors(record):
+    """Keep raw events; correlate only WebKit's handled SW transport duplicate.
+
+    A minimal real TCP-disconnect probe confirms WebKit emits this inspector
+    event even when both the fetch and its catalog wrapper rejection are caught.
+    No ordinary exception, online failure or unmatched event is classified.
+    """
+    errors = record.get('pageErrors', [])
+    record['expectedOfflinePageErrors'] = []
+    phase = record.get('offlineTcpPhase', {})
+    proof = next((p for p in record.get('connectionLossProof', [])
+                  if p.get('label') == 'outage-for-game'), {})
+    controller = record.get('offlineCache', {}).get('controller')
+    if not (record.get('browser') == 'webkit' and record.get('offlineSimulation') == 'connection-loss'
+            and record.get('connectionLossVerified') and record.get('offlineResume') and controller
+            and not record.get('runtimeExceptions')
+            and phase.get('id') and proof.get('failed') and proof.get('serverHits', 0) > 0
+            and proof.get('serverState') == 'connection-loss' and proof.get('status') is None):
+        return errors
+    message = 'Response served by service worker is an error'
+    scope = urlsplit(controller)
+    catalog_path = scope.path.rsplit('/', 1)[0] + '/assets/puzzle/data/world_countries_50m.geojson'
+    end = phase.get('endedAtMs') or time.monotonic() * 1000
+
+    def in_phase(event):
+        return (event.get('tcpPhase') == phase['id']
+                and phase['startedAtMs'] <= event.get('atMs', -1) <= end)
+
+    matching = []
+    for index, request in enumerate(record.get('requestFailed', [])):
+        url = urlsplit(request['url'])
+        if (in_phase(request) and request.get('resourceType') == 'fetch'
+                and request.get('failure') == message and url.scheme == scope.scheme
+                and url.netloc == scope.netloc and url.path == catalog_path):
+            matching.append((index, request))
+    used, expected = set(), set()
+    for event in record.get('pageErrorEvents', []):
+        index = event.get('index')
+        if not (in_phase(event) and event.get('message') == message
+                and isinstance(index, int) and index not in expected
+                and 0 <= index < len(errors) and errors[index] == message):
+            continue
+        match = next(((i, request) for i, request in matching
+                      if i not in used and abs(request['atMs'] - event['atMs']) <= 1000), None)
+        if match:
+            request_index, request = match
+            used.add(request_index)
+            expected.add(index)
+            record['expectedOfflinePageErrors'].append({
+                'pageErrorIndex': index, 'requestFailedIndex': request_index,
+                'message': message, 'url': request['url'], 'tcpPhase': phase['id'],
+            })
+    return [message for index, message in enumerate(errors) if index not in expected]
 
 
 async def ready(page, entry=None):
@@ -479,6 +551,8 @@ async def offline_resume(page, context, before, record, mode='browser'):
     record['offlineSimulation'] = mode
     if mode == 'connection-loss':
         await verify_connection_loss(context, page._qa_base, record)
+        record['offlineTcpPhase'] = {'id': 'outage-for-game', 'startedAtMs': time.monotonic() * 1000,
+                                     'endedAtMs': None}
     elif mode == 'server-outage':
         await context.add_cookies([{'name': 'qa-puzzle-offline', 'value': '1', 'url': page._qa_base}])
     else:
@@ -496,7 +570,7 @@ async def offline_resume(page, context, before, record, mode='browser'):
 async def completion_case(browser, server, args, entry, difficulty, index, shared_context=None):
     viewport = VIEWPORTS[index % len(VIEWPORTS)]
     locale = LOCALES[index % len(LOCALES)]
-    record = {'suite': 'completion', 'id': entry['id'], 'difficulty': difficulty,
+    record = {'suite': 'completion', 'id': entry['id'], 'difficulty': difficulty, 'browser': args.browser_name,
               'viewport': viewport, 'locale': locale, 'status': 'failed'}
     started = time.monotonic()
     context = shared_context or await context_for(browser, server, args.output, viewport, locale, record)
@@ -534,7 +608,9 @@ async def completion_case(browser, server, args, entry, difficulty, index, share
         record['maxFrameWaitMs'] = round(max(first['maxFrame'], final['maxFrame']), 2)
         assert await page.locator('#puzzleResultErrors').count() == 0, 'Errors remain in result dialog'
         await check_layout(page, record, 'completed')
-        assert not record.get('pageErrors'), record.get('pageErrors')
+        unexpected = unexpected_page_errors(record)
+        assert not unexpected, unexpected
+        assert not record.get('runtimeExceptions'), record.get('runtimeExceptions')
         assert not record.get('unexpectedWrites'), record.get('unexpectedWrites')
         assert not record.get('missingFixtures'), record.get('missingFixtures')
         record['status'] = 'passed'
@@ -554,6 +630,8 @@ async def completion_case(browser, server, args, entry, difficulty, index, share
         except Exception:
             pass
     finally:
+        if record.get('offlineTcpPhase'):
+            record['offlineTcpPhase']['endedAtMs'] = time.monotonic() * 1000
         record['seconds'] = round(time.monotonic() - started, 3)
         if not shared_context:
             await context.close()

@@ -1,3 +1,4 @@
+import {legalLabSaveMode,legalLabSaveMessageKey} from './legal-lab-save-status.js?v=1.3.10';
 import {CAREER_COPY,careerRoute} from './career-course.js';
 import {seminarModule,seminarTopic,seminarModuleForSlug} from './seminar-modules.js';
 import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.10';
@@ -17,6 +18,8 @@ import {mountFormDraft,formDraft} from './form-draft.js';
 import {mountTeacherJournal} from './teacher-journal.js?v=1.3.10';
 import {openAccount,mountProfile} from './account.js?v=1.3.10';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
+import {createPlatformDiagnostics} from './diagnostics.js';
+import {diagnosticsCopy,openDiagnosticReport,mountDiagnosticsAdmin} from './diagnostics-ui.js';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -27,6 +30,9 @@ const versionLabel = document.getElementById('versionLabel');
 const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const slugify = (value) => String(value || '').toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, '-').replace(/^-|-$/g, '');
 const number = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
+function diagnosticModule(){const r=route();if(r.name==='activity'&&/^(lecture-[1-8]|seminar-[1-8](?:-classroom|-assessment)?)$/.test(r.parts[0]||''))return r.parts[0];if(r.name==='games'&&['maps','career','settlements','reception','governor','legal-lab'].includes(r.parts[0]))return r.parts[0];return ['dashboard','gradebook','materials','profile','admin','diagnostics','games','puzzle'].includes(r.name)?r.name:'platform'}
+export const diagnostics=createPlatformDiagnostics({backend,build:'reader-performance-1',getLocale,getModule:diagnosticModule});
+function diagnosticReportButton(target){if(!target||target.querySelector('[data-report-problem]'))return;const button=document.createElement('button');button.type='button';button.className='btn btn-neutral btn-small diagnostic-report-link';button.dataset.reportProblem='';button.textContent=diagnosticsCopy(getLocale()).report;button.onclick=()=>{document.getElementById('accountDialog')?.close();openDiagnosticReport({diagnostics,locale:getLocale()})};target.append(button)}
 
 const UI = {
   ru: {
@@ -293,6 +299,7 @@ async function render(){
     else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='games') renderGamesRoute(r.parts[0]);
     else if(r.name==='admin') await renderAdmin();
+    else if(r.name==='diagnostics'){const controller=new AbortController();currentCleanup=()=>controller.abort();await mountDiagnosticsAdmin(app,{backend,locale:getLocale(),signal:controller.signal});}
     else if(r.name==='activity') await renderActivity(r.parts[0],r.parts[1]);
     else location.hash='dashboard';
   }catch(error){console.error(error.code||error);app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
@@ -402,7 +409,7 @@ async function renderGradebook(){
   const total=items.reduce((sum,item)=>sum+number(grades[item.slug]?.points),0);
   const rows=items.map(item=>{const g=grades[item.slug];return`<tr><td><strong>${esc(item.title)}</strong><br><small class="muted">${esc(item.kind)}</small></td><td>${g?`<span class="grade-good">${number(g.points)}</span>`:item.slug==='seminar-3'&&settlementsStatus?.kind==='pending'?`<span>${settlementsStatus.points}</span>`:'<span class="grade-empty">—</span>'}${item.slug==='seminar-3'&&settlementsStatus?`<br><small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</td><td>${item.max}</td><td>${g?`${Math.round(number(g.points)/item.max*100)}%`:'—'}</td><td>${g?formatDate(g.updatedAt):'—'}</td></tr>`}).join('');
   const historySeminarTitles=new Map(data.course.topics.filter(topic=>['career','reception'].includes(seminarModule(topic))).map(topic=>[topic.seminar.slug,loc(topic.seminar,'title',topic.seminar.title)]));
-  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(historySeminarTitles.get(x.activitySlug)||x.title||x.activitySlug||x.type)}</td><td>${esc(x.type==='legal-lab'?({ru:'Досье',en:'Dossier',zh:'卷宗'})[getLocale()]:x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}${x.type==='legal-lab'?`<small class="muted" style="display:block" data-legal-save-id="${esc(x.id)}">${({ru:'Сохранено',en:'Saved',zh:'已保存'})[getLocale()]}</small>`:''}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
+  const attemptRows=attempts.filter(x=>x.recordGrade!==false).slice(0,40).map(x=>`<tr><td>${esc(historySeminarTitles.get(x.activitySlug)||x.title||x.activitySlug||x.type)}</td><td>${esc(x.type==='legal-lab'?({ru:'Досье',en:'Dossier',zh:'卷宗'})[getLocale()]:x.type||'—')}</td><td>${number(x.points)}/${number(x.maxPoints||CONFIG.activityMax[x.activitySlug]||5)}${x.type==='legal-lab'?`<small class="muted" style="display:block" data-legal-save-id="${esc(x.id)}" data-legal-save-mode="${legalLabSaveMode(x)}">${({ru:'Проверка статуса…',en:'Checking sync status…',zh:'正在检查同步状态……'})[getLocale()]}</small>`:''}</td><td>${formatDuration(x.durationMs)}</td><td>${formatDate(x.createdAt)}</td></tr>`).join('');
   const body=!profile?`<div class="panel empty-state"><div class="icon">◎</div><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="gradeLogin">${ui('login')}</button></div>`:`<div class="stats-grid"><div class="stat-card"><span>${ui('total')}</span><strong>${total}/100</strong></div><div class="stat-card"><span>${ui('continuous')}</span><strong>${Math.min(80,total-number(grades.exam?.points))}/80</strong></div><div class="stat-card"><span>${ui('examination')}</span><strong>${number(grades.exam?.points)}/20</strong></div><div class="stat-card"><span>${ui('completedCount')}</span><strong>${items.filter(i=>number(grades[i.slug]?.points)>0).length}/17</strong></div></div><div class="page-actions" style="margin-bottom:14px"><button class="btn btn-primary" id="exportPersonal">${ui('exportCsv')}</button><button class="btn btn-neutral" id="refreshGrades">${ui('refresh')}</button></div><div class="gradebook-wrap"><table class="gradebook"><thead><tr><th>${ui('activity')}</th><th>${ui('result')}</th><th>${ui('max')}</th><th>%</th><th>${ui('date')}</th></tr></thead><tbody>${rows}</tbody></table></div><div class="panel" style="margin-top:18px"><h2>${ui('attempts')}</h2><div class="table-wrap"><table class="data-table"><thead><tr><th>${ui('activity')}</th><th>${ui('type')}</th><th>${ui('result')}</th><th>${ui('duration')}</th><th>${ui('date')}</th></tr></thead><tbody>${attemptRows||`<tr><td colspan="5">${ui('noResults')}</td></tr>`}</tbody></table></div></div>`;
   app.innerHTML=contentPage(ui('gradebookTitle'),ui('gradebookLead'),body);
   void updateLegalLabSaveStatus(app);
@@ -422,13 +429,13 @@ async function renderGradebook(){
 async function updateLegalLabSaveStatus(root=app){
   const profile=backend.getProfile(),owner=attemptOwner(),locale=getLocale();
   if(!profile||backend.isAdmin())return;
-  const messages={ru:{pending:'Ожидает синхронизации',unsafe:'Не удалось сохранить на устройстве',conflict:'Нужно выбрать сохранённый вариант',device:'Сохранено на устройстве',saved:'Сохранено'},en:{pending:'Waiting to sync',unsafe:'Could not save on this device',conflict:'Choose a saved version',device:'Saved on this device',saved:'Saved'},zh:{pending:'等待同步',unsafe:'未能保存到本设备',conflict:'请选择已保存版本',device:'已保存到本设备',saved:'已保存'}}[locale];
+  const messages={ru:{pending:'Ожидает синхронизации',unsafe:'Не удалось сохранить на устройстве',conflict:'Нужно выбрать сохранённый вариант',device:'Сохранено на устройстве',saved:'Синхронизировано',unknown:'Статус синхронизации недоступен'},en:{pending:'Waiting to sync',unsafe:'Could not save on this device',conflict:'Choose a saved version',device:'Saved on this device',saved:'Synced',unknown:'Sync status unavailable'},zh:{pending:'等待同步',unsafe:'未能保存到本设备',conflict:'请选择已保存版本',device:'已保存到本设备',saved:'已同步',unknown:'同步状态暂不可用'}}[locale];
   await Promise.all([...root.querySelectorAll('[data-legal-save-id]')].map(async node=>{
     let state='unknown';
-    try{state=(await durableStore.getSaveStatus({owner,activitySlug:'seminar-4',mode:'legal-lab-workspace',attemptId:node.dataset.legalSaveId})).state;}catch{}
+    try{state=(await durableStore.getSaveStatus({owner,activitySlug:'seminar-4',mode:legalLabSaveMode({id:node.dataset.legalSaveId,draftMode:node.dataset.legalSaveMode}),attemptId:node.dataset.legalSaveId})).state;}catch{}
     if(!node.isConnected||owner!==attemptOwner()||locale!==getLocale())return;
     node.dataset.legalSaveState=state;
-    node.textContent=messages[state==='device-only'?'device':['pending','unsafe','conflict'].includes(state)?state:'saved'];
+    node.textContent=messages[legalLabSaveMessageKey(state)];
   }));
 }
 
@@ -444,7 +451,7 @@ function renderMaterials(){
 }
 
 function renderProfile(){
-  if(mountProfile(app))return;
+  if(mountProfile(app)){diagnosticReportButton(app.querySelector('.profile-panel'));return;}
   const body=`<div class="panel empty-state"><div class="icon">◎</div><h2>${ui('noProfile')}</h2><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="profileLogin">${ui('login')}</button></div>`;
   app.innerHTML=contentPage(t('navProfile'),'',body);
   app.querySelector('#profileLogin')?.addEventListener('click',openAuthDialog);
@@ -522,7 +529,7 @@ function renderSeminar4(topic,view){
       if(!active())return;
       const a=accessSnapshot();
       handle=await mountLegalLabInCourse(mount,{
-        backend,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
+        backend,diagnostics,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
         period:String(a.context.startYear)+'-'+String(a.context.endYear),
         groups:groupOptions(),locale:getLocale(),signal:controller.signal,
         initialView:view==='quiz'?'learn':view==='assessment'?'assessment':undefined,
@@ -618,7 +625,7 @@ function renderSettlements(){
   mountTask=(async()=>{try{
     const [{mountSettlements},{createSettlementsPresentation}]=await Promise.all([import('../../apps/settlements/entry.mjs'),import('./settlements-presentation.js')]);if(!active())return;
     presentation=createSettlementsPresentation(mount);
-    handle=await mountSettlements(mount,{backend,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
+    handle=await mountSettlements(mount,{backend,diagnostics,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
     if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');
   }catch(error){presentation?.destroy();if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};console.error('Settlements module:',error?.code||error?.message);}})();
 }
@@ -672,7 +679,7 @@ function renderSeminar5(topic,{context='course'}={}){
       const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
       if(!active()){cleanup();return;}
       mountedCleanup=await mountReception(mount,{
-        backend,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
+        backend,diagnostics,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
         assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
         onExit:()=>{location.hash=free?'games':'dashboard'}
@@ -726,7 +733,7 @@ function renderSeminar6(topic,{context='course'}={}){
     const {mountCareer}=await import('../../apps/career/entry.mjs');
     if(!active()){cleanup();return;}
     token.lang=getLocale();
-    handle=await mountCareer(mount,{owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
+    handle=await mountCareer(mount,{diagnostics,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
       onRouteChange:(view,{replace=false}={})=>{
         if(!active())return;
         const next=`#${routeBase}/${careerRoute(view)}`;
@@ -919,7 +926,7 @@ async function renderPuzzleRoute(asSeminar=false){
       content.querySelector('.puzzle-profile-warning a')?.setAttribute('href','#profile');
       content.querySelector('#puzzleResultBack')?.setAttribute('href',asSeminar?'#activity/seminar-2':'#puzzle');
       container.querySelector('[data-puzzle-loading]')?.remove();container.append(...content.childNodes);
-      const mounted=await mountPuzzlePage({context,base:'assets/puzzle/data',legacyBase:'data'});
+      const mounted=await mountPuzzlePage({diagnostics,context,base:'assets/puzzle/data',legacyBase:'data'});
       if(!active()){await mounted?.();return;}
       mountedCleanup=mounted;
     }catch(error){
@@ -963,6 +970,7 @@ async function renderAdmin(){
   }).join('');
   app.innerHTML=contentPage(ui('teacherTitle'),'',`<div class="admin-toolbar"><a class="btn btn-primary" href="#gradebook">${ui('gradebookTitle')}</a><button class="btn btn-neutral" id="adminLogout">${ui('teacherLogout')}</button></div><section class="panel access-admin"><div class="access-admin-header"><div><h2>${accessText('scheduleTitle')}</h2><p>${accessText('scheduleLead')}</p></div><div class="access-admin-meta"><strong>${accessText('academicYear')} ${access.context.startYear}/${access.context.endYear}</strong><span>${accessText('currentWeek')}: ${access.context.week}</span></div></div><div class="access-admin-list">${accessRows}</div></section>`);
   app.querySelector('#adminLogout').onclick=async()=>{await backend.adminSignOut();render()};
+  app.querySelector('.admin-toolbar').insertAdjacentHTML('beforeend',`<a class="btn btn-neutral" href="#diagnostics">${esc(diagnosticsCopy(getLocale()).title)}</a>`);
   if(!backend.connected)app.querySelectorAll('[data-access-key]').forEach(button=>button.disabled=true);
   app.querySelectorAll('[data-access-key]').forEach(button=>button.onclick=async()=>{
     const controls=button.closest('.access-mode');controls.querySelectorAll('button').forEach(item=>item.disabled=true);
@@ -1169,7 +1177,7 @@ authIdentifier.addEventListener('input',event=>{
 authIdentifier.addEventListener('compositionend',()=>{clearTimeout(rosterLookupTimer);rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700)});
 authDialog.addEventListener('close',()=>{clearTimeout(rosterLookupTimer);rosterLookupRequest++;clearAuthOperation();authPassword.value=''});
 document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
-profileButton.addEventListener('click',()=>openAccount(openAuthDialog));
+profileButton.addEventListener('click',()=>{openAccount(openAuthDialog);diagnosticReportButton(document.querySelector('#accountDialog .modal-card'))});
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
   if(authSubmit.disabled)return;
@@ -1198,7 +1206,7 @@ authResetPassword.addEventListener('click',async()=>{
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
 function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
-window.addEventListener('hashchange',render);window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
+window.addEventListener('hashchange',()=>{diagnostics.record('route',{success:true,code:'ok'});render()});window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
 window.addEventListener('rudn:identitychange',()=>{
   updateTopProfile();document.getElementById('accountDialog')?.close();
@@ -1229,7 +1237,7 @@ async function bootstrap(){
   translateDocument();updateLanguageSwitcher();updateRudnLogos();populateGroupButtons();setAuthStage('identifier');versionLabel.textContent=CONFIG.version;
   backend.onStatus(updateSync);
   durableStore.subscribe(()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app)});
-  backend.init().then(()=>render()).catch(error=>toast(error,'error'));
+  backend.init().then(()=>{diagnostics.record('route',{success:true,code:'ok'});return render();}).catch(error=>toast(error,'error'));
   await loadData();dataReady=true;
   updateTopProfile();await render();
   if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>console.warn('Service worker',error))}

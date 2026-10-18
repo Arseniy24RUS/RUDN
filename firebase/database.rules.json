@@ -14,6 +14,154 @@
     },
     "rudn-platform": {
       "v1": {
+        "diagnosticSessions": {
+          "$uid": {
+            "$slot": {
+              ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'omnistat@yandex.ru')",
+              ".write": "auth != null && auth.uid === $uid && newData.exists() && (!data.exists() || data.child('expiresAt').val() <= now || data.child('sessionId').val() === newData.child('sessionId').val())",
+              ".validate": "$slot.matches(/^s[0-3]$/) && newData.hasChildren(['sessionId','updatedAt','expiresAt'])",
+              "sessionId": {".validate":"newData.isString() && newData.val().matches(/^[a-z0-9]{12,40}$/)"},
+              "updatedAt": {".validate":"newData.isNumber() && newData.val() >= now - 120000 && newData.val() <= now + 120000"},
+              "expiresAt": {".validate":"newData.isNumber() && newData.val() === newData.parent().child('updatedAt').val() + 600000"},
+              "$other": {".validate":false}
+            }
+          }
+        },
+        "diagnostics": {
+          ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
+          "$uid": {
+            "$slot": {
+              ".validate": "$slot.matches(/^s[0-3]$/)",
+              "$batch": {
+                ".validate": "$batch.matches(/^b[0-7]$/) && newData.hasChildren([\"schema\",\"batchId\",\"writtenAt\",\"sessionId\",\"reportCode\",\"build\",\"createdAt\",\"expiresAt\",\"environment\",\"selfReport\",\"events\"])",
+                "batchId": {".validate":"newData.isString() && newData.val().matches(/^[a-z0-9]{12,40}$/)"},
+                "writtenAt": {".validate":"newData.isNumber() && newData.val() === now"},
+                "schema": {
+                  ".validate": "newData.val() === 1"
+                },
+                "sessionId": {
+                  ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9]{12,40}$/)"
+                },
+                "reportCode": {
+                  ".validate": "newData.isString() && newData.val().matches(/^[A-Z0-9]{12}$/)"
+                },
+                "build": {
+                  ".validate": "newData.isString() && newData.val().length <= 80"
+                },
+                "createdAt": {
+                  ".validate": "newData.isNumber() && newData.val() > now - 2592000000 && newData.val() <= now + 120000"
+                },
+                "expiresAt": {
+                  ".validate": "newData.isNumber() && newData.val() === newData.parent().child('createdAt').val() + 2592000000"
+                },
+                "environment": {
+                  ".validate": "newData.hasChildren([\"browser\",\"browserVersion\",\"os\",\"osVersion\",\"osSource\",\"width\",\"height\",\"screenWidth\",\"screenHeight\",\"dpr\",\"input\"])",
+                  "browser": {
+                    ".validate": "newData.val() === 'unknown' || newData.val() === 'edge' || newData.val() === 'chrome' || newData.val() === 'firefox' || newData.val() === 'safari'"
+                  },
+                  "browserVersion": {
+                    ".validate": "newData.isString() && newData.val().length <= 24"
+                  },
+                  "os": {
+                    ".validate": "newData.val() === 'unknown' || newData.val() === 'ios' || newData.val() === 'android' || newData.val() === 'windows' || newData.val() === 'macos' || newData.val() === 'linux'"
+                  },
+                  "osVersion": {
+                    ".validate": "newData.isString() && newData.val().length <= 24"
+                  },
+                  "osSource": {
+                    ".validate": "newData.val() === 'ua-reported' || newData.val() === 'ua-may-be-frozen'"
+                  },
+                  "width": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+                  },
+                  "height": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+                  },
+                  "screenWidth": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+                  },
+                  "screenHeight": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+                  },
+                  "dpr": {
+                    ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10"
+                  },
+                  "input": {
+                    ".validate": "newData.val() === 'touch' || newData.val() === 'pointer'"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "selfReport": {
+                  ".validate": "newData.hasChildren([\"model\",\"os\"])",
+                  "model": {
+                    ".validate": "newData.isString() && newData.val().length <= 60"
+                  },
+                  "os": {
+                    ".validate": "newData.isString() && newData.val().length <= 40"
+                  },
+                  "$other": {
+                    ".validate": false
+                  }
+                },
+                "events": {
+                  ".validate": "newData.hasChildren()",
+                  "$event": {
+                    ".validate": "$event.matches(/^e([0-9]|1[01])$/) && newData.hasChildren([\"event\",\"module\",\"locale\",\"at\",\"docId\",\"durationMs\",\"code\",\"success\",\"found\",\"visible\",\"units\",\"cacheBytes\",\"targetCount\"])",
+                    "event": {
+                      ".validate": "newData.val() === 'route' || newData.val() === 'runtime-error' || newData.val() === 'resource-error' || newData.val() === 'unhandled-rejection' || newData.val() === 'document-load' || newData.val() === 'document-search' || newData.val() === 'document-jump' || newData.val() === 'reader-state' || newData.val() === 'report'"
+                    },
+                    "module": {
+                      ".validate": "newData.isString() && newData.val().length <= 64"
+                    },
+                    "locale": {
+                      ".validate": "newData.val() === 'ru' || newData.val() === 'en' || newData.val() === 'zh'"
+                    },
+                    "at": {
+                      ".validate": "newData.isNumber() && newData.val() >= now - 2592000000 && newData.val() <= now + 120000"
+                    },
+                    "docId": {
+                      ".validate": "newData.isString() && newData.val().length <= 64"
+                    },
+                    "durationMs": {
+                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3600000"
+                    },
+                    "code": {
+                      ".validate": "newData.val() === 'ok' || newData.val() === 'unknown' || newData.val() === 'cancelled' || newData.val() === 'target-missing' || newData.val() === 'load-failed' || newData.val() === 'timeout' || newData.val() === 'offline' || newData.val() === 'syntax' || newData.val() === 'type' || newData.val() === 'range' || newData.val() === 'resource' || newData.val() === 'promise' || newData.val() === 'storage' || newData.val() === 'network' || newData.val() === 'limit'"
+                    },
+                    "success": {
+                      ".validate": "newData.isBoolean()"
+                    },
+                    "found": {
+                      ".validate": "newData.isBoolean()"
+                    },
+                    "visible": {
+                      ".validate": "newData.isBoolean()"
+                    },
+                    "units": {
+                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200000"
+                    },
+                    "cacheBytes": {
+                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000000"
+                    },
+                    "targetCount": {
+                      ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200000"
+                    },
+                    "$other": {
+                      ".validate": false
+                    }
+                  }
+                },
+                "$other": {
+                  ".validate": false
+                },
+                ".write": "auth != null && ((auth.uid === $uid && newData.exists() && root.child('rudn-platform/v1/diagnosticSessions').child($uid).child($slot).child('sessionId').val() === newData.child('sessionId').val() && root.child('rudn-platform/v1/diagnosticSessions').child($uid).child($slot).child('expiresAt').val() > now && (!data.exists() || (newData.child('batchId').val() !== data.child('batchId').val() && now >= data.child('writtenAt').val() + 30000))) || (auth.token.email === 'omnistat@yandex.ru' && !newData.exists() && data.child('expiresAt').val() <= now))",
+                ".read": "auth != null && auth.uid === $uid"
+              }
+            }
+          }
+        },
         "checkpoints": {
           ".read": "auth != null && auth.token.email === 'omnistat@yandex.ru'",
           "$studentKey": {

@@ -8,6 +8,9 @@ on:
       - 'site/apps/legal-lab/**'
       - 'site/assets/js/main.js'
       - 'site/assets/js/backend.js'
+      - 'site/assets/js/diagnostics*.js'
+      - 'site/assets/css/diagnostics.css'
+      - 'site/assets/js/legal-lab-save-status.js'
       - 'site/assets/js/checkpoint-sync.js'
       - 'site/assets/js/durable-store.js'
       - 'site/assets/js/legal-lab-storage.js'
@@ -18,6 +21,8 @@ on:
       - 'firebase/database.rules.json'
       - 'scripts/*legal*'
       - 'tests/legal-lab*'
+      - 'tests/platform-diagnostics*'
+      - 'scripts/test_platform_diagnostics*'
       - 'tests/fixtures/legal-lab-retired-extras.json'
       - 'tests/fixtures/legal-lab-retired-corpus/**'
       - 'docs/quality/legal-document-translations/**'
@@ -50,13 +55,14 @@ jobs:
           python -m pip install -r tools/legal-lab/corpus-requirements.txt
           python -X utf8 -m unittest discover -s tools/legal-lab/tests -p corpus_regression_test.py -v
       - name: Verify all requisites, stable history, drafts and ephemeral selections
-        run: node --test tests/legal-lab*.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
+        run: node --test tests/legal-lab*.test.mjs tests/platform-diagnostics*.test.mjs scripts/test_legal_lab_contracts.mjs scripts/test_legal_rooms_runtime.mjs
       - name: Verify non-graded practice receipts and resolved conflict recurrence
         run: node --test scripts/test_legal_lab_host_practice.mjs scripts/test_legal_lab_conflict_recurrence.mjs
       - name: Reject a result from a conflicting branch before grading
         run: node scripts/test_legal_lab_conflict.mjs
       - name: Verify full corpus, references, translations and release hashes
         run: |
+          node scripts/build_legal_lab_reader.mjs --check
           node scripts/build_legal_lab_manifest.mjs --check
           node scripts/test_legal_lab_corpus.mjs --output "${{ runner.temp }}/legal-corpus"
       - uses: actions/upload-artifact@v4
@@ -85,6 +91,8 @@ jobs:
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_sync_emulator.mjs"
       - name: Preserve graded retries and history across offline delivery and fresh devices
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node scripts/test_legal_lab_retry_emulator.mjs"
+      - name: Verify bounded diagnostic sessions, privacy rules and idempotent delivery
+        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test_platform_diagnostics_emulator.mjs"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -163,6 +171,15 @@ jobs:
           node scripts/test_legal_lab_mobile_nav.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-mobile-nav"
           node scripts/test_legal_lab_quiz_after_assessment.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-quiz-after-assessment"
           node scripts/test_legal_lab_browser.mjs --base http://127.0.0.1:8765/ --browsers "${{ matrix.browser }}" --output "${{ runner.temp }}/legal-browser"
+      - name: Verify shared diagnostic report and teacher filters in all languages
+        env:
+          DIAGNOSTICS_BROWSERS: ${{ matrix.browser }}
+          DIAGNOSTICS_OUTPUT: ${{ runner.temp }}/platform-diagnostics
+        run: node scripts/test_platform_diagnostics_browser.mjs
+      - name: Keep existing paragraphs consistent with draft conflict and read-only state
+        run: node scripts/test_legal_lab_reader_conflict.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/reader-conflict"
+      - name: Cancel stale documents and release readers before a delayed checkpoint completes
+        run: node scripts/test_legal_lab_reader_lifecycle.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/reader-lifecycle"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -172,4 +189,48 @@ jobs:
             ${{ runner.temp }}/legal-quiz-after-assessment
             ${{ runner.temp }}/legal-mobile-nav
             ${{ runner.temp }}/legal-server.log
+            ${{ runner.temp }}/platform-diagnostics
+            ${{ runner.temp }}/reader-conflict
+            ${{ runner.temp }}/reader-lifecycle
+          retention-days: 14
+
+  bounded-reader:
+    needs: corpus-and-contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Prepare isolated browser runtime
+        run: |
+          npm ci --ignore-scripts
+          npm install --no-save --package-lock=false playwright@1.62.1
+          npx playwright install --with-deps "${{ matrix.browser }}"
+      - name: Open every act and language with bounded DOM and caches
+        run: node scripts/test_legal_lab_performance.mjs --browser "${{ matrix.browser }}" --suite smoke --output "${{ runner.temp }}/reader-smoke"
+      - name: Search, navigate, rotate, cancel and grade through the document UI
+        run: node scripts/test_legal_lab_performance.mjs --browser "${{ matrix.browser }}" --suite deep --output "${{ runner.temp }}/reader-deep"
+      - name: Observe unchanged marks of thirty synthetic participants for one minute
+        run: node scripts/test_legal_lab_performance.mjs --browser "${{ matrix.browser }}" --suite presence --output "${{ runner.temp }}/reader-presence"
+      - name: Restore downloaded passages offline with the actual course service worker
+        run: node scripts/test_legal_lab_performance.mjs --browser "${{ matrix.browser }}" --suite offline --functional --output "${{ runner.temp }}/reader-offline"
+      - name: Run an actual twenty-minute WebKit session with language changes
+        if: matrix.browser == 'webkit'
+        run: node scripts/test_legal_lab_performance.mjs --browser webkit --suite soak --duration-minutes 20 --output "${{ runner.temp }}/reader-soak"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bounded-reader-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/reader-smoke
+            ${{ runner.temp }}/reader-deep
+            ${{ runner.temp }}/reader-presence
+            ${{ runner.temp }}/reader-offline
+            ${{ runner.temp }}/reader-soak
           retention-days: 14

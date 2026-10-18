@@ -62,7 +62,7 @@ export function createFirebaseRestTransport({
     }
   }
 
-  async function request(method,path,{value,etag=false,ifMatch,signal,timeoutMs:requestTimeout=timeoutMs,session=capture()}={}){
+  async function request(method,path,{value,etag=false,ifMatch,signal,query,timeoutMs:requestTimeout=timeoutMs,session=capture()}={}){
     const controller=new AbortController();
     const relay=()=>controller.abort(signal?.reason||failure('network/aborted'));
     if(signal?.aborted)relay();
@@ -71,12 +71,15 @@ export function createFirebaseRestTransport({
     try{
       assertCurrent(session);
       const suffix=cleanPath(path);
+      // A narrow read-only pagination contract; transactions keep their exact reads.
+      if(query!==undefined&&(method!=='GET'||!query||typeof query!=='object'||Array.isArray(query)||Object.keys(query).some(key=>!['orderBy','limitToFirst','startAt'].includes(key))||query.orderBy!=='$key'||!Number.isInteger(query.limitToFirst)||query.limitToFirst<1||query.limitToFirst>21||query.startAt!==undefined&&(typeof query.startAt!=='string'||!/^[a-zA-Z0-9_-]{1,128}$/.test(query.startAt))))throw failure('database/invalid-query');
       for(let authRetry=0;authRetry<2;authRetry++){
         const token=await abortRace(session.user.getIdToken(authRetry===1),controller.signal);
         assertCurrent(session);
         const url=new URL(`${root}/${suffix}.json`,database.href.replace(/\/$/,'')+'/');
         url.searchParams.set('auth',token);
         if(namespace)url.searchParams.set('ns',namespace);
+        if(query){url.searchParams.set('orderBy',JSON.stringify('$key'));url.searchParams.set('limitToFirst',String(query.limitToFirst));if(query.startAt!==undefined)url.searchParams.set('startAt',JSON.stringify(query.startAt));}
         const headers={'Accept':'application/json'};
         if(etag)headers['X-Firebase-ETag']='true';
         if(ifMatch!==undefined)headers['If-Match']=ifMatch;

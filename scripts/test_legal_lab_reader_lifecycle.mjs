@@ -1,0 +1,111 @@
+/** Informed synthetic local public-mount race regression. No Firebase, grades, or physical-device claim. */
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,stat} from 'node:fs/promises';
+import {createServer} from 'node:http';
+import {resolve,dirname,extname,sep} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),site=resolve(root,'site'),args=process.argv.slice(2),arg=(name,fallback)=>args.includes(name)?args[args.indexOf(name)+1]:fallback;
+const engine=arg('--browser','chromium'),output=resolve(arg('--output',resolve(root,'../evidence/runs/20261018-reader-performance/reader-lifecycle')));
+assert.ok(['chromium','firefox','webkit'].includes(engine),'Unsupported browser');
+const json=async file=>JSON.parse(await readFile(resolve(site,'apps/legal-lab',file),'utf8'));
+const [catalog,bank,registry,variants]=await Promise.all(['data/catalog.json','data/bank.json','data/reader/catalog.json','data/assessment-variants.json'].map(json));
+const {unpackDescriptor}=await import(pathToFileURL(resolve(site,'apps/legal-lab/lib/reader-codec.mjs')).href);
+const index=bank.classroom.findIndex(t=>t.kind==='text'&&t.docId==='constitution'),koap=registry.documents.find(d=>d.id==='koap');
+const html=`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Legal Lab reader lifecycle race — synthetic QA</title><style>body{margin:0;font:16px system-ui}#module{max-width:1366px;margin:auto}</style><main id="module"></main><script type="module">
+import{mountLegalLab}from'/apps/legal-lab/entry.mjs';
+const owner='synthetic-lifecycle-'+crypto.randomUUID(),assessment=new URLSearchParams(location.search).has('assessment')?{format:'five-task-v1',caseId:${JSON.stringify(variants.variants.find(v=>v.questionSet==='constitution').id)},attemptId:owner,startedAt:1,contentVersion:${JSON.stringify(catalog.contentVersion)},preview:true,stage:2,phase:'active',answer:{assessmentMode:'five-task-v1',tasks:{}},result:null,delivery:'not-submitted'}:null,state={schema:1,contentVersion:${JSON.stringify(catalog.contentVersion)},id:owner,startedAt:1,answers:{},index:${index},reader:{},elapsedMs:0,view:assessment?'assessment':'learn',assessment,quizCompletion:{contentVersion:${JSON.stringify(catalog.contentVersion)}}};
+window.qa={hold:false,pending:false,events:[],liveClosed:false,release:null};
+const live={watchTask(){},subscribe(fn){fn({connected:true,aggregates:{selections:{},respondents:0}});return()=>{};},choose:async()=>true,close(){qa.liveClosed=true;}};
+window.handle=await mountLegalLab(document.querySelector('#module'),{owner,period:'qa',locale:'ru',initialView:state.view,initialState:state,backend:{generation:1,isAdmin:()=>false,getProfile:()=>({studentKey:'synthetic'})},getOwner:()=>owner,liveFactory:async()=>live,checkpoint:async value=>{qa.lastCheckpoint=structuredClone(value.state);if(qa.hold){qa.pending=true;await new Promise(resolve=>qa.release=resolve);qa.pending=false;}},diagnostics:{record:(event,fields)=>qa.events.push({event,fields})}});window.ready=true;
+</script>`;
+const mime={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png'};
+const server=createServer(async(req,res)=>{try{const url=new URL(req.url,'http://local');if(url.pathname==='/__qa'){res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});res.end(html);return;}const path=resolve(site,'.'+url.pathname);if(!path.startsWith(site+sep)||(await stat(path)).isDirectory())throw Error('missing');res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});res.end(await readFile(path));}catch{res.writeHead(404);res.end();}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const report={kind:'informed synthetic public-mount render and teardown race regression',engine,browserFallback:'Browser plugin unavailable; bundled Playwright on localhost',source:{},checks:[],errors:[],status:'fail'};
+for(const file of ['entry.mjs','lib/reader-view.mjs','lib/reader-controller.mjs','lib/reader-data.mjs'])report.source[file]=createHash('sha256').update(await readFile(resolve(site,'apps/legal-lab',file))).digest('hex');
+const pw=await import(process.env.PLAYWRIGHT_MODULE_PATH?pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE_PATH)).href:'playwright');let browser;
+const within=async(promise,label)=>{let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Timed out: '+label)),30000);})]);}finally{clearTimeout(timer);}};
+try{
+  browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{}),...(process.env.PLAYWRIGHT_EXECUTABLE_PATH?{executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH}:{})});report.version=browser.version();const page=await browser.newPage({viewport:{width:1366,height:900}});page.setDefaultTimeout(15000);page.on('pageerror',err=>report.errors.push(err.message));
+  await page.goto('http://127.0.0.1:'+server.address().port+'/__qa');await page.waitForFunction(()=>window.ready);await page.locator('.ll-paper [data-unit]').first().waitFor();
+  let releaseA,seenA;const blocked=new Promise(resolve=>seenA=resolve),gate=new Promise(resolve=>releaseA=resolve);const path='/apps/legal-lab/'+koap.structure.file;
+  await page.route('**'+path,async route=>{seenA();await gate;await route.continue().catch(()=>{});});
+  await page.locator('[data-doc-group="koap"]').click();await within(blocked,'structural request');await page.locator('[data-doc-group="procurement44"]').click();await page.waitForFunction(()=>document.querySelector('[data-reader-doc]')?.dataset.readerDoc==='procurement44'&&document.querySelectorAll('.ll-paper [data-unit]').length>0);
+  await page.locator('[data-action="toggle-reader-search"]').click();await page.locator('[data-input="reader-query"]').fill('Российской');await page.locator('[data-input="reader-query"]').press('Enter');await page.waitForFunction(()=>handle.getDiagnostics().corpus.searchReady&&!handle.getDiagnostics().reader.searchPending&&document.querySelector('[data-action="jump-unit"]'));
+  const before=await page.evaluate(()=>({first:document.querySelector('[data-action="jump-unit"]').dataset.id,stats:handle.getDiagnostics()})),responseA=page.waitForResponse(response=>new URL(response.url()).pathname===path);releaseA();await responseA;await page.unroute('**'+path);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const after=await page.evaluate(()=>({first:document.querySelector('[data-action="jump-unit"]').dataset.id,stats:handle.getDiagnostics()}));assert.equal(after.stats.reader.docId,'procurement44');assert.equal(after.stats.corpus.searchIndexes,1);assert.equal(after.stats.corpus.searchReady,true);assert.equal(after.first,before.first);report.checks.push('Delayed structural A cannot replace B, clear its search results, or destroy its ready worker');
+  // Reload A now that its structural record is cached: delay its descriptor itself.
+  let releaseManifest,seenManifest;const manifestSeen=new Promise(resolve=>seenManifest=resolve),manifestGate=new Promise(resolve=>releaseManifest=resolve),manifestPath='/apps/legal-lab/'+koap.locales.ru.file;
+  await page.route('**'+manifestPath,async route=>{seenManifest();await manifestGate;await route.continue().catch(()=>{});});await page.locator('[data-action="clear-search"]').click();await page.locator('[data-doc-group="koap"]').click();await within(manifestSeen,'descriptor request');await page.locator('[data-doc-group="constitution"]').click();await page.waitForFunction(()=>document.querySelector('[data-reader-doc]')?.dataset.readerDoc==='constitution'&&document.querySelectorAll('.ll-paper [data-unit]').length>0);releaseManifest();await page.unroute('**'+manifestPath);await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));assert.equal(await page.evaluate(()=>handle.getDiagnostics().reader.docId),'constitution');report.checks.push('Superseded descriptor request is cancelled before view publication');
+  // A same-document question change can arrive before its first block has loaded.
+  const koapManifest=unpackDescriptor(await json(koap.locales.ru.file)),blockPath='/apps/legal-lab/'+koapManifest.blocks[0].file;let releaseBlock,seenBlock;const blockSeen=new Promise(resolve=>seenBlock=resolve),blockGate=new Promise(resolve=>releaseBlock=resolve);
+  await page.route('**'+blockPath,async route=>{seenBlock();await blockGate;await route.continue().catch(()=>{});});await page.locator('[data-doc-group="koap"]').click();await within(blockSeen,'first text block');assert.equal(await page.locator('.ll-paper [data-unit]').count(),0);await page.locator('.ll-doc-questions [data-reader-question]').nth(1).click();releaseBlock();await page.waitForFunction(()=>document.querySelector('[data-reader-doc]')?.dataset.readerDoc==='koap'&&document.querySelectorAll('.ll-paper [data-unit]').length>0);await page.unroute('**'+blockPath);assert.equal(await page.locator('.ll-doc-questions [data-reader-question]').nth(1).getAttribute('aria-pressed'),'true');report.checks.push('Question change during first window loading resumes the reused empty reader');
+  await page.locator('[data-doc-group="constitution"]').click();await page.waitForFunction(()=>document.querySelector('[data-reader-doc]')?.dataset.readerDoc==='constitution'&&document.querySelectorAll('.ll-paper [data-unit]').length>0);
+  await page.locator('[data-action="toggle-reader-search"]').click();await page.locator('[data-input="reader-query"]').fill('Российской');await page.locator('[data-input="reader-query"]').press('Enter');await page.waitForFunction(()=>handle.getDiagnostics().corpus.searchReady&&!handle.getDiagnostics().reader.searchPending);await page.locator('[data-action="clear-search"]').click();
+  await page.evaluate(()=>qa.hold=true);await page.locator('.ll-paper [data-unit]').first().click();await page.waitForFunction(()=>qa.pending);const immediate=await page.evaluate(()=>{window.destroyed=false;window.destroyPromise=handle.destroy().then(()=>destroyed=true);return {stats:handle.getDiagnostics(),closed:qa.liveClosed,pending:qa.pending,destroyed};});assert.equal(immediate.stats.reader,null);assert.equal(immediate.stats.corpus.searchIndexes,0);assert.equal(immediate.stats.corpus.blocks,0);assert.equal(immediate.closed,true);assert.equal(immediate.pending,true);assert.equal(immediate.destroyed,false);report.checks.push('Teardown immediately destroys reader, worker, cache and presence while old-owner checkpoint is pending');
+  await page.evaluate(()=>{qa.hold=false;qa.release();return destroyPromise;});assert.equal(await page.evaluate(()=>destroyed),true);report.checks.push('Pending dirty checkpoint can complete independently after UI teardown');
+  await page.goto('http://127.0.0.1:'+server.address().port+'/__qa?assessment=1');await page.waitForFunction(()=>window.ready);await page.locator('.ll-paper [data-unit]').first().waitFor();
+  const assessmentUnit=page.locator('.ll-paper [data-unit]').first(),assessmentUnitId=await assessmentUnit.getAttribute('data-unit');await page.evaluate(()=>qa.hold=true);
+  await assessmentUnit.click();assert.equal(await assessmentUnit.getAttribute('aria-pressed'),'true');assert.match(await assessmentUnit.getAttribute('class'),/\bselected\b/);await page.waitForFunction(()=>qa.pending);
+  await page.locator('.ll-selected-passages [data-action="remove-unit"]').click();assert.equal(await assessmentUnit.getAttribute('aria-pressed'),'false');assert.equal(await page.evaluate(()=>qa.pending),true);
+  await assessmentUnit.click();assert.equal(await assessmentUnit.getAttribute('aria-pressed'),'true');assert.equal(await page.evaluate(()=>qa.pending),true);
+  await page.evaluate(()=>{qa.hold=false;qa.release();return handle.flush();});assert.equal(await page.evaluate(id=>Object.values(qa.lastCheckpoint.assessment.answer.tasks).some(answer=>answer.selections?.includes(id)),assessmentUnitId),true);await page.evaluate(()=>handle.destroy());
+  report.checks.push('Assessment select/remove/reselect updates immediately while the checkpoint remains pending, then persists the final selection');
+  // Rendered controller fixture: multiple-block shifts must preserve canonical
+  // order in both directions, as well as overlapping nodes, focus and selection.
+  report.windowOrder=await page.evaluate(async()=>{
+    const {ReaderController}=await import('/apps/legal-lab/lib/reader-controller.mjs');
+    document.body.innerHTML='<style>.order-fixture{font:16px system-ui;padding:20px}.order-fixture .ll-paper{height:220px;overflow:auto;border:1px solid #abc;overflow-anchor:none}.order-fixture .ll-paragraph{display:block;box-sizing:border-box;width:100%;height:60px;margin:0;padding:10px;text-align:left}.order-fixture .selected{background:#d9f0e5}</style><main class="order-fixture"><h1>Synthetic window-order regression</h1><section class="ll-reader"><div class="ll-reader-dock"></div><article class="ll-paper"></article></section></main>';
+    const units=Array.from({length:8},(_,block)=>Array.from({length:4},(_,unit)=>({id:'block-'+block+'-unit-'+unit,text:'Block '+block+' · paragraph '+unit}))).flat(),descriptor={docId:'synthetic-order',locale:'ru',units,blocks:Array.from({length:8},(_,id)=>({id,count:4})),unitToBlock:Object.fromEntries(units.map((unit,index)=>[unit.id,Math.floor(index/4)]))};
+    const app={state:{reader:{}},opt:{},isLocked:()=>false,fail:error=>{throw error;},corpus:{cancelSearch(){},loadBlock:async(_doc,_locale,id)=>({id,units:units.slice(id*4,id*4+4)})}},spec={descriptor,selected:[],correctIds:[],renderBlock:block=>block.units.map(unit=>'<button class="ll-paragraph" data-unit="'+unit.id+'">'+unit.text+'</button>').join('')};
+    const reader=document.querySelector('.ll-reader'),paper=reader.querySelector('.ll-paper'),controller=new ReaderController(app,reader,spec),records=[];
+    // The fixture calls explicit window transitions; disable automatic scrolling
+    // so it cannot request a different center during these deterministic checks.
+    controller.scheduleScroll=()=>{};
+    try{
+      await controller.window(3,null);
+      for(const center of [1,3,5,3,1,5,1]){
+        const expectedBlocks=[center-1,center,center+1],overlap=expectedBlocks.find(id=>controller.nodes.has(id)),retained=overlap===undefined?null:controller.nodes.get(overlap).querySelector('[data-unit]');
+        if(retained){paper.scrollTop+=retained.getBoundingClientRect().top-paper.getBoundingClientRect().top+4;retained.focus({preventScroll:true});retained.classList.add('selected');}
+        const position=controller.capture(),offset=retained?retained.getBoundingClientRect().top-paper.getBoundingClientRect().top:null;
+        await controller.window(center,position);await new Promise(resolve=>requestAnimationFrame(resolve));
+        const expectedIds=expectedBlocks.flatMap(id=>units.slice(id*4,id*4+4).map(unit=>unit.id)),actualIds=[...paper.querySelectorAll('[data-unit]')].map(unit=>unit.dataset.unit);
+        records.push({center,expectedIds,actualIds,retained:retained?{sameNode:paper.querySelector('[data-unit="'+retained.dataset.unit+'"]')===retained,focused:document.activeElement===retained,selected:retained.classList.contains('selected'),anchorDelta:retained.getBoundingClientRect().top-paper.getBoundingClientRect().top-offset}:null});
+      }
+    }finally{controller.destroy();}
+    return records;
+  });
+  for(const step of report.windowOrder){assert.deepEqual(step.actualIds,step.expectedIds,'Canonical unit order after center '+step.center);if(step.retained){assert.equal(step.retained.sameNode,true);assert.equal(step.retained.focused,true);assert.equal(step.retained.selected,true);assert.ok(Math.abs(step.retained.anchorDelta)<=1.5,'Visible anchor stays in place after center '+step.center);}}
+  report.checks.push('Forward/backward multi-block shifts retain canonical unit order, overlapping nodes, selection, focus and anchor');
+  report.navigationRaces=await page.evaluate(async()=>{
+    const {ReaderController}=await import('/apps/legal-lab/lib/reader-controller.mjs');
+    const frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+    const units=Array.from({length:8},(_,block)=>Array.from({length:4},(_,unit)=>({id:'nav-'+block+'-'+unit,text:'Navigation block '+block+' · '+unit}))).flat();
+    function fixture(id,saved={}){
+      document.querySelector('.order-fixture').innerHTML='<h1>Synthetic document navigation race</h1><section class="ll-reader"><div class="ll-reader-dock"></div><article class="ll-paper"></article></section>';
+      const descriptor={docId:id,locale:'ru',units,blocks:Array.from({length:8},(_,id)=>({id,count:4})),unitToBlock:Object.fromEntries(units.map((unit,index)=>[unit.id,Math.floor(index/4)]))},state={reader:{[id]:saved}},control={hold:false,started:false,signals:[],release:null,gate:null};
+      const app={state,opt:{},isLocked:()=>false,fail:error=>{throw error;},corpus:{cancelSearch(){},loadBlock:async(_doc,_locale,id,{signal}={})=>{if(control.hold){control.started=true;control.signals.push(signal);await control.gate;if(signal?.aborted)throw new DOMException('Cancelled','AbortError');}return {id,units:units.slice(id*4,id*4+4)};}}},spec={descriptor,selected:[],correctIds:[],renderBlock:block=>block.units.map(unit=>'<button class="ll-paragraph" data-unit="'+unit.id+'">'+unit.text+'</button>').join('')},reader=document.querySelector('.ll-reader'),paper=reader.querySelector('.ll-paper'),controller=new ReaderController(app,reader,spec);
+      controller.resizeObserver?.disconnect();return {controller,paper,control};
+    }
+    const foreign={docId:'different-law',locale:'ru',top:20000,anchor:{id:'different-law-unit',offset:-9}};
+    const saved=fixture('saved-law',{anchorId:'nav-4-1',anchorOffset:-3,scrollTop:1700});await saved.controller.initialize(foreign);const ownUnit=saved.paper.querySelector('[data-unit="nav-4-1"]'),ownPosition={center:saved.controller.center,found:Boolean(ownUnit),offset:ownUnit?ownUnit.getBoundingClientRect().top-saved.paper.getBoundingClientRect().top:null};saved.controller.destroy();
+    const fresh=fixture('new-law');await fresh.controller.initialize(foreign);const freshPosition={center:fresh.controller.center,top:fresh.paper.scrollTop,first:fresh.paper.querySelector('[data-unit]')?.dataset.unit};fresh.controller.destroy();
+    async function delayedScroll(returnToMounted){
+      const {controller,paper,control}=fixture('race-law');const automatic=controller.scheduleScroll.bind(controller);controller.scheduleScroll=()=>{};await controller.window(3,null);paper.scrollTop=controller.prefix(3)+10;await frame();await frame();controller.scheduleScroll=automatic;
+      control.hold=true;control.gate=new Promise(resolve=>control.release=resolve);paper.scrollTop=controller.prefix(5)+10;controller.scheduleScroll();for(let i=0;i<10&&!control.started;i++)await frame();if(!control.started)throw Error('Delayed scroll window did not start');
+      const nextTop=returnToMounted?controller.prefix(3)+16:controller.prefix(5)+70;paper.scrollTop=nextTop;
+      if(returnToMounted){controller.scheduleScroll();await frame();await frame();}
+      // For the within-target case, release before the next animation frame.
+      // This exercises a response arriving before the new scroll callback runs.
+      control.hold=false;control.release();await frame();await frame();await frame();
+      const result={expectedCenter:returnToMounted?3:5,center:controller.center,expectedTop:nextTop,top:paper.scrollTop,delta:paper.scrollTop-nextTop,oldRequestAborted:control.signals.every(signal=>signal.aborted)};controller.destroy();return result;
+    }
+    return {ownPosition,freshPosition,returnToMounted:await delayedScroll(true),withinPendingTarget:await delayedScroll(false)};
+  });
+  assert.equal(report.navigationRaces.ownPosition.found,true,'Saved law must restore its own anchor, not a foreign capture');assert.equal(report.navigationRaces.ownPosition.center,4);assert.ok(Math.abs(report.navigationRaces.ownPosition.offset+3)<=1.5);
+  assert.equal(report.navigationRaces.freshPosition.center,0);assert.equal(report.navigationRaces.freshPosition.top,0);assert.equal(report.navigationRaces.freshPosition.first,'nav-0-0');
+  for(const name of ['returnToMounted','withinPendingTarget']){const result=report.navigationRaces[name];assert.equal(result.center,result.expectedCenter,name);assert.ok(Math.abs(result.delta)<=1.5,name+' must preserve the latest manual position');}
+  assert.equal(report.navigationRaces.returnToMounted.oldRequestAborted,true);report.checks.push('Document positions stay document-owned and delayed scroll windows preserve the latest manual position');
+  assert.deepEqual(report.errors,[]);report.status='pass';await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,engine+'.png')});
+}catch(error){report.error=error.stack;process.exitCode=1;}finally{await browser?.close();await new Promise(resolve=>server.close(resolve));await mkdir(output,{recursive:true});await writeFile(resolve(output,engine+'.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}

@@ -12,6 +12,7 @@ import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.10';
 if(!CONFIG.emulators)installFirebaseGateway(CONFIG.firebaseGateway);
 import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
+import {claimDiagnosticSession,writeDiagnosticBatch,confirmDiagnosticBatch,readDiagnosticPage} from './diagnostics-transport.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -237,6 +238,39 @@ class Backend{
       if(active()&&String(error.code||'').startsWith('network/'))this.restAvailableAt=0;
       throw error;
     }
+  }
+  async writeDiagnosticBatch(uid,slot,batch,value,{signal}={}){
+    if(this.user?.uid!==uid||(!this.isAdmin()&&!this.getProfile()))throw serviceError('auth/profile-required');
+    return writeDiagnosticBatch({transport:this.restTransport(),uid,slot,batch,value,signal});
+  }
+  async confirmDiagnosticBatch(uid,slot,batch,value,{signal}={}){
+    if(this.user?.uid!==uid||(!this.isAdmin()&&!this.getProfile()))throw serviceError('auth/profile-required');
+    return confirmDiagnosticBatch({transport:this.restTransport(),uid,slot,batch,value,signal});
+  }
+  async claimDiagnosticSession(uid,sessionId,preferredSlot,{signal}={}){
+    if(this.user?.uid!==uid||(!this.isAdmin()&&!this.getProfile()))throw serviceError('auth/profile-required');
+    return claimDiagnosticSession({transport:this.restTransport(),uid,sessionId,preferredSlot,now:()=>this.globalNow(),signal});
+  }
+  async readDiagnostics({after=null,signal}={}){
+    if(!this.isAdmin())throw serviceError('auth/admin-required');
+    const generation=this.generation,uid=this.user.uid;
+    const active=()=>!signal?.aborted&&this.generation===generation&&this.user?.uid===uid&&this.isAdmin();
+    const result=await readDiagnosticPage({transport:this.restTransport(),after,signal,now:()=>this.globalNow(),isCurrent:active});
+    if(!active())throw serviceError('auth/profile-changed');
+    const expired=result.expiredPaths;
+    // Opportunistic cleanup, not a server TTL. No student/profile data is fetched.
+    let cleanupScheduled=0;
+    if(expired.length&&!this.diagnosticCleanup){
+      const paths=expired.slice(0,32);cleanupScheduled=paths.length;
+      this.diagnosticCleanup=(async()=>{
+        for(let i=0;i<paths.length;i+=4){
+          if(!active())return;
+          await Promise.allSettled(paths.slice(i,i+4).map(path=>this.restTransport().transaction(path,current=>current?.expiresAt<=this.globalNow()?null:undefined,{retries:1,signal})));
+        }
+      })().catch(()=>{}).finally(()=>{this.diagnosticCleanup=null});
+    }
+    if(!active())throw serviceError('auth/profile-changed');
+    return {rows:result.rows,expired:expired.length,cleanupScheduled,nextAfter:result.nextAfter};
   }
   durableSync(){
     if(!this.checkpointSync){
