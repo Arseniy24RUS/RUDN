@@ -26,7 +26,7 @@ window.mount=async()=>{
   const {mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');
   handle=await mountReception(node,{period:'2026-2027',assessmentAllowed:false,locale:'ru',diagnostics,calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()})});
  }else if(qa.kind==='settlements'){
-  const {mountSettlements}=await import('/apps/settlements/entry.mjs');handle=await mountSettlements(node,{backend,owner:'guest:updates',mode:'free',locale:'ru',diagnostics});
+  const {mountSettlements}=await import('/apps/settlements/entry.mjs');qa.settlementsBackend??={...backend,getProfile:()=>qa.settlementsProfile||null};handle=await mountSettlements(node,{backend:qa.settlementsBackend,owner:'guest:updates',mode:'free',locale:'ru',diagnostics});
  }
  qa.mounted=true;window.handle=handle;return true;
 };
@@ -70,6 +70,15 @@ try{
   await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,module+'-restored.png')});report.checks.push({module,status:'pass',check:'durable local checkpoint + same place + no result submission'});
   if(module==='career'){
    await page.evaluate(()=>window.failSave=true);const refused=await page.evaluate(()=>prepare());assert.equal(refused.status,'blocked');await page.locator('#question-back').click();assert.equal(await page.locator('[data-question-index="0"]').getAttribute('aria-current'),'step');report.checks.push({module,status:'pass',check:'failed checkpoint blocks update and releases the input gate'});
+  }
+  if(module==='settlements'){
+   const changed=await page.evaluate(async()=>{qa.settlementsProfile={studentKey:'synthetic-other-owner'};return prepare();});
+   assert.equal(changed.status,'defer','An injected host profile change must prevent saving the previous owner');
+   await page.locator('[data-select="rank-difficulty"]').selectOption('easy');
+   await page.evaluate(()=>{qa.settlementsProfile=null;});
+   const guestAgain=await page.evaluate(()=>prepare());assert.equal(guestAgain.status,'ready','The original guest identity remains resumable');
+   await page.evaluate(()=>handle.cancelPreparation({discard:true}));
+   report.checks.push({module,status:'pass',check:'injected host identity blocks a switched profile and preserves the guest fallback'});
   }
   await context.close();
  }

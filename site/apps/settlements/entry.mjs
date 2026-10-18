@@ -1,6 +1,5 @@
 import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
 import {durableStore} from '../../assets/js/durable-store.js';
-import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {resourceURL} from '../../assets/js/release-resources.js';
 import {COPY,normalizeLocale,regionName,durationText} from './copy.mjs';
 import {createSettlementsPersistence} from '../../assets/js/settlements-storage.js';
@@ -40,6 +39,11 @@ async function mountSettlementsInternal(container,{backend,owner='guest:settleme
   function notifyView(value){if(presentedView!==value){presentedView=value;onViewChange?.(value)}}
   const c=()=>COPY[lang],number=(n,d=1)=>new Intl.NumberFormat(lang==='zh'?'zh-CN':lang==='en'?'en-GB':'ru-RU',{maximumFractionDigits:d}).format(n||0);
   const $=selector=>shadow.querySelector(selector),student=owner.startsWith('student:'),teacher=owner.startsWith('teacher:'),active=()=>!disposed&&!abort.signal.aborted;
+  const currentOwner=()=>{
+    const profile=backend?.getProfile?.();
+    const current=backend?.isAdmin?.()?`teacher:${backend.user?.uid||''}`:profile?.studentKey?`student:${profile.studentKey}`:'guest';
+    return current==='guest'&&!/^(student|teacher):/.test(owner)?owner:current;
+  };
   const renderedMarkup=new WeakMap();
   function setMarkup(node,html){if(renderedMarkup.get(node)===html)return;renderedMarkup.set(node,html);node.innerHTML=html;}
   const textRegion=id=>{const region=regions.find(item=>item.id===id);return region?regionName(region,lang):id;};
@@ -245,8 +249,8 @@ async function mountSettlementsInternal(container,{backend,owner='guest:settleme
   }catch(error){if(!active())return api;notice='failed';$('.lobby').innerHTML=`<p>${esc(c().failed)}</p><button data-action="reload-page">${esc(c().retry)}</button>`;$('.lobby button').onclick=()=>onExit?.();showStatus();diagnostics?.error?.(error,{event:'module-error',operation:'load',code:'load-failed'});console.error('Settlements initialization:',error?.code||error?.message);}
   ready=active()&&notice!=='failed';api.updateReady=ready;diagnostics?.record?.('module-ready',{success:ready});
   updateAdapter=createUpdateAdapter({module:'settlements',root:container,signal:abort.signal,diagnostics,
-    getIdentity:()=>({owner:attemptOwner()==='guest'&&!/^(student|teacher):/.test(owner)?owner:attemptOwner()}),
-    isBusy:()=>!ready||!active()||(attemptOwner()==='guest'&&!/^(student|teacher):/.test(owner)?owner:attemptOwner())!==owner||busy||restoringWriter||acquiringWriter||pendingCompletion||!!conflict||!persistence.canWrite()||saveState==='unsafe'||!!$('.host-dialog').open||!!game?.updateBusy?.(),
+    getIdentity:()=>({owner:currentOwner()}),
+    isBusy:()=>!ready||!active()||currentOwner()!==owner||busy||restoringWriter||acquiringWriter||pendingCompletion||!!conflict||!persistence.canWrite()||saveState==='unsafe'||!!$('.host-dialog').open||!!game?.updateBusy?.(),
     pause:async value=>{if(value){tick();updatePaused=true;lastTick=0;await actionQueue;await queue;game?.pauseForUpdate?.(true);}else{game?.pauseForUpdate?.(false);updatePaused=false;tick();}},
     capture:()=>({schema:1,view,mode,selectedDifficulty,selectedRegion,rankDifficulty,elapsedMs,trainingGate,dom:captureUpdateView(container),game:game?.captureForUpdate?.()||null}),
     checkpoint:async()=>{await game?.flush?.();await queue;await saveCurrent();const intro=view==='tutorial';const item=intro?tutorial:session;if(!item)return {durable:true,revision:0,checkpointRef:{kind:'lobby'}};
