@@ -1417,3 +1417,21 @@ async function init() {
 
 export const ready = init();
 export {routeTo as navigate, setLanguage as setLocale};
+export const updateBusy=()=>groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
+export const pauseForUpdate=()=>{};
+export function flushForUpdate(){return saveState();}
+export function captureForUpdate(){
+  const filters=Object.fromEntries(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].map(id=>[id,$('#'+id)?.value||'']));
+  return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password').slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.()};
+}
+export async function restoreForUpdate(value){
+  if(value?.schema!==1||value.model!==MODEL_VERSION)throw Error('update/incompatible');
+  if(Number.isInteger(value.questionIndex))state.questionIndex=Math.max(0,Math.min(data.questions.length-1,value.questionIndex));
+  for(const [id,text]of Object.entries(value.filters||{})){if(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].includes(id)&&$('#'+id))$('#'+id).value=String(text).slice(0,500);}
+  workspace?.restoreForUpdate?.(value.workspace);classroom?.restoreForUpdate?.(value.classroom);decisionLab?.restoreForUpdate?.(value.decisionLab);publicService?.restoreForUpdate?.(value.publicService);vacancies?.restoreForUpdate?.(value.vacancies);
+  groupMode=value.groupMode==='demo'?'demo':'uploaded';groupRecords=Array.isArray(value.groupRecords)?value.groupRecords:[];groupRejected=Math.max(0,Number(value.groupRejected)||0);
+  seminarAuthority=data.authorities.find(a=>a.id===value.seminarAuthority)||null;
+  routeTo(value.route,{updateHash:false,focus:false});
+  if(value.authority)openAuthority(value.authority,value.authorityTab);
+  for(const field of value.fields||[]){const el=document.getElementById(field.id);if(el&&['INPUT','TEXTAREA','SELECT'].includes(el.tagName)&&el.type!=='file'&&el.type!=='password'){el.value=String(field.value||'');el.checked=!!field.checked;}}
+}

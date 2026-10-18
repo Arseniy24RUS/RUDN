@@ -6,6 +6,10 @@ import {durableStore} from './durable-store.js?v=1.3.10';
 import {puzzleLeaderboardLocalResult} from './student-identity.js';
 import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.10';
 import {loadRussiaMap} from './puzzle-map-loader.js?v=1.3.10';
+import {resourceURL,getReleaseContext} from './release-resources.js';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
+import {bootstrapUpdateCoordinator} from './platform-update-coordinator.js';
+import {getSharedPlatformDiagnostics} from './diagnostics.js';
 import {PUZZLE_LEVELS,bestPuzzleResults,puzzleGroups,filterPuzzleResults,puzzleResultPage,formatPuzzleTime,loadPuzzleXlsx,puzzleLeaderboardWorkbook} from './puzzle-leaderboard.js?v=1.3.10';
 let activePuzzleBridge=null;
 
@@ -25,13 +29,21 @@ const lifecycleCleanup=[];
 if(!document.getElementById('toastStack')){const host=document.createElement('div');host.id='toastStack';host.className='toast-stack';host.setAttribute('aria-live','polite');document.body.append(host)}
 initNotifications();
 const native=root.dataset.native==='true';
+const platformDiagnostics=options.diagnostics||getSharedPlatformDiagnostics({backend,build:getReleaseContext()?.buildId||'development',getLocale,getModule:()=> 'maps'});
+let diagnostics=platformDiagnostics.forModule?.('maps')||platformDiagnostics;
+let loadingEnd=diagnostics.span?.('module-load');
+async function observed(operation,action,event){
+  const scope=diagnostics,end=scope.span?.(operation);
+  try{const result=await action();end?.({success:true});if(event)scope.record?.(event,{operation,success:true});return result}
+  catch(error){end?.({success:false});scope.error?.(error,{operation,...(event?{event}:{})});throw error}
+}
 const locale=getLocale();
 const context=options.context==='seminar'||(!options.context&&new URLSearchParams(location.search).get('context')==='seminar')?'seminar':'free';
 const base=options.base||'../assets/puzzle/data';
 const legacyBase=options.legacyBase||'../data';
 const bridgeToken={original:activePuzzleBridge?.original||window.fetch};
 const previousFetch=bridgeToken.original;
-const nativeFetch=previousFetch.bind(window);
+const nativeFetch=(input,init)=>previousFetch.call(window,input instanceof Request?new Request(resourceURL(input),input):resourceURL(input),init);
 const activeAttempts=new Map();
 const completedAttempts=new Map();
 const warn=detail=>root.dispatchEvent(new CustomEvent('puzzle:storage-warning',{detail}));
@@ -188,7 +200,7 @@ const puzzleFetch=async(input,options={})=>{
       if(russian89&&signedIn){const leaderboard=await backend.puzzleLeaderboardRecord({difficulty:body.difficulty,timeMs:body.duration_ms,placed:body.placed,total:body.total,timestamp:Date.now()},progressProfile);if(leaderboard)record.leaderboard=leaderboard}
       // Geometry, final screen and both delivery jobs survive a reload. Cloud I/O
       // starts only after this transaction; it never delays the result dialog.
-      const completion=await durableStore.complete({...progressScope,attemptId:record.id,contentVersion:'puzzle-v3',state:{...(saved?.state||body),finished:true,completionReceipt:result},attempt:record},{queue:signedIn});
+      const completion=await observed('result-save',()=>durableStore.complete({...progressScope,attemptId:record.id,contentVersion:'puzzle-v3',state:{...(saved?.state||body),finished:true,completionReceipt:result},attempt:record},{queue:signedIn}),'result-save');
       const receipt=completion?.state?.completionReceipt||result;
       completedAttempts.set(body.attempt_id,receipt);
       if(sameStudent){
@@ -200,7 +212,7 @@ const puzzleFetch=async(input,options={})=>{
       return jsonResponse(receipt)
     }
     return jsonResponse({detail:'Not found'},404);
-  }catch(error){if(options.signal?.aborted||error?.name==='AbortError')throw error;return jsonResponse({detail:String(error.message||error)},500)}
+  }catch(error){if(options.signal?.aborted||error?.name==='AbortError')throw error;diagnostics.error?.(error,{operation:'map-request'});return jsonResponse({detail:String(error.message||error)},500)}
 };
 window.fetch=puzzleFetch;
 activePuzzleBridge=bridgeToken;
@@ -273,7 +285,7 @@ function renderLeaderboard(){
 async function refreshLeaderboard({cloud=true}={}){
   if(disposed||leaderboardClosed||!root.isConnected)return;
   const owner=currentOwner(),localRevision=++leaderboardLocalRevision;
-  const attempts=owner===progressOwner&&owner.startsWith('student:')?await durableStore.listAttempts({owner}).catch(()=>[]):[];
+  const attempts=owner===progressOwner&&owner.startsWith('student:')?await durableStore.listAttempts({owner}).catch(error=>{diagnostics.error?.(error,{operation:'history-load'});return []}):[];
   if(disposed||leaderboardClosed||!root.isConnected||localRevision!==leaderboardLocalRevision)return;
   leaderboardLocal=currentOwner()===owner?attempts.map(puzzleLeaderboardLocalResult).filter(Boolean):[];
   renderLeaderboard();
@@ -286,7 +298,7 @@ async function refreshLeaderboard({cloud=true}={}){
         const rows=await backend.getPuzzleLeaderboard({signal:controller.signal});
         if(disposed||!root.isConnected||controller.signal.aborted)return;
         leaderboardRemote=rows;leaderboardLoaded=true;leaderboardStale=false;
-      }catch{if(controller.signal.aborted)return;leaderboardStale=true}
+      }catch(error){if(controller.signal.aborted)return;diagnostics.error?.(error,{operation:'leaderboard-load'});leaderboardStale=true}
     }else if(cloud)leaderboardStale=true;
     renderLeaderboard();
   })().finally(()=>{leaderboardRefresh=null;if(leaderboardController===controller)leaderboardController=null;if(leaderboardRetry){leaderboardRetry=false;scheduleLeaderboard()}});
@@ -324,11 +336,11 @@ async function exportLeaderboard(){
     const workbook=puzzleLeaderboardWorkbook(XLSX,rows,staticTranslations[locale]||staticTranslations.ru);
     const bytes=XLSX.write(workbook,{bookType:'xlsx',type:'array',compression:true});
     const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));link.download='rudn-map-leaderboard.xlsx';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);
-  }catch{leaderboardError=groupFilterCopy('exportFailed')}
+  }catch(error){diagnostics.error?.(error,{operation:'leaderboard-export'});leaderboardError=groupFilterCopy('exportFailed')}
   finally{delete button.dataset.exporting;renderLeaderboard()}
 }
 
-const puzzleLogo=document.getElementById('puzzleRudnLogo');if(puzzleLogo){puzzleLogo.src=locale==='ru'?'../assets/img/rudn-logo.png':'../assets/img/rudn-logo-en.png';puzzleLogo.alt=locale==='ru'?'РУДН':'RUDN University'}
+const puzzleLogo=document.getElementById('puzzleRudnLogo');if(puzzleLogo){puzzleLogo.src=resourceURL(locale==='ru'?'../img/rudn-logo.png':'../img/rudn-logo-en.png',import.meta.url).href;puzzleLogo.alt=locale==='ru'?'РУДН':'RUDN University'}
 root.dataset.context=context;root.dataset.activitySlug=context==='seminar'?'seminar-2':'maps-freeplay';
 if(context==='seminar'){
   const backLink=document.getElementById('puzzleBackLink');if(backLink){backLink.href='../index.html#activity/seminar-2';backLink.querySelector('span').dataset.staticI18n='back'}
@@ -338,11 +350,14 @@ if(context==='seminar'){
 }
 await backend.init();
 if(!root.isConnected)return abandonMount();
+// Standalone authentication can replace the anonymous pre-login context.
+// Bind subsequent events once to the identity that actually owns this game.
+if(!native&&platformDiagnostics.forModule){diagnostics.destroy?.();diagnostics=platformDiagnostics.forModule('maps');loadingEnd=diagnostics.span?.('module-load');}
 const progressOwner=backend.isAdmin()?`teacher:${backend.user.uid}`:backend.getProfile()?.studentKey?`student:${backend.getProfile().studentKey}`:'guest:puzzle';
 const progressProfile=backend.getProfile()?{...backend.getProfile()}:null;
 const progressScope={owner:progressOwner,activitySlug:context==='seminar'?'seminar-2':'maps-freeplay',mode:context};
 // Local recovery and map preparation are independent of cloud reads.
-const savedPuzzle=await durableStore.loadDraft(progressScope);
+const savedPuzzle=await observed('restore',()=>durableStore.loadDraft(progressScope),'restore');
 if(!root.isConnected)return abandonMount();
 const revisions=new Map(savedPuzzle?[[savedPuzzle.attemptId,savedPuzzle.revision]]:[]);
 let saveTail=Promise.resolve();
@@ -373,8 +388,8 @@ root.puzzleProgress={
    })();
    saveTail=work;return work;
  },
- saveGeometry:wrapper=>geometryStore.save(wrapper),
- loadGeometry:ref=>geometryStore.load(ref),
+ saveGeometry:wrapper=>observed('geometry-save',()=>geometryStore.save(wrapper)),
+ loadGeometry:ref=>observed('geometry-load',()=>geometryStore.load(ref)),
  canWrite:()=>Boolean(writer?.canWrite()&&currentOwner()===progressOwner&&!disposed),
  takeControl:()=>writer.acquire(),
  flush:async()=>{await saveTail.catch(()=>{});await durableStore.flush()},
@@ -419,11 +434,12 @@ resolveReady();
 const engineCleanup=native&&root.isConnected?window.mountRudnPuzzle?.():null;
 // Prepare the small module shell; exact played geometry is in IndexedDB.
 navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'puzzle'});
-if(!native&&'serviceWorker' in navigator){
+if(!native&&'serviceWorker' in navigator&&!getReleaseContext()){
   void navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url),{updateViaCache:'none'})
     .then(()=>navigator.serviceWorker.ready).then(registration=>registration.active?.postMessage({type:'PREPARE_MODULE',module:'puzzle'})).catch(()=>{});
 }
 const cleanup=()=>{
+  updater.destroy();coordinator?.destroy();diagnostics.destroy?.();
   engineCleanup?.();
   lifecycleCleanup.splice(0).forEach(cleanup=>cleanup());
   restoreFetch();
@@ -433,6 +449,17 @@ const cleanup=()=>{
   });
 };
 cleanup.flush=async()=>{await root.puzzleProgress?.capture?.();await durableStore.flush();};
+const updater=createUpdateAdapter({module:'maps',root,diagnostics,
+  getIdentity:()=>({owner:currentOwner(),attemptId:root.puzzleProgress.updateState?.().attemptId||savedPuzzle?.attemptId||''}),
+  isBusy:()=>!writer.canWrite()||!root.puzzleProgress.updateState?.().ready||root.puzzleProgress.updateState?.().busy||!!root.querySelector('dialog[open]'),
+  pause:value=>root.puzzleProgress.pauseForUpdate?.(value),
+  capture:()=>({view:captureUpdateView(root)}),
+  checkpoint:async()=>{await root.puzzleProgress.capture();await saveTail;await durableStore.flush();const saved=await durableStore.getSaveStatus({...progressScope,attemptId:root.puzzleProgress.updateState().attemptId});return {durable:saved.durable===true&&!['empty','unsafe','conflict'].includes(saved.state),revision:saved.revision,checkpointRef:root.puzzleProgress.updateState().attemptId}},
+  restore:async({state},options)=>{await restoreUpdateView(root,state.view,options);return {status:'restored'}}});
+Object.assign(cleanup,updater);
+cleanup.resumeAfterUpdate=async options=>{await root.puzzleProgress.loaded;return updater.resumeAfterUpdate(options)};
+const coordinator=native?null:bootstrapUpdateCoordinator({backend,diagnostics,module:'puzzle',getOwner:currentOwner,getAdapters:()=>[cleanup]});
+void Promise.resolve(root.puzzleProgress.loaded).then(()=>{loadingEnd?.({success:true});void coordinator?.restorePending();window.dispatchEvent(new Event('rudn:module-ready'))}).catch(error=>{loadingEnd?.({success:false});diagnostics.error?.(error,{operation:'map-load'})});
 return cleanup;
 }
 

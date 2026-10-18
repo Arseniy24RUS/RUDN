@@ -14,6 +14,8 @@ import {
 } from './quiz.js?v=1.3.10';
 import {getLocale} from './i18n.js?v=1.3.10';
 import {attemptOwner,prepareQuizDraft,persistQuiz} from './attempt-session.js?v=1.3.10';
+import {bindQuizUpdate} from './platform-learning-updates.js';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
 
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,(char)=>({
   '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'
@@ -108,11 +110,13 @@ export function revealState(records,active,nowValue=Date.now()){
   return records.length>=threshold||Boolean(first&&nowValue-first>=(CONFIG.live?.revealAfterMs||45000));
 }
 
-export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGroup,recordAttempt,participateLive=true}={}){
+export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGroup,recordAttempt,participateLive=true,diagnostics,signal}={}){
+  const initialOwner=attemptOwner();
   const profile=backend.getProfile();
   const group=groupOptions().includes(requestedGroup)?requestedGroup:profile?.group;
   if(participateLive&&!groupOptions().includes(group))throw new Error('Выберите учебную группу');
   await prepareQuizDraft('seminar-1-classroom');
+  if(signal?.aborted||initialOwner!==attemptOwner()||!container.isConnected)throw Object.assign(new Error('Quiz mount cancelled'),{name:'AbortError',code:'module/cancelled'});
   let {roomKey,session}=roomQuestionSet(group,{persist:true});
   roomKey=session.liveRoomKey||roomKey;session.liveRoomKey=roomKey;persistQuiz(session);
   session.recordAttempt=recordAttempt??!backend.isAdmin();
@@ -124,6 +128,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   let joined=false;
   let connected=false;let connecting=false;let stopStatus=()=>{};
   let closed=false;
+  const updater=bindQuizUpdate({root:container,getSession:()=>session,diagnostics});
   const updateLiveState=()=>{
     if(closed)return;
     const activeIds=activeParticipantIds(presence);
@@ -147,6 +152,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
     if(closed)return;
     const activeIds=activeParticipantIds(presence);
     renderQuiz(container,session,{
+      diagnostics,
       onExit:()=>{cleanup();(onExit||(()=>history.back()))()},
       onAnswer:({question,value,index})=>participateLive?backend.submitAutomaticQuizResponse(roomKey,question.id,value,index,group):undefined,
       onFinish:()=>{},
@@ -162,6 +168,7 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
   const cleanup=()=>{
     if(closed)return;
     closed=true;
+    updater.destroy();
     try{unsubPresence()}catch{}
     try{unsubResponses()}catch{}
     try{stopStatus()}catch{}
@@ -177,13 +184,14 @@ export async function mountAdaptiveSeminar1(container,{onExit,group:requestedGro
       unsubResponses=backend.subscribeAutomaticResponses(roomKey,(value)=>{responses=value;updateLiveState()});
       connected=true;
     }
-    catch(error){console.warn('Automatic classroom connection failed',error)}
+    catch(error){diagnostics?.error?.(error,{operation:'classroom-connect'})}
     finally{connecting=false;updateLiveState()}
   };
   stopStatus=backend.onStatus(()=>{updateLiveState();connect()});
   void connect();
   render();
   cleanup.refreshLocale=render;
+  Object.assign(cleanup,updater);
   return cleanup;
 }
 
@@ -302,6 +310,10 @@ export function mountAutomaticBoard(container,{initialGroup,onGroupChange}={}){
   subscribe();
   const stopStatus=backend.onStatus(()=>{if(!disposed&&!subscribed&&backend.mode==='cloud')subscribe()});
   const timer=setInterval(render,1000);
-  const cleanup=()=>{disposed=true;cleanupSubscriptions();stopStatus();clearInterval(timer)};
-  cleanup.refreshLocale=render;return cleanup;
+  const updater=createUpdateAdapter({module:'quiz-board',root:container,getIdentity:attemptOwner,
+    checkpoint:async()=>({durable:true,revision:0,checkpointRef:'board-view'}),
+    capture:()=>({group,selectedIndex,followLatest,navOpen,view:captureUpdateView(container)}),
+    restore:async({state},options)=>{group=state.group;subscribe();selectedIndex=state.selectedIndex;followLatest=state.followLatest;navOpen=state.navOpen;render();await restoreUpdateView(container,state.view,options);return {status:'restored'}}});
+  const cleanup=()=>{updater.destroy();disposed=true;cleanupSubscriptions();stopStatus();clearInterval(timer)};
+  Object.assign(cleanup,updater);cleanup.refreshLocale=render;return cleanup;
 }

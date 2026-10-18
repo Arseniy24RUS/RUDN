@@ -32,6 +32,7 @@ Object.assign(COPY.zh,{
   retry:'重新加载'
 });
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+Object.assign(COPY.ru,{diagnostics:'Диагностика'});Object.assign(COPY.en,{diagnostics:'Diagnostics'});Object.assign(COPY.zh,{diagnostics:'诊断'});
 const numeric=value=>Math.round(Number(value||0)*100)/100;
 let disposeCurrentJournal=null;
 export function journalModel(snapshot,topics){
@@ -159,7 +160,7 @@ export function mountTeacherJournal(app,{topics,onEdit,downloadCsv}){
           <tbody>${groupRows.map(row=>`<tr data-student-key="${esc(row.profile.studentKey)}">
             <th scope="row" class="student-sticky"><span${row.absentFromOfficialRoster?' class="student-name-absent"':''}>${esc(row.profile.fullName||officialTicket(row.profile))}</span><small>${esc(officialTicket(row.profile))}</small></th>
             ${columns.map(column=>`<td data-activity="${column.slug}" class="${column.ungraded?'ungraded':''}">${row.values[column.slug]??'—'}${column.slug==='seminar-4'&&row.hasLegalLabReports?`<br><button class="badge" type="button" data-legal-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewLegalReports)}">${esc(c.reportPresent)}</button>`:''}${column.slug==='seminar-7'&&row.hasGovernorReports?`<br><button class="badge" type="button" data-governor-review="${esc(row.profile.studentKey)}" aria-label="${esc(c.viewReports)}">${esc(c.reportPresent)}</button>`:''}</td>`).join('')}
-            <td class="journal-total">${row.profile.rosterOnly?'—':row.total}</td><td>${row.profile.rosterOnly?'':`<button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button>`}</td></tr>`).join('')}
+            <td class="journal-total">${row.profile.rosterOnly?'—':row.total}</td><td>${row.profile.rosterOnly?'':`<button class="btn btn-neutral btn-small" data-grade-edit="${esc(row.profile.studentKey)}" ${canEdit()?'':'disabled'}>${c.edit}</button><a class="btn btn-neutral btn-small" href="#diagnostics/${encodeURIComponent(row.profile.studentKey)}">${c.diagnostics}</a>`}</td></tr>`).join('')}
             <tr class="journal-statistics"><th class="student-sticky">${c.submitted}</th>${statistics.map(stat=>`<td>${stat.count}</td>`).join('')}<td>${withResults.length}</td><td></td></tr>
             <tr class="journal-statistics"><th class="student-sticky">${c.activityAverage}</th>${statistics.map(stat=>`<td>${stat.mean}</td>`).join('')}<td>${average}</td><td></td></tr>
           </tbody></table></div></section>`;

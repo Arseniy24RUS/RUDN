@@ -1,3 +1,4 @@
+import {resourceURL} from '../../assets/js/release-resources.js';
 import {mountLegalLab} from './entry.mjs';
 import {FirebaseLive} from './lib/live.mjs';
 import {createLegalLabPersistence,legalLabAttemptForCourse} from '../../assets/js/legal-lab-storage.js';
@@ -37,7 +38,7 @@ export function createLegalLabPracticeCompletion({backend,owner,getOwner=()=>own
 export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwner,period,groups,locale,signal,assessmentAllowed,onExit,checkpoint,initialView,diagnostics}={}){
   if(!backend||typeof backend.getProfile!=='function'||typeof backend.saveAttempt!=='function')throw new TypeError('The existing course backend is required');
   const teacher=backend.isAdmin();const profile=backend.getProfile();
-  const response=await fetch(new URL('./data/catalog.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
+  const response=await fetch(resourceURL('./data/catalog.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
   if(!response.ok)throw new Error('The document catalogue could not be loaded');
   const catalog=await response.json();
   let handle=null,conflictPanel=null,destroyed=false,currentLocale=locale;
@@ -74,7 +75,7 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
     initialView,
     onPracticeComplete:createLegalLabPracticeCompletion({backend,owner,getOwner,contentVersion:catalog.contentVersion,signal,isActive:()=>!destroyed&&!persistence.conflicted}),
     initialState,attemptId:persistence.attemptId,
-    checkpoint:async value=>{await persistence.checkpoint(value);await checkpoint?.(value);},
+    checkpoint:async value=>{const saved=await persistence.checkpoint(value);if(saved?.saveStatus?.durable!==true||saved.saveStatus.state==='conflict')throw Object.assign(Error('storage/checkpoint-unsafe'),{code:'storage/checkpoint-unsafe'});await checkpoint?.(value);return saved;},
     isTeacher:teacher,group:profile?.group,groups:groups?.length?groups:undefined,
     // Pseudorandom per-profile assignment: same case on another device in the
     // same academic period/version. This is not cryptographic exam protection.
@@ -83,7 +84,8 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
     liveFactory:({contentVersion,signal:liveSignal})=>backend.user?.uid&&(backend.isAdmin()||backend.getProfile()?.studentKey)?new FirebaseLive({backend,rootPath,contentVersion,signal:liveSignal}):null
   });
   if(!signal?.aborted)void warmCourseCache(handle.contentVersion,signal);
-  return {contentVersion:handle.contentVersion,getReport:()=>handle.getReport(),
+  return {module:'legal-lab',contentVersion:handle.contentVersion,getReport:()=>handle.getReport(),
+    prepareForUpdate:options=>persistence.conflicted?Promise.resolve({status:'blocked',code:'conflict'}):handle.prepareForUpdate(options),resumeAfterUpdate:options=>handle.resumeAfterUpdate(options),cancelPreparation:options=>handle.cancelPreparation(options),commitPreparation:()=>handle.commitPreparation(),
     async flush(){await handle.flush();await persistence.flush();},
     async setLocale(next){currentLocale=next;if(conflictPanel){conflictPanel.remove();conflictPanel=null;showConflict();}await handle.setLocale(next);},
     async destroy(){destroyed=true;try{await handle.destroy();}finally{persistence.destroy();}}};
@@ -102,13 +104,13 @@ export async function warmCourseCache(contentVersion,signal){
 }
 async function prepareCourseShell(worker,contentVersion,signal){
   try{
-    const response=await fetch(new URL('./precache-manifest.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
+    const response=await fetch(resourceURL('./precache-manifest.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
     if(!response.ok)return false;const manifest=await response.json();
     if(manifest.contentVersion!==contentVersion||!Array.isArray(manifest.files))return false;
     const scope=new URL('../../',import.meta.url),prefix=new URL('./',import.meta.url);
     // Warm only the shell. Reading must not compete with unseen scans or acts.
     // The same course worker retains documents and images when actually requested.
-    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&/\.(?:m?js|css|html|json)$/.test(u.pathname)&&!u.pathname.includes('/data/documents/')&&!u.pathname.includes('/data/reader/')&&!/\/data\/translations\/(?:en|zh)\//.test(u.pathname)&&!u.search&&!u.hash).map(u=>u.href);
+    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&/\.(?:m?js|css|html|json)$/.test(u.pathname)&&!u.pathname.includes('/data/documents/')&&!u.pathname.includes('/data/reader/')&&!/\/data\/translations\/(?:en|zh)\//.test(u.pathname)&&!u.search&&!u.hash).map(u=>resourceURL(u).href);
     for(let offset=0;offset<urls.length;offset+=200){
       if(signal?.aborted)return false;
       const ready=await new Promise(resolve=>{

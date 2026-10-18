@@ -1,5 +1,22 @@
 const failure=code=>Object.assign(new Error(code),{code});
 const stable=value=>JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).filter(([key])=>key!=='writtenAt').sort(([a],[b])=>a.localeCompare(b))):item);
+// The v2 service owns identity binding, append-only storage and deletion generations.
+// Error messages and response bodies are deliberately not exposed as telemetry.
+export async function requestDiagnostics({endpoint,token,action,payload={},signal,fetchImpl=globalThis.fetch,timeoutMs=12000}){
+  const controller=new AbortController();const aborted=()=>controller.abort();
+  if(signal?.aborted)throw failure('diagnostics/cancelled');
+  signal?.addEventListener('abort',aborted,{once:true});
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+  try{
+    if(!token||typeof token!=='string')throw failure('diagnostics/auth');
+    const url=new URL(endpoint);if(url.protocol!=='https:'&&!(url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)))throw failure('diagnostics/endpoint');
+    const response=await fetchImpl(url.href,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({...payload,action}),signal:controller.signal,cache:'no-store',credentials:'omit'});
+    let data;try{data=await response.json()}catch{throw failure('diagnostics/invalid-response')}
+    if(!response.ok||data?.ok!==true){const code=typeof data?.error?.code==='string'&&/^[a-z0-9/_-]{1,80}$/i.test(data.error.code)?data.error.code:'diagnostics/request-failed';throw Object.assign(failure(code),{status:response.status,retryAfterMs:Math.max(0,Math.min(300000,Number(data?.error?.retryAfterMs)||0))})}
+    return data;
+  }catch(error){if(controller.signal.aborted)throw failure(signal?.aborted?'diagnostics/cancelled':'diagnostics/timeout');if(error?.code)throw error;throw failure('diagnostics/network')}
+  finally{clearTimeout(timer);signal?.removeEventListener('abort',aborted)}
+}
 export async function confirmDiagnosticBatch({transport,uid,slot,batch,value,signal}){
   const current=(await transport.get(`diagnostics/${uid}/${slot}/${batch}`,{signal,timeoutMs:6000})).value;
   return current?.batchId===value.batchId&&stable(current)===stable(value);

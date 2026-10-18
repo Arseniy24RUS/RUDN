@@ -1,6 +1,9 @@
 import { createCareerRuntime } from './runtime.bundle.mjs';
 import {backend} from '../../assets/js/backend.js?v=1.3.10';
+import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
+import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const VALID_ROUTES = new Set(['home','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
@@ -8,13 +11,14 @@ const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : Str
 const activeMounts = new WeakMap();
 
 /** A native, isolated DOM component. Authentication and course navigation belong to the host. */
-export async function mountCareer(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, initialRoute = 'home', onRouteChange, signal} = {}) {
+export async function mountCareer(container,options={}) {const finish=options.diagnostics?.span?.('module-load');try{const handle=await mountCareerInternal(container,options);finish?.({success:true});return handle;}catch(error){finish?.({success:false,code:error.name==='AbortError'?'cancelled':'load-failed'});options.diagnostics?.error?.(error,{event:'module-error',operation:'load'});throw error;}}
+async function mountCareerInternal(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, initialRoute = 'home', onRouteChange, signal,diagnostics} = {}) {
   if (!(container instanceof HTMLElement)) throw new TypeError('Career module requires an HTMLElement container.');
   activeMounts.get(container)?.destroy();
   const shadow = container.shadowRoot || container.attachShadow({mode:'open'});
   const free=hostContext==='free';
   const ownerKey = `rudn-career:${free?'free:':''}embedded:${encodeURIComponent(MODULE_BASE.pathname)}:${encodeURIComponent(String(owner || 'guest'))}:`;
-  let current = null, disposed = false, language = locale(lang), route = VALID_ROUTES.has(initialRoute) ? initialRoute : 'home', generation = 0;
+  let current = null, disposed = false, language = locale(lang), route = VALID_ROUTES.has(initialRoute) ? initialRoute : 'home', generation = 0,updatePaused=false,updateAdapter=null,latestCheckpoint=null,saveFailure=false;
   const hostWindow = container.ownerDocument.defaultView;
   const hostDocument = container.ownerDocument;
   const controller = new AbortController();
@@ -25,13 +29,14 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
   try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
   const saveCopy={ru:{pending:'Сохранено на устройстве · ожидает отправки',saved:'Сохранено',unsafe:'Не удалось сохранить. Скачайте ответы перед закрытием.'},en:{pending:'Saved on this device · awaiting upload',saved:'Saved',unsafe:'Could not save. Download your answers before closing.'},'zh-Hans':{pending:'已保存在此设备 · 等待上传',saved:'已保存',unsafe:'无法保存。关闭前请下载答案。'}};
   const track=promise=>{pendingSaves.add(promise);promise.finally(()=>pendingSaves.delete(promise)).catch(()=>{});return promise;};
-  const persistWorkspace=()=>track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:{values:Object.fromEntries(values),route}},{queue:durableOwner.startsWith('student:')}).then(saved=>{
-    const label=shadow.querySelector('#session-status');if(label&&!disposed)label.textContent=saveCopy[language][!saved.saveStatus.durable?'unsafe':saved.saveStatus.state==='saved'?'saved':'pending'];return saved;
-  }).catch(error=>{hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}));return null;}));
+  const persistWorkspace=()=>{const started=performance.now();return track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:{values:Object.fromEntries(values),route}},{queue:durableOwner.startsWith('student:')}).then(saved=>{
+    latestCheckpoint=saved;saveFailure=saved.saveStatus?.durable!==true;diagnostics?.record?.('checkpoint',{operation:'draft-save',success:!saveFailure,code:saveFailure?'storage':'ok',durationMs:performance.now()-started});const label=shadow.querySelector('#session-status');if(label&&!disposed)label.textContent=saveCopy[language][!saved.saveStatus.durable?'unsafe':saved.saveStatus.state==='saved'?'saved':'pending'];return saved;
+  }).catch(error=>{saveFailure=true;diagnostics?.error?.(error,{event:'checkpoint',code:'storage',operation:'save',durationMs:performance.now()-started});hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}));return null;}));};
 
-  const api = {
+  const api = {module:'career',
     destroy() {
       if (disposed) return;
+      updateAdapter?.destroy();
       const flushed=api.flush();
       disposed = true; generation += 1; controller.abort(); current?.cleanup(); current = null;
       signal?.removeEventListener('abort',abortFromHost);
@@ -40,6 +45,7 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
       return flushed;
     },
     async flush(){await Promise.allSettled([...pendingSaves]);await durableStore.flush();},
+    prepareForUpdate:options=>updateAdapter?.prepareForUpdate(options)||Promise.resolve({status:'defer',code:'mounting'}),resumeAfterUpdate:options=>updateAdapter?.resumeAfterUpdate(options)||Promise.resolve({status:'blocked',code:'mounting'}),cancelPreparation:options=>updateAdapter?.cancelPreparation(options),commitPreparation:()=>updateAdapter?.commitPreparation(),
     async setLocale(value) {
       language = locale(value);
       if (current && !disposed) await current.runtime.setLocale(language, {persist:false});
@@ -60,12 +66,12 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
   let markup, css;
   try {
     const [surfaceResponse, styleResponse] = await Promise.all([
-      fetch(new URL('surface.html', MODULE_BASE), {signal:controller.signal}),
-      fetch(new URL('module.css', MODULE_BASE), {signal:controller.signal})
+      fetch(resourceURL('surface.html', MODULE_BASE), {signal:controller.signal}),
+      fetch(resourceURL('module.css', MODULE_BASE), {signal:controller.signal})
     ]);
     if (!surfaceResponse.ok || !styleResponse.ok) throw new Error('Career module resources could not be loaded.');
     [markup, css] = await Promise.all([surfaceResponse.text(), styleResponse.text()]);
-  } catch(error) {api.destroy();throw error;}
+  } catch(error) {diagnostics?.error?.(error,{event:'module-error',code:'load-failed',operation:'load'});api.destroy();throw error;}
 
   async function start() {
     if(disposed)throw new DOMException('Career mount aborted.','AbortError');
@@ -76,14 +82,14 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
     let destroyed = false;
     const style = hostDocument.createElement('style');
     // Stylesheet URLs normally resolve relative to the CSS file; inline Shadow DOM styles need an explicit base.
-    style.textContent = css.replace(/url\(\s*(['"]?)(?!data:|blob:|#)([^)'"\s]+)\1\s*\)/g, (_, quote, value) => `url("${new URL(value, MODULE_BASE).href}")`);
+    style.textContent = css.replace(/url\(\s*(['"]?)(?!data:|blob:|#)([^)'"\s]+)\1\s*\)/g, (_, quote, value) => `url("${resourceURL(value, MODULE_BASE).href}")`);
     const surface = hostDocument.createElement('div');
     surface.className = 'career-surface'; surface.lang = language;
     surface.innerHTML = markup;
     for (const element of surface.querySelectorAll('[src],[href]')) {
       for (const attribute of ['src','href']) {
         const value = element.getAttribute(attribute);
-        if (value && !value.startsWith('#') && !/^(?:[a-z]+:|\/\/)/i.test(value)) element.setAttribute(attribute, new URL(value, MODULE_BASE).href);
+        if (value && !value.startsWith('#') && !/^(?:[a-z]+:|\/\/)/i.test(value)) element.setAttribute(attribute, resourceURL(value, MODULE_BASE).href);
       }
     }
     shadow.replaceChildren(style, surface);
@@ -148,7 +154,7 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
         const abort = () => combined.abort();
         if(life.signal.aborted || options.signal?.aborted)combined.abort();
         life.signal.addEventListener('abort',abort,{once:true}); options.signal?.addEventListener('abort',abort,{once:true});
-        try{return await hostWindow.fetch(new URL(input,MODULE_BASE),{...options,signal:combined.signal});}
+        try{return await hostWindow.fetch(String(input).startsWith('api/')?new URL('apps/career/'+input,getReleaseContext()?.siteRoot||new URL('../../',MODULE_BASE)):resourceURL(input,MODULE_BASE),{...options,signal:combined.signal});}
         finally{life.signal.removeEventListener('abort',abort);options.signal?.removeEventListener('abort',abort);}
       },
       MutationObserver:ScopedObserver,URL:ScopedURL,setTimeout:timeout,clearTimeout:clearTimer,requestAnimationFrame:raf,
@@ -166,15 +172,15 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
       resultCalculated(record) {
         if(destroyed || resultsSent.has(record.recordId))return;
         resultsSent.add(record.recordId);
-        const captured=structuredClone(record);
+        const captured=structuredClone(record),started=performance.now();
         if(free||durableOwner.startsWith('student:')){
           const student=durableOwner.startsWith('student:');
           const attempt={id:captured.recordId,...(student?{studentKey:durableOwner.slice(8)}:{}),activitySlug:free?'career-freeplay':'career-diagnostic',draftMode:'diagnostic',type:'career-diagnostic',recordGrade:false,createdAt:captured.createdAt,title:'Career diagnostic',career:captured};
           track(durableStore.complete({owner:durableOwner,activitySlug:attempt.activitySlug,mode:'diagnostic',attemptId:attempt.id,state:{record:captured},attempt},{queue:student}).then(()=>{
             if(student&&!backend.isAdmin()&&backend.getProfile()?.studentKey===attempt.studentKey)return backend.saveAttempt(attempt);
-          }).catch(error=>hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}))));
+          }).then(()=>diagnostics?.record?.('result-save',{operation:'submit',success:true,durationMs:performance.now()-started})).catch(error=>{diagnostics?.error?.(error,{event:'result-save',operation:'submit',durationMs:performance.now()-started});hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}));}));
         }
-        if(typeof onResult === 'function') track(Promise.resolve().then(() => onResult(captured)).catch(error => console.error('Career result callback failed:',error)));
+        if(typeof onResult === 'function') track(Promise.resolve().then(() => onResult(captured)).catch(error => {diagnostics?.error?.(error,{event:'result-save',operation:'result-callback'});console.error('Career result callback failed:',error);}));
       }
     };
     const cleanup = () => {
@@ -192,6 +198,14 @@ export async function mountCareer(container, {owner = 'guest', context: hostCont
     container.setAttribute('data-career-ready','true');
   }
 
-  try {await start();} catch(error) {api.destroy();throw error;}
+  try {await start();} catch(error) {diagnostics?.error?.(error,{event:'module-error',code:'load-failed',operation:'load'});api.destroy();throw error;}
+  updateAdapter=createUpdateAdapter({module:'career',root:container,signal,diagnostics,
+    getIdentity:()=>({owner:attemptOwner()==='guest'?'guest:career':attemptOwner(),attemptId:'workspace-v1'}),
+    isBusy:()=>disposed||!current||(attemptOwner()==='guest'?'guest:career':attemptOwner())!==durableOwner||!!shadow.querySelector('dialog[open]')||current.runtime.updateBusy?.(),pause:value=>{updatePaused=value;current?.runtime.pauseForUpdate?.(value);},
+    capture:()=>({context:hostContext,route,view:captureUpdateView(container),runtime:current.runtime.captureForUpdate()}),
+    checkpoint:async()=>{if(!current.runtime.flushForUpdate())throw Error('update/unsafe');await Promise.allSettled([...pendingSaves]);const saved=await persistWorkspace();if(saveFailure||!saved?.saveStatus?.durable)throw Error('update/unsafe');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:'workspace-v1',revision:saved.revision}};},
+    restore:async({state},{signal}={})=>{if(disposed||!current||state.context!==hostContext||!VALID_ROUTES.has(state.route))return {status:'blocked',code:'incompatible'};route=state.route;await current.runtime.restoreForUpdate(state.runtime);await restoreUpdateView(container,state.view,{signal});return {status:'restored',code:'ok'};}
+  });
+  diagnostics?.record?.('module-ready',{success:true});
   return api;
 }

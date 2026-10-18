@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../../../../../assets/js/release-resources.js';
 import {ART_BOUNDS} from './art-bounds.mjs';
 /** Render-only art catalog. Source data, engine state and replay never enter this module. */
 const RUNTIME_ART=new URL('../../../img/settlements/v3/',import.meta.url);
@@ -98,8 +99,9 @@ let diagnosticDraws=false;
 export function setArtworkDiagnostics(value){diagnosticDraws=Boolean(value);}
 
 export function artwork(id,fallback){
+  fallback=resourceURL(fallback,import.meta.url).href;
   const spec=assetSpec(id);if(!spec||!artworkAvailable(id))return fallback;
-  const url=isCandidate(spec)?new URL(`/__art-preview/${ART_PREVIEW}/${spec.id}.webp`,page.origin).href:new URL(`${spec.id}.webp`,RUNTIME_ART).href;
+  const url=isCandidate(spec)?new URL(`/__art-preview/${ART_PREVIEW}/${spec.id}.webp`,page.origin).href:resourceURL(`${spec.id}.webp`,RUNTIME_ART).href;
   sources.set(spec.id,url);sourceIds.set(url,spec.id);fallbacks.set(url,fallback);return unavailable.has(url)?fallback:url;
 }
 /** Exactly one fallback request per failed image; unavailable candidates stay absent until reload. */

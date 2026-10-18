@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {READER_CATALOG_SHA,READER_CONTENT_VERSION} from './reader-registry.mjs';
 import {unpackStructure,unpackDescriptor} from './reader-codec.mjs';
 
@@ -48,14 +49,14 @@ export class ReaderSearch {
   activate(manifest){
     const key=manifest.docId+'/'+manifest.locale;if(this.key===key&&this.worker)return;
     this.destroy();if(this.signal?.aborted)throw abort();requireThat(this.WorkerClass,'Web Worker unavailable');
-    this.key=key;this.worker=new this.WorkerClass(new URL('./reader-search-worker.mjs',import.meta.url),{type:'module'});
+    this.key=key;this.worker=new this.WorkerClass(resourceURL('./reader-search-worker.mjs',import.meta.url),{type:'module'});
     this.worker.onmessage=({data})=>{if(data?.type==='ready'){this.ready=true;return;}const call=this.pending.get(data?.request);if(!call)return;this.pending.delete(data.request);call.cleanup();if(data.type==='error'){const error=new Error('Document search failed');error.code=data.code||'reader/search';call.reject(error);}else call.resolve(data.result);};
     this.worker.onerror=()=>{for(const call of this.pending.values()){call.cleanup();call.reject(new Error('Document search worker failed'));}this.pending.clear();this.worker?.terminate();this.worker=null;this.key=null;this.ready=false;};
     const worker=this.worker,controller=new AbortController();this.loadingController=controller;
     worker.postMessage({type:'load',key,sha256:manifest.search.sha256,docId:manifest.docId,locale:manifest.locale,contentVersion:manifest.contentVersion});
     // Fetch as the course window's service-worker client, then transfer the raw
     // buffer. Decoding and parsing stay in the worker and releases cannot mix.
-    Promise.resolve().then(()=>this.fetcher(new URL(manifest.search.file,this.base),{credentials:'same-origin',cache:'no-cache',signal:controller.signal})).then(response=>{if(!response.ok)throw new Error('load');return response.arrayBuffer();}).then(bytes=>{if(this.worker===worker)worker.postMessage({type:'index',bytes},[bytes]);}).catch(()=>{if(this.worker===worker)worker.postMessage({type:'index-error'});});
+    Promise.resolve().then(()=>this.fetcher(resourceURL(manifest.search.file,this.base),{credentials:'same-origin',cache:'no-cache',signal:controller.signal})).then(response=>{if(!response.ok)throw new Error('load');return response.arrayBuffer();}).then(bytes=>{if(this.worker===worker)worker.postMessage({type:'index',bytes},[bytes]);}).catch(()=>{if(this.worker===worker)worker.postMessage({type:'index-error'});});
   }
   search(manifest,query,{page=0,pageSize=20,signal}={}){
     if(signal?.aborted||this.signal?.aborted)return Promise.reject(abort());this.activate(manifest);this.cancel();

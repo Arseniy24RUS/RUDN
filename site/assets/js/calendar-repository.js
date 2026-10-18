@@ -2,9 +2,10 @@ import {BUNDLED_CALENDARS} from './calendar-bundled.js';
 import {calendarYearNow,validateCalendarYear,makeCalendarSnapshot,calendarYearLength} from './calendar-model.js';
 import {calendarProviderURLs,crossCheckCalendars,calendarTransportURLs,parseIsDayOffAPI,isDayOffFileCalendar,parseXmlCalendar,publishedCalendar,selectPublishedCalendar} from './calendar-providers.js';
 import {parseConsultantCalendar} from './calendar-consultant.js';
+import {resourceURL} from './release-resources.js';
 const CALENDAR_CACHE_KEY='rudn.calendar.feed.v1';
 const CALENDAR_MAX_AGE=7*86400000;
-export const CALENDAR_FEED_URL=new URL('../data/calendars/current.json',import.meta.url).href;
+export const CALENDAR_FEED_URL=resourceURL('../data/calendars/current.json',import.meta.url).href;
 export async function calendarReadText(url,{fetcher=globalThis.fetch,timeoutMs=4500,maxBytes=300000}={}){
  if(typeof fetcher!=='function')throw Error('Загрузка календаря недоступна.');
  const ctrl=new AbortController();let timer;

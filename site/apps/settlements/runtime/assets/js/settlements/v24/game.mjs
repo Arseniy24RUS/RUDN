@@ -1,3 +1,4 @@
+import {project,unproject} from './projection.mjs';
 import {World,change,haversine} from '../v2/engine.mjs';
 import {loadRegion,DATA,json,compressed,art} from '../v2/data.mjs';
 import {RULES_VERSION,FIXED_TRANSPORT_RULES_VERSION,NEW_RULES_VERSION,TELECOM_RULES_VERSION,SERIALIZED_ACTIONS_RULES_VERSION,INITIAL_NETWORK_SAVE_RULES_VERSION,ROUTE_LIMIT_SAVE_RULES_VERSION,towerSpec,MAX_TOWER_BATCH,MAX_ROUTE_STOPS,TRANSPORT_PRICES,CATALOG,createState,evaluate,preview,apply,undo,restore,exportSave,tutorialInstruction,totalTutorialSteps} from './engine.mjs';
@@ -82,7 +83,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
   // read autonomous saves, including the autonomous tutorial-completed marker.
   const storage=embedded?{preferences:()=>({}),setPreferences:()=>{},load:()=>null,resume:()=>null,save:()=>{},introDone:()=>true,finishIntro:()=>{}}:createStorage();
   const abort=new AbortController(),media=matchMedia('(prefers-reduced-motion: reduce)');
-  let readOnly=Boolean(options.readOnly),terminalReason=null,completionSent=false,classification=null,saveQueue=Promise.resolve(),lastSaveFailure=null,dialogSource=null;
+  let updatePaused=false,readOnly=Boolean(options.readOnly),terminalReason=null,completionSent=false,classification=null,saveQueue=Promise.resolve(),lastSaveFailure=null,dialogSource=null;
   const hostAbort=()=>destroy();
   options.signal?.addEventListener('abort',hostAbort,{once:true});
   if(options.signal?.aborted){abort.abort();throw new DOMException('Game mount aborted','AbortError');}
@@ -90,7 +91,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
   let selectedId=null,selectedFacilityId=null,selectedPosition=null,towerPositions=[],routeFrom=null,routeStops=[],targetEdge=null,q=null,guide=null,lastResult=null,saveError='',loading=false,disposed=false,request=0;
   let toolsOpen=false,inlineHelp='',dialogOpener=null,retryTarget=null;
   const reduced=()=>Boolean(preferences.reducedMotion||media.matches);
-  const listen=(node,event,handler,options={})=>node.addEventListener(event,handler,{...options,signal:abort.signal});
+  const listen=(node,event,handler,options={})=>node.addEventListener(event,e=>{if(!updatePaused)handler(e);},{...options,signal:abort.signal});
   root.classList.add('puzzle');root.classList.toggle('puzzle-embedded',embedded);root.innerHTML=`
     <div class="puzzle-map" tabindex="0" role="application" aria-label="Карта. Перемещайте стрелками, масштабируйте плюс и минус. Поиск поселений доступен кнопкой Поиск."></div>
     <header class="puzzle-header" data-map-obstacle><div class="header-actions"><button class="icon-button" data-act="menu" aria-label="Меню игры">${uiIcon('menu')}</button></div><a class="puzzle-brand" href="#" data-act="home" aria-label="Меню игры">Учебная группа</a><button class="budget" data-act="budget"></button><div class="header-actions"><button class="icon-button" data-act="undo" aria-label="Отменить последний ход" title="Отменить ход">${uiIcon('undo')}</button></div></header>
@@ -153,7 +154,7 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
     if(isTowerAction(action)&&!Number.isFinite(q.cost))q={...q,cost:Math.round(towerSpec(state).cost*(action.type==='tower-batch'?action.positions.length:1)*1000)/1000};
   }
   function select(rowValue,facilityId=null,alternatives=[]){
-    if(loading||disposed||!rowValue)return;
+    if(updatePaused||loading||disposed||!rowValue)return;
     if(readOnly||terminalReason)activeTool=null;
     toolsOpen=false;inlineHelp='';
     if(alternatives.length>1){showDialog('В этой точке несколько поселений',`<p>Координаты совпадают. Выберите нужную запись.</p><div class="choice-list">${alternatives.map(a=>{const item=typeof a==='string'?row(a):a;return `<button data-select="${esc(item.id)}"><strong data-source-name>${esc(item.name)}</strong><span>${populationText(item.population)}</span></button>`;}).join('')}</div>`);return;}
@@ -175,12 +176,12 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
     render();
   }
   function selectNetwork(selection){
-    if(loading||disposed||readOnly||terminalReason||state.rulesVersion!==SOCIAL_RULES_VERSION||activeTool!=='connect'||!routeFrom||instruction()?.locked)return;
+    if(updatePaused||loading||disposed||readOnly||terminalReason||state.rulesVersion!==SOCIAL_RULES_VERSION||activeTool!=='connect'||!routeFrom||instruction()?.locked)return;
     if(routeStops.length>1){message('Для присоединения к действующей линии начните отдельное соединение.');return;}
     targetEdge=selection.targetEdge.slice();selectedId=null;selectedFacilityId=null;selectedPosition=null;toolsOpen=false;inlineHelp='';calculate();message('');render();
   }
   function place(coordinate){
-    if(loading||readOnly||terminalReason||activeTool!=='tower')return;
+    if(updatePaused||loading||readOnly||terminalReason||activeTool!=='tower')return;
     toolsOpen=false;inlineHelp='';
     const inst=instruction();
     if(inst?.locked&&inst.coordinate&&(Math.abs(coordinate.lat-inst.coordinate.lat)>1e-6||Math.abs(coordinate.lon-inst.coordinate.lon)>1e-6)){message('Коснитесь отмеченной площадки, чтобы увидеть первое покрытие.');return;}
@@ -460,7 +461,26 @@ export async function mountPuzzle(root,params=new URLSearchParams(),options={}){
   const initialMode=embedded?options.mode:!requested&&!params.get('region')&&savedMode(resume)?savedMode(resume):!storage.introDone()?'intro':requested==='intro'?'intro':requested==='free'?'free':params.get('region')?(curatedIds().includes(params.get('region'))?'campaign':'free'):savedMode(resume)||'intro';
   localize();
   try{await boot(initialMode==='intro'?'chelyabinskaya_oblast':params.get('region')||resume?.regionId||'moskovskaya_oblast',initialMode,{imported:options.initialSave||null,difficulty:embedded?options.difficulty:null});}catch(error){destroy();throw error;}
+  function captureForUpdate(){
+    const camera=map?.camera;
+    return {schema:1,rulesVersion:state?.rulesVersion,regionId:world?.region.id,scenarioId:scenario?.id,mode,difficulty,activeLayer,activeTool,selectedId,selectedFacilityId,selectedPosition,towerPositions,routeFrom,routeStops,targetEdge,toolsOpen,inlineHelp,lastResult,camera:camera?{center:unproject(camera.screenToWorld({x:camera.width/2,y:camera.height/2})),zoom:camera.zoom}:null};
+  }
+  function restoreForUpdate(saved){
+    if(saved?.schema!==1||saved.rulesVersion!==state?.rulesVersion||saved.regionId!==world?.region.id||saved.scenarioId!==scenario?.id)return false;
+    const point=p=>p&&Number.isFinite(p.lat)&&Number.isFinite(p.lon)&&Math.abs(p.lat)<=90&&Math.abs(p.lon)<=180?{lat:p.lat,lon:p.lon}:null;
+    const validId=id=>world.row(id)?id:null;
+    activeLayer=Object.hasOwn(NAMES,saved.activeLayer)?saved.activeLayer:activeLayer;activeTool=Object.hasOwn(TOOLS,saved.activeTool)?saved.activeTool:null;
+    selectedId=validId(saved.selectedId);selectedFacilityId=typeof saved.selectedFacilityId==='string'?saved.selectedFacilityId:null;selectedPosition=point(saved.selectedPosition);
+    towerPositions=(saved.towerPositions||[]).slice(0,MAX_TOWER_BATCH).map(point).filter(Boolean);routeFrom=validId(saved.routeFrom);routeStops=(saved.routeStops||[]).slice(0,MAX_ROUTE_STOPS).map(validId).filter(Boolean);
+    targetEdge=Array.isArray(saved.targetEdge)&&saved.targetEdge.length===2?saved.targetEdge.map(validId):null;if(targetEdge?.some(id=>!id))targetEdge=null;
+    toolsOpen=saved.toolsOpen===true;inlineHelp=['budget','last-result','legend'].includes(saved.inlineHelp)?saved.inlineHelp:'';lastResult=saved.lastResult||null;
+    calculate();render();
+    const center=point(saved.camera?.center);if(center&&Number.isFinite(saved.camera?.zoom)&&map?.camera){map.camera.zoomBy(saved.camera.zoom-map.camera.zoom);map.camera.setCenter(project(center,map.wrap));map.invalidate();}
+    return true;
+  }
   return {
+    updateBusy:()=>loading||!!map?.camera.moving||!!$('dialog')?.open||!!pendingImport,
+    pauseForUpdate(value){updatePaused=!!value;},captureForUpdate,restoreForUpdate,
     setLocale(value){translator.setLocale(value);root.lang=value==='zh'||value==='zh-Hans'?'zh-Hans':value==='en'?'en':'ru';map?.setTranslator(t);render();localize();},
     setReadOnly(value){readOnly=Boolean(value);if(readOnly){toolsOpen=false;activeTool=null;clearSelection();}else{lastSaveFailure=null;saveError='';if(terminalReason&&!completionSent)save();}render();},
     snapshot,

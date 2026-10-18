@@ -1,0 +1,109 @@
+name: Platform diagnostics and safe updates
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'site/**'
+      - 'firebase/**'
+      - 'firebase.diagnostics-v2.json'
+      - 'scripts/*diagnostic*'
+      - 'scripts/*platform*'
+      - 'tests/*platform*'
+      - 'tests/*diagnostic*'
+      - '.github/workflows/platform-checks.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts --prefix firebase/functions
+      - name: Verify identity, archives, checkpoints, rollback and immutable releases
+        run: >-
+          node --test tests/diagnostics-v2.test.mjs
+          tests/platform-update-state.test.mjs tests/platform-update-coordinator.test.mjs
+          tests/platform-diagnostics-pagination.test.mjs
+          scripts/diagnostics-v2-service.test.mjs scripts/test-platform-release.mjs
+          scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs
+
+  firebase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --ignore-scripts --prefix firebase/functions
+      - name: Verify archive authorization, idempotence, indexing and deletion fences
+        run: >-
+          npx --yes firebase-tools@15.30.1 emulators:exec
+          --project demo-rudn --config firebase.diagnostics-v2.json --only auth,database,functions
+          "node --test --test-force-exit scripts/diagnostics-v2-emulator.test.mjs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: platform-emulator
+          path: '*-debug.log'
+          retention-days: 14
+
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts
+      - run: npm run build:firebase && npm run build:career
+      - run: python -m pip install playwright==1.61.0
+      - run: python -m playwright install --with-deps ${{ matrix.browser }}
+      - name: Verify automatic diagnostics and restore in real browser engines
+        env:
+          RELEASE_BROWSERS: ${{ matrix.browser }}
+          DIAGNOSTICS_BROWSERS: ${{ matrix.browser }}
+          QA_OUT: ${{ runner.temp }}/release-${{ matrix.browser }}
+          DIAGNOSTICS_OUTPUT: ${{ runner.temp }}/diagnostics-${{ matrix.browser }}
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          export PLAYWRIGHT_PATH="$PLAYWRIGHT_MODULE_PATH"
+          node scripts/diagnostics-v2-browser.mjs
+          node scripts/test-platform-release-browser.mjs
+          node scripts/platform-update-adapters.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/adapters-${{ matrix.browser }}'
+          node scripts/platform-update-adapters-lifecycle.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/lifecycle-${{ matrix.browser }}'
+          node scripts/platform-update-adapters-diagnostics.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/standalone-diagnostics-${{ matrix.browser }}'
+          node scripts/platform-shell-updates.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/shell-${{ matrix.browser }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: platform-${{ matrix.browser }}
+          path: |
+            ${{ runner.temp }}/release-${{ matrix.browser }}
+            ${{ runner.temp }}/diagnostics-${{ matrix.browser }}
+            ${{ runner.temp }}/adapters-${{ matrix.browser }}
+            ${{ runner.temp }}/lifecycle-${{ matrix.browser }}
+            ${{ runner.temp }}/standalone-diagnostics-${{ matrix.browser }}
+            ${{ runner.temp }}/shell-${{ matrix.browser }}
+          retention-days: 30

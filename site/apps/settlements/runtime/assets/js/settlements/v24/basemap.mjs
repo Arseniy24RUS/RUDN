@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../../../../../assets/js/release-resources.js';
 import {project, WORLD_SIZE} from './projection.mjs';
 import {APPROVED_ART} from '../v2/assets.mjs';
 
@@ -15,7 +16,7 @@ export function loadGrassTexture() {
     const image = new Image(); image.decoding = 'async';
     image.onload = async () => { try { await image.decode(); sharedGrassDecodeCount++; sharedGrassImage = image; resolve(image); } catch { resolve(null); } };
     image.onerror = () => resolve(null);
-    image.src = new URL('../../../img/settlements/v3/terrain_grass.webp', import.meta.url).href;
+    image.src = resourceURL('../../../img/settlements/v3/terrain_grass.webp', import.meta.url).href;
   });
   return sharedGrassPromise;
 }

@@ -14,11 +14,55 @@
     },
     "rudn-platform": {
       "v1": {
+        "diagnosticsV2": {
+          ".read": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true",
+          ".write": false,
+          "sessions": {
+            "$sid": {
+              ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && newData.exists() && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child($sid).exists() && newData.child('closed').val() === false && newData.child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && newData.child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(newData.child('subjectKey').val()).child('generation').val() && (!data.exists() || (data.child('uid').val() === newData.child('uid').val() && data.child('subjectKey').val() === newData.child('subjectKey').val() && data.child('generation').val() === newData.child('generation').val() && data.child('globalGeneration').val() === newData.child('globalGeneration').val()))"
+            }
+          },
+          "batches": {
+            "$sid": {
+              "$batch": {
+                ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('closed').val() === false && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child($sid).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('subjectKey').val()).child('generation').val() && !data.exists() && newData.exists()"
+              }
+            }
+          },
+          "batchIndex": {
+            "$sid": {
+              "$batch": {
+                ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('closed').val() === false && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child($sid).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child($sid).child('subjectKey').val()).child('generation').val() && newData.exists()"
+              }
+            }
+          },
+          "sessionIndex": {
+            "$entry": {
+              ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('closed').val() === false && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('subjectKey').val()).child('generation').val() && newData.exists()"
+            }
+          },
+          "subjectIndex": {
+            "$subject": {
+              "$entry": {
+                ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('closed').val() === false && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('subjectKey').val()).child('generation').val() && newData.exists()"
+              }
+            }
+          },
+          "filterIndex": {
+            "$field": {
+              "$value": {
+                "$entry": {
+                  ".write": "auth != null && auth.uid === 'diagnostics-service' && auth.token.diagnosticsService === true && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('closed').val() === false && !root.child('rudn-platform/v1/diagnosticsV2').child('tombstones').child(newData.child('sessionId').val()).exists() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('globalGeneration').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/global/generation').val() && root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('generation').val() === root.child('rudn-platform/v1/diagnosticsV2').child('control/subjects').child(root.child('rudn-platform/v1/diagnosticsV2').child('sessions').child(newData.child('sessionId').val()).child('subjectKey').val()).child('generation').val() && newData.exists()"
+                }
+              }
+            }
+          }
+        },
         "diagnosticSessions": {
           "$uid": {
             "$slot": {
               ".read": "auth != null && (auth.uid === $uid || auth.token.email === 'omnistat@yandex.ru')",
-              ".write": "auth != null && auth.uid === $uid && newData.exists() && (!data.exists() || data.child('expiresAt').val() <= now || data.child('sessionId').val() === newData.child('sessionId').val())",
+              ".write": false,
               ".validate": "$slot.matches(/^s[0-3]$/) && newData.hasChildren(['sessionId','updatedAt','expiresAt'])",
               "sessionId": {".validate":"newData.isString() && newData.val().matches(/^[a-z0-9]{12,40}$/)"},
               "updatedAt": {".validate":"newData.isNumber() && newData.val() >= now - 120000 && newData.val() <= now + 120000"},
@@ -156,7 +200,7 @@
                 "$other": {
                   ".validate": false
                 },
-                ".write": "auth != null && ((auth.uid === $uid && newData.exists() && root.child('rudn-platform/v1/diagnosticSessions').child($uid).child($slot).child('sessionId').val() === newData.child('sessionId').val() && root.child('rudn-platform/v1/diagnosticSessions').child($uid).child($slot).child('expiresAt').val() > now && (!data.exists() || (newData.child('batchId').val() !== data.child('batchId').val() && now >= data.child('writtenAt').val() + 30000))) || (auth.token.email === 'omnistat@yandex.ru' && !newData.exists() && data.child('expiresAt').val() <= now))",
+                ".write": false,
                 ".read": "auth != null && auth.uid === $uid"
               }
             }

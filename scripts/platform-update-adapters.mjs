@@ -1,0 +1,98 @@
+/** Informed synthetic localhost adapter regression. Real app UI + local IDB;
+ * the backend is isolated and never contacts Firebase or a production profile. */
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir,stat} from 'node:fs/promises';
+import {createServer} from 'node:http';
+import {resolve,dirname,extname,sep} from 'node:path';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),site=resolve(root,'site');
+const args=process.argv.slice(2),arg=(name,fallback)=>args.includes(name)?args[args.indexOf(name)+1]:fallback;
+const engine=arg('--browser','chromium'),output=resolve(arg('--output',resolve(root,'../evidence/runs/20261018-platform-observability/adapters/'+engine)));
+assert.ok(['chromium','firefox','webkit'].includes(engine));
+const fixture=`<!doctype html><html lang="ru"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Platform update adapters — synthetic QA</title><style>body{margin:0;font:16px system-ui}#module{min-height:100vh}#runtime{height:720px;width:100%}</style><main id="module"></main><script type="module">
+import {backend} from '/assets/js/backend.js?v=1.3.10';
+import {updateSnapshotStore} from '/assets/js/platform-update-state.js';
+window.qa={events:[],kind:new URLSearchParams(location.search).get('module'),owner:'guest:updates',token:null};
+const diagnostics={record:(event,fields)=>qa.events.push({event,fields}),error:(_error,fields)=>qa.events.push({event:fields.event,fields}),span:operation=>{const started=performance.now();return fields=>qa.events.push({event:'operation',fields:{operation,...fields,durationMs:performance.now()-started}})}};
+window.mount=async()=>{
+ const node=document.querySelector('#module');node.replaceChildren();let handle;
+ if(qa.kind==='legal-lab'){
+  const {mountLegalLab}=await import('/apps/legal-lab/entry.mjs');
+  if(!qa.legalSeed){const {freshState}=await import('/apps/legal-lab/lib/storage.mjs');const [catalog,bank]=await Promise.all(['catalog','bank'].map(id=>fetch('/apps/legal-lab/data/'+id+'.json').then(r=>r.json())));qa.legalSeed=freshState(catalog.contentVersion);qa.legalSeed.index=bank.classroom.findIndex(t=>t.kind==='text');qa.legalSeed.view='learn';}
+  handle=await mountLegalLab(node,{owner:qa.owner,period:'test',demo:true,locale:'ru',initialState:qa.mounted?undefined:qa.legalSeed,diagnostics});
+ }else if(qa.kind==='career'){
+  const {mountCareer}=await import('/apps/career/entry.mjs');handle=await mountCareer(node,{owner:'guest',lang:'ru',initialRoute:'test',diagnostics});
+ }else if(qa.kind==='reception'){
+  const {mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');
+  handle=await mountReception(node,{period:'2026-2027',assessmentAllowed:false,locale:'ru',diagnostics,calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()})});
+ }else if(qa.kind==='settlements'){
+  const {mountSettlements}=await import('/apps/settlements/entry.mjs');handle=await mountSettlements(node,{backend,owner:'guest:updates',mode:'free',locale:'ru',diagnostics});
+ }
+ qa.mounted=true;window.handle=handle;return true;
+};
+window.prepare=async()=>{const result=await handle.prepareForUpdate({targetRelease:{buildId:'synthetic-next'},deadlineAt:Date.now()+5000});qa.receipt=result;if(result.resumeToken)qa.saved=await updateSnapshotStore().get(result.resumeToken);return result;};
+window.roundtrip=async()=>{const token=qa.receipt.resumeToken;handle.commitPreparation?.();if(typeof handle==='function')await handle();else await handle.destroy();await mount();return handle.resumeAfterUpdate({resumeToken:token});};
+await mount();window.ready=true;
+</script>`;
+const backend=`import {durableStore} from '/assets/js/durable-store.js';
+export const backend={generation:1,authReady:true,user:null,serverTimeOffset:0,isAdmin:()=>false,getProfile:()=>null,onStatus:()=>()=>{},init:async()=>{},globalNow:()=>Date.now(),getAccessOverrides:()=>({}),localAttempts:()=>[],databaseAvailable:()=>false,ensureDiagnosticIdentity:async()=>null,loadDraft:scope=>durableStore.loadDraft(scope),checkpoint:(input,options)=>{if(window.failSave)return Promise.reject(Error('synthetic save failure'));return durableStore.checkpoint(input,{...options,queue:false});},saveAttempt:async()=>{window.syntheticSubmissions=(window.syntheticSubmissions||0)+1;throw Error('Unexpected submission');},restTransport:()=>({get:async()=>({value:null})})};`;
+const mime={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png'};
+const server=createServer(async(req,res)=>{try{const url=new URL(req.url,'http://local');if(url.pathname==='/__qa'){res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'});res.end(fixture);return;}if(url.pathname==='/assets/js/backend.js'){res.writeHead(200,{'Content-Type':'text/javascript'});res.end(backend);return;}const path=resolve(site,'.'+url.pathname);if(!path.startsWith(site+sep)||(await stat(path)).isDirectory())throw Error('missing');res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream','Cache-Control':'no-store'});if(url.pathname==='/apps/governor/platform-bridge.js'){res.end(await readFile(path,'utf8')+'\nwindow.qaGovernor={get adapter(){return updateAdapter},get runtime(){return runtime}};');return;}res.end(await readFile(path));}catch{res.writeHead(404);res.end();}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const report={kind:'informed synthetic public adapter roundtrip',engine,status:'fail',checks:[],errors:[],browserPath:'Reproducible localhost integration through bundled Playwright with isolated synthetic backend'};
+const pw=await import(process.env.PLAYWRIGHT_MODULE_PATH?pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE_PATH)).href:'playwright');let browser,lastPage;
+try{
+ browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});report.version=browser.version();
+ for(const module of (arg('--module','')?[arg('--module','')]:['legal-lab','career','reception','settlements'])){
+  const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();lastPage=page;page.setDefaultTimeout(20000);page.on('pageerror',e=>report.errors.push({module,message:e.message}));await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
+  await page.goto('http://127.0.0.1:'+server.address().port+'/__qa?module='+module);await page.waitForFunction(()=>window.ready);
+  assert.equal(await page.title(),'Platform update adapters — synthetic QA');
+  if(module==='legal-lab'){
+   await page.locator('.ll-paper [data-unit]').first().waitFor();await page.locator('.ll-paper [data-unit]').first().click();await page.evaluate(()=>handle.flush());
+   await page.locator('[data-action="toggle-reader-search"]').click();await page.locator('[data-input="reader-query"]').fill('власть');
+  }else if(module==='career'){
+   await page.locator('#answer-options [data-answer]').first().click();await page.locator('#question-next').click();
+  }else if(module==='reception'){
+   await page.locator('[data-action="start"]').click();await page.locator('[data-action="tab"][data-tab="research"]').click();await page.locator('input[type=radio][data-field="knowledge.application"]').first().check();await page.locator('[data-field="knowledge.lawNumber"]').fill('synthetic last unblurred input');
+  }else{
+   await page.locator('[data-select="rank-difficulty"]').selectOption('hard');
+  }
+  let prepared;for(let i=0;i<15;i++){prepared=await page.evaluate(()=>prepare());if(prepared.status!=='defer')break;await page.waitForTimeout(100);}
+  assert.equal(prepared.status,'ready',module+': '+JSON.stringify(prepared));
+  const snapshot=await page.evaluate(()=>qa.saved);assert.equal(snapshot.module,module);assert.ok(snapshot.checkpointRef);
+  const restored=await page.evaluate(()=>roundtrip());assert.equal(restored.status,'restored',module+': '+JSON.stringify(restored));
+  if(module==='legal-lab'){assert.equal(await page.locator('.ll-paper [data-unit][aria-pressed="true"]').count(),1);assert.equal(await page.locator('[data-input="reader-query"]').inputValue(),'власть');}
+  if(module==='career'){assert.equal(await page.locator('[data-question-index="1"]').getAttribute('aria-current'),'step');}
+  if(module==='reception'){assert.equal(await page.locator('[data-field="knowledge.lawNumber"]').inputValue(),'synthetic last unblurred input');assert.equal(await page.locator('input[type=radio][data-field="knowledge.application"]').first().isChecked(),true);}
+  if(module==='settlements'){assert.equal(await page.locator('[data-select="rank-difficulty"]').inputValue(),'hard');}
+  assert.equal(await page.evaluate(()=>window.syntheticSubmissions||0),0);const diagnosticEvents=await page.evaluate(()=>qa.events);assert.ok(diagnosticEvents.some(e=>e.event==='operation'&&e.fields.operation==='module-load'&&e.fields.success===true),module+' actual load telemetry');if(module!=='settlements')assert.ok(diagnosticEvents.some(e=>e.event==='checkpoint'&&e.fields.success===true),module+' durable checkpoint telemetry');assert.equal(JSON.stringify(diagnosticEvents).includes('synthetic last unblurred input'),false);
+  await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,module+'-restored.png')});report.checks.push({module,status:'pass',check:'durable local checkpoint + same place + no result submission'});
+  if(module==='career'){
+   await page.evaluate(()=>window.failSave=true);const refused=await page.evaluate(()=>prepare());assert.equal(refused.status,'blocked');await page.locator('#question-back').click();assert.equal(await page.locator('[data-question-index="0"]').getAttribute('aria-current'),'step');report.checks.push({module,status:'pass',check:'failed checkpoint blocks update and releases the input gate'});
+  }
+  await context.close();
+ }
+ if(!arg('--module','')){
+  // The host test above verifies its durable contract. This separate public
+  // engine mount checks a tentative map action without confirming a move.
+  const context=await browser.newContext({viewport:{width:1100,height:800}}),page=await context.newPage();lastPage=page;page.on('pageerror',e=>report.errors.push({module:'settlements-preview',message:e.message}));
+  await page.goto('http://127.0.0.1:'+server.address().port+'/__qa?module=runtime');await page.waitForFunction(()=>window.ready);
+  await page.evaluate(async()=>{const {mountSettlementsGame}=await import('/apps/settlements/runtime/assets/js/settlements/v24/game.mjs');document.querySelector('#module').innerHTML='<link rel="stylesheet" href="/apps/settlements/runtime/assets/css/settlements-v24.css"><div id="runtime"></div>';window.runtimeMount=async save=>window.runtimeHandle=await mountSettlementsGame(document.querySelector('#runtime'),{mode:'intro',regionId:'chelyabinskaya_oblast',initialSave:save,onCheckpoint:async()=>{},onComplete:async()=>{throw Error('Unexpected completion')}});await runtimeMount();});
+  const point=await page.evaluate(()=>runtimeHandle.mapPoint(runtimeHandle.inspect().tutorial.coordinate));await page.locator('.puzzle-map').click({position:point});
+  const preview=await page.evaluate(()=>{const current=runtimeHandle.inspect();return {capture:runtimeHandle.captureForUpdate(),save:runtimeHandle.exportSave(),preview:current.preview,actions:current.state.actions.length};});assert.ok(preview.preview?.ok);assert.equal(preview.actions,0);
+  const restoredPreview=await page.evaluate(async saved=>{runtimeHandle.destroy();await runtimeMount(saved.save);const restored=runtimeHandle.restoreForUpdate(saved.capture);return {restored,inspect:runtimeHandle.inspect(),capture:runtimeHandle.captureForUpdate()};},preview);
+  assert.equal(restoredPreview.restored,true);assert.equal(restoredPreview.inspect.state.actions.length,0);assert.deepEqual(restoredPreview.inspect.preview.action,preview.preview.action);assert.deepEqual(restoredPreview.capture.selectedPosition,preview.capture.selectedPosition);assert.ok(Math.abs(restoredPreview.capture.camera.zoom-preview.capture.camera.zoom)<1e-6);await page.screenshot({path:resolve(output,'settlements-preview-restored.png')});report.checks.push({module:'settlements-preview',status:'pass',check:'unconfirmed placement + preview + camera restored with zero committed actions'});await context.close();
+
+  const gov=await browser.newContext({viewport:{width:1100,height:850}}),governor=await gov.newPage();lastPage=governor;governor.setDefaultTimeout(25000);governor.on('pageerror',e=>report.errors.push({module:'governor',message:e.message}));await governor.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
+  const url='http://127.0.0.1:'+server.address().port+'/apps/governor/index.html?context=free';await governor.goto(url);await governor.waitForFunction(()=>window.qaGovernor?.adapter);
+  await governor.locator('#campaign-options > summary').click();await governor.locator('#session-seed').fill('SYNTHETIC-UPDATE');let govPrepared=await governor.evaluate(()=>qaGovernor.adapter.prepareForUpdate({targetRelease:'synthetic-next'}));assert.equal(govPrepared.status,'ready');await governor.evaluate(()=>qaGovernor.adapter.commitPreparation());await governor.reload();await governor.waitForFunction(()=>window.qaGovernor?.adapter);assert.equal((await governor.evaluate(token=>qaGovernor.adapter.resumeAfterUpdate({resumeToken:token}),govPrepared.resumeToken)).status,'restored');assert.equal(await governor.locator('#session-seed').inputValue(),'SYNTHETIC-UPDATE');
+  await governor.locator('#campaign-mode').selectOption('guided');await governor.locator('#start-form button[type="submit"]').click();await governor.waitForFunction(()=>qaGovernor.runtime.state()?.history?.length===0);
+  // Introductory panels are an ordinary transient update gate.
+  await governor.evaluate(()=>document.querySelectorAll('dialog[open]').forEach(d=>d.close()));await governor.locator('.nav-button[data-view="map"]').click();
+  const campaign=await governor.evaluate(()=>qaGovernor.runtime.checkpointForUpdate());govPrepared=await governor.evaluate(()=>qaGovernor.adapter.prepareForUpdate({targetRelease:'synthetic-next'}));assert.equal(govPrepared.status,'ready');await governor.evaluate(()=>qaGovernor.adapter.commitPreparation());await governor.reload();await governor.waitForFunction(()=>window.qaGovernor?.adapter);assert.equal((await governor.evaluate(token=>qaGovernor.adapter.resumeAfterUpdate({resumeToken:token}),govPrepared.resumeToken)).status,'restored');
+  const after=await governor.evaluate(()=>qaGovernor.runtime.checkpointForUpdate());assert.equal(after.storiesRunId,campaign.storiesRunId);assert.equal(after.history.length,campaign.history.length);assert.equal(after.activeView,'map');assert.equal(await governor.evaluate(()=>window.syntheticSubmissions||0),0);await governor.screenshot({path:resolve(output,'governor-restored.png')});report.checks.push({module:'governor',status:'pass',check:'standalone launch fields and active campaign view restored without a new run or submission'});await gov.close();
+ }
+ if(!arg('--module','')){const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();lastPage=page;page.on('pageerror',e=>report.errors.push({module:'reception-demo',message:e.message}));await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());await page.goto('http://127.0.0.1:'+server.address().port+'/apps/reception/demo.html');await page.locator('[data-action="start"]').waitFor();await page.screenshot({path:resolve(output,'reception-demo.png')});report.checks.push({module:'reception-demo',status:'pass',check:'deployed standalone entry mounts the maintained modular app'});await context.close();}
+ assert.deepEqual(report.errors,[]);report.status='pass';
+}catch(error){await mkdir(output,{recursive:true});if(lastPage&&!lastPage.isClosed()){await lastPage.screenshot({path:resolve(output,'failure.png')});await writeFile(resolve(output,'failure.html'),await lastPage.content());}report.failure={message:error.message,stack:error.stack};process.exitCode=1;}
+finally{await browser?.close();await new Promise(resolve=>server.close(resolve));await mkdir(output,{recursive:true});await writeFile(resolve(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}

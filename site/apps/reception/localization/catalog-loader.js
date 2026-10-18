@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 // Browser-only lazy locale reader. No canonical content, answers or profile writes.
 export const LOCALE_CACHE = 'rudn-reception-locales-v2';
 const normalizeLocale = value => /^zh/i.test(value||'')?'zh':/^en/i.test(value||'')?'en':'ru';
@@ -24,7 +25,7 @@ function resourceValid(entry,id,locale) {
 
 export function createReceptionCatalogLoader({fetch:fetcher=globalThis.fetch,timeoutMs=8000,cacheStorage=globalThis.caches,baseURL=new URL('compiled/',import.meta.url)}={}) {
   const manifests=new Map(),packs=new Map(),aliasLoads=new Map();
-  const urlFor=path=>new URL(path,baseURL);
+  const urlFor=path=>resourceURL(path,baseURL);
   async function cacheGet(url) {
     try {const cache=await bounded(Promise.resolve(cacheStorage?.open(LOCALE_CACHE)),500);const response=await bounded(Promise.resolve(cache?.match(url.href)),500);return response?JSON.parse(await bounded(response.text(),500)):null;}catch{return null;}
   }

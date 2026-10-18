@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {labelForUnit} from './reader-tools.mjs';
 
 const locales=new Set(['en','zh']),kind='educational-unofficial',hashPattern=/^[a-f0-9]{64}$/;
@@ -40,7 +41,7 @@ export class DocumentTranslations {
   async json(path,expectedSha){
     checkAbort(this.signal);
     let response;
-    try{response=await this.fetcher(new URL(path,this.base),{signal:this.signal,credentials:'same-origin',cache:'no-cache'});}
+    try{response=await this.fetcher(resourceURL(path,this.base),{signal:this.signal,credentials:'same-origin',cache:'no-cache'});}
     catch(error){checkAbort(this.signal);throw new DocumentTranslationError('load','Translation request failed.',{cause:error});}
     checkAbort(this.signal);
     requireThat(response.ok,'load',`Translation request failed: HTTP ${response.status}.`);

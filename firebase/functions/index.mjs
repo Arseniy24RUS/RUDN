@@ -2,6 +2,13 @@ import {onRequest} from 'firebase-functions/v2/https';
 import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {handle} from './gateway.mjs';
+import {onValueWritten} from 'firebase-functions/v2/database';
+import {diagnosticsHandler,diagnosticsRuntime} from './diagnostics-http.mjs';
+
+export const diagnosticsApi=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:40,minInstances:0,maxInstances:2,timeoutSeconds:60,invoker:'public',cors:false},diagnosticsHandler);
+export const diagnosticsDownload=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:10,minInstances:0,maxInstances:2,timeoutSeconds:3600,invoker:'public',cors:false},async(req,res)=>{if(req.method!=='GET'){res.status(405).json({ok:false,error:{code:'method'}});return;}return diagnosticsHandler(req,res);});
+// The demo RTDB emulator uses us-central1; the deployed database is europe-west1.
+export const diagnosticsProfileIndex=onValueWritten({ref:'/rudn-platform/v1/profiles/{studentKey}',region:process.env.FUNCTIONS_EMULATOR?'us-central1':'europe-west1',memory:'256MiB',maxInstances:2,retry:true},async event=>diagnosticsRuntime().service.syncProfile(event.params.studentKey,undefined,Date.parse(event.time)||Date.now()));
 
 const BASE='https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/networkGateway/';
 export const networkGateway=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:80,minInstances:0,maxInstances:2,timeoutSeconds:60,invoker:'public',cors:false},async(req,res)=>{

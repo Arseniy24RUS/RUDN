@@ -585,29 +585,31 @@ test('release handshake binds only its own in-scope client and module preparatio
   assert.equal(worker.networkCalls,0,'A missing historical release must not inherit the current module');
 });
 
-test('page boot announces its loaded version after a controller change and only trusts that worker for update notices',async()=>{
+test('page boot pins its exact build and only the controlling worker may wake the checkpoint coordinator',async()=>{
   const main=await readFile(path.join(siteRoot,'assets/js/main.js'),'utf8');
   const helper=main.slice(main.indexOf('function connectPageRelease(){'),main.indexOf('async function bootstrap(){'));
   assert.ok(helper.startsWith('function connectPageRelease(){'));
-  const listeners=new Map(),sent=[],notices=[];
+  const listeners=new Map(),sent=[],checks=[];
+  const exact={buildId:'a'.repeat(32),manifestURL:scope+'manifest.json',manifestSha256:'b'.repeat(64)};
   const original={postMessage:message=>sent.push(message)};
   const updated={postMessage:message=>sent.push(message)};
   const workers={controller:original,ready:Promise.resolve(),addEventListener:(type,handler)=>listeners.set(type,handler)};
   vm.runInNewContext(helper.replace('import.meta.url',JSON.stringify(scope+'assets/js/main.js?v=1.3.2'))+'\nconnectPageRelease();',{
-    URL,navigator:{serviceWorker:workers},CONFIG:{version:currentVersion},getLocale:()=> 'en',toast:(...args)=>notices.push(args)
+    URL,navigator:{serviceWorker:workers},CONFIG:{version:currentVersion},backend:{},diagnostics:{record(){}},attemptOwner:()=> 'guest',updateAdapters:()=>[],currentCleanup:null,
+    getReleaseContext:()=>exact,bootstrapUpdateCoordinator:()=>({check:reason=>checks.push(reason)})
   });
   await Promise.resolve();
   assert.ok(sent.length>=1);
-  assert.ok(sent.every(message=>message.type==='BIND_RELEASE'&&message.release==='1.3.2'));
+  assert.ok(sent.every(message=>message.type==='BIND_BUILD'&&message.buildId===exact.buildId));
   workers.controller=updated;
   listeners.get('controllerchange')();
-  assert.equal(sent.at(-1).release,'1.3.2');
+  assert.equal(sent.at(-1).buildId,exact.buildId);
+  const before=checks.length;
   listeners.get('message')({source:original,data:{type:'RELEASE_RESOURCE_UNAVAILABLE'}});
-  assert.equal(notices.length,0);
+  assert.equal(checks.length,before);
   listeners.get('message')({source:updated,data:{type:'RELEASE_RESOURCE_UNAVAILABLE'}});
-  assert.equal(notices.length,1);
-  assert.match(notices[0][0],/refresh the page after finishing or saving/i);
-  assert.equal(notices[0][2],0,'The student can read and dismiss the notice without a countdown');
+  assert.equal(checks.length,before+1);
+  assert.equal(checks.at(-1),'resource-error','A resource failure requests verification/checkpoint; it never reloads directly');
 });
 
 test('hung request falls back to the matching cached file within a finite deadline',async()=>{
