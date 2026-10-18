@@ -523,8 +523,12 @@ class LegalLab {
     else if(action==='assessment-type'){if(t.kind!=='type'||!ACT_TYPES.includes(b.dataset.value))return;answer.type=b.dataset.value;}
     else if(action==='select-unit'||action==='remove-unit'){if(t.kind!=='text')return;const id=b.dataset.unit||b.dataset.id,d=this.corpus.cache.get(t.docId);if(!d?.units.some(u=>u.id===id))return;const list=answer.selections||[],has=list.includes(id);if(!has&&list.length>=selectionLimit(t,[d]))return;answer.selections=has?list.filter(x=>x!==id):[...list,id];}
     else if(action==='five-submit'){answer.submitted=true;}
-    if(action!=='five-submit')answer.submitted=false;a.answer.tasks[t.id]=answer;await this.persist();
-    if(t.kind==='text'){this.refreshReaderSelection('assessment-five');for(const button of this.root.querySelectorAll('.ll-five-nav [data-index]')){const index=Number(button.dataset.index);button.textContent=String(index+1)+(a.answer.tasks[item.tasks[index]?.id]?.submitted?' ✔':'');}if(item.tasks.every(q=>a.answer.tasks[q.id]?.submitted))return this.render();return;}return this.render();
+    if(action!=='five-submit')answer.submitted=false;a.answer.tasks[t.id]=answer;
+    // Selection feedback must not wait for IndexedDB or the host checkpoint.
+    if(t.kind==='text'){this.refreshReaderSelection('assessment-five');for(const button of this.root.querySelectorAll('.ll-five-nav [data-index]')){const index=Number(button.dataset.index);button.textContent=String(index+1)+(a.answer.tasks[item.tasks[index]?.id]?.submitted?' ✔':'');}}
+    await this.persist();
+    if(!this.active()||this.view!=='assessment'||this.state.assessment!==a||fiveTask(this)?.id!==t.id)return;
+    if(t.kind!=='text'||item.tasks.every(q=>a.answer.tasks[q.id]?.submitted))return this.render();
   }
   async restartAssessment(){
     if(this.isLocked()||!this.assessmentUnlocked())return;const a=this.state.assessment;if(a?.result&&!a.preview&&a.delivery!=='host-accepted'){this.notice='Сначала отправьте сохранённый результат в журнал.';return this.render();}
