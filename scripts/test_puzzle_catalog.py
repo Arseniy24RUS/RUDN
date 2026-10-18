@@ -88,6 +88,26 @@ DIAGNOSTIC_HOOK = r"""(() => {
 })();"""
 
 
+def inject_fixture_fetch(source):
+    """Redirect audited remote fixtures, preserving the release's real URL loader."""
+    markers = (
+        'const nativeFetch=previousFetch.bind(window);',
+        'const nativeFetch=(input,init)=>previousFetch.call(window,input instanceof Request?new Request(resourceURL(input),input):resourceURL(input),init);',
+    )
+    matched = [marker for marker in markers if marker in source]
+    assert len(matched) == 1 and source.count(matched[0]) == 1, 'Fixture transport marker changed'
+    marker = matched[0]
+    original = marker.replace('const nativeFetch=', 'const sourceNativeFetch=', 1)
+    wrapper = r"""
+const nativeFetch=(input,options)=>{
+ const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
+ const api=url.match(/geoboundaries\.org\/api\/current\/gbOpen\/([A-Z]{3})\/ADM1\//);
+ const geometry=url.match(/\/gbOpen\/([A-Z]{3})\/ADM1\/.*\.(?:geojson|json)(?:\?|$)/);
+ return sourceNativeFetch(api?`/RUDN/__qa/metadata/${api[1]}.json`:geometry?`/RUDN/__qa/geometry/${geometry[1]}.json`:input,options);
+};"""
+    return source.replace(marker, original + wrapper, 1)
+
+
 class PuzzleServer:
     def __init__(self, output, port=0):
         self.output, self.port = output, port
@@ -190,17 +210,11 @@ class PuzzleServer:
                             return
                         source = source.replace(marker, READ_ONLY_HOOK + '\n' + marker, 1)
                     else:
-                        marker = 'const nativeFetch=previousFetch.bind(window);'
-                        replacement = r"""const nativeFetch=(input,options)=>{
- const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
- const api=url.match(/geoboundaries\.org\/api\/current\/gbOpen\/([A-Z]{3})\/ADM1\//);
- const geometry=url.match(/\/gbOpen\/([A-Z]{3})\/ADM1\/.*\.(?:geojson|json)(?:\?|$)/);
- return previousFetch.call(window,api?`/RUDN/__qa/metadata/${api[1]}.json`:geometry?`/RUDN/__qa/geometry/${geometry[1]}.json`:input,options);
-};"""
-                        if source.count(marker) != 1:
-                            self.send_error(500, 'Fixture transport marker changed')
+                        try:
+                            source = inject_fixture_fetch(source)
+                        except AssertionError as error:
+                            self.send_error(500, str(error))
                             return
-                        source = source.replace(marker, replacement, 1)
                     body = source.encode('utf-8')
                     self.send_response(200)
                     self.send_header('Content-Type', 'text/javascript; charset=utf-8')

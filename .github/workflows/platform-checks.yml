@@ -93,6 +93,7 @@ jobs:
           node scripts/test-platform-release-browser.mjs
           node scripts/platform-update-adapters.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/adapters-${{ matrix.browser }}'
           node scripts/platform-update-adapters-lifecycle.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/lifecycle-${{ matrix.browser }}'
+          node scripts/platform-update-adapters-loader-retry.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/loader-retry-${{ matrix.browser }}'
           node scripts/platform-update-adapters-diagnostics.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/standalone-diagnostics-${{ matrix.browser }}'
           node scripts/platform-shell-updates.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/shell-${{ matrix.browser }}'
       - uses: actions/upload-artifact@v4
@@ -104,6 +105,7 @@ jobs:
             ${{ runner.temp }}/diagnostics-${{ matrix.browser }}
             ${{ runner.temp }}/adapters-${{ matrix.browser }}
             ${{ runner.temp }}/lifecycle-${{ matrix.browser }}
+            ${{ runner.temp }}/loader-retry-${{ matrix.browser }}
             ${{ runner.temp }}/standalone-diagnostics-${{ matrix.browser }}
             ${{ runner.temp }}/shell-${{ matrix.browser }}
           retention-days: 30

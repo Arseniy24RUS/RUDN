@@ -30,14 +30,6 @@ OLD_HOOK = r"""
       canvas:{width:state.cssWidth,height:state.cssHeight,mapBottom:state.mapBottom},map:{x:0,y:0,width:state.cssWidth,height:state.mapBottom},tray:trayRect()};};
   window.__upgradeRead=()=>snapshotState();
 """
-FIXTURE_FETCH = r"""const nativeFetch=(input,options)=>{
- const url=input instanceof URL?input.href:typeof input==='string'?input:input.url;
- const api=url.match(/geoboundaries\.org\/api\/current\/gbOpen\/([A-Z]{3})\/ADM1\//);
- const geometry=url.match(/\/gbOpen\/([A-Z]{3})\/ADM1\/.*\.(?:geojson|json)(?:\?|$)/);
- return previousFetch.call(window,api?`/RUDN/__qa/metadata/${api[1]}.json`:geometry?`/RUDN/__qa/geometry/${geometry[1]}.json`:input,options);
-};"""
-
-
 class HistoricalServer(catalog.PuzzleServer):
     def __init__(self, output, commit):
         super().__init__(output)
@@ -76,9 +68,7 @@ class HistoricalServer(catalog.PuzzleServer):
                     assert source.count(marker) == 1
                     source = source.replace(marker, OLD_HOOK + '\n' + marker, 1)
                 elif name == '/assets/js/puzzle-bootstrap.js':
-                    marker = 'const nativeFetch=previousFetch.bind(window);'
-                    assert source.count(marker) == 1
-                    source = source.replace(marker, FIXTURE_FETCH, 1)
+                    source = catalog.inject_fixture_fetch(source)
                 body = source.encode('utf-8')
                 self.send_response(200)
                 self.send_header('Content-Type', 'text/javascript; charset=utf-8' if name.endswith(('.js', '.mjs')) else (mimetypes.guess_type(name)[0] or 'application/octet-stream'))

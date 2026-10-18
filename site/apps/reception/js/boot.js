@@ -6,10 +6,12 @@ import {resourceURL} from '../../../assets/js/release-resources.js';
 import {mountReception} from './app.js';
 const root=document.getElementById('receptionApp');
 const preview=new URLSearchParams(location.search).get('preview')==='1';
-const diagnosticService=getSharedPlatformDiagnostics({backend:sharedBackend,getLocale:()=>document.documentElement.lang,getModule:()=> 'reception'});let diagnostics=diagnosticService.forModule('reception');
+const diagnosticService=getSharedPlatformDiagnostics({backend:sharedBackend,getLocale:()=>document.documentElement.lang,getModule:()=> 'reception'});let diagnosticScope=diagnosticService.forModule('reception');
+const diagnostics={record:(...args)=>diagnosticScope.record(...args),error:(...args)=>diagnosticScope.error(...args),span:(...args)=>diagnosticScope.span(...args)};
+const rebindDiagnostics=()=>{diagnosticScope.destroy();diagnosticScope=diagnosticService.forModule('reception');};
 async function mount(options){const handle=await mountReception(root,{...options,diagnostics});const coordinator=bootstrapUpdateCoordinator({getAdapters:()=>[handle],backend:sharedBackend,diagnostics,module:'reception',getOwner:()=>preview?'preview':attemptOwner(),getRoute:()=>String(preview)+location.hash});await coordinator.restorePending();}
 async function boot(){
- if(preview){await mount({profileLabel:'Автономная тренировка',assessmentAllowed:false,onExit:()=>{location.href='?preview=1';}});return;}
+ if(preview){void sharedBackend.ensureDiagnosticIdentity().then(rebindDiagnostics).catch(()=>{});await mount({profileLabel:'Автономная тренировка',assessmentAllowed:false,onExit:()=>{location.href='?preview=1';}});return;}
  try{
   const {backend}=await import('../../../assets/js/backend.js?v=1.3.10');
   const {topicGate,academicContext}=await import('../../../assets/js/access.js?v=1.3.10');
@@ -18,7 +20,7 @@ async function boot(){
   if(!courseResponse.ok)throw new Error('Course catalogue unavailable');
   const topic=seminarTopic(await courseResponse.json(),'reception');
   if(!topic)throw new Error('Reception topic missing');
-  await backend.init();diagnostics.destroy();diagnostics=diagnosticService.forModule('reception');
+  await backend.init();rebindDiagnostics();
   const now=Date.now()+Number(backend.serverTimeOffset||0),year=academicContext(now).startYear;
   const gate=topicGate(topic.number,backend.getAccessOverrides(year),now),admin=backend.isAdmin();
   if(!admin&&!gate.open){root.innerHTML='<div class="boot"><h1>Семинар ещё не открыт</h1><p>Доступ определяется расписанием основной платформы. Завершённые черновики не удаляются.</p><p><a href="../../index.html#dashboard">Вернуться к курсу</a></p></div>';return;}
