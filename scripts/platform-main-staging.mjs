@@ -14,14 +14,16 @@ const mime={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript'
 const server=createServer(async(req,res)=>{const url=new URL(req.url,'http://local');try{if(url.pathname==='/__switch'){current='B';res.end('B');return}if(url.pathname==='/favicon.ico'){res.writeHead(204);res.end();return}if(!url.pathname.startsWith('/RUDN/'))throw Error('outside');let logical=decodeURIComponent(url.pathname.slice('/RUDN/'.length))||'index.html';const root=['index.html','release.json'].includes(logical)?current==='A'?stageA:stageB:stageB;const file=resolve(root,logical);if(!file.startsWith(root+sep)||(await stat(file)).isDirectory())throw Error('missing');const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(data);requests.push({path:url.pathname,status:200,bytes:data.byteLength})}catch{requests.push({path:url.pathname,status:404});res.writeHead(404);res.end()}});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const origin='http://127.0.0.1:'+server.address().port;
 const pw=await import(process.env.PLAYWRIGHT_MODULE_PATH?pathToFileURL(process.env.PLAYWRIGHT_MODULE_PATH).href:'playwright');let browser,page;
-const report={kind:'actual immutable main+bootstrap+SW; synthetic in-memory auth/cloud boundary',engine,status:'fail',buildA:pointerA.current,buildB:pointerB.current,checks:[],errors:[],blockedExternal:[],notCovered:['production authentication/Firebase writes','physical phones'],stageDirectories:{a:stageA,b:stageB},serviceWorkers:arg('--service-workers','allow')};
+const report={kind:'actual immutable main+bootstrap+SW; synthetic in-memory auth/cloud boundary',engine,status:'fail',buildA:pointerA.current,buildB:pointerB.current,checks:[],errors:[],blockedExternal:[],failedRequests:[],httpErrors:[],notCovered:['production authentication/Firebase writes','physical phones'],stageDirectories:{a:stageA,b:stageB},serviceWorkers:arg('--service-workers','allow')};
 async function context(){
  const context=await browser.newContext({viewport:{width:390,height:844},serviceWorkers:arg('--service-workers','allow')});
  await context.addInitScript(({buildA})=>{
   if(location.origin==='null'||!location.pathname.startsWith('/RUDN/'))return;
   const build=location.pathname.match(/\/_releases\/([a-f0-9]{32})\//)?.[1]||buildA;
   window.__qaBoundary=(async()=>{
-   const runtime='/RUDN/_releases/'+build+'/';
+   // WebKit evaluates addInitScript under web-inspector://bootstrap.js. Resolve
+   // fixture imports against the real document origin, not that inspector URL.
+   const runtime=location.origin+'/RUDN/_releases/'+build+'/';
    const {backend}=await import(runtime+'assets/js/backend.js?v=1.3.10');
    const {durableStore}=await import(runtime+'assets/js/durable-store.js');
    const profile={studentKey:'123456789',fullName:'Synthetic staging QA',ticket:'123456789',group:'ГГУбд-01-26',ownerUid:'synthetic-local-only'};
@@ -35,7 +37,7 @@ async function context(){
    window.__qaBackend=backend;window.__qaStore=durableStore;window.__qaBoundaryReady=true;
   })().catch(error=>{window.__qaBoundaryError=error.message;throw error});
  },{buildA:pointerA.current.buildId});
- await context.route('**/*',async route=>{const url=new URL(route.request().url());if(url.origin!==origin){report.blockedExternal.push({host:url.host,path:url.pathname,type:route.request().resourceType()});await route.abort();return}if(/\/assets\/js\/main\.js$/.test(url.pathname)&&route.request().resourceType()==='script'){await route.request().frame().evaluate(()=>window.__qaBoundary)}await route.continue()});
+ await context.route('**/*',async route=>{const url=new URL(route.request().url());try{if(url.origin!==origin){report.blockedExternal.push({host:url.host,path:url.pathname,type:route.request().resourceType()});await route.abort();return}if(/\/assets\/js\/main\.js$/.test(url.pathname)&&route.request().resourceType()==='script')await route.request().frame().evaluate(()=>window.__qaBoundary);await route.continue()}catch(error){report.errors.push({kind:'synthetic-boundary-gate',path:url.pathname,message:error.message});await route.abort().catch(()=>{})}});
  return context;
 }
 async function ready(){await page.waitForFunction(()=>window.__qaBoundaryReady&&!document.querySelector('#app[aria-busy="true"]')&&window.__RUDN_RELEASE__?.buildId);assert.equal(await page.evaluate(()=>window.__qaBoundaryError||null),null)}
@@ -43,7 +45,7 @@ async function route(hash,selector){await page.evaluate(value=>location.hash=val
 try{
  browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});report.version=browser.version();
  for(const kind of (arg('--kind','')?[arg('--kind','')]:['quiz','form','modules'])){
-  current='A';const ctx=await context();page=await ctx.newPage();page.setDefaultTimeout(60000);page.on('pageerror',error=>report.errors.push({kind,message:error.message}));
+  current='A';const ctx=await context();page=await ctx.newPage();page.setDefaultTimeout(60000);page.on('pageerror',error=>report.errors.push({kind,message:error.message}));page.on('requestfailed',request=>report.failedRequests.push({url:request.url(),type:request.resourceType(),failure:request.failure()}));page.on('response',response=>{if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()})});
   await page.goto(origin+'/RUDN/#dashboard');await ready();await page.waitForFunction(()=>document.querySelector('#app')?.innerText.length>300);
   if(kind==='modules'){
    const routes=[['activity/seminar-1-classroom','#quizMount .quiz-shell'],['activity/seminar-4','#legalLabMount[aria-busy="false"]'],['games/career','#careerMount[aria-busy="false"]'],['games/reception','#receptionMount[aria-busy="false"]'],['games/settlements','#settlementsMount[aria-busy="false"]'],['puzzle','#geoPuzzleApp[data-play-allowed="true"]'],['activity/seminar-7','a[href*="governor"]'],['games','.games-grid'],['profile','#app'],['materials','.material-grid >> nth=0']];
@@ -66,5 +68,5 @@ try{
   await page.screenshot({path:resolve(out,kind+'-B.png')});report.checks.push({kind,status:'pass',sameRoute:true,sameAttempt:true,noAutomaticSubmission:true,realMain:true,realImmutableBootstrap:true});await ctx.close();
  }
  assert.deepEqual(report.errors,[]);assert.equal(report.blockedExternal.some(x=>/firebase|googleapis|cloudfunctions/.test(x.host)),false);assert.equal(requests.filter(x=>x.status===404).length,0);report.status='pass';
-}catch(error){report.failure={message:error.message,stack:error.stack};process.exitCode=1;if(page&&!page.isClosed()){report.page=await page.evaluate(()=>({url:location.href,boundary:window.__qaBoundaryReady,boundaryError:window.__qaBoundaryError,build:window.__RUDN_RELEASE__?.buildId,marker:sessionStorage.getItem('rudn.update.pending.v1'),text:document.querySelector('#app')?.innerText?.slice(0,500)}));await page.screenshot({path:resolve(out,'failure.png')}).catch(()=>{})}}
+}catch(error){report.failure={message:error.message,stack:error.stack};process.exitCode=1;if(page&&!page.isClosed()){report.page=await page.evaluate(()=>({url:location.href,boundary:window.__qaBoundaryReady,boundaryError:window.__qaBoundaryError,build:window.__RUDN_RELEASE__?.buildId,marker:sessionStorage.getItem('rudn.update.pending.v1'),text:document.querySelector('#app')?.innerText?.slice(0,500)})).catch(error=>({inspectionError:error.message}));await page.screenshot({path:resolve(out,'failure.png')}).catch(()=>{})}}
 finally{await browser?.close();await new Promise(resolve=>{server.close(resolve);server.closeAllConnections()});await mkdir(out,{recursive:true});report.requests404=requests.filter(x=>x.status===404);report.requests=requests.length;await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2))}
