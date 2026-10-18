@@ -677,6 +677,7 @@ jobs:
         if: ${{ github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false) }}
         uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ steps.release_archive.outputs.build_id }}
           path: ${{ runner.temp }}/platform-staging
 
   publish-pages:
@@ -691,6 +692,8 @@ jobs:
       - name: Deploy verified immutable staging
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ needs.deploy.outputs.build_id }}
 
   retain-successful-release:
     needs: [deploy, publish-pages]
