@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createDiagnosticsService,ROOT} from '../firebase/functions/diagnostics-service.mjs';
-import {environment,event,packet,nameTokens} from '../firebase/functions/diagnostics-schema.mjs';
+import {environment,event,packet,nameTokens,ERROR_CLASSES} from '../firebase/functions/diagnostics-schema.mjs';
+import {compareFirebaseKeys} from './diagnostics-v2-cli-adapter.mjs';
 
 // Deterministic adapter exercises business transactions; separate emulator suite
 // exercises actual Auth, restricted Admin writer and deployed-function routing.
@@ -9,7 +10,7 @@ export function memoryDatabase(){
  let state={};const clone=value=>value==null?null:structuredClone(value);
  const get=path=>path.split('/').filter(Boolean).reduce((v,k)=>v?.[k],state)??null;
  function set(path,value){const keys=path.split('/').filter(Boolean);if(!keys.length){state=value||{};return;}let p=state;for(const k of keys.slice(0,-1))p=p[k]??={};if(value==null)delete p[keys.at(-1)];else p[keys.at(-1)]=clone(value);}
- function ref(path,query={}){return {get:async()=>{let v=clone(get(path));if(query.ordered&&v){v=Object.fromEntries(Object.entries(v).sort(([a],[b])=>a<b?-1:a>b?1:0).filter(([k])=>(!query.after||k>query.after)&&(!query.start||k>=query.start)&&(!query.end||k<=query.end)).slice(0,query.limit??Infinity));if(!Object.keys(v).length)v=null;}return {val:()=>v};},set:async value=>set(path,value),remove:async()=>set(path,null),update:async values=>{for(const [k,v] of Object.entries(values))set(path+'/'+k,v);},transaction:async fn=>{const value=fn(clone(get(path)));if(value!==undefined)set(path,value);return {committed:value!==undefined,snapshot:{val:()=>clone(get(path))}};},orderByKey:()=>ref(path,{...query,ordered:true}),startAfter:after=>ref(path,{...query,after}),startAt:start=>ref(path,{...query,start}),endAt:end=>ref(path,{...query,end}),limitToFirst:limit=>ref(path,{...query,limit})};}
+ function ref(path,query={}){return {get:async()=>{let v=clone(get(path));if(query.ordered&&v){v=Object.fromEntries(Object.entries(v).sort(([a],[b])=>compareFirebaseKeys(a,b)).filter(([k])=>(!query.after||compareFirebaseKeys(k,query.after)>0)&&(!query.start||compareFirebaseKeys(k,query.start)>=0)&&(!query.end||compareFirebaseKeys(k,query.end)<=0)).slice(0,query.limit??Infinity));if(!Object.keys(v).length)v=null;}return {val:()=>v,forEach:fn=>{for(const [key,item] of Object.entries(v||{}).sort(([a],[b])=>compareFirebaseKeys(a,b)))if(fn({key,val:()=>clone(item)})===true)break;}};},set:async value=>set(path,value),remove:async()=>set(path,null),update:async values=>{for(const [k,v] of Object.entries(values))set(path+'/'+k,v);},transaction:async fn=>{const value=fn(clone(get(path)));if(value!==undefined)set(path,value);return {committed:value!==undefined,snapshot:{val:()=>clone(get(path))}};},orderByKey:()=>ref(path,{...query,ordered:true}),startAfter:after=>ref(path,{...query,after}),startAt:start=>ref(path,{...query,start}),endAt:end=>ref(path,{...query,end}),limitToFirst:limit=>ref(path,{...query,limit})};}
  return {ref,dump:()=>clone(state)};
 }
 const admin={uid:'teacher-test',email:'omnistat@yandex.ru'},student={uid:'student-test'},peer={uid:'peer-test'};
@@ -24,6 +25,11 @@ test('schema rejects PII/query/answer/raw errors and preserves unknown environme
  assert.equal(event({...evt(),stack:[{file:'/assets/js/main.js',line:5,column:2}]}).stack[0].line,5);
  assert.throws(()=>packet({sessionId:'session-client-0001',batchId:'batch-client-00001',events:Array.from({length:13},()=>evt())}));
  assert.deepEqual(nameTokens('Ёлкин  Антон-Ильич'),['елкин','антон','ильич']);
+});
+test('optional error class preserves historical events and accepts only standard sanitized categories',()=>{
+ assert.equal(Object.hasOwn(event(evt()),'errorClass'),false,'Historical events remain unchanged when the new field is absent');
+ for(const errorClass of ERROR_CLASSES)assert.equal(event({...evt(),event:'runtime-error',errorClass}).errorClass,errorClass);
+ for(const errorClass of ['PrivateStudentName','TypeError: private message','AbortError','',null,42,{name:'TypeError'}])assert.throws(()=>event({...evt(),errorClass}),error=>error.code==='invalid');
 });
 test('authoritative profile binding, same UID profile switches, anonymous separation and foreign rejection',async()=>{
  const {service}=await setup();const a=await service.handle(opening(),student);assert.equal(a.studentKey,'123456789');
@@ -98,4 +104,14 @@ test('all-history statistics page through v2 then unbound legacy archive without
  let cursor=null,pages=0,total={sessions:0,batches:0,events:0};do{const result=await service.handle({action:'status',scope:'all',cursor},admin);for(const field of Object.keys(total))total[field]+=result.counts[field];pages++;cursor=result.nextCursor;}while(cursor);
  assert.deepEqual(total,{sessions:24,batches:24,events:24});assert.equal(pages,3,'legacy payload reads remain bounded to ten archive entries per page');
  const preview=await service.handle({action:'previewDelete',scope:'all'},admin);assert.equal(preview.partial,true);assert.ok(preview.nextCursor);
+});
+
+test('session time filters use inclusive server openedAt bounds, scoped cursors and global indexes',async()=>{
+ const {service,tick}=await setup(),sessions=[];for(let i=0;i<4;i++){tick(61000);sessions.push(await service.handle(opening('time-window-client-'+i),student));}
+ const from=sessions[1].openedAt,to=sessions[2].openedAt;
+ const first=await service.handle({action:'listSessions',filters:{from,to,browser:'safari'},limit:1},admin);assert.deepEqual(first.items.map(s=>s.sessionId),[sessions[1].sessionId]);assert.ok(first.nextCursor);
+ const second=await service.handle({action:'listSessions',filters:{from,to,browser:'safari'},limit:1,cursor:first.nextCursor},admin);assert.deepEqual(second.items.map(s=>s.sessionId),[sessions[2].sessionId]);assert.equal(second.nextCursor,null);
+ const scoped=await service.handle({action:'listSessions',studentKey:'123456789',filters:{from,to}},admin);assert.deepEqual(scoped.items.map(s=>s.sessionId),sessions.slice(1,3).map(s=>s.sessionId));
+ await assert.rejects(service.handle({action:'listSessions',filters:{from:from+1,to,browser:'safari'},cursor:first.nextCursor},admin),e=>e.code==='invalid-cursor');
+ for(const filters of [{from:to+1,to},{from:-1},{from:Infinity},{to:1.1},{from:'1800000000000'}])await assert.rejects(service.handle({action:'listSessions',filters},admin),e=>e.code==='invalid');
 });

@@ -95,6 +95,14 @@ const SHELL=[
   './assets/css/site.css?v=1.3.10',
   './assets/css/puzzle.css?v=1.3.10',
   './assets/js/main.js?v=1.3.10',
+  './assets/js/release-resources.js',
+  './assets/js/release-bootstrap.js',
+  './assets/js/release-recovery.js',
+  './assets/js/platform-update-state.js',
+  './assets/js/platform-update-coordinator.js',
+  './assets/js/platform-learning-updates.js',
+  './assets/js/diagnostics-bootstrap.js',
+  './assets/js/diagnostics-cloud-policy.js',
   './assets/js/diagnostics.js',
   './assets/js/diagnostics-transport.js',
   './assets/js/diagnostics-ui.js',
@@ -141,6 +149,7 @@ const SHELL=[
   './assets/img/quiz-legislative.png','./assets/img/quiz-executive.png','./assets/img/quiz-judicial.png','./assets/img/quiz-other.svg',
   './assets/course/previews/seminar_07_simulator.jpg',
   './manifest.webmanifest',
+  './data/platform-contracts.json',
   './data/course.json','./data/questions.json','./data/seminar5_variants.json',
   './data/exam_questions.json','./data/question_media.json','./data/symbol_manifest.json'
 ];
@@ -711,7 +720,15 @@ async function platformServe(event){
     if(!registryResponse.ok)throw new Error('release/baseline-unavailable');const registry=await registryResponse.json(),entry=registry.files[logical];
     if(entry)return platformChecked(url,entry.sha256,bound||CACHE);
     return fetchWithDeadline(event.request);
-  }catch{event.source?.postMessage?.({type:'RELEASE_RESOURCE_UNAVAILABLE'});return unavailableRelease(event.clientId);}
+  }catch(error){
+    // A cold navigation can reference an evicted generation. Only the host's
+    // real 404 HTML may recover that entry; a corrupt successful response must
+    // never be accepted as a substitute for verified runtime bytes.
+    if(navigation&&/^_releases\/[a-f0-9]{32}\/.+\.html$/.test(logical)&&error?.message!=='release/integrity'){
+      try{const response=await fetchWithDeadline(event.request);if(response.status===404&&/text\/html/i.test(response.headers.get('content-type')||''))return response;}catch{}
+    }
+    event.source?.postMessage?.({type:'RELEASE_RESOURCE_UNAVAILABLE'});return unavailableRelease(event.clientId);
+  }
 }
 function platformMessage(event){
   const type=event.data?.type;

@@ -129,6 +129,7 @@ if(typeof document!=='undefined'&&[...document.querySelectorAll('script[data-pla
   void bootRelease().catch(error=>{
     mark(error?.code||'import-failed','runtime-import');
     void bootFailed(error?.code||'import-failed');
+    if(!pendingTransition())void globalThis.__RUDN_RELEASE_RECOVERY__?.recover('runtime-unavailable');
     const root=document.getElementById('app');if(root){root.setAttribute('aria-busy','false');root.innerHTML='<div role="status">Не удалось загрузить приложение. Сохранённая работа остаётся на устройстве.</div>';}
   });
 }

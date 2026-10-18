@@ -13,6 +13,7 @@ if(!CONFIG.emulators)installFirebaseGateway(CONFIG.firebaseGateway);
 import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
 import {claimDiagnosticSession,writeDiagnosticBatch,confirmDiagnosticBatch,readDiagnosticPage,requestDiagnostics} from './diagnostics-transport.js';
+import {diagnosticIdentityAllowed} from './diagnostics-cloud-policy.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -197,6 +198,9 @@ class Backend{
   async adminSignOut(){return this.signOut()}
   async ensureDiagnosticIdentity(){
     // Background anonymous auth adds no profile or mandatory login UI.
+    // The production gateway accepts only the configured published origin.
+    // Local/demo mounts retain their local diagnostic queue without contacting it.
+    if(!diagnosticIdentityAllowed(CONFIG,globalThis.location?.href))return null;
     await this.init();if(!this.authClient)throw serviceError('diagnostics/unavailable');
     if(this.loginPending)await this.loginPending;
     if(!this.authClient.currentUser)await this.ensureStudentCloud();

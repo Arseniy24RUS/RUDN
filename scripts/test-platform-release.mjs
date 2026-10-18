@@ -11,6 +11,9 @@ async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,
 async function fixture(t){const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-release-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const site=path.join(root,'site'),baseline=path.join(root,'baseline');
   const files={'index.html':'<html><head><link rel="stylesheet" href="assets/css/site.css"></head><body><script type="module" src="assets/js/main.js"></script></body></html>','service-worker.js':'const PLATFORM_RELEASE=null;','assets/js/main.js':"import './dep.js'; export const value=1;",'assets/js/dep.js':'export const dep=1;','assets/js/release-bootstrap.js':'export const bootstrap=1;','assets/js/release-resources.js':'export const resourceURL=()=>{};','assets/js/diagnostics-bootstrap.js':'globalThis.early=true;','assets/css/site.css':'body { background:url(../img/a.png) }','assets/img/a.png':'old-png','data/course.json':'{"v":1}','apps/demo/index.html':'<html><body><script src="script.js"></script><script>globalThis.hello=true;</script></body></html>','apps/demo/script.js':'globalThis.demo=true;','apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/1-easy.mjs':'export default {large:1};'};
   files['data/platform-contracts.json']=await fs.readFile(new URL('../site/data/platform-contracts.json',import.meta.url),'utf8');
+  files['assets/js/release-recovery.js']=await fs.readFile(new URL('../site/assets/js/release-recovery.js',import.meta.url),'utf8');
+  files['apps/demo/fragment.html']='<div id="surface">fragment</div>';
+  files['404.html']='<html><body>Legacy missing page</body></html>';
   for(const [name,text] of Object.entries(files)){await write(site,name,text);await write(baseline,name,text);}return {root,site,baseline};
 }
 test('exact runtime, frozen baseline, changed resource dedup and previous retention',async t=>{
@@ -20,11 +23,17 @@ test('exact runtime, frozen baseline, changed resource dedup and previous retent
   const first=await buildRelease({...f,out}),pointer=JSON.parse(await fs.readFile(path.join(out,'release.json'))),manifest=JSON.parse(await fs.readFile(path.join(out,`_releases/${first.buildId}/manifest.json`)));
   assert.equal(first.status,'pass');assert.equal(pointer.previous,null);assert.equal(await fs.readFile(path.join(out,'data/course.json'),'utf8'),'{"v":1}');
   assert.equal(manifest.contracts.modules['legal-lab'],1);assert.equal(manifest.contracts.adapterSnapshot,1);
+  const registry=JSON.parse(await fs.readFile(path.join(out,'platform-baseline.json')));
+  assert.equal(registry.schema,2);assert.ok(registry.legacyEntryHTML['apps/demo/index.html']);assert.ok(!registry.files['apps/demo/index.html']);assert.ok(registry.files['apps/demo/fragment.html']);
+  assert.match(await fs.readFile(path.join(out,'apps/demo/index.html'),'utf8'),/data-release-alias="apps\/demo\/index.html"/);
+  assert.match(await fs.readFile(path.join(out,'404.html'),'utf8'),/data-release-missing/);
+  assert.match(await fs.readFile(path.join(out,'index.html'),'utf8'),/data-platform-recovery/);
   const measured=dir=>readdirSync(dir,{withFileTypes:true}).reduce((sum,item)=>sum+(item.isDirectory()?measured(path.join(dir,item.name)):statSync(path.join(dir,item.name)).size),0);assert.equal(first.totalBytes,measured(out),'Budget is the actual sum of every staged byte, including the receipt');
   assert.match(manifest.resources['data/course.json'].url,/_objects\/[a-f0-9]{64}\.json$/);
   assert.equal(manifest.resources['assets/img/a.png'].url,'/RUDN/assets/img/a.png');assert.match(manifest.resources['assets/js/main.js'].url,/_releases\/[a-f0-9]{32}\/assets\/js\/main.js$/);
   const css=await fs.readFile(path.join(out,`_releases/${first.buildId}/assets/css/site.css`),'utf8');assert.match(css,/url\(\/RUDN\/assets\/img\/a.png\)/);
   const html=await fs.readFile(path.join(out,`_releases/${first.buildId}/apps/demo/index.html`),'utf8');assert.match(html,/platform-entry-scripts/);assert.match(html,/data-release-build=/);assert.ok(!html.includes('<script src="script.js"'));
+  assert.match(html.slice(0,1024),/<meta charset="utf-8">/);
   assert.equal(manifest.resources['apps/demo/module.html.inline-0.mjs'].kind,'runtime');assert.equal(await fs.readFile(path.join(out,`_releases/${first.buildId}/apps/demo/module.html.inline-0.mjs`),'utf8'),'import "./script.js";');
   assert.equal(await fs.readFile(path.join(out,`_releases/${first.buildId}/apps/demo/fragment.html`),'utf8'),'<div id="surface">fragment</div>');
   assert.equal(isRuntime('apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/1-easy.mjs'),false);
@@ -35,6 +44,7 @@ test('exact runtime, frozen baseline, changed resource dedup and previous retent
   await assert.rejects(fs.access(path.join(third.out,manifest.resources['data/course.json'].url.slice('/RUDN/'.length))),{code:'ENOENT'});
   const retained=JSON.parse(await fs.readFile(path.join(third.out,`_releases/${second.buildId}/manifest.json`),'utf8'));assert.equal(await fs.readFile(path.join(third.out,retained.resources['data/course.json'].url.slice('/RUDN/'.length)),'utf8'),'{"v":3}');
   assert.equal(await fs.readFile(path.join(third.out,'data/course.json'),'utf8'),'{"v":1}');
+  const alias=await fs.readFile(path.join(third.out,'apps/demo/index.html'),'utf8');await write(third.out,'apps/demo/index.html','old HTML');await assert.rejects(verifyRelease(third.out),/release\/alias-integrity/);await write(third.out,'apps/demo/index.html',alias);
   await write(third.out,`_releases/${third.buildId}/assets/js/dep.js`,'corrupt');await assert.rejects(verifyRelease(third.out),/release\/integrity/);
 });
 test('build ID follows transformed bytes deterministically; budget and unsafe output fail closed',async t=>{

@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {parse} from 'acorn';
 
 const TOKEN='__RUDN_RELEASE_ID__', SCHEMA=1;
-const controls=new Set(['index.html','service-worker.js','release.json','platform-baseline.json','platform-build-report.json']);
+const controls=new Set(['index.html','404.html','service-worker.js','release.json','platform-baseline.json','platform-build-report.json']);
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const json=value=>JSON.stringify(value)+'\n';
 const fail=code=>{throw new Error(code);};
@@ -42,7 +42,9 @@ function resolveStatic(value,logical,resources,base){
   const target=resources[name];return target?target.url+resolved.search+resolved.hash:value;
 }
 function rewriteCSS(source,logical,resources,base){return source.replace(/url\(\s*(['"]?)([^)'"\s]+)\1\s*\)/g,(_,quote,url)=>`url(${quote}${resolveStatic(url,logical,resources,base)}${quote})`);}
-function rewriteHTML(source,logical,resources,base,inlineModules){
+function recoveryMarkup(source){return `<script data-platform-recovery>${source.replace(/<\/script/gi,'<\\/script')}</script>`;}
+function aliasHTML(logical,base,recovery){return `<!doctype html><html lang="ru" data-release-scope="${base}"${logical?` data-release-alias="${logical}"`:' data-release-missing'}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${logical?'РУДН':'404 · РУДН'}</title></head><body><main><h1>${logical?'РУДН':'404'}</h1><p id="releaseRecoveryStatus">${logical?'Открываем актуальную версию…':'Страница не найдена.'}</p></main>${recoveryMarkup(recovery)}</body></html>\n`;}
+function rewriteHTML(source,logical,resources,base,inlineModules,recovery){
   if(!/<html\b/i.test(source))return rewriteCSS(source.replace(/\b(src|href|poster)\s*=\s*(["'])(.*?)\2/gi,(full,key,quote,value)=>`${key}=${quote}${resolveStatic(value,logical,resources,base)}${quote}`),logical,resources,base);
   const plan=[];
   let html=source.replace(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi,(full,attrs,text)=>{
@@ -54,7 +56,11 @@ function rewriteHTML(source,logical,resources,base,inlineModules){
   });
   if(logical==='index.html'&&!plan.length)plan.push({type:'module',src:resources['assets/js/main.js'].url});
   html=html.replace(/\b(src|href|poster)\s*=\s*(["'])(.*?)\2/gi,(full,key,quote,value)=>`${key}=${quote}${resolveStatic(value,logical,resources,base)}${quote}`);
-  html=rewriteCSS(html,logical,resources,base).replace(/<html\b([^>]*)>/i,(_,attrs)=>`<html${attrs.replace(/\sdata-release-build=["'][^"']*["']/g,'')} data-release-build="${TOKEN}">`);
+  html=rewriteCSS(html,logical,resources,base).replace(/<html\b([^>]*)>/i,(_,attrs)=>`<html${attrs.replace(/\sdata-release-build=["'][^"']*["']/g,'')} data-release-build="${TOKEN}" data-release-scope="${base}">`);
+  // The inline recovery must not push charset metadata beyond HTML's initial
+  // encoding prescan. All source/runtime files are UTF-8.
+  html=html.replace(/<head\b[^>]*>/i,full=>full+'<meta charset="utf-8">'+recoveryMarkup(recovery));
+  if(!/<head\b/i.test(html))html=html.replace(/<html\b[^>]*>/i,full=>full+'<head><meta charset="utf-8">'+recoveryMarkup(recovery)+'</head>');
   const bootstrap=`<script id="platform-entry-scripts" type="application/json">${JSON.stringify(plan).replace(/</g,'\\u003c')}</script>\n<script src="${resources['assets/js/diagnostics-bootstrap.js'].url}" data-platform-diagnostics></script>\n<script type="module" src="${resources['assets/js/release-bootstrap.js'].url}" data-platform-bootstrap></script>`;
   return /<\/body\s*>/i.test(html)?html.replace(/<\/body\s*>/i,bootstrap+'\n</body>'):html+'\n'+bootstrap;
 }
@@ -73,7 +79,7 @@ function packsFor(resources){
 export async function verifyRelease(out,{budget=1_000_000_000}={}){
   const pointer=JSON.parse(await fs.readFile(path.join(out,'release.json'),'utf8')), baseline=JSON.parse(await fs.readFile(path.join(out,'platform-baseline.json'),'utf8'));
   if(pointer.schema!==SCHEMA)fail('release/pointer-schema');const base=baseline.sitePath,verified=new Map(),unreachableImports=[];
-  if(baseline.baselineId!==digest(json(baseline.files)))fail('release/baseline-identity');
+  if(baseline.schema!==2||!baseline.legacyEntryHTML||baseline.baselineId!==digest(json({files:baseline.files,legacyEntryHTML:baseline.legacyEntryHTML})))fail('release/baseline-identity');
   async function verify(name,expected){if(!safeName(name))fail('release/unsafe-path');const bytes=await fs.readFile(path.join(out,name));if(bytes.length!==expected.bytes||digest(bytes)!==expected.sha256)fail('release/integrity:'+name);verified.set(name,{bytes:bytes.length,sha256:expected.sha256});return bytes;}
   await parallel(Object.entries(baseline.files),async([name,entry])=>verify(name,entry));
   for(const target of [pointer.current,pointer.previous].filter(Boolean)){
@@ -93,6 +99,14 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     if(!/^[a-f0-9]{64}$/.test(manifest.workerTemplateSha256||'')||identity.update(manifest.workerTemplateSha256).digest('hex').slice(0,32)!==target.buildId)fail('release/build-identity');
     if(target===pointer.current){const worker=await fs.readFile(path.join(out,'service-worker.js'),'utf8'),template=worker.replace(/^const PLATFORM_RELEASE=.*;$/m,'const PLATFORM_RELEASE=null;');if(digest(template)!==manifest.workerTemplateSha256)fail('release/worker-integrity');}
     for(const names of Object.values(manifest.packs))for(const name of names)if(!manifest.resources[name])fail('release/unknown-pack-resource');
+    if(!Array.isArray(manifest.publicEntries)||manifest.publicEntries.some(name=>!safeName(name)||!name.endsWith('.html')||!runtimeTexts.get(name)?.includes('data-release-build=')))fail('release/invalid-public-entries');
+    if(JSON.stringify(manifest.publicEntries)!==JSON.stringify([...runtimeTexts.keys()].filter(name=>name.endsWith('.html')&&/<html\b/i.test(runtimeTexts.get(name))).sort()))fail('release/public-entry-inventory');
+    if(target===pointer.current){
+      const recovery=runtimeTexts.get('assets/js/release-recovery.js');if(!recovery)fail('release/recovery-missing');
+      for(const name of new Set([...Object.keys(baseline.legacyEntryHTML),...manifest.publicEntries].filter(name=>!controls.has(name)))){if(!safeName(name)||!name.endsWith('.html'))fail('release/unsafe-alias');if(await fs.readFile(path.join(out,name),'utf8')!==aliasHTML(name,base,recovery))fail('release/alias-integrity:'+name);}
+      if(await fs.readFile(path.join(out,'404.html'),'utf8')!==aliasHTML(null,base,recovery))fail('release/recovery-integrity');
+      if(await fs.readFile(path.join(out,'index.html'),'utf8')!==runtimeTexts.get('index.html'))fail('release/root-entry-integrity');
+    }
     const graph=new Map(),roots=new Set(Object.keys(manifest.resources).filter(name=>name==='assets/js/main.js'||/(?:^|\/)entry\.mjs$/.test(name)));
     for(const [name,item] of Object.entries(manifest.resources).filter(([n,e])=>e.kind==='runtime'&&/\.html$/.test(n))){
       const html=runtimeTexts.get(name),plan=/<script id="platform-entry-scripts" type="application\/json">([\s\S]*?)<\/script>/.exec(html);
@@ -125,21 +139,25 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   for(const source of [site,baselineDir])if(out===source||out.startsWith(source+path.sep)||source.startsWith(out+path.sep))fail('release/output-overlaps-source');
   try{await fs.access(out);fail('release/output-exists');}catch(error){if(error.code!=='ENOENT')throw error;}
   onProgress('inventory-source');const source=await inventory(site);onProgress('inventory-baseline');const baselineSource=await inventory(baselineDir);
-  for(const required of ['index.html','service-worker.js','assets/js/main.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/diagnostics-bootstrap.js','data/platform-contracts.json'])if(!source[required])fail('release/missing-source:'+required);
+  for(const required of ['index.html','service-worker.js','assets/js/main.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','data/platform-contracts.json'])if(!source[required])fail('release/missing-source:'+required);
   const contracts=validateContracts(JSON.parse(await fs.readFile(path.join(site,'data/platform-contracts.json'),'utf8')));
   let oldRegistry=null,oldPointer=null;try{oldRegistry=JSON.parse(await fs.readFile(path.join(baselineDir,'platform-baseline.json'),'utf8'));oldPointer=JSON.parse(await fs.readFile(path.join(baselineDir,'release.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
   if(oldRegistry&&oldRegistry.sitePath!==base)fail('release/baseline-scope');
-  const frozen=oldRegistry?.files||Object.fromEntries(Object.entries(baselineSource).filter(([name])=>!controls.has(name)));
+  if(oldRegistry&&oldRegistry.schema!==2)fail('release/baseline-registry-version');
+  const legacyEntryHTML=oldRegistry?.legacyEntryHTML||{};
+  if(!oldRegistry)for(const [name,entry] of Object.entries(baselineSource))if(name.endsWith('.html')&&/<html\b/i.test(await fs.readFile(path.join(baselineDir,name),'utf8')))legacyEntryHTML[name]=entry;
+  const frozen=oldRegistry?.files||Object.fromEntries(Object.entries(baselineSource).filter(([name])=>!controls.has(name)&&!legacyEntryHTML[name]));
   if(Object.keys(frozen).some(name=>!safeName(name)))fail('release/unsafe-baseline-path');
-  const baselineId=oldRegistry?.baselineId||digest(json(frozen));
+  const baselineId=oldRegistry?.baselineId||digest(json({files:frozen,legacyEntryHTML}));
   const resources={};for(const [name,item] of Object.entries(source)){
     if(controls.has(name)&&name!=='index.html')continue;
     const runtime=isRuntime(name),same=!runtime&&frozen[name]?.sha256===item.sha256;
     const ext=name.endsWith('.json.gz')?'.json.gz':path.posix.extname(name);
     resources[name]={...item,kind:runtime?'runtime':'resource',url:runtime?`${base}_releases/${TOKEN}/${name}`:same?base+name:`${base}_objects/${item.sha256}${ext}`};
   }
+  const recovery=await fs.readFile(path.join(site,'assets/js/release-recovery.js'),'utf8');
   onProgress('transform-runtime');const runtime=new Map();for(const [name,item] of Object.entries(resources))if(item.kind==='runtime'){
-    let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
+    let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
   }
   const inputHash=crypto.createHash('sha256').update(`schema:${SCHEMA}\nbase:${base}\nbaseline:${baselineId}\n`);
   for(const [name,item] of Object.entries(resources))inputHash.update(name+'\0'+(runtime.has(name)?digest(runtime.get(name)):item.sha256)+'\n');
@@ -158,11 +176,14 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
     if(item.kind==='runtime'){const bytes=Buffer.from(runtime.get(name).replaceAll(TOKEN,buildId));item.bytes=bytes.length;item.sha256=digest(bytes);await put(out,physical,bytes);}
     else if(!frozen[physical])await copyResource(site,name,out,physical);
   }
-  const manifest={schema:SCHEMA,buildId,baselineId,workerTemplateSha256:source['service-worker.js'].sha256,runtimeRoot:`${base}_releases/${buildId}/`,entryURL:`${base}_releases/${buildId}/index.html`,contracts,resources,packs:packsFor(resources)};
+  const publicEntries=[...runtime.keys()].filter(name=>name.endsWith('.html')&&/<html\b/i.test(runtime.get(name))).sort();
+  const manifest={schema:SCHEMA,buildId,baselineId,workerTemplateSha256:source['service-worker.js'].sha256,runtimeRoot:`${base}_releases/${buildId}/`,entryURL:`${base}_releases/${buildId}/index.html`,contracts,publicEntries,resources,packs:packsFor(resources)};
   const manifestBytes=json(manifest),target={buildId,manifestURL:`${base}_releases/${buildId}/manifest.json`,manifestSha256:digest(manifestBytes),entryURL:manifest.entryURL};
   await put(out,`_releases/${buildId}/manifest.json`,manifestBytes);await put(out,`_releases/${buildId}/release.json`,json(target));
-  await put(out,'release.json',json({schema:SCHEMA,current:target,previous}));await put(out,'platform-baseline.json',json({schema:SCHEMA,baselineId,sitePath:base,files:frozen}));
+  await put(out,'release.json',json({schema:SCHEMA,current:target,previous}));await put(out,'platform-baseline.json',json({schema:2,baselineId,sitePath:base,files:frozen,legacyEntryHTML}));
   await put(out,'index.html',await fs.readFile(path.join(out,`_releases/${buildId}/index.html`)));
+  for(const name of new Set([...Object.keys(legacyEntryHTML),...publicEntries].filter(name=>!controls.has(name))))await put(out,name,aliasHTML(name,base,recovery));
+  await put(out,'404.html',aliasHTML(null,base,recovery));
   let worker=await fs.readFile(path.join(site,'service-worker.js'),'utf8');if(!worker.includes('const PLATFORM_RELEASE=null;'))fail('release/worker-placeholder-missing');
   worker=worker.replace('const PLATFORM_RELEASE=null;',`const PLATFORM_RELEASE=${JSON.stringify({schema:SCHEMA,current:target,previous})};`);await put(out,'service-worker.js',worker);
   onProgress('verify-staging');let report=verify?await verifyRelease(out,{budget:budget-4096}):{status:'not-run',buildId};if(verify){const payloadBytes=report.totalBytes;report={...report,budget,fileCount:report.fileCount+1};for(let n=0;n<4;n++)report.totalBytes=payloadBytes+Buffer.byteLength(json(report));if(report.totalBytes>budget)fail('release/budget');}await put(out,'platform-build-report.json',json(report));return {...report,target,out};

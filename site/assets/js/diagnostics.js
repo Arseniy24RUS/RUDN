@@ -2,6 +2,9 @@
 export const DIAGNOSTIC_LIMITS=Object.freeze({queue:256,queueBytes:256*1024,events:12,batchBytes:16*1024,interval:30000,stack:5});
 export const DIAGNOSTIC_EVENTS=Object.freeze(['route','runtime-error','resource-error','unhandled-rejection','bootstrap-error','session-open','session-close','visibility','module-load','module-ready','module-error','module-mount','module-unmount','draft-save','result-save','cloud-sync','offline','online','storage-error','interaction','operation','checkpoint','restore','delivery','access','asset-load','worker-error','document-load','document-search','document-jump','reader-state','update-state']);
 const EVENTS=new Set(DIAGNOSTIC_EVENTS);
+const ERROR_EVENTS=new Set(['runtime-error','resource-error','unhandled-rejection','bootstrap-error','module-error','storage-error','worker-error']);
+const ERROR_CLASSES=new Set(['Error','TypeError','RangeError','SyntaxError','ReferenceError','URIError','EvalError','AggregateError','DOMException','FirebaseError']);
+const isErrorEvent=value=>value?.severity==='error'||ERROR_EVENTS.has(value?.event);
 const CODES=new Set(['ok','unknown','cancelled','target-missing','load-failed','timeout','offline','syntax','type','range','resource','promise','storage','network','limit','import-failed','failed','blocked','deferred','ready','conflict','permission','auth','not-found','invalid','quota','deleted','dropped']);
 for(const code of ['marker-not-durable','release-not-verified','deadline','owner-or-route-changed','envelope-not-ready','rollback-unavailable','restore-timeout','storage-unavailable','storage-blocked','snapshot-oversize','snapshot-mismatch','cancelled','owner-changed','busy','checkpoint-unsupported','not-durable','revision-changed'])CODES.add('update/'+code);
 for(const code of ['url-outside-scope','invalid-target','resource-unavailable','integrity','invalid-manifest','invalid-resource','pointer-unavailable','invalid-pointer','unknown-resource','not-prepared','transition-storage-unavailable','entry-import-failed','requested-build-unavailable','invalid-context','context-already-bound'])CODES.add('release/'+code);
@@ -55,6 +58,10 @@ export function classifyDiagnosticError(error){
  if(safeCode(error?.code))return safeCode(error.code);
  if(error?.name==='SyntaxError')return 'syntax';if(error?.name==='TypeError')return 'type';if(error?.name==='RangeError')return 'range';if(error?.name==='QuotaExceededError')return 'storage';if(error?.name==='AbortError')return 'cancelled';return 'unknown';
 }
+export function diagnosticErrorClass(error){
+ const name=error?.name;if(ERROR_CLASSES.has(name))return name;
+ return ['AbortError','QuotaExceededError','SecurityError','NetworkError','NotAllowedError','InvalidStateError','DataCloneError','TimeoutError','NotFoundError','NotSupportedError','InvalidAccessError','OperationError'].includes(name)?'DOMException':undefined;
+}
 export function sanitizeDiagnosticEvent(event,fields={},context={}){
  if(!EVENTS.has(event))return null;
  const value={event,module:token(context.module)||'platform',locale:['ru','en','zh'].includes(context.locale)?context.locale:'ru',at:integer(context.at,9999999999999),code:safeCode(fields.code)||(fields.success===true?'ok':'unknown')};
@@ -62,6 +69,7 @@ export function sanitizeDiagnosticEvent(event,fields={},context={}){
  for(const name of ['success','found','visible'])if(typeof fields[name]==='boolean')value[name]=fields[name];
  for(const [name,max] of [['durationMs',3600000],['units',200000],['cacheBytes',1e8],['targetCount',200000],['repeat',1000]])if(typeof fields[name]==='number')value[name]=integer(fields[name],max);
  if(['info','warning','error'].includes(fields.severity))value.severity=fields.severity;
+ if(ERROR_CLASSES.has(fields.errorClass))value.errorClass=fields.errorClass;
  if(Array.isArray(fields.stack)){value.stack=fields.stack.filter(f=>f&&typeof f.file==='string'&&/^\/(?:assets|apps|_releases)\/[a-zA-Z0-9_./-]+$/.test(f.file)&&!f.file.includes('..')&&f.file.length<=200&&/\.(?:m?js)$/.test(f.file)).slice(0,5).map(f=>({file:f.file,line:integer(f.line),column:integer(f.column)}));if(!value.stack.length)delete value.stack}
  return value;
 }
@@ -73,13 +81,15 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  let buckets=[],active=null,disposed=false,timer=null,sending=null,lastWrite=0,retryAt=0,environment=detectEnvironment(env),state='idle',droppedTotal=0,deduplicatedTotal=0,persistQueued=false,identityEpoch=0;
  const identity=()=>{const auth=backend.user?.uid||'',profile=backend.getProfile?.(),student=!backend.isAdmin?.()&&/^\d{5,20}$/.test(profile?.studentKey||'')?profile.studentKey:null;return {key:auth+'|'+(backend.isAdmin?.()?'teacher':student||'anonymous'),auth,studentKey:student}};
  const currentBuild=()=>token(env.__RUDN_RELEASE__?.buildId||build,80)||'unknown';
+ // Exact release identity, not a guessed semantic module version.
+ const moduleVersion=()=>/^[a-f0-9]{32}$/.test(env.__RUDN_RELEASE__?.buildId||'')?'build:'+env.__RUDN_RELEASE__.buildId:undefined;
  function createBucket(owner){return {owner,clientSessionId:uid(env),session:null,build:currentBuild(),environment:{...environment},queue:[],pending:null,dropped:0,deduplicated:0,createdAt:now()}}
  const allEvents=()=>buckets.reduce((n,b)=>n+b.queue.length+(b.pending?.events.length||0),0);
  const persist=()=>safeWrite(tab||local,storageKey,{schema:2,buckets,lastWrite,droppedTotal,deduplicatedTotal});
  const schedulePersist=()=>{if(persistQueued)return;persistQueued=true;Promise.resolve().then(()=>{persistQueued=false;if(!disposed)persist()}).catch(()=>{})};
  function trim(){
   // Pending batches are immutable for idempotent retry; evict only unsent events.
-  while(allEvents()>DIAGNOSTIC_LIMITS.queue||byteSize(buckets)>DIAGNOSTIC_LIMITS.queueBytes){const b=buckets.find(b=>b.queue.length);if(b){b.queue.shift();b.dropped++;droppedTotal++}else{const old=buckets.find(b=>b!==active&&b!==sending?.bucket);if(!old)break;const count=old.pending?.events.length||0;droppedTotal+=count;if(active){active.dropped+=count+old.dropped+(old.pending?.dropped||0);active.deduplicated+=old.deduplicated+(old.pending?.deduplicated||0)}buckets.splice(buckets.indexOf(old),1)}}
+  while(allEvents()>DIAGNOSTIC_LIMITS.queue||byteSize(buckets)>DIAGNOSTIC_LIMITS.queueBytes){let candidate=null;for(const b of buckets)for(let index=0;index<b.queue.length;index++){const event=b.queue[index],error=isErrorEvent(event);if(!candidate||candidate.error&&!error||candidate.error===error&&event.at<candidate.event.at)candidate={b,index,event,error}}if(candidate){candidate.b.queue.splice(candidate.index,1);candidate.b.dropped++;droppedTotal++}else{const old=buckets.find(b=>b!==active&&b!==sending?.bucket);if(!old)break;const count=old.pending?.events.length||0;droppedTotal+=count;if(active){active.dropped+=count+old.dropped+(old.pending?.dropped||0);active.deduplicated+=old.deduplicated+(old.pending?.deduplicated||0)}buckets.splice(buckets.indexOf(old),1)}}
   buckets=buckets.filter(b=>{if(b===active||b===sending?.bucket||b.queue.length||b.pending)return true;if(active){active.dropped+=b.dropped;active.deduplicated+=b.deduplicated}return false});
  }
  function restore(){
@@ -93,13 +103,13 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  }
  function syncIdentity(){
   if(disposed)return;const owner=identity();if(active?.owner.key===owner.key&&active.build===currentBuild())return;
-  identityEpoch++;const initial=active===null;active=(initial?[...buckets].reverse().find(b=>b.owner.key===owner.key&&b.build===currentBuild()):null)||createBucket(owner);if(!buckets.includes(active))buckets.push(active);if(!initial)active.queue.push(sanitizeDiagnosticEvent('session-open',{success:true},{module:getModule(),locale:getLocale(),at:now()}));trim();persist();schedule();
+  identityEpoch++;const initial=active===null;active=(initial?[...buckets].reverse().find(b=>b.owner.key===owner.key&&b.build===currentBuild()):null)||createBucket(owner);if(!buckets.includes(active))buckets.push(active);if(!initial)active.queue.push(sanitizeDiagnosticEvent('session-open',{success:true,moduleVersion:moduleVersion()},{module:getModule(),locale:getLocale(),at:now()}));trim();persist();schedule();
  }
- function eligible(){if(!backend.user?.uid)return null;const current=identity().key;return buckets.find(b=>(b.owner.key===current||!b.owner.studentKey&&(!b.owner.auth||b.owner.auth===backend.user.uid))&&(b.queue.length||b.pending))||null}
+ function eligible(){const auth=backend.user?.uid;if(!auth)return null;return buckets.find(b=>(b.owner.auth===auth||!b.owner.auth&&!b.owner.studentKey)&&(b.queue.length||b.pending))||null}
  function schedule(){if(disposed||timer||sending||!eligible()||env.navigator?.onLine===false||env.document?.visibilityState==='hidden')return;const delay=Math.max(1000,retryAt-now(),lastWrite?lastWrite+DIAGNOSTIC_LIMITS.interval-now():DIAGNOSTIC_LIMITS.interval);timer=setTimer(()=>{timer=null;void flush()},delay)}
  function record(event,fields={},bound){
-  try{if(disposed)return false;syncIdentity();const value=sanitizeDiagnosticEvent(event,fields,{module:bound?.module||getModule(),locale:bound?.locale||getLocale(),at:now()});if(!value)return false;
-   const key=JSON.stringify({...value,at:0,repeat:0}),previous=active.queue.at(-1);if(previous&&value.at-previous.at<=5000&&JSON.stringify({...previous,at:0,repeat:0})===key){previous.repeat=Math.min(1000,(previous.repeat||1)+1);active.deduplicated++;deduplicatedTotal++}else active.queue.push(value);
+  try{if(disposed)return false;syncIdentity();const value=sanitizeDiagnosticEvent(event,{...fields,moduleVersion:bound?.moduleVersion||moduleVersion()},{module:bound?.module||getModule(),locale:bound?.locale||getLocale(),at:now()});if(!value)return false;
+   const key=JSON.stringify({...value,at:0,repeat:0}),error=isErrorEvent(value),windowMs=error?30000:5000,previous=error?[...active.queue].reverse().find(e=>value.at-e.at<=windowMs&&JSON.stringify({...e,at:0,repeat:0})===key):active.queue.at(-1);if(previous&&value.at-previous.at<=windowMs&&JSON.stringify({...previous,at:0,repeat:0})===key){previous.repeat=Math.min(1000,(previous.repeat||1)+1);active.deduplicated++;deduplicatedTotal++}else active.queue.push(value);
    trim();schedulePersist();schedule();return true;
   }catch{return false}
  }
@@ -117,11 +127,11 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
   }finally{if(sending===flight)sending=null;schedule()}
  }
  function bound(module=getModule(),options={}){
-  syncIdentity();let ended=false;const owner=identity().key,epoch=identityEpoch,current=()=>{syncIdentity();return !ended&&!disposed&&identityEpoch===epoch&&identity().key===owner};const context={module:token(module)||'platform',locale:options.locale};const api={record:(event,fields)=>current()&&record(event,fields,context),error:(error,fields={})=>current()&&record(fields.event||'module-error',{...fields,code:fields.code||classifyDiagnosticError(error),severity:'error',stack:sanitizeDiagnosticStack(error,env)},context),span:(operation,fields={})=>{const started=env.performance?.now?.()??now();let done=false;return(result={})=>{if(done||!current())return false;done=true;return record('operation',{...fields,...result,operation,durationMs:(env.performance?.now?.()??now())-started},context)}},destroy(){ended=true}};return api;
+  syncIdentity();let ended=false;const owner=identity().key,epoch=identityEpoch,current=()=>{syncIdentity();return !ended&&!disposed&&identityEpoch===epoch&&identity().key===owner};const context={module:token(module)||'platform',locale:options.locale,moduleVersion:moduleVersion()};const api={record:(event,fields)=>current()&&record(event,fields,context),error:(error,fields={})=>current()&&record(fields.event||'module-error',{...fields,code:fields.code||classifyDiagnosticError(error),errorClass:diagnosticErrorClass(error),severity:'error',stack:sanitizeDiagnosticStack(error,env)},context),span:(operation,fields={})=>{const started=env.performance?.now?.()??now();let done=false;return(result={})=>{if(done||!current())return false;done=true;return record('operation',{...fields,...result,operation,durationMs:(env.performance?.now?.()??now())-started},context)}},destroy(){ended=true}};return api;
  }
  function globalContext(stack){for(const frame of stack){const app=frame.file.match(/\/apps\/(legal-lab|career|reception|settlements|governor)\//)?.[1];if(app)return {module:app};if(/\/assets\/js\/puzzle[^/]*\.(?:js|mjs)$/.test(frame.file))return {module:'maps'};if(/\/assets\/js\/(?:quiz|adaptive-quiz)\.js$/.test(frame.file))return {module:'quiz'}}return {module:'platform'}}
- const runtime=event=>{const stack=sanitizeDiagnosticStack(event.error||{stack:typeof event.filename==='string'?event.filename+':'+integer(event.lineno)+':'+integer(event.colno):''},env);record(event.error?'runtime-error':'resource-error',{code:event.error?classifyDiagnosticError(event.error):'resource',severity:'error',stack},globalContext(stack))};
- const rejection=event=>{const stack=sanitizeDiagnosticStack(event.reason,env);record('unhandled-rejection',{code:classifyDiagnosticError(event.reason),severity:'error',stack},globalContext(stack))};
+ const runtime=event=>{const stack=sanitizeDiagnosticStack(event.error||{stack:typeof event.filename==='string'?event.filename+':'+integer(event.lineno)+':'+integer(event.colno):''},env);record(event.error?'runtime-error':'resource-error',{code:event.error?classifyDiagnosticError(event.error):'resource',errorClass:diagnosticErrorClass(event.error),severity:'error',stack},globalContext(stack))};
+ const rejection=event=>{const stack=sanitizeDiagnosticStack(event.reason,env);record('unhandled-rejection',{code:classifyDiagnosticError(event.reason),errorClass:diagnosticErrorClass(event.reason),severity:'error',stack},globalContext(stack))};
  const visibility=()=>{record('visibility',{stage:env.document?.visibilityState==='hidden'?'hidden':'visible'});if(env.document?.visibilityState==='hidden'){clearTimer(timer);timer=null;void flush()}else schedule()};
  const online=()=>{record('online',{success:true});schedule()},offline=()=>record('offline',{code:'offline'});
  restore();syncIdentity();

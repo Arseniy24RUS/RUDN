@@ -3,6 +3,7 @@ import {createHash} from 'node:crypto';
 export const LIMITS=Object.freeze({events:12,packetBytes:16384,intervalMs:30000,page:20,scan:100,eventPage:50,exportPage:100});
 export const EVENTS=new Set(['route','runtime-error','resource-error','unhandled-rejection','bootstrap-error','module-mount','module-unmount','operation','checkpoint','restore','delivery','access','asset-load','worker-error','document-load','document-search','document-jump','reader-state','update-state','session-open','session-close','visibility','module-load','module-ready','module-error','draft-save','result-save','cloud-sync','offline','online','storage-error','interaction']);
 export const CODES=new Set(['ok','unknown','cancelled','target-missing','load-failed','timeout','offline','syntax','type','range','resource','promise','storage','network','limit','import-failed','failed','blocked','deferred','ready','conflict','permission','auth','not-found','invalid','quota','deleted','dropped']);
+export const ERROR_CLASSES=Object.freeze(['Error','TypeError','RangeError','SyntaxError','ReferenceError','URIError','EvalError','AggregateError','DOMException','FirebaseError']);
 for(const value of ['marker-not-durable','release-not-verified','deadline','owner-or-route-changed','envelope-not-ready','rollback-unavailable','restore-timeout','storage-unavailable','storage-blocked','snapshot-oversize','snapshot-mismatch','cancelled','owner-changed','busy','checkpoint-unsupported','not-durable','revision-changed'])CODES.add('update/'+value);
 for(const value of ['url-outside-scope','invalid-target','resource-unavailable','integrity','invalid-manifest','invalid-resource','pointer-unavailable','invalid-pointer','unknown-resource','not-prepared','transition-storage-unavailable','entry-import-failed','requested-build-unavailable','invalid-context','context-already-bound'])CODES.add('release/'+value);
 for(const value of ['module-loading','inactive-or-restoring','unversioned','adapter-not-ready','context-changed','checkpoint-unconfirmed','unavailable','disposed','different-build','owner-not-ready','route-restoring','module-not-ready','owner-changed','interaction-active','owner-missing','saved','resume-owner-mismatch','restore-failed','resume-failed'])CODES.add(value);
@@ -30,13 +31,14 @@ export function environment(value={}){
  return result;
 }
 export function event(value){
- fields(value,['event','module','locale','at','docId','questionId','screenId','moduleVersion','durationMs','code','success','found','visible','units','cacheBytes','targetCount','operation','stage','severity','repeat','dropped','deduplicated','stack']);
+ fields(value,['event','module','locale','at','docId','questionId','screenId','moduleVersion','durationMs','code','success','found','visible','units','cacheBytes','targetCount','operation','stage','severity','repeat','dropped','deduplicated','stack','errorClass']);
  if(!EVENTS.has(value.event))fail();
  const result={event:value.event,module:token(value.module||'platform'),locale:pick(value.locale,['ru','en','zh'],'ru'),at:number(value.at??0,9999999999999),code:pick(value.code,[...CODES],value.success===true?'ok':'unknown')};
  for(const key of ['success','found','visible'])if(value[key]!==undefined){if(typeof value[key]!=='boolean')fail();result[key]=value[key];}
  for(const [key,max] of Object.entries({durationMs:3600000,units:200000,cacheBytes:100000000,targetCount:200000,repeat:1000,dropped:1000000,deduplicated:1000000}))if(value[key]!==undefined)result[key]=number(value[key],max);
  for(const key of ['docId','questionId','screenId','moduleVersion','operation','stage'])if(value[key]!==undefined)result[key]=token(value[key],['operation','stage'].includes(key)?48:64,true);
  if(value.severity!==undefined)result.severity=pick(value.severity,['info','warning','error']);
+ if(value.errorClass!==undefined)result.errorClass=pick(value.errorClass,ERROR_CLASSES);
  if(value.stack!==undefined){if(!Array.isArray(value.stack)||value.stack.length>5)fail();result.stack=value.stack.map(frame=>{fields(frame,['file','line','column']);if(typeof frame.file!=='string'||frame.file.length>200||frame.file.includes('..')||!/^\/(?:assets|apps|_releases)\/[a-zA-Z0-9_./-]+$/.test(frame.file))fail();return {file:frame.file,line:number(frame.line??0,1e7),column:number(frame.column??0,1e7)};});}
  return result;
 }

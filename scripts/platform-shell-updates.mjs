@@ -39,7 +39,7 @@ if(qa.kind==='quiz'){
 }
 window.saved=async()=>{await durableStore.flush();return durableStore.loadDraft(qa.scope)};
 window.pending=()=>durableStore.listPending({owner:qa.owner,limit:50,includeDeferred:true});
-const contracts=${JSON.stringify(contracts)};const release={getReleaseContext:()=>({buildId:qa.build,contracts}),checkRelease:async()=>({buildId:sessionStorage.getItem('qa-target')||'B',previous:{buildId:qa.build}}),prepareRelease:async target=>({ready:true,buildId:target.buildId,context:{contracts}}),activatePreparedRelease:target=>{sessionStorage.setItem('qa-build',target.buildId);sessionStorage.setItem('qa-reloads',String(Number(sessionStorage.getItem('qa-reloads')||0)+1));location.reload()},rollbackRelease:()=>{throw Error('Unexpected rollback')},markReleaseRestored:()=>sessionStorage.setItem('qa-restored','true')};
+const contracts=${JSON.stringify(contracts)};const release={getReleaseContext:()=>({buildId:qa.build,contracts}),checkRelease:async()=>({buildId:sessionStorage.getItem('qa-target')||'B',previous:{buildId:qa.build}}),prepareRelease:async target=>({ready:true,buildId:target.buildId,context:{contracts}}),activatePreparedRelease:async target=>{if(new URLSearchParams(location.search).has('holdActivation')){qa.activationReady=true;await new Promise(resolve=>qa.releaseActivation=resolve)}sessionStorage.setItem('qa-build',target.buildId);sessionStorage.setItem('qa-reloads',String(Number(sessionStorage.getItem('qa-reloads')||0)+1));location.reload()},rollbackRelease:()=>{throw Error('Unexpected rollback')},markReleaseRestored:()=>sessionStorage.setItem('qa-restored','true')};
 window.coordinator=bootstrapUpdateCoordinator({backend,diagnostics,module:()=>adapter.module,getOwner:()=>qa.owner,getAdapters:()=>[adapter],release,autoStart:false});qa.restored=await coordinator.restorePending();qa.ready=true;
 </script></body></html>`;
 const mime={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.geojson':'application/json','.webp':'image/webp'};
@@ -49,9 +49,37 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const {createHash}=await import('node:crypto');const hashes=async()=>Object.fromEntries(await Promise.all(runtimeFiles.map(async file=>[file,createHash('sha256').update(await readFile(resolve(site,'assets/js',file))).digest('hex')])));
 const report={kind:'synthetic isolated backend/release receipt; real UI, coordinator, reload, IndexedDB/outbox',engine,status:'fail',checks:[],errors:[],sourceBefore:await hashes(),notCovered:['production Firebase','physical devices','real main.js routing','service-worker staging/integrity (separate suite)']};
 const pw=await import(process.env.PLAYWRIGHT_MODULE_PATH?pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE_PATH)).href:'playwright');let browser,lastPage;
+async function twoTabs(){
+ const context=await browser.newContext({viewport:{width:390,height:844}}),pages=[await context.newPage(),await context.newPage()],kinds=['quiz','form'];
+ await context.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
+ try{
+  for(const [i,page] of pages.entries()){
+   lastPage=page;page.setDefaultTimeout(20000);page.on('pageerror',error=>report.errors.push({kind:'two-tabs-'+kinds[i],message:error.message}));
+   await page.goto('http://127.0.0.1:'+server.address().port+'/__shell?kind='+kinds[i]+'&holdActivation=1#activity/'+kinds[i]);await page.waitForFunction(()=>window.qa?.ready);
+   if(i===0){await page.locator('.short-answer').fill('first answer');await page.locator('#quizNext').click();await page.waitForFunction(()=>document.querySelector('.quiz-progress')?.textContent.includes('2/2'))}
+   const input=page.locator(i===0?'.short-answer':'textarea');await input.click();await input.pressSequentially(i===0?'quiz latest Z':'form latest Y');assert.equal(await input.evaluate(el=>el===document.activeElement),true);
+  }
+  const before=await Promise.all(pages.map(page=>page.evaluate(async()=>({draft:await saved(),hash:location.hash,scope:qa.scope}))));
+  assert.notEqual(before[0].draft.attemptId,before[1].draft.attemptId);assert.equal(before[0].scope.owner,before[1].scope.owner);
+  const shared=await pages[0].evaluate(async scope=>(await (await import('/assets/js/durable-store.js')).durableStore.loadDraft(scope)).attemptId,before[1].scope);assert.equal(shared,before[1].draft.attemptId,'Both tabs use the same real origin/IndexedDB');
+  await pages[0].evaluate(()=>{void coordinator.check('test')});await pages[0].waitForFunction(()=>qa.activationReady);
+  const marker0=await pages[0].evaluate(()=>JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')));assert.ok(marker0?.token);assert.equal(await pages[1].evaluate(()=>sessionStorage.getItem('rudn.update.pending.v1')),null);
+  await pages[1].evaluate(()=>{void coordinator.check('test')});await pages[1].waitForFunction(()=>qa.activationReady);
+  const marker1=await pages[1].evaluate(()=>JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')));assert.ok(marker1?.token);assert.notEqual(marker0.token,marker1.token);assert.equal(marker0.route,before[0].hash);assert.equal(marker1.route,before[1].hash);
+  await pages[0].evaluate(()=>qa.releaseActivation());await pages[0].waitForFunction(()=>window.qa?.build==='B'&&qa.ready);
+  assert.equal(await pages[0].evaluate(()=>sessionStorage.getItem('rudn.update.pending.v1')),null);assert.equal(await pages[1].evaluate(()=>JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')).token),marker1.token,'Restoring tab1 cannot clear tab2 marker');assert.equal(await pages[1].evaluate(()=>qa.build),'A');
+  await pages[1].evaluate(()=>qa.releaseActivation());await pages[1].waitForFunction(()=>window.qa?.build==='B'&&qa.ready);
+  for(const [i,page] of pages.entries()){
+   const after=await page.evaluate(async()=>({draft:await saved(),hash:location.hash,reloads:Number(sessionStorage.getItem('qa-reloads')),pending:sessionStorage.getItem('rudn.update.pending.v1'),ops:await pending(),restored:qa.restored.status}));assert.equal(after.draft.attemptId,before[i].draft.attemptId);assert.equal(after.hash,before[i].hash);assert.equal(after.reloads,1);assert.equal(after.pending,null);assert.equal(after.restored,'restored');assert.equal(after.ops.filter(x=>x.type==='attempt').length,0);assert.notEqual(after.draft.phase,'completed');
+   const input=page.locator(i===0?'.short-answer':'textarea');assert.equal(await input.inputValue(),i===0?'quiz latest Z':'form latest Y');assert.equal(await input.evaluate(el=>el===document.activeElement),true);if(i===0)assert.equal(after.draft.state.index,1);await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,'two-tabs-'+kinds[i]+'-B.png')});
+  }
+  report.checks.push({kind:'two-tabs',status:'pass',sharedOriginAndIndexedDB:true,sameProfile:true,differentModulesAndAttempts:true,isolatedPendingMarkers:true,oneTabDoesNotClearOtherMarker:true,latestUnblurredFields:true,sameRoutesAndAttempts:true,reloadsPerTab:1,noAutomaticResult:true});
+ }finally{await context.close()}
+}
 try{
  browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});report.version=browser.version();
- for(const kind of arg('--kind','')?[arg('--kind','')]:['quiz','adaptive','form','maps']){
+ const kinds=arg('--kind','')?[arg('--kind','')]:['quiz','adaptive','form','maps','two-tabs'];if(kinds.includes('two-tabs'))await twoTabs();
+ for(const kind of kinds.filter(kind=>kind!=='two-tabs')){
   const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();lastPage=page;page.setDefaultTimeout(20000);page.on('pageerror',error=>report.errors.push({kind,message:error.message}));await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
   await page.goto('http://127.0.0.1:'+server.address().port+'/__shell?kind='+kind+'#activity/'+kind);await page.waitForFunction(()=>window.qa?.ready);
   if(kind==='quiz'||kind==='adaptive'){await page.locator('.short-answer').fill('first answer');await page.locator('#quizNext').click();await page.waitForFunction(()=>document.querySelector('.quiz-progress')?.textContent.includes('2/2'));await page.locator('.short-answer').click();await page.locator('.short-answer').pressSequentially('last character Z');assert.equal(await page.locator('.short-answer').evaluate(el=>el===document.activeElement),true)}

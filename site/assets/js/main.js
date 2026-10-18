@@ -527,12 +527,12 @@ function seminarShell(topic,body){return `<section class="page"><div class="page
 function renderSeminar4(topic,view){
   // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
   const owner=attemptOwner(),controller=new AbortController(),scope=routeDiagnostics;
-  let handle=null,mountPromise=Promise.resolve();
+  let handle=null,mountPromise=Promise.resolve(),mountStarted=false;
   app.innerHTML=`<section class="page legal-lab-course-page"><div id="legalLabMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#legalLabMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner();
   const allowed=()=>{const a=accessSnapshot();return topicGate(topic.number,a.overrides,a.now).open;};
-  const cleanup=async()=>{controller.abort();await mountPromise.catch(()=>{});await handle?.destroy();};
+  const cleanup=async()=>{controller.abort();if(mountStarted)await mountPromise.catch(()=>{});await handle?.destroy();};
   cleanup.flush=()=>handle?.flush();
   exposeModuleUpdateAdapter(cleanup,()=>handle,'legal-lab');
   cleanup.refreshLocale=()=>{
@@ -548,6 +548,7 @@ function renderSeminar4(topic,view){
       const {mountLegalLabInCourse}=await import('../../apps/legal-lab/platform.mjs?v=1.0.0');
       if(!active())return;
       const a=accessSnapshot();
+      mountStarted=true;
       handle=await mountLegalLabInCourse(mount,{
         backend,diagnostics:scope,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
         period:String(a.context.startYear)+'-'+String(a.context.endYear),
@@ -644,14 +645,14 @@ function renderSettlements(){
   const current=route();
   const mode=current.name==='activity'&&current.parts[0]==='seminar-3'?'assessment':current.name==='games'&&current.parts[0]==='settlements'?'free':null;
   if(!mode)return;
-  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController(),scope=routeDiagnostics;let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
+  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController(),scope=routeDiagnostics;let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const free=mode==='free';
   app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#settlementsMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&(free?route().name==='games'&&route().parts[0]==='settlements':route().name==='activity'&&route().parts[0]==='seminar-3');
-  // A route can leave while mounting still holds the profile's write lock.
-  // Join the entire startup/teardown chain before the next module is mounted.
-  const cleanup=()=>cleanupTask||=(async()=>{const presentationExit=presentation?.destroy();controller.abort();try{await mountTask;}finally{await handle?.destroy();await presentationExit;}})();
+  // An import owns no workspace. Once mounting starts, join teardown so the
+  // profile write lock is released before another module acquires it.
+  const cleanup=()=>cleanupTask||=(async()=>{const presentationExit=presentation?.destroy();controller.abort();try{if(mountStarted)await mountTask;}finally{await handle?.destroy();await presentationExit;}})();
   cleanup.isStale=()=>controller.signal.aborted||generation!==backend.generation;
   cleanup.flush=()=>handle?.flush();
   exposeModuleUpdateAdapter(cleanup,()=>handle,'settlements');
@@ -665,7 +666,7 @@ function renderSettlements(){
   navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'settlements'});
   mountTask=(async()=>{try{
     const [{mountSettlements},{createSettlementsPresentation}]=await Promise.all([import('../../apps/settlements/entry.mjs'),import('./settlements-presentation.js')]);if(!active())return;
-    presentation=createSettlementsPresentation(mount);
+    mountStarted=true;presentation=createSettlementsPresentation(mount);
     handle=await mountSettlements(mount,{backend,diagnostics:scope,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
     if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');moduleReady();
   }catch(error){presentation?.destroy();if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};scope?.error(error,{operation:'module-load'});console.error('Settlements module:',error?.code||error?.message);}})();
@@ -701,8 +702,8 @@ function renderSeminar5(topic,{context='course'}={}){
   app.innerHTML=`<section class="page reception-page"><div id="receptionMount" lang="${getLocale()}" aria-busy="true"><p role="status">${t('receptionOpening')}</p></div></section>`;
   const mount=app.querySelector('#receptionMount');
   const controller=new AbortController(),owner=attemptOwner(),scope=routeDiagnostics;
-  let mountedCleanup=()=>{},locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
-  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();await mountTask;await mountedCleanup();})();
+  let mountedCleanup=()=>{},locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
+  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();if(mountStarted)await mountTask;await mountedCleanup();})();
   cleanup.flush=()=>mountedCleanup.flush?.();
   exposeModuleUpdateAdapter(cleanup,()=>mountedCleanup,'reception');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&isModuleRoute('reception',context);
@@ -720,6 +721,7 @@ function renderSeminar5(topic,{context='course'}={}){
     try{
       const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
       if(!active())return;
+      mountStarted=true;
       mountedCleanup=await mountReception(mount,{
         backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
@@ -743,7 +745,7 @@ function renderSeminar6(topic,{context='course'}={}){
   const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
   const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview',scope=routeDiagnostics;
   const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
-  let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null;
+  let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
   app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.civil_service_test)}" target="_blank" rel="noopener noreferrer" data-career-ui="openCivilTest">${ui('openCivilTest')}</a></div><form id="civilForm" class="form-grid"><label><span data-career-ui="testScore">${ui('testScore')}</span><input name="score" required></label><label><span data-career-ui="screenshot">${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit" data-career-ui="submit">${ui('submit')}</button></div></form></details></section>`;
@@ -754,7 +756,7 @@ function renderSeminar6(topic,{context='course'}={}){
   }
   const mount=app.querySelector('#careerMount');
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
-  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();await mountTask;await handle?.destroy();if(currentCareer===token)currentCareer=null;})();
+  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();if(mountStarted)await mountTask;await handle?.destroy();if(currentCareer===token)currentCareer=null;})();
   cleanup.flush=()=>handle?.flush?.();
   exposeModuleUpdateAdapter(cleanup,()=>handle,'career');
   cleanup.refreshLocale=()=>{
@@ -777,6 +779,7 @@ function renderSeminar6(topic,{context='course'}={}){
     const {mountCareer}=await import('../../apps/career/entry.mjs');
     if(!active())return;
     token.lang=getLocale();
+    mountStarted=true;
     handle=await mountCareer(mount,{diagnostics:scope,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
       onRouteChange:(view,{replace=false}={})=>{
         if(!active())return;

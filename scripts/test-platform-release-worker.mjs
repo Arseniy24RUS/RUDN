@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
+import {parse} from 'acorn';
 const workerSource=await fs.readFile(new URL('../site/service-worker.js',import.meta.url),'utf8');
 const scope='https://test.invalid/RUDN/',hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 function release(id,code){const entry=`/RUDN/_releases/${id}/index.html`,main=`/RUDN/_releases/${id}/assets/js/main.js`;const files=new Map([[entry,`<html>${code}</html>`],[main,code]]);const resources={'index.html':{url:entry,sha256:hash(files.get(entry)),bytes:files.get(entry).length,kind:'runtime'},'assets/js/main.js':{url:main,sha256:hash(code),bytes:code.length,kind:'runtime'}};const manifest=JSON.stringify({schema:1,buildId:id,runtimeRoot:`/RUDN/_releases/${id}/`,resources,packs:{shell:Object.keys(resources)}}),target={buildId:id,manifestURL:`/RUDN/_releases/${id}/manifest.json`,manifestSha256:hash(manifest),entryURL:entry};files.set(target.manifestURL,manifest);files.set(`/RUDN/_releases/${id}/release.json`,JSON.stringify(target));return {target,files};}
@@ -13,6 +14,27 @@ function harness(pointer,files,{stores=new Map()}={}){
   const context=vm.createContext({URL,Request,Response,crypto:crypto.webcrypto,AbortController,setTimeout,clearTimeout,caches,fetch:input=>h.fetch(input),self:{registration:{scope},addEventListener:(name,fn)=>listeners.set(name,fn),skipWaiting:async()=>{},clients:{matchAll:async()=>clients,get:async id=>clients.find(c=>c.id===id),claim:async()=>{}}}});
   vm.runInContext(workerSource.replace('const PLATFORM_RELEASE=null;',`const PLATFORM_RELEASE=${JSON.stringify(pointer)};`),context);return h;
 }
+
+test('cold evicted HTML navigation passes through the real host 404 while integrity failures stay closed',async()=>{
+  const b=release('b'.repeat(32),'new'),files=new Map(b.files),h=harness({schema:1,current:b.target,previous:null},files),original=h.fetch;
+  h.fetch=async input=>{const url=new URL(typeof input==='string'?input:input.url||input.href,scope);if(url.pathname.endsWith('/index.html')&&!files.has(url.pathname))return new Response('<html>Recovery entry</html>',{status:404,headers:{'content-type':'text/html'}});return original(input);};
+  const missing=await h.request(`_releases/${'a'.repeat(32)}/index.html`,{mode:'navigate',resultingClientId:'cold'});assert.equal(missing.status,404);assert.equal(await missing.text(),'<html>Recovery entry</html>');
+  files.set(b.target.entryURL,'corrupt');await assert.rejects(h.request(b.target.entryURL,{mode:'navigate',resultingClientId:'corrupt'}),/release\/integrity/);
+});
+
+test('legacy installation includes the complete static shared startup graph before offline startup',async()=>{
+  const context=vm.createContext({URL,Map,Set,self:{registration:{scope},addEventListener(){}}});vm.runInContext(workerSource,context);
+  const core=Array.from(vm.runInContext('CORE_SHELL',context));
+  for(const logical of ['release-resources.js','release-bootstrap.js','release-recovery.js','platform-update-state.js','platform-update-coordinator.js','diagnostics-bootstrap.js'])assert.ok(core.includes('./assets/js/'+logical),`Missing shared startup dependency: ${logical}`);
+  assert.ok(core.includes('./data/platform-contracts.json'));
+  const site=new URL('../site/',import.meta.url),cached=new Set(core.map(name=>name.replace(/^\.\//,'').split(/[?#]/)[0])),seen=new Set(),queue=['assets/js/main.js','assets/js/puzzle-bootstrap.js','assets/js/diagnostics-bootstrap.js','assets/js/release-bootstrap.js'];
+  while(queue.length){
+    const name=queue.shift();if(seen.has(name))continue;seen.add(name);assert.ok(cached.has(name),`Static startup dependency absent from install: ${name}`);
+    const url=new URL(name,site),source=await fs.readFile(url,'utf8'),ast=parse(source,{ecmaVersion:'latest',sourceType:'module'});
+    for(const item of ast.body){if(!/^(?:ImportDeclaration|ExportNamedDeclaration|ExportAllDeclaration)$/.test(item.type)||!item.source?.value?.startsWith('.'))continue;const child=new URL(item.source.value,url);child.search='';child.hash='';assert.ok(child.href.startsWith(site.href));queue.push(decodeURIComponent(child.pathname.slice(site.pathname.length)));}
+  }
+  assert.ok(seen.size>30,'The assertion must traverse the actual shell rather than an empty fixture');
+});
 test('exact SW stages verified shell, keeps two tab bindings and serves offline immutable paths',async()=>{
   const a=release('a'.repeat(32),'old'),b=release('b'.repeat(32),'new'),files=new Map([...a.files,...b.files]);files.set('/RUDN/release.json',JSON.stringify({schema:1,current:b.target,previous:a.target}));
   const h=harness({schema:1,current:b.target,previous:a.target},files),messages=[];const first={id:'first',url:scope,postMessage:m=>messages.push(m)},second={id:'second',url:scope,postMessage:m=>messages.push(m)};h.clients.push(first,second);
