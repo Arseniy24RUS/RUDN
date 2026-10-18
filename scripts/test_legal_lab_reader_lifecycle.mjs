@@ -78,5 +78,34 @@ try{
   });
   for(const step of report.windowOrder){assert.deepEqual(step.actualIds,step.expectedIds,'Canonical unit order after center '+step.center);if(step.retained){assert.equal(step.retained.sameNode,true);assert.equal(step.retained.focused,true);assert.equal(step.retained.selected,true);assert.ok(Math.abs(step.retained.anchorDelta)<=1.5,'Visible anchor stays in place after center '+step.center);}}
   report.checks.push('Forward/backward multi-block shifts retain canonical unit order, overlapping nodes, selection, focus and anchor');
+  report.navigationRaces=await page.evaluate(async()=>{
+    const {ReaderController}=await import('/apps/legal-lab/lib/reader-controller.mjs');
+    const frame=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+    const units=Array.from({length:8},(_,block)=>Array.from({length:4},(_,unit)=>({id:'nav-'+block+'-'+unit,text:'Navigation block '+block+' · '+unit}))).flat();
+    function fixture(id,saved={}){
+      document.querySelector('.order-fixture').innerHTML='<h1>Synthetic document navigation race</h1><section class="ll-reader"><div class="ll-reader-dock"></div><article class="ll-paper"></article></section>';
+      const descriptor={docId:id,locale:'ru',units,blocks:Array.from({length:8},(_,id)=>({id,count:4})),unitToBlock:Object.fromEntries(units.map((unit,index)=>[unit.id,Math.floor(index/4)]))},state={reader:{[id]:saved}},control={hold:false,started:false,signals:[],release:null,gate:null};
+      const app={state,opt:{},isLocked:()=>false,fail:error=>{throw error;},corpus:{cancelSearch(){},loadBlock:async(_doc,_locale,id,{signal}={})=>{if(control.hold){control.started=true;control.signals.push(signal);await control.gate;if(signal?.aborted)throw new DOMException('Cancelled','AbortError');}return {id,units:units.slice(id*4,id*4+4)};}}},spec={descriptor,selected:[],correctIds:[],renderBlock:block=>block.units.map(unit=>'<button class="ll-paragraph" data-unit="'+unit.id+'">'+unit.text+'</button>').join('')},reader=document.querySelector('.ll-reader'),paper=reader.querySelector('.ll-paper'),controller=new ReaderController(app,reader,spec);
+      controller.resizeObserver?.disconnect();return {controller,paper,control};
+    }
+    const foreign={docId:'different-law',locale:'ru',top:20000,anchor:{id:'different-law-unit',offset:-9}};
+    const saved=fixture('saved-law',{anchorId:'nav-4-1',anchorOffset:-3,scrollTop:1700});await saved.controller.initialize(foreign);const ownUnit=saved.paper.querySelector('[data-unit="nav-4-1"]'),ownPosition={center:saved.controller.center,found:Boolean(ownUnit),offset:ownUnit?ownUnit.getBoundingClientRect().top-saved.paper.getBoundingClientRect().top:null};saved.controller.destroy();
+    const fresh=fixture('new-law');await fresh.controller.initialize(foreign);const freshPosition={center:fresh.controller.center,top:fresh.paper.scrollTop,first:fresh.paper.querySelector('[data-unit]')?.dataset.unit};fresh.controller.destroy();
+    async function delayedScroll(returnToMounted){
+      const {controller,paper,control}=fixture('race-law');const automatic=controller.scheduleScroll.bind(controller);controller.scheduleScroll=()=>{};await controller.window(3,null);paper.scrollTop=controller.prefix(3)+10;await frame();await frame();controller.scheduleScroll=automatic;
+      control.hold=true;control.gate=new Promise(resolve=>control.release=resolve);paper.scrollTop=controller.prefix(5)+10;controller.scheduleScroll();for(let i=0;i<10&&!control.started;i++)await frame();if(!control.started)throw Error('Delayed scroll window did not start');
+      const nextTop=returnToMounted?controller.prefix(3)+16:controller.prefix(5)+70;paper.scrollTop=nextTop;
+      if(returnToMounted){controller.scheduleScroll();await frame();await frame();}
+      // For the within-target case, release before the next animation frame.
+      // This exercises a response arriving before the new scroll callback runs.
+      control.hold=false;control.release();await frame();await frame();await frame();
+      const result={expectedCenter:returnToMounted?3:5,center:controller.center,expectedTop:nextTop,top:paper.scrollTop,delta:paper.scrollTop-nextTop,oldRequestAborted:control.signals.every(signal=>signal.aborted)};controller.destroy();return result;
+    }
+    return {ownPosition,freshPosition,returnToMounted:await delayedScroll(true),withinPendingTarget:await delayedScroll(false)};
+  });
+  assert.equal(report.navigationRaces.ownPosition.found,true,'Saved law must restore its own anchor, not a foreign capture');assert.equal(report.navigationRaces.ownPosition.center,4);assert.ok(Math.abs(report.navigationRaces.ownPosition.offset+3)<=1.5);
+  assert.equal(report.navigationRaces.freshPosition.center,0);assert.equal(report.navigationRaces.freshPosition.top,0);assert.equal(report.navigationRaces.freshPosition.first,'nav-0-0');
+  for(const name of ['returnToMounted','withinPendingTarget']){const result=report.navigationRaces[name];assert.equal(result.center,result.expectedCenter,name);assert.ok(Math.abs(result.delta)<=1.5,name+' must preserve the latest manual position');}
+  assert.equal(report.navigationRaces.returnToMounted.oldRequestAborted,true);report.checks.push('Document positions stay document-owned and delayed scroll windows preserve the latest manual position');
   assert.deepEqual(report.errors,[]);report.status='pass';await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,engine+'.png')});
 }catch(error){report.error=error.stack;process.exitCode=1;}finally{await browser?.close();await new Promise(resolve=>server.close(resolve));await mkdir(output,{recursive:true});await writeFile(resolve(output,engine+'.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));}

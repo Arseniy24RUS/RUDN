@@ -6,7 +6,7 @@ const escape=value=>CSS.escape(String(value));
 export class ReaderController {
   constructor(app,reader,spec){
     this.app=app;this.reader=reader;this.paper=reader.querySelector('.ll-paper');this.spec=spec;this.descriptor=spec.descriptor;
-    this.abort=new AbortController();this.heights=new Map();this.nodes=new Map();this.center=-1;this.generation=0;this.jumpGeneration=0;this.searchGeneration=0;this.closed=false;this.frameId=0;
+    this.abort=new AbortController();this.heights=new Map();this.nodes=new Map();this.center=-1;this.pendingCenter=null;this.generation=0;this.jumpGeneration=0;this.searchGeneration=0;this.closed=false;this.frameId=0;
     this.before=document.createElement('div');this.after=document.createElement('div');
     for(const el of [this.before,this.after]){el.className='ll-reader-spacer';el.setAttribute('aria-hidden','true');}
     this.paper.replaceChildren(this.before,this.after);this.paper.setAttribute('aria-busy','true');
@@ -29,23 +29,26 @@ export class ReaderController {
     return {docId:this.descriptor.docId,locale:this.descriptor.locale,top:this.paper.scrollTop,anchor:unit?{id:unit.dataset.unit,offset:unit.getBoundingClientRect().top-box.top}:null};
   }
   restore(position){
+    if(position?.docId&&position.docId!==this.descriptor.docId)return;
     const anchor=position?.anchor,el=anchor&&this.paper.querySelector('[data-unit="'+escape(anchor.id)+'"]');
     if(el){const delta=el.getBoundingClientRect().top-this.paper.getBoundingClientRect().top-anchor.offset;if(Math.abs(delta)>.5)this.paper.scrollTop+=delta;}
     else if(position&&Math.abs(this.paper.scrollTop-(position.top||0))>.5)this.paper.scrollTop=position.top||0;
   }
   async initialize(position){
+    if(position?.docId!==this.descriptor.docId)position=null;
     const start=performance.now(),rs=this.app.state.reader[this.descriptor.docId]||{},anchor=position?.anchor?.id||rs.anchorId;
     const block=anchor&&this.descriptor.unitToBlock[anchor];
-    if(!await this.window(Number.isInteger(block)?block:this.locate(position?.top||rs.scrollTop||0),null))return;
+    if(!await this.window(Number.isInteger(block)?block:this.locate(position?.top??rs.scrollTop??0),null))return;
     if(this.closed)return;
     this.restore(position||{top:rs.scrollTop||0,anchor:anchor?{id:anchor,offset:rs.anchorOffset||0}:null});
     this.record('document-load',{durationMs:Math.round(performance.now()-start),success:true,units:this.stats().mountedUnits});
   }
   scheduleScroll(){
     if(this.closed||this.suspended||this.frameId||this.jumping)return;
-    this.frameId=requestAnimationFrame(()=>{this.frameId=0;if(this.closed||this.suspended||this.jumping)return;const position=this.capture(),rs=this.app.state.reader[this.descriptor.docId]||={};rs.scrollTop=position.top;if(position.anchor){rs.anchorId=position.anchor.id;rs.anchorOffset=position.anchor.offset;}
+    this.frameId=requestAnimationFrame(()=>{this.frameId=0;if(this.closed||this.suspended||this.jumping||this.center<0)return;const position=this.capture(),rs=this.app.state.reader[this.descriptor.docId]||={};rs.scrollTop=position.top;if(position.anchor){rs.anchorId=position.anchor.id;rs.anchorOffset=position.anchor.offset;}
       const center=this.locate(this.paper.scrollTop+this.paper.clientHeight/2);
-      if(center!==this.center)void this.window(center,position).catch(error=>this.app.fail(error));
+      if(center===this.center){if(Number.isInteger(this.pendingCenter))this.cancelWindow();}
+      else if(center!==this.pendingCenter)void this.window(center,null,()=>center===this.locate(this.paper.scrollTop+this.paper.clientHeight/2)).catch(error=>this.app.fail(error));
     });
   }
   measure(){
@@ -58,14 +61,16 @@ export class ReaderController {
     const start=indexes[0],end=indexes.at(-1)+1;
     const before=this.prefix(start)+'px',after=(this.prefix(this.descriptor.blocks.length)-this.prefix(end))+'px';if(this.before.style.height!==before)this.before.style.height=before;if(this.after.style.height!==after)this.after.style.height=after;
   }
-  cancelWindow(){this.generation++;this.windowAbort?.abort();this.windowAbort=null;}
+  cancelWindow(){this.generation++;this.windowAbort?.abort();this.windowAbort=null;this.pendingCenter=null;}
   suspend(){this.suspended=true;this.cancelWindow();this.cancelJump();this.cancelSearch();}
   resume(){this.suspended=false;}
   async window(center,position,valid=()=>true){
     if(this.closed||this.suspended)return false;this.cancelWindow();const request=this.windowAbort=new AbortController();
     const generation=this.generation;center=bounded(center,0,this.descriptor.blocks.length-1);
     const indexes=[];for(let i=Math.max(0,center-1);i<=Math.min(this.descriptor.blocks.length-1,center+1);i++)indexes.push(i);
-    if(center===this.center&&indexes.every(index=>this.nodes.has(index)))return true;
+    if(center===this.center&&indexes.every(index=>this.nodes.has(index))){this.windowAbort=null;return true;}
+    this.pendingCenter=center;
+    try{
     let blocks;try{blocks=await Promise.all(indexes.map(index=>this.app.corpus.loadBlock(this.descriptor.docId,this.descriptor.locale,index,{signal:request.signal})));}
     catch(error){if(error.name==='AbortError'||request.signal.aborted)return false;throw error;}
     if(this.closed||request.signal.aborted||generation!==this.generation||!valid())return false;
@@ -80,6 +85,7 @@ export class ReaderController {
     for(const [index,node]of this.nodes)this.heights.set(index,node.getBoundingClientRect().height);
     this.spacers();this.restore(oldPosition);this.spec.afterRender?.();
     return true;
+    }finally{if(this.windowAbort===request){this.windowAbort=null;this.pendingCenter=null;}}
   }
   update(spec){this.spec=spec;const selected=new Set(spec.selected),correct=new Set(spec.correctIds);for(const el of this.paper.querySelectorAll('[data-unit]')){const disabled=!spec.readonly&&this.app.isLocked(),action=spec.readonly?'noop':'select-unit';if(el.disabled!==disabled)el.disabled=disabled;if(el.dataset.action!==action)el.dataset.action=action;const chosen=selected.has(el.dataset.unit);el.classList.toggle('selected',chosen);el.classList.toggle('correct',spec.review&&correct.has(el.dataset.unit));el.setAttribute('aria-pressed',String(chosen));const check=el.querySelector('.ll-check');if(check.textContent!==(chosen?'✓':''))check.textContent=chosen?'✓':'';}this.measure();this.spec.afterRender?.();}
   cancelJump(){if(this.jumping){this.cancelWindow();this.jumpGeneration++;this.jumping=false;this.record('document-jump',{durationMs:Math.round(performance.now()-this.jumpStarted),success:false,code:'cancelled'});}}

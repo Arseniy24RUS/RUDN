@@ -71,6 +71,7 @@ export async function attachReader(app,position,scope){
   scope?.assert();
   const reader=app.root.querySelector('[data-reader-doc]'),spec=app.readerSpec;
   if(!reader||!spec){app.readerController?.destroy();app.readerController=null;app.readerSpec=null;app.corpus.releaseReader();return;}
+  if(position?.docId!==spec.descriptor.docId)position=null;
   if(app.readerController?.reader===reader){
     const controller=app.readerController;controller.resume();controller.update(spec);
     // A question change can cancel the very first window before any block paints.
