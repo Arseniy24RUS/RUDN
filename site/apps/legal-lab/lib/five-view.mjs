@@ -1,5 +1,5 @@
 import {escapeHTML as e,scanQuestionsFor,SCAN_METADATA_MODE,gradeTask,expandIds,selectionLimit} from './core.mjs';
-import {documentDisplay,displayLabel} from './translation-ui.mjs';
+import {documentDisplay,displayLabel,prepareReportPassages} from './translation-ui.mjs';
 
 // Whole-article alternatives accept a heading or its substance. Quote the complete
 // provision as feedback, including its body when a heading alone earned credit.
@@ -15,20 +15,28 @@ const taskName=(t,i)=>t.kind==='scan'?'Реквизиты':t.kind==='type'?'Ви
 export function fiveIntro(app){
   return `<section class="ll-assessment-intro"><h1>На оценку</h1><p>Пять заданий, по одному баллу за каждое: реквизиты документа, вид другого документа и три вопроса по тексту закона.</p><button class="ll-primary" data-action="start-assessment" ${app.isLocked()?'disabled':''}>Начать →</button></section>`;
 }
-export async function fiveAssessment(app){
+export async function fiveAssessment(app,scope){
+  scope?.assert();
   const a=app.state.assessment,item=fiveVariant(app);if(!item)throw Error('Assessment variant unavailable');
-  if(a.result){await Promise.all([...new Set(item.tasks.filter(t=>t.kind==='text').map(t=>t.docId))].map(id=>app.loadDocument(id)));return fiveReport(app,item,a);}
+  if(a.result){const passages=await prepareFiveReport(app,item,a,scope);scope?.assert();return fiveReport(app,item,a,passages);}
   const stage=Math.max(0,Math.min(4,a.stage||0)),t=item.tasks[stage],answer=fiveAnswer(app,t);
   let body='';
   if(t.kind==='scan')body=app.scanAssignment(app.scans.find(s=>s.id===t.scanId),answer.metadata,{questions:scanQuestionsFor(app.scans.find(s=>s.id===t.scanId)),index:a.scanFieldIndex||0,context:'assessment'});
   else if(t.kind==='type')body=app.typeView(t,answer.type,{action:'assessment-type'});
-  else {const d=await app.loadDocument(t.docId);app.assessmentDoc=d.id;body=app.reader(d,answer.selections,{context:'assessment-five',limit:selectionLimit(t,[d])});}
-  const all=item.tasks.every(t=>a.answer.tasks?.[t.id]?.submitted),teacher=app.teacherAccess()?await app.teacherAnswer(t):'';
+  else {const d=await app.loadDocument(t.docId,scope);scope?.assert();app.assessmentDoc=d.id;body=app.reader(d,answer.selections,{context:'assessment-five',limit:selectionLimit(t,[d]),scope});}
+  const all=item.tasks.every(t=>a.answer.tasks?.[t.id]?.submitted),teacher=app.teacherAccess()?await app.teacherAnswer(t,scope):'';scope?.assert();
   return `<section class="ll-five-work" data-five-variant="${e(item.id)}"><header class="ll-assessment-heading"><div class="ll-eyebrow"><span>На оценку</span> · ${stage+1} / 5</div>${t.kind==='text'?'':`<h1>${e(t.prompt)}</h1>`}</header><nav class="ll-five-nav" aria-label="Задания работы">${item.tasks.map((q,i)=>`<button class="${i===stage?'active':''}" data-action="five-task" data-index="${i}" aria-pressed="${i===stage}" aria-label="${e(taskName(q,i))}">${i+1}${a.answer.tasks?.[q.id]?.submitted?' ✔':''}</button>`).join('')}</nav>${teacher}${body}${t.kind==='text'?'':`<div class="ll-actions ll-five-actions"><button class="ll-primary" data-action="five-submit">✔ <span>Сохранить ответ</span></button>${answer.submitted&&stage<4?'<button class="ll-primary" data-action="five-next">Далее →</button>':''}${answer.submitted?'<span role="status">Ответ сохранён</span>':''}</div>`}${all?`<div class="ll-five-finish">${app.confirming?'<p>Отправить все пять ответов на оценку?</p><div class="ll-actions"><button class="ll-primary" data-action="finish-assessment">Отправить</button><button class="ll-secondary" data-action="cancel-finish">Вернуться</button></div>':'<button class="ll-primary" data-action="confirm-finish">Завершить и проверить</button>'}</div>`:''}</section>`;
 }
-export function fiveReport(app,item,a){
+export async function prepareFiveReport(app,item,a,scope){
+  scope?.assert();
+  const docs=await Promise.all([...new Set(item.tasks.filter(t=>t.kind==='text').map(t=>t.docId))].map(id=>app.corpus.load(id)));
+  scope?.assert();
+  const ids=item.tasks.filter(t=>t.kind==='text').flatMap(t=>[...(a.answer.tasks?.[t.id]?.selections||[]),...expandIds(fiveEvidenceSet(t),docs)]);
+  return prepareReportPassages(app,docs,ids,scope);
+}
+export function fiveReport(app,item,a,reportPassages=new Map()){
   const docs=[...app.corpus.cache.values()];
-  const passages=(task,ids)=>ids.length?ids.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));if(!d)return '';const info=documentDisplay(app,d),u=info.units.get(id);return `<blockquote data-document-text lang="${info.locale}"><strong>${e(displayLabel(app,d,id))}</strong><p>${e(u.text)}</p></blockquote>`;}).join(''):'<p>Не выбрано</p>';
+  const passages=(task,ids)=>ids.length?ids.map(id=>{const d=docs.find(d=>d.units.some(u=>u.id===id));if(!d)return '';const saved=reportPassages.get(id),info=saved?null:documentDisplay(app,d),u=saved?.unit||info?.units.get(id);if(!u)return '';return `<blockquote data-document-text lang="${saved?.locale||info.locale}"><strong>${e(saved?.label||displayLabel(app,d,id))}</strong><p>${e(u.text)}</p></blockquote>`;}).join(''):'<p>Не выбрано</p>';
   const details=item.tasks.map((t,i)=>{
     const answer=a.answer.tasks?.[t.id]||{},criterion=a.result.criteria.find(c=>c.id===t.id),grade=gradeTask(t,answer,docs,app.scans);let review='';
     if(t.kind==='scan'){const scan=app.scans.find(s=>s.id===t.scanId);review=app.scanReview(scan,answer.metadata||{},scanQuestionsFor(scan));}

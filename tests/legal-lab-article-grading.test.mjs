@@ -70,17 +70,18 @@ test('actual report method explains legacy and new heading selections using the 
   // This exercises the real string-rendering method only, not a browser/DOM simulation.
   // Dependencies and already-verified corpus are explicit; production source is unchanged.
   const entry=await readFile(new URL('../site/apps/legal-lab/entry.mjs',import.meta.url),'utf8');
-  const start=entry.indexOf('  report(item,a,reportDocs=null){'),end=entry.indexOf('\n  help(){',start);assert.ok(start>=0&&end>start);
-  const render=new Function('e','asset','dossierScanQuestions','gradeEvidence','expandIds','canonicalArticleSelections','labelForUnit','EVIDENCE_MODE','documentDisplay','displayLabel','return ({'+entry.slice(start,end)+'}).report;')(escapeHTML,value=>value,dossierScanQuestions,gradeEvidence,expandIds,canonicalArticleSelections,labelForUnit,EVIDENCE_MODE,documentDisplay,displayLabel);
-  const app={corpus:{cache:new Map(docs.map(d=>[d.id,d]))},scans,reportOnly:true};
+  const start=entry.indexOf('  async report(item,a,reportDocs=null'),end=entry.indexOf('\n  help(){',start);assert.ok(start>=0&&end>start);
+  const {documentLocale,prepareReportPassages}=await import('../site/apps/legal-lab/lib/translation-ui.mjs');
+  const render=new Function('e','asset','dossierScanQuestions','gradeEvidence','expandIds','canonicalArticleSelections','labelForUnit','EVIDENCE_MODE','documentDisplay','displayLabel','documentLocale','prepareReportPassages','return ({'+entry.slice(start,end)+'}).report;')(escapeHTML,value=>value,dossierScanQuestions,gradeEvidence,expandIds,canonicalArticleSelections,labelForUnit,EVIDENCE_MODE,documentDisplay,displayLabel,documentLocale,prepareReportPassages);
+  const app={corpus:{cache:new Map(docs.map(d=>[d.id,d])),readerDocument:async()=>{}},scans,reportOnly:true};
   const item=cases.find(c=>c.id==='A01'),legacy={...fullAnswer(item),selections:['constitution-ua258597def4c307226-1']};
   const report=answer=>{const result=scoreDossier(item,answer,scans,docs);return render.call(app,item,{caseId:item.id,answer,result:{...result,criteria:result.criteria.filter(c=>c.id==='evidence')},preview:false,delivery:'host-accepted'});};
-  const before=structuredClone(legacy),oldHtml=report(legacy);assert.deepEqual(legacy,before);
+  const before=structuredClone(legacy),oldHtml=await report(legacy);assert.deepEqual(legacy,before);
   assert.equal((oldHtml.match(/>Совпало<\/p>/g)||[]).length,0);
   assert.equal((oldHtml.match(/>Лишний фрагмент<\/p>/g)||[]).length,1);
   assert.equal((oldHtml.match(/>Пропущенный фрагмент<\/p>/g)||[]).length,1);
   assert.doesNotMatch(oldHtml,/Ваш выбор в документе:/);
-  const current={...legacy,evidenceMode:EVIDENCE_MODE},currentBefore=structuredClone(current),newHtml=report(current);assert.deepEqual(current,currentBefore);
+  const current={...legacy,evidenceMode:EVIDENCE_MODE},currentBefore=structuredClone(current),newHtml=await report(current);assert.deepEqual(current,currentBefore);
   assert.equal((newHtml.match(/>Совпало<\/p>/g)||[]).length,2,'matched selected unit and expected unit agree');
   assert.equal((newHtml.match(/>Лишний фрагмент<\/p>/g)||[]).length,2);
   assert.equal((newHtml.match(/>Пропущенный фрагмент<\/p>/g)||[]).length,0);

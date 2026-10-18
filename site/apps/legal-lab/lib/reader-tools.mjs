@@ -88,6 +88,7 @@ function documentLabels(doc){
 /** A source-based chip label. UTF text and legal numbering are never rewritten. */
 export function labelForUnit(doc,unitId){
   if(!doc||!Array.isArray(doc.units)||!Array.isArray(doc.sections))return '';
+  if(doc.structural){const descriptor=doc.readerSource?.peekReaderDocument(doc.id,'ru');return descriptor?.labels[unitId]||doc.readerSource?.peekUnit(doc.id,'ru',unitId)?.label||doc.sections.find(section=>section.unitIds.includes(unitId))?.title||'';}
   const cached=documentLabels(doc),target=cached.units.get(unitId);if(!target)return '';
   const section=cached.sections.get(target.sectionId)||cached.membership.get(unitId);
   if(!section)return [compact(target.locator),quote(target.text)].filter(Boolean).join(' · ');

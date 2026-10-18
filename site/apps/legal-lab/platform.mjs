@@ -34,7 +34,7 @@ export function createLegalLabPracticeCompletion({backend,owner,getOwner=()=>own
   };
 }
 /** No Firebase initializeApp, new authentication, iframe, or service worker. */
-export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwner,period,groups,locale,signal,assessmentAllowed,onExit,checkpoint,initialView}={}){
+export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwner,period,groups,locale,signal,assessmentAllowed,onExit,checkpoint,initialView,diagnostics}={}){
   if(!backend||typeof backend.getProfile!=='function'||typeof backend.saveAttempt!=='function')throw new TypeError('The existing course backend is required');
   const teacher=backend.isAdmin();const profile=backend.getProfile();
   const response=await fetch(new URL('./data/catalog.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
@@ -70,7 +70,7 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
     const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value;
   }});
   handle = await mountLegalLab(mount,{
-    backend:moduleBackend,owner,getOwner,period,locale,signal,onExit,
+    backend:moduleBackend,owner,getOwner,period,locale,signal,onExit,diagnostics,
     initialView,
     onPracticeComplete:createLegalLabPracticeCompletion({backend,owner,getOwner,contentVersion:catalog.contentVersion,signal,isActive:()=>!destroyed&&!persistence.conflicted}),
     initialState,attemptId:persistence.attemptId,
@@ -91,24 +91,34 @@ export async function mountLegalLabInCourse(root,{backend,rootPath,owner,getOwne
 
 /** Existing service-worker.js accepts PREPARE_MODULE.urls, so no second worker
  * and no change to seminar-1/other module caching is needed. */
+const warmedWorkers=new WeakMap();
 export async function warmCourseCache(contentVersion,signal){
   const worker=globalThis.navigator?.serviceWorker?.controller;if(!worker)return false;
+  if(signal?.aborted)return false;
+  let versions=warmedWorkers.get(worker);if(!versions){versions=new Map();warmedWorkers.set(worker,versions);}
+  if(versions.has(contentVersion))return versions.get(contentVersion);
+  const work=prepareCourseShell(worker,contentVersion,signal);versions.set(contentVersion,work);
+  const ready=await work;if(!ready&&versions.get(contentVersion)===work)versions.delete(contentVersion);return ready;
+}
+async function prepareCourseShell(worker,contentVersion,signal){
   try{
     const response=await fetch(new URL('./precache-manifest.json',import.meta.url),{signal,credentials:'same-origin',cache:'no-cache'});
     if(!response.ok)return false;const manifest=await response.json();
     if(manifest.contentVersion!==contentVersion||!Array.isArray(manifest.files))return false;
     const scope=new URL('../../',import.meta.url),prefix=new URL('./',import.meta.url);
-    // Full acts, translations and annex images are fetched by the reader when needed.
-    // The course worker then retains visited documents for offline reading.
-    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&!u.pathname.includes('/data/documents/')&&!/\/data\/translations\/(?:en|zh)\//.test(u.pathname)&&!u.search&&!u.hash).map(u=>u.href);
+    // Warm only the shell. Reading must not compete with unseen scans or acts.
+    // The same course worker retains documents and images when actually requested.
+    const urls=manifest.files.map(f=>new URL(f.url,scope)).filter(u=>u.origin===prefix.origin&&u.pathname.startsWith(prefix.pathname)&&/\.(?:m?js|css|html|json)$/.test(u.pathname)&&!u.pathname.includes('/data/documents/')&&!u.pathname.includes('/data/reader/')&&!/\/data\/translations\/(?:en|zh)\//.test(u.pathname)&&!u.search&&!u.hash).map(u=>u.href);
     for(let offset=0;offset<urls.length;offset+=200){
       if(signal?.aborted)return false;
       const ready=await new Promise(resolve=>{
         const requestId=crypto.randomUUID();
-        const finish=value=>{clearTimeout(timer);navigator.serviceWorker.removeEventListener('message',listener);resolve(value);};
+        const finish=value=>{clearTimeout(timer);navigator.serviceWorker.removeEventListener('message',listener);signal?.removeEventListener('abort',aborted);resolve(value);};
+        const aborted=()=>finish(false);
         const listener=event=>{if(event.data?.type==='MODULE_CACHE_STATUS'&&event.data.requestId===requestId)finish(event.data.ready===true);};
         const timer=setTimeout(()=>finish(false),20000);
         navigator.serviceWorker.addEventListener('message',listener);
+        signal?.addEventListener('abort',aborted,{once:true});
         worker.postMessage({type:'PREPARE_MODULE',module:'legal-lab',requestId,urls:urls.slice(offset,offset+200)});
       });
       if(!ready)return false;

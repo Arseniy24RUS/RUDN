@@ -117,12 +117,12 @@ test('actual route chain forwards quiz, assessment and bare resume without start
   for(const [view,expected] of [['quiz','learn'],['assessment','assessment'],[undefined,undefined]]){
     const mounted=[],mount={isConnected:true,setAttribute(){}},context={
       data:{course:{topics:[legalTopic]}},seminarModule,seminarModuleForSlug,navigator:{},location:{hash:''},accessSnapshot:()=>({now:0,context:{startYear:2026,endYear:2027},overrides:{}}),topicGate:()=>({open:true}),accessAllowed:()=>true,
-      attemptOwner:()=>owner,AbortController,app:{innerHTML:'',querySelector:()=>mount},currentCleanup:null,t:key=>key,backend:{},CONFIG:{rootPath:'synthetic'},groupOptions:()=>[],getLocale:()=> 'en',
+      attemptOwner:()=>owner,AbortController,app:{innerHTML:'',querySelector:()=>mount},currentCleanup:null,t:key=>key,backend:{},diagnostics:{record(){}},CONFIG:{rootPath:'synthetic'},groupOptions:()=>[],getLocale:()=> 'en',
       loadPlatform:async()=>({mountLegalLabInCourse:async(root,options)=>{mounted.push(options);return{destroy(){},flush(){}};}})};
     vm.createContext(context);vm.runInContext(block('async function renderActivity','function renderLecture')+block('async function renderSeminar','function seminarShell')+
       block('function renderSeminar4','function renderSeminar8').replace("import('../../apps/legal-lab/platform.mjs?v=1.0.0')",'loadPlatform()'),context);
     await context.renderActivity('seminar-4',view);await new Promise(resolve=>setImmediate(resolve));assert.equal(mounted.length,1);assert.equal(mounted[0].initialView,expected);assert.equal(mounted[0].owner,owner);
-    await context.currentCleanup();
+    assert.equal(mounted[0].diagnostics,context.diagnostics,'The shell passes its optional shared diagnostics service');await context.currentCleanup();
   }
 });
 

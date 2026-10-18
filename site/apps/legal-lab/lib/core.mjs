@@ -79,16 +79,20 @@ export function expandIds(ids, docs) {
   const aliases=Object.assign({}, ...docs.map(d=>d.aliases||{}));
   return unique(ids.flatMap(id=>aliases[id]||[id]));
 }
+// Structural sources are immutable for a mount; grading never needs prose or
+// the current reader window. Cache identifiers without retaining another text.
+const knownUnits=new WeakMap();
+function unitIds(doc){let cached=knownUnits.get(doc);if(!cached||cached.units!==doc.units||cached.count!==doc.units.length){cached={units:doc.units,count:doc.units.length,ids:new Set(doc.units.map(unit=>unit.id))};knownUnits.set(doc,cached);}return cached.ids;}
 /** Jaccard gives partial credit, penalises marking all paragraphs, and allows
  * equivalent complete answer sets. Invalid/unknown IDs can never add credit. */
 export function gradeEvidence(selected, answerSets, docs=[], {wholeArticles=true}={}) {
-  const known=new Set(docs.flatMap(d=>d.units.map(u=>u.id)));
+  const known=docs.map(unitIds);
   const canonical=ids=>wholeArticles?canonicalArticleSelections(ids,docs):ids;
   const chosen=canonical(unique(selected)), expanded=answerSets.map(s=>canonical(expandIds(s,docs)));
   if(!chosen.length)return {fraction:0,exact:false,matched:0,extra:0,missing:expanded[0]?.length||0};
   let best={fraction:0,exact:false,matched:0,extra:chosen.length,missing:expanded[0]?.length||0};
   for(const expected of expanded) {
-    const allowed=new Set(expected.filter(id=>!docs.length||known.has(id)));
+    const allowed=new Set(expected.filter(id=>!docs.length||known.some(ids=>ids.has(id))));
     if(!allowed.size) continue;
     const matched=chosen.filter(x=>allowed.has(x)).length;
     const extra=chosen.length-matched, missing=allowed.size-matched;
@@ -128,8 +132,7 @@ export function scoreDossier(item, answer={}, scans=[], docs=[]) {
   const evidence=gradeEvidence(answer.selections||[],item.answerSets,docs,{wholeArticles:wholeArticleMode(answer)});
   // Evidence belongs to explicitly selected source documents; hidden answer IDs
   // from other documents do not gain credit.
-  const knownSources=new Map(docs.flatMap(d=>d.units.map(u=>[u.id,d.id])));
-  const sourceOK=unique(answer.selections||[]).every(id=>selected.has(knownSources.get(id)));
+  const sourceOK=unique(answer.selections||[]).every(id=>selected.has(docs.findLast(d=>unitIds(d).has(id))?.id));
   const criterion=[
     {id:'metadata',label:'Реквизиты на скане',max:1,points:round(metadata)},
     {id:'classification',label:'Виды документов',max:1,points:round(classification)},

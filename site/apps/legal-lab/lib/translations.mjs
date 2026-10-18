@@ -84,16 +84,19 @@ export class DocumentTranslations {
   }
   get(doc,locale){
     if(!locales.has(locale))return null;checkAbort(this.signal);
+    if(doc?.structural)return doc.readerSource?.peekReaderDocument(doc.id,locale)||null;
     return this.entry(doc,locale)?this.cache.get(`${doc.id}/${locale}`)||null:null;
   }
   async load(doc,locale){
-    if(!locales.has(locale))return null;checkAbort(this.signal);await this.initialize();
+    if(!locales.has(locale))return null;checkAbort(this.signal);
+    if(doc?.structural)return doc.readerSource.readerDocument(doc.id,locale);
+    await this.initialize();
     const entry=this.entry(doc,locale);if(!entry)return null;
     const key=`${doc.id}/${locale}`;if(this.cache.has(key))return this.cache.get(key);
     if(this.inflight.has(key))return this.inflight.get(key);
     const work=this.json(`data/translations/${entry.file}`,entry.sha256).then(value=>{
       checkAbort(this.signal);this.entry(doc,locale);
-      const translation=freeze(validateTranslation(doc,value,locale,entry.source));this.cache.set(key,translation);return translation;
+      const translation=freeze(validateTranslation(doc,value,locale,entry.source));this.cache.clear();this.cache.set(key,translation);return translation;
     }).finally(()=>this.inflight.delete(key));
     this.inflight.set(key,work);return work;
   }

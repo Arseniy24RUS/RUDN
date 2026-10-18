@@ -187,3 +187,6 @@
  body:has(#legalLabMount .legal-lab>.ll-nav>[aria-current="page"]:is([data-view="learn"],[data-view="assessment"])) .mobile-nav{display:none}
  body:has(#legalLabMount .legal-lab>.ll-nav>[aria-current="page"]:is([data-view="learn"],[data-view="assessment"])) .main{padding-bottom:max(18px,env(safe-area-inset-bottom))}
 }
+
+/* Only three verified blocks are mounted; no content-visibility placeholders retain full acts. */
+.ll-reader-block{display:flow-root}.ll-reader-block .ll-reader-section{content-visibility:visible;contain-intrinsic-size:none;margin:0}.ll-reader-block>h3{font:600 18px/1.55 Georgia,"Times New Roman",serif;margin:18px 0 10px;overflow-wrap:anywhere}.ll-reader-spacer{pointer-events:none;overflow-anchor:none;width:1px;contain:strict}
