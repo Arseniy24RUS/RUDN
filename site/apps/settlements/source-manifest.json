@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "a8432033f3ce8f526a1daa16c49dc44d3c90f3bef7a1d6128a1a913ab79e77a6",
+  "sourceHash": "5054964fff0b3a240f8b109e5dbc07282a527932f27ccc4d89f18bc29392b5b9",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -4555,8 +4555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-v1.mjs",
-      "bytes": 8079,
-      "sha256": "7f7040d7df8543baa26f7569cff14b1259dfe66b3ff859cfeaede7f59d40865a"
+      "bytes": 8353,
+      "sha256": "feacd8e7ebb2f2a59fd1a8e327c6de82c9ad49098f1bb55f31d2ebbb0264d073"
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-v2-regions/altayskiy_kray.mjs",

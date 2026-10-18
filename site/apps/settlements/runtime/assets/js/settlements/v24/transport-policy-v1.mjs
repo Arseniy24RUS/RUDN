@@ -34,13 +34,18 @@ export function transportContentHash(text) {
       const a=w[i-15], b=w[i-2], s0=rotr(a,7)^rotr(a,18)^(a>>>3), s1=rotr(b,17)^rotr(b,19)^(b>>>10);
       w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
     }
-    let [a,b,c,d,e,f,g,k]=h;
+    // Keep the compression loop scalar: no per-block iterators or temporary
+    // arrays are needed to read and accumulate the eight SHA-256 words.
+    let a=h[0],b=h[1],c=h[2],d=h[3],e=h[4],f=h[5],g=h[6],k=h[7];
     for (let i=0;i<64;i++) {
       const s1=rotr(e,6)^rotr(e,11)^rotr(e,25), ch=(e&f)^(~e&g), t1=(k+s1+ch+K[i]+w[i])>>>0;
       const s0=rotr(a,2)^rotr(a,13)^rotr(a,22), maj=(a&b)^(a&c)^(b&c), t2=(s0+maj)>>>0;
       k=g; g=f; f=e; e=(d+t1)>>>0; d=c; c=b; b=a; a=(t1+t2)>>>0;
     }
-    for (const [i,value] of [a,b,c,d,e,f,g,k].entries()) h[i]=(h[i]+value)>>>0;
+    h[0]=(h[0]+a)>>>0; h[1]=(h[1]+b)>>>0;
+    h[2]=(h[2]+c)>>>0; h[3]=(h[3]+d)>>>0;
+    h[4]=(h[4]+e)>>>0; h[5]=(h[5]+f)>>>0;
+    h[6]=(h[6]+g)>>>0; h[7]=(h[7]+k)>>>0;
   }
   return [...h].map(value=>value.toString(16).padStart(8,'0')).join('');
 }
