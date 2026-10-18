@@ -4,7 +4,7 @@ export const DIAGNOSTIC_EVENTS=Object.freeze(['route','runtime-error','resource-
 const EVENTS=new Set(DIAGNOSTIC_EVENTS);
 const ERROR_EVENTS=new Set(['runtime-error','resource-error','unhandled-rejection','bootstrap-error','module-error','storage-error','worker-error']);
 const ERROR_CLASSES=new Set(['Error','TypeError','RangeError','SyntaxError','ReferenceError','URIError','EvalError','AggregateError','DOMException','FirebaseError']);
-const isErrorEvent=value=>value?.severity==='error'||ERROR_EVENTS.has(value?.event);
+const isErrorEvent=value=>value?.severity==='error'||ERROR_EVENTS.has(value?.event)||value?.success===false&&!['cancelled','offline','deferred','blocked'].includes(value.code);
 const CODES=new Set(['ok','unknown','cancelled','target-missing','load-failed','timeout','offline','syntax','type','range','resource','promise','storage','network','limit','import-failed','failed','blocked','deferred','ready','conflict','permission','auth','not-found','invalid','quota','deleted','dropped']);
 for(const code of ['marker-not-durable','release-not-verified','deadline','owner-or-route-changed','envelope-not-ready','rollback-unavailable','restore-timeout','storage-unavailable','storage-blocked','snapshot-oversize','snapshot-mismatch','cancelled','owner-changed','busy','checkpoint-unsupported','not-durable','revision-changed'])CODES.add('update/'+code);
 for(const code of ['url-outside-scope','invalid-target','resource-unavailable','integrity','invalid-manifest','invalid-resource','pointer-unavailable','invalid-pointer','unknown-resource','not-prepared','transition-storage-unavailable','entry-import-failed','requested-build-unavailable','invalid-context','context-already-bound'])CODES.add('release/'+code);
@@ -118,6 +118,9 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
   if(disposed)return false;syncIdentity();if(sending||env.navigator?.onLine===false)return false;const bucket=eligible();if(!bucket)return false;if(now()<Math.max(retryAt,lastWrite?lastWrite+DIAGNOSTIC_LIMITS.interval:0)){schedule();return false}
   clearTimer(timer);timer=null;const controller=new AbortController(),flight={bucket,controller};sending=flight;state='sending';
   try{
+   // Pre-auth events remain anonymous, but their first authenticated delivery
+   // permanently owns the session and every idempotent retry, even after a lost ACK.
+   if(!bucket.owner.auth){bucket.owner={...bucket.owner,auth:backend.user.uid,key:backend.user.uid+'|anonymous'};persist()}
    if(!bucket.session){const payload={clientSessionId:bucket.clientSessionId,installationId,build:bucket.build,environment:bucket.environment};if(bucket.owner.studentKey)payload.studentKey=bucket.owner.studentKey;const session=await request('openSession',payload,controller.signal);if(disposed)return false;bucket.session={sessionId:session.sessionId,subjectKey:session.subjectKey,generation:session.generation,reportCode:session.reportCode};persist()}
    if(!bucket.pending){const events=[];while(bucket.queue.length&&events.length<12){const next=bucket.queue[0];if(byteSize({sessionId:bucket.session.sessionId,batchId:uid(env),events:[...events,next],dropped:bucket.dropped,deduplicated:bucket.deduplicated})>DIAGNOSTIC_LIMITS.batchBytes-1024)break;events.push(bucket.queue.shift())}if(!events.length)return false;bucket.pending={batchId:uid(env),events,dropped:Math.min(1e6,bucket.dropped),deduplicated:Math.min(1e6,bucket.deduplicated)};bucket.dropped=0;bucket.deduplicated=0;persist()}
    const packet=bucket.pending;lastWrite=now();persist();await request('append',{sessionId:bucket.session.sessionId,...packet},controller.signal);if(disposed)return false;
