@@ -1,3 +1,7 @@
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
+import {bootstrapUpdateCoordinator,UPDATE_PENDING_KEY} from '../../assets/js/platform-update-coordinator.js';
+import {getSharedPlatformDiagnostics} from '../../assets/js/diagnostics.js';
+import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 import {backend} from '../../assets/js/backend.js?v=1.3.10';
 import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.10';
@@ -8,7 +12,7 @@ import {durableStore} from '../../assets/js/durable-store.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
-const courseResponse=await fetch(new URL('../../data/course.json',import.meta.url));
+const courseResponse=await fetch(resourceURL('../../data/course.json',import.meta.url));
 if(!courseResponse.ok)throw new Error('Course catalogue unavailable');
 const course=await courseResponse.json();
 const $=selector=>document.querySelector(selector);
@@ -18,7 +22,8 @@ const courseUrl=new URL(free?'../../#games':'../../#activity/seminar-7',import.m
 const currentOwner=()=>attemptOwner()==='guest'&&free?'guest:governor':attemptOwner();
 let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false;
 const storageValues=new Map(),pendingCheckpoints=new Set();
-let latestSaveStatus=null;
+let latestSaveStatus=null,updateAdapter=null,updateCoordinator=null,updatePaused=false;
+const diagnosticService=getSharedPlatformDiagnostics({backend,getLocale:()=>getLocale(),getModule:()=> 'governor'});let diagnostics=diagnosticService.forModule('governor');
 let language=G.I18n.normalize(getLocale());
 const tr=(ru,en,zh)=>language==='zh'&&zh?zh:G.I18n.choose(language,ru,en);
 const local=value=>G.I18n.local(value,language);
@@ -35,10 +40,10 @@ const terminal=s=>Boolean(s&&(s.completed||G.BudgetReview.stopped(s)));
 function stored(key,fallback=null){try{return JSON.parse(storage.getItem(key))??fallback;}catch{return fallback;}}
 function checkpointCampaign(state){
  if(!owner||!run||!state)return Promise.resolve();
- const snapshot={campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)};
+ const snapshot={campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)},started=performance.now(),scope=diagnostics;
  const promise=backend.checkpoint({owner,activitySlug,mode:'campaign',attemptId:run.submissionId,contentVersion:String(state.version||'governor-v1'),phase:terminal(state)?'completed':'answering',state:snapshot},{queue:owner.startsWith('student:')})
-  .then(saved=>{latestSaveStatus=saved.saveStatus;if(sameOwner())refresh();return saved;})
-  .catch(error=>{window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner,errorCode:error.code||'storage/unavailable'}}));return null;});
+  .then(saved=>{scope.record('checkpoint',{operation:'draft-save',success:!!saved.saveStatus?.durable,code:saved.saveStatus?.durable?'ok':'storage',durationMs:performance.now()-started});latestSaveStatus=saved.saveStatus;if(sameOwner())refresh();return saved;})
+  .catch(error=>{scope.error(error,{event:'checkpoint',code:'storage',operation:'save',durationMs:performance.now()-started});window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner,errorCode:error.code||'storage/unavailable'}}));return null;});
  pendingCheckpoints.add(promise);promise.finally(()=>pendingCheckpoints.delete(promise));return promise;
 }
 async function flushCampaign(){if(runtime?.state())await checkpointCampaign(runtime.state());await Promise.allSettled([...pendingCheckpoints]);await durableStore.flush();}
@@ -131,10 +136,10 @@ function submissionDialog(){
   if(!d.open)d.showModal();
 }
 async function submit(){
-  if(submissionBusy||!sameOwner()||(!free&&backend.isAdmin())||!runtime?.canWrite()||(free&&run?.submitted))return;
+  if(updatePaused||submissionBusy||!sameOwner()||(!free&&backend.isAdmin())||!runtime?.canWrite()||(free&&run?.submitted))return;
   const state=runtime?.state();if(!terminal(state))return;
   if(run&&backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner)){refresh();return;}
-  submissionBusy=true;$('#platform-submit').disabled=true;
+  submissionBusy=true;$('#platform-submit').disabled=true;const started=performance.now(),scope=diagnostics;
   try{
     ensureRun(state);
     const submittingRun=run;
@@ -144,13 +149,13 @@ async function submit(){
     if(!sameOwner())throw new Error('auth/profile-changed');
     if(free&&!owner.startsWith('student:'))await durableStore.complete({owner,activitySlug,mode:'campaign',attemptId:record.id,state:{campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)},attempt:{...record,draftMode:'campaign'}},{queue:false});
     else await backend.saveAttempt({...record,draftMode:'campaign'});
-    submittingRun.submitted=true;
+    scope.record('result-save',{operation:'submit',success:true,durationMs:performance.now()-started});submittingRun.submitted=true;
     // Replay can start while the previous result is being written. A receipt
     // belongs to the captured campaign and must never mark its successor sent.
     if(run===submittingRun)persistRun();
     if(sameOwner()){refresh();if($('#platform-submission').open)submissionDialog();}
   }catch(error){
-      if(sameOwner()){if(free){message(tr('Не удалось сохранить итог. Повторим при следующем открытии.','Could not save the result. It will be retried on reopening.','暂未保存结果，下次打开时将重试。'));return;}const text=tr('Сохранение оценки пока не подтверждено. Откройте «Отчёт к семинару» и повторите отправку.','Grade saving is not confirmed yet. Open the seminar report and retry submission.');message(text);$('#platform-submission-status').textContent=text;$('#platform-submit').disabled=false;}
+      scope.error(error,{event:'result-save',operation:'submit',durationMs:performance.now()-started});if(sameOwner()){if(free){message(tr('Не удалось сохранить итог. Повторим при следующем открытии.','Could not save the result. It will be retried on reopening.','暂未保存结果，下次打开时将重试。'));return;}const text=tr('Сохранение оценки пока не подтверждено. Откройте «Отчёт к семинару» и повторите отправку.','Grade saving is not confirmed yet. Open the seminar report and retry submission.');message(text);$('#platform-submission-status').textContent=text;$('#platform-submit').disabled=false;}
   }finally{submissionBusy=false;}
 }
 async function tryStart(){
@@ -161,7 +166,7 @@ async function tryStart(){
     const now=backend.globalNow(),gate=topicGate(7,backend.getAccessOverrides(academicContext(now).startYear),now);
     block(gate.override==='closed'?tr('Раздел 7 закрыт преподавателем.','Section 7 is closed by the instructor.'):tr(`Раздел 7 откроется ${formatAccessDate(gate.opensAt,'ru')}.`,`Section 7 opens on ${formatAccessDate(gate.opensAt,'en')}.`));return;
   }
-  started=true;active=true;owner=candidate;
+  started=true;active=true;owner=candidate;diagnostics.destroy();diagnostics=diagnosticService.forModule('governor');const loadEnd=diagnostics.span('module-load');
   const scoped=scopedStorage(localStorage,owner,{context});
   const observed=new Map();
   const remember=key=>{if(!storageValues.has(key)){let value=null;try{value=scoped.getItem(key);}catch{}storageValues.set(key,value);observed.set(key,value);}return storageValues.get(key);};
@@ -184,17 +189,29 @@ async function tryStart(){
   G.Platform={
     storage,lockName:scoped.lockName,storageKey:scoped.keyFor(G.Saves.Key),offlineEnabled:false,
     language,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):(profile?.fullName||tr('Гость','Guest','访客')),group:profile?.group||''},
-    canWrite:sameOwner,onNewRun:runChanged,onError:()=>block(tr('Не удалось запустить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not start. Reload or return to section 7.')),
+    canWrite:()=>!updatePaused&&sameOwner(),onResume:()=>{identityChanged();updateCoordinator?.notifyStateChanged();},onNewRun:runChanged,onError:()=>{loadEnd({success:false,code:'load-failed'});diagnostics.record('module-error',{operation:'load',success:false,code:'load-failed'});block(tr('Не удалось запустить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not start. Reload or return to section 7.'));},
     onSaved:state=>{try{ensureRun(state);refresh();if(runtime&&terminal(state)&&(free||!backend.isAdmin()))submit();}catch{message(tr('Партия сохранена; сведения об отчёте требуют свободного места на устройстве.','Campaign saved; report metadata needs free device storage.'));}},
     onLanguage:next=>{language=G.I18n.normalize(next);setLocale(language);refresh();},
     onEnd:host=>{if(host.querySelector('[data-platform-submit]'))return;const b=document.createElement('button');b.type='button';b.className='primary-button';b.dataset.platformSubmit='';b.textContent=free?tr('Отчёт о кампании','Campaign report','游戏报告'):tr('Оценка и отчёт к семинару','Seminar grade and report');b.addEventListener('click',submissionDialog);host.append(b);},
-    attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();if(terminal(runtime.state())&&(free||!backend.isAdmin()))submit();}
+    attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();installUpdateAdapter();loadEnd({success:true});diagnostics.record('module-ready',{success:true});if(!sessionStorage.getItem(UPDATE_PENDING_KEY)&&terminal(runtime.state())&&(free||!backend.isAdmin()))submit();}
   };
   try{
-    await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='./src/app.js';script.onload=resolve;script.onerror=reject;document.body.append(script);});
-  }catch{started=false;block(tr('Не удалось загрузить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not be loaded. Reload or return to section 7.'));}
+    await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=resourceURL('./src/app.js',import.meta.url).href;script.onload=resolve;script.onerror=reject;document.body.append(script);});
+  }catch(error){loadEnd({success:false,code:'load-failed'});diagnostics.error(error,{event:'module-error',operation:'load'});started=false;block(tr('Не удалось загрузить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not be loaded. Reload or return to section 7.'));}
 }
 
+function installUpdateAdapter(){
+ updateAdapter?.destroy();
+ updateAdapter=createUpdateAdapter({module:'governor',root:document.body,diagnostics,getIdentity:()=>({owner:currentOwner()}),
+  isBusy:()=>!sameOwner()||submissionBusy||!!runtime?.updateBusy?.(),
+  pause:async value=>{updatePaused=value;runtime.pauseForUpdate(value);if(value)await Promise.allSettled([...pendingCheckpoints]);},
+  capture:()=>({schema:1,runtime:runtime.captureForUpdate(),view:captureUpdateView(document.body)}),
+  checkpoint:async()=>{if(!sameOwner())throw Error('update/identity');const state=runtime.checkpointForUpdate();if(!state)return {durable:true,revision:0,checkpointRef:{kind:'start'}};if(!run)throw Error('update/missing-attempt');const field=$('#platform-reflection');if(field&&!field.readOnly&&!run.submitted)run.reflection=field.value.slice(0,6000);const saved=await checkpointCampaign(state);if(saved?.saveStatus?.durable!==true)throw Error('update/not-durable');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:run.submissionId,revision:saved.revision}};},
+  restore:async({state,checkpointRef},{signal}={})=>{if(state.schema!==1||checkpointRef.attemptId&&checkpointRef.attemptId!==run?.submissionId)return {status:'blocked',code:'incompatible'};if(!runtime.restoreForUpdate(state.runtime))return {status:'partial',code:'incompatible'};await restoreUpdateView(document.body,state.view,{signal});return {status:'restored',code:'ok'};}
+ });
+ if(!updateCoordinator)updateCoordinator=bootstrapUpdateCoordinator({getAdapters:()=>updateAdapter?[updateAdapter]:[],backend,diagnostics,module:'governor',getOwner:currentOwner,getRoute:()=>context+location.hash});
+ void updateCoordinator.restorePending();
+}
 $('#platform-back').href=courseUrl;
 $('#platform-loading-back').href=courseUrl;
 $('#platform-report').addEventListener('click',()=>{if(runtime?.state())submissionDialog();else message(tr('Сначала начните или продолжите кампанию.','Start or resume a campaign first.'));});
@@ -203,7 +220,7 @@ $('#platform-readable').addEventListener('click',()=>{$('#platform-submission').
 $('#platform-submit').addEventListener('click',submit);
 $('#platform-reflection').addEventListener('input',()=>{if(!run||!sameOwner()||run.submitted)return;run.reflection=$('#platform-reflection').value.slice(0,6000);try{persistRun();}catch{message(tr('Не удалось сохранить текст. Скопируйте его перед закрытием страницы.','Text could not be saved. Copy it before closing this page.'));}});
 $('#platform-back').addEventListener('click',async event=>{event.preventDefault();await flushCampaign();location.href=courseUrl;});
-window.addEventListener('pagehide',()=>{if(runtime?.state())checkpointCampaign(runtime.state());});
+window.addEventListener('pagehide',()=>{if(!updatePaused&&runtime?.state())checkpointCampaign(runtime.state());});
 window.addEventListener('rudn:identitychange',identityChanged);
 window.addEventListener('rudn:accesschange',identityChanged);
 window.addEventListener('visibilitychange',()=>{if(!document.hidden)identityChanged();});
@@ -227,7 +244,7 @@ if('serviceWorker'in navigator){
   const prepare=()=>{
     if(preparing||moduleReady||!navigator.serviceWorker.controller)return;
     preparing=true;updateOfflineStatus();
-    navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,new URL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
+    navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,resourceURL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
   };
   navigator.serviceWorker.addEventListener('message',event=>{
     if(event.source!==navigator.serviceWorker.controller||event.data?.type!=='MODULE_CACHE_STATUS'||event.data.module!=='governor')return;
@@ -236,6 +253,6 @@ if('serviceWorker'in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{preparing=false;moduleReady=false;prepare();});
   window.addEventListener('online',prepare);
   window.addEventListener('rudn:locale',updateOfflineStatus);
-  navigator.serviceWorker.register(new URL('../../service-worker.js',import.meta.url))
+  navigator.serviceWorker.register(new URL('service-worker.js',getReleaseContext()?.siteRoot||new URL('../../',import.meta.url)))
     .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
 }

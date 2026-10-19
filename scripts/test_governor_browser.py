@@ -171,13 +171,20 @@ class Suite:
             assert dialog["left"] >= -1 and dialog["right"] <= metrics["width"] + 1, (label, dialog)
             assert dialog["scroll"] <= dialog["width"] + 1, (label, dialog)
 
+    def course_entry(self, page):
+        link = page.get_by_role("link", name="Открыть симулятор", exact=True)
+        link.wait_for()
+        # Resource resolution may serialize an absolute href. The destination,
+        # visible affordance and same-window contract must remain exact.
+        assert link.evaluate("node=>node.href") == self.server.base + "apps/governor/index.html"
+        assert link.get_attribute("target") != "_blank"
+        return link
+
     def native(self, page, from_course=False):
         if from_course:
             page.goto(self.server.base + "#activity/seminar-7", wait_until="networkidle")
             self.current["course_title"] = page.title()
-            link = page.locator('a[href="apps/governor/index.html"]')
-            link.wait_for()
-            assert link.get_attribute("target") != "_blank"
+            link = self.course_entry(page)
             count = len(page.context.pages)
             link.click()
             self.ready(page)
@@ -327,7 +334,7 @@ class Suite:
         assert len(second["attempts"]) == 1
         self.current["same_seed_new_run"] = "Same model session ID; distinct secure run and submission IDs"
         page.locator("#platform-back").click()
-        page.locator('a[href="apps/governor/index.html"]').wait_for()
+        self.course_entry(page)
         assert page.url == self.server.base + "#activity/seminar-7"
         assert len(context.pages) == 1 and page.locator("iframe").count() == 0
         self.screenshot(page, label + "-return-course")
@@ -476,7 +483,7 @@ class Suite:
         assert len(after["save"]["state"]["history"]) == 2
         assert after["run"]["submissionId"] == saved["run"]["submissionId"]
         page.locator("#platform-back").click()
-        page.locator('a[href="apps/governor/index.html"]').wait_for()
+        self.course_entry(page)
         assert page.url == self.server.base + "#activity/seminar-7"
         page.wait_for_function("""() => {
           const image=document.querySelector('img[src="assets/course/previews/seminar_07_simulator.jpg"]');

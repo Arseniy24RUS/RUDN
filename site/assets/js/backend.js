@@ -12,7 +12,8 @@ import {commitPuzzleLeaderboard} from './puzzle-storage.js?v=1.3.10';
 if(!CONFIG.emulators)installFirebaseGateway(CONFIG.firebaseGateway);
 import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
-import {claimDiagnosticSession,writeDiagnosticBatch,confirmDiagnosticBatch,readDiagnosticPage} from './diagnostics-transport.js';
+import {claimDiagnosticSession,writeDiagnosticBatch,confirmDiagnosticBatch,readDiagnosticPage,requestDiagnostics} from './diagnostics-transport.js';
+import {diagnosticEndpoint,diagnosticIdentityAllowed} from './diagnostics-cloud-policy.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -195,6 +196,30 @@ class Backend{
     return this.auth.sendPasswordResetEmail(this.authClient,identifier);
   }
   async adminSignOut(){return this.signOut()}
+  async ensureDiagnosticIdentity(){
+    // Background anonymous auth adds no profile or mandatory login UI.
+    // The production gateway accepts only the configured published origin.
+    // Local/demo mounts retain their local diagnostic queue without contacting it.
+    if(!diagnosticIdentityAllowed(CONFIG,globalThis.location?.href))return null;
+    await this.init();if(!this.authClient)throw serviceError('diagnostics/unavailable');
+    if(this.loginPending)await this.loginPending;
+    if(!this.authClient.currentUser)await this.ensureStudentCloud();
+    return this.user;
+  }
+  async diagnosticsRequest(action,payload={},options={}){
+    if(!this.user)throw serviceError('diagnostics/auth-required');
+    const endpoint=diagnosticEndpoint(CONFIG);
+    if(!endpoint)throw serviceError('diagnostics/unavailable');
+    const uid=this.user.uid,generation=this.generation;
+    const adminActions=new Set(['searchStudents','listSessions','readEvents','exportSession','createExport','status','previewDelete','delete','migrateLegacy']);
+    if(adminActions.has(action)&&!this.isAdmin())throw serviceError('diagnostics/admin-required');
+    const active=()=>!options.signal?.aborted&&this.user?.uid===uid&&this.generation===generation;
+    const token=await this.user.getIdToken();
+    if(!active())throw serviceError('diagnostics/identity-changed');
+    const result=await requestDiagnostics({endpoint,token,action,payload,signal:options.signal});
+    if(!active())throw serviceError('diagnostics/identity-changed');
+    return result;
+  }
   async signOut(){
     this.checkpointSync?.stop();
     this.restAvailableAt=0;
@@ -258,17 +283,8 @@ class Backend{
     const result=await readDiagnosticPage({transport:this.restTransport(),after,signal,now:()=>this.globalNow(),isCurrent:active});
     if(!active())throw serviceError('auth/profile-changed');
     const expired=result.expiredPaths;
-    // Opportunistic cleanup, not a server TTL. No student/profile data is fetched.
-    let cleanupScheduled=0;
-    if(expired.length&&!this.diagnosticCleanup){
-      const paths=expired.slice(0,32);cleanupScheduled=paths.length;
-      this.diagnosticCleanup=(async()=>{
-        for(let i=0;i<paths.length;i+=4){
-          if(!active())return;
-          await Promise.allSettled(paths.slice(i,i+4).map(path=>this.restTransport().transaction(path,current=>current?.expiresAt<=this.globalNow()?null:undefined,{retries:1,signal})));
-        }
-      })().catch(()=>{}).finally(()=>{this.diagnosticCleanup=null});
-    }
+    // Legacy records are archived by the migration, never deleted on a UI read.
+    const cleanupScheduled=0;
     if(!active())throw serviceError('auth/profile-changed');
     return {rows:result.rows,expired:expired.length,cleanupScheduled,nextAfter:result.nextAfter};
   }
@@ -836,3 +852,16 @@ class Backend{
 }
 
 export const backend=new Backend();
+// Capture technical context at invocation; never inspect arguments or results.
+// Telemetry transport is deliberately outside this list to avoid recursive logs.
+for(const operation of ['checkpoint','loadDraft','saveAttempt','queueAttachment','syncLocalToCloud']){
+  const original=backend[operation];
+  if(typeof original!=='function')continue;
+  backend[operation]=async function(...args){
+    const scope=globalThis.__RUDN_DIAGNOSTICS__?.forModule?.();
+    const end=scope?.span?.(operation);
+    try{const result=await original.apply(this,args);end?.({success:true});return result}
+    catch(error){scope?.error?.(error,{operation});end?.({success:false,code:error?.name==='QuotaExceededError'?'storage':'failed'});throw error}
+    finally{scope?.destroy?.()}
+  };
+}

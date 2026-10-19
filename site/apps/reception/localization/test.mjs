@@ -6,6 +6,7 @@ import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const playwright = require(process.env.PLAYWRIGHT_PATH || 'playwright');
 const files = Object.fromEntries(await Promise.all(['runtime.js', 'ui.js', 'catalog-loader.js', 'validation.js'].map(async name => [`/${name}`, await readFile(new URL(name, import.meta.url))])));
+files['/assets/js/release-resources.js'] = await readFile(new URL('../../../assets/js/release-resources.js', import.meta.url));
 const server = createServer((request, response) => {
   response.setHeader('Cache-Control', 'no-store');
   if (files[request.url]) { response.setHeader('Content-Type', 'text/javascript'); response.end(files[request.url]); }

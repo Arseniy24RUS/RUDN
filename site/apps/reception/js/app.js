@@ -1,5 +1,7 @@
 import {confirmAction} from './confirm.js';
 import {durableStore} from '../../../assets/js/durable-store.js';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../../assets/js/platform-update-state.js';
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {characterFor,ensureVisualCast,gfxCaseKey} from './characters.js';
 import {GFX_DOCUMENTS,GFX_EVIDENCE} from './graphics-data.js';
 import {renderSourceMonitor,renderSourceProvenance} from './source-monitor-ui.js';
@@ -23,14 +25,15 @@ import {buildPilotReport,pilotCSV} from './pilot.js';
 import {createReceptionStorage,receptionStorageContext,storeKey,archiveDraft,legacyDrafts,recentCaseIds,exportJSON} from './storage.js';
 import {icon,esc} from './icons.js';
 import {parseDateOnly,formatDateOnly,durationLabel,monthDays,moveMonth,CALENDAR_SOURCES} from '../../../assets/js/legal-calendar.js';
-const media=path=>new URL('../'+path,import.meta.url).href;
+const media=path=>resourceURL('../'+path,import.meta.url).href;
 const button=(text,action,cls='',extra='',ico='')=>`<button type="button" class="rx-btn ${cls}" data-action="${action}" ${extra}>${ico?icon(ico):''}${esc(text)}</button>`;
 const sourceLink=(url,label='Открыть источник')=>safeUrl(url)?`<a class="rx-btn small" href="${esc(safeUrl(url))}" target="_blank" rel="noopener noreferrer">${esc(label)}${icon('out')}</a>`:'';
 const section=(ico,title,description='')=>`<div class="rx-section-head"><span class="rx-section-icon">${icon(ico)}</span><div><h2>${esc(title)}</h2>${description?`<p>${esc(description)}</p>`:''}</div></div>`;
 const TABS=[['talk','talk','Приём'],['docs','folder','Документы'],['research','search','Источники'],['calendar','clock','Календарь'],['plan','plan','Решение'],['history','history','История']];
 
 /** Uses the host platform's existing backend. Never creates or edits Firebase rules. */
-export async function mountReception(root,options={}){
+export async function mountReception(root,options={}){const finish=options.diagnostics?.span?.('module-load');try{const handle=await mountReceptionInternal(root,options);finish?.({success:handle?.module==='reception',code:handle?.module==='reception'?'ok':options.signal?.aborted?'cancelled':'load-failed'});return handle;}catch(error){finish?.({success:false,code:error.name==='AbortError'?'cancelled':'load-failed'});options.diagnostics?.error?.(error,{event:'module-error',operation:'load'});throw error;}}
+async function mountReceptionInternal(root,options={}){
  const lifetime=new AbortController(),parentSignal=options.signal;
  if(parentSignal?.aborted)return ()=>{};
  const abort=()=>lifetime.abort();
@@ -50,7 +53,7 @@ export async function mountReception(root,options={}){
  const owner=ownerNow(),period=options.period||academicPeriod();
  const repository=createReceptionStorage({owner,period,backend,context});
  const readDraftResult=(_owner,mode)=>repository.read(mode);
- const writeDraft=(draft,_storage,settings)=>repository.write(draft,settings);
+ const writeDraft=async(draft,_storage,settings)=>{const started=performance.now();try{const result=await repository.write(draft,settings);options.diagnostics?.record?.('checkpoint',{operation:'draft-save',success:result.ok&&result.saveStatus?.durable===true,code:result.ok?'ok':result.conflict?'conflict':'storage',durationMs:performance.now()-started});return result;}catch(error){options.diagnostics?.error?.(error,{event:'checkpoint',operation:'draft-save',durationMs:performance.now()-started});throw error;}};
  const assessmentProfile=options.assessmentProfile||RECEPTION_SETTINGS.assessmentProfile;getShiftProfile(assessmentProfile);
  let practiceProfile='balanced-six',pilotReport=null,pilotOpen=false,pilotStatus='';
  let sourceMonitorObservations=[],sourceReportNote='',sourceMonitorOpen=false,sourceQuery='',sourceFilter='all',sourceExpanded='',sourceAsOf='';
@@ -90,7 +93,7 @@ export async function mountReception(root,options={}){
  const pageSize=12;
  const displayTitle=c=>state.mode==='practice'?c.title:`Обращение: ${c.topic}`;
  const focusPanel=()=>{const el=root.querySelector(state.screen==='work'?'.rx-panel h2':state.screen==='summary'?'.rx-summary h1':'.rx-hero h1');if(el){el.tabIndex=-1;el.focus({preventScroll:true});el.scrollIntoView({block:'start',behavior:'instant'});}};
- let disposed=false,closing=false,busy=false,calendarLoading=false,queue=Promise.resolve(),notice='',tab='talk',month='',dayLabel='',showCalculation=false,activeDoc='',lastAnswer='',previewText=false;
+ let disposed=false,closing=false,busy=false,calendarLoading=false,queue=Promise.resolve(),notice='',tab='talk',month='',dayLabel='',showCalculation=false,activeDoc='',lastAnswer='',previewText=false,updatePaused=false,updateAdapter=null;
  const legacy=legacyDrafts(owner,contextStorage,period);
  if(loaded.status==='empty'){const firstSave=await writeDraft(state);if(!firstSave.ok)problem='Не удалось закрепить назначенную смену на устройстве. Разрешите сохранение данных сайта.';}
  tab=state.cases[state.caseIds[state.active]].phase||'talk';
@@ -108,7 +111,7 @@ export async function mountReception(root,options={}){
  }
  cleanupEvents.push(durableStore.subscribe(event=>{if(event.owner===owner)updateReceipt()}));
  root.classList.add('reception-root');
- const cssId='rudn-reception-style-v101';if(!document.getElementById(cssId)){const link=document.createElement('link');link.id=cssId;link.rel='stylesheet';link.href=new URL('../style.css?v=1.0.1',import.meta.url).href;document.head.append(link);}
+ const cssId='rudn-reception-style-v101';if(!document.getElementById(cssId)){const link=document.createElement('link');link.id=cssId;link.rel='stylesheet';link.href=resourceURL('../style.css?v=1.0.1',import.meta.url).href;document.head.append(link);}
  const policy=()=>modePolicy(state.mode),current=()=>caseById(state.caseIds[state.active],state),progress=()=>state.cases[current().id],locked=()=>state.completed||(isIndependent(state.mode)&&Boolean(progress().first));
  const opts=(items,key)=>orderedOptions(items,state.seed,current().id+key);
  function choices(path,title,items,value,disabled=locked()){
@@ -228,11 +231,11 @@ export async function mountReception(root,options={}){
   queue=queue.then(job,job);return queue;
  }
  async function sendResult(){if(disposed||busy||!policy().grade||state.submitted||!state.completed)return;if(!canGrade()){notice='Передача остановлена: проверьте профиль и доступность семинара. Сохранённая попытка не удалена.';render();return;}
-  busy=true;render();const captured=clone(state);
+  busy=true;render();const captured=clone(state),started=performance.now();
   try{const result=await backend.saveAttempt({...makeAttempt(captured,backend.getProfile().studentKey),draftMode:`${period}:${captured.mode}`});if(result?.preview)throw Error('Платформа вернула режим предварительного просмотра вместо сохранения.');
    const saved=(await readDraftResult(owner,captured.mode,period)).state;if(saved?.id===captured.id){saved.submitted=true;saved.submittedAt=new Date().toISOString();const marked=await writeDraft(saved);if(!marked.ok)throw Error('Платформа приняла попытку, но отметку об этом не удалось сохранить. Повторная передача безопасна.');if(state.id===saved.id)state=saved;}
-   notice='Работа завершена. Итоговый балл рассчитан.';
-  }catch(error){notice=`Не удалось подтвердить передачу: ${error.message||'ошибка соединения'}. Повторите её без создания новой попытки.`;}
+   options.diagnostics?.record?.('result-save',{operation:'submit',success:true,durationMs:performance.now()-started});notice='Работа завершена. Итоговый балл рассчитан.';
+  }catch(error){options.diagnostics?.error?.(error,{event:'result-save',operation:'submit',durationMs:performance.now()-started});notice=`Не удалось подтвердить передачу: ${error.message||'ошибка соединения'}. Повторите её без создания новой попытки.`;}
   finally{busy=false;render();}
  }
  async function selectMode(mode){
@@ -270,7 +273,7 @@ export async function mountReception(root,options={}){
   finally{busy=false;calendarLoading=false;render();focusPanel();}
  }
 
- async function click(e){if(calendarLoading)return;if(e.target.closest('[data-source-report-pick]')){e.preventDefault();root.querySelector('[data-source-report]')?.click();return;}const external=e.target.closest('[data-source-open]');if(external&&root.contains(external)&&!locked()&&!problem){const id=external.dataset.sourceOpen;await mutate(s=>{const p=s.cases[current().id];if(!p.evidence.externalOpened.includes(id))p.evidence.externalOpened.push(id);event(s,'source-link-opened',current().id,{recordId:id});},{redraw:false});return;}const target=e.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled)return;const action=target.dataset.action;notice='';
+ async function click(e){if(updatePaused||calendarLoading)return;if(e.target.closest('[data-source-report-pick]')){e.preventDefault();root.querySelector('[data-source-report]')?.click();return;}const external=e.target.closest('[data-source-open]');if(external&&root.contains(external)&&!locked()&&!problem){const id=external.dataset.sourceOpen;await mutate(s=>{const p=s.cases[current().id];if(!p.evidence.externalOpened.includes(id))p.evidence.externalOpened.push(id);event(s,'source-link-opened',current().id,{recordId:id});},{redraw:false});return;}const target=e.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled)return;const action=target.dataset.action;notice='';
   if(action==='retry-locale'){presentationFailedKey='';render();return;}
   if(action==='open-bank'){try{busy=true;await loadCaseCatalog({signal:lifetime.signal});bankOpen=true;}catch(error){notice=error.message;}finally{busy=false;render();}return;}
   if(action.startsWith('source-monitor-')){try{await loadSourceIndex({signal:lifetime.signal});}catch(error){sourceReportNote=error.message;render();return;}}
@@ -303,7 +306,7 @@ export async function mountReception(root,options={}){
    if(action==='finish'){if(await mutate(s=>completeShift(s)))await sendResult();focusPanel();return;}
   }catch(error){notice=error.message||'Не удалось выполнить действие.';render();}
  }
- async function change(e){if(calendarLoading)return;
+ async function change(e){if(updatePaused||calendarLoading)return;
  if(e.target.matches('[data-source-report]')&&canInspectSources()){try{const file=e.target.files?.[0];if(!file)return;if(file.size>2000000)throw Error('Отчёт слишком велик');const text=await file.text();if(disposed||ownerNow()!==owner)return;sourceMonitorObservations=parseSourceObservations(text);sourceReportNote='Загружен локальный технический отчёт. Правовые тексты и оценки не менялись.';}catch(error){sourceReportNote='Отчёт не принят: '+error.message;}render();return;}
  if(e.target.matches('[data-source-filter],[data-source-asof]')){root.querySelector('[data-action=source-monitor-search]')?.click();return;}
   if(e.target.matches('[data-calendar-month],[data-calendar-year]')){
@@ -353,8 +356,16 @@ export async function mountReception(root,options={}){
   profileIsUserContent:()=>options.profileLabelIsUserContent===true||Boolean(!options.profileLabel&&backend?.getProfile?.()?.fullName),
   getOptionalViews:()=>({includeCatalog:bankOpen,includeSourceIndex:sourceMonitorOpen}),onMissing:options.onMissingTranslation||(()=>{})});
  render();if(state.completed&&!state.submitted&&policy().grade)sendResult();
- const cleanup=()=>{if(cleanupPromise)return cleanupPromise;closing=true;presenter?.destroy();cleanupEvents.forEach(fn=>fn());root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',onInput);window.removeEventListener('rudn:identitychange',identity);window.removeEventListener('storage',storage);cleanupPromise=flush().finally(()=>{disposed=true;release();});return cleanupPromise;};
+ updateAdapter=createUpdateAdapter({module:'reception',root,signal:lifetime.signal,diagnostics:options.diagnostics,
+  getIdentity:()=>({owner:ownerNow(),attemptId:state.id}),isBusy:()=>disposed||closing||busy||calendarLoading||!!problem||!!presentationRequestKey||!!document.querySelector('.rx-help-dialog[open]'),
+  pause:async value=>{updatePaused=value;if(value)await queue;},
+  capture:()=>({version:VERSION,view:captureUpdateView(root),tab,month,dayLabel,showCalculation,activeDoc,lastAnswer,previewText,bankFilter,bankQuery,bankTopic,bankPage,bankOpen,activeSource,sourceMonitorOpen,sourceQuery,sourceFilter,sourceExpanded,sourceAsOf,practiceProfile}),
+  checkpoint:async()=>{await queue;if(ownerNow()!==owner||problem)throw Error('update/conflict');const draft=clone(state);if(!draft.completed&&!locked()){const p=draft.cases[draft.caseIds[draft.active]];for(const el of root.querySelectorAll('input[data-field],textarea[data-field],select[data-field]')){if(el.disabled||el.type==='file'||['radio','checkbox'].includes(el.type)&&!el.checked)continue;const parts=el.dataset.field.split('.');if(parts.some(k=>['__proto__','prototype','constructor'].includes(k)))continue;if(parts.length===2&&p[parts[0]]&&Object.hasOwn(p[parts[0]],parts[1]))p[parts[0]][parts[1]]=el.value;else if(parts.length===1&&Object.hasOwn(p,parts[0]))p[parts[0]]=el.value;}}const result=await writeDraft(draft);if(!result.ok||result.saveStatus?.durable!==true)throw Error('update/not-durable');state=draft;return {durable:true,revision:state.revision,checkpointRef:{id:state.id,revision:state.revision,version:VERSION}};},
+  restore:async({state:saved,checkpointRef},{signal}={})=>{if(checkpointRef.id!==state.id||saved.version!==VERSION)return {status:'blocked',code:'incompatible'};tab=TABS.some(([id])=>id===saved.tab)?saved.tab:'talk';month=String(saved.month||'');dayLabel=String(saved.dayLabel||'');showCalculation=!!saved.showCalculation;activeDoc=String(saved.activeDoc||'');lastAnswer=String(saved.lastAnswer||'');previewText=!!saved.previewText;bankFilter=String(saved.bankFilter||'all');bankQuery=String(saved.bankQuery||'');bankTopic=String(saved.bankTopic||'all');bankPage=Math.max(0,Number(saved.bankPage)||0);bankOpen=!!saved.bankOpen;activeSource=String(saved.activeSource||'');sourceMonitorOpen=!!saved.sourceMonitorOpen&&canInspectSources();sourceQuery=String(saved.sourceQuery||'');sourceFilter=String(saved.sourceFilter||'all');sourceExpanded=String(saved.sourceExpanded||'');sourceAsOf=String(saved.sourceAsOf||'');practiceProfile=saved.practiceProfile||practiceProfile;await presenter?.setLocale(wantedLocale());renderMarkup();await restoreUpdateView(root,saved.view,{signal});return {status:'restored',code:'ok'};}
+ });
+ const cleanup=()=>{if(cleanupPromise)return cleanupPromise;closing=true;updateAdapter?.destroy();presenter?.destroy();cleanupEvents.forEach(fn=>fn());root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',onInput);window.removeEventListener('rudn:identitychange',identity);window.removeEventListener('storage',storage);cleanupPromise=flush().finally(()=>{disposed=true;release();});return cleanupPromise;};
  cleanup.flush=flush;
+ cleanup.module='reception';options.diagnostics?.record?.('module-ready',{success:true});cleanup.prepareForUpdate=options=>updateAdapter.prepareForUpdate(options);cleanup.resumeAfterUpdate=options=>updateAdapter.resumeAfterUpdate(options);cleanup.cancelPreparation=options=>updateAdapter.cancelPreparation(options);cleanup.commitPreparation=()=>updateAdapter.commitPreparation();
  lifetime.signal.addEventListener('abort',cleanup,{once:true});
  cleanup.refreshLocale=locale=>{requestedLocale=normalizeReceptionLocale(locale||options.getLocale?.()||document.documentElement.lang);if(!presentationRequestKey&&!presentationFailedKey&&presentationReadyKey===presentationKey())return;presentationFailedKey='';render();};
  cleanup.getLocale=()=>presenter?.getLocale();return cleanup;

@@ -1,12 +1,13 @@
+import {resourceURL} from '../../../../../../../assets/js/release-resources.js';
 /** Local-first loader. No login, CDN, IndexedDB or external tiles block startup. */
 import {artwork,legacySpriteId} from './assets.mjs';
 import {readSettlementsResource} from './network.mjs';
 export const DATA = new URL('../../../../data/settlements/v1/', import.meta.url);
 export const ART = new URL('../../../img/settlements/v1/', import.meta.url);
 export const VISUAL_ART = new URL('../../../img/settlements/v2/', import.meta.url);
-export const sprite = id => artwork(id,new URL(`${legacySpriteId(id)}.webp`,VISUAL_ART).href);
+export const sprite = id => artwork(id,resourceURL(`${legacySpriteId(id)}.webp`,VISUAL_ART).href);
 const trimmed=new Set(['O-01-ready','O-01-build','O-02-ready','O-02-build','O-03-ready','O-03-build','O-04-ready','O-04-build','O-05-ready','O-05-build','O-06-ready','O-06-build','O-09','O-10']);
-export function art(id,size=256){const legacy=legacySpriteId(id),fallback=trimmed.has(legacy)?new URL(`${legacy}.webp`,VISUAL_ART).href:new URL(`${legacy}-${size}.webp`,ART).href;return artwork(id,fallback);}
+export function art(id,size=256){const legacy=legacySpriteId(id),fallback=trimmed.has(legacy)?resourceURL(`${legacy}.webp`,VISUAL_ART).href:resourceURL(`${legacy}-${size}.webp`,ART).href;return artwork(id,fallback);}
 export async function json(url,{signal,timeout=12000}={}){
   return readSettlementsResource(url,{signal,timeout,read:async response=>{
     if(String(url).endsWith('.gz')){

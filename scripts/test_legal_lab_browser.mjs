@@ -12,6 +12,7 @@ import {createHash} from 'node:crypto';
 import {release as osRelease} from 'node:os';
 import {hash32,expandIds,assessmentReady,ACT_TYPES,scanQuestionsFor,SCAN_METADATA_MODE,scoreDossier,searchUnits} from '../site/apps/legal-lab/lib/core.mjs';
 import {PRESENCE_TTL_MS} from '../site/apps/legal-lab/lib/live.mjs';
+import {CONFIG} from '../site/assets/js/config.js';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),args=process.argv.slice(2);
 const arg=(k,d)=>args.includes(k)?args[args.indexOf(k)+1]:d;
 const base=arg('--base','http://127.0.0.1:8765/').replace(/\/?$/,'/');
@@ -123,9 +124,11 @@ async function record(browser,id,viewport,fn,{locale='ru',url=(args.includes('--
  const rec={id,engine:browser._qaName,locale,viewport,mobileEmulation:mobile,status:'fail',startedAt:new Date().toISOString(),url};records.push(rec);
  const context=await browser.newContext({viewport:{width:viewport[0],height:viewport[1]},locale:{ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[locale],hasTouch:viewport[0]<900,...(mobile?{isMobile:true}:{}),serviceWorkers:'allow',acceptDownloads:true});
  await context.tracing.start({screenshots:true,snapshots:true,sources:false});const page=await context.newPage();page.setDefaultTimeout(12000);const errors=[];page.on('pageerror',e=>errors.push(e.message));const consoleErrors=[];page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
- try{await page.goto(url);await ready(page);assert.match(await page.title(),/На подпись|Ready to sign|待签署|Isolated Legal Lab/);await fn(page,context,rec);rec.layout=await layout(page);assert.deepEqual(errors,[]);assert.deepEqual(consoleErrors,[]);rec.status='pass';}
+ const localDemo=['localhost','127.0.0.1','[::1]'].includes(new URL(url).hostname),productionRequests=[],productionHosts=new Set([new URL(CONFIG.firebaseGateway).hostname,new URL(CONFIG.firebase.databaseURL).hostname,'identitytoolkit.googleapis.com','securetoken.googleapis.com']);
+ page.on('request',request=>{const target=new URL(request.url());if(localDemo&&productionHosts.has(target.hostname))productionRequests.push(target.origin+target.pathname);});
+ try{await page.goto(url);await ready(page);assert.match(await page.title(),/На подпись|Ready to sign|待签署|Isolated Legal Lab/);await fn(page,context,rec);rec.layout=await layout(page);assert.deepEqual(errors,[],'No page runtime errors');assert.deepEqual(consoleErrors,[],'No browser console errors');assert.deepEqual(productionRequests,[],'Local UI regression must not contact production Firebase or create anonymous diagnostic accounts');rec.status='pass';}
  catch(e){rec.error=e.stack||String(e);rec.screenshot=await shot(page,id+'-failure').catch(()=>null);rec.dom=await page.locator('body').innerText().catch(()=>null);}
- finally{rec.pageErrors=errors;rec.consoleErrors=consoleErrors;rec.finishedAt=new Date().toISOString();rec.trace=resolve(output,id+'.zip');await context.tracing.stop({path:rec.trace});await context.close();await writeFile(resolve(output,'progress.json'),JSON.stringify({contentVersion:catalog.contentVersion,preliminary,environment,records},null,2));console.log(rec.status.toUpperCase(),id,rec.error?.split('\n')[0]||'');}
+ finally{rec.pageErrors=errors;rec.consoleErrors=consoleErrors;rec.productionNetwork={enforced:localDemo,requests:productionRequests};rec.finishedAt=new Date().toISOString();rec.trace=resolve(output,id+'.zip');await context.tracing.stop({path:rec.trace});await context.close();await writeFile(resolve(output,'progress.json'),JSON.stringify({contentVersion:catalog.contentVersion,preliminary,environment,records},null,2));console.log(rec.status.toUpperCase(),id,rec.error?.split('\n')[0]||'');}
 }
 
 // Expected groups come from the supplied task bank, not the rendering implementation.

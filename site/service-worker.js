@@ -1,4 +1,7 @@
 const SCOPE=new URL(self.registration.scope);
+// Replaced only in the verified deployment staging directory. Source fixtures
+// retain the legacy protocol while the first migration preserves existing tabs.
+const PLATFORM_RELEASE=null;
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
 const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-bounded-reader-1-diagnostics-1`;
@@ -92,6 +95,15 @@ const SHELL=[
   './assets/css/site.css?v=1.3.10',
   './assets/css/puzzle.css?v=1.3.10',
   './assets/js/main.js?v=1.3.10',
+  './assets/js/release-resources.js',
+  './assets/js/release-bootstrap.js',
+  './assets/js/release-recovery.js',
+  './assets/js/platform-update-state.js',
+  './assets/js/platform-update-coordinator.js',
+  './assets/js/platform-update-failures.js',
+  './assets/js/platform-learning-updates.js',
+  './assets/js/diagnostics-bootstrap.js',
+  './assets/js/diagnostics-cloud-policy.js',
   './assets/js/diagnostics.js',
   './assets/js/diagnostics-transport.js',
   './assets/js/diagnostics-ui.js',
@@ -138,6 +150,7 @@ const SHELL=[
   './assets/img/quiz-legislative.png','./assets/img/quiz-executive.png','./assets/img/quiz-judicial.png','./assets/img/quiz-other.svg',
   './assets/course/previews/seminar_07_simulator.jpg',
   './manifest.webmanifest',
+  './data/platform-contracts.json',
   './data/course.json','./data/questions.json','./data/seminar5_variants.json',
   './data/exam_questions.json','./data/question_media.json','./data/symbol_manifest.json'
 ];
@@ -439,7 +452,7 @@ async function prepareResources(paths,{required=false,cacheName=CACHE}={}){
 
 self.addEventListener('install',event=>{
   event.waitUntil(
-    prepareResources([...CORE_SHELL,...PUZZLE_SHELL],{required:true})
+    (PLATFORM_RELEASE?platformPrepare(PLATFORM_RELEASE.current,'shell'):prepareResources([...CORE_SHELL,...PUZZLE_SHELL],{required:true}))
       .then(()=>self.skipWaiting())
   );
 });
@@ -466,6 +479,7 @@ async function bindClient(id,name){
   try{await (await caches.open(CLIENT_CACHE)).put(clientKey(id),new Response(name))}catch{}
 }
 async function activateRelease(){
+  if(PLATFORM_RELEASE)return platformActivate();
   const clients=(await self.clients.matchAll({type:'window',includeUncontrolled:true})).filter(inScopeClient);
   const names=await caches.keys();
   const metadata=await caches.open(CLIENT_CACHE);
@@ -583,11 +597,13 @@ self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const url=new URL(event.request.url);
   if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))return;
+  if(PLATFORM_RELEASE){event.respondWith(platformServe(event));return;}
   const networkFirst=event.request.mode==='navigate'||/\.(?:html|css|m?js|json|geojson|topojson|webmanifest)$/i.test(url.pathname);
   event.respondWith(serveRequest(event,networkFirst));
 });
 
 self.addEventListener('message',event=>{
+  if(PLATFORM_RELEASE&&platformMessage(event))return;
   if(event.data?.type==='BIND_RELEASE'){
     if(!inScopeClient(event.source)||!/^\d+\.\d+\.\d+$/.test(event.data.release))return;
     event.waitUntil((async()=>{
@@ -620,3 +636,110 @@ self.addEventListener('message',event=>{
     if(!result.ready&&cacheName!==CACHE)event.source?.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE'});
   })());
 });
+
+// Exact releases use immutable physical paths. Cache hits and misses always
+// resolve through the same manifest, including dedicated workers and old tabs.
+const platformManifests=new Map(),platformVerified=new Set();
+const platformCache=id=>`${CACHE_PREFIX}release-${id}`;
+const platformURL=value=>{const url=new URL(value,SCOPE);if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))throw new Error('release/url-outside-scope');url.search='';url.hash='';return url;};
+async function platformHash(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
+function platformTarget(target){if(!/^[a-f0-9]{32}$/.test(target?.buildId||'')||!/^[a-f0-9]{64}$/.test(target?.manifestSha256||''))throw new Error('release/invalid-target');const url=platformURL(target.manifestURL);if(url.pathname!==new URL(`_releases/${target.buildId}/manifest.json`,SCOPE).pathname)throw new Error('release/manifest-path');return target;}
+async function platformChecked(url,sha,cacheName){
+  const key=platformURL(url).href;let cache;try{cache=await caches.open(cacheName);}catch{}
+  let response=await cache?.match(key);
+  if(response&&!platformVerified.has(cacheName+' '+key)){
+    if(await platformHash(await response.clone().arrayBuffer())!==sha){await cache.delete(key);response=null;}
+    else platformVerified.add(cacheName+' '+key);
+  }
+  if(response)return response;
+  response=await fetchWithDeadline(new Request(key,{cache:'reload'}));if(!response.ok)throw new Error('release/resource-unavailable');
+  if(await platformHash(await response.clone().arrayBuffer())!==sha)throw new Error('release/integrity');
+  try{await cache?.put(key,response.clone());platformVerified.add(cacheName+' '+key);}catch{}
+  return response;
+}
+async function platformManifest(target){
+  platformTarget(target);if(platformManifests.has(target.buildId))return platformManifests.get(target.buildId);
+  const response=await platformChecked(target.manifestURL,target.manifestSha256,platformCache(target.buildId)),manifest=await response.json();
+  if(manifest.schema!==1||manifest.buildId!==target.buildId||!manifest.resources||!manifest.packs?.shell)throw new Error('release/invalid-manifest');
+  const byURL=new Map();for(const item of Object.values(manifest.resources)){if(!/^[a-f0-9]{64}$/.test(item.sha256||'')||!Number.isSafeInteger(item.bytes))throw new Error('release/invalid-resource');byURL.set(platformURL(item.url).href,item);}
+  const loaded={...manifest,target,byURL};platformManifests.set(target.buildId,loaded);
+  const cache=await caches.open(platformCache(target.buildId));await cache.put(new URL(`_releases/${target.buildId}/release.json`,SCOPE),new Response(JSON.stringify(target),{headers:{'content-type':'application/json'}}));
+  return loaded;
+}
+async function platformFind(id){
+  if(platformManifests.has(id))return platformManifests.get(id);
+  const target=[PLATFORM_RELEASE.current,PLATFORM_RELEASE.previous].find(x=>x?.buildId===id);if(target)return platformManifest(target);
+  const cached=await (await caches.open(platformCache(id))).match(new URL(`_releases/${id}/release.json`,SCOPE));
+  if(cached)return platformManifest(await cached.json());
+  const response=await fetchWithDeadline(new Request(new URL(`_releases/${id}/release.json`,SCOPE),{cache:'reload'}));
+  if(response.ok){const target=await response.json();if(target.buildId===id)return platformManifest(target);}throw new Error('release/unknown-build');
+}
+async function platformPrepare(target,module,extras=[]){
+  const manifest=await platformManifest(target),queue=[...new Set([...manifest.packs.shell,...(manifest.packs[module]||[]),...extras])];
+  if(queue.some(name=>!manifest.resources[name]))throw new Error('release/unknown-resource');
+  await Promise.all(Array.from({length:Math.min(3,queue.length)},async()=>{while(queue.length){const item=manifest.resources[queue.shift()];await platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}));
+  return {ready:true,failed:0,buildId:manifest.buildId};
+}
+async function platformActivate(){
+  const clients=(await self.clients.matchAll({type:'window',includeUncontrolled:true})).filter(inScopeClient),names=await caches.keys(),metadata=await caches.open(CLIENT_CACHE);
+  const old=await metadata.match(ACTIVE_RELEASE),oldName=old&&await old.text();
+  // An old shell without exact context keeps its prior cache. Claiming the tab
+  // never switches its imports or triggers a reload.
+  for(const client of clients)if(!await clientRelease(client.id))await bindClient(client.id,oldName||CACHE);
+  const keep=new Set([platformCache(PLATFORM_RELEASE.current.buildId),PLATFORM_RELEASE.previous&&platformCache(PLATFORM_RELEASE.previous.buildId),...await Promise.all(clients.map(c=>clientRelease(c.id)))]);
+  for(const name of names)if(isReleaseCache(name)&&!keep.has(name)&&name!==CACHE)await caches.delete(name);
+  const liveKeys=new Set(clients.map(c=>clientKey(c.id)));for(const request of await metadata.keys())if(request.url!==ACTIVE_RELEASE&&!liveKeys.has(request.url))await metadata.delete(request);
+  await metadata.put(ACTIVE_RELEASE,new Response(platformCache(PLATFORM_RELEASE.current.buildId)));await self.clients.claim();
+  for(const client of clients)client.postMessage({type:'RELEASE_AVAILABLE',buildId:PLATFORM_RELEASE.current.buildId});
+}
+async function platformServe(event){
+  const url=platformURL(event.request.url),logical=url.pathname.slice(SCOPE.pathname.length),navigation=event.request.mode==='navigate';
+  try{
+    if(logical==='release.json'){
+      try{const response=await fetchWithDeadline(new Request(url,{cache:'no-store'}));if(response.ok)return response;}catch{}
+      return new Response(JSON.stringify(PLATFORM_RELEASE),{headers:{'content-type':'application/json'}});
+    }
+    const physical=/^_releases\/([a-f0-9]{32})\/(.*)$/.exec(logical);
+    if(physical){
+      const manifest=await platformFind(physical[1]);
+      if(physical[2]==='release.json')return new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
+      if(physical[2]==='manifest.json')return platformChecked(manifest.target.manifestURL,manifest.target.manifestSha256,platformCache(manifest.buildId));
+      const item=manifest.byURL.get(url.href);if(!item)throw new Error('release/unknown-resource');
+      if(navigation)await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(url,item.sha256,platformCache(manifest.buildId));
+    }
+    const bound=await clientRelease(event.clientId),build=/release-([a-f0-9]{32})$/.exec(bound||'')?.[1];
+    if(navigation){const manifest=await platformManifest(PLATFORM_RELEASE.current),name=logical.endsWith('/')?logical+'index.html':logical||'index.html',item=manifest.resources[name];if(item?.kind==='runtime'){await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}
+    if(build){const manifest=await platformFind(build),item=manifest.resources[logical]||manifest.byURL.get(url.href);if(item)return platformChecked(item.url,item.sha256,platformCache(build));if(!logical.startsWith('_objects/'))throw new Error('release/unknown-resource');}
+    // Shared objects can be loaded by a worker with no window client ID. Their
+    // pathname itself carries the complete SHA-256 of the canonical bytes.
+    const object=/^_objects\/([a-f0-9]{64})(?:\.[a-z0-9.-]+)?$/i.exec(logical);
+    if(object)return platformChecked(url,object[1],platformCache(build||PLATFORM_RELEASE.current.buildId));
+    if(bound){const old=await (await caches.open(bound)).match(event.request);if(old)return old;}
+    // Original root resources are frozen from the published migration baseline.
+    // A legacy tab may still fetch a lazy file, but never receives current code.
+    const registryResponse=await fetchWithDeadline(new Request(new URL('platform-baseline.json',SCOPE),{cache:'reload'}));
+    if(!registryResponse.ok)throw new Error('release/baseline-unavailable');const registry=await registryResponse.json(),entry=registry.files[logical];
+    if(entry)return platformChecked(url,entry.sha256,bound||CACHE);
+    return fetchWithDeadline(event.request);
+  }catch(error){
+    // A cold navigation can reference an evicted generation. Only the host's
+    // real 404 HTML may recover that entry; a corrupt successful response must
+    // never be accepted as a substitute for verified runtime bytes.
+    if(navigation&&/^_releases\/[a-f0-9]{32}\/.+\.html$/.test(logical)&&error?.message!=='release/integrity'){
+      try{const response=await fetchWithDeadline(event.request);if(response.status===404&&/text\/html/i.test(response.headers.get('content-type')||''))return response;}catch{}
+    }
+    event.source?.postMessage?.({type:'RELEASE_RESOURCE_UNAVAILABLE'});return unavailableRelease(event.clientId);
+  }
+}
+function platformMessage(event){
+  const type=event.data?.type;
+  if(type==='BIND_BUILD'){
+    if(!inScopeClient(event.source))return true;
+    event.waitUntil((async()=>{try{const manifest=await platformManifest(event.data);await bindClient(event.source.id,platformCache(manifest.buildId));event.source.postMessage({type:'BUILD_BOUND',buildId:manifest.buildId});}catch{event.source.postMessage({type:'RELEASE_RESOURCE_UNAVAILABLE',buildId:event.data.buildId});}})());return true;
+  }
+  if(type==='BIND_RELEASE'){
+    event.waitUntil((async()=>{const bound=await clientRelease(event.source?.id);if(bound?.includes(':release-'))event.source?.postMessage({type:'RELEASE_BOUND',release:event.data.release});})());return true;
+  }
+  if(type!=='PREPARE_MODULE')return false;
+  event.waitUntil((async()=>{try{const bound=await clientRelease(event.source?.id),id=/release-([a-f0-9]{32})$/.exec(bound||'')?.[1];if(!id){event.source?.postMessage({type:'MODULE_CACHE_STATUS',module:event.data.module,requestId:event.data.requestId||null,ready:false,failed:1});return;}const manifest=await platformFind(id),extras=(event.data.urls||[]).slice(0,250).map(value=>{const url=platformURL(value);return Object.keys(manifest.resources).find(name=>platformURL(manifest.resources[name].url).href===url.href)||url.pathname.slice(SCOPE.pathname.length);});const result=await platformPrepare(manifest.target,event.data.module,extras);event.source?.postMessage({type:'MODULE_CACHE_STATUS',module:event.data.module,requestId:event.data.requestId||null,...result});}catch{event.source?.postMessage({type:'MODULE_CACHE_STATUS',module:event.data.module,requestId:event.data.requestId||null,ready:false,failed:1});}})());return true;
+}

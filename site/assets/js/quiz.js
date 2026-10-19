@@ -3,6 +3,7 @@ import {backend} from './backend.js?v=1.3.10';
 import {attemptOwner,persistQuiz,restoreQuiz} from './attempt-session.js?v=1.3.10';
 import {readState,pendingStorageKey} from './session.js?v=1.3.10';
 import {durableStore} from './durable-store.js';
+import {resourceURL} from './release-resources.js';
 
 function uuid(){return globalThis.crypto?.randomUUID?.()||`quiz-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`}
 const escapeHtml=(value)=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -129,14 +130,14 @@ function prepareQuizResources(questions){
 
 export function renderInstitutionHeading(q,{tag='h2',board=false}={}){
   const safeTag=tag==='h1'?'h1':'h2';const m=q.media||{};
-  const symbol=m.symbol?`<img class="institution-heading-logo" src="${escapeHtml(m.symbol)}" alt="">`:'';
+  const symbol=m.symbol?`<img class="institution-heading-logo" src="${escapeHtml(resourceURL(m.symbol))}" alt="">`:'';
   return `<div class="institution-heading ${board?'board-institution-heading':''}">${symbol}<${safeTag} class="institution-title ${board?'board-question-title':''}">${escapeHtml(institutionText(q))}</${safeTag}></div>`;
 }
 
 export function renderQuestionMedia(q,{showSymbol=true}={}){
   const m=q.media;if(!m)return'';
-  const photo=m.photo?`<div><img class="question-photo" src="${escapeHtml(m.photo)}" alt="${escapeHtml(institutionText(q))}"></div>`:'';
-  const symbol=showSymbol&&m.symbol?`<div><img class="question-symbol" src="${escapeHtml(m.symbol)}" alt=""></div>`:'';
+  const photo=m.photo?`<div><img class="question-photo" src="${escapeHtml(resourceURL(m.photo))}" alt="${escapeHtml(institutionText(q))}"></div>`:'';
+  const symbol=showSymbol&&m.symbol?`<div><img class="question-symbol" src="${escapeHtml(resourceURL(m.symbol))}" alt=""></div>`:'';
   return photo||symbol?`<div class="question-media ${photo&&symbol?'':'single'}">${photo}${symbol}</div>`:'';
 }
 
@@ -174,23 +175,27 @@ function renderQuestionNavigator(session){
 }
 
 export function renderQuiz(container,session,options={}){
+  const diagnostics=options.diagnostics||globalThis.__RUDN_DIAGNOSTICS__?.forModule?.();
+  const reportError=(error,operation)=>diagnostics?.error?.(error,{operation});
   options.onSessionChange?.(session);
   if(session.phase==='completed')return renderQuizResult(container,session,options);
   if(session.phase==='submitting'){container.innerHTML=`<div class="panel" role="status">${getLocale()==='en'?'Saving your result…':getLocale()==='zh'?'正在保存结果……':'Сохраняем результат…'}</div>`;return}
   const {onExit,onAnswer,onQuestionChange}=options;const q=session.questions[session.index];
   if(!q){container.innerHTML=`<div class="panel"><p>В этом блоке пока нет вопросов.</p><button class="btn btn-neutral" id="quizExit">${t('backToCourse')}</button></div>`;container.querySelector('#quizExit').onclick=onExit||(()=>history.back());return}
   const progress=(session.index/session.questions.length)*100;
+  diagnostics?.record?.('interaction',{operation:'question-view',questionId:String(q.id)});
   const matrixOptions=typeof options.matrixOptions==='function'?options.matrixOptions({question:q,index:session.index,session}):(options.matrixOptions||{});
   const body=q.type==='matrix_single'?renderMatrix(q,session,matrixOptions):q.type==='shortanswer'?renderShort(q,session):renderMultichoice(q,session);
   const heading=q.type==='matrix_single'?renderInstitutionHeading(q):`<h2>${escapeHtml(questionText(q))}</h2>`;
   const statusText=typeof options.statusText==='function'?options.statusText({question:q,index:session.index,session}):options.statusText;
   const questionNavigatorHtml=session.activitySlug==='seminar-1-classroom'?renderQuestionNavigator(session):'';
   container.innerHTML=`<div class="quiz-shell"><div class="quiz-progress"><span>${t('quizQuestion')} ${session.index+1}/${session.questions.length}</span><div class="track"><span style="width:${progress}%"></span></div>${statusText?`<span class="quiz-live-status">${escapeHtml(statusText)}</span>`:''}</div><article class="quiz-question">${questionNavigatorHtml}<div class="question-kicker">${escapeHtml(categoryText(q))}</div>${heading}${renderQuestionMedia(q,{showSymbol:q.type!=='matrix_single'})}${body}<div class="quiz-actions"><button class="btn btn-neutral" id="quizPrev" ${session.index===0?'disabled':''}>← ${t('previous')}</button><button class="btn btn-primary" id="quizNext">${session.index===session.questions.length-1?t('finish'):t('next')} →</button></div></article></div>`;
-  Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(console.warn);
+  Promise.resolve(onQuestionChange?.({question:q,index:session.index,session})).catch(error=>reportError(error,'question-change'));
   const choose=(value)=>{
     session.answers[q.id]=value;
     persistQuiz(session);
-    Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(console.warn);
+    diagnostics?.record?.('interaction',{operation:'answer-select',questionId:String(q.id)});
+    Promise.resolve(onAnswer?.({question:q,value,index:session.index,session})).catch(error=>reportError(error,'answer-select'));
     if(q.type==='matrix_single'){
       const canonical=canonicalMatrixValue(value);
       container.querySelectorAll('[data-matrix]').forEach(button=>{
@@ -208,14 +213,14 @@ export function renderQuiz(container,session,options={}){
   const questionNavigatorElement=container.querySelector('.quiz-question-nav');if(questionNavigatorElement)questionNavigatorElement.ontoggle=()=>{session.navOpen=questionNavigatorElement.open;persistQuiz(session)};
   container.querySelectorAll('[data-quiz-index]').forEach(button=>button.onclick=()=>{session.index=Number(button.dataset.quizIndex);session.navOpen=false;persistQuiz(session);renderQuiz(container,session,options)});
   container.onkeydown=event=>{if(q.type!=='matrix_single'||event.altKey||event.ctrlKey||event.metaKey)return;const n=Number(event.key);if(n>=1&&n<=9){event.preventDefault();container.querySelector(`[aria-keyshortcuts="${n}"]`)?.click()}};
-  const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>{session.answers[q.id]=short.value;persistQuiz(session)});short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(console.warn))}
+  const short=container.querySelector('.short-answer');if(short){short.addEventListener('input',()=>{session.answers[q.id]=short.value;persistQuiz(session)});short.addEventListener('change',()=>Promise.resolve(onAnswer?.({question:q,value:short.value,index:session.index,session})).catch(error=>reportError(error,'answer-change')))}
   container.querySelector('#quizPrev').onclick=async()=>{session.index=Math.max(0,session.index-1);await persistQuiz(session);renderQuiz(container,session,options)};
   container.querySelector('#quizNext').onclick=async event=>{
     if(event.currentTarget.disabled)return;
     if(!hasAnswer(q,session.answers[q.id])){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:t('selectAnswer'),type:'error'}}));return}
     event.currentTarget.disabled=true;
     if(session.index<session.questions.length-1){session.index++;await persistQuiz(session);renderQuiz(container,session,options)}
-    else finishQuiz(container,session,options).catch(error=>window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:error,type:'error'}})));
+    else finishQuiz(container,session,options).catch(error=>{reportError(error,'result-submit');window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message:error,type:'error'}}))});
   };
 }
 function hasAnswer(q,value){if(q.type==='multichoice'&&!q.single)return Array.isArray(value)&&value.length>0;return value!==undefined&&value!==null&&String(value).trim()!==''}

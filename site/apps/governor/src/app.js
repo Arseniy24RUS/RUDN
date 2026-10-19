@@ -31,7 +31,7 @@
   try {store=new Saves.Store(storage);}catch(_){store=new Saves.Store({getItem(){throw Error('storage');},setItem(){throw Error('storage');}});}
   let storageStatus='empty',writerReady=false,releaseWriter=null;
   let blockedByOtherTab=false;
-  let pendingImport=null, importRequest=0;
+  let pendingImport=null, importRequest=0, updatePaused=false;
   let updateCampaignModeLabels=()=>{};
   const PREFS_KEY = 'rudn-governor-stage9-prefs';
   const META_KEY = 'rudn-governor-stage9-meta';
@@ -269,7 +269,7 @@
   }
 
   function saveState(showFeedback) {
-    if (!state || blockedByOtherTab || !writerReady || Platform?.canWrite?.()===false) return false;
+    if (updatePaused || !state || blockedByOtherTab || !writerReady || Platform?.canWrite?.()===false) return false;
     state.language=language;
     if(!state.awaitingContinue)state.draft={actionId:selectedActionId,fundingMode:selectedFundingMode,placementId:selectedPlacementId};
     try {
@@ -649,22 +649,22 @@
     playSound('confirm');
   }
 
-  function continueSavedCampaign() {
+  function continueSavedCampaign(options={}) {
     if(!writerReady||blockedByOtherTab)return;
     const restored = savedState && Engine.restoreState(savedState);
     if (!restored) return;
     state = restored;
-    Platform?.onSaved?.(state);
+    if(!options.fromUpdate)Platform?.onSaved?.(state);
     language = state.language || language;
     selectedActionId = state.awaitingContinue ? state.selectedActionId : (state.draft?.actionId || null);
     selectedFundingMode = state.awaitingContinue ? state.selectedFundingMode : (state.draft?.fundingMode || null);
     selectedPlacementId = state.awaitingContinue ? state.selectedPlacementId : (state.draft?.placementId || null);
     resolutionShown = false;
     applyTranslations();
-    showGame();
+    showGame(options);
   }
 
-  function showGame() {
+  function showGame(options={}) {
     if (!state.storiesRunId) {
       const legacyCompleted = state.completed && metaState.recordedSessions.includes(state.sessionId);
       state.storiesRunId = legacyCompleted ? `legacy:${state.sessionId}` : `run-${window.crypto?.randomUUID?.() || Date.now() + '-' + Math.floor(Math.random()*1e9)}`;
@@ -682,7 +682,7 @@
     state.activeView = state.activeView || 'mission';
     renderGame();
     requestAnimationFrame(() => {
-      if(Platform?.canWrite?.()===false)return;
+      if(options.fromUpdate||Platform?.canWrite?.()===false)return;
       $('#main-game').focus({ preventScroll: true });
       if(BudgetReview.locked(state)){BudgetReviewUI.open();}
       else if(Recovery.pending(state)){RecoveryUI.open();}
@@ -1816,7 +1816,7 @@
 
     window.addEventListener('storage',e=>{if(e.key===STORAGE_KEY&&state&&e.newValue!==store.token)blockForOtherTab();});
     window.addEventListener('pagehide',()=>{saveState(false);if(releaseWriter){releaseWriter();writerReady=false;}});
-    window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
+    window.addEventListener('pageshow',async e=>{if(e.persisted){await acquireWriter();Platform?.onResume?.();}});
     document.addEventListener('keydown', event => {
       if(!state||state.completed||state.awaitingContinue||state.activeView!=='mission'||blockedByOtherTab)return;
       if(event.defaultPrevented||event.repeat||event.ctrlKey||event.altKey||event.metaKey||document.querySelector('dialog[open]'))return;
@@ -1853,7 +1853,13 @@
       $('#player-group').value = savedState.profile.group || '';
     }
     showStartScreen();
-    Platform?.attach?.({state:()=>state||savedState,canWrite:()=>writerReady&&!blockedByOtherTab,freeze:()=>{writerReady=false;blockedByOtherTab=true;releaseWriter?.();$('#app').inert=true;}});
+    Platform?.attach?.({state:()=>state||savedState,canWrite:()=>writerReady&&!blockedByOtherTab,
+      updateBusy:()=>!!pendingImport||!!document.querySelector('dialog[open]')||!writerReady||blockedByOtherTab,
+      pauseForUpdate:value=>{updatePaused=!!value;},
+      checkpointForUpdate:()=>{const value=state||savedState;if(!value)return null;const copy=structuredClone(value);if(state&&!state.awaitingContinue)copy.draft={actionId:selectedActionId,fundingMode:selectedFundingMode,placementId:selectedPlacementId};return copy;},
+      captureForUpdate:()=>({schema:1,started:!!state,version:(state||savedState)?.version,activeView:state?.activeView,resolutionShown,fields:[...document.querySelectorAll('#start-screen input,#start-screen select')].filter(el=>el.id&&el.type!=='file'&&el.type!=='password').map(el=>({id:el.id,value:el.value,checked:el.checked}))}),
+      restoreForUpdate:saved=>{if(saved?.schema!==1||saved.version!==(state||savedState)?.version)return false;if(saved.started){continueSavedCampaign({fromUpdate:true});if(!state)return false;resolutionShown=!!saved.resolutionShown;if(saved.activeView)state.activeView=saved.activeView;renderGame();}for(const field of saved.fields||[]){const el=document.getElementById(field.id);if(el?.closest('#start-screen')&&el.type!=='file'&&el.type!=='password'){el.value=field.value;el.checked=!!field.checked;}}updateStartScenarioPreview();return true;},
+      freeze:()=>{writerReady=false;blockedByOtherTab=true;releaseWriter?.();$('#app').inert=true;}});
     document.documentElement.dataset.appReady='true';
 
     if (!Platform && 'serviceWorker' in navigator && ['http:', 'https:'].includes(location.protocol)) {

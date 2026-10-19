@@ -1,3 +1,4 @@
+import {resourceURL} from '../../assets/js/release-resources.js';
 import {migrateClassroomScans,VERSION,EVIDENCE_MODE,ACT_TYPES,SCAN_METADATA_MODE,scanQuestionsFor,dossierScanQuestions,normalizeScanSelections,escapeHTML as e,uid,gradeTask,gradeEvidence,scoreDossier,chooseCase,assessmentReady,searchUnits,expandIds,selectionLimit,hash32,parseDossierAnswer} from './lib/core.mjs';
 import {Store,editorLease,freshState,RevisionConflict} from './lib/storage.mjs';
 import {Corpus} from './lib/corpus.mjs';
@@ -12,6 +13,7 @@ import {isFiveWork,fiveVariant,fiveTask,fiveAnswer,fiveIntro,fiveAssessment,five
 import {LocalLive} from './lib/live.mjs';
 import {localizeContent} from './locales/content.mjs';
 import {translate,translateDOM,normalizeLocale} from './locales/ui.mjs';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
 const BASE=new URL('./',import.meta.url);
 const SEARCH_ICON='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>';
 const SCAN_EYE='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -21,15 +23,15 @@ const clip=(s,n=120)=>String(s).length>n?String(s).slice(0,n-1)+'…':String(s);
 const count=(a)=>Object.keys(a||{}).length;
 const timeText=ms=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
 function external(url,text){let u;try{u=new URL(url);}catch{return '';}if(!['https:','http:'].includes(u.protocol))return '';return `<a href="${e(u.href)}" target="_blank" rel="noopener noreferrer">${e(text)} ↗</a>`;}
-function asset(path){return new URL(path,BASE).href;}
-function applyStyle(){if(!document.querySelector('link[data-legal-lab-style]')){const link=document.createElement('link');link.dataset.legalLabStyle='1';link.rel='stylesheet';link.href=new URL('style.css',BASE).href;document.head.append(link);}}
+function asset(path){return resourceURL(path,BASE).href;}
+function applyStyle(){if(!document.querySelector('link[data-legal-lab-style]')){const link=document.createElement('link');link.dataset.legalLabStyle='1';link.rel='stylesheet';link.href=resourceURL('style.css',BASE).href;document.head.append(link);}}
 
 /** Mounts into the course DOM. The host retains authentication, navigation,
  * gradebook, Firebase SDK, access gates and service worker. */
 export async function mountLegalLab(container, options={}) {
   if(!(container instanceof HTMLElement))throw new TypeError('A mount HTMLElement is required');
   applyStyle();const app=new LegalLab(container,options);await app.initialize();
-  return {contentVersion:app.catalog?.contentVersion,destroy:()=>app.destroy(),flush:()=>app.flush(),setLocale:lang=>app.setLocale(lang),getReport:()=>app.state?.assessment?.result||null,getDiagnostics:()=>({reader:app.readerController?.stats()||null,corpus:app.corpus?.cacheStats()||null})};
+  return {module:'legal-lab',contentVersion:app.catalog?.contentVersion,destroy:()=>app.destroy(),flush:()=>app.flush(),setLocale:lang=>app.setLocale(lang),getReport:()=>app.state?.assessment?.result||null,getDiagnostics:()=>({reader:app.readerController?.stats()||null,corpus:app.corpus?.cacheStats()||null}),prepareForUpdate:options=>app.updateAdapter?.prepareForUpdate(options)||Promise.resolve({status:'defer',code:'mounting'}),resumeAfterUpdate:options=>app.updateAdapter?.resumeAfterUpdate(options)||Promise.resolve({status:'blocked',code:'mounting'}),cancelPreparation:options=>app.updateAdapter?.cancelPreparation(options),commitPreparation:()=>app.updateAdapter?.commitPreparation()};
 }
 const imageDimensions=scan=>Number.isInteger(scan?.imageWidth)&&Number.isInteger(scan?.imageHeight)&&scan.imageWidth>0&&scan.imageHeight>0?` width="${scan.imageWidth}" height="${scan.imageHeight}"`:'';
 class LegalLab {
@@ -47,6 +49,7 @@ class LegalLab {
     return {epoch,signal,assert:()=>{if(!this.active()||signal.aborted||epoch!==this.seq)throw new DOMException('Superseded view','AbortError');}};
   }
   async initialize(){
+    const loadEnd=this.opt.diagnostics?.span?.('module-load');
     this.root.classList.add('legal-lab');this.root.lang=this.locale;this.root.innerHTML='<div class="ll-loading" role="status">Открываем рабочее место…</div>';
     try {
       this.corpus=await new Corpus(BASE,{signal:this.signal}).initialize();if(!this.active())return;
@@ -67,7 +70,7 @@ class LegalLab {
       if(this.state.assessment&&!isFiveWork(this.state.assessment)&&!this.state.assessment.result){if(!Object.hasOwn(this.state.assessment.answer,'metadataMode'))this.state.assessment.answer.metadataMode=SCAN_METADATA_MODE;if(!Object.hasOwn(this.state.assessment.answer,'evidenceMode'))this.state.assessment.answer.evidenceMode=EVIDENCE_MODE;}
       if(this.readOnly&&!this.incompatible)this.notice='Другая вкладка редактирует эту работу. Здесь доступен просмотр. Закройте другую вкладку и обновите страницу.';
       if(this.catalog.documents.every(d=>d.coverage==='excerpts'))await this.corpus.all();
-      this.clickHandler=ev=>{const b=ev.target.closest('[data-action]');if(b&&this.root.contains(b)&&!b.disabled){ev.preventDefault();this.action(b.dataset.action,b).catch(err=>this.fail(err));}};
+      this.clickHandler=ev=>{const b=ev.target.closest('[data-action]');if(b&&this.root.contains(b)&&!b.disabled&&!this.updatePaused){ev.preventDefault();this.updateActionCount=(this.updateActionCount||0)+1;this.action(b.dataset.action,b).catch(err=>this.fail(err)).finally(()=>this.updateActionCount--);}};
       this.inputHandler=ev=>this.input(ev);this.submitHandler=ev=>{if(ev.target.matches('[data-search-form]')){ev.preventDefault();this.runSearch(ev.target.dataset.searchForm).catch(err=>this.fail(err));}};
       // Touch gestures retain native focus and scrolling; clicks use normal button behavior.
       this.readerScrollHandler=ev=>{const paper=ev.target;if(!paper.matches?.('.ll-paper'))return;const id=paper.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};this.state.reader[id].scrollTop=paper.scrollTop;}};this.root.addEventListener('scroll',this.readerScrollHandler,{capture:true,passive:true});
@@ -77,14 +80,24 @@ class LegalLab {
       this.identityHandler=()=>{if(!this.teacherAccess()){this.teacher=false;this.root.querySelectorAll('[data-teacher-answer]').forEach(el=>el.remove());this.root.querySelectorAll('.ll-teacher-target').forEach(el=>el.classList.remove('ll-teacher-target'));}if(!this.active()||this.opt.getOwner&&this.opt.getOwner()!==this.owner)this.destroy();};
       window.addEventListener('rudn:identitychange',this.identityHandler);
       this.beforeUnload=ev=>{if(this.pending){ev.preventDefault();ev.returnValue='';}};window.addEventListener('beforeunload',this.beforeUnload);
-      this.tick=setInterval(()=>{if(!this.active()||document.visibilityState!=='visible')return;this.state.elapsedMs+=1000;const el=this.root.querySelector('[data-clock]');if(el)el.textContent=timeText(this.state.elapsedMs);if(this.state.elapsedMs%15000===0)this.persist().catch(err=>this.fail(err));},1000);
-      this.visibilitySaveHandler=()=>{if(document.visibilityState==='hidden')void this.persist().catch(()=>{});};document.addEventListener('visibilitychange',this.visibilitySaveHandler,{signal:this.signal});window.addEventListener('pagehide',this.visibilitySaveHandler,{signal:this.signal});
+      this.tick=setInterval(()=>{if(!this.active()||this.updatePaused||document.visibilityState!=='visible')return;this.state.elapsedMs+=1000;const el=this.root.querySelector('[data-clock]');if(el)el.textContent=timeText(this.state.elapsedMs);if(this.state.elapsedMs%15000===0)this.persist().catch(err=>this.fail(err));},1000);
+      this.visibilitySaveHandler=()=>{if(!this.updatePaused&&document.visibilityState==='hidden')void this.persist().catch(()=>{});};document.addEventListener('visibilitychange',this.visibilitySaveHandler,{signal:this.signal});window.addEventListener('pagehide',this.visibilitySaveHandler,{signal:this.signal});
       window.addEventListener('online',()=>void this.completePractice(),{signal:this.signal});
       // Older drafts may contain a classroom link. It never reconnects or
       // restricts navigation in the automatic, page-scoped shared activity.
       delete this.state.liveRoom;
-      await this.initializePresence();await this.render();void this.completePractice();
-    } catch(err){if(err.name==='AbortError'||!this.active())return;console.error('Legal Lab loading failed',err);this.root.innerHTML=`<div class="ll-alert ll-danger" role="alert"><h2>Модуль не открылся</h2><p>Не удалось открыть материалы. Проверьте соединение и повторите загрузку.</p><button class="ll-primary" data-retry-load>Повторить загрузку</button></div>`;translateDOM(this.root,this.locale);this.root.querySelector('[data-retry-load]').addEventListener('click',()=>window.location.reload());}
+      await this.initializePresence();await this.render();this.installUpdateAdapter();loadEnd?.({success:true});this.opt.diagnostics?.record?.('module-ready',{success:true});void this.completePractice();
+    } catch(err){loadEnd?.({success:false,code:err.name==='AbortError'?'cancelled':'load-failed'});if(err.name==='AbortError'||!this.active())return;this.opt.diagnostics?.error?.(err,{event:'module-error',code:'load-failed',operation:'load'});console.error('Legal Lab loading failed',err);this.root.innerHTML=`<div class="ll-alert ll-danger" role="alert"><h2>Модуль не открылся</h2><p>Не удалось открыть материалы. Проверьте соединение и повторите загрузку.</p><button class="ll-primary" data-retry-load>Повторить загрузку</button></div>`;translateDOM(this.root,this.locale);this.root.querySelector('[data-retry-load]').addEventListener('click',()=>window.location.reload());}
+  }
+  installUpdateAdapter(){
+    this.updateAdapter=createUpdateAdapter({module:'legal-lab',root:this.root,signal:this.signal,diagnostics:this.opt.diagnostics,
+      getIdentity:()=>({owner:this.opt.getOwner?.()||this.owner,attemptId:this.state?.id}),
+      isBusy:()=>!this.active()||!this.persistenceActive()||this.updateActionCount>0||this.submitting||this.practiceDelivery||this.readOnly||!!this.incompatible,
+      pause:value=>{this.updatePaused=value;if(value)this.readerController?.suspend();else this.readerController?.resume();},
+      capture:()=>{const position=captureReaderPosition(this);return {contentVersion:this.catalog.contentVersion,view:captureUpdateView(this.root),reader:position,currentView:this.view,scanHints:this.scanHints,scanZoom:this.scanZoom,scanContext:this.scanContext,assessmentField:this.assessmentField,activeType:this.activeType,assessmentDoc:this.assessmentDoc};},
+      checkpoint:async()=>{const position=captureReaderPosition(this);if(position){const rs=this.state.reader[position.docId]||={};Object.assign(rs,{scrollTop:position.top,anchorId:position.anchor?.id,anchorOffset:position.anchor?.offset});}await this.persist();const row=await this.store.get('session');if(!row||row.revision!==this.revision||row.value.id!==this.state.id)throw Error('update/checkpoint-mismatch');if(this.opt.checkpoint)await this.opt.checkpoint({attemptId:row.value.assessment?.attemptId||row.value.id,contentVersion:this.catalog.contentVersion,state:row.value,mode:row.value.assessment&&!row.value.assessment.preview?'assessment':'practice'});return {durable:true,revision:row.revision,checkpointRef:{id:row.value.id,revision:row.revision,contentVersion:this.catalog.contentVersion}};},
+      restore:async({state,checkpointRef},{signal}={})=>{if(!this.active()||state.contentVersion!==this.catalog.contentVersion||checkpointRef.id!==this.state.id)return {status:'blocked',code:'incompatible'};this.view=['home','learn','assessment','help'].includes(state.currentView)?state.currentView:this.view;this.scanHints=state.scanHints===true;this.scanZoom=Number.isFinite(state.scanZoom)?Math.max(1,Math.min(3,state.scanZoom)):1;this.scanContext=state.scanContext;this.assessmentField=Number.isInteger(state.assessmentField)?state.assessmentField:0;this.activeType=Number.isInteger(state.activeType)?state.activeType:0;this.assessmentDoc=state.assessmentDoc;await this.render();if(signal?.aborted)throw new DOMException('Aborted','AbortError');await restoreUpdateView(this.root,state.view,{signal});const position=state.reader;if(position?.docId===this.readerController?.descriptor.docId){if(position.anchor?.id)await this.readerController.navigate(position.anchor.id);this.readerController.restore(position);const d=this.corpus.cache.get(position.docId),rs=this.state.reader[position.docId];if(d&&rs?.searchOpen){await this.readerController.search(readerQuery(this,d),rs.searchPage||0);refreshReaderSearch(this,d);}}return {status:'restored',code:'ok'};}
+    });
   }
   persist(){
     if(!this.state||this.readOnly||this.closed)return this.queue;
@@ -97,25 +110,27 @@ class LegalLab {
     if(this.pending)return this.queue;
     this.pending=1;
     this.queue=this.queue.catch(()=>{}).then(async()=>{
+      const started=(globalThis.performance?.now?.()??Date.now());
       try{
         while(this.pendingSnapshot&&this.persistenceActive()&&!this.readOnly){
           const job=this.pendingSnapshot;this.pendingSnapshot=null;this.savingFingerprint=job.fingerprint;
           const record=await this.store.put('session',job.snapshot,this.revision);this.revision=record.revision;
           if(this.opt.checkpoint&&this.persistenceActive()){
             try{await this.opt.checkpoint({attemptId:job.snapshot.assessment?.attemptId||job.snapshot.id,contentVersion:this.catalog.contentVersion,state:job.snapshot,mode:job.snapshot.assessment&&!job.snapshot.assessment.preview?'assessment':'practice'});}
-            catch(err){if(['RevisionConflict','DraftConflict'].includes(err?.name)){this.readOnly=true;this.notice='Работа изменена на другом устройстве. Обновите страницу, чтобы загрузить актуальный черновик.';this.noticeType='warning';void this.render();throw err;}this.notice='Сохранено на устройстве. Облачная копия черновика пока недоступна.';this.noticeType='warning';}
+            catch(err){this.opt.diagnostics?.error?.(err,{event:'checkpoint',operation:'host-save',stage:'host'});if(['RevisionConflict','DraftConflict'].includes(err?.name)){this.readOnly=true;this.notice='Работа изменена на другом устройстве. Обновите страницу, чтобы загрузить актуальный черновик.';this.noticeType='warning';void this.render();throw err;}this.notice='Сохранено на устройстве. Облачная копия черновика пока недоступна.';this.noticeType='warning';}
           }
           this.savedFingerprint=job.fingerprint;
           const label=this.active()&&this.root.querySelector('[data-save-state]');if(label)label.textContent=translate(this.store.mode==='indexeddb'?'Сохранено на устройстве':'Резервное локальное сохранение',this.locale);
         }
-      }catch(err){if(err instanceof RevisionConflict)this.readOnly=true;throw err;}
+        this.opt.diagnostics?.record?.('checkpoint',{operation:'draft-save',stage:'local',success:true,durationMs:(globalThis.performance?.now?.()??Date.now())-started});
+      }catch(err){this.opt.diagnostics?.error?.(err,{event:'checkpoint',operation:'draft-save',durationMs:(globalThis.performance?.now?.()??Date.now())-started});if(err instanceof RevisionConflict)this.readOnly=true;throw err;}
       finally{this.savingFingerprint=null;this.pending=0;}
     });
     return this.queue;
   }
   async completePractice(){
-    if(!this.opt.onPracticeComplete||this.teacher||this.demo||!this.active()||this.readOnly||this.practiceDelivery||this.state.practiceCompletion?.delivered)return;
-    this.practiceDelivery=true;
+    if(!this.opt.onPracticeComplete||this.teacher||this.demo||!this.active()||this.updatePaused||this.readOnly||this.practiceDelivery||this.state.practiceCompletion?.delivered)return;
+    this.practiceDelivery=true;const started=(globalThis.performance?.now?.()??Date.now());
     try{
       if(!this.state.practiceCompletion){
         if(!this.bank.classroom.every(t=>this.answer(t).submitted))return;
@@ -125,12 +140,12 @@ class LegalLab {
         this.state.practiceCompletion={id:this.state.id,contentVersion:this.catalog.contentVersion,points:answers.length,total:answers.length,finishedAt:Date.now()};
         await this.persist();if(!this.active()||this.readOnly)return;
       }
-      const receipt=structuredClone(this.state.practiceCompletion);await this.opt.onPracticeComplete(receipt);
+      const receipt=structuredClone(this.state.practiceCompletion);await this.opt.onPracticeComplete(receipt);this.opt.diagnostics?.record?.('result-save',{operation:'practice-submit',success:true,durationMs:(globalThis.performance?.now?.()??Date.now())-started});
       if(!this.active())return;this.state.practiceCompletion.delivered=true;await this.persist();
-    }catch{ /* Durable delivery is retried on the next ordinary save. */ }finally{this.practiceDelivery=false;}
+    }catch(error){this.opt.diagnostics?.error?.(error,{event:'result-save',operation:'practice-submit',durationMs:(globalThis.performance?.now?.()??Date.now())-started}); /* Durable delivery is retried on the next ordinary save. */ }finally{this.practiceDelivery=false;}
   }
   flush(){return this.persist();}
-  fail(err){if(!this.active()||err?.name==='AbortError')return;console.warn('Legal Lab action failed',err);if(['RevisionConflict','DraftConflict'].includes(err?.name))this.notice='Работа изменена на другом устройстве. Обновите страницу, чтобы загрузить актуальный черновик.';else this.notice=['Связь недоступна. Дождитесь подключения.','Профиль изменён. Откройте модуль заново.','Для досье можно выбрать до трёх документов','Самостоятельная работа ещё не открыта'].includes(err?.message)?err.message:'Не удалось выполнить действие. Ответы сохранены. Повторите попытку.';this.noticeType='danger';this.render().catch(()=>{});}
+  fail(err){if(!this.active()||err?.name==='AbortError')return;this.opt.diagnostics?.error?.(err,{event:'module-error',operation:'action'});console.warn('Legal Lab action failed',err);if(['RevisionConflict','DraftConflict'].includes(err?.name))this.notice='Работа изменена на другом устройстве. Обновите страницу, чтобы загрузить актуальный черновик.';else this.notice=['Связь недоступна. Дождитесь подключения.','Профиль изменён. Откройте модуль заново.','Для досье можно выбрать до трёх документов','Самостоятельная работа ещё не открыта'].includes(err?.message)?err.message:'Не удалось выполнить действие. Ответы сохранены. Повторите попытку.';this.noticeType='danger';this.render().catch(()=>{});}
   isLocked(){return this.readOnly||!this.active();}
   doc(id){return this.catalog.documents.find(d=>d.id===id);}
   task(){return this.bank.classroom[Math.max(0,Math.min(this.state.index||0,this.bank.classroom.length-1))];}
@@ -394,7 +409,7 @@ class LegalLab {
     return `<section class="ll-result"><div class="ll-eyebrow">ДОСЬЕ ${e(a.caseId)} · ${a.preview?'ТРЕНИРОВКА':'РАБОТА ЗАВЕРШЕНА'}</div><h1>Досье проверено</h1><div class="ll-result-score">${e(a.result.points)}<small> / 5</small></div><p>${a.preview?'Результат тренировочный и не отправляется в журнал.':a.delivery==='host-accepted'?'Результат сохранён. При подключении к сети журнал синхронизируется автоматически.':'Результат сохранён. Отправка в журнал ещё не подтверждена.'}</p><div class="ll-result-criteria">${a.result.criteria.map(c=>`<div><span>${e(c.label)}</span><meter min="0" max="${e(c.max)}" value="${e(c.points)}" aria-label="${e(c.label)}"></meter><strong>${e(c.points)} / ${e(c.max)}</strong></div>`).join('')}</div><div class="ll-answer-review">${breakdown}</div>${this.reportOnly?'':`<div class="ll-actions"><button class="ll-primary" data-action="export-report">Сохранить отчёт</button>${!a.preview&&a.delivery!=='host-accepted'?'<button class="ll-secondary" data-action="retry-delivery">Повторить передачу в журнал</button>':''}<button class="ll-secondary" data-action="home">К маршруту</button></div>`}</section>`;
   }
   help(){return `<section class="ll-help"><div class="ll-eyebrow">СПРАВКА</div><h1>Как работать с документами</h1><div class="ll-help-grid"><article><h2>Выбор фрагмента на скане</h2><p>Выберите название реквизита, затем его область на скане. Цвет кнопки совпадает с цветом выбранной рамки. Можно менять выбор в любом порядке. Кнопка с глазом показывает доступные области. С клавиатуры выбирайте область клавишами Tab и Enter.</p></article><article><h2>Ответ фрагментом</h2><p>Найдите положение с помощью оглавления или поиска. Нажмите на абзац. Для составного ответа отметьте несколько. Лишние фрагменты снижают точность ответа.</p></article><article><h2>Вид документа</h2><p>Ориентируйтесь на автора и содержание заголовка. Проверка относится к конкретному реальному акту. Распоряжения не ограничены вопросами о сотрудниках.</p></article><article><h2>Совместная работа</h2><p>Совместные отметки работают только при поиске абзацев в больших документах. Их видят участники на том же вопросе; при переходе или выходе отметки исчезают. Сканы, виды актов и досье выполняются индивидуально.</p></article></div><h2>Схемы из лекции</h2><p>Ниже сохранены авторские схемы. Они помогают ориентироваться в примерах; правовая форма каждого задания проверяется по его оригиналу.</p>${[36,48,58].map((n,i)=>`<details><summary>${['Федеральный уровень','Уровень субъекта','Муниципальный уровень'][i]} · слайд ${n}</summary><img src="${asset(`assets/help/lecture-${n}.webp`)}" alt="Схема из лекции, слайд ${n}" loading="lazy"></details>`).join('')}<details><summary>Источники и авторство</summary><p data-original lang="ru">${e(this.catalog.sources.lecture)}</p><p data-original lang="ru">${e(this.catalog.sources.tickets)}</p></details><button class="ll-secondary" data-action="export-state">Экспортировать локальную работу</button></section>`;}
-  input(ev){const el=ev.target;if(!el.dataset.input)return;switch(el.dataset.input){case'task-picker':if(ev.type!=='change')break;this.action('go-task',{dataset:{index:el.value}}).catch(err=>this.fail(err));break;case'library-query':this.librarySearch=el.value;break;case'library-content':this.libraryContent=el.checked;break;case'reader-query':{const id=el.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};const doc=this.corpus.cache.get(id);if(doc&&readerQuery(this,doc)!==el.value){setReaderQuery(this,doc,el.value);this.readerController?.cancelSearch();}}break;}}}
+  input(ev){if(this.updatePaused)return;const el=ev.target;if(!el.dataset.input)return;switch(el.dataset.input){case'task-picker':if(ev.type!=='change')break;this.action('go-task',{dataset:{index:el.value}}).catch(err=>this.fail(err));break;case'library-query':this.librarySearch=el.value;break;case'library-content':this.libraryContent=el.checked;break;case'reader-query':{const id=el.closest('[data-reader-doc]')?.dataset.readerDoc;if(id){this.state.reader[id]||={};const doc=this.corpus.cache.get(id);if(doc&&readerQuery(this,doc)!==el.value){setReaderQuery(this,doc,el.value);this.readerController?.cancelSearch();}}break;}}}
   async runSearch(which){
     if(which==='reader'){
       const reader=this.root.querySelector('[data-reader-doc]'),d=this.corpus.cache.get(reader?.dataset.readerDoc),controller=this.readerController;if(!d||!controller)return;
@@ -556,8 +571,9 @@ class LegalLab {
     const b=this.opt.backend;if(!b?.saveAttempt&&!this.opt.saveAttempt)throw new Error('Адаптер журнала не подключён');
     const profile=b?.getProfile?.();if(b&&(!profile||b.isAdmin?.()))throw new Error('Для передачи результата необходим профиль студента');
     const record={id:a.attemptId,type:'legal-lab',activitySlug:'seminar-4',draftMode:'legal-lab-assessment',title:'Семинар 4. На подпись',studentKey:profile?.studentKey,points:a.result.points,maxPoints:5,recordGrade:true,contentVersion:a.contentVersion,caseId:a.caseId,startedAt:a.startedAt,finishedAt:a.finishedAt,durationMs:a.finishedAt-a.startedAt,legalLab:{criteria:a.result.criteria,answer:a.answer,answerJson:JSON.stringify(a.answer),documentVersions:a.documentVersions}};
-    try{const save=this.opt.saveAttempt||((x)=>b.saveAttempt(x));await save(record);if(!this.active())return;a.delivery='host-accepted';await this.persist();}
-    catch(err){a.delivery='pending';await this.persist();this.notice='Результат сохранён. Не удалось отправить его в журнал; повторите отправку.';this.noticeType='warning';}
+    const started=(globalThis.performance?.now?.()??Date.now());
+    try{const save=this.opt.saveAttempt||((x)=>b.saveAttempt(x));await save(record);this.opt.diagnostics?.record?.('result-save',{operation:'submit',success:true,durationMs:(globalThis.performance?.now?.()??Date.now())-started});if(!this.active())return;a.delivery='host-accepted';await this.persist();}
+    catch(err){this.opt.diagnostics?.error?.(err,{event:'result-save',operation:'submit',durationMs:(globalThis.performance?.now?.()??Date.now())-started});a.delivery='pending';await this.persist();this.notice='Результат сохранён. Не удалось отправить его в журнал; повторите отправку.';this.noticeType='warning';}
   }
   async initializePresence(){
     if(this.readOnly)return;
@@ -601,7 +617,7 @@ class LegalLab {
   async setLocale(lang){if(normalizeLocale(lang)===this.locale)return;const extraId=this.extraTask?.id;this.locale=normalizeLocale(lang);this.root.lang=this.locale==='zh'?'zh-Hans':this.locale;Object.assign(this,localizeContent(this.corpus.bank,this.corpus.cases,this.locale));this.extraTask=extraId?this.bank.extra.find(t=>t.id===extraId):null;this.localizeFive();return this.render();}
   destroy(){
     if(this.closed||this.disposing)return this.destroyPromise||this.queue;
-    this.disposing=true;const saved=this.persist().catch(()=>{});this.closed=true;this.seq++;this.renderAbort?.abort();this.controller.abort();
+    this.disposing=true;this.updateAdapter?.destroy();const saved=this.persist().catch(()=>{});this.closed=true;this.seq++;this.renderAbort?.abort();this.controller.abort();
     this.leaveLive();clearInterval(this.tick);this.opt.signal?.removeEventListener('abort',this.abortParent);this.readerLayoutObserver?.disconnect();cancelAnimationFrame(this.readerLayoutFrame);this.readerController?.destroy();this.readerController=null;this.readerSpec=null;this.corpus?.destroy();this.translations?.destroy?.();
     this.root.removeEventListener('scroll',this.readerScrollHandler,true);this.root.removeEventListener('contextmenu',this.typeContextHandler);this.root.removeEventListener('click',this.clickHandler);this.root.removeEventListener('input',this.inputHandler);this.root.removeEventListener('change',this.inputHandler);this.root.removeEventListener('submit',this.submitHandler);window.removeEventListener('rudn:identitychange',this.identityHandler);window.removeEventListener('beforeunload',this.beforeUnload);this.root.classList.remove('legal-lab');
     // Rendering and workers end immediately; the old owner's queued dirty snapshot

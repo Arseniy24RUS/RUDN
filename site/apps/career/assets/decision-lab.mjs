@@ -106,5 +106,5 @@ export function createDecisionLab({data,state,routeTo,openAuthority,saveScenario
     });
   }
   document.addEventListener('app:language',()=>{if(!document.querySelector('#view-lab').hidden)render('lab');});
-  return {render,open:entry};
+  return {render,open:entry,updateBusy:()=>busy,captureForUpdate:()=>({mode,selected,draft:structuredClone(draft),fingerprint,title}),restoreForUpdate(value){sync();if(value?.fingerprint!==fingerprint)return false;mode=['explain','experiment'].includes(value.mode)?value.mode:'explain';selected=agency(value.selected)?value.selected:selected;draft=value.draft?checkedInputs(value.draft,data):draft;title=String(value.title||'').slice(0,500);preview=null;return true;}};
 }

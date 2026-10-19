@@ -18,8 +18,12 @@ import {mountFormDraft,formDraft} from './form-draft.js';
 import {mountTeacherJournal} from './teacher-journal.js?v=1.3.10';
 import {openAccount,mountProfile} from './account.js?v=1.3.10';
 import {prepareGovernorReportLocale,governorReportValue,governorReceiptState} from './governor-report-locale.js';
-import {createPlatformDiagnostics} from './diagnostics.js';
-import {diagnosticsCopy,openDiagnosticReport,mountDiagnosticsAdmin} from './diagnostics-ui.js';
+import {getSharedPlatformDiagnostics} from './diagnostics.js';
+import {diagnosticsCopy,mountDiagnosticsAdmin} from './diagnostics-ui.js';
+import {resourceURL,getReleaseContext} from './release-resources.js';
+import {bootstrapUpdateCoordinator} from './platform-update-coordinator.js';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
+import {exposeModuleUpdateAdapter,bindQuizUpdate,bindFormUpdate} from './platform-learning-updates.js';
 
 const app = document.getElementById('app');
 const authDialog = document.getElementById('authDialog');
@@ -31,8 +35,7 @@ const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({'&':'
 const slugify = (value) => String(value || '').toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/gi, '-').replace(/^-|-$/g, '');
 const number = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
 function diagnosticModule(){const r=route();if(r.name==='activity'&&/^(lecture-[1-8]|seminar-[1-8](?:-classroom|-assessment)?)$/.test(r.parts[0]||''))return r.parts[0];if(r.name==='games'&&['maps','career','settlements','reception','governor','legal-lab'].includes(r.parts[0]))return r.parts[0];return ['dashboard','gradebook','materials','profile','admin','diagnostics','games','puzzle'].includes(r.name)?r.name:'platform'}
-export const diagnostics=createPlatformDiagnostics({backend,build:'reader-performance-1',getLocale,getModule:diagnosticModule});
-function diagnosticReportButton(target){if(!target||target.querySelector('[data-report-problem]'))return;const button=document.createElement('button');button.type='button';button.className='btn btn-neutral btn-small diagnostic-report-link';button.dataset.reportProblem='';button.textContent=diagnosticsCopy(getLocale()).report;button.onclick=()=>{document.getElementById('accountDialog')?.close();openDiagnosticReport({diagnostics,locale:getLocale()})};target.append(button)}
+export const diagnostics=getSharedPlatformDiagnostics({backend,build:globalThis.__RUDN_RELEASE__?.buildId||'development',getLocale,getModule:diagnosticModule});
 
 const UI = {
   ru: {
@@ -196,6 +199,17 @@ let formCleanups=[];
 let currentCareer=null;
 let renderedKey='';let renderedLocale='';let dataReady=false;let renderRunning=false;let renderAgain=false;
 let accessRefreshTimer=null;
+let routeDiagnostics=null,updateCoordinator=null,quizStartGeneration=0;
+const shellUpdate=createUpdateAdapter({module:'platform',root:app,getIdentity:attemptOwner,
+  isBusy:()=>renderRunning||!dataReady||!backend.authReady||!!document.querySelector('dialog[open]')||!!app.querySelector('form:not([data-guarded])'),
+  checkpoint:async()=>({durable:true,revision:0,checkpointRef:'read-only-shell'}),
+  capture:()=>({view:captureUpdateView(app)}),restore:async({state},options)=>{await restoreUpdateView(app,state.view,options);return {status:'restored'}},diagnostics});
+function updateAdapters(){
+  if(renderRunning||!dataReady||!backend.authReady)return [];
+  const module=currentCleanup?.prepareForUpdate?currentCleanup:currentCleanup&&/^(activity|games|puzzle)$/.test(route().name)?null:shellUpdate;
+  return [module,...formCleanups.map(item=>item.updateAdapter)].filter((item,index)=>item||index===0);
+}
+function moduleReady(){window.dispatchEvent(new Event('rudn:module-ready'));void updateCoordinator?.restorePending()}
 
 function scheduleAccessRefresh(){
   clearTimeout(accessRefreshTimer);
@@ -213,7 +227,7 @@ function scheduleAccessRefresh(){
 async function loadJson(path,fallback){
   // Revalidate before worker installation; no-store prevents Firefox from
   // serving even worker-cached resources in browser offline mode.
-  const response=await fetch(path,{cache:'no-cache'});
+  const response=await fetch(resourceURL(path,new URL('../../',import.meta.url)),{cache:'no-cache'});
   if(!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
   return response.json();
 }
@@ -223,7 +237,7 @@ async function loadData(){
     loadJson('data/exam_questions.json',[]),loadJson('data/question_media.json',{}),loadJson('data/symbol_manifest.json',{}),
     loadJson('apps/legal-lab/data/catalog.json',null).catch(()=>null)
   ]);
-  data={course,questions,variants,exam,media,symbols,legalLabCatalog};
+  data=JSON.parse(JSON.stringify({course,questions,variants,exam,media,symbols,legalLabCatalog},(_key,value)=>typeof value==='string'&&/^(?:assets|data|apps)\/[^\s<>]+$/.test(value)?resourceURL(value,new URL('../../',import.meta.url)).href:value));
   window.RUDN_DATA=data;
 }
 
@@ -284,6 +298,8 @@ async function render(){
   try{for(const controller of formCleanups)await controller.destroy();formCleanups=[];await durableStore.flush()}
   catch(error){renderRunning=false;app.setAttribute('aria-busy','false');toast(error,'error',0,{critical:true});return}
   if(currentCleanup){try{await currentCleanup.flush?.();await currentCleanup()}catch(error){renderRunning=false;toast(error,'error',0,{critical:true});return} currentCleanup=null}
+  routeDiagnostics?.destroy();routeDiagnostics=diagnostics.forModule(diagnosticModule());
+  const loadEnd=routeDiagnostics.span('screen-render');let renderSuccess=true;
   const r=route();setActiveNav(r.name);
   // Saving the previous screen is asynchronous; recheck the current route/profile.
   const requestedGame=freeGameForRoute(r),requestedGate=requestedGame&&gameAccessGate(requestedGame,backend,data.course);
@@ -299,26 +315,29 @@ async function render(){
     else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='games') renderGamesRoute(r.parts[0]);
     else if(r.name==='admin') await renderAdmin();
-    else if(r.name==='diagnostics'){const controller=new AbortController();currentCleanup=()=>controller.abort();await mountDiagnosticsAdmin(app,{backend,locale:getLocale(),signal:controller.signal});}
+    else if(r.name==='diagnostics'){const controller=new AbortController();currentCleanup=()=>controller.abort();await mountDiagnosticsAdmin(app,{backend,locale:getLocale(),signal:controller.signal,studentKey:r.parts[0]});}
     else if(r.name==='activity') await renderActivity(r.parts[0],r.parts[1]);
     else location.hash='dashboard';
-  }catch(error){console.error(error.code||error);app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
+  }catch(error){renderSuccess=false;routeDiagnostics.error(error,{operation:'screen-render'});app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}
   if(!document.querySelector('dialog[open]'))app.focus({preventScroll:true});translateDocument(app);
   await guardSubmissions();
   app.setAttribute('aria-busy','false');
   if(resetScroll)window.scrollTo({top:0,left:0,behavior:'instant'});
   scheduleAccessRefresh();
-  renderRunning=false;if(renderAgain){renderAgain=false;render()}
+  renderRunning=false;loadEnd({success:renderSuccess});moduleReady();if(renderAgain){renderAgain=false;render()}
 }
 async function guardSubmissions(){
   for(const form of app.querySelectorAll('#appealForm,#civilForm,#simulatorForm,#reflectionForm')){
     const slug={appealForm:'seminar-5',civilForm:'seminar-6',simulatorForm:'seminar-7',reflectionForm:'lecture-8'}[form.id];
-    const controller=await mountFormDraft(form,slug);if(controller&&!formCleanups.includes(controller))formCleanups.push(controller);
-    const submit=form.onsubmit;if(!submit||form.dataset.guarded)continue;form.dataset.guarded='true';
+    const controller=await mountFormDraft(form,slug);if(controller&&!formCleanups.includes(controller)){
+      controller.updateAdapter=bindFormUpdate({root:form,controller,diagnostics:routeDiagnostics});
+      const destroy=controller.destroy;controller.destroy=async()=>{controller.updateAdapter.destroy();await destroy()};formCleanups.push(controller);
+    }
+    const scope=routeDiagnostics,submit=form.onsubmit;if(!submit||form.dataset.guarded)continue;form.dataset.guarded='true';
     form.onsubmit=async event=>{event.preventDefault();if(form.dataset.saving)return;form.dataset.saving='true';form.setAttribute('aria-busy','true');const button=form.querySelector('[type=submit]'),label=button.textContent;button.disabled=true;button.textContent=t('loading');
       // Native currentTarget is cleared once dispatch returns, before IndexedDB finishes.
       const submission={currentTarget:form,target:event.target,submitter:event.submitter,preventDefault:()=>event.preventDefault()};
-      try{await controller?.save();await submit.call(form,submission)}catch(error){toast(error,'error')}finally{delete form.dataset.saving;form.setAttribute('aria-busy','false');button.disabled=false;button.textContent=label}
+      try{await controller?.save();await submit.call(form,submission)}catch(error){scope?.error(error,{operation:'form-submit'});toast(error,'error')}finally{delete form.dataset.saving;form.setAttribute('aria-busy','false');button.disabled=false;button.textContent=label;updateCoordinator?.notifyStateChanged()}
     };
   }
 }
@@ -451,7 +470,7 @@ function renderMaterials(){
 }
 
 function renderProfile(){
-  if(mountProfile(app)){diagnosticReportButton(app.querySelector('.profile-panel'));return;}
+  if(mountProfile(app))return;
   const body=`<div class="panel empty-state"><div class="icon">◎</div><h2>${ui('noProfile')}</h2><p>${ui('signInToContinue')}</p><button class="btn btn-primary" id="profileLogin">${ui('login')}</button></div>`;
   app.innerHTML=contentPage(t('navProfile'),'',body);
   app.querySelector('#profileLogin')?.addEventListener('click',openAuthDialog);
@@ -507,14 +526,15 @@ async function renderSeminar(topic,view){
 function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
 function renderSeminar4(topic,view){
   // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
-  const owner=attemptOwner(),controller=new AbortController();
-  let handle=null,mountPromise=Promise.resolve();
+  const owner=attemptOwner(),controller=new AbortController(),scope=routeDiagnostics;
+  let handle=null,mountPromise=Promise.resolve(),mountStarted=false;
   app.innerHTML=`<section class="page legal-lab-course-page"><div id="legalLabMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#legalLabMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner();
   const allowed=()=>{const a=accessSnapshot();return topicGate(topic.number,a.overrides,a.now).open;};
-  const cleanup=async()=>{controller.abort();await mountPromise.catch(()=>{});await handle?.destroy();};
+  const cleanup=async()=>{controller.abort();if(mountStarted)await mountPromise.catch(()=>{});await handle?.destroy();};
   cleanup.flush=()=>handle?.flush();
+  exposeModuleUpdateAdapter(cleanup,()=>handle,'legal-lab');
   cleanup.refreshLocale=()=>{
     if(!active())return;
     const a=accessSnapshot(),gate=topicGate(topic.number,a.overrides,a.now);
@@ -528,8 +548,9 @@ function renderSeminar4(topic,view){
       const {mountLegalLabInCourse}=await import('../../apps/legal-lab/platform.mjs?v=1.0.0');
       if(!active())return;
       const a=accessSnapshot();
+      mountStarted=true;
       handle=await mountLegalLabInCourse(mount,{
-        backend,diagnostics,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
+        backend,diagnostics:scope,rootPath:CONFIG.rootPath,owner,getOwner:attemptOwner,
         period:String(a.context.startYear)+'-'+String(a.context.endYear),
         groups:groupOptions(),locale:getLocale(),signal:controller.signal,
         initialView:view==='quiz'?'learn':view==='assessment'?'assessment':undefined,
@@ -537,13 +558,14 @@ function renderSeminar4(topic,view){
       });
       if(!active()){await handle.destroy();return;}
       mount.setAttribute('aria-busy','false');
+      moduleReady();
     }catch(error){
       if(!active())return;
       mount.setAttribute('aria-busy','false');
       const copy={ru:['Практикум не открылся','Работа сохранена. Повторите загрузку.','Повторить'],en:['The workshop could not open','Your work is saved. Please try again.','Try again'],zh:['实践课未能打开','作业已保存，请重新加载。','重试']}[getLocale()]||['Практикум не открылся','Работа сохранена. Повторите загрузку.','Повторить'];
       mount.innerHTML=`<div class="panel" role="alert"><h2>${esc(copy[0])}</h2><p>${esc(copy[1])}</p><button class="btn btn-primary" type="button">${esc(copy[2])}</button></div>`;
       mount.querySelector('button').onclick=()=>{void cleanup().then(()=>{renderedKey='';render();});};
-      console.error('Legal Lab:',error);
+      scope?.error(error,{operation:'module-load'});
     }
   })();
 }
@@ -552,50 +574,69 @@ function renderSeminar8(topic){
   app.innerHTML=seminarShell(topic,`<div class="panel"><h2>${esc(loc(topic.seminar,'title',topic.seminar.title))}</h2><p class="muted">${ui('finalLead')}</p><button class="btn btn-primary" id="finalQuiz">${ui('startTest')}</button></div>`);
   app.querySelector('#finalQuiz').onclick=()=>startQuiz('seminar-8');
 }
-async function startQuiz(activitySlug){
+async function startQuiz(activitySlug,{resumeMode}={}){
   const gate=quizAccessGate(activitySlug);
   if(gate&&!accessAllowed(gate)){lockedAccessPage(activitySlug,gate);return}
   const classroom=activitySlug==='seminar-1-classroom';
   if(!(classroom&&backend.isAdmin())&&!requireProfile())return;
+  const request=++quizStartGeneration,requestedHash=location.hash,owner=attemptOwner(),generation=backend.generation,scope=routeDiagnostics;
+  const contextCurrent=()=>request===quizStartGeneration&&location.hash===requestedHash&&owner===attemptOwner()&&generation===backend.generation;
+  const previous=currentCleanup;
+  if(previous){await previous.flush?.();await previous();if(currentCleanup===previous)currentCleanup=null;}
+  if(!contextCurrent())return;
   app.innerHTML=`<section class="page"><div id="quizMount"></div></section>`;
   window.scrollTo({top:0,left:0,behavior:'instant'});
   const mount=app.querySelector('#quizMount');
-  const returnTo=(target)=>{const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
-  if(activitySlug==='seminar-1-classroom'){
-    if(backend.isAdmin()){
-      let selectedGroup='';
-      mount.insertAdjacentHTML('beforebegin',`<div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div><header class="page-head"><div><h1>${ui('seminar1ClassroomTitle')}</h1><p>${ui('adminQuizInstruction')}</p></div></header><div class="admin-quiz-mode" role="group" aria-label="${esc(ui('seminar1ClassroomTitle'))}"><button class="btn btn-primary" type="button" data-admin-quiz-mode="board">${ui('quizBoardMode')}</button><button class="btn btn-neutral" type="button" data-admin-quiz-mode="play">${ui('takeQuizMode')}</button></div>`);
-      const controls=app.querySelector('.admin-quiz-mode');let activeCleanup=()=>{};let disposed=false;
-      const setMode=(mode)=>controls.querySelectorAll('[data-admin-quiz-mode]').forEach(button=>{const active=button.dataset.adminQuizMode===mode;button.classList.toggle('btn-primary',active);button.classList.toggle('btn-neutral',!active);button.setAttribute('aria-pressed',String(active))});
-      const showBoard=()=>{
-        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('board');
-        activeCleanup=mountAutomaticBoard(mount,{initialGroup:selectedGroup,onGroupChange:group=>{selectedGroup=group}});
-      };
-      const showQuiz=async()=>{
-        if(disposed)return;try{activeCleanup()}catch{};mount.innerHTML='';setMode('play');
-        activeCleanup=await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,participateLive:false,onExit:()=>returnTo('dashboard')});
-      };
-      controls.querySelector('[data-admin-quiz-mode="board"]').onclick=showBoard;
-      controls.querySelector('[data-admin-quiz-mode="play"]').onclick=()=>showQuiz().catch(error=>toast(error,'error'));
-      currentCleanup=()=>{disposed=true;try{activeCleanup()}catch{}};
-      currentCleanup.refreshLocale=()=>{
-        controls.querySelector('[data-admin-quiz-mode="board"]').textContent=ui('quizBoardMode');
-        controls.querySelector('[data-admin-quiz-mode="play"]').textContent=ui('takeQuizMode');
-        app.querySelector('.page-head h1').textContent=ui('seminar1ClassroomTitle');app.querySelector('.page-head p').textContent=ui('adminQuizInstruction');
-        app.querySelector('.page-actions a').textContent=`← ${ui('back')}`;activeCleanup.refreshLocale?.();
-      };
-      showBoard();
-      return;
+  let disposed=false,activeCleanup=null,mountTask=Promise.resolve(),modeTail=Promise.resolve(),modeGeneration=0,cleanupTask=null;
+  const active=()=>!disposed&&contextCurrent()&&mount.isConnected;
+  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;++modeGeneration;await modeTail.catch(()=>{});await mountTask.catch(()=>{});await activeCleanup?.();activeCleanup=null;})();
+  exposeModuleUpdateAdapter(cleanup,()=>activeCleanup,classroom?'classroom':`quiz:${activitySlug}`);
+  currentCleanup=cleanup;
+  const returnTo=target=>{if(!active())return;const hash=`#${target}`;if(location.hash===hash)render();else location.hash=target};
+  mountTask=(async()=>{
+    if(classroom){
+      if(backend.isAdmin()){
+        let selectedGroup='';
+        mount.insertAdjacentHTML('beforebegin',`<div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div><header class="page-head"><div><h1>${ui('seminar1ClassroomTitle')}</h1><p>${ui('adminQuizInstruction')}</p></div></header><div class="admin-quiz-mode" role="group" aria-label="${esc(ui('seminar1ClassroomTitle'))}"><button class="btn btn-primary" type="button" data-admin-quiz-mode="board">${ui('quizBoardMode')}</button><button class="btn btn-neutral" type="button" data-admin-quiz-mode="play">${ui('takeQuizMode')}</button></div>`);
+        const controls=app.querySelector('.admin-quiz-mode');
+        const setMode=mode=>controls.querySelectorAll('[data-admin-quiz-mode]').forEach(button=>{const selected=button.dataset.adminQuizMode===mode;button.classList.toggle('btn-primary',selected);button.classList.toggle('btn-neutral',!selected);button.setAttribute('aria-pressed',String(selected))});
+        const showMode=mode=>{
+          const modeRequest=++modeGeneration;
+          const work=modeTail.catch(()=>{}).then(async()=>{
+            await activeCleanup?.();activeCleanup=null;
+            if(!active()||modeRequest!==modeGeneration)return;
+            mount.innerHTML='';setMode(mode);
+            const child=mode==='play'?await mountAdaptiveSeminar1(mount,{group:selectedGroup,recordAttempt:false,participateLive:false,onExit:()=>returnTo('dashboard'),diagnostics:scope}):mountAutomaticBoard(mount,{initialGroup:selectedGroup,onGroupChange:group=>{selectedGroup=group},diagnostics:scope});
+            if(!active()||modeRequest!==modeGeneration){await child?.();return;}
+            activeCleanup=child;moduleReady();
+          });
+          modeTail=work;return work;
+        };
+        for(const button of controls.querySelectorAll('[data-admin-quiz-mode]'))button.onclick=()=>{void showMode(button.dataset.adminQuizMode).catch(error=>{scope?.error(error,{operation:'classroom-mode'});if(active())toast(error,'error')})};
+        cleanup.refreshLocale=()=>{
+          if(!active())return;
+          controls.querySelector('[data-admin-quiz-mode="board"]').textContent=ui('quizBoardMode');
+          controls.querySelector('[data-admin-quiz-mode="play"]').textContent=ui('takeQuizMode');
+          app.querySelector('.page-head h1').textContent=ui('seminar1ClassroomTitle');app.querySelector('.page-head p').textContent=ui('adminQuizInstruction');
+          app.querySelector('.page-actions a').textContent=`← ${ui('back')}`;activeCleanup?.refreshLocale?.();
+        };
+        await showMode(resumeMode==='play'?'play':'board');
+        return;
+      }
+      const child=await mountAdaptiveSeminar1(mount,{onExit:()=>returnTo('dashboard'),diagnostics:scope});
+      if(!active()){await child?.();return;}
+      activeCleanup=child;cleanup.refreshLocale=()=>{if(active())child.refreshLocale?.()};moduleReady();return;
     }
-    currentCleanup=await mountAdaptiveSeminar1(mount,{onExit:()=>returnTo('dashboard')});
-    return;
-  }
-  const assessment=activitySlug==='seminar-1-assessment';
-  await prepareQuizDraft(assessment?'seminar-1':activitySlug,{mode:assessment?'assessment':'default'});
-  let session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
-  const options={onExit:()=>returnTo('dashboard'),onSessionChange:next=>{session=next}};
-  currentCleanup=()=>{};currentCleanup.refreshLocale=()=>renderQuiz(mount,session,options);
-  renderQuiz(mount,session,options);
+    const assessment=activitySlug==='seminar-1-assessment';
+    await prepareQuizDraft(assessment?'seminar-1':activitySlug,{mode:assessment?'assessment':'default'});
+    if(!active())return;
+    let session=buildQuiz(data.questions,assessment?'seminar-1':activitySlug,backend.getProfile(),assessment?{mode:'assessment'}:{});
+    const options={diagnostics:scope,onExit:()=>returnTo('dashboard'),onSessionChange:next=>{session=next}};
+    const updater=bindQuizUpdate({root:mount,getSession:()=>session,diagnostics:scope});
+    activeCleanup=()=>updater.destroy();Object.assign(activeCleanup,updater);cleanup.refreshLocale=()=>{if(active())renderQuiz(mount,session,options)};
+    renderQuiz(mount,session,options);moduleReady();
+  })();
+  await mountTask;
 }
 function renderSeminar3(topic){
   renderSettlements('assessment');
@@ -604,16 +645,17 @@ function renderSettlements(){
   const current=route();
   const mode=current.name==='activity'&&current.parts[0]==='seminar-3'?'assessment':current.name==='games'&&current.parts[0]==='settlements'?'free':null;
   if(!mode)return;
-  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController();let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null;
+  const owner=attemptOwner(),generation=backend.generation,controller=new AbortController(),scope=routeDiagnostics;let handle=null,presentation=null,locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const free=mode==='free';
   app.innerHTML=`<section class="page settlements-page"><div id="settlementsMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
   const mount=app.querySelector('#settlementsMount');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&(free?route().name==='games'&&route().parts[0]==='settlements':route().name==='activity'&&route().parts[0]==='seminar-3');
-  // A route can leave while mounting still holds the profile's write lock.
-  // Join the entire startup/teardown chain before the next module is mounted.
-  const cleanup=()=>cleanupTask||=(async()=>{const presentationExit=presentation?.destroy();controller.abort();try{await mountTask;}finally{await handle?.destroy();await presentationExit;}})();
+  // An import owns no workspace. Once mounting starts, join teardown so the
+  // profile write lock is released before another module acquires it.
+  const cleanup=()=>cleanupTask||=(async()=>{const presentationExit=presentation?.destroy();controller.abort();try{if(mountStarted)await mountTask;}finally{await handle?.destroy();await presentationExit;}})();
   cleanup.isStale=()=>controller.signal.aborted||generation!==backend.generation;
   cleanup.flush=()=>handle?.flush();
+  exposeModuleUpdateAdapter(cleanup,()=>handle,'settlements');
   cleanup.refreshLocale=()=>{
     if(!active())return;
     const access=accessSnapshot(),gate=topicGate(3,access.overrides,access.now);
@@ -624,10 +666,10 @@ function renderSettlements(){
   navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'settlements'});
   mountTask=(async()=>{try{
     const [{mountSettlements},{createSettlementsPresentation}]=await Promise.all([import('../../apps/settlements/entry.mjs'),import('./settlements-presentation.js')]);if(!active())return;
-    presentation=createSettlementsPresentation(mount);
-    handle=await mountSettlements(mount,{backend,diagnostics,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
-    if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');
-  }catch(error){presentation?.destroy();if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};console.error('Settlements module:',error?.code||error?.message);}})();
+    mountStarted=true;presentation=createSettlementsPresentation(mount);
+    handle=await mountSettlements(mount,{backend,diagnostics:scope,owner:owner==='guest'?'guest:settlements':owner,mode,locale:getLocale(),signal:controller.signal,onViewChange:view=>{if(active())presentation.setView(view);},onLocaleChange:next=>{if(active()){setLocale(next);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());cleanup.refreshLocale();}},onLogin:()=>openAuthDialog(),onExit:()=>{renderedKey='';render();}});
+    if(!active()){await handle.destroy();return;}mount.setAttribute('aria-busy','false');moduleReady();
+  }catch(error){presentation?.destroy();if(!active())return;mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${t('error')}</p><button class="btn btn-primary">${ui('refresh')}</button></div>`;mount.querySelector('button').onclick=()=>{renderedKey='';render();};scope?.error(error,{operation:'module-load'});console.error('Settlements module:',error?.code||error?.message);}})();
 }
 function stableVariant(){const p=backend.getProfile();if(!p)return data.variants[0];let h=0;for(const c of p.studentKey)h=(Math.imul(h,31)+c.charCodeAt(0))>>>0;return data.variants[h%data.variants.length]}
 function gamesText(key){return GAMES_COPY[getLocale()]?.[key]||GAMES_COPY.ru[key]||key;}
@@ -647,7 +689,7 @@ function renderGamesRoute(module){
   }
   const games=GAMES.filter(game=>gameAccessGate(game.id,backend,data.course)?.open!==false);
   const lead=backend.getProfile()&&!backend.isAdmin()?GAMES_STUDENT_LEAD[getLocale()]||GAMES_STUDENT_LEAD.ru:gamesText('lead');
-  app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${game.href}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
+  app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${esc(game.href.startsWith('#')?game.href:resourceURL(game.href,new URL('../../',import.meta.url)).href)}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
 }
 function renderSeminar5(topic,{context='course'}={}){
   const free=context==='free';
@@ -659,10 +701,11 @@ function renderSeminar5(topic,{context='course'}={}){
   }
   app.innerHTML=`<section class="page reception-page"><div id="receptionMount" lang="${getLocale()}" aria-busy="true"><p role="status">${t('receptionOpening')}</p></div></section>`;
   const mount=app.querySelector('#receptionMount');
-  const controller=new AbortController(),owner=attemptOwner();
-  let mountedCleanup=()=>{},locale=getLocale();
-  const cleanup=()=>{controller.abort();mountedCleanup();};
+  const controller=new AbortController(),owner=attemptOwner(),scope=routeDiagnostics;
+  let mountedCleanup=()=>{},locale=getLocale(),mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
+  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();if(mountStarted)await mountTask;await mountedCleanup();})();
   cleanup.flush=()=>mountedCleanup.flush?.();
+  exposeModuleUpdateAdapter(cleanup,()=>mountedCleanup,'reception');
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&isModuleRoute('reception',context);
   cleanup.refreshLocale=()=>{
     const access=accessSnapshot(),gate=topicGate(topic.number,access.overrides,access.now);
@@ -674,33 +717,35 @@ function renderSeminar5(topic,{context='course'}={}){
     if(locale!==getLocale()){locale=getLocale();mountedCleanup.refreshLocale?.(locale);}
   };
   currentCleanup=cleanup;
-  void (async()=>{
+  mountTask=(async()=>{
     try{
       const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
-      if(!active()){cleanup();return;}
+      if(!active())return;
+      mountStarted=true;
       mountedCleanup=await mountReception(mount,{
-        backend,diagnostics,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
+        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
         assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
         onExit:()=>{location.hash=free?'games':'dashboard'}
       });
-      if(!active()){cleanup();return;}
+      if(!active())return;
       mount.setAttribute('aria-busy','false');
+      moduleReady();
     }catch(error){
       if(!active())return;
       mount.setAttribute('aria-busy','false');
       mount.innerHTML=`<div class="panel" role="alert"><h2>${t('receptionUnavailable')}</h2><p>${t('answersOnDevice')}</p><button type="button" class="btn btn-primary" id="receptionRetry">${t('retryLoading')}</button></div>`;
       mount.querySelector('#receptionRetry').onclick=()=>{cleanup();renderedKey='';render();};
-      console.error('Reception module:',error);
+      scope?.error(error,{operation:'module-load'});console.error('Reception module:',error);
     }
   })();
 }
 function renderSeminar6(topic,{context='course'}={}){
   const free=context==='free';
   const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
-  const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview';
+  const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview',scope=routeDiagnostics;
   const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
-  let disposed=false,handle=null;
+  let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
   app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.civil_service_test)}" target="_blank" rel="noopener noreferrer" data-career-ui="openCivilTest">${ui('openCivilTest')}</a></div><form id="civilForm" class="form-grid"><label><span data-career-ui="testScore">${ui('testScore')}</span><input name="score" required></label><label><span data-career-ui="screenshot">${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit" data-career-ui="submit">${ui('submit')}</button></div></form></details></section>`;
@@ -711,15 +756,16 @@ function renderSeminar6(topic,{context='course'}={}){
   }
   const mount=app.querySelector('#careerMount');
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
-  const cleanup=()=>{disposed=true;controller.abort();handle?.destroy();if(currentCareer===token)currentCareer=null;};
+  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();if(mountStarted)await mountTask;await handle?.destroy();if(currentCareer===token)currentCareer=null;})();
   cleanup.flush=()=>handle?.flush?.();
+  exposeModuleUpdateAdapter(cleanup,()=>handle,'career');
   cleanup.refreshLocale=()=>{
     if(!active())return;
     app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
     app.querySelectorAll('[data-career-ui]').forEach(el=>el.textContent=free&&el.dataset.careerUi==='back'?gamesText('back'):ui(el.dataset.careerUi));
     app.querySelector('#careerCourseStatus').textContent=text('local');
     mount.setAttribute('aria-label',text('title'));
-    if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active())console.error('Career locale:',error);});}
+    if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active()){scope?.error(error,{operation:'locale'});console.error('Career locale:',error);}});}
   };
   currentCleanup=cleanup;
   const civilForm=app.querySelector('#civilForm');
@@ -729,11 +775,12 @@ function renderSeminar6(topic,{context='course'}={}){
     if(!score||!attachment){toast(ui('fillRequired'),'error');return}
     await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',attachmentIds:[attachment.id],studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl:attachment.ref,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');renderedKey='';render();
   };
-  void (async()=>{try{
+  mountTask=(async()=>{try{
     const {mountCareer}=await import('../../apps/career/entry.mjs');
-    if(!active()){cleanup();return;}
+    if(!active())return;
     token.lang=getLocale();
-    handle=await mountCareer(mount,{diagnostics,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
+    mountStarted=true;
+    handle=await mountCareer(mount,{diagnostics:scope,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
       onRouteChange:(view,{replace=false}={})=>{
         if(!active())return;
         const next=`#${routeBase}/${careerRoute(view)}`;
@@ -742,13 +789,14 @@ function renderSeminar6(topic,{context='course'}={}){
       }
     });
     token.handle=handle;
-    if(!active()){cleanup();return;}
+    if(!active())return;
     mount.setAttribute('aria-busy','false');
+    moduleReady();
   }catch(error){
     if(!active())return;
     mount.setAttribute('aria-busy','false');mount.innerHTML=`<div class="notice danger"><p>${esc(text('failed'))}</p><button type="button" class="btn btn-primary" id="retryCareer">${text('retry')}</button></div>`;
     mount.querySelector('#retryCareer').onclick=()=>{cleanup();renderedKey='';render();};
-    console.error('Career module:',error);
+    scope?.error(error,{operation:'module-load'});console.error('Career module:',error);
   }})();
 }
 const GOVERNOR_COPY={
@@ -817,7 +865,7 @@ const territories=(Array.isArray(report.territories)?report.territories:[]).slic
 }
 async function renderSeminar7(topic){
   const c=governorCopy(),owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey,hash=location.hash;
-  const intro=`<div class="panel external-card"><div><span class="badge">${esc(c.module)}</span><h2>${esc(c.title)}</h2><p>${esc(ui('seminar7Lead'))}</p><p class="muted">${esc(c.languages)}</p></div><a class="btn btn-primary" href="apps/governor/index.html">${esc(ui('openSimulator'))}</a></div><div class="panel"><p class="notice">${esc(c.assessment)}</p><p>${esc(c.rubric)}</p></div>`;
+  const intro=`<div class="panel external-card"><div><span class="badge">${esc(c.module)}</span><h2>${esc(c.title)}</h2><p>${esc(ui('seminar7Lead'))}</p><p class="muted">${esc(c.languages)}</p></div><a class="btn btn-primary" href="${esc(resourceURL('apps/governor/index.html',new URL('../../',import.meta.url)).href)}">${esc(ui('openSimulator'))}</a></div><div class="panel"><p class="notice">${esc(c.assessment)}</p><p>${esc(c.rubric)}</p></div>`;
   app.innerHTML=seminarShell(topic,`${intro}<section class="panel"><h2>${esc(c.history)}</h2><div id="governorHistory" role="status">${backend.isAdmin()?esc(c.preview):!studentKey?esc(ui('profileRequired')):esc(t('loading'))}</div></section>`);
   if(!studentKey)return;
   const [items,grades]=await Promise.all([backend.getAttempts(studentKey),backend.getGrades(studentKey),prepareGovernorReportLocale().catch(()=>{})]);
@@ -833,7 +881,7 @@ let puzzleFragment=null;
 const puzzleRuntimeRequests=new Map();
 async function getPuzzleFragment(signal){
   if(puzzleFragment)return puzzleFragment;
-  const response=await fetch('apps/puzzle.html',{cache:'no-cache',signal});
+  const response=await fetch(resourceURL('apps/puzzle.html',new URL('../../',import.meta.url)),{cache:'no-cache',signal});
   if(!response.ok)throw new Error(`apps/puzzle.html: HTTP ${response.status}`);
   const documentCopy=new DOMParser().parseFromString(await response.text(),'text/html');
   signal.throwIfAborted();
@@ -887,7 +935,7 @@ async function renderPuzzleRoute(asSeminar=false){
       return;
     }
   }
-  const context=asSeminar?'seminar':'free',requestedHash=location.hash,requestedOwner=attemptOwner(),requestedLocale=getLocale();
+  const context=asSeminar?'seminar':'free',requestedHash=location.hash,requestedOwner=attemptOwner(),requestedLocale=getLocale(),scope=routeDiagnostics;
   const copy={ru:{loading:'Открываем карту…',waiting:'Карта откроется автоматически после подключения.'},en:{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'},zh:{loading:'正在打开地图…',waiting:'连接恢复后，地图会自动打开。'}}[requestedLocale]||{loading:'Opening the map…',waiting:'The map will open automatically when the connection is available.'};
   app.innerHTML=`<section class="page puzzle-native-page" data-puzzle-route="${context}"><div class="page-actions"><a class="btn btn-neutral btn-small" href="${asSeminar?'#dashboard':'#games'}">← ${esc(asSeminar?ui('back'):gamesText('back'))}</a></div><div class="panel" role="status" aria-live="polite" data-puzzle-loading="loading">${esc(copy.loading)}</div></section>`;
   const container=app.firstElementChild;
@@ -902,6 +950,7 @@ async function renderPuzzleRoute(asSeminar=false){
     return cleanupPromise=Promise.resolve().then(()=>mountedCleanup?.());
   };
   cleanup.flush=()=>mountedCleanup?.flush?.();
+  exposeModuleUpdateAdapter(cleanup,()=>mountedCleanup,'maps');
   const permitted=()=>{
     if(!active()){cleanup();return false;}
     const access=accessSnapshot(),gate=asSeminar?topicGate(2,access.overrides,access.now):gameAccessGate('maps',backend,data.course);
@@ -926,9 +975,10 @@ async function renderPuzzleRoute(asSeminar=false){
       content.querySelector('.puzzle-profile-warning a')?.setAttribute('href','#profile');
       content.querySelector('#puzzleResultBack')?.setAttribute('href',asSeminar?'#activity/seminar-2':'#puzzle');
       container.querySelector('[data-puzzle-loading]')?.remove();container.append(...content.childNodes);
-      const mounted=await mountPuzzlePage({diagnostics,context,base:'assets/puzzle/data',legacyBase:'data'});
+      const mounted=await mountPuzzlePage({diagnostics:scope,context,base:'assets/puzzle/data',legacyBase:'data'});
       if(!active()){await mounted?.();return;}
       mountedCleanup=mounted;
+      moduleReady();
     }catch(error){
       controller.abort();
       if(!active())return;
@@ -1177,7 +1227,7 @@ authIdentifier.addEventListener('input',event=>{
 authIdentifier.addEventListener('compositionend',()=>{clearTimeout(rosterLookupTimer);rosterLookupTimer=setTimeout(()=>resolveIdentifier(),700)});
 authDialog.addEventListener('close',()=>{clearTimeout(rosterLookupTimer);rosterLookupRequest++;clearAuthOperation();authPassword.value=''});
 document.querySelector('.modal-close').addEventListener('click',()=>authDialog.close());
-profileButton.addEventListener('click',()=>{openAccount(openAuthDialog);diagnosticReportButton(document.querySelector('#accountDialog .modal-card'))});
+profileButton.addEventListener('click',()=>openAccount(openAuthDialog));
 authForm.addEventListener('submit',async event=>{
   event.preventDefault();
   if(authSubmit.disabled)return;
@@ -1204,7 +1254,7 @@ authResetPassword.addEventListener('click',async()=>{
   await runAuthOperation(()=>backend.adminResetPassword(identifier,{locale:getLocale()}),{reset:true});
 });
 function updateLanguageSwitcher(){languageOptions.forEach(button=>{const active=button.dataset.lang===getLocale();button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active))})}
-function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png';image.alt=international?'RUDN University':'РУДН'})}
+function updateRudnLogos(){const international=getLocale()!=='ru';document.querySelectorAll('[data-rudn-logo]').forEach(image=>{image.src=resourceURL(international?'assets/img/rudn-logo-en.png':'assets/img/rudn-logo.png',new URL('../../',import.meta.url)).href;image.alt=international?'RUDN University':'РУДН'})}
 languageOptions.forEach(button=>button.addEventListener('click',()=>{setLocale(button.dataset.lang);updateLanguageSwitcher();updateRudnLogos();updateSync(backend.status());render()}));
 window.addEventListener('hashchange',()=>{diagnostics.record('route',{success:true,code:'ok'});render()});window.addEventListener('rudn:gradechange',()=>{updateQuizSaveStatus(app);updateGovernorSaveStatus(app);void updateLegalLabSaveStatus(app);if(route().name==='gradebook'||route().name==='dashboard')render()});
 window.addEventListener('rudn:accesschange',()=>{renderedKey='';render();});
@@ -1215,19 +1265,26 @@ window.addEventListener('rudn:identitychange',()=>{
 });
 
 function connectPageRelease(){
-  if(!('serviceWorker' in navigator))return;
-  const workers=navigator.serviceWorker;
-  // This is the document's loaded module version, not the newly active worker's.
-  const release=new URL(import.meta.url).searchParams.get('v')||CONFIG.version;
-  const announce=()=>workers.controller?.postMessage({type:'BIND_RELEASE',release});
+  updateCoordinator=bootstrapUpdateCoordinator({backend,diagnostics,getOwner:attemptOwner,getAdapters:updateAdapters,
+    module:()=>currentCleanup?.module==='maps'?'puzzle':currentCleanup?.module?.startsWith('quiz')?'quiz':currentCleanup?.module||'platform',
+    restoreRoute:async(hash,envelope)=>{
+      if(location.hash!==hash){location.hash=hash;return}
+      const needed=envelope?.adapters?.[0]?.module;
+      if(needed?.startsWith('quiz:')&&currentCleanup?.module!==needed){await startQuiz(needed.slice(5),{resumeMode:'play'});moduleReady()}
+    }
+  });
+  const workers=navigator.serviceWorker;if(!workers)return;
+  const announce=()=>{
+    const exact=getReleaseContext();
+    workers.controller?.postMessage(exact?{type:'BIND_BUILD',buildId:exact.buildId,manifestURL:exact.manifestURL,manifestSha256:exact.manifestSha256}:{type:'BIND_RELEASE',release:CONFIG.version});
+    void updateCoordinator.check('worker-change');
+  };
   workers.addEventListener('controllerchange',announce);
   workers.addEventListener('message',event=>{
-    if(event.source!==workers.controller||event.data?.type!=='RELEASE_RESOURCE_UNAVAILABLE')return;
-    const message=getLocale()==='en'?'To open this activity, refresh the page after finishing or saving your current work.':getLocale()==='zh'?'请先完成或保存当前作业，然后刷新页面以打开此活动。':'Чтобы открыть это задание, обновите страницу после завершения или сохранения текущей работы.';
-    toast(message,'info',0);
-  });
-  announce();
-  workers.ready.then(announce).catch(()=>{});
+    if(event.source===workers.controller&&['RELEASE_RESOURCE_UNAVAILABLE','RELEASE_RESOURCE_ERROR','RELEASE_READY'].includes(event.data?.type)){
+      diagnostics.record('resource-error',{code:'release-resource-unavailable',stage:'service-worker'});void updateCoordinator.check('resource-error');
+    }
+  });announce();
 }
 
 async function bootstrap(){
@@ -1240,6 +1297,6 @@ async function bootstrap(){
   backend.init().then(()=>{diagnostics.record('route',{success:true,code:'ok'});return render();}).catch(error=>toast(error,'error'));
   await loadData();dataReady=true;
   updateTopProfile();await render();
-  if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>console.warn('Service worker',error))}
+  if('serviceWorker' in navigator&&!getReleaseContext()){navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).then(registration=>registration.update()).catch(error=>diagnostics.error(error,{operation:'worker-register'}))}
 }
-bootstrap().catch(error=>{console.error(error);app.innerHTML=`<div class="notice danger">${esc(error.stack||error)}</div>`});
+bootstrap().catch(error=>{diagnostics.error(error,{operation:'bootstrap'});app.innerHTML=`<div class="notice danger">${esc(errorText(error))}</div>`;void updateCoordinator?.check('bootstrap-error')});

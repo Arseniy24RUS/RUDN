@@ -294,7 +294,11 @@
     if (performance.now() - state.lastCheckpointAt >= 250) void checkpoint();
     else if (!checkpointTimer) checkpointTimer = setTimeout(() => { checkpointTimer = 0; void checkpoint(); }, 250);
   }
-  if(root.puzzleProgress)root.puzzleProgress.capture=checkpoint;
+  if(root.puzzleProgress){
+    root.puzzleProgress.capture=checkpoint;
+    root.puzzleProgress.updateState=()=>({attemptId:state.attemptId,ready:state.ready,busy:state.loading||state.restoring||state.draggingPiece||state.draggingPan||state.draggingFromTray});
+    root.puzzleProgress.pauseForUpdate=paused=>{if(paused)pauseTimer();else if(state.timerStarted&&!state.finished&&writable())startTimerIfNeeded()};
+  }
 
   function toast(message, type = "info", ms = 3000) {
     if(document.getElementById('toastStack')){window.dispatchEvent(new CustomEvent('rudn:toast',{detail:{message,type}}));return}
@@ -2390,8 +2394,10 @@
   updateUi();
   state.animationFrame = requestAnimationFrame(tick);
   const restored = root.puzzleProgress?.restore;
-  if (restored?.started) { state.selections = { ...restored.selections }; void startGame({ resume: restored }); }
-  else void startGame({ desired: { mode: seminarContext ? "russia-subjects" : "world-countries", difficulty: "medium", selection: null } });
+  let initialLoad;
+  if (restored?.started) { state.selections = { ...restored.selections }; initialLoad=startGame({ resume: restored }); }
+  else initialLoad=startGame({ desired: { mode: seminarContext ? "russia-subjects" : "world-countries", difficulty: "medium", selection: null } });
+  if(root.puzzleProgress)root.puzzleProgress.loaded=initialLoad;
   return () => {
     lifecycleSave();
     disposed = true;

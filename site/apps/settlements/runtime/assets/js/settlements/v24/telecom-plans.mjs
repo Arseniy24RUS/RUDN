@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../../../../../assets/js/release-resources.js';
 /** Authored regional telecom tasks. Only the selected region is imported. */
 import {haversine} from '../v2/engine.mjs';
 import * as policy from './telecom-policy.mjs';
@@ -87,7 +88,7 @@ export async function loadTelecomPlan(world, {retry = false} = {}) {
   if (failure && (!retry || !failure.importFailed || failure.retried)) throw failure.error;
   const retried = Boolean(failure && retry), loading = (async () => {
     let module;
-    try { module = await import(`./telecom-plans-regions/${id}.mjs${retried ? '?retry=1' : ''}`); }
+    try { module = await import(resourceURL(`./telecom-plans-regions/${id}.mjs${retried ? '?retry=1' : ''}`,import.meta.url).href); }
     catch { const error = new Error('Не удалось загрузить план связи. Повторите загрузку региона.'); failures.set(world, {error, importFailed: true, retried}); throw error; }
     try { const plan = await validateTelecomPlan(world, module.default); loaded.set(world, plan); failures.delete(world); return plan; }
     catch (error) { failures.set(world, {error, importFailed: false, retried}); throw error; }

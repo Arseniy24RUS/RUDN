@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {CONTENT_MANIFEST as manifest} from '../content/manifest.js';
 import {realizeDatePack,caseDeadlineWithSnapshot} from './case-time.js';
 
@@ -49,7 +50,7 @@ export function datedCaseBank(year,calendarSnapshot){
 async function checksum(value){const bytes=new TextEncoder().encode(JSON.stringify(value));return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 async function readResource(path,sha256,{signal,timeoutMs=8000,fetch:fetcher=globalThis.fetch}={}){
  if(signal?.aborted)throw new DOMException('Загрузка материалов отменена.','AbortError');
- const url=new URL('../content/'+path,import.meta.url);url.searchParams.set('v',sha256.slice(0,16));
+ const url=resourceURL('../content/'+path,import.meta.url);
  const validate=async text=>{const value=JSON.parse(text);if(await checksum(value)!==sha256)throw failure('content/integrity','Сохранённые материалы не совпадают с версией задания. Работа не заменена новым вариантом.');return value;};
  // Node build/regression harnesses use the same files and checksum checks, without a network dependency.
  if(url.protocol==='file:'){const {readFile}=await import('node:fs/promises');url.search='';return validate(await readFile(url,'utf8'));}

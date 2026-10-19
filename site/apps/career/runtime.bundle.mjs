@@ -24,9 +24,14 @@ var CareerRuntime = (() => {
   var app_exports = {};
   __export(app_exports, {
     STORAGE_KEY: () => STORAGE_KEY,
+    captureForUpdate: () => captureForUpdate,
+    flushForUpdate: () => flushForUpdate,
     navigate: () => routeTo,
+    pauseForUpdate: () => pauseForUpdate,
     ready: () => ready,
-    setLocale: () => setLanguage
+    restoreForUpdate: () => restoreForUpdate,
+    setLocale: () => setLanguage,
+    updateBusy: () => updateBusy
   });
 
   // site/apps/career/assets/versions.mjs
@@ -594,7 +599,12 @@ var CareerRuntime = (() => {
       draw();
       preview();
     });
-    return { open, render(route) {
+    return { open, updateBusy: () => busy || loading, captureForUpdate: () => ({ selected, territorial, query, limit }), restoreForUpdate(value) {
+      selected = institutions.some((a) => a.id === value?.selected) ? value.selected : "";
+      territorial = value?.territorial === true;
+      query = String(value?.query || "").slice(0, 200);
+      limit = Math.max(12, Math.min(240, Number(value?.limit) || 12));
+    }, render(route) {
       if (route === "vacancies") {
         draw();
         void load();
@@ -1096,7 +1106,12 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-public-service")?.hidden) render("public-service");
     });
-    return { render, open(id) {
+    return { render, captureForUpdate: () => ({ cohort, query, selected, comparison }), restoreForUpdate(value) {
+      cohort = Object.hasOwn(cohortLabels(), value?.cohort) ? value.cohort : "all";
+      query = String(value?.query || "").slice(0, 120);
+      selected = byId(value?.selected) ? value.selected : null;
+      comparison = (value?.comparison || []).filter((id) => byId(id)).slice(0, 2);
+    }, open(id) {
       if (!byId(id)) return;
       selected = id;
       routeTo2("public-service");
@@ -1469,7 +1484,16 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-lab").hidden) render("lab");
     });
-    return { render, open: entry };
+    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint, title }), restoreForUpdate(value) {
+      sync();
+      if (value?.fingerprint !== fingerprint) return false;
+      mode = ["explain", "experiment"].includes(value.mode) ? value.mode : "explain";
+      selected = agency(value.selected) ? value.selected : selected;
+      draft = value.draft ? checkedInputs(value.draft, data2) : draft;
+      title = String(value.title || "").slice(0, 500);
+      preview = null;
+      return true;
+    } };
   }
 
   // site/apps/career/assets/recovery.mjs
@@ -1583,7 +1607,7 @@ var CareerRuntime = (() => {
   var ico = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   function createClassroom({ data: data2, routeTo: routeTo2, openAuthority: openAuthority2, toast: toast2, downloadText: downloadText2, getResult }) {
     const root = document.querySelector("#classroom-root"), cases = data2.agencyStudies.cases;
-    let book = blankWorkbook(), mode = "cases", activeCase = null, storageFailed = false;
+    let importing = false, book = blankWorkbook(), mode = "cases", activeCase = null, storageFailed = false;
     const protectedStore = createProtectedStore(NOTEBOOK_KEY, (raw) => {
       const value = JSON.parse(raw);
       if (!validateWorkbook(value, data2.authorities, cases)) throw Error("schema");
@@ -1716,6 +1740,7 @@ var CareerRuntime = (() => {
       root.querySelector("#workbook-import")?.addEventListener("change", async (e) => {
         const f = e.target.files[0];
         if (!f) return;
+        importing = true;
         try {
           if (f.size > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
           const incoming = importWorkbook(await f.text(), data2.authorities, cases);
@@ -1726,6 +1751,7 @@ var CareerRuntime = (() => {
         } catch {
           toast2(L4("\u0424\u0430\u0439\u043B \u043B\u0438\u0441\u0442\u0430 \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442, \u0440\u0430\u0437\u043C\u0435\u0440 \u0438 \u0432\u0435\u0440\u0441\u0438\u044E.", "Worksheet file rejected: check its format, size and version."));
         } finally {
+          importing = false;
           e.target.value = "";
         }
       });
@@ -1768,7 +1794,10 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-workshop").hidden) render("workshop");
     });
-    return { render, open, sourceForAuthority(id) {
+    return { render, open, updateBusy: () => importing, captureForUpdate: () => ({ mode, activeCase }), restoreForUpdate(value) {
+      mode = ["cases", "notes", "plan"].includes(value?.mode) ? value.mode : "cases";
+      activeCase = cases.some((c) => c.id === value?.activeCase) ? value.activeCase : null;
+    }, sourceForAuthority(id) {
       const c = cases.find((c2) => c2.authorityId === id);
       return c ? `<div data-no-i18n class="ws-dossier-source">${source(c)}<p>${L4("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u044E, \u043D\u043E \u043D\u0435 \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.", "This source supports the function, not the numerical weights of the teaching profile.")}</p></div>` : "";
     } };
@@ -2091,6 +2120,7 @@ var CareerRuntime = (() => {
     }).join("");
   }
   function createWorkspace({ data: data2, state: state2, modelVersion, rank, route, openAuthority: openAuthority2, restore, toast: toast2, download, isComplete }) {
+    let importing = false;
     let scenarios = [], selection = [], focus = "government", storageAvailable = true, sourceAuthority = "", scenarioResults = /* @__PURE__ */ new Map();
     const protectedStore = createProtectedStore(SCENARIO_STORAGE_KEY, (raw) => importScenarios(raw, [], data2.questions, data2.sectors).items);
     scenarios = protectedStore.value || [];
@@ -2276,6 +2306,7 @@ var CareerRuntime = (() => {
       $("#scenario-import").addEventListener("change", async (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
+        importing = true;
         try {
           if (file.size > 512 * 1024) throw Error("size");
           const result = importScenarios(await file.text(), scenarios, data2.questions, data2.sectors);
@@ -2286,6 +2317,7 @@ var CareerRuntime = (() => {
         } catch {
           toast2(translate("\u0424\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442, \u0432\u0435\u0440\u0441\u0438\u044E, \u043B\u0438\u043C\u0438\u0442 \u0438 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435 \u043A\u043E\u043D\u0444\u043B\u0438\u043A\u0442\u0443\u044E\u0449\u0438\u0445 \u0437\u0430\u043F\u0438\u0441\u0435\u0439."));
         }
+        importing = false;
         event.target.value = "";
       });
       $("#opportunity-authority").addEventListener("change", (e) => {
@@ -2306,7 +2338,11 @@ var CareerRuntime = (() => {
       const persisted = persist();
       return { id: item.id, persisted };
     }
-    return { bind, saveDetached, render(routeName) {
+    return { bind, saveDetached, updateBusy: () => importing, captureForUpdate: () => ({ selection, focus, sourceAuthority }), restoreForUpdate(value) {
+      selection = (value?.selection || []).filter((id) => scenarios.some((s) => s.id === id));
+      focus = byId.has(value?.focus) ? value.focus : "government";
+      sourceAuthority = byId.has(value?.sourceAuthority) ? value.sourceAuthority : "";
+    }, render(routeName) {
       if (routeName === "structure") structure();
       if (routeName === "scenarios") renderScenarios();
       if (routeName === "opportunities") opportunities();
@@ -3901,6 +3937,41 @@ var CareerRuntime = (() => {
     }
   }
   var ready = init();
+  var updateBusy = () => groupBusy || decisionLab?.updateBusy?.() || vacancies?.updateBusy?.() || workspace?.updateBusy?.() || classroom?.updateBusy?.() || pendingLegacyChoice || protectedStorage;
+  var pauseForUpdate = () => {
+  };
+  function flushForUpdate() {
+    return saveState();
+  }
+  function captureForUpdate() {
+    const filters = Object.fromEntries(["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].map((id) => [id, $2("#" + id)?.value || ""]));
+    return { schema: 1, model: MODEL_VERSION, fields: [...document.querySelectorAll("input[id],textarea[id],select[id]")].filter((el) => el.type !== "file" && el.type !== "password").slice(0, 100).map((el) => ({ id: el.id, value: el.value, checked: el.checked })), route: state.lastRoute, questionIndex: state.questionIndex, filters, authority: currentAuthority?.id || null, authorityTab: document.querySelector("#authority-dialog [role=tab][aria-selected=true]")?.dataset.tab || "overview", seminarAuthority: seminarAuthority?.id || null, groupMode, groupRecords, groupRejected, workspace: workspace?.captureForUpdate?.(), classroom: classroom?.captureForUpdate?.(), decisionLab: decisionLab?.captureForUpdate?.(), publicService: publicService?.captureForUpdate?.(), vacancies: vacancies?.captureForUpdate?.() };
+  }
+  async function restoreForUpdate(value) {
+    if (value?.schema !== 1 || value.model !== MODEL_VERSION) throw Error("update/incompatible");
+    if (Number.isInteger(value.questionIndex)) state.questionIndex = Math.max(0, Math.min(data.questions.length - 1, value.questionIndex));
+    for (const [id, text2] of Object.entries(value.filters || {})) {
+      if (["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].includes(id) && $2("#" + id)) $2("#" + id).value = String(text2).slice(0, 500);
+    }
+    workspace?.restoreForUpdate?.(value.workspace);
+    classroom?.restoreForUpdate?.(value.classroom);
+    decisionLab?.restoreForUpdate?.(value.decisionLab);
+    publicService?.restoreForUpdate?.(value.publicService);
+    vacancies?.restoreForUpdate?.(value.vacancies);
+    groupMode = value.groupMode === "demo" ? "demo" : "uploaded";
+    groupRecords = Array.isArray(value.groupRecords) ? value.groupRecords : [];
+    groupRejected = Math.max(0, Number(value.groupRejected) || 0);
+    seminarAuthority = data.authorities.find((a) => a.id === value.seminarAuthority) || null;
+    routeTo(value.route, { updateHash: false, focus: false });
+    if (value.authority) openAuthority(value.authority, value.authorityTab);
+    for (const field of value.fields || []) {
+      const el = document.getElementById(field.id);
+      if (el && ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) && el.type !== "file" && el.type !== "password") {
+        el.value = String(field.value || "");
+        el.checked = !!field.checked;
+      }
+    }
+  }
   return __toCommonJS(app_exports);
 })();
 

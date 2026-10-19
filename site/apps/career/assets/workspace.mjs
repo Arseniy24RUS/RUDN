@@ -21,6 +21,7 @@ export function resourceCards(resources){
   </article>`;}).join('');
 }
 export function createWorkspace({data,state,modelVersion,rank,route,openAuthority,restore,toast,download,isComplete}){
+  let importing=false;
   let scenarios=[],selection=[],focus='government',storageAvailable=true,sourceAuthority='',scenarioResults=new Map();
   const protectedStore=createProtectedStore(SCENARIO_STORAGE_KEY,raw=>importScenarios(raw,[],data.questions,data.sectors).items);
   scenarios=protectedStore.value||[];storageAvailable=!protectedStore.protected;
@@ -129,10 +130,10 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
     $('#scenario-form').addEventListener('submit',e=>{e.preventDefault();saveScenario();});
     $('#scenario-export').addEventListener('click',()=>download('rudn-career-scenarios.json',JSON.stringify(scenarioBundle(scenarios),null,2)));
     $('#scenario-import').addEventListener('change',async event=>{
-      const file=event.target.files?.[0];if(!file)return;
+      const file=event.target.files?.[0];if(!file)return;importing=true;
       try{if(file.size>512*1024)throw Error('size');const result=importScenarios(await file.text(),scenarios,data.questions,data.sectors);scenarios=result.items;persist();renderScenarios();toast(t(`Добавлено сценариев: ${result.added}. Повторов: ${result.duplicates}.`));}
       catch{toast(t('Файл не принят. Проверьте формат, версию, лимит и отсутствие конфликтующих записей.'));}
-      event.target.value='';
+      importing=false;event.target.value='';
     });
     $('#opportunity-authority').addEventListener('change',e=>{sourceAuthority=e.target.value;opportunities();});
     $('#opportunity-kind').addEventListener('change',opportunities);
@@ -149,5 +150,5 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
     const persisted=persist();
     return {id:item.id,persisted};
   }
-  return {bind,saveDetached,render(routeName){if(routeName==='structure')structure();if(routeName==='scenarios')renderScenarios();if(routeName==='opportunities')opportunities();},focusAuthority(id){focus=byId.has(id)&&authorityCore(byId.get(id))?id:'government';route('structure');},showResources(id){sourceAuthority=byId.has(id)?id:'';route('opportunities');},resourceCardsFor(id){return resourceCards(resourcesForAuthority(byId.get(id),data.resources));}};
+  return {bind,saveDetached,updateBusy:()=>importing,captureForUpdate:()=>({selection,focus,sourceAuthority}),restoreForUpdate(value){selection=(value?.selection||[]).filter(id=>scenarios.some(s=>s.id===id));focus=byId.has(value?.focus)?value.focus:'government';sourceAuthority=byId.has(value?.sourceAuthority)?value.sourceAuthority:'';},render(routeName){if(routeName==='structure')structure();if(routeName==='scenarios')renderScenarios();if(routeName==='opportunities')opportunities();},focusAuthority(id){focus=byId.has(id)&&authorityCore(byId.get(id))?id:'government';route('structure');},showResources(id){sourceAuthority=byId.has(id)?id:'';route('opportunities');},resourceCardsFor(id){return resourceCards(resourcesForAuthority(byId.get(id),data.resources));}};
 }

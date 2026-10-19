@@ -1,3 +1,4 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {searchUnits,contentHash} from './core.mjs';
 import {ReaderData} from './reader-data.mjs';
 export class Corpus {
@@ -5,7 +6,7 @@ export class Corpus {
   assertActive(){if(this.destroyed||this.signal?.aborted)throw new DOMException('Aborted','AbortError');}
   async json(path,expectedSha=null,{signal=this.signal}={}){
     const check=()=>{this.assertActive();if(signal?.aborted)throw new DOMException('Aborted','AbortError');};check();
-    const r=await fetch(new URL(path,this.base),{signal,credentials:'same-origin',cache:'no-cache'});
+    const r=await fetch(resourceURL(path,this.base),{signal,credentials:'same-origin',cache:'no-cache'});
     check();
     if(!r.ok)throw new Error(`Не удалось загрузить ${path}: HTTP ${r.status}`);
     const bytes=await r.arrayBuffer();

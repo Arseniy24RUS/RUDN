@@ -1,10 +1,11 @@
+import {resourceURL} from '../../../assets/js/release-resources.js';
 import {escapeHTML as e,expandIds,gradeTask} from './core.mjs';
 import {translate,translateDOM} from '../locales/ui.mjs';
 import {documentTaskGroups} from './reader-tools.mjs';
 import {documentDisplay,documentLocale,displayLabel,readerQuery} from './translation-ui.mjs';
 import {ReaderController} from './reader-controller.mjs';
 const BASE=new URL('../',import.meta.url);
-const asset=path=>new URL(path,BASE).href;
+const asset=path=>resourceURL(path,BASE).href;
 const SEARCH='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>';
 const CONTENTS='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h14M7 12h14M7 19h14M2 5h1M2 12h1M2 19h1"/></svg>';
 const clip=(value,n=120)=>String(value).length>n?String(value).slice(0,n-1)+'…':String(value);

@@ -1,3 +1,4 @@
+import {resourceURL,getReleaseContext} from '../../../../../../../assets/js/release-resources.js';
 /** Public game files have a second network path; profile traffic stays separate. */
 const RUNTIME=new URL('../../../../',import.meta.url);
 const GATEWAY=new URL('https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/networkGateway/settlements/runtime/');
@@ -26,9 +27,9 @@ export async function readSettlementsResource(url,{signal,timeout=12000,fetchImp
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     return read(response);
   },{signal,timeout});
-  try{return await load(url);}
+  try{return await load(resourceURL(url));}
   catch(error){
-    if(signal?.aborted)throw error;
+    if(signal?.aborted||getReleaseContext())throw error;
     const fallback=settlementsFallbackUrl(url,roots);
     if(!fallback)throw error;
     return load(fallback);
@@ -36,11 +37,11 @@ export async function readSettlementsResource(url,{signal,timeout=12000,fetchImp
 }
 let importAttempt=0;
 export async function loadSettlementsGame({moduleUrl=new URL('../v24/game.mjs',import.meta.url),signal,timeout=12000,importImpl=url=>import(url),...roots}={}){
-  const url=new URL(moduleUrl);
+  const url=resourceURL(moduleUrl);
   const load=target=>bounded(()=>importImpl(target),{signal,timeout});
   try{return await load(url.href);}
   catch(error){
-    if(signal?.aborted)throw error;
+    if(signal?.aborted||getReleaseContext())throw error;
     const fallback=settlementsFallbackUrl(url,roots);
     if(!fallback)throw error;
     // Failed ESM imports are remembered by the browser. A retry gets a fresh key.

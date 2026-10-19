@@ -43,6 +43,7 @@ for(const locale of ['en','zh']) {
   assert(!Object.hasOwn(packs.get('catalog').strings,unique));
 }
 for(const file of ['catalog-loader.js'])files.set('/'+file,await readFile(new URL(file,import.meta.url),'utf8'));
+files.set('/assets/js/release-resources.js',await readFile(new URL('../../../assets/js/release-resources.js',import.meta.url),'utf8'));
 const requestPaths=[];
 const server=createServer((request,response)=>{
   const pathname=new URL(request.url,'http://localhost').pathname;requestPaths.push(pathname);

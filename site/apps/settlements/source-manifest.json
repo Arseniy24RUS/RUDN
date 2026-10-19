@@ -1,7 +1,7 @@
 {
   "moduleVersion": "1.0",
   "origin": "RUDN-Settlements-Codex-Production-Kit/game/site",
-  "sourceHash": "730791f58b21a0b360715d90534c28123504f65087d75348b97f68824e8609ab",
+  "sourceHash": "5054964fff0b3a240f8b109e5dbc07282a527932f27ccc4d89f18bc29392b5b9",
   "files": [
     {
       "path": "assets/css/settlements-v24.css",
@@ -1485,8 +1485,8 @@
     },
     {
       "path": "assets/js/settlements/v2/assets.mjs",
-      "bytes": 16890,
-      "sha256": "d202e895c79f4347363429071da8fd06cb93023cbd9ac4358371cd4803da2b32"
+      "bytes": 16857,
+      "sha256": "33c065f62cf9e50fb11a1ffc287e02c661714d6aaad7c32b210e823a3e6947c7"
     },
     {
       "path": "assets/js/settlements/v2/camera.mjs",
@@ -1495,8 +1495,8 @@
     },
     {
       "path": "assets/js/settlements/v2/data.mjs",
-      "bytes": 2298,
-      "sha256": "986a7d0fc49f9de58f121ea2fb6ea3d6140f1ae465d8a782dcd3bb26b2469df1"
+      "bytes": 2391,
+      "sha256": "35d483ca2c3168f24a6fcbddd287511e534d1beeaa10cdc0a1d3c3c2a965b2b2"
     },
     {
       "path": "assets/js/settlements/v2/engine.mjs",
@@ -1530,8 +1530,8 @@
     },
     {
       "path": "assets/js/settlements/v2/network.mjs",
-      "bytes": 2809,
-      "sha256": "c4160fbabbc47c0d60e07168f1dafc611c0792d40f07aff6416cecd3cd931f7a"
+      "bytes": 2967,
+      "sha256": "a7b36a5bdd26ca92a1947240837a13e5a4b3d9ec9ab80a54820371fa7d493945"
     },
     {
       "path": "assets/js/settlements/v2/render-index.mjs",
@@ -1545,8 +1545,8 @@
     },
     {
       "path": "assets/js/settlements/v24/basemap.mjs",
-      "bytes": 16960,
-      "sha256": "e1b5bc1f0f28a0e23a63bcbcc4500fa0afcb9350c90ebdda1809b021dfd8f7e9"
+      "bytes": 17045,
+      "sha256": "e25a95aaaf8ec3881e87f3eb3cf6b75eba129fd761c6277cd973edd5da945031"
     },
     {
       "path": "assets/js/settlements/v24/camera.mjs",
@@ -1570,8 +1570,8 @@
     },
     {
       "path": "assets/js/settlements/v24/game.mjs",
-      "bytes": 79610,
-      "sha256": "7dc4da62b16efab7b2de785a800524a66cf63504799d36af22c83bfe1829e1c8"
+      "bytes": 81895,
+      "sha256": "2fe2a6b87009ebbe923505c9e40ca612b9f89c758e0c12073d20c89c37a78319"
     },
     {
       "path": "assets/js/settlements/v24/i18n.mjs",
@@ -4530,8 +4530,8 @@
     },
     {
       "path": "assets/js/settlements/v24/telecom-plans.mjs",
-      "bytes": 8362,
-      "sha256": "adf5dadbdfd9bb1ac7e7537978815626857c82c1645c01415c9b0218083cf031"
+      "bytes": 8477,
+      "sha256": "834144a8873be560d7f5425c772303f715d5290438bfa031b2db38e60601fb4c"
     },
     {
       "path": "assets/js/settlements/v24/telecom-policy.mjs",
@@ -4555,8 +4555,8 @@
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-v1.mjs",
-      "bytes": 8079,
-      "sha256": "7f7040d7df8543baa26f7569cff14b1259dfe66b3ff859cfeaede7f59d40865a"
+      "bytes": 8353,
+      "sha256": "feacd8e7ebb2f2a59fd1a8e327c6de82c9ad49098f1bb55f31d2ebbb0264d073"
     },
     {
       "path": "assets/js/settlements/v24/transport-policy-v2-regions/altayskiy_kray.mjs",

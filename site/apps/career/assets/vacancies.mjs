@@ -60,5 +60,5 @@ export function createVacancies({data,getResult,routeTo,closeDialog=()=>{}}){
   const open=id=>{if(id&&!institutions.some(a=>a.id===id))return;selected=id||'';query='';limit=12;closeDialog();routeTo('vacancies');};
   document.addEventListener('click',event=>{const button=event.target.closest('[data-vacancy-open]');if(button){event.preventDefault();open(button.dataset.vacancyOpen);}});
   document.addEventListener('app:language',()=>{draw();preview();});
-  return {open,render(route){if(route==='vacancies'){draw();void load();void connectionInfo();}else if(route==='results'){preview();void load();}}};
+  return {open,updateBusy:()=>busy||loading,captureForUpdate:()=>({selected,territorial,query,limit}),restoreForUpdate(value){selected=institutions.some(a=>a.id===value?.selected)?value.selected:'';territorial=value?.territorial===true;query=String(value?.query||'').slice(0,200);limit=Math.max(12,Math.min(240,Number(value?.limit)||12));},render(route){if(route==='vacancies'){draw();void load();void connectionInfo();}else if(route==='results'){preview();void load();}}};
 }

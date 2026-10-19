@@ -7,6 +7,7 @@ import {createLegalLabPracticeCompletion} from '../site/apps/legal-lab/platform.
 import {createDurableStore,durableStore} from '../site/assets/js/durable-store.js';
 import {commitStudentAttempt} from '../site/assets/js/checkpoint-sync.js';
 import {createLegalLabPersistence} from '../site/assets/js/legal-lab-storage.js';
+import {resourceURL} from '../site/assets/js/release-resources.js';
 import {seminarModule,seminarModuleForSlug} from '../site/assets/js/seminar-modules.js';
 
 const version='synthetic-legal-v1',owner='student:synthetic-practice',studentKey='synthetic-practice';
@@ -88,6 +89,8 @@ test('completed dossier sidecar preserves practice receipt and scan answer histo
   }finally{persistence.destroy();store.close();}
 });
 
+const updateSource=await readFile(new URL('../site/assets/js/platform-learning-updates.js',import.meta.url),'utf8');
+const exposeModuleUpdateAdapter=vm.runInNewContext('('+updateSource.slice(updateSource.indexOf('function exposeModuleUpdateAdapter'),updateSource.indexOf('export function bindQuizUpdate')).trim()+')');
 const main=await readFile(new URL('../site/assets/js/main.js',import.meta.url),'utf8');
 function block(from,to){const start=main.indexOf(from),end=main.indexOf(to,start);assert.ok(start>=0&&end>start);return main.slice(start,end);}
 const legalTopic={number:6,title:'Synthetic legal module moved to topic 6',seminar:{slug:'seminar-4',module:'legal-lab',title:'Legal'},lecture:{slug:'lecture-6',title:'Lecture'}};
@@ -116,13 +119,14 @@ test('actual dashboard has independent quiz and assessment stars in RU, EN, ZH w
 test('actual route chain forwards quiz, assessment and bare resume without starting an assignment',async()=>{
   for(const [view,expected] of [['quiz','learn'],['assessment','assessment'],[undefined,undefined]]){
     const mounted=[],mount={isConnected:true,setAttribute(){}},context={
-      data:{course:{topics:[legalTopic]}},seminarModule,seminarModuleForSlug,navigator:{},location:{hash:''},accessSnapshot:()=>({now:0,context:{startYear:2026,endYear:2027},overrides:{}}),topicGate:()=>({open:true}),accessAllowed:()=>true,
+      data:{course:{topics:[legalTopic]}},seminarModule,seminarModuleForSlug,exposeModuleUpdateAdapter,moduleReady(){},navigator:{},location:{hash:''},accessSnapshot:()=>({now:0,context:{startYear:2026,endYear:2027},overrides:{}}),topicGate:()=>({open:true}),accessAllowed:()=>true,
       attemptOwner:()=>owner,AbortController,app:{innerHTML:'',querySelector:()=>mount},currentCleanup:null,t:key=>key,backend:{},diagnostics:{record(){}},CONFIG:{rootPath:'synthetic'},groupOptions:()=>[],getLocale:()=> 'en',
       loadPlatform:async()=>({mountLegalLabInCourse:async(root,options)=>{mounted.push(options);return{destroy(){},flush(){}};}})};
+    context.routeDiagnostics=context.diagnostics;
     vm.createContext(context);vm.runInContext(block('async function renderActivity','function renderLecture')+block('async function renderSeminar','function seminarShell')+
       block('function renderSeminar4','function renderSeminar8').replace("import('../../apps/legal-lab/platform.mjs?v=1.0.0')",'loadPlatform()'),context);
     await context.renderActivity('seminar-4',view);await new Promise(resolve=>setImmediate(resolve));assert.equal(mounted.length,1);assert.equal(mounted[0].initialView,expected);assert.equal(mounted[0].owner,owner);
-    assert.equal(mounted[0].diagnostics,context.diagnostics,'The shell passes its optional shared diagnostics service');await context.currentCleanup();
+    assert.equal(mounted[0].diagnostics,context.diagnostics,'The shell passes the route-bound diagnostics scope');await context.currentCleanup();
   }
 });
 
@@ -130,7 +134,7 @@ test('actual platform forwards initial view and sends practice through real back
   const source=await readFile(new URL('../site/apps/legal-lab/platform.mjs',import.meta.url),'utf8');
   for(const initialView of ['learn','assessment',undefined]){
     const f=fixture(),assessmentCalls=[],mounted=[],persist={load:async()=>null,conflicted:false,attemptId:'assessment-stable',saveAttempt:async attempt=>assessmentCalls.push(attempt),destroy(){}};
-    const context={document:{createElement:()=>({})},fetch:async()=>({ok:true,json:async()=>({contentVersion:version})}),
+    const context={resourceURL,document:{createElement:()=>({})},fetch:async()=>({ok:true,json:async()=>({contentVersion:version})}),
       createLegalLabPersistence:()=>persist,legalLabAttemptForCourse:attempt=>attempt,mountLegalLab:async(root,options)=>{mounted.push(options);return{contentVersion:version};},FirebaseLive:class{},URL,crypto,console};
     vm.createContext(context);vm.runInContext(source.replace(/^import .*;\r?\n/gm,'').replaceAll('export ','').replaceAll('import.meta.url',"'https://synthetic.invalid/apps/legal-lab/platform.mjs'"),context);
     await context.mountLegalLabInCourse({replaceChildren(){}},{backend:f.backend,owner,contentVersion:version,initialView});
