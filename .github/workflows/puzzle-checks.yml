@@ -270,6 +270,7 @@ jobs:
             ${{ runner.temp }}/puzzle-interactions/interactions*.json*
             ${{ runner.temp }}/puzzle-interactions/resilience*.json*
             ${{ runner.temp }}/puzzle-interactions/failures
+            ${{ runner.temp }}/puzzle-interactions/resilience-failures
           retention-days: 14
 
   games-and-rendering:
