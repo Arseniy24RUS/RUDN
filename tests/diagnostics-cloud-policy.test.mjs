@@ -1,8 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CONFIG} from '../site/assets/js/config.js';
-import {diagnosticIdentityAllowed} from '../site/assets/js/diagnostics-cloud-policy.js';
+import {diagnosticEndpoint,diagnosticIdentityAllowed} from '../site/assets/js/diagnostics-cloud-policy.js';
 import {handle} from '../firebase/functions/gateway.mjs';
+
+test('auth/database emulators never send diagnostic batches to production',()=>{
+  assert.equal(diagnosticEndpoint(CONFIG),new URL('../diagnosticsApi',CONFIG.firebaseGateway).href);
+  for(const emulators of [{},{auth:'http://127.0.0.1:9099',host:'127.0.0.1',databasePort:9000},{diagnosticsUrl:''},{diagnosticsUrl:new URL('../diagnosticsApi',CONFIG.firebaseGateway).href}])assert.equal(diagnosticEndpoint({...CONFIG,emulators}),null);
+  const url='http://127.0.0.1:5001/demo-rudn/europe-west1/diagnosticsApi';
+  assert.equal(diagnosticEndpoint({...CONFIG,emulators:{diagnosticsUrl:url}}),url);
+  for(const diagnosticsUrl of ['invalid','file:///diagnosticsApi','http://user:password@localhost:5001/api','http://example.com/api'])assert.equal(diagnosticEndpoint({...CONFIG,emulators:{diagnosticsUrl}}),null);
+});
 
 test('background diagnostic identity matches the actual production gateway origin policy',async()=>{
   for(const href of [CONFIG.pagesUrl,CONFIG.pagesUrl+'apps/legal-lab/demo.html','https://preview.example.test/RUDN/','http://127.0.0.1:8765/apps/legal-lab/demo.html','http://localhost:8765/','http://arseniy24rus.github.io/RUDN/']){

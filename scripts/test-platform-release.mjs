@@ -6,8 +6,23 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {buildRelease,verifyRelease,isRuntime} from './build-platform-release.mjs';
-import {seedBaselineCalendar} from './download-release-baseline.mjs';
+import {seedBaselineCalendar,unpackLegacyBaseline,downloadLegacyArchive,LEGACY_BASELINE} from './download-release-baseline.mjs';
 async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);}
+test('first-migration recovery rejects an unreviewed archive before extracting any bytes',async t=>{
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-legacy-check-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const zip=path.join(root,'baseline.zip'),out=path.join(root,'site');await fs.writeFile(zip,'unreviewed archive');
+  await assert.rejects(unpackLegacyBaseline(zip,out),/release\/legacy-baseline-checksum/);
+  await assert.rejects(fs.access(out),{code:'ENOENT'});await assert.rejects(fs.access(path.join(root,'artifact.tar')),{code:'ENOENT'});
+  assert.equal(LEGACY_BASELINE.runId,39135557270);assert.equal(LEGACY_BASELINE.artifactId,12140617647);
+});
+test('expired original artifact falls back only to its retained reviewed backup',async()=>{
+  const calls=[],repo='Arseniy24RUS/RUDN',download=path.resolve(os.tmpdir(),'legacy-download');
+  const runCommand=async(command,args)=>{calls.push({command,args});return JSON.stringify({artifacts:[{name:'github-pages',expired:false,workflow_run:{id:1}},{name:LEGACY_BASELINE.artifactName,expired:true,workflow_run:{id:2}},{name:LEGACY_BASELINE.artifactName,expired:false,workflow_run:{id:3}}]});};
+  const zip=await downloadLegacyArchive({repo,download,runCommand,downloadBinary:async()=>{throw Error('expired');}});
+  assert.equal(zip,path.join(download,'baseline.zip'));
+  assert.deepEqual(calls[1],{command:'gh',args:['run','download','3','--repo',repo,'--name',LEGACY_BASELINE.artifactName,'--dir',download]});
+  await assert.rejects(downloadLegacyArchive({repo,download,downloadBinary:async()=>{throw Error('expired');},runCommand:async()=>'{"artifacts":[]}'}),/reviewed-legacy-baseline-unavailable/);
+});
 async function fixture(t){const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-release-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const site=path.join(root,'site'),baseline=path.join(root,'baseline');
   const files={'index.html':'<html><head><link rel="stylesheet" href="assets/css/site.css"></head><body><script type="module" src="assets/js/main.js"></script></body></html>','service-worker.js':'const PLATFORM_RELEASE=null;','assets/js/main.js':"import './dep.js'; export const value=1;",'assets/js/dep.js':'export const dep=1;','assets/js/release-bootstrap.js':'export const bootstrap=1;','assets/js/release-resources.js':'export const resourceURL=()=>{};','assets/js/diagnostics-bootstrap.js':'globalThis.early=true;','assets/css/site.css':'body { background:url(../img/a.png) }','assets/img/a.png':'old-png','data/course.json':'{"v":1}','apps/demo/index.html':'<html><body><script src="script.js"></script><script>globalThis.hello=true;</script></body></html>','apps/demo/script.js':'globalThis.demo=true;','apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/1-easy.mjs':'export default {large:1};'};
   files['data/platform-contracts.json']=await fs.readFile(new URL('../site/data/platform-contracts.json',import.meta.url),'utf8');

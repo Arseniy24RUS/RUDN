@@ -395,6 +395,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+      - name: Preserve the reviewed first-migration baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-legacy-baseline-ae6f32e1324437ed30ee15bb930518aa1b267755
+          path: ${{ runner.temp }}/platform-baseline-download/baseline.zip
+          if-no-files-found: ignore
+          retention-days: 90
+          compression-level: 0
+          overwrite: true
       - name: Update published reception calendars
         run: node scripts/update-reception-calendars.mjs
       - name: Validate static bundle

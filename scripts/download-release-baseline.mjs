@@ -3,13 +3,42 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {createWriteStream} from 'node:fs';
+import {pipeline} from 'node:stream/promises';
+export const LEGACY_BASELINE={runId:39135557270,artifactId:12140617647,artifactName:'platform-legacy-baseline-ae6f32e1324437ed30ee15bb930518aa1b267755',zipSha256:'fef98cc280cf3b0b3f5534bedc5959db383176102c947e24a822009a65360e99'};
 export function run(command,args,{capture=false}={}){return new Promise((resolve,reject)=>{const child=spawn(command,args,{stdio:['ignore','pipe','pipe'],windowsHide:true});let stdout='',stderr='';child.stdout.on('data',chunk=>{stdout+=chunk;});child.stderr.on('data',chunk=>{stderr+=chunk;});child.on('error',()=>reject(new Error('release/process-unavailable:'+command)));child.on('close',code=>code===0?resolve(capture?stdout:null):reject(new Error('release/process-failed:'+command+':'+code)));});}
+async function downloadFile(command,args,file){
+  const child=spawn(command,args,{stdio:['ignore','pipe','ignore'],windowsHide:true});
+  const closed=new Promise((resolve,reject)=>{child.once('error',()=>reject(new Error('release/process-unavailable:'+command)));child.once('close',code=>code===0?resolve():reject(new Error('release/process-failed:'+command+':'+code)));});
+  const streamed=pipeline(child.stdout,createWriteStream(file,{flags:'wx'}));
+  try{await Promise.all([streamed,closed]);}
+  catch(error){child.kill();await Promise.allSettled([streamed,closed]);await fs.rm(file,{force:true});throw error;}
+}
 export async function unpack(archive,out){
   const list=await run('tar',['-tf',archive],{capture:true});for(const name of list.split(/\r?\n/).filter(Boolean))if(/(^\/|^[A-Za-z]:|(^|\/)\.\.($|\/)|\\)/.test(name))throw new Error('release/unsafe-archive');
   const details=await run('tar',['-tvf',archive],{capture:true});if(details.split(/\r?\n/).some(line=>/^[lh]/.test(line)))throw new Error('release/archive-links-forbidden');
   await fs.mkdir(out,{recursive:true});await run('tar',['-xf',archive,'-C',out]);
 }
 async function sha(file){const handle=await fs.open(file);const digest=crypto.createHash('sha256');for await(const chunk of handle.createReadStream())digest.update(chunk);return digest.digest('hex');}
+export async function unpackLegacyBaseline(zip,out){
+  if(await sha(zip)!==LEGACY_BASELINE.zipSha256)throw new Error('release/legacy-baseline-checksum');
+  const archive=path.join(path.dirname(zip),'artifact.tar');
+  // Extract only the reviewed member; never accept ZIP paths or another site.
+  await run('python',['-c','import pathlib,sys,zipfile\nwith zipfile.ZipFile(sys.argv[1]) as z:\n assert z.namelist()==["artifact.tar"], "unexpected baseline ZIP members"\n with z.open("artifact.tar") as source, open(sys.argv[2],"xb") as target:\n  import shutil; shutil.copyfileobj(source,target)\n',zip,archive]);
+  await unpack(archive,out);
+  return {status:'pass',kind:'first-migration',runId:LEGACY_BASELINE.runId,archiveSha256:LEGACY_BASELINE.zipSha256,out};
+}
+export async function downloadLegacyArchive({repo,download,runCommand=run,downloadBinary=downloadFile}){
+  const zip=path.join(download,'baseline.zip');
+  try{await downloadBinary('gh',['api',`repos/${repo}/actions/artifacts/${LEGACY_BASELINE.artifactId}/zip`],zip);}
+  catch{
+    const listing=JSON.parse(await runCommand('gh',['api',`repos/${repo}/actions/artifacts?name=${LEGACY_BASELINE.artifactName}&per_page=100`],{capture:true}));
+    const artifact=listing.artifacts?.find(item=>item.name===LEGACY_BASELINE.artifactName&&!item.expired);
+    if(!artifact)throw new Error('release/reviewed-legacy-baseline-unavailable');
+    await runCommand('gh',['run','download',String(artifact.workflow_run.id),'--repo',repo,'--name',LEGACY_BASELINE.artifactName,'--dir',download]);
+  }
+  return zip;
+}
 export async function downloadBaseline({out,repo='Arseniy24RUS/RUDN',publishedURL='https://arseniy24rus.github.io/RUDN/'}){
   out=path.resolve(out);try{await fs.access(out);throw new Error('release/output-exists');}catch(error){if(error.code!=='ENOENT')throw error;}
   const download=out+'-download';await fs.mkdir(download,{recursive:true});let pointer=null;
@@ -26,10 +55,10 @@ export async function downloadBaseline({out,repo='Arseniy24RUS/RUDN',publishedUR
     await unpack(archive,out);const recovered=JSON.parse(await fs.readFile(path.join(out,'release.json'),'utf8'));if(recovered.current.buildId!==id)throw new Error('release/baseline-build-mismatch');
     return {status:'pass',kind:'exact-release',buildId:id,archiveSha256:expected,out};
   }
-  await run('gh',['run','download','39135557270','--repo',repo,'--name','github-pages','--dir',download]);await unpack(path.join(download,'artifact.tar'),out);
+  const legacyZip=await downloadLegacyArchive({repo,download});
   // Legacy fallback is intentionally bounded to the reviewed publication. Once
   // a versioned pointer exists, its archive is mandatory and this path is closed.
-  return {status:'pass',kind:'first-migration',runId:39135557270,out};
+  return unpackLegacyBaseline(legacyZip,out);
 }
 export async function seedBaselineCalendar(root,destination){
   root=path.resolve(root);const logical='assets/data/calendars/current.json';let source=path.join(root,logical),expected=null;

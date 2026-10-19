@@ -13,7 +13,7 @@ if(!CONFIG.emulators)installFirebaseGateway(CONFIG.firebaseGateway);
 import {commitSettlementsLeaderboard} from './settlements-leaderboard.js';
 import {puzzleLeaderboardAttemptId} from './student-identity.js';
 import {claimDiagnosticSession,writeDiagnosticBatch,confirmDiagnosticBatch,readDiagnosticPage,requestDiagnostics} from './diagnostics-transport.js';
-import {diagnosticIdentityAllowed} from './diagnostics-cloud-policy.js';
+import {diagnosticEndpoint,diagnosticIdentityAllowed} from './diagnostics-cloud-policy.js';
 
 const PROFILE_KEY='rudn.profile.v1';
 const ATTEMPTS_KEY='rudn.attempts.v1';
@@ -208,13 +208,14 @@ class Backend{
   }
   async diagnosticsRequest(action,payload={},options={}){
     if(!this.user)throw serviceError('diagnostics/auth-required');
+    const endpoint=diagnosticEndpoint(CONFIG);
+    if(!endpoint)throw serviceError('diagnostics/unavailable');
     const uid=this.user.uid,generation=this.generation;
     const adminActions=new Set(['searchStudents','listSessions','readEvents','exportSession','createExport','status','previewDelete','delete','migrateLegacy']);
     if(adminActions.has(action)&&!this.isAdmin())throw serviceError('diagnostics/admin-required');
     const active=()=>!options.signal?.aborted&&this.user?.uid===uid&&this.generation===generation;
     const token=await this.user.getIdToken();
     if(!active())throw serviceError('diagnostics/identity-changed');
-    const endpoint=CONFIG.emulators?.diagnosticsUrl||new URL('../diagnosticsApi',CONFIG.firebaseGateway).href;
     const result=await requestDiagnostics({endpoint,token,action,payload,signal:options.signal});
     if(!active())throw serviceError('diagnostics/identity-changed');
     return result;
