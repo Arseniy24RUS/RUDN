@@ -623,6 +623,64 @@ async def run(args, server):
                         record['status'] = 'passed'
                     except Exception as error:
                         record['error'], record['traceback'] = str(error), traceback.format_exc()
+                        # Read only after the scenario has failed, before a screenshot
+                        # can wait for rendering. Never replace the original exception.
+                        try:
+                            record['modeInputFailureDiagnostics'] = await page.evaluate("""() => {
+                              const number = value => Number.isFinite(value) ? value : null;
+                              const identify = element => element ? {
+                                tag: element.tagName?.toLowerCase() || null,
+                                id: (element.id || '').slice(0, 120),
+                                classes: String(element.getAttribute?.('class') || '').slice(0, 240),
+                                mode: element.getAttribute?.('data-puzzle-mode')?.slice(0, 80) || null,
+                                connected: element.isConnected
+                              } : null;
+                              const now = performance.now();
+                              const stability = window.__qaPuzzleInputStability;
+                              const viewport = window.visualViewport;
+                              const buttons = [...document.querySelectorAll('[data-puzzle-mode]')];
+                              return {
+                                schema: 1,
+                                capturedAt: now,
+                                visibilityState: document.visibilityState,
+                                activeElement: identify(document.activeElement),
+                                scroll: {x: scrollX, y: scrollY},
+                                viewport: {width: innerWidth, height: innerHeight,
+                                  visual: viewport ? {
+                                    width: viewport.width, height: viewport.height,
+                                    offsetLeft: viewport.offsetLeft, offsetTop: viewport.offsetTop,
+                                    pageLeft: viewport.pageLeft, pageTop: viewport.pageTop,
+                                    scale: viewport.scale
+                                  } : null},
+                                stability: stability ? {
+                                  sample: Array.isArray(stability.sample) ? stability.sample.slice(0, 6).map(number) : null,
+                                  at: number(stability.at),
+                                  ageMs: Number.isFinite(stability.at) ? now - stability.at : null
+                                } : null,
+                                buttonCount: buttons.length,
+                                buttons: buttons.slice(0, 16).map(button => {
+                                  const r = button.getBoundingClientRect();
+                                  const x = r.left + r.width / 2, y = r.top + r.height / 2;
+                                  const hit = document.elementFromPoint(x, y);
+                                  const style = getComputedStyle(button);
+                                  return {
+                                    ...identify(button), disabled: Boolean(button.disabled),
+                                    rect: {left: r.left, top: r.top, right: r.right,
+                                      bottom: r.bottom, width: r.width, height: r.height},
+                                    center: {x, y}, hit: identify(hit),
+                                    centerHitsButton: Boolean(hit && button.contains(hit)),
+                                    fullyInViewport: r.width > 0 && r.height > 0 && r.left >= 0 && r.top >= 0 &&
+                                      r.right <= innerWidth && r.bottom <= innerHeight,
+                                    hovered: button.matches(':hover'),
+                                    style: {transform: style.transform, display: style.display,
+                                      visibility: style.visibility, pointerEvents: style.pointerEvents,
+                                      opacity: style.opacity}
+                                  };
+                                })
+                              };
+                            }""")
+                        except Exception as diagnostic_error:
+                            record['modeInputFailureDiagnosticsError'] = type(diagnostic_error).__name__
                         try:
                             path = args.output / 'resilience-failures' / f'{browser_name}-{name}.png'
                             path.parent.mkdir(parents=True, exist_ok=True)

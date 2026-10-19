@@ -3,7 +3,8 @@
 Run inside firebase emulators:exec --project demo-rudn --only auth,database.
 QA injects local config, a read-only geometry observer and passive runtime
 listeners. The real backend, authentication, completion bridge, rules and
-leaderboard remain active; every raw page error still fails this test.
+leaderboard remain active. Every raw error is retained; only the explicitly
+receipted Inspector abort during old-document exit is classified separately.
 """
 from __future__ import annotations
 import argparse
@@ -29,8 +30,63 @@ BACKEND_SPEC=re.search(r"from './(backend\.js[^']*)'",(ROOT/'site/assets/js/puzz
 
 RESULTS_URL=DATABASE+'/results.json?ns='+NAMESPACE
 
+def native_abort_receipt(error,requests,lifecycle):
+    """Recognize only this harness's completed, held abort during old-page exit.
+
+    WebKit can report its Inspector-injected transport failure as a native
+    pageerror while disposing the document, although fetch rejection was caught.
+    Message text alone is never sufficient; retain every raw signal in reports.
+    """
+    native=f'Fetch API cannot load {RESULTS_URL} due to access control checks.'
+    stack=error.get('stack','').splitlines()
+    if (error.get('name')!='Fetch API cannot load http'
+            or error.get('message')!=RESULTS_URL.removeprefix('http:/')+' due to access control checks.'
+            or not stack or stack[0]!=native
+            or not re.fullmatch(r'\s+at getPuzzleLeaderboard \(http://127\.0\.0\.1:\d+/RUDN/assets/js/backend\.js(?:\?[^)]*)?:\d+:\d+\)',stack[1] if len(stack)>1 else '')
+            or not any(re.fullmatch(r'\s+at refreshLeaderboard \(http://127\.0\.0\.1:\d+/RUDN/assets/js/puzzle-bootstrap\.js(?:\?[^)]*)?:\d+:\d+\)',line) for line in stack[2:])
+            or error.get('phase')!='offline-held-refresh-reload'
+            or not all(error.get(key) for key in ('page','context','document'))):
+        return None
+    same=lambda item:all(item.get(key)==error.get(key) for key in ('page','context','document'))
+    at=error.get('at',-1)
+    before=[item for item in lifecycle if same(item) and item.get('kind')=='lifecycle' and item.get('event')=='beforeunload' and item.get('at',at)>0 and item['at']<at]
+    after=[item for item in lifecycle if same(item) and item.get('kind')=='lifecycle' and item.get('event')=='pagehide' and item.get('at',-1)>at]
+    if not before or not after:return None
+    exit_at=max(item['at'] for item in before);hidden_at=min(item['at'] for item in after)
+    if not any(item.get('kind')=='document' and item.get('page')==error.get('page')
+            and item.get('context')==error.get('context') and item.get('document')!=error.get('document')
+            and item.get('at',-1)>hidden_at for item in lifecycle):return None
+    marks=[item for item in lifecycle if same(item) and item.get('kind')=='test-phase'
+        and item.get('event')=='offline-held-refresh-reload' and item.get('at',exit_at)<exit_at]
+    for mark in reversed(marks):
+        request=next((item for item in requests if item.get('id')==mark.get('requestId')),None)
+        if not request or not same(request) or request.get('url')!=RESULTS_URL or request.get('method')!='GET':continue
+        fault=request.get('injectedAbort',{})
+        if (fault.get('scenario')!='local-row-before-offline-reload' or fault.get('errorCode')!='internetdisconnected'
+                or request.get('failure')!='Blocked by Web Inspector' or request.get('status') is not None
+                or request.get('responseAt') is not None):continue
+        requested=request.get('requestedAt',-1);armed=fault.get('armedAt',-1)
+        started=fault.get('startedAt',-1);finished=fault.get('completedAt',-1);failed=request.get('failedAt',-1)
+        if not (0<requested<=armed<=started<=finished<exit_at and started<=failed<exit_at):continue
+        # Native errors have no requestId. Never attribute an ambiguous signal
+        # when another failed/pending request could emit a delayed exit signal.
+        # Only proven successful responses, including older GETs, are safe.
+        ambiguous=False
+        for other in requests:
+            if other.get('id')==request['id'] or not same(other) or other.get('url')!=RESULTS_URL:continue
+            other_start=other.get('requestedAt',-1)
+            if other_start<0 or other_start>at:continue
+            succeeded=(200<=other.get('status',0)<300 and other.get('finishedAt') is not None
+                and other['finishedAt']<=at and other.get('failedAt') is None)
+            if not succeeded:ambiguous=True;break
+        if ambiguous:continue
+        return {'requestId':request['id'],'reason':'inspector-aborted-held-refresh-during-old-document-exit',
+            'document':error['document'],'page':error['page'],'context':error['context'],
+            'abortCompletedAt':finished,'beforeUnloadAt':exit_at,'errorAt':at,'pageHideAt':hidden_at}
+    return None
+
 class RuntimeEvidence:
-    """Durable QA observations; every raw driver/runtime/collector error fails."""
+    """Retain raw observations; unknown native/runtime/collector errors fail."""
     def __init__(self,browser):
         self.raw=[];self.runtime=[];self.failures=[];self.lifecycle=[]
         self.pages={};self.contexts={};self.requests={};self.closing=set();self.closed=set()
@@ -63,10 +119,22 @@ class RuntimeEvidence:
         })()""")
         context.on('page',lambda page:self.watch(page,context))
 
-    def mark(self,page,phase):
+    def mark(self,page,phase,**details):
         meta=self.pages[page];meta['phase']=phase
         self.lifecycle.append({'kind':'test-phase','event':phase,'at':time.monotonic(),
-            'page':meta['id'],'context':meta['context'],'document':meta['document']})
+            'page':meta['id'],'context':meta['context'],'document':meta['document'],**details})
+
+    def arm_held_abort(self,route):
+        request=self.requests.get(route.request)
+        assert request and request['url']==RESULTS_URL and request['method']=='GET','Held refresh was not observed'
+        request['injectedAbort']={'scenario':'local-row-before-offline-reload',
+            'errorCode':'internetdisconnected','armedAt':time.monotonic()}
+        return request['id']
+
+    async def abort_held_refresh(self,route):
+        receipt=self.requests[route.request]['injectedAbort'];receipt['startedAt']=time.monotonic()
+        await route.abort(receipt['errorCode'])
+        receipt['completedAt']=time.monotonic()
 
     def watch(self,page,context):
         meta={'id':len(self.pages)+1,'context':self.contexts[context],'document':None,'phase':'created'};self.pages[page]=meta
@@ -77,7 +145,7 @@ class RuntimeEvidence:
                 # Firefox can acknowledge the new document before this event.
                 self.lifecycle.append({'kind':'navigation','at':time.monotonic(),**origin()})
         def requested(request):
-            if request.method=='GET' and request.url==RESULTS_URL:
+            if request.url==RESULTS_URL:
                 self.requests[request]={'id':len(self.requests)+1,'url':request.url,'method':request.method,
                     'requestedAt':time.monotonic(),**origin()}
         def completed(request,**values):
@@ -110,11 +178,17 @@ class RuntimeEvidence:
             self.closed.add(context)
 
     def summarize(self,record):
-        errors=[e['name']+': '+e['message'] for e in self.raw]
+        errors=[];native=[];used=set()
+        for index,error in enumerate(self.raw):
+            receipt=native_abort_receipt(error,list(self.requests.values()),self.lifecycle)
+            if receipt and receipt['requestId'] not in used:
+                used.add(receipt['requestId']);native.append({'rawErrorIndex':index,**receipt})
+            else:errors.append(error['name']+': '+error['message'])
         errors.extend('Runtime '+e['kind']+': '+e['message'] for e in self.runtime)
         errors.extend(self.failures)
         record.update(pageErrors=errors,rawPageErrors=self.raw,runtimeErrors=self.runtime,
-            runtimeCollectorFailures=self.failures,leaderboardRequests=list(self.requests.values()),lifecycle=self.lifecycle)
+            runtimeCollectorFailures=self.failures,leaderboardRequests=list(self.requests.values()),lifecycle=self.lifecycle,
+            explainedNativeTransportSignals=native)
 
 def db(path='',value=None,method='GET'):
     url=DATABASE+'/'+path+'.json?ns='+NAMESPACE
@@ -305,10 +379,12 @@ async def run(browser_name,output):
                         assert partial['actual']==87
                         # An already-pending remote refresh must not delay the
                         # newly completed local row until its five-second timeout.
-                        held=asyncio.Event();release=asyncio.Event()
+                        held=asyncio.Event();release=asyncio.Event();held_request_id=None
                         async def hold_results(route):
+                            nonlocal held_request_id
+                            held_request_id=evidence.arm_held_abort(route)
                             held.set();await release.wait()
-                            await route.abort('internetdisconnected')
+                            await evidence.abort_held_refresh(route)
                         held_pattern=re.compile(r'^http://127\.0\.0\.1:9000/results\.json\?')
                         await context.route(held_pattern,hold_results)
                         await page.evaluate("window.dispatchEvent(new Event('online'))")
@@ -329,7 +405,7 @@ async def run(browser_name,output):
                     await page.locator(f'#leader_{difficulty} tr[data-attempt-id="{attempt_id}"]').wait_for()
                     if index==0:
                         assert db('results/'+attempt_id) is None
-                        evidence.mark(page,'reload');await evidence.drain(page)
+                        evidence.mark(page,'offline-held-refresh-reload',requestId=held_request_id);await evidence.drain(page)
                         await page.reload(wait_until='domcontentloaded');await ready(page)
                         await page.locator(f'#leader_{difficulty} tr[data-attempt-id="{attempt_id}"]').wait_for()
                         await context.unroute(re.compile(r'^http://127\.0\.0\.1:(9000|9099)/'))
@@ -619,12 +695,77 @@ async def runtime_controls(browser_name,output):
             finally:
                 await browser.close()
                 (output/f'runtime-controls-{browser_name}.json').write_text(json.dumps({'browser':browser_name,'controls':records,
-                    'errorPolicy':'Every raw pageerror, runtime signal and collector failure fails; no native exception allowance'},indent=2),encoding='utf8')
+                    'errorPolicy':'Retain every raw pageerror; fail every runtime/collector/unknown native error. Only an explicitly receipted Inspector-held abort during old-document exit is classified separately.'},indent=2),encoding='utf8')
     return {'browser':browser_name,'runtimePositiveControls':len(records),'passed':True}
 
+def classifier_contract():
+    """Synthetic event contracts, never reported as a real browser pass."""
+    origin={'page':1,'context':1,'document':'old-document'}
+    error={**origin,'name':'Fetch API cannot load http','message':RESULTS_URL.removeprefix('http:/')+' due to access control checks.',
+        'stack':f'Fetch API cannot load {RESULTS_URL} due to access control checks.\n    at getPuzzleLeaderboard (http://127.0.0.1:12345/RUDN/assets/js/backend.js?v=1.3.10:779:33)\n    at refreshLeaderboard (http://127.0.0.1:12345/RUDN/assets/js/puzzle-bootstrap.js?v=1.3.10:304:5)',
+        'phase':'offline-held-refresh-reload','at':5}
+    request={**origin,'id':1,'url':RESULTS_URL,'method':'GET','requestedAt':1,'failedAt':2.5,'failure':'Blocked by Web Inspector',
+        'injectedAbort':{'scenario':'local-row-before-offline-reload','errorCode':'internetdisconnected','armedAt':1.5,'startedAt':2,'completedAt':2.6}}
+    lifecycle=[{**origin,'kind':'test-phase','event':'offline-held-refresh-reload','requestId':1,'at':3},
+        {**origin,'kind':'lifecycle','event':'beforeunload','at':4},{**origin,'kind':'lifecycle','event':'pagehide','at':6},
+        {**origin,'kind':'document','document':'new-document','at':7}]
+    cases=[]
+    def check(name,mutate=None,expected=False,runtime=None,collector=None,duplicate=False,other_requests=None):
+        raw,req,life=json.loads(json.dumps([error,request,lifecycle]))
+        if mutate:mutate(raw,req,life)
+        evidence=RuntimeEvidence('synthetic-contract');evidence.raw=[raw,raw] if duplicate else [raw]
+        evidence.requests={1:req,**{item['id']:item for item in json.loads(json.dumps(other_requests or []))}}
+        evidence.lifecycle=life;evidence.runtime=runtime or [];evidence.failures=collector or []
+        result={};evidence.summarize(result)
+        assert bool(result['explainedNativeTransportSignals'])==expected,name
+        must_fail=not expected or bool(runtime or collector or duplicate)
+        assert bool(result['pageErrors'])==must_fail,name
+        assert result['rawPageErrors']==evidence.raw,name
+        cases.append({'case':name,'expectedGateFailure':must_fail,'passed':True})
+    check('exact-held-abort-exit',expected=True)
+    check('different-native-url',lambda e,r,l:e.update(message=e['message']+'&other=1'))
+    check('different-request-url',lambda e,r,l:r.update(url=RESULTS_URL+'&other=1'))
+    check('different-request-document',lambda e,r,l:r.update(document='another-document'))
+    check('different-request-context',lambda e,r,l:r.update(context=2))
+    check('missing-error-document',lambda e,r,l:e.pop('document'))
+    check('different-phase',lambda e,r,l:e.update(phase='reload'))
+    check('missing-abort-receipt',lambda e,r,l:r.pop('injectedAbort'))
+    check('different-abort-cause',lambda e,r,l:r['injectedAbort'].update(errorCode='failed'))
+    check('different-failure-cause',lambda e,r,l:r.update(failure='Connection refused'))
+    check('unfinished-abort',lambda e,r,l:r['injectedAbort'].pop('completedAt'))
+    check('abort-after-exit',lambda e,r,l:r['injectedAbort'].update(completedAt=4.1))
+    check('received-response',lambda e,r,l:r.update(status=200,responseAt=2.1))
+    check('before-unload',lambda e,r,l:e.update(at=3.9))
+    check('after-pagehide',lambda e,r,l:e.update(at=6.1))
+    check('missing-pagehide',lambda e,r,l:l.pop(2))
+    check('synthetic-pagehide-mark',lambda e,r,l:l[2].update(kind='test-phase'))
+    check('missing-new-document',lambda e,r,l:l.pop(3))
+    check('unrelated-new-context',lambda e,r,l:l[3].update(context=2))
+    check('wrong-bound-request',lambda e,r,l:l[0].update(requestId=2))
+    check('unknown-callsite',lambda e,r,l:e.update(stack=e['stack'].replace('getPuzzleLeaderboard','otherFunction')))
+    other={**origin,'id':2,'url':RESULTS_URL,'method':'GET','requestedAt':1.8}
+    check('concurrent-pending-request',other_requests=[other])
+    check('concurrent-failed-request',other_requests=[{**other,'failedAt':2.9,'failure':'Connection refused'}])
+    check('concurrent-aborted-request',other_requests=[{**other,'failedAt':2.9,'failure':'Blocked by Web Inspector'}])
+    check('concurrent-unfinished-response',other_requests=[{**other,'responseAt':2.9,'status':200}])
+    check('older-still-pending-request',other_requests=[{**other,'requestedAt':0.5}])
+    check('older-failed-before-held',other_requests=[{**other,'requestedAt':0.5,'failedAt':0.9,'failure':'Blocked by Web Inspector'}])
+    check('older-completed-success',expected=True,other_requests=[{**other,'requestedAt':0.2,'responseAt':0.3,'finishedAt':0.4,'status':200}])
+    check('concurrent-completed-success',expected=True,other_requests=[{**other,'responseAt':2.9,'finishedAt':3,'status':200}])
+    check('other-document-pending-request',expected=True,other_requests=[{**other,'document':'another-document'}])
+    check('other-url-pending-request',expected=True,other_requests=[{**other,'url':RESULTS_URL+'&other=1'}])
+    check('native-duplicate',expected=True,duplicate=True)
+    for kind in ['error','unhandledrejection']:
+        check('runtime-'+kind,expected=True,runtime=[{'kind':kind,'message':'Synthetic contract failure'}])
+    check('collector-error',expected=True,collector=['Synthetic collector failure'])
+    return {'kind':'synthetic-classifier-contract','passed':True,'cases':cases,'browserExecuted':False}
+
 async def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--browsers',default='chromium');parser.add_argument('--offline-export-only',action='store_true');parser.add_argument('--output',type=Path,default=Path(os.environ.get('QA_OUT',str(ROOT.parent/'artifacts/rudn-puzzle-qa/leaderboard-1.3.7'))));args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('--browsers',default='chromium');parser.add_argument('--offline-export-only',action='store_true');parser.add_argument('--classifier-only',action='store_true');parser.add_argument('--output',type=Path,default=Path(os.environ.get('QA_OUT',str(ROOT.parent/'artifacts/rudn-puzzle-qa/leaderboard-1.3.7'))));args=parser.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
+    contracts=classifier_contract();(args.output/'native-abort-classifier.json').write_text(json.dumps(contracts,indent=2),encoding='utf8')
+    print(json.dumps({'kind':contracts['kind'],'cases':len(contracts['cases']),'passed':True}))
+    if args.classifier_only:return
     for browser in args.browsers.split(','):
         print(json.dumps(await runtime_controls(browser,args.output)))
         if not args.offline_export_only:print(json.dumps(await run(browser,args.output)))
