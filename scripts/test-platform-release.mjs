@@ -7,6 +7,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {buildRelease,verifyRelease,isRuntime} from './build-platform-release.mjs';
 import {seedBaselineCalendar,unpackLegacyBaseline,downloadLegacyArchive,LEGACY_BASELINE} from './download-release-baseline.mjs';
+import {preserveLegacyBaseline} from './preserve-legacy-baseline.mjs';
 async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);}
 test('first-migration recovery rejects an unreviewed archive before extracting any bytes',async t=>{
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-legacy-check-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
@@ -22,6 +23,62 @@ test('expired original artifact falls back only to its retained reviewed backup'
   assert.equal(zip,path.join(download,'baseline.zip'));
   assert.deepEqual(calls[1],{command:'gh',args:['run','download','3','--repo',repo,'--name',LEGACY_BASELINE.artifactName,'--dir',download]});
   await assert.rejects(downloadLegacyArchive({repo,download,downloadBinary:async()=>{throw Error('expired');},runCommand:async()=>'{"artifacts":[]}'}),/reviewed-legacy-baseline-unavailable/);
+});
+
+async function preservationFixture(t){
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-preserve-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
+  const out=path.join(root,'download'),calls=[];
+  // Orchestration fixtures replace the digest operation, not the production pin.
+  // The malformed-archive cases below use the actual SHA256 verifier.
+  const verifyArchive=async file=>{calls.push(['verify',file]);assert.equal(await fs.readFile(file,'utf8'),'reviewed-fixture');return LEGACY_BASELINE.zipSha256;};
+  return {out,calls,verifyArchive,runId:'77',repo:'Arseniy24RUS/RUDN',fetchImpl:async()=>new Response('',{status:404})};
+}
+test('early preservation prepares the pinned original ZIP without extracting the site',async t=>{
+  const f=await preservationFixture(t);
+  const result=await preserveLegacyBaseline({...f,runCommand:async(command,args)=>{f.calls.push(args);assert.match(args[1],/\/runs\/77\/artifacts\?/);return '{"artifacts":[]}';},downloadBinary:async(command,args,file)=>{f.calls.push(args);assert.equal(args[1],`repos/${f.repo}/actions/artifacts/${LEGACY_BASELINE.artifactId}/zip`);await fs.writeFile(file,'reviewed-fixture');}});
+  assert.equal(result.uploadRequired,true);assert.equal(result.artifactName,LEGACY_BASELINE.artifactName);assert.equal(result.archiveSha256,LEGACY_BASELINE.zipSha256);
+  assert.deepEqual(await fs.readdir(f.out),['baseline.zip']);assert.equal(f.calls.filter(x=>x[0]==='verify').length,1);
+});
+test('repeat preservation verifies this run backup and never replaces or deletes it',async t=>{
+  const f=await preservationFixture(t);
+  const result=await preserveLegacyBaseline({...f,downloadBinary:async()=>assert.fail('The original archive must not be requested on a repeat'),runCommand:async(command,args)=>{
+    f.calls.push(args);if(args[0]==='api')return JSON.stringify({artifacts:[{id:9,name:LEGACY_BASELINE.artifactName,expired:false}]});
+    assert.deepEqual(args,['run','download','77','--repo',f.repo,'--name',LEGACY_BASELINE.artifactName,'--dir',f.out]);await fs.writeFile(path.join(f.out,'baseline.zip'),'reviewed-fixture');
+  }});
+  assert.equal(result.kind,'already-retained');assert.equal(result.uploadRequired,false);assert.equal(result.artifactId,9);assert.equal(f.calls.filter(x=>x[0]==='verify').length,1);
+  assert.ok(f.calls.every(args=>!args.includes('delete')&&!args.includes('--clobber')&&!args.includes('upload')));
+});
+test('early preservation recovers an expired original only from the canonical retained ZIP',async t=>{
+  const f=await preservationFixture(t);
+  const result=await preserveLegacyBaseline({...f,downloadBinary:async()=>{throw Error('410 expired');},runCommand:async(command,args)=>{
+    f.calls.push(args);if(args[0]==='api')return JSON.stringify({artifacts:args[1].includes('/runs/77/')?[]:[{name:'unrelated',expired:false,workflow_run:{id:1}},{name:LEGACY_BASELINE.artifactName,expired:true,workflow_run:{id:2}},{name:LEGACY_BASELINE.artifactName,expired:false,workflow_run:{id:55}}]});
+    assert.equal(args[2],'55');await fs.writeFile(path.join(f.out,'baseline.zip'),'reviewed-fixture');
+  }});
+  assert.equal(result.uploadRequired,true);assert.equal(result.archiveSha256,LEGACY_BASELINE.zipSha256);assert.deepEqual(await fs.readdir(f.out),['baseline.zip']);
+});
+test('invalid original and same-run backup checksums fail before an upload receipt',async t=>{
+  for(const existing of [false,true]){
+    const f=await preservationFixture(t);delete f.verifyArchive;
+    await assert.rejects(preserveLegacyBaseline({...f,downloadBinary:async(command,args,file)=>fs.writeFile(file,'unreviewed archive'),runCommand:async(command,args)=>{
+      if(args[0]==='api')return JSON.stringify({artifacts:existing?[{id:9,name:LEGACY_BASELINE.artifactName,expired:false}]:[]});
+      await fs.writeFile(path.join(f.out,'baseline.zip'),'unreviewed archive');
+    }}),/release\/legacy-baseline-checksum/);
+    assert.deepEqual(await fs.readdir(f.out),['baseline.zip']);
+  }
+});
+test('versioned publication skips legacy backup, unavailable or malformed pointers do not',async t=>{
+  const f=await preservationFixture(t),unexpected=async()=>assert.fail('No archive access expected');
+  const result=await preserveLegacyBaseline({...f,runCommand:unexpected,downloadBinary:unexpected,fetchImpl:async()=>Response.json({schema:1,current:{buildId:'a'.repeat(32)}})});
+  assert.equal(result.kind,'versioned-baseline');assert.equal(result.uploadRequired,false);await assert.rejects(fs.access(f.out),{code:'ENOENT'});
+  for(const response of [new Response('',{status:503}),Response.json({schema:2,current:{buildId:'a'.repeat(32)}})])await assert.rejects(preserveLegacyBaseline({...f,runCommand:unexpected,fetchImpl:async()=>response}),/release\/(published-pointer-unavailable|invalid-published-pointer)/);
+});
+test('repeat preservation finds the same-run backup beyond the first artifact page',async t=>{
+  const f=await preservationFixture(t),pages=[];
+  const result=await preserveLegacyBaseline({...f,downloadBinary:async()=>assert.fail('Repeat must not download original'),runCommand:async(command,args)=>{
+    if(args[0]==='api'){pages.push(args[1]);return JSON.stringify({artifacts:pages.length===1?Array.from({length:100},(_,id)=>({id,name:'other-'+id,expired:false})):[{id:101,name:LEGACY_BASELINE.artifactName,expired:false}]});}
+    await fs.writeFile(path.join(f.out,'baseline.zip'),'reviewed-fixture');
+  }});
+  assert.equal(result.uploadRequired,false);assert.equal(pages.length,2);assert.match(pages[1],/page=2$/);
 });
 async function fixture(t){const root=await fs.mkdtemp(path.join(os.tmpdir(),'rudn-release-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));const site=path.join(root,'site'),baseline=path.join(root,'baseline');
   const files={'index.html':'<html><head><link rel="stylesheet" href="assets/css/site.css"></head><body><script type="module" src="assets/js/main.js"></script></body></html>','service-worker.js':'const PLATFORM_RELEASE=null;','assets/js/main.js':"import './dep.js'; export const value=1;",'assets/js/dep.js':'export const dep=1;','assets/js/release-bootstrap.js':'export const bootstrap=1;','assets/js/release-resources.js':'export const resourceURL=()=>{};','assets/js/diagnostics-bootstrap.js':'globalThis.early=true;','assets/css/site.css':'body { background:url(../img/a.png) }','assets/img/a.png':'old-png','data/course.json':'{"v":1}','apps/demo/index.html':'<html><body><script src="script.js"></script><script>globalThis.hello=true;</script></body></html>','apps/demo/script.js':'globalThis.demo=true;','apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/1-easy.mjs':'export default {large:1};'};

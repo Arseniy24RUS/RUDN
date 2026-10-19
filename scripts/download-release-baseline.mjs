@@ -20,8 +20,12 @@ export async function unpack(archive,out){
   await fs.mkdir(out,{recursive:true});await run('tar',['-xf',archive,'-C',out]);
 }
 async function sha(file){const handle=await fs.open(file);const digest=crypto.createHash('sha256');for await(const chunk of handle.createReadStream())digest.update(chunk);return digest.digest('hex');}
-export async function unpackLegacyBaseline(zip,out){
+export async function verifyLegacyArchive(zip){
   if(await sha(zip)!==LEGACY_BASELINE.zipSha256)throw new Error('release/legacy-baseline-checksum');
+  return LEGACY_BASELINE.zipSha256;
+}
+export async function unpackLegacyBaseline(zip,out){
+  await verifyLegacyArchive(zip);
   const archive=path.join(path.dirname(zip),'artifact.tar');
   // Extract only the reviewed member; never accept ZIP paths or another site.
   await run('python',['-c','import pathlib,sys,zipfile\nwith zipfile.ZipFile(sys.argv[1]) as z:\n assert z.namelist()==["artifact.tar"], "unexpected baseline ZIP members"\n with z.open("artifact.tar") as source, open(sys.argv[2],"xb") as target:\n  import shutil; shutil.copyfileobj(source,target)\n',zip,archive]);
@@ -39,12 +43,15 @@ export async function downloadLegacyArchive({repo,download,runCommand=run,downlo
   }
   return zip;
 }
+export async function readPublishedPointer(publishedURL='https://arseniy24rus.github.io/RUDN/',fetchImpl=fetch){
+  const response=await fetchImpl(new URL('release.json',publishedURL),{cache:'no-store',signal:AbortSignal.timeout(30000)});
+  if(response.ok){const pointer=await response.json();if(pointer.schema!==1||!/^[a-f0-9]{32}$/.test(pointer.current?.buildId||''))throw new Error('release/invalid-published-pointer');return pointer;}
+  else if(response.status!==404)throw new Error('release/published-pointer-unavailable');
+  return null;
+}
 export async function downloadBaseline({out,repo='Arseniy24RUS/RUDN',publishedURL='https://arseniy24rus.github.io/RUDN/'}){
   out=path.resolve(out);try{await fs.access(out);throw new Error('release/output-exists');}catch(error){if(error.code!=='ENOENT')throw error;}
-  const download=out+'-download';await fs.mkdir(download,{recursive:true});let pointer=null;
-  const response=await fetch(new URL('release.json',publishedURL),{cache:'no-store',signal:AbortSignal.timeout(30000)});
-  if(response.ok){pointer=await response.json();if(pointer.schema!==1||!/^[a-f0-9]{32}$/.test(pointer.current?.buildId||''))throw new Error('release/invalid-published-pointer');}
-  else if(response.status!==404)throw new Error('release/published-pointer-unavailable');
+  const download=out+'-download';await fs.mkdir(download,{recursive:true});const pointer=await readPublishedPointer(publishedURL);
   if(pointer){
     const id=pointer.current.buildId,tag='platform-release-'+id,archiveName=tag+'.tar.gz';
     // The successful live pointer chooses the baseline; an un-deployed or older

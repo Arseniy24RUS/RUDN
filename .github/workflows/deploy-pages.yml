@@ -26,6 +26,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preserve-legacy-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout baseline preservation tools
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/preserve-legacy-baseline.mjs
+            scripts/download-release-baseline.mjs
+          sparse-checkout-cone-mode: false
+      - name: Prepare Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Verify the reviewed first-migration ZIP or an existing backup
+        id: preserve
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/preserve-legacy-baseline.mjs --out "${{ runner.temp }}/platform-legacy-baseline-backup" --repo "${{ github.repository }}" --run-id "${{ github.run_id }}"
+      - name: Retain the reviewed first-migration baseline without replacing it
+        if: steps.preserve.outputs.upload_required == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.preserve.outputs.artifact_name }}
+          path: ${{ steps.preserve.outputs.archive_path }}
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+
   platform-checks:
     uses: ./.github/workflows/platform-checks.yml
 
@@ -39,8 +72,8 @@ jobs:
       coverage: full
 
   deploy:
-    needs: [puzzle-checks, legal-lab, platform-checks]
-    if: ${{ !cancelled() && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')))) }}
+    needs: [preserve-legacy-baseline, puzzle-checks, legal-lab, platform-checks]
+    if: ${{ !cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')))) }}
     env:
       FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
       SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
@@ -395,15 +428,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
-      - name: Preserve the reviewed first-migration baseline
-        uses: actions/upload-artifact@v4
-        with:
-          name: platform-legacy-baseline-ae6f32e1324437ed30ee15bb930518aa1b267755
-          path: ${{ runner.temp }}/platform-baseline-download/baseline.zip
-          if-no-files-found: ignore
-          retention-days: 90
-          compression-level: 0
-          overwrite: true
       - name: Update published reception calendars
         run: node scripts/update-reception-calendars.mjs
       - name: Validate static bundle
