@@ -75,7 +75,7 @@ export function createDiagnosticsService({db,ingestDb=db,now=Date.now,uuid=rando
   if(/^[0-9]{5,20}$/.test(query)){try{const {canonical,p}=await profile(query,null);return {items:!group||p.group===group?[{studentKey:canonical,fullName:p.fullName,group:p.group}]:[],nextCursor:null};}catch(error){if(error.code==='not-found')return {items:[],nextCursor:null};throw error;}}
   const path=words.length?'nameIndex':group?'groupIndex/'+key(group):'directory',prefix=words.length?nameKey(words[0]):'',signature=path+'|'+query+'|'+group,after=cursor(input,signature),limit=maxPage(input.limit),out=[];
   const result=await page(path,{after,prefix,limit:LIMITS.scan});let last=after;for(const [entry,value] of result.rows){last=entry;if(value.deleted)continue;const p=path==='directory'?value:await read('directory/'+value.studentKey);if(!p||p.deleted||group&&p.group!==group||words.some(word=>!p.tokens?.some(token=>token.startsWith(word))))continue;out.push({studentKey:p.studentKey,fullName:p.fullName,group:p.group});if(out.length===limit)break;}
-  const more=result.more||result.rows.at(-1)?.[0]!==last;return {items:out,nextCursor:more?encodeCursor({path:signature,after:last}):null};
+  const more=result.more||(result.rows.length>0&&result.rows.at(-1)[0]!==last);return {items:out,nextCursor:more?encodeCursor({path:signature,after:last}):null};
  }
  function filterArgs(input){const filters=fields(input.filters||{},['build','browser','module','code','installationId','from','to']);for(const [k,v] of Object.entries(filters)){if(k==='from'||k==='to'){if(!Number.isSafeInteger(v)||v<0||v>9999999999999)fail();}else if(k==='code'){if(!CODES.has(v))fail();}else token(v,k==='build'?80:64);}if(filters.from!==undefined&&filters.to!==undefined&&filters.from>filters.to)fail();return filters;}
  async function listSessions(input){
@@ -83,7 +83,7 @@ export function createDiagnosticsService({db,ingestDb=db,now=Date.now,uuid=rando
   const first=Object.entries(filters).find(([field])=>field!=='from'&&field!=='to'),path=subjectKey?'subjectIndex/'+subjectKey:first?'filterIndex/'+first[0]+'/'+key(first[1]):'sessionIndex',signature=path+'|'+JSON.stringify(filters),after=cursor(input,signature),limit=maxPage(input.limit),out=[];
   const at=filters.from===undefined?'':String(filters.from).padStart(13,'0')+'_',end=filters.to===undefined?'':String(filters.to).padStart(13,'0')+'_\uf8ff';
   const result=await page(path,{after,at,end,limit:LIMITS.scan});let last=after;for(const [entry,value] of result.rows){last=entry;if(Object.entries(filters).some(([field,v])=>field==='from'?value.openedAt<v:field==='to'?value.openedAt>v:field==='module'?!values(value.modules).includes(v):field==='code'?!values(value.codes).includes(v):field==='browser'?value.environment?.browser!==v:value[field]!==v))continue;if(!await active(await read('sessions/'+value.sessionId)))continue;out.push(publicSummary(value));if(out.length===limit)break;}
-  const more=result.more||result.rows.at(-1)?.[0]!==last;return {items:out,nextCursor:more?encodeCursor({path:signature,after:last}):null};
+  const more=result.more||(result.rows.length>0&&result.rows.at(-1)[0]!==last);return {items:out,nextCursor:more?encodeCursor({path:signature,after:last}):null};
  }
  async function readEvents(input,auth,exporting=false){
   fields(input,['action','sessionId','cursor','limit']);
