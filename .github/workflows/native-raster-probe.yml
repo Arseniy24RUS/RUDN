@@ -1,0 +1,56 @@
+name: Exact native raster probe
+
+on:
+  pull_request:
+    branches: [codex/platform-diagnostics-updates]
+    paths:
+      - 'scripts/ci_native_raster_probe.py'
+      - '.github/workflows/native-raster-probe.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-raster-probe-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  exact-seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare the same browser and real runtime as the failing CI
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0 openpyxl==3.1.5
+          python -m playwright install --with-deps webkit
+      - name: Audit the two maps used by the exact scenario
+        run: python scripts/prepare_puzzle_catalog.py --output "${{ runner.temp }}/native-probe" --workers 1 --only russia-subjects,world-countries
+      - name: Capture exact seed with the unchanged DPR1 pixel assertions
+        shell: bash
+        run: |
+          failed=0
+          for phase in none before after; do
+            python scripts/ci_native_raster_probe.py --fixtures "${{ runner.temp }}/native-probe" --output "${{ runner.temp }}/native-probe/exact-1655163107-$phase" --seed 1655163107 --phase "$phase" || failed=1
+          done
+          exit "$failed"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-native-raster-${{ github.run_id }}
+          path: ${{ runner.temp }}/native-probe
+          if-no-files-found: error
+          retention-days: 7
