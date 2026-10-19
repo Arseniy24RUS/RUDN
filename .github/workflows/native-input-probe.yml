@@ -1,0 +1,58 @@
+name: Observe exact Firefox native mode input
+
+on:
+  pull_request:
+    branches: [codex/platform-diagnostics-updates]
+    paths:
+      - 'scripts/ci_native_input_probe.py'
+      - '.github/workflows/native-input-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  original-and-centre:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONUTF8: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Checkout the exact failing product and original harness
+        uses: actions/checkout@v4
+        with:
+          ref: 9507cb80844154129895a9e0dc84832a3a96f01a
+          path: product
+      - name: Checkout only the isolated observer separately
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: observer
+          sparse-checkout: scripts/ci_native_input_probe.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare the unchanged runtime and matching Firefox
+        working-directory: product
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0 openpyxl==3.1.5
+          python -m playwright install --with-deps firefox
+          python scripts/prepare_puzzle_catalog.py --output "${{ runner.temp }}/native-input-fixtures" --workers 1 --only municipal-112819,world-countries
+      - name: Observe three original clicks and three separate centre controls
+        run: |
+          mkdir -p "${{ runner.temp }}/native-input-probe"
+          DEBUG=pw:api python observer/scripts/ci_native_input_probe.py --source product --fixtures "${{ runner.temp }}/native-input-fixtures" --output "${{ runner.temp }}/native-input-probe" 2>"${{ runner.temp }}/native-input-probe/pw-api.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-input-observer-${{ github.run_id }}
+          path: ${{ runner.temp }}/native-input-probe
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: false
