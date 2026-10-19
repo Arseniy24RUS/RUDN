@@ -22,6 +22,26 @@ from playwright.async_api import async_playwright
 CAPTURE_HOOK = r"""
   window.__nativeEvidenceHistory=[];
   window.__nativeEvidenceRecords=[];
+  const nativeReplayOps=[],nativePhases=[];
+  let nativePendingPhase=null;
+  const savePixels=context=>({width:context.canvas.width,height:context.canvas.height,
+    pixels:context.getImageData(0,0,context.canvas.width,context.canvas.height).data,context:contextDetails(context)});
+  const pixelsPng=entry=>{const canvas=document.createElement('canvas');canvas.width=entry.width;canvas.height=entry.height;
+    canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(entry.pixels),entry.width,entry.height),0,0);
+    const png=canvas.toDataURL('image/png');canvas.width=canvas.height=0;return png;};
+  const replayNativeCommands=commands=>{const path=new Path2D();let ring=new Path2D();
+    for(let i=0;i<commands.length;i+=3){
+      if(commands[i]===0)ring.moveTo(commands[i+1],commands[i+2]);
+      else if(commands[i]===1)ring.lineTo(commands[i+1],commands[i+2]);
+      else if(commands[i]===2)ring.closePath();
+      else {path.addPath(ring);ring=new Path2D();}
+    }path.addPath(ring);return path;};
+  const restoreNativeContext=(context,s)=>{const m=s.transform;context.setTransform(m[0],m[1],m[4],m[5],m[12],m[13]);
+    context.globalAlpha=s.alpha;context.globalCompositeOperation=s.composite;context.fillStyle=s.fill;context.strokeStyle=s.stroke;
+    context.lineWidth=s.width;context.lineJoin=s.join;context.lineCap=s.cap;context.miterLimit=s.miter;
+    context.setLineDash(s.dash);context.lineDashOffset=s.dashOffset;context.shadowColor=s.shadow[0];
+    context.shadowBlur=s.shadow[1];context.shadowOffsetX=s.shadow[2];context.shadowOffsetY=s.shadow[3];
+    if(s.filter!=null)context.filter=s.filter;context.imageSmoothingEnabled=s.smoothing;};
   const captureHistory=(kind,fields={})=>{
     const history=window.__nativeEvidenceHistory;
     if(history.length>=256)history.shift();
@@ -32,21 +52,35 @@ CAPTURE_HOOK = r"""
   const observedResize=resizeActiveRaster;
   resizeActiveRaster=function(width,height){
     captureHistory('resize-before',{requested:[width,height]});
+    nativeReplayOps.push({kind:'resize',width,height});
     const result=observedResize(width,height);captureHistory('resize-after');return result;
   };
   for(const name of ['fill','stroke','drawImage']){
     const original=CanvasRenderingContext2D.prototype[name];
     CanvasRenderingContext2D.prototype[name]=function(...args){
+      let immediate=null;
       if(this.canvas===activeSprite.canvas){
         const paths=currentPiece()&&highResolutionPaths(currentPiece().index);
         captureHistory(name,{context:contextDetails(this),fillRule:name==='fill'?args[1]:null,
           originalFill:name==='fill'?args[0]===paths?.path:null,
           originalStroke:name==='stroke'?args[0]===paths?.strokePath:null,
           bitmap:name==='drawImage'?{type:args[0]?.constructor?.name,width:args[0]?.width,height:args[0]?.height,coordinates:args.slice(1)}:null});
+        nativeReplayOps.push({kind:name,args:args.slice(),context:contextDetails(this)});
+        if(name==='stroke'&&!currentPiece()?.inTray&&state.features[state.current]?.properties._puzzleId==='151223'
+            &&state.view.k>2&&state.view.k<3&&nativePhases.length<4){
+          immediate={beforeStroke:savePixels(this),afterStroke:null,afterConsumption:null};
+        }
       }
-      return original.apply(this,args);
+      const result=original.apply(this,args);
+      if(immediate){immediate.afterStroke=savePixels(this);nativePhases.push(immediate);nativePendingPhase=immediate;}
+      return result;
     };
   }
+  const nativeConsumer=ctx.drawImage;
+  ctx.drawImage=function(source,...args){const result=nativeConsumer.call(this,source,...args);
+    if(source===activeSprite.canvas&&nativePendingPhase){
+      nativePendingPhase.afterConsumption=savePixels(source.getContext('2d'));nativePendingPhase=null;
+    }return result;};
   window.__captureNativeEvidence=({sprite,paths,canvas,actual,expected,difference,source})=>{
     const width=canvas.width,height=canvas.height;
     const commands=state.renderGeometry?.getFullCommands(currentPiece().index);
@@ -55,10 +89,43 @@ CAPTURE_HOOK = r"""
       context:contextDetails(sprite.canvas.getContext('2d')),referenceContext:contextDetails(canvas.getContext('2d')),
       difference,history:window.__nativeEvidenceHistory.slice(),
       commands:commands?{fill:Array.from(commands.fill),stroke:Array.from(commands.stroke)}:null,
-      actualPng:sprite.canvas.toDataURL('image/png'),referencePng:canvas.toDataURL('image/png'),diagonalProbes:[]};
+      actualPng:sprite.canvas.toDataURL('image/png'),referencePng:canvas.toDataURL('image/png'),diagonalProbes:[],
+      readbackIntervention:'Diagnostic readbacks before and immediately after final stroke can change native batching; baseline v1 retained separately.',
+      phaseImages:[],renderProbes:[]};
     const roundoff=rasterRoundoffTracker(actual,expected);
     const pointSamples=pixels=>[{x:18,y:102},{x:21,y:184}].filter(p=>p.x<width&&p.y<height).map(p=>({...p,rgba:Array.from(pixels.slice((p.y*width+p.x)*4,(p.y*width+p.x)*4+4))}));
     record.actualSamples=pointSamples(actual);record.referenceSamples=pointSamples(expected);
+    for(const phase of nativePhases){
+      if(phase.afterStroke.width!==width||phase.afterStroke.height!==height)continue;
+      for(const name of ['beforeStroke','afterStroke','afterConsumption']){
+        const entry=phase[name];if(!entry)continue;
+        record.phaseImages.push({phase:name,png:pixelsPng(entry),context:entry.context,samples:pointSamples(entry.pixels),
+          versusAudit:rasterPixelDifference(entry.pixels,actual,width),
+          versusImmediate:rasterPixelDifference(entry.pixels,phase.afterStroke.pixels,width)});
+      }
+    }
+    for(const kind of (sprite.scale>2&&sprite.scale<3&&record.featureId==='151223'
+      ?['fresh-final-original','fresh-final-clone','fresh-final-command-replay','fresh-exact-history']:[])){
+      const surface=document.createElement('canvas');surface.width=width;surface.height=height;
+      const context=surface.getContext('2d',source==='worker'?{alpha:true,willReadFrequently:true}:{alpha:true});
+      try{
+        if(kind==='fresh-exact-history'){
+          for(const op of nativeReplayOps){
+            if(op.kind==='resize'){surface.height=0;surface.width=op.width;surface.height=op.height;}
+            else {restoreNativeContext(context,op.context);context[op.kind](...op.args);}
+          }
+        }else{
+          restoreNativeContext(context,record.context);
+          const fill=kind==='fresh-final-clone'?new Path2D(paths.path):kind==='fresh-final-command-replay'?replayNativeCommands(commands.fill):paths.path;
+          const stroke=kind==='fresh-final-clone'?new Path2D(paths.strokePath):kind==='fresh-final-command-replay'?replayNativeCommands(commands.stroke):paths.strokePath;
+          context.fill(fill,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(stroke);
+        }
+        const pixels=context.getImageData(0,0,width,height).data;
+        record.renderProbes.push({kind,png:surface.toDataURL('image/png'),samples:pointSamples(pixels),context:contextDetails(context),
+          versusActual:rasterPixelDifference(actual,pixels,width),versusReference:rasterPixelDifference(expected,pixels,width)});
+      }catch(error){record.renderProbes.push({kind,error:String(error)});}
+      surface.width=surface.height=0;
+    }
     for(const radius of [1e-7,1e-6,1e-5,1e-4])for(const sx of [-1,1])for(const sy of [-1,1]){
       const offset=radius/Math.SQRT2,dx=sx*offset,dy=sy*offset;
       const probe=document.createElement('canvas');probe.width=width;probe.height=height;
@@ -106,6 +173,13 @@ async def main(args):
                                     path=output/f'capture-{index}-{name}.png'
                                     path.write_bytes(base64.b64decode(data.split(',',1)[1]))
                                     item[name+'Png']={'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+                                for group in ['phaseImages','renderProbes']:
+                                    for probe in item.get(group,[]):
+                                        if 'png' not in probe:continue
+                                        data=probe.pop('png');label=probe.get('phase',probe.get('kind'))
+                                        path=output/f'capture-{index}-{label}.png'
+                                        path.write_bytes(base64.b64decode(data.split(',',1)[1]))
+                                        probe['png']={'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
                                 commands=item.pop('commands')
                                 path=output/f'capture-{index}-commands.json'
                                 path.write_text(json.dumps(commands,separators=(',',':')),encoding='utf-8')
