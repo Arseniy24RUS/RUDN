@@ -6,6 +6,7 @@ import {durableStore} from './durable-store.js?v=1.3.10';
 import {puzzleLeaderboardLocalResult} from './student-identity.js';
 import {createPuzzleGeometryStore,createPuzzleWriter,puzzleGeometryUrl} from './puzzle-storage.js?v=1.3.10';
 import {loadRussiaMap} from './puzzle-map-loader.js?v=1.3.10';
+import {fetchPuzzleMetadata} from './puzzle-metadata-request.js';
 import {resourceURL,getReleaseContext} from './release-resources.js';
 import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
 import {bootstrapUpdateCoordinator} from './platform-update-coordinator.js';
@@ -142,17 +143,21 @@ async function localAdm1(iso,local){
     geometry_url:`${base}/adm1/${iso}.geojson`,feature_count:local.features});
 }
 async function remoteAdm1(iso,signal){
-  const catalog=admCatalogSource||await load(`${base}/geoboundaries_adm1_catalog.json`,signal);
+  if(signal?.aborted)throw new DOMException('Metadata loading cancelled','AbortError');
+  const scope=diagnostics;
+  const catalog=admCatalogSource||await fetchPuzzleMetadata(`${base}/geoboundaries_adm1_catalog.json`,{fetchImpl:nativeFetch,signal});
+  if(signal?.aborted)throw new DOMException('Metadata loading cancelled','AbortError');
   const pinned=catalog.find(item=>String(item.boundaryISO).toUpperCase()===iso);
-  const controller=new AbortController(),abort=()=>controller.abort();
-  if(signal?.aborted)controller.abort();else signal?.addEventListener('abort',abort,{once:true});
-  const timer=setTimeout(abort,4000);let meta;
+  let meta;
   try{
-    const response=await nativeFetch(`https://www.geoboundaries.org/api/current/gbOpen/${iso}/ADM1/`,{signal:controller.signal});
-    if(!response.ok)throw new Error(`geoBoundaries HTTP ${response.status}`);
-    meta=await response.json();
-  }catch(error){if(signal?.aborted||!pinned)throw error;meta=pinned}
-  finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
+    meta=await fetchPuzzleMetadata(`https://www.geoboundaries.org/api/current/gbOpen/${iso}/ADM1/`,{fetchImpl:nativeFetch,signal});
+  }catch(error){
+    if(signal?.aborted)throw new DOMException('Metadata loading cancelled','AbortError');
+    if(!pinned)throw error;
+    try{scope.record?.('asset-load',{operation:'map-metadata',stage:'fallback',docId:iso,success:false,code:error?.name==='TimeoutError'?'timeout':'load-failed'})}catch{}
+    meta=pinned;
+  }
+  if(signal?.aborted)throw new DOMException('Metadata loading cancelled','AbortError');
   if(!meta?.simplifiedGeometryGeoJSON&&!meta?.gjDownloadURL)meta=pinned||meta;
 const geometry=meta.simplifiedGeometryGeoJSON||meta.gjDownloadURL;if(!geometry)throw new Error('geoBoundaries did not provide GeoJSON');return wrapper({id:`${iso.toLowerCase()}-adm1-geoboundaries`,title:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'ADM1'}`,title_en:`${meta.boundaryName||iso}: ${meta.boundaryCanonical||'First-level administrative units'}`,title_zh:`${meta.boundaryName||iso}：一级行政区`,source:`geoBoundaries; ${meta.boundarySource||''}`,source_en:`geoBoundaries; ${meta.boundarySource||''}`,source_zh:`geoBoundaries; ${meta.boundarySource||''}`,license:meta.boundaryLicense||'CC BY 4.0',license_en:meta.boundaryLicense||'CC BY 4.0',license_zh:meta.boundaryLicense||'CC BY 4.0',origin:'remote',year:String(meta.boundaryYearRepresented||''),note:'Loaded from geoBoundaries gbOpen.',geometry_url:geometry,feature_count:Number(meta.admUnitCount)||null})}
 

@@ -4,7 +4,7 @@ const SCOPE=new URL(self.registration.scope);
 const PLATFORM_RELEASE=null;
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-bounded-reader-1-diagnostics-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-bounded-reader-1-diagnostics-2`;
 // Geography and regional plans are requested only by an explicitly opened game.
 const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-copy.js','./assets/js/settlements-leaderboard.js'];
 const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.mjs','./apps/legal-lab/style.css','./apps/legal-lab/precache-manifest.json','./apps/legal-lab/lib/core.mjs','./apps/legal-lab/lib/corpus.mjs','./apps/legal-lab/lib/reader-codec.mjs','./apps/legal-lab/lib/reader-controller.mjs','./apps/legal-lab/lib/reader-data.mjs','./apps/legal-lab/lib/reader-registry.mjs','./apps/legal-lab/lib/reader-search-worker.mjs','./apps/legal-lab/lib/reader-view.mjs','./apps/legal-lab/lib/live.mjs','./apps/legal-lab/lib/storage.mjs','./assets/js/legal-lab-storage.js'];
@@ -137,6 +137,7 @@ const SHELL=[
   './assets/js/access.js?v=1.3.10',
   './assets/js/puzzle-bootstrap.js?v=1.3.10',
   './assets/js/puzzle-map-loader.js?v=1.3.10',
+  './assets/js/puzzle-metadata-request.js',
   './assets/js/puzzle-engine.js?v=1.3.10',
   './assets/js/puzzle-render-geometry.js?v=1.3.10',
   './assets/js/puzzle-raster-worker.js?v=1.3.10',
@@ -400,6 +401,7 @@ const PUZZLE_SHELL=[
   './apps/puzzle.html','./assets/css/puzzle.css?v=1.3.10',
   './assets/js/puzzle-bootstrap.js?v=1.3.10','./assets/js/puzzle-engine.js?v=1.3.10',
   './assets/js/puzzle-map-loader.js?v=1.3.10',
+  './assets/js/puzzle-metadata-request.js',
   './assets/js/puzzle-render-geometry.js?v=1.3.10',
   './assets/js/puzzle-raster-worker.js?v=1.3.10',
   './assets/js/puzzle-leaderboard.js?v=1.3.10',

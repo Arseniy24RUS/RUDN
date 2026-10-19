@@ -712,6 +712,78 @@ async def completion_case(browser, server, args, entry, difficulty, index, share
     return record
 
 
+def observe_layout_fixture_requests(page, server):
+    """Bounded passive timing; exported only if the layout scenario fails."""
+    limit = 64
+    timing = {'clock': 'python-monotonic-ms', 'startedAtMs': time.monotonic() * 1000,
+              'limit': limit, 'dropped': 0, 'requests': [], 'collectorErrors': []}
+    tracked = {}
+    origin = urlsplit(server.origin)
+
+    def collector_error(error):
+        if len(timing['collectorErrors']) < 8:
+            timing['collectorErrors'].append(type(error).__name__)
+
+    def requested(request):
+        try:
+            url = urlsplit(request.url)
+            if ((url.scheme, url.netloc) != (origin.scheme, origin.netloc)
+                    or not re.fullmatch(r'/RUDN/__qa/(metadata|geometry)/[A-Z]{3}\.json', url.path)):
+                return
+            if request in tracked:
+                return
+            if len(tracked) >= limit:
+                timing['dropped'] += 1
+                return
+            item = {'id': len(tracked) + 1, 'path': url.path,
+                    'method': request.method, 'resourceType': request.resource_type,
+                    'requestedAtMs': time.monotonic() * 1000, 'state': 'pending'}
+            tracked[request] = item
+            timing['requests'].append(item)
+        except Exception as error:
+            collector_error(error)
+
+    def response_received(response):
+        try:
+            item = tracked.get(response.request)
+            if item is not None:
+                item.update(responseAtMs=time.monotonic() * 1000, status=response.status,
+                            fromServiceWorker=response.from_service_worker)
+        except Exception as error:
+            collector_error(error)
+
+    def ended(request, failed=False):
+        try:
+            item = tracked.get(request)
+            if item is not None:
+                if failed:
+                    item.update(failedAtMs=time.monotonic() * 1000, state='failed',
+                                failure=diagnostic_text(request.failure)[:240])
+                else:
+                    item.update(finishedAtMs=time.monotonic() * 1000, state='finished')
+        except Exception as error:
+            collector_error(error)
+
+    handlers = [('request', requested), ('response', response_received),
+                ('requestfinished', ended), ('requestfailed', lambda request: ended(request, True))]
+    for event, handler in handlers:
+        try:
+            page.on(event, handler)
+        except Exception as error:
+            collector_error(error)
+
+    def stop():
+        timing['stoppedAtMs'] = time.monotonic() * 1000
+        for event, handler in handlers:
+            try:
+                page.remove_listener(event, handler)
+            except Exception as error:
+                collector_error(error)
+        tracked.clear()
+
+    return timing, stop
+
+
 async def layout_case(browser, server, args, entry, index, shared_context=None):
     record = {'suite': 'layout', 'id': entry['id'], 'status': 'failed'}
     context = shared_context or await context_for(browser, server, args.output, VIEWPORTS[0], 'ru', record)
@@ -720,6 +792,7 @@ async def layout_case(browser, server, args, entry, index, shared_context=None):
     page = context.pages[0] if context.pages else await context.new_page()
     page._qa_base = server.base;page._qa_locale = 'ru';observe(page, record)
     started = time.monotonic()
+    request_timing, stop_timing = observe_layout_fixture_requests(page, server)
     try:
         await start_map(page, entry, 'medium')
         for viewport_index, viewport in enumerate(LAYOUT_VIEWPORTS):
@@ -731,7 +804,50 @@ async def layout_case(browser, server, args, entry, index, shared_context=None):
         record['status'] = 'passed'
     except Exception as error:
         record['error'] = str(error);record['traceback'] = traceback.format_exc()
+        record['failureObservedAtMs'] = time.monotonic() * 1000
+        record['layoutRequestTiming'] = request_timing
+        # Failure evidence only: no retries, synthetic state or changes to the
+        # original input/assertion deadlines. Keep the original error if capture fails.
+        try:
+            capture = await asyncio.wait_for(page.evaluate("""() => {
+              const root = document.getElementById('geoPuzzleApp');
+              const empty = document.getElementById('puzzleEmpty');
+              const state = window.__puzzleRead?.();
+              const keys = ['ready','loading','restoring','writable','started','finished',
+                'attemptId','difficulty','mode','selection','placed','total','current','hints'];
+              const text = id => document.getElementById(id)?.textContent?.slice(0, 500) || null;
+              return {
+                lastState: state ? Object.fromEntries(keys.filter(key => key in state).map(key => [key, state[key]])) : null,
+                layoutFailureUI: {
+                  capturedAtPerformanceMs: performance.now(), visibilityState: document.visibilityState,
+                  online: navigator.onLine, loadPhase: root?.dataset.loadPhase || null,
+                  loadingVisible: Boolean(document.getElementById('puzzleLoading')?.getClientRects().length),
+                  loadingTitle: text('puzzleLoadingTitle'), loadingText: text('puzzleLoadingText'),
+                  emptyVisible: Boolean(empty?.getClientRects().length),
+                  emptyTitle: empty?.querySelector('h2')?.textContent?.slice(0, 500) || null,
+                  emptyText: empty?.querySelector('p')?.textContent?.slice(0, 500) || null,
+                  selectors: Object.fromEntries(['puzzleMode','puzzleDifficulty','puzzleCountry','puzzleSubject']
+                    .map(id => [id, document.getElementById(id)?.value || null])),
+                  viewport: {width: innerWidth, height: innerHeight, scrollX, scrollY}
+                }
+              };
+            }"""), timeout=3)
+            for key in ('loadingTitle', 'loadingText', 'emptyTitle', 'emptyText'):
+                if capture['layoutFailureUI'][key]:
+                    capture['layoutFailureUI'][key] = diagnostic_text(capture['layoutFailureUI'][key])
+            record.update(capture)
+            record['stateCapturedAtMs'] = time.monotonic() * 1000
+        except Exception as capture_error:
+            record['layoutStateCaptureError'] = type(capture_error).__name__
+        try:
+            path = args.output / 'failures' / f'{args.browser_name}-{entry["id"]}-layout.png'
+            path.parent.mkdir(parents=True, exist_ok=True)
+            await page.screenshot(path=str(path), timeout=3000)
+            record['screenshot'] = str(path)
+        except Exception as capture_error:
+            record['layoutScreenshotError'] = type(capture_error).__name__
     finally:
+        stop_timing()
         record['seconds'] = round(time.monotonic() - started, 3)
         if not shared_context:
             await context.close()
