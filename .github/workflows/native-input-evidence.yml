@@ -1,0 +1,142 @@
+name: Preserve original native input evidence
+
+on:
+  pull_request:
+    branches: [codex/platform-diagnostics-updates]
+    paths:
+      - '.github/workflows/native-input-evidence.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-artifact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download the original synthetic CI artifact without rerunning it
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVIDENCE_ROOT: ${{ runner.temp }}/native-input-evidence
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          from urllib.error import HTTPError
+          from urllib.parse import urlsplit
+          from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
+
+          root = Path(os.environ['EVIDENCE_ROOT'])
+          root.mkdir(parents=True, exist_ok=True)
+          artifact_id = 12188881608
+          api = f'https://api.github.com/repos/Arseniy24RUS/RUDN/actions/artifacts/{artifact_id}'
+          headers = {'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                     'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
+          with urlopen(Request(api, headers=headers), timeout=60) as response:
+              metadata = json.load(response)
+          assert metadata['id'] == artifact_id and metadata['workflow_run']['id'] == 39256354510
+          assert metadata['workflow_run']['head_sha'] == '9507cb80844154129895a9e0dc84832a3a96f01a'
+          assert not metadata['expired']
+
+          class NoRedirect(HTTPRedirectHandler):
+              def redirect_request(self, request, fp, code, message, response_headers, newurl):
+                  return None
+
+          # Never forward the GitHub authorization header to the signed storage URL.
+          try:
+              result = build_opener(NoRedirect).open(Request(api + '/zip', headers=headers), timeout=60)
+          except HTTPError as error:
+              if error.code not in (301, 302, 303, 307, 308):
+                  raise RuntimeError(f'Artifact API HTTP status {error.code}') from None
+              destination = error.headers.get('Location', '')
+              assert urlsplit(destination).scheme == 'https', 'Expected HTTPS artifact storage'
+              result = urlopen(Request(destination), timeout=60)
+          path = root / 'original-12188881608.zip'
+          with result, path.open('wb') as output:
+              while block := result.read(1024 * 1024):
+                  output.write(block)
+                  assert output.tell() <= 32 * 1024 * 1024, 'Unexpected artifact size'
+          digest = hashlib.sha256(path.read_bytes()).hexdigest()
+          assert digest == 'a912946731796df4809571b705b28097818a1c4438b0582a41a6df9b8ac60423', 'Original upload SHA mismatch'
+          assert path.stat().st_size == 820415, 'Original upload byte count mismatch'
+          expected = metadata.get('digest')
+          if expected:
+              assert expected == 'sha256:' + digest, 'Original artifact digest mismatch'
+          receipt = {key: metadata.get(key) for key in ('id', 'name', 'size_in_bytes', 'created_at', 'expires_at', 'digest')}
+          receipt.update({'sourceRunId': 39256354510, 'sourceJobId': 118073173627,
+                          'sourceHead': metadata['workflow_run']['head_sha'], 'sha256': digest,
+                          'downloadedBytes': path.stat().st_size, 'syntheticCIOnly': True,
+                          'originalJobRerun': False})
+          (root / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print(json.dumps(receipt, sort_keys=True))
+          PY
+      - name: Preserve the raw ZIP before inspecting any reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-native-input-12188881608-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/native-input-evidence/original-12188881608.zip
+            ${{ runner.temp }}/native-input-evidence/receipt.json
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: false
+      - name: Print complete bounded input events and failure context
+        env:
+          EVIDENCE_ROOT: ${{ runner.temp }}/native-input-evidence
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, zipfile
+          from pathlib import Path, PurePosixPath
+
+          root = Path(os.environ['EVIDENCE_ROOT'])
+          extracted = root / 'extracted'
+          extracted.mkdir()
+          inventory, failures = [], []
+          with zipfile.ZipFile(root / 'original-12188881608.zip') as archive:
+              assert sum(item.file_size for item in archive.infolist()) <= 128 * 1024 * 1024
+              for item in archive.infolist():
+                  parts = PurePosixPath(item.filename)
+                  assert not parts.is_absolute() and '..' not in parts.parts and '\\' not in item.filename
+                  if item.is_dir():
+                      continue
+                  body = archive.read(item)
+                  path = extracted.joinpath(*parts.parts)
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(body)
+                  inventory.append({'path': item.filename, 'bytes': len(body), 'sha256': hashlib.sha256(body).hexdigest()})
+                  if not item.filename.endswith('.json') or len(body) > 20 * 1024 * 1024:
+                      continue
+                  report = json.loads(body)
+                  if not isinstance(report, dict) or not isinstance(report.get('results'), list):
+                      continue
+                  for record in report['results']:
+                      deliveries = record.get('modeInputDelivery', [])
+                      if not any(not entry.get('delivered') for entry in deliveries):
+                          continue
+                      failure = {key: record.get(key) for key in ('suite', 'id', 'difficulty', 'browser', 'viewport', 'locale', 'status', 'seconds', 'error', 'traceback', 'screenshot')}
+                      failure.update({'sourceReport': item.filename, 'browserVersion': report.get('browserVersion'),
+                                      'platform': report.get('platform'), 'modeInputDelivery': deliveries})
+                      for key in ('requestedMaps', 'requestedSelectors', 'loadStatus', 'consoleErrors', 'pageErrors', 'requestFailed', 'inputCleanupErrors'):
+                          failure[key] = record.get(key, [])[-20:]
+                      state = record.get('lastState') or {}
+                      failure['lastState'] = {key: state.get(key) for key in ('mode', 'selection', 'difficulty', 'ready', 'started', 'finished', 'total', 'placed', 'loading', 'restoring', 'writable', 'attemptId')}
+                      # The original probe did not record these fields. Do not infer them.
+                      failure['unrecordedInOriginal'] = ['pointerId', 'pointerType', 'eventTimestamp', 'nodeIdentity', 'nodeIsConnected', 'eventHitTest', 'activeElement']
+                      failures.append(failure)
+          assert 1 <= len(failures) <= 8, 'Expected bounded original input failures'
+          text = json.dumps({'failures': failures}, ensure_ascii=False, indent=2)
+          assert len(text.encode('utf-8')) <= 128 * 1024, 'Refuse oversized log; raw evidence already preserved'
+          (root / 'input-failure-context.json').write_text(text + '\n', encoding='utf-8')
+          (root / 'inventory.json').write_text(json.dumps(inventory, indent=2) + '\n')
+          print(text)
+          PY
+      - name: Preserve extracted original screenshots and structured context
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: inspected-native-input-12188881608-${{ github.run_id }}
+          path: ${{ runner.temp }}/native-input-evidence
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: false
