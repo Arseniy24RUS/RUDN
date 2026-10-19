@@ -1,0 +1,141 @@
+"""Evidence-only exact-seed raster diagnostic; no product/test files are edited.
+
+Runs the existing real-input DPR1 scenario with its original assertions.
+Captures the actual native surface and the independent reference before any
+assertion, plus bounded diagonal probes. A probe never alters acceptance.
+"""
+import argparse
+import asyncio
+import base64
+import hashlib
+import json
+import platform
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
+import test_puzzle_catalog as catalog
+import test_puzzle_render_browser as render
+from playwright.async_api import async_playwright
+
+CAPTURE_HOOK = r"""
+  window.__nativeEvidenceHistory=[];
+  window.__nativeEvidenceRecords=[];
+  const captureHistory=(kind,fields={})=>{
+    const history=window.__nativeEvidenceHistory;
+    if(history.length>=256)history.shift();
+    history.push({kind,at:performance.now(),size:[activeSprite.canvas.width,activeSprite.canvas.height],
+      current:state.current,featureId:state.features[state.current]?.properties._puzzleId,
+      viewScale:state.view?.k,...fields});
+  };
+  const observedResize=resizeActiveRaster;
+  resizeActiveRaster=function(width,height){
+    captureHistory('resize-before',{requested:[width,height]});
+    const result=observedResize(width,height);captureHistory('resize-after');return result;
+  };
+  for(const name of ['fill','stroke','drawImage']){
+    const original=CanvasRenderingContext2D.prototype[name];
+    CanvasRenderingContext2D.prototype[name]=function(...args){
+      if(this.canvas===activeSprite.canvas){
+        const paths=currentPiece()&&highResolutionPaths(currentPiece().index);
+        captureHistory(name,{context:contextDetails(this),fillRule:name==='fill'?args[1]:null,
+          originalFill:name==='fill'?args[0]===paths?.path:null,
+          originalStroke:name==='stroke'?args[0]===paths?.strokePath:null,
+          bitmap:name==='drawImage'?{type:args[0]?.constructor?.name,width:args[0]?.width,height:args[0]?.height,coordinates:args.slice(1)}:null});
+      }
+      return original.apply(this,args);
+    };
+  }
+  window.__captureNativeEvidence=({sprite,paths,canvas,actual,expected,difference,source})=>{
+    const width=canvas.width,height=canvas.height;
+    const commands=state.renderGeometry?.getFullCommands(currentPiece().index);
+    const record={seed:state.seed,featureId:state.features[currentPiece().index].properties._puzzleId,
+      zoom:state.view.k/state.baseViewK,scale:sprite.scale,dpr:sprite.dpr,source,width,height,
+      context:contextDetails(sprite.canvas.getContext('2d')),referenceContext:contextDetails(canvas.getContext('2d')),
+      difference,history:window.__nativeEvidenceHistory.slice(),
+      commands:commands?{fill:Array.from(commands.fill),stroke:Array.from(commands.stroke)}:null,
+      actualPng:sprite.canvas.toDataURL('image/png'),referencePng:canvas.toDataURL('image/png'),diagonalProbes:[]};
+    const roundoff=rasterRoundoffTracker(actual,expected);
+    const pointSamples=pixels=>[{x:18,y:102},{x:21,y:184}].filter(p=>p.x<width&&p.y<height).map(p=>({...p,rgba:Array.from(pixels.slice((p.y*width+p.x)*4,(p.y*width+p.x)*4+4))}));
+    record.actualSamples=pointSamples(actual);record.referenceSamples=pointSamples(expected);
+    for(const radius of [1e-7,1e-6,1e-5,1e-4])for(const sx of [-1,1])for(const sy of [-1,1]){
+      const offset=radius/Math.SQRT2,dx=sx*offset,dy=sy*offset;
+      const probe=document.createElement('canvas');probe.width=width;probe.height=height;
+      const context=probe.getContext('2d',source==='worker'?{alpha:true,willReadFrequently:true}:{alpha:true});
+      context.setTransform(sprite.dpr*sprite.scale,0,0,sprite.dpr*sprite.scale,-sprite.left*sprite.dpr+dx,-sprite.top*sprite.dpr+dy);
+      context.fillStyle='#dc3f45';context.strokeStyle='#8e2028';context.lineWidth=1.2/sprite.scale;
+      context.lineJoin=context.lineCap='round';
+      context.fill(paths.path,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(paths.strokePath);
+      const pixels=context.getImageData(0,0,width,height).data;
+      const explained=roundoff.addCandidate(pixels,dx,dy);
+      record.diagonalProbes.push({radius,dx,dy,actualRadius:Math.hypot(dx,dy),
+        difference:rasterPixelDifference(actual,pixels,width),samples:pointSamples(pixels),
+        explainedPixels:explained.map(i=>({x:i/4%width,y:Math.floor(i/4/width)}))});
+      probe.width=probe.height=0;
+    }
+    record.diagonalSummary=roundoff.summary();
+    record.sourceAfterCapture=rasterPixelDifference(sprite.canvas.getContext('2d').getImageData(0,0,width,height).data,actual,width);
+    window.__nativeEvidenceRecords.push(record);
+  };
+"""
+
+async def main(args):
+    output=Path(args.output);output.mkdir(parents=True,exist_ok=True)
+    marker='    const difference=rasterPixelDifference(actual,expected,canvas.width);'
+    assert render.RENDER_HOOK.count(marker)==1
+    capture='\n    window.__captureNativeEvidence({sprite,paths,canvas,actual,expected,difference,source});'
+    catalog.READ_ONLY_HOOK += render.RENDER_HOOK.replace(marker,marker+capture,1)+CAPTURE_HOOK
+    records=[]
+    with catalog.PuzzleServer(Path(args.fixtures) if args.fixtures else output) as server:
+        async with async_playwright() as playwright:
+            browser=await playwright.webkit.launch(**({'executable_path':args.executable} if args.executable else {}))
+            new_context=browser.new_context
+            async def context_with_seed(*cargs,**kwargs):
+                context=await new_context(*cargs,**kwargs)
+                await context.add_init_script('Math.random=()=>'+repr((args.seed+0.25)/0xffffffff)+';')
+                original_close=context.close
+                async def save_before_close(*close_args,**close_kwargs):
+                    for page in context.pages:
+                        if page.is_closed():continue
+                        try:
+                            values=await page.evaluate('window.__nativeEvidenceRecords||[]')
+                            for index,item in enumerate(values):
+                                for name in ['actual','reference']:
+                                    data=item.pop(name+'Png')
+                                    path=output/f'capture-{index}-{name}.png'
+                                    path.write_bytes(base64.b64decode(data.split(',',1)[1]))
+                                    item[name+'Png']={'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+                                commands=item.pop('commands')
+                                path=output/f'capture-{index}-commands.json'
+                                path.write_text(json.dumps(commands,separators=(',',':')),encoding='utf-8')
+                                item['commands']={'file':path.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+                                records.append(item)
+                            await page.screenshot(path=str(output/'last-page.png'),full_page=False)
+                        except Exception as error:
+                            records.append({'captureFailure':repr(error)})
+                    (output/'captures.json').write_text(json.dumps(records,ensure_ascii=False,indent=2),encoding='utf-8')
+                    await original_close(*close_args,**close_kwargs)
+                context.close=save_before_close
+                return context
+            browser.new_context=context_with_seed
+            try:
+                result=await render.run_dpr_case(browser,'webkit',1,server,output)
+                result['environment']={'system':platform.platform(),'browserVersion':browser.version,'port':server.httpd.server_port,'executable':args.executable,
+                    'base':server.base,'seed':args.seed,'physicalDevice':False,
+                    'browserPath':'Playwright WebKit; Browser skill is absent; exact engine required for CI diagnosis'}
+                result['sourceHashes']={name:hashlib.sha256((ROOT/'site/assets/js'/name).read_bytes()).hexdigest()
+                    for name in ['puzzle-engine.js','puzzle-render-geometry.js','puzzle-raster-worker.js']}
+                result['evidenceOnly']=True
+                (output/'report.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+                print(json.dumps({'status':result['status'],'captures':len(records),'error':result.get('error','')[:300]},ensure_ascii=False),flush=True)
+            finally:await browser.close()
+    if result['status']!='passed':raise SystemExit(1)
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--output',required=True)
+    parser.add_argument('--seed',type=int,default=1655163107)
+    parser.add_argument('--executable')
+    parser.add_argument('--fixtures')
+    asyncio.run(main(parser.parse_args()))
