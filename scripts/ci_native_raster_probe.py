@@ -23,6 +23,7 @@ CAPTURE_HOOK = r"""
   window.__nativeEvidenceHistory=[];
   window.__nativeEvidenceRecords=[];
   const nativeReplayOps=[],nativePhases=[];
+  const nativeProbePhase=window.__nativeProbePhase||'both';
   let nativePendingPhase=null;
   const savePixels=context=>({width:context.canvas.width,height:context.canvas.height,
     pixels:context.getImageData(0,0,context.canvas.width,context.canvas.height).data,context:contextDetails(context)});
@@ -66,18 +67,26 @@ CAPTURE_HOOK = r"""
           originalStroke:name==='stroke'?args[0]===paths?.strokePath:null,
           bitmap:name==='drawImage'?{type:args[0]?.constructor?.name,width:args[0]?.width,height:args[0]?.height,coordinates:args.slice(1)}:null});
         nativeReplayOps.push({kind:name,args:args.slice(),context:contextDetails(this)});
-        if(name==='stroke'&&!currentPiece()?.inTray&&state.features[state.current]?.properties._puzzleId==='151223'
+        if(nativeProbePhase!=='none'&&name==='stroke'&&!currentPiece()?.inTray&&state.features[state.current]?.properties._puzzleId==='151223'
             &&state.view.k>2&&state.view.k<3&&nativePhases.length<4){
-          immediate={beforeStroke:savePixels(this),afterStroke:null,afterConsumption:null};
+          immediate={width:this.canvas.width,height:this.canvas.height,
+            beforeStroke:['before','both'].includes(nativeProbePhase)?savePixels(this):null,afterStroke:null,afterConsumption:null};
         }
       }
       const result=original.apply(this,args);
-      if(immediate){immediate.afterStroke=savePixels(this);nativePhases.push(immediate);nativePendingPhase=immediate;}
+      if(immediate){
+        if(['after','both'].includes(nativeProbePhase))immediate.afterStroke=savePixels(this);
+        nativePhases.push(immediate);if(nativeProbePhase==='both')nativePendingPhase=immediate;
+      }
       return result;
     };
   }
   const nativeConsumer=ctx.drawImage;
-  ctx.drawImage=function(source,...args){const result=nativeConsumer.call(this,source,...args);
+  ctx.drawImage=function(source,...args){
+    if(source===activeSprite.canvas){const consumer={kind:'consume',args:args.slice(),context:contextDetails(this),
+      width:this.canvas.width,height:this.canvas.height};nativeReplayOps.push(consumer);
+      captureHistory('consume',{consumer:{...consumer}});}
+    const result=nativeConsumer.call(this,source,...args);
     if(source===activeSprite.canvas&&nativePendingPhase){
       nativePendingPhase.afterConsumption=savePixels(source.getContext('2d'));nativePendingPhase=null;
     }return result;};
@@ -90,28 +99,36 @@ CAPTURE_HOOK = r"""
       difference,history:window.__nativeEvidenceHistory.slice(),
       commands:commands?{fill:Array.from(commands.fill),stroke:Array.from(commands.stroke)}:null,
       actualPng:sprite.canvas.toDataURL('image/png'),referencePng:canvas.toDataURL('image/png'),diagonalProbes:[],
-      readbackIntervention:'Diagnostic readbacks before and immediately after final stroke can change native batching; baseline v1 retained separately.',
+      phaseMode:nativeProbePhase,
+      readbackIntervention:'Diagnostic stroke readbacks can change native batching; none/before/after modes isolate them. Baseline v1 retained separately.',
+      consumerReferenceLimit:'Replicates target size, transform and paint state/arguments on an initially transparent destination, not prior background contents.',
       phaseImages:[],renderProbes:[]};
     const roundoff=rasterRoundoffTracker(actual,expected);
     const pointSamples=pixels=>[{x:18,y:102},{x:21,y:184}].filter(p=>p.x<width&&p.y<height).map(p=>({...p,rgba:Array.from(pixels.slice((p.y*width+p.x)*4,(p.y*width+p.x)*4+4))}));
     record.actualSamples=pointSamples(actual);record.referenceSamples=pointSamples(expected);
     for(const phase of nativePhases){
-      if(phase.afterStroke.width!==width||phase.afterStroke.height!==height)continue;
+      if(phase.width!==width||phase.height!==height)continue;
       for(const name of ['beforeStroke','afterStroke','afterConsumption']){
         const entry=phase[name];if(!entry)continue;
         record.phaseImages.push({phase:name,png:pixelsPng(entry),context:entry.context,samples:pointSamples(entry.pixels),
           versusAudit:rasterPixelDifference(entry.pixels,actual,width),
-          versusImmediate:rasterPixelDifference(entry.pixels,phase.afterStroke.pixels,width)});
+          versusImmediate:phase.afterStroke?rasterPixelDifference(entry.pixels,phase.afterStroke.pixels,width):null});
       }
     }
+    const materializeConsumer=(surface,op)=>{const destination=document.createElement('canvas');
+      destination.width=op.width;destination.height=op.height;const consumer=destination.getContext('2d');
+      restoreNativeContext(consumer,op.context);consumer.drawImage(surface,...op.args);
+      consumer.getImageData(0,0,op.width,op.height);destination.width=destination.height=0;};
+    const lastConsumer=nativeReplayOps.filter(op=>op.kind==='consume').at(-1);
     for(const kind of (sprite.scale>2&&sprite.scale<3&&record.featureId==='151223'
-      ?['fresh-final-original','fresh-final-clone','fresh-final-command-replay','fresh-exact-history']:[])){
+      ?['fresh-final-original','fresh-final-composited','fresh-final-clone','fresh-final-command-replay','fresh-exact-history']:[])){
       const surface=document.createElement('canvas');surface.width=width;surface.height=height;
       const context=surface.getContext('2d',source==='worker'?{alpha:true,willReadFrequently:true}:{alpha:true});
       try{
         if(kind==='fresh-exact-history'){
           for(const op of nativeReplayOps){
             if(op.kind==='resize'){surface.height=0;surface.width=op.width;surface.height=op.height;}
+            else if(op.kind==='consume'){materializeConsumer(surface,op);}
             else {restoreNativeContext(context,op.context);context[op.kind](...op.args);}
           }
         }else{
@@ -119,6 +136,7 @@ CAPTURE_HOOK = r"""
           const fill=kind==='fresh-final-clone'?new Path2D(paths.path):kind==='fresh-final-command-replay'?replayNativeCommands(commands.fill):paths.path;
           const stroke=kind==='fresh-final-clone'?new Path2D(paths.strokePath):kind==='fresh-final-command-replay'?replayNativeCommands(commands.stroke):paths.strokePath;
           context.fill(fill,state.mode==='russia-subjects'?'nonzero':'evenodd');context.stroke(stroke);
+          if(kind==='fresh-final-composited')materializeConsumer(surface,lastConsumer);
         }
         const pixels=context.getImageData(0,0,width,height).data;
         record.renderProbes.push({kind,png:surface.toDataURL('image/png'),samples:pointSamples(pixels),context:contextDetails(context),
@@ -161,6 +179,7 @@ async def main(args):
             async def context_with_seed(*cargs,**kwargs):
                 context=await new_context(*cargs,**kwargs)
                 await context.add_init_script('Math.random=()=>'+repr((args.seed+0.25)/0xffffffff)+';')
+                await context.add_init_script('window.__nativeProbePhase='+json.dumps(args.phase)+';')
                 original_close=context.close
                 async def save_before_close(*close_args,**close_kwargs):
                     for page in context.pages:
@@ -201,6 +220,7 @@ async def main(args):
                 result['sourceHashes']={name:hashlib.sha256((ROOT/'site/assets/js'/name).read_bytes()).hexdigest()
                     for name in ['puzzle-engine.js','puzzle-render-geometry.js','puzzle-raster-worker.js']}
                 result['evidenceOnly']=True
+                result['phaseMode']=args.phase
                 (output/'report.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
                 print(json.dumps({'status':result['status'],'captures':len(records),'error':result.get('error','')[:300]},ensure_ascii=False),flush=True)
             finally:await browser.close()
@@ -212,4 +232,5 @@ if __name__=='__main__':
     parser.add_argument('--seed',type=int,default=1655163107)
     parser.add_argument('--executable')
     parser.add_argument('--fixtures')
+    parser.add_argument('--phase',choices=['none','before','after','both'],default='both')
     asyncio.run(main(parser.parse_args()))
