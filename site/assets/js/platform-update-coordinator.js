@@ -1,5 +1,6 @@
 import {updateSnapshotStore} from './platform-update-state.js';
 import * as releaseAPI from './release-bootstrap.js';
+import {hasFailedRelease,recordFailedRelease} from './platform-update-failures.js';
 
 export const UPDATE_PENDING_KEY='rudn.update.pending.v1';
 const uid=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -15,7 +16,7 @@ function compatibleContracts(current,target,list){
 // A coordinator is scoped to one document/tab. Accepted work stays in the normal
 // draft/outbox stores; this envelope contains only local recovery references.
 export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnostics,module='platform',getOwner=()=>'',getRoute=()=>globalThis.location?.hash||'',restoreRoute,release=releaseAPI,store=updateSnapshotStore(),storage=safeStorage('sessionStorage'),persistentStorage=safeStorage('localStorage'),window:win=globalThis.window,document:doc=globalThis.document,now=Date.now,autoStart=true}={}){
-  let disposed=false,running=null,restoring=null,revision=0,blocked=null,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
+  let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
   const context=()=>release.getReleaseContext?.();
   const moduleName=()=>typeof module==='function'?module():module;
   const record=(event,fields)=>{try{diagnostics?.record?.(event,fields)}catch{}};
@@ -52,6 +53,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       const target=await release.checkRelease({signal:controller.signal});
       targetBuild=target.buildId;
       if(target.buildId===current.buildId)return {status:'current'};
+      if(hasFailedRelease(target.buildId,{storage:persistentStorage}))return {status:'defer',code:'failed-release'};
       if(blocked?.build===target.buildId&&blocked.revision===revision)return {status:'defer',code:blocked.code};
       const owner=getOwner(),route=getRoute();
       list=adapters();
@@ -99,18 +101,27 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     if(running)return running;
     running=runCheck(reason).finally(()=>{running=null});return running;
   }
-  async function rollback(marker,envelope,code){
+  function rollback(marker,envelope,code){
+    if(rollbackTask)return marker.token===rollbackToken?rollbackTask:Promise.resolve({status:'defer',code:'context-changed'});
+    rollbackToken=marker.token;
+    rollbackTask=runRollback(marker,envelope,code).finally(()=>{rollbackTask=null;rollbackToken=null});return rollbackTask;
+  }
+  async function runRollback(marker,envelope,code){
     if(disposed||marker.owner!==getOwner())return {status:'defer',code:'context-changed'};
     const oldRoute=getRoute();
     record('update-state',{stage:'restore',code,success:false});
     const previous=envelope?.previous||marker.previous;
     if(marker.phase!=='rollback'&&previous?.buildId&&previous.buildId!==context()?.buildId){
+      const controller=new AbortController();rollbackController=controller;let timeout;
       try{
-        const ready=await release.prepareRelease(previous,{module:moduleName()});if(disposed||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};if(!ready?.ready)throw fail('update/rollback-unavailable');
-        writePending({...marker,phase:'rollback',targetBuild:previous.buildId,rollbackAttempted:true});
+        recordFailedRelease({buildId:marker.targetBuild,sourceBuild:marker.sourceBuild,code:'restore-failed'},{storage:persistentStorage});
+        const deadline=new Promise((_,reject)=>{controller.signal.addEventListener('abort',()=>reject(fail('update/rollback-timeout')),{once:true});timeout=setTimeout(()=>controller.abort(),5000)});
+        const ready=await Promise.race([release.prepareRelease(previous,{module:moduleName(),signal:controller.signal}),deadline]);if(disposed||controller.signal.aborted||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};if(!ready?.ready)throw fail('update/rollback-unavailable');
+        writePending({...marker,phase:'rollback',targetBuild:previous.buildId,failedBuild:marker.targetBuild,rollbackAttempted:true});
         release.rollbackRelease(previous,{resumeToken:marker.token});switched=true;
         return {status:'rollback'};
-      }catch{record('update-state',{stage:'rollback',code:'unavailable',success:false})}
+      }catch(error){code=error?.code==='update/rollback-timeout'?'update/rollback-timeout':'update/rollback-unavailable';record('update-state',{stage:'rollback',code,success:false})}
+      finally{clearTimeout(timeout);if(rollbackController===controller)rollbackController=null}
     }
     if(disposed||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};
     writePending({...marker,phase:'blocked',code});show(true);
@@ -148,6 +159,9 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
         if(!stable(envelope.owner,envelope.route,list)||controller.signal.aborted)return {status:'defer',code:'context-changed'};
         if(result?.status!=='restored')return rollback(marker,envelope,result?.code||'update/restore-incomplete');
       }
+      if(marker.phase==='rollback'&&marker.failedBuild&&!recordFailedRelease({buildId:marker.failedBuild,sourceBuild:marker.sourceBuild,code:'restore-failed'},{storage:persistentStorage})){
+        writePending({...marker,phase:'blocked',code:'update/failure-fence-unavailable'});show(true);return {status:'blocked',code:'update/failure-fence-unavailable'};
+      }
       // Only a mounted and restored module confirms the new launch.
       record('update-state',{stage:interruptedSwitch?'interrupted-switch-restored':'restored',success:true});
       release.markReleaseRestored?.();
@@ -163,15 +177,21 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     revision++;blocked=null;if(disposed)return;
     clearTimeout(debounce);debounce=setTimeout(()=>{void (pending()?restorePending():check('state-change'))},800);
   }
-  const wake=event=>{if(['hashchange','rudn:identitychange'].includes(event?.type))restoration?.abort();if(doc?.visibilityState!=='hidden')notifyStateChanged()};
+  const wake=event=>{if(['hashchange','rudn:identitychange'].includes(event?.type)){contextEpoch++;restoration?.abort();rollbackController?.abort()}if(doc?.visibilityState!=='hidden')notifyStateChanged()};
   // Ordinary typing/scroll gestures are not a polling source. They only wake a
   // previously deferred update after its interaction/storage obstacle changed.
   const changed=()=>{if(blocked)notifyStateChanged()};
   const bootFailed=event=>{
+    if(disposed||switched)return;
     const marker=pending();if(!marker)return;event.preventDefault();
     if(marker.owner!==getOwner())return;
     if(marker.phase==='blocked'){show(true);return}
-    void store.get(marker.token).then(envelope=>rollback(marker,envelope,'update/boot-failed'));
+    const epoch=contextEpoch,route=getRoute();
+    void store.get(marker.token).then(envelope=>{
+      const current=pending();
+      if(disposed||switched||epoch!==contextEpoch||route!==getRoute()||current?.token!==marker.token||current.owner!==getOwner()||current.targetBuild!==marker.targetBuild||['blocked','rollback'].includes(current.phase))return;
+      return rollback(current,envelope,'update/boot-failed');
+    }).catch(()=>record('update-state',{stage:'restore',code:'update/recovery-unavailable',success:false}));
   };
   win?.addEventListener?.('rudn:release-boot-failed',bootFailed);
   const events=['online','pageshow','hashchange','rudn:identitychange','rudn:module-ready','rudn:update-state-changed'];
@@ -180,5 +200,5 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
   doc?.addEventListener?.('visibilitychange',wake);
   backend?.addEventListener?.('change',wake);
   if(autoStart){timer=setInterval(()=>{if(doc?.visibilityState!=='hidden')void check('interval')},300000);queueMicrotask(()=>void (pending()?restorePending():check('startup')))}
-  return {check,restorePending,notifyStateChanged,destroy(){disposed=true;if(!switched)transition?.abort();restoration?.abort();clearTimeout(debounce);clearInterval(timer);hide();win?.removeEventListener?.('rudn:release-boot-failed',bootFailed);for(const event of events)win?.removeEventListener?.(event,wake);for(const event of ['pointerup','compositionend','change','input'])doc?.removeEventListener?.(event,changed,true);doc?.removeEventListener?.('visibilitychange',wake);backend?.removeEventListener?.('change',wake);void cancel(adapters(),{discard:!switched})}};
+  return {check,restorePending,notifyStateChanged,destroy(){disposed=true;if(!switched)transition?.abort();restoration?.abort();rollbackController?.abort();clearTimeout(debounce);clearInterval(timer);hide();win?.removeEventListener?.('rudn:release-boot-failed',bootFailed);for(const event of events)win?.removeEventListener?.(event,wake);for(const event of ['pointerup','compositionend','change','input'])doc?.removeEventListener?.(event,changed,true);doc?.removeEventListener?.('visibilitychange',wake);backend?.removeEventListener?.('change',wake);void cancel(adapters(),{discard:!switched})}};
 }

@@ -3,16 +3,87 @@ import assert from 'node:assert/strict';
 import {bootstrapUpdateCoordinator,UPDATE_PENDING_KEY} from '../site/assets/js/platform-update-coordinator.js';
 const CONTRACTS={updateEnvelope:1,adapterSnapshot:1,durableStore:1,modules:{test:1}};
 function harness(overrides={}){
-  let owner='student:a',route='#activity/x',build='a',list=[],activated=0,rolledBack=0,prepared=0,restored=0;
+  const A='a'.repeat(32),B='b'.repeat(32);
+  let owner='student:a',route='#activity/x',build=A,list=[],activated=0,rolledBack=0,prepared=0,restored=0;
   const snapshots=new Map(),markers=new Map();
   const storage={getItem:k=>markers.get(k)||null,setItem:(k,v)=>markers.set(k,v),removeItem:k=>markers.delete(k)};
   const store={put:async value=>{snapshots.set(value.token,structuredClone(value));return {durable:true}},get:async key=>snapshots.get(key),remove:async key=>snapshots.delete(key)};
-  const release={getReleaseContext:()=>({buildId:build,contracts:CONTRACTS}),checkRelease:async()=>({buildId:'b',previous:{buildId:'a'}}),prepareRelease:async target=>{prepared++;return {ready:true,buildId:target.buildId,context:{contracts:CONTRACTS}}},activatePreparedRelease:()=>{activated++},rollbackRelease:()=>{rolledBack++},markReleaseRestored:()=>restored++};
-  const coordinator=bootstrapUpdateCoordinator({getAdapters:()=>list,getOwner:()=>owner,getRoute:()=>route,module:'test',release,store,storage,document:null,window:null,autoStart:false,...overrides});
+  const release={getReleaseContext:()=>({buildId:build,contracts:CONTRACTS}),checkRelease:async()=>({buildId:B,previous:{buildId:A}}),prepareRelease:async target=>{prepared++;return {ready:true,buildId:target.buildId,context:{contracts:CONTRACTS}}},activatePreparedRelease:()=>{activated++},rollbackRelease:()=>{rolledBack++},markReleaseRestored:()=>restored++};
+  const restart=()=>bootstrapUpdateCoordinator({getAdapters:()=>list,getOwner:()=>owner,getRoute:()=>route,module:'test',release,store,storage,persistentStorage:storage,document:null,window:null,autoStart:false,...overrides});
+  const coordinator=restart();
   const adapter={module:'test',prepareForUpdate:async()=>({status:'ready',resumeToken:'adapter-state'}),resumeAfterUpdate:async()=>({status:'restored'}),cancelPreparation:async()=>{}};
   list=[adapter];
-  return {coordinator,release,storage,store,snapshots,adapter,setOwner:x=>owner=x,setRoute:x=>route=x,setBuild:x=>build=x,setAdapters:x=>list=x,counts:()=>({activated,rolledBack,prepared,restored})};
+  return {coordinator,restart,release,storage,store,snapshots,adapter,setOwner:x=>owner=x,setRoute:x=>route=x,setBuild:x=>build=x.length===1?x.repeat(32):x,setAdapters:x=>list=x,counts:()=>({activated,rolledBack,prepared,restored})};
 }
+
+test('a failed target cannot loop after successful rollback in fresh document coordinators',async()=>{
+  const h=harness();await h.coordinator.check();h.coordinator.destroy();
+  h.setBuild('b');h.adapter.resumeAfterUpdate=async()=>({status:'blocked',code:'failed'});
+  const broken=h.restart();assert.equal((await broken.restorePending()).status,'rollback');broken.destroy();
+  h.setBuild('a');h.adapter.resumeAfterUpdate=async()=>({status:'restored'});
+  const previous=h.restart();assert.equal((await previous.restorePending()).status,'restored');previous.destroy();
+  assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),null);
+  const reopened=h.restart();assert.deepEqual(await reopened.check('interval'),{status:'defer',code:'failed-release'});
+  assert.equal(h.counts().activated,1);assert.equal(h.counts().rolledBack,1);
+  h.release.checkRelease=async()=>({buildId:'c'.repeat(32),previous:{buildId:'a'.repeat(32)}});
+  assert.equal((await reopened.check('online')).status,'switching');assert.equal(h.counts().activated,2);reopened.destroy();
+});
+
+test('rollback keeps recovery snapshots if its failure fence cannot be saved',async()=>{
+  const h=harness();await h.coordinator.check();h.coordinator.destroy();h.setBuild('b');
+  h.adapter.resumeAfterUpdate=async()=>({status:'blocked',code:'failed'});
+  const broken=h.restart();assert.equal((await broken.restorePending()).status,'rollback');broken.destroy();
+  h.setBuild('a');h.adapter.resumeAfterUpdate=async()=>({status:'restored'});
+  const restored=h.restart(),write=h.storage.setItem;
+  h.storage.setItem=(key,value)=>{if(key==='rudn.update.failed-releases.v1')throw Error('quota');write(key,value)};
+  assert.deepEqual(await restored.restorePending(),{status:'blocked',code:'update/failure-fence-unavailable'});
+  assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'blocked');assert.equal(h.snapshots.size,1);restored.destroy();
+});
+
+test('a hung rollback fetch reaches bounded recovery without losing snapshots',async()=>{
+  const h=harness();await h.coordinator.check();h.setBuild('b');let signal;
+  h.adapter.resumeAfterUpdate=async()=>({status:'blocked',code:'failed'});
+  h.release.prepareRelease=(_target,options)=>{signal=options.signal;return new Promise(()=>{})};
+  const start=Date.now();assert.deepEqual(await h.coordinator.restorePending(),{status:'blocked',code:'update/rollback-timeout'});
+  assert.ok(Date.now()-start<6500);assert.equal(signal.aborted,true);assert.equal(h.snapshots.size,1);
+  assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'blocked');assert.equal(h.counts().rolledBack,0);h.coordinator.destroy();
+});
+
+test('boot failure and adapter failure share one pending fallback and one navigation',async()=>{
+  const win=new EventTarget(),h=harness({window:win});await h.coordinator.check();h.coordinator.destroy();h.setBuild('b');const broken=h.restart();
+  h.adapter.resumeAfterUpdate=async()=>({status:'blocked',code:'failed'});let resolve,calls=0;
+  h.release.prepareRelease=()=>{calls++;return new Promise(done=>resolve=done)};
+  const restoring=broken.restorePending();await new Promise(done=>setImmediate(done));
+  const boot=new Event('rudn:release-boot-failed',{cancelable:true});win.dispatchEvent(boot);await new Promise(done=>setImmediate(done));
+  assert.equal(boot.defaultPrevented,true);assert.equal(calls,1);resolve({ready:true});
+  assert.equal((await restoring).status,'rollback');await new Promise(done=>setImmediate(done));assert.equal(h.counts().rolledBack,1);
+  const late=new Event('rudn:release-boot-failed',{cancelable:true});win.dispatchEvent(late);await new Promise(done=>setImmediate(done));
+  assert.equal(late.defaultPrevented,false);assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'rollback');assert.equal(h.counts().rolledBack,1);broken.destroy();
+});
+
+for(const outcome of ['rollback','restored'])test('late boot read cannot reopen '+outcome+' recovery',async()=>{
+  const win=new EventTarget(),h=harness({window:win});await h.coordinator.check();h.coordinator.destroy();h.setBuild('b');const current=h.restart();
+  let finishAdapter,finishBootRead,reads=0;const get=h.store.get;
+  h.store.get=async key=>{if(++reads===2)await new Promise(resolve=>finishBootRead=resolve);return get(key)};
+  h.adapter.resumeAfterUpdate=()=>new Promise(resolve=>finishAdapter=resolve);
+  const restoring=current.restorePending();await new Promise(resolve=>setImmediate(resolve));
+  win.dispatchEvent(new Event('rudn:release-boot-failed',{cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(typeof finishBootRead,'function');finishAdapter(outcome==='rollback'?{status:'blocked',code:'failed'}:{status:'restored'});
+  assert.equal((await restoring).status,outcome);await new Promise(resolve=>setImmediate(resolve));
+  const before=h.counts(),marker=h.storage.getItem(UPDATE_PENDING_KEY);
+  finishBootRead();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(h.counts(),before);assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),marker);current.destroy();
+});
+
+for(const change of ['route','identity'])test('late boot read stays cancelled after '+change+' change',async()=>{
+  const win=new EventTarget(),h=harness({window:win});await h.coordinator.check();h.coordinator.destroy();h.setBuild('b');const current=h.restart();
+  let finishRead;const get=h.store.get;h.store.get=async key=>{await new Promise(resolve=>finishRead=resolve);return get(key)};
+  win.dispatchEvent(new Event('rudn:release-boot-failed',{cancelable:true}));await new Promise(resolve=>setImmediate(resolve));
+  if(change==='route'){h.setRoute('#dashboard');win.dispatchEvent(new Event('hashchange'))}
+  else{h.setOwner('student:b');win.dispatchEvent(new Event('rudn:identitychange'));h.setOwner('student:a');win.dispatchEvent(new Event('rudn:identitychange'))}
+  const before=h.counts(),marker=h.storage.getItem(UPDATE_PENDING_KEY);finishRead();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+  assert.deepEqual(h.counts(),before);assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),marker);current.destroy();
+});
 test('one verified switch, durable envelope, same owner/route and restored module acknowledgment',async()=>{
   const h=harness();assert.equal((await h.coordinator.check()).status,'switching');assert.equal(h.counts().activated,1);
   const marker=JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY));assert.equal(h.snapshots.get(marker.token).owner,'student:a');

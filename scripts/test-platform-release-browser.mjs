@@ -11,7 +11,7 @@ await fs.mkdir(out,{recursive:true});const source=path.join(out,'source'),baseli
 async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);}
 for(const root of [source,baseline]){
   await write(root,'index.html','<!doctype html><html><head><title>Release protocol fixture</title></head><body><main id="app">Loading</main><button id="update">Update</button><button id="lazy">Lazy</button><output id="lazy-result"></output><script type="module" src="assets/js/main.js"></script></body></html>');
-  for(const name of ['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','data/platform-contracts.json'])await write(root,name,await fs.readFile(path.join(repo,'site',name)));
+  for(const name of ['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','assets/js/platform-update-failures.js','data/platform-contracts.json'])await write(root,name,await fs.readFile(path.join(repo,'site',name)));
   await write(root,'data/course.json','{"release":"A"}');await write(root,'data/lazy.json','{"lazy":"A"}');
 }
 const main=version=>`import {getReleaseContext,releaseFetch} from './release-resources.js';import {checkRelease,prepareRelease,activatePreparedRelease} from './release-bootstrap.js';const data=await (await releaseFetch('../../data/course.json',{},import.meta.url)).json();document.querySelector('#app').textContent='${version} '+data.release+' '+(sessionStorage.getItem('fixture-draft')||'none');document.querySelector('#app').dataset.build=getReleaseContext().buildId;document.querySelector('#update').onclick=async()=>{sessionStorage.setItem('fixture-draft','question-7');const target=await checkRelease();await prepareRelease(target);activatePreparedRelease(target,{resumeToken:'fixture-token'});};document.querySelector('#lazy').onclick=async()=>document.querySelector('#lazy-result').textContent=(await(await releaseFetch('../../data/lazy.json',{},import.meta.url)).json()).lazy;`;
@@ -44,8 +44,10 @@ const results=[];
 // Keep the synthetic localhost fixture independent of the host's proxy settings.
 const launch=engine=>playwright[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});
 try{for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(','))for(const sw of ['allow','block']){
+  console.log(JSON.stringify({engine,phase:'update',serviceWorkers:sw}));
   live=a.out;const browser=await launch(engine),context=await browser.newContext({serviceWorkers:sw,viewport:{width:390,height:844}});if(sw==='block')await context.addInitScript(()=>Object.defineProperty(window,'caches',{get(){throw new DOMException('Synthetic cache unavailable','SecurityError');}}));const page=await context.newPage(),other=await context.newPage(),standalonePage=await context.newPage(),errors=[];
-  page.on('pageerror',error=>errors.push(error.message));other.on('pageerror',error=>errors.push(error.message));
+  await context.addInitScript(()=>{window.fixtureClicks=[];addEventListener('click',event=>fixtureClicks.push({id:event.target?.id,at:performance.now()}),true);});
+  page.on('pageerror',error=>errors.push(error.message));other.on('pageerror',error=>errors.push(error.message));standalonePage.on('pageerror',error=>errors.push(error.message));
   try{
     await page.goto(url);await page.locator('#app').filter({hasText:'A A none'}).waitFor();await other.goto(url);await other.locator('#app').filter({hasText:'A A none'}).waitFor();await standalonePage.goto(origin+`/RUDN/_releases/${a.buildId}/standalone.html#question-3`);await standalonePage.locator('#app').filter({hasText:'A A none'}).waitFor();await context.addCookies([{name:'fixture-login',value:'preserved',url:origin}]);
     if(sw==='allow')await page.waitForFunction(()=>navigator.serviceWorker.controller!==null);
@@ -54,9 +56,10 @@ try{for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(
     await standalonePage.locator('#update').click();await standalonePage.locator('#app').filter({hasText:'B B question-7'}).waitFor();assert.equal(new URL(standalonePage.url()).pathname,`/RUDN/_releases/${b.buildId}/standalone.html`);assert.equal(new URL(standalonePage.url()).hash,'#question-3');
     if(sw==='allow'){await page.waitForFunction(()=>navigator.serviceWorker.controller!==null);networkDown=true;await page.reload();await page.locator('#app').filter({hasText:'B B question-7'}).waitFor();networkDown=false;}
     await page.screenshot({path:path.join(out,`${engine}-${sw}.png`)});assert.deepEqual(errors,[]);results.push({engine,serviceWorkers:sw,status:'pass',buildId:b.buildId,oldTabStable:true,draftRestored:true,cookiePreserved:true,offline:sw==='allow'?'pass':'not-applicable'});
-  }finally{networkDown=false;await browser.close();}
+  }catch(error){const pages=[];for(const [name,tab] of [['main',page],['other',other],['standalone',standalonePage]]){pages.push({name,...await tab.evaluate(()=>({href:location.href,text:document.getElementById('app')?.textContent,clicks:window.fixtureClicks,worker:!!navigator.serviceWorker?.controller})).catch(()=>({unavailable:true}))});await tab.screenshot({path:path.join(out,`${engine}-${sw}-${name}-failure.png`)}).catch(()=>{});}await fs.writeFile(path.join(out,'failure.json'),JSON.stringify({engine,serviceWorkers:sw,error:error.message,errors,pages,requests},null,2)+'\n');throw error;}finally{networkDown=false;await browser.close();}
 }
 for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')){
+  console.log(JSON.stringify({engine,phase:'cold-entry'}));
   live=a.out;const browser=await launch(engine),context=await browser.newContext({serviceWorkers:'block'}),old=await context.newPage(),errors=[];
   await context.addInitScript(()=>Object.defineProperty(window,'caches',{get(){throw new DOMException('Synthetic cache unavailable','SecurityError');}}));
   try{
@@ -64,6 +67,7 @@ for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')
     await old.locator('#lazy').click();await old.locator('#lazy-result').filter({hasText:'A'}).waitFor();assert.equal(old.url(),oldURL);
     await old.evaluate(()=>{localStorage.setItem('fixture-persistent-draft','unchanged');});
     for(const scenario of ['obsolete-exact-entry','obsolete-exact-directory','canonical-standalone','canonical-standalone-directory','stale-root-dead-bootstrap','stale-root-cached-bootstrap']){
+      console.log(JSON.stringify({engine,scenario}));
       const page=await context.newPage(),navigations=[];page.on('pageerror',error=>errors.push({scenario,message:error.message}));page.on('request',request=>{if(request.isNavigationRequest()&&request.frame()===page.mainFrame())navigations.push(request.url());});
       staleRoot=scenario.startsWith('stale-root');cachedBootstrap=scenario==='stale-root-cached-bootstrap';
       const directory=scenario.endsWith('-directory'),logical=directory?'apps/demo/index.html':scenario==='canonical-standalone'?'standalone.html':'index.html';
@@ -81,7 +85,7 @@ for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')
 for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')){
   live=broken.out;const token='process-recovery-token',pending={token,owner:'synthetic-owner',sourceBuild:a.buildId,targetBuild:broken.buildId,phase:'switching',attempts:1,startedAt:Date.now(),route:'#activity/fixture',previous:a.target};
   const browser=await launch(engine),context=await browser.newContext({serviceWorkers:'block',storageState:{cookies:[],origins:[{origin,localStorage:[{name:'rudn.update.pending.v1:'+token,value:JSON.stringify(pending)}]}]}}),page=await context.newPage(),navigations=[];page.on('framenavigated',frame=>{if(frame===page.mainFrame())navigations.push(frame.url());});
-  try{await page.goto(origin+broken.target.entryURL+'?rudnResume='+token+'#activity/fixture');await page.locator('#app').filter({hasText:'A A none'}).waitFor();assert.equal(new URL(page.url()).pathname,`/RUDN/_releases/${a.buildId}/index.html`);assert.equal(navigations.filter(value=>value.includes(broken.buildId)).length,1);assert.equal(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).phase,'rudn.update.pending.v1:'+token),'rollback');results.push({engine,scenario:'process-session-lost-import-failure',status:'pass',rollbackCount:1,previousBuild:a.buildId});}finally{await browser.close();}
+  try{await page.goto(origin+broken.target.entryURL+'?rudnResume='+token+'#activity/fixture');await page.locator('#app').filter({hasText:'A A none'}).waitFor();assert.equal(new URL(page.url()).pathname,`/RUDN/_releases/${a.buildId}/index.html`);assert.equal(navigations.filter(value=>value.includes(broken.buildId)).length,1);const marker=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),'rudn.update.pending.v1:'+token);assert.equal(marker.phase,'rollback');assert.equal(marker.targetBuild,a.buildId);assert.equal(marker.failedBuild,broken.buildId);results.push({engine,scenario:'process-session-lost-import-failure',status:'pass',rollbackCount:1,previousBuild:a.buildId});}finally{await browser.close();}
 }
-}finally{await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'report.json'),JSON.stringify({classification:'automated synthetic protocol fixture',browserPlugin:'not available',results},null,2)+'\n');}
+}finally{await new Promise(r=>{server.close(r);server.closeAllConnections();});await fs.writeFile(path.join(out,'report.json'),JSON.stringify({classification:'automated synthetic protocol fixture',browserPlugin:'not available',results},null,2)+'\n');}
 console.log(JSON.stringify({status:'pass',results,out},null,2));

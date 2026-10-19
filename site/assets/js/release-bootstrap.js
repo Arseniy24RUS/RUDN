@@ -1,4 +1,5 @@
 import {getReleaseContext,setReleaseContext,resourceURL} from './release-resources.js';
+import {recordFailedRelease} from './platform-update-failures.js';
 export {getReleaseContext,resourceURL};
 const SCHEMA=1, HEX=/^[a-f0-9]{64}$/;
 const RESUME_KEY='rudn.release.transition.v1';
@@ -8,17 +9,34 @@ let bootTimer=null,bootSettled=false;
 function stopBootWatchdog(){bootSettled=true;clearTimeout(bootTimer);bootTimer=null;}
 export function markReleaseRestored(){stopBootWatchdog();}
 function pendingTransition(){try{const session=JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')||'null');if(session)return session;const token=new URL(location.href).searchParams.get('rudnResume');if(token&&/^[a-zA-Z0-9_-]{1,128}$/.test(token))return JSON.parse(localStorage.getItem('rudn.update.pending.v1:'+token)||'null');}catch{}return null;}
+function writeTransition(pending){const json=JSON.stringify(pending);sessionStorage.setItem('rudn.update.pending.v1',json);if(pending.token)localStorage.setItem('rudn.update.pending.v1:'+pending.token,json);}
+function showBootFailure(){
+  const language=document.documentElement.lang.toLowerCase(),copy=language.startsWith('zh')?'无法加载应用。已保存的作业仍保留在此设备上。':language.startsWith('en')?'The application could not load. Your saved work remains on this device.':'Не удалось загрузить приложение. Сохранённая работа остаётся на устройстве.';
+  const root=document.getElementById('app')||document.body,status=document.createElement('div');status.setAttribute('role','status');status.textContent=copy;root.setAttribute('aria-busy','false');root.replaceChildren(status);
+}
 async function bootFailed(code){
   if(bootSettled)return;stopBootWatchdog();
   const event=new CustomEvent('rudn:release-boot-failed',{cancelable:true,detail:{code}});
   if(globalThis.dispatchEvent?.(event)===false)return;
   const pending=pendingTransition();
-  if(!pending||pending.targetBuild!==document.documentElement.dataset.releaseBuild||pending.phase==='rollback'||!pending.previous)return;
+  if(!pending||pending.targetBuild!==document.documentElement.dataset.releaseBuild)return;
+  if(pending.phase==='blocked'){showBootFailure();return;}
+  if(pending.phase==='rollback'||pending.rollbackAttempted){Object.assign(pending,{phase:'blocked',bootFailure:code,code:'update/rollback-unavailable'});try{writeTransition(pending);}catch{}showBootFailure();return;}
+  if(!pending.previous){showBootFailure();return;}
+  const failedBuild=pending.targetBuild;
+  recordFailedRelease({buildId:failedBuild,sourceBuild:pending.sourceBuild,code:'boot-failed'});
+  // Persist the one attempted fallback before fetching. If it cannot finish,
+  // a manual reload must retain the saved work without starting another loop.
+  Object.assign(pending,{phase:'blocked',failedBuild,bootFailure:code,rollbackAttempted:true,code:'update/rollback-unavailable'});
+  const controller=new AbortController();let timeout;
   try{
-    validateTarget(pending.previous);pending.phase='rollback';pending.bootFailure=code;pending.rollbackAttempted=true;
-    sessionStorage.setItem('rudn.update.pending.v1',JSON.stringify(pending));if(pending.token)localStorage.setItem('rudn.update.pending.v1:'+pending.token,JSON.stringify(pending));
-    await prepareRelease(pending.previous);activatePreparedRelease(pending.previous,{resumeToken:pending.token});
-  }catch{mark('rollback-unavailable','runtime-import');}
+    writeTransition(pending);validateTarget(pending.previous);
+    const deadline=new Promise((_,reject)=>{timeout=setTimeout(()=>{controller.abort();reject(failure('release/rollback-timeout'));},5000);});
+    await Promise.race([prepareRelease(pending.previous,{signal:controller.signal}),deadline]);
+    // The returning coordinator must restore A, while retaining B as failed.
+    Object.assign(pending,{phase:'rollback',targetBuild:pending.previous.buildId});
+    writeTransition(pending);activatePreparedRelease(pending.previous,{resumeToken:pending.token});
+  }catch{Object.assign(pending,{phase:'blocked',targetBuild:failedBuild});try{writeTransition(pending);}catch{}mark('rollback-unavailable','runtime-import');showBootFailure();}finally{clearTimeout(timeout);controller.abort();}
 }
 const ownURL=new URL(import.meta.url);
 export const siteRoot=new URL(ownURL.pathname.includes('/_releases/')?ownURL.pathname.split('/_releases/')[0]+'/':'../../',ownURL).href;
@@ -110,7 +128,9 @@ export async function bootRelease(){
     await import(new URL('assets/js/main.js?v=1.3.10',siteRoot).href);return;
   }
   const pending=pendingTransition();
-  if(pending&&pending.targetBuild===expected&&pending.phase!=='rollback')bootTimer=setTimeout(()=>void bootFailed('restore-timeout'),45000);
+  // An entry that already hung cannot render its own recovery UI after reload.
+  if(pending?.targetBuild===expected&&pending.phase==='blocked'&&pending.bootFailure&&pending.rollbackAttempted){stopBootWatchdog();showBootFailure();return;}
+  if(pending&&pending.targetBuild===expected&&pending.phase!=='blocked')bootTimer=setTimeout(()=>void bootFailed('restore-timeout'),45000);
   globalThis.addEventListener?.('rudn:update-restored',markReleaseRestored,{once:true});
   globalThis.addEventListener?.('rudn:update-recovery-dismissed',stopBootWatchdog,{once:true});
   let target;
@@ -130,6 +150,6 @@ if(typeof document!=='undefined'&&[...document.querySelectorAll('script[data-pla
     mark(error?.code||'import-failed','runtime-import');
     void bootFailed(error?.code||'import-failed');
     if(!pendingTransition())void globalThis.__RUDN_RELEASE_RECOVERY__?.recover('runtime-unavailable');
-    const root=document.getElementById('app');if(root){root.setAttribute('aria-busy','false');root.innerHTML='<div role="status">Не удалось загрузить приложение. Сохранённая работа остаётся на устройстве.</div>';}
+    showBootFailure();
   });
 }

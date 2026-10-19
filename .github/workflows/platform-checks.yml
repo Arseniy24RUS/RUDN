@@ -35,7 +35,7 @@ jobs:
       - name: Verify identity, archives, checkpoints, rollback and immutable releases
         run: >-
           node --test tests/diagnostics-v2.test.mjs tests/diagnostics-cloud-policy.test.mjs
-          tests/platform-update-state.test.mjs tests/platform-update-coordinator.test.mjs
+          tests/platform-update-state.test.mjs tests/platform-update-coordinator.test.mjs tests/platform-update-failures.test.mjs
           tests/platform-diagnostics-pagination.test.mjs
           scripts/diagnostics-v2-service.test.mjs scripts/diagnostics-v2-cli-adapter.test.mjs scripts/test-platform-release.mjs
           scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs
@@ -97,6 +97,7 @@ jobs:
           export PLAYWRIGHT_PATH="$PLAYWRIGHT_MODULE_PATH"
           node scripts/diagnostics-v2-browser.mjs
           node scripts/test-platform-release-browser.mjs
+          QA_OUT="${{ runner.temp }}/boot-rollback-${{ matrix.browser }}" node scripts/test-platform-boot-rollback.mjs
           node scripts/platform-update-adapters-transport.mjs --browser '${{ matrix.browser }}' --output '${{ runner.temp }}/transport-${{ matrix.browser }}'
           trace_args=()
           if [ '${{ matrix.browser }}' = 'webkit' ]; then trace_args+=(--trace-runtime); fi
@@ -111,6 +112,7 @@ jobs:
           name: platform-${{ matrix.browser }}
           path: |
             ${{ runner.temp }}/release-${{ matrix.browser }}
+            ${{ runner.temp }}/boot-rollback-${{ matrix.browser }}
             ${{ runner.temp }}/diagnostics-${{ matrix.browser }}
             ${{ runner.temp }}/adapters-${{ matrix.browser }}
             ${{ runner.temp }}/transport-${{ matrix.browser }}
