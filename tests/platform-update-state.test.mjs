@@ -74,3 +74,42 @@ test('an asynchronous pause finishing after the deadline cannot freeze the old p
   const result=await s.adapter.prepareForUpdate({targetRelease:'b',deadlineAt:Date.now()+15});assert.equal(result.status,'defer');assert.equal(paused,false);
   finishPause();await new Promise(resolve=>setImmediate(resolve));assert.equal(paused,false);s.adapter.destroy();
 });
+
+test('restore telemetry forwards an active exception to the sanitizing SDK without snapshot fields',async()=>{
+  const errors=[],records=[],error=new TypeError('synthetic private payload must not become diagnostic fields');
+  const s=setup({diagnostics:{error:(...args)=>errors.push(args),record:(...args)=>records.push(args)},restore:async()=>{throw error}});
+  try{
+    const ready=await s.adapter.prepareForUpdate({targetRelease:'b'});
+    assert.deepEqual(await s.adapter.resumeAfterUpdate(ready),{status:'blocked',code:'restore-failed'});
+    assert.equal(errors.length,1);assert.equal(errors[0][0],error);
+    assert.deepEqual(errors[0][1],{operation:'update-restore',stage:'restore',code:'restore-failed'});
+    assert.equal(JSON.stringify(records).includes(error.message),false);
+    assert.ok(records.some(([event,fields])=>event==='update-state'&&fields.code==='restore-failed'));
+  }finally{s.adapter.destroy()}
+});
+
+for(const logger of ['absent','throwing','rejecting'])test('restore telemetry with '+logger+' SDK preserves the failure protocol',async()=>{
+  let calls=0;const diagnostics=logger==='absent'?undefined:{error:()=>{calls++;if(logger==='throwing')throw Error('synthetic telemetry failure');return Promise.reject(Error('synthetic telemetry failure'))}};
+  const s=setup({diagnostics,restore:async()=>{throw new TypeError('synthetic restore failure')}});
+  try{const ready=await s.adapter.prepareForUpdate({targetRelease:'b'});assert.deepEqual(await s.adapter.resumeAfterUpdate(ready),{status:'blocked',code:'restore-failed'});if(logger!=='absent')assert.equal(calls,1);await new Promise(resolve=>setImmediate(resolve));}
+  finally{s.adapter.destroy()}
+});
+
+test('restore telemetry does not report an expected AbortError as a runtime error',async()=>{
+  const errors=[];const s=setup({diagnostics:{error:(...args)=>errors.push(args)},restore:async()=>{throw new DOMException('Synthetic cancellation','AbortError')}});
+  try{const ready=await s.adapter.prepareForUpdate({targetRelease:'b'});assert.deepEqual(await s.adapter.resumeAfterUpdate(ready),{status:'blocked',code:'restore-failed'});assert.equal(errors.length,0);}
+  finally{s.adapter.destroy()}
+});
+
+for(const reason of ['request-abort','owner-change','destroy'])test('restore telemetry ignores late rejection after '+reason,async()=>{
+  let rejectRestore;const errors=[],controller=new AbortController();
+  const s=setup({diagnostics:{error:(...args)=>errors.push(args)},restore:()=>new Promise((_,reject)=>{rejectRestore=reject})});
+  try{
+    const ready=await s.adapter.prepareForUpdate({targetRelease:'b'});
+    const result=s.adapter.resumeAfterUpdate({...ready,signal:controller.signal});
+    await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof rejectRestore,'function');
+    if(reason==='request-abort')controller.abort();else if(reason==='owner-change')s.setIdentity({owner:'student:B',attemptId:'attempt-1'});else s.adapter.destroy();
+    rejectRestore(new TypeError('synthetic late failure'));
+    assert.deepEqual(await result,{status:'defer',code:'cancelled'});assert.equal(errors.length,0);
+  }finally{s.adapter.destroy()}
+});

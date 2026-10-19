@@ -150,7 +150,12 @@ export function createUpdateAdapter({module,root,signal,getIdentity,getRevision,
       const result=await restore({state:copy(value.state),checkpointRef:copy(value.checkpointRef),identity:copy(value.identity),revision:value.revision},{signal:controller.signal});
       if(!active())return {status:'defer',code:'cancelled'};
       const status=result?.status||'restored';record('update-result',{success:status==='restored',code:status==='restored'?'ok':result?.code||status});return {...result,status};
-    }catch{record('update-result',{success:false,code:'restore-failed'});return {status:active()?'blocked':'defer',code:active()?'restore-failed':'cancelled'}}
+    }catch(error){
+      // Expected cancellation is not a runtime fault. The SDK sanitizes the
+      // exception; telemetry must never change restoration or recovery.
+      if(active()&&error?.name!=='AbortError')try{void Promise.resolve(diagnostics?.error?.(error,{operation:'update-restore',stage:'restore',code:'restore-failed'})).catch(()=>{});}catch{}
+      record('update-result',{success:false,code:'restore-failed'});return {status:active()?'blocked':'defer',code:active()?'restore-failed':'cancelled'};
+    }
     finally{resumeSignal?.removeEventListener('abort',abort);if(restorationAbort===controller)restorationAbort=null}
   }
   return {module,prepareForUpdate,resumeAfterUpdate,cancelPreparation,commitPreparation(){if(ready)committed=true},
