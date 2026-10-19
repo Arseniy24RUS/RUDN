@@ -49,6 +49,38 @@ test('old profile queues keep their original student and never deliver through a
 
 test('direct and explicit errors survive ordinary flood; all-error overflow remains bounded',async()=>{const h=harness();h.service.record('storage-error',{code:'storage',docId:'first-error'});h.tick(1);h.service.record('operation',{severity:'error',code:'failed',docId:'explicit-error'});for(let i=0;i<350;i++){h.tick(1);h.service.record('route',{durationMs:i})}assert.equal(h.service.status().queued,256);await h.service.flush();assert.ok(h.packets()[0].events.some(e=>e.docId==='first-error'));assert.ok(h.packets()[0].events.some(e=>e.docId==='explicit-error'));assert.ok(h.packets()[0].dropped>0);for(let i=0;i<350;i++){h.tick(1);h.service.record('worker-error',{durationMs:i})}assert.ok(h.service.status().queued<=256);assert.ok(h.service.status().bytes<=262144);h.service.destroy()});
 
+test('reload preserves more than 32 offline owners within the shared budget without silent loss',()=>{
+ const h=harness();h.env.navigator.onLine=false;
+ for(let i=0;i<100;i++){h.setProfile({studentKey:String(100000000+i)});h.service.record('storage-error',{docId:'owner-'+i,code:'storage'});h.tick(1)}
+ const before=h.service.status();assert.equal(before.dropped,0);h.service.destroy();
+ const key=[...h.env.sessionStorage.map.keys()].find(k=>k.startsWith('rudn.diagnostics.queue.v2.'));
+ const saved=JSON.parse(h.env.sessionStorage.getItem(key));assert.ok(saved.buckets.length>32);
+ const errors=saved.buckets.flatMap(b=>b.queue.filter(e=>e.event==='storage-error').map(e=>[b.owner.studentKey,e.docId]));assert.equal(errors.length,100);
+ const service=createPlatformDiagnostics(h.settings);assert.equal(service.status().queued,before.queued+1);assert.equal(service.status().dropped,0);service.destroy();
+ const restored=JSON.parse(h.env.sessionStorage.getItem(key));assert.deepEqual(restored.buckets.flatMap(b=>b.queue.filter(e=>e.event==='storage-error').map(e=>[b.owner.studentKey,e.docId])),errors);
+});
+
+test('the full persisted envelope remains bounded after delayed device hints and pending metadata',async()=>{
+ const h=harness();h.service.destroy();let releaseHints;
+ h.env.navigator.userAgentData={getHighEntropyValues:()=>new Promise(resolve=>releaseHints=resolve)};
+ const service=createPlatformDiagnostics(h.settings),frame={file:'/assets/'+ 'x'.repeat(180)+'.js',line:1,column:1};
+ for(let i=0;i<150;i++){h.setProfile({studentKey:String(100000000+i)});service.record('runtime-error',{docId:'error-'+i,stack:Array(5).fill(frame)});h.tick(1)}
+ const key=[...h.env.sessionStorage.map.keys()].find(k=>k.startsWith('rudn.diagnostics.queue.v2.'));
+ const size=()=>Buffer.byteLength(h.env.sessionStorage.getItem(key));
+ assert.ok(service.status().bytes>262144-5000);assert.ok(service.status().dropped>0);
+ releaseHints({model:'X'.repeat(80),platformVersion:'20.0'});for(let i=0;i<8;i++)await Promise.resolve();
+ assert.ok(size()<=262144);assert.equal(size(),service.status().bytes);
+ const base=h.backend.diagnosticsRequest;h.backend.diagnosticsRequest=async(action,payload)=>{const result=await base(action,payload);if(action==='append')throw Error('lost ACK');return result};
+ await service.flush();assert.ok(size()<=262144);assert.equal(size(),service.status().bytes);assert.ok(JSON.parse(h.env.sessionStorage.getItem(key)).buckets.some(b=>b.session&&b.pending));
+ service.destroy();assert.ok(size()<=262144);
+});
+
+test('unavailable tab storage uses bounded memory without orphaning localStorage queue keys',()=>{
+ const h=harness();h.service.destroy();h.env.sessionStorage=null;
+ for(let run=0;run<3;run++){const service=createPlatformDiagnostics(h.settings);for(let i=0;i<350;i++)service.record('route',{durationMs:i});assert.ok(service.status().queued<=256);assert.ok(service.status().bytes<=262144);service.destroy()}
+ assert.equal([...h.env.localStorage.map.keys()].some(key=>key.startsWith('rudn.diagnostics.queue.v2.')),false);
+});
+
 test('errors deduplicate across interleaved ordinary events for 30 seconds without mutating pending packets',async()=>{const h=harness(),base=h.backend.diagnosticsRequest;let lost=true;h.backend.diagnosticsRequest=async(action,payload)=>{const result=await base(action,payload);if(action==='append'&&lost){lost=false;throw Error('lost ACK')}return result};h.service.record('storage-error',{code:'storage'});h.tick(10000);h.service.record('route',{success:true});h.service.record('storage-error',{code:'storage'});await h.service.flush();const events=h.packets()[0].events.filter(e=>e.event==='storage-error');assert.equal(events.length,1);assert.equal(events[0].repeat,2);assert.equal(h.packets()[0].deduplicated,1);const first=structuredClone(h.packets()[0]);h.service.record('storage-error',{code:'storage'});h.tick(31000);h.service.record('route');h.service.record('storage-error',{code:'storage'});await h.service.flush();assert.deepEqual(h.packets().at(-1),first);h.tick(30000);await h.service.flush();assert.equal(h.packets().at(-1).events.filter(e=>e.event==='storage-error').length,2);h.service.destroy()});
 
 test('bound record/error/span carry exact release build version and normalized errorClass only',async()=>{const h=harness(),id='a'.repeat(32);await h.service.flush();h.tick(30000);h.env.__RUDN_RELEASE__={buildId:id};const scope=h.service.forModule('career');scope.record('module-ready',{moduleVersion:'invented-v9'});scope.error(new TypeError('private message'));scope.span('load')({success:true});await h.service.flush();const events=h.packets().at(-1).events.filter(e=>e.module==='career');assert.equal(events.length,3);assert.ok(events.every(e=>e.moduleVersion==='build:'+id));assert.equal(events[1].errorClass,'TypeError');assert.doesNotMatch(JSON.stringify(events),/private|invented/);assert.equal(diagnosticErrorClass({name:'QuotaExceededError'}),'DOMException');assert.equal(diagnosticErrorClass({name:'PrivateStudentError'}),undefined);for(const errorClass of ['Error','TypeError','RangeError','SyntaxError','ReferenceError','URIError','EvalError','AggregateError','DOMException','FirebaseError'])validateEvent(sanitizeDiagnosticEvent('runtime-error',{errorClass},{at:1}));assert.equal('errorClass' in sanitizeDiagnosticEvent('runtime-error',{errorClass:'private'}),false);h.env.__RUDN_RELEASE__={buildId:'b'.repeat(32)};assert.equal(scope.record('module-ready'),false);h.service.destroy()});

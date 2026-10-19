@@ -417,7 +417,67 @@ async def select_map(page, entry):
       const s=window.__puzzleRead();
       return s.ready&&!s.restoring&&s.writable;
     }""")
-    await page.locator(f'[data-puzzle-mode="{category}"]').first.click()
+    selector = f'[data-puzzle-mode="{category}"]'
+    button = page.locator(selector).first
+    # The page uses smooth scrolling, so settle the viewport before targeting
+    # the next control. Firefox CI once returned from click without a mode click
+    # in document capture; its precise cause was not locally reproduced.
+    # Finish the normal scroll first, then make exactly one native click. Do not
+    # retry the choice or bypass handlers: distinguish failed input delivery
+    # from a delivered choice that the application failed to apply.
+    # An "if needed" check can finish while an older smooth scroll is still
+    # moving; explicitly centre the target using the page's normal behaviour.
+    await button.evaluate("button=>button.scrollIntoView({block:'center',inline:'nearest'})")
+    await page.evaluate("""()=>{delete window.__qaPuzzleInputStability}""")
+    await page.wait_for_function("""selector=>{
+      const button=document.querySelector(selector),r=button?.getBoundingClientRect();
+      if(!r||!button.isConnected||button.disabled)return false;
+      const x=r.left+r.width/2,y=r.top+r.height/2;
+      const hit=document.elementFromPoint(x,y);
+      const clear=r.width>0&&r.height>0&&r.left>=0&&r.top>=0
+        &&r.right<=innerWidth&&r.bottom<=innerHeight&&hit&&button.contains(hit);
+      const sample=[r.left,r.top,r.width,r.height,scrollX,scrollY],now=performance.now();
+      const previous=window.__qaPuzzleInputStability;
+      if(!clear||!previous||sample.some((v,i)=>Math.abs(v-previous.sample[i])>.5)){
+        window.__qaPuzzleInputStability={sample,at:now};return false;
+      }
+      return now-previous.at>=120;
+    }""", arg=selector, timeout=20000)
+    await page.evaluate("""category=>{
+      const probe={category,delivered:false,events:[]};
+      probe.capture=event=>{
+        const target=event.target?.closest?.('[data-puzzle-mode]');
+        const button=document.querySelector(`[data-puzzle-mode="${category}"]`);
+        const r=button?.getBoundingClientRect();
+        if(probe.events.length<12)probe.events.push({type:event.type,trusted:event.isTrusted,
+          mode:target?.dataset.puzzleMode||null,targetId:event.target?.id||null,
+          x:event.clientX,y:event.clientY,scrollY,
+          rect:r&&{left:r.left,top:r.top,width:r.width,height:r.height}});
+        if(event.type==='click'&&event.isTrusted&&target?.dataset.puzzleMode===category)probe.delivered=true;
+      };
+      for(const type of ['pointerdown','pointerup','click'])document.addEventListener(type,probe.capture,true);
+      window.__qaPuzzleModeInput=probe;
+    }""", category)
+    try:
+        await button.click()
+        delivery = await page.evaluate("""()=>{
+          const probe=window.__qaPuzzleModeInput,s=window.__puzzleRead?.();
+          return {category:probe?.category,delivered:Boolean(probe?.delivered),events:probe?.events||[],
+            state:s&&{mode:s.mode,selection:s.selection,difficulty:s.difficulty,ready:s.ready,
+              loading:s.loading,restoring:s.restoring,writable:s.writable}};
+        }""")
+        getattr(page, '_qa_record', {}).setdefault('modeInputDelivery', []).append(delivery)
+        assert delivery['delivered'], ('Native mode click was not delivered to the requested control', delivery)
+    finally:
+        try:
+            await page.evaluate("""()=>{
+              const probe=window.__qaPuzzleModeInput;
+              if(probe)for(const type of ['pointerdown','pointerup','click'])document.removeEventListener(type,probe.capture,true);
+              delete window.__qaPuzzleModeInput;delete window.__qaPuzzleInputStability;
+            }""")
+        except PlaywrightError as cleanup_error:
+            # A closed/crashed page must retain the original interaction error.
+            getattr(page, '_qa_record', {}).setdefault('inputCleanupErrors', []).append(diagnostic_text(cleanup_error))
     selection = 'RUS' if mode == 'russia-subjects' else entry.get('selection')
     if selection is not None:
         selector = '#puzzleSubject' if mode == 'russia-municipalities' else '#puzzleCountry'

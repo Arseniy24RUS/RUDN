@@ -18,7 +18,7 @@ const byteSize=value=>new TextEncoder().encode(JSON.stringify(value)).byteLength
 const uid=env=>env.crypto?.randomUUID?.()||globalThis.crypto?.randomUUID?.()||'d'+Math.random().toString(36).slice(2)+Date.now().toString(36);
 const validId=v=>typeof v==='string'&&/^[a-zA-Z0-9-]{12,64}$/.test(v);
 const safeRead=(storage,key)=>{try{return JSON.parse(storage?.getItem(key)||'null')}catch{return null}};
-const safeWrite=(storage,key,value)=>{try{storage?.setItem(key,JSON.stringify(value));return true}catch{return false}};
+const safeWrite=(storage,key,value)=>{try{if(typeof storage?.setItem!=='function')return false;storage.setItem(key,JSON.stringify(value));return true}catch{return false}};
 const storage=(env,key)=>{try{return env[key]}catch{return null}};
 const nullableNumber=(value,max)=>typeof value==='number'&&Number.isFinite(value)&&value>=0?Math.min(max,value):null;
 function environmentCapabilities(env,nav){
@@ -85,16 +85,22 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  const moduleVersion=()=>/^[a-f0-9]{32}$/.test(env.__RUDN_RELEASE__?.buildId||'')?'build:'+env.__RUDN_RELEASE__.buildId:undefined;
  function createBucket(owner){return {owner,clientSessionId:uid(env),session:null,build:currentBuild(),environment:{...environment},queue:[],pending:null,dropped:0,deduplicated:0,createdAt:now()}}
  const allEvents=()=>buckets.reduce((n,b)=>n+b.queue.length+(b.pending?.events.length||0),0);
- const persist=()=>safeWrite(tab||local,storageKey,{schema:2,buckets,lastWrite,droppedTotal,deduplicatedTotal});
+ const persistedState=()=>({schema:2,buckets,lastWrite,droppedTotal,deduplicatedTotal});
+ // Queues belong to a tab. Without sessionStorage keep the bounded queue in
+ // memory; a random tab key in localStorage would become an orphan on reload.
+ const persist=()=>{trim();return safeWrite(tab,storageKey,persistedState())};
  const schedulePersist=()=>{if(persistQueued)return;persistQueued=true;Promise.resolve().then(()=>{persistQueued=false;if(!disposed)persist()}).catch(()=>{})};
  function trim(){
+  const removeEmpty=()=>{buckets=buckets.filter(b=>{if(b===active||b===sending?.bucket||b.queue.length||b.pending)return true;if(active){active.dropped+=b.dropped;active.deduplicated+=b.deduplicated}return false})};
+  removeEmpty();
   // Pending batches are immutable for idempotent retry; evict only unsent events.
-  while(allEvents()>DIAGNOSTIC_LIMITS.queue||byteSize(buckets)>DIAGNOSTIC_LIMITS.queueBytes){let candidate=null;for(const b of buckets)for(let index=0;index<b.queue.length;index++){const event=b.queue[index],error=isErrorEvent(event);if(!candidate||candidate.error&&!error||candidate.error===error&&event.at<candidate.event.at)candidate={b,index,event,error}}if(candidate){candidate.b.queue.splice(candidate.index,1);candidate.b.dropped++;droppedTotal++}else{const old=buckets.find(b=>b!==active&&b!==sending?.bucket);if(!old)break;const count=old.pending?.events.length||0;droppedTotal+=count;if(active){active.dropped+=count+old.dropped+(old.pending?.dropped||0);active.deduplicated+=old.deduplicated+(old.pending?.deduplicated||0)}buckets.splice(buckets.indexOf(old),1)}}
-  buckets=buckets.filter(b=>{if(b===active||b===sending?.bucket||b.queue.length||b.pending)return true;if(active){active.dropped+=b.dropped;active.deduplicated+=b.deduplicated}return false});
+  while(allEvents()>DIAGNOSTIC_LIMITS.queue||byteSize(persistedState())>DIAGNOSTIC_LIMITS.queueBytes){let candidate=null;for(const b of buckets)for(let index=0;index<b.queue.length;index++){const event=b.queue[index],error=isErrorEvent(event);if(!candidate||candidate.error&&!error||candidate.error===error&&event.at<candidate.event.at)candidate={b,index,event,error}}if(candidate){candidate.b.queue.splice(candidate.index,1);candidate.b.dropped++;droppedTotal++;removeEmpty()}else{const old=buckets.find(b=>b!==active&&b!==sending?.bucket);if(!old)break;const count=old.pending?.events.length||0;droppedTotal+=count;if(active){active.dropped+=count+old.dropped+(old.pending?.dropped||0);active.deduplicated+=old.deduplicated+(old.pending?.deduplicated||0)}buckets.splice(buckets.indexOf(old),1)}}
  }
  function restore(){
-  const saved=safeRead(tab||local,storageKey);if(saved?.schema!==2||!Array.isArray(saved.buckets)||byteSize(saved)>DIAGNOSTIC_LIMITS.queueBytes*2)return;
-  for(const old of saved.buckets.slice(-32)){if(!validId(old.clientSessionId)||typeof old.owner?.key!=='string'||typeof old.owner.auth!=='string')continue;const studentKey=/^\d{5,20}$/.test(old.owner.studentKey||'')?old.owner.studentKey:null;if(old.owner.studentKey&&!studentKey)continue;
+  const saved=safeRead(tab,storageKey);if(saved?.schema!==2||!Array.isArray(saved.buckets)||byteSize(saved)>DIAGNOSTIC_LIMITS.queueBytes*2)return;
+  // The event/byte budget is shared by all owners; a second arbitrary context
+  // limit must not silently discard their pending errors during a reload.
+  for(const old of saved.buckets){if(!validId(old.clientSessionId)||typeof old.owner?.key!=='string'||typeof old.owner.auth!=='string')continue;const studentKey=/^\d{5,20}$/.test(old.owner.studentKey||'')?old.owner.studentKey:null;if(old.owner.studentKey&&!studentKey)continue;
    const b=createBucket({key:old.owner.key,auth:old.owner.auth,studentKey});b.clientSessionId=old.clientSessionId;b.build=token(old.build,80)||'unknown';b.createdAt=integer(old.createdAt,9999999999999);b.dropped=integer(old.dropped,1e6);b.deduplicated=integer(old.deduplicated,1e6);b.queue=(old.queue||[]).map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(-256);
    if(validId(old.session?.sessionId))b.session={sessionId:old.session.sessionId,subjectKey:token(old.session.subjectKey),generation:integer(old.session.generation,1e9),reportCode:token(old.session.reportCode)};
    if(validId(old.pending?.batchId)&&Array.isArray(old.pending.events)){const events=old.pending.events.map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(0,12);const pending={batchId:old.pending.batchId,events,dropped:integer(old.pending.dropped,1e6),deduplicated:integer(old.pending.deduplicated,1e6)};if(events.length&&byteSize(pending)<DIAGNOSTIC_LIMITS.batchBytes-1024)b.pending=pending}
@@ -145,7 +151,7 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  void detectEnvironmentHints(env).then(value=>{if(disposed)return;environment=value;for(const b of buckets)if(!b.session)b.environment={...value};persist()}).catch(()=>{});
  record('session-open',{success:true});
  try{Promise.resolve(backend.ensureDiagnosticIdentity?.()).then(()=>{if(!disposed){syncIdentity();schedule()}}).catch(()=>{})}catch{}
- return {record,flush,syncIdentity,forModule:bound,error:(error,fields)=>bound(getModule()).error(error,fields),span:(operation,fields)=>bound(getModule()).span(operation,fields),status:()=>({state,queued:allEvents(),bytes:byteSize(buckets),dropped:droppedTotal,deduplicated:deduplicatedTotal,code:active?.session?.reportCode||null,authenticated:Boolean(backend.user?.uid)}),destroy(){if(disposed)return;persist();disposed=true;sending?.controller.abort();clearTimer(timer);unsubscribe?.();env.removeEventListener?.('error',runtime,true);env.removeEventListener?.('unhandledrejection',rejection);env.removeEventListener?.('online',online);env.removeEventListener?.('offline',offline);env.removeEventListener?.('rudn:identitychange',syncIdentity);env.removeEventListener?.('rudn:release-context',syncIdentity);env.document?.removeEventListener?.('visibilitychange',visibility);buckets=[];active=null;}};
+ return {record,flush,syncIdentity,forModule:bound,error:(error,fields)=>bound(getModule()).error(error,fields),span:(operation,fields)=>bound(getModule()).span(operation,fields),status:()=>({state,queued:allEvents(),bytes:byteSize(persistedState()),dropped:droppedTotal,deduplicated:deduplicatedTotal,code:active?.session?.reportCode||null,authenticated:Boolean(backend.user?.uid)}),destroy(){if(disposed)return;persist();disposed=true;sending?.controller.abort();clearTimer(timer);unsubscribe?.();env.removeEventListener?.('error',runtime,true);env.removeEventListener?.('unhandledrejection',rejection);env.removeEventListener?.('online',online);env.removeEventListener?.('offline',offline);env.removeEventListener?.('rudn:identitychange',syncIdentity);env.removeEventListener?.('rudn:release-context',syncIdentity);env.document?.removeEventListener?.('visibilitychange',visibility);buckets=[];active=null;}};
 }
 export function getSharedPlatformDiagnostics(options={}){
  const env=options.env||globalThis;if(env.__RUDN_DIAGNOSTICS__?.forModule)return env.__RUDN_DIAGNOSTICS__;
