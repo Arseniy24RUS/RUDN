@@ -1,12 +1,14 @@
-"""Evidence-only exact-seed static-layer consumer matrix; run from repository root.
+"""Evidence-only exact-seed static-layer probe; run from the repository root.
 
 The existing DPR3 scenario, input, assertions and verdict remain intact.
-No new paint observer or canvas operation precedes its original q/p comparison.
+Bounded JS-only paint-plan observers precede the original q/p comparison.
+No additional native getters, canvas calls or readbacks precede its verdict.
 Additional controls run only in context cleanup, after the original assertions.
 """
 import argparse
 import asyncio
 import base64
+import copy
 import hashlib
 import json
 import platform
@@ -14,42 +16,119 @@ import sys
 from pathlib import Path
 
 SEED = 2277844156
+ORIGINAL_SOURCE_HASHES = {
+    'puzzle-engine.js': '93d9366eeb2ae5881d3337d10c8e54a5608354b852fbe9e7c34990b9f0b7776a',
+    'puzzle-render-geometry.js': 'f6751e094fcbeefd510fb05f056dcd8e4a590005357c06e24539c6a4facd942e',
+    'puzzle-raster-worker.js': '2c7bb6549e2bded941a6b96f37b43a695c517065d85a431c16c1cffdbb9ecd74',
+}
 CAPTURE_HOOK = r"""
-  let staticEvidencePending=null,staticEvidenceCaptured=null;
+  let staticEvidencePending=null,staticEvidenceCaptured=null,paintPlanFrozen=false,auditDepth=0;
+  let lastStaticPlan=null,lastReferencePlan=null,activePaintPass=null,nextIdentity=1;
+  const paintIdentities=new WeakMap(),MAX_PLAN_FEATURES=512,MAX_CAPTURE_ERRORS=16;
   window.__staticEvidenceErrors=[];
+  const paintError=(stage,error)=>{if(window.__staticEvidenceErrors.length<MAX_CAPTURE_ERRORS)
+    window.__staticEvidenceErrors.push({stage,name:error?.name||'Error'});};
+  const identity=value=>{
+    if(value===null||value===undefined)return null;
+    if(typeof value!=='object'&&typeof value!=='function')return null;
+    if(!paintIdentities.has(value))paintIdentities.set(value,nextIdentity++);
+    return paintIdentities.get(value);
+  };
+  const boundedCopy=values=>{
+    if(values.length>MAX_PLAN_FEATURES)throw new RangeError('paint-plan-bound');
+    return [...values];
+  };
+  const numericView=view=>({x:view.x,y:view.y,k:view.k});
+  const numericMap=map=>({x:map.x,y:map.y,width:map.width,height:map.height});
+  const snapshotPass=(name,view,map)=>{
+    const dpr=state.dpr,lodScale=state.view.k;
+    // These are source-declared JS parameters, never reads of native context state.
+    return {name,view:numericView(view),map:numericMap(map),dpr,lodScale,
+      clipMatrix:[dpr,0,0,dpr,0,0],sceneMatrix:[dpr*view.k,0,0,dpr*view.k,dpr*view.x,dpr*view.y],
+      styles:{fill:name==='map'?'#e7f1f7':'#0079c1',stroke:name==='map'?'#91b2c6':'#004f80',
+        lineWidth:1/lodScale,lineJoin:'round',lineCap:'round',fillRule:state.mode==='russia-subjects'?'nonzero':'evenodd'},
+      scene:{mode:state.mode,selection:state.selection??null,seed:state.seed,placed:state.placed,current:state.current,
+        view:numericView(state.view),map:numericMap(state.mapRect),baseViewK:state.baseViewK,
+        renderGeometryId:identity(state.renderGeometry),projectionId:identity(state.projection),
+        featuresId:identity(state.features),piecesId:identity(state.pieces),boundsId:identity(state.bounds),
+        pathsId:identity(state.paths),strokePathsId:identity(state.strokePaths),order:boundedCopy(state.order),
+        pieces:boundedCopy(state.pieces).map(piece=>({index:piece.index,locked:piece.locked,inTray:piece.inTray}))},
+      operations:[],completed:false};
+  };
+  const sourceDrawMap=drawMap,sourceDrawLockedPieces=drawLockedPieces,sourceDisplayPaths=displayPaths;
+  const observePaintPass=(name,original,receiver,args)=>{
+    const previousPass=activePaintPass;
+    let pass=null,plan=null,successful=false;
+    try{
+      const context=args[0]===undefined?ctx:args[0];
+      if(!paintPlanFrozen&&(context===staticCtx||auditDepth>0)){
+        const role=context===staticCtx?'static':'reference';
+        const view=args[1]===undefined?state.view:args[1],map=args[2]===undefined?state.mapRect:args[2];
+        const previous=role==='static'?lastStaticPlan:lastReferencePlan;
+        plan=name==='map'||!previous||previous.context!==context
+          ?{role,context,contextId:identity(context),passes:[],paths:new Map(),orphan:name!=='map'}:previous;
+        if(plan.passes.length>=2)throw new RangeError('paint-pass-bound');
+        pass=snapshotPass(name,view,map);plan.passes.push(pass);
+        if(role==='static')lastStaticPlan=plan;else lastReferencePlan=plan;
+        activePaintPass={pass,plan};
+      }
+    }catch(error){paintError('observe-pass',error);pass=null;plan=null;activePaintPass=previousPass;}
+    try{
+      // Exactly one original call; observation cannot swallow a native failure.
+      const result=Reflect.apply(original,receiver,args);successful=true;return result;
+    }finally{
+      if(pass)pass.completed=successful;
+      activePaintPass=previousPass;
+    }
+  };
+  drawMap=function(...args){return observePaintPass('map',sourceDrawMap,this,args);};
+  drawLockedPieces=function(...args){return observePaintPass('locked',sourceDrawLockedPieces,this,args);};
+  displayPaths=function(...args){
+    const result=Reflect.apply(sourceDisplayPaths,this,args);
+    try{
+      if(activePaintPass&&!paintPlanFrozen){
+        const {pass,plan}=activePaintPass,index=args[0];
+        if(pass.operations.length>=MAX_PLAN_FEATURES)throw new RangeError('paint-operation-bound');
+        const pathId=identity(result.path),strokePathId=identity(result.strokePath);
+        // Source drawMap/drawLockedPieces immediately fill then stroke this pair.
+        pass.operations.push({order:pass.operations.length,index,
+          featureId:state.features[index]?.properties._puzzleId??null,pathId,strokePathId,kinds:['fill','stroke']});
+        plan.paths.set(pathId,result.path);plan.paths.set(strokePathId,result.strokePath);
+      }
+    }catch(error){paintError('observe-returned-paths',error);}
+    return result;
+  };
   // The original audit invokes this after its existing getImageData/difference.
-  // Retain its buffers without canvas calls or an extra readback.
+  // Retain its buffers and last observed plans, with no canvas/native calls.
   window.__captureStaticEvidence=({q,p,width,height,cacheDifference,sprite,view,map})=>{
     try{
       if(staticEvidencePending||staticEvidenceCaptured||state.seed!==2277844156||state.placed!==20||state.current!==49)return;
       const zoom=state.view.k/state.baseViewK;
       if(Math.abs(zoom-4)>1e-6)return;
-      staticEvidencePending={q,p,metadata:{seed:state.seed,order:[...state.order],current:state.current,
+      paintPlanFrozen=true;
+      staticEvidencePending={q,p,plans:{actual:lastStaticPlan,reference:lastReferencePlan},
+        metadata:{seed:state.seed,order:[...state.order],current:state.current,
         featureId:state.features[state.current]?.properties._puzzleId,zoom,placed:state.placed,
         deviceDpr:devicePixelRatio,rasterDpr:state.dpr,width,height,scale:sprite.scale,
         cacheView:{...view},cacheMap:{...map},mapRect:{...state.mapRect},draw:{...window.__backgroundDraw},
-        destinationSize:[els.canvas.width,els.canvas.height],
         baselineDifference:cacheDifference,fillRule:state.mode==='russia-subjects'?'nonzero':'evenodd'}};
-    }catch(error){window.__staticEvidenceErrors.push({stage:'retain-original-buffers',name:error?.name||'Error'});}
+    }catch(error){paintError('retain-original-buffers',error);}
   };
   const observedStaticAudit=window.__backgroundAudit;
   window.__backgroundAudit=function(...args){
-    const result=observedStaticAudit.apply(this,args);
-    // The original sixteen jitter comparisons have completed before this.
-    // Preserve the exact current native paths for later, independent controls.
-    // This is a reconstructed paint plan, NOT observed original paint history.
+    let result;auditDepth++;
+    try{result=Reflect.apply(observedStaticAudit,this,args);}finally{auditDepth--;}
+    // All original sixteen jitter comparisons have completed. No re-selection
+    // of display paths here: controls retain the actual objects observed earlier.
     if(staticEvidencePending){
       const capture=staticEvidencePending;staticEvidencePending=null;staticEvidenceCaptured=capture;
       try{
-        const {cacheView:view,cacheMap:map}=capture.metadata;
-        const mapIndices=state.features.map((_,index)=>index).filter(index=>visibleFeature(index,view,map));
-        const lockedIndices=state.pieces.filter(piece=>piece.locked&&visibleFeature(piece.index,view,map)).map(piece=>piece.index);
-        capture.paths=new Map([...new Set([...mapIndices,...lockedIndices])].map(index=>[index,displayPaths(index)]));
-        capture.metadata.passes=[{name:'map',fill:'#e7f1f7',stroke:'#91b2c6',indices:mapIndices},
-          {name:'locked',fill:'#0079c1',stroke:'#004f80',indices:lockedIndices}];
+        for(const [kind,plan] of Object.entries(capture.plans))
+          if(!plan||plan.orphan||plan.passes.length!==2||plan.passes.some(pass=>!pass.completed))
+            throw new Error('incomplete-'+kind+'-paint-plan');
         capture.metadata.originalAudit=result;
-        capture.metadata.originalPaintHistoryAvailable=false;
-      }catch(error){capture.controlError={stage:'retain-replay-plan',name:error?.name||'Error'};}
+        capture.metadata.originalPaintHistoryAvailable='last-completed-static-and-cache-reference-only';
+      }catch(error){capture.controlError={stage:'validate-retained-plans',name:error?.name||'Error'};}
     }
     return result;
   };
@@ -58,76 +137,135 @@ CAPTURE_HOOK = r"""
     canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(pixels),width,height),0,0);
     const png=canvas.toDataURL('image/png');canvas.width=canvas.height=0;return png;
   };
-  const staticEvidenceContext=context=>({attributes:context.getContextAttributes?.(),
-    transform:Array.from(context.getTransform().toFloat64Array()),alpha:context.globalAlpha,
-    composite:context.globalCompositeOperation,fill:context.fillStyle,stroke:context.strokeStyle,
-    width:context.lineWidth,join:context.lineJoin,cap:context.lineCap,miter:context.miterLimit,
-    dash:context.getLineDash(),dashOffset:context.lineDashOffset,
-    shadow:[context.shadowColor,context.shadowBlur,context.shadowOffsetX,context.shadowOffsetY],
-    filter:context.filter??null,smoothing:context.imageSmoothingEnabled});
   window.__finishStaticEvidence=()=>{
     if(!staticEvidenceCaptured)return {records:[],errors:window.__staticEvidenceErrors};
-    const {q,p,metadata:m,paths,controlError}=staticEvidenceCaptured;
+    const {q,p,metadata:m,plans,controlError}=staticEvidenceCaptured;
     const sample=pixels=>Array.from(pixels.slice((1236*m.width+361)*4,(1236*m.width+361)*4+4));
     // These are the original q/p buffers, not a new read of the game's canvas.
     const record={...m,baselineActualSample:sample(q),baselineReferenceSample:sample(p),
       actualPng:staticEvidencePng(q,m.width,m.height),referencePng:staticEvidencePng(p,m.width,m.height),
-      controlsStartedAfterOriginalScenario:true,controls:[]};
+      controlsStartedAfterOriginalScenario:true,controls:[],
+      observedPlans:Object.fromEntries(Object.entries(plans).map(([kind,plan])=>[kind,plan?{
+        contextId:plan.contextId,role:plan.role,orphan:plan.orphan,passes:plan.passes}:null]))};
     if(controlError){record.controlError=controlError;return {records:[record],errors:window.__staticEvidenceErrors};}
-    const paint=(context,history)=>{
-      for(const pass of m.passes){
-        context.save();context.setTransform(m.rasterDpr,0,0,m.rasterDpr,0,0);context.beginPath();
-        context.rect(m.cacheMap.x,m.cacheMap.y,m.cacheMap.width,m.cacheMap.height);context.clip();
-        context.setTransform(m.rasterDpr*m.cacheView.k,0,0,m.rasterDpr*m.cacheView.k,
-          m.rasterDpr*m.cacheView.x,m.rasterDpr*m.cacheView.y);
-        context.fillStyle=pass.fill;context.strokeStyle=pass.stroke;context.lineWidth=1/m.scale;
-        context.lineJoin=context.lineCap='round';
-        const operations=[];
-        for(const index of pass.indices){
-          const pair=paths.get(index);
-          operations.push({kind:'fill',index,fillRule:m.fillRule});context.fill(pair.path,m.fillRule);
-          operations.push({kind:'stroke',index});context.stroke(pair.strokePath);
+    const paint=(context,plan)=>{
+      for(const pass of plan.passes){
+        context.save();context.setTransform(...pass.clipMatrix);context.beginPath();
+        context.rect(pass.map.x,pass.map.y,pass.map.width,pass.map.height);context.clip();
+        context.setTransform(...pass.sceneMatrix);
+        context.fillStyle=pass.styles.fill;context.strokeStyle=pass.styles.stroke;
+        context.lineWidth=pass.styles.lineWidth;context.lineJoin=pass.styles.lineJoin;context.lineCap=pass.styles.lineCap;
+        for(const operation of pass.operations){
+          context.fill(plan.paths.get(operation.pathId),pass.styles.fillRule);
+          context.stroke(plan.paths.get(operation.strokePathId));
         }
-        // No getters/readback between the map and locked native passes.
-        history.push({pass:pass.name,operations,fill:pass.fill,stroke:pass.stroke,
-          width:1/m.scale,fillRule:m.fillRule,join:'round',cap:'round',
-          transform:[m.rasterDpr*m.cacheView.k,0,0,m.rasterDpr*m.cacheView.k,
-            m.rasterDpr*m.cacheView.x,m.rasterDpr*m.cacheView.y]});context.restore();
+        context.restore();
       }
     };
-    for(const [surface,consumed] of [['fresh',false],['fresh',true],['reused',false],['reused',true]]){
-      const kind=surface+(consumed?'-audit-consumer':'-no-consumer');
-      const canvas=document.createElement('canvas');let context;const history=[];
-      if(surface==='reused'){
-        context=canvas.getContext('2d',{alpha:true});canvas.width=m.width;canvas.height=m.height;
-        paint(context,history);canvas.width=m.width;canvas.height=m.height;
-        history.push({operation:'resize-reset-to-same-dimensions',width:m.width,height:m.height});
-      }else{canvas.width=m.width;canvas.height=m.height;context=canvas.getContext('2d',{alpha:true});}
-      paint(context,history);
-      let destination=null,destinationPixels=null,consumer=null;
-      if(consumed){
-        destination=document.createElement('canvas');destination.width=m.destinationSize[0];destination.height=m.destinationSize[1];
-        const target=destination.getContext('2d');
-        // The exact actual-canvas branch of the original background audit:
-        // a.save(); clipMap(a); a.drawImage(source,...); a.restore(); read(a).
-        target.save();target.setTransform(m.rasterDpr,0,0,m.rasterDpr,0,0);target.beginPath();
-        target.rect(m.mapRect.x,m.mapRect.y,m.mapRect.width,m.mapRect.height);target.clip();
-        target.drawImage(canvas,m.draw.x,m.draw.y,m.draw.width,m.draw.height);target.restore();
-        destinationPixels=target.getImageData(0,0,destination.width,destination.height).data;
-        consumer={kind:'original-audit-consumer',width:destination.width,height:destination.height,
-          draw:{...m.draw},clip:{...m.mapRect},transform:[m.rasterDpr,0,0,m.rasterDpr,0,0],
-          readOrder:['destination','source'],readbackBytes:destinationPixels.length};
-      }
-      const pixels=context.getImageData(0,0,m.width,m.height).data;
-      const control={kind,surface,consumed,history,consumer,contextAfterRead:staticEvidenceContext(context),
-        versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
-        sample:sample(pixels),png:staticEvidencePng(pixels,m.width,m.height)};
-      if(destination){control.consumerPng=staticEvidencePng(destinationPixels,destination.width,destination.height);destination.width=destination.height=0;}
-      record.controls.push(control);canvas.width=canvas.height=0;
+    for(const kind of ['actual','reference']){
+      const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;
+      try{
+        const context=canvas.getContext('2d',{alpha:true});paint(context,plans[kind]);
+        const pixels=context.getImageData(0,0,m.width,m.height).data;
+        record.controls.push({kind:'exact-'+kind+'-plan',
+          versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
+          sample:sample(pixels),png:staticEvidencePng(pixels,m.width,m.height)});
+      }finally{canvas.width=canvas.height=0;}
     }
     return {records:[record],errors:window.__staticEvidenceErrors};
   };
 """
+
+
+def first_difference(actual, reference, path='$'):
+    if isinstance(actual, dict) and isinstance(reference, dict):
+        if set(actual) != set(reference):
+            return {'path': path + '.keys', 'actual': sorted(actual), 'reference': sorted(reference)}
+        for key in sorted(actual):
+            difference = first_difference(actual[key], reference[key], path + '.' + key)
+            if difference is not None:
+                return difference
+        return None
+    if isinstance(actual, list) and isinstance(reference, list):
+        if len(actual) != len(reference):
+            return {'path': path + '.length', 'actual': len(actual), 'reference': len(reference)}
+        for index, (left, right) in enumerate(zip(actual, reference)):
+            difference = first_difference(left, right, f'{path}[{index}]')
+            if difference is not None:
+                return difference
+        return None
+    if actual != reference or (type(actual) is bool) != (type(reference) is bool):
+        return {'path': path, 'actual': actual, 'reference': reference}
+    return None
+
+
+def plan_categories(plan):
+    passes = plan['passes']
+    return {
+        'numericParameters': [{key: item[key] for key in
+            ('view', 'map', 'dpr', 'lodScale', 'clipMatrix', 'sceneMatrix')} |
+            {'lineWidth': item['styles']['lineWidth']} for item in passes],
+        'ordering': [{'pass': item['name'], 'operations': [{key: operation[key] for key in
+            ('order', 'index', 'featureId', 'kinds')} for operation in item['operations']]} for item in passes],
+        'nativePathIdentity': [[{key: operation[key] for key in ('index', 'pathId', 'strokePathId')}
+            for operation in item['operations']] for item in passes],
+        'declaredStyles': [{key: value for key, value in item['styles'].items() if key != 'lineWidth'} for item in passes],
+        'semanticState': [item['scene'] for item in passes],
+    }
+
+
+def semantic_digest(value):
+    return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
+        separators=(',', ':'), allow_nan=False).encode('utf-8')).hexdigest()
+
+
+def compare_observed_plans(record):
+    observed = record['observedPlans']
+    if not observed['actual'] or not observed['reference']:
+        return {'status': 'incomplete', 'equal': False}
+    actual, reference = plan_categories(observed['actual']), plan_categories(observed['reference'])
+    categories = {}
+    for category in actual:
+        difference = first_difference(actual[category], reference[category])
+        categories[category] = {'equal': difference is None,
+            'actualSHA256': semantic_digest(actual[category]),
+            'referenceSHA256': semantic_digest(reference[category]), 'firstDifference': difference}
+    return {'status': 'compared', 'equal': all(item['equal'] for item in categories.values()),
+        'actualSemanticSHA256': semantic_digest(actual), 'referenceSemanticSHA256': semantic_digest(reference),
+        'categories': categories,
+        'contextIdentityExcluded': True,
+        'limits': 'WeakMap IDs establish object identity within this run only. Styles/matrices are source-declared JS parameters, not native context getters. Equal input plans do not prove equal native raster pipelines.'}
+
+
+def self_test():
+    item = {'name': 'map', 'view': {'x': 1, 'y': 2, 'k': 3},
+        'map': {'x': 0, 'y': 0, 'width': 20, 'height': 30}, 'dpr': 2, 'lodScale': 3,
+        'clipMatrix': [2, 0, 0, 2, 0, 0], 'sceneMatrix': [6, 0, 0, 6, 2, 4],
+        'styles': {'lineWidth': 1 / 3, 'fill': '#e7f1f7', 'stroke': '#91b2c6',
+            'lineJoin': 'round', 'lineCap': 'round', 'fillRule': 'nonzero'},
+        'scene': {'renderGeometryId': 4, 'placed': 20},
+        'operations': [{'order': 0, 'index': 8, 'featureId': 115100,
+            'kinds': ['fill', 'stroke'], 'pathId': 20, 'strokePathId': 21}]}
+    plan = {'contextId': 1, 'passes': [item]}
+    records = []
+    for name, category, change in [
+        ('equal-inputs-different-contexts', None, lambda other: other.update(contextId=2)),
+        ('numeric-matrix', 'numericParameters', lambda other: other['passes'][0]['sceneMatrix'].__setitem__(4, 2.1)),
+        ('path-order', 'ordering', lambda other: other['passes'][0]['operations'][0].update(order=1)),
+        ('native-path-identity', 'nativePathIdentity', lambda other: other['passes'][0]['operations'][0].update(pathId=22)),
+        ('declared-style', 'declaredStyles', lambda other: other['passes'][0]['styles'].update(fill='#000000')),
+        ('semantic-renderer', 'semanticState', lambda other: other['passes'][0]['scene'].update(renderGeometryId=7)),
+    ]:
+        reference = copy.deepcopy(plan)
+        change(reference)
+        result = compare_observed_plans({'observedPlans': {'actual': plan, 'reference': reference}})
+        if category is None:
+            assert result['equal'] and result['actualSemanticSHA256'] == result['referenceSemanticSHA256']
+        else:
+            assert not result['equal'] and result['categories'][category]['firstDifference'] is not None
+            assert all(value['equal'] for key, value in result['categories'].items() if key != category)
+        records.append({'name': name, 'status': 'pass'})
+    print(json.dumps({'status': 'passed', 'cases': records}, ensure_ascii=False))
 
 
 async def main(args):
@@ -140,12 +278,7 @@ async def main(args):
     names = ['puzzle-engine.js', 'puzzle-render-geometry.js', 'puzzle-raster-worker.js']
     hashes = lambda: {name: hashlib.sha256((repo / 'site/assets/js' / name).read_bytes()).hexdigest() for name in names}
     before_hashes = hashes()
-    old_observer = """  const observedBackgroundFill=staticCtx.fill;
-  staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};"""
-    live_observer = """  const observedBackgroundFill=CanvasRenderingContext2D.prototype.fill;
-  CanvasRenderingContext2D.prototype.fill=function(...args){if(this===staticCtx)window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};"""
-    assert render.RENDER_HOOK.count(old_observer) == 1, 'Exact original static paint observer required'
-    render.RENDER_HOOK = render.RENDER_HOOK.replace(old_observer, live_observer, 1)
+    assert before_hashes == ORIGINAL_SOURCE_HASHES, 'This evidence probe requires the exact original 6f render sources, without fresh-surface/JSON patches'
     marker = '      cacheDifference=rasterPixelDifference(q,p,fresh.width);'
     assert render.RENDER_HOOK.count(marker) == 1, 'Exact original cache audit marker required'
     injected = marker + '\n      window.__captureStaticEvidence({q,p,width:fresh.width,height:fresh.height,cacheDifference,sprite,view,map});'
@@ -170,6 +303,7 @@ async def main(args):
                                 collected = await page.evaluate('window.__finishStaticEvidence?.()||{records:[],errors:[]}')
                                 capture_errors.extend(collected['errors'])
                                 for index, record in enumerate(collected['records']):
+                                    record['planComparison'] = compare_observed_plans(record)
                                     for key in ('actual', 'reference'):
                                         raw = base64.b64decode(record.pop(key+'Png').split(',', 1)[1])
                                         path = output / f'capture-{index}-{key}.png'
@@ -180,11 +314,6 @@ async def main(args):
                                         path = output / f'capture-{index}-{control["kind"]}.png'
                                         path.write_bytes(raw)
                                         control['png'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
-                                        if control.get('consumerPng'):
-                                            raw = base64.b64decode(control.pop('consumerPng').split(',', 1)[1])
-                                            path = output / f'capture-{index}-{control["kind"]}-destination.png'
-                                            path.write_bytes(raw)
-                                            control['consumerPng'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
                                     captures.append(record)
                             except Exception as error:
                                 capture_errors.append({'stage': 'collect-after-original-scenario', 'name': type(error).__name__})
@@ -208,10 +337,11 @@ async def main(args):
                 result['probe'] = {'evidenceOnly': True, 'originalVerdictUnchanged': True,
                     'captureCount': len(captures), 'captureErrors': capture_errors,
                     'captureTarget': {'seed': SEED, 'dpr': 3, 'rasterDpr': 2, 'current': 49, 'placed': 20, 'zoom': 4},
-                    'newPaintObserversBeforeOriginalAudit': False, 'newCanvasOperationsBeforeOriginalVerdict': False,
-                    'controlsAlterAcceptance': False, 'originalPaintHistoryAvailable': False,
-                    'matrix':'fresh/reused context x no consumer/original audit consumer',
-                    'limitation': 'Original test instrumentation remains. New hook retains the original buffers and exact native paths after its audit; secondary controls run after its full scenario verdict. Control history is reconstructed, not the historical actual paint stream. Consumer matches the original audit canvas, not the complete displayed main-canvas lifetime. Fresh uses a new context after sizing; reuse creates a context, paints once, resets the same dimensions and repaints. Native platform must be read from environment.'}
+                    'newPaintObserversBeforeOriginalAudit': 'JS-only drawMap/drawLockedPieces/displayPaths wrappers',
+                    'newCanvasOperationsBeforeOriginalVerdict': False, 'newNativeCanvasGettersBeforeOriginalVerdict': False,
+                    'controlsAlterAcceptance': False, 'originalPaintHistoryAvailable': 'last-completed-static-and-cache-reference-plans',
+                    'bounds': {'featuresPerPass': 512, 'passesPerPlan': 2, 'latestPlans': 2, 'errors': 16},
+                    'limitation': 'Original test instrumentation and assertions remain. Additional JS observation overhead and retaining the last native path objects may affect timing/lifetime. Primary q/p, 16 jitters and verdict are not replaced. Styles/matrices are derived from original source arguments, not native state. Only post-verdict secondary controls repaint exact retained plans; neither DOM-visible consumer history nor complete native context history is reproduced.'}
                 (output / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
                 print(json.dumps({'status': result['status'], 'captures': len(captures), 'captureErrors': capture_errors,
                     'sourceStable': result['sourceStable'], 'error': result.get('error', '')[:250]}, ensure_ascii=False), flush=True)
@@ -224,7 +354,14 @@ async def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo', default='.')
-    parser.add_argument('--output', required=True)
+    parser.add_argument('--output')
     parser.add_argument('--fixtures')
     parser.add_argument('--executable')
-    asyncio.run(main(parser.parse_args()))
+    parser.add_argument('--self-test', action='store_true')
+    args = parser.parse_args()
+    if args.self_test:
+        self_test()
+    else:
+        if not args.output:
+            parser.error('--output is required for the native probe')
+        asyncio.run(main(args))
