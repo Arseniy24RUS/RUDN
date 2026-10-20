@@ -1,0 +1,282 @@
+# PREPARED ONLY. Root must confirm direct strict q/p zero-difference for 98d69ed
+# before pushing this workflow. Diagnostic PASS does not replace integrated CI.
+name: Readback policy candidate matrix
+
+on:
+  push:
+    branches: [codex/readback-policy-matrix]
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+  BASELINE_REF: 6f7c4016299de7ed92bd6fdc2b63c36b12bd2cf1
+  CANDIDATE_REF: 98d69ed9ea2ceeba2b22b79709fea75fe1eab40b
+  BASELINE_ENGINE_SHA: 93d9366eeb2ae5881d3337d10c8e54a5608354b852fbe9e7c34990b9f0b7776a
+  BASELINE_ORACLE_SHA: 123f93a85875e96c087a979922e18bede9f6e55a1aff6758fdc9ac375c8689a1
+  CANDIDATE_ENGINE_SHA: dec35dd1898c791657377c0771aa745730e9ba9b67ddb014a9b8654dfcf939d1
+  CANDIDATE_ORACLE_SHA: da75d987e3683da6768c6f115a5749e4682a1ea2e03994ff1cedda2b8b419a09
+
+jobs:
+  strict-render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    env:
+      FIXTURES: ${{ runner.temp }}/readback-fixtures
+      EVIDENCE: ${{ runner.temp }}/readback-render-${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read existing audited c8 catalog
+        uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          run-id: 39352833447
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: ${{ runner.temp }}/readback-fixtures
+      - name: Prepare original runtime and prove candidate bytes
+        id: ready
+        shell: bash
+        run: |
+          mkdir -p "$EVIDENCE"
+          git merge-base --is-ancestor "$CANDIDATE_REF" HEAD
+          git diff --exit-code "$CANDIDATE_REF" HEAD -- site scripts
+          git restore --source="$CANDIDATE_REF" -- site/assets/js/puzzle-engine.js scripts/test_puzzle_render_browser.py
+          python - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          pairs = {
+              'site/assets/js/puzzle-engine.js': os.environ['CANDIDATE_ENGINE_SHA'],
+              'scripts/test_puzzle_render_browser.py': os.environ['CANDIDATE_ORACLE_SHA'],
+              'scripts/test_puzzle_raster_worker.py': 'c42aaf377a92a2f4a71a1c86c4293bda7c3d9a27c3d08109b335e9bf1036ace6',
+          }
+          rows = []
+          for name, expected in pairs.items():
+              data = pathlib.Path(name).read_bytes()
+              blob = subprocess.check_output(['git','show',os.environ['CANDIDATE_REF']+':'+name])
+              rows.append({'path':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),
+                           'expected':expected,'matchesGitBlob':data==blob})
+          evidence = pathlib.Path(os.environ['EVIDENCE'])
+          (evidence/'source-proof.json').write_text(json.dumps({
+              'phase':'candidate','ref':os.environ['CANDIDATE_REF'],
+              'checkout':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+              'catalogRun':39352833447,'catalogArtifact':'puzzle-audited-catalog','files':rows
+          },indent=2)+'\n')
+          assert all(r['sha256']==r['expected'] and r['matchesGitBlob'] for r in rows)
+          assert (pathlib.Path(os.environ['FIXTURES'])/'fixtures').is_dir()
+          PY
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+          python -m pip install playwright==1.61.0 openpyxl==3.1.5
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+          { node --version; python --version; python -m playwright --version; } > "$EVIDENCE/runtime.txt"
+      - name: Strict render all languages and DPR 1/2/3
+        id: render
+        if: steps.ready.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          printf '%s  %s\n' "$CANDIDATE_ENGINE_SHA" site/assets/js/puzzle-engine.js "$CANDIDATE_ORACLE_SHA" scripts/test_puzzle_render_browser.py | sha256sum --check | tee "$EVIDENCE/render-source-before.txt"
+          set +e
+          python scripts/test_puzzle_render_browser.py --fixtures "$FIXTURES" --output "$EVIDENCE/render" --browsers "${{ matrix.browser }}" --locales ru en zh --dpr-checks 2>&1 | tee "$EVIDENCE/render.log"
+          code=${PIPESTATUS[0]}
+          printf '%s\n' "$code" > "$EVIDENCE/render-exit.txt"
+          exit "$code"
+      - name: Existing exact worker pixels memory and cancellation
+        id: worker
+        if: always() && steps.ready.outcome == 'success'
+        continue-on-error: true
+        shell: bash
+        run: |
+          printf '%s  %s\n' "$CANDIDATE_ENGINE_SHA" site/assets/js/puzzle-engine.js "$CANDIDATE_ORACLE_SHA" scripts/test_puzzle_render_browser.py | sha256sum --check | tee "$EVIDENCE/worker-source-before.txt"
+          set +e
+          python scripts/test_puzzle_raster_worker.py --fixtures "$FIXTURES" --output "$EVIDENCE/raster-worker" --browsers "${{ matrix.browser }}" 2>&1 | tee "$EVIDENCE/worker.log"
+          code=${PIPESTATUS[0]}
+          printf '%s\n' "$code" > "$EVIDENCE/worker-exit.txt"
+          exit "$code"
+      - name: Require both original gates and unchanged candidate bytes
+        if: always()
+        shell: bash
+        env:
+          READY: ${{ steps.ready.outcome }}
+          RENDER: ${{ steps.render.outcome }}
+          WORKER: ${{ steps.worker.outcome }}
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          out=pathlib.Path(os.environ['EVIDENCE']);out.mkdir(parents=True,exist_ok=True)
+          actual={
+              'engine':hashlib.sha256(pathlib.Path('site/assets/js/puzzle-engine.js').read_bytes()).hexdigest(),
+              'oracle':hashlib.sha256(pathlib.Path('scripts/test_puzzle_render_browser.py').read_bytes()).hexdigest()
+          }
+          stable=actual['engine']==os.environ['CANDIDATE_ENGINE_SHA'] and actual['oracle']==os.environ['CANDIDATE_ORACLE_SHA']
+          outcomes={key:os.environ[key] for key in ('READY','RENDER','WORKER')}
+          (out/'outcomes.json').write_text(json.dumps({'outcomes':outcomes,'sourceStable':stable,'after':actual},indent=2)+'\n')
+          assert stable and all(value=='success' for value in outcomes.values()), 'Original render/worker gate failed or did not run'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: readback-render-${{ matrix.browser }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/readback-render-${{ matrix.browser }}
+          retention-days: 30
+          overwrite: false
+
+  same-runner-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      FIXTURES: ${{ runner.temp }}/readback-fixtures
+      EVIDENCE: ${{ runner.temp }}/readback-performance
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read the same audited c8 catalog
+        uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          run-id: 39352833447
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          path: ${{ runner.temp }}/readback-fixtures
+      - name: Prepare one unchanged runner runtime
+        id: ready
+        shell: bash
+        run: |
+          mkdir -p "$EVIDENCE"
+          git merge-base --is-ancestor "$CANDIDATE_REF" HEAD
+          git diff --exit-code "$CANDIDATE_REF" HEAD -- site scripts
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+          { node --version; python --version; python -m playwright --version; } > "$EVIDENCE/runtime.txt"
+          python scripts/test_puzzle_performance_budget.py 2>&1 | tee "$EVIDENCE/budget-controls.log"
+      - name: Baseline then candidate on this same runner with existing budgets
+        id: performance
+        if: steps.ready.outcome == 'success'
+        shell: bash
+        run: |
+          failed=0
+          for phase in baseline candidate; do
+            export PHASE="$phase"
+            if [[ "$phase" == baseline ]]; then
+              export REF="$BASELINE_REF" ENGINE_SHA="$BASELINE_ENGINE_SHA" ORACLE_SHA="$BASELINE_ORACLE_SHA"
+            else
+              export REF="$CANDIDATE_REF" ENGINE_SHA="$CANDIDATE_ENGINE_SHA" ORACLE_SHA="$CANDIDATE_ORACLE_SHA"
+            fi
+            mkdir -p "$EVIDENCE/$phase"
+            # Read-only shared audited geometry; do not make another large copy.
+            ln -s "$FIXTURES/fixtures" "$EVIDENCE/$phase/fixtures"
+            git restore --source="$REF" -- site/assets/js/puzzle-engine.js scripts/test_puzzle_render_browser.py
+            if ! python - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          expected={
+              'site/assets/js/puzzle-engine.js':os.environ['ENGINE_SHA'],
+              'scripts/test_puzzle_render_browser.py':os.environ['ORACLE_SHA'],
+              'scripts/test_puzzle_performance.py':'7f6b87c072cf726c3999f40edec667af7945b898e9e82ee55e42c57e03bff700',
+              'scripts/test_puzzle_performance_budget.py':'58f6a68488eca67a413643bad32b0488b3ef0e6e4071c6759727afecabc013f9'
+          }
+          rows=[]
+          for name,wanted in expected.items():
+              data=pathlib.Path(name).read_bytes()
+              original=subprocess.check_output(['git','show',os.environ['REF']+':'+name])
+              rows.append({'path':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),
+                           'expected':wanted,'matchesGitBlob':data==original})
+          out=pathlib.Path(os.environ['EVIDENCE'])/os.environ['PHASE']
+          (out/'source-before.json').write_text(json.dumps({'phase':os.environ['PHASE'],'ref':os.environ['REF'],
+              'catalogRun':39352833447,'files':rows},indent=2)+'\n')
+          assert all(row['sha256']==row['expected'] and row['matchesGitBlob'] for row in rows)
+          assert (out/'fixtures').is_dir()
+          PY
+            then
+              printf '125\n' > "$EVIDENCE/$phase/exit.txt"
+              failed=1
+              continue
+            fi
+            set +e
+            python scripts/test_puzzle_performance.py --output "$EVIDENCE/$phase" --channels chromium --cycles 3 --cpu-rates 1,4,6 --enforce-budgets 2>&1 | tee "$EVIDENCE/$phase/run.log"
+            code=${PIPESTATUS[0]}
+            set -e
+            printf '%s\n' "$code" > "$EVIDENCE/$phase/exit.txt"
+            if [[ "$code" != 0 ]]; then failed=1; fi
+            sha256sum site/assets/js/puzzle-engine.js scripts/test_puzzle_render_browser.py scripts/test_puzzle_performance.py scripts/test_puzzle_performance_budget.py > "$EVIDENCE/$phase/source-after.sha256"
+            printf '%s  %s\n' "$ENGINE_SHA" site/assets/js/puzzle-engine.js "$ORACLE_SHA" scripts/test_puzzle_render_browser.py | sha256sum --check || failed=1
+          done
+          exit "$failed"
+      - name: Preserve phase outcomes and descriptive memory/latency comparison
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          root=pathlib.Path(os.environ['EVIDENCE']);root.mkdir(parents=True,exist_ok=True)
+          phases={}
+          for phase in ('baseline','candidate'):
+              folder=root/phase;exitfile=folder/'exit.txt';report=folder/'desktop-performance.json'
+              data=json.loads(report.read_text()) if report.exists() else None
+              rows=(data or {}).get('results',[])
+              phases[phase]={'exitCode':int(exitfile.read_text()) if exitfile.exists() else None,
+                  'status':'not-run' if not report.exists() else 'passed' if all(row.get('status')=='passed' for row in rows) and rows else 'failed',
+                  'maps':[{'id':m['id'],'cycle':m['cycle'],'cpuThrottle':m['cpuThrottle'],
+                           **{k:m.get(k) for k in ('retainedHeapMiB','loadSeconds','dragFrameP95Ms','dragFrameMaxMs')}}
+                          for result in rows for m in result.get('maps',[])]}
+          comparisons=[]
+          before={(r['id'],r['cycle']):r for r in phases['baseline']['maps']}
+          for row in phases['candidate']['maps']:
+              previous=before.get((row['id'],row['cycle']))
+              if previous:
+                  comparisons.append({'id':row['id'],'cycle':row['cycle'],'cpuThrottle':row['cpuThrottle'],
+                      'baseline':previous,'candidate':row,
+                      'deltas':{key:row[key]-previous[key] if isinstance(row.get(key),(float,int)) and isinstance(previous.get(key),(float,int)) else None
+                                for key in ('retainedHeapMiB','loadSeconds','dragFrameP95Ms','dragFrameMaxMs')}})
+          complete=all(p['exitCode']==0 and p['status']=='passed' and len(p['maps'])==18 for p in phases.values())
+          (root/'comparison.json').write_text(json.dumps({'sameRunner':True,'order':['baseline','candidate'],
+              'phases':phases,'comparison':comparisons,'complete':complete,
+              'limits':['Existing performance budgets enforced unchanged; descriptive deltas add no new thresholds.',
+                        'Heap and existing raster byte budgets are not total GPU/process memory.',
+                        'Desktop runner is not a physical phone; sequential order has warm-cache/host-noise limitations.',
+                        'Integrated product still requires full CI and explicit review.']},indent=2)+'\n')
+          assert complete, 'A baseline/candidate performance phase failed, was incomplete or did not run'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: readback-performance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/readback-performance/*.json
+            ${{ runner.temp }}/readback-performance/*.txt
+            ${{ runner.temp }}/readback-performance/*.log
+            ${{ runner.temp }}/readback-performance/baseline/*.json
+            ${{ runner.temp }}/readback-performance/baseline/*.txt
+            ${{ runner.temp }}/readback-performance/baseline/*.log
+            ${{ runner.temp }}/readback-performance/baseline/*.sha256
+            ${{ runner.temp }}/readback-performance/baseline/*failure.png
+            ${{ runner.temp }}/readback-performance/candidate/*.json
+            ${{ runner.temp }}/readback-performance/candidate/*.txt
+            ${{ runner.temp }}/readback-performance/candidate/*.log
+            ${{ runner.temp }}/readback-performance/candidate/*.sha256
+            ${{ runner.temp }}/readback-performance/candidate/*failure.png
+          retention-days: 30
+          overwrite: false
