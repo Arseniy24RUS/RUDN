@@ -1,0 +1,50 @@
+name: Chromium input stability diagnosis
+
+on:
+  push:
+    branches: [codex/input-stability-diagnosis]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  native-input:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: puzzle-audited-catalog
+          run-id: '39352833447'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/puzzle-interactions
+      - name: Prepare original native runtime and Chromium
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium
+      - name: Preserve original controls then resilience sequence
+        run: |
+          python scripts/test_puzzle_interactions.py --output "${{ runner.temp }}/puzzle-interactions" --browsers chromium
+          python scripts/test_puzzle_resilience.py --output "${{ runner.temp }}/puzzle-interactions" --browsers chromium
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chromium-input-stability
+          path: |
+            ${{ runner.temp }}/puzzle-interactions/interactions*.json*
+            ${{ runner.temp }}/puzzle-interactions/resilience*.json*
+            ${{ runner.temp }}/puzzle-interactions/failures
+            ${{ runner.temp }}/puzzle-interactions/resilience-failures
+          retention-days: 30
