@@ -1,6 +1,7 @@
 import {updateSnapshotStore} from './platform-update-state.js';
 import * as releaseAPI from './release-bootstrap.js';
 import {hasFailedRelease,recordFailedRelease} from './platform-update-failures.js';
+import {captureCheckpointContracts,acceptsCheckpointContracts} from './platform-update-contracts.js';
 
 export const UPDATE_PENDING_KEY='rudn.update.pending.v1';
 const uid=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -8,9 +9,7 @@ const fail=code=>Object.assign(new Error(code),{code});
 const safeStorage=name=>{try{return globalThis[name]}catch{return null}};
 const COPY={ru:['Обновляем платформу…','Работа сохранена. Не удалось восстановить её автоматически.','Вернуться к сохранённой работе'],en:['Updating the platform…','Your work is saved. Automatic restoration failed.','Return to saved work'],zh:['正在更新平台…','作业已保存，自动恢复失败。','返回已保存的作业']};
 function compatibleContracts(current,target,list){
-  if(!current||!target)return false;
-  for(const key of ['updateEnvelope','adapterSnapshot','durableStore'])if(!Number.isInteger(current[key])||current[key]!==target[key])return false;
-  return list.every(adapter=>{let key=String(adapter.module||'platform').split(':')[0];if(key==='classroom'||key==='quiz-board')key='quiz';if(key==='puzzle')key='maps';return Number.isInteger(current.modules?.[key])&&current.modules[key]===target.modules?.[key]});
+  return acceptsCheckpointContracts(captureCheckpointContracts(current,list.map(adapter=>({module:adapter.module||'platform'}))),target);
 }
 
 // A coordinator is scoped to one document/tab. Accepted work stays in the normal
@@ -80,11 +79,13 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       }
       if(!stable(owner,route,list))throw fail('update/owner-or-route-changed');
       show();envelopeToken=uid();
-      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,previous:target.previous||null,createdAt:now()};
+      const checkpointContracts=captureCheckpointContracts(current.contracts,results);
+      if(!checkpointContracts)throw fail('update/incompatible-contract');
+      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,checkpointContracts,previous:target.previous||null,createdAt:now()};
       const envelopeWrite=store.put(envelope).then(async saved=>{if(controller.signal.aborted){await store.remove(envelope.token);throw fail('update/deadline')}return saved});
       const saved=await Promise.race([envelopeWrite,deadline]);
       if(!saved?.durable||controller.signal.aborted||!stable(owner,route,list)||now()>deadlineAt)throw fail('update/envelope-not-ready');
-      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,previous:target.previous||null});
+      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,checkpointContracts,previous:target.previous||null});
       clearTimeout(preparationTimer);
       for(const adapter of list)adapter.commitPreparation?.();
       record('update-state',{stage:'switch',operation:moduleName(),success:true});
@@ -117,10 +118,14 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
         recordFailedRelease({buildId:marker.targetBuild,sourceBuild:marker.sourceBuild,code:'restore-failed'},{storage:persistentStorage});
         const deadline=new Promise((_,reject)=>{controller.signal.addEventListener('abort',()=>reject(fail('update/rollback-timeout')),{once:true});timeout=setTimeout(()=>controller.abort(),5000)});
         const ready=await Promise.race([release.prepareRelease(previous,{module:moduleName(),signal:controller.signal}),deadline]);if(disposed||controller.signal.aborted||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};if(!ready?.ready)throw fail('update/rollback-unavailable');
+        // Verify the saved checkpoint modules, not the failed screen's current
+        // adapters. Missing metadata cannot certify a safe previous release.
+        const checkpoints=envelope?.adapters;
+        if(!Array.isArray(checkpoints)||!checkpoints.length||checkpoints.some(adapter=>typeof adapter?.module!=='string'||!adapter.module||typeof adapter.resumeToken!=='string'||!adapter.resumeToken)||!captureCheckpointContracts(envelope.checkpointContracts,checkpoints)||!acceptsCheckpointContracts(envelope.checkpointContracts,ready.context?.contracts))throw fail('update/rollback-incompatible-contract');
         writePending({...marker,phase:'rollback',targetBuild:previous.buildId,failedBuild:marker.targetBuild,rollbackAttempted:true});
         release.rollbackRelease(previous,{resumeToken:marker.token});switched=true;
         return {status:'rollback'};
-      }catch(error){code=error?.code==='update/rollback-timeout'?'update/rollback-timeout':'update/rollback-unavailable';record('update-state',{stage:'rollback',code,success:false})}
+      }catch(error){code=['update/rollback-timeout','update/rollback-incompatible-contract'].includes(error?.code)?error.code:'update/rollback-unavailable';record('update-state',{stage:'rollback',code,success:false})}
       finally{clearTimeout(timeout);if(rollbackController===controller)rollbackController=null}
     }
     if(disposed||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};

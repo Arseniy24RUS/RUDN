@@ -1,5 +1,5 @@
 // Preserve the deployment/CI entry point while replacing the retired manual report form.
-if(!process.argv.includes('--cold-legal-only'))await import('./diagnostics-v2-browser.mjs');
+if(!process.argv.includes('--cold-legal-only')&&!process.argv.includes('--admin-update-only'))await import('./diagnostics-v2-browser.mjs');
 
 // Real cold main.js routing/coordinator and the public course adapter. Only the
 // localhost identity/cloud boundary and A/B URL aliases are synthetic; this is
@@ -23,6 +23,7 @@ const {backend}=await import(base+'assets/js/backend.js?v=1.3.10');
 const {durableStore}=await import(base+'assets/js/durable-store.js');
 const {setReleaseContext}=await import(base+'assets/js/release-resources.js');
 const {updateSnapshotStore}=await import(base+'assets/js/platform-update-state.js');
+const {captureCheckpointContracts}=await import(base+'assets/js/platform-update-contracts.js');
 const {academicContext}=await import(base+'assets/js/access.js?v=1.3.10');
 window.qa={build,owner,events:[],submissions:0};
 backend.profile={studentKey:'123456789',fullName:'Synthetic cold restore',group:'ГГУбд-01-26'};
@@ -54,8 +55,9 @@ if(build==='${buildA}'){
   if(receipt.status!=='ready')return receipt;
   qa.handle.commitPreparation();const token=crypto.randomUUID(),previous={buildId:'${buildA}',entryURL:'/_releases/${buildA}/index.html',manifestURL:'/_releases/${buildA}/manifest.json',manifestSha256:'0'.repeat(64)};
   const envelope={schema:1,token,owner,sourceBuild:'${buildA}',targetBuild:'${buildB}',route:'${route}',language:'ru',adapters:[{module:'legal-lab',resumeToken:receipt.resumeToken,checkpointRef:receipt.checkpointRef}],previous,createdAt:Date.now()};
+  envelope.checkpointContracts=captureCheckpointContracts(${JSON.stringify(contracts)},envelope.adapters);
   const stored=await updateSnapshotStore().put(envelope);if(!stored.durable)throw Error('Envelope not durable');
-  const marker={token,owner,sourceBuild:'${buildA}',targetBuild:'${buildB}',phase:'switching',attempts:1,startedAt:Date.now(),route:'${route}',previous};
+  const marker={token,owner,sourceBuild:'${buildA}',targetBuild:'${buildB}',phase:'switching',attempts:1,startedAt:Date.now(),route:'${route}',previous,checkpointContracts:envelope.checkpointContracts};
   sessionStorage.setItem('rudn.update.pending.v1',JSON.stringify(marker));localStorage.setItem('rudn.update.pending.v1:'+token,JSON.stringify(marker));
   await qa.handle.destroy();return {...receipt,token};
  };
@@ -81,7 +83,7 @@ const pw=await import(process.env.PLAYWRIGHT_MODULE_PATH?pathToFileURL(process.e
 const report={status:'fail',kind:'actual main/coordinator/cold hosted Legal restore with local synthetic identity/cloud and URL aliases',notCovered:['production authentication','service worker','immutable manifest integrity','physical phones'],results:[]};
 report.sourceHashes=Object.fromEntries(await Promise.all(['assets/js/main.js','assets/js/platform-learning-updates.js','assets/js/platform-update-coordinator.js','assets/js/platform-update-state.js','apps/legal-lab/entry.mjs'].map(async file=>[file,createHash('sha256').update(await readFile(resolve(site,file))).digest('hex')])));
 let browser,page;
-try{for(const engine of (process.env.DIAGNOSTICS_BROWSERS||'chromium,firefox,webkit').split(',')){
+try{for(const engine of (process.argv.includes('--admin-update-only')?[]:(process.env.DIAGNOSTICS_BROWSERS||'chromium,firefox,webkit').split(','))){
  held=false;hold=new Promise(resolve=>releaseHold=resolve);heldReady=new Promise(resolve=>heldResolve=resolve);requests.length=0;
  const item={engine,status:'fail',errors:[],navigations:[],blockedExternal:[]};report.results.push(item);
  browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});item.version=browser.version();
@@ -130,4 +132,147 @@ try{for(const engine of (process.env.DIAGNOSTICS_BROWSERS||'chromium,firefox,web
  finally{releaseHold();await context.close();await browser.close();browser=null;}
 }report.status='pass';}
 catch(error){report.failure={message:error.message,stack:error.stack};process.exitCode=1;}
-finally{releaseHold();await browser?.close();await new Promise(resolve=>{server.close(resolve);server.closeAllConnections()});await mkdir(output,{recursive:true});await writeFile(resolve(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({status:report.status,kind:'cold-hosted-legal-main',results:report.results.map(({engine,status,failure})=>({engine,status,failure})),output}));}
+finally{releaseHold();await browser?.close();await new Promise(resolve=>{server.close(resolve);server.closeAllConnections()});if(!process.argv.includes('--admin-update-only')){await mkdir(output,{recursive:true});await writeFile(resolve(output,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({status:report.status,kind:'cold-hosted-legal-main',results:report.results.map(({engine,status,failure})=>({engine,status,failure})),output}));}}
+
+if(!process.exitCode&&!process.argv.includes('--cold-legal-only'))await verifyAdminUpdates();
+
+async function verifyAdminUpdates(){
+ const adminOutput=resolve(process.env.DIAGNOSTICS_OUTPUT||'test-results/diagnostics-v2','admin-main-update');
+ const adminRoute='#diagnostics/123456789',adminOwner='teacher:synthetic-teacher';
+ const adminHtml=html.replace('src="fixture-entry.mjs"','src="admin-entry.mjs"');
+ // Real main on both documents. Only identity/read-data and release URL aliases
+  // are synthetic. A's coordinator is stopped after mount readiness, before UI
+  // setup and the manually owned transition; its real child adapter stays live.
+  // B's coordinator is unchanged.
+ // No site copies, Firebase, production or claim of full automatic A dispatch.
+ const adminEntry=`
+ const build=location.pathname.split('/')[2],base=location.origin+'/_releases/'+build+'/';
+ const {backend}=await import(base+'assets/js/backend.js?v=1.3.10');
+ const {setReleaseContext}=await import(base+'assets/js/release-resources.js');
+ const {updateSnapshotStore}=await import(base+'assets/js/platform-update-state.js');
+ const {captureCheckpointContracts}=await import(base+'assets/js/platform-update-contracts.js');
+ window.qa={kind:'admin',build,events:[],calls:[],restored:0};
+ backend.profile=null;backend.user={uid:'synthetic-teacher',email:'synthetic-teacher@invalid.example'};backend.isAdmin=()=>true;backend.authReady=true;backend.connected=false;
+ backend.init=async()=>{backend.emitStatus();return backend.status()};backend.ensureDiagnosticIdentity=async()=>null;backend.syncLocalToCloud=async()=>{};
+ backend.durableSync=()=>({restore:async()=>null,flush:async()=>({status:'synthetic-offline'})});
+ backend.diagnosticsRequest=async(action,payload={},options={})=>{
+  qa.calls.push({action,payload});
+  if(action==='openSession')return {sessionId:payload.clientSessionId,subjectKey:'teacher_synthetic',generation:0};
+  if(action==='append')return {batchId:payload.batchId,receivedAt:Date.now(),duplicate:false};
+  const response=await fetch(base+'admin-api',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,payload}),signal:options.signal});
+  if(!response.ok)throw Error('Synthetic read boundary failure');return response.json();
+ };
+ setReleaseContext({buildId:build,siteRoot:location.origin+'/',runtimeRoot:base,resources:{},contracts:${JSON.stringify(contracts)}});
+ document.documentElement.dataset.releaseBuild=build;
+ addEventListener('rudn:module-ready',()=>qa.events.push('module-ready'));
+ addEventListener('rudn:update-restored',()=>{qa.restored++;qa.events.push('restored')});
+ window.qaPrepare=async()=>{
+  const adapter=window.qaAdminAdapter(),receipt=await adapter.prepareForUpdate({targetRelease:{buildId:'${buildB}'}});
+  if(receipt.status!=='ready')return receipt;
+  adapter.commitPreparation();const token=crypto.randomUUID(),previous={buildId:'${buildA}',entryURL:'/_releases/${buildA}/admin.html',manifestURL:'/_releases/${buildA}/manifest.json',manifestSha256:'0'.repeat(64)};
+  const envelope={schema:1,token,owner:'${adminOwner}',sourceBuild:'${buildA}',targetBuild:'${buildB}',route:'${adminRoute}',language:'ru',adapters:[{module:'diagnostics',resumeToken:receipt.resumeToken,checkpointRef:receipt.checkpointRef}],previous,createdAt:Date.now()};
+  envelope.checkpointContracts=captureCheckpointContracts(${JSON.stringify(contracts)},envelope.adapters);
+  const stored=await updateSnapshotStore().put(envelope);if(!stored.durable)throw Error('Envelope not durable');
+  const marker={token,owner:'${adminOwner}',sourceBuild:'${buildA}',targetBuild:'${buildB}',phase:'switching',attempts:1,startedAt:Date.now(),route:'${adminRoute}',previous,checkpointContracts:envelope.checkpointContracts};
+  sessionStorage.setItem('rudn.update.pending.v1',JSON.stringify(marker));localStorage.setItem('rudn.update.pending.v1:'+token,JSON.stringify(marker));
+  const saved=await updateSnapshotStore().get(receipt.resumeToken);return {...receipt,token,state:saved.state};
+ };
+ await import(base+'assets/js/main.js?v=1.3.10');
+ `;
+  const adminReport={status:'fail',kind:'actual-main-admin-update',synthetic:true,A_coordinator_stop_boundary:'after-source-mount-before-setup',A_synthetic_transition_owner:true,notCovered:['automatic A coordinator dispatch','production auth/API','service worker/integrity','physical phones'],results:[]};
+ const sourceFiles=['assets/js/main.js','assets/js/diagnostics-ui.js','assets/js/platform-learning-updates.js','assets/js/platform-update-state.js','assets/js/platform-update-coordinator.js'];
+ const sourceHashes=async()=>Object.fromEntries(await Promise.all(sourceFiles.map(async file=>[file,createHash('sha256').update(await readFile(resolve(site,file))).digest('hex')])));
+ adminReport.sourceHashesBefore=await sourceHashes();
+ let releaseAdminHold,holdAdmin,heldAdmin=false,adminBrowser,adminHeldReady,resolveAdminHeld;
+ const calls=[];
+ const adminServer=createServer(async(req,res)=>{try{
+  const url=new URL(req.url,'http://localhost');if(url.pathname==='/favicon.ico'){res.writeHead(204);res.end();return}
+  if(url.pathname==='/release.json'){res.setHeader('Content-Type',mime['.json']);res.end(JSON.stringify({schema:1,current:{buildId:buildB,entryURL:'/_releases/'+buildB+'/admin.html',manifestURL:'/_releases/'+buildB+'/manifest.json',manifestSha256:'0'.repeat(64)}}));return}
+  const match=url.pathname.match(/^\/_releases\/([ab]{32})\/(.+)$/);if(!match)throw Error('outside fixture');const [,build,logical]=match;
+  if(logical==='admin.html'){res.setHeader('Content-Type',mime['.html']);res.end(adminHtml);return}
+  if(logical==='admin-entry.mjs'){res.setHeader('Content-Type',mime['.mjs']);res.end(adminEntry);return}
+  if(logical==='admin-api'){
+   let raw='';for await(const chunk of req)raw+=chunk;const {action,payload}=JSON.parse(raw);calls.push({build,action,payload});
+   if(build===buildB&&action==='listSessions'&&!heldAdmin){heldAdmin=true;resolveAdminHeld();await holdAdmin}
+   const row={sessionId:payload.cursor?'synthetic-session-2':'synthetic-session-1',reportCode:'SYNTHETIC',installationId:'synthetic-installation',environment:{browser:'synthetic'},build:'fixture-build',openedAt:1800000000000};
+   let value;
+   if(action==='searchStudents')value={items:[{studentKey:'123456789',fullName:'Synthetic fixture student',group:'Synthetic group'}],nextCursor:null};
+   else if(action==='listSessions')value={items:[row],nextCursor:payload.cursor?null:'sessions-next'};
+   else if(action==='readEvents')value={items:[{event:'fixture-event',module:'maps',code:'ok'}],nextCursor:payload.cursor?null:'events-next'};
+   else throw Error('Unexpected mutating/admin request');
+   res.setHeader('Content-Type',mime['.json']);res.end(JSON.stringify(value));return;
+  }
+  const file=resolve(site,logical);if(!file.startsWith(site+sep))throw Error('outside fixture');
+  let bytes=await readFile(file);if(logical==='assets/js/main.js')bytes=Buffer.from(bytes.toString('utf8')+`
+if(window.qa?.kind==="admin"){
+ window.qaAdminAdapter=()=>updateAdapters()[0];
+ window.qaStopSourceUpdates=async()=>{
+  if(qa.build!==${JSON.stringify(buildA)})throw Error('Source-only fixture lifecycle');
+  updateCoordinator.destroy();
+  // Drain an already running check; a disposed idle coordinator returns defer.
+  // This cannot start another update or dispose the child adapter.
+  await updateCoordinator.check('fixture-disposed');
+ };
+}
+`);
+  res.setHeader('Content-Type',mime[extname(file)]||'application/octet-stream');res.setHeader('Cache-Control','no-store');res.end(bytes);
+ }catch{res.writeHead(500);res.end()}});await new Promise(resolve=>adminServer.listen(0,'127.0.0.1',resolve));const baseURL='http://127.0.0.1:'+adminServer.address().port;
+ try{for(const engine of (process.env.DIAGNOSTICS_BROWSERS||'chromium,firefox,webkit').split(',')){
+  heldAdmin=false;holdAdmin=new Promise(resolve=>releaseAdminHold=resolve);adminHeldReady=new Promise(resolve=>resolveAdminHeld=resolve);calls.length=0;
+   const item={engine,status:'fail',sourceCoordinatorStopped:false,errors:[],navigations:[],blockedExternal:[]};adminReport.results.push(item);
+  adminBrowser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});item.version=adminBrowser.version();
+  const context=await adminBrowser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'}),p=await context.newPage();p.setDefaultTimeout(30000);
+  p.on('pageerror',error=>item.errors.push(error.message));let measure=false;
+  p.on('request',request=>{if(measure&&request.isNavigationRequest()&&request.frame()===p.mainFrame())item.navigations.push(new URL(request.url()).pathname)});
+  await context.route('**/*',request=>{if(new URL(request.request().url()).origin===baseURL)return request.continue();item.blockedExternal.push(new URL(request.request().url()).origin);return request.abort()});
+  try{
+   await p.goto(baseURL+'/_releases/'+buildA+'/admin.html'+adminRoute);
+   await p.waitForFunction(()=>document.querySelector('#app')?.getAttribute('aria-busy')==='false'&&window.qaAdminAdapter?.()?.isUpdateReady===true);
+    await p.evaluate(()=>qaStopSourceUpdates());item.sourceCoordinatorStopped=true;
+   await p.locator('[data-student-search] [name=query]').fill('Applied search');await p.locator('[data-student-search] [name=group]').fill('Applied group');await p.locator('[data-student-search] [type=submit]').click();
+    await p.locator('[data-student]').waitFor();
+    item.preStudentClick=await p.evaluate(()=>({busy:document.querySelector('#app')?.getAttribute('aria-busy'),inert:!!document.querySelector('[data-student]')?.closest('[inert]'),status:!!document.querySelector('[data-status]')?.textContent,marker:!!sessionStorage.getItem('rudn.update.pending.v1')}));
+    await p.locator('[data-student]').click();await p.waitForFunction(()=>!document.querySelector('[data-status]')?.textContent);
+   await p.locator('[data-filters] [name=module]').fill('maps');await p.locator('[data-filters] [type=submit]').click();await p.waitForFunction(()=>!document.querySelector('[data-status]')?.textContent);
+   await p.locator('[data-device]').click();await p.locator('[data-device-reset]').waitFor();
+   await p.locator('[data-sessions] [data-next]').click();await p.locator('[data-sessions] [data-prev]').waitFor();await p.locator('[data-session]').click();await p.locator('[data-export]').waitFor();
+   await p.locator('[data-events] [data-next]').click();await p.locator('[data-events] [data-prev]').waitFor();
+   await p.locator('[data-events] summary').first().click();
+   await p.locator('[data-student-search] [name=query]').fill('Last unsubmitted surname');
+   await p.locator('[data-filters] [name=from]').fill('2026-10-20T09:15');
+   const draft=p.locator('[data-filters] [name=module]');await draft.fill('legal-lab');await draft.press('ArrowLeft');
+   const before=await p.evaluate(()=>({focus:document.activeElement.name,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd,scrollY}));
+   item.beforeView=before;
+   const prepared=await p.evaluate(()=>qaPrepare());assert.equal(prepared.status,'ready');assert.equal(prepared.state.sessionId,'synthetic-session-2');
+   item.checkpointView=prepared.state.view;
+   assert.equal(prepared.state.search.draft.query,'Last unsubmitted surname');assert.equal(prepared.state.search.applied.query,'Applied search');assert.equal(prepared.state.filters.applied.module,'maps');assert.equal(prepared.state.filters.draft.module,'legal-lab');assert.equal(prepared.state.filters.draft.from,'2026-10-20T09:15');
+   assert.equal(prepared.state.filters.applied.installationId,'synthetic-installation');assert.equal(prepared.state.pages.events.cursor,'events-next');
+   assert.doesNotMatch(JSON.stringify(prepared.state),/Synthetic fixture student|fixture-event|confirmationToken|downloadURL/);
+   measure=true;await p.goto(baseURL+'/_releases/'+buildB+'/admin.html?rudnResume='+prepared.token+adminRoute,{waitUntil:'domcontentloaded'});
+   await p.waitForFunction(()=>window.qa?.calls.some(x=>x.action==='listSessions'));
+   // A recorded browser call precedes its HTTP arrival, especially in Firefox.
+   // Observe the actual existing server hold before testing the early state.
+   let holdDeadline;try{await Promise.race([adminHeldReady,new Promise((_,reject)=>{holdDeadline=setTimeout(()=>reject(Error('Admin fixture hold not reached')),30000)})])}finally{clearTimeout(holdDeadline)}
+   assert.equal(heldAdmin,true);
+   await p.waitForTimeout(1200);
+   const early=await p.evaluate(()=>({marker:JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')),ready:qaAdminAdapter()?.isUpdateReady===true,restored:qa.restored}));
+   assert.equal(early.marker.phase,'switching');assert.equal(early.ready,false);assert.equal(early.restored,0);
+   releaseAdminHold();
+   await p.waitForFunction(()=>window.qa?.restored===1&&!sessionStorage.getItem('rudn.update.pending.v1'));
+   const after=await p.evaluate(()=>({hash:location.hash,focus:document.activeElement.name,start:document.activeElement.selectionStart,end:document.activeElement.selectionEnd,scrollY,
+    query:document.querySelector('[data-student-search] [name=query]').value,module:document.querySelector('[data-filters] [name=module]').value,from:document.querySelector('[data-filters] [name=from]').value,
+    details:document.querySelector('[data-events] details').open,calls:qa.calls.filter(x=>!['openSession','append'].includes(x.action)),restored:qa.restored,
+    marker:sessionStorage.getItem('rudn.update.pending.v1'),failed:localStorage.getItem('rudn.update.failed-releases.v1')}));
+   item.afterView={focus:after.focus,start:after.start,end:after.end,scrollY:after.scrollY};
+   assert.equal(after.hash,adminRoute);assert.equal(after.query,'Last unsubmitted surname');assert.equal(after.module,'legal-lab');assert.equal(after.from,'2026-10-20T09:15');assert.equal(after.details,true);
+   for(const key of ['focus','start','end'])assert.equal(after[key],before[key],key);assert.ok(Math.abs(after.scrollY-before.scrollY)<=1);
+   assert.ok(after.calls.some(x=>x.action==='listSessions'&&x.payload.cursor==='sessions-next'&&x.payload.filters.module==='maps'&&x.payload.filters.installationId==='synthetic-installation'));
+   assert.ok(after.calls.some(x=>x.action==='readEvents'&&x.payload.sessionId==='synthetic-session-2'&&x.payload.cursor==='events-next'));
+   assert.ok(after.calls.every(x=>['searchStudents','listSessions','readEvents'].includes(x.action)));assert.equal(after.marker,null);assert.equal(after.failed,null);assert.equal(item.navigations.length,1);assert.deepEqual(item.errors,[]);assert.deepEqual(item.blockedExternal,[]);
+   item.status='pass';item.earlyDeferred=true;item.sameSelection=true;item.lastUnblurredDraft=true;item.appliedFiltersSeparate=true;item.sameCursor=true;item.focusAndScroll=true;item.readOnlyRestore=true;item.oneNavigation=true;
+   await mkdir(adminOutput,{recursive:true});await p.screenshot({path:resolve(adminOutput,engine+'-restored.png')});
+  }catch(error){item.failure={message:error.message,stack:error.stack};item.dom=await p.evaluate(()=>({hash:location.hash,busy:document.querySelector('#app')?.getAttribute('aria-busy'),calls:window.qa?.calls,events:window.qa?.events,marker:sessionStorage.getItem('rudn.update.pending.v1')})).catch(()=>({unavailable:true}));await mkdir(adminOutput,{recursive:true});await p.screenshot({path:resolve(adminOutput,engine+'-failure.png')}).catch(()=>{});throw error}
+  finally{releaseAdminHold();await context.close();await adminBrowser.close();adminBrowser=null}
+ }adminReport.status='pass'}catch(error){adminReport.failure={message:error.message,stack:error.stack};process.exitCode=1}
+ finally{releaseAdminHold?.();await adminBrowser?.close();await new Promise(resolve=>{adminServer.close(resolve);adminServer.closeAllConnections()});adminReport.sourceHashesAfter=await sourceHashes();adminReport.sourceStable=JSON.stringify(adminReport.sourceHashesAfter)===JSON.stringify(adminReport.sourceHashesBefore);if(!adminReport.sourceStable){adminReport.status='fail';process.exitCode=1}await mkdir(adminOutput,{recursive:true});await writeFile(resolve(adminOutput,'report.json'),JSON.stringify(adminReport,null,2));console.log(JSON.stringify({kind:adminReport.kind,status:adminReport.status,results:adminReport.results.map(({engine,status,failure})=>({engine,status,failure})),output:adminOutput}))}
+}
