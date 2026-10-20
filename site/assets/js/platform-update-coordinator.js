@@ -1,22 +1,23 @@
 import {updateSnapshotStore} from './platform-update-state.js';
 import * as releaseAPI from './release-bootstrap.js';
 import {hasFailedRelease,recordFailedRelease} from './platform-update-failures.js';
+import {captureCheckpointContracts,acceptsCheckpointContracts} from './platform-update-contracts.js';
 
 export const UPDATE_PENDING_KEY='rudn.update.pending.v1';
+const RELEASE_RETRY_INTERVAL=300000;
+const preparationKey=(target,module)=>JSON.stringify([target.buildId,target.manifestSha256,target.manifestURL,target.entryURL,module]);
 const uid=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const fail=code=>Object.assign(new Error(code),{code});
 const safeStorage=name=>{try{return globalThis[name]}catch{return null}};
 const COPY={ru:['Обновляем платформу…','Работа сохранена. Не удалось восстановить её автоматически.','Вернуться к сохранённой работе'],en:['Updating the platform…','Your work is saved. Automatic restoration failed.','Return to saved work'],zh:['正在更新平台…','作业已保存，自动恢复失败。','返回已保存的作业']};
 function compatibleContracts(current,target,list){
-  if(!current||!target)return false;
-  for(const key of ['updateEnvelope','adapterSnapshot','durableStore'])if(!Number.isInteger(current[key])||current[key]!==target[key])return false;
-  return list.every(adapter=>{let key=String(adapter.module||'platform').split(':')[0];if(key==='classroom'||key==='quiz-board')key='quiz';if(key==='puzzle')key='maps';return Number.isInteger(current.modules?.[key])&&current.modules[key]===target.modules?.[key]});
+  return acceptsCheckpointContracts(captureCheckpointContracts(current,list.map(adapter=>({module:adapter.module||'platform'}))),target);
 }
 
 // A coordinator is scoped to one document/tab. Accepted work stays in the normal
 // draft/outbox stores; this envelope contains only local recovery references.
 export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnostics,module='platform',getOwner=()=>'',getRoute=()=>globalThis.location?.hash||'',restoreRoute,release=releaseAPI,store=updateSnapshotStore(),storage=safeStorage('sessionStorage'),persistentStorage=safeStorage('localStorage'),window:win=globalThis.window,document:doc=globalThis.document,now=Date.now,autoStart=true}={}){
-  let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
+  let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,preparationBlocked=null,online=win?.navigator?.onLine,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
   const context=()=>release.getReleaseContext?.();
   const moduleName=()=>typeof module==='function'?module():module;
   const record=(event,fields)=>{try{diagnostics?.record?.(event,fields)}catch{}};
@@ -48,22 +49,33 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     if(disposed||switched||doc?.visibilityState==='hidden'||pending())return {status:'defer',code:'inactive-or-restoring'};
     const current=context();if(!current?.buildId)return {status:'defer',code:'unversioned'};
     const controller=new AbortController();transition=controller;
-    let list=[],envelopeToken=null,preparationTimer=null,targetBuild='';
+    const epoch=contextEpoch,owner=getOwner(),route=getRoute(),operation=moduleName();
+    let list=[],envelopeToken=null,preparationTimer=null,targetBuild='',key='',preparingRelease=false;
+    const sameContext=(checkAdapters=true)=>!disposed&&epoch===contextEpoch&&owner===getOwner()&&route===getRoute()&&operation===moduleName()&&current.buildId===context()?.buildId&&(!checkAdapters||!list.length||stable(owner,route,list));
+    const blockPreparation=code=>{preparationBlocked={key,code,epoch,owner,route,operation,sourceBuild:current.buildId,list,retryAt:now()+RELEASE_RETRY_INTERVAL}};
     try{
       const target=await release.checkRelease({signal:controller.signal});
+      if(controller.signal.aborted||!sameContext(false))return {status:'defer',code:'context-changed'};
       targetBuild=target.buildId;
       if(target.buildId===current.buildId)return {status:'current'};
       if(hasFailedRelease(target.buildId,{storage:persistentStorage}))return {status:'defer',code:'failed-release'};
       if(blocked?.build===target.buildId&&blocked.revision===revision)return {status:'defer',code:blocked.code};
-      const owner=getOwner(),route=getRoute();
+      key=preparationKey(target,operation);
+      // Input revisions can resolve checkpoint obstacles, but cannot repair
+      // release bytes. Retry those only after a descriptor/context change,
+      // observed network recovery, or the existing five-minute check window.
+      if(preparationBlocked?.key===key&&preparationBlocked.epoch===epoch&&preparationBlocked.owner===owner&&preparationBlocked.route===route&&preparationBlocked.sourceBuild===current.buildId&&stable(owner,route,preparationBlocked.list)&&now()<preparationBlocked.retryAt)return {status:'defer',code:preparationBlocked.code};
       list=adapters();
       if(!list.length||list.some(a=>!a?.prepareForUpdate||!a?.resumeAfterUpdate)){
         blocked={build:target.buildId,revision,code:'adapter-not-ready'};return {status:'defer',code:blocked.code};
       }
-      record('update-state',{stage:'prepare-release',operation:moduleName(),code:reason});
-      const receipt=await release.prepareRelease(target,{module:moduleName(),signal:controller.signal});
+      record('update-state',{stage:'prepare-release',operation,code:reason});
+      preparingRelease=true;
+      const receipt=await release.prepareRelease(target,{module:operation,signal:controller.signal});
+      if(controller.signal.aborted||!sameContext(false))return {status:'defer',code:'context-changed'};
       if(!receipt?.ready||receipt.buildId!==target.buildId)throw fail('update/release-not-verified');
-      if(!compatibleContracts(current.contracts,receipt.context?.contracts,list)){blocked={build:target.buildId,revision,code:'incompatible-contract'};record('update-state',{stage:'contract',code:'invalid',success:false});return {status:'defer',code:blocked.code}}
+      if(!compatibleContracts(current.contracts,receipt.context?.contracts,list)){if(sameContext())blockPreparation('incompatible-contract');record('update-state',{stage:'contract',code:'invalid',success:false});return {status:'defer',code:'incompatible-contract'}}
+      preparingRelease=false;preparationBlocked=null;
       if(!stable(owner,route,list))return {status:'defer',code:'context-changed'};
       const deadlineAt=now()+5000,results=[];
       const deadline=new Promise((_,reject)=>{
@@ -80,19 +92,22 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       }
       if(!stable(owner,route,list))throw fail('update/owner-or-route-changed');
       show();envelopeToken=uid();
-      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,previous:target.previous||null,createdAt:now()};
+      const checkpointContracts=captureCheckpointContracts(current.contracts,results);
+      if(!checkpointContracts)throw fail('update/incompatible-contract');
+      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,checkpointContracts,previous:target.previous||null,createdAt:now()};
       const envelopeWrite=store.put(envelope).then(async saved=>{if(controller.signal.aborted){await store.remove(envelope.token);throw fail('update/deadline')}return saved});
       const saved=await Promise.race([envelopeWrite,deadline]);
       if(!saved?.durable||controller.signal.aborted||!stable(owner,route,list)||now()>deadlineAt)throw fail('update/envelope-not-ready');
-      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,previous:target.previous||null});
+      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,checkpointContracts,previous:target.previous||null});
       clearTimeout(preparationTimer);
       for(const adapter of list)adapter.commitPreparation?.();
       record('update-state',{stage:'switch',operation:moduleName(),success:true});
       release.activatePreparedRelease(target,{resumeToken:envelopeToken});switched=true;
       return {status:'switching',buildId:target.buildId};
     }catch(error){
-      const code=error?.code||'update/preparation-failed';record('update-state',{stage:'prepare',code,success:false});
-      blocked={build:targetBuild,revision,code};
+      const obsolete=!sameContext()||(preparingRelease&&controller.signal.aborted);
+      const code=obsolete?'context-changed':error?.code||'update/preparation-failed';
+      if(!obsolete){record('update-state',{stage:'prepare',code,success:false});if(preparingRelease)blockPreparation(code);else blocked={build:targetBuild,revision,code}}
       if(!switched){try{clearPending(envelopeToken)}catch{}if(envelopeToken)void store.remove(envelopeToken).catch(()=>{})}
       return {status:'defer',code};
     }finally{clearTimeout(preparationTimer);if(!switched)await cancel(list);if(transition===controller)transition=null}
@@ -117,10 +132,14 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
         recordFailedRelease({buildId:marker.targetBuild,sourceBuild:marker.sourceBuild,code:'restore-failed'},{storage:persistentStorage});
         const deadline=new Promise((_,reject)=>{controller.signal.addEventListener('abort',()=>reject(fail('update/rollback-timeout')),{once:true});timeout=setTimeout(()=>controller.abort(),5000)});
         const ready=await Promise.race([release.prepareRelease(previous,{module:moduleName(),signal:controller.signal}),deadline]);if(disposed||controller.signal.aborted||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};if(!ready?.ready)throw fail('update/rollback-unavailable');
+        // Verify the saved checkpoint modules, not the failed screen's current
+        // adapters. Missing metadata cannot certify a safe previous release.
+        const checkpoints=envelope?.adapters;
+        if(!Array.isArray(checkpoints)||!checkpoints.length||checkpoints.some(adapter=>typeof adapter?.module!=='string'||!adapter.module||typeof adapter.resumeToken!=='string'||!adapter.resumeToken)||!captureCheckpointContracts(envelope.checkpointContracts,checkpoints)||!acceptsCheckpointContracts(envelope.checkpointContracts,ready.context?.contracts))throw fail('update/rollback-incompatible-contract');
         writePending({...marker,phase:'rollback',targetBuild:previous.buildId,failedBuild:marker.targetBuild,rollbackAttempted:true});
         release.rollbackRelease(previous,{resumeToken:marker.token});switched=true;
         return {status:'rollback'};
-      }catch(error){code=error?.code==='update/rollback-timeout'?'update/rollback-timeout':'update/rollback-unavailable';record('update-state',{stage:'rollback',code,success:false})}
+      }catch(error){code=['update/rollback-timeout','update/rollback-incompatible-contract'].includes(error?.code)?error.code:'update/rollback-unavailable';record('update-state',{stage:'rollback',code,success:false})}
       finally{clearTimeout(timeout);if(rollbackController===controller)rollbackController=null}
     }
     if(disposed||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};
@@ -177,7 +196,12 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     revision++;blocked=null;if(disposed)return;
     clearTimeout(debounce);debounce=setTimeout(()=>{void (pending()?restorePending():check('state-change'))},800);
   }
-  const wake=event=>{if(['hashchange','rudn:identitychange'].includes(event?.type)){contextEpoch++;restoration?.abort();rollbackController?.abort()}if(doc?.visibilityState!=='hidden')notifyStateChanged()};
+  const wake=event=>{
+    if(event?.type==='offline'){online=false;return}
+    if(event?.type==='online'){const recovered=online===false&&win?.navigator?.onLine!==false;online=win?.navigator?.onLine??true;if(recovered)preparationBlocked=null}
+    if(['hashchange','rudn:identitychange'].includes(event?.type)){contextEpoch++;restoration?.abort();rollbackController?.abort()}
+    if(doc?.visibilityState!=='hidden')notifyStateChanged()
+  };
   // Ordinary typing/scroll gestures are not a polling source. They only wake a
   // previously deferred update after its interaction/storage obstacle changed.
   const changed=()=>{if(blocked)notifyStateChanged()};
@@ -194,11 +218,11 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     }).catch(()=>record('update-state',{stage:'restore',code:'update/recovery-unavailable',success:false}));
   };
   win?.addEventListener?.('rudn:release-boot-failed',bootFailed);
-  const events=['online','pageshow','hashchange','rudn:identitychange','rudn:module-ready','rudn:update-state-changed'];
+  const events=['online','offline','pageshow','hashchange','rudn:identitychange','rudn:module-ready','rudn:update-state-changed'];
   for(const event of events)win?.addEventListener?.(event,wake);
   for(const event of ['pointerup','compositionend','change','input'])doc?.addEventListener?.(event,changed,true);
   doc?.addEventListener?.('visibilitychange',wake);
   backend?.addEventListener?.('change',wake);
-  if(autoStart){timer=setInterval(()=>{if(doc?.visibilityState!=='hidden')void check('interval')},300000);queueMicrotask(()=>void (pending()?restorePending():check('startup')))}
+  if(autoStart){timer=setInterval(()=>{preparationBlocked=null;if(doc?.visibilityState!=='hidden')void check('interval')},RELEASE_RETRY_INTERVAL);queueMicrotask(()=>void (pending()?restorePending():check('startup')))}
   return {check,restorePending,notifyStateChanged,destroy(){disposed=true;if(!switched)transition?.abort();restoration?.abort();rollbackController?.abort();clearTimeout(debounce);clearInterval(timer);hide();win?.removeEventListener?.('rudn:release-boot-failed',bootFailed);for(const event of events)win?.removeEventListener?.(event,wake);for(const event of ['pointerup','compositionend','change','input'])doc?.removeEventListener?.(event,changed,true);doc?.removeEventListener?.('visibilitychange',wake);backend?.removeEventListener?.('change',wake);void cancel(adapters(),{discard:!switched})}};
 }

@@ -100,6 +100,7 @@ const SHELL=[
   './assets/js/release-bootstrap.js',
   './assets/js/release-recovery.js',
   './assets/js/platform-update-state.js',
+  './assets/js/platform-update-contracts.js',
   './assets/js/platform-update-coordinator.js',
   './assets/js/platform-update-failures.js',
   './assets/js/platform-learning-updates.js',

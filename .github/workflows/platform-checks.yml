@@ -37,6 +37,7 @@ jobs:
         run: >-
           node --test tests/diagnostics-v2.test.mjs tests/diagnostics-cloud-policy.test.mjs
           tests/platform-update-state.test.mjs tests/platform-update-coordinator.test.mjs tests/platform-update-failures.test.mjs
+          tests/platform-update-preparation-retry.test.mjs tests/diagnostics-admin-update.test.mjs
           tests/platform-diagnostics-pagination.test.mjs
           scripts/diagnostics-v2-service.test.mjs scripts/diagnostics-v2-cli-adapter.test.mjs scripts/test-platform-release.mjs
           scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs scripts/test_sw_client_bindings.mjs scripts/test_sw_durable_prepare.mjs

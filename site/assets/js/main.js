@@ -317,7 +317,13 @@ async function render(){
     else if(r.name==='puzzle') await renderPuzzleRoute();
     else if(r.name==='games') renderGamesRoute(r.parts[0]);
     else if(r.name==='admin') await renderAdmin();
-    else if(r.name==='diagnostics'){const controller=new AbortController();currentCleanup=()=>controller.abort();await mountDiagnosticsAdmin(app,{backend,locale:getLocale(),signal:controller.signal,studentKey:r.parts[0]});}
+    else if(r.name==='diagnostics'){
+      const controller=new AbortController();let handle=null;
+      const cleanup=()=>{controller.abort();handle?.destroy?.()};
+      exposeModuleUpdateAdapter(cleanup,()=>handle,'diagnostics');currentCleanup=cleanup;
+      handle=await mountDiagnosticsAdmin(app,{backend,locale:getLocale(),signal:controller.signal,studentKey:r.parts[0],diagnostics:routeDiagnostics});
+      if(controller.signal.aborted)handle?.destroy?.();
+    }
     else if(r.name==='activity') await renderActivity(r.parts[0],r.parts[1]);
     else location.hash='dashboard';
   }catch(error){renderSuccess=false;routeDiagnostics.error(error,{operation:'screen-render'});app.innerHTML=contentPage(t('error'),errorText(error),`<div class="panel"><a class="btn btn-neutral" href="#dashboard">${ui('back')}</a></div>`);toast(error,'error')}

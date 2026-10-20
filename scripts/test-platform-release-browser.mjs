@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {buildRelease} from './build-platform-release.mjs';
+import {captureCheckpointContracts} from '../site/assets/js/platform-update-contracts.js';
 function boundedRing(limit){const events=[];let dropped=0;return {push(event){if(events.length===limit){events.shift();dropped++;}events.push(event);},snapshot(){return {events:[...events],dropped,limit};}};}
 function fixturePath(value,scope){try{const url=new URL(value,scope),root=new URL(scope);return url.origin===root.origin&&url.pathname.startsWith(root.pathname)&&url.pathname.length<=300?url.pathname:null;}catch{return null;}}
 async function failureObservation(label,operation,timeoutMs=3000){
@@ -113,7 +114,7 @@ await fs.mkdir(out,{recursive:true});const source=path.join(out,'source'),baseli
 async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);}
 for(const root of [source,baseline]){
   await write(root,'index.html','<!doctype html><html><head><title>Release protocol fixture</title></head><body><main id="app">Loading</main><button id="update">Update</button><button id="lazy">Lazy</button><output id="lazy-result"></output><script type="module" src="assets/js/main.js"></script></body></html>');
-  for(const name of ['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','assets/js/platform-update-failures.js','data/platform-contracts.json'])await write(root,name,await fs.readFile(path.join(repo,'site',name)));
+  for(const name of ['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','assets/js/platform-update-failures.js','assets/js/platform-update-contracts.js','data/platform-contracts.json'])await write(root,name,await fs.readFile(path.join(repo,'site',name)));
   await write(root,'data/course.json','{"release":"A"}');await write(root,'data/lazy.json','{"lazy":"A"}');
 }
 const main=version=>`import {getReleaseContext,releaseFetch} from './release-resources.js';import {checkRelease,prepareRelease,activatePreparedRelease} from './release-bootstrap.js';const data=await (await releaseFetch('../../data/course.json',{},import.meta.url)).json();document.querySelector('#app').textContent='${version} '+data.release+' '+(sessionStorage.getItem('fixture-draft')||'none');document.querySelector('#app').dataset.build=getReleaseContext().buildId;document.querySelector('#update').onclick=async()=>{sessionStorage.setItem('fixture-draft','question-7');const target=await checkRelease();await prepareRelease(target);activatePreparedRelease(target,{resumeToken:'fixture-token'});};document.querySelector('#lazy').onclick=async()=>document.querySelector('#lazy-result').textContent=(await(await releaseFetch('../../data/lazy.json',{},import.meta.url)).json()).lazy;`;
@@ -216,7 +217,7 @@ for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')
 }
 for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(',')){
   markStage('process-session-lost-import-failure');
-  live=broken.out;const token='process-recovery-token',pending={token,owner:'synthetic-owner',sourceBuild:a.buildId,targetBuild:broken.buildId,phase:'switching',attempts:1,startedAt:Date.now(),route:'#activity/fixture',previous:a.target};
+  live=broken.out;const token='process-recovery-token',pending={token,owner:'synthetic-owner',sourceBuild:a.buildId,targetBuild:broken.buildId,phase:'switching',attempts:1,startedAt:Date.now(),route:'#activity/fixture',previous:a.target,checkpointContracts:captureCheckpointContracts(manifests.get(a.buildId).contracts,[{module:'platform'}])};
   const browser=await launch(engine),context=await browser.newContext({serviceWorkers:'block',storageState:{cookies:[],origins:[{origin,localStorage:[{name:'rudn.update.pending.v1:'+token,value:JSON.stringify(pending)}]}]}}),page=await context.newPage(),navigations=[];page.on('framenavigated',frame=>{if(frame===page.mainFrame())navigations.push(frame.url());});
   try{await page.goto(origin+broken.target.entryURL+'?rudnResume='+token+'#activity/fixture');await page.locator('#app').filter({hasText:'A A none'}).waitFor();assert.equal(new URL(page.url()).pathname,`/RUDN/_releases/${a.buildId}/index.html`);assert.equal(navigations.filter(value=>value.includes(broken.buildId)).length,1);const marker=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),'rudn.update.pending.v1:'+token);assert.equal(marker.phase,'rollback');assert.equal(marker.targetBuild,a.buildId);assert.equal(marker.failedBuild,broken.buildId);results.push({engine,scenario:'process-session-lost-import-failure',status:'pass',rollbackCount:1,previousBuild:a.buildId});}finally{await browser.close();}
 }

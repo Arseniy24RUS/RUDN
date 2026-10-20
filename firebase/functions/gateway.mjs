@@ -49,7 +49,11 @@ export function upstreamFor(url,method){
     if(!['GET','HEAD','POST','PUT','DELETE'].includes(method)||!suffix.startsWith(`/v0/b/${BUCKET}/o`)||!new RegExp(`^/v0/b/${BUCKET.replaceAll('.','\\.')}/o(?:/|$)`).test(suffix))return null;
     host='firebasestorage.googleapis.com';
   }else if(service==='database'){
-    if(!['GET','PUT','PATCH','DELETE'].includes(method)||!suffix.startsWith('/rudn-platform/v1/')||!suffix.endsWith('.json'))return null;
+    const platform=['GET','PUT','PATCH','DELETE'].includes(method)&&suffix.startsWith('/rudn-platform/v1/')&&suffix.endsWith('.json');
+    // Public puzzle reads and keyed append-only transactions still use RTDB Rules.
+    const result=(method==='GET'&&suffix==='/results.json')||(['GET','PUT'].includes(method)&&/^\/results\/[A-Za-z0-9_-]{1,150}\.json$/.test(suffix));
+    const resultQuery=[...url.searchParams.keys()].every(name=>name==='auth')&&url.searchParams.getAll('auth').length<=1&&(!url.searchParams.has('auth')||Boolean(url.searchParams.get('auth')));
+    if(!platform&&!(result&&resultQuery))return null;
     host=DATABASE;
   }else return null;
   return new URL(suffix+url.search,'https://'+host);

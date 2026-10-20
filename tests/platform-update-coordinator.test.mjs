@@ -3,7 +3,24 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import {bootstrapUpdateCoordinator,UPDATE_PENDING_KEY} from '../site/assets/js/platform-update-coordinator.js';
-const CONTRACTS={updateEnvelope:1,adapterSnapshot:1,durableStore:1,modules:{test:1}};
+const CONTRACTS={schema:1,updateEnvelope:1,adapterSnapshot:1,durableStore:1,modules:{test:1}};
+for(const invalid of ['missing-adapters','empty-adapters','missing-module','missing-token','missing-metadata'])test('boot failure keeps malformed checkpoint in recovery: '+invalid,async()=>{
+  const win=new EventTarget(),h=harness({window:win});await h.coordinator.check();h.coordinator.destroy();h.setBuild('b');
+  const marker=JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)),envelope=h.snapshots.get(marker.token);
+  if(invalid==='missing-adapters')delete envelope.adapters;
+  if(invalid==='empty-adapters')envelope.adapters=[];
+  if(invalid==='missing-module')delete envelope.adapters[0].module;
+  if(invalid==='missing-token')delete envelope.adapters[0].resumeToken;
+  if(invalid==='missing-metadata')delete envelope.checkpointContracts;
+  const current=h.restart();
+  try{
+    const event=new Event('rudn:release-boot-failed',{cancelable:true});win.dispatchEvent(event);
+    await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(event.defaultPrevented,true);assert.equal(h.counts().rolledBack,0);assert.equal(h.counts().restored,0);
+    const saved=JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY));assert.equal(saved.phase,'blocked');assert.equal(saved.code,'update/rollback-incompatible-contract');
+    assert.equal(saved.token,marker.token);assert.equal(h.snapshots.has(marker.token),true);
+  }finally{current.destroy()}
+});
 function harness(overrides={}){
   const A='a'.repeat(32),B='b'.repeat(32);
   let owner='student:a',route='#activity/x',build=A,list=[],activated=0,rolledBack=0,prepared=0,restored=0;
@@ -57,7 +74,7 @@ test('boot failure and adapter failure share one pending fallback and one naviga
   h.release.prepareRelease=()=>{calls++;return new Promise(done=>resolve=done)};
   const restoring=broken.restorePending();await new Promise(done=>setImmediate(done));
   const boot=new Event('rudn:release-boot-failed',{cancelable:true});win.dispatchEvent(boot);await new Promise(done=>setImmediate(done));
-  assert.equal(boot.defaultPrevented,true);assert.equal(calls,1);resolve({ready:true});
+  assert.equal(boot.defaultPrevented,true);assert.equal(calls,1);resolve({ready:true,context:{contracts:CONTRACTS}});
   assert.equal((await restoring).status,'rollback');await new Promise(done=>setImmediate(done));assert.equal(h.counts().rolledBack,1);
   const late=new Event('rudn:release-boot-failed',{cancelable:true});win.dispatchEvent(late);await new Promise(done=>setImmediate(done));
   assert.equal(late.defaultPrevented,false);assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'rollback');assert.equal(h.counts().rolledBack,1);broken.destroy();
@@ -171,6 +188,21 @@ test('incompatible save contracts defer before pausing or checkpointing the acti
   const h=harness();let checkpoints=0;h.adapter.prepareForUpdate=async()=>{checkpoints++;return {status:'ready',resumeToken:'test'}};
   h.release.prepareRelease=async target=>({ready:true,buildId:target.buildId,context:{contracts:{...CONTRACTS,adapterSnapshot:2}}});
   assert.equal((await h.coordinator.check()).code,'incompatible-contract');assert.equal(checkpoints,0);assert.equal(h.counts().activated,0);h.coordinator.destroy();
+});
+
+for(const module of ['quiz:lecture-1','diagnostics'])for(const kind of ['missing-module','different-version','missing-manifest'])
+test('rollback contract fence: '+module+' / '+kind,async()=>{
+ const h=harness(),key=module.split(':')[0],contracts={...CONTRACTS,modules:{...CONTRACTS.modules,[key]:1}};
+ const context=h.release.getReleaseContext;h.release.getReleaseContext=()=>({...context(),contracts});
+ h.adapter.module=module;h.release.prepareRelease=async target=>({ready:true,buildId:target.buildId,context:{contracts}});
+ try{
+  assert.equal((await h.coordinator.check()).status,'switching');h.setBuild('b');
+  h.adapter.resumeAfterUpdate=async()=>({status:'blocked',code:'test-restore-failure'});
+  const previous=structuredClone(contracts);if(kind==='missing-module')delete previous.modules[key];else previous.modules[key]=2;
+  h.release.prepareRelease=async()=>kind==='missing-manifest'?{ready:true}:{ready:true,context:{contracts:previous}};
+  assert.deepEqual(await h.coordinator.restorePending(),{status:'blocked',code:'update/rollback-incompatible-contract'});
+  assert.equal(h.counts().rolledBack,0);assert.equal(h.snapshots.size,1);assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'blocked');
+ }finally{h.coordinator.destroy()}
 });
 
 // Exercise the actual shell readiness boundary together with the real

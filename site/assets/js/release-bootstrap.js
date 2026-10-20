@@ -1,5 +1,6 @@
 import {getReleaseContext,setReleaseContext,resourceURL} from './release-resources.js';
 import {recordFailedRelease} from './platform-update-failures.js';
+import {acceptsCheckpointContracts} from './platform-update-contracts.js';
 export {getReleaseContext,resourceURL};
 const SCHEMA=1, HEX=/^[a-f0-9]{64}$/;
 const RESUME_KEY='rudn.release.transition.v1';
@@ -32,11 +33,12 @@ async function bootFailed(code){
   try{
     writeTransition(pending);validateTarget(pending.previous);
     const deadline=new Promise((_,reject)=>{timeout=setTimeout(()=>{controller.abort();reject(failure('release/rollback-timeout'));},5000);});
-    await Promise.race([prepareRelease(pending.previous,{signal:controller.signal}),deadline]);
+    const prepared=await Promise.race([prepareRelease(pending.previous,{signal:controller.signal}),deadline]);
+    if(!prepared?.ready||prepared.buildId!==pending.previous.buildId||typeof pending.token!=='string'||!pending.token||!acceptsCheckpointContracts(pending.checkpointContracts,prepared.context?.contracts))throw failure('release/rollback-incompatible-contract');
     // The returning coordinator must restore A, while retaining B as failed.
     Object.assign(pending,{phase:'rollback',targetBuild:pending.previous.buildId});
     writeTransition(pending);activatePreparedRelease(pending.previous,{resumeToken:pending.token});
-  }catch{Object.assign(pending,{phase:'blocked',targetBuild:failedBuild});try{writeTransition(pending);}catch{}mark('rollback-unavailable','runtime-import');showBootFailure();}finally{clearTimeout(timeout);controller.abort();}
+  }catch(error){const incompatible=error?.code==='release/rollback-incompatible-contract';Object.assign(pending,{phase:'blocked',targetBuild:failedBuild,...(incompatible?{code:'update/rollback-incompatible-contract'}:{})});try{writeTransition(pending);}catch{}mark(incompatible?'rollback-incompatible-contract':'rollback-unavailable','runtime-import');showBootFailure();}finally{clearTimeout(timeout);controller.abort();}
 }
 const ownURL=new URL(import.meta.url);
 export const siteRoot=new URL(ownURL.pathname.includes('/_releases/')?ownURL.pathname.split('/_releases/')[0]+'/':'../../',ownURL).href;

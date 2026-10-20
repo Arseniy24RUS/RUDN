@@ -78,6 +78,17 @@ export async function restoreUpdateView(root,state,{signal}={}){
   try{node.focus({preventScroll:true});if(focus.start!==null&&typeof node.setSelectionRange==='function')node.setSelectionRange(focus.start,focus.end)}catch{}
 }
 
+// Independent scoped holds share the same native-input rule. Releasing one
+// hold never releases another adapter's preparation or restoration hold.
+export function holdUpdateInput(root,isHeld=()=>true){
+  const doc=root?.ownerDocument||globalThis.document;
+  const eventInside=event=>!root||event.composedPath?.().includes(root)||root.contains?.(event.target);
+  const block=event=>{if(isHeld()&&eventInside(event)&&event.isTrusted!==false){event.preventDefault?.();event.stopImmediatePropagation?.()}};
+  const blockedEvents=['beforeinput','input','change','click','keydown','pointerdown','submit'];
+  for(const name of blockedEvents)doc?.addEventListener(name,block,true);
+  return ()=>{for(const name of blockedEvents)doc?.removeEventListener(name,block,true)};
+}
+
 export function createUpdateAdapter({module,root,signal,getIdentity,getRevision,isBusy=()=>false,pause=()=>{},capture=()=>({}),checkpoint,restore=async()=>({status:'restored'}),diagnostics,store=updateSnapshotStore(),now=Date.now}={}){
   const doc=root?.ownerDocument||globalThis.document;
   let destroyed=false,epoch=0,pending=null,held=false,ready=null,readyIdentity=null,readyTarget=null,readyAbortCleanup=null,composition=false,filePicker=false,committed=false;
@@ -88,11 +99,9 @@ export function createUpdateAdapter({module,root,signal,getIdentity,getRevision,
   const composing=event=>{if(eventInside(event))composition=event.type==='compositionstart'};
   const selectingFile=event=>{if(eventInside(event)&&event.target?.type==='file')filePicker=true};
   const fileDone=()=>{filePicker=false};
-  const block=event=>{if(held&&eventInside(event)&&event.isTrusted!==false){event.preventDefault?.();event.stopImmediatePropagation?.()}};
   const listeners=[['pointerdown',pointerDown],['pointerup',pointerUp],['pointercancel',pointerUp],['compositionstart',composing],['compositionend',composing],['click',selectingFile],['change',fileDone],['cancel',fileDone]];
   for(const [name,handler]of listeners)doc?.addEventListener(name,handler,true);
-  const blockedEvents=['beforeinput','input','change','click','keydown','pointerdown','submit'];
-  for(const name of blockedEvents)doc?.addEventListener(name,block,true);
+  const releaseInput=holdUpdateInput(root,()=>held);
   const record=(event,fields)=>{try{diagnostics?.record?.('update-state',{...fields,stage:event==='update-result'?'restore':'checkpoint',operation:module})}catch{}};
   async function thaw(){if(!held)return;held=false;try{await pause(false)}catch{record('update-prepare',{code:'resume-failed',success:false})}}
   function cancelPreparation({discard=!committed}={}){const token=ready?.resumeToken;epoch++;preparationAbort?.abort();restorationAbort?.abort();preparationAbort=null;readyAbortCleanup?.();readyAbortCleanup=null;ready=null;readyIdentity=null;readyTarget=null;committed=false;return Promise.all([thaw(),discard&&token?store.remove(token):null])}
@@ -160,6 +169,6 @@ export function createUpdateAdapter({module,root,signal,getIdentity,getRevision,
   }
   return {module,prepareForUpdate,resumeAfterUpdate,cancelPreparation,commitPreparation(){if(ready)committed=true},
     get updatePrepared(){return !!ready},get updateBusy(){return !!pending},
-    destroy(){destroyed=true;cancelPreparation();for(const[name,handler]of listeners)doc?.removeEventListener(name,handler,true);for(const name of blockedEvents)doc?.removeEventListener(name,block,true);signal?.removeEventListener('abort',abortLifecycle)}
+    destroy(){destroyed=true;cancelPreparation();for(const[name,handler]of listeners)doc?.removeEventListener(name,handler,true);releaseInput();signal?.removeEventListener('abort',abortLifecycle)}
   };
 }
