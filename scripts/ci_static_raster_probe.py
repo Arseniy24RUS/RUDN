@@ -1,9 +1,11 @@
-"""Evidence-only exact-seed fresh-native-path probe; run from repository root.
+"""Evidence-only exact-seed static readback-policy candidate; run from repository root.
 
-The existing DPR3 scenario, input, assertions and verdict remain intact.
+The DPR3 scenario and strict assertions remain; two explicitly pinned candidate
+lines change startup static context and independent equal-size cache reference
+to alpha:true,willReadFrequently:true. This is NOT the original 6f runtime.
 Bounded JS-only paint-plan observers precede the original q/p comparison.
 No additional native getters, canvas calls or readbacks precede its verdict.
-Fresh renderer, geometry comparison and two paints run only after original verdict.
+Additional controls run only in context cleanup, after the original assertions.
 """
 import argparse
 import asyncio
@@ -16,9 +18,11 @@ import sys
 from pathlib import Path
 
 SEED = 2277844156
-ORIGINAL_RENDER_TEST_SHA256 = '123f93a85875e96c087a979922e18bede9f6e55a1aff6758fdc9ac375c8689a1'
-ORIGINAL_SOURCE_HASHES = {
-    'puzzle-engine.js': '93d9366eeb2ae5881d3337d10c8e54a5608354b852fbe9e7c34990b9f0b7776a',
+CANDIDATE_RENDER_TEST_SHA256 = 'da75d987e3683da6768c6f115a5749e4682a1ea2e03994ff1cedda2b8b419a09'
+BASELINE_ENGINE_SHA256 = '93d9366eeb2ae5881d3337d10c8e54a5608354b852fbe9e7c34990b9f0b7776a'
+BASELINE_RENDER_TEST_SHA256 = '123f93a85875e96c087a979922e18bede9f6e55a1aff6758fdc9ac375c8689a1'
+CANDIDATE_SOURCE_HASHES = {
+    'puzzle-engine.js': 'dec35dd1898c791657377c0771aa745730e9ba9b67ddb014a9b8654dfcf939d1',
     'puzzle-render-geometry.js': 'f6751e094fcbeefd510fb05f056dcd8e4a590005357c06e24539c6a4facd942e',
     'puzzle-raster-worker.js': '2c7bb6549e2bded941a6b96f37b43a695c517065d85a431c16c1cffdbb9ecd74',
 }
@@ -108,8 +112,6 @@ CAPTURE_HOOK = r"""
       if(Math.abs(zoom-4)>1e-6)return;
       paintPlanFrozen=true;
       staticEvidencePending={q,p,plans:{actual:lastStaticPlan,reference:lastReferencePlan},
-        rendererInputs:{renderer:state.renderGeometry,topology:state.wrapper?.geometry,project:state.projection,
-          featureIds:state.features.map(feature=>feature.properties._puzzleId),baseViewK:state.baseViewK,viewMax:state.viewMax},
         metadata:{seed:state.seed,order:[...state.order],current:state.current,
         featureId:state.features[state.current]?.properties._puzzleId,zoom,placed:state.placed,
         deviceDpr:devicePixelRatio,rasterDpr:state.dpr,width,height,scale:sprite.scale,
@@ -140,39 +142,9 @@ CAPTURE_HOOK = r"""
     canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(pixels),width,height),0,0);
     const png=canvas.toDataURL('image/png');canvas.width=canvas.height=0;return png;
   };
-  const MAX_INSPECT_NUMBERS=4000000,MAX_INSPECT_ARCS=100000;
-  const inspectSummary=level=>{
-    if(!level||!Array.isArray(level.arcs)||level.arcs.length>MAX_INSPECT_ARCS)throw new RangeError('inspect-arcs-bound');
-    let xyNumbers=0,retainedIndices=0;
-    if(!Number.isFinite(level.bucket)||!Number.isFinite(level.tolerance))throw new RangeError('inspect-header');
-    for(const arc of level.arcs){
-      if(!Array.isArray(arc.xy)||!Array.isArray(arc.indices)||arc.xy.length%2)throw new TypeError('inspect-shape');
-      xyNumbers+=arc.xy.length;retainedIndices+=arc.indices.length;
-      if(xyNumbers+retainedIndices>MAX_INSPECT_NUMBERS)throw new RangeError('inspect-numbers-bound');
-      if(!arc.xy.every(Number.isFinite)||!arc.indices.every(value=>Number.isSafeInteger(value)&&value>=0&&value<arc.xy.length/2))
-        throw new TypeError('inspect-numbers');
-    }
-    return {bucket:level.bucket,tolerance:level.tolerance,arcs:level.arcs.length,xyNumbers,retainedIndices};
-  };
-  const inspectDifference=(left,right)=>{
-    for(const key of ['bucket','tolerance'])if(!Object.is(left[key],right[key]))return {field:key,actual:left[key],fresh:right[key]};
-    if(left.arcs.length!==right.arcs.length)return {field:'arcs.length',actual:left.arcs.length,fresh:right.arcs.length};
-    for(let arc=0;arc<left.arcs.length;arc++)for(const key of ['xy','indices']){
-      const a=left.arcs[arc][key],b=right.arcs[arc][key];
-      if(a.length!==b.length)return {field:key+'.length',arc,actual:a.length,fresh:b.length};
-      for(let index=0;index<a.length;index++)if(!Object.is(a[index],b[index]))
-        return {field:key,arc,index,actual:a[index],fresh:b[index],actualNegativeZero:Object.is(a[index],-0),freshNegativeZero:Object.is(b[index],-0)};
-    }
-    return null;
-  };
-  const inspectDigest=async level=>{
-    // Bounded in-memory numeric copies only. No arc/coordinate arrays leave the page.
-    const bytes=new TextEncoder().encode(JSON.stringify(level));
-    return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(value=>value.toString(16).padStart(2,'0')).join('');
-  };
-  window.__finishStaticEvidence=async()=>{
+  window.__finishStaticEvidence=()=>{
     if(!staticEvidenceCaptured)return {records:[],errors:window.__staticEvidenceErrors};
-    const {q,p,metadata:m,plans,controlError,rendererInputs:inputs}=staticEvidenceCaptured;
+    const {q,p,metadata:m,plans,controlError}=staticEvidenceCaptured;
     const sample=pixels=>Array.from(pixels.slice((1236*m.width+361)*4,(1236*m.width+361)*4+4));
     // These are the original q/p buffers, not a new read of the game's canvas.
     const record={...m,baselineActualSample:sample(q),baselineReferenceSample:sample(p),
@@ -181,7 +153,7 @@ CAPTURE_HOOK = r"""
       observedPlans:Object.fromEntries(Object.entries(plans).map(([kind,plan])=>[kind,plan?{
         contextId:plan.contextId,role:plan.role,orphan:plan.orphan,passes:plan.passes}:null]))};
     if(controlError){record.controlError=controlError;return {records:[record],errors:window.__staticEvidenceErrors};}
-    const paint=(context,plan,freshPairs)=>{
+    const paint=(context,plan)=>{
       for(const pass of plan.passes){
         context.save();context.setTransform(...pass.clipMatrix);context.beginPath();
         context.rect(pass.map.x,pass.map.y,pass.map.width,pass.map.height);context.clip();
@@ -189,79 +161,21 @@ CAPTURE_HOOK = r"""
         context.fillStyle=pass.styles.fill;context.strokeStyle=pass.styles.stroke;
         context.lineWidth=pass.styles.lineWidth;context.lineJoin=pass.styles.lineJoin;context.lineCap=pass.styles.lineCap;
         for(const operation of pass.operations){
-          const pair=freshPairs.get(operation.index);
-          context.fill(pair.path,pass.styles.fillRule);
-          context.stroke(pair.strokePath);
+          context.fill(plan.paths.get(operation.pathId),pass.styles.fillRule);
+          context.stroke(plan.paths.get(operation.strokePathId));
         }
         context.restore();
       }
     };
-    let canvas=null,freshRenderer=null,stage='validate-renderer-inputs';
-    try{
-      const actual=plans.actual,lodScale=actual.passes[0].lodScale;
-      if(!inputs?.renderer||inputs.topology?.type!=='Topology'||typeof inputs.project!=='function'
-        ||actual.passes.some(pass=>pass.scene.mode!=='russia-subjects'||!Object.is(pass.lodScale,lodScale)
-          ||pass.scene.renderGeometryId!==identity(inputs.renderer)||pass.scene.projectionId!==identity(inputs.project)))
-        throw new Error('captured-renderer-inputs-mismatch');
-      const objectKey=bestTopologyObject(inputs.topology),seamWidth=2*Math.PI*inputs.project.scale(),maxScale=inputs.baseViewK*inputs.viewMax;
-      if(!objectKey||!Number.isFinite(seamWidth)||!Number.isFinite(maxScale)||maxScale<=0)throw new Error('renderer-parameters');
-      const constructor={topology:inputs.topology,objectKey,featureIds:[...inputs.featureIds],project:inputs.project,seamWidth,maxScale};
-      stage='construct-independent-renderer';
-      freshRenderer=window.RudnPuzzleGeometry.createTopologyRenderer(constructor);
-      if(!freshRenderer||freshRenderer===inputs.renderer)throw new Error('independent-renderer-unavailable');
-      record.freshPaths={status:'checking-geometry',constructor:{objectKey,featureIds:[...inputs.featureIds],seamWidth,maxScale,lodScale,
-        topologyIdentity:identity(inputs.topology),projectionIdentity:identity(inputs.project),originalRendererIdentity:identity(inputs.renderer),freshRendererIdentity:identity(freshRenderer)},
-        nativePathUse:'No fresh native paths have been requested or painted before geometry comparison',geometryComparison:null};
-      stage='compare-projected-arcs-and-lod';
-      {
-        // inspectLevel builds numeric LOD metadata but never calls renderer.get or native Path2D.
-        const original=inputs.renderer.inspectLevel(lodScale),fresh=freshRenderer.inspectLevel(lodScale);
-        const originalSummary=inspectSummary(original),freshSummary=inspectSummary(fresh),firstDifference=inspectDifference(original,fresh);
-        record.freshPaths.geometryComparison={equal:firstDifference===null,firstDifference,original:originalSummary,fresh:freshSummary,
-          originalSHA256:await inspectDigest(original),freshSHA256:await inspectDigest(fresh),
-          hashEncoding:'SHA256 of JSON numeric level; direct Object.is comparison additionally distinguishes negative zero'};
-      }
-      if(!record.freshPaths.geometryComparison.equal)throw new Error('fresh-numeric-geometry-mismatch');
-      stage='construct-unused-native-paths';
-      const indices=[...new Set(actual.passes.flatMap(pass=>pass.operations.map(operation=>operation.index)))];
-      if(indices.length>MAX_PLAN_FEATURES)throw new RangeError('fresh-path-count-bound');
-      const originals=new Set(actual.paths.values()),freshPairs=new Map();
-      record.freshPaths.identities=[];
-      for(const index of indices){
-        const pair=freshRenderer.get(index,lodScale);
-        if(!pair?.path||!pair.strokePath||originals.has(pair.path)||originals.has(pair.strokePath))throw new Error('native-path-not-fresh');
-        freshPairs.set(index,pair);
-        const operation=actual.passes.flatMap(pass=>pass.operations).find(item=>item.index===index);
-        record.freshPaths.identities.push({index,featureId:operation.featureId,originalPathId:operation.pathId,originalStrokePathId:operation.strokePathId,
-          freshPathId:identity(pair.path),freshStrokePathId:identity(pair.strokePath)});
-      }
-      record.freshPaths.getCalls=indices.length;
-      record.freshPaths.note='Each unique index requested once; locked pass intentionally reuses the map pair within each exact full-plan paint.';
-      stage='first-full-plan-paint';
-      canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;
-      const context=canvas.getContext('2d');
-      if(!context)throw new Error('native-context-unavailable');
-      paint(context,actual,freshPairs);
-      const first=context.getImageData(0,0,m.width,m.height).data;
-      stage='clear-same-canvas-and-second-full-plan-paint';
-      context.setTransform(1,0,0,1,0,0);context.clearRect(0,0,m.width,m.height);
-      paint(context,actual,freshPairs);
-      const second=context.getImageData(0,0,m.width,m.height).data;
-      // Serialize only after BOTH paints/reads; no PNG, attributes or clone between the paints.
-      for(const [kind,pixels] of [['fresh-paths-first',first],['fresh-paths-second',second]])
-        record.controls.push({kind,versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
+    for(const kind of ['actual','reference']){
+      const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;
+      try{
+        const context=canvas.getContext('2d',{alpha:true,willReadFrequently:true});paint(context,plans[kind]);
+        const pixels=context.getImageData(0,0,m.width,m.height).data;
+        record.controls.push({kind:'exact-'+kind+'-plan',contextPolicy:{alpha:true,willReadFrequently:true},acceptanceRole:'post-verdict diagnostic only',
+          versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
           sample:sample(pixels),png:staticEvidencePng(pixels,m.width,m.height)});
-      record.freshPaths.firstVersusSecond=rasterPixelDifference(first,second,m.width);
-      record.freshPaths.status='observed';
-      record.freshPaths.contextOptions='default';
-      record.freshPaths.canvasResizedBetweenPaints=false;
-      record.freshPaths.firstReadBeforeSecondPaint=true;
-    }catch(error){
-      record.controlError={stage,name:error?.name||'Error'};
-      if(record.freshPaths)record.freshPaths.status='inconclusive';
-    }finally{
-      if(canvas)canvas.width=canvas.height=0;
-      freshRenderer=null;
+      }finally{canvas.width=canvas.height=0;}
     }
     return {records:[record],errors:window.__staticEvidenceErrors};
   };
@@ -368,9 +282,11 @@ async def main(args):
     from playwright.async_api import async_playwright
     names = ['puzzle-engine.js', 'puzzle-render-geometry.js', 'puzzle-raster-worker.js']
     hashes = lambda: {name: hashlib.sha256((repo / 'site/assets/js' / name).read_bytes()).hexdigest() for name in names}
-    assert hashlib.sha256((repo / 'scripts/test_puzzle_render_browser.py').read_bytes()).hexdigest() == ORIGINAL_RENDER_TEST_SHA256, 'Exact original render oracle and assertions required'
     before_hashes = hashes()
-    assert before_hashes == ORIGINAL_SOURCE_HASHES, 'This evidence probe requires the exact original 6f render sources, without fresh-surface/JSON patches'
+    oracle_file = repo / 'scripts/test_puzzle_render_browser.py'
+    oracle_before = hashlib.sha256(oracle_file.read_bytes()).hexdigest()
+    assert oracle_before == CANDIDATE_RENDER_TEST_SHA256, 'Exact two-line candidate oracle required; assertions/jitters unchanged'
+    assert before_hashes == CANDIDATE_SOURCE_HASHES, 'Exact readback-policy candidate sources required; not the pristine 6f runtime'
     marker = '      cacheDifference=rasterPixelDifference(q,p,fresh.width);'
     assert render.RENDER_HOOK.count(marker) == 1, 'Exact original cache audit marker required'
     injected = marker + '\n      window.__captureStaticEvidence({q,p,width:fresh.width,height:fresh.height,cacheDifference,sprite,view,map});'
@@ -402,8 +318,6 @@ async def main(args):
                                         path.write_bytes(raw)
                                         record[key+'Png'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
                                     for control in record['controls']:
-                                        if not control.get('png'):
-                                            continue
                                         raw = base64.b64decode(control.pop('png').split(',', 1)[1])
                                         path = output / f'capture-{index}-{control["kind"]}.png'
                                         path.write_bytes(raw)
@@ -428,23 +342,32 @@ async def main(args):
                     'seed': SEED, 'physicalDevice': False, 'executable': args.executable}
                 result['sourceHashesBefore'], result['sourceHashesAfter'] = before_hashes, hashes()
                 result['sourceStable'] = result['sourceHashesBefore'] == result['sourceHashesAfter']
-                result['probe'] = {'evidenceOnly': True, 'originalVerdictUnchanged': True,
+                oracle_after = hashlib.sha256(oracle_file.read_bytes()).hexdigest()
+                result['renderOracleHashes'] = {'before': oracle_before, 'after': oracle_after}
+                result['renderOracleStable'] = oracle_before == oracle_after
+                result['candidate'] = {'baseCommit': '6f7c4016299de7ed92bd6fdc2b63c36b12bd2cf1',
+                    'sourcePolicyChanged': True, 'contextPolicy': {'alpha': True, 'willReadFrequently': True},
+                    'runtimeChange': 'Policy on first staticCanvas.getContext only',
+                    'oracleChange': 'Same declared policy on first equal-size cache-reference getContext only',
+                    'unchangedPolicies': 'Full-visible-map reference and all16jitter canvases remain default',
+                    'baselineEngineSHA256': BASELINE_ENGINE_SHA256, 'baselineOracleSHA256': BASELINE_RENDER_TEST_SHA256,
+                    'baselineFailure': 'Retained separately; this candidate result does not rewrite the original6f failure',
+                    'sourceStableMeaning': 'Candidate bytes did not change during this run, not equality to original6f',
+                    'hintLimit': 'willReadFrequently does not guarantee CPU placement or backend stability'}
+                result['probe'] = {'evidenceOnly': True, 'primaryCandidateVerdictUnchangedByCollector': True,
                     'captureCount': len(captures), 'captureErrors': capture_errors,
                     'captureTarget': {'seed': SEED, 'dpr': 3, 'rasterDpr': 2, 'current': 49, 'placed': 20, 'zoom': 4},
                     'newPaintObserversBeforeOriginalAudit': 'JS-only drawMap/drawLockedPieces/displayPaths wrappers',
-                    'newCanvasOperationsBeforeOriginalVerdict': False, 'newNativeCanvasGettersBeforeOriginalVerdict': False,
+                    'newObserverCanvasOperationsBeforeCandidateVerdict': False, 'newObserverNativeCanvasGettersBeforeCandidateVerdict': False,
                     'controlsAlterAcceptance': False, 'originalPaintHistoryAvailable': 'last-completed-static-and-cache-reference-plans',
                     'bounds': {'featuresPerPass': 512, 'passesPerPlan': 2, 'latestPlans': 2, 'errors': 16},
-                    'secondary': 'Independent topology renderer; exact numeric projected arcs/LOD comparison, new unused Path2D objects; first full-plan paint/read then clear SAME surface and second full-plan paint/read',
-                    'geometryOutput': 'Bounded counts/SHA/first difference only; no large arc arrays exported',
-                    'secondaryStatus': 'complete' if captures and all(item.get('freshPaths', {}).get('status') == 'observed' and len(item['controls']) == 2 for item in captures) else 'inconclusive',
-                    'limitation': 'Original q/p, 16 jitters and verdict remain. Extra JS observation/ref retention may affect timing/lifetime. Unused means no prior Canvas paint with these newly constructed Path2D objects; native path construction and global backend caches are not coldness guarantees. Both paints retain the original map/locked reuse order. The second paint follows source readback and clearRect on the same surface, so a difference is compatible with first-use/materialization but does not isolate path state from canvas/readback history. A post-verdict q reproduction does not waive the original pixel gate or authorize product warmup. No hint, clone, extra consumer or random numerical factor is introduced.'}
+                    'limitation': 'Two explicitly pinned source/oracle lines change context policy from6f. All strict assertions, primary q/p and16jitter parameters remain; jitter canvases still use default policy, so any jitter explanation is cross-policy and requires separate interpretation. Additional JS observation/ref retention may affect timing/lifetime. Primary candidate verdict is not replaced by secondary results. Styles/matrices are derived from source arguments, not native state. Post-verdict exact-plan controls explicitly request the candidate policy; neither complete DOM-visible consumer nor native context history is reproduced. No warmup, UA condition, clone, threshold change or original-failure waiver is introduced.'}
                 (output / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
                 print(json.dumps({'status': result['status'], 'captures': len(captures), 'captureErrors': capture_errors,
                     'sourceStable': result['sourceStable'], 'error': result.get('error', '')[:250]}, ensure_ascii=False), flush=True)
             finally:
                 await browser.close()
-    if result['status'] != 'passed' or not captures or capture_errors or any('controlError' in item for item in captures) or not result['sourceStable']:
+    if result['status'] != 'passed' or not captures or capture_errors or any('controlError' in item for item in captures) or not result['sourceStable'] or not result['renderOracleStable']:
         raise SystemExit(1)
 
 

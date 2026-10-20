@@ -121,7 +121,7 @@
   const hitCanvas = document.createElement("canvas");
   const hitCtx = hitCanvas.getContext("2d");
   const staticCanvas = document.createElement("canvas");
-  const staticCtx = staticCanvas.getContext("2d", { alpha: true });
+  const staticCtx = staticCanvas.getContext("2d", { alpha: true, willReadFrequently: true });
   const backgroundSprite = { valid: false, direct: false };
   const activeSprite = { canvas: document.createElement("canvas"), path: null };
   const rasterPreparation = {
