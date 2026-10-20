@@ -1,4 +1,4 @@
-"""Evidence-only exact-seed static-layer probe; run from the repository root.
+"""Evidence-only exact-seed static-layer consumer matrix; run from repository root.
 
 The existing DPR3 scenario, input, assertions and verdict remain intact.
 No new paint observer or canvas operation precedes its original q/p comparison.
@@ -28,6 +28,7 @@ CAPTURE_HOOK = r"""
         featureId:state.features[state.current]?.properties._puzzleId,zoom,placed:state.placed,
         deviceDpr:devicePixelRatio,rasterDpr:state.dpr,width,height,scale:sprite.scale,
         cacheView:{...view},cacheMap:{...map},mapRect:{...state.mapRect},draw:{...window.__backgroundDraw},
+        destinationSize:[els.canvas.width,els.canvas.height],
         baselineDifference:cacheDifference,fillRule:state.mode==='russia-subjects'?'nonzero':'evenodd'}};
     }catch(error){window.__staticEvidenceErrors.push({stage:'retain-original-buffers',name:error?.name||'Error'});}
   };
@@ -73,11 +74,7 @@ CAPTURE_HOOK = r"""
       actualPng:staticEvidencePng(q,m.width,m.height),referencePng:staticEvidencePng(p,m.width,m.height),
       controlsStartedAfterOriginalScenario:true,controls:[]};
     if(controlError){record.controlError=controlError;return {records:[record],errors:window.__staticEvidenceErrors};}
-    const paint=(context,clone,history)=>{
-      const clones=new WeakMap(),pathFor=path=>{
-        if(!clone)return path;
-        if(!clones.has(path))clones.set(path,new Path2D(path));return clones.get(path);
-      };
+    const paint=(context,history)=>{
       for(const pass of m.passes){
         context.save();context.setTransform(m.rasterDpr,0,0,m.rasterDpr,0,0);context.beginPath();
         context.rect(m.cacheMap.x,m.cacheMap.y,m.cacheMap.width,m.cacheMap.height);context.clip();
@@ -88,27 +85,45 @@ CAPTURE_HOOK = r"""
         const operations=[];
         for(const index of pass.indices){
           const pair=paths.get(index);
-          operations.push({kind:'fill',index,fillRule:m.fillRule});context.fill(pathFor(pair.path),m.fillRule);
-          operations.push({kind:'stroke',index});context.stroke(pathFor(pair.strokePath));
+          operations.push({kind:'fill',index,fillRule:m.fillRule});context.fill(pair.path,m.fillRule);
+          operations.push({kind:'stroke',index});context.stroke(pair.strokePath);
         }
-        // Context reads occur only after the entire secondary pass was drawn.
-        history.push({pass:pass.name,operations,context:staticEvidenceContext(context)});context.restore();
+        // No getters/readback between the map and locked native passes.
+        history.push({pass:pass.name,operations,fill:pass.fill,stroke:pass.stroke,
+          width:1/m.scale,fillRule:m.fillRule,join:'round',cap:'round',
+          transform:[m.rasterDpr*m.cacheView.k,0,0,m.rasterDpr*m.cacheView.k,
+            m.rasterDpr*m.cacheView.x,m.rasterDpr*m.cacheView.y]});context.restore();
       }
     };
-    for(const kind of ['fresh-original-paths','resized-context-original-paths','fresh-cloned-paths']){
+    for(const [surface,consumed] of [['fresh',false],['fresh',true],['reused',false],['reused',true]]){
+      const kind=surface+(consumed?'-audit-consumer':'-no-consumer');
       const canvas=document.createElement('canvas');let context;const history=[];
-      if(kind==='resized-context-original-paths'){
+      if(surface==='reused'){
         context=canvas.getContext('2d',{alpha:true});canvas.width=m.width;canvas.height=m.height;
-        paint(context,false,history);canvas.width=m.width;canvas.height=m.height;
+        paint(context,history);canvas.width=m.width;canvas.height=m.height;
         history.push({operation:'resize-reset-to-same-dimensions',width:m.width,height:m.height});
+      }else{canvas.width=m.width;canvas.height=m.height;context=canvas.getContext('2d',{alpha:true});}
+      paint(context,history);
+      let destination=null,destinationPixels=null,consumer=null;
+      if(consumed){
+        destination=document.createElement('canvas');destination.width=m.destinationSize[0];destination.height=m.destinationSize[1];
+        const target=destination.getContext('2d');
+        // The exact actual-canvas branch of the original background audit:
+        // a.save(); clipMap(a); a.drawImage(source,...); a.restore(); read(a).
+        target.save();target.setTransform(m.rasterDpr,0,0,m.rasterDpr,0,0);target.beginPath();
+        target.rect(m.mapRect.x,m.mapRect.y,m.mapRect.width,m.mapRect.height);target.clip();
+        target.drawImage(canvas,m.draw.x,m.draw.y,m.draw.width,m.draw.height);target.restore();
+        destinationPixels=target.getImageData(0,0,destination.width,destination.height).data;
+        consumer={kind:'original-audit-consumer',width:destination.width,height:destination.height,
+          draw:{...m.draw},clip:{...m.mapRect},transform:[m.rasterDpr,0,0,m.rasterDpr,0,0],
+          readOrder:['destination','source'],readbackBytes:destinationPixels.length};
       }
-      canvas.width=m.width;canvas.height=m.height;context??=canvas.getContext('2d',{alpha:true});
-      paint(context,kind==='fresh-cloned-paths',history);
       const pixels=context.getImageData(0,0,m.width,m.height).data;
-      record.controls.push({kind,history,versusActual:rasterPixelDifference(q,pixels,m.width),
-        versusReference:rasterPixelDifference(p,pixels,m.width),sample:sample(pixels),
-        png:staticEvidencePng(pixels,m.width,m.height)});
-      canvas.width=canvas.height=0;
+      const control={kind,surface,consumed,history,consumer,contextAfterRead:staticEvidenceContext(context),
+        versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
+        sample:sample(pixels),png:staticEvidencePng(pixels,m.width,m.height)};
+      if(destination){control.consumerPng=staticEvidencePng(destinationPixels,destination.width,destination.height);destination.width=destination.height=0;}
+      record.controls.push(control);canvas.width=canvas.height=0;
     }
     return {records:[record],errors:window.__staticEvidenceErrors};
   };
@@ -159,6 +174,11 @@ async def main(args):
                                         path = output / f'capture-{index}-{control["kind"]}.png'
                                         path.write_bytes(raw)
                                         control['png'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
+                                        if control.get('consumerPng'):
+                                            raw = base64.b64decode(control.pop('consumerPng').split(',', 1)[1])
+                                            path = output / f'capture-{index}-{control["kind"]}-destination.png'
+                                            path.write_bytes(raw)
+                                            control['consumerPng'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
                                     captures.append(record)
                             except Exception as error:
                                 capture_errors.append({'stage': 'collect-after-original-scenario', 'name': type(error).__name__})
@@ -184,7 +204,8 @@ async def main(args):
                     'captureTarget': {'seed': SEED, 'dpr': 3, 'rasterDpr': 2, 'current': 49, 'placed': 20, 'zoom': 4},
                     'newPaintObserversBeforeOriginalAudit': False, 'newCanvasOperationsBeforeOriginalVerdict': False,
                     'controlsAlterAcceptance': False, 'originalPaintHistoryAvailable': False,
-                    'limitation': 'Original test instrumentation remains. New hook retains the original buffers and exact native paths after its audit; secondary controls run after its full scenario verdict. Control history is reconstructed, not the historical actual paint stream. Windows does not reproduce the Linux native port.'}
+                    'matrix':'fresh/reused context x no consumer/original audit consumer',
+                    'limitation': 'Original test instrumentation remains. New hook retains the original buffers and exact native paths after its audit; secondary controls run after its full scenario verdict. Control history is reconstructed, not the historical actual paint stream. Consumer matches the original audit canvas, not the complete displayed main-canvas lifetime. Fresh uses a new context after sizing; reuse creates a context, paints once, resets the same dimensions and repaints. Native platform must be read from environment.'}
                 (output / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
                 print(json.dumps({'status': result['status'], 'captures': len(captures), 'captureErrors': capture_errors,
                     'sourceStable': result['sourceStable'], 'error': result.get('error', '')[:250]}, ensure_ascii=False), flush=True)
