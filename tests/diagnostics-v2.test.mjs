@@ -42,7 +42,21 @@ test('lost acknowledgement and reload retry the exact immutable packet and sessi
  const h=harness(),base=h.backend.diagnosticsRequest;let first=true;h.backend.diagnosticsRequest=async(action,payload)=>{const value=await base(action,payload);if(action==='append'&&first){first=false;throw Error('lost ACK')}return value};h.service.record('document-load',{success:true});await h.service.flush();h.service.destroy();h.tick(60000);const resumed=createPlatformDiagnostics(h.settings);await resumed.flush();assert.deepEqual(h.packets()[0],h.packets()[1]);resumed.destroy();
 });
 test('same UID A→B→A starts a new active session while old pending A retains its session',async()=>{
- const h=harness();h.service.record('document-load',{docId:'a-document'});await h.service.flush();const a=h.packets()[0].sessionId;h.service.record('document-search',{docId:'a-pending'});h.setProfile({studentKey:'987654321'});h.service.record('document-load',{docId:'b-document'});h.tick(30000);await h.service.flush();assert.equal(h.packets().at(-1).sessionId,a);assert.equal(h.packets().at(-1).events[0].docId,'a-pending');h.tick(30000);await h.service.flush();const b=h.packets().at(-1);assert.notEqual(a,b.sessionId);assert.ok(b.events.every(e=>e.docId!=='a-pending'));assert.equal(h.calls.filter(c=>c.action==='openSession').at(-1).payload.studentKey,'987654321');h.setProfile({studentKey:'123456789'});h.tick(30000);h.service.record('module-ready',{success:true});await h.service.flush();assert.notEqual(h.packets().at(-1).sessionId,a);assert.notEqual(h.packets().at(-1).sessionId,b.sessionId);assert.ok(h.packets().at(-1).events.some(e=>e.event==='session-open'));h.service.destroy();
+ const h=harness();
+ try {
+  h.service.record('document-load',{docId:'a-document'});await h.service.flush();const a=h.packets()[0].sessionId;
+  h.service.record('document-search',{docId:'a-pending'});h.setProfile({studentKey:'987654321'});h.service.record('document-load',{docId:'b-document'});
+  const previousPackets=h.packets().length;
+  for(let turn=0;turn<2;turn++){h.tick(30000);await h.service.flush()}
+  const delivered=h.packets().slice(previousPackets),bSession=h.calls.find(call=>call.action==='openSession'&&call.payload.studentKey==='987654321').payload.clientSessionId;
+  assert.equal(delivered.length,2);
+  const aPending=delivered.find(packet=>packet.sessionId===a),b=delivered.find(packet=>packet.sessionId===bSession);
+  assert.ok(aPending);assert.ok(b);assert.equal(aPending.sessionId,a);assert.equal(aPending.events[0].docId,'a-pending');
+  assert.notEqual(a,b.sessionId);assert.ok(b.events.every(event=>event.docId!=='a-pending'));assert.ok(b.events.some(event=>event.docId==='b-document'));
+  assert.equal(h.calls.filter(call=>call.action==='openSession').at(-1).payload.studentKey,'987654321');
+  h.setProfile({studentKey:'123456789'});h.tick(30000);h.service.record('module-ready',{success:true});await h.service.flush();
+  assert.notEqual(h.packets().at(-1).sessionId,a);assert.notEqual(h.packets().at(-1).sessionId,b.sessionId);assert.ok(h.packets().at(-1).events.some(event=>event.event==='session-open'));
+ } finally {h.service.destroy()}
 });
 
 test('old profile queues keep their original student and never deliver through another auth UID',async()=>{const h=harness();h.service.record('document-load',{docId:'old-student'});h.setProfile({studentKey:'987654321'});await h.service.flush();assert.equal(h.calls.find(c=>c.action==='openSession').payload.studentKey,'123456789');assert.ok(h.packets()[0].events.some(e=>e.docId==='old-student'));h.service.record('document-load',{docId:'same-auth-queued'});h.backend.user={uid:'different-firebase-owner'};h.setProfile({studentKey:'111112222'});h.tick(30000);await h.service.flush();assert.equal(h.calls.filter(c=>c.action==='openSession').at(-1).payload.studentKey,'111112222');assert.ok(h.packets().at(-1).events.every(e=>e.docId!=='same-auth-queued'));h.service.destroy()});
@@ -166,3 +180,179 @@ test('maximal safe events leave room for server canonical metadata and drain wit
 test('evicted pending batches report their loss in the next active packet',async()=>{const h=harness();h.service.record('module-load',{success:true});h.service.destroy();const key=[...h.env.sessionStorage.map.keys()].find(k=>k.startsWith('rudn.diagnostics.queue.v2.'));const state=JSON.parse(h.env.sessionStorage.getItem(key)),template=state.buckets[0];const frame={file:'/assets/'+ 'x'.repeat(180)+'.js',line:1,column:1};state.buckets=Array.from({length:25},(_,i)=>({...structuredClone(template),owner:{key:'other-'+i+'|123456789',auth:'other-'+i,studentKey:'123456789'},clientSessionId:'synthetic-session-'+String(i).padStart(8,'0'),queue:[],pending:{batchId:'synthetic-packet-'+String(i).padStart(8,'0'),events:Array.from({length:12},()=>sanitizeDiagnosticEvent('runtime-error',{stack:Array(5).fill(frame)},{at:1})),dropped:0,deduplicated:0}}));h.env.sessionStorage.setItem(key,JSON.stringify(state));const service=createPlatformDiagnostics(h.settings);const losses=service.status().dropped;assert.ok(losses>0);service.record('module-ready',{success:true});await service.flush();assert.ok(h.packets().at(-1).dropped>=losses);assert.ok(service.status().queued<=256);service.destroy()});
 
 test('global late errors infer only known own-script module, never the current route',async()=>{const h=harness();const dispatch=(type,values)=>{const e=new Event(type);Object.assign(e,values);h.env.dispatchEvent(e)};dispatch('error',{error:{name:'TypeError',stack:'at https://example.test/RUDN/_releases/abc/apps/legal-lab/entry.mjs:17:3'}});dispatch('unhandledrejection',{reason:{stack:'at https://example.test/RUDN/assets/js/adaptive-quiz.js:5:3'}});dispatch('error',{filename:'https://example.test/RUDN/assets/js/puzzle-engine.js',lineno:9,colno:2});dispatch('unhandledrejection',{reason:{stack:'at https://other.test/apps/governor/app.js:2:3'}});await h.service.flush();const events=h.packets()[0].events.filter(e=>['runtime-error','resource-error','unhandled-rejection'].includes(e.event));assert.deepEqual(events.map(e=>e.module),['legal-lab','quiz','maps','platform']);assert.ok(events.every(e=>e.module!=='seminar-4'));h.service.destroy()});
+
+function anonymousQueueControl() {
+ const h=harness({anonymous:true,profile:{studentKey:'700000001'}});
+ h.service.record('runtime-error',{code:'type',docId:'anonymous-control'});
+ h.backend.user={uid:'synthetic-owner-a'};
+ h.setProfile({studentKey:'700000001'});
+ h.service.record('runtime-error',{code:'type',docId:'student-control'});
+ return h;
+}
+function persistedDiagnostics(h) {
+ const key=[...h.env.sessionStorage.map.keys()].find(key=>key.startsWith('rudn.diagnostics.queue.v2.'));
+ return JSON.parse(h.env.sessionStorage.getItem(key));
+}
+
+test('queue progress: a normal anonymous head drains before the current student without mixing owners',async()=>{
+ const h=anonymousQueueControl();
+ try {
+  for(let cycle=0;cycle<3;cycle++){h.tick(30000);await h.service.flush()}
+  const opens=h.calls.filter(call=>call.action==='openSession').map(call=>call.payload),packets=h.packets();
+  assert.equal(opens.length,2);assert.equal(opens[0].studentKey,undefined);assert.equal(opens[1].studentKey,'700000001');
+  assert.notEqual(opens[0].clientSessionId,opens[1].clientSessionId);
+  assert.ok(packets[0].events.some(event=>event.docId==='anonymous-control'));
+  assert.ok(packets[0].events.every(event=>event.docId!=='student-control'));
+  assert.ok(packets[1].events.some(event=>event.docId==='student-control'));
+  assert.ok(packets[1].events.every(event=>event.docId!=='anonymous-control'));
+  assert.equal(h.service.status().queued,0);assert.equal(h.service.status().dropped,0);
+ } finally {h.service.destroy()}
+});
+
+test('queue progress: permanently forbidden anonymous openSession does not starve the current student',async()=>{
+ const h=anonymousQueueControl(),base=h.backend.diagnosticsRequest,attempts=[];
+ h.backend.diagnosticsRequest=async(action,payload)=>{
+  attempts.push({action,payload:structuredClone(payload)});
+  if(action==='openSession'&&!payload.studentKey)throw Object.assign(new Error('synthetic rejection'),{code:'forbidden'});
+  return base(action,payload);
+ };
+ try {
+  for(let cycle=0;cycle<3;cycle++){h.tick(30000);await h.service.flush()}
+  const anonymous=attempts.filter(call=>call.action==='openSession'&&!call.payload.studentKey);
+  assert.ok(anonymous.length>=2);assert.equal(new Set(anonymous.map(call=>call.payload.clientSessionId)).size,1);
+  const queued=persistedDiagnostics(h).buckets.find(bucket=>bucket.owner.studentKey===null);
+  assert.equal(queued.owner.auth,'synthetic-owner-a');assert.equal(queued.session,null);
+  assert.ok(queued.queue.some(event=>event.docId==='anonymous-control'));assert.equal(h.service.status().dropped,0);
+  assert.ok(h.calls.some(call=>call.action==='openSession'&&call.payload.studentKey==='700000001'),'current student receives its own session despite permanent rejection of the older anonymous session');
+  assert.ok(h.packets().some(packet=>packet.events.some(event=>event.docId==='student-control')));
+  assert.ok(h.packets().every(packet=>packet.events.every(event=>event.docId!=='anonymous-control')));
+ } finally {h.service.destroy()}
+});
+
+test('queue progress: invalid-response anonymous append preserves its immutable packet while the current student advances',async()=>{
+ const h=anonymousQueueControl(),base=h.backend.diagnosticsRequest,rejected=[];let anonymousSession;
+ h.backend.diagnosticsRequest=async(action,payload)=>{
+  if(action==='append'&&payload.sessionId===anonymousSession){rejected.push(structuredClone(payload));throw Object.assign(new Error('synthetic invalid response'),{code:'invalid-response'})}
+  const response=await base(action,payload);
+  if(action==='openSession'&&!payload.studentKey)anonymousSession=response.sessionId;
+  return response;
+ };
+ try {
+  for(let cycle=0;cycle<3;cycle++){h.tick(30000);await h.service.flush()}
+  assert.ok(rejected.length>=2);for(const packet of rejected)assert.deepEqual(packet,rejected[0]);
+  const queued=persistedDiagnostics(h).buckets.find(bucket=>bucket.session?.sessionId===anonymousSession);
+  assert.equal(queued.owner.auth,'synthetic-owner-a');assert.equal(queued.owner.studentKey,null);
+  assert.deepEqual({sessionId:queued.session.sessionId,...queued.pending},rejected[0]);
+  assert.ok(queued.pending.events.some(event=>event.docId==='anonymous-control'));assert.equal(h.service.status().dropped,0);
+  assert.ok(h.packets().some(packet=>packet.events.some(event=>event.docId==='student-control')),'current student packet advances while the failed packet remains available for an identical retry');
+  assert.ok(h.packets().every(packet=>packet.events.every(event=>event.docId!=='anonymous-control')));
+ } finally {h.service.destroy()}
+});
+
+test('queue progress: lost ACK yields to current student and retries exactly without crossing authenticated owners',async()=>{
+ const h=anonymousQueueControl(),base=h.backend.diagnosticsRequest,attempts=[];let lost=true,anonymousSession;
+ h.backend.diagnosticsRequest=async(action,payload)=>{
+  attempts.push({auth:h.backend.user?.uid,action,payload:structuredClone(payload)});
+  const response=await base(action,payload);
+  if(action==='openSession'&&!payload.studentKey)anonymousSession=response.sessionId;
+  if(action==='append'&&payload.sessionId===anonymousSession&&lost){lost=false;throw Object.assign(new Error('synthetic lost acknowledgement'),{code:'network'})}
+  return response;
+ };
+ try {
+  h.tick(30000);assert.equal(await h.service.flush(),false);
+  const original=structuredClone(h.packets()[0]);
+  h.tick(30000);await h.service.flush();
+  assert.ok(h.packets().at(-1).events.some(event=>event.docId==='student-control'),'the next eligible current-student packet must not wait for an older lost ACK retry');
+  h.backend.user={uid:'synthetic-owner-b'};h.setProfile({studentKey:'700000002'});
+  h.service.record('runtime-error',{code:'type',docId:'other-owner-control'});
+  h.tick(30000);await h.service.flush();
+  const differentOwner=attempts.filter(call=>call.auth==='synthetic-owner-b');
+  assert.ok(differentOwner.some(call=>call.action==='append'&&call.payload.events.some(event=>event.docId==='other-owner-control')));
+  assert.ok(differentOwner.every(call=>call.action!=='append'||call.payload.events.every(event=>!['anonymous-control','student-control'].includes(event.docId))));
+  h.backend.user={uid:'synthetic-owner-a'};h.setProfile({studentKey:'700000001'});
+  h.tick(30000);await h.service.flush();
+  const retries=attempts.filter(call=>call.action==='append'&&call.payload.sessionId===anonymousSession);
+  assert.equal(retries.length,2);assert.deepEqual(retries[0].payload,original);assert.deepEqual(retries[1].payload,original);
+  assert.ok(retries.every(call=>call.auth==='synthetic-owner-a'));assert.equal(h.service.status().dropped,0);
+ } finally {h.service.destroy()}
+});
+
+test('queue progress: retry scheduling never makes an older A session active after A to B to A and reload',async()=>{
+ const h=harness({profile:{studentKey:'700000001'}}),base=h.backend.diagnosticsRequest;let resumed,oldSession;
+ try {
+  h.service.record('runtime-error',{code:'type',docId:'old-a-control'});
+  h.setProfile({studentKey:'700000002'});h.service.record('runtime-error',{code:'type',docId:'b-control'});
+  h.setProfile({studentKey:'700000001'});h.service.record('runtime-error',{code:'type',docId:'latest-a-control'});
+  const original=persistedDiagnostics(h),oldA=original.buckets[0],latestA=original.buckets.filter(bucket=>bucket.owner.studentKey==='700000001').at(-1);
+  assert.notEqual(oldA.clientSessionId,latestA.clientSessionId);
+  h.backend.diagnosticsRequest=async(action,payload)=>{
+   const response=await base(action,payload);
+   if(action==='openSession')oldSession=response.sessionId;
+   if(action==='append')throw Object.assign(new Error('synthetic lost acknowledgement'),{code:'network'});
+   return response;
+  };
+  h.tick(30000);assert.equal(await h.service.flush(),false);
+  const pending=structuredClone(persistedDiagnostics(h).buckets.find(bucket=>bucket.session?.sessionId===oldSession).pending);
+  h.service.destroy();resumed=createPlatformDiagnostics(h.settings);
+  resumed.record('runtime-error',{code:'type',docId:'after-reload-control'});resumed.destroy();
+  const restored=persistedDiagnostics(h),recipient=restored.buckets.find(bucket=>bucket.queue.some(event=>event.docId==='after-reload-control'));
+  assert.deepEqual(restored.buckets.find(bucket=>bucket.session?.sessionId===oldSession).pending,pending);
+  assert.equal(recipient.owner.studentKey,'700000001');assert.equal(recipient.owner.auth,'same-firebase-owner');
+  assert.equal(recipient.clientSessionId,latestA.clientSessionId,'new events after reload remain in the latest A session, never the old failed session');
+ } finally {resumed?.destroy();h.service.destroy()}
+});
+
+test('queue progress: two permanently rejected eligible heads cannot alternate forever ahead of a valid third owner',async()=>{
+ const h=harness({profile:{studentKey:'700000001'}}),base=h.backend.diagnosticsRequest,opens=[];
+ h.service.record('runtime-error',{code:'type',docId:'first-rejected'});
+ h.setProfile({studentKey:'700000002'});h.service.record('runtime-error',{code:'type',docId:'second-rejected'});
+ h.setProfile({studentKey:'700000003'});h.service.record('runtime-error',{code:'type',docId:'third-current'});
+ h.backend.diagnosticsRequest=async(action,payload)=>{
+  if(action==='openSession'){opens.push(payload.studentKey);if(payload.studentKey!=='700000003')throw Object.assign(new Error('synthetic permanent rejection'),{code:'forbidden'})}
+  return base(action,payload);
+ };
+ try {
+  for(let cycle=0;cycle<3;cycle++){h.tick(30000);await h.service.flush()}
+  assert.deepEqual(opens,['700000001','700000002','700000003']);
+  assert.ok(h.packets().some(packet=>packet.events.some(event=>event.docId==='third-current')),'third owner advances within three permitted dispatches');
+  assert.ok(h.packets().every(packet=>packet.events.every(event=>!['first-rejected','second-rejected'].includes(event.docId))));
+  const saved=persistedDiagnostics(h);
+  for(const [studentKey,marker] of [['700000001','first-rejected'],['700000002','second-rejected']]){
+   const bucket=saved.buckets.find(bucket=>bucket.owner.studentKey===studentKey);
+   assert.equal(bucket.owner.auth,'same-firebase-owner');assert.ok(bucket.queue.some(event=>event.docId===marker));assert.equal(bucket.session,null);
+  }
+  assert.equal(h.service.status().dropped,0);
+ } finally {h.service.destroy()}
+});
+
+for(const mode of ['missing','invalid','unmatched','dispatched'])test('queue progress: optional persisted cursor '+mode+' preserves bounded delivery and session chronology',async()=>{
+ const h=harness({profile:{studentKey:'700000001'}}),base=h.backend.diagnosticsRequest;let resumed;
+ try {
+  h.service.record('runtime-error',{code:'type',docId:'cursor-first'});
+  h.setProfile({studentKey:'700000002'});h.service.record('runtime-error',{code:'type',docId:'cursor-second'});
+  const initial=persistedDiagnostics(h).buckets.map(bucket=>bucket.clientSessionId);
+  if(mode==='dispatched'){
+   h.backend.diagnosticsRequest=async(action,payload)=>{
+    if(action==='openSession'&&payload.studentKey==='700000001')throw Object.assign(new Error('synthetic permanent rejection'),{code:'forbidden'});
+    return base(action,payload);
+   };
+   h.tick(30000);assert.equal(await h.service.flush(),false);
+  }
+  h.service.destroy();
+  const key=[...h.env.sessionStorage.map.keys()].find(key=>key.startsWith('rudn.diagnostics.queue.v2.')),saved=persistedDiagnostics(h);
+  if(mode==='dispatched')assert.equal(saved.deliveryCursor,initial[0]);
+  else {
+   if(mode==='missing')delete saved.deliveryCursor;
+   else saved.deliveryCursor=mode==='invalid'?{unexpected:true}:'ffffffff-ffff-ffff-ffff-ffffffffffff';
+   h.env.sessionStorage.setItem(key,JSON.stringify(saved));
+  }
+  resumed=createPlatformDiagnostics(h.settings);
+  assert.deepEqual(persistedDiagnostics(h).buckets.map(bucket=>bucket.clientSessionId),initial);
+  h.tick(30000);assert.equal(await resumed.flush(),true);
+  const expected=mode==='dispatched'?'700000002':'700000001',marker=mode==='dispatched'?'cursor-second':'cursor-first';
+  assert.equal(h.calls.find(call=>call.action==='openSession').payload.studentKey,expected);
+  assert.ok(h.packets()[0].events.some(event=>event.docId===marker));
+  assert.ok(h.packets()[0].events.every(event=>!event.docId||event.docId===marker));
+  assert.equal(resumed.status().dropped,0);
+ } finally {resumed?.destroy();h.service.destroy()}
+});

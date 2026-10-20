@@ -78,14 +78,14 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  let installationId=safeRead(local,'rudn.diagnostics.installation.v2');if(!validId(installationId)){installationId=uid(env);safeWrite(local,'rudn.diagnostics.installation.v2',installationId)}
  let tabId=safeRead(tab,'rudn.diagnostics.tab.v2');if(!validId(tabId)){tabId=uid(env);safeWrite(tab,'rudn.diagnostics.tab.v2',tabId)}
  const storageKey='rudn.diagnostics.queue.v2.'+tabId;
- let buckets=[],active=null,disposed=false,timer=null,sending=null,lastWrite=0,retryAt=0,environment=detectEnvironment(env),state='idle',droppedTotal=0,deduplicatedTotal=0,persistQueued=false,identityEpoch=0;
+ let buckets=[],active=null,disposed=false,timer=null,sending=null,lastWrite=0,retryAt=0,environment=detectEnvironment(env),state='idle',droppedTotal=0,deduplicatedTotal=0,persistQueued=false,identityEpoch=0,deliveryCursor=null;
  const identity=()=>{const auth=backend.user?.uid||'',profile=backend.getProfile?.(),student=auth&&!backend.isAdmin?.()&&/^\d{5,20}$/.test(profile?.studentKey||'')?profile.studentKey:null;return {key:auth+'|'+(backend.isAdmin?.()?'teacher':student||'anonymous'),auth,studentKey:student}};
  const currentBuild=()=>token(env.__RUDN_RELEASE__?.buildId||build,80)||'unknown';
  // Exact release identity, not a guessed semantic module version.
  const moduleVersion=()=>/^[a-f0-9]{32}$/.test(env.__RUDN_RELEASE__?.buildId||'')?'build:'+env.__RUDN_RELEASE__.buildId:undefined;
  function createBucket(owner){return {owner,clientSessionId:uid(env),session:null,build:currentBuild(),environment:{...environment},queue:[],pending:null,dropped:0,deduplicated:0,createdAt:now()}}
  const allEvents=()=>buckets.reduce((n,b)=>n+b.queue.length+(b.pending?.events.length||0),0);
- const persistedState=()=>({schema:2,buckets,lastWrite,droppedTotal,deduplicatedTotal});
+ const persistedState=()=>({schema:2,buckets,lastWrite,droppedTotal,deduplicatedTotal,...(deliveryCursor?{deliveryCursor}:{})});
  // Queues belong to a tab. Without sessionStorage keep the bounded queue in
  // memory; a random tab key in localStorage would become an orphan on reload.
  const persist=()=>{trim();return safeWrite(tab,storageKey,persistedState())};
@@ -109,13 +109,19 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
    if(validId(old.session?.sessionId))b.session={sessionId:old.session.sessionId,subjectKey:token(old.session.subjectKey),generation:integer(old.session.generation,1e9),reportCode:token(old.session.reportCode)};
    if(validId(old.pending?.batchId)&&Array.isArray(old.pending.events)){const events=old.pending.events.map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(0,12);const pending={batchId:old.pending.batchId,events,dropped:integer(old.pending.dropped,1e6),deduplicated:integer(old.pending.deduplicated,1e6)};if(events.length&&byteSize(pending)<DIAGNOSTIC_LIMITS.batchBytes-1024)b.pending=pending}
    buckets.push(b);
-  }lastWrite=Math.min(now(),integer(saved.lastWrite,9999999999999));droppedTotal=integer(saved.droppedTotal,1e9);deduplicatedTotal=integer(saved.deduplicatedTotal,1e9);
+  }lastWrite=Math.min(now(),integer(saved.lastWrite,9999999999999));droppedTotal=integer(saved.droppedTotal,1e9);deduplicatedTotal=integer(saved.deduplicatedTotal,1e9);deliveryCursor=validId(saved.deliveryCursor)?saved.deliveryCursor:null;
  }
  function syncIdentity(){
   if(disposed)return;const owner=identity();if(active?.owner.key===owner.key&&active.build===currentBuild())return;
   identityEpoch++;const initial=active===null;active=(initial?[...buckets].reverse().find(b=>b.owner.key===owner.key&&b.build===currentBuild()):null)||createBucket(owner);if(!buckets.includes(active))buckets.push(active);if(!initial)active.queue.push(sanitizeDiagnosticEvent('session-open',{success:true,moduleVersion:moduleVersion()},{module:getModule(),locale:getLocale(),at:now()}));trim();persist();schedule();
  }
- function eligible(){const auth=backend.user?.uid;if(!auth)return null;return buckets.find(b=>(b.owner.auth===auth||!b.owner.auth&&!b.owner.studentKey)&&(b.queue.length||b.pending))||null}
+ function isEligible(bucket){const auth=backend.user?.uid;return Boolean(auth&&(bucket.owner.auth===auth||!bucket.owner.auth&&!bucket.owner.studentKey)&&(bucket.queue.length||bucket.pending))}
+ function eligible(){
+  // Delivery order is separate from session chronology, which restore uses for active identity.
+  const index=deliveryCursor?buckets.findIndex(bucket=>bucket.clientSessionId===deliveryCursor):-1;
+  for(let offset=1;offset<=buckets.length;offset++){const bucket=buckets[(index+offset)%buckets.length];if(isEligible(bucket))return bucket}
+  return null;
+ }
  function schedule(){if(disposed||timer||sending||!eligible()||env.navigator?.onLine===false||env.document?.visibilityState==='hidden')return;const delay=Math.max(1000,retryAt-now(),lastWrite?lastWrite+DIAGNOSTIC_LIMITS.interval-now():DIAGNOSTIC_LIMITS.interval);timer=setTimer(()=>{timer=null;void flush()},delay)}
  function record(event,fields={},bound){
   try{if(disposed)return false;syncIdentity();const value=sanitizeDiagnosticEvent(event,{...fields,moduleVersion:bound?.moduleVersion||moduleVersion()},{module:bound?.module||getModule(),locale:bound?.locale||getLocale(),at:now()});if(!value)return false;
@@ -126,7 +132,7 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  async function request(action,payload,signal){if(typeof backend.diagnosticsRequest!=='function')throw Object.assign(new Error('unavailable'),{code:'diagnostics/unavailable'});return backend.diagnosticsRequest(action,payload,{signal})}
  async function flush(){
   if(disposed)return false;syncIdentity();if(sending||env.navigator?.onLine===false)return false;const bucket=eligible();if(!bucket)return false;if(now()<Math.max(retryAt,lastWrite?lastWrite+DIAGNOSTIC_LIMITS.interval:0)){schedule();return false}
-  clearTimer(timer);timer=null;const controller=new AbortController(),flight={bucket,controller};sending=flight;state='sending';
+  clearTimer(timer);timer=null;const controller=new AbortController(),flight={bucket,controller};sending=flight;state='sending';deliveryCursor=bucket.clientSessionId;persist();
   try{
    // Pre-auth events remain anonymous, but their first authenticated delivery
    // permanently owns the session and every idempotent retry, even after a lost ACK.
