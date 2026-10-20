@@ -97,11 +97,13 @@ test('same prepared admin handle restores focus and becomes interactive after ca
  }finally{f.close()}
 });
 
-test('fresh admin restore holds native input through the final view frame and releases it afterwards',async()=>{
+test('fresh admin restore holds native input through the final view frame and releases it afterwards',async t=>{
  const f=fixture();let releaseFrame;try{
   const source=await f.mount(),field=f.root().querySelector('[data-filters]').elements.module;field.focus();
   const {ready}=await saved(source);source.commitPreparation();source.destroy();
   const fresh=await f.mount(),restoredField=f.root().querySelector('[data-filters]').elements.module;
+  // Freeze only the held view frame, so the 100 ms fallback cannot end it before the input assertions.
+  t.mock.timers.enable({apis:['setTimeout']});
   f.win.requestAnimationFrame=callback=>{releaseFrame=callback};
   const restoring=fresh.resumeAfterUpdate(ready);await settle();assert.equal(typeof releaseFrame,'function');
   const during={inert:f.root().inert,blocked:trustedInput(f.doc,restoredField)};
@@ -119,7 +121,7 @@ test('independent scoped input holds release idempotently without releasing each
  }finally{f.close()}
 });
 
-test('abort frees an ignored read; its late result cannot overwrite new fields or release a newer restore hold',async()=>{
+test('abort frees an ignored read; its late result cannot overwrite new fields or release a newer restore hold',async t=>{
  const f=fixture();let finishOld,releaseFrame;try{
   const source=await f.mount();f.root().querySelector('[data-session]').click();await settle();
   const {ready}=await saved(source);source.commitPreparation();source.destroy();const handle=await f.mount();
@@ -134,6 +136,8 @@ test('abort frees an ignored read; its late result cannot overwrite new fields o
   try{assert.equal((await Promise.race([old,new Promise((_,reject)=>{watchdog=setTimeout(()=>reject(Error('Abort did not settle ignored read')),200)})])).status,'defer')}finally{clearTimeout(watchdog)}
   assert.equal(f.root().inert,false);assert.equal(trustedInput(f.doc,field),false);field.value='latest after cancellation';
   await settle();assert.equal(field.value,'latest after cancellation');
+  // The abort watchdog above remains real; freeze only the newer view frame.
+  t.mock.timers.enable({apis:['setTimeout']});
   f.win.requestAnimationFrame=callback=>{releaseFrame=callback};
   const newer=handle.resumeAfterUpdate(ready);await settle();assert.equal(typeof releaseFrame,'function');
   finishOld();await settle();

@@ -4,6 +4,8 @@ import {hasFailedRelease,recordFailedRelease} from './platform-update-failures.j
 import {captureCheckpointContracts,acceptsCheckpointContracts} from './platform-update-contracts.js';
 
 export const UPDATE_PENDING_KEY='rudn.update.pending.v1';
+const RELEASE_RETRY_INTERVAL=300000;
+const preparationKey=(target,module)=>JSON.stringify([target.buildId,target.manifestSha256,target.manifestURL,target.entryURL,module]);
 const uid=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const fail=code=>Object.assign(new Error(code),{code});
 const safeStorage=name=>{try{return globalThis[name]}catch{return null}};
@@ -15,7 +17,7 @@ function compatibleContracts(current,target,list){
 // A coordinator is scoped to one document/tab. Accepted work stays in the normal
 // draft/outbox stores; this envelope contains only local recovery references.
 export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnostics,module='platform',getOwner=()=>'',getRoute=()=>globalThis.location?.hash||'',restoreRoute,release=releaseAPI,store=updateSnapshotStore(),storage=safeStorage('sessionStorage'),persistentStorage=safeStorage('localStorage'),window:win=globalThis.window,document:doc=globalThis.document,now=Date.now,autoStart=true}={}){
-  let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
+  let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,preparationBlocked=null,online=win?.navigator?.onLine,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
   const context=()=>release.getReleaseContext?.();
   const moduleName=()=>typeof module==='function'?module():module;
   const record=(event,fields)=>{try{diagnostics?.record?.(event,fields)}catch{}};
@@ -47,22 +49,33 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     if(disposed||switched||doc?.visibilityState==='hidden'||pending())return {status:'defer',code:'inactive-or-restoring'};
     const current=context();if(!current?.buildId)return {status:'defer',code:'unversioned'};
     const controller=new AbortController();transition=controller;
-    let list=[],envelopeToken=null,preparationTimer=null,targetBuild='';
+    const epoch=contextEpoch,owner=getOwner(),route=getRoute(),operation=moduleName();
+    let list=[],envelopeToken=null,preparationTimer=null,targetBuild='',key='',preparingRelease=false;
+    const sameContext=(checkAdapters=true)=>!disposed&&epoch===contextEpoch&&owner===getOwner()&&route===getRoute()&&operation===moduleName()&&current.buildId===context()?.buildId&&(!checkAdapters||!list.length||stable(owner,route,list));
+    const blockPreparation=code=>{preparationBlocked={key,code,epoch,owner,route,operation,sourceBuild:current.buildId,list,retryAt:now()+RELEASE_RETRY_INTERVAL}};
     try{
       const target=await release.checkRelease({signal:controller.signal});
+      if(controller.signal.aborted||!sameContext(false))return {status:'defer',code:'context-changed'};
       targetBuild=target.buildId;
       if(target.buildId===current.buildId)return {status:'current'};
       if(hasFailedRelease(target.buildId,{storage:persistentStorage}))return {status:'defer',code:'failed-release'};
       if(blocked?.build===target.buildId&&blocked.revision===revision)return {status:'defer',code:blocked.code};
-      const owner=getOwner(),route=getRoute();
+      key=preparationKey(target,operation);
+      // Input revisions can resolve checkpoint obstacles, but cannot repair
+      // release bytes. Retry those only after a descriptor/context change,
+      // observed network recovery, or the existing five-minute check window.
+      if(preparationBlocked?.key===key&&preparationBlocked.epoch===epoch&&preparationBlocked.owner===owner&&preparationBlocked.route===route&&preparationBlocked.sourceBuild===current.buildId&&stable(owner,route,preparationBlocked.list)&&now()<preparationBlocked.retryAt)return {status:'defer',code:preparationBlocked.code};
       list=adapters();
       if(!list.length||list.some(a=>!a?.prepareForUpdate||!a?.resumeAfterUpdate)){
         blocked={build:target.buildId,revision,code:'adapter-not-ready'};return {status:'defer',code:blocked.code};
       }
-      record('update-state',{stage:'prepare-release',operation:moduleName(),code:reason});
-      const receipt=await release.prepareRelease(target,{module:moduleName(),signal:controller.signal});
+      record('update-state',{stage:'prepare-release',operation,code:reason});
+      preparingRelease=true;
+      const receipt=await release.prepareRelease(target,{module:operation,signal:controller.signal});
+      if(controller.signal.aborted||!sameContext(false))return {status:'defer',code:'context-changed'};
       if(!receipt?.ready||receipt.buildId!==target.buildId)throw fail('update/release-not-verified');
-      if(!compatibleContracts(current.contracts,receipt.context?.contracts,list)){blocked={build:target.buildId,revision,code:'incompatible-contract'};record('update-state',{stage:'contract',code:'invalid',success:false});return {status:'defer',code:blocked.code}}
+      if(!compatibleContracts(current.contracts,receipt.context?.contracts,list)){if(sameContext())blockPreparation('incompatible-contract');record('update-state',{stage:'contract',code:'invalid',success:false});return {status:'defer',code:'incompatible-contract'}}
+      preparingRelease=false;preparationBlocked=null;
       if(!stable(owner,route,list))return {status:'defer',code:'context-changed'};
       const deadlineAt=now()+5000,results=[];
       const deadline=new Promise((_,reject)=>{
@@ -92,8 +105,9 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       release.activatePreparedRelease(target,{resumeToken:envelopeToken});switched=true;
       return {status:'switching',buildId:target.buildId};
     }catch(error){
-      const code=error?.code||'update/preparation-failed';record('update-state',{stage:'prepare',code,success:false});
-      blocked={build:targetBuild,revision,code};
+      const obsolete=!sameContext()||(preparingRelease&&controller.signal.aborted);
+      const code=obsolete?'context-changed':error?.code||'update/preparation-failed';
+      if(!obsolete){record('update-state',{stage:'prepare',code,success:false});if(preparingRelease)blockPreparation(code);else blocked={build:targetBuild,revision,code}}
       if(!switched){try{clearPending(envelopeToken)}catch{}if(envelopeToken)void store.remove(envelopeToken).catch(()=>{})}
       return {status:'defer',code};
     }finally{clearTimeout(preparationTimer);if(!switched)await cancel(list);if(transition===controller)transition=null}
@@ -182,7 +196,12 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     revision++;blocked=null;if(disposed)return;
     clearTimeout(debounce);debounce=setTimeout(()=>{void (pending()?restorePending():check('state-change'))},800);
   }
-  const wake=event=>{if(['hashchange','rudn:identitychange'].includes(event?.type)){contextEpoch++;restoration?.abort();rollbackController?.abort()}if(doc?.visibilityState!=='hidden')notifyStateChanged()};
+  const wake=event=>{
+    if(event?.type==='offline'){online=false;return}
+    if(event?.type==='online'){const recovered=online===false&&win?.navigator?.onLine!==false;online=win?.navigator?.onLine??true;if(recovered)preparationBlocked=null}
+    if(['hashchange','rudn:identitychange'].includes(event?.type)){contextEpoch++;restoration?.abort();rollbackController?.abort()}
+    if(doc?.visibilityState!=='hidden')notifyStateChanged()
+  };
   // Ordinary typing/scroll gestures are not a polling source. They only wake a
   // previously deferred update after its interaction/storage obstacle changed.
   const changed=()=>{if(blocked)notifyStateChanged()};
@@ -199,11 +218,11 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     }).catch(()=>record('update-state',{stage:'restore',code:'update/recovery-unavailable',success:false}));
   };
   win?.addEventListener?.('rudn:release-boot-failed',bootFailed);
-  const events=['online','pageshow','hashchange','rudn:identitychange','rudn:module-ready','rudn:update-state-changed'];
+  const events=['online','offline','pageshow','hashchange','rudn:identitychange','rudn:module-ready','rudn:update-state-changed'];
   for(const event of events)win?.addEventListener?.(event,wake);
   for(const event of ['pointerup','compositionend','change','input'])doc?.addEventListener?.(event,changed,true);
   doc?.addEventListener?.('visibilitychange',wake);
   backend?.addEventListener?.('change',wake);
-  if(autoStart){timer=setInterval(()=>{if(doc?.visibilityState!=='hidden')void check('interval')},300000);queueMicrotask(()=>void (pending()?restorePending():check('startup')))}
+  if(autoStart){timer=setInterval(()=>{preparationBlocked=null;if(doc?.visibilityState!=='hidden')void check('interval')},RELEASE_RETRY_INTERVAL);queueMicrotask(()=>void (pending()?restorePending():check('startup')))}
   return {check,restorePending,notifyStateChanged,destroy(){disposed=true;if(!switched)transition?.abort();restoration?.abort();rollbackController?.abort();clearTimeout(debounce);clearInterval(timer);hide();win?.removeEventListener?.('rudn:release-boot-failed',bootFailed);for(const event of events)win?.removeEventListener?.(event,wake);for(const event of ['pointerup','compositionend','change','input'])doc?.removeEventListener?.(event,changed,true);doc?.removeEventListener?.('visibilitychange',wake);backend?.removeEventListener?.('change',wake);void cancel(adapters(),{discard:!switched})}};
 }
