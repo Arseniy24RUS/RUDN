@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
 import {bootstrapUpdateCoordinator,UPDATE_PENDING_KEY} from '../site/assets/js/platform-update-coordinator.js';
 const CONTRACTS={updateEnvelope:1,adapterSnapshot:1,durableStore:1,modules:{test:1}};
 function harness(overrides={}){
@@ -169,4 +171,79 @@ test('incompatible save contracts defer before pausing or checkpointing the acti
   const h=harness();let checkpoints=0;h.adapter.prepareForUpdate=async()=>{checkpoints++;return {status:'ready',resumeToken:'test'}};
   h.release.prepareRelease=async target=>({ready:true,buildId:target.buildId,context:{contracts:{...CONTRACTS,adapterSnapshot:2}}});
   assert.equal((await h.coordinator.check()).code,'incompatible-contract');assert.equal(checkpoints,0);assert.equal(h.counts().activated,0);h.coordinator.destroy();
+});
+
+// Exercise the actual shell readiness boundary together with the real
+// coordinator. Only network/storage/navigation and the slow child mount are
+// synthetic; main's adapter selection and both ready notifications are intact.
+const mainSource=await readFile(new URL('../site/assets/js/main.js',import.meta.url),'utf8');
+const learningSource=await readFile(new URL('../site/assets/js/platform-learning-updates.js',import.meta.url),'utf8');
+const exposeSource=learningSource.slice(learningSource.indexOf('function exposeModuleUpdateAdapter('),learningSource.indexOf('export function bindQuizUpdate'));
+const readySource=mainSource.slice(mainSource.indexOf('function updateAdapters('),mainSource.indexOf('\nfunction scheduleAccessRefresh('));
+function shellReadiness(getHandle,module,window){
+  const context=vm.createContext({Event,Promise,window,backend:{authReady:true},renderRunning:false,dataReady:true,currentCleanup:null,formCleanups:[],shellUpdate:{module:'platform'},route:()=>({name:'activity'}),updateCoordinator:null});
+  vm.runInContext(exposeSource+'\n'+readySource+'\nthis.expose=exposeModuleUpdateAdapter;',context);
+  context.currentCleanup=context.expose(()=>{},getHandle,module);
+  return context;
+}
+const lazyModules=['legal-lab','career','reception','settlements','maps','classroom','quiz:lecture-1'];
+for(const module of lazyModules)test('actual shell waits for lazy '+module+' mount before restoring B, without rollback',async()=>{
+  const win=new EventTarget();let handle,resumeCalls=0,finishMount;
+  const mounted={module,prepareForUpdate:async()=>({status:'ready',resumeToken:'adapter-state'}),resumeAfterUpdate:async()=>{resumeCalls++;return {status:'restored'}},cancelPreparation:async()=>{}};
+  handle=mounted;const shell=shellReadiness(()=>handle,module,win);
+  const h=harness({getAdapters:()=>shell.updateAdapters(),module:()=>module,window:win});
+  const contracts={...CONTRACTS,modules:{...CONTRACTS.modules,'legal-lab':1,career:1,reception:1,settlements:1,maps:1,quiz:1}};
+  const getContext=h.release.getReleaseContext,prepare=h.release.prepareRelease;
+  h.release.getReleaseContext=()=>({...getContext(),contracts});h.release.prepareRelease=async target=>({...await prepare(target),context:{contracts}});
+  let current=h.coordinator;
+  try{
+    assert.equal((await current.check()).status,'switching');current.destroy();h.setBuild('b');
+    handle=null;shell.currentCleanup=shell.expose(()=>{},()=>handle,module);
+    const mount=new Promise(resolve=>{finishMount=()=>{handle=mounted;resolve()}});
+    current=h.restart();shell.updateCoordinator=current;
+    // main.render() reaches its outer ready notification while renderSeminar4
+    // (and the other lazy wrappers) still awaits its child handle.
+    shell.moduleReady();
+    const early=await current.restorePending();
+    assert.deepEqual(early,{status:'defer',code:'module-not-ready'});
+    assert.equal(resumeCalls,0);assert.equal(h.counts().rolledBack,0);assert.equal(h.counts().restored,0);
+    assert.equal(JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY)).phase,'switching');assert.equal(h.snapshots.size,1);
+    finishMount();await mount;shell.moduleReady();
+    assert.equal((await current.restorePending()).status,'restored');
+    assert.equal(resumeCalls,1);assert.equal(h.counts().activated,1);assert.equal(h.counts().rolledBack,0);assert.equal(h.counts().restored,1);
+    assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),null);assert.equal(h.snapshots.size,0);
+  }finally{current.destroy()}
+});
+
+test('actual shell readiness rejects partial handles and follows a nested lazy handle',()=>{
+  let handle=null;const shell=shellReadiness(()=>handle,'classroom',new EventTarget());
+  assert.equal(shell.currentCleanup.isUpdateReady,false);assert.equal(shell.updateAdapters().length,0);
+  handle={module:'classroom',prepareForUpdate:async()=>({status:'ready'})};
+  assert.equal(shell.currentCleanup.isUpdateReady,false);assert.equal(shell.updateAdapters().length,0);
+  handle.resumeAfterUpdate=async()=>({status:'restored'});assert.equal(shell.currentCleanup.isUpdateReady,true);assert.equal(shell.updateAdapters().length,1);
+  handle.isUpdateReady=false;assert.equal(shell.updateAdapters().length,0);
+  handle.isUpdateReady=true;assert.equal(shell.updateAdapters().length,1);
+  handle=null;assert.equal(shell.updateAdapters().length,0,'A retired/replaced child cannot expose the old ready flag');
+});
+
+test('actual shell mount-ready wake survives a coalesced older restorePending call',async()=>{
+  const win=new EventTarget();let handle,releaseRoute,resumeCalls=0;
+  const mounted={module:'legal-lab',prepareForUpdate:async()=>({status:'ready',resumeToken:'adapter-state'}),resumeAfterUpdate:async()=>{resumeCalls++;return {status:'restored'}},cancelPreparation:async()=>{}};
+  handle=mounted;const shell=shellReadiness(()=>handle,'legal-lab',win);
+  const h=harness({getAdapters:()=>shell.updateAdapters(),module:'legal-lab',window:win,restoreRoute:()=>new Promise(resolve=>{releaseRoute=resolve})});
+  const contracts={...CONTRACTS,modules:{...CONTRACTS.modules,'legal-lab':1}},getContext=h.release.getReleaseContext,prepare=h.release.prepareRelease;
+  h.release.getReleaseContext=()=>({...getContext(),contracts});h.release.prepareRelease=async target=>({...await prepare(target),context:{contracts}});
+  let current=h.coordinator,timer;
+  try{
+    await current.check();current.destroy();h.setBuild('b');handle=null;
+    shell.currentCleanup=shell.expose(()=>{},()=>handle,'legal-lab');current=h.restart();shell.updateCoordinator=current;
+    shell.moduleReady();const early=current.restorePending();await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(typeof releaseRoute,'function','The older restore is paused after seeing no mounted adapters');
+    const acknowledged=new Promise((resolve,reject)=>{win.addEventListener('rudn:update-restored',resolve,{once:true});timer=setTimeout(()=>reject(Error('No module-ready event retry')),2000)});
+    handle=mounted;shell.moduleReady();assert.equal(current.restorePending(),early,'Direct restore coalesces with the older promise');
+    releaseRoute();assert.equal((await early).code,'module-not-ready');
+    await acknowledged;await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(resumeCalls,1);assert.equal(h.counts().restored,1);assert.equal(h.counts().rolledBack,0);assert.equal(h.counts().activated,1);
+    assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),null);assert.equal(h.snapshots.size,0);
+  }finally{clearTimeout(timer);current.destroy()}
 });

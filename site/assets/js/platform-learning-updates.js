@@ -4,6 +4,10 @@ import {attemptOwner,persistQuiz} from './attempt-session.js?v=1.3.10';
 
 export function exposeModuleUpdateAdapter(cleanup,getHandle,module){
   Object.defineProperty(cleanup,'module',{configurable:true,get:()=>getHandle()?.module||module});
+  Object.defineProperty(cleanup,'isUpdateReady',{configurable:true,get:()=>{
+    const handle=getHandle();
+    return !!handle&&typeof handle.prepareForUpdate==='function'&&typeof handle.resumeAfterUpdate==='function'&&handle.isUpdateReady!==false;
+  }});
   cleanup.prepareForUpdate=options=>getHandle()?.prepareForUpdate?.(options)||Promise.resolve({status:'defer',code:'module-loading'});
   cleanup.resumeAfterUpdate=options=>getHandle()?.resumeAfterUpdate?.(options)||Promise.resolve({status:'blocked',code:'module-loading'});
   cleanup.cancelPreparation=options=>getHandle()?.cancelPreparation?.(options);

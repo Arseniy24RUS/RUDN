@@ -79,7 +79,7 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
  let tabId=safeRead(tab,'rudn.diagnostics.tab.v2');if(!validId(tabId)){tabId=uid(env);safeWrite(tab,'rudn.diagnostics.tab.v2',tabId)}
  const storageKey='rudn.diagnostics.queue.v2.'+tabId;
  let buckets=[],active=null,disposed=false,timer=null,sending=null,lastWrite=0,retryAt=0,environment=detectEnvironment(env),state='idle',droppedTotal=0,deduplicatedTotal=0,persistQueued=false,identityEpoch=0;
- const identity=()=>{const auth=backend.user?.uid||'',profile=backend.getProfile?.(),student=!backend.isAdmin?.()&&/^\d{5,20}$/.test(profile?.studentKey||'')?profile.studentKey:null;return {key:auth+'|'+(backend.isAdmin?.()?'teacher':student||'anonymous'),auth,studentKey:student}};
+ const identity=()=>{const auth=backend.user?.uid||'',profile=backend.getProfile?.(),student=auth&&!backend.isAdmin?.()&&/^\d{5,20}$/.test(profile?.studentKey||'')?profile.studentKey:null;return {key:auth+'|'+(backend.isAdmin?.()?'teacher':student||'anonymous'),auth,studentKey:student}};
  const currentBuild=()=>token(env.__RUDN_RELEASE__?.buildId||build,80)||'unknown';
  // Exact release identity, not a guessed semantic module version.
  const moduleVersion=()=>/^[a-f0-9]{32}$/.test(env.__RUDN_RELEASE__?.buildId||'')?'build:'+env.__RUDN_RELEASE__.buildId:undefined;
@@ -101,7 +101,11 @@ export function createPlatformDiagnostics({backend={},build='unknown',getLocale=
   // The event/byte budget is shared by all owners; a second arbitrary context
   // limit must not silently discard their pending errors during a reload.
   for(const old of saved.buckets){if(!validId(old.clientSessionId)||typeof old.owner?.key!=='string'||typeof old.owner.auth!=='string')continue;const studentKey=/^\d{5,20}$/.test(old.owner.studentKey||'')?old.owner.studentKey:null;if(old.owner.studentKey&&!studentKey)continue;
-   const b=createBucket({key:old.owner.key,auth:old.owner.auth,studentKey});b.clientSessionId=old.clientSessionId;b.build=token(old.build,80)||'unknown';b.createdAt=integer(old.createdAt,9999999999999);b.dropped=integer(old.dropped,1e6);b.deduplicated=integer(old.deduplicated,1e6);b.queue=(old.queue||[]).map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(-256);
+    // A cached profile without a UID was never eligible for delivery. Only a
+    // clearly unaccepted queue can become anonymous; ambiguous session/packet
+    // owners stay quarantined by eligible(), within the existing queue budget.
+    const owner=!old.owner.auth&&studentKey&&old.session==null&&old.pending==null?{key:'|anonymous',auth:'',studentKey:null}:{key:old.owner.key,auth:old.owner.auth,studentKey};
+    const b=createBucket(owner);b.clientSessionId=old.clientSessionId;b.build=token(old.build,80)||'unknown';b.createdAt=integer(old.createdAt,9999999999999);b.dropped=integer(old.dropped,1e6);b.deduplicated=integer(old.deduplicated,1e6);b.queue=(old.queue||[]).map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(-256);
    if(validId(old.session?.sessionId))b.session={sessionId:old.session.sessionId,subjectKey:token(old.session.subjectKey),generation:integer(old.session.generation,1e9),reportCode:token(old.session.reportCode)};
    if(validId(old.pending?.batchId)&&Array.isArray(old.pending.events)){const events=old.pending.events.map(e=>sanitizeDiagnosticEvent(e.event,e,e)).filter(Boolean).slice(0,12);const pending={batchId:old.pending.batchId,events,dropped:integer(old.pending.dropped,1e6),deduplicated:integer(old.pending.deduplicated,1e6)};if(events.length&&byteSize(pending)<DIAGNOSTIC_LIMITS.batchBytes-1024)b.pending=pending}
    buckets.push(b);

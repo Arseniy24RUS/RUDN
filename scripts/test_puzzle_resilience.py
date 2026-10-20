@@ -14,8 +14,10 @@ import json
 from pathlib import Path
 import re
 import sys
+from threading import Lock
 import time
 import traceback
+from urllib.parse import parse_qs, urlsplit
 
 from playwright.async_api import async_playwright
 from test_puzzle_catalog import DIAGNOSTIC_PREFIX, PuzzleServer, READ_ONLY_HOOK, ROOT, STUDENT, context_for, flush, observe, ready, select_map, trusted_drop, write_json
@@ -524,6 +526,51 @@ async def worker_update_offline(*args):
 
 async def worker_version_skew(page, context, browser_name, server, record):
     """Old worker has never cached standalone HTML; deployment supplies newer HTML."""
+    # Observe the native upgrade; do not send extra BINDs, gate responses or retry.
+    trace = {'schema': 1, 'events': [], 'dropped': 0}
+    record['workerUpgradeTrace'] = trace
+    trace_started = time.monotonic()
+    trace_lock = Lock()
+
+    def add_trace(kind, **fields):
+        try:
+            with trace_lock:
+                if len(trace['events']) == 128:
+                    trace['events'].pop(0)
+                    trace['dropped'] += 1
+                trace['events'].append({'kind': kind, 'observedMs': round((time.monotonic() - trace_started) * 1000, 2), **fields})
+        except Exception:
+            pass  # Observation must not replace any native result or exception.
+
+    def safe_resource(url):
+        parts = urlsplit(url)
+        return {'path': parts.path, 'query': {key: values[0] for key, values in parse_qs(parts.query).items()
+                                            if key in ('v', 'loaderRetry', 'qa-old-release') and len(values) == 1
+                                            and re.fullmatch(r'[0-9.]{1,40}', values[0])}}
+
+    def lifecycle_message(message):
+        if message.text.startswith('__QA_SW_LIFECYCLE__'):
+            try:
+                add_trace('page-lifecycle', event=json.loads(message.text[len('__QA_SW_LIFECYCLE__'):]))
+            except (ValueError, TypeError):
+                add_trace('observer-unavailable', operation='console-decode')
+
+    page.on('console', lifecycle_message)
+    await context.add_init_script(r"""(() => {
+      const workers=navigator.serviceWorker;if(!workers)return;
+      const resource=value=>{try{const u=new URL(value,location.href);return {path:u.pathname,query:Object.fromEntries(['v','loaderRetry','qa-old-release'].flatMap(k=>{const v=u.searchParams.get(k);return v&&/^[0-9.]{1,40}$/.test(v)?[[k,v]]:[]}))};}catch{return null}};
+      const worker=w=>w?{script:resource(w.scriptURL),state:w.state}:null;
+      const emit=(kind,fields={})=>{try{console.info('__QA_SW_LIFECYCLE__'+JSON.stringify({kind,atMs:performance.now(),document:location.pathname,controller:worker(workers.controller),...fields}));}catch{}};
+      const watchWorker=new WeakSet(),watchRegistration=new WeakSet();
+      const observeWorker=w=>{if(!w||watchWorker.has(w))return;watchWorker.add(w);w.addEventListener('statechange',()=>emit('worker-state',{worker:worker(w)}));};
+      const observeRegistration=r=>{if(!r||watchRegistration.has(r))return;watchRegistration.add(r);const sample=()=>{for(const w of [r.installing,r.waiting,r.active])observeWorker(w);emit('registration',{installing:worker(r.installing),waiting:worker(r.waiting),active:worker(r.active)});};r.addEventListener('updatefound',sample);sample();};
+      workers.addEventListener('controllerchange',()=>{observeWorker(workers.controller);emit('controllerchange');});
+      workers.addEventListener('message',event=>{if(['RELEASE_BOUND','RELEASE_RESOURCE_UNAVAILABLE'].includes(event.data?.type))emit('message',{type:event.data.type,release:/^[0-9.]{1,40}$/.test(event.data?.release)?event.data.release:null,source:worker(event.source),sourceIsController:event.source===workers.controller});});
+      for(const event of ['pageshow','pagehide'])addEventListener(event,e=>emit(event,{persisted:e.persisted}));
+      try{const original=ServiceWorker.prototype.postMessage;ServiceWorker.prototype.postMessage=function(...args){if(args[0]?.type==='BIND_RELEASE')emit('bind-sent',{target:worker(this),release:/^[0-9.]{1,40}$/.test(args[0]?.release)?args[0].release:null});return Reflect.apply(original,this,args);};}catch{emit('observer-unavailable',{operation:'postMessage'});}
+      try{const original=workers.register;workers.register=function(...args){emit('register-requested',{script:resource(args[0])});const result=Reflect.apply(original,this,args);result.then(r=>{try{observeRegistration(r);emit('register-resolved');}catch{emit('observer-unavailable',{operation:'registration'});}},()=>emit('register-rejected'));return result;};}catch{emit('observer-unavailable',{operation:'register'});}
+      observeWorker(workers.controller);emit('document-start');
+    })();""")
     await open_game(page, server)
     await trusted_drop(page)
     before = await saved(page)
@@ -543,23 +590,44 @@ async def worker_version_skew(page, context, browser_name, server, record):
     assert old_installs == 1, 'Prior-release fixture must explicitly exclude the puzzle shell'
 
     def skew_get(request):
-        if request.path == old_path or request.path == landing_path:
-            body = old_source.encode('utf-8') if request.path == old_path else b'<!doctype html><title>Isolated upgrade landing</title>'
-            request.send_response(200)
-            request.send_header('Content-Type', 'text/javascript; charset=utf-8' if request.path == old_path else 'text/html; charset=utf-8')
-            request.send_header('Content-Length', str(len(body)))
-            request.end_headers()
-            request.wfile.write(body)
-        else:
-            original_get(request)
+        resource = safe_resource(request.path)
+        watched = resource['path'].endswith(('/service-worker.js', '/main.js', '/puzzle-bootstrap.js'))
+        send_response = request.send_response
+        response_status = None
+
+        def observe_status(code, *args, **kwargs):
+            nonlocal response_status
+            response_status = code
+            return send_response(code, *args, **kwargs)
+
+        if watched:
+            add_trace('http-start', resource=resource)
+            request.send_response = observe_status
+        try:
+            if request.path == old_path or request.path == landing_path:
+                body = old_source.encode('utf-8') if request.path == old_path else b'<!doctype html><title>Isolated upgrade landing</title>'
+                request.send_response(200)
+                request.send_header('Content-Type', 'text/javascript; charset=utf-8' if request.path == old_path else 'text/html; charset=utf-8')
+                request.send_header('Content-Length', str(len(body)))
+                request.end_headers()
+                request.wfile.write(body)
+            else:
+                original_get(request)
+        finally:
+            if watched:
+                request.send_response = send_response
+                add_trace('http-finished', resource=resource, status=response_status)
 
     handler.do_GET = skew_get
     try:
+        add_trace('fixture-phase', phase='unregister-and-delete')
         await page.evaluate("""async()=>{
           for(const registration of await navigator.serviceWorker.getRegistrations())await registration.unregister();
           for(const name of await caches.keys())if(name.startsWith('rudn-gmu-pages:'))await caches.delete(name);
         }""")
+        add_trace('fixture-phase', phase='landing-navigation')
         await page.goto(server.origin + landing_path, wait_until='domcontentloaded')
+        add_trace('fixture-phase', phase='old-registration')
         await page.evaluate("""async path=>{
           await navigator.serviceWorker.register(path,{scope:'/RUDN/',updateViaCache:'none'});
           await navigator.serviceWorker.ready;
@@ -570,9 +638,11 @@ async def worker_version_skew(page, context, browser_name, server, record):
         assert not any('v' + current_version + '-' in name for name in record['oldCaches']), 'New release was already cached; upgrade test would be inconclusive'
         record['standaloneWasCached'] = await page.evaluate("async()=>Boolean(await caches.match(new URL('/RUDN/apps/puzzle.html',location.href).href))")
         assert not record['standaloneWasCached'], 'Standalone HTML was already cached by the simulated previous release'
+        add_trace('fixture-phase', phase='old-cache-preconditions-passed')
         # Navigation is served by the old worker, and standalone HTML was not
         # part of CORE_SHELL. Versioned imports must recover through an update.
         await page.goto(server.base + 'apps/puzzle.html?context=free&qaLocale=ru', wait_until='domcontentloaded')
+        add_trace('fixture-phase', phase='new-html-domcontentloaded')
         after = await ready(page)
         assert after['attemptId'] == before['attemptId'] and after['placed'] == 1
         await page.wait_for_function("document.querySelector('#geoPuzzleApp').dataset.playAllowed==='true'")
@@ -581,6 +651,21 @@ async def worker_version_skew(page, context, browser_name, server, record):
                              'progressPreserved': 1, 'attemptPreserved': True}
     finally:
         handler.do_GET = original_get
+        try:
+            trace['finalSnapshot'] = await asyncio.wait_for(page.evaluate("""async versions=>{
+              const worker=w=>w?{scriptPath:new URL(w.scriptURL).pathname,state:w.state}:null;
+              const registrations=await navigator.serviceWorker.getRegistrations();
+              const names=(await caches.keys()).filter(name=>name.startsWith('rudn-gmu-pages:')).slice(0,8);
+              const assets=[];
+              for(const name of names){if(name.endsWith('client-bindings'))continue;const cache=await caches.open(name);for(const version of versions)assets.push({cache:name,version,main:Boolean(await cache.match(new URL('/RUDN/assets/js/main.js?v='+version,location.href))),bootstrap:Boolean(await cache.match(new URL('/RUDN/assets/js/puzzle-bootstrap.js?v='+version,location.href)))});}
+              return {controller:worker(navigator.serviceWorker.controller),registrations:registrations.map(r=>({active:worker(r.active),waiting:worker(r.waiting),installing:worker(r.installing)})),assets,hasPuzzleRead:typeof window.__puzzleRead==='function'};
+            }""", [old_version, current_version]), timeout=2)
+        except Exception as error:
+            trace['snapshotError'] = type(error).__name__
+        try:
+            page.remove_listener('console', lifecycle_message)
+        except Exception:
+            add_trace('observer-unavailable', operation='remove-console-listener')
 
 
 SCENARIOS = {'initial-failure': initial_failure, 'initial-hang': initial_hang,

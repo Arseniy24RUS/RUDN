@@ -115,3 +115,52 @@ test('session time filters use inclusive server openedAt bounds, scoped cursors 
  await assert.rejects(service.handle({action:'listSessions',filters:{from:from+1,to,browser:'safari'},cursor:first.nextCursor},admin),e=>e.code==='invalid-cursor');
  for(const filters of [{from:to+1,to},{from:-1},{from:Infinity},{to:1.1},{from:'1800000000000'}])await assert.rejects(service.handle({action:'listSessions',filters},admin),e=>e.code==='invalid');
 });
+
+test('empty student and session indexes terminate without phantom continuation cursors',async()=>{
+ const {service}=await setup();
+ for(const request of [
+  {action:'searchStudents'},
+  {action:'searchStudents',query:'нет-совпадений'},
+  {action:'searchStudents',group:'Пустая группа'},
+  {action:'listSessions'},
+  {action:'listSessions',studentKey:'123456789'},
+  {action:'listSessions',filters:{build:'not-published'}}
+ ]){const result=await service.handle(request,admin);assert.deepEqual(result.items,[],JSON.stringify(request));assert.equal(result.nextCursor,null,JSON.stringify(request));}
+ const created=await service.handle(opening(),student);
+ const refreshed=await service.handle({action:'listSessions',studentKey:'123456789'},admin);
+ assert.deepEqual(refreshed.items.map(row=>row.sessionId),[created.sessionId]);assert.equal(refreshed.nextCursor,null,'A later refresh finds new data without pretending the old empty result had another page');
+});
+
+test('student page limits preserve real continuation and an exhausted cursor terminates after index removal',async()=>{
+ const {service,db}=await setup();await service.handle({action:'migrateLegacy',kind:'profiles'},admin);
+ const request={action:'searchStudents',limit:1},first=await service.handle(request,admin);assert.equal(first.items.length,1);assert.ok(first.nextCursor);
+ const second=await service.handle({...request,cursor:first.nextCursor},admin);assert.equal(second.items.length,1);assert.notEqual(second.items[0].studentKey,first.items[0].studentKey);assert.equal(second.nextCursor,null);
+ await db.ref(ROOT+'/directory').remove();
+ const exhausted=await service.handle({...request,cursor:first.nextCursor},admin);assert.deepEqual(exhausted.items,[]);assert.equal(exhausted.nextCursor,null,'An old cursor cannot turn an empty index into an endless Next loop');
+});
+
+test('session page limits preserve real continuation and an exhausted cursor terminates after index removal',async()=>{
+ const {service,db,tick}=await setup(),a=await service.handle(opening(),student);tick(61000);const b=await service.handle(opening('session-page-client-0002'),student);
+ const request={action:'listSessions',studentKey:'123456789',limit:1},first=await service.handle(request,admin);assert.deepEqual(first.items.map(row=>row.sessionId),[a.sessionId]);assert.ok(first.nextCursor);
+ const second=await service.handle({...request,cursor:first.nextCursor},admin);assert.deepEqual(second.items.map(row=>row.sessionId),[b.sessionId]);assert.equal(second.nextCursor,null);
+ await db.ref(ROOT+'/subjectIndex/student_123456789').remove();
+ const exhausted=await service.handle({...request,cursor:first.nextCursor},admin);assert.deepEqual(exhausted.items,[]);assert.equal(exhausted.nextCursor,null);
+});
+
+test('student filtering preserves a progressing cursor across an empty bounded scan',async()=>{
+ const {service}=await setup();
+ for(let i=0;i<101;i++){const studentKey=String(200000000+i);await service.syncProfile(studentKey,{studentKey,fullName:'Проверка',group:i===100?'Нужная группа':'Другая группа'});}
+ const request={action:'searchStudents',query:'пров',group:'Нужная группа'},first=await service.handle(request,admin);assert.deepEqual(first.items,[]);assert.ok(first.nextCursor,'The first 100 scanned names are valid entries excluded by the group filter');
+ const second=await service.handle({...request,cursor:first.nextCursor},admin);assert.deepEqual(second.items.map(row=>row.studentKey),['200000100']);assert.equal(second.nextCursor,null);
+});
+
+for(const skip of ['closed','build-filter'])test('session '+skip+' preserves a progressing cursor across an empty bounded scan',async()=>{
+ const {service,db,tick}=await setup();let last;
+ for(let i=0;i<101;i++){
+  tick(61000);last=await service.handle({...opening('session-scan-client-'+String(i).padStart(4,'0')),build:skip==='build-filter'&&i<100?'other-build':'wanted-build'},student);
+  if(skip==='closed'&&i<100)await db.ref(ROOT+'/sessions/'+last.sessionId+'/closed').set(true);
+ }
+ const request={action:'listSessions',studentKey:'123456789',...(skip==='build-filter'?{filters:{build:'wanted-build'}}:{})};
+ const first=await service.handle(request,admin);assert.deepEqual(first.items,[]);assert.ok(first.nextCursor,'A bounded scan skipped 100 entries but has not exhausted the index');
+ const second=await service.handle({...request,cursor:first.nextCursor},admin);assert.deepEqual(second.items.map(row=>row.sessionId),[last.sessionId]);assert.equal(second.nextCursor,null);
+});

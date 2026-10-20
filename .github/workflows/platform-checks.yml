@@ -10,6 +10,7 @@ on:
       - 'firebase.diagnostics-v2.json'
       - 'scripts/*diagnostic*'
       - 'scripts/*platform*'
+      - 'scripts/test_sw_*.mjs'
       - 'tests/*platform*'
       - 'tests/*diagnostic*'
       - '.github/workflows/platform-checks.yml'
@@ -38,7 +39,7 @@ jobs:
           tests/platform-update-state.test.mjs tests/platform-update-coordinator.test.mjs tests/platform-update-failures.test.mjs
           tests/platform-diagnostics-pagination.test.mjs
           scripts/diagnostics-v2-service.test.mjs scripts/diagnostics-v2-cli-adapter.test.mjs scripts/test-platform-release.mjs
-          scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs
+          scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs scripts/test_sw_client_bindings.mjs scripts/test_sw_durable_prepare.mjs
 
   firebase:
     runs-on: ubuntu-latest

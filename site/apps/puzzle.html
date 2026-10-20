@@ -81,14 +81,16 @@
     // new, previously uncached HTML while correctly rejecting its new modules.
     (()=>{
       const release='1.3.10',workers=navigator.serviceWorker;
-      let starting=false,started=false,registration,bootstrapReady=false,bootstrapAttempt=0;
+      let starting=false,started=false,startPending=false,registration,bootstrapReady=false,bootstrapAttempt=0;
       const loadedScripts=new Set();
       const status=document.createElement('p');status.className='puzzle-page-main';status.setAttribute('role','status');
       const language=document.documentElement.dataset.locale;
       status.textContent=language==='zh'?'正在准备地图…':language==='en'?'Preparing the map…':'Подготавливаем карту…';
       document.querySelector('main').before(status);
       const start=async()=>{
-        if(starting||started)return;starting=true;
+        if(started)return;
+        if(starting){startPending=true;return}
+        starting=true;startPending=false;
         try{
           if(!bootstrapReady){
             const retry=bootstrapAttempt++?`&loaderRetry=${bootstrapAttempt}`:'';
@@ -101,7 +103,12 @@
           started=true;status.remove();
         }catch{
           status.textContent=language==='zh'?'连接恢复后地图将自动打开。':language==='en'?'The map will open when the connection returns.':'Карта откроется, когда связь восстановится.';
-        }finally{starting=false}
+        }finally{
+          starting=false;
+          // A new controller can finish binding before an older import rejects.
+          // Keep that wake-up so the ready release gets one coalesced attempt.
+          if(startPending&&!started){startPending=false;void start()}
+        }
       };
       const announce=()=>workers?.controller?.postMessage({type:'BIND_RELEASE',release});
       workers?.addEventListener('message',event=>{

@@ -62,7 +62,7 @@ try{
   assert.equal(prepared.status,'ready',module+': '+JSON.stringify(prepared));
   const snapshot=await page.evaluate(()=>qa.saved);assert.equal(snapshot.module,module);assert.ok(snapshot.checkpointRef);
   const restored=await page.evaluate(()=>roundtrip());assert.equal(restored.status,'restored',module+': '+JSON.stringify(restored));
-  if(module==='legal-lab'){assert.equal(await page.locator('.ll-paper [data-unit][aria-pressed="true"]').count(),1);assert.equal(await page.locator('[data-input="reader-query"]').inputValue(),'власть');}
+  if(module==='legal-lab'){assert.ok(snapshot.state.reader?.docId,'Text restore must exercise a real reader position');assert.equal(await page.locator('.ll-paper [data-unit][aria-pressed="true"]').count(),1);assert.equal(await page.locator('[data-input="reader-query"]').inputValue(),'власть');assert.equal((await page.evaluate(()=>handle.getDiagnostics())).reader.docId,snapshot.state.reader.docId);}
   if(module==='career'){assert.equal(await page.locator('[data-question-index="1"]').getAttribute('aria-current'),'step');}
   if(module==='reception'){assert.equal(await page.locator('[data-field="knowledge.lawNumber"]').inputValue(),'synthetic last unblurred input');assert.equal(await page.locator('input[type=radio][data-field="knowledge.application"]').first().isChecked(),true);}
   if(module==='settlements'){assert.equal(await page.locator('[data-select="rank-difficulty"]').inputValue(),'hard');}
@@ -81,6 +81,43 @@ try{
    report.checks.push({module,status:'pass',check:'injected host identity blocks a switched profile and preserves the guest fallback'});
   }
   await context.close();
+ }
+ if(!arg('--module','')||arg('--module','')==='legal-lab'){
+  const bank=JSON.parse(await readFile(resolve(site,'apps/legal-lab/data/bank.json'),'utf8'));
+  for(const kind of ['scan','type']){
+   const index=bank.classroom.findIndex(task=>task.kind===kind),check={module:'legal-lab',kind,status:'fail',check:'reader-free checkpoint restores the same task, choice and attempt without submission'};
+   const context=await browser.newContext({viewport:{width:390,height:844}}),page=await context.newPage();lastPage=page;page.setDefaultTimeout(20000);
+   page.on('pageerror',error=>report.errors.push({module:'legal-lab',kind,message:error.message}));
+   await page.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
+   try{
+    assert.ok(index>=0);await page.goto('http://127.0.0.1:'+server.address().port+'/__qa?module=legal-lab');await page.waitForFunction(()=>window.ready);
+    // Begin with the real text reader, then leave it through the visible task
+    // picker. The image task must retire that reader before capture and restore.
+    await page.locator('.ll-paper [data-unit]').first().waitFor();await page.locator('[data-input="task-picker"]').selectOption(String(index));
+    if(kind==='scan'){
+     await page.locator('[data-action="scan-field"]').first().click();await page.locator('[data-action="hotspot"]').first().focus();await page.keyboard.press('Enter');
+     await page.locator('.ll-assigned-frame').first().waitFor();
+    }else{
+     await page.locator('[data-action="type-choice"]').first().click();await page.locator('[data-action="type-choice"][aria-pressed="true"]').waitFor();
+    }
+    await page.evaluate(()=>handle.flush());
+    const selection=kind==='scan'?'.ll-assigned-frame': '[data-action="type-choice"][aria-pressed="true"]';
+    const chosen=await page.locator(selection).first().evaluate(el=>({field:el.dataset.assignedField??null,region:el.dataset.selectedRegion??null,type:el.dataset.value??null}));
+    assert.equal((await page.evaluate(()=>handle.getDiagnostics())).reader,null,'The image task has no text reader');
+    let prepared;for(let i=0;i<15;i++){prepared=await page.evaluate(()=>prepare());if(prepared.status!=='defer')break;await page.waitForTimeout(100);}
+    assert.equal(prepared.status,'ready',JSON.stringify(prepared));const before=await page.evaluate(()=>qa.saved);
+    assert.equal(before.state.reader,null);check.capturedReader=null;assert.ok(before.identity.attemptId);assert.equal(before.checkpointRef.id,before.identity.attemptId);
+    const restored=await page.evaluate(()=>roundtrip());check.restoreResult=restored;assert.equal(restored.status,'restored',JSON.stringify(restored));
+    assert.equal(await page.locator('[data-input="task-picker"]').inputValue(),String(index));assert.equal((await page.evaluate(()=>handle.getDiagnostics())).reader,null);
+    assert.deepEqual(await page.locator(selection).first().evaluate(el=>({field:el.dataset.assignedField??null,region:el.dataset.selectedRegion??null,type:el.dataset.value??null})),chosen);
+    const again=await page.evaluate(()=>prepare());assert.equal(again.status,'ready');const after=await page.evaluate(()=>qa.saved);
+    assert.deepEqual(after.identity,before.identity);assert.equal(after.checkpointRef.id,before.checkpointRef.id);assert.equal(after.state.reader,null);
+    assert.equal(await page.evaluate(()=>window.syntheticSubmissions||0),0);await page.evaluate(()=>handle.cancelPreparation({discard:true}));
+    await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,'legal-lab-'+kind+'-restored.png')});check.status='pass';
+   }catch(error){check.failure={message:error.message,stack:error.stack};await mkdir(output,{recursive:true});await page.screenshot({path:resolve(output,'legal-lab-'+kind+'-failure.png'),timeout:5000}).catch(()=>{});}
+   finally{report.checks.push(check);await context.close();}
+  }
+  assert.equal(report.checks.filter(check=>check.status==='fail').length,0,'Reader-free Legal Lab restores must pass');
  }
  if(!arg('--module','')||arg('--module','')==='settlements-preview'){
   // The host test above verifies its durable contract. This separate public

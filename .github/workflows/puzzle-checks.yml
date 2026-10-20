@@ -310,7 +310,7 @@ jobs:
         env:
           QA_OUT: ${{ runner.temp }}/games-qa
         run: |
-          node --test scripts/test_free_module_contracts.mjs scripts/test_puzzle_leaderboard.mjs scripts/test_puzzle_metadata_deadline.mjs scripts/puzzle_snap_test.mjs scripts/puzzle_raster_schedule_test.mjs
+          node --test scripts/test_free_module_contracts.mjs scripts/test_puzzle_leaderboard.mjs scripts/test_puzzle_metadata_deadline.mjs scripts/test_puzzle_json_deadline.mjs scripts/test_puzzle_entry_wakeup.mjs scripts/puzzle_snap_test.mjs scripts/puzzle_raster_schedule_test.mjs
           node scripts/test_puzzle_render_geometry.cjs
           python scripts/test_puzzle_xlsx.py --artifacts "${{ runner.temp }}/games-qa"
       - name: Verify actual mobile geometry and rotation in all languages

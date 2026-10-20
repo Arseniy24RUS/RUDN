@@ -63,6 +63,30 @@ READ_ONLY_HOOK = r"""
 
 DIAGNOSTIC_PREFIX = 'QA-PUZZLE-DIAGNOSTIC:'
 DIAGNOSTIC_HOOK = r"""(() => {
+  // Passive document-lifetime history includes the trusted drop endpoint BEFORE
+  // select_map scrolls. Never log these high-frequency events to console/IPC.
+  try{
+    const events=[],limit=64,ids=new WeakMap();let nextId=1,dropped=0,total=0,errors=0,latest=null,lastButton=null;
+    const number=value=>Number.isFinite(value)?value:null;
+    const identify=element=>{if(!element)return null;if(!ids.has(element))ids.set(element,nextId++);
+      return {nodeId:ids.get(element),tag:String(element.tagName||'').toLowerCase().slice(0,20),
+        id:String(element.id||'').slice(0,120),mode:element.getAttribute?.('data-puzzle-mode')?.slice(0,80)||null,
+        connected:Boolean(element.isConnected)};};
+    const capture=event=>{if(!event.isTrusted)return;try{
+      const value={sequence:++total,at:number(performance.now()),type:event.type,trusted:true,
+        target:identify(event.target),relatedTarget:identify(event.relatedTarget),
+        clientX:number(event.clientX),clientY:number(event.clientY),pageX:number(event.pageX),pageY:number(event.pageY),
+        screenX:number(event.screenX),screenY:number(event.screenY),button:number(event.button),buttons:number(event.buttons),
+        pointerId:number(event.pointerId),pointerType:typeof event.pointerType==='string'?event.pointerType.slice(0,20):null,
+        scroll:{x:scrollX,y:scrollY}};
+      if(events.length===limit){events.shift();dropped++;}events.push(value);latest=value;
+      if(['pointerdown','pointerup','mousedown','mouseup'].includes(event.type))lastButton=value;
+    }catch{errors++;}};
+    window.__qaPuzzleTrustedInputSnapshot=()=>({schema:1,events:[...events],latest,lastButton,limit,dropped,total,errors});
+    for(const type of ['pointerover','pointerout','pointermove','pointerdown','pointerup',
+      'mouseover','mouseout','mousemove','mousedown','mouseup','click'])
+      document.addEventListener(type,capture,{capture:true,passive:true});
+  }catch(error){window.__qaPuzzleTrustedInputSnapshot=()=>({schema:1,unavailable:true,errorClass:error?.name||'Error'});}
   const selectors=()=>({
     mode:document.querySelector('#puzzleMode')?.value,
     difficulty:document.querySelector('#puzzleDifficulty')?.value,
@@ -428,21 +452,77 @@ async def select_map(page, entry):
     # An "if needed" check can finish while an older smooth scroll is still
     # moving; explicitly centre the target using the page's normal behaviour.
     await button.evaluate("button=>button.scrollIntoView({block:'center',inline:'nearest'})")
-    await page.evaluate("""()=>{delete window.__qaPuzzleInputStability}""")
-    await page.wait_for_function("""selector=>{
-      const button=document.querySelector(selector),r=button?.getBoundingClientRect();
-      if(!r||!button.isConnected||button.disabled)return false;
-      const x=r.left+r.width/2,y=r.top+r.height/2;
-      const hit=document.elementFromPoint(x,y);
-      const clear=r.width>0&&r.height>0&&r.left>=0&&r.top>=0
-        &&r.right<=innerWidth&&r.bottom<=innerHeight&&hit&&button.contains(hit);
-      const sample=[r.left,r.top,r.width,r.height,scrollX,scrollY],now=performance.now();
-      const previous=window.__qaPuzzleInputStability;
-      if(!clear||!previous||sample.some((v,i)=>Math.abs(v-previous.sample[i])>.5)){
-        window.__qaPuzzleInputStability={sample,at:now};return false;
-      }
-      return now-previous.at>=120;
-    }""", arg=selector, timeout=20000)
+    await page.evaluate("""selector=>{
+      delete window.__qaPuzzleInputStability;
+      try{
+        const events=[],limit=128,ids=new WeakMap();let sequence=0,nextId=1,dropped=0,observerErrors=0;
+        const counts={reset:0,reject:0};
+        const pointerStart=window.__qaPuzzleTrustedInputSnapshot?.();
+        const pointerAtStart=pointerStart?.latest||null,pointerLastButtonAtStart=pointerStart?.lastButton||null;
+        const number=value=>Number.isFinite(value)?value:null;
+        const identify=element=>{
+          if(!element)return null;
+          if(!ids.has(element))ids.set(element,nextId++);
+          return {nodeId:ids.get(element),tag:String(element.tagName||'').toLowerCase().slice(0,20),
+            id:String(element.id||'').slice(0,120),mode:element.getAttribute?.('data-puzzle-mode')?.slice(0,80)||null,
+            classes:String(element.getAttribute?.('class')||'').slice(0,240),connected:Boolean(element.isConnected)};
+        };
+        const push=(kind,fields)=>{if(events.length===limit){events.shift();dropped++;}
+          counts[kind]++;events.push({sequence:++sequence,kind,...fields});};
+        const style=button=>{if(!button)return null;const value=getComputedStyle(button);return {
+          transform:value.transform.slice(0,160),transitionProperty:value.transitionProperty.slice(0,120),
+          transitionDuration:value.transitionDuration.slice(0,80),display:value.display,visibility:value.visibility,
+          pointerEvents:value.pointerEvents,hovered:button.matches(':hover')};};
+        const trace={record(kind,fields){try{
+          const {button,r,hit,clear,sample,now,previous}=fields;
+          const old=Array.isArray(previous?.sample)?previous.sample.slice(0,6):null;
+          push(kind,{at:number(now??performance.now()),reason:kind==='reject'
+            ?(!r?'missing-rect':!button.isConnected?'disconnected':'disabled')
+            :!clear?'not-clear':!previous?'initial-sample':'delta',
+            clear:Boolean(clear),previous:old,previousAt:number(previous?.at),
+            current:Array.isArray(sample)?sample.slice(0,6):null,
+            delta:old&&sample?sample.map((value,index)=>number(value-old[index])):null,
+            button:identify(button),disabled:Boolean(button?.disabled),hit:identify(hit),
+            rect:r?{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}:null,
+            scroll:{x:scrollX,y:scrollY},viewport:{width:innerWidth,height:innerHeight},style:style(button)});
+        }catch{observerErrors++;}},snapshot(){
+          let pointer=null;try{pointer=window.__qaPuzzleTrustedInputSnapshot?.()||null;}catch{observerErrors++;}
+          return {schema:1,selector,events:[...events],limit,dropped,total:sequence,counts:{...counts},
+            observerErrors,pointerAtStart,pointerLastButtonAtStart,pointer};}};
+        window.__qaPuzzleInputTrace=trace;
+      }catch(error){window.__qaPuzzleInputTrace={snapshot:()=>({schema:1,unavailable:true,errorClass:error?.name||'Error'})};}
+    }""", selector)
+    try:
+        await page.wait_for_function("""selector=>{
+          const button=document.querySelector(selector),r=button?.getBoundingClientRect();
+          if(!r||!button.isConnected||button.disabled){
+            try{window.__qaPuzzleInputTrace?.record?.('reject',{button,r});}catch{}
+            return false;
+          }
+          const x=r.left+r.width/2,y=r.top+r.height/2;
+          const hit=document.elementFromPoint(x,y);
+          const clear=r.width>0&&r.height>0&&r.left>=0&&r.top>=0
+            &&r.right<=innerWidth&&r.bottom<=innerHeight&&hit&&button.contains(hit);
+          const sample=[r.left,r.top,r.width,r.height,scrollX,scrollY],now=performance.now();
+          const previous=window.__qaPuzzleInputStability;
+          if(!clear||!previous||sample.some((v,i)=>Math.abs(v-previous.sample[i])>.5)){
+            window.__qaPuzzleInputStability={sample,at:now};
+            try{window.__qaPuzzleInputTrace?.record?.('reset',{button,r,hit,clear,sample,now,previous});}catch{}
+            return false;
+          }
+          return now-previous.at>=120;
+        }""", arg=selector, timeout=20000)
+    except Exception:
+        # Read-only diagnostic capture after the original guard failed. Its
+        # timeout/errors must not replace or retry the original interaction.
+        try:
+            captured = await asyncio.wait_for(page.evaluate("""()=>{
+              return window.__qaPuzzleInputTrace?.snapshot?.()||{unavailable:true};
+            }"""), timeout=2)
+            getattr(page, '_qa_record', {}).setdefault('modeInputStabilityFailures', []).append(captured)
+        except Exception as diagnostic_error:
+            getattr(page, '_qa_record', {}).setdefault('modeInputStabilityCaptureErrors', []).append(type(diagnostic_error).__name__)
+        raise
     await page.evaluate("""category=>{
       const probe={category,delivered:false,events:[]};
       probe.capture=event=>{
@@ -473,6 +553,7 @@ async def select_map(page, entry):
             await page.evaluate("""()=>{
               const probe=window.__qaPuzzleModeInput;
               if(probe)for(const type of ['pointerdown','pointerup','click'])document.removeEventListener(type,probe.capture,true);
+              delete window.__qaPuzzleInputTrace;
               delete window.__qaPuzzleModeInput;delete window.__qaPuzzleInputStability;
             }""")
         except PlaywrightError as cleanup_error:

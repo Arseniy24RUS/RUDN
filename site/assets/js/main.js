@@ -205,7 +205,9 @@ const shellUpdate=createUpdateAdapter({module:'platform',root:app,getIdentity:at
   checkpoint:async()=>({durable:true,revision:0,checkpointRef:'read-only-shell'}),
   capture:()=>({view:captureUpdateView(app)}),restore:async({state},options)=>{await restoreUpdateView(app,state.view,options);return {status:'restored'}},diagnostics});
 function updateAdapters(){
-  if(renderRunning||!dataReady||!backend.authReady)return [];
+  // The shell can render before a lazy child finishes mounting. Its proxy is
+  // not a restorable adapter until the real child handle is available.
+  if(renderRunning||!dataReady||!backend.authReady||currentCleanup?.isUpdateReady===false)return [];
   const module=currentCleanup?.prepareForUpdate?currentCleanup:currentCleanup&&/^(activity|games|puzzle)$/.test(route().name)?null:shellUpdate;
   return [module,...formCleanups.map(item=>item.updateAdapter)].filter((item,index)=>item||index===0);
 }
