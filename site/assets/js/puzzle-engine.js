@@ -364,36 +364,59 @@
   }
 
   async function fetchJson(url, options = {}) {
+    const cancelled = () => new DOMException("Map loading cancelled", "AbortError");
+    if (options.signal?.aborted) throw cancelled();
     const controller = new AbortController();
-    const abort = () => controller.abort();
-    if (options.signal?.aborted) abort();
-    options.signal?.addEventListener("abort", abort, { once: true });
-    const timeout = setTimeout(abort, 45000);
-    try {
-    const response = await scopedFetch(url, {
-      credentials: "same-origin",
-      ...options,
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        ...(options.headers || {}),
-      },
+    return new Promise((resolve, reject) => {
+      let settled = false, timeout;
+      const cleanup = () => {
+        if (timeout !== undefined) clearTimeout(timeout);
+        options.signal?.removeEventListener("abort", abort);
+      };
+      const settle = (complete, value) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        complete(value);
+      };
+      const stop = error => {
+        if (settled) return;
+        // Fix the outcome before native abort can synchronously reject work.
+        settle(reject, error);
+        controller.abort();
+      };
+      const abort = () => stop(cancelled());
+      options.signal?.addEventListener("abort", abort, { once: true });
+      if (options.signal?.aborted) { abort(); return; }
+      timeout = setTimeout(() => stop(new DOMException("map/json-timeout", "TimeoutError")), 45000);
+      // This deadline bounds headers AND JSON even if native work ignores abort.
+      // Observe both late outcomes, but never start a late response's body work.
+      const download = (async () => {
+        const response = await scopedFetch(url, {
+          credentials: "same-origin",
+          ...options,
+          signal: controller.signal,
+          headers: {
+            Accept: "application/json",
+            ...(options.headers || {}),
+          },
+        });
+        if (settled) return;
+        let payload = null;
+        try {
+          payload = await response.json();
+        } catch (_) {
+          payload = null;
+        }
+        if (settled) return;
+        if (!response.ok) {
+          const detail = payload && (payload.detail || payload.message);
+          throw new Error(detail || `HTTP ${response.status}`);
+        }
+        return payload;
+      })();
+      download.then(value => settle(resolve, value), error => settle(reject, error));
     });
-    let payload = null;
-    try {
-      payload = await response.json();
-    } catch (_) {
-      payload = null;
-    }
-    if (!response.ok) {
-      const detail = payload && (payload.detail || payload.message);
-      throw new Error(detail || `HTTP ${response.status}`);
-    }
-    return payload;
-    } finally {
-      clearTimeout(timeout);
-      options.signal?.removeEventListener("abort", abort);
-    }
   }
 
   function bestTopologyObject(topology) {

@@ -11,6 +11,7 @@ const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.m
 const CLIENT_CACHE=`${CACHE_PREFIX}client-bindings`;
 const ACTIVE_RELEASE=new URL('.release-clients/active',SCOPE).href;
 const clientBindings=new Map();
+const clientBindingWrites=new Map();
 const isReleaseCache=name=>name!==CLIENT_CACHE&&name.startsWith(CACHE_PREFIX);
 const releaseVersion=name=>name.slice(CACHE_PREFIX.length).match(/^v(\d+\.\d+\.\d+)(?:-|$)/)?.[1];
 const LEGACY_CACHES=new Set(['rudn-gmu-pages-v1.2.2','rudn-gmu-pages-v1.3.0-career']);
@@ -471,14 +472,24 @@ async function clientRelease(id){
   try{
     const response=await (await caches.open(CLIENT_CACHE)).match(clientKey(id));
     const name=response&&await response.text();
+    // A release handshake may finish while CacheStorage is still reading the
+    // previous binding. Its acknowledged in-memory value takes precedence.
+    if(clientBindings.has(id))return clientBindings.get(id);
     if(name&&isReleaseCache(name)){clientBindings.set(id,name);return name}
   }catch{}
-  return null;
+  return clientBindings.get(id)||null;
 }
 async function bindClient(id,name){
   if(!id)return;
   clientBindings.set(id,name);
-  try{await (await caches.open(CLIENT_CACHE)).put(clientKey(id),new Response(name))}catch{}
+  // Serialize this worker's writes per client. A slow older put must not
+  // replace a later acknowledged binding after the worker is restarted.
+  const previous=clientBindingWrites.get(id)||Promise.resolve();
+  const write=previous.catch(()=>{}).then(async()=>{
+    try{await (await caches.open(CLIENT_CACHE)).put(clientKey(id),new Response(name))}catch{}
+  });
+  clientBindingWrites.set(id,write);
+  try{await write}finally{if(clientBindingWrites.get(id)===write)clientBindingWrites.delete(id)}
 }
 async function activateRelease(){
   if(PLATFORM_RELEASE)return platformActivate();
