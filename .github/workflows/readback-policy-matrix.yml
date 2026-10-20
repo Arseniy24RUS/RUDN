@@ -27,10 +27,11 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
-    env:
-      FIXTURES: ${{ runner.temp }}/readback-fixtures
-      EVIDENCE: ${{ runner.temp }}/readback-render-${{ matrix.browser }}
     steps:
+      - name: Set runner-local evidence paths
+        shell: bash
+        run: |
+          printf 'FIXTURES=%s/readback-fixtures\nEVIDENCE=%s/readback-render-%s\n' "$RUNNER_TEMP" "$RUNNER_TEMP" "${{ matrix.browser }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -139,10 +140,11 @@ jobs:
   same-runner-performance:
     runs-on: ubuntu-latest
     timeout-minutes: 75
-    env:
-      FIXTURES: ${{ runner.temp }}/readback-fixtures
-      EVIDENCE: ${{ runner.temp }}/readback-performance
     steps:
+      - name: Set runner-local evidence paths
+        shell: bash
+        run: |
+          printf 'FIXTURES=%s/readback-fixtures\nEVIDENCE=%s/readback-performance\n' "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
