@@ -11,7 +11,7 @@ import {buildRelease} from './build-platform-release.mjs';
 const repo=fileURLToPath(new URL('../',import.meta.url));
 const out=path.resolve(process.env.QA_OUT||path.join(repo,'../evidence/runs/20261018-platform-observability/release/boot-rollback'));
 const source=path.join(out,'source'),baseline=path.join(out,'baseline'),sourceRef=process.env.SOURCE_REF||null;
-const files=['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','assets/js/platform-update-state.js','assets/js/platform-update-coordinator.js','assets/js/platform-update-failures.js','data/platform-contracts.json'];
+const files=['service-worker.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','assets/js/platform-update-state.js','assets/js/platform-update-coordinator.js','assets/js/platform-update-contracts.js','assets/js/platform-update-failures.js','data/platform-contracts.json'];
 const sourceHashes={};
 async function sourceBytes(name){
   if(!sourceRef)return fs.readFile(path.join(repo,'site',name));
