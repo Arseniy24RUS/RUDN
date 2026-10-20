@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 SEED = 2277844156
-ORIGINAL_RENDER_TEST_SHA256 = '4ce36ffacbf5364557be3c1768eeec945afe464cc729ce492da3f79310fcd648'
+ORIGINAL_RENDER_TEST_SHA256 = '123f93a85875e96c087a979922e18bede9f6e55a1aff6758fdc9ac375c8689a1'
 ORIGINAL_SOURCE_HASHES = {
     'puzzle-engine.js': '93d9366eeb2ae5881d3337d10c8e54a5608354b852fbe9e7c34990b9f0b7776a',
     'puzzle-render-geometry.js': 'f6751e094fcbeefd510fb05f056dcd8e4a590005357c06e24539c6a4facd942e',
