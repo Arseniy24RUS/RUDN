@@ -1,9 +1,9 @@
-"""Evidence-only exact-seed static-layer probe; run from the repository root.
+"""Evidence-only exact-seed native pipeline probe; run from repository root.
 
 The existing DPR3 scenario, input, assertions and verdict remain intact.
 Bounded JS-only paint-plan observers precede the original q/p comparison.
 No additional native getters, canvas calls or readbacks precede its verdict.
-Additional controls run only in context cleanup, after the original assertions.
+Five independent secondary controls run in cleanup, after original assertions.
 """
 import argparse
 import asyncio
@@ -106,12 +106,18 @@ CAPTURE_HOOK = r"""
       const zoom=state.view.k/state.baseViewK;
       if(Math.abs(zoom-4)>1e-6)return;
       paintPlanFrozen=true;
+      const indices=[...new Set([lastStaticPlan,lastReferencePlan].flatMap(plan=>
+        (plan?.passes||[]).flatMap(pass=>pass.operations.map(operation=>operation.index))))];
+      const featureBounds=Object.fromEntries(indices.map(index=>{
+        const bounds=state.bounds[index];return [index,{x0:bounds.x0,y0:bounds.y0,x1:bounds.x1,y1:bounds.y1}];
+      }));
       staticEvidencePending={q,p,plans:{actual:lastStaticPlan,reference:lastReferencePlan},
         metadata:{seed:state.seed,order:[...state.order],current:state.current,
         featureId:state.features[state.current]?.properties._puzzleId,zoom,placed:state.placed,
         deviceDpr:devicePixelRatio,rasterDpr:state.dpr,width,height,scale:sprite.scale,
         cacheView:{...view},cacheMap:{...map},mapRect:{...state.mapRect},draw:{...window.__backgroundDraw},
-        baselineDifference:cacheDifference,fillRule:state.mode==='russia-subjects'?'nonzero':'evenodd'}};
+        baselineDifference:cacheDifference,fillRule:state.mode==='russia-subjects'?'nonzero':'evenodd',featureBounds,
+        consumerCssSize:{width:state.cssWidth,height:state.cssHeight}}};
     }catch(error){paintError('retain-original-buffers',error);}
   };
   const observedStaticAudit=window.__backgroundAudit;
@@ -137,7 +143,25 @@ CAPTURE_HOOK = r"""
     canvas.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(pixels),width,height),0,0);
     const png=canvas.toDataURL('image/png');canvas.width=canvas.height=0;return png;
   };
-  window.__finishStaticEvidence=()=>{
+  const pipelineMatrix=(pass,precision)=>pass.sceneMatrix.map((value,index)=>
+    precision==='f32'&&[0,3,4,5].includes(index)?Math.fround(value):value);
+  const pipelinePrecisionEvidence=(plan,bounds)=>({model:'Math.fround on physical scene CTM a,d,e,f only',
+    passes:plan.passes.map(pass=>{
+      const original=pass.sceneMatrix,rounded=pipelineMatrix(pass,'f32');
+      const features=pass.operations.map(operation=>{
+        const b=bounds[operation.index];let maximumPhysicalDelta=-1,maximumCorner=null;
+        for(const [x,y] of [[b.x0,b.y0],[b.x0,b.y1],[b.x1,b.y0],[b.x1,b.y1]]){
+          const dx=(rounded[0]-original[0])*x+(rounded[2]-original[2])*y+rounded[4]-original[4];
+          const dy=(rounded[1]-original[1])*x+(rounded[3]-original[3])*y+rounded[5]-original[5];
+          const distance=Math.hypot(dx,dy);
+          if(distance>maximumPhysicalDelta){maximumPhysicalDelta=distance;maximumCorner={x,y,dx,dy};}
+        }
+        return {index:operation.index,maximumPhysicalDelta,maximumCorner};
+      });
+      return {name:pass.name,originalMatrix:original,f32Matrix:rounded,features,
+        maximumPhysicalDelta:Math.max(0,...features.map(feature=>feature.maximumPhysicalDelta))};
+    })});
+  window.__finishStaticEvidence=async()=>{
     if(!staticEvidenceCaptured)return {records:[],errors:window.__staticEvidenceErrors};
     const {q,p,metadata:m,plans,controlError}=staticEvidenceCaptured;
     const sample=pixels=>Array.from(pixels.slice((1236*m.width+361)*4,(1236*m.width+361)*4+4));
@@ -148,11 +172,11 @@ CAPTURE_HOOK = r"""
       observedPlans:Object.fromEntries(Object.entries(plans).map(([kind,plan])=>[kind,plan?{
         contextId:plan.contextId,role:plan.role,orphan:plan.orphan,passes:plan.passes}:null]))};
     if(controlError){record.controlError=controlError;return {records:[record],errors:window.__staticEvidenceErrors};}
-    const paint=(context,plan)=>{
+    const paint=(context,plan,precision='original')=>{
       for(const pass of plan.passes){
         context.save();context.setTransform(...pass.clipMatrix);context.beginPath();
         context.rect(pass.map.x,pass.map.y,pass.map.width,pass.map.height);context.clip();
-        context.setTransform(...pass.sceneMatrix);
+        context.setTransform(...pipelineMatrix(pass,precision));
         context.fillStyle=pass.styles.fill;context.strokeStyle=pass.styles.stroke;
         context.lineWidth=pass.styles.lineWidth;context.lineJoin=pass.styles.lineJoin;context.lineCap=pass.styles.lineCap;
         for(const operation of pass.operations){
@@ -162,16 +186,121 @@ CAPTURE_HOOK = r"""
         context.restore();
       }
     };
-    for(const kind of ['actual','reference']){
-      const canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;
+    // Only source-context options and the consumer change in the 2x2 matrix.
+    // The fifth cell is a separate deterministic precision model, not acceptance.
+    const cells=[
+      {kind:'default-detached',frequent:false,consumer:'detached',precision:'original'},
+      {kind:'default-visible',frequent:false,consumer:'visible-main',precision:'original'},
+      {kind:'frequent-detached',frequent:true,consumer:'detached',precision:'original'},
+      {kind:'frequent-visible',frequent:true,consumer:'visible-main',precision:'original'},
+      {kind:'f32-default-detached',frequent:false,consumer:'detached',precision:'f32'}];
+    const destinationSize={width:Math.floor(m.consumerCssSize.width*m.rasterDpr),
+      height:Math.floor(m.consumerCssSize.height*m.rasterDpr)};
+    const nativeObservation=()=>{
+      const r=els.canvas.getBoundingClientRect(),style=getComputedStyle(els.canvas);
+      const x=r.left+m.mapRect.x+m.mapRect.width/2,y=r.top+m.mapRect.y+m.mapRect.height/2;
+      const inViewport=x>=0&&x<innerWidth&&y>=0&&y<innerHeight;
+      const hit=inViewport?document.elementFromPoint(x,y):null;
+      return {documentVisible:document.visibilityState==='visible',connected:els.canvas.isConnected,
+        rectangle:{x:r.x,y:r.y,width:r.width,height:r.height},width:els.canvas.width,height:els.canvas.height,
+        display:style.display,visibility:style.visibility,opacity:style.opacity,
+        mapCenterInViewport:inViewport,mapCenterHitsCanvas:hit===els.canvas,
+        stateView:numericView(state.view),stateMap:numericMap(state.mapRect),stateDpr:state.dpr};
+    };
+    const visible=info=>info.documentVisible&&info.connected&&info.display!=='none'&&info.visibility==='visible'
+      &&Number(info.opacity)>0&&info.rectangle.width>0&&info.rectangle.height>0
+      &&info.mapCenterInViewport&&info.mapCenterHitsCanvas;
+    const twoFrames=()=>new Promise(resolve=>{
+      const timestamps=[];let done=false,frame;
+      const finish=status=>{if(done)return;done=true;clearTimeout(timer);cancelAnimationFrame(frame);resolve({status,timestamps});};
+      const tick=time=>{timestamps.push(time);if(timestamps.length===2)finish('two-frames');else frame=requestAnimationFrame(tick);};
+      // This bounds only post-verdict observation. It cannot turn an original FAIL into PASS.
+      const timer=setTimeout(()=>finish('observation-timeout'),2000);frame=requestAnimationFrame(tick);
+    });
+    let activeControl=null,ownConsumerDraw=false;
+    const originalMainMethods=[],observerFailures=[];
+    for(const method of ['clearRect','drawImage','fill','stroke','fillRect','strokeRect','fillText','strokeText']){
       try{
-        const context=canvas.getContext('2d',{alpha:true});paint(context,plans[kind]);
-        const pixels=context.getImageData(0,0,m.width,m.height).data;
-        record.controls.push({kind:'exact-'+kind+'-plan',
-          versusActual:rasterPixelDifference(q,pixels,m.width),versusReference:rasterPixelDifference(p,pixels,m.width),
-          sample:sample(pixels),png:staticEvidencePng(pixels,m.width,m.height)});
-      }finally{canvas.width=canvas.height=0;}
+        const descriptor=Object.getOwnPropertyDescriptor(ctx,method),original=ctx[method];
+        const wrapper=function(...args){
+          if(activeControl&&!ownConsumerDraw){
+            const counts=activeControl.mainInterference;counts[method]=(counts[method]||0)+1;
+          }
+          return Reflect.apply(original,this,args);
+        };
+        ctx[method]=wrapper;
+        if(ctx[method]!==wrapper)throw new Error('observer-unavailable');
+        originalMainMethods.push({method,descriptor,wrapper});
+      }catch(error){observerFailures.push({method,name:error?.name||'Error'});}
     }
+    try{
+      for(const cell of cells){
+        const control={...cell,status:'running',mainInterference:{},observerFailures,
+          sourceContextOptions:cell.frequent?{alpha:true,willReadFrequently:true}:{alpha:true},
+          readOrder:['source','destination'],destinationSize,sourcePlan:'captured-actual',inconclusiveReasons:[]};
+        let canvas=null,destination=null;
+        try{
+          activeControl=control;control.before=nativeObservation();
+          if(cell.consumer==='visible-main'&&(!visible(control.before)
+            ||control.before.width!==destinationSize.width||control.before.height!==destinationSize.height)){
+            control.status='inconclusive';control.inconclusiveReasons.push('visible-main-precondition');
+            record.controls.push(control);continue;
+          }
+          canvas=document.createElement('canvas');canvas.width=m.width;canvas.height=m.height;
+          const context=canvas.getContext('2d',control.sourceContextOptions);
+          paint(context,plans.actual,cell.precision);
+          let consumer;
+          if(cell.consumer==='visible-main'){destination=els.canvas;consumer=ctx;}
+          else{destination=document.createElement('canvas');destination.width=destinationSize.width;
+            destination.height=destinationSize.height;consumer=destination.getContext('2d',{alpha:true});}
+          // No source read/PNG/bitmap transfer occurred before this consumer.
+          ownConsumerDraw=true;
+          try{
+            consumer.save();
+            try{
+              consumer.setTransform(m.rasterDpr,0,0,m.rasterDpr,0,0);
+              consumer.clearRect(0,0,m.consumerCssSize.width,m.consumerCssSize.height);
+              consumer.beginPath();consumer.rect(m.mapRect.x,m.mapRect.y,m.mapRect.width,m.mapRect.height);consumer.clip();
+              consumer.drawImage(canvas,m.draw.x,m.draw.y,m.draw.width,m.draw.height);
+            }finally{consumer.restore();}
+          }finally{ownConsumerDraw=false;}
+          control.frames=await twoFrames();
+          const pixels=context.getImageData(0,0,m.width,m.height).data;
+          const destinationPixels=consumer.getImageData(0,0,destination.width,destination.height).data;
+          control.after=nativeObservation();
+          if(control.frames.status!=='two-frames')control.inconclusiveReasons.push('two-frame-observation-timeout');
+          if(!control.after.documentVisible)control.inconclusiveReasons.push('document-not-visible');
+          if(cell.consumer==='visible-main'){
+            if(observerFailures.length)control.inconclusiveReasons.push('main-observer-unavailable');
+            if(Object.values(control.mainInterference).some(count=>count>0))control.inconclusiveReasons.push('main-render-interference');
+            if(!visible(control.after))control.inconclusiveReasons.push('main-not-visible-after-consumer');
+            if(JSON.stringify(control.before)!==JSON.stringify(control.after))control.inconclusiveReasons.push('main-geometry-or-view-changed');
+          }
+          control.status=control.inconclusiveReasons.length?'inconclusive':'observed';
+          control.versusActual=rasterPixelDifference(q,pixels,m.width);
+          control.versusReference=rasterPixelDifference(p,pixels,m.width);
+          control.sample=sample(pixels);control.png=staticEvidencePng(pixels,m.width,m.height);
+          control.destinationPng=staticEvidencePng(destinationPixels,destination.width,destination.height);
+          control.actualContextAttributes=context.getContextAttributes?.()??null;
+          if(cell.precision==='f32')control.precisionEvidence=pipelinePrecisionEvidence(plans.actual,m.featureBounds);
+          record.controls.push(control);
+        }catch(error){
+          control.status='inconclusive';control.inconclusiveReasons.push('secondary-control-error');
+          control.error={name:error?.name||'Error'};record.controls.push(control);
+        }finally{
+          activeControl=null;ownConsumerDraw=false;
+          if(canvas)canvas.width=canvas.height=0;
+          if(destination&&destination!==els.canvas)destination.width=destination.height=0;
+        }
+      }
+    }finally{
+      activeControl=null;
+      for(const {method,descriptor,wrapper} of originalMainMethods){
+        try{if(ctx[method]===wrapper){if(descriptor)Object.defineProperty(ctx,method,descriptor);else delete ctx[method];}}
+        catch(error){paintError('restore-post-verdict-main-observer',error);}
+      }
+    }
+    record.mainRestored=false;record.mainRestorationReason='Test context closes immediately after collection; no extra product repaint';
     return {records:[record],errors:window.__staticEvidenceErrors};
   };
 """
@@ -310,10 +439,13 @@ async def main(args):
                                         path.write_bytes(raw)
                                         record[key+'Png'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
                                     for control in record['controls']:
-                                        raw = base64.b64decode(control.pop('png').split(',', 1)[1])
-                                        path = output / f'capture-{index}-{control["kind"]}.png'
-                                        path.write_bytes(raw)
-                                        control['png'] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
+                                        for key, suffix in [('png', ''), ('destinationPng', '-destination')]:
+                                            if not control.get(key):
+                                                continue
+                                            raw = base64.b64decode(control.pop(key).split(',', 1)[1])
+                                            path = output / f'capture-{index}-{control["kind"]}{suffix}.png'
+                                            path.write_bytes(raw)
+                                            control[key] = {'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest()}
                                     captures.append(record)
                             except Exception as error:
                                 capture_errors.append({'stage': 'collect-after-original-scenario', 'name': type(error).__name__})
@@ -341,7 +473,11 @@ async def main(args):
                     'newCanvasOperationsBeforeOriginalVerdict': False, 'newNativeCanvasGettersBeforeOriginalVerdict': False,
                     'controlsAlterAcceptance': False, 'originalPaintHistoryAvailable': 'last-completed-static-and-cache-reference-plans',
                     'bounds': {'featuresPerPass': 512, 'passesPerPlan': 2, 'latestPlans': 2, 'errors': 16},
-                    'limitation': 'Original test instrumentation and assertions remain. Additional JS observation overhead and retaining the last native path objects may affect timing/lifetime. Primary q/p, 16 jitters and verdict are not replaced. Styles/matrices are derived from original source arguments, not native state. Only post-verdict secondary controls repaint exact retained plans; neither DOM-visible consumer history nor complete native context history is reproduced.'}
+                    'secondaryMatrix': 'Default/willReadFrequently source context x detached/existing-visible-main consumer; fifth default-detached cell Math.fround physical CTM a,d,e,f only',
+                    'secondaryReadOrder': ['two requestAnimationFrame callbacks after consumer', 'source', 'destination'],
+                    'secondaryStatus': 'complete' if captures and all(len(item['controls']) == 5 and
+                        all(control['status'] == 'observed' for control in item['controls']) for item in captures) else 'inconclusive',
+                    'limitation': 'Original test instrumentation and assertions remain. Additional JS observation overhead and retaining native paths may affect timing/lifetime. Primary q/p, 16 jitters and verdict are not replaced. Native paths are already warmed by the audit/jitters. Two animation frames are not a GPU completion guarantee. willReadFrequently is a context hint; DOM visibility does not identify a backend. F32 is one deterministic matrix precision model, not an inferred native implementation. Secondary controls use the existing visible main context without stopping normal RAF; interference/visibility changes are inconclusive. Neither full original context history nor a production fix is established.'}
                 (output / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
                 print(json.dumps({'status': result['status'], 'captures': len(captures), 'captureErrors': capture_errors,
                     'sourceStable': result['sourceStable'], 'error': result.get('error', '')[:250]}, ensure_ascii=False), flush=True)
