@@ -170,7 +170,7 @@ RENDER_HOOK = r"""
     const fresh=document.createElement('canvas');fresh.width=staticCanvas.width;fresh.height=staticCanvas.height;
     let cacheDifference={differences:0,maximumDifference:0,maximumAlphaDifference:0,maximumPremultipliedDifference:0,examples:[]};
     let cacheActualTransform=null,cacheReferenceTransform=null,cacheRoundoffProbe=null;const cacheJitter=[];
-    if(!sprite.direct){const context=fresh.getContext('2d'),view={x:sprite.viewX-sprite.left,y:sprite.viewY-sprite.top,k:state.view.k},map={x:0,y:0,width:fresh.width/state.dpr,height:fresh.height/state.dpr};
+    if(!sprite.direct){const context=fresh.getContext('2d',{alpha:true,willReadFrequently:true}),view={x:sprite.viewX-sprite.left,y:sprite.viewY-sprite.top,k:state.view.k},map={x:0,y:0,width:fresh.width/state.dpr,height:fresh.height/state.dpr};
       drawMap(context,view,map);drawLockedPieces(context,view,map);
       const p=context.getImageData(0,0,fresh.width,fresh.height).data,q=staticCtx.getImageData(0,0,fresh.width,fresh.height).data;
       cacheActualTransform=Array.from(staticCtx.getTransform().toFloat64Array());cacheReferenceTransform=Array.from(context.getTransform().toFloat64Array());
@@ -179,7 +179,7 @@ RENDER_HOOK = r"""
         const roundoff=rasterRoundoffTracker(q,p);
         for(const epsilon of [1e-7,1e-6,1e-5,1e-4])for(const axis of ['x','y'])for(const sign of [-1,1]){
           const target=document.createElement('canvas');target.width=fresh.width;target.height=fresh.height;
-          const shifted={...view,[axis]:view[axis]+epsilon*sign/state.dpr},targetContext=target.getContext('2d');
+          const shifted={...view,[axis]:view[axis]+epsilon*sign/state.dpr},targetContext=target.getContext('2d',{alpha:true,willReadFrequently:true});
           drawMap(targetContext,shifted,map);drawLockedPieces(targetContext,shifted,map);
           const pixels=targetContext.getImageData(0,0,target.width,target.height).data;
           const explainedPixels=roundoff.addCandidate(pixels,axis==='x'?epsilon*sign:0,axis==='y'?epsilon*sign:0);
