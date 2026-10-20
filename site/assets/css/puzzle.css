@@ -167,7 +167,7 @@
   cursor: pointer;
   transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
-.puzzle-mode-card:hover { transform: translateY(-1px); border-color: #94cfee; background: #f2faff; }
+.puzzle-mode-card:hover { border-color: #94cfee; background: #f2faff; }
 .puzzle-mode-card:focus-visible { outline: 3px solid rgba(0,121,193,.2); outline-offset: 2px; }
 .puzzle-mode-card.active {
   color: var(--rudn-blue-deep);
