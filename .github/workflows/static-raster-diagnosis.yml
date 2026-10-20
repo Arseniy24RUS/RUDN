@@ -1,0 +1,37 @@
+name: Static background raster diagnosis
+
+on:
+  push:
+    branches: [codex/static-raster-diagnosis]
+
+permissions:
+  contents: read
+
+jobs:
+  exact-seed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare existing fixture runtime and native WebKit
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps webkit
+      - name: Observe original exact-seed verdict before secondary controls
+        run: python scripts/ci_static_raster_probe.py --repo . --output "${{ runner.temp }}/static-raster"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-raster-exact-seed
+          path: ${{ runner.temp }}/static-raster
+          retention-days: 30
