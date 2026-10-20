@@ -140,6 +140,12 @@ async def main(args):
     names = ['puzzle-engine.js', 'puzzle-render-geometry.js', 'puzzle-raster-worker.js']
     hashes = lambda: {name: hashlib.sha256((repo / 'site/assets/js' / name).read_bytes()).hexdigest() for name in names}
     before_hashes = hashes()
+    old_observer = """  const observedBackgroundFill=staticCtx.fill;
+  staticCtx.fill=function(...args){window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};"""
+    live_observer = """  const observedBackgroundFill=CanvasRenderingContext2D.prototype.fill;
+  CanvasRenderingContext2D.prototype.fill=function(...args){if(this===staticCtx)window.__backgroundPaints++;return observedBackgroundFill.apply(this,args);};"""
+    assert render.RENDER_HOOK.count(old_observer) == 1, 'Exact original static paint observer required'
+    render.RENDER_HOOK = render.RENDER_HOOK.replace(old_observer, live_observer, 1)
     marker = '      cacheDifference=rasterPixelDifference(q,p,fresh.width);'
     assert render.RENDER_HOOK.count(marker) == 1, 'Exact original cache audit marker required'
     injected = marker + '\n      window.__captureStaticEvidence({q,p,width:fresh.width,height:fresh.height,cacheDifference,sprite,view,map});'

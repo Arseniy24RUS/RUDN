@@ -120,8 +120,8 @@
   const ctx = els.canvas.getContext("2d", { alpha: true });
   const hitCanvas = document.createElement("canvas");
   const hitCtx = hitCanvas.getContext("2d");
-  const staticCanvas = document.createElement("canvas");
-  const staticCtx = staticCanvas.getContext("2d", { alpha: true });
+  let staticCanvas = document.createElement("canvas");
+  let staticCtx = staticCanvas.getContext("2d", { alpha: true });
   const backgroundSprite = { valid: false, direct: false };
   const activeSprite = { canvas: document.createElement("canvas"), path: null };
   const rasterPreparation = {
@@ -1802,7 +1802,20 @@
     if (sprite.direct) {
       staticCanvas.width = staticCanvas.height = 0;
     } else {
-      staticCanvas.width = width; staticCanvas.height = height;
+      // Release the previous backing buffer before allocating the replacement.
+      // A cache hit above retains its surface and performs no additional work.
+      staticCanvas.width = staticCanvas.height = 0;
+      const nextCanvas = document.createElement("canvas");
+      try {
+        nextCanvas.width = width; nextCanvas.height = height;
+        const nextContext = nextCanvas.getContext("2d", { alpha: true });
+        if (!nextContext) throw new Error("Static map surface unavailable");
+        staticCanvas = nextCanvas;
+        staticCtx = nextContext;
+      } catch (error) {
+        nextCanvas.width = nextCanvas.height = 0;
+        throw error;
+      }
       const cacheView = { x: view.x - left, y: view.y - top, k: view.k };
       const cacheMap = { x: 0, y: 0, width: width / dpr, height: height / dpr };
       drawMap(staticCtx, cacheView, cacheMap);
