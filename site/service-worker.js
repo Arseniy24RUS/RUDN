@@ -657,17 +657,25 @@ const platformCache=id=>`${CACHE_PREFIX}release-${id}`;
 const platformURL=value=>{const url=new URL(value,SCOPE);if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))throw new Error('release/url-outside-scope');url.search='';url.hash='';return url;};
 async function platformHash(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function platformTarget(target){if(!/^[a-f0-9]{32}$/.test(target?.buildId||'')||!/^[a-f0-9]{64}$/.test(target?.manifestSha256||''))throw new Error('release/invalid-target');const url=platformURL(target.manifestURL);if(url.pathname!==new URL(`_releases/${target.buildId}/manifest.json`,SCOPE).pathname)throw new Error('release/manifest-path');return target;}
-async function platformChecked(url,sha,cacheName){
-  const key=platformURL(url).href;let cache;try{cache=await caches.open(cacheName);}catch{}
-  let response=await cache?.match(key);
-  if(response&&!platformVerified.has(cacheName+' '+key)){
-    if(await platformHash(await response.clone().arrayBuffer())!==sha){await cache.delete(key);response=null;}
+async function platformPersist(cacheName,key,response,sha){
+  const cache=await caches.open(cacheName);
+  await cache.put(key,response.clone());
+  const stored=await cache.match(key);
+  if(!stored||await platformHash(await stored.arrayBuffer())!==sha)throw new Error('release/cache-unavailable');
+  platformVerified.add(cacheName+' '+key);
+}
+async function platformChecked(url,sha,cacheName,requireCache=false){
+  const key=platformURL(url).href;let cache,response;
+  try{cache=await caches.open(cacheName);response=await cache.match(key);}catch{if(requireCache)throw new Error('release/cache-unavailable');}
+  if(response&&(requireCache||!platformVerified.has(cacheName+' '+key))){
+    if(await platformHash(await response.clone().arrayBuffer())!==sha){platformVerified.delete(cacheName+' '+key);await cache.delete(key);response=null;}
     else platformVerified.add(cacheName+' '+key);
   }
   if(response)return response;
   response=await fetchWithDeadline(new Request(key,{cache:'reload'}));if(!response.ok)throw new Error('release/resource-unavailable');
   if(await platformHash(await response.clone().arrayBuffer())!==sha)throw new Error('release/integrity');
-  try{await cache?.put(key,response.clone());platformVerified.add(cacheName+' '+key);}catch{}
+  if(requireCache)await platformPersist(cacheName,key,response,sha);
+  else try{if(cache){await cache.put(key,response.clone());platformVerified.add(cacheName+' '+key);}}catch{}
   return response;
 }
 async function platformManifest(target){
@@ -676,7 +684,7 @@ async function platformManifest(target){
   if(manifest.schema!==1||manifest.buildId!==target.buildId||!manifest.resources||!manifest.packs?.shell)throw new Error('release/invalid-manifest');
   const byURL=new Map();for(const item of Object.values(manifest.resources)){if(!/^[a-f0-9]{64}$/.test(item.sha256||'')||!Number.isSafeInteger(item.bytes))throw new Error('release/invalid-resource');byURL.set(platformURL(item.url).href,item);}
   const loaded={...manifest,target,byURL};platformManifests.set(target.buildId,loaded);
-  const cache=await caches.open(platformCache(target.buildId));await cache.put(new URL(`_releases/${target.buildId}/release.json`,SCOPE),new Response(JSON.stringify(target),{headers:{'content-type':'application/json'}}));
+  try{const cache=await caches.open(platformCache(target.buildId));await cache.put(new URL(`_releases/${target.buildId}/release.json`,SCOPE),new Response(JSON.stringify(target),{headers:{'content-type':'application/json'}}));}catch{}
   return loaded;
 }
 async function platformFind(id){
@@ -690,7 +698,13 @@ async function platformFind(id){
 async function platformPrepare(target,module,extras=[]){
   const manifest=await platformManifest(target),queue=[...new Set([...manifest.packs.shell,...(manifest.packs[module]||[]),...extras])];
   if(queue.some(name=>!manifest.resources[name]))throw new Error('release/unknown-resource');
-  await Promise.all(Array.from({length:Math.min(3,queue.length)},async()=>{while(queue.length){const item=manifest.resources[queue.shift()];await platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}));
+  const cacheName=platformCache(manifest.buildId);
+  // Preparation promises persisted bytes, even if the manifest is already in RAM.
+  // Ordinary online reads continue when optional cache storage is unavailable.
+  await platformChecked(target.manifestURL,target.manifestSha256,cacheName,true);
+  const descriptor=new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
+  await platformPersist(cacheName,new URL(`_releases/${manifest.buildId}/release.json`,SCOPE).href,descriptor,await platformHash(await descriptor.clone().arrayBuffer()));
+  await Promise.all(Array.from({length:Math.min(3,queue.length)},async()=>{while(queue.length){const item=manifest.resources[queue.shift()];await platformChecked(item.url,item.sha256,cacheName,true);}}));
   return {ready:true,failed:0,buildId:manifest.buildId};
 }
 async function platformActivate(){

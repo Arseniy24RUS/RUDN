@@ -6,6 +6,34 @@ const abort=()=>new DOMException('Aborted','AbortError');
 const checkSignal=signal=>{if(signal?.aborted)throw abort();};
 function requireThat(value,message){if(!value)throw new Error('Reader data: '+message);}
 
+// One wall-clock budget covers the entire callback, including body/hash work.
+// Native abort is best effort; the independent settlement releases caller slots.
+export function boundedReaderOperation(task,{signal,signals=[],timeoutMs=10000,assertActive}={}){
+  const parents=[...new Set([signal,...signals].filter(Boolean))];
+  try{assertActive?.();for(const parent of parents)checkSignal(parent);}catch(error){return Promise.reject(error);}
+  const controller=new AbortController(),duration=Number.isFinite(timeoutMs)&&timeoutMs>0?timeoutMs:10000;
+  const now=()=>globalThis.performance?.now?.()??Date.now(),deadline=now()+duration;
+  const timeout=()=>Object.assign(new Error('Время загрузки документа истекло. Повторите переход.'),{name:'TimeoutError',code:'reader/timeout'});
+  return new Promise((resolve,reject)=>{
+    let settled=false,timer;
+    const finish=(error,value)=>{if(settled)return;settled=true;clearTimeout(timer);for(const parent of parents)parent.removeEventListener('abort',cancel);error?reject(error):resolve(value);};
+    const stop=error=>{if(settled)return;finish(error);controller.abort();};
+    const cancel=()=>stop(abort());
+    const check=()=>{assertActive?.();for(const parent of parents)checkSignal(parent);if(settled)throw abort();if(now()>=deadline)throw timeout();};
+    const fail=error=>{if(error?.name==='AbortError'||error?.code==='reader/timeout')stop(error);else finish(error);};
+    timer=setTimeout(()=>stop(timeout()),duration);
+    for(const parent of parents)parent.addEventListener('abort',cancel,{once:true});
+    try{
+      check();
+      // Observe both late outcomes even if timeout/cancellation has already won.
+      Promise.resolve(task(controller.signal,check)).then(value=>{
+        // Synchronous parsing cannot be preempted, but an overrun is not success.
+        try{check();finish(null,value);}catch(error){fail(error);}
+      },fail);
+    }catch(error){fail(error);}
+  });
+}
+
 // Each caller owns its cancellation. A report and a scrolling reader may share
 // one fetch without cancelling each other; a flight with no consumers stops.
 function shared(map,key,signal,parentSignal,task){
@@ -45,26 +73,56 @@ export class BlockCache {
 
 /** Exactly one active search index, held only inside a dedicated worker. */
 export class ReaderSearch {
-  constructor(base,{signal,WorkerClass=globalThis.Worker,fetch:fetcher=globalThis.fetch?.bind(globalThis)}={}){this.base=base;this.signal=signal;this.WorkerClass=WorkerClass;this.fetcher=fetcher;this.worker=null;this.key=null;this.sequence=0;this.pending=new Map();this.ready=false;signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
+  constructor(base,{signal,WorkerClass=globalThis.Worker,fetch:fetcher=globalThis.fetch?.bind(globalThis),timeoutMs=10000}={}){this.base=base;this.signal=signal;this.WorkerClass=WorkerClass;this.fetcher=fetcher;this.timeoutMs=timeoutMs;this.worker=null;this.key=null;this.sequence=0;this.pending=new Map();this.ready=false;signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
   activate(manifest){
     const key=manifest.docId+'/'+manifest.locale;if(this.key===key&&this.worker)return;
     this.destroy();if(this.signal?.aborted)throw abort();requireThat(this.WorkerClass,'Web Worker unavailable');
     this.key=key;this.worker=new this.WorkerClass(resourceURL('./reader-search-worker.mjs',import.meta.url),{type:'module'});
-    this.worker.onmessage=({data})=>{if(data?.type==='ready'){this.ready=true;return;}const call=this.pending.get(data?.request);if(!call)return;this.pending.delete(data.request);call.cleanup();if(data.type==='error'){const error=new Error('Document search failed');error.code=data.code||'reader/search';call.reject(error);}else call.resolve(data.result);};
-    this.worker.onerror=()=>{for(const call of this.pending.values()){call.cleanup();call.reject(new Error('Document search worker failed'));}this.pending.clear();this.worker?.terminate();this.worker=null;this.key=null;this.ready=false;};
     const worker=this.worker,controller=new AbortController();this.loadingController=controller;
-    worker.postMessage({type:'load',key,sha256:manifest.search.sha256,docId:manifest.docId,locale:manifest.locale,contentVersion:manifest.contentVersion});
+    let resolveReady,rejectReady;
+    const ready=new Promise((resolve,reject)=>{resolveReady=resolve;rejectReady=reject;});ready.catch(()=>{});
+    this.releaseLoading=()=>rejectReady(abort());
+    worker.onmessage=({data})=>{
+      if(this.worker!==worker)return;
+      if(data?.type==='ready'){this.ready=true;resolveReady();return;}
+      const call=this.pending.get(data?.request);if(!call)return;
+      if(data.type==='error'){const error=new Error('Document search failed');error.code=data.code||'reader/search';this.fail(worker,error);}
+      else{this.pending.delete(data.request);call.cleanup();call.resolve(data.result);}
+    };
+    worker.onerror=()=>this.fail(worker,new Error('Document search worker failed'));
     // Fetch as the course window's service-worker client, then transfer the raw
-    // buffer. Decoding and parsing stay in the worker and releases cannot mix.
-    Promise.resolve().then(()=>this.fetcher(resourceURL(manifest.search.file,this.base),{credentials:'same-origin',cache:'no-cache',signal:controller.signal})).then(response=>{if(!response.ok)throw new Error('load');return response.arrayBuffer();}).then(bytes=>{if(this.worker===worker)worker.postMessage({type:'index',bytes},[bytes]);}).catch(()=>{if(this.worker===worker)worker.postMessage({type:'index-error'});});
+    // buffer. Worker integrity, decoding and schema checks share this one init
+    // budget; a query has its own budget from its call, including pending init.
+    this.initialization=boundedReaderOperation(async(signal,check)=>{
+      worker.postMessage({type:'load',key,sha256:manifest.search.sha256,docId:manifest.docId,locale:manifest.locale,contentVersion:manifest.contentVersion});
+      const response=await this.fetcher(resourceURL(manifest.search.file,this.base),{credentials:'same-origin',cache:'no-cache',signal});
+      check();if(!response.ok)throw new Error('Document search index load failed');
+      const bytes=await response.arrayBuffer();check();
+      if(this.worker!==worker)throw abort();worker.postMessage({type:'index',bytes},[bytes]);
+      await ready;check();
+    },{signals:[this.signal,controller.signal],timeoutMs:this.timeoutMs});
+    this.initialization.catch(error=>this.fail(worker,error));
+  }
+  fail(worker,error){
+    if(this.worker!==worker)return;
+    this.worker=null;this.key=null;this.ready=false;
+    for(const call of this.pending.values()){call.cleanup();call.reject(error);}this.pending.clear();
+    this.loadingController?.abort();this.loadingController=null;this.releaseLoading?.();this.releaseLoading=null;this.initialization=null;
+    worker?.terminate();
   }
   search(manifest,query,{page=0,pageSize=20,signal}={}){
     if(signal?.aborted||this.signal?.aborted)return Promise.reject(abort());this.activate(manifest);this.cancel();
-    const request=++this.sequence;
-    return new Promise((resolve,reject)=>{const cancel=()=>{if(!this.pending.has(request))return;this.pending.delete(request);cleanup();this.worker?.postMessage({type:'cancel',request});reject(abort());},cleanup=()=>signal?.removeEventListener('abort',cancel);this.pending.set(request,{resolve,reject,cleanup});signal?.addEventListener('abort',cancel,{once:true});this.worker.postMessage({type:'search',request,query:String(query),page:Math.max(0,Math.floor(page)),pageSize:Math.min(100,Math.max(1,Math.floor(pageSize)))});});
+    const request=++this.sequence,worker=this.worker,controller=new AbortController();
+    return boundedReaderOperation(activeSignal=>new Promise((resolve,reject)=>{
+      const cancel=()=>{if(!this.pending.has(request))return;this.pending.delete(request);cleanup();if(this.worker===worker)worker.postMessage({type:'cancel',request});reject(abort());};
+      const cleanup=()=>activeSignal.removeEventListener('abort',cancel);
+      this.pending.set(request,{resolve,reject,cleanup,cancel:()=>controller.abort()});activeSignal.addEventListener('abort',cancel,{once:true});
+      try{worker.postMessage({type:'search',request,query:String(query),page:Math.max(0,Math.floor(page)),pageSize:Math.min(100,Math.max(1,Math.floor(pageSize)))});}
+      catch(error){this.pending.delete(request);cleanup();reject(error);}
+    }),{signals:[signal,this.signal,controller.signal],timeoutMs:this.timeoutMs}).catch(error=>{if(error?.code==='reader/timeout')this.fail(worker,error);throw error;});
   }
-  cancel(){for(const [request,call]of this.pending){call.cleanup();call.reject(abort());this.worker?.postMessage({type:'cancel',request});}this.pending.clear();}
-  destroy(){this.cancel();this.loadingController?.abort();this.loadingController=null;this.worker?.terminate();this.worker=null;this.key=null;this.ready=false;}
+  cancel(){for(const call of [...this.pending.values()])call.cancel();}
+  destroy(){if(this.worker)this.fail(this.worker,abort());else{this.loadingController?.abort();this.loadingController=null;this.releaseLoading?.();this.releaseLoading=null;this.initialization=null;}}
   stats(){return {searchIndexes:this.worker?1:0,pendingSearches:this.pending.size,searchReady:this.ready};}
 }
 

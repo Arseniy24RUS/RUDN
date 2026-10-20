@@ -1,23 +1,24 @@
 import {resourceURL} from '../../../assets/js/release-resources.js';
 import {searchUnits,contentHash} from './core.mjs';
-import {ReaderData} from './reader-data.mjs';
+import {ReaderData,boundedReaderOperation} from './reader-data.mjs';
 export class Corpus {
   constructor(base,{signal}={}){this.base=base;this.signal=signal;this.destroyed=false;this.cache=new Map();this.inflight=new Map();this.readerData=new ReaderData(this);signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
   assertActive(){if(this.destroyed||this.signal?.aborted)throw new DOMException('Aborted','AbortError');}
-  async json(path,expectedSha=null,{signal=this.signal}={}){
-    const check=()=>{this.assertActive();if(signal?.aborted)throw new DOMException('Aborted','AbortError');};check();
-    const r=await fetch(resourceURL(path,this.base),{signal,credentials:'same-origin',cache:'no-cache'});
-    check();
-    if(!r.ok)throw new Error(`Не удалось загрузить ${path}: HTTP ${r.status}`);
-    const bytes=await r.arrayBuffer();
-    check();
-    if(expectedSha){
-      const digest=await crypto.subtle.digest('SHA-256',bytes);
+  async json(path,expectedSha=null,{signal=this.signal,timeoutMs=10000}={}){
+    return boundedReaderOperation(async(activeSignal,check)=>{
+      const r=await fetch(resourceURL(path,this.base),{signal:activeSignal,credentials:'same-origin',cache:'no-cache'});
       check();
-      const actual=[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');
-      if(actual!==expectedSha)throw new Error('Контрольная сумма документа не совпадает. Обновите материалы.');
-    }
-    check();return JSON.parse(new TextDecoder().decode(bytes));
+      if(!r.ok)throw new Error(`Не удалось загрузить ${path}: HTTP ${r.status}`);
+      const bytes=await r.arrayBuffer();
+      check();
+      if(expectedSha){
+        const digest=await crypto.subtle.digest('SHA-256',bytes);
+        check();
+        const actual=[...new Uint8Array(digest)].map(v=>v.toString(16).padStart(2,'0')).join('');
+        if(actual!==expectedSha)throw new Error('Контрольная сумма документа не совпадает. Обновите материалы.');
+      }
+      check();return JSON.parse(new TextDecoder().decode(bytes));
+    },{signals:[this.signal,signal],timeoutMs,assertActive:()=>this.assertActive()});
   }
   async initialize(){
     const [catalog,bank,scans,cases]=await Promise.all(['data/catalog.json','data/bank.json','data/scans.json','data/cases.json'].map(x=>this.json(x)));
