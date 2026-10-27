@@ -60,22 +60,25 @@ jobs:
           compression-level: 0
 
   platform-checks:
+    if: ${{ !contains(github.event.head_commit.message, '[career-verified-publish]') }}
     uses: ./.github/workflows/platform-checks.yml
 
   legal-lab:
+    if: ${{ !contains(github.event.head_commit.message, '[career-verified-publish]') }}
     uses: ./.github/workflows/legal-lab-checks.yml
 
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: [preserve-legacy-baseline, puzzle-checks, legal-lab, platform-checks]
-    if: ${{ !cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')))) }}
+    if: ${{ (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && contains(github.event.head_commit.message, '[career-verified-publish]') && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))))) }}
     env:
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
+      CAREER_VERIFIED_PUBLISH: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') }}
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
       SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
       SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
       SETTLEMENTS_RUNTIME_CACHE: ${{ contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
@@ -155,6 +158,8 @@ jobs:
           }
           is_settlements_ui = os.environ['SETTLEMENTS_UI_ONLY'] == 'true'
           allowed = settlements_ui if is_settlements_ui else puzzle_no_mistakes if os.environ['PUZZLE_NO_MISTAKES_ONLY'] == 'true' else quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
+          if os.environ['CAREER_VERIFIED_PUBLISH'] == 'true':
+            allowed = {'.github/workflows/deploy-pages.yml'}
           if os.environ['FIREBASE_TRANSPORT_ONLY'] == 'true':
             # The owner explicitly authorized skipping full module checks for
             # this reviewed gateway release. Any later product edit rejects it.
@@ -411,6 +416,13 @@ jobs:
               def without_presentation(text):
                 return re.sub(r'(?s)\n/\* SETTLEMENTS_PRESENTATION_BEGIN \*/.*?/\* SETTLEMENTS_PRESENTATION_END \*/\n?', '', text).rstrip()
               assert without_presentation(source('HEAD^', 'site/assets/css/site.css')) == without_presentation(source('HEAD', 'site/assets/css/site.css')), 'Only the isolated Settlements presentation styles may change'
+          if os.environ['CAREER_VERIFIED_PUBLISH'] == 'true':
+            # User explicitly limited this publication to Seminar 5. The product
+            # tree is frozen at the reviewed career/CSS fix; only this workflow
+            # may change. Unflagged pushes retain the existing full checks.
+            assert changed == {'.github/workflows/deploy-pages.yml'}
+            tree = subprocess.check_output(['git', 'rev-parse', 'HEAD:site'], text=True).strip()
+            assert tree == '4b91f44de893621c470b68ac944a12af6d6202da', 'Career publication requires the exact reviewed site tree'
           PY
       - name: Prepare Node.js
         uses: actions/setup-node@v4
@@ -421,8 +433,15 @@ jobs:
           npm ci --ignore-scripts
           npm run build:firebase
           npm run build:career
-          node site/apps/reception/localization/extract.mjs
-          node site/apps/reception/localization/compile.mjs
+          if [ "$CAREER_VERIFIED_PUBLISH" != 'true' ]; then
+            node site/apps/reception/localization/extract.mjs
+            node site/apps/reception/localization/compile.mjs
+          fi
+      - name: Verify Seminar 5 shared stylesheet offline regression
+        if: env.CAREER_VERIFIED_PUBLISH == 'true'
+        run: |
+          node --check site/service-worker.js
+          node --test --test-name-pattern='every global stylesheet|failure to retrieve any global stylesheet' scripts/test_governor_service_worker.mjs
       - name: Check career vacancy snapshot contract offline
         run: |
           node --test tests/career-vacancy-sync.test.mjs
@@ -433,11 +452,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
       - name: Refresh public federal vacancy snapshot
-        if: github.event_name != 'pull_request' && env.FOCUSED_HOTFIX != 'true'
+        if: github.event_name != 'pull_request' && (env.FOCUSED_HOTFIX != 'true' || env.CAREER_VERIFIED_PUBLISH == 'true')
         run: |
           node scripts/sync-career-vacancies.mjs --refresh --baseline "${{ runner.temp }}/platform-baseline"
           node scripts/sync-career-vacancies.mjs --check
       - name: Update published reception calendars
+        if: env.CAREER_VERIFIED_PUBLISH != 'true'
         run: node scripts/update-reception-calendars.mjs
       - name: Validate static bundle
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true' || env.FIREBASE_TRANSPORT_ONLY == 'true'
@@ -550,10 +570,10 @@ jobs:
           node site/apps/reception/localization/reference-locale-test.mjs
           node site/apps/reception/localization/source-strings-test.mjs
       - name: Verify career locale templates and question coverage
-        if: env.FOCUSED_HOTFIX != 'true'
+        if: env.FOCUSED_HOTFIX != 'true' || env.CAREER_VERIFIED_PUBLISH == 'true'
         run: node scripts/test_career_localization.mjs
       - name: Verify career ranking and automatic civil-service grading
-        if: env.FOCUSED_HOTFIX != 'true'
+        if: env.FOCUSED_HOTFIX != 'true' || env.CAREER_VERIFIED_PUBLISH == 'true'
         run: |
           node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/civil-service-model.test.mjs
           node scripts/build-civil-service-bank.mjs
@@ -568,6 +588,7 @@ jobs:
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
       - name: Verify Firebase gateway request transport and project boundaries
+        if: env.CAREER_VERIFIED_PUBLISH != 'true'
         run: |
           node scripts/test-firebase-gateway.mjs
           node --test firebase/functions/gateway.test.mjs
@@ -698,6 +719,7 @@ jobs:
       - name: Build and verify exact runtime and immutable resources
         run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
       - name: Verify actual immutable main and module routes
+        if: env.CAREER_VERIFIED_PUBLISH != 'true'
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium
