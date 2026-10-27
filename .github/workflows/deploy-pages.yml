@@ -1,778 +1,89 @@
-name: Deploy RUDN learning platform to GitHub Pages
+name: Read-only career vacancy transport probe
 
 on:
-  # RUDN_RECEPTION_CALENDAR_SCHEDULE
-  schedule:
-    - cron: "23 4 * * *"
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
     inputs:
       verification_only:
-        description: Build, verify and archive without publishing Pages or a GitHub Release
+        description: Read-only connection diagnostics; never publishes
         type: boolean
         default: true
 
 permissions:
   contents: read
-  actions: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages-${{ github.event_name == 'pull_request' && github.event.pull_request.number || (inputs.verification_only == true && github.ref) || 'production' }}
-  cancel-in-progress: true
+  group: career-vacancy-transport-probe-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  preserve-legacy-baseline:
+  probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-      actions: read
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '24']
     steps:
-      - name: Checkout baseline preservation tools
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
+          persist-credentials: false
           sparse-checkout: |
-            scripts/preserve-legacy-baseline.mjs
-            scripts/download-release-baseline.mjs
+            scripts/sync-career-vacancies.mjs
+            site/apps/career/assets/vacancies-model.mjs
           sparse-checkout-cone-mode: false
-      - name: Prepare Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - name: Verify the reviewed first-migration ZIP or an existing backup
-        id: preserve
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: node scripts/preserve-legacy-baseline.mjs --out "${{ runner.temp }}/platform-legacy-baseline-backup" --repo "${{ github.repository }}" --run-id "${{ github.run_id }}"
-      - name: Retain the reviewed first-migration baseline without replacing it
-        if: steps.preserve.outputs.upload_required == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.preserve.outputs.artifact_name }}
-          path: ${{ steps.preserve.outputs.archive_path }}
-          if-no-files-found: error
-          retention-days: 90
-          compression-level: 0
-
-  platform-checks:
-    uses: ./.github/workflows/platform-checks.yml
-
-  legal-lab:
-    uses: ./.github/workflows/legal-lab-checks.yml
-
-  puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
-    uses: ./.github/workflows/puzzle-checks.yml
-    with:
-      coverage: full
-
-  deploy:
-    needs: [preserve-legacy-baseline, puzzle-checks, legal-lab, platform-checks]
-    if: ${{ !cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')))) }}
-    env:
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
-      SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
-      SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
-      SETTLEMENTS_RUNTIME_CACHE: ${{ contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
-      SETTLEMENTS_ROUTE_LIMITS: ${{ contains(github.event.head_commit.message, '[settlements-route-limits]') }}
-      SETTLEMENTS_TOWER_BATCH: ${{ contains(github.event.head_commit.message, '[settlements-tower-batch]') }}
-      SETTLEMENTS_BOUNDARIES: ${{ contains(github.event.head_commit.message, '[settlements-boundaries]') }}
-      SETTLEMENTS_TOWERS: ${{ contains(github.event.head_commit.message, '[settlements-towers]') }}
-      SETTLEMENTS_GRADE_HOTFIX: ${{ contains(github.event.head_commit.message, '[settlements-grade-hotfix]') }}
-      FIREBASE_TRANSPORT_ONLY: ${{ contains(github.event.head_commit.message, '[firebase-transport-only]') }}
-      SETTLEMENTS_UI_ONLY: ${{ contains(github.event.head_commit.message, '[settlements-ui-only]') }}
-      VERIFIED_SETTLEMENTS_PUBLISH: ${{ contains(github.event.head_commit.message, '[settlements-ui-only]') && contains(github.event.head_commit.message, '[settlements-verified-publish]') }}
-      PUZZLE_NO_MISTAKES_ONLY: ${{ contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') }}
-      QUIZ_LAYOUT_ONLY: ${{ contains(github.event.head_commit.message, '[quiz-layout-only]') }}
-      GAMES_ACCESS_ONLY: ${{ contains(github.event.head_commit.message, '[games-access-only]') }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    outputs:
-      build_id: ${{ steps.release_archive.outputs.build_id }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      # Focused hotfixes run checks for their authorized scope.
-      # Reject the shortcut if the commit changes anything outside this scope.
-      - name: Verify focused hotfix change scope
-        if: env.FOCUSED_HOTFIX == 'true'
+          node-version: ${{ matrix.node }}
+      - name: Probe the same public search with verified TLS
+        shell: bash
         run: |
-          python - <<'PY'
-          import os, subprocess
-          games_access = {
-            '.github/workflows/deploy-pages.yml',
-            'scripts/test_games_access.mjs',
-            'site/assets/js/games-catalog.js',
-            'site/assets/js/main.js',
-            'site/apps/governor/platform-bridge.js',
-            'site/service-worker.js',
+          node --input-type=module <<'NODE'
+          import dns from 'node:dns/promises';
+          import https from 'node:https';
+          import {SEARCH_URL,FILTER,requestJSON} from './scripts/sync-career-vacancies.mjs';
+          const record=value=>console.log(JSON.stringify(value));
+          const safeError=e=>({name:e?.name,code:e?.code,message:String(e?.message||'').slice(0,350),cause:e?.cause?{name:e.cause.name,code:e.cause.code,message:String(e.cause.message||'').slice(0,350),errors:e.cause.errors?.map(x=>({code:x.code,address:x.address,port:x.port}))}:null});
+          const host=new URL(SEARCH_URL).hostname;
+          let addresses=[];
+          try{addresses=await dns.lookup(host,{all:true});record({stage:'dns',node:process.version,undici:process.versions.undici,host,addresses});}
+          catch(error){record({stage:'dns',error:safeError(error)});process.exit(0);}
+          const body={page:1,sort:0,direction:1,pageSize:1,...FILTER};
+          const boundedFetch=async(...args)=>{
+            const response=await fetch(...args);
+            if(!response.ok){try{await response.body?.cancel();}catch{}}
+            return {ok:response.ok,status:response.status,headers:response.headers,text:async()=>{
+              const reader=response.body?.getReader();if(!reader)return '';
+              let size=0;const chunks=[];
+              try{for(;;){const {value,done}=await reader.read();if(done)break;size+=value.byteLength;if(size>2*1024*1024){try{await reader.cancel();}catch{}throw new Error('vacancies/probe-response-limit');}chunks.push(Buffer.from(value));}}
+              finally{try{reader.releaseLock();}catch{}}
+              return Buffer.concat(chunks).toString('utf8');
+            }};
+          };
+          const transportCodes=new Set(['UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_SOCKET','ECONNRESET','ECONNREFUSED','ETIMEDOUT','ENETUNREACH','EHOSTUNREACH','EAI_AGAIN','ENOTFOUND']);
+          const isTransportFailure=error=>['AbortError','TimeoutError'].includes(error?.name)||error?.message==='fetch failed'&&(transportCodes.has(error.cause?.code)||error.cause?.errors?.some(e=>transportCodes.has(e.code)));
+          let transportFailed=false;
+          try{
+            const result=await requestJSON(SEARCH_URL,{body,fetchImpl:boundedFetch,timeoutMs:25000,onObservation:receipt=>record({stage:'default-fetch-response',...receipt})});
+            record({stage:'default-fetch',status:'ok',keys:Object.keys(result||{}),sourceTotal:result?.total??result?.totalCount??null});
+          }catch(error){
+            record({stage:'default-fetch',status:'error',error:safeError(error)});
+            // HTTP denials and contract errors are not retried through another transport.
+            if(String(error.message||'').startsWith('vacancies/')||!isTransportFailure(error))process.exit(0);
+            transportFailed=true;
           }
-          quiz_layout = {
-            '.github/workflows/deploy-pages.yml',
-            'scripts/test_quiz_layout.mjs',
-            'site/assets/css/site.css',
-            'site/service-worker.js',
+          if(transportFailed&&addresses.some(x=>x.family===4)){
+            const bytes=JSON.stringify(body);
+            const started=Date.now();
+            await new Promise(resolve=>{
+              const request=https.request(SEARCH_URL,{method:'POST',family:4,headers:{Accept:'application/json','Content-Type':'application/json','Content-Length':Buffer.byteLength(bytes)}},response=>{
+                let size=0;const chunks=[];
+                response.on('data',chunk=>{size+=chunk.length;if(size>2*1024*1024){request.destroy(new Error('Probe response limit'));return;}chunks.push(chunk);});
+                response.on('end',()=>{clearTimeout(timer);let validJSON=false;try{JSON.parse(Buffer.concat(chunks).toString('utf8'));validJSON=true;}catch{}record({stage:'native-https-ipv4',status:response.statusCode,bytes:size,validJSON,elapsedMs:Date.now()-started});resolve();});
+                response.on('error',error=>{clearTimeout(timer);record({stage:'native-https-ipv4-response',error:safeError(error)});resolve();});
+              });
+              const timer=setTimeout(()=>request.destroy(Object.assign(new Error('Probe timeout'),{code:'PROBE_TIMEOUT'})),25000);
+              request.on('error',error=>{clearTimeout(timer);record({stage:'native-https-ipv4',error:safeError(error),elapsedMs:Date.now()-started});resolve();});
+              request.end(bytes);
+            });
           }
-          puzzle_no_mistakes = {
-            '.github/workflows/deploy-pages.yml',
-            '.github/workflows/puzzle-checks.yml',
-            'scripts/puzzle_snap_test.mjs',
-            'scripts/test_puzzle_catalog.py',
-            'scripts/test_puzzle_interactions.py',
-            'scripts/test_puzzle_release_upgrade.py',
-            'scripts/test_puzzle_resilience.py',
-            'scripts/test_puzzle_no_mistakes.py',
-            'scripts/test_puzzle_leaderboard.mjs',
-            'site/apps/puzzle.html',
-            'site/assets/css/puzzle.css',
-            'site/assets/js/puzzle-bootstrap.js',
-            'site/assets/js/puzzle-engine.js',
-            'site/service-worker.js',
-            'docs/puzzle-no-mistakes.md',
-          }
-          settlements_ui = {
-            '.github/workflows/deploy-pages.yml',
-            'site/apps/settlements/entry.mjs',
-            'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs',
-            'site/apps/settlements/source-manifest.json',
-            'site/apps/settlements/module.css',
-            'site/assets/js/main.js',
-            'site/assets/js/settlements-presentation.js',
-            'site/assets/css/site.css',
-            'scripts/test-settlements-browser.py',
-            'scripts/test-settlements-region-switch.py',
-            'site/assets/js/settlements-storage.js',
-            'scripts/test-settlements-storage.mjs',
-            'scripts/test-settlements-save-status-browser.py',
-            'site/service-worker.js',
-          }
-          is_settlements_ui = os.environ['SETTLEMENTS_UI_ONLY'] == 'true'
-          allowed = settlements_ui if is_settlements_ui else puzzle_no_mistakes if os.environ['PUZZLE_NO_MISTAKES_ONLY'] == 'true' else quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
-          if os.environ['FIREBASE_TRANSPORT_ONLY'] == 'true':
-            # The owner explicitly authorized skipping full module checks for
-            # this reviewed gateway release. Any later product edit rejects it.
-            assert subprocess.check_output(['git', 'rev-parse', 'HEAD:site'], text=True).strip() == 'bd0f98ca72f68fdd99a0761def6f65529cb12cb4'
-            assert subprocess.check_output(['git', 'rev-parse', 'HEAD:firebase'], text=True).strip() == '22b145ae3fbfcfd048b357cab47ff85b157b49a9'
-            allowed = {'.github/workflows/deploy-pages.yml', 'package.json', 'package-lock.json', 'open_rudn_direct.bat', 'scripts/open-rudn-direct.ps1', 'scripts/test-firebase-gateway.mjs'}
-            allowed.update(subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', 'HEAD', 'site', 'firebase'], text=True).splitlines())
-          if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
-            # The owner requested urgent publication without the full matrix.
-            # Only tutorial/completion presentation and recovery may change; engine rules/data stay fixed.
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/apps/settlements/entry.mjs', 'site/apps/settlements/copy.mjs', 'site/apps/settlements/module.css', 'site/service-worker.js', 'scripts/test-settlements-result-browser.py', 'scripts/test-settlements-tutorial-assessment-browser.py', 'scripts/test-settlements-training-gates-browser.py', 'scripts/test-settlements-course-status.mjs', 'scripts/test-settlements-course-recovery.mjs', 'scripts/test-settlements-dashboard-browser.py', 'site/assets/js/settlements-course-status.js', 'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs', 'site/apps/settlements/runtime/assets/js/settlements/v24/i18n.mjs', 'site/apps/settlements/source-manifest.json', 'site/assets/js/main.js', 'site/assets/js/firebase-gateway.js', 'scripts/test-firebase-gateway.mjs'}
-          if os.environ['SETTLEMENTS_ROAD_ROUTES'] == 'true':
-            runtime = 'site/apps/settlements/runtime/'
-            paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/network-routing.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-road-routes-browser.py', 'scripts/audit-settlements-road-routes.mjs'} | {runtime + path for path in paths}
-          if os.environ['SETTLEMENTS_NETWORK'] == 'true':
-            import json, hashlib, re
-            runtime = 'site/apps/settlements/runtime/'
-            patched = {'assets/js/settlements/v2/network.mjs', 'assets/js/settlements/v2/data.mjs', 'assets/js/settlements/v24/social-plan-fetch.mjs', 'assets/js/settlements/v24/transport-policy-fetch.mjs', 'assets/js/settlements/v24/federal-cities.mjs'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/entry.mjs', 'site/assets/js/settlements-storage.js', 'site/apps/settlements/source-manifest.json', 'firebase/functions/gateway.mjs', 'firebase/functions/gateway.test.mjs', 'scripts/test-settlements-network.mjs', 'scripts/test-settlements-network-browser.mjs', 'scripts/test-settlements-storage.mjs'} | {runtime + path for path in patched}
-            def source(ref, path):
-              return subprocess.check_output(['git','show',f'{ref}:{path}'])
-            previous, current = [json.loads(source(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^','HEAD']]
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',',':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = source('HEAD', runtime + entry['path'])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in [previous,current]:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert previous == current, 'Game rules, authored plans and protected geography must stay unchanged'
-            def worker_without_network_stamp(ref):
-              text = source(ref,'site/service-worker.js').decode()
-              text = re.sub(r'^const CACHE=.*?;$','CACHE_STAMP',text,flags=re.M)
-              return text.replace("'./apps/settlements/runtime/assets/js/settlements/v2/network.mjs',",'')
-            assert worker_without_network_stamp('HEAD^') == worker_without_network_stamp('HEAD'), 'Existing release/geometry cache protections must stay unchanged'
-            def firebase_routes(ref):
-              return source(ref,'firebase/functions/gateway.mjs').decode().split('export function upstreamFor(',1)[1].split('export async function handle(',1)[0]
-            assert firebase_routes('HEAD^') == firebase_routes('HEAD'), 'Firebase authentication/database/storage routes must stay unchanged'
-          if os.environ['SETTLEMENTS_TOWERS'] == 'true':
-            runtime = 'site/apps/settlements/runtime/'
-            paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/scenarios.mjs', 'assets/js/settlements/v24/telecom-policy.mjs', 'assets/js/settlements/v24/initial-tower-spacing.mjs', 'assets/js/settlements/v24/tower-lod.mjs'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-initial-spacing.mjs', 'scripts/test-settlements-tower-lod.mjs', 'scripts/test-settlements-tower-saves.mjs', 'scripts/test-settlements-tower-spacing-browser.py', 'scripts/audit-settlements-tower-spacing.mjs'} | {runtime + path for path in paths}
-          if os.environ['SETTLEMENTS_BOUNDARIES'] == 'true':
-            runtime = 'site/apps/settlements/runtime/'
-            paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/region-playability.mjs'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-boundaries.mjs', 'scripts/test-settlements-boundary-map.mjs', 'scripts/test-settlements-boundaries-browser.py', 'scripts/audit-settlements-boundaries.mjs'} | {runtime + path for path in paths}
-          if os.environ['SETTLEMENTS_TOWER_BATCH'] == 'true':
-            runtime = 'site/apps/settlements/runtime/'
-            paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-tower-batch.mjs', 'scripts/test-settlements-tower-batch-map.mjs', 'scripts/test-settlements-tower-batch-browser.py'} | {runtime + path for path in paths}
-          if os.environ['SETTLEMENTS_RUNTIME_CACHE'] == 'true':
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'scripts/test_governor_service_worker.mjs'}
-          if os.environ['SETTLEMENTS_ROUTE_LIMITS'] == 'true':
-            runtime = 'site/apps/settlements/runtime/'
-            paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-route-limits.mjs', 'scripts/test-settlements-route-limits-browser.py', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-boundaries.mjs'} | {runtime + path for path in paths}
-          changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
-          assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
-          if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
-            import re, json, hashlib
-            def content(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}']).decode()
-            game_path = 'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs'
-            def game_logic(text):
-              for start, end in [('render', 'settlementCard'), ('menu', 'regions')]:
-                text, count = re.subn(r'(?ms)^  function '+start+r'\(.*?(?=^  function '+end+r'\()', '', text)
-                assert count == 1
-              return text
-            assert game_logic(content('HEAD^', game_path)) == game_logic(content('HEAD', game_path)), 'Engine behavior must stay unchanged'
-            manifest_path = 'site/apps/settlements/source-manifest.json'
-            previous, current = [json.loads(content(ref, manifest_path)) for ref in ['HEAD^', 'HEAD']]
-            patched = {'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs'}
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'],ensure_ascii=False,separators=(',',':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = subprocess.check_output(['git','show','HEAD:site/apps/settlements/runtime/'+entry['path']])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in [previous,current]:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert previous == current, 'Protected data and other runtime provenance must stay unchanged'
-            def shared_main(text):
-              text = re.sub(r"^import .* from './settlements-course-status.js';\n", '', text, flags=re.M)
-              for start, end in [('async function renderDashboard', 'const gradeItems='), ('async function renderGradebook', 'function renderMaterials')]:
-                text, count = re.subn(r'(?ms)^'+start+r'\(.*?(?=^'+end+r')', '', text)
-                assert count == 1
-              return text
-            assert shared_main(content('HEAD^','site/assets/js/main.js')) == shared_main(content('HEAD','site/assets/js/main.js')), 'Only settlement result presentation/recovery may change in main'
-          if os.environ['SETTLEMENTS_ROAD_ROUTES'] == 'true':
-            import json, hashlib, re
-            runtime = 'site/apps/settlements/runtime/'
-            patched = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/network-routing.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'}
-            allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-road-routes-browser.py', 'scripts/audit-settlements-road-routes.mjs'} | {runtime + path for path in patched}
-            changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
-            assert changed and changed <= allowed, f'Change outside road/routes scope: {sorted(changed - allowed)}'
-            def source_bytes(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
-            manifests = [json.loads(source_bytes(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^', 'HEAD']]
-            current = manifests[1]
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = source_bytes('HEAD', runtime + entry['path'])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in manifests:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert manifests[0] == manifests[1], 'Scenario plans, geography and unrelated runtime files must stay unchanged'
-            def worker_without_stamp(ref):
-              text = source_bytes(ref, 'site/service-worker.js').decode()
-              text, count = re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$', 'const CACHE=RELEASE_STAMP;', text, flags=re.M)
-              assert count == 1
-              return text
-            assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Only the service-worker release stamp may change'
-          if os.environ['SETTLEMENTS_TOWERS'] == 'true':
-            import json, hashlib, re
-            runtime = 'site/apps/settlements/runtime/'
-            patched = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/scenarios.mjs', 'assets/js/settlements/v24/telecom-policy.mjs', 'assets/js/settlements/v24/initial-tower-spacing.mjs', 'assets/js/settlements/v24/tower-lod.mjs'}
-            def source_bytes(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
-            manifests = [json.loads(source_bytes(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^', 'HEAD']]
-            current = manifests[1]
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = source_bytes('HEAD', runtime + entry['path'])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in manifests:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert manifests[0] == manifests[1], 'Scenario plans, geography and unrelated runtime files must stay unchanged'
-            def worker_without_stamp(ref):
-              text = source_bytes(ref, 'site/service-worker.js').decode()
-              text, count = re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$', 'const CACHE=RELEASE_STAMP;', text, flags=re.M)
-              assert count == 1
-              return text
-            assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Only the service-worker release stamp may change'
-            path = 'scripts/test-settlements-road-routes.mjs'
-            before, after = [source_bytes(ref, path).decode() for ref in ['HEAD^', 'HEAD']]
-            assert after.replace("difficulty,initialTowerPolicyVersion:null}", "difficulty}") == before, 'Legacy fixture hashes and assertions must stay unchanged'
-          if os.environ['SETTLEMENTS_BOUNDARIES'] == 'true':
-            import json, hashlib, re
-            runtime = 'site/apps/settlements/runtime/'
-            patched = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/region-playability.mjs'}
-            def source_bytes(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
-            manifests = [json.loads(source_bytes(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^', 'HEAD']]
-            current = manifests[1]
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = source_bytes('HEAD', runtime + entry['path'])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in manifests:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert manifests[0] == manifests[1], 'Scenario plans, geography and unrelated runtime files must stay unchanged'
-            def worker_without_stamp(ref):
-              text = source_bytes(ref, 'site/service-worker.js').decode()
-              text, count = re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$', 'const CACHE=RELEASE_STAMP;', text, flags=re.M)
-              assert count == 1
-              return text
-            assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Only the service-worker release stamp may change'
-          if os.environ['SETTLEMENTS_TOWER_BATCH'] == 'true' or os.environ['SETTLEMENTS_ROUTE_LIMITS'] == 'true':
-            import json, hashlib, re
-            runtime = 'site/apps/settlements/runtime/'
-            patched = ({'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs'} if os.environ['SETTLEMENTS_ROUTE_LIMITS'] == 'true' else {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/map.mjs', 'assets/js/settlements/v24/i18n.mjs', 'assets/css/settlements-v24.css'})
-            def source_bytes(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
-            manifests = [json.loads(source_bytes(ref, 'site/apps/settlements/source-manifest.json')) for ref in ['HEAD^', 'HEAD']]
-            current = manifests[1]
-            assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
-            for entry in current['files']:
-              if entry['path'] in patched:
-                data = source_bytes('HEAD', runtime + entry['path'])
-                assert entry['bytes'] == len(data) and entry['sha256'] == hashlib.sha256(data).hexdigest()
-            for manifest in manifests:
-              manifest.pop('sourceHash')
-              manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in patched]
-            assert manifests[0] == manifests[1], 'Scenario plans, geography and unrelated runtime files must stay unchanged'
-            def worker_without_stamp(ref):
-              text = source_bytes(ref, 'site/service-worker.js').decode()
-              text, count = re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$', 'const CACHE=RELEASE_STAMP;', text, flags=re.M)
-              assert count == 1
-              return text
-            assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Only the service-worker release stamp may change'
-          if os.environ['SETTLEMENTS_RUNTIME_CACHE'] == 'true':
-            import re
-            def source_bytes(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'])
-            def worker_without_current_fetch(ref):
-              text=source_bytes(ref,'site/service-worker.js').decode()
-              text,count=re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$','const CACHE=RELEASE_STAMP;',text,flags=re.M)
-              assert count==1
-              text,count=re.subn(r'(?ms)^async function serveRequest\(.*?(?=^self.addEventListener)', 'CURRENT_RELEASE_FETCH\n\n',text)
-              assert count==1
-              return text
-            assert worker_without_current_fetch('HEAD^')==worker_without_current_fetch('HEAD'), 'Existing installation, cache ownership, historical release binding and other module logic must stay unchanged'
-          if os.environ['VERIFIED_SETTLEMENTS_PUBLISH'] == 'true':
-            # One already-reviewed product tree: fresh native matrix, emulator,
-            # local save regression and WebKit evidence exist for these bytes.
-            # Any product edit rejects this publication path. Normal runs retain
-            # every browser check, including the repaired test fixtures below.
-            assert is_settlements_ui
-            parent = subprocess.check_output(['git', 'rev-parse', 'HEAD^'], text=True).strip()
-            assert parent == '7bd796f60279b10799df1f1dd2d21243362d5376', 'Verified publication is limited to this reviewed follow-up'
-            tree = subprocess.check_output(['git', 'rev-parse', 'HEAD:site'], text=True).strip()
-            assert tree == '930ce0dffd80c9f1ab053f26cc4165d128dd638a', 'Verified publication requires the exact reviewed site tree'
-          if is_settlements_ui and 'site/service-worker.js' in changed:
-            import re
-            def worker_without_stamp(ref):
-              source = subprocess.check_output(['git', 'show', f'{ref}:site/service-worker.js'], text=True)
-              source, count = re.subn(r'^const CACHE=`\$\{CACHE_PREFIX\}[A-Za-z0-9._-]+`;$', 'const CACHE=RELEASE_STAMP;', source, flags=re.M)
-              assert count == 1, 'Expected exactly one service-worker cache stamp'
-              return source
-            assert worker_without_stamp('HEAD^') == worker_without_stamp('HEAD'), 'Settlements UI hotfix may only change the service-worker cache stamp'
-          if is_settlements_ui:
-            import re
-            def source(ref, path):
-              return subprocess.check_output(['git', 'show', f'{ref}:{path}'], text=True)
-            game_path = 'site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs'
-            if game_path in changed:
-              before = source('HEAD^', game_path)
-              old = 'render();map.fitFocus(targetIds());'
-              new = '\n'.join([
-                'render();',
-                '      // First acquaint the player with the whole territory; task focus stays explicit.',
-                '      map.camera.setViewport(map.element.clientWidth,map.element.clientHeight);',
-                "      if(mode!=='intro'&&(!stored||updatedScenario))map.fitAll();else map.fitFocus(targetIds());",
-              ])
-              assert before.count(old) == 1 and source('HEAD', game_path) == before.replace(old, new), 'Runtime hotfix is limited to the initial camera overview'
-            if 'site/apps/settlements/source-manifest.json' in changed:
-              import json, hashlib
-              previous = json.loads(source('HEAD^', 'site/apps/settlements/source-manifest.json'))
-              current = json.loads(source('HEAD', 'site/apps/settlements/source-manifest.json'))
-              game_bytes = subprocess.check_output(['git', 'show', f'HEAD:{game_path}'])
-              game_entries = [entry for entry in current['files'] if entry['path'] == 'assets/js/settlements/v24/game.mjs']
-              assert len(game_entries) == 1
-              assert game_entries[0]['bytes'] == len(game_bytes) and game_entries[0]['sha256'] == hashlib.sha256(game_bytes).hexdigest()
-              assert current['sourceHash'] == hashlib.sha256(json.dumps(current['files'], ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
-              for manifest in [previous, current]:
-                manifest.pop('sourceHash')
-                manifest['files'] = [entry for entry in manifest['files'] if entry['path'] != 'assets/js/settlements/v24/game.mjs']
-              assert previous == current, 'Only the camera module provenance may change'
-            def without_module(source_text):
-              result, count = re.subn(r'(?ms)^function renderSettlements\(.*?(?=^function stableVariant\()', '', source_text)
-              assert count == 1, 'Expected exactly one native Settlements entry function'
-              return result
-            if 'site/assets/js/main.js' in changed:
-              assert without_module(source('HEAD^', 'site/assets/js/main.js')) == without_module(source('HEAD', 'site/assets/js/main.js')), 'Only renderSettlements may change in the shared entry'
-            if 'site/assets/css/site.css' in changed:
-              def without_presentation(text):
-                return re.sub(r'(?s)\n/\* SETTLEMENTS_PRESENTATION_BEGIN \*/.*?/\* SETTLEMENTS_PRESENTATION_END \*/\n?', '', text).rstrip()
-              assert without_presentation(source('HEAD^', 'site/assets/css/site.css')) == without_presentation(source('HEAD', 'site/assets/css/site.css')), 'Only the isolated Settlements presentation styles may change'
-          PY
-      - name: Prepare Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - name: Build pinned, self-hosted Firebase SDK
-        run: |
-          npm ci --ignore-scripts
-          npm run build:firebase
-          npm run build:career
-          node site/apps/reception/localization/extract.mjs
-          node site/apps/reception/localization/compile.mjs
-      - name: Check career vacancy snapshot contract offline
-        run: |
-          node --test tests/career-vacancy-sync.test.mjs
-          node scripts/sync-career-vacancies.mjs --check
-      # RUDN_RECEPTION_CALENDAR_UPDATE
-      - name: Retrieve the last successfully published baseline and calendar
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
-      - name: Refresh public federal vacancy snapshot
-        if: github.event_name != 'pull_request' && env.FOCUSED_HOTFIX != 'true'
-        run: |
-          node scripts/sync-career-vacancies.mjs --refresh --baseline "${{ runner.temp }}/platform-baseline"
-          node scripts/sync-career-vacancies.mjs --check
-      - name: Update published reception calendars
-        run: node scripts/update-reception-calendars.mjs
-      - name: Validate static bundle
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true' || env.FIREBASE_TRANSPORT_ONLY == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/validate_static.py
-          while IFS= read -r -d '' file; do
-            node --check "$file"
-          done < <(find site -type f \( -name '*.js' -o -name '*.mjs' \) -print0)
-      - name: Check urgent Settlements result and retry patch
-        if: env.SETTLEMENTS_GRADE_HOTFIX == 'true'
-        run: |
-          node --check site/apps/settlements/entry.mjs
-          node --test scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-      - name: Verify Settlements road access, atomic routes and legacy saves
-        if: env.SETTLEMENTS_ROAD_ROUTES == 'true'
-        run: |
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-road-routes.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
-      - name: Verify separated initial towers and legacy saves
-        if: env.SETTLEMENTS_TOWERS == 'true'
-        run: |
-          # Explicit immutable historical parser inputs; tests never fetch implicitly.
-          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
-          git fetch --no-tags --depth=1 origin 19b9c066dd59b577b2b39c3d4cc988302ed8c16e
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-network.mjs scripts/test-settlements-initial-spacing.mjs scripts/test-settlements-tower-lod.mjs scripts/test-settlements-tower-saves.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node scripts/audit-settlements-road-routes.mjs --alternatives
-          node scripts/audit-settlements-tower-spacing.mjs --require-road-witness
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
-      - name: Verify Settlements network fallback and assessment start
-        if: env.SETTLEMENTS_NETWORK == 'true' || env.SETTLEMENTS_TOWERS == 'true'
-        env:
-          QA_OUT: ${{ runner.temp }}/settlements-network-qa
-        run: |
-          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-network.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node --test scripts/test_governor_service_worker.mjs
-          python scripts/validate_static.py
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node scripts/test-settlements-network-browser.mjs
-      - name: Verify regional boundaries, preserved replay and completion
-        if: env.SETTLEMENTS_BOUNDARIES == 'true'
-        run: |
-          git fetch --no-tags --depth=1 origin c1458c828b25d5aa3c3d15809ba7834859cf7906
-          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
-          git fetch --no-tags --depth=1 origin 19b9c066dd59b577b2b39c3d4cc988302ed8c16e
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-boundaries.mjs scripts/test-settlements-boundary-map.mjs scripts/test-settlements-network.mjs scripts/test-settlements-initial-spacing.mjs scripts/test-settlements-tower-lod.mjs scripts/test-settlements-tower-saves.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node scripts/audit-settlements-boundaries.mjs --verify-runtime
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
-      - name: Verify atomic tower batches, replay and regional scope
-        if: env.SETTLEMENTS_TOWER_BATCH == 'true'
-        run: |
-          git fetch --no-tags --depth=1 origin 64589fada29591814d88da7b67cde327ae3fc1d0
-          git fetch --no-tags --depth=1 origin c1458c828b25d5aa3c3d15809ba7834859cf7906
-          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
-          git fetch --no-tags --depth=1 origin 19b9c066dd59b577b2b39c3d4cc988302ed8c16e
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-tower-batch.mjs scripts/test-settlements-tower-batch-map.mjs scripts/test-settlements-boundaries.mjs scripts/test-settlements-boundary-map.mjs scripts/test-settlements-network.mjs scripts/test-settlements-initial-spacing.mjs scripts/test-settlements-tower-lod.mjs scripts/test-settlements-tower-saves.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node scripts/audit-settlements-boundaries.mjs --verify-runtime
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/map.mjs
-      - name: Verify settlement chain counts and unchanged legacy journals
-        if: env.SETTLEMENTS_ROUTE_LIMITS == 'true'
-        run: |
-          git fetch --no-tags --depth=1 origin 4fb79938e53f1555601cf39fd56718eb9711b548
-          git fetch --no-tags --depth=1 origin 0d2a786d1a71ce52bf6902fff658f9b24836c555
-          git fetch --no-tags --depth=1 origin 64589fada29591814d88da7b67cde327ae3fc1d0
-          git fetch --no-tags --depth=1 origin c1458c828b25d5aa3c3d15809ba7834859cf7906
-          git fetch --no-tags --depth=1 origin faf861b61627dabff7569e14f2e414e14a41e103
-          git fetch --no-tags --depth=1 origin 19b9c066dd59b577b2b39c3d4cc988302ed8c16e
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-route-limits.mjs scripts/test-settlements-road-routes.mjs scripts/test-settlements-tower-batch.mjs scripts/test-settlements-boundaries.mjs scripts/test-settlements-network.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs scripts/test_governor_service_worker.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/game.mjs
-          node --check site/apps/settlements/runtime/assets/js/settlements/v24/i18n.mjs
-      - name: Verify fresh Settlements runtime without changing historical caches
-        if: env.SETTLEMENTS_RUNTIME_CACHE == 'true'
-        run: |
-          node --test scripts/test_governor_service_worker.mjs
-          node --test scripts/test-settlements-network.mjs scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs scripts/test-settlements-course-status.mjs scripts/test-settlements-course-recovery.mjs
-          node scripts/sync-settlements.mjs --check
-          node --check site/service-worker.js
-      - name: Verify Governor grading and offline contract
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
-        run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
-      - name: Verify Settlements source integrity, score and persistence
-        if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
-        run: |
-          node scripts/sync-settlements.mjs --check
-          node --test scripts/test-settlements-contract.mjs scripts/test-settlements-storage.mjs
-          node scripts/test_games_access.mjs --unit
-      - name: Verify legacy reception assignments and lazy content integrity
-        if: env.FOCUSED_HOTFIX != 'true'
-        run: node site/apps/reception/content/test.mjs
-      - name: Verify equivalent localized answers without changing historical grading
-        if: env.FOCUSED_HOTFIX != 'true'
-        run: |
-          node site/apps/reception/localization/answer-alias-test.mjs
-          node site/apps/reception/localization/compiled-contract-test.mjs
-          node site/apps/reception/localization/reference-locale-test.mjs
-          node site/apps/reception/localization/source-strings-test.mjs
-      - name: Verify career locale templates and question coverage
-        if: env.FOCUSED_HOTFIX != 'true'
-        run: node scripts/test_career_localization.mjs
-      - name: Verify career ranking and automatic civil-service grading
-        if: env.FOCUSED_HOTFIX != 'true'
-        run: |
-          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/civil-service-model.test.mjs
-          node scripts/build-civil-service-bank.mjs
-          git diff --exit-code -- site/data/civil-service/mintrud-v4-reviewed.json site/data/civil-service/build-review.json
-      - name: Prepare Java for isolated Firebase rules checks
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-      - name: Verify Settlements permissions and result delivery in emulators
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
-      - name: Verify Firebase gateway request transport and project boundaries
-        run: |
-          node scripts/test-firebase-gateway.mjs
-          node --test firebase/functions/gateway.test.mjs
-      - name: Verify gateway release sessions, files and cache upgrade
-        if: env.FIREBASE_TRANSPORT_ONLY == 'true'
-        shell: bash
-        env:
-          DURABLE_TEST_BROWSERS: chromium,webkit
-        run: |
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium webkit
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node scripts/test_auth_recovery.mjs
-          node scripts/test_durable_store.mjs
-          node --test scripts/test_governor_service_worker.mjs
-      - name: Prepare native browser checks
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        run: |
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium webkit
-      - name: Test native Governor on desktop and mobile
-        if: env.FOCUSED_HOTFIX != 'true'
-        run: python scripts/test_governor_browser.py --output "${{ runner.temp }}/governor-browser-qa"
-      - name: Test native Settlements, all locales and one-region loading
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        run: python scripts/test-settlements-browser.py --output "${{ runner.temp }}/settlements-browser-qa"
-      - name: Verify current-turn save status and cross-context restoration
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "python scripts/test-settlements-save-status-browser.py --port 4198"
-      - name: Verify games access after native presentation changes
-        if: (env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        shell: bash
-        env:
-          QA_OUT: ${{ runner.temp }}/games-access-qa
-        run: |
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node scripts/test_games_access.mjs
-      - name: Verify durable local queue and attachment replay
-        if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
-        shell: bash
-        env:
-          DURABLE_TEST_BROWSERS: chromium
-        run: |
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node scripts/test_durable_store.mjs
-      - name: Complete eight reception cases through the real interface
-        if: env.FOCUSED_HOTFIX != 'true'
-        shell: bash
-        env:
-          DURABLE_TEST_BROWSERS: chromium
-          QA_OUT: ${{ runner.temp }}/reception-browser-qa
-        run: |
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          python -m http.server 8765 --bind 127.0.0.1 --protocol HTTP/1.1 --directory site > "${{ runner.temp }}/reception-server.log" 2>&1 &
-          reception_server_pid=$!
-          trap 'kill "$reception_server_pid" 2>/dev/null || true' EXIT
-          for attempt in {1..30}; do
-            curl --fail --silent http://127.0.0.1:8765/ >/dev/null && break
-            sleep 0.2
-          done
-          for reception_locale in ru en zh; do
-            RECEPTION_LOCALE="$reception_locale" node scripts/test_reception_complete.cjs
-          done
-          node scripts/test_reception_backup.cjs
-          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_locale_race.cjs
-          node scripts/test_platform_i18n.cjs
-          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_entry_i18n.cjs
-          DURABLE_TEST_BROWSERS=chromium,webkit node scripts/test_reception_document_labels.cjs
-          node site/apps/reception/localization/test.mjs
-          node site/apps/reception/localization/pack-test.mjs
-          node site/apps/reception/localization/presentation-test.mjs
-      - name: Check only games course access
-        if: env.GAMES_ACCESS_ONLY == 'true'
-        env:
-          QA_OUT: ${{ runner.temp }}/games-access-qa
-        run: |
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node --check site/assets/js/main.js
-          node --check site/assets/js/games-catalog.js
-          node --check site/apps/governor/platform-bridge.js
-          node --check site/service-worker.js
-          node scripts/test_games_access.mjs
-      - name: Check only quiz answer layout
-        if: env.QUIZ_LAYOUT_ONLY == 'true'
-        env:
-          QA_OUT: ${{ runner.temp }}/quiz-layout-qa
-        run: |
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium
-          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
-          node --check site/service-worker.js
-          node scripts/test_quiz_layout.mjs
-      - name: Verify puzzle progress and results without mistake counters
-        if: env.PUZZLE_NO_MISTAKES_ONLY == 'true'
-        env:
-          QA_OUT: ${{ runner.temp }}/puzzle-no-mistakes-qa
-        run: |
-          python -m pip install playwright==1.61.0 openpyxl==3.1.5
-          python -m playwright install --with-deps chromium
-          git fetch --no-tags --depth=1 origin 93698d66ca2f9f04143beba14db969d3f3927a6c
-          node --check site/assets/js/puzzle-engine.js
-          node --check site/assets/js/puzzle-bootstrap.js
-          node --check site/service-worker.js
-          node --test scripts/puzzle_snap_test.mjs scripts/test_puzzle_leaderboard.mjs
-          python scripts/test_puzzle_xlsx.py --artifacts "$QA_OUT"
-          python scripts/test_puzzle_no_mistakes.py --output "$QA_OUT"
-      - name: Save native browser evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: governor-browser-qa
-          path: |
-            ${{ runner.temp }}/governor-browser-qa
-            ${{ runner.temp }}/reception-browser-qa
-            ${{ runner.temp }}/games-access-qa
-            ${{ runner.temp }}/quiz-layout-qa
-            ${{ runner.temp }}/puzzle-no-mistakes-qa
-            ${{ runner.temp }}/settlements-browser-qa
-            artifacts/settlements-save-status
-            ${{ runner.temp }}/settlements-network-qa
-          if-no-files-found: ignore
-          retention-days: 7
-      - name: Configure Pages
-        if: ${{ github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false) }}
-        uses: actions/configure-pages@v5
-      - name: Build and verify exact runtime and immutable resources
-        run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
-      - name: Verify actual immutable main and module routes
-        run: |
-          python -m pip install playwright==1.61.0
-          python -m playwright install --with-deps chromium
-          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
-          node scripts/platform-main-staging.mjs --a "${{ runner.temp }}/platform-staging" --b "${{ runner.temp }}/platform-staging" --kind modules --browser chromium --output "${{ runner.temp }}/platform-main-staging"
-      - name: Retain immutable main smoke evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: platform-main-staging
-          path: ${{ runner.temp }}/platform-main-staging
-          if-no-files-found: ignore
-          retention-days: 14
-      - name: Archive verified staging and checksum
-        id: release_archive
-        run: node scripts/archive-platform-release.mjs --site "${{ runner.temp }}/platform-staging" --out "${{ runner.temp }}/platform-release-archive"
-      - name: Retain the exact baseline for recovery
-        uses: actions/upload-artifact@v4
-        with:
-          name: platform-release-${{ steps.release_archive.outputs.build_id }}
-          path: ${{ runner.temp }}/platform-release-archive
-          if-no-files-found: error
-          retention-days: 90
-      - name: Upload Pages artifact
-        if: ${{ github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false) }}
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: github-pages-${{ steps.release_archive.outputs.build_id }}
-          path: ${{ runner.temp }}/platform-staging
-
-  publish-pages:
-    needs: deploy
-    if: ${{ needs.deploy.result == 'success' && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false)) }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy verified immutable staging
-        id: deployment
-        uses: actions/deploy-pages@v4
-        with:
-          artifact_name: github-pages-${{ needs.deploy.outputs.build_id }}
-
-  retain-successful-release:
-    needs: [deploy, publish-pages]
-    if: ${{ needs.deploy.result == 'success' && needs.publish-pages.result == 'success' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      actions: read
-      contents: write
-    steps:
-      - name: Download only the successfully deployed exact archive
-        uses: actions/download-artifact@v4
-        with:
-          name: platform-release-${{ needs.deploy.outputs.build_id }}
-          path: release-archive
-      - name: Verify and retain the immutable GitHub Release archive
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          BUILD_ID: ${{ needs.deploy.outputs.build_id }}
-          TARGET_SHA: ${{ github.sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          cd release-archive
-          sha256sum --check "platform-release-${BUILD_ID}.tar.gz.sha256"
-          tag="platform-release-${BUILD_ID}"
-          if gh release view "$tag" >/dev/null 2>&1; then
-            mkdir existing
-            gh release download "$tag" --pattern receipt.json --dir existing
-            node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
-          else
-            gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "Exact verified GitHub Pages deployment. Runtime, immutable resources and checksums retained for baseline recovery."
-          fi
+          NODE
