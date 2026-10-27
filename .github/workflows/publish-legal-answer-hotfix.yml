@@ -1,0 +1,143 @@
+name: Publish the reviewed Legal Lab Q38 answer correction
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify the exact content-only correction and Q38 answers
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import {execFileSync} from 'node:child_process';
+          import {gradeTask} from './site/apps/legal-lab/lib/core.mjs';
+          const base='cb97a9638d3833348541bb5ccd0a87359ab7f37b';
+          const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+          assert.equal(git('rev-parse','HEAD^'),base);
+          assert.deepEqual(git('diff','--name-only',base,'HEAD').split('\n').sort(),[
+            '.github/workflows/publish-legal-answer-hotfix.yml',
+            'site/apps/legal-lab/data/bank.json',
+            'site/apps/legal-lab/precache-manifest.json'
+          ]);
+          const path='site/apps/legal-lab/data/bank.json',read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const expected=JSON.parse(git('show',base+':'+path));
+          const first='ekb-u2c8f0d453e3d6d59d3-1';
+          expected.classroom.find(q=>q.id==='Q38').answerSets=[['ekb25'],[first],['ekb25',first]];
+          const bank=read(path);assert.deepEqual(bank,expected);
+          const task=bank.classroom.find(q=>q.id==='Q38'),doc=read('site/apps/legal-lab/data/documents/ekb.json');
+          const [old]=doc.aliases.ekb25;
+          for(const selections of [[first],[old],[old,first]])assert.equal(gradeTask(task,{docId:'ekb',selections},[doc]).exact,true);
+          for(const selections of [[],['ekb-u9563f70d675075c366-1'],['ekb-ue947c97ee438a44c81-1'],['ekb-ud18b4b409e5b07cd00-1'],[first,'ekb-u9563f70d675075c366-1']])assert.equal(gradeTask(task,{docId:'ekb',selections},[doc]).exact,false);
+          assert.equal(gradeTask(task,{docId:'constitution',selections:[first]},[doc]).exact,false);
+          console.log('PASS: Q38 alternatives, combined evidence, unrelated clauses, wrong document; every other task unchanged.');
+          NODE
+          node scripts/build_legal_lab_manifest.mjs --check
+      - name: Run the existing deterministic build transforms
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+          node site/apps/reception/localization/extract.mjs
+          node site/apps/reception/localization/compile.mjs
+      - name: Retrieve the verified current release without changing its calendar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+      - name: Build the immutable release with the existing publisher
+        run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
+      - name: Reject changes outside the two reviewed Legal Lab data files
+        env:
+          BASELINE: ${{ runner.temp }}/platform-baseline
+          STAGING: ${{ runner.temp }}/platform-staging
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const read=(root,file)=>JSON.parse(fs.readFileSync(path.join(root,file),'utf8'));
+          const local=url=>{assert.ok(url.startsWith('/RUDN/'));return url.slice('/RUDN/'.length)};
+          const a=process.env.BASELINE,b=process.env.STAGING;
+          const old=read(a,'release.json').current,pointer=read(b,'release.json'),current=pointer.current;
+          assert.deepEqual(pointer.previous,old);
+          const x=read(a,local(old.manifestURL)),y=read(b,local(current.manifestURL));
+          assert.deepEqual(Object.keys(y.resources),Object.keys(x.resources));
+          assert.deepEqual(y.contracts,x.contracts);assert.deepEqual(y.publicEntries,x.publicEntries);
+          assert.equal(y.workerTemplateSha256,x.workerTemplateSha256);
+          const changed=[];
+          for(const [name,item] of Object.entries(y.resources)){
+            const previous=x.resources[name];assert.equal(item.kind,previous.kind);
+            if(item.kind==='runtime'){
+              const canonical=(root,entry,id)=>fs.readFileSync(path.join(root,local(entry.url)),'utf8').replaceAll(id,'__RUDN_RELEASE_ID__');
+              assert.equal(canonical(b,item,current.buildId),canonical(a,previous,old.buildId),name);
+            }else if(item.sha256!==previous.sha256)changed.push(name);
+          }
+          assert.deepEqual(changed.sort(),['apps/legal-lab/data/bank.json','apps/legal-lab/precache-manifest.json']);
+          console.log(JSON.stringify({status:'pass',previous:old.buildId,current:current.buildId,changed}));
+          NODE
+      - name: Archive the exact verified release
+        id: archive
+        run: node scripts/archive-platform-release.mjs --site "${{ runner.temp }}/platform-staging" --out "${{ runner.temp }}/platform-archive"
+      - name: Retain the verified archive before changing the live site
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-release-${{ steps.archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-archive
+          retention-days: 90
+          compression-level: 0
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages-${{ steps.archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-staging
+      - name: Check that the source and live baseline have not moved
+        env:
+          BASELINE: ${{ runner.temp }}/platform-baseline
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$EXPECTED_SHA"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const previous=JSON.parse(fs.readFileSync(path.join(process.env.BASELINE,'release.json'),'utf8'));
+          const response=await fetch('https://arseniy24rus.github.io/RUDN/release.json',{cache:'no-store',signal:AbortSignal.timeout(30000)});
+          assert.equal(response.status,200);assert.deepEqual((await response.json()).current,previous.current);
+          NODE
+      - name: Publish
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ steps.archive.outputs.build_id }}
+      - name: Retain the published release for the existing update and rollback system
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_ID: ${{ steps.archive.outputs.build_id }}
+          TARGET_SHA: ${{ github.sha }}
+        working-directory: ${{ runner.temp }}/platform-archive
+        run: |
+          tag="platform-release-${BUILD_ID}"
+          gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --repo "${{ github.repository }}" --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "Q38-only answer correction; targeted grading checks, unchanged runtime and immutable resource verification. No full CI requested."
