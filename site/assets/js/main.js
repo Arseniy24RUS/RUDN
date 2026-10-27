@@ -753,7 +753,7 @@ function renderSeminar6(topic,{context='course'}={}){
   const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
   const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview',scope=routeDiagnostics;
   const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
-  let disposed=false,handle=null,knowledgeHandle=null,mountTask=Promise.resolve(),knowledgeTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
+  let disposed=false,handle=null,knowledgeHandle=null,mountTask=Promise.resolve(),knowledgeTask=Promise.resolve(),cleanupTask=null,mountStarted=false,knowledgeStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
   app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div id="civilServiceMount" aria-busy="true"><p role="status">${text('loading')}</p></div></details></section>`;
@@ -764,7 +764,17 @@ function renderSeminar6(topic,{context='course'}={}){
   }
   const mount=app.querySelector('#careerMount');
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
-  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();await Promise.allSettled([mountTask,knowledgeTask]);await Promise.all([handle?.destroy(),knowledgeHandle?.destroy()]);if(currentCareer===token)currentCareer=null;})();
+  const cleanup=()=>cleanupTask||=(async()=>{
+    disposed=true;controller.abort();
+    // Dynamic imports cannot be aborted. Only an already started mount owns
+    // resources that must finish cleanup before the next route can render.
+    const pending=[];
+    if(mountStarted)pending.push(mountTask);
+    if(knowledgeStarted)pending.push(knowledgeTask);
+    await Promise.allSettled(pending);
+    await Promise.all([handle?.destroy(),knowledgeHandle?.destroy()]);
+    if(currentCareer===token)currentCareer=null;
+  })();
   cleanup.flush=()=>Promise.all([handle?.flush?.(),knowledgeHandle?.flush?.()]);
   exposeModuleUpdateAdapter(cleanup,()=>handle&&({...handle,prepareForUpdate:async options=>{await knowledgeHandle?.flush?.();return handle.prepareForUpdate(options);}}),'career');
   cleanup.refreshLocale=()=>{
@@ -782,6 +792,7 @@ function renderSeminar6(topic,{context='course'}={}){
     try{
       const {mountCivilServiceCourse}=await import('./civil-service-course.mjs');
       if(!active())return;
+      knowledgeStarted=true;
       knowledgeHandle=await mountCivilServiceCourse(target,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope});
       if(active())target.setAttribute('aria-busy','false');
     }catch(error){

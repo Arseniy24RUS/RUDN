@@ -33,23 +33,33 @@ const base=`http://127.0.0.1:${server.address().port}`;
 const ready=page=>page.locator('#app[aria-busy="false"]').waitFor();
 const route=async(page,hash)=>{await page.evaluate(hash=>{location.hash=hash;},hash);await page.waitForFunction(hash=>location.hash==='#'+hash,hash);await ready(page);};
 async function lateModuleDoesNotReplaceCatalog(browser,module='career'){
- const config={career:{path:'/apps/career/entry.mjs',mount:'#careerMount'},settlements:{path:'/apps/settlements/entry.mjs',mount:'#settlementsMount'},reception:{path:'/apps/reception/js/app.js',mount:'#receptionMount'},'legal-lab':{path:'/apps/legal-lab/platform.mjs',mount:'#legalLabMount'}}[module];
+ const config={career:{path:'/apps/career/entry.mjs',mount:'#careerMount'},settlements:{path:'/apps/settlements/entry.mjs',mount:'#settlementsMount'},reception:{path:'/apps/reception/js/app.js',mount:'#receptionMount'},'legal-lab':{path:'/apps/legal-lab/platform.mjs',mount:'#legalLabMount'},knowledge:{path:'/assets/js/civil-service-course.mjs',mount:'#civilServiceMount'}}[module];
  const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[],requests=[];
  let release,notifyHeld;const gate=new Promise(resolve=>{release=resolve;}),held=new Promise(resolve=>{notifyHeld=resolve;});
  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>requests.push(request.url()));
  await context.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
  await context.route('**'+config.path+'*',async request=>{notifyHeld();await gate;await request.continue();});
- if(module==='legal-lab')await context.addInitScript(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']))));},profile);
+ if(module==='legal-lab'||module==='knowledge')await context.addInitScript(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']))));},profile);
  try{
   await page.goto(base+'/#games');await page.locator('[data-game]').first().waitFor();
-  if(module==='legal-lab')await page.evaluate(()=>{location.hash='activity/seminar-4'});else await page.locator(`[data-game="${module}"] a`).click();
+  if(module==='legal-lab')await page.evaluate(()=>{location.hash='activity/seminar-4'});else if(module==='knowledge')await page.evaluate(()=>{location.hash='activity/seminar-6'});else await page.locator(`[data-game="${module}"] a`).click();
   await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error(module+' import was not requested')),30000);held.then(()=>{clearTimeout(timer);resolve();});});
   await page.goBack();await page.locator('[data-game]').first().waitFor();
+  if(module==='knowledge'){
+   await ready(page);
+   assert.equal(new URL(page.url()).hash,'#games');
+   assert.equal(await page.locator('[data-game]').count(),5,'Catalog must finish rendering while knowledge import remains held');
+   assert.equal(await page.locator('#civilServiceMount,.civil-service-test').count(),0,'Back removes the course knowledge surface before import release');
+  }
   const lateResponse=page.waitForResponse(response=>new URL(response.url()).pathname===config.path);
   release();await lateResponse;await page.waitForLoadState('networkidle');
   assert.equal(new URL(page.url()).hash,'#games');assert.equal(await page.locator('[data-game]').count(),5);
   assert.equal(await page.locator(config.mount).count(),0,'Late module cannot replace the catalog after Back');
   if(module==='career')assert.equal(requests.some(url=>url.includes('/apps/career/surface.html')),false,'Cancelled route never mounts the late module');
+  if(module==='knowledge'){
+   assert.equal(await page.locator('.civil-service-test').count(),0,'Late knowledge import cannot mount an orphan test');
+   assert.equal(requests.some(url=>url.includes('/data/civil-service/mintrud-v4-reviewed.json')),false,'Cancelled course route never starts the late knowledge bank load');
+  }
   assert.deepEqual(errors,[]);
   console.log(`PASS delayed ${module} import: catalog visible before response, no late mount`);
  }catch(error){
@@ -88,7 +98,7 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
  const browser=await pw[engine].launch({headless:true,...(engine==='firefox'?{firefoxUserPrefs:{'network.proxy.type':0}}:{})});
  try{
   if(process.env.GAMES_PLATFORM_FOCUS==='race'){
-   for(const module of ['career','settlements','reception','legal-lab'])await lateModuleDoesNotReplaceCatalog(browser,module);console.log(`PASS ${engine}: four held module imports→Back→late response preserve the catalog`);continue;
+   for(const module of ['career','settlements','reception','legal-lab','knowledge'])await lateModuleDoesNotReplaceCatalog(browser,module);console.log(`PASS ${engine}: five held module imports→Back→late response preserve the catalog`);continue;
   }
   const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[],modules=[];
   page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(/\/apps\/(?:career|reception|governor|settlements)\//.test(request.url()))modules.push(request.url());});
@@ -133,7 +143,7 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
    await page.goto(base+'/#dashboard');await ready(page);assert.equal(await page.locator(`[data-lecture-test="lecture-${lecture}"]`).isDisabled(),true);
    await page.evaluate(key=>{const access=JSON.parse(localStorage.getItem('qa.access'));access[key]='open';localStorage.setItem('qa.access',JSON.stringify(access));},key);
   }
-  assert.deepEqual(errors,[]);await context.close();for(const module of ['career','settlements','reception','legal-lab'])await lateModuleDoesNotReplaceCatalog(browser,module);
+  assert.deepEqual(errors,[]);await context.close();for(const module of ['career','settlements','reception','legal-lab','knowledge'])await lateModuleDoesNotReplaceCatalog(browser,module);
   console.log(`PASS ${engine}: guest catalog/lazy modules/locales/history, ${process.env.GAMES_PLATFORM_FOCUS==='gates'?'targeted access checks':'actual5/5+5/5+50/50→three stars/gold, lower retake'}, all7 direct test/topic gates, late module after Back`);
  }finally{await browser.close();}
 }}finally{await new Promise(resolve=>server.close(resolve));}
