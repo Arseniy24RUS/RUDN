@@ -752,7 +752,7 @@ jobs:
 
   publish-pages:
     needs: deploy
-    if: ${{ needs.deploy.result == 'success' && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false)) }}
+    if: ${{ !cancelled() && needs.deploy.result == 'success' && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -767,7 +767,7 @@ jobs:
 
   retain-successful-release:
     needs: [deploy, publish-pages]
-    if: ${{ needs.deploy.result == 'success' && needs.publish-pages.result == 'success' }}
+    if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.publish-pages.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
