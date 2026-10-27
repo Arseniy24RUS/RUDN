@@ -56,7 +56,7 @@ export async function ensureLanguage(locale) {
  locale=normalizeLanguage(locale);
  if(locale==='ru'||resources.has(locale))return true;
  if(pendingLanguages.has(locale))return pendingLanguages.get(locale);
- const request=loadJSON(`./locales/${locale}.json`,{timeout:4000,validate:x=>isRecord(x)&&isRecord(x.entries)&&Array.isArray(x.templates)})
+ const request=loadJSON(`./locales/${locale}.json`,{validate:x=>isRecord(x)&&isRecord(x.entries)&&Array.isArray(x.templates)})
   .then(content=>{configureTranslations(content.entries,content.templates,locale);unavailableLanguages.delete(locale);return true;})
   .catch(()=>{unavailableLanguages.add(locale);return false;}).finally(()=>pendingLanguages.delete(locale));
  pendingLanguages.set(locale,request);return request;

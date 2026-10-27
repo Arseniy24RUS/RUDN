@@ -265,7 +265,7 @@ async function loadData() {
     {cases:[],disclaimer:{ru:'Раздел временно недоступен',en:'Section temporarily unavailable','zh-Hans':'该部分暂不可用'}},
     {records:[],eligibilitySources:[],country:'RU',registryVersion:'unavailable'}];
   const optional=Promise.all(optionalFiles.map(async(url,i)=>{
-    try{return {value:await loadJSON(url,{timeout:3500,validate:v=>{
+    try{return {value:await loadJSON(url,{validate:v=>{
       if(Array.isArray(defaults[i]))return Array.isArray(v);
       if(!isRecord(v))return false;
       if(i===1)return Array.isArray(v.trackProfiles)&&Array.isArray(v.sources);

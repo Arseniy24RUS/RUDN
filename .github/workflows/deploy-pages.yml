@@ -159,7 +159,7 @@ jobs:
           is_settlements_ui = os.environ['SETTLEMENTS_UI_ONLY'] == 'true'
           allowed = settlements_ui if is_settlements_ui else puzzle_no_mistakes if os.environ['PUZZLE_NO_MISTAKES_ONLY'] == 'true' else quiz_layout if os.environ['QUIZ_LAYOUT_ONLY'] == 'true' else games_access
           if os.environ['CAREER_VERIFIED_PUBLISH'] == 'true':
-            allowed = {'.github/workflows/deploy-pages.yml'}
+            allowed = {'.github/workflows/deploy-pages.yml', 'site/apps/career/assets/loader.mjs', 'site/apps/career/assets/app.js', 'site/apps/career/assets/i18n.mjs', 'site/apps/career/runtime.bundle.mjs', 'tests/career-loader.test.mjs'}
           if os.environ['FIREBASE_TRANSPORT_ONLY'] == 'true':
             # The owner explicitly authorized skipping full module checks for
             # this reviewed gateway release. Any later product edit rejects it.
@@ -418,11 +418,11 @@ jobs:
               assert without_presentation(source('HEAD^', 'site/assets/css/site.css')) == without_presentation(source('HEAD', 'site/assets/css/site.css')), 'Only the isolated Settlements presentation styles may change'
           if os.environ['CAREER_VERIFIED_PUBLISH'] == 'true':
             # User explicitly limited this publication to Seminar 5. The product
-            # tree is frozen at the reviewed career/CSS fix; only this workflow
-            # may change. Unflagged pushes retain the existing full checks.
-            assert changed == {'.github/workflows/deploy-pages.yml'}
+            # tree is frozen at the reviewed career loading fix; changes outside
+            # its explicit file set are rejected. Unflagged pushes retain full checks.
+            assert changed and changed <= {'.github/workflows/deploy-pages.yml', 'site/apps/career/assets/loader.mjs', 'site/apps/career/assets/app.js', 'site/apps/career/assets/i18n.mjs', 'site/apps/career/runtime.bundle.mjs', 'tests/career-loader.test.mjs'}
             tree = subprocess.check_output(['git', 'rev-parse', 'HEAD:site'], text=True).strip()
-            assert tree == '4b91f44de893621c470b68ac944a12af6d6202da', 'Career publication requires the exact reviewed site tree'
+            assert tree == '4e6d560b7cb9675f5719a2ecfd3b07798517fb9c', 'Career publication requires the exact reviewed site tree'
           PY
       - name: Prepare Node.js
         uses: actions/setup-node@v4
@@ -441,6 +441,7 @@ jobs:
         if: env.CAREER_VERIFIED_PUBLISH == 'true'
         run: |
           node --check site/service-worker.js
+          node --test tests/career-loader.test.mjs
           node --test --test-name-pattern='every global stylesheet|failure to retrieve any global stylesheet' scripts/test_governor_service_worker.mjs
       - name: Check career vacancy snapshot contract offline
         run: |

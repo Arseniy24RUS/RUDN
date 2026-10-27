@@ -1641,15 +1641,25 @@ var CareerRuntime = (() => {
   };
 
   // site/apps/career/assets/loader.mjs
-  async function loadJSON(url, { timeout = 5e3, validate = () => true } = {}) {
+  async function loadJSON(url, { timeout = 3e4, validate = () => true } = {}) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeout);
-    try {
+    let timer;
+    const deadline = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        const error = new DOMException(`Timed out loading ${url}`, "TimeoutError");
+        reject(error);
+        controller.abort(error);
+      }, timeout);
+    });
+    const request = (async () => {
       const response = await fetch(url, { cache: "no-store", signal: controller.signal });
       if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
       const value = await response.json();
       if (!validate(value)) throw new Error(`Invalid data: ${url}`);
       return value;
+    })();
+    try {
+      return await Promise.race([request, deadline]);
     } finally {
       clearTimeout(timer);
     }
@@ -1755,7 +1765,7 @@ var CareerRuntime = (() => {
     locale = normalizeLanguage(locale);
     if (locale === "ru" || resources.has(locale)) return true;
     if (pendingLanguages.has(locale)) return pendingLanguages.get(locale);
-    const request = loadJSON(`./locales/${locale}.json`, { timeout: 4e3, validate: (x) => isRecord(x) && isRecord(x.entries) && Array.isArray(x.templates) }).then((content) => {
+    const request = loadJSON(`./locales/${locale}.json`, { validate: (x) => isRecord(x) && isRecord(x.entries) && Array.isArray(x.templates) }).then((content) => {
       configureTranslations(content.entries, content.templates, locale);
       unavailableLanguages.delete(locale);
       return true;
@@ -4312,7 +4322,7 @@ var CareerRuntime = (() => {
     ];
     const optional = Promise.all(optionalFiles.map(async (url, i) => {
       try {
-        return { value: await loadJSON(url, { timeout: 3500, validate: (v) => {
+        return { value: await loadJSON(url, { validate: (v) => {
           if (Array.isArray(defaults[i])) return Array.isArray(v);
           if (!isRecord(v)) return false;
           if (i === 1) return Array.isArray(v.trackProfiles) && Array.isArray(v.sources);
