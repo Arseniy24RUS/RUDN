@@ -15,6 +15,14 @@ assert.notEqual(futureVersion,currentVersion,'The second update must install a d
 const scope='https://example.test/platform-rudn/';
 const modulePath='apps/governor/';
 const excludedNames=new Set(['LICENSE','VERSION']);
+const indexHTML=await readFile(path.join(siteRoot,'index.html'),'utf8');
+const globalStylesheets=[...indexHTML.replace(/<!--[\s\S]*?-->/g,'').matchAll(/<link\b[^>]*>/gi)].flatMap(([tag])=>{
+  const attributes=Object.fromEntries([...tag.matchAll(/\b([^\s=<>/]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g)]
+    .map(([,name,doubleQuoted,singleQuoted,unquoted])=>[name.toLowerCase(),doubleQuoted??singleQuoted??unquoted]));
+  if(!attributes.rel?.toLowerCase().split(/\s+/).includes('stylesheet'))return [];
+  assert.ok(attributes.href,'Every global stylesheet link must declare its actual href');
+  return [attributes.href.replace(/&amp;/g,'&')];
+});
 
 async function runtimeFiles(directory,prefix=''){
   const entries=await readdir(directory,{withFileTypes:true});
@@ -206,6 +214,42 @@ test('module manifest includes runtime files; platform and puzzle entry are inst
     'Only the puzzle entry and shared course metadata may install; full documents, translations and optional module assets stay lazy');
   assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
   assert.ok(worker.cacheName.startsWith(worker.cachePrefix+`v${currentVersion}-`));
+});
+
+test('every global stylesheet linked by index.html is mandatory precache and serves its actual bytes on the first offline return',async t=>{
+  assert.ok(globalStylesheets.length>0,'The real platform document must expose global stylesheet dependencies');
+  t.diagnostic('Global stylesheet hrefs from site/index.html: '+JSON.stringify(globalStylesheets));
+  const worker=makeWorker(),rootURL=new URL(scope);
+  const coreURLs=new Set(worker.core.map(entry=>new URL(entry,scope).href));
+  for(const href of globalStylesheets){
+    const url=new URL(href,scope);
+    assert.equal(url.origin,rootURL.origin,'A global offline stylesheet must belong to this origin');
+    assert.ok(url.pathname.startsWith(rootURL.pathname),'A global offline stylesheet must stay inside this app scope');
+    assert.ok(coreURLs.has(url.href),`Global stylesheet omitted from mandatory CORE_SHELL: ${href}`);
+  }
+  await worker.emit('install');
+  await worker.emit('activate');
+  const installedURLs=new Set(worker.installedRequests.map(request=>request.url));
+  const before=worker.networkCalls;
+  worker.fetch=async()=>{throw new TypeError('Network unavailable')};
+  for(const href of globalStylesheets){
+    const url=new URL(href,scope);
+    assert.ok(installedURLs.has(url.href),`Global stylesheet was not fetched during install: ${href}`);
+    const response=await worker.request(href,{clientId:'first-offline-stylesheets'});
+    assert.equal(response?.status,200,`Global stylesheet unavailable before its first controlled online visit: ${href}`);
+    const file=path.join(siteRoot,decodeURIComponent(url.pathname.slice(rootURL.pathname.length)));
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()),await readFile(file),`Offline stylesheet bytes differ from the actual file: ${href}`);
+  }
+  assert.equal(worker.networkCalls,before,'Global stylesheets must already be available when the network disappears');
+});
+
+test('failure to retrieve any global stylesheet prevents activating an incomplete shell',async t=>{
+  for(const href of globalStylesheets)await t.test(href,async()=>{
+    const worker=makeWorker(),fetch=worker.fetch,target=new URL(href,scope).href;
+    worker.fetch=request=>request.url===target?Promise.resolve(new Response('Unavailable',{status:503})):fetch(request);
+    await assert.rejects(worker.emit('install'),/resource\/unavailable/,`A missing global stylesheet must fail required precache: ${href}`);
+    assert.equal(worker.skipped,false,'The healthy previous worker must remain active when a global stylesheet is missing');
+  });
 });
 
 test('the first offline course reload has its shared catalog and every manifest icon without a prior controlled visit',async()=>{
