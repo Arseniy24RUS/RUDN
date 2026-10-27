@@ -423,11 +423,20 @@ jobs:
           npm run build:career
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
+      - name: Check career vacancy snapshot contract offline
+        run: |
+          node --test tests/career-vacancy-sync.test.mjs
+          node scripts/sync-career-vacancies.mjs --check
       # RUDN_RECEPTION_CALENDAR_UPDATE
       - name: Retrieve the last successfully published baseline and calendar
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+      - name: Refresh public federal vacancy snapshot
+        if: github.event_name != 'pull_request' && env.FOCUSED_HOTFIX != 'true'
+        run: |
+          node scripts/sync-career-vacancies.mjs --refresh --baseline "${{ runner.temp }}/platform-baseline"
+          node scripts/sync-career-vacancies.mjs --check
       - name: Update published reception calendars
         run: node scripts/update-reception-calendars.mjs
       - name: Validate static bundle
@@ -543,6 +552,12 @@ jobs:
       - name: Verify career locale templates and question coverage
         if: env.FOCUSED_HOTFIX != 'true'
         run: node scripts/test_career_localization.mjs
+      - name: Verify career ranking and automatic civil-service grading
+        if: env.FOCUSED_HOTFIX != 'true'
+        run: |
+          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/civil-service-model.test.mjs
+          node scripts/build-civil-service-bank.mjs
+          git diff --exit-code -- site/data/civil-service/mintrud-v4-reviewed.json site/data/civil-service/build-review.json
       - name: Prepare Java for isolated Firebase rules checks
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         uses: actions/setup-java@v4

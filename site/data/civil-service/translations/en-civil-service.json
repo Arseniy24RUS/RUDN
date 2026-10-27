@@ -1,0 +1,1738 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "0800769a95d70a69b82ea5187c714a28af303c27db5cfbb1ffcf7305ad904f24",
+  "entries": {
+    "MT4-0328": {
+      "stem": "State offices of the Russian Federation are offices established by:",
+      "options": {
+        "a": "The Constitution of the Russian Federation and federal laws for the direct exercise of federal state bodies' powers, and offices established by the constitutions (charters) and laws of constituent entities of the Russian Federation for the direct exercise of those entities' state bodies' powers",
+        "b": "Federal laws for federal state bodies to exercise their powers",
+        "c": "The Constitution of the Russian Federation and federal laws for the direct exercise of the powers of federal state bodies and state bodies of constituent entities of the Russian Federation",
+        "d": "The Constitution of the Russian Federation and federal laws for the indirect exercise of federal state bodies' powers"
+      }
+    },
+    "MT4-0329": {
+      "stem": "The principal federal law regulating the state civil service is:",
+      "options": {
+        "a": "Federal Law No. 79-FZ of 27 July 2004",
+        "b": "Federal Law No. 25-FZ of 2 March 2007",
+        "c": "Federal Law No. 39-FZ of 28 January 2011",
+        "d": "Federal Law No. 59-FZ of 2 May 2006"
+      }
+    },
+    "MT4-0330": {
+      "stem": "The state civil service of the Russian Federation is:",
+      "options": {
+        "a": "A type of municipal service consisting of professional service activities of citizens of the Russian Federation",
+        "b": "A type of state service consisting of professional service activities of citizens of the Russian Federation",
+        "c": "A type of public activity consisting of socially significant activities of citizens of the Russian Federation",
+        "d": "Performance of duties in elected offices"
+      }
+    },
+    "MT4-0331": {
+      "stem": "The state civil service in the Russian Federation is divided into:",
+      "options": {
+        "a": "Federal civil service and civil service of constituent entities of the Russian Federation",
+        "b": "Federal civil service, civil service of constituent entities of the Russian Federation, and municipal service",
+        "c": "Civil service in executive, representative and judicial state bodies",
+        "d": "Civil service within and outside the Russian Federation"
+      }
+    },
+    "MT4-0332": {
+      "stem": "The state-service system of the Russian Federation includes the following types:",
+      "options": {
+        "a": "Civil service and military service",
+        "b": "Federal service and municipal service",
+        "c": "Civil service and municipal service",
+        "d": "Customs service and migration service"
+      }
+    },
+    "MT4-0333": {
+      "stem": "May a federal state body have positions that are not state-service positions?",
+      "options": {
+        "a": "Yes",
+        "b": "Only if a register of such positions is established by a decree of the President of the Russian Federation",
+        "c": "Yes, if state servants in those positions have access to information constituting a state or military secret of the Russian Federation",
+        "d": "No"
+      }
+    },
+    "MT4-0334": {
+      "stem": "Which is NOT a principle of the state civil service?",
+      "options": {
+        "a": "Priority of human and civil rights and freedoms",
+        "b": "Professionalism and competence of state civil servants",
+        "c": "Accessibility of information about the state civil service",
+        "d": "Rationality of state civil servants' activities"
+      }
+    },
+    "MT4-0335": {
+      "stem": "The relationship between the state civil service and municipal service is ensured through:",
+      "options": {
+        "a": "Performance of common tasks",
+        "b": "Uniform basic qualification requirements for state civil-service and municipal-service positions",
+        "c": "Correspondence between class ranks in the state civil service and municipal service",
+        "d": "Accountability of local self-government bodies to state authorities"
+      }
+    },
+    "MT4-0336": {
+      "stem": "Which rules apply if an international treaty of the Russian Federation establishes rules different from those in state civil-service legislation?",
+      "options": {
+        "a": "The Labour Code of the Russian Federation",
+        "b": "The rules of the international treaty",
+        "c": "The Constitution of the Russian Federation",
+        "d": "State civil-service legislation"
+      }
+    },
+    "MT4-0337": {
+      "stem": "A federal state civil servant, dissatisfied with a staffing decision by the head of the state body in which they serve, criticised the body's personnel policy on a radio programme. Have prohibitions associated with state civil service been breached?",
+      "options": {
+        "a": "Yes",
+        "b": "No, because everyone may express their opinion, including in the media",
+        "c": "Yes, if this is not part of the federal state civil servant's official duties",
+        "d": "No, provided the federal state civil servant made no insulting statements or statements discrediting the head's honour and dignity"
+      }
+    },
+    "MT4-0338": {
+      "stem": "Who is eligible to enter the state civil service?",
+      "options": {
+        "a": "Citizens of the Russian Federation aged 18 or over who know the state language of the Russian Federation",
+        "b": "Citizens of the Russian Federation aged 18 or over who know its state language and meet the qualification requirements",
+        "c": "Citizens of the Russian Federation and foreign citizens aged 18 or over who know its state language and meet the qualification requirements",
+        "d": "Foreign citizens aged 18 or over who know the state language of the Russian Federation and meet the qualification requirements"
+      }
+    },
+    "MT4-0339": {
+      "stem": "Can foreign citizens enter military state service in the Russian Federation?",
+      "options": {
+        "a": "No; this is prohibited by legal acts of the Russian Federation",
+        "b": "Federal law provides for foreign citizens to enter military service in the Russian Federation under contract",
+        "c": "In exceptional cases, by decree of the President of the Russian Federation, and only without remuneration",
+        "d": "Yes, provided foreign citizens are denied access to information constituting a state or military secret of the Russian Federation"
+      }
+    },
+    "MT4-0340": {
+      "stem": "Which type of state-service position is not provided for in state-service legislation?",
+      "options": {
+        "a": "Federal state civil-service positions",
+        "b": "State civil-service positions of a constituent entity of the Russian Federation",
+        "c": "Military positions",
+        "d": "Law-enforcement service positions"
+      }
+    },
+    "MT4-0341": {
+      "stem": "Which listed category of civil-service positions is not provided for by the law of the Russian Federation 'On the State Civil Service of the Russian Federation'?",
+      "options": {
+        "a": "Assistants (advisers)",
+        "b": "Specialists",
+        "c": "Support specialists",
+        "d": "All listed categories are provided for"
+      }
+    },
+    "MT4-0342": {
+      "stem": "State civil-service positions are established to:",
+      "options": {
+        "a": "Support the exercise of the powers of a state body or a person holding a state office",
+        "b": "Support the exercise of the powers of a state body, a person holding a state office, or the head of an autonomous or budget-funded institution subordinate to a state body",
+        "c": "Support the exercise of a state body's powers",
+        "d": "Support the exercise of the powers of a person holding a state office"
+      }
+    },
+    "MT4-0343": {
+      "stem": "Federal civil-service positions are established by (choose the most complete and correct answer):",
+      "options": {
+        "a": "A federal law or a resolution of the Government of the Russian Federation",
+        "b": "A decree of the President of the Russian Federation or a resolution of its Government",
+        "c": "A federal law or a decree of the President of the Russian Federation",
+        "d": "A federal constitutional law or a federal law"
+      }
+    },
+    "MT4-0344": {
+      "stem": "Which of the following is the highest rank that can be awarded to a civil servant in the Russian Federation?",
+      "options": {
+        "a": "Active Referent",
+        "b": "Active Councillor",
+        "c": "Active Civil Councillor",
+        "d": "Active State Councillor"
+      }
+    },
+    "MT4-0345": {
+      "stem": "Civil-service positions are divided into the following categories:",
+      "options": {
+        "a": "Managers and subordinates",
+        "b": "Managers, assistants (advisers), specialists, and support specialists",
+        "c": "Managers and specialists",
+        "d": "Managers, specialists, and support specialists"
+      }
+    },
+    "MT4-0346": {
+      "stem": "Which is not a duty of a federal state civil servant in the 'managers' category?",
+      "options": {
+        "a": "Taking measures to prevent conflicts of interest",
+        "b": "Maintaining the level of qualification needed to perform official duties properly",
+        "c": "Informing the employer's representative of a personal interest arising in the performance of official duties that may lead to a conflict of interest",
+        "d": "Joining a trade union"
+      }
+    },
+    "MT4-0347": {
+      "stem": "Positions in the 'specialists' category are:",
+      "options": {
+        "a": "Positions established to provide organisational and documentation support for state bodies' activities",
+        "b": "Positions established to assist persons holding state offices in exercising their powers",
+        "c": "Positions of heads and deputy heads of state bodies and their structural units; heads and deputy heads of territorial offices of federal executive bodies and their structural units; and heads and deputy heads of state bodies' representative offices and their structural units, held for a fixed term or without a fixed term",
+        "d": "Positions established to provide professional support for state bodies in carrying out their assigned tasks and functions"
+      }
+    },
+    "MT4-0348": {
+      "stem": "Which is NOT a basic duty of a federal state civil servant in the 'specialists' category?",
+      "options": {
+        "a": "Not disclosing information learned in the performance of official duties",
+        "b": "Performing official duties in accordance with the official job regulations",
+        "c": "Reporting renunciation of citizenship of the Russian Federation or acquisition of another state's citizenship on the date of renunciation or acquisition",
+        "d": "Complying with the state body's service rules",
+        "e": "Career advancement on a competitive basis"
+      }
+    },
+    "MT4-0349": {
+      "stem": "A civil servant must perform official duties in accordance with:",
+      "options": {
+        "a": "The job description",
+        "b": "The official job regulations",
+        "c": "The regulation on civil servants' personal data",
+        "d": "The manager's requirements"
+      }
+    },
+    "MT4-0350": {
+      "stem": "Are official job regulations a mandatory document in the state civil service?",
+      "options": {
+        "a": "Yes",
+        "b": "No",
+        "c": "Only for positions in the highest and principal groups",
+        "d": "Only if required by the regulation on the organisational unit"
+      }
+    },
+    "MT4-0351": {
+      "stem": "If a state civil servant in the 'specialists' or 'support specialists' category receives an unlawful instruction from their immediate supervisor, they must:",
+      "options": {
+        "a": "Carry out the instruction and then immediately report it, in writing or orally, to the employer's representative",
+        "b": "Provide written reasons why the instruction is unlawful, citing provisions of Russian legislation that may be violated by carrying it out, and then carry it out",
+        "c": "Carry out the instruction immediately",
+        "d": "Provide written reasons why the instruction is unlawful, citing provisions of Russian legislation that may be violated, and obtain the supervisor's written confirmation of the instruction. If the supervisor confirms it without legal justification, refuse to carry it out."
+      }
+    },
+    "MT4-0352": {
+      "stem": "Which is NOT considered a gross violation of a civil servant's official duties?",
+      "options": {
+        "a": "Absence from the workplace without good reason for more than four consecutive hours during a working day",
+        "b": "Reporting for service under the influence of alcohol, narcotics or other intoxicants",
+        "c": "Disclosure of information constituting a state secret or another secret protected by federal law",
+        "d": "Failure to perform official duties for a valid reason",
+        "e": "A breach of occupational safety requirements that causes serious consequences, such as an accident at work, an industrial accident or a disaster, or knowingly creates a real threat of such consequences"
+      }
+    },
+    "MT4-0353": {
+      "stem": "Civil servants' official job regulations are approved by:",
+      "options": {
+        "a": "The Federal Law 'On the State Civil Service of the Russian Federation'",
+        "b": "The employer's representative",
+        "c": "The relevant state civil-service management body",
+        "d": "A legal act of a constituent entity of the Russian Federation"
+      }
+    },
+    "MT4-0354": {
+      "stem": "Which may depend on the efficiency and performance indicators of a civil servant's professional service activities?",
+      "options": {
+        "a": "Remuneration",
+        "b": "Length of leave",
+        "c": "Number of official duties",
+        "d": "All of the above"
+      }
+    },
+    "MT4-0355": {
+      "stem": "Restrictions and prohibitions in the civil service are established by:",
+      "options": {
+        "a": "A resolution of the Government of the Russian Federation",
+        "b": "The Federal Law 'On the State-Service System of the Russian Federation'",
+        "c": "The Federal Law 'On the State Civil Service of the Russian Federation' and other federal laws",
+        "d": "Official job regulations"
+      }
+    },
+    "MT4-0356": {
+      "stem": "Who exercises state supervision over compliance with Russian civil-service legislation?",
+      "options": {
+        "a": "The Presidential Administration of the Russian Federation",
+        "b": "The Chair of the Government of the Russian Federation",
+        "c": "The Prosecutor General of the Russian Federation",
+        "d": "The Accounts Chamber of the Russian Federation"
+      }
+    },
+    "MT4-0357": {
+      "stem": "A dispute concerning refusal of admission to the civil service is classified as:",
+      "options": {
+        "a": "A labour dispute",
+        "b": "An administrative-law dispute",
+        "c": "An individual service dispute",
+        "d": "A collective service dispute"
+      }
+    },
+    "MT4-0358": {
+      "stem": "The public employer of a federal state servant is:",
+      "options": {
+        "a": "The federal state body",
+        "b": "The Russian Federation",
+        "c": "The employer",
+        "d": "The Government of the Russian Federation"
+      }
+    },
+    "MT4-0359": {
+      "stem": "The head of a state body, a person holding a state civil office, or a representative of that head or person, exercising the powers of a public employer on behalf of the Russian Federation or one of its constituent entities, is:",
+      "options": {
+        "a": "The public employer's representative",
+        "b": "The authorised employer",
+        "c": "The authorised public employer",
+        "d": "The employer's representative"
+      }
+    },
+    "MT4-0360": {
+      "stem": "Under the Federal Law 'On the State Civil Service of the Russian Federation', the public employer's representative means (choose the most complete and correct answer):",
+      "options": {
+        "a": "The head of a state body exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+        "b": "The head of a state body or a person holding a state office, exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+        "c": "The head of a state body, a person holding a state office, or a representative of that head or person, exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+        "d": "The head of a state body, a person holding a state office, a representative of that head or person, or any other person exercising the public employer's powers on behalf of the Russian Federation or a constituent entity"
+      }
+    },
+    "MT4-0361": {
+      "stem": "A state civil servant may undertake other paid work under which conditions? Choose the most complete and correct answer.",
+      "options": {
+        "a": "If the civil servant has notified the employer's representative in advance",
+        "b": "If the civil servant has notified the employer's representative in advance and the work is scientific research",
+        "c": "If the civil servant has notified the employer's representative in advance and the work will not lead to a conflict of interest",
+        "d": "If the civil servant has notified the employer's representative in advance and will perform the work on weekends and/or public holidays"
+      }
+    },
+    "MT4-0362": {
+      "stem": "Which is NOT a basic right of a state civil servant?",
+      "options": {
+        "a": "Reviewing assessments of their professional service activities and other documents before they are added to their personnel file",
+        "b": "Membership of a trade union",
+        "c": "Access to state-secret information under the established procedure",
+        "d": "Receiving state assistance with insurance of personally owned property"
+      }
+    },
+    "MT4-0363": {
+      "stem": "Restrictions associated with civil service include:",
+      "options": {
+        "a": "Acquiring income-generating securities in cases specified by federal law",
+        "b": "Acquiring another state's citizenship or renouncing citizenship of the Russian Federation",
+        "c": "Election to a paid elective office in a trade-union body, including an elected body of a primary trade-union organisation established within a territory's executive body",
+        "d": "Engaging in entrepreneurial activity"
+      }
+    },
+    "MT4-0364": {
+      "stem": "To comply with requirements for official conduct, a civil servant must:",
+      "options": {
+        "a": "Refrain from conduct that discredits their honour and dignity",
+        "b": "Refrain from discussing service matters in the presence of a senior manager",
+        "c": "Avoid participation in mass events held by public organisations",
+        "d": "Observe personal rights and interests when performing official duties"
+      }
+    },
+    "MT4-0365": {
+      "stem": "A civil servant has the right to:",
+      "options": {
+        "a": "Engage in entrepreneurial activity",
+        "b": "Use the advantages of their official position for election campaigning",
+        "c": "Stop performing official duties in order to resolve a service dispute",
+        "d": "Perform other paid work after notifying the employer's representative in advance, provided this will not lead to a conflict of interest"
+      }
+    },
+    "MT4-0366": {
+      "stem": "For family or other valid reasons, on written application and by decision of the employer's representative, a civil servant may be granted unpaid leave lasting:",
+      "options": {
+        "a": "Two weeks",
+        "b": "No more than one year",
+        "c": "No more than three days",
+        "d": "No more than six months"
+      }
+    },
+    "MT4-0367": {
+      "stem": "Basic and additional state guarantees in the state civil service apply to civil servants in which categories?",
+      "options": {
+        "a": "Managers and assistants (advisers)",
+        "b": "Specialists",
+        "c": "Support specialists",
+        "d": "All of the above"
+      }
+    },
+    "MT4-0368": {
+      "stem": "Which is NOT a basic state guarantee for state civil servants?",
+      "options": {
+        "a": "Civil-service conditions enabling official duties to be performed in accordance with official job regulations",
+        "b": "Medical insurance for the civil servant and their family members",
+        "c": "Compulsory state social insurance against illness or incapacity during civil service",
+        "d": "Reimbursement of relocation costs for the civil servant and their family when moving to another locality upon dismissal from civil service"
+      }
+    },
+    "MT4-0369": {
+      "stem": "Which is NOT an additional state guarantee for federal state civil servants?",
+      "options": {
+        "a": "Compensation for using a private vehicle for official purposes and reimbursement of related expenses in cases and under procedures established by Russian regulatory legal acts",
+        "b": "Appointment to another civil-service position when a state body is abolished",
+        "c": "Annual paid basic leave",
+        "d": "A one-off subsidy for purchasing housing, once during the entire period of civil service, under the procedure and conditions established by a Russian Government resolution and a regulatory legal act of a constituent entity"
+      }
+    },
+    "MT4-0370": {
+      "stem": "Which is prohibited in connection with state civil service?",
+      "options": {
+        "a": "Membership of a trade union",
+        "b": "Using the advantages of one's official position for election campaigning",
+        "c": "Reviewing the contents of one's personnel file",
+        "d": "Taking measures to prevent a conflict of interest"
+      }
+    },
+    "MT4-0371": {
+      "stem": "Which is NOT a requirement for state civil servants' official conduct under the Federal Law 'On the State Civil Service of the Russian Federation'?",
+      "options": {
+        "a": "Proceeding on the basis that recognition, observance and protection of human and civil rights and freedoms determine the meaning and substance of professional service activities",
+        "b": "Performing professional service activities within the state body's competence established by Russian legislation",
+        "c": "Maintaining neutrality so that decisions of political parties, other public associations, religious associations and other organisations cannot influence professional service activities",
+        "d": "Challenging violations of one's rights and legitimate interests in court"
+      }
+    },
+    "MT4-0372": {
+      "stem": "On dismissal from state civil service due to a state body's reorganisation or structural change, liquidation, or reduction of civil-service positions, a civil servant receives compensation equal to:",
+      "options": {
+        "a": "Three months' average earnings, excluding severance pay",
+        "b": "Three months' average earnings, including severance pay",
+        "c": "Four months' monetary remuneration, with no severance pay",
+        "d": "Four months' monetary remuneration, including severance pay"
+      }
+    },
+    "MT4-0373": {
+      "stem": "A civil servant is guaranteed:",
+      "options": {
+        "a": "An annual increase in remuneration",
+        "b": "Compulsory state social insurance against illness or incapacity during state civil service",
+        "c": "Official immunity",
+        "d": "Reimbursement of land tax and personal property tax paid"
+      }
+    },
+    "MT4-0374": {
+      "stem": "Which is not a basic duty of a civil servant?",
+      "options": {
+        "a": "Performing official duties in accordance with official job regulations",
+        "b": "Not disclosing state secrets or information learned concerning citizens' private lives and health or affecting their honour and dignity",
+        "c": "Complying with the state body's service rules",
+        "d": "Membership of a political party"
+      }
+    },
+    "MT4-0375": {
+      "stem": "Which is not a duty of a civil servant?",
+      "options": {
+        "a": "Maintaining neutrality so that decisions of political parties, other public associations, religious associations and other organisations cannot influence professional service activities",
+        "b": "Promoting interethnic and interfaith harmony",
+        "c": "Giving preference to particular public or religious associations, professional or social groups, organisations or citizens",
+        "d": "Observing established rules for public statements and the provision of official information"
+      }
+    },
+    "MT4-0376": {
+      "stem": "A civil servant has the right to:",
+      "options": {
+        "a": "Act as attorney or representative for third parties in the state body in which they serve, unless otherwise provided by this Federal Law and other federal laws",
+        "b": "Challenge violations of their rights and interests in state civil service in court",
+        "c": "Establish political-party structures within state bodies",
+        "d": "Publicly express judgments and assessments concerning the activities of the state body in which they serve, when this is not part of their official duties"
+      }
+    },
+    "MT4-0377": {
+      "stem": "A civil servant may:",
+      "options": {
+        "a": "Undertake other paid work after notifying the employer's representative in advance, provided this will not lead to a conflict of interest",
+        "b": "Undertake any other paid work",
+        "c": "Undertake any other paid work after notifying the employer's representative in advance",
+        "d": "Undertake any other paid work without notifying the public employer in advance, provided this will not lead to a conflict of interest"
+      }
+    },
+    "MT4-0378": {
+      "stem": "A state civil servant may undertake other paid work under the following conditions:",
+      "options": {
+        "a": "If the civil servant has notified the employer's representative in advance",
+        "b": "If the civil servant has notified the employer's representative in advance and the work is scientific research",
+        "c": "If the civil servant has notified the employer's representative in advance and the work will not lead to a conflict of interest",
+        "d": "If the civil servant has notified the employer's representative in advance and will perform the work on weekends and/or public holidays"
+      }
+    },
+    "MT4-0379": {
+      "stem": "A civil servant must:",
+      "options": {
+        "a": "Report renunciation of citizenship of the Russian Federation on the date of renunciation",
+        "b": "Report renunciation of citizenship of the Russian Federation within two weeks of renunciation",
+        "c": "Report renunciation of citizenship of the Russian Federation within 10 working days of renunciation",
+        "d": "Report renunciation of citizenship of the Russian Federation within 3 days of renunciation"
+      }
+    },
+    "MT4-0380": {
+      "stem": "A civil servant must:",
+      "options": {
+        "a": "Travel outside the Russian Federation in connection with official duties at the expense of individuals or legal entities, except official business trips conducted under Russian law by agreement between Russian federal, regional or municipal bodies and foreign state or municipal bodies, international or foreign organisations",
+        "b": "Carry out a supervisor's instruction even if it is unlawful",
+        "c": "Inform the employer's representative of a personal interest arising in the performance of official duties",
+        "d": "Receive benefits from individuals or legal entities in connection with official duties, including gifts, money, loans, services, entertainment, holidays, travel expenses and other benefits"
+      }
+    },
+    "MT4-0381": {
+      "stem": "A civil servant has the right to:",
+      "options": {
+        "a": "Career advancement on a competitive basis",
+        "b": "Perform official duties in accordance with official job regulations",
+        "c": "Safeguard state property, including property provided for official duties",
+        "d": "Acquire income-generating securities in cases specified by federal law"
+      }
+    },
+    "MT4-0382": {
+      "stem": "A civil servant must:",
+      "options": {
+        "a": "Stop performing official duties in order to resolve a service dispute",
+        "b": "Comply with the state body's service rules",
+        "c": "Obtain access to state-secret information under the established procedure",
+        "d": "Carry out an unlawful instruction after obtaining the supervisor's written confirmation"
+      }
+    },
+    "MT4-0383": {
+      "stem": "In connection with state civil service, a civil servant is prohibited from:",
+      "options": {
+        "a": "Having access, under the established procedure and in connection with official duties, to state bodies, local self-government bodies, public associations and other organisations",
+        "b": "Participating in the management of an economic entity, except housing, housing-construction, garage, gardening, vegetable-growing or dacha consumer cooperatives, property-owners' associations and trade unions",
+        "c": "Participating for remuneration in the activities of a commercial organisation's governing body",
+        "d": "Submitting information about themselves and their family members required by federal law under the established procedure"
+      }
+    },
+    "MT4-0384": {
+      "stem": "In connection with state civil service, a civil servant is prohibited from:",
+      "options": {
+        "a": "Performing any paid work",
+        "b": "Engaging in entrepreneurial activity personally or through agents",
+        "c": "Participating for remuneration in the activities of a commercial organisation's governing body",
+        "d": "Registering ownership of real estate or other property"
+      }
+    },
+    "MT4-0385": {
+      "stem": "If a civil servant acquires another state's citizenship, the employer's representative must:",
+      "options": {
+        "a": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service from the date the other citizenship was acquired",
+        "b": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service, notifying the relevant state body's trade-union body at least 2 months in advance",
+        "c": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service from the date the other citizenship was acquired, unless otherwise provided by an international treaty of the Russian Federation",
+        "d": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service, notifying them at least 1 month before dismissal"
+      }
+    },
+    "MT4-0386": {
+      "stem": "A civil servant may not be removed from their state civil-service position and dismissed at the employer's representative's initiative during:",
+      "options": {
+        "a": "Professional retraining",
+        "b": "Study at a higher-education institution",
+        "c": "Annual leave",
+        "d": "Work with information containing state secrets"
+      }
+    },
+    "MT4-0387": {
+      "stem": "May a previously convicted citizen hold a state civil-service position if the conviction was expunged before the statutory rehabilitation period expired?",
+      "options": {
+        "a": "Yes, through a competitive selection on general terms",
+        "b": "No; a citizen with any previous conviction may not hold a state civil-service position",
+        "c": "No; this restriction applies only to persons seeking positions in the highest group of state civil-service positions"
+      }
+    },
+    "MT4-0388": {
+      "stem": "Qualification requirements concerning civil-service length or specialist work experience for federal civil servants are established by:",
+      "options": {
+        "a": "The Federal Law 'On the State Civil Service of the Russian Federation'",
+        "b": "A decree of the President of the Russian Federation",
+        "c": "A resolution of the Government of the Russian Federation",
+        "d": "Regulatory legal acts of federal state bodies"
+      }
+    },
+    "MT4-0389": {
+      "stem": "Mandatory qualification requirements for state civil-service positions include requirements concerning:",
+      "options": {
+        "a": "Level of professional education; length of state civil service or work experience in the specialty or field of training; and the knowledge and skills needed for official duties",
+        "b": "Level of professional education and length of state civil service or work experience in the specialty or field of training",
+        "c": "Level of professional education and the knowledge and skills needed for official duties",
+        "d": "Level of professional education"
+      }
+    },
+    "MT4-0390": {
+      "stem": "Higher education at least at specialist-degree or master's-degree level is a qualification requirement for federal state civil-service positions in which categories? Choose the most complete and correct answer.",
+      "options": {
+        "a": "Managers, specialists and support specialists in all position groups",
+        "b": "Managers, assistants (advisers) and specialists in the highest and principal position groups",
+        "c": "Managers, assistants (advisers) and specialists in all civil-service position groups, and support specialists in the principal and leading groups",
+        "d": "Assistants (advisers) and specialists in all civil-service position groups, and support specialists in the principal and leading groups"
+      }
+    },
+    "MT4-0391": {
+      "stem": "Which is not a qualification requirement for state civil-service positions?",
+      "options": {
+        "a": "A requirement concerning the specialty or field of training",
+        "b": "A requirement concerning length of civil service",
+        "c": "A requirement concerning work experience in the specialty or field of training",
+        "d": "A requirement for prior military or alternative civilian service"
+      }
+    },
+    "MT4-0392": {
+      "stem": "Which regulatory legal act establishes requirements for length of civil service or work experience in the specialty or field of training for civil servants of a constituent entity of the Russian Federation?",
+      "options": {
+        "a": "A decree of the President of the Russian Federation",
+        "b": "An order of the head of the constituent entity",
+        "c": "A federal law",
+        "d": "A law of the constituent entity"
+      }
+    },
+    "MT4-0393": {
+      "stem": "Entry into state civil service to fill a position, or appointment of a civil servant to another civil-service position, takes place:",
+      "options": {
+        "a": "Only following competitive selection",
+        "b": "Following competitive selection, except in cases provided for by state civil-service legislation",
+        "c": "Following an interview with the head of the state body",
+        "d": "Only by appointment from among persons in the personnel reserve"
+      }
+    },
+    "MT4-0394": {
+      "stem": "The regulation on competitive selection for a vacant state civil-service position, defining its procedure and conditions, is approved by:",
+      "options": {
+        "a": "The Federal Law 'On the State Civil Service of the Russian Federation'",
+        "b": "A legal act of the relevant state body",
+        "c": "A legal act of a constituent entity of the Russian Federation",
+        "d": "A decree of the President of the Russian Federation"
+      }
+    },
+    "MT4-0395": {
+      "stem": "The regulation on the federal civil-service personnel reserve, establishing how the federal reserve and federal state bodies' reserves are formed and managed, is approved by:",
+      "options": {
+        "a": "A federal law",
+        "b": "A regulatory legal act of the President of the Russian Federation",
+        "c": "A resolution of the Government of the Russian Federation",
+        "d": "A regulatory legal act of the relevant federal executive body"
+      }
+    },
+    "MT4-0396": {
+      "stem": "Competitive selection for a state civil-service position may NOT be held:",
+      "options": {
+        "a": "When appointing to an indefinite-term civil-service position in the 'managers' category",
+        "b": "When appointing a civil servant or citizen included in the civil-service personnel reserve",
+        "c": "When concluding a fixed-term service contract",
+        "d": "When appointing to specified civil-service positions involving access to state secrets, under a list approved by a regulatory act of the state body"
+      }
+    },
+    "MT4-0397": {
+      "stem": "A citizen is not admitted to competitive selection if:",
+      "options": {
+        "a": "They have a conviction expunged or spent under the procedure established by federal law",
+        "b": "They are not a citizen of the Russian Federation",
+        "c": "They are already in civil service",
+        "d": "They do not have clearance for access to state secrets"
+      }
+    },
+    "MT4-0398": {
+      "stem": "When may a citizen be appointed to a state civil-service position without competitive selection?",
+      "options": {
+        "a": "When entering civil service for the first time",
+        "b": "When concluding a fixed-term service contract",
+        "c": "If no disciplinary penalties were imposed by another employer or employer's representative at their previous workplace or service post",
+        "d": "If they hold the civil-service class rank of State Councillor of the Russian Federation, 1st, 2nd or 3rd class"
+      }
+    },
+    "MT4-0399": {
+      "stem": "When may a citizen be appointed to a state civil-service position without competitive selection?",
+      "options": {
+        "a": "If no disciplinary penalties were imposed by another employer or employer's representative at their previous workplace or service post",
+        "b": "If they hold the following state civil-service class rank:",
+        "c": "State Councillor of the Russian Federation, 1st, 2nd or 3rd class",
+        "d": "By decision of the employer's representative when appointing to a position in the junior group of state civil-service positions"
+      }
+    },
+    "MT4-0400": {
+      "stem": "A citizen of the Russian Federation may be admitted to state civil service in which case?",
+      "options": {
+        "a": "A final court judgment has declared them to have limited legal capacity",
+        "b": "They have acquired another state's citizenship",
+        "c": "They refuse security-clearance procedures for state secrets or other federally protected secrets when the duties of the position sought or held require use of such information",
+        "d": "They are closely related by blood or marriage to a civil servant, provided the position does not involve one being directly subordinate or accountable to the other"
+      }
+    },
+    "MT4-0401": {
+      "stem": "A citizen may not be admitted to state civil service, and a civil servant may not remain in it, if:",
+      "options": {
+        "a": "They fail to provide federally required information, or knowingly provide false information, about income, expenditure, property and property-related obligations",
+        "b": "There is no procedure for granting access to state-secret information",
+        "c": "They fail to provide a medical institution's certificate of health",
+        "d": "They are distantly related to a civil servant and the position involves one being directly subordinate or accountable to the other"
+      }
+    },
+    "MT4-0402": {
+      "stem": "Who provides the employer's representative with the addresses of websites and/or web pages on which a civil-service applicant or civil servant has posted publicly available information, together with identifying details?",
+      "options": {
+        "a": "A citizen applying for a civil-service position",
+        "b": "A civil servant",
+        "c": "A municipal servant",
+        "d": "Anyone who wishes"
+      }
+    },
+    "MT4-0403": {
+      "stem": "Municipal and civil servants provide the addresses of websites and/or web pages where they have posted publicly available information, and identifying details:",
+      "options": {
+        "a": "Once in their lifetime",
+        "b": "Annually for the preceding calendar year, except information posted in the performance of a municipal servant's official duties",
+        "c": "Every six months, except information posted in the performance of a municipal servant's official duties",
+        "d": "Every 5 years, except information posted in the performance of a municipal servant's official duties"
+      }
+    },
+    "MT4-0404": {
+      "stem": "A civil servant's probation period is set for:",
+      "options": {
+        "a": "No more than 3 months",
+        "b": "No more than 6 months",
+        "c": "No more than 1 year",
+        "d": "No more than 2 years"
+      }
+    },
+    "MT4-0405": {
+      "stem": "The purpose of probation on entry to state civil service is:",
+      "options": {
+        "a": "To assess the civil servant's suitability for the position",
+        "b": "To develop strong motivation to perform official duties",
+        "c": "To assess the quality and level of the civil servant's professional training",
+        "d": "To award a class rank"
+      }
+    },
+    "MT4-0406": {
+      "stem": "A civil servant appointed to a state civil-service position is subject to probation. Which statement is correct?",
+      "options": {
+        "a": "Only some provisions of the Federal Law 'On the State Civil Service of the Russian Federation' apply during probation",
+        "b": "A civil servant may not undertake additional professional education during probation",
+        "c": "A period of temporary incapacity is not counted towards probation",
+        "d": "The employer's representative may not terminate the service contract before probation expires"
+      }
+    },
+    "MT4-0407": {
+      "stem": "For which category of persons may probation be imposed upon appointment to a state civil-service position?",
+      "options": {
+        "a": "State civil servants transferred to positions following a reduction in state civil-service positions",
+        "b": "Citizens who obtained higher education under a targeted-training agreement requiring subsequent state civil service and are entering state civil service for the first time",
+        "c": "State civil servants transferred from another state body",
+        "d": "State civil servants appointed to state civil-service positions by way of"
+      }
+    },
+    "MT4-0408": {
+      "stem": "The probation period for citizens entering state civil service for the first time is:",
+      "options": {
+        "a": "From one to six months",
+        "b": "From six months to one year",
+        "c": "From one month to one year",
+        "d": "From three months to one year"
+      }
+    },
+    "MT4-0409": {
+      "stem": "An agreement between the employer's representative and a citizen entering state civil service, or a civil servant, concerning service and appointment to a civil-service position is:",
+      "options": {
+        "a": "A service contract",
+        "b": "An employment contract",
+        "c": "An employment agreement",
+        "d": "Official job regulations"
+      }
+    },
+    "MT4-0410": {
+      "stem": "What is the maximum duration of a fixed-term service contract?",
+      "options": {
+        "a": "Up to one year",
+        "b": "Up to two years",
+        "c": "Up to three years",
+        "d": "Up to five years"
+      }
+    },
+    "MT4-0411": {
+      "stem": "The model form of a service contract is established by:",
+      "options": {
+        "a": "Federal law",
+        "b": "The President of the Russian Federation",
+        "c": "The Government of the Russian Federation",
+        "d": "The parties may determine the form by mutual agreement, guided only by the requirements of the Civil Code of the Russian Federation"
+      }
+    },
+    "MT4-0412": {
+      "stem": "A mandatory essential term of a service contract is:",
+      "options": {
+        "a": "An undertaking not to disclose state secrets",
+        "b": "The probation period on entry to state civil service",
+        "c": "An undertaking to undergo compulsory state fingerprint registration",
+        "d": "Types and conditions of social insurance associated with professional service activities"
+      }
+    },
+    "MT4-0413": {
+      "stem": "Which is NOT an essential term of a federal state civil servant's service contract?",
+      "options": {
+        "a": "The title of the civil-service position and the state body's organisational unit",
+        "b": "Types and conditions of social insurance associated with professional service activities",
+        "c": "Performance indicators for the civil servant's professional service activities",
+        "d": "The date on which official duties begin"
+      }
+    },
+    "MT4-0414": {
+      "stem": "In which cases is a fixed-term service contract with a state civil servant mandatory?",
+      "options": {
+        "a": "Filling certain civil-service positions in the 'managers' category",
+        "b": "Filling civil-service positions in the 'assistants (advisers)' category",
+        "c": "Filling civil-service positions in Russian consular institutions",
+        "d": "Filling a civil-service position subject to special remuneration arrangements under the Federal Law 'On the State Civil Service of the Russian Federation'",
+        "e": "All of the above"
+      }
+    },
+    "MT4-0415": {
+      "stem": "A fixed-term service contract is concluded with a state civil servant in the 'specialists' category on which condition?",
+      "options": {
+        "a": "The position is in a state body established for a fixed period or to perform specific tasks and functions",
+        "b": "The state civil servant gives written consent",
+        "c": "The state civil servant has an illness included in a list approved by a regulatory legal act of the President of the Russian Federation",
+        "d": "The state civil servant has insufficient qualifications"
+      }
+    },
+    "MT4-0416": {
+      "stem": "When does a service contract enter into force? Choose the most complete and correct answer.",
+      "options": {
+        "a": "On the date specified by the parties as its effective date",
+        "b": "On the date both parties sign the service contract",
+        "c": "On the date the civil servant signs the service contract",
+        "d": "On the date the parties sign it, unless otherwise established by federal law, another Russian regulatory legal act or the service contract"
+      }
+    },
+    "MT4-0417": {
+      "stem": "The parties to a service contract for a state civil-service position are:",
+      "options": {
+        "a": "The employer's representative and the civil servant",
+        "b": "The employer's representative and a representative of the state body's elected trade-union body",
+        "c": "The employer's representative and a citizen previously in state civil service",
+        "d": "Representatives of the trade-union body"
+      }
+    },
+    "MT4-0418": {
+      "stem": "The employer's representative must notify a civil servant of changes to essential terms of the service contract:",
+      "options": {
+        "a": "In writing at least two weeks before they take effect",
+        "b": "In writing at least one month before they take effect",
+        "c": "In writing at least two months before they take effect",
+        "d": "Orally two months before they take effect"
+      }
+    },
+    "MT4-0419": {
+      "stem": "A service contract may be terminated by agreement between its parties:",
+      "options": {
+        "a": "At any time",
+        "b": "1 month after notifying the employer's representative",
+        "c": "2 months after notifying the employer's representative",
+        "d": "2 weeks after notifying the employer's representative"
+      }
+    },
+    "MT4-0420": {
+      "stem": "May the employer's representative terminate a civil servant's contract before the two-month notice period for dismissal due to a reduction in civil-service positions or abolition of a state body expires?",
+      "options": {
+        "a": "Yes, but only with written consent from both the civil servant and the relevant state body's trade-union organisation",
+        "b": "Yes, but only with the civil servant's written consent and additional compensation equal to retained remuneration calculated in proportion to the notice period remaining",
+        "c": "Yes, but only with the relevant state body's trade-union organisation's consent",
+        "d": "No"
+      }
+    },
+    "MT4-0421": {
+      "stem": "Does dismissal for a civil servant's unsuitability for their position differ procedurally from dismissal on other grounds at the employer's representative's initiative?",
+      "options": {
+        "a": "No",
+        "b": "The distinctive feature is that the civil servant must surrender their official ID on the day of removal from the position",
+        "c": "Yes; such dismissal is possible only if transfer to another civil-service position with the civil servant's consent is impossible",
+        "d": "The distinctive feature is that the civil servant cannot be dismissed during temporary incapacity or leave"
+      }
+    },
+    "MT4-0422": {
+      "stem": "Which case does NOT result in termination for violating mandatory federal rules governing conclusion of a service contract, where the violation prevents continued civil service in the position?",
+      "options": {
+        "a": "The contract was concluded contrary to a final court sentence prohibiting the person from holding specified civil-service positions or engaging in specified activities",
+        "b": "The contract concerns duties medically contraindicated for the person according to a medical opinion",
+        "c": "The person lacks an appropriate document confirming their work experience",
+        "d": "The person lacks the required education and qualification document when the duties require specialist knowledge under the Federal Law 'On the State Civil Service of the Russian Federation' or another regulatory legal act"
+      }
+    },
+    "MT4-0423": {
+      "stem": "A service contract is terminated and the civil servant is removed from their position and dismissed from civil service in connection with:",
+      "options": {
+        "a": "Criminal proceedings being initiated against the civil servant for an offence punishable by a penalty incompatible with holding a civil-service position",
+        "b": "The civil servant being declared partially unfit for work by a medical opinion",
+        "c": "An administrative penalty of disqualification being imposed on the civil servant",
+        "d": "All answers are correct"
+      }
+    },
+    "MT4-0424": {
+      "stem": "Which is not an essential term of a service contract?",
+      "options": {
+        "a": "The date official duties begin",
+        "b": "The rights and duties of the employer's representative",
+        "c": "The address of the workplace",
+        "d": "Inclusion of the position in the list of civil-service positions subject to rotation"
+      }
+    },
+    "MT4-0425": {
+      "stem": "A service contract is terminated, the civil servant is removed from their position and dismissed, and, with their consent, included in the personnel reserve in connection with which event? Choose the most complete and correct answer.",
+      "options": {
+        "a": "Election or appointment to an elective position in a state body, election to an elective position in a local self-government body, or election to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+        "b": "Election to an elective position in a state body or to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+        "c": "Election or appointment to a state office, except the case in Article 6(2) of Federal Constitutional Law No. 2-FKZ of 17 December 1997 'On the Government of the Russian Federation', to a municipal office, or election to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+        "d": "Election or appointment to a state office of the Russian Federation or a municipal office, or election to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body"
+      }
+    },
+    "MT4-0426": {
+      "stem": "The employer's representative must notify a state civil servant in writing of changes to essential terms of the service contract:",
+      "options": {
+        "a": "At least one month before they take effect",
+        "b": "At least two weeks before they take effect",
+        "c": "At least two months before they take effect",
+        "d": "Changes to essential terms may take effect no earlier than 1 January of the year following the decision to make those changes"
+      }
+    },
+    "MT4-0427": {
+      "stem": "Transfer of a civil servant to another state civil-service position:",
+      "options": {
+        "a": "Is permitted with the civil servant's written consent",
+        "b": "Is not permitted",
+        "c": "Is permitted with the civil servant's oral consent",
+        "d": "Is permitted by decision of the employer's representative"
+      }
+    },
+    "MT4-0428": {
+      "stem": "In cases specified by law, the employer's representative may transfer a civil servant to a state civil-service position in the same body that is not specified in the service contract:",
+      "options": {
+        "a": "For up to 1 year",
+        "b": "For up to 5 years",
+        "c": "For up to one month",
+        "d": "For up to 2 weeks"
+      }
+    },
+    "MT4-0429": {
+      "stem": "Which is NOT a transfer to another state civil-service position and does NOT require the civil servant's consent?",
+      "options": {
+        "a": "Appointment to another state civil-service position without changing the duties established by the official job regulations",
+        "b": "Appointment to an equivalent state civil-service position with minor changes to duties established by the service contract",
+        "c": "Reassignment to another state civil-service position without changing duties established by the service contract and official job regulations",
+        "d": "Appointment to a higher state civil-service position when the state body relocates"
+      }
+    },
+    "MT4-0430": {
+      "stem": "Transfer to a civil-service position in the same state body that is not specified in the service contract is NOT permitted for the purpose of:",
+      "options": {
+        "a": "Preventing accidents",
+        "b": "Preventing or remedying the consequences of a natural disaster",
+        "c": "Preventing destruction of or damage to civil servants' personal property",
+        "d": "Replacing a temporarily absent civil servant"
+      }
+    },
+    "MT4-0431": {
+      "stem": "A transfer ordered by the employer's representative to replace a temporarily absent civil servant may not exceed, in a calendar year:",
+      "options": {
+        "a": "One month",
+        "b": "Three months",
+        "c": "Six months",
+        "d": "The law does not limit the duration"
+      }
+    },
+    "MT4-0432": {
+      "stem": "May a state civil servant be transferred to a position not specified in their service contract to remedy the consequences of a natural disaster? Choose the most complete and correct answer.",
+      "options": {
+        "a": "Yes, by decision of the employer's representative, for up to one month in the same state body, paid at the temporary position's rate but no less than the previous remuneration, including work medically contraindicated for them",
+        "b": "Yes, by decision of the employer's representative and with the civil servant's prior written consent, for up to one month in the same state body, paid at the temporary position's rate but no less than the previous remuneration, including work medically contraindicated for them",
+        "c": "Yes, by decision of the employer's representative, for up to one month in the same state body, paid at the temporary position's rate but no less than the previous remuneration, excluding work medically contraindicated for them",
+        "d": "No"
+      }
+    },
+    "MT4-0433": {
+      "stem": "When state civil-service positions are reduced, the service relationship with an affected civil servant may continue if:",
+      "options": {
+        "a": "The civil servant is sent for professional retraining or further training",
+        "b": "They are moved to a non-civil-service position in the same public authority",
+        "c": "They are dismissed from state civil service by agreement between the parties",
+        "d": "They are suspended from office"
+      }
+    },
+    "MT4-0434": {
+      "stem": "A state civil-service position filled through rotation is held for:",
+      "options": {
+        "a": "One to three years",
+        "b": "Three to five years",
+        "c": "Two to three years",
+        "d": "Up to five years"
+      }
+    },
+    "MT4-0435": {
+      "stem": "A civil servant's refusal to relocate with the state body:",
+      "options": {
+        "a": "Is grounds for reassignment to a non-civil-service position in the same authority",
+        "b": "Is grounds for termination of the service contract, removal from the position and dismissal from state civil service",
+        "c": "Is grounds for suspension from the state civil-service position",
+        "d": "Is grounds for suspension of the service contract"
+      }
+    },
+    "MT4-0436": {
+      "stem": "Choose the most accurate definition of an 'individual service dispute':",
+      "options": {
+        "a": "Unresolved disagreements between the employer's representative and a civil servant, applicant or former civil servant concerning application of the Federal Law 'On the State Civil Service of the Russian Federation'",
+        "b": "Unresolved disagreements between the employer's representative and a civil servant, applicant or former civil servant",
+        "c": "Unresolved disagreements between the employer's representative and a civil servant, applicant or former civil servant concerning application of civil-service laws, other regulatory legal acts or the service contract, which have been submitted to a body competent to hear individual service disputes",
+        "d": "Disagreements between the employer's representative and a civil servant, applicant or former civil servant concerning application of civil-service laws, other regulatory legal acts or the service contract"
+      }
+    },
+    "MT4-0437": {
+      "stem": "If a service contract was terminated at the civil servant's initiative, may the civil servant seek reinstatement in their previous position directly in court, bypassing the service disputes commission?",
+      "options": {
+        "a": "Yes, provided they apply within one month of receiving a copy of the dismissal order or their employment record book",
+        "b": "No",
+        "c": "Yes, provided no more than three months have passed since dismissal",
+        "d": "Yes, under any circumstances"
+      }
+    },
+    "MT4-0438": {
+      "stem": "Individual service disputes are heard by:",
+      "options": {
+        "a": "The commission on conflicts of interest and official-conduct requirements",
+        "b": "Trade-union organisations",
+        "c": "The state body's service disputes commission or a court",
+        "d": "Courts only"
+      }
+    },
+    "MT4-0439": {
+      "stem": "A civil servant, applicant or former civil servant may apply to the service disputes commission within:",
+      "options": {
+        "a": "One month of learning, or when they should have learned, of the violation of their right",
+        "b": "Three months of learning, or when they should have learned, of the violation of their right",
+        "c": "Six months of learning, or when they should have learned, of the violation of their right",
+        "d": "One year of learning, or when they should have learned, of the violation of their right"
+      }
+    },
+    "MT4-0440": {
+      "stem": "The service disputes commission must consider a service dispute within:",
+      "options": {
+        "a": "Five working days of the written application",
+        "b": "Seven calendar days of the written application",
+        "c": "Ten calendar days of the written application",
+        "d": "One month of the written application"
+      }
+    },
+    "MT4-0441": {
+      "stem": "May a civil servant stop performing official duties in order to resolve a service dispute?",
+      "options": {
+        "a": "It is prohibited",
+        "b": "It is permitted with the organisational unit head's consent",
+        "c": "It is permitted",
+        "d": "It is the civil servant's duty"
+      }
+    },
+    "MT4-0442": {
+      "stem": "Which service disputes may be heard directly by a court on a written application from the employer's representative?",
+      "options": {
+        "a": "Compensation by a civil servant for harm caused to the state body, unless federal laws provide otherwise",
+        "b": "Termination of a service contract",
+        "c": "Transfer to another state civil-service position",
+        "d": "Changes to essential terms of a service contract"
+      }
+    },
+    "MT4-0443": {
+      "stem": "A civil servant's failure to report approaches by any person seeking to induce them to commit corruption offences may result in:",
+      "options": {
+        "a": "Dismissal from state civil service",
+        "b": "Transfer to another position",
+        "c": "Criminal liability",
+        "d": "Transfer to another state body"
+      }
+    },
+    "MT4-0444": {
+      "stem": "Who is empowered to consider a civil servant's violation of the code of ethics and official conduct?",
+      "options": {
+        "a": "The employer's representative",
+        "b": "The commission on compliance with civil servants' official-conduct requirements and resolution of conflicts of interest",
+        "c": "The qualification commission",
+        "d": "The appraisal commission"
+      }
+    },
+    "MT4-0445": {
+      "stem": "What is the purpose of appraisal?",
+      "options": {
+        "a": "To decide whether to award a civil servant a state civil-service class rank",
+        "b": "To determine whether the civil servant is suited to their state civil-service position",
+        "c": "To decide whether to impose a disciplinary penalty",
+        "d": "To decide whether to remove a disciplinary penalty"
+      }
+    },
+    "MT4-0446": {
+      "stem": "Which civil servants are not subject to appraisal?",
+      "options": {
+        "a": "Those holding 'specialists' category positions, holding positions whose duties involve state-secret information",
+        "b": "Those holding state civil-service positions under a fixed-term service contract",
+        "c": "Those holding 'assistants (advisers)' category positions under a fixed-term service contract",
+        "d": "Those under 60 years of age"
+      }
+    },
+    "MT4-0447": {
+      "stem": "Is a civil servant holding a state civil-service position in the 'managers' category subject to appraisal?",
+      "options": {
+        "a": "Yes, if they have a fixed-term service contract",
+        "b": "No, in all cases",
+        "c": "No, if they have a fixed-term service contract, except civil servants in certain positions appointed and dismissed by the President or Government of the Russian Federation for which appraisal is required by a presidential decree or government resolution respectively",
+        "d": "Yes, in all cases"
+      }
+    },
+    "MT4-0448": {
+      "stem": "An appraisal or selection commission's composition is valid:",
+      "options": {
+        "a": "If independent experts make up at least one quarter of its members",
+        "b": "If independent experts make up at least one third of its members",
+        "c": "If independent experts make up at least half of its members",
+        "d": "Without independent experts"
+      }
+    },
+    "MT4-0449": {
+      "stem": "A civil servant failed to attend an appraisal without a valid reason. What are the consequences?",
+      "options": {
+        "a": "They are deemed to have failed the appraisal",
+        "b": "They are dismissed from civil service",
+        "c": "They face disciplinary liability and the appraisal is postponed",
+        "d": "They lose their class rank"
+      }
+    },
+    "MT4-0450": {
+      "stem": "How often is a civil servant appraised?",
+      "options": {
+        "a": "Annually",
+        "b": "Once every 2 years",
+        "c": "Once every 3 years",
+        "d": "The employer's representative determines the interval"
+      }
+    },
+    "MT4-0451": {
+      "stem": "When may a civil servant's appraisal be held ahead of schedule?",
+      "options": {
+        "a": "When the civil servant commits more than two disciplinary violations",
+        "b": "When a decision is taken to promote the civil servant",
+        "c": "When a decision is taken to reduce state civil-service positions in the state body",
+        "d": "When the employer's representative decides to change essential conditions of the civil servant's professional service activities"
+      }
+    },
+    "MT4-0452": {
+      "stem": "What happens if the civil servant being appraised is a member of the appraisal commission?",
+      "options": {
+        "a": "They undergo appraisal as a commission member but cannot vote",
+        "b": "They must be appraised by another commission",
+        "c": "Their membership of the appraisal commission is suspended during their appraisal",
+        "d": "Their appraisal is postponed until they leave the commission"
+      }
+    },
+    "MT4-0453": {
+      "stem": "Which appraisal commission decision is unlawful?",
+      "options": {
+        "a": "The civil servant is suited to the position and is nominated for their first or next class rank",
+        "b": "The civil servant is suited to the position and is recommended for the personnel reserve to fill a vacant civil-service position through promotion",
+        "c": "The civil servant is suited to the position subject to successful completion of additional professional education",
+        "d": "The civil servant is not suited to the position"
+      }
+    },
+    "MT4-0454": {
+      "stem": "After finding a civil servant unsuitable for their position, may the appraisal commission recommend that the employer's representative dismiss them?",
+      "options": {
+        "a": "No; appraisal determines suitability for the position, not whether to dismiss the civil servant",
+        "b": "Yes; a civil servant unsuitable for their position must be dismissed",
+        "c": "Yes; appraisal is conducted to identify grounds for dismissing civil servants",
+        "d": "Yes, as an exceptional measure"
+      }
+    },
+    "MT4-0455": {
+      "stem": "An extraordinary appraisal of civil servants may be held:",
+      "options": {
+        "a": "By agreement between the parties to the service contract",
+        "b": "When the civil servant commits a disciplinary offence",
+        "c": "After the period of holding the awarded class rank expires",
+        "d": "When the employer's representative doubts the civil servant's suitability for their position"
+      }
+    },
+    "MT4-0456": {
+      "stem": "A civil servant is in the personnel reserve. How may they be appointed to a vacant state civil-service position?",
+      "options": {
+        "a": "With their consent, by decision of the employer's representative",
+        "b": "Without their consent if the vacancy is in the state body that created the reserve",
+        "c": "With their consent, by decision of the head of the state body's personnel service",
+        "d": "Being in the reserve automatically implies consent to appointment to any vacant position"
+      }
+    },
+    "MT4-0457": {
+      "stem": "When is a qualification examination held?",
+      "options": {
+        "a": "Upon entry to state civil service",
+        "b": "When deciding whether to award a state civil-service class rank",
+        "c": "When a civil servant completes professional education",
+        "d": "When deciding whether to increase a civil servant's remuneration"
+      }
+    },
+    "MT4-0458": {
+      "stem": "A qualification examination assesses:",
+      "options": {
+        "a": "The civil servant's professional level",
+        "b": "Results of professional service activities using efficiency and performance indicators",
+        "c": "Proper performance of official duties",
+        "d": "Suitability for the state civil-service position held"
+      }
+    },
+    "MT4-0459": {
+      "stem": "A civil servant undertakes further training:",
+      "options": {
+        "a": "Once every three years",
+        "b": "As needed, but at least once every three years",
+        "c": "As needed, but at least once every five years",
+        "d": "As needed, at the employer's representative's discretion"
+      }
+    },
+    "MT4-0460": {
+      "stem": "The classification of civil-service positions includes:",
+      "options": {
+        "a": "Categories and groups",
+        "b": "Groups and subclasses",
+        "c": "Classes and subgroups",
+        "d": "Types and subtypes"
+      }
+    },
+    "MT4-0461": {
+      "stem": "Which lists position groups in the correct hierarchical order?",
+      "options": {
+        "a": "Highest, principal, senior, leading, junior",
+        "b": "Highest, principal, leading, senior, junior",
+        "c": "Leading, highest, principal, senior, junior",
+        "d": "Highest, senior, leading, principal, junior"
+      }
+    },
+    "MT4-0462": {
+      "stem": "How are civil servants awarded class ranks?",
+      "options": {
+        "a": "In accordance with the state civil-service position held",
+        "b": "Based on appraisal results",
+        "c": "Based on competitive-selection results",
+        "d": "By applying for a class rank when concluding the service contract"
+      }
+    },
+    "MT4-0463": {
+      "stem": "When may a federal civil servant receive their first state civil-service class rank if no probation was imposed?",
+      "options": {
+        "a": "Upon appointment to the state civil-service position",
+        "b": "No earlier than three months after appointment if no probation was imposed",
+        "c": "No earlier than six months after appointment",
+        "d": "No earlier than one year after appointment"
+      }
+    },
+    "MT4-0464": {
+      "stem": "In federal executive bodies, the federal state civil-service class rank of State Councillor of the Russian Federation, 1st, 2nd or 3rd class, is awarded by:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Government of the Russian Federation",
+        "c": "The head of the federal executive body",
+        "d": "The head of the federal executive body in agreement with the Ministry of Health and Social Development of the Russian Federation"
+      }
+    },
+    "MT4-0465": {
+      "stem": "Which regulatory legal act establishes correspondence between class ranks, diplomatic ranks, military ranks and special ranks?",
+      "options": {
+        "a": "The Federal Law 'On the State-Service System of the Russian Federation'",
+        "b": "A decree of the President of the Russian Federation",
+        "c": "A resolution of the Government of the Russian Federation",
+        "d": "An order of the Government of the Russian Federation"
+      }
+    },
+    "MT4-0466": {
+      "stem": "The first class rank for the leading group of federal state civil-service positions is:",
+      "options": {
+        "a": "Secretary of the State Civil Service of the Russian Federation, 3rd class",
+        "b": "Referent of the State Civil Service of the Russian Federation, 3rd class",
+        "c": "State Councillor of the Russian Federation, 3rd class",
+        "d": "Councillor of the State Civil Service of the Russian Federation, 3rd class"
+      }
+    },
+    "MT4-0467": {
+      "stem": "The procedure for awarding and retaining federal state civil-service class ranks is established by:",
+      "options": {
+        "a": "A decree of the President of the Russian Federation",
+        "b": "A resolution of the Government of the Russian Federation",
+        "c": "An order of the head of the federal executive body",
+        "d": "An order of the head of the federal executive body agreed with the Ministry of Health and Social Development of the Russian Federation"
+      }
+    },
+    "MT4-0468": {
+      "stem": "Which is NOT a condition for awarding a federal state civil servant a long-service pension?",
+      "options": {
+        "a": "At least 15 years of state civil service",
+        "b": "Holding a federal state civil-service position for at least 12 full months immediately before dismissal",
+        "c": "Resignation in connection with retirement on a state pension",
+        "d": "Membership of a trade union"
+      }
+    },
+    "MT4-0469": {
+      "stem": "The relationship between the state civil service and other types of Russian state service is ensured on the basis of:",
+      "options": {
+        "a": "Establishing restrictions and obligations when performing different types of Russian state service",
+        "b": "Uniform conditions and amounts of state servants' remuneration",
+        "c": "Uniform pension conditions for citizens who have performed state civil service",
+        "d": "Establishing uniform qualification requirements"
+      }
+    },
+    "MT4-0470": {
+      "stem": "An internal service inquiry is conducted:",
+      "options": {
+        "a": "By decision of the employer's representative or on a civil servant's written application",
+        "b": "Only by decision of the employer's representative",
+        "c": "On a civil servant's oral complaint to a superior official",
+        "d": "On an application from third parties"
+      }
+    },
+    "MT4-0471": {
+      "stem": "Before a disciplinary penalty is imposed, an internal service inquiry is conducted:",
+      "options": {
+        "a": "At the employer's representative's discretion",
+        "b": "If necessary",
+        "c": "Mandatorily",
+        "d": "Depending on the nature of the disciplinary penalty"
+      }
+    },
+    "MT4-0472": {
+      "stem": "An internal service inquiry must be completed:",
+      "options": {
+        "a": "Within 14 calendar days of the decision to conduct it",
+        "b": "Within one month of the decision to conduct it",
+        "c": "Within two months of the decision to conduct it",
+        "d": "Within three months of the decision to conduct it"
+      }
+    },
+    "MT4-0473": {
+      "stem": "The wife of a deputy minister of a federal ministry opened a deposit account at a bank in the Republic of Yemen during a tourist trip. What consequences does this have for the deputy minister?",
+      "options": {
+        "a": "Dismissal due to loss of trust",
+        "b": "A reprimand",
+        "c": "The wife must file an income declaration",
+        "d": "None"
+      }
+    },
+    "MT4-0474": {
+      "stem": "A civil servant is a member of a state body's selection commission. Their son has applied for a vacant specialist position in that body. What must the civil servant do?",
+      "options": {
+        "a": "No action is required",
+        "b": "Notify the employer's representative and immediate supervisor of the conflict of interest in writing",
+        "c": "Tell their son that he cannot compete for the position",
+        "d": "Inform the immediate supervisor and selection commission members of the conflict of interest"
+      }
+    },
+    "MT4-0475": {
+      "stem": "A civil servant was given shares in a joint-stock company free of charge. If a conflict of interest exists and they intend to accept the shares, what must they do?",
+      "options": {
+        "a": "They cannot accept shares as a gift under any circumstances",
+        "b": "After accepting the gift, they must place it in trust management",
+        "c": "As it is a gift, no action is required",
+        "d": "They may own no more than 50% of the shares and must sell or transfer the rest"
+      }
+    },
+    "MT4-0476": {
+      "stem": "The employer's representative learned that a subordinate had a personal interest leading to a conflict of interest but took no measures. What are the consequences if this inaction becomes known?",
+      "options": {
+        "a": "The employer's representative receives a severe reprimand",
+        "b": "The employer's representative is demoted",
+        "c": "The employer's representative is suspended from the managerial position",
+        "d": "The employer's representative is dismissed from state civil service"
+      }
+    },
+    "MT4-0477": {
+      "stem": "A civil servant acquired Canadian citizenship. What is the correct action?",
+      "options": {
+        "a": "Resign from state civil service",
+        "b": "Notify the conflict-of-interest commission",
+        "c": "Notify the personnel service of the state body in which they serve in writing",
+        "d": "No action is required"
+      }
+    },
+    "MT4-0478": {
+      "stem": "In which case may the employer's representative choose NOT to suspend a state civil servant, allowing them to perform official duties?",
+      "options": {
+        "a": "Reporting for service under the influence of alcohol, narcotics or other intoxicants",
+        "b": "Being charged with an offence and made subject to a court order for temporary suspension under Russian criminal-procedure law",
+        "c": "Discovery of a conflict of interest involving the civil servant",
+        "d": "Failure to complete required occupational-safety training and assessment of knowledge and skills"
+      }
+    },
+    "MT4-0479": {
+      "stem": "A civil servant intends to rent out a dwelling they own. What must they do to comply with all legal requirements?",
+      "options": {
+        "a": "They have no right to rent out real estate",
+        "b": "They may conclude a rental agreement but must report the income in the prescribed disclosure form",
+        "c": "They must inform their immediate supervisor and the employer's representative",
+        "d": "They must apply to the state body's conflict-of-interest commission"
+      }
+    },
+    "MT4-0480": {
+      "stem": "A civil servant wishes to join a trade union. What must they do?",
+      "options": {
+        "a": "They cannot do so while in state civil service",
+        "b": "Obtain the employer's representative's permission",
+        "c": "Obtain the conflict-of-interest commission's approval",
+        "d": "They may join without taking any other action"
+      }
+    },
+    "MT4-0481": {
+      "stem": "What must a citizen who is a registered political-party member do when entering state civil service?",
+      "options": {
+        "a": "Suspend party membership from the date the service contract is concluded",
+        "b": "Notify the employer's representative of party membership",
+        "c": "Apply to the commission on official-conduct requirements and conflicts of interest",
+        "d": "No action is required"
+      }
+    },
+    "MT4-0482": {
+      "stem": "Several civil servants decided to establish a political party's primary branch in the state body where they serve. Is this lawful?",
+      "options": {
+        "a": "Yes",
+        "b": "Yes, if the party is represented in the State Duma of the Federal Assembly of the Russian Federation",
+        "c": "Yes, if at least 50% of the state body's staff wish to establish the branch",
+        "d": "No"
+      }
+    },
+    "MT4-0483": {
+      "stem": "A civil servant decides to stand for elected office in a local self-government body. What happens if they are elected?",
+      "options": {
+        "a": "They may combine the civil-service position with the elected local office",
+        "b": "They may combine the positions if the local self-government body sends an official request to the state body",
+        "c": "They will be prohibited from holding the state civil-service position",
+        "d": "The employer's representative decides whether the positions may be combined"
+      }
+    },
+    "MT4-0484": {
+      "stem": "A civil servant has committed a disciplinary offence and a penalty is to be imposed. Which approach is correct?",
+      "options": {
+        "a": "Only one disciplinary penalty is imposed for one offence",
+        "b": "One penalty is imposed for a minor offence and two for a serious offence",
+        "c": "The manager determines the number of penalties according to the offence's seriousness",
+        "d": "A monetary fine may be imposed in addition to a disciplinary penalty"
+      }
+    },
+    "MT4-0485": {
+      "stem": "Which disciplinary penalties may the employer's representative impose? Choose the most complete and correct answer.",
+      "options": {
+        "a": "A caution, reprimand, warning of incomplete suitability for the position, or dismissal from civil service",
+        "b": "A caution, reprimand, severe reprimand, removal from the civil-service position, or dismissal from civil service",
+        "c": "A caution, reprimand, severe reprimand, warning of incomplete suitability for the position, or dismissal from civil service",
+        "d": "A caution, warning, reprimand, severe reprimand, removal from the civil-service position, or dismissal from civil service"
+      }
+    },
+    "MT4-0486": {
+      "stem": "A civil servant is regarded as having no disciplinary penalty if no new penalty is imposed:",
+      "options": {
+        "a": "Within six months of the penalty being imposed",
+        "b": "Within nine months of the penalty being imposed",
+        "c": "Within one year of the penalty being imposed",
+        "d": "Within two years of the penalty being imposed"
+      }
+    },
+    "MT4-0487": {
+      "stem": "The employer's representative may remove a disciplinary penalty before one year has elapsed since its imposition. On what basis? Choose the most complete and correct answer.",
+      "options": {
+        "a": "On their own initiative",
+        "b": "On the civil servant's written application or their immediate supervisor's request",
+        "c": "On their own initiative, the civil servant's written application or their immediate supervisor's request",
+        "d": "On their own initiative, the civil servant's written application, or a request from the immediate supervisor or trade-union body"
+      }
+    },
+    "MT4-0488": {
+      "stem": "A disciplinary penalty based on an audit may not be imposed on a state civil servant if the following time has elapsed since the offence:",
+      "options": {
+        "a": "Six months",
+        "b": "One year",
+        "c": "One and a half years",
+        "d": "Two years"
+      }
+    },
+    "MT4-0489": {
+      "stem": "Which is NOT a reward or award for state civil service?",
+      "options": {
+        "a": "A state body's certificate of honour together with a one-off monetary reward or a valuable gift",
+        "b": "A commendation together with a one-off monetary reward",
+        "c": "A one-off monetary reward upon retirement on a state long-service pension",
+        "d": "Early removal of a disciplinary penalty"
+      }
+    },
+    "MT4-0490": {
+      "stem": "To whom may a civil servant submit a written appeal against a disciplinary penalty? Choose the most complete and correct answer.",
+      "options": {
+        "a": "The state body's service disputes commission or a court",
+        "b": "The head of the state body or a court",
+        "c": "The state body's service disputes commission, the commission on state civil servants' official conduct and conflicts of interest, or a court",
+        "d": "A court"
+      }
+    },
+    "MT4-0491": {
+      "stem": "A manager gave a civil servant an unlawful instruction, which the civil servant carried out. Who bears liability under federal laws?",
+      "options": {
+        "a": "Only the civil servant",
+        "b": "Only the manager",
+        "c": "Both the civil servant and the manager",
+        "d": "This will be determined by an internal service inquiry"
+      }
+    },
+    "MT4-0492": {
+      "stem": "What must a civil servant do upon receiving an oral instruction from a manager that they consider unlawful?",
+      "options": {
+        "a": "Refuse to carry it out, citing its unlawfulness",
+        "b": "Carry it out and report it in writing to the commission on official conduct and conflicts of interest",
+        "c": "Give the manager written reasons why it is unlawful, citing Russian legal provisions that may be violated, and obtain written confirmation of the instruction. If the manager confirms it in writing, the civil servant must refuse to carry it out",
+        "d": "Report it in writing to a higher manager and carry it out after that manager confirms in writing that it must be performed"
+      }
+    },
+    "MT4-0493": {
+      "stem": "Under the Federal Law 'On the State Civil Service of the Russian Federation', a civil servant's family members are:",
+      "options": {
+        "a": "Parents, spouse and children, including adopted children",
+        "b": "Spouse and minor children",
+        "c": "Parents, siblings, spouse, children and other close persons",
+        "d": "Spouse and children"
+      }
+    },
+    "MT4-0494": {
+      "stem": "When must an applicant for a state civil-service position submit information about their income, property and property-related obligations and those of their family members?",
+      "options": {
+        "a": "Upon entry to state civil service",
+        "b": "Within one month after entry",
+        "c": "Within three months after entry",
+        "d": "Within one year after entry"
+      }
+    },
+    "MT4-0495": {
+      "stem": "May a bank use a civil servant's and their family members' income, property and property-obligation disclosures to assess creditworthiness for a loan?",
+      "options": {
+        "a": "No",
+        "b": "Yes, with the civil servant's consent",
+        "c": "Yes, with written consent from the civil servant and their family members",
+        "d": "Yes, with the employer's representative's written consent"
+      }
+    },
+    "MT4-0496": {
+      "stem": "A civil servant submits income, property and property-obligation disclosures for themselves and their family. For whom are they NOT required to submit information?",
+      "options": {
+        "a": "Their spouse",
+        "b": "Their 7-year-old son",
+        "c": "Their 17-year-old daughter",
+        "d": "Their 23-year-old son"
+      }
+    },
+    "MT4-0497": {
+      "stem": "A civil servant submits income, property and property-obligation disclosures for themselves and their family. For whom must they submit information?",
+      "options": {
+        "a": "Their 5-year-old son",
+        "b": "Their father",
+        "c": "Their brother",
+        "d": "Their former spouse"
+      }
+    },
+    "MT4-0498": {
+      "stem": "Which sequence of actions is correct?",
+      "options": {
+        "a": "Issue the state body's act appointing the person to a state civil-service position, then conclude the service contract",
+        "b": "Conclude the service contract, then issue the state body's appointment act",
+        "c": "Conclude an employment agreement, then issue the appointment act",
+        "d": "Conclude an employment agreement, then conclude a service contract"
+      }
+    },
+    "MT4-0499": {
+      "stem": "Citizens who held state-service positions listed in Russian regulatory legal acts must inform a new employer of their last service post when concluding employment agreements:",
+      "options": {
+        "a": "Always, whenever concluding an employment agreement",
+        "b": "For five years after leaving state service",
+        "c": "For two years after leaving state service",
+        "d": "At the parties' discretion"
+      }
+    },
+    "MT4-0500": {
+      "stem": "When hiring a former state or municipal servant who held a position listed in Russian regulatory legal acts, within two years of their departure, the employer must notify the employer's representative at the former service post of the employment agreement within:",
+      "options": {
+        "a": "5 days",
+        "b": "10 days",
+        "c": "30 days",
+        "d": "60 days"
+      }
+    },
+    "MT4-0501": {
+      "stem": "For service needs, may the employer's representative compensate a civil servant with an irregular working day for work beyond normal hours through overtime pay instead of additional paid leave?",
+      "options": {
+        "a": "No",
+        "b": "Yes; the employer's representative may choose between that guarantee and compensation",
+        "c": "Yes; the employer's representative acts according to the state's interests and financial capacity",
+        "d": "Yes, with the civil servant's consent"
+      }
+    },
+    "MT4-0502": {
+      "stem": "An employer's failure to notify the public employer's representative at a former state servant's last service post when concluding an employment agreement entails:",
+      "options": {
+        "a": "Civil-law liability",
+        "b": "Administrative liability",
+        "c": "Financial liability",
+        "d": "Criminal liability"
+      }
+    },
+    "MT4-0503": {
+      "stem": "Civil servants with an irregular working day receive annual additional paid leave lasting:",
+      "options": {
+        "a": "At least 10 calendar days",
+        "b": "Less than 15 days",
+        "c": "As established by the collective agreement, but no less than seven calendar days",
+        "d": "Three calendar days"
+      }
+    },
+    "MT4-0504": {
+      "stem": "How long is annual basic paid leave for civil servants holding principal-group positions?",
+      "options": {
+        "a": "28 calendar days",
+        "b": "30 calendar days",
+        "c": "35 calendar days",
+        "d": "40 calendar days",
+        "e": "45 calendar days"
+      }
+    },
+    "MT4-0505": {
+      "stem": "How many calendar days of additional paid long-service leave are granted for 15 or more years of civil service?",
+      "options": {
+        "a": "7 calendar days",
+        "b": "10 calendar days",
+        "c": "Determined individually in each case by the employer's representative"
+      }
+    },
+    "MT4-0506": {
+      "stem": "The combined duration of annual basic paid leave and annual additional paid long-service leave may NOT exceed:",
+      "options": {
+        "a": "50 calendar days for the highest group, 45 days for the principal group, and 40 calendar days for other groups",
+        "b": "55 calendar days for the highest and principal groups and 45 calendar days for other groups",
+        "c": "45 calendar days for the highest and principal groups and 40 calendar days for other groups",
+        "d": "No limits are established"
+      }
+    },
+    "MT4-0507": {
+      "stem": "A civil servant may obtain additional professional education:",
+      "options": {
+        "a": "Both in the Russian Federation and abroad",
+        "b": "Only in the Russian Federation",
+        "c": "Only in the Russian Federation and other CIS member states",
+        "d": "In the Russian Federation, and abroad if relevant international agreements exist"
+      }
+    },
+    "MT4-0508": {
+      "stem": "Which is NOT a basis for sending a civil servant for additional professional education?",
+      "options": {
+        "a": "Appointment to another civil-service position through competitive promotion",
+        "b": "Inclusion in the personnel reserve through competitive selection",
+        "c": "The results of the civil servant's appraisal",
+        "d": "The civil servant's written application"
+      }
+    },
+    "MT4-0509": {
+      "stem": "Additional professional education for a civil servant includes:",
+      "options": {
+        "a": "Professional retraining and further training",
+        "b": "A second higher-education degree and professional retraining",
+        "c": "An internship",
+        "d": "Preparatory courses",
+        "e": "Postgraduate research study and external degree candidacy"
+      }
+    },
+    "MT4-0510": {
+      "stem": "A civil servant's monetary remuneration consists of:",
+      "options": {
+        "a": "Position salary and class-rank salary",
+        "b": "Position salary, class-rank salary and additional payments",
+        "c": "Position salary, class-rank salary and financial support",
+        "d": "Class-rank salary"
+      }
+    },
+    "MT4-0511": {
+      "stem": "What monthly long-service supplement to the position salary is payable for more than 15 years of civil service?",
+      "options": {
+        "a": "20 percent",
+        "b": "30 percent",
+        "c": "15 percent",
+        "d": "25 percent"
+      }
+    },
+    "MT4-0512": {
+      "stem": "Is municipal-service time included when calculating length of civil service?",
+      "options": {
+        "a": "Yes",
+        "b": "No",
+        "c": "Yes, if the civil servant was in state service before holding municipal-service positions",
+        "d": "Yes, at a ratio of 2 to 1"
+      }
+    },
+    "MT4-0513": {
+      "stem": "The amounts of position salaries and class-rank salaries for federal state civil servants are established by:",
+      "options": {
+        "a": "Federal law",
+        "b": "A decree of the President of the Russian Federation on the Government's submission",
+        "c": "The Government of the Russian Federation",
+        "d": "The head of the relevant federal executive body for federal state civil servants holding positions in that body"
+      }
+    },
+    "MT4-0514": {
+      "stem": "What amount must the employer's representative pay a civil servant if their service contract is terminated because mandatory rules for its conclusion were violated through no fault of the civil servant?",
+      "options": {
+        "a": "One month's monetary remuneration",
+        "b": "The salary",
+        "c": "Two months' monetary remuneration",
+        "d": "No payment is required"
+      }
+    },
+    "MT4-0515": {
+      "stem": "The maximum age for remaining in civil service is:",
+      "options": {
+        "a": "55 for women and 60 for men",
+        "b": "60 years; this rule applies until 1 January 2017 under Federal Law No. 143-FZ of 23 May 2016",
+        "c": "65 years",
+        "d": "70 years"
+      }
+    },
+    "MT4-0516": {
+      "stem": "While a civil servant is suspended from their position and barred from performing official duties, monetary remuneration:",
+      "options": {
+        "a": "Accrues in full in all cases",
+        "b": "Never accrues",
+        "c": "Accrues when suspension is for resolution of a conflict of interest",
+        "d": "Does not accrue when suspension is for resolution of a conflict of interest, but accrues in other cases"
+      }
+    },
+    "MT4-0517": {
+      "stem": "State supervision over compliance with Russian state civil-service legislation is exercised by:",
+      "options": {
+        "a": "Courts",
+        "b": "Prosecution authorities",
+        "c": "Justice authorities",
+        "d": "The Control and Accounts Chamber of the Russian Federation"
+      }
+    },
+    "MT4-0518": {
+      "stem": "The list of indicators for assessing the effectiveness of a constituent entity's executive authorities is approved by:",
+      "options": {
+        "a": "The constituent entity's legislature",
+        "b": "The constituent entity's highest official",
+        "c": "The President of the Russian Federation",
+        "d": "Federal law"
+      }
+    },
+    "MT4-0519": {
+      "stem": "Which legal act approves the Register of Federal State Civil-Service Positions?",
+      "options": {
+        "a": "A decree of the President of the Russian Federation",
+        "b": "A resolution of the Government of the Russian Federation",
+        "c": "An order of the head of Rosreestr",
+        "d": "An order of the Minister of Labour of the Russian Federation"
+      }
+    }
+  },
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943"
+}

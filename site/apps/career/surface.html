@@ -180,6 +180,9 @@
           <div><span class="step-kicker">Этап 2 из 3</span><h1>Какие сферы Вам интересны?</h1><p>Отметьте четыре наиболее привлекательные сферы в порядке приоритета и две сферы, которые сейчас интересуют Вас меньше всего.</p></div>
           <div class="selection-status"><strong id="priority-count">0 / 4</strong><span>в приоритете</span><strong id="low-count">0 / 2</strong><span>не в приоритете</span></div>
         </div>
+        <div class="sector-selection-toolbar"><p>Перетащите строку, чтобы изменить порядок. На телефоне сначала удерживайте её.</p><button id="sectors-reset" type="button">Сбросить выбор</button></div>
+        <p id="sector-drag-help" class="sector-sr-only">Пробел — взять строку; стрелки вверх и вниз — переместить; пробел — подтвердить; Escape — отменить.</p>
+        <p id="sector-order-status" class="sector-sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
         <div id="sector-grid" class="sector-grid"></div>
         <div class="sticky-actions">
           <button class="button button-secondary" type="button" data-route="test"><svg><use href="#i-arrow-left"/></svg>К вопросам</button>
@@ -295,7 +298,7 @@
       <section id="view-methodology" class="view methodology-view" hidden>
         <div class="methodology-hero">
           <div><h1>Как строится рекомендация</h1><p>Тест является учебным профориентационным инструментом. Он сопоставляет выраженные интересы студента с карьерными треками, сферами деятельности и условиями работы в публичном секторе.</p></div>
-          <div class="version-badge"><span>Версия платформы</span><strong>1.0 · Модель 8.0</strong><small>Открытые формулы, авторские допущения и проверка результатов</small></div>
+          <div class="version-badge"><span>Как считается индекс</span><strong>Интересы и направления работы</strong><small>Открытые формулы и понятные объяснения</small></div>
         </div>
         <div class="methodology-grid">
           <article><span class="method-number">01</span><h2>Профессиональные интересы</h2><p>27 утверждений образуют девять шкал. Каждый пункт описывает одну наблюдаемую рабочую задачу и оценивается от «совершенно неинтересно» до «очень интересно».</p></article>
@@ -310,9 +313,9 @@
           <b>+</b>
           <div><span>15%</span><strong>Условия труда</strong></div>
           <b>=</b>
-          <div class="formula-result"><span>0–100</span><strong>Индекс относительного соответствия</strong></div>
+          <div class="formula-result"><span>0–100</span><strong>Оценка направления</strong></div>
         </div>
-        <div class="methodology-details">
+        <p>Индекс учреждения: 70% оценки лучшего направления + 30% среднего по всем уникальным направлениям. Поэтому учитывается не только один подходящий трек, но и общий профиль работы учреждения.</p><div class="methodology-details">
           <article><h2>Плавный расчёт и уровень интереса</h2><p>Влияние формы интересов ослабляется плавно при близких ответах. Отдельно показывается отсутствие положительного интереса. Равные индексы означают неразличимость в этой модели, а не одинаковую профессиональную пригодность.</p></article>
           <article><h2>Уточнение предметной области</h2><p>В двух ведущих сферах могут появиться короткие необязательные уточнения. Без ответа система сохраняет широкую область. Итог также учитывает авторский коэффициент представленности направления: 1,00; 0,96 или 0,91.</p></article>
           <article>
@@ -325,12 +328,12 @@
           </article>
         </div>
         <div class="document-links">
-          <a href="docs/METHODOLOGY-STAGE8.md" target="_blank"><svg><use href="#i-method"/></svg><span><strong>Полная методика</strong><small>Формулы, шкалы и правила интерпретации</small></span></a>
-          <a href="docs/AUDIT-1.0.md" target="_blank"><svg><use href="#i-source"/></svg><span><strong>Основания и открытые замечания</strong><small>Сферы, треки, источники и уровни уверенности</small></span></a>
+          <a href="docs/METHODOLOGY.md" target="_blank"><svg><use href="#i-method"/></svg><span><strong>Полная методика</strong><small>Формулы, шкалы и правила интерпретации</small></span></a>
+          <a href="docs/SOURCES.md" target="_blank"><svg><use href="#i-source"/></svg><span><strong>Основания и открытые замечания</strong><small>Сферы, треки, источники и уровни уверенности</small></span></a>
           <a href="reports/stage8/independent-audit.json" target="_blank"><svg><use href="#i-eye"/></svg><span><strong>Машиночитаемый аудит</strong><small>Покрытие реестра и результаты сценарных проверок</small></span></a>
-          <a href="docs/TEACHER-GUIDE-STAGE8.md" target="_blank"><svg><use href="#i-seminar"/></svg><span><strong>Руководство для преподавателя</strong><small>Сценарий семинара и вопросы для обсуждения</small></span></a>
+          <a href="docs/TEACHER-GUIDE.md" target="_blank"><svg><use href="#i-seminar"/></svg><span><strong>Руководство для преподавателя</strong><small>Сценарий семинара и вопросы для обсуждения</small></span></a>
         </div>
-      <div class="language-method-note"><p>Модель расчёта: 8.0.0. Индексы прежних версий напрямую не сопоставимы.</p><p>Переводы обеспечивают доступ к учебному материалу, но не подтверждают психометрическую эквивалентность языковых версий. Официальные русские названия органов сохранены рядом с рабочими переводами.</p></div></section>
+      <div class="language-method-note"><p>Переводы обеспечивают доступ к учебному материалу, но не подтверждают психометрическую эквивалентность языковых версий. Официальные русские названия органов сохранены рядом с рабочими переводами.</p></div></section>
 
       <section id="view-structure" class="view workspace-view" hidden>
         <div class="workspace-heading"><div><h1>Система органов власти</h1><p>От руководства деятельностью к ведомству и территориальному уровню. Выберите ветвь, чтобы разобраться в подчинённости.</p></div><button type="button" id="structure-home" class="button button-secondary">К началу схемы</button></div>

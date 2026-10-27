@@ -1,0 +1,3583 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-10-27",
+  "evidenceType": "synthetic-linguistic-content-review",
+  "scope": "Все 210 языковых заданий прочитаны. Это проверка заданий и ключей, не измерение образовательного эффекта и не человеческая аттестация.",
+  "sourceSha256": "0800769a95d70a69b82ea5187c714a28af303c27db5cfbb1ffcf7305ad904f24",
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943",
+  "questions": [
+    {
+      "id": "MT4-0001",
+      "number": 1,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0002",
+      "number": 2,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0003",
+      "number": 3,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0004",
+      "number": 4,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0005",
+      "number": 5,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0006",
+      "number": 6,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0007",
+      "number": 7,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0008",
+      "number": 8,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0009",
+      "number": 9,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0010",
+      "number": 10,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0011",
+      "number": 11,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0012",
+      "number": 12,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0013",
+      "number": 13,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0014",
+      "number": 14,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0015",
+      "number": 15,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0016",
+      "number": 16,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0017",
+      "number": 17,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0018",
+      "number": 18,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0019",
+      "number": 19,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0020",
+      "number": 20,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0021",
+      "number": 21,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0022",
+      "number": 22,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0023",
+      "number": 23,
+      "sectionId": "russian",
+      "status": "retired",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "В печатном тексте последняя позиция обозначена «подсвече()ы», но варианты и ключ ссылаются на номер4. До явного исправления нумерации задание не используется.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0024",
+      "number": 24,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0025",
+      "number": 25,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0026",
+      "number": 26,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0027",
+      "number": 27,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0028",
+      "number": 28,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0029",
+      "number": 29,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0030",
+      "number": 30,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0031",
+      "number": 31,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Формулировка о двойной согласной и вариант «дилемм…а» допускают разное понимание роли пропуска. Требуется редакторская формулировка до оценивания.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0032",
+      "number": 32,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0033",
+      "number": 33,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0034",
+      "number": 34,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0035",
+      "number": 35,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0036",
+      "number": 36,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "В непроверяемой части исходного предложения опечатки «филосовском», «Серебря(3)ого век». Не исправлять незаметно; требуется редакторская версия.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0037",
+      "number": 37,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0038",
+      "number": 38,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0039",
+      "number": 39,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0040",
+      "number": 40,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0041",
+      "number": 41,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0042",
+      "number": 42,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0043",
+      "number": 43,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0044",
+      "number": 44,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0045",
+      "number": 45,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0046",
+      "number": 46,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0047",
+      "number": 47,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0048",
+      "number": 48,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0049",
+      "number": 49,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0050",
+      "number": 50,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0051",
+      "number": 51,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0052",
+      "number": 52,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0053",
+      "number": 53,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0054",
+      "number": 54,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0055",
+      "number": 55,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0056",
+      "number": 56,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "В ключевом ряду исходная опечатка «бе…дейстиве». До выпуска исправленной редакции задание исключено из выдачи.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0057",
+      "number": 57,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0058",
+      "number": 58,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0059",
+      "number": 59,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0060",
+      "number": 60,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0061",
+      "number": 61,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0062",
+      "number": 62,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0063",
+      "number": 63,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0064",
+      "number": 64,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0065",
+      "number": 65,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0066",
+      "number": 66,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0067",
+      "number": 67,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0068",
+      "number": 68,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0069",
+      "number": 69,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0070",
+      "number": 70,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0071",
+      "number": 71,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0072",
+      "number": 72,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0073",
+      "number": 73,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография и словоизменение. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0074",
+      "number": 74,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0075",
+      "number": 75,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0076",
+      "number": 76,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Требуется согласовать академическое и официальное написание «Конституционный Суд» и названия комиссии ООН. Только напечатанного единственного ключа недостаточно для снятия неоднозначности.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0077",
+      "number": 77,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Повтор спорного варианта с официальным названием Конституционного Суда. Нужна единая редакторская норма прописных букв.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0078",
+      "number": 78,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0079",
+      "number": 79,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0080",
+      "number": 80,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0081",
+      "number": 81,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0082",
+      "number": 82,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0083",
+      "number": 83,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0084",
+      "number": 84,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0085",
+      "number": 85,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0086",
+      "number": 86,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0087",
+      "number": 87,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0088",
+      "number": 88,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0089",
+      "number": 89,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0090",
+      "number": 90,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0091",
+      "number": 91,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0092",
+      "number": 92,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0093",
+      "number": 93,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0094",
+      "number": 94,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0095",
+      "number": 95,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0096",
+      "number": 96,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0097",
+      "number": 97,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0098",
+      "number": 98,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0099",
+      "number": 99,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0100",
+      "number": 100,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0101",
+      "number": 101,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — орфография, прописные буквы и формы числительных. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0102",
+      "number": 102,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0103",
+      "number": 103,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0104",
+      "number": 104,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0105",
+      "number": 105,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0106",
+      "number": 106,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0107",
+      "number": 107,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0108",
+      "number": 108,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0109",
+      "number": 109,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0110",
+      "number": 110,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0111",
+      "number": 111,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0112",
+      "number": 112,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0113",
+      "number": 113,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0114",
+      "number": 114,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0115",
+      "number": 115,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0116",
+      "number": 116,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0117",
+      "number": 117,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0118",
+      "number": 118,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0119",
+      "number": 119,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0120",
+      "number": 120,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0121",
+      "number": 121,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0122",
+      "number": 122,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0123",
+      "number": 123,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0124",
+      "number": 124,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0125",
+      "number": 125,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0126",
+      "number": 126,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0127",
+      "number": 127,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0128",
+      "number": 128,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0129",
+      "number": 129,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Пунктуационное решение в альтернативном пояснительном предложении с «это» требует отдельной редакторской проверки. Не использовать спорный distractor при автоматическом оценивании.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0130",
+      "number": 130,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0131",
+      "number": 131,
+      "sectionId": "russian",
+      "status": "retired",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Нельзя считать альтернативное тире при пояснении/обосновании безусловной ошибкой: академические правила допускают тире вместо двоеточия. Единственный печатный ключ не обеспечивает однозначного оценивания.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules",
+        "https://ruslang.ru/sites/default/files/doc/ortho/Dymarskij_orthcomm_24122023.pdf"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0132",
+      "number": 132,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0133",
+      "number": 133,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0134",
+      "number": 134,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0135",
+      "number": 135,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0136",
+      "number": 136,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0137",
+      "number": 137,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0138",
+      "number": 138,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0139",
+      "number": 139,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0140",
+      "number": 140,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0141",
+      "number": 141,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0142",
+      "number": 142,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0143",
+      "number": 143,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0144",
+      "number": 144,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0145",
+      "number": 145,
+      "sectionId": "russian",
+      "status": "retired",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Печатный ключ c требует запятую после союза «однако» в начале второй части. В данной конструкции это противительный союз, а не вводное слово; ключ не согласуется с правилом.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules",
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/odnako-zhe-zh"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0146",
+      "number": 146,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — пунктуация. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0147",
+      "number": 147,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0148",
+      "number": 148,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0149",
+      "number": 149,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0150",
+      "number": 150,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0151",
+      "number": 151,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0152",
+      "number": 152,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0153",
+      "number": 153,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0154",
+      "number": 154,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0155",
+      "number": 155,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — ударение и склонение имён. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://orfo.ruslang.ru/?hl=ru",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0156",
+      "number": 156,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Для фрагмента «Работа по выполнению» не указан зависимый контекст; абсолютная неправильность альтернативы не доказана. Нужна более определённая формулировка.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0157",
+      "number": 157,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0158",
+      "number": 158,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0159",
+      "number": 159,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0160",
+      "number": 160,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0161",
+      "number": 161,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0162",
+      "number": 162,
+      "sectionId": "russian",
+      "status": "retired",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Вариант b «уделить серьезное значение» тоже нарушает сочетаемость («уделить внимание» / «придать значение»), но печатный ключ отмечает только c. До исправления набора ответов вопрос не используется.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0163",
+      "number": 163,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0164",
+      "number": 164,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0165",
+      "number": 165,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0166",
+      "number": 166,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0167",
+      "number": 167,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0168",
+      "number": 168,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0169",
+      "number": 169,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0170",
+      "number": 170,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0171",
+      "number": 171,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0172",
+      "number": 172,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0173",
+      "number": 173,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0174",
+      "number": 174,
+      "sectionId": "russian",
+      "status": "review-needed",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Для «почеркнуть» не задано значение/контекст; требуется словарная проверка самостоятельного глагола, а не предположение о пропущенной д в «подчеркнуть».",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0175",
+      "number": 175,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0176",
+      "number": 176,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0177",
+      "number": 177,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0178",
+      "number": 178,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0179",
+      "number": 179,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0180",
+      "number": 180,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0181",
+      "number": 181,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0182",
+      "number": 182,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0183",
+      "number": 183,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0184",
+      "number": 184,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0185",
+      "number": 185,
+      "sectionId": "russian",
+      "status": "retired",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Перед «налогового периода» грамматически допустимы и «после», и «по истечении». Нет контекста, который исключал бы вариант b при печатном единственном ключе c.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0186",
+      "number": 186,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0187",
+      "number": 187,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0188",
+      "number": 188,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0189",
+      "number": 189,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0190",
+      "number": 190,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0191",
+      "number": 191,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0192",
+      "number": 192,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0193",
+      "number": 193,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0194",
+      "number": 194,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0195",
+      "number": 195,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0196",
+      "number": 196,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0197",
+      "number": 197,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0198",
+      "number": 198,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0199",
+      "number": 199,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0200",
+      "number": 200,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0201",
+      "number": 201,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0202",
+      "number": 202,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0203",
+      "number": 203,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0204",
+      "number": 204,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0205",
+      "number": 205,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules",
+        "https://fil.unn.ru/nauka/nauchno-prosvetitelskie-proekty/gramotnyj-nizhnij/chasto-zadavaemye-voprosy-o-russkom-yazyke/?view-version=visually-impaired"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0206",
+      "number": 206,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — управление, сочетаемость и деловой стиль. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0207",
+      "number": 207,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — понимание русского исходного текста. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0208",
+      "number": 208,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — понимание русского исходного текста. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0209",
+      "number": 209,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — понимание русского исходного текста. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0210",
+      "number": 210,
+      "sectionId": "russian",
+      "status": "verified",
+      "checkedAt": "2026-10-27",
+      "evidenceType": "synthetic-linguistic-content-review",
+      "reviewDepth": "read-stem-all-options-and-printed-key",
+      "reason": "Прочитаны формулировка, все варианты и печатный ключ; проверяемый предмет — понимание русского исходного текста. Изменчивые правовые сведения внутри языковых примеров не используются как действующая правовая норма. Образцы и варианты сохраняются по-русски.",
+      "sourceUrls": [
+        "https://gramota.ru/biblioteka/spravochniki/spravochnik-po-punktuatsii/prilozhenie-2-vvodnye-slova-i-sochetaniya",
+        "https://orfo.ruslang.ru/rules"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    }
+  ]
+}

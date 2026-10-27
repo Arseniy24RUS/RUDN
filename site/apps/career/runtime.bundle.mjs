@@ -35,10 +35,10 @@ var CareerRuntime = (() => {
   });
 
   // site/apps/career/assets/versions.mjs
-  var MODEL_VERSION = "8.0.0";
+  var MODEL_VERSION = "8.1.0";
   var QUESTIONNAIRE_VERSION = "8.0.0";
   var REGISTRY_VERSION = "ru-public-careers-2026-09-05-stage8";
-  var SCORING_REVISION = "smooth065-path-scoped-domains-v8";
+  var SCORING_REVISION = "smooth065-path-portfolio70-30-v8.1";
   var RELEASE_VERSION = "1.0.0";
 
   // site/apps/career/assets/topics.mjs
@@ -59,6 +59,18 @@ var CareerRuntime = (() => {
     const coverage = path.topics?.[sectorId];
     if (!coverage?.length) return 1;
     return coverage.includes(choice) ? 1 : 0.7;
+  }
+
+  // site/apps/career/assets/model-upgrade.mjs
+  var PREVIOUS_MODEL_VERSION = "8.0.0";
+  var PREVIOUS_SCORING_REVISION = "smooth065-path-scoped-domains-v8";
+  var compatibleInputModel = (version) => [MODEL_VERSION, PREVIOUS_MODEL_VERSION].includes(version);
+  function upgradePreviousDraft(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value) || value.schema !== 4 || value.modelVersion !== PREVIOUS_MODEL_VERSION || value.questionnaireVersion !== QUESTIONNAIRE_VERSION || value.registryVersion !== REGISTRY_VERSION || !value.answers || !value.conditions) return null;
+    return { ...structuredClone(value), modelVersion: MODEL_VERSION, completedAt: null, resultRecordId: null };
+  }
+  function canReuseScenarioInputs(item) {
+    return item?.modelVersion === PREVIOUS_MODEL_VERSION && item.scoringRevision === PREVIOUS_SCORING_REVISION;
   }
 
   // site/apps/career/assets/session-transfer.mjs
@@ -89,7 +101,7 @@ var CareerRuntime = (() => {
   function parseSession(text2, questions, sectors) {
     if (typeof text2 !== "string" || new TextEncoder().encode(text2).length > SESSION_LIMIT) throw Error("file-size");
     const v = JSON.parse(text2);
-    if (!allowed(v, ["schema", "schemaVersion", "releaseVersion", "modelVersion", "questionnaireVersion", "registryVersion", "savedAt", "inputs"]) || v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || v.modelVersion !== MODEL_VERSION || v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error("version");
+    if (!allowed(v, ["schema", "schemaVersion", "releaseVersion", "modelVersion", "questionnaireVersion", "registryVersion", "savedAt", "inputs"]) || v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || !compatibleInputModel(v.modelVersion) || v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error("version");
     const i = v.inputs, qids = questions.map((q) => q.id), sids = sectors.map((s) => s.id);
     if (!allowed(i, ["answers", "prioritySectors", "lowPrioritySectors", "conditions", "focusAreas"]) || !allowed(i.answers, qids) || !Object.values(i.answers).every(score) || !allowed(i.conditions, conditions) || !Object.values(i.conditions).every(score)) throw Error("answers");
     for (const [key, limit] of [["prioritySectors", 4], ["lowPrioritySectors", 2]]) {
@@ -98,6 +110,1535 @@ var CareerRuntime = (() => {
     if (i.prioritySectors.some((id) => i.lowPrioritySectors.includes(id)) || !plain(i.focusAreas) || !validateFocusAreas(i.focusAreas, i.prioritySectors)) throw Error("focus");
     return structuredClone(i);
   }
+
+  // site/apps/career/data/authority-symbols.json
+  var authority_symbols_default = {
+    schemaVersion: 1,
+    checkedAt: "2026-10-27",
+    symbols: {
+      mvd: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/mvd_rf.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0412\u0414 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Internal_Affairs.svg",
+        license: "Public domain",
+        credit: "\u041C\u0412\u0414 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Internal_Affairs.svg",
+        sha256: "fb717bc02ceec51a6f9d609718836d5708ef3799b7fcd659e2847f8e30a1be47",
+        bytes: 223904,
+        reusedFrom: "site/data/symbol_manifest.json#russian_mvd",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      mid: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/mfa_russia.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0418\u0414 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Foreign_Affairs_of_Russia.svg",
+        license: "Public domain",
+        credit: "\u041C\u0418\u0414 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Foreign_Affairs_of_Russia.svg",
+        sha256: "cf6376b66ab7ee369b3b6b26b93e7e54fa9be18de360e6002ba69ca6d197ef68",
+        bytes: 379030,
+        reusedFrom: "site/data/symbol_manifest.json#mfa_russia",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      minzdrav: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/minhealth_rf.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0437\u0434\u0440\u0430\u0432 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Health_of_Russia.svg",
+        license: "Public domain",
+        credit: "\u041C\u0438\u043D\u0437\u0434\u0440\u0430\u0432 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Health_of_Russia.svg",
+        sha256: "ff81270e337bdfb3b02f830bad3cc7a35a96200dbdb1c7398cec6f24f656214d",
+        bytes: 400014,
+        reusedFrom: "site/data/symbol_manifest.json#russian_health_ministry",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      minobrnauki: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/minobrnauki_rf.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u043E\u0431\u0440\u043D\u0430\u0443\u043A\u0438 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Science_and_Higher_Education.svg",
+        license: "Public domain",
+        credit: "\u041C\u0438\u043D\u043E\u0431\u0440\u043D\u0430\u0443\u043A\u0438 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Science_and_Higher_Education.svg",
+        sha256: "a57ad32c3939ed852ed47ab5a93ab8b27f3b4082c658d615dc3d1ac574203fb9",
+        bytes: 152286,
+        reusedFrom: "site/data/symbol_manifest.json#russian_minobrnauki",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      minfin: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/minfin_rf.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0444\u0438\u043D \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Digital_emblem_of_the_Ministry_of_Finance_(Russia).svg",
+        license: "Public domain",
+        credit: "\u041C\u0438\u043D\u0444\u0438\u043D \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Digital_emblem_of_the_Ministry_of_Finance_(Russia).svg",
+        sha256: "471056261a41171f1134b4f08ab27bd152e9b6a7fa3f2573caf5eefbdcf76de2",
+        bytes: 98664,
+        reusedFrom: "site/data/symbol_manifest.json#russian_minfin",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      fns: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/fns_rf.webp",
+        kind: "official_emblem",
+        title: "\u0424\u041D\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Tax_Service.svg",
+        license: "Public domain",
+        credit: "\u0424\u041D\u0421 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Tax_Service.svg",
+        sha256: "86a2ce0fd830e0f65ee696953bb61be5850a1139f95eedee7b7c15939ff2c312",
+        bytes: 389244,
+        reusedFrom: "site/data/symbol_manifest.json#federal_tax_service",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      treasury: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/treasury_rf.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u0430\u0437\u043D\u0430\u0447\u0435\u0439\u0441\u0442\u0432\u043E",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%B4%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BD%D0%B0%D0%BA-%D1%8D%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BA%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B0.png",
+        license: "CC0",
+        credit: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u0430\u0437\u043D\u0430\u0447\u0435\u0439\u0441\u0442\u0432\u043E \u2014 https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%B4%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_%D0%B7%D0%BD%D0%B0%D0%BA-%D1%8D%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BA%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%B9%D1%81%D1%82%D0%B2%D0%B0.png",
+        sha256: "c4aecb833eca283481f002b2ad427a550d19cfbac82c57b019ffbfad35bddfd6",
+        bytes: 355122,
+        reusedFrom: "site/data/symbol_manifest.json#federal_treasury",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      rosstat: {
+        src: "assets/authority-symbols/rosstat.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0441\u0442\u0430\u0442",
+        source: "https://commons.wikimedia.org/wiki/File:Russian_Federal_State_Statistics_Service_Emblem.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Russian_Federal_State_Statistics_Service_Emblem.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Russian_Federal_State_Statistics_Service_Emblem.svg/330px-Russian_Federal_State_Statistics_Service_Emblem.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0441\u0442\u0430\u0442",
+        description: "Russian Federal State Statistics Service Emblem, 2014-04-01",
+        sha256: "de5c84a58a29156714f387e18540ebe516c94f4b78295a63e19bb3ce51e2f072",
+        bytes: 53854,
+        width: 218,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "cd347d084898fa1764da692d39fdbc929ee0ef571c1f5da107b1317a6eeed7f3",
+        originalBytes: 96159,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosselkhoznadzor: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/rosselkhoznadzor.webp",
+        kind: "official_emblem",
+        title: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0420\u043E\u0441\u0441\u0435\u043B\u044C\u0445\u043E\u0437\u043D\u0430\u0434\u0437\u043E\u0440\u0430",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Veterinary_and_Phytosanitary_Supervision.svg",
+        license: "Public domain / PD-RU-exempt",
+        credit: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0420\u043E\u0441\u0441\u0435\u043B\u044C\u0445\u043E\u0437\u043D\u0430\u0434\u0437\u043E\u0440\u0430 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Veterinary_and_Phytosanitary_Supervision.svg",
+        sha256: "2fc978c6ec833f6d4f7945599d5c738c467c48568c8366a372da64167a34df2c",
+        bytes: 403134,
+        reusedFrom: "site/data/symbol_manifest.json#bryansk_rosselkhoznadzor",
+        width: 1200,
+        height: 1200,
+        hasTransparency: true
+      },
+      fas: {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/fas_rf.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0410\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Embllem_of_the_Federal_Antimonopoly_Service.svg",
+        license: "Public domain",
+        credit: "\u0424\u0410\u0421 \u0420\u043E\u0441\u0441\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Embllem_of_the_Federal_Antimonopoly_Service.svg",
+        sha256: "670300e021460334c40fdf862427600b3e836c97193b8ecc44df5539b04156ec",
+        bytes: 338262,
+        reusedFrom: "site/data/symbol_manifest.json#fas_russia",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "state-duma-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/state_duma.webp",
+        kind: "official_emblem",
+        title: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0414\u0443\u043C\u0430",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_gosduma.svg",
+        license: "Public domain",
+        credit: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0414\u0443\u043C\u0430 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_gosduma.svg",
+        sha256: "9f11a49965dfbec66450fa5ff5a654b9f22ce38d7897b885a16f1a5faea7d95f",
+        bytes: 496072,
+        reusedFrom: "site/data/symbol_manifest.json#state_duma_staff",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "federation-council-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/federation_council.webp",
+        kind: "official_emblem",
+        title: "\u0421\u043E\u0432\u0435\u0442 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federation_Council_of_Russia_(simple).svg",
+        license: "Public domain",
+        credit: "\u0421\u043E\u0432\u0435\u0442 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federation_Council_of_Russia_(simple).svg",
+        sha256: "85394202560fc070455b2f5d329ddd598c804079513f65c4a843c7c2c22241f3",
+        bytes: 55262,
+        reusedFrom: "site/data/symbol_manifest.json#federation_council",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "supreme-court-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/supreme_court_rf.webp",
+        kind: "official_emblem",
+        title: "\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u044B\u0439 \u0421\u0443\u0434 \u0420\u0424",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Supreme_Court_of_Russia.svg",
+        license: "Public domain",
+        credit: "\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u044B\u0439 \u0421\u0443\u0434 \u0420\u0424 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Supreme_Court_of_Russia.svg",
+        sha256: "096177e7cd83f2448000a616c6acf735af299a357106d63f5374e3fe3ffa0acd",
+        bytes: 349294,
+        reusedFrom: "site/data/symbol_manifest.json#supreme_court_rf",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "constitutional-court-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/constitutional_court_rf.webp",
+        kind: "official_emblem",
+        title: "\u041A\u043E\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u043D\u044B\u0439 \u0421\u0443\u0434 \u0420\u0424",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Russian_Soviet_Federative_Socialist_Republic_(1978%E2%80%931991),_Emblem_of_the_Russian_Federation_(1991%E2%80%931992).svg",
+        license: "Public domain",
+        credit: "\u041A\u043E\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u043D\u044B\u0439 \u0421\u0443\u0434 \u0420\u0424 \u2014 https://commons.wikimedia.org/wiki/File:Emblem_of_the_Russian_Soviet_Federative_Socialist_Republic_(1978%E2%80%931991),_Emblem_of_the_Russian_Federation_(1991%E2%80%931992).svg",
+        sha256: "e74db1bb68ddadcc17816156ee70898a889eed8bd93b113a6f250baa3a9e29af",
+        bytes: 271494,
+        reusedFrom: "site/data/symbol_manifest.json#constitutional_court_rf",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "chelyabinsk-assembly-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/chelyabinsk_oblast.webp",
+        kind: "jurisdiction_coat",
+        title: "\u0427\u0435\u043B\u044F\u0431\u0438\u043D\u0441\u043A\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C",
+        source: "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Chelyabinsk_Oblast.svg",
+        license: "Public domain",
+        credit: "\u0427\u0435\u043B\u044F\u0431\u0438\u043D\u0441\u043A\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u2014 https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Chelyabinsk_Oblast.svg",
+        sha256: "df90e41f38d0d8d35f1b09417e05d7809aa4f38dfea305a8ad0ea74a73bb0680",
+        bytes: 241102,
+        reusedFrom: "site/data/symbol_manifest.json#chelyabinsk_region_government",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "stp-finance-committee": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/saint_petersburg.webp",
+        kind: "jurisdiction_coat",
+        title: "\u0421\u0430\u043D\u043A\u0442-\u041F\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433",
+        source: "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Saint_Petersburg.svg",
+        license: "Public domain",
+        credit: "\u0421\u0430\u043D\u043A\u0442-\u041F\u0435\u0442\u0435\u0440\u0431\u0443\u0440\u0433 \u2014 https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Saint_Petersburg.svg",
+        sha256: "bfab2788d5360ba11f5c9ac6bbf743b408b2970978e10bbe7db30d322628b0a3",
+        bytes: 326e3,
+        reusedFrom: "site/data/symbol_manifest.json#saint_petersburg_legislative_assembly",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "novosibirsk-mayor-office": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/novosibirsk_city.webp",
+        kind: "jurisdiction_coat",
+        title: "\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A",
+        source: "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Novosibirsk.svg",
+        license: "Public domain",
+        credit: "\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A \u2014 https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Novosibirsk.svg",
+        sha256: "c0da295732e873aa8f2c3293dd860087027815ed6e959cd48d5cef505a57d2ce",
+        bytes: 218904,
+        reusedFrom: "site/data/symbol_manifest.json#novosibirsk_city_hall",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      "novosibirsk-council-staff": {
+        src: "../../assets/course/quiz_media/branches_levels/symbols-v071/novosibirsk_city.webp",
+        kind: "jurisdiction_coat",
+        title: "\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A",
+        source: "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Novosibirsk.svg",
+        license: "Public domain",
+        credit: "\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A \u2014 https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Novosibirsk.svg",
+        sha256: "c0da295732e873aa8f2c3293dd860087027815ed6e959cd48d5cef505a57d2ce",
+        bytes: 218904,
+        reusedFrom: "site/data/symbol_manifest.json#novosibirsk_city_hall",
+        width: 960,
+        height: 960,
+        hasTransparency: true
+      },
+      mchs: {
+        src: "assets/authority-symbols/mchs.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0427\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Great_emblem_of_the_Russian_Ministry_of_Emergency_Situations.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Great_emblem_of_the_Russian_Ministry_of_Emergency_Situations.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Great_emblem_of_the_Russian_Ministry_of_Emergency_Situations.svg/330px-Great_emblem_of_the_Russian_Ministry_of_Emergency_Situations.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Ministry of Emergency Situations (Russia) \u0410\u043D\u043D\u0430 \u039C\u0430\u0440\u0442\u044B\u043D\u043E\u0432\u0430",
+        description: "Great emblem of the Russian Ministry of Emergency Situations",
+        sha256: "ffc9e0c5c8480935a13ed68b7b440bbc938ef9091785e302726528a3d80a06b9",
+        bytes: 53740,
+        width: 186,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "276051ba6afedaf40bfe243316941fd7fe1a79448e7f2042ebd85f84059b06f7",
+        originalBytes: 145732,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rossotrudnichestvo: {
+        src: "assets/authority-symbols/rossotrudnichestvo.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u043E",
+        source: "https://commons.wikimedia.org/wiki/File:Rossotrudnichestvo.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/6/67/Rossotrudnichestvo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Rossotrudnichestvo.png/330px-Rossotrudnichestvo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041F\u0440\u0435\u0441\u0441-\u0441\u043B\u0443\u0436\u0431\u0430 \u0420\u043E\u0441\u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u0430",
+        description: "Logo of Rossotrudnichestvo",
+        sha256: "f05b11560784cbc8a2da3cd819f2e16e2f348fad712f87d1bc358438f9fea935",
+        bytes: 53582,
+        width: 256,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "459a2eadc2b6bbdaf3ff1dc2ccc4b7416219200d6dd87745a9aebe1e07c3bf50",
+        originalBytes: 76800,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      roshydromet: {
+        src: "assets/authority-symbols/roshydromet.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0433\u0438\u0434\u0440\u043E\u043C\u0435\u0442",
+        source: "https://commons.wikimedia.org/wiki/File:Large_Emblem_of_the_Federal_Service_for_Hydrometeorology_and_Environmental_Monitoring_of_Russia.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Large_Emblem_of_the_Federal_Service_for_Hydrometeorology_and_Environmental_Monitoring_of_Russia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/Large_Emblem_of_the_Federal_Service_for_Hydrometeorology_and_Environmental_Monitoring_of_Russia.png/330px-Large_Emblem_of_the_Federal_Service_for_Hydrometeorology_and_Environmental_Monitoring_of_Russia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Government of Russia",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u0433\u0438\u0434\u0440\u043E\u043C\u0435\u0442\u0435\u043E\u0440\u043E\u043B\u043E\u0433\u0438\u0438 \u0438 \u043C\u043E\u043D\u0438\u0442\u043E\u0440\u0438\u043D\u0433\u0443 \u043E\u043A\u0440\u0443\u0436\u0430\u044E\u0449\u0435\u0439 \u0441\u0440\u0435\u0434\u044B \u041C\u043D\u043E\u0433\u043E\u0446\u0432\u0435\u0442\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442",
+        sha256: "22918917f12d047ffd8f12f16dc3888d6a17727d2707d3cc86604c2b2c7f74c0",
+        bytes: 67302,
+        width: 231,
+        height: 256,
+        hasTransparency: false,
+        originalSha256: "c98194e1859a0ee68e5ba06e011b36db3bf11c130c28dd197f188f0b3d412413",
+        originalBytes: 165887,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosleshoz: {
+        src: "assets/authority-symbols/rosleshoz.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043B\u0435\u0441\u0445\u043E\u0437",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%A0%D0%BE%D1%81%D0%BB%D0%B5%D1%81%D1%85%D0%BE%D0%B7.gif",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/4/4d/%D0%A0%D0%BE%D1%81%D0%BB%D0%B5%D1%81%D1%85%D0%BE%D0%B7.gif?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/%D0%A0%D0%BE%D1%81%D0%BB%D0%B5%D1%81%D1%85%D0%BE%D0%B7.gif/330px-%D0%A0%D0%BE%D1%81%D0%BB%D0%B5%D1%81%D1%85%D0%BE%D0%B7.gif?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Federal Forestry Agency (Rosleshoz) Ministry of Natural Resources and Ecology of Russia",
+        description: "The symbolism of the Federal Agency of the Russian Federation of Forestry (Rosleshoz)",
+        sha256: "60212600b85d714080fe995a552387ec467cb32349867e55272f9f2a44ab8b4c",
+        bytes: 86042,
+        width: 224,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "af41f3c46629828f3f655e6c93000632451fc71de959436a0ac6615ea0e655f2",
+        originalBytes: 64991,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosstandart: {
+        src: "assets/authority-symbols/rosstandart.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Rosstandard.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/6/6b/Emblem_of_Rosstandard.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Emblem_of_Rosstandard.png/330px-Emblem_of_Rosstandard.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442",
+        description: '\u0423\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D \u043F\u0440\u0438\u043A\u0430\u0437\u043E\u043C \u041C\u0438\u043D\u043F\u0440\u043E\u043C\u0442\u043E\u0440\u0433\u0430 \u0420\u0424 \u043E\u0442 20.02.2017 \u2116 479 "\u041E\u0431 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0438 \u0433\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430 - \u044D\u043C\u0431\u043B\u0435\u043C\u044B \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u0430 \u043F\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0440\u0435\u0433\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044E \u0438 \u043C\u0435\u0442\u0440\u043E\u043B\u043E\u0433\u0438\u0438". \u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u0430 \u043F\u043E \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u0438\u044E \u0441 \u0413\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u043C \u0441\u043E\u0432\u0435\u0442\u043E\u043C \u043F\u0440\u0438 \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0435 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438.',
+        sha256: "7680fff4fda232f26f143cbf8dc616527d6fd65d1a0ef6e3fb704b028db39d76",
+        bytes: 67202,
+        width: 240,
+        height: 256,
+        hasTransparency: false,
+        originalSha256: "846c432db79ef0877309cc9f5b56b4d20322c9d87c70ead1b057e1c8eeafabc6",
+        originalBytes: 158129,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minvostok: {
+        src: "assets/authority-symbols/minvostok.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0432\u043E\u0441\u0442\u043E\u043A\u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Minvostokrazvitiya.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/1/1c/Emblem_of_Minvostokrazvitiya.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Emblem_of_Minvostokrazvitiya.svg/330px-Emblem_of_Minvostokrazvitiya.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Unknown author Unknown author",
+        description: "\u0411\u043E\u043B\u044C\u0448\u0430\u044F \u044D\u043C\u0431\u043B\u0435\u043C\u0430 \u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438 \u043F\u043E \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044E \u0414\u0430\u043B\u044C\u043D\u0435\u0433\u043E \u0412\u043E\u0441\u0442\u043E\u043A\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0437\u043E\u043B\u043E\u0442\u043E\u0433\u043E, \u0443\u0432\u0435\u043D\u0447\u0430\u043D\u043D\u043E\u0433\u043E \u0442\u0440\u0435\u043C\u044F \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u043D\u044B\u043C\u0438 \u043B\u0435\u043D\u0442\u043E\u0439 \u043A\u043E\u0440\u043E\u043D\u0430\u043C\u0438 \u0434\u0432\u0443\u0433\u043B\u0430\u0432\u043E\u0433\u043E \u043E\u0440\u043B\u0430, \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0449\u0435\u0433\u043E \u043B\u0430\u043F\u0430\u043C\u0438 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u0439 \u043D\u0430 \u0435\u0433\u043E \u0433\u0440\u0443\u0434\u0438 \u043A\u0440\u0443\u0433\u043B\u044B\u0439 \u0449\u0438\u0442 \u043A\u0440\u0430\u0441\u043D\u043E - \u0441\u0438\u043D\u0435\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0441 \u0437\u043E\u043B\u043E\u0442\u0438\u0441\u0442\u043E\u0439 \u043E\u043A\u0430\u043D\u0442\u043E\u0432\u043A\u043E\u0439, \u0432 \u0446\u0435\u043D\u0442\u0440\u0435 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u043F\u043E\u043C\u0435\u0449\u0435\u043D\u043E \u0441\u0442\u0438\u043B\u0438\u0437\u043E\u0432\u0430\u043D\u043D\u043E\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0434\u0430\u043B\u044C\u043D\u0435\u0432\u043E\u0441\u0442\u043E\u0447\u043D\u043E\u0433\u043E \u043B\u043E\u0442\u043E\u0441\u0430 \u0441\u0435\u0440\u0435\u0431\u0440\u0438\u0441\u0442\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430",
+        sha256: "c30a3e278ce670cbab45d73e6cdd7cde09072a0641f91a72a931841ed9de6b1c",
+        bytes: 50186,
+        width: 231,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "39f8f7eba1f2ec35f6c4ad7004aa6ab357de8080c12d07bf695af8121a6f80ea",
+        originalBytes: 101687,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minselkhoz: {
+        src: "assets/authority-symbols/minselkhoz.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0441\u0435\u043B\u044C\u0445\u043E\u0437 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Agriculture_of_Russia_new.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Emblem_of_the_Ministry_of_Agriculture_of_Russia_new.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Emblem_of_the_Ministry_of_Agriculture_of_Russia_new.svg/330px-Emblem_of_the_Ministry_of_Agriculture_of_Russia_new.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Russian Government",
+        description: "New Emblem of the Ministry of Agriculture of Russia",
+        sha256: "ef0178ea14679e8ac8065f1f882b72ef48b541720fb29314d5f550b326866a25",
+        bytes: 68430,
+        width: 249,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "b9f4242ddcf924b2a9149eb42a518635488c83c9256921ac2d82548cea26c0b0",
+        originalBytes: 102464,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosrybolovstvo: {
+        src: "assets/authority-symbols/rosrybolovstvo.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0440\u044B\u0431\u043E\u043B\u043E\u0432\u0441\u0442\u0432\u043E",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Fisheries_Agency.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/0/07/Emblem_of_the_Federal_Fisheries_Agency.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Emblem_of_the_Federal_Fisheries_Agency.svg/330px-Emblem_of_the_Federal_Fisheries_Agency.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041D\u0438\u043A\u0438\u0442\u0430 \u041D\u0435\u0441\u0442\u0435\u0440\u043E\u0432",
+        description: "Emblem of the Federal Fisheries Agency",
+        sha256: "858ce02236ba24e9921820c716851b0a5f48e0207716f3d73e351b77d4680a33",
+        bytes: 78406,
+        width: 234,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "f978de353f092bed0ab6873c16bb9fd70e8be2624bc9e83a24fecf04b29fd687",
+        originalBytes: 141939,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minstroy: {
+        src: "assets/authority-symbols/minstroy.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0441\u0442\u0440\u043E\u0439 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Minstroy-russia-emblem.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Minstroy-russia-emblem.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Minstroy-russia-emblem.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Russian Government",
+        description: "Emblem of Ministry of Utillities and Housing",
+        sha256: "1a675685382477227542da57b4dd3c4ae32443b218256c7e439b3a688e67f549",
+        bytes: 54028,
+        width: 207,
+        height: 256,
+        hasTransparency: false,
+        originalSha256: "93e7b58750c895d30502cdf9497081f8820f490d3d8b7c0f9afe55818c7436e6",
+        originalBytes: 28200,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      mintrans: {
+        src: "assets/authority-symbols/mintrans.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0442\u0440\u0430\u043D\u0441 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Russian_Ministry_of_Transport.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Emblem_of_the_Russian_Ministry_of_Transport.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Emblem_of_the_Russian_Ministry_of_Transport.svg/330px-Emblem_of_the_Russian_Ministry_of_Transport.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u0430 \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        sha256: "04a2f50f827a1957abc92dc4d38049c3cbc64a615db0a062f062e59ffe3776ca",
+        bytes: 68150,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "1b57fe3f7f5faff8e54fba39a49ad035375b9c560f8f4f3e4cf9017e46af74ed",
+        originalBytes: 111657,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosaviatsiya: {
+        src: "assets/authority-symbols/rosaviatsiya.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0430\u0432\u0438\u0430\u0446\u0438\u044F",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Air_Transport_Agency.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/b/bf/Emblem_of_the_Federal_Air_Transport_Agency.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Emblem_of_the_Federal_Air_Transport_Agency.svg/330px-Emblem_of_the_Federal_Air_Transport_Agency.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Yaroslav Ponomarev",
+        description: "Emblem of the Federal Air Transport Agency",
+        sha256: "8e58d273105576b02af71cd03a62113d7d3deb66ac6a9feceded29c1bbc8ab99",
+        bytes: 71150,
+        width: 232,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "e9664fe83601c3eacb13e3c249c09943e9db2243b89ab51fd01cb37a45e012e2",
+        originalBytes: 120804,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosavtodor: {
+        src: "assets/authority-symbols/rosavtodor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0430\u0432\u0442\u043E\u0434\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Federal_Road_Agency.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/9/95/Emblem_of_Federal_Road_Agency.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/Emblem_of_Federal_Road_Agency.svg/330px-Emblem_of_Federal_Road_Agency.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0430\u0432\u0442\u043E\u0434\u043E\u0440",
+        description: "Flag of Federal Road Agency (Rosavtodor), Russia",
+        sha256: "0b8a8cf4a4a6deb3673eaa57c0c443274311e6ceb645af5d870353d9539d5e3f",
+        bytes: 49308,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "1086836134fd9c963ac78ca0dbcec965a4a05cf725eb79cc71e808aa3f8736f8",
+        originalBytes: 112096,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      roszheldor: {
+        src: "assets/authority-symbols/roszheldor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0436\u0435\u043B\u0434\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Federal_agency_of_a_railway_transport.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/2/22/Emblem_of_Federal_agency_of_a_railway_transport.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Emblem_of_Federal_agency_of_a_railway_transport.svg/330px-Emblem_of_Federal_agency_of_a_railway_transport.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0436\u0435\u043B\u0434\u043E\u0440",
+        description: "Emblem of Federal agency of a railway transport",
+        sha256: "94ebc72a6a903767d2f71f3ff18ab69b132546883756ebf2fb4b444b3710e225",
+        bytes: 55198,
+        width: 240,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "dc1c9a3f7d3198cf0c10452675fb8f72262937f13180b031570d89d1cd911ae4",
+        originalBytes: 107809,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosmorrechflot: {
+        src: "assets/authority-symbols/rosmorrechflot.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043C\u043E\u0440\u0440\u0435\u0447\u0444\u043B\u043E\u0442",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Federal_Agency_for_Sea_and_Inland_Water_Transport.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/86/Emblem_of_Federal_Agency_for_Sea_and_Inland_Water_Transport.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/86/Emblem_of_Federal_Agency_for_Sea_and_Inland_Water_Transport.svg/330px-Emblem_of_Federal_Agency_for_Sea_and_Inland_Water_Transport.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:ru:\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u043E \u043C\u043E\u0440\u0441\u043A\u043E\u0433\u043E \u0438 \u0440\u0435\u0447\u043D\u043E\u0433\u043E \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u0430",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u0430 \u043C\u043E\u0440\u0441\u043A\u043E\u0433\u043E \u0438 \u0440\u0435\u0447\u043D\u043E\u0433\u043E \u0442\u0440\u0430\u043D\u0441\u043F\u043E\u0440\u0442\u0430",
+        sha256: "a700eca1f4d57d1b26a42cf45bdabc97eb919bbc4746609a64f978fd5694014f",
+        bytes: 88462,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "5e44f3950b08201be48de8fe57cdb896260de082f70a879199713b73f5a31b71",
+        originalBytes: 161406,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      mintrud: {
+        src: "assets/authority-symbols/mintrud.webp",
+        kind: "official_logo",
+        title: "\u041C\u0438\u043D\u0442\u0440\u0443\u0434 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Logo_of_Mintrud_(Russia).svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_of_Mintrud_%28Russia%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e8/Logo_of_Mintrud_%28Russia%29.svg/330px-Logo_of_Mintrud_%28Russia%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u0442\u0440\u0443\u0434\u0430 \u0438 \u0441\u043E\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0439 \u0437\u0430\u0449\u0438\u0442\u044B \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        description: "\u041B\u043E\u0433\u043E\u0442\u0438\u043F \u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u0430 \u0442\u0440\u0443\u0434\u0430 \u0438 \u0441\u043E\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0439 \u0437\u0430\u0449\u0438\u0442\u044B \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        sha256: "b0d8936389df2af30a65af61707ca0387baf38ed91d583913db5adcd30a7e93d",
+        bytes: 33944,
+        width: 221,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "0abf7216a6483d0aa2ca2ed373f80154da7f8594ede9a6e1cafda1ab886d3631",
+        originalBytes: 30406,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosimushchestvo: {
+        src: "assets/authority-symbols/rosimushchestvo.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E",
+        source: "https://commons.wikimedia.org/wiki/File:Rosimushestvo.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Rosimushestvo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Rosimushestvo.png/330px-Rosimushestvo.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E",
+        description: "\u0413\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0437\u043D\u0430\u043A-\u044D\u043C\u0431\u043B\u0435\u043C\u0430 \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u0430 \u043F\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u043C \u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u043E\u043C",
+        sha256: "d347665a20d55466c937ee79b54344e2568307c65f827176c547577e8528cd83",
+        bytes: 72080,
+        width: 226,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "27a8ccc0780e17cf89cf3d01cd2d007d62394f1cc9e41184eef7d2bda876ef2f",
+        originalBytes: 158325,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      mincifry: {
+        src: "assets/authority-symbols/mincifry.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u0446\u0438\u0444\u0440\u044B \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Digital_Development,_Communications_and_Mass_Media_(Russia).svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Emblem_of_the_Ministry_of_Digital_Development%2C_Communications_and_Mass_Media_%28Russia%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Emblem_of_the_Ministry_of_Digital_Development%2C_Communications_and_Mass_Media_%28Russia%29.svg/330px-Emblem_of_the_Ministry_of_Digital_Development%2C_Communications_and_Mass_Media_%28Russia%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Ministry of Digital Development, Communications and Mass Media (Russia) \u041E\u043B\u0435\u0433 \u041C\u0430\u0440\u0438\u043D\u0435\u043D\u043A\u043E \u0410\u0440\u0441\u0430\u043B\u0430\u043D \u041E\u0447\u0438\u0440\u043E\u0432",
+        description: "Emblem of the Ministry of Digital Development, Communications and Mass Media of Russia",
+        sha256: "862ef5b3621f3a30cb0ac4dc975bb1afa25e95441927e7d95323023841c84247",
+        bytes: 74192,
+        width: 245,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "9f570d2d7159dcfd1e49ef6fe01a52cbe853546ad5b5c793ae9f105c9d55e165",
+        originalBytes: 121857,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rkn: {
+        src: "assets/authority-symbols/rkn.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043A\u043E\u043C\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Roskomnadzor.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Emblem_of_Roskomnadzor.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Emblem_of_Roskomnadzor.svg/330px-Emblem_of_Roskomnadzor.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043F\u043E \u043D\u0430\u0434\u0437\u043E\u0440\u0443 \u0432 \u0441\u0444\u0435\u0440\u0435 \u0441\u0432\u044F\u0437\u0438, \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0445 \u0442\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u0439 \u0438 \u043C\u0430\u0441\u0441\u043E\u0432\u044B\u0445 \u043A\u043E\u043C\u043C\u0443\u043D\u0438\u043A\u0430\u0446\u0438\u0439",
+        description: "Emblem of Roskomnadzor.",
+        sha256: "dbb1f859456655fa1039cab3a57f857d890f736c7f4023a101aa7fce21bc723b",
+        bytes: 65250,
+        width: 225,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "66994f3cd087b81bd231a8bbd7e5c27d6154ae9ff2479bf328f08f515ff599ef",
+        originalBytes: 114348,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      mineconom: {
+        src: "assets/authority-symbols/mineconom.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u044D\u043A\u043E\u043D\u043E\u043C\u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Min-econom-develop-russia-emblem.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Min-econom-develop-russia-emblem.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Min-econom-develop-russia-emblem.svg/330px-Min-econom-develop-russia-emblem.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438 (The Ministry of Economic Development of the Russian Federation)",
+        description: "\u0413\u0435\u0440\u0431\u043E\u0432\u044B\u0439 \u0437\u043D\u0430\u043A \u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u0430 \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        sha256: "9002fb204f17955eec9d3b76833e01d2297e7111166ebed447ec219e7e6ce08f",
+        bytes: 81026,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "9fe4cbde4b73761a1af5213f53f5d3c68ef8c009c9193b792c9784d19eabe06c",
+        originalBytes: 138701,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosakkreditaciya: {
+        src: "assets/authority-symbols/rosakkreditaciya.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u0430\u043A\u043A\u0440\u0435\u0434\u0438\u0442\u0430\u0446\u0438\u044F",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Rosa%D1%81%D1%81reditacia.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/4/49/Emblem_of_Rosa%D1%81%D1%81reditacia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Emblem_of_Rosa%D1%81%D1%81reditacia.png/330px-Emblem_of_Rosa%D1%81%D1%81reditacia.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u0447\u0435\u0441\u043A\u043E\u0433\u043E \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F",
+        description: "Emblem of the Rosacreditation, Russian Federation",
+        sha256: "672a168b779f928f106fb11d62a7ef232f1b841a78269f4aadeab874494eaa5c",
+        bytes: 14234,
+        width: 256,
+        height: 89,
+        hasTransparency: false,
+        originalSha256: "d7d73114440788fbd5d38a9e6a7f12f60d7c3e71f139bc1b6633f1d37498619a",
+        originalBytes: 25479,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rospatent: {
+        src: "assets/authority-symbols/rospatent.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043F\u0430\u0442\u0435\u043D\u0442",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Intellectual_Property_of_Russia.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/fe/Emblem_of_the_Federal_Service_for_Intellectual_Property_of_Russia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/Emblem_of_the_Federal_Service_for_Intellectual_Property_of_Russia.svg/330px-Emblem_of_the_Federal_Service_for_Intellectual_Property_of_Russia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Federal Service for Intellectual Property (Russia) \u0410\u043D\u043D\u0430 \u0425\u0440\u0443\u0441\u0442\u0430\u043B\u0451\u0432\u0430",
+        description: "Emblem of the Federal Service for Intellectual Property of Russia",
+        sha256: "044c6fc4495a9d45e7b9ba4e42d96aa56099e93f89708a08a43334ade5e778fa",
+        bytes: 45112,
+        width: 256,
+        height: 178,
+        hasTransparency: true,
+        originalSha256: "deb7e13064193da33b68ffcaf4c2c9bd70cfe207d8156196e2da2958ea574d35",
+        originalBytes: 80346,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minenergo: {
+        src: "assets/authority-symbols/minenergo.webp",
+        kind: "official_logo",
+        title: "\u041C\u0438\u043D\u044D\u043D\u0435\u0440\u0433\u043E \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://minenergo.gov.ru/",
+        sourceFile: "https://minenergo.gov.ru/f/media/ui/logo.png",
+        downloadUrl: "https://minenergo.gov.ru/f/media/ui/logo.png",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u041C\u0438\u043D\u044D\u043D\u0435\u0440\u0433\u043E \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "6895b66186e2cdf8ffaa1c17f37c3c53f2b62def3ee07ea81a3e5a5e1312abdb",
+        bytes: 20244,
+        width: 256,
+        height: 123,
+        hasTransparency: true,
+        originalSha256: "7b9b660c018e680a2bb69dcd88f965fcc3508b34ccb88ba2aee1bb81a60667a7",
+        originalBytes: 543808,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosgvardiya: {
+        src: "assets/authority-symbols/rosgvardiya.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0433\u0432\u0430\u0440\u0434\u0438\u044F",
+        source: "https://commons.wikimedia.org/wiki/File:National_Guard_of_Russia.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/a/aa/National_Guard_of_Russia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/National_Guard_of_Russia.svg/330px-National_Guard_of_Russia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0420\u043E\u0441\u0433\u0432\u0430\u0440\u0434\u0438\u044F",
+        description: "Emblem of National Guard of Russia",
+        sha256: "cb995f362fdd52ef5441cd282db7b14f1398b7f357b7fec569bea02473acaf22",
+        bytes: 56954,
+        width: 256,
+        height: 244,
+        hasTransparency: true,
+        originalSha256: "809ba8857533fcb9614ebcc90594345c8c42ccfbbcd21ca85854feaa3686245d",
+        originalBytes: 86919,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fsvts: {
+        src: "assets/authority-symbols/fsvts.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u0412\u0422\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_service_on_military_(Russia).svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Emblem_of_the_Federal_service_on_military_%28Russia%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Emblem_of_the_Federal_service_on_military_%28Russia%29.svg/330px-Emblem_of_the_Federal_service_on_military_%28Russia%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Distorted",
+        description: "Emblem of ru:\u0424\u0421\u0412\u0422\u0421 .",
+        sha256: "c31d31b2a201770dc2173fbec82daf7c0c55a8c60f86f7e9c2ee984556986883",
+        bytes: 70260,
+        width: 248,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "f266e2d85408d17510b8322873c29a2369afe9a99a605a4eb5390cf79132be74",
+        originalBytes: 117818,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosfinmonitoring: {
+        src: "assets/authority-symbols/rosfinmonitoring.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0444\u0438\u043D\u043C\u043E\u043D\u0438\u0442\u043E\u0440\u0438\u043D\u0433",
+        source: "https://commons.wikimedia.org/wiki/File:COA_of_Rosfinmonitoring.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/6/6c/COA_of_Rosfinmonitoring.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/COA_of_Rosfinmonitoring.png/330px-COA_of_Rosfinmonitoring.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041F\u0440\u0430\u0432\u0438\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        description: "Heraldic symbol-emblem of the Federal Service for Financial Monitoring (approved by Government Resolution dated January 25, 2008 \u2116 27)",
+        sha256: "596541e515b051c42eb5fa03e064d3eee1abea88044ebba99e78fd67238d6623",
+        bytes: 86944,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "58b632b11fa368edd90cbea53437b922ada9e037ab551e58efae9b3d4334df26",
+        originalBytes: 217646,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      gusp: {
+        src: "assets/authority-symbols/gusp.webp",
+        kind: "official_emblem",
+        title: "\u0413\u0423\u0421\u041F",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Main_Directorate_of_Special_Programs_of_the_President.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Emblem_of_the_Main_Directorate_of_Special_Programs_of_the_President.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/Emblem_of_the_Main_Directorate_of_Special_Programs_of_the_President.svg/330px-Emblem_of_the_Main_Directorate_of_Special_Programs_of_the_President.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0413\u043B\u0430\u0432\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0433\u043B\u0430\u0432\u043D\u043E\u0433\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        sha256: "b0056199f68ff2d6038a54d88969c1c23db33007d308fc22d6cf55156451f168",
+        bytes: 46466,
+        width: 256,
+        height: 249,
+        hasTransparency: true,
+        originalSha256: "5eec0455a3e8cfe7e918c009015869d3233eec9e4f08c214b51251b9407bf757",
+        originalBytes: 74191,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      gfs: {
+        src: "assets/authority-symbols/gfs.webp",
+        kind: "official_emblem",
+        title: "\u0413\u0424\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_State_Courier_Service.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Emblem_of_the_State_Courier_Service.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Emblem_of_the_State_Courier_Service.svg/330px-Emblem_of_the_State_Courier_Service.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:State Courier Service (Russia) \u041E\u043B\u0435\u0433 \u041C\u0430\u0440\u0438\u043D\u0435\u043D\u043A\u043E",
+        description: "Emblem of the State Courier Service",
+        sha256: "0ad36186cd8a220e6bc224ef681a3c4cfe6d4fc11db6c882bd4d7a96e63fa191",
+        bytes: 70004,
+        width: 205,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "4425d262dfc61b955e246483072b1214c8bf02b703834a1011558201c029cb24",
+        originalBytes: 156292,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      udp: {
+        src: "assets/authority-symbols/udp.webp",
+        kind: "official_emblem",
+        title: "\u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0435\u043B\u0430\u043C\u0438 \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u0424",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8_%D0%BF%D1%80%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B0_%D0%A0%D0%A4.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/a/ad/%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8_%D0%BF%D1%80%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B0_%D0%A0%D0%A4.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8_%D0%BF%D1%80%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B0_%D0%A0%D0%A4.svg/330px-%D0%AD%D0%BC%D0%B1%D0%BB%D0%B5%D0%BC%D0%B0_%D0%A3%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F_%D0%B4%D0%B5%D0%BB%D0%B0%D0%BC%D0%B8_%D0%BF%D1%80%D0%B5%D0%B7%D0%B8%D0%B4%D0%B5%D0%BD%D1%82%D0%B0_%D0%A0%D0%A4.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: '\u0423\u043A\u0430\u0437 \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438 \u043E\u0442 14 \u044F\u043D\u0432\u0430\u0440\u044F 2009\u0433. \u2116 59 "\u041E\u0431 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u0438 \u044D\u043C\u0431\u043B\u0435\u043C\u044B \u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u043B\u0430\u043C\u0438 \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438"',
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0423\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u043B\u0430\u043C\u0438 \u043F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0430 \u0420\u0424 \u0443\u0447\u0440\u0435\u0436\u0434\u0451\u043D\u043D\u0430\u044F 14 \u044F\u043D\u0432\u0430\u0440\u044F 2009",
+        sha256: "f8be62d97bb83ebd2f4acdff8100e41f7903d8a5be1d9907b14741f3e626aa7c",
+        bytes: 62952,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "6ad440d0fe66b7ff9650d7a49c53e8a278f36c9b7780ac8c13032bdc0c53d087",
+        originalBytes: 105059,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosobrnadzor: {
+        src: "assets/authority-symbols/rosobrnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043E\u0431\u0440\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Rosobrnadzor.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/5/51/Emblem_of_Rosobrnadzor.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/51/Emblem_of_Rosobrnadzor.png/330px-Emblem_of_Rosobrnadzor.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043F\u043E \u043D\u0430\u0434\u0437\u043E\u0440\u0443 \u0432 \u0441\u0444\u0435\u0440\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u0438 \u043D\u0430\u0443\u043A\u0438",
+        description: "Emblem of Rosobrnadzor.",
+        sha256: "f7a042594e803ed3bb52a4ede200f12abbc6d62515e5605a3a7278fc57faaf83",
+        bytes: 41894,
+        width: 256,
+        height: 194,
+        hasTransparency: true,
+        originalSha256: "2872d06d79651a5a134ec1f785b0b31db49931878757a4b356ed90e5f3661e04",
+        originalBytes: 112984,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosreserv: {
+        src: "assets/authority-symbols/rosreserv.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0440\u0435\u0437\u0435\u0440\u0432",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B1_%D0%A0%D0%BE%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B0.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/c/ca/%D0%93%D0%B5%D1%80%D0%B1_%D0%A0%D0%BE%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B0.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/%D0%93%D0%B5%D1%80%D0%B1_%D0%A0%D0%BE%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B0.svg/330px-%D0%93%D0%B5%D1%80%D0%B1_%D0%A0%D0%BE%D1%81%D1%80%D0%B5%D0%B7%D0%B5%D1%80%D0%B2%D0%B0.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Rylov egrock Egor",
+        description: "\u0413\u0435\u0440\u0431 \u0420\u043E\u0441\u0440\u0435\u0437\u0435\u0440\u0432\u0430 \u043E\u0442\u0440\u0438\u0441\u043E\u0432\u0430\u043D",
+        sha256: "ff1012af9fbdd4d819a8490960d62bf8082c57b8dc7aa6202d529edcef5695df",
+        bytes: 45690,
+        width: 256,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "271e234d73ef1d6c82277526738ed7a5289df57e75a5e9215888c108cadf7d45",
+        originalBytes: 104058,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fadn: {
+        src: "assets/authority-symbols/fadn.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0410\u0414\u041D \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Digital_emblem_of_the_Federal_Agency_for_Ethnic_Affairs.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/4/43/Digital_emblem_of_the_Federal_Agency_for_Ethnic_Affairs.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Digital_emblem_of_the_Federal_Agency_for_Ethnic_Affairs.svg/330px-Digital_emblem_of_the_Federal_Agency_for_Ethnic_Affairs.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u043E \u043F\u043E \u0434\u0435\u043B\u0430\u043C \u043D\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0435\u0439",
+        description: "\u0426\u0438\u0444\u0440\u043E\u0432\u0430\u044F \u044D\u043C\u0431\u043B\u0435\u043C\u0430 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u0430 \u043F\u043E \u0434\u0435\u043B\u0430\u043C \u043D\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0435\u0439",
+        sha256: "bca2501a07598d12485852817f77b479673b68b88fc392d23181257fe600c886",
+        bytes: 21734,
+        width: 228,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "812337f0ea4506fe13437878e73f14fa0b7cbe726feee1473d5474f8eaeba190",
+        originalBytes: 31993,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minpromtorg: {
+        src: "assets/authority-symbols/minpromtorg.webp",
+        kind: "official_logo",
+        title: "\u041C\u0438\u043D\u043F\u0440\u043E\u043C\u0442\u043E\u0440\u0433 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%9C%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D0%B5%D1%80%D1%81%D1%82%D0%B2%D0%B0_%D0%BF%D1%80%D0%BE%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%B8_%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8_%D0%A0%D0%A4.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/dd/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%9C%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D0%B5%D1%80%D1%81%D1%82%D0%B2%D0%B0_%D0%BF%D1%80%D0%BE%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%B8_%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8_%D0%A0%D0%A4.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://upload.wikimedia.org/wikipedia/commons/d/dd/%D0%9B%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF_%D0%9C%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D0%B5%D1%80%D1%81%D1%82%D0%B2%D0%B0_%D0%BF%D1%80%D0%BE%D0%BC%D1%8B%D1%88%D0%BB%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%B8_%D1%82%D0%BE%D1%80%D0%B3%D0%BE%D0%B2%D0%BB%D0%B8_%D0%A0%D0%A4.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u043F\u0440\u043E\u043C\u044B\u0448\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u0442\u043E\u0440\u0433\u043E\u0432\u043B\u0438 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        description: "\u041B\u043E\u0433\u043E\u0442\u0438\u043F \u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u0430 \u043F\u0440\u043E\u043C\u044B\u0448\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u0442\u043E\u0440\u0433\u043E\u0432\u043B\u0438 \u0420\u0424",
+        sha256: "a8e761da9a3f58c615c53dd6a143f06165838e308705b6c9ce3af00ce5e03f36",
+        bytes: 2244,
+        width: 203,
+        height: 34,
+        hasTransparency: true,
+        originalSha256: "bb88fb21b1cabab8a3c9637c133e57ecd52eb4000e07ed2d876420ce25e5ec71",
+        originalBytes: 5832,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minprirody: {
+        src: "assets/authority-symbols/minprirody.webp",
+        kind: "official_logo",
+        title: "\u041C\u0438\u043D\u043F\u0440\u0438\u0440\u043E\u0434\u044B \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://www.mnr.gov.ru/",
+        sourceFile: "https://www.mnr.gov.ru/assets/images/mobile-logo-new.svg",
+        downloadUrl: "https://www.mnr.gov.ru/assets/images/mobile-logo-new.svg",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u041C\u0438\u043D\u043F\u0440\u0438\u0440\u043E\u0434\u044B \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "6ed711b3909cf8c9e25081388b7ff88f1cbe61a6f9fa580009e18e43a16afb90",
+        bytes: 2102,
+        width: 30,
+        height: 30,
+        hasTransparency: true,
+        originalSha256: "19d111147d060339b0cfa3df18ed00b87525cbedb665962176a6d1bccf0e0245",
+        originalBytes: 176596,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minkult: {
+        src: "assets/authority-symbols/minkult.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u043A\u0443\u043B\u044C\u0442\u0443\u0440\u044B \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Ministry_of_Culture_of_Russia.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/2/26/Emblem_of_the_Ministry_of_Culture_of_Russia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/Emblem_of_the_Ministry_of_Culture_of_Russia.svg/330px-Emblem_of_the_Ministry_of_Culture_of_Russia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041C\u0438\u043D\u0438\u0441\u0442\u0435\u0440\u0441\u0442\u0432\u043E \u043A\u0443\u043B\u044C\u0442\u0443\u0440\u044B \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        description: "Emblem of the Ministry of Culture of Russia",
+        sha256: "107690c9fbcc2b8ed1fb09174ea1d7274c4bd4bea169b4074a510a62c37f12f5",
+        bytes: 36850,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "b9b96ea68b24b3a248e51f0495b65cc4081d55b8f8a426485bc1ae83fd048140",
+        originalBytes: 72930,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fts: {
+        src: "assets/authority-symbols/fts.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0422\u0421 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Customs_Service_of_Russia.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/1/14/Emblem_of_the_Federal_Customs_Service_of_Russia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/14/Emblem_of_the_Federal_Customs_Service_of_Russia.svg/330px-Emblem_of_the_Federal_Customs_Service_of_Russia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Federal Customs Service of Russia",
+        description: "Emblem of the Federal Customs Service of Russia",
+        sha256: "b74491991be99482daf0ddf6dc6c5a46eb8a61c2b61ffc33d8dff209198fc877",
+        bytes: 61904,
+        width: 231,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "616d97179a6913a536f8123cada4a4d7aa3a8a39388dd57240369dede925273c",
+        originalBytes: 114579,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosprirodnadzor: {
+        src: "assets/authority-symbols/rosprirodnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043F\u0440\u0438\u0440\u043E\u0434\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Supervision_of_Natural_Resources.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/9/92/Emblem_of_the_Federal_Service_for_Supervision_of_Natural_Resources.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Emblem_of_the_Federal_Service_for_Supervision_of_Natural_Resources.svg/330px-Emblem_of_the_Federal_Service_for_Supervision_of_Natural_Resources.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041D\u0438\u043A\u0438\u0442\u0430 \u0414\u043E\u0431\u0440\u043E\u0432",
+        description: "\u0413\u0435\u0440\u0431 \u0420\u043E\u0441\u043F\u0440\u0438\u0440\u043E\u0434\u043D\u0430\u0434\u0437\u043E\u0440\u0430",
+        sha256: "443ee0294b7bbfc93379a3aac91ac3c8d8c95050796bdd6fa0e1c9cf1bebb1af",
+        bytes: 71762,
+        width: 243,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "1eed8dd31cde57b39a385992899cf2bebb585604d605fcf421d20a562d21f02c",
+        originalBytes: 115724,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minjust: {
+        src: "assets/authority-symbols/minjust.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u044E\u0441\u0442 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Ministry_of_Justice.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/81/Emblem_of_Ministry_of_Justice.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Emblem_of_Ministry_of_Justice.png/330px-Emblem_of_Ministry_of_Justice.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Decree of the President of Russia",
+        description: "Emblem of Ministry of Justice of Russia",
+        sha256: "3ce51811935a4f7fca0e9f9cd3aa8e9126fdbb52fc4c30289eeeed84d275ebfd",
+        bytes: 72938,
+        width: 240,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "67e0e54f291ebc78140bd8a2bec80d345add82fe1d59bc6c4682008750be0844",
+        originalBytes: 159227,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fso: {
+        src: "assets/authority-symbols/fso.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u041E \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Great_emblem_of_the_Federal_Guard_Service.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Great_emblem_of_the_Federal_Guard_Service.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Great_emblem_of_the_Federal_Guard_Service.svg/330px-Great_emblem_of_the_Federal_Guard_Service.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0413\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0441\u043E\u0432\u0435\u0442 \u043F\u0440\u0438 \u041F\u0440\u0435\u0437\u0438\u0434\u0435\u043D\u0442\u0435 \u0420\u0424",
+        description: "Great emblem of the Federal Guard Service",
+        sha256: "c7ceca4d02a828983859bbd0d8eeba8e6b90bf551d83876b50f079b4480c4a93",
+        bytes: 43958,
+        width: 217,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "c3c693219bedd2e83d406aae010d113a1fb2ab2529038b1e8607da5e26da457f",
+        originalBytes: 80507,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosreestr: {
+        src: "assets/authority-symbols/rosreestr.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0440\u0435\u0435\u0441\u0442\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Federal_Service_for_State_Registration,_Cadastre_and_Cartography.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/9/91/Emblem_of_Federal_Service_for_State_Registration%2C_Cadastre_and_Cartography.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/91/Emblem_of_Federal_Service_for_State_Registration%2C_Cadastre_and_Cartography.svg/330px-Emblem_of_Federal_Service_for_State_Registration%2C_Cadastre_and_Cartography.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u041E\u043B\u0435\u0433 \u041C\u0430\u0440\u0438\u043D\u0435\u043D\u043A\u043E",
+        description: "\u041B\u043E\u0433\u043E\u0442\u0438\u043F \u0420\u043E\u0441\u0440\u0435\u0435\u0441\u0442\u0440\u0430",
+        sha256: "663f9dffb00a32061e51bbaeee44fa199b5542320793b3e407c8bcd27e3c6ec8",
+        bytes: 21776,
+        width: 231,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "923e17bb5af26da3551b994627d2224dc3cfcc606ccb61076736d1155584274e",
+        originalBytes: 34204,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rostekhnadzor: {
+        src: "assets/authority-symbols/rostekhnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0442\u0435\u0445\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Rostekhnadzor.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/81/Emblem_of_the_Rostekhnadzor.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Emblem_of_the_Rostekhnadzor.svg/330px-Emblem_of_the_Rostekhnadzor.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "ru:w:\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043F\u043E \u044D\u043A\u043E\u043B\u043E\u0433\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443, \u0442\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0438 \u0430\u0442\u043E\u043C\u043D\u043E\u043C\u0443 \u043D\u0430\u0434\u0437\u043E\u0440\u0443",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u044D\u043A\u043E\u043B\u043E\u0433\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443, \u0442\u0435\u0445\u043D\u043E\u043B\u043E\u0433\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u0438 \u0430\u0442\u043E\u043C\u043D\u043E\u043C\u0443 \u043D\u0430\u0434\u0437\u043E\u0440\u0443",
+        sha256: "f8aaecbb270b5a8040893ff0579d2bc9644fd710907d8759937a1e9b3ef821ae",
+        bytes: 80702,
+        width: 227,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "5c12b082ae71964b66a46c619c26f45497c0c2dfaa04348734fa812965ed4ab5",
+        originalBytes: 161261,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rostrud: {
+        src: "assets/authority-symbols/rostrud.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0442\u0440\u0443\u0434",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Rostrud.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Emblem_of_Rostrud.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Emblem_of_Rostrud.svg/330px-Emblem_of_Rostrud.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Popadius",
+        description: "\u0413\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0437\u043D\u0430\u043A - \u044D\u043C\u0431\u043B\u0435\u043C\u0430 \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u0442\u0440\u0443\u0434\u0443 \u0438 \u0437\u0430\u043D\u044F\u0442\u043E\u0441\u0442\u0438 (\u0434\u0430\u043B\u0435\u0435 - \u044D\u043C\u0431\u043B\u0435\u043C\u0430) \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u043E\u0431\u043E\u0439 \u0434\u0432\u0443\u0433\u043B\u0430\u0432\u043E\u0433\u043E \u043E\u0440\u043B\u0430 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430 \u0441 \u043F\u043E\u0434\u043D\u044F\u0442\u044B\u043C\u0438 \u043A\u0440\u044B\u043B\u044C\u044F\u043C\u0438, \u0443\u0432\u0435\u043D\u0447\u0430\u043D\u043D\u043E\u0433\u043E \u0434\u0432\u0443\u043C\u044F \u043C\u0430\u043B\u044B\u043C\u0438 \u0438 \u043E\u0434\u043D\u043E\u0439 \u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043A\u043E\u0440\u043E\u043D\u0430\u043C\u0438 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430, \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u043D\u044B\u043C\u0438 \u043B\u0435\u043D\u0442\u043E\u0439 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430. \u0412 \u043F\u0440\u0430\u0432\u043E\u0439 \u043B\u0430\u043F\u0435 \u043E\u0440\u043B\u0430 - \u0441\u043A\u0438\u043F\u0435\u0442\u0440 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430, \u0432 \u043B\u0435\u0432\u043E\u0439 \u043B\u0430\u043F\u0435 - \u0434\u0435\u0440\u0436\u0430\u0432\u0430 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430. \u041D\u0430 \u0433\u0440\u0443\u0434\u0438 \u043E\u0440\u043B\u0430 - \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u044B\u0439 \u0433\u0435\u0440\u0430\u043B\u044C\u0434\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0449\u0438\u0442 \u0447\u0435\u0440\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430, \u043D\u0430 \u043A\u043E\u0442\u043E\u0440\u043E\u043C \u0437\u0443\u0431\u0447\u0430\u0442\u043E\u0435 \u043A\u043E\u043B\u044C\u0446\u043E \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430, \u043F\u043E\u0432\u0435\u0440\u0445 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E - \u0434\u0432\u0430 \u0441\u043A\u0440\u0435\u0449\u0435\u043D\u043D\u044B\u0445 \u043C\u043E\u043B\u043E\u0442\u0430 \u0441\u0435\u0440\u0435\u0431\u0440\u044F\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430.",
+        sha256: "1b18e447fc7393c782a718fd2b089cd2c06f163a5350f779e93d396a6a90d8c8",
+        bytes: 52072,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "e36f2afd758acf0c3ab6db5360bb761c3584fc20a215ca9602b7e0e6a171b9ed",
+        originalBytes: 116232,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minsport: {
+        src: "assets/authority-symbols/minsport.webp",
+        kind: "official_logo",
+        title: "\u041C\u0438\u043D\u0441\u043F\u043E\u0440\u0442 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://minsport.gov.ru/",
+        sourceFile: "http://storage.minsport.gov.ru/cms-uploads/cms/minsport_main_be87ebd686.svg",
+        downloadUrl: "http://storage.minsport.gov.ru/cms-uploads/cms/minsport_main_be87ebd686.svg",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u041C\u0438\u043D\u0441\u043F\u043E\u0440\u0442 \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "6fb27735b89e23db37b16d916da55db6c01e4581b4bcc7fb91d723b5ba2e87c3",
+        bytes: 21118,
+        width: 248,
+        height: 247,
+        hasTransparency: true,
+        originalSha256: "869ab1873be8c5ef4761a3a5fd09db07a52bd540d81cc926625a5a1a48bc27ea",
+        originalBytes: 177476,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosvodresursy: {
+        src: "assets/authority-symbols/rosvodresursy.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u0432\u043E\u0434\u0440\u0435\u0441\u0443\u0440\u0441\u044B",
+        source: "https://commons.wikimedia.org/wiki/File:Lob_%D0%A0%D0%9E%D0%A1%D0%92%D0%9E%D0%94%D0%A0%D0%95%D0%A1%D0%A3%D0%A0%D0%A1%D0%AB.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/8/82/Lob_%D0%A0%D0%9E%D0%A1%D0%92%D0%9E%D0%94%D0%A0%D0%95%D0%A1%D0%A3%D0%A0%D0%A1%D0%AB.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Lob_%D0%A0%D0%9E%D0%A1%D0%92%D0%9E%D0%94%D0%A0%D0%95%D0%A1%D0%A3%D0%A0%D0%A1%D0%AB.svg/330px-Lob_%D0%A0%D0%9E%D0%A1%D0%92%D0%9E%D0%94%D0%A0%D0%95%D0%A1%D0%A3%D0%A0%D0%A1%D0%AB.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "CC BY-SA 3.0",
+        licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+        credit: "\u041B\u043E\u0431\u0430\u0447\u0435\u0432 \u0412\u043B\u0430\u0434\u0438\u043C\u0438\u0440",
+        description: "\u0420\u043E\u0441\u0432\u043E\u0434\u0440\u0435\u0441\u0443\u0440\u0441\u044B, \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u0430\u0433\u0435\u043D\u0442\u0441\u0442\u0432\u043E. \u041B\u043E\u0433\u043E\u0442\u0438\u043F.",
+        sha256: "312612f5763fa6a5713277bdcd8e68749a128b4f14a5fe13df8246d0d79d76d3",
+        bytes: 43888,
+        width: 255,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "5e04cae7b2b8242657c3d26739dce068ba3353c98f59460a6884d014c9e3132e",
+        originalBytes: 57111,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fssp: {
+        src: "assets/authority-symbols/fssp.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u0421\u041F \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Bailiffs_Service.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/d6/Emblem_of_the_Federal_Bailiffs_Service.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Emblem_of_the_Federal_Bailiffs_Service.svg/330px-Emblem_of_the_Federal_Bailiffs_Service.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Federal Bailiffs Service (Russia)",
+        description: "Emblem of the Federal Bailiffs Service of Russia",
+        sha256: "064a9d4db1371ad4406dcd9e9ec95ce857da1ff60710aef01a8094907e5a7c60",
+        bytes: 68696,
+        width: 234,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "de85febb62dd94ecc8345d1f7a8f2d56d61accef3a0236a77741fd1c550003ab",
+        originalBytes: 127069,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fsin: {
+        src: "assets/authority-symbols/fsin.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u0418\u041D \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Penitentiary_Service.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Emblem_of_the_Federal_Penitentiary_Service.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/Emblem_of_the_Federal_Penitentiary_Service.svg/330px-Emblem_of_the_Federal_Penitentiary_Service.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Federal Penitentiary Service \u041D\u0438\u043A\u0438\u0442\u0430 \u0413\u043B\u0443\u0445\u0430\u0440\u0451\u0432",
+        description: "Emblem of the Federal Penitentiary Service",
+        sha256: "866dec598ad80efdfb2f71ece902430e0c01184a087bdbd3ef59fdd8e8839d83",
+        bytes: 64302,
+        width: 237,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "65fa7aee65ca0e77b9993f706522a27761172f8eb7eaae599da3a2d2d027edd3",
+        originalBytes: 114301,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fsb: {
+        src: "assets/authority-symbols/fsb.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u0411 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_Federal_security_service.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/7/77/Emblem_of_Federal_security_service.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Emblem_of_Federal_security_service.svg/330px-Emblem_of_Federal_security_service.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0424\u0421\u0411 \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Emblem of Federal security service of Russia",
+        sha256: "7f5acee37e3b242e0ec59c11c711ac121048b4e9516e205c30078169c0c9648d",
+        bytes: 47376,
+        width: 135,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "eb360277bd3282eac5b6cefc1346108aa36a810e878c4b591cc8ec4239144b89",
+        originalBytes: 171309,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      roskosmos: {
+        src: "assets/authority-symbols/roskosmos.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u043A\u043E\u0441\u043C\u043E\u0441",
+        source: "https://commons.wikimedia.org/wiki/File:2022-roscosmos-logo-main-rus.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/d/de/2022-roscosmos-logo-main-rus.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/2022-roscosmos-logo-main-rus.png/330px-2022-roscosmos-logo-main-rus.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "CC0",
+        licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        credit: "Roscosmos",
+        description: "Roscosmos logo main",
+        sha256: "ccddf06b1e28e84130ac14b09d11c1b8cc63eef8343af8314afed51500997232",
+        bytes: 6764,
+        width: 256,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "6f8cf8b0cae5c6d9eba433a124c88ce56e230a1bb72151c9f865ff22b750ce0e",
+        originalBytes: 9964,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minoborony: {
+        src: "assets/authority-symbols/minoborony.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u043E\u0431\u043E\u0440\u043E\u043D\u044B \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Middle_emblem_of_the_Ministry_of_Defence_of_the_Russian_Federation_(21.07.2003-present).svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/2/25/Middle_emblem_of_the_Ministry_of_Defence_of_the_Russian_Federation_%2821.07.2003-present%29.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Middle_emblem_of_the_Ministry_of_Defence_of_the_Russian_Federation_%2821.07.2003-present%29.svg/330px-Middle_emblem_of_the_Ministry_of_Defence_of_the_Russian_Federation_%2821.07.2003-present%29.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "F l a n k e r",
+        description: "The Russian Federation Defence Ministry (Ministerstvo oborony Rossijskoj Federatsii) medium emblem",
+        sha256: "aa458682431d62193ebfe6b113264ab68cec7345eb59fb07450b2ed78fb5208b",
+        bytes: 24496,
+        width: 256,
+        height: 174,
+        hasTransparency: true,
+        originalSha256: "bb7fbc52e2662452bc6b301e104e66a3be17fdb45608df37fb8950754f44190b",
+        originalBytes: 61804,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      svr: {
+        src: "assets/authority-symbols/svr.webp",
+        kind: "official_emblem",
+        title: "\u0421\u0412\u0420 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Foreign_Intelligence_Service_of_Russia.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/9/9f/Emblem_of_the_Foreign_Intelligence_Service_of_Russia.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Emblem_of_the_Foreign_Intelligence_Service_of_Russia.svg/330px-Emblem_of_the_Foreign_Intelligence_Service_of_Russia.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0421\u0412\u0420 \u0420\u0424",
+        description: "Emblem of the Foreign Intelligence Service of Russia",
+        sha256: "544025b675e17293f962754210138f5a6201715e4c7a08c7d7c3a949d4f76d99",
+        bytes: 78926,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "91d1eb151dd223f33dee869e583f16dc27b489ab5e69e27a1d3c2d0e2a8085ab",
+        originalBytes: 141718,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rostransnadzor: {
+        src: "assets/authority-symbols/rostransnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0442\u0440\u0430\u043D\u0441\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_Supervision_of_Transport.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/4/45/Emblem_of_the_Federal_Service_for_Supervision_of_Transport.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Emblem_of_the_Federal_Service_for_Supervision_of_Transport.svg/330px-Emblem_of_the_Federal_Service_for_Supervision_of_Transport.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Federal Service for Supervision of Transport",
+        description: "Emblem of the Federal Service for Supervision of Transport",
+        sha256: "b0b61526bea5d4b988c1dc06aaa2f256a29e2985788ccfe56a663f1032cc7702",
+        bytes: 64762,
+        width: 228,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "a127d5885ba3f5abdca23c07620ee3107b1fc0ba0112e0f025bf59c58f8798b1",
+        originalBytes: 116189,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fmba: {
+        src: "assets/authority-symbols/fmba.webp",
+        kind: "official_emblem",
+        title: "\u0424\u041C\u0411\u0410 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Emblema_gerb_FMBA.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/3/31/Emblema_gerb_FMBA.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/31/Emblema_gerb_FMBA.svg/330px-Emblema_gerb_FMBA.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "Cian Akril",
+        description: "Emblem of Federal Biomedical Agency, Russia",
+        sha256: "31ef4d50d9b9ae3c87a4e4e8d43649da0c6a7fd5c8ee6367533061cc2d160cc7",
+        bytes: 57506,
+        width: 227,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "8e14c49b992557d27764d8cae1315e4b6f20444f8db4e02cd0ed789ed8773a2a",
+        originalBytes: 103958,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rospotrebnadzor: {
+        src: "assets/authority-symbols/rospotrebnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u043F\u043E\u0442\u0440\u0435\u0431\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://commons.wikimedia.org/wiki/File:Emblem_of_the_Federal_Service_for_the_Oversight_of_Consumer_Protection_and_Welfare.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Emblem_of_the_Federal_Service_for_the_Oversight_of_Consumer_Protection_and_Welfare.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fb/Emblem_of_the_Federal_Service_for_the_Oversight_of_Consumer_Protection_and_Welfare.svg/330px-Emblem_of_the_Federal_Service_for_the_Oversight_of_Consumer_Protection_and_Welfare.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "w:Federal Service for the Oversight of Consumer Protection and Welfare",
+        description: "Emblem of the Federal Service for the Oversight of Consumer Protection and Welfare",
+        sha256: "c58294aab6587ea4f979cc17819f437732ea506a47c393778b821338ef949ecd",
+        bytes: 45544,
+        width: 225,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "57287c7818c5f6ee9f1e579cd2ee6b04146576246cde057e9c221c8053ecef6d",
+        originalBytes: 123188,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      ffoms: {
+        src: "assets/authority-symbols/ffoms.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0424\u041E\u041C\u0421",
+        source: "https://commons.wikimedia.org/wiki/File:%D0%A4%D0%A4%D0%9E%D0%9C%D0%A1_-_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%84%D0%BE%D0%BD%D0%B4_%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B5%D0%B4%D0%B8%D1%86%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/2/21/%D0%A4%D0%A4%D0%9E%D0%9C%D0%A1_-_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%84%D0%BE%D0%BD%D0%B4_%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B5%D0%B4%D0%B8%D1%86%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/%D0%A4%D0%A4%D0%9E%D0%9C%D0%A1_-_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%84%D0%BE%D0%BD%D0%B4_%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B5%D0%B4%D0%B8%D1%86%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png/330px-%D0%A4%D0%A4%D0%9E%D0%9C%D0%A1_-_%D0%A4%D0%B5%D0%B4%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%84%D0%BE%D0%BD%D0%B4_%D0%BE%D0%B1%D1%8F%D0%B7%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D0%B3%D0%BE_%D0%BC%D0%B5%D0%B4%D0%B8%D1%86%D0%B8%D0%BD%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_%D1%81%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "CC BY-SA 4.0",
+        licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+        credit: "Esc-del",
+        description: "\u042D\u043C\u0431\u043B\u0435\u043C\u0430 \u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0444\u043E\u043D\u0434\u0430 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043C\u0435\u0434\u0438\u0446\u0438\u043D\u0441\u043A\u043E\u0433\u043E \u0441\u0442\u0440\u0430\u0445\u043E\u0432\u0430\u043D\u0438\u044F",
+        sha256: "f9802f9489664e873eb49078765f6a15597b414ecedd4e414e4b3c3cd26d7195",
+        bytes: 9008,
+        width: 256,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "f690abec3f76287829da7d4be6612d0d35ab21eeb82ab17926c9d6767de0b256",
+        originalBytes: 21460,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      fstek: {
+        src: "assets/authority-symbols/fstek.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0421\u0422\u042D\u041A \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://fstec.ru/obshchaya-informatsiya/ofitsialnaya-simvolika",
+        sourceFile: "https://fstec.ru/images/simbols/fstec.png",
+        downloadUrl: "https://fstec.ru/images/simbols/fstec.png",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0424\u0421\u0422\u042D\u041A \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "1272745d3c4d8494733dff4d0875e22ec3b5c0121de2ae5738368a968e27f947",
+        bytes: 63668,
+        width: 192,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "b1d5b7fb7445d969b60f02cbdebd2a7e860272c2c5534f9fa096da6fe015dd3d",
+        originalBytes: 115850,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      roszdravnadzor: {
+        src: "assets/authority-symbols/roszdravnadzor.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0437\u0434\u0440\u0430\u0432\u043D\u0430\u0434\u0437\u043E\u0440",
+        source: "https://roszdravnadzor.gov.ru/",
+        sourceFile: "https://roszdravnadzor.gov.ru/i/skin/default/img/logo-gerb.png",
+        downloadUrl: "https://roszdravnadzor.gov.ru/i/skin/default/img/logo-gerb.png",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0420\u043E\u0441\u0437\u0434\u0440\u0430\u0432\u043D\u0430\u0434\u0437\u043E\u0440",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "45095dfe4d6bd415db54d80c71af142f3b66fff17fbcc13c248fa9e58e34b594",
+        bytes: 2592,
+        width: 57,
+        height: 66,
+        hasTransparency: true,
+        originalSha256: "3e90e0d5264635b01a84cd3cfdb9fe4c933e3357a70ed2df1f1e00470c350daa",
+        originalBytes: 3438,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosnedra: {
+        src: "assets/authority-symbols/rosnedra.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u043D\u0435\u0434\u0440\u0430",
+        source: "https://rosnedra.gov.ru/",
+        sourceFile: "https://rosnedra.gov.ru/local/templates/rosnedra/assets/img/logo.svg?1",
+        downloadUrl: "https://rosnedra.gov.ru/local/templates/rosnedra/assets/img/logo.svg?1",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0420\u043E\u0441\u043D\u0435\u0434\u0440\u0430",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "b8756a0901ad6ccf28f6e4fe4acea41e2ffac4127b3afab0c4bdb279208a5cf6",
+        bytes: 3598,
+        width: 256,
+        height: 68,
+        hasTransparency: true,
+        originalSha256: "2282749fa5420fb103b1277e69250bb09f5db0208e9a9658da2741d72b90a2a1",
+        originalBytes: 47688,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      minpros: {
+        src: "assets/authority-symbols/minpros.webp",
+        kind: "official_emblem",
+        title: "\u041C\u0438\u043D\u043F\u0440\u043E\u0441\u0432\u0435\u0449\u0435\u043D\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://edu.gov.ru/",
+        sourceFile: "https://edu.gov.ru/application/frontend/skin/default/assets/data/logo/logo_sm.png?v=1",
+        downloadUrl: "https://edu.gov.ru/application/frontend/skin/default/assets/data/logo/logo_sm.png?v=1",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u041C\u0438\u043D\u043F\u0440\u043E\u0441\u0432\u0435\u0449\u0435\u043D\u0438\u044F \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "88613391d604f2e9925e6e053618174730ceebc213d6206cd8dca5092f476ce4",
+        bytes: 43872,
+        width: 207,
+        height: 240,
+        hasTransparency: true,
+        originalSha256: "05914710f0a9b46f08c3cd310f57ada22065757cd2850f275bb862fe8b4fb9e8",
+        originalBytes: 65906,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      probirnaya: {
+        src: "assets/authority-symbols/probirnaya.webp",
+        kind: "official_emblem",
+        title: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0438\u0440\u043D\u0430\u044F \u043F\u0430\u043B\u0430\u0442\u0430",
+        source: "https://probpalata.gov.ru/",
+        sourceFile: "https://probpalata.gov.ru/_asset/img/logo@2x.png",
+        downloadUrl: "https://probpalata.gov.ru/_asset/img/logo@2x.png",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0438\u0440\u043D\u0430\u044F \u043F\u0430\u043B\u0430\u0442\u0430",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "17875f38ad90e5491c2708a6bd601c32459651f2bf26f65d44c247291d31982f",
+        bytes: 22428,
+        width: 256,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "7d6eba5ece73145446d34d35e000254e11fa0f34dd4c9455d094f395059af04b",
+        originalBytes: 12191,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosalkotab: {
+        src: "assets/authority-symbols/rosalkotab.webp",
+        kind: "official_emblem",
+        title: "\u0420\u043E\u0441\u0430\u043B\u043A\u043E\u0433\u043E\u043B\u044C\u0442\u0430\u0431\u0430\u043A\u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C",
+        source: "https://fsrar.gov.ru/",
+        sourceFile: "https://fsrar.gov.ru/images/fskatr.png",
+        downloadUrl: "https://fsrar.gov.ru/images/fskatr.png",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0420\u043E\u0441\u0430\u043B\u043A\u043E\u0433\u043E\u043B\u044C\u0442\u0430\u0431\u0430\u043A\u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "0d41e17a5a055e9a4e5ec191e6b2307e7dc641ba5bffa0b521c4d82a0ace7eeb",
+        bytes: 80550,
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "2682bf456320c764cf190e908380c4b62d45b99c8b3d9675fa6dbf5ee9b4f57b",
+        originalBytes: 358635,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosarchiv: {
+        src: "assets/authority-symbols/rosarchiv.webp",
+        kind: "jurisdiction_coat",
+        title: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u0435\u0440\u0431 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_the_Russian_Federation_2.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/2/29/Coat_of_Arms_of_the_Russian_Federation_2.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Coat_of_Arms_of_the_Russian_Federation_2.svg/330px-Coat_of_Arms_of_the_Russian_Federation_2.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u0435\u0440\u0431 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438; \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A flag.kremlin.ru, \u0424\u041A\u0417 \u043E\u0442 25.12.2000 \u2116 2-\u0424\u041A\u0417; Wikimedia Commons",
+        description: "",
+        sha256: "b3fc829206dec323c9169b6ba552239bbe9fdab1198bd8fa95bb49ee6bbd3a13",
+        bytes: 64912,
+        usageSource: "https://archives.gov.ru/",
+        usageSourceFile: "https://archives.gov.ru/sites/all/themes/archives/images/gerb2.png",
+        usageNote: "\u0420\u043E\u0441\u0430\u0440\u0445\u0438\u0432 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439 \u0433\u0435\u0440\u0431 \u0432 \u0448\u0430\u043F\u043A\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430. \u0417\u0434\u0435\u0441\u044C \u043F\u043E\u043A\u0430\u0437\u0430\u043D \u043C\u043D\u043E\u0433\u043E\u0446\u0432\u0435\u0442\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u0433\u0435\u0440\u0431\u0430 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438, \u0430 \u043D\u0435 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u044D\u043C\u0431\u043B\u0435\u043C\u0430.",
+        width: 233,
+        height: 256,
+        hasTransparency: true,
+        originalSha256: "831ece3799d33541daf4c678d9590d6ff59f58982b69c5186931e4228e154c93",
+        originalBytes: 107598,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosmolodezh: {
+        src: "assets/authority-symbols/rosmolodezh.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u043C\u043E\u043B\u043E\u0434\u0451\u0436\u044C",
+        source: "https://fadm.gov.ru/",
+        sourceFile: "https://fadm.gov.ru/local/templates/fadmgovru/assets/img/globa/logo.svg",
+        downloadUrl: "https://fadm.gov.ru/local/templates/fadmgovru/assets/img/globa/logo.svg",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0420\u043E\u0441\u043C\u043E\u043B\u043E\u0434\u0451\u0436\u044C",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "8cfe85a2ac2c7afdd30540f96b5db31fd659e628322b08bfcb5531cc4513c4b3",
+        bytes: 1426,
+        width: 144,
+        height: 21,
+        hasTransparency: true,
+        originalSha256: "d54441e6fefc145ccc6e595c052285b82d7c4e4214ded54bfef4c5aac634bbc2",
+        originalBytes: 4831,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      rosatom: {
+        src: "assets/authority-symbols/rosatom.webp",
+        kind: "official_logo",
+        title: "\u0420\u043E\u0441\u0430\u0442\u043E\u043C",
+        source: "https://rosatom.ru/index.html",
+        sourceFile: "https://rosatom.ru/local/templates/rosatom/img/logo.svg",
+        downloadUrl: "https://rosatom.ru/local/templates/rosatom/img/logo.svg",
+        license: "Official website asset; no explicit reuse licence stated on the source page",
+        rightsBasis: "Institutional identification in educational material; original official mark, no endorsement implied",
+        credit: "\u0420\u043E\u0441\u0430\u0442\u043E\u043C",
+        description: "Official website header mark, observed 2026-10-27",
+        sha256: "abc8f358f60d9474c2b5f68d60a3fdc57dd09531b1b31196a5c00a2a21a78813",
+        bytes: 2618,
+        width: 132,
+        height: 28,
+        hasTransparency: true,
+        originalSha256: "5e39cec0725ee5b11dc81996d2fe82a98354d05de34c3055c0401ab02e5e1059",
+        originalBytes: 11439,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      },
+      sfr: {
+        src: "assets/authority-symbols/sfr.webp",
+        kind: "official_logo",
+        title: "\u0421\u043E\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0444\u043E\u043D\u0434 \u0420\u043E\u0441\u0441\u0438\u0438",
+        source: "https://commons.wikimedia.org/wiki/File:Logo_SFR.svg",
+        sourceFile: "https://upload.wikimedia.org/wikipedia/commons/a/ad/Logo_SFR.svg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        downloadUrl: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Logo_SFR.svg/330px-Logo_SFR.svg.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+        license: "Public domain",
+        licenseUrl: "",
+        credit: "\u0410\u041D\u041E \xAB\u041D\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u044B\xBB",
+        description: "\u041B\u043E\u0433\u043E\u0442\u0438\u043F \u0421\u043E\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0444\u043E\u043D\u0434\u0430 \u0420\u043E\u0441\u0441\u0438\u0438",
+        sha256: "c6165659432276951b8ae0716015d67bf13331b6584b77348c592bdb66e28d9c",
+        bytes: 26616,
+        width: 256,
+        height: 213,
+        hasTransparency: true,
+        originalSha256: "1ee6a09d9266eb5eaef410bb02f8e08f93d5bfc40f40cfc6a46586818f0db2b4",
+        originalBytes: 37283,
+        preparation: "Proportional resize to maximum 256 px; lossless WebP; original colors and alpha preserved"
+      }
+    }
+  };
 
   // site/apps/career/assets/loader.mjs
   async function loadJSON(url, { timeout = 5e3, validate = () => true } = {}) {
@@ -327,6 +1868,24 @@ var CareerRuntime = (() => {
     document.querySelectorAll("[data-language]").forEach((button) => button.addEventListener("click", () => setLanguage(button.dataset.language)));
   }
 
+  // site/apps/career/assets/authority-symbols.mjs
+  var escape = (value) => String(value || "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  function authorityEmblem(authority, className = "") {
+    const symbol = authority_symbols_default.symbols[authority.id];
+    if (!symbol) return "";
+    const src = __careerHost.assetURL ? __careerHost.assetURL(symbol.src) : new URL(symbol.src, location.href).href;
+    return `<span class="authority-symbol ${escape(className)}"><img src="${escape(src)}" width="64" height="64" alt="" loading="lazy" decoding="async"></span>`;
+  }
+  function authoritySymbolSource(authority) {
+    return authority_symbols_default.symbols[authority.id] || null;
+  }
+  function authoritySymbolCredit(authority) {
+    const symbol = authoritySymbolSource(authority);
+    if (!symbol) return "";
+    const label = getLanguage() === "en" ? "Symbol source" : getLanguage() === "zh-Hans" ? "\u6807\u8BC6\u6765\u6E90" : "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0441\u0438\u043C\u0432\u043E\u043B\u0430";
+    return `<p class="authority-symbol-credit" data-no-i18n><a href="${escape(symbol.source)}" target="_blank" rel="noopener noreferrer">${label}</a> \xB7 ${escape(symbol.credit)} \xB7 ${escape(symbol.license)}</p>`;
+  }
+
   // site/apps/career/assets/vacancies-model.mjs
   var PORTAL = "https://gossluzhba.gov.ru";
   var FEED_SCHEMA = 1;
@@ -493,7 +2052,7 @@ var CareerRuntime = (() => {
       return `<div class="vac-source-status ${tone}" role="status">${I("source")}<div><strong>${heading}</strong><p>${body}</p><small>${L("\u0423\u0441\u043F\u0435\u0448\u043D\u0430\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430", "Successful source check", "\u6210\u529F\u6838\u5BF9\u65F6\u95F4")}: ${E(date(feed?.lastSuccessAt))}${feed?.lastSuccessAt ? " \xB7 " + L("\u0432\u0440\u0435\u043C\u044F \u041C\u043E\u0441\u043A\u0432\u044B", "Moscow time", "\u83AB\u65AF\u79D1\u65F6\u95F4") : ""}</small></div></div>`;
     }
     function cards(items) {
-      return items.map((v) => `<article class="vac-card"><div class="vac-card-meta"><span>${E(strings()[v.status])}</span><span>${E(v.location || L("\u041C\u0435\u0441\u0442\u043E \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Location not supplied", "\u672A\u6CE8\u660E\u5730\u70B9"))}</span></div><h3 lang="ru">${E(v.title)}</h3><p class="vac-employer" lang="ru">${E(v.organization.name)}</p>${v.organization.relation === "territorial" ? `<p class="vac-relation">${L("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D, \u043D\u0435 \u0446\u0435\u043D\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0430\u043F\u043F\u0430\u0440\u0430\u0442", "Territorial authority, not the central office", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173\uFF0C\u975E\u4E2D\u592E\u673A\u5173")}</p>` : ""}${v.department ? `<p lang="ru">${E(v.department)}</p>` : ""}<dl>${v.deadline ? `<div><dt>${L("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E(date(v.deadline))}</dd></div>` : ""}${v.salary ? `<div><dt>${L("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as stated", "\u6765\u6E90\u6240\u5217\u62A5\u916C")}</dt><dd lang="ru">${E(v.salary)}</dd></div>` : ""}${v.education ? `<div><dt>${L("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386")}</dt><dd lang="ru">${E(v.education)}</dd></div>` : ""}${v.experience ? `<div><dt>${L("\u041E\u043F\u044B\u0442", "Experience", "\u7ECF\u5386")}</dt><dd lang="ru">${E(v.experience)}</dd></div>` : ""}${v.kind ? `<div><dt>${L("\u0412\u0438\u0434 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Announcement type", "\u516C\u544A\u7C7B\u578B")}</dt><dd lang="ru">${E(v.kind)}</dd></div>` : ""}</dl><p class="vac-card-note">${L("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u044B", "Retrieved", "\u83B7\u53D6\u4E8E")}: ${E(date(v.lastSeenAt))}. ${L("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C.", "Titles and requirements retain their original Russian wording.", "\u6807\u9898\u53CA\u8981\u6C42\u4FDD\u7559\u4FC4\u6587\u539F\u6587\u3002")}</p><a class="button button-primary" href="${E(v.url)}" target="_blank" rel="noopener noreferrer">${L("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I("external")}</a></article>`).join("");
+      return items.map((v) => `<article class="vac-card"><div class="vac-card-meta"><span>${E(strings()[v.status])}</span><span>${E(v.location || L("\u041C\u0435\u0441\u0442\u043E \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Location not supplied", "\u672A\u6CE8\u660E\u5730\u70B9"))}</span></div><div class="result-symbol-heading">${authorityEmblem(institutions.find((a) => a.id === v.organization.authorityId) || { id: "" }, "compact")}<h3 lang="ru">${E(v.title)}</h3></div><p class="vac-employer" lang="ru">${E(v.organization.name)}</p>${v.organization.relation === "territorial" ? `<p class="vac-relation">${L("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D, \u043D\u0435 \u0446\u0435\u043D\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0430\u043F\u043F\u0430\u0440\u0430\u0442", "Territorial authority, not the central office", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173\uFF0C\u975E\u4E2D\u592E\u673A\u5173")}</p>` : ""}${v.department ? `<p lang="ru">${E(v.department)}</p>` : ""}<dl>${v.deadline ? `<div><dt>${L("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E(date(v.deadline))}</dd></div>` : ""}${v.salary ? `<div><dt>${L("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as stated", "\u6765\u6E90\u6240\u5217\u62A5\u916C")}</dt><dd lang="ru">${E(v.salary)}</dd></div>` : ""}${v.education ? `<div><dt>${L("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386")}</dt><dd lang="ru">${E(v.education)}</dd></div>` : ""}${v.experience ? `<div><dt>${L("\u041E\u043F\u044B\u0442", "Experience", "\u7ECF\u5386")}</dt><dd lang="ru">${E(v.experience)}</dd></div>` : ""}${v.kind ? `<div><dt>${L("\u0412\u0438\u0434 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Announcement type", "\u516C\u544A\u7C7B\u578B")}</dt><dd lang="ru">${E(v.kind)}</dd></div>` : ""}</dl><p class="vac-card-note">${L("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u044B", "Retrieved", "\u83B7\u53D6\u4E8E")}: ${E(date(v.lastSeenAt))}. ${L("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C.", "Titles and requirements retain their original Russian wording.", "\u6807\u9898\u53CA\u8981\u6C42\u4FDD\u7559\u4FC4\u6587\u539F\u6587\u3002")}</p><a class="button button-primary" href="${E(v.url)}" target="_blank" rel="noopener noreferrer">${L("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I("external")}</a></article>`).join("");
     }
     function nothing() {
       const targets = ids();
@@ -502,7 +2061,8 @@ var CareerRuntime = (() => {
       return `<div class="vac-empty">${I("briefcase")}<h3>${!matched.length ? L("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0435\u0449\u0451 \u043D\u0435 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B", "Employers not yet matched", "\u96C7\u4E3B\u5C1A\u672A\u5339\u914D") : L("\u0412 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u0438 \u0432\u044B\u0434\u0430\u0447\u0438 \u043D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439", "No matching announcements in the retrieved results", "\u5DF2\u83B7\u53D6\u7ED3\u679C\u4E2D\u6CA1\u6709\u5339\u914D\u516C\u544A")}</h3><p>${L("\u042D\u0442\u043E \u043D\u0435 \u0432\u044B\u0432\u043E\u0434 \u043E\u0431 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435. \u0414\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043A \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0438\u0441\u043A\u0443.", "This is not evidence that the authority has no vacancies. You can open the official search.", "\u8FD9\u4E0D\u8BC1\u660E\u673A\u5173\u6CA1\u6709\u7A7A\u7F3A\uFF1B\u53EF\u4EE5\u6253\u5F00\u5B98\u65B9\u641C\u7D22\u3002")}</p><a class="button button-secondary" href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L("\u041F\u043E\u0438\u0441\u043A \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official portal", "\u5728\u5B98\u65B9\u95E8\u6237\u641C\u7D22")}${I("external")}</a></div>`;
     }
     function setup() {
-      return `<details class="vac-setup"><summary>${L("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432", "Source and organisation matching", "\u6765\u6E90\u4E0E\u673A\u5173\u5339\u914D")}</summary><p>${L("\u0417\u0434\u0435\u0441\u044C \u043F\u0443\u0431\u043B\u0438\u043A\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u0439 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430\u043B\u0430. \u0421\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438 \u0441\u0442\u0430\u0442\u0443\u0441 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430: \u043F\u0443\u0441\u0442\u043E\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435\u0442.", "This section displays a verifiable copy of information from the official portal. Check the retrieval date and source status: an empty list does not mean there are no vacancies.", "\u6B64\u5904\u5C55\u793A\u5B98\u65B9\u95E8\u6237\u4FE1\u606F\u7684\u53EF\u6838\u67E5\u526F\u672C\u3002\u8BF7\u67E5\u770B\u83B7\u53D6\u65E5\u671F\u548C\u6765\u6E90\u72B6\u6001\uFF1A\u5217\u8868\u4E3A\u7A7A\u4E0D\u4EE3\u8868\u6CA1\u6709\u804C\u4F4D\u3002")}</p><p>${L("\u041F\u0435\u0440\u0435\u0434 \u043E\u0442\u043A\u043B\u0438\u043A\u043E\u043C \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443 \u043D\u0430 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u0440\u043E\u043A \u043F\u043E\u0434\u0430\u0447\u0438, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B. \u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435\u043C \u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0441\u043F\u0438\u0441\u043A\u0430 \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "Before applying, open the listing on the official portal to verify the deadline, requirements and documents. The platform administrator manages the connection and updates.", "\u7533\u8BF7\u524D\u8BF7\u5728\u5B98\u65B9\u95E8\u6237\u6253\u5F00\u804C\u4F4D\u8BE6\u60C5\uFF0C\u6838\u5B9E\u622A\u6B62\u65E5\u671F\u3001\u8981\u6C42\u53CA\u6750\u6599\u3002\u5E73\u53F0\u7BA1\u7406\u5458\u8D1F\u8D23\u8FDE\u63A5\u4E0E\u66F4\u65B0\u3002")}</p><p>${L("\u0415\u0441\u043B\u0438 \u0444\u043E\u0440\u043C\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0430 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0430\u0441\u044C \u0438\u043B\u0438 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438, \u0441\u0431\u043E\u0440 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442\u0441\u044F. \u041E\u0431\u0445\u043E\u0434 \u0432\u0445\u043E\u0434\u0430, CAPTCHA \u0438 \u0441\u0435\u0442\u0435\u0432\u044B\u0445 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F.", "Collection stops if the portal changes or requires authentication. Login, CAPTCHA and network restrictions are not bypassed.", "\u95E8\u6237\u6539\u53D8\u6216\u8981\u6C42\u8EAB\u4EFD\u8BA4\u8BC1\u65F6\u505C\u6B62\u91C7\u96C6\uFF1B\u4E0D\u7ED5\u8FC7\u767B\u5F55\u3001\u9A8C\u8BC1\u7801\u6216\u7F51\u7EDC\u9650\u5236\u3002")}</p><div class="vac-directory-summary"><span>${L("\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0439 \u0432 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445", "Source organisations retrieved", "\u5DF2\u83B7\u53D6\u6765\u6E90\u673A\u6784")}: <b>${feed?.organizations.length || 0}</b></span><span>${L("\u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E", "Matched", "\u5DF2\u5339\u914D")}: <b>${feed?.organizations.filter((o) => o.authorityId).length || 0}</b></span></div>${feed?.organizations.length ? `<div class="vac-table-scroll"><table><thead><tr><th>${L("\u041D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435", "On the portal", "\u95E8\u6237\u673A\u6784")}</th><th>${L("\u0412 \u043D\u0430\u0448\u0435\u043C \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435", "In our directory", "\u672C\u5E73\u53F0\u76EE\u5F55")}</th><th>${L("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435", "Basis", "\u4F9D\u636E")}</th></tr></thead><tbody>${feed.organizations.filter((o) => o.authorityId).slice(0, 100).map((o) => `<tr><td lang="ru">${E(o.name)}<small>${E(o.id)}</small></td><td>${E(displayName(o.authorityId))}</td><td>${o.matchMethod === "reviewed" ? L("\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u0441\u0432\u044F\u0437\u044C", "Reviewed link", "\u5DF2\u5BA1\u6838\u5173\u8054") : L("\u0422\u043E\u0447\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435", "Exact name", "\u540D\u79F0\u7CBE\u786E\u5339\u914D")}</td></tr>`).join("")}</tbody></table></div>` : ""}<p class="vac-card-note">${L("\u041D\u0435\u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0438 \u043F\u043E\u0434\u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F \u0432 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0435 \u043F\u043E\u043F\u0430\u0434\u0430\u044E\u0442. \u0418\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u044B \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0432\u043D\u0443\u0442\u0440\u0438 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430.", "Ambiguous matches and subordinate institutions are never automatically included. IDs are matched only within the retrieved source data.", "\u6A21\u7CCA\u5339\u914D\u53CA\u4E0B\u5C5E\u4E8B\u4E1A\u673A\u6784\u4E0D\u81EA\u52A8\u8FDB\u5165\u4E2A\u4EBA\u5217\u8868\uFF1B\u6807\u8BC6\u4EC5\u5728\u5DF2\u83B7\u53D6\u7684\u6765\u6E90\u6570\u636E\u5185\u5339\u914D\u3002")}</p></details>`;
+      const employers = [...new Map((feed?.organizations || []).map((o) => [normalizeName(o.name), o])).values()];
+      return `<details class="vac-setup"><summary>${L("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432", "Source and organisation matching", "\u6765\u6E90\u4E0E\u673A\u5173\u5339\u914D")}</summary><p>${L("\u0417\u0434\u0435\u0441\u044C \u043F\u0443\u0431\u043B\u0438\u043A\u0443\u0435\u0442\u0441\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C\u0430\u044F \u043A\u043E\u043F\u0438\u044F \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u0439 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430\u043B\u0430. \u0421\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438 \u0441\u0442\u0430\u0442\u0443\u0441 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430: \u043F\u0443\u0441\u0442\u043E\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435\u0442.", "This section displays a verifiable copy of information from the official portal. Check the retrieval date and source status: an empty list does not mean there are no vacancies.", "\u6B64\u5904\u5C55\u793A\u5B98\u65B9\u95E8\u6237\u4FE1\u606F\u7684\u53EF\u6838\u67E5\u526F\u672C\u3002\u8BF7\u67E5\u770B\u83B7\u53D6\u65E5\u671F\u548C\u6765\u6E90\u72B6\u6001\uFF1A\u5217\u8868\u4E3A\u7A7A\u4E0D\u4EE3\u8868\u6CA1\u6709\u804C\u4F4D\u3002")}</p><p>${L("\u041F\u0435\u0440\u0435\u0434 \u043E\u0442\u043A\u043B\u0438\u043A\u043E\u043C \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0443 \u043D\u0430 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u0440\u043E\u043A \u043F\u043E\u0434\u0430\u0447\u0438, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B. \u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435\u043C \u0438 \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0441\u043F\u0438\u0441\u043A\u0430 \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u0442 \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "Before applying, open the listing on the official portal to verify the deadline, requirements and documents. The platform administrator manages the connection and updates.", "\u7533\u8BF7\u524D\u8BF7\u5728\u5B98\u65B9\u95E8\u6237\u6253\u5F00\u804C\u4F4D\u8BE6\u60C5\uFF0C\u6838\u5B9E\u622A\u6B62\u65E5\u671F\u3001\u8981\u6C42\u53CA\u6750\u6599\u3002\u5E73\u53F0\u7BA1\u7406\u5458\u8D1F\u8D23\u8FDE\u63A5\u4E0E\u66F4\u65B0\u3002")}</p><p>${L("\u0415\u0441\u043B\u0438 \u0444\u043E\u0440\u043C\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0430 \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0430\u0441\u044C \u0438\u043B\u0438 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u0438, \u0441\u0431\u043E\u0440 \u043E\u0441\u0442\u0430\u043D\u0430\u0432\u043B\u0438\u0432\u0430\u0435\u0442\u0441\u044F. \u041E\u0431\u0445\u043E\u0434 \u0432\u0445\u043E\u0434\u0430, CAPTCHA \u0438 \u0441\u0435\u0442\u0435\u0432\u044B\u0445 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F.", "Collection stops if the portal changes or requires authentication. Login, CAPTCHA and network restrictions are not bypassed.", "\u95E8\u6237\u6539\u53D8\u6216\u8981\u6C42\u8EAB\u4EFD\u8BA4\u8BC1\u65F6\u505C\u6B62\u91C7\u96C6\uFF1B\u4E0D\u7ED5\u8FC7\u767B\u5F55\u3001\u9A8C\u8BC1\u7801\u6216\u7F51\u7EDC\u9650\u5236\u3002")}</p><div class="vac-directory-summary"><span>${L("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439 \u043F\u043E \u0442\u043E\u0447\u043D\u044B\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044F\u043C", "Employers by exact source name", "\u6309\u6765\u6E90\u51C6\u786E\u540D\u79F0\u7EDF\u8BA1\u7684\u96C7\u4E3B")}: <b>${employers.length}</b></span><span>${L("\u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043E", "Matched", "\u5DF2\u5339\u914D")}: <b>${employers.filter((o) => o.authorityId).length}</b></span></div>${feed?.organizations.length ? `<div class="vac-table-scroll"><table><thead><tr><th>${L("\u041D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435", "On the portal", "\u95E8\u6237\u673A\u6784")}</th><th>${L("\u0412 \u043D\u0430\u0448\u0435\u043C \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435", "In our directory", "\u672C\u5E73\u53F0\u76EE\u5F55")}</th><th>${L("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435", "Basis", "\u4F9D\u636E")}</th></tr></thead><tbody>${employers.filter((o) => o.authorityId).slice(0, 100).map((o) => `<tr><td lang="ru">${E(o.name)}<small><a href="${E(o.evidenceUrl || PORTAL + "/vacancy/")}" target="_blank" rel="noopener noreferrer">${L("\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430-\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435", "Supporting source card", "\u6765\u6E90\u4F9D\u636E\u5361\u7247")}</a></small></td><td>${E(displayName(o.authorityId))}</td><td>${o.matchMethod === "reviewed" ? L("\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u0441\u0432\u044F\u0437\u044C", "Reviewed link", "\u5DF2\u5BA1\u6838\u5173\u8054") : L("\u0422\u043E\u0447\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435", "Exact name", "\u540D\u79F0\u7CBE\u786E\u5339\u914D")}</td></tr>`).join("")}</tbody></table></div>` : ""}<p class="vac-card-note">${L("\u041D\u0435\u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F \u0438 \u043F\u043E\u0434\u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F \u0432 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u043F\u0438\u0441\u043E\u043A \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0435 \u043F\u043E\u043F\u0430\u0434\u0430\u044E\u0442. \u0414\u043B\u044F \u0446\u0435\u043D\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u0430 \u043A\u0430\u0436\u0434\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430; \u0434\u043B\u044F \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u2014 \u0442\u043E\u0447\u043D\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u0438\u0435\u0440\u0430\u0440\u0445\u0438\u044F \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435-\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0438.", "Ambiguous matches and subordinate institutions are never automatically included. Each central listing is checked individually; territorial matches use the exact source name and hierarchy in the supporting card.", "\u6A21\u7CCA\u5339\u914D\u53CA\u4E0B\u5C5E\u4E8B\u4E1A\u673A\u6784\u4E0D\u81EA\u52A8\u8FDB\u5165\u4E2A\u4EBA\u5217\u8868\u3002\u4E2D\u592E\u673A\u5173\u516C\u544A\u9010\u4E00\u6838\u67E5\uFF1B\u6D3E\u51FA\u673A\u5173\u5339\u914D\u4F9D\u636E\u51C6\u786E\u540D\u79F0\u548C\u6765\u6E90\u5361\u7247\u4E2D\u7684\u5C42\u7EA7\u3002")}</p></details>`;
     }
     function draw() {
       if (!isVisible()) return;
@@ -619,6 +2179,7 @@ var CareerRuntime = (() => {
   // site/apps/career/assets/scoring.mjs
   var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
   var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
+  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
   function clamp(value, min = 0, max = 1) {
     return Math.max(min, Math.min(max, value));
   }
@@ -720,10 +2281,54 @@ var CareerRuntime = (() => {
     if (Number(importance) === 2) return 0.96;
     return 0.91;
   }
+  function canonicalValue(value) {
+    if (Array.isArray(value)) return value.map(canonicalValue);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
+    return value;
+  }
+  function pathSignature(path, template, factor) {
+    return JSON.stringify(canonicalValue({
+      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
+      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length).map(([id, ids]) => [id, [...new Set(ids)].sort()])),
+      conditions: CONDITION_IDS.map((id) => {
+        const value = path.conditions?.[id];
+        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+      }),
+      factor
+    }));
+  }
+  function aggregatePaths(paths) {
+    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+    const best = ordered[0];
+    const pathMeanScore = average(ordered.map((path) => path.score));
+    const contributions = {};
+    const pathMeanContributions = {};
+    for (const key of ["role", "sector", "conditions"]) {
+      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
+      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+    }
+    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+    const { signature, ...bestPath } = best;
+    return {
+      ...bestPath,
+      rawScore,
+      score: Math.round(rawScore * 10) / 10,
+      band: matchBand(rawScore),
+      bestPathScore: best.score,
+      pathMeanScore,
+      portfolioScore: pathMeanScore,
+      pathCount: ordered.length,
+      aggregation: AGENCY_AGGREGATION,
+      bestPathContributions: best.contributions,
+      pathMeanContributions,
+      contributions
+    };
+  }
   function scoreAuthority(authority, context, trackMap) {
     const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
     const cFit = conditionFit(context.conditions, authority.conditions);
-    let best = null;
+    const paths = /* @__PURE__ */ new Map();
     for (const link of authority.tracks || []) {
       const template = trackMap.get(link.id);
       if (!template) continue;
@@ -731,10 +2336,14 @@ var CareerRuntime = (() => {
       const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
       const cFit2 = conditionFit(context.conditions, link.conditions || {});
       const rFit = roleFit(context.roleProfile, template);
+      const factor = importanceFactor(link.importance);
       const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
-      const score2 = 100 * base * importanceFactor(link.importance);
+      const score2 = 100 * base * factor;
+      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
       const candidate = {
         score: score2,
+        signature,
+        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
         roleFit: rFit,
         sectorFit: sFit2,
         conditionFit: cFit2,
@@ -745,25 +2354,33 @@ var CareerRuntime = (() => {
         pathTopics: path.topics || {},
         pathConditions: link.conditions || {}
       };
-      if (!best || candidate.score > best.score) best = candidate;
+      const existing = paths.get(signature);
+      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
     }
-    if (!best) {
-      best = {
-        score: 100 * (0.45 * sFit + 0.15 * cFit + 0.2),
+    if (!paths.size) {
+      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
+      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
+      return {
+        ...authority,
+        score: Math.round(score2 * 10) / 10,
+        rawScore: score2,
+        band: matchBand(score2),
         roleFit: 0.5,
         sectorFit: sFit,
         conditionFit: cFit,
         track: null,
-        importance: 0
+        importance: 0,
+        bestPathScore: null,
+        pathMeanScore: null,
+        portfolioScore: null,
+        pathCount: 0,
+        aggregation: AGENCY_AGGREGATION,
+        contributions,
+        bestPathContributions: null,
+        pathMeanContributions: null
       };
     }
-    return {
-      ...authority,
-      ...best,
-      score: Math.round(best.score * 10) / 10,
-      rawScore: best.score,
-      band: matchBand(best.score)
-    };
+    return { ...authority, ...aggregatePaths([...paths.values()]) };
   }
   function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
     const roleProfile = computeRoleProfile(answers, questions);
@@ -981,7 +2598,8 @@ var CareerRuntime = (() => {
         const scored = scoreAuthority({ id: record.id, shortName: record.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
         return { ...scored, link };
       }).sort((a, b) => b.rawScore - a.rawScore || b.sectorFit - a.sectorFit || a.link.id.localeCompare(b.link.id));
-      return { ...record, match: options[0], options };
+      const overall = scoreAuthority({ id: record.id, shortName: record.name.ru, tracks: record.tracks }, context, map);
+      return { ...record, match: { ...overall, link: overall.path }, options };
     }).sort((a, b) => b.match.rawScore - a.match.rawScore || b.match.sectorFit - a.match.sectorFit || a.name.ru.localeCompare(b.name.ru, "ru"));
     return { ranked, roleProfile, sectorPreferences };
   }
@@ -990,7 +2608,7 @@ var CareerRuntime = (() => {
     return records.filter((a) => (cohort === "all" || a.cohort === cohort) && (!q || [...Object.values(a.name), ...Object.values(a.location), ...Object.values(a.mission), ...a.verifiedUnits, ...a.tracks.flatMap((t) => Object.values(t.title))].join(" ").normalize("NFKC").toLocaleLowerCase().includes(q)));
   }
   function publicServiceReport(registry, ranked) {
-    return { kind: "russian-public-service-exploration", schemaVersion: 1, registryVersion: registry.registryVersion, modelVersion: registry.modelVersion, generatedAt: (/* @__PURE__ */ new Date()).toISOString(), notice: "Not an anonymous class result or evidence of eligibility. Russian institutions only.", items: ranked.map((a, i) => ({ id: a.id, officialName: a.name.ru, country: "RU", cohort: a.cohort, rankWithinSelection: i + 1, index: a.match?.score ?? null, track: a.match?.link.id ?? null, source: a.sources[0].url })) };
+    return { kind: "russian-public-service-exploration", schemaVersion: 1, registryVersion: registry.registryVersion, modelVersion: MODEL_VERSION, scoringRevision: SCORING_REVISION, generatedAt: (/* @__PURE__ */ new Date()).toISOString(), notice: "Not an anonymous class result or evidence of eligibility. Russian institutions only.", items: ranked.map((a, i) => ({ id: a.id, officialName: a.name.ru, country: "RU", cohort: a.cohort, rankWithinSelection: i + 1, index: a.match?.score ?? null, track: a.match?.link.id ?? null, source: a.sources[0].url })) };
   }
 
   // site/apps/career/assets/public-service.mjs
@@ -1019,7 +2637,7 @@ var CareerRuntime = (() => {
       return `<details class="ps-eligibility"><summary>${I2("shield")}${L2("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L2("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E2(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L2("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E2(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L2("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
     }
     function card(a, index) {
-      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div><h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E2(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L2("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L2("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L2("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E2(L2("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
+      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E2(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L2("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L2("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L2("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E2(L2("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
     }
     function modelDetails(a) {
       return `<section class="ps-section"><h2>${L2("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
@@ -1030,7 +2648,7 @@ var CareerRuntime = (() => {
     function detail(a) {
       const match = result?.ranked.find((x) => x.id === a.id);
       a = match || a;
-      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L2("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading"><span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E2(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p></div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L2("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L2("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L2("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L2("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L2("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L2("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L2("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L2("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L2("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L2("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L2("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L2("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E2(u)}</p>`).join("")}<small>${L2("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L2("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L2("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L2("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L2("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L2("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L2("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L2("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
+      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L2("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E2(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L2("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L2("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L2("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L2("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L2("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L2("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L2("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L2("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L2("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L2("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L2("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L2("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E2(u)}</p>`).join("")}<small>${L2("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L2("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L2("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L2("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L2("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L2("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L2("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L2("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
@@ -1039,7 +2657,7 @@ var CareerRuntime = (() => {
     }
     function list() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
-      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L2("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E2(query)}" placeholder="${L2("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L2("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L2("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L2("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L2("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L2("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L2("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L2("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L2("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L2("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F 27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u0438 \u043E\u0431\u0449\u0438\u0435 \u0448\u0430\u0431\u043B\u043E\u043D\u044B \u0440\u043E\u043B\u0435\u0439. \u0414\u043B\u044F \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0438\u0437 \u043D\u043E\u0432\u044B\u0445 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0439 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E \u0437\u0430\u0434\u0430\u043D\u044B \u0441\u0444\u0435\u0440\u044B \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F. \u041F\u0440\u0438\u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F \u043F\u0440\u0435\u0436\u043D\u0438\u0435 \u0434\u043E\u043B\u0438 40/45/15 \u0438 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\u044B \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 1,00/0,96/0,91. \u0411\u0435\u0440\u0451\u0442\u0441\u044F \u043B\u0443\u0447\u0448\u0438\u0439 \u0442\u0440\u0435\u043A. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0438 \u0438 \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0422\u041E\u041F-5.", "The current 27-question form and shared role templates are used. Each added work direction has its own areas and conditions. Existing 40/45/15 weights and 1.00/0.96/0.91 representation factors apply; the highest track is selected. Matching operates within this additional sample without altering the original top five.", "\u4F7F\u7528\u5F53\u524D27\u9898\u95EE\u5377\u548C\u901A\u7528\u89D2\u8272\u6A21\u677F\u3002\u65B0\u589E\u5DE5\u4F5C\u65B9\u5411\u5206\u522B\u8BBE\u7F6E\u9886\u57DF\u548C\u6761\u4EF6\uFF0C\u6CBF\u752840/45/15\u6743\u91CD\u4E0E1.00/0.96/0.91\u7CFB\u6570\uFF0C\u53D6\u6700\u9AD8\u65B9\u5411\u3002\u672C\u6BD4\u8F83\u9650\u4E8E\u8865\u5145\u6837\u672C\uFF0C\u4E0D\u6539\u53D8\u539F\u524D\u4E94\u6392\u540D\u3002")}</p><p>${L2("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E2(registry.registryVersion)}</small></details>`;
+      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L2("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E2(query)}" placeholder="${L2("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L2("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L2("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L2("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L2("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L2("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L2("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L2("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L2("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L2("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L2("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L2("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E2(registry.registryVersion)}</small></details>`;
     }
     function bind() {
       root.querySelectorAll("[data-ps-notebook]").forEach((b) => b.onclick = () => openNotebook?.(b.dataset.psNotebook));
@@ -1164,7 +2782,7 @@ var CareerRuntime = (() => {
       };
     }).sort((a, b) => b.score - a.score || Number(b.selected) - Number(a.selected));
     const factor = factorFor(item.importance);
-    const raw = [40 * item.roleFit * factor, 45 * item.sectorFit * factor, 15 * item.conditionFit * factor];
+    const raw = [item.contributions.role, item.contributions.sector, item.contributions.conditions];
     const contributions = displayContributions(raw, item.score);
     const pathSectors = item.pathSectors || authority.sectors;
     const sectorRows = pathSectors.map((s) => ({
@@ -1204,6 +2822,11 @@ var CareerRuntime = (() => {
       neighbours,
       roleProfile: result.roleProfile,
       lowInterest,
+      bestPathScore: item.bestPathScore,
+      pathMeanScore: item.pathMeanScore,
+      pathCount: item.pathCount,
+      bestPathContributions: item.bestPathContributions,
+      aggregation: item.aggregation,
       roleRows: SCALE_IDS.map((id) => ({ id, interest: result.roleProfile.raw[id], relevance: item.track?.vector[id] ?? 0 }))
     };
   }
@@ -1341,19 +2964,19 @@ var CareerRuntime = (() => {
       const labels = [L3("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L3("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L3("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
       const max = [40, 45, 15];
       const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${T(a.shortName)}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L3("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><h2>${T(x.authority.shortName)}</h2><span>${x.adjacent ? L3("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L3("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L3("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L3("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L3("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${T(x.authority.shortName)}</h2></div><span>${x.adjacent ? L3("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L3("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L3("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L3("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
     <p class="dl-track">${L3("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x.item.track?.title)}</strong></p>
     ${x.roleProfile.flat ? `<div class="dl-notice">${L3("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
     ${x.lowInterest ? `<div class="dl-notice">${L3("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
-    <h3>${L3("\u0418\u0437 \u0447\u0435\u0433\u043E \u0441\u043B\u043E\u0436\u0438\u043B\u0441\u044F \u0438\u043D\u0434\u0435\u043A\u0441", "How the index adds up")}</h3>
+    <h3>${L3("\u0418\u0437 \u0447\u0435\u0433\u043E \u0441\u043B\u043E\u0436\u0438\u043B\u0441\u044F \u0438\u043D\u0434\u0435\u043A\u0441", "How the index adds up")}</h3><p>${L3("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043E\u0446\u0435\u043D\u043A\u0438 \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F + 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u041F\u043E\u044D\u0442\u043E\u043C\u0443 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0442\u0440\u0435\u043A, \u043D\u043E \u0438 \u043E\u0431\u0449\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F.", "Institution index: 70% of the best work direction + 30% of the average across all distinct work directions. This reflects both a suitable career path and the institution\u2019s wider work profile.")}</p>
     <div class="dl-stacked" aria-hidden="true">${x.contributions.map((p, i) => `<i class="dl-piece-${i}" style="width:${p}%"></i>`).join("")}</div>
     <div class="dl-contributions">${x.contributions.map((p, i) => `<div><span><i class="dl-key dl-piece-${i}"></i>${labels[i]}</span><strong>${F2(p)}</strong><small>${L3("\u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441", "base weight")}: ${max[i]} / 100</small></div>`).join("")}</div>
     <p class="dl-formula">${x.contributions.map(F2).join(" + ")} = ${F2(x.item.score)} ${L3("\u0431\u0430\u043B\u043B\u0430 \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "index points")}</p>
     <p class="dl-help">${L3("\u0412\u0441\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0443\u0436\u0435 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0442\u0440\u0435\u043A\u0430. \u0414\u0435\u0441\u044F\u0442\u044B\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u044B \u0442\u0430\u043A, \u0447\u0442\u043E\u0431\u044B \u0441\u0443\u043C\u043C\u0430 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u043B\u0430 \u0441 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043E\u0442 \u044D\u0442\u043E\u0433\u043E \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.", "All three contributions already include the track-representation factor. Displayed tenths are reconciled to add up to the index; rankings are not changed.")}</p>
-    <details class="dl-details"><summary>${L3("\u0421\u0444\u0435\u0440\u044B: \u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0438 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Policy areas: your choices and the agency profile")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L3("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u044B\u0439 \u043F\u0443\u0442\u044C. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Only the best-fitting subject path contributes. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L3("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L3("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L3("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L3("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L3("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L3("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L3("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
-    <details class="dl-details"><summary>${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u044F: \u0433\u0434\u0435 \u0435\u0441\u0442\u044C \u0440\u0430\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435", "Conditions: where preferences differ")}</summary><p>${L3("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L3("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L3("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L3("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
-    <details class="dl-details"><summary>${L3("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L3("\u0412\u044B\u0431\u0438\u0440\u0430\u0435\u0442\u0441\u044F \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441 \u0441\u0440\u0435\u0434\u0438 \u0437\u0430\u0434\u0430\u043D\u043D\u044B\u0445 \u0442\u0440\u0435\u043A\u043E\u0432. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430.", "The highest index among the defined tracks is selected. Representation factors: 3 \u2192 1.00; 2 \u2192 0.96; 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L3("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
-    <details class="dl-details"><summary>${L3("\u041A\u0430\u043A \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B \u0441 \u0440\u043E\u043B\u044C\u044E", "How interests are matched to a role")}</summary><p>${L3("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L3("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L3("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L3("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
+    <details class="dl-details"><summary>${L3("\u0421\u0444\u0435\u0440\u044B \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Areas of the best work direction")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L3("\u0414\u0435\u0442\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Details of the best work direction. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L3("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L3("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L3("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L3("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L3("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L3("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L3("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
+    <details class="dl-details"><summary>${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Conditions of the best work direction")}</summary><p>${L3("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L3("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L3("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L3("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
+    <details class="dl-details"><summary>${L3("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L3("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L3("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
+    <details class="dl-details"><summary>${L3("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L3("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L3("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L3("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L3("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
     </article><aside class="dl-aside"><section class="dl-side-card"><h3>${L3("\u041F\u043E\u0447\u0435\u043C\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0441\u043F\u043E\u0440\u0438\u0442\u044C \u043E \u0434\u0435\u0441\u044F\u0442\u044B\u0445", "Why tenths should not decide a career")}</h3><p>${L3("\u042D\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 2,5 \u0431\u0430\u043B\u043B\u0430 \u043E\u0442 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E. \u041F\u043E\u0440\u043E\u0433 \u2013 \u043F\u0440\u0430\u0432\u0438\u043B\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B.", "These agencies are within 2.5 points of the selected one. The threshold is an interface rule, not a statistical confidence interval.")}</p><div class="dl-neighbours">${near || `<p>${L3("\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u0441\u043E\u0441\u0435\u0434\u0435\u0439 \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043F\u043E\u0440\u043E\u0433\u0430 \u043D\u0435\u0442.", "No other agency in this category is within the threshold.")}</p>`}</div><p class="dl-help">${L3("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0442\u043E\u0447\u043D\u044B\u0435 \u0440\u0430\u0432\u0435\u043D\u0441\u0442\u0432\u0430 \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u044E\u0442\u0441\u044F \u043F\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0443. \u042D\u0442\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043F\u043E\u0440\u044F\u0434\u043E\u043A, \u043D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430.", "Ordering uses the unrounded index; exact ties are resolved by identifier. This technical order is not evidence of superiority.")}</p></section>
     <section class="dl-side-card"><h3>${L3("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L3("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L3("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I3("source")}</button></section>
     ${sensitivityCard(x)}
@@ -1849,7 +3472,7 @@ var CareerRuntime = (() => {
   function validateAnonymousRecord(record, registry = validationRegistry) {
     const errors = [];
     if (!record || typeof record !== "object" || Array.isArray(record)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
-    if (record.schemaVersion === 1) return { valid: false, errors: ["\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0440\u0435\u0436\u043D\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u0415\u0433\u043E \u043D\u0435\u043B\u044C\u0437\u044F \u0441\u043C\u0435\u0448\u0438\u0432\u0430\u0442\u044C \u0441 \u043D\u043E\u0432\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u043E\u0439. \u0418\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0439\u0442\u0435 \u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0438 \u0437\u0430\u043D\u043E\u0432\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0435 \u0432\u043E\u043F\u0440\u043E\u0441\u044B."] };
+    if (record.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
     const schemaOK = exactKeys(record, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record.roleProfile.raw, SCALE_IDS2) && exactKeys(record.conditions, CONDITION_IDS3) && Array.isArray(record.ranking) && record.ranking.length >= 5 && record.ranking.length <= 10 && record.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
     if (!schemaOK) return { valid: false, errors: ["\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0445\u0435\u043C\u0435. \u041F\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u0435, \u0432 \u0442\u043E\u043C \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F, \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F."] };
     if (!Array.isArray(record.leadingTieIds) || !record.leadingTieIds.length || record.leadingTieIds.length > 69 || new Set(record.leadingTieIds).size !== record.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
@@ -1857,7 +3480,7 @@ var CareerRuntime = (() => {
     if (record.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
     if (record.questionnaireVersion !== QUESTIONNAIRE_VERSION || record.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
     if (!validateFocusAreas(record.focusAreas, record.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
-    if (record.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0441\u043E\u0437\u0434\u0430\u043D \u043D\u0435\u0441\u043E\u0432\u043C\u0435\u0441\u0442\u0438\u043C\u043E\u0439 \u0432\u0435\u0440\u0441\u0438\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
+    if (record.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
     if (typeof record.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
     if (typeof record.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record.createdAt) || Number.isNaN(Date.parse(record.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
     if (!record.roleProfile || typeof record.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
@@ -2197,7 +3820,7 @@ var CareerRuntime = (() => {
         return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date2(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map((id) => `<span class="tag">${esc(data2.sectors.find((s) => s.id === id)?.title || id)}</span>`).join("")}</div>
       <div class="scenario-top">${top.map((a, i) => `<span><b>${i + 1}</b>${esc(a.shortName)}<strong>${a.score.toFixed(1)}</strong></span>`).join("")}</div>
-      ${!result ? '<p class="scenario-warning">\u0421\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0434\u0440\u0443\u0433\u043E\u0439 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\u043E. \u041C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0442\u0438 \u043A\u043E\u043F\u0438\u044E \u043E\u0442\u0432\u0435\u0442\u043E\u0432, \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442\u0432\u0435\u0442\u0438\u0432 \u043D\u0430 \u0442\u0440\u0438 \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0432\u043E\u043F\u0440\u043E\u0441\u0430. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043E\u0441\u0442\u0430\u043D\u0435\u0442\u0441\u044F \u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0435.</p>' : ""}
+      ${!result ? '<p class="scenario-warning">\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438.</p>' : ""}
       <div class="scenario-actions"><button class="button button-primary" data-restore="${item.id}" ${!result ? 'data-legacy="true"' : ""}>${result ? "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0442\u0438 \u0438 \u043F\u0435\u0440\u0435\u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C"}</button><button class="button button-secondary" data-rename="${item.id}">\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C</button><button class="icon-button" data-delete="${item.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439">${glyph("trash")}</button></div>
       </article>`;
       }).join("") : `<div class="workspace-empty">${glyph("route")}<h2>\u0412\u0430\u0448 \u043F\u0435\u0440\u0432\u044B\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439</h2><p>\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u0417\u0430\u0442\u0435\u043C \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u0438\u043B\u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0434\u0432\u0430 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430 \u0431\u0435\u0437 \u043F\u043E\u0442\u0435\u0440\u0438 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432.</p><button class="button button-primary" data-go-test>\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442${glyph("arrow-right")}</button></div>`;
@@ -2217,11 +3840,11 @@ var CareerRuntime = (() => {
         if (!confirm(translate("\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u043C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u043C? \u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u0442\u0435\u0440\u044F\u043D\u044B."))) return;
         const input = structuredClone(item.inputs);
         input.focusAreas ||= {};
-        if (!compatibleScenario(item, modelVersion)) {
+        if (!compatibleScenario(item, modelVersion) && !canReuseScenarioInputs(item)) {
           for (const id of ["K3", "T3", "I3"]) delete input.answers[id];
           restore(input);
           route("test");
-          toast2(translate("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D. \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u0442\u0440\u0438 \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0432\u043E\u043F\u0440\u043E\u0441\u0430 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442."));
+          toast2(translate("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442."));
         } else {
           restore(input);
           route("results");
@@ -2438,7 +4061,9 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/app.js
-  var STORAGE_KEY = storageKey("answers-v8");
+  var STORAGE_KEY = storageKey("answers-v8.1");
+  var PREVIOUS_STORAGE_KEY = storageKey("answers-v8");
+  var copiedInputs = false;
   var DATA_FILES = [
     "data/scales.json",
     "data/questions.json",
@@ -2485,6 +4110,8 @@ var CareerRuntime = (() => {
   var pendingLegacyChoice = false;
   var lastSaveStatus = "idle";
   var persistedFingerprint = null;
+  var sectorDrag = null;
+  var sectorPress = null;
   var $2 = (selector, root = document) => root.querySelector(selector);
   var $$2 = (selector, root = document) => [...root.querySelectorAll(selector)];
   var icon = (id, className = "") => `<svg class="${className}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
@@ -2532,6 +4159,14 @@ var CareerRuntime = (() => {
   function storedPayload() {
     try {
       const rawText = readLocal(STORAGE_KEY);
+      if (!rawText) {
+        const prior = readLocal(PREVIOUS_STORAGE_KEY);
+        const upgraded = prior ? upgradePreviousDraft(JSON.parse(prior)) : null;
+        if (upgraded) {
+          copiedInputs = true;
+          return upgraded;
+        }
+      }
       const current = JSON.parse(rawText || "null");
       if (rawText && (!isRecord(current) || Number(current.schema) !== 4 || current.modelVersion !== MODEL_VERSION || current.questionnaireVersion !== QUESTIONNAIRE_VERSION || current.registryVersion !== REGISTRY_VERSION || !isRecord(current.answers) || !isRecord(current.conditions))) {
         unrecoverableStoredText = rawText;
@@ -2576,7 +4211,7 @@ var CareerRuntime = (() => {
     if (!completionStatus({ ...state, questions: data.questions }).complete) state.completedAt = null;
     if (typeof state.completedAt !== "string" || !Number.isFinite(Date.parse(state.completedAt))) state.completedAt = null;
     if (typeof state.resultRecordId !== "string" || !/^[a-zA-Z0-9-]{8,100}$/.test(state.resultRecordId)) state.resultRecordId = null;
-    persistedFingerprint = stateFingerprint();
+    persistedFingerprint = copiedInputs ? null : stateFingerprint();
   }
   function stateFingerprint() {
     const { lastRoute, ...content } = state;
@@ -2638,7 +4273,7 @@ var CareerRuntime = (() => {
         routeTo(resolveResumeRoute());
         toast("\u041E\u0442\u0432\u0435\u0442\u044B \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u044B. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u0437\u0430\u043D\u043E\u0432\u043E.");
       } catch {
-        toast("\u0424\u0430\u0439\u043B \u043E\u0442\u0432\u0435\u0442\u043E\u0432 \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442. \u041D\u0443\u0436\u0435\u043D \u0444\u0430\u0439\u043B \xAB\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B\xBB \u044D\u0442\u043E\u0439 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438 \u0440\u0430\u0437\u043C\u0435\u0440\u043E\u043C \u0434\u043E 128 \u041A\u0411.");
+        toast("\u0424\u0430\u0439\u043B \u043E\u0442\u0432\u0435\u0442\u043E\u0432 \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u0430\u0439\u043B \xAB\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B\xBB \u0440\u0430\u0437\u043C\u0435\u0440\u043E\u043C \u0434\u043E 128 \u041A\u0411.");
       } finally {
         event.target.value = "";
       }
@@ -2747,6 +4382,7 @@ var CareerRuntime = (() => {
     return $2(".view:not([hidden])")?.id?.replace("view-", "") || "home";
   }
   function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
+    finishSectorDrag(false, { focus: false, announce: false });
     const valid = ["home", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
     if (route === "main-content") {
       document.getElementById("main-content")?.focus();
@@ -2904,6 +4540,7 @@ var CareerRuntime = (() => {
       if (current.low) state.lowPrioritySectors.splice(current.lowIndex, 1);
       state.prioritySectors.push(id);
     }
+    state.focusAreas = sanitizeFocusAreas(state.focusAreas, state.prioritySectors);
     invalidateResult();
     saveState();
     renderSectors();
@@ -2917,6 +4554,7 @@ var CareerRuntime = (() => {
       if (current.priority) state.prioritySectors.splice(current.priorityIndex, 1);
       state.lowPrioritySectors.push(id);
     }
+    state.focusAreas = sanitizeFocusAreas(state.focusAreas, state.prioritySectors);
     invalidateResult();
     saveState();
     renderSectors();
@@ -2930,21 +4568,196 @@ var CareerRuntime = (() => {
       $2("#sector-grid").before(root);
     }
     const labels = { prioritySectors: "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u044B: \u043E\u0442 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043A \u0447\u0435\u0442\u0432\u0451\u0440\u0442\u043E\u043C\u0443", lowPrioritySectors: "\u041C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435: \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0441\u0442\u0440\u043E\u043A\u0430 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0442\u0435\u043B\u044C\u043D\u0430" };
-    root.innerHTML = Object.entries(labels).map(([key, label]) => `<div><h3>${label}</h3>${state[key].length ? state[key].map((id, i) => `<div class="sector-order-row"><span><b class="order-index">${i + 1}.</b> <span>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</span></span><button type="button" data-order="${key}" data-index="${i}" data-direction="-1" ${!i ? "disabled" : ""} aria-label="\u041F\u043E\u0434\u043D\u044F\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442">${icon("arrow-left")}</button><button type="button" data-order="${key}" data-index="${i}" data-direction="1" ${i === state[key].length - 1 ? "disabled" : ""} aria-label="\u041E\u043F\u0443\u0441\u0442\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442">${icon("arrow-right")}</button></div>`).join("") : "<p>\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0444\u0435\u0440\u044B \u043D\u0438\u0436\u0435.</p>"}</div>`).join("");
-    $$2("[data-order]", root).forEach((b) => b.addEventListener("click", () => {
-      const key = b.dataset.order, i = Number(b.dataset.index), j = i + Number(b.dataset.direction);
-      if (j < 0 || j >= state[key].length) return;
-      [state[key][i], state[key][j]] = [state[key][j], state[key][i]];
+    root.innerHTML = Object.entries(labels).map(([key, label]) => `<section class="sector-order-group ${key === "prioritySectors" ? "priority" : "low"}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label}</h3>${state[key].length ? `<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id, i) => {
+      const title = escapeHtml(data.sectors.find((s) => s.id === id)?.title || id);
+      return `<li class="sector-order-row ${key === "prioritySectors" ? "priority" : "low"}" data-order-key="${key}" data-sector-id="${id}" tabindex="0" aria-label="${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}" aria-roledescription="${escapeHtml(translate("\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u043C\u044B\u0439 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}" aria-describedby="sector-drag-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape">
+      <span class="sector-order-title"><b class="order-index">${i + 1}.</b><span>${title}</span></span>
+      <button type="button" class="sector-remove" aria-label="${escapeHtml(translate("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}: ${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}">${icon("close")}</button>
+      ${key === "prioritySectors" ? `<div class="sector-card-topics" data-topic-card="${id}" hidden></div>` : ""}
+    </li>`;
+    }).join("")}</ol>` : "<p>\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0444\u0435\u0440\u044B \u043D\u0438\u0436\u0435.</p>"}</section>`).join("");
+    $$2(".sector-order-row", root).forEach((row) => {
+      const isControl = (target) => Boolean(target.closest("button,input,select,textarea,a,label,[contenteditable]"));
+      row.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "touch" || !event.isPrimary || event.button !== 0 || isControl(event.target)) return;
+        event.preventDefault();
+        row.focus({ preventScroll: true });
+        beginSectorDrag(row, "pointer", event);
+        row.setPointerCapture(event.pointerId);
+      });
+      row.addEventListener("pointermove", (event) => {
+        if (sectorDrag?.row !== row || sectorDrag.mode !== "pointer" || sectorDrag.pointerId !== event.pointerId) return;
+        event.preventDefault();
+        sectorDrag.clientY = event.clientY;
+        if (Math.abs(event.clientY - sectorDrag.startY) > 5) sectorDrag.moved = true;
+        if (sectorDrag.moved) previewSectorDrag();
+      });
+      row.addEventListener("pointerup", (event) => {
+        if (sectorDrag?.row === row && sectorDrag.mode === "pointer" && sectorDrag.pointerId === event.pointerId) finishSectorDrag(sectorDrag.moved);
+      });
+      row.addEventListener("pointercancel", () => {
+        if (sectorDrag?.row === row && sectorDrag.mode === "pointer") finishSectorDrag(false);
+      });
+      row.addEventListener("lostpointercapture", () => {
+        if (sectorDrag?.row === row && sectorDrag.mode === "pointer") finishSectorDrag(false);
+      });
+      row.addEventListener("touchstart", (event) => {
+        if (event.touches.length !== 1) {
+          finishSectorDrag(false, { focus: false, announce: false });
+          return;
+        }
+        if (isControl(event.target)) return;
+        finishSectorDrag(false, { focus: false, announce: false });
+        const touch = event.touches[0], press = { row, id: touch.identifier, x: touch.clientX, y: touch.clientY, timer: null };
+        sectorPress = press;
+        press.timer = setTimeout(() => {
+          if (sectorPress !== press || !row.isConnected) return;
+          sectorPress = null;
+          row.focus({ preventScroll: true });
+          beginSectorDrag(row, "touch", { touchId: press.id, clientY: press.y });
+        }, 400);
+      }, { passive: true });
+      row.addEventListener("touchmove", (event) => {
+        if (event.touches.length !== 1) {
+          finishSectorDrag(false, { focus: false, announce: false });
+          return;
+        }
+        const touch = event.touches[0];
+        if (sectorPress?.row === row && sectorPress.id === touch.identifier) {
+          if (Math.hypot(touch.clientX - sectorPress.x, touch.clientY - sectorPress.y) > 8) finishSectorDrag(false, { focus: false, announce: false });
+          return;
+        }
+        if (sectorDrag?.row !== row || sectorDrag.mode !== "touch" || sectorDrag.touchId !== touch.identifier) return;
+        if (!event.cancelable) {
+          finishSectorDrag(false, { focus: false });
+          return;
+        }
+        event.preventDefault();
+        sectorDrag.clientY = touch.clientY;
+        if (Math.abs(touch.clientY - sectorDrag.startY) > 5) sectorDrag.moved = true;
+        if (sectorDrag.moved) previewSectorDrag();
+      }, { passive: false });
+      row.addEventListener("touchend", (event) => {
+        if (sectorPress?.row === row) finishSectorDrag(false, { focus: false, announce: false });
+        if (sectorDrag?.row === row && sectorDrag.mode === "touch" && [...event.changedTouches].some((touch) => touch.identifier === sectorDrag.touchId)) finishSectorDrag(sectorDrag.moved);
+      });
+      row.addEventListener("touchcancel", () => {
+        if (sectorPress?.row === row || sectorDrag?.row === row) finishSectorDrag(false, { focus: false });
+      });
+      row.addEventListener("contextmenu", (event) => {
+        if (sectorPress?.row === row || sectorDrag?.row === row) event.preventDefault();
+      });
+      row.addEventListener("keydown", (event) => {
+        if (event.target !== row) return;
+        const grabbed = sectorDrag?.row === row && sectorDrag.mode === "keyboard";
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          if (event.repeat) return;
+          if (grabbed) finishSectorDrag(true);
+          else beginSectorDrag(row, "keyboard");
+        } else if (grabbed && ["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          sectorDrag.target = event.key === "Home" ? 0 : event.key === "End" ? sectorDrag.rows.length - 1 : Math.max(0, Math.min(sectorDrag.rows.length - 1, sectorDrag.target + (event.key === "ArrowUp" ? -1 : 1)));
+          previewSectorDrag();
+          row.scrollIntoView({ block: "nearest", behavior: "instant" });
+          announceSectorOrder(translate("\u041F\u043E\u0437\u0438\u0446\u0438\u044F") + ` ${sectorDrag.target + 1} / ${sectorDrag.rows.length}`);
+        } else if ((sectorDrag?.row === row || sectorPress?.row === row) && event.key === "Escape") {
+          event.preventDefault();
+          finishSectorDrag(false);
+        } else if (grabbed && event.key === "Tab") finishSectorDrag(false, { focus: false });
+      });
+      row.addEventListener("blur", () => {
+        if (sectorDrag?.row === row && sectorDrag.mode === "keyboard") finishSectorDrag(false, { focus: false });
+      });
+      $2(".sector-remove", row).addEventListener("click", () => {
+        finishSectorDrag(false, { focus: false, announce: false });
+        const key = row.dataset.orderKey, id = row.dataset.sectorId, index = state[key].indexOf(id);
+        if (index < 0) return;
+        state[key].splice(index, 1);
+        state.focusAreas = sanitizeFocusAreas(state.focusAreas, state.prioritySectors);
+        invalidateResult();
+        saveState();
+        renderSectors();
+        const next = state[key][Math.min(index, state[key].length - 1)];
+        (next ? $2(`[data-order-key="${key}"][data-sector-id="${next}"] .sector-remove`) : $2(`[data-sector="${id}"] .${key === "prioritySectors" ? "priority-toggle" : "low-toggle"}`))?.focus({ preventScroll: true });
+        announceSectorOrder("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0443\u0434\u0430\u043B\u0451\u043D.");
+      });
+    });
+  }
+  function announceSectorOrder(message) {
+    const status = $2("#sector-order-status");
+    if (status) status.textContent = translate(message);
+  }
+  function beginSectorDrag(row, mode, event) {
+    finishSectorDrag(false, { focus: false, announce: false });
+    const list = row.parentElement, rows = $$2(".sector-order-row", list), index = rows.indexOf(row);
+    sectorDrag = { row, list, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
+    row.classList.add("is-dragging");
+    list.classList.add("is-sorting");
+    announceSectorOrder("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u043D \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F.");
+    if (mode !== "keyboard") {
+      const session = sectorDrag;
+      const tick = () => {
+        if (sectorDrag !== session || !session.row.isConnected) return;
+        if (session.moved && window.innerHeight) {
+          const speed = session.clientY < 64 ? -12 : session.clientY > window.innerHeight - 64 ? 12 : 0;
+          if (speed) window.scrollBy?.({ top: speed, behavior: "instant" });
+          previewSectorDrag();
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }
+  function previewSectorDrag() {
+    const drag = sectorDrag;
+    if (!drag) return;
+    drag.rows.forEach((row) => row.style.removeProperty("transform"));
+    const boxes = drag.rows.map((row) => row.getBoundingClientRect());
+    if (drag.mode !== "keyboard") {
+      drag.target = boxes.reduce((index, box, i) => i !== drag.index && drag.clientY > box.top + box.height / 2 ? index + 1 : index, 0);
+    }
+    const order = drag.rows.map((_, i) => i);
+    order.splice(drag.index, 1);
+    order.splice(drag.target, 0, drag.index);
+    const gap = boxes.length > 1 ? boxes[1].top - boxes[0].bottom : 0;
+    let top = boxes[0].top;
+    for (const index of order) {
+      const offset = drag.mode !== "keyboard" && index === drag.index ? drag.clientY - drag.grabOffset - boxes[index].top : top - boxes[index].top;
+      drag.rows[index].style.transform = `translateY(${offset}px)`;
+      top += boxes[index].height + gap;
+    }
+  }
+  function finishSectorDrag(commit, { focus = true, announce = true } = {}) {
+    if (sectorPress) {
+      clearTimeout(sectorPress.timer);
+      sectorPress = null;
+    }
+    const drag = sectorDrag;
+    if (!drag) return;
+    sectorDrag = null;
+    drag.rows.forEach((row) => {
+      row.style.removeProperty("transform");
+      row.classList.remove("is-dragging");
+    });
+    drag.list.classList.remove("is-sorting");
+    if (drag.pointerId !== void 0 && drag.row.hasPointerCapture(drag.pointerId)) drag.row.releasePointerCapture(drag.pointerId);
+    if (commit && drag.index !== drag.target) {
+      state[drag.key].splice(drag.target, 0, state[drag.key].splice(drag.index, 1)[0]);
+      state.focusAreas = sanitizeFocusAreas(state.focusAreas, state.prioritySectors);
       invalidateResult();
       saveState();
       renderSectors();
-      $2(`[data-order="${key}"][data-index="${j}"]:not([disabled])`)?.focus({ preventScroll: true });
-    }));
+    }
+    if (focus) $2(`[data-order-key="${drag.key}"][data-sector-id="${drag.id}"]`)?.focus({ preventScroll: true });
+    if (announce) announceSectorOrder(commit ? "\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0438\u0437\u043C\u0435\u043D\u0451\u043D." : "\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E.");
   }
   function renderSectors() {
+    finishSectorDrag(false, { focus: false, announce: false });
     $2("#priority-count").textContent = `${state.prioritySectors.length} / 4`;
     $2("#low-count").textContent = `${state.lowPrioritySectors.length} / 2`;
     $2("#sectors-next").disabled = state.prioritySectors.length !== 4 || state.lowPrioritySectors.length !== 2;
+    $2("#sectors-reset").disabled = !state.prioritySectors.length && !state.lowPrioritySectors.length && !Object.keys(state.focusAreas).length;
     state.focusAreas = sanitizeFocusAreas(state.focusAreas, state.prioritySectors);
     renderSectorOrder();
     $2("#sector-grid").innerHTML = data.sectors.map((sector) => {
@@ -2957,8 +4770,8 @@ var CareerRuntime = (() => {
       <h2>${escapeHtml(sector.title)}</h2>
       <p>${escapeHtml(sector.description)}</p>
       <div class="sector-actions">
-        <button type="button" class="priority-toggle" aria-pressed="${selection.priority}">${selection.priority ? "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430" : "\u0412 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"}</button>
-        <button type="button" class="low-toggle" aria-pressed="${selection.low}">${selection.low ? "\u0423\u0431\u0440\u0430\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0443" : "\u041D\u0435 \u043C\u043E\u0451"}</button>
+        <button type="button" class="priority-toggle" aria-pressed="${selection.priority}">\u041D\u0440\u0430\u0432\u0438\u0442\u0441\u044F</button>
+        <button type="button" class="low-toggle" aria-pressed="${selection.low}">\u041D\u0435 \u043D\u0440\u0430\u0432\u0438\u0442\u0441\u044F</button>
       </div>
     </article>`;
     }).join("");
@@ -2969,23 +4782,24 @@ var CareerRuntime = (() => {
     });
   }
   function renderTopicQuestions() {
-    let root = $2("#topic-questions");
-    if (!root) {
-      root = document.createElement("section");
-      root.id = "topic-questions";
-      root.className = "topic-questions";
-      $2("#sector-grid").after(root);
-    }
-    const groups = activeTopicGroups(state.prioritySectors).map((id) => TOPIC_GROUPS.find((g) => g.id === id));
-    root.innerHTML = groups.length ? `<h2>\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435, \u0447\u0442\u043E \u0438\u043C\u0435\u043D\u043D\u043E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E</h2><p>\u041D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E. \u0414\u043E \u0434\u0432\u0443\u0445 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0439 \u0432 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0445 \u0441\u0444\u0435\u0440\u0430\u0445 \u043F\u043E\u043C\u043E\u0433\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0430\u0442\u044C \u0441\u043E\u0441\u0435\u0434\u043D\u0438\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430. \u041C\u043E\u0436\u043D\u043E \u043E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0448\u0438\u0440\u043E\u043A\u0438\u0439 \u0432\u044B\u0431\u043E\u0440.</p>${groups.map((g) => `<fieldset><legend>${escapeHtml(data.sectors.find((s) => s.id === g.id).title)}</legend><div class="topic-options"><button type="button" data-topic-group="${g.id}" data-topic="" aria-pressed="${!state.focusAreas[g.id]}">\u041F\u043E\u043A\u0430 \u043D\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0430\u044E / \u0432\u0441\u044F \u0441\u0444\u0435\u0440\u0430</button>${g.topics.map((t) => `<button type="button" data-topic-group="${g.id}" data-topic="${t.id}" aria-pressed="${state.focusAreas[g.id] === t.id}"><span data-no-i18n>${escapeHtml(t.title[getLanguage()] || t.title.ru)}</span></button>`).join("")}</div></fieldset>`).join("")}` : "";
-    $$2("[data-topic-group]", root).forEach((b) => b.addEventListener("click", () => {
-      if (b.dataset.topic) state.focusAreas[b.dataset.topicGroup] = b.dataset.topic;
-      else delete state.focusAreas[b.dataset.topicGroup];
-      invalidateResult();
-      saveState();
-      renderTopicQuestions();
-      $2(`[data-topic-group="${b.dataset.topicGroup}"][data-topic="${b.dataset.topic}"]`, root)?.focus({ preventScroll: true });
-    }));
+    const active = activeTopicGroups(state.prioritySectors);
+    $$2("[data-topic-card]").forEach((root) => {
+      const group = TOPIC_GROUPS.find((item) => item.id === root.dataset.topicCard);
+      root.hidden = !group || !active.includes(group.id);
+      if (root.hidden) {
+        root.replaceChildren();
+        return;
+      }
+      root.innerHTML = `<label for="sector-topic-${group.id}">\u0423\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435:</label><select id="sector-topic-${group.id}" data-topic-group="${group.id}" title="\u0423\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435 (\u043D\u0435\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u043E)"><option value="">\u0412\u0441\u044F \u0441\u0444\u0435\u0440\u0430</option>${group.topics.map((topic) => `<option value="${topic.id}" data-no-i18n>${escapeHtml(topic.title[getLanguage()] || topic.title.ru)}</option>`).join("")}</select>`;
+      const select = $2("select", root);
+      select.value = state.focusAreas[group.id] || "";
+      select.addEventListener("change", () => {
+        if (select.value) state.focusAreas[group.id] = select.value;
+        else delete state.focusAreas[group.id];
+        invalidateResult();
+        saveState();
+      });
+    });
   }
   function renderConditions() {
     $2("#condition-list").innerHTML = data.conditions.map((condition) => {
@@ -3107,7 +4921,7 @@ var CareerRuntime = (() => {
 
     <section class="dl-lab-launch"><div><h2>\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435\u0441\u044C, \u043F\u043E\u0447\u0435\u043C\u0443 \u0432\u044B\u0431\u0440\u0430\u043D \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D</h2><p>\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0432\u043A\u043B\u0430\u0434 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432, \u0441\u0444\u0435\u0440 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u0439. \u0421\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442, \u043D\u0435 \u043C\u0435\u043D\u044F\u044F \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432.</p></div><button id="result-to-lab" class="button button-primary" type="button">\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430${icon("chart")}</button></section>
     <section class="results-section">
-      <div class="results-section-header"><div><h2>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438</h2><p>\u0422\u041E\u041F-5 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u0438\u0435\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0442\u0440\u0435\u043A\u0430, \u0437\u0430 \u0441\u0447\u0451\u0442 \u043A\u043E\u0442\u043E\u0440\u043E\u0433\u043E \u0441\u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043B\u0430\u0441\u044C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0435 \u0442\u0440\u0438</button></div>
+      <div class="results-section-header"><div><h2>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438</h2><p>\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B (70%) \u0438 \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u0432\u0441\u0435\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F (30%).</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0435 \u0442\u0440\u0438</button></div>
       ${leadingTies.length > 1 ? `<p class="app-notice">\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0438\u043C\u0435\u044E\u0442 \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u044B\u0439 \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0432\u043D\u0443\u0442\u0440\u0438 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439, \u0430 \u043D\u0435 \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u0439 \u0432 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.</p>` : ""}
       <div class="top-match-grid">${top.map((item, index) => matchCard(item, index + 1)).join("")}</div>
       ${cutTies.length ? `<details class="equal-results"><summary>\u0417\u0430 \u0433\u0440\u0430\u043D\u0438\u0446\u0435\u0439 \u0422\u041E\u041F-5 \u0435\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0441 \u0442\u0435\u043C \u0436\u0435 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C</summary><div class="tag-row">${cutTies.map((a) => `<button type="button" class="button button-secondary open-authority" data-authority="${a.id}">${escapeHtml(a.shortName)}</button>`).join("")}</div><p>\u041E\u043D\u0438 \u043D\u0435 \u043C\u0435\u043D\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438, \u0447\u0435\u043C \u043F\u044F\u0442\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.</p></details>` : ""}
@@ -3161,7 +4975,7 @@ var CareerRuntime = (() => {
     const selected = state.compareIds.includes(item.id);
     return `<article class="match-card">
     <div class="match-rank"><span>${rank}</span><div class="match-score"><strong>${item.score.toFixed(1)}</strong><small>\u0438\u043D\u0434\u0435\u043A\u0441</small></div></div>
-    <h3>${escapeHtml(item.shortName)}</h3>
+    <div class="result-symbol-heading">${authorityEmblem(item, "compact")}<h3>${escapeHtml(item.shortName)}</h3></div>
     <span class="match-type">${escapeHtml(publicSector ? item.entityTypeLabel : item.entityTypeLabel)}</span>
     <div class="match-track"><b>\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u0442\u0440\u0435\u043A</b>${escapeHtml(item.track?.title || "\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435")}</div>
     <div class="match-card-actions"><button class="match-more open-authority" type="button" data-authority="${item.id}">${escapeHtml(item.band.label)}${icon("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${item.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"}</span></button></div>
@@ -3289,7 +5103,7 @@ var CareerRuntime = (() => {
       const selected = state.compareIds.includes(authority.id);
       const careerRoles = buildAuthorityCareerRoles(authority, data.careerFramework, data.competencies, 3);
       return `<article class="authority-card">
-      <div class="authority-card-head"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><span class="confidence-dot ${authority.confidence}">\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C</span></div>
+      <div class="authority-card-head">${authorityEmblem(authority)}<span class="confidence-dot ${authority.confidence}">\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C</span></div>
       <h2>${escapeHtml(authority.shortName)}</h2>
       <span class="authority-type">${escapeHtml(authority.entityTypeLabel)}</span>
       <p>${escapeHtml(authority.mission)}</p>
@@ -3340,7 +5154,7 @@ var CareerRuntime = (() => {
       ...(authority.evidence || []).map((item) => ({ ...item, label: item.title || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430" })),
       ...data.careerFramework.sources.map((item) => ({ ...item, label: item.title }))
     ];
-    return `${classroom?.sourceForAuthority(authority.id) || ""}<div class="source-governance"><h2>\u0427\u0442\u043E \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C, \u0430 \u0447\u0442\u043E \u043C\u043E\u0434\u0435\u043B\u044C\u043D\u044B\u043C</h2><div class="source-governance-grid"><div><strong>\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F</strong><p>\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435, \u0438\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0438\u043F, \u043F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C, \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E \u043E\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u044F \u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044B.</p></div><div><strong>\u0423\u0447\u0435\u0431\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C</strong><p>\u0412\u0435\u0441\u0430 \u0441\u0444\u0435\u0440, \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438, \u0442\u0438\u043F\u043E\u0432\u044B\u0435 \u0441\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u0430 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439, \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0440\u043E\u043B\u0435\u0439 \u0438 \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u0442\u0440\u0443\u0434\u0430.</p></div></div></div>
+    return `${authoritySymbolCredit(authority)}${classroom?.sourceForAuthority(authority.id) || ""}<div class="source-governance"><h2>\u0427\u0442\u043E \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C, \u0430 \u0447\u0442\u043E \u043C\u043E\u0434\u0435\u043B\u044C\u043D\u044B\u043C</h2><div class="source-governance-grid"><div><strong>\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F</strong><p>\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435, \u0438\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0438\u043F, \u043F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C, \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E \u043E\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u044F \u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044B.</p></div><div><strong>\u0423\u0447\u0435\u0431\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C</strong><p>\u0412\u0435\u0441\u0430 \u0441\u0444\u0435\u0440, \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438, \u0442\u0438\u043F\u043E\u0432\u044B\u0435 \u0441\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u0430 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439, \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0440\u043E\u043B\u0435\u0439 \u0438 \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u0442\u0440\u0443\u0434\u0430.</p></div></div></div>
     <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon("external")}</a>`).join("")}</div>
     <div class="career-model-note warning">${icon("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
   }
@@ -3357,7 +5171,7 @@ var CareerRuntime = (() => {
     const selected = state.compareIds.includes(authority.id);
     $2("#authority-dialog-content").innerHTML = `
     <div class="dialog-hero">
-      <div class="dialog-hero-top"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435"}</span></button></div>
+      <div class="dialog-hero-top">${authorityEmblem(authority)}<button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435"}</span></button></div>
       <h1 id="authority-dialog-title">${escapeHtml(authority.name)}</h1>
       <p class="official-russian-name" lang="ru" data-no-i18n>${escapeHtml(authority.name)}</p>
       <span>${escapeHtml(authority.entityTypeLabel)}</span>
@@ -3523,7 +5337,7 @@ var CareerRuntime = (() => {
     ${selected.length < 2 ? `<div class="compare-guidance">${icon("info")}<p>\u041F\u0435\u0440\u0432\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u0432\u044B\u0431\u0440\u0430\u043D. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0435\u0449\u0451 \u043E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0435 \u0438\u043B\u0438 \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430\u0445 \u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435.</p><button class="button button-secondary" type="button" data-route="directory">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0440\u0433\u0430\u043D${icon("arrow-right")}</button></div>` : `<div class="compare-actions"><button id="compare-print" class="button button-secondary" type="button">${icon("print")}\u041F\u0435\u0447\u0430\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F</button><button class="button button-secondary" type="button" data-route="directory">${icon("plus")}\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u043B\u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C</button></div>`}
     <div class="compare-columns" style="--compare-count:${Math.max(selected.length, 1)}">
       ${columns.map(({ authority, roles, routes, competencies, education }) => `<article class="compare-column">
-        <header class="compare-column-header"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authority.shortName)}">${icon("close")}</button><h2>${escapeHtml(authority.shortName)}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u043B\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435${icon("arrow-right")}</button></header>
+        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authority.shortName)}">${icon("close")}</button><h2>${escapeHtml(authority.shortName)}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u043B\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435${icon("arrow-right")}</button></header>
         <section><h3>\u0418\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435</h3><dl><div><dt>\u041F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C</dt><dd>${escapeHtml(authority.parent)}</dd></div><div><dt>\u0423\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u0438</dt><dd>${confidenceLabel(authority.confidence)}</dd></div></dl></section>
         <section><h3>\u041A\u043B\u044E\u0447\u0435\u0432\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><div class="tag-row">${(authority.sectors || []).slice(0, 4).map((entry) => `<span class="tag">${escapeHtml(sectorMap.get(entry.id)?.title || entry.id)}</span>`).join("")}</div></section>
         <section><h3>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043D\u044B\u0435 \u0440\u043E\u043B\u0438</h3><div class="compare-role-list">${roles.map((role) => `<div><strong>${escapeHtml(role.title)}</strong><small>${escapeHtml(role.importanceLabel)}</small><p>${escapeHtml(role.unitFamilies[0] || "\u043F\u0440\u043E\u0444\u0438\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435")}</p></div>`).join("")}</div></section>
@@ -3749,6 +5563,17 @@ var CareerRuntime = (() => {
     $2("#question-back").addEventListener("click", () => moveQuestion(-1));
     $2("#question-next").addEventListener("click", () => moveQuestion(1));
     $2("#sectors-next").addEventListener("click", () => routeTo("conditions"));
+    $2("#sectors-reset").addEventListener("click", () => {
+      finishSectorDrag(false, { focus: false, announce: false });
+      state.prioritySectors = [];
+      state.lowPrioritySectors = [];
+      state.focusAreas = {};
+      invalidateResult();
+      saveState();
+      renderSectors();
+      $2("#sector-grid .priority-toggle")?.focus({ preventScroll: true });
+      announceSectorOrder("\u0412\u044B\u0431\u043E\u0440 \u0441\u0444\u0435\u0440 \u0438 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F \u0441\u0431\u0440\u043E\u0448\u0435\u043D\u044B.");
+    });
     $2("#calculate-button").addEventListener("click", () => {
       if (calculateResults()) routeTo("results");
     });
@@ -3840,7 +5665,7 @@ var CareerRuntime = (() => {
       el.id = "protected-storage";
       el.className = "app-notice migration-notice";
       el.setAttribute("role", "alert");
-      el.innerHTML = '<p>\u0421\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043F\u043E\u0432\u0440\u0435\u0436\u0434\u0435\u043D\u0430 \u0438\u043B\u0438 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0441\u044F \u043A \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u041E\u043D\u0430 \u043D\u0435 \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442\u0441\u044F. \u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0441\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u043A\u043E\u043F\u0438\u044E; \u043D\u0430\u0447\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435 \u043C\u043E\u0436\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u044F\u0432\u043D\u043E.</p><button type="button" class="button button-secondary" id="protected-backup">\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C</button><button type="button" class="button button-secondary" id="session-backup">\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u043E\u0442\u0432\u0435\u0442\u044B</button><button type="button" class="button button-primary" id="protected-reset">\u041D\u0430\u0447\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435</button>';
+      el.innerHTML = '<p>\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u043A\u043E\u043F\u0438\u044E \u043F\u0435\u0440\u0435\u0434 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435\u043C \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u044F.</p><button type="button" class="button button-secondary" id="protected-backup">\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u0443\u044E \u0437\u0430\u043F\u0438\u0441\u044C</button><button type="button" class="button button-secondary" id="session-backup">\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u043E\u0442\u0432\u0435\u0442\u044B</button><button type="button" class="button button-primary" id="protected-reset">\u041D\u0430\u0447\u0430\u0442\u044C \u043D\u043E\u0432\u043E\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0435</button>';
       $2("#main-content").before(el);
       $2("#protected-backup").onclick = () => downloadText("career-recoverable-record.json", unrecoverableStoredText || "null");
       $2("#session-backup").onclick = () => downloadText("career-session-backup.json", JSON.stringify({ schema: 4, modelVersion: MODEL_VERSION, questionnaireVersion: QUESTIONNAIRE_VERSION, registryVersion: REGISTRY_VERSION, ...state }, null, 2));
@@ -3918,7 +5743,8 @@ var CareerRuntime = (() => {
       bindStaticEvents();
       bindSessionTransfer();
       document.addEventListener("app:language", () => {
-        if (activeRoute() === "sectors") renderTopicQuestions();
+        finishSectorDrag(false, { focus: false, announce: false });
+        if (activeRoute() === "sectors") renderSectors();
       });
       updateResumeButton();
       renderCompareTray();
@@ -3937,10 +5763,12 @@ var CareerRuntime = (() => {
     }
   }
   var ready = init();
-  var updateBusy = () => groupBusy || decisionLab?.updateBusy?.() || vacancies?.updateBusy?.() || workspace?.updateBusy?.() || classroom?.updateBusy?.() || pendingLegacyChoice || protectedStorage;
+  var updateBusy = () => Boolean(sectorDrag || sectorPress) || groupBusy || decisionLab?.updateBusy?.() || vacancies?.updateBusy?.() || workspace?.updateBusy?.() || classroom?.updateBusy?.() || pendingLegacyChoice || protectedStorage;
   var pauseForUpdate = () => {
+    finishSectorDrag(false, { focus: false, announce: false });
   };
   function flushForUpdate() {
+    finishSectorDrag(false, { focus: false, announce: false });
     return saveState();
   }
   function captureForUpdate() {

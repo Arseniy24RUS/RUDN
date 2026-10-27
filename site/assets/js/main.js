@@ -753,10 +753,10 @@ function renderSeminar6(topic,{context='course'}={}){
   const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
   const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview',scope=routeDiagnostics;
   const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
-  let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
+  let disposed=false,handle=null,knowledgeHandle=null,mountTask=Promise.resolve(),knowledgeTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
-  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div class="page-actions"><a class="btn btn-secondary" href="${esc(data.course.external_apps.civil_service_test)}" target="_blank" rel="noopener noreferrer" data-career-ui="openCivilTest">${ui('openCivilTest')}</a></div><form id="civilForm" class="form-grid"><label><span data-career-ui="testScore">${ui('testScore')}</span><input name="score" required></label><label><span data-career-ui="screenshot">${ui('screenshot')}</span><input name="file" type="file" accept="image/*,.pdf" required></label><div class="full"><button class="btn btn-primary" type="submit" data-career-ui="submit">${ui('submit')}</button></div></form></details></section>`;
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div id="civilServiceMount" aria-busy="true"><p role="status">${text('loading')}</p></div></details></section>`;
   if(free){
     app.querySelector('#careerKnowledge').remove();
     app.querySelector('.page-actions a').href='#games';
@@ -764,9 +764,9 @@ function renderSeminar6(topic,{context='course'}={}){
   }
   const mount=app.querySelector('#careerMount');
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
-  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();if(mountStarted)await mountTask;await handle?.destroy();if(currentCareer===token)currentCareer=null;})();
-  cleanup.flush=()=>handle?.flush?.();
-  exposeModuleUpdateAdapter(cleanup,()=>handle,'career');
+  const cleanup=()=>cleanupTask||=(async()=>{disposed=true;controller.abort();await Promise.allSettled([mountTask,knowledgeTask]);await Promise.all([handle?.destroy(),knowledgeHandle?.destroy()]);if(currentCareer===token)currentCareer=null;})();
+  cleanup.flush=()=>Promise.all([handle?.flush?.(),knowledgeHandle?.flush?.()]);
+  exposeModuleUpdateAdapter(cleanup,()=>handle&&({...handle,prepareForUpdate:async options=>{await knowledgeHandle?.flush?.();return handle.prepareForUpdate(options);}}),'career');
   cleanup.refreshLocale=()=>{
     if(!active())return;
     app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
@@ -774,15 +774,24 @@ function renderSeminar6(topic,{context='course'}={}){
     app.querySelector('#careerCourseStatus').textContent=text('local');
     mount.setAttribute('aria-label',text('title'));
     if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active()){scope?.error(error,{operation:'locale'});console.error('Career locale:',error);}});}
+    knowledgeHandle?.setLocale(getLocale()).catch(error=>{if(active())scope?.error(error,{operation:'civil-service-locale'});});
   };
   currentCleanup=cleanup;
-  const civilForm=app.querySelector('#civilForm');
-  if(civilForm)civilForm.onsubmit=async event=>{
-    event.preventDefault();if(!requireProfile())return;const fd=new FormData(event.currentTarget);const score=String(fd.get('score')||'').trim();
-    const draft=formDraft(event.currentTarget),attachment=await draft?.attachment('file');
-    if(!score||!attachment){toast(ui('fillRequired'),'error');return}
-    await backend.saveAttempt({id:draft?.attemptId,draftMode:'form',attachmentIds:[attachment.id],studentKey,type:'external-test-proof',activitySlug:'seminar-6',title:loc(topic.seminar,'title'),points:5,maxPoints:5,reportedScore:score,fileUrl:attachment.ref,reviewStatus:'pending'});toast(`${ui('saved')} · 5/5 (${ui('manualReview')})`,'success');renderedKey='';render();
-  };
+  if(!free)knowledgeTask=(async()=>{
+    const target=app.querySelector('#civilServiceMount');
+    try{
+      const {mountCivilServiceCourse}=await import('./civil-service-course.mjs');
+      if(!active())return;
+      knowledgeHandle=await mountCivilServiceCourse(target,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope});
+      if(active())target.setAttribute('aria-busy','false');
+    }catch(error){
+      if(!active()||error.name==='AbortError')return;
+      target.setAttribute('aria-busy','false');target.replaceChildren();
+      const message=document.createElement('p');message.setAttribute('role','alert');message.textContent=text('failed');
+      const retry=document.createElement('button');retry.className='btn btn-secondary';retry.textContent=text('retry');retry.onclick=()=>{cleanup();renderedKey='';render();};target.append(message,retry);
+      scope?.error(error,{operation:'civil-service-load'});
+    }
+  })();
   mountTask=(async()=>{try{
     const {mountCareer}=await import('../../apps/career/entry.mjs');
     if(!active())return;

@@ -1,8 +1,13 @@
 {
   "schemaVersion": 1,
-  "state": "not_connected",
-  "attemptedAt": null,
-  "lastSuccessAt": null,
-  "errorCode": "LIVE_ACCESS_NOT_VERIFIED",
-  "message": "The public page and JSON contract could not be read in the build environment. No successful live integration is claimed."
+  "state": "ready",
+  "attemptedAt": "2026-10-27T13:54:34.210Z",
+  "lastSuccessAt": "2026-10-27T13:54:34.210Z",
+  "errorCode": null,
+  "message": "Public federal search retrieved without authentication; see feed coverage and observation time.",
+  "sourceTotal": 1610,
+  "sourcePageCount": 17,
+  "centralDetailsVerified": 244,
+  "sourceEmployerCount": 370,
+  "sourceReferenceCount": 594
 }

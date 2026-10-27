@@ -1,0 +1,13 @@
+/* Local official emblems keep their own colours and aspect ratio. */
+.authority-symbol {display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:64px;height:64px;vertical-align:middle;}
+.authority-symbol img {display:block;width:100%;height:100%;object-fit:contain;}
+.authority-symbol.compact {width:42px;height:42px;}
+.authority-card-head .authority-symbol {margin-right:12px;}
+.dialog-hero-top .authority-symbol {width:82px;height:82px;}
+.compare-column-header .authority-symbol {margin-bottom:10px;}
+.result-symbol-heading {display:flex;align-items:center;gap:12px;min-width:0;}
+.result-symbol-heading h3,.result-symbol-heading h2 {margin:0;min-width:0;}
+.authority-symbol-credit {font-size:12px;line-height:1.5;color:#526781;}
+.ps-dossier-heading .authority-symbol-credit {color:#fff;background:#075c94;padding:8px 10px;border-radius:8px;}
+.ps-dossier-heading .authority-symbol-credit a {color:inherit;text-decoration:underline;}
+@media(max-width:480px) {.authority-symbol{width:52px;height:52px;}.dialog-hero-top .authority-symbol{width:64px;height:64px;}}

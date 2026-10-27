@@ -44,7 +44,7 @@ export function explainAuthority(authorityId, state, data, existingResult=null) 
       roleFit:scored.roleFit,selected:item.track?.id===link.id};
   }).sort((a,b)=>b.score-a.score||Number(b.selected)-Number(a.selected));
   const factor=factorFor(item.importance);
-  const raw=[40*item.roleFit*factor,45*item.sectorFit*factor,15*item.conditionFit*factor];
+  const raw=[item.contributions.role,item.contributions.sector,item.contributions.conditions];
   const contributions=displayContributions(raw,item.score);
   const pathSectors=item.pathSectors||authority.sectors;
   const sectorRows=pathSectors.map(s=>({id:s.id,weight:s.weight,preference:result.sectorPreferences[s.id],
@@ -62,6 +62,8 @@ export function explainAuthority(authorityId, state, data, existingResult=null) 
   const lowInterest=result.roleProfile.lowInterest;
   return {authority,item,rank:category.findIndex(a=>a.id===item.id)+1,categorySize:category.length,adjacent:!core(item),
     raw,contributions,factor,tracks,sectorRows,conditionRows,neighbours,roleProfile:result.roleProfile,lowInterest,
+    bestPathScore:item.bestPathScore,pathMeanScore:item.pathMeanScore,pathCount:item.pathCount,
+    bestPathContributions:item.bestPathContributions,aggregation:item.aggregation,
     roleRows:SCALE_IDS.map(id=>({id,interest:result.roleProfile.raw[id],relevance:item.track?.vector[id]??0}))};
 }
 

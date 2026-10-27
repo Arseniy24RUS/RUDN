@@ -1,0 +1,2026 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "0800769a95d70a69b82ea5187c714a28af303c27db5cfbb1ffcf7305ad904f24",
+  "entries": {
+    "MT4-0211": {
+      "stem": "A constitution is:",
+      "options": {
+        "a": "A legal document containing all the laws of a country",
+        "b": "The fundamental law of a state, defining its structure and the formation of public authorities, and establishing and protecting human rights, etc.",
+        "c": "A collection of fundamental laws and principles of the state",
+        "d": "An oath of allegiance to the state"
+      }
+    },
+    "MT4-0212": {
+      "stem": "When was the Constitution of the Russian Federation adopted?",
+      "options": {
+        "a": "12 December 1984",
+        "b": "12 December 1991",
+        "c": "12 December 2001",
+        "d": "12 December 1993"
+      }
+    },
+    "MT4-0213": {
+      "stem": "What type of document is the Constitution of the Russian Federation?",
+      "options": {
+        "a": "A decree",
+        "b": "A resolution",
+        "c": "The fundamental law of the state",
+        "d": "A federal law"
+      }
+    },
+    "MT4-0214": {
+      "stem": "The Constitution of the Russian Federation:",
+      "options": {
+        "a": "Has supreme legal force",
+        "b": "Has supreme legal force only over the laws of constituent entities of the Russian Federation",
+        "c": "Has legal force equal to federal laws",
+        "d": "Has supreme legal force only in matters concerning the structure of the state"
+      }
+    },
+    "MT4-0215": {
+      "stem": "The Constitution of the Russian Federation was adopted:",
+      "options": {
+        "a": "By a decree of the President of the Russian Federation",
+        "b": "By a federal constitutional law",
+        "c": "By a nationwide vote, a referendum",
+        "d": "By the Federal Assembly, the parliament of the Russian Federation"
+      }
+    },
+    "MT4-0216": {
+      "stem": "Types of constitutions in force in the Russian Federation:",
+      "options": {
+        "a": "The Constitution of the Russian Federation and constitutions of territories, regions, the autonomous region and autonomous districts",
+        "b": "The Constitution of the Russian Federation and constitutions of republics within the Russian Federation",
+        "c": "Constitutions of republics within the Russian Federation and constitutions of federal cities",
+        "d": "The Constitution of the Russian Federation and constitutions of federal cities"
+      }
+    },
+    "MT4-0217": {
+      "stem": "According to the Constitution of the Russian Federation, who is the bearer of sovereignty in Russia?",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Federal Assembly",
+        "c": "The State Duma",
+        "d": "The multinational people"
+      }
+    },
+    "MT4-0218": {
+      "stem": "What is the form of government in the Russian Federation?",
+      "options": {
+        "a": "A presidential republic",
+        "b": "A presidential-parliamentary republic",
+        "c": "A parliamentary monarchy",
+        "d": "A parliamentary republic"
+      }
+    },
+    "MT4-0219": {
+      "stem": "A referendum of the Russian Federation is:",
+      "options": {
+        "a": "A nationwide vote on matters of state significance by citizens of the Russian Federation entitled to participate in a referendum",
+        "b": "A sample survey of the population to determine public opinion on an issue",
+        "c": "The formation of state authorities and local self-government bodies",
+        "d": "A vote by citizens to decide issues of state or local significance"
+      }
+    },
+    "MT4-0220": {
+      "stem": "Voting in a referendum:",
+      "options": {
+        "a": "Is secret",
+        "b": "Is conducted by completing survey forms",
+        "c": "Is open",
+        "d": "Is conducted by completing an electronic questionnaire on the website of the State Duma of the Russian Federation"
+      }
+    },
+    "MT4-0221": {
+      "stem": "What is the highest direct expression of the power of the people?",
+      "options": {
+        "a": "Referendums and free elections",
+        "b": "A referendum",
+        "c": "Free elections",
+        "d": "Rallies and demonstrations"
+      }
+    },
+    "MT4-0222": {
+      "stem": "Citizens of the Russian Federation have the right to participate in managing state affairs:",
+      "options": {
+        "a": "Directly",
+        "b": "They have no right to participate in managing state affairs",
+        "c": "Only through their representatives",
+        "d": "Both directly and through their representatives"
+      }
+    },
+    "MT4-0223": {
+      "stem": "Which of the following expresses a citizen's right to participate in managing state affairs?",
+      "options": {
+        "a": "Addressing officials of executive authorities",
+        "b": "Participating in a referendum",
+        "c": "Applying to a court to protect one's lawful rights and interests",
+        "d": "Holding pickets and demonstrations"
+      }
+    },
+    "MT4-0224": {
+      "stem": "The description and procedure for the official use of the State Flag, Coat of Arms and Anthem of the Russian Federation are established by:",
+      "options": {
+        "a": "The Constitution of the Russian Federation",
+        "b": "A federal constitutional law",
+        "c": "A decree of the President of the Russian Federation",
+        "d": "A federal law"
+      }
+    },
+    "MT4-0225": {
+      "stem": "Under the Constitution of the Russian Federation, the highest value is:",
+      "options": {
+        "a": "Democracy",
+        "b": "A state governed by the rule of law",
+        "c": "The foundations of the constitutional system",
+        "d": "The individual and their rights and freedoms"
+      }
+    },
+    "MT4-0226": {
+      "stem": "Personal rights of an individual and citizen do not include the right to:",
+      "options": {
+        "a": "Liberty and personal inviolability",
+        "b": "Life",
+        "c": "Education",
+        "d": "Inviolability of the home"
+      }
+    },
+    "MT4-0227": {
+      "stem": "A constitutional duty of a citizen of the Russian Federation is:",
+      "options": {
+        "a": "Obtaining basic general education",
+        "b": "Starting a family",
+        "c": "Participating in elections of state authorities",
+        "d": "Engaging in entrepreneurial activity"
+      }
+    },
+    "MT4-0228": {
+      "stem": "The Russian Federation is a secular state. This means that:",
+      "options": {
+        "a": "Different religions may be established as state religions in different constituent entities of the Russian Federation",
+        "b": "Atheism is the official worldview in the Russian Federation",
+        "c": "No religion may be established as compulsory in the Russian Federation",
+        "d": "Teaching courses about any religion in state educational institutions is prohibited in the Russian Federation"
+      }
+    },
+    "MT4-0229": {
+      "stem": "According to the Constitution of the Russian Federation, Russia is:",
+      "options": {
+        "a": "A constitutional democracy",
+        "b": "A democratic federal state governed by the rule of law, with a republican form of government",
+        "c": "A presidential republic with a federal structure",
+        "d": "A centralized state with a parliamentary form of government"
+      }
+    },
+    "MT4-0230": {
+      "stem": "Which name of our state is established in the Constitution of the Russian Federation?",
+      "options": {
+        "a": "Russian Federation, Russia",
+        "b": "Russian Federation, Russian State",
+        "c": "Russia, Russian Federative Republic",
+        "d": "Russia, Rus, Russian Federation"
+      }
+    },
+    "MT4-0231": {
+      "stem": "The Constitution of the Russian Federation does not establish:",
+      "options": {
+        "a": "The right to freely use one's abilities for work and to choose an occupation and profession",
+        "b": "A duty to work",
+        "c": "The right to rest",
+        "d": "The right to work in conditions meeting safety and hygiene requirements"
+      }
+    },
+    "MT4-0232": {
+      "stem": "A constitutional duty of an individual and citizen is:",
+      "options": {
+        "a": "To pay taxes and levies",
+        "b": "To work",
+        "c": "To form associations to protect their interests",
+        "d": "To lead a worthy life"
+      }
+    },
+    "MT4-0233": {
+      "stem": "A constitutional duty of an individual and citizen is:",
+      "options": {
+        "a": "To lead a worthy life",
+        "b": "To work",
+        "c": "To form associations to protect their interests",
+        "d": "To defend the Fatherland"
+      }
+    },
+    "MT4-0234": {
+      "stem": "Which of the following constitutional rights can be exercised only by a citizen of the Russian Federation?",
+      "options": {
+        "a": "The right to work",
+        "b": "The right to engage in entrepreneurial activity",
+        "c": "The right to elect and be elected to state authorities and local self-government bodies",
+        "d": "The right to receive medical care"
+      }
+    },
+    "MT4-0235": {
+      "stem": "Which is not a principle of suffrage in the Russian Federation?",
+      "options": {
+        "a": "Equality",
+        "b": "Direct voting",
+        "c": "Open voting",
+        "d": "Universality"
+      }
+    },
+    "MT4-0236": {
+      "stem": "May laws abolishing human and civil rights and freedoms be enacted in the Russian Federation?",
+      "options": {
+        "a": "Yes, in the interests of federal executive authorities",
+        "b": "No",
+        "c": "Yes, during a state of emergency to ensure citizens' safety and protect the constitutional system",
+        "d": "Yes, with the approval of the Government of the Russian Federation"
+      }
+    },
+    "MT4-0237": {
+      "stem": "Proposals to amend or revise provisions of the Constitution of the Russian Federation may be submitted by:",
+      "options": {
+        "a": "The President of the Russian Federation, the Presidential Administration, the Federation Council, the State Duma, the Government Executive Office, and a group comprising at least one fifth of Federation Council members or State Duma deputies",
+        "b": "The President of the Russian Federation, the Federal Assembly of the Russian Federation, the Government of the Russian Federation, and legislative (representative) bodies of constituent entities of the Russian Federation",
+        "c": "The President of the Russian Federation, the Federation Council and the State Duma",
+        "d": "The President of the Russian Federation, the Federation Council, the State Duma, the Government of the Russian Federation, legislative (representative) bodies of constituent entities of the Russian Federation, and a group comprising at least one fifth of Federation Council members or State Duma deputies"
+      }
+    },
+    "MT4-0238": {
+      "stem": "May human rights and freedoms be restricted?",
+      "options": {
+        "a": "No, because human rights and freedoms belong to a person from birth and are inalienable",
+        "b": "No, because the Constitution of the Russian Federation prohibits laws abolishing human rights and freedoms",
+        "c": "They may be restricted by a decree of the President of the Russian Federation to the extent necessary to protect the foundations of the constitutional system and ensure national defence",
+        "d": "They may be restricted by federal law to the extent necessary to protect state security, health, and the rights and lawful interests of others"
+      }
+    },
+    "MT4-0239": {
+      "stem": "The principal legal attributes of the statehood of constituent entities of the Russian Federation are (choose the most complete and correct answer):",
+      "options": {
+        "a": "A constitution for republics and a charter for other constituent entities",
+        "b": "A constitution for republics and territories, a charter for other constituent entities, and legislation for every constituent entity without exception",
+        "c": "A charter and legislation for every constituent entity without exception",
+        "d": "A constitution for republics, a charter for other constituent entities, and legislation for every constituent entity without exception"
+      }
+    },
+    "MT4-0240": {
+      "stem": "The guarantor of the Constitution of the Russian Federation and of human and civil rights and freedoms is:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Constitutional Court of the Russian Federation",
+        "c": "The State Duma of the Federal Assembly of the Russian Federation",
+        "d": "The Federation Council of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0241": {
+      "stem": "The term for which the President of the Russian Federation is elected is:",
+      "options": {
+        "a": "4 years",
+        "b": "5 years",
+        "c": "6 years",
+        "d": "It depends on whether the citizen is elected President of the Russian Federation for the first time or again"
+      }
+    },
+    "MT4-0242": {
+      "stem": "Who may be elected President of the Russian Federation?",
+      "options": {
+        "a": "A citizen of the Russian Federation aged at least 35",
+        "b": "A citizen of the Russian Federation over 40 who has permanently resided in the Russian Federation for at least 10 years",
+        "c": "A citizen of the Russian Federation over 30 who has not left the country in the last 3 years",
+        "d": "A citizen of the Russian Federation aged at least 35 who has permanently resided in the Russian Federation for at least 10 years"
+      }
+    },
+    "MT4-0243": {
+      "stem": "The President of the Russian Federation begins exercising their powers:",
+      "options": {
+        "a": "Upon election",
+        "b": "Upon taking the oath",
+        "c": "On the day after the Central Election Commission of the Russian Federation officially publishes the election results"
+      }
+    },
+    "MT4-0244": {
+      "stem": "The same person may not hold the office of President of the Russian Federation:",
+      "options": {
+        "a": "For more than three consecutive terms",
+        "b": "For more than one term",
+        "c": "For more than four consecutive terms",
+        "d": "For more than two consecutive terms"
+      }
+    },
+    "MT4-0245": {
+      "stem": "May a President-elect of the Russian Federation begin presidential duties without taking the oath on assuming office?",
+      "options": {
+        "a": "No",
+        "b": "Yes, by promising to take it later",
+        "c": "Yes, because the oath is a formality",
+        "d": "Yes, by signing the text of the oath remotely"
+      }
+    },
+    "MT4-0246": {
+      "stem": "According to the Constitution of the Russian Federation, the President of the Russian Federation is:",
+      "options": {
+        "a": "The head of state",
+        "b": "The head of the executive branch",
+        "c": "The head of the legislative branch",
+        "d": "The head of the executive and legislative branches"
+      }
+    },
+    "MT4-0247": {
+      "stem": "According to the Constitution of the Russian Federation, the President of the Russian Federation issues:",
+      "options": {
+        "a": "Laws and orders",
+        "b": "Decrees and orders",
+        "c": "Laws and resolutions",
+        "d": "Resolutions and orders"
+      }
+    },
+    "MT4-0248": {
+      "stem": "According to the Constitution of the Russian Federation, the exercise of federal state powers throughout the Russian Federation is ensured by:",
+      "options": {
+        "a": "The Government of the Russian Federation",
+        "b": "The President of the Russian Federation and the Government of the Russian Federation",
+        "c": "The Government of the Russian Federation and executive authorities of constituent entities of the Russian Federation",
+        "d": "The President of the Russian Federation, the Government of the Russian Federation and executive authorities of constituent entities of the Russian Federation"
+      }
+    },
+    "MT4-0249": {
+      "stem": "The President of the Russian Federation may suspend acts of executive authorities of constituent entities of the Russian Federation in which case? Choose the most complete and correct answer.",
+      "options": {
+        "a": "The acts conflict with the Constitution of the Russian Federation",
+        "b": "The acts conflict with the Constitution of the Russian Federation and federal laws",
+        "c": "The acts conflict with the Constitution of the Russian Federation, federal laws or international obligations of the Russian Federation",
+        "d": "The acts conflict with the Constitution of the Russian Federation, federal laws or international obligations of the Russian Federation, or violate human and civil rights and freedoms"
+      }
+    },
+    "MT4-0250": {
+      "stem": "Who may suspend acts of executive authorities of constituent entities of the Russian Federation pending a ruling by the competent court, if those acts conflict with the Constitution of the Russian Federation, federal laws or international obligations of the Russian Federation, or violate human and civil rights and freedoms?",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The State Duma of the Federal Assembly of the Russian Federation",
+        "c": "The Government of the Russian Federation",
+        "d": "The Constitutional Court of the Russian Federation"
+      }
+    },
+    "MT4-0251": {
+      "stem": "An Acting President of the Russian Federation does NOT have the right to:",
+      "options": {
+        "a": "Declare martial law",
+        "b": "Grant pardons",
+        "c": "Call a referendum",
+        "d": "Sign instruments of ratification"
+      }
+    },
+    "MT4-0252": {
+      "stem": "The status of the Security Council of the Russian Federation is determined by:",
+      "options": {
+        "a": "A federal constitutional law",
+        "b": "A federal law",
+        "c": "A decree of the President of the Russian Federation",
+        "d": "A resolution of the Government of the Russian Federation"
+      }
+    },
+    "MT4-0253": {
+      "stem": "Who is the Supreme Commander-in-Chief of the Armed Forces of the Russian Federation?",
+      "options": {
+        "a": "The Chair of the Federation Council of the Federal Assembly of the Russian Federation",
+        "b": "The President of the Russian Federation",
+        "c": "The Minister of Defence of the Russian Federation",
+        "d": "The Chief of the General Staff of the Armed Forces of the Russian Federation"
+      }
+    },
+    "MT4-0254": {
+      "stem": "The Government of the Russian Federation:",
+      "options": {
+        "a": "Decides whether the Armed Forces of the Russian Federation may be used outside the territory of the Russian Federation",
+        "b": "Adopts a federal law on the federal budget",
+        "c": "Manages federal property",
+        "d": "Grants pardons"
+      }
+    },
+    "MT4-0255": {
+      "stem": "The Government of the Russian Federation consists of:",
+      "options": {
+        "a": "The Prime Minister, Deputy Prime Ministers, federal ministers and the Government Executive Office",
+        "b": "The Prime Minister, Deputy Prime Ministers and federal ministers",
+        "c": "The Prime Minister and federal ministers",
+        "d": "The Prime Minister, Deputy Prime Ministers, federal ministers and their deputies"
+      }
+    },
+    "MT4-0256": {
+      "stem": "The main areas of activity of the Government of the Russian Federation are determined by:",
+      "options": {
+        "a": "A nationwide referendum",
+        "b": "The President of the Russian Federation",
+        "c": "The Prime Minister of the Russian Federation",
+        "d": "The State Duma of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0257": {
+      "stem": "As regulatory acts, the Government of the Russian Federation issues:",
+      "options": {
+        "a": "Resolutions",
+        "b": "Orders and instructions",
+        "c": "Decrees and orders",
+        "d": "Resolutions and orders"
+      }
+    },
+    "MT4-0258": {
+      "stem": "According to the Constitution of the Russian Federation, the head of the Government of the Russian Federation is:",
+      "options": {
+        "a": "The head of the executive branch of the Russian Federation",
+        "b": "The Chair of the Council of Ministers of the Russian Federation",
+        "c": "The President of the Russian Federation",
+        "d": "The Prime Minister of the Russian Federation"
+      }
+    },
+    "MT4-0259": {
+      "stem": "The Prime Minister of the Russian Federation is appointed by:",
+      "options": {
+        "a": "The Federation Council of the Federal Assembly of the Russian Federation",
+        "b": "The President of the Russian Federation",
+        "c": "The State Duma of the Federal Assembly of the Russian Federation",
+        "d": "It is an elected office"
+      }
+    },
+    "MT4-0260": {
+      "stem": "The decision on the resignation of the Government of the Russian Federation is made by:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The President of the Russian Federation with the consent of the chambers of the Federal Assembly",
+        "c": "The State Duma of the Russian Federation",
+        "d": "The Federation Council of the Russian Federation"
+      }
+    },
+    "MT4-0261": {
+      "stem": "The Government of the Russian Federation relinquishes its powers before:",
+      "options": {
+        "a": "The newly elected President of the Russian Federation",
+        "b": "The Government of the Russian Federation",
+        "c": "The State Duma of the Russian Federation",
+        "d": "The Constitutional Court of the Russian Federation"
+      }
+    },
+    "MT4-0262": {
+      "stem": "Which is a regulatory legal act of an executive authority of the Russian Federation?",
+      "options": {
+        "a": "The Constitution of the Russian Federation",
+        "b": "A federal law",
+        "c": "A resolution of the Government of the Russian Federation",
+        "d": "A federal constitutional law"
+      }
+    },
+    "MT4-0263": {
+      "stem": "According to the Constitution, the Federal Assembly, the parliament of the Russian Federation, is:",
+      "options": {
+        "a": "The representative and legislative body of the Russian Federation",
+        "b": "The legislative body of the Russian Federation",
+        "c": "An executive authority of the Russian Federation",
+        "d": "A judicial authority of the Russian Federation"
+      }
+    },
+    "MT4-0264": {
+      "stem": "According to the Constitution, the Federal Assembly, the parliament of the Russian Federation, consists of:",
+      "options": {
+        "a": "The State Duma and the Council of Nationalities",
+        "b": "The Federation Council and the State Duma",
+        "c": "The Security Council and the State Duma",
+        "d": "The Federation Council and the Council of Nationalities"
+      }
+    },
+    "MT4-0265": {
+      "stem": "According to the Constitution of the Russian Federation, the State Duma consists of:",
+      "options": {
+        "a": "Representatives of constituent entities of the Russian Federation, one from each constituent entity",
+        "b": "Representatives of constituent entities of the Russian Federation, two from each constituent entity",
+        "c": "Members of the Federation Council",
+        "d": "450 deputies"
+      }
+    },
+    "MT4-0266": {
+      "stem": "Which matter is NOT within the jurisdiction of the State Duma?",
+      "options": {
+        "a": "Removing the President of the Russian Federation from office",
+        "b": "Giving consent to the President of the Russian Federation to appoint the Prime Minister",
+        "c": "Hearing annual reports of the Government of the Russian Federation on its activities",
+        "d": "Appointing and dismissing the Chair of the Accounts Chamber of the Russian Federation"
+      }
+    },
+    "MT4-0267": {
+      "stem": "If the State Duma expresses no confidence in the Government of the Russian Federation for a second time within three months, the President of the Russian Federation does what? Choose the most complete and correct answer.",
+      "options": {
+        "a": "Dissolves the State Duma",
+        "b": "Announces the resignation of the Government of the Russian Federation",
+        "c": "Calls a referendum on confidence in the Government of the Russian Federation",
+        "d": "Announces the resignation of the Government of the Russian Federation or dissolves the State Duma"
+      }
+    },
+    "MT4-0268": {
+      "stem": "According to the Constitution of the Russian Federation, the Federation Council includes:",
+      "options": {
+        "a": "450 deputies",
+        "b": "One representative from each constituent entity of the Russian Federation",
+        "c": "Representatives of the executive authority of the Russian Federation",
+        "d": "Two representatives from each constituent entity of the Russian Federation, one from its legislative (representative) body and one from its executive body; and representatives of the Russian Federation appointed by the President, numbering no more than ten percent of the Federation Council members representing constituent entities' legislative (representative) and executive bodies"
+      }
+    },
+    "MT4-0269": {
+      "stem": "Which matter is NOT within the jurisdiction of the Federation Council?",
+      "options": {
+        "a": "Approving changes to boundaries between constituent entities of the Russian Federation",
+        "b": "Approving a decree of the President of the Russian Federation introducing a state of emergency",
+        "c": "Calling an election of the President of the Russian Federation",
+        "d": "Deciding the question of confidence in the Government of the Russian Federation"
+      }
+    },
+    "MT4-0270": {
+      "stem": "Which body does the Federal Assembly of the Russian Federation establish to oversee execution of the federal budget?",
+      "options": {
+        "a": "The Accounts Chamber of the Russian Federation",
+        "b": "The Federal Service for Financial and Budgetary Supervision",
+        "c": "The Federal Treasury",
+        "d": "A committee on the expenditure of budget funds"
+      }
+    },
+    "MT4-0271": {
+      "stem": "According to the Constitution of the Russian Federation, the State Duma is elected for a term of:",
+      "options": {
+        "a": "Five years",
+        "b": "Six years",
+        "c": "Four years",
+        "d": "Three years"
+      }
+    },
+    "MT4-0272": {
+      "stem": "Who may be a deputy of the State Duma?",
+      "options": {
+        "a": "A citizen of the Russian Federation aged 21 or over who has the right to participate in elections",
+        "b": "A citizen of the Russian Federation aged 18 or over who has the right to participate in elections",
+        "c": "A citizen of any country aged 18 or over who has the right to participate in elections",
+        "d": "A citizen of any country aged 21 or over who has the right to participate in elections"
+      }
+    },
+    "MT4-0273": {
+      "stem": "When do the powers of deputies of the previous convocation of the State Duma of the Federal Assembly of the Russian Federation end?",
+      "options": {
+        "a": "When their five-year term expires",
+        "b": "When the newly elected State Duma begins its work",
+        "c": "Three months after the election of the new State Duma",
+        "d": "No later than one month after the election of the President of the Russian Federation"
+      }
+    },
+    "MT4-0274": {
+      "stem": "The right of legislative initiative does not belong to:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Federation Council of the Russian Federation",
+        "c": "The Government of the Russian Federation",
+        "d": "The Ministry of Justice of the Russian Federation"
+      }
+    },
+    "MT4-0275": {
+      "stem": "Federal laws are adopted by:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The State Duma of the Federal Assembly of the Russian Federation",
+        "c": "The Federation Council of the Federal Assembly of the Russian Federation",
+        "d": "The Government of the Russian Federation",
+        "e": "The Constitutional Court of the Russian Federation"
+      }
+    },
+    "MT4-0276": {
+      "stem": "Is it permissible in the Russian Federation to enact federal laws containing state secrets?",
+      "options": {
+        "a": "Yes, if necessary to ensure the security and sovereignty of the Russian Federation",
+        "b": "Yes, if required to comply with an international treaty of the Russian Federation",
+        "c": "Yes, if the provisions containing state secrets are not published",
+        "d": "No"
+      }
+    },
+    "MT4-0277": {
+      "stem": "Do state servants' personal data recorded in their personnel files constitute state secrets?",
+      "options": {
+        "a": "Yes",
+        "b": "No",
+        "c": "Yes, if the state servant declared this in the prescribed form upon entering service",
+        "d": "Yes, where this is established by federal laws and other regulatory legal acts of the Russian Federation"
+      }
+    },
+    "MT4-0278": {
+      "stem": "The main directions of the domestic and foreign policy of the Russian Federation are determined by:",
+      "options": {
+        "a": "The Government of the Russian Federation",
+        "b": "The President of the Russian Federation",
+        "c": "The President and the Government of the Russian Federation",
+        "d": "The President, the Government and the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0279": {
+      "stem": "State power in the Russian Federation is exercised on the basis of division into:",
+      "options": {
+        "a": "Legislative, executive and judicial",
+        "b": "Federal, regional and municipal",
+        "c": "Civil, military and law-enforcement",
+        "d": "Elected and appointed"
+      }
+    },
+    "MT4-0280": {
+      "stem": "Which matter is NOT within the exclusive jurisdiction of the Russian Federation?",
+      "options": {
+        "a": "Monitoring compliance with federal laws",
+        "b": "The federal structure and territory of the Russian Federation",
+        "c": "Measures to combat disasters, natural calamities and epidemics and to eliminate their consequences",
+        "d": "The federal state service"
+      }
+    },
+    "MT4-0281": {
+      "stem": "Does federal legislation take precedence over the legislation of constituent entities of the Russian Federation in every case?",
+      "options": {
+        "a": "Yes, in every case",
+        "b": "In every case except matters outside the jurisdiction of the Russian Federation and outside its powers in areas of joint jurisdiction of the Russian Federation and its constituent entities",
+        "c": "In every case except matters within the exclusive jurisdiction of the Russian Federation",
+        "d": "The legislation of constituent entities of the Russian Federation always takes precedence"
+      }
+    },
+    "MT4-0282": {
+      "stem": "The Russian Federation may participate in interstate associations and transfer part of its powers to them under which conditions? Choose the most complete and correct answer.",
+      "options": {
+        "a": "In accordance with international treaties, provided this does not restrict human and civil rights and freedoms or conflict with the foundations of the constitutional system of the Russian Federation",
+        "b": "Provided this does not restrict human rights and freedoms",
+        "c": "In accordance with international treaties, provided this does not conflict with the foundations of the constitutional system of the Russian Federation",
+        "d": "Provided the transfer complies with international treaties of the Russian Federation"
+      }
+    },
+    "MT4-0283": {
+      "stem": "Local self-government bodies are:",
+      "options": {
+        "a": "State authorities at the municipal level",
+        "b": "Bodies directly elected by the population",
+        "c": "Bodies formed by the representative body of a municipality",
+        "d": "Bodies directly elected by the population and/or formed by the representative body of a municipality, vested with their own powers to resolve matters of local significance"
+      }
+    },
+    "MT4-0284": {
+      "stem": "The structure of local self-government bodies is determined by:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Government of the Russian Federation",
+        "c": "Executive authorities of the constituent entity of the Russian Federation",
+        "d": "The population independently"
+      }
+    },
+    "MT4-0285": {
+      "stem": "To which branch of state power do local self-government bodies belong?",
+      "options": {
+        "a": "The executive branch",
+        "b": "The legislative branch",
+        "c": "The judicial branch",
+        "d": "None"
+      }
+    },
+    "MT4-0286": {
+      "stem": "In which territories is local self-government exercised?",
+      "options": {
+        "a": "Urban and rural settlements and other territories, taking historical and other local traditions into account",
+        "b": "Settlements without territorial-administrative divisions",
+        "c": "All settlements with a population of up to 10,000",
+        "d": "Settlements with a population of up to 5,000"
+      }
+    },
+    "MT4-0287": {
+      "stem": "According to the Constitution of the Russian Federation, state power in the Russian Federation is exercised by:",
+      "options": {
+        "a": "The President, the Federal Assembly (the Federation Council and the State Duma), the Government and the courts of the Russian Federation",
+        "b": "The President, the Federal Assembly (the Federation Council and the State Duma) and the Government of the Russian Federation",
+        "c": "The President, the Government and the courts of the Russian Federation, and local self-government bodies",
+        "d": "The President and the Federal Assembly (the Federation Council and the State Duma) of the Russian Federation"
+      }
+    },
+    "MT4-0288": {
+      "stem": "Protecting and ensuring the stability of the ruble is the main function of which institution?",
+      "options": {
+        "a": "The Central Bank of the Russian Federation",
+        "b": "The Government of the Russian Federation",
+        "c": "The Ministry of Finance of the Russian Federation",
+        "d": "The Ministry of Economic Development of the Russian Federation"
+      }
+    },
+    "MT4-0289": {
+      "stem": "The system of state authorities of constituent entities of the Russian Federation is established by:",
+      "options": {
+        "a": "The Russian Federation",
+        "b": "The President of the Russian Federation",
+        "c": "The Government of the Russian Federation",
+        "d": "The constituent entities of the Russian Federation"
+      }
+    },
+    "MT4-0290": {
+      "stem": "The transfer of powers from federal executive authorities to executive authorities of constituent entities of the Russian Federation:",
+      "options": {
+        "a": "Is permitted under agreements between the Prime Minister of the Russian Federation and heads of constituent entities, provided this does not conflict with the Constitution of the Russian Federation or federal laws",
+        "b": "Is permitted if the executive authorities of constituent entities transfer part of their powers to federal executive authorities",
+        "c": "Is permitted where part of the powers of federal executive authorities is transferred by agreement with executive authorities of constituent entities, provided this does not conflict with the Constitution of the Russian Federation or federal laws",
+        "d": "Is not permitted"
+      }
+    },
+    "MT4-0291": {
+      "stem": "How are the following state authorities subordinated to one another?",
+      "options": {
+        "a": "Executive authorities are subordinate to legislative authorities",
+        "b": "Judicial authorities are subordinate to legislative authorities",
+        "c": "Executive authorities are subordinate to judicial authorities",
+        "d": "Legislative, executive and judicial authorities are independent"
+      }
+    },
+    "MT4-0292": {
+      "stem": "How many constituent entities are there in the Russian Federation?",
+      "options": {
+        "a": "79",
+        "b": "86",
+        "c": "85",
+        "d": "87"
+      }
+    },
+    "MT4-0293": {
+      "stem": "Which is not a constituent entity of the Russian Federation?",
+      "options": {
+        "a": "A federal district",
+        "b": "An autonomous district",
+        "c": "A region (oblast)",
+        "d": "A federal city"
+      }
+    },
+    "MT4-0294": {
+      "stem": "Which constituent entity of the Russian Federation has priority in relations with federal state authorities?",
+      "options": {
+        "a": "A republic",
+        "b": "A territory (krai)",
+        "c": "A region (oblast)",
+        "d": "An autonomous district",
+        "e": "All the listed constituent entities have equal rights"
+      }
+    },
+    "MT4-0295": {
+      "stem": "What determines the status of a republic within the Russian Federation?",
+      "options": {
+        "a": "The Constitution of the Russian Federation",
+        "b": "The Constitution of the Russian Federation and a federal law on the republic",
+        "c": "The Constitution of the Russian Federation and the republic's constitution",
+        "d": "The Constitution of the Russian Federation and the republic's charter"
+      }
+    },
+    "MT4-0296": {
+      "stem": "What determines the status of a territory (krai) within the Russian Federation?",
+      "options": {
+        "a": "The Constitution of the Russian Federation",
+        "b": "The Constitution of the Russian Federation and a federal law on the territory",
+        "c": "The Constitution of the Russian Federation and the territory's constitution",
+        "d": "The Constitution of the Russian Federation and the territory's charter"
+      }
+    },
+    "MT4-0297": {
+      "stem": "Who may establish their own state languages alongside Russian, the state language of the Russian Federation?",
+      "options": {
+        "a": "Republics of the Russian Federation",
+        "b": "All constituent entities of the Russian Federation",
+        "c": "Constituent entities whose ethnic majority speaks a language other than Russian",
+        "d": "No constituent entity of the Russian Federation has this right"
+      }
+    },
+    "MT4-0298": {
+      "stem": "The formation of a new constituent entity within the Russian Federation is decided:",
+      "options": {
+        "a": "By a referendum in the constituent entities concerned, in coordination with the President of the Russian Federation",
+        "b": "By the President of the Russian Federation",
+        "c": "By the Federation Council of the Federal Assembly of the Russian Federation",
+        "d": "By the legislative (representative) state authorities of the constituent entities concerned"
+      }
+    },
+    "MT4-0299": {
+      "stem": "According to the Constitution of the Russian Federation, boundaries between constituent entities of the Russian Federation:",
+      "options": {
+        "a": "May be changed with the consent of one of the constituent entities",
+        "b": "May be changed with the mutual consent of the constituent entities concerned",
+        "c": "May be changed by a decision of the Russian Federation",
+        "d": "May not be changed"
+      }
+    },
+    "MT4-0300": {
+      "stem": "According to the Constitution of the Russian Federation, state power in constituent entities of the Russian Federation is exercised by:",
+      "options": {
+        "a": "State authorities formed by the constituent entities",
+        "b": "Federal state authorities",
+        "c": "Local self-government bodies",
+        "d": "State authorities formed by the constituent entities and local self-government bodies"
+      }
+    },
+    "MT4-0301": {
+      "stem": "The structure of executive state authorities of a constituent entity of the Russian Federation is formed by:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Government of the Russian Federation",
+        "c": "The Federal Assembly",
+        "d": "The highest official of the constituent entity of the Russian Federation"
+      }
+    },
+    "MT4-0302": {
+      "stem": "According to the Constitution of the Russian Federation, matters of joint jurisdiction of the Russian Federation and its constituent entities are regulated by:",
+      "options": {
+        "a": "Federal laws and, in accordance with them, laws and other regulatory legal acts of constituent entities",
+        "b": "Federal laws",
+        "c": "Federal constitutional laws and federal laws",
+        "d": "Laws and other regulatory legal acts of constituent entities"
+      }
+    },
+    "MT4-0303": {
+      "stem": "According to the Constitution of the Russian Federation, the charter of a territory, region, federal city, autonomous region or autonomous district is adopted by:",
+      "options": {
+        "a": "The population of the constituent entity in a referendum",
+        "b": "The executive body of the constituent entity",
+        "c": "The legislative (representative) body of the constituent entity",
+        "d": "The President of the Russian Federation"
+      }
+    },
+    "MT4-0304": {
+      "stem": "The creation of a system of judicial and law-enforcement bodies is aimed at:",
+      "options": {
+        "a": "Performing the coercive functions of the state",
+        "b": "Ensuring respect for and protection of human rights and freedoms",
+        "c": "Resolving disputes",
+        "d": "Ensuring the adversarial nature of court proceedings"
+      }
+    },
+    "MT4-0305": {
+      "stem": "According to the Constitution of the Russian Federation, justice in the Russian Federation is administered by:",
+      "options": {
+        "a": "Law-enforcement bodies",
+        "b": "Courts and law-enforcement bodies",
+        "c": "Courts alone",
+        "d": "Courts and extrajudicial bodies established by law"
+      }
+    },
+    "MT4-0306": {
+      "stem": "Which body is the highest judicial body for resolving economic disputes?",
+      "options": {
+        "a": "The Supreme Arbitration Court of the Russian Federation",
+        "b": "The Supreme Court of the Russian Federation",
+        "c": "The Constitutional Court of the Russian Federation",
+        "d": "Economic disputes are resolved by international courts"
+      }
+    },
+    "MT4-0307": {
+      "stem": "According to the Constitution of the Russian Federation, judges:",
+      "options": {
+        "a": "Are subject only to the Constitution of the Russian Federation and federal law",
+        "b": "Are subordinate to the head of the Supreme Court of the Russian Federation",
+        "c": "Are subordinate to judges of higher courts",
+        "d": "Are subordinate to the President of the Russian Federation"
+      }
+    },
+    "MT4-0308": {
+      "stem": "Is the establishment of extraordinary courts permitted in the Russian Federation?",
+      "options": {
+        "a": "It is not permitted",
+        "b": "It is permitted",
+        "c": "It is permitted by a special decision of the President of the Russian Federation in areas under a state of emergency",
+        "d": "It is permitted by a special decision of the President of the Russian Federation in areas under martial law"
+      }
+    },
+    "MT4-0309": {
+      "stem": "Laws adopted in the Russian Federation may be applied only after:",
+      "options": {
+        "a": "Official publication",
+        "b": "Adoption in the third reading by the State Duma of the Federal Assembly of the Russian Federation",
+        "c": "Signing by the President of the Russian Federation",
+        "d": "Approval by the Federation Council of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0310": {
+      "stem": "A federal law is considered approved by the Federation Council if:",
+      "options": {
+        "a": "More than two thirds of all Federation Council members vote for it",
+        "b": "More than half of all Federation Council members vote for it, or the Federation Council does not consider it within ten days",
+        "c": "More than half of all Federation Council members vote for it, or the Federation Council does not consider it within fourteen days",
+        "d": "More than three quarters of all Federation Council members vote for it, or the Federation Council does not consider it within fourteen days"
+      }
+    },
+    "MT4-0311": {
+      "stem": "In which circumstances may a person apply to interstate bodies for the protection of human rights and freedoms?",
+      "options": {
+        "a": "When all available domestic legal remedies have been exhausted",
+        "b": "When the person is a foreign citizen and does not hold Russian citizenship",
+        "c": "When the person is a citizen of both the Russian Federation and another state",
+        "d": "When the circumstances of the case affect the rights and freedoms of citizens of other states"
+      }
+    },
+    "MT4-0312": {
+      "stem": "From what point does a person accused of a crime have the right to assistance from a lawyer (defence counsel)?",
+      "options": {
+        "a": "From the moment of detention",
+        "b": "From the moment of remand in custody",
+        "c": "From the moment charges are brought",
+        "d": "At any time"
+      }
+    },
+    "MT4-0313": {
+      "stem": "Until what point is an accused person considered innocent?",
+      "options": {
+        "a": "Until detention by law-enforcement bodies",
+        "b": "Until remand in custody",
+        "c": "Until charges are officially brought",
+        "d": "Until a court conviction enters into legal force"
+      }
+    },
+    "MT4-0314": {
+      "stem": "How is evidence obtained in violation of federal law used in the administration of justice?",
+      "options": {
+        "a": "Such evidence may not be used",
+        "b": "Such evidence may be added to a criminal case but is not examined in court",
+        "c": "Such evidence may not be used to aggravate the accused person's guilt",
+        "d": "Such evidence must be documented in accordance with federal law and may then be used"
+      }
+    },
+    "MT4-0315": {
+      "stem": "How is a law establishing liability for an offence applied if adopted after the offence was committed?",
+      "options": {
+        "a": "The law cannot be applied",
+        "b": "If the new law establishes or increases liability, it cannot be applied",
+        "c": "If the new law removes or reduces liability, the old law in force when the crime was committed applies",
+        "d": "The law is applied selectively at the court's discretion"
+      }
+    },
+    "MT4-0316": {
+      "stem": "How are persons prosecuted for acts or omissions that are not recognized as crimes in the Russian Federation extradited to other states?",
+      "options": {
+        "a": "Persons accused of crimes are extradited on the basis of federal law",
+        "b": "Persons accused of crimes are extradited on the basis of an international treaty of the Russian Federation",
+        "c": "Extradition is not permitted",
+        "d": "Extradition is governed by an international agreement with the requesting country"
+      }
+    },
+    "MT4-0317": {
+      "stem": "In which case may a citizen of the Russian Federation be deprived of citizenship?",
+      "options": {
+        "a": "For committing particularly serious crimes",
+        "b": "For espionage against the Russian Federation",
+        "c": "For committing a crime against the state",
+        "d": "A citizen of the Russian Federation cannot be deprived of citizenship"
+      }
+    },
+    "MT4-0318": {
+      "stem": "A citizen of the Russian Federation has acquired citizenship of another country. Which statement is correct?",
+      "options": {
+        "a": "This does not terminate citizenship of the Russian Federation",
+        "b": "This automatically terminates citizenship of the Russian Federation",
+        "c": "This suspends citizenship of the Russian Federation",
+        "d": "Within six months, the citizen must choose which of the two citizenships to retain and submit an application to the territorial office of the Federal Migration Service at their place of residence or stay"
+      }
+    },
+    "MT4-0319": {
+      "stem": "In which case may a citizen of the Russian Federation be expelled from the Russian Federation?",
+      "options": {
+        "a": "For committing a crime against the state",
+        "b": "For espionage against the Russian Federation",
+        "c": "For committing particularly serious crimes",
+        "d": "A citizen of the Russian Federation cannot be expelled from the Russian Federation"
+      }
+    },
+    "MT4-0320": {
+      "stem": "How are private, state and municipal forms of ownership recognized and protected in the Russian Federation?",
+      "options": {
+        "a": "Private ownership takes precedence over the other forms",
+        "b": "State ownership takes precedence over the other forms",
+        "c": "The order of precedence is state, municipal, then private ownership",
+        "d": "All the listed forms of ownership are recognized and protected equally"
+      }
+    },
+    "MT4-0321": {
+      "stem": "What is the procedure for appointing the Governor of the Central Bank of the Russian Federation?",
+      "options": {
+        "a": "The President of the Russian Federation nominates a candidate to the State Duma, which appoints the candidate",
+        "b": "The Prime Minister nominates a candidate to the President of the Russian Federation, who approves the nomination",
+        "c": "The President of the Russian Federation appoints a candidate at their own discretion",
+        "d": "The State Duma nominates a candidate, and the President of the Russian Federation approves the nomination"
+      }
+    },
+    "MT4-0322": {
+      "stem": "Who appoints judges of the Constitutional Court of the Russian Federation?",
+      "options": {
+        "a": "The Supreme Court of the Russian Federation",
+        "b": "The Prosecutor General of the Russian Federation",
+        "c": "The Federation Council of the Federal Assembly of the Russian Federation",
+        "d": "The State Duma of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0323": {
+      "stem": "The Constitutional Court of the Russian Federation consists of:",
+      "options": {
+        "a": "19 judges",
+        "b": "25 judges",
+        "c": "15 judges",
+        "d": "21 judges"
+      }
+    },
+    "MT4-0324": {
+      "stem": "As a general rule, at what age may a person become a judge?",
+      "options": {
+        "a": "18",
+        "b": "21",
+        "c": "25",
+        "d": "35"
+      }
+    },
+    "MT4-0325": {
+      "stem": "Choose the incorrect statement:",
+      "options": {
+        "a": "The same person may simultaneously be a member of the Federation Council and a deputy of the State Duma of the Federal Assembly of the Russian Federation",
+        "b": "A State Duma deputy may not simultaneously be a deputy of a legislative (representative) state body of a constituent entity of the Russian Federation",
+        "c": "A citizen of the Russian Federation aged 21 or over may be elected a State Duma deputy",
+        "d": "The oldest deputy opens the first sitting of the State Duma"
+      }
+    },
+    "MT4-0326": {
+      "stem": "Who appoints and dismisses the Prosecutor General of the Russian Federation and their deputies?",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Prime Minister of the Russian Federation",
+        "c": "The Federation Council of the Federal Assembly of the Russian Federation",
+        "d": "The State Duma of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0327": {
+      "stem": "Who appoints and dismisses federal ministers?",
+      "options": {
+        "a": "The Prime Minister of the Russian Federation",
+        "b": "The President of the Russian Federation",
+        "c": "The State Duma of the Federal Assembly of the Russian Federation",
+        "d": "The Federation Council of the Federal Assembly of the Russian Federation"
+      }
+    },
+    "MT4-0593": {
+      "stem": "Which of the devices shown is not an internal computer component?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0594": {
+      "stem": "Which of the devices shown is used for long-term data storage?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0595": {
+      "stem": "Which of the devices shown is not a computer peripheral?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0596": {
+      "stem": "Which of the devices shown is not a computer peripheral?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0597": {
+      "stem": "Which of the devices shown is a computer peripheral designed for copying, scanning and printing documents, and for receiving and sending faxes?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0598": {
+      "stem": "Which of the ports shown can be used to connect a USB flash drive?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0599": {
+      "stem": "Which of the ports shown cannot output images to external peripheral devices (a monitor, television or projector)?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0600": {
+      "stem": "Which of the ports shown can be used to connect an Ethernet cable for access to a local area network and the Internet?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0601": {
+      "stem": "How can you open this menu?",
+      "options": {
+        "a": "Right-click the Desktop",
+        "b": "Left-click the Desktop",
+        "c": "Press Ctrl + Alt + Del",
+        "d": "Press the Windows key"
+      }
+    },
+    "MT4-0602": {
+      "stem": "What capacity must a storage medium (a disc, memory card or flash drive) have to store a file of the size shown?",
+      "options": {
+        "a": "700 bytes",
+        "b": "70 MB",
+        "c": "70 KB",
+        "d": "700 KB"
+      }
+    },
+    "MT4-0603": {
+      "stem": "Which application can open files identified by the following icon?",
+      "options": {
+        "a": "Paint graphics editor",
+        "b": "Word text editor",
+        "c": "PowerPoint presentation software",
+        "d": "Excel spreadsheet software",
+        "e": "Explorer browser"
+      }
+    },
+    "MT4-0604": {
+      "stem": "Which application can open files identified by the following icon?",
+      "options": {
+        "a": "Paint graphics editor",
+        "b": "Word text editor",
+        "c": "PowerPoint presentation software",
+        "d": "Excel spreadsheet software",
+        "e": "Explorer browser"
+      }
+    },
+    "MT4-0605": {
+      "stem": "One of the programs has frozen (is not responding). How can you open Task Manager, shown below, to use the End Task command?",
+      "options": {
+        "a": "Press Ctrl + Alt + Del",
+        "b": "Press Ctrl + Shift",
+        "c": "Press Ctrl + Alt + Shift",
+        "d": "Press Ctrl + X"
+      }
+    },
+    "MT4-0606": {
+      "stem": "The window shown below is active. You want to select all the files in this window. Which keyboard shortcut can do this?",
+      "options": {
+        "a": "Ctrl + A",
+        "b": "Ctrl + V",
+        "c": "Ctrl + Alt",
+        "d": "Ctrl + Shift"
+      }
+    },
+    "MT4-0607": {
+      "stem": "You have connected a removable drive to a USB port. Which icon should you click to see it?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0608": {
+      "stem": "What will happen if you click the Type (Тип) button?",
+      "options": {
+        "a": "Files of the same type will be grouped together",
+        "b": "The type of the selected files will change",
+        "c": "The File Type column will be removed",
+        "d": "A new column will be added to the right of the File Type column"
+      }
+    },
+    "MT4-0609": {
+      "stem": "What should you enter in the indicated field to find all MS Word files (doc, docx) in the Общие folder?",
+      "options": {
+        "a": "*.doc*",
+        "b": "doc, docx",
+        "c": "MS WORD",
+        "d": "*.doc/docx"
+      }
+    },
+    "MT4-0610": {
+      "stem": "MS Word is not responding. You have opened Task Manager and selected the application. Which button should you click to force it to close?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0611": {
+      "stem": "You have opened the Recycle Bin to restore an accidentally deleted file named Иванов.rar. Which button should you click to start restoring the file?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0612": {
+      "stem": "Which button should you click to arrange the selected text in two columns?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0613": {
+      "stem": "Which tab should you open to find the number of characters, paragraphs and lines in a document?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0614": {
+      "stem": "Which button should you click to display non-printing formatting marks (paragraphs, tabs, spaces, etc.)?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0615": {
+      "stem": "Which button can convert the selected text to uppercase?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0616": {
+      "stem": "What will happen if you click the indicated Quick Print (Быстрая печать) button?",
+      "options": {
+        "a": "The current page will be printed",
+        "b": "One copy of the entire document will be printed",
+        "c": "The application will switch to Print Preview",
+        "d": "A dialog box with printer settings will appear"
+      }
+    },
+    "MT4-0617": {
+      "stem": "Which command should you use to create a copy of the document under a different name?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0618": {
+      "stem": "Which command would you choose to quickly apply the upper paragraph's formatting to the lower paragraph?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0619": {
+      "stem": "Which tab should you open to change the margins of the document you are editing?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0620": {
+      "stem": "Which button was clicked to produce text formatted like this?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0621": {
+      "stem": "Which tab should you open to add page numbers to a document?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0622": {
+      "stem": "The text contains a link to an external source. What should you do to follow it?",
+      "options": {
+        "a": "Left-click the link",
+        "b": "Hold Ctrl and left-click the link",
+        "c": "Hold Ctrl and right-click the link",
+        "d": "Hold Shift and right-click the link",
+        "e": "Hold Shift and left-click the link"
+      }
+    },
+    "MT4-0623": {
+      "stem": "What will happen if you click the indicated button?",
+      "options": {
+        "a": "A blank page will be created in this document",
+        "b": "The application will switch to Print Preview",
+        "c": "A new Word document will be created",
+        "d": "The current page will be printed"
+      }
+    },
+    "MT4-0624": {
+      "stem": "Which tab should you open to change the document's author, title and keywords?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0625": {
+      "stem": "You want the lower paragraph to look like the upper paragraph. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0626": {
+      "stem": "In which part of the screen should you double-click the left mouse button to be able to enter a header or footer?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0627": {
+      "stem": "How can you select the cell ranges highlighted in yellow on the worksheet?",
+      "options": {
+        "a": "Select E2:E8, then hold Alt and select H2:H8",
+        "b": "Select E2:E8, then hold Ctrl and select H2:H8",
+        "c": "Select E2:E8, then hold Shift and select H2:H8",
+        "d": "Use conditional formatting"
+      }
+    },
+    "MT4-0628": {
+      "stem": "You want to calculate the number of people holding state offices and state civil service positions in executive and legislative bodies in 2013. Which option performs this calculation?",
+      "options": {
+        "a": "=СУММ(H4:H8)",
+        "b": "=СУММ(H4:H5)",
+        "c": "=СУММ(B4:B5)",
+        "d": "=СУММ($4:$5)"
+      }
+    },
+    "MT4-0629": {
+      "stem": "You want to insert a new worksheet into the demo14 workbook with one click. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0630": {
+      "stem": "You want to select the entire worksheet named возр.гр. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0631": {
+      "stem": "To select the range of columns B:H, you should:",
+      "options": {
+        "a": "Hold Ctrl, click the column B heading (area 1), then click the column H heading (area 2)",
+        "b": "Click the column B heading (area 1), then hold Ctrl and click the column H heading (area 2)",
+        "c": "Click the column B heading (area 1), then hold Shift and click the column H heading (area 2)",
+        "d": "Hold Shift, click the column B heading (area 1), then click the column H heading (area 2)"
+      }
+    },
+    "MT4-0632": {
+      "stem": "To select the non-adjacent rows 10 and 20, you should:",
+      "options": {
+        "a": "Click the row 10 heading (area 1), then click the row 20 heading (area 2)",
+        "b": "Click the row 10 heading (area 1), then hold Ctrl and click the row 20 heading (area 2)",
+        "c": "Click the row 10 heading (area 1), then hold Shift and click the row 20 heading (area 2)",
+        "d": "Hold Shift, click the row 10 heading (area 1), then click the row 20 heading (area 2)"
+      }
+    },
+    "MT4-0633": {
+      "stem": "Cell C9 must show the proportion of the population aged 0–4 (the value in B9) in the total population (the value in B7):",
+      "options": {
+        "a": "Click C9, type =, enter the formula B9:B7, and press Enter",
+        "b": "Click C9, type =, enter the formula B9/B7, and press Enter",
+        "c": "Click C9, enter the formula B9/B7, type =, and press Enter",
+        "d": "Click C9, enter the formula B9:B7, type =, and press Enter"
+      }
+    },
+    "MT4-0634": {
+      "stem": "Cell C9 must show the proportion of the population aged 0–4 (the value in B9) in the total population (the value in B7), so that the formula can then be autofilled into C10:C20:",
+      "options": {
+        "a": "Click C9, type =, enter the formula B7/$B$9, and press Enter",
+        "b": "Click C9, enter the formula B9/$B$7, type =, and press Enter",
+        "c": "Click C9, type =, enter the formula B9/$B$7, and press Enter",
+        "d": "Click C9, enter the formula B7/$B$9, type =, and press Enter"
+      }
+    },
+    "MT4-0635": {
+      "stem": "Cell I7 must show the average of the values in B7:H7:",
+      "options": {
+        "a": "Click I7, open tab 1, use the Average command, and press Enter",
+        "b": "Click I7, open tab 2, use the Average command, and press Enter",
+        "c": "Click I7, open tab 3, use the Average command, and press Enter",
+        "d": "Click I7, open tab 4, use the Average command, and press Enter"
+      }
+    },
+    "MT4-0636": {
+      "stem": "You need to sort the values in H7:H21 in descending order:",
+      "options": {
+        "a": "Click button 1",
+        "b": "Click H6, then click button 1",
+        "c": "Click H6, then open tab 2",
+        "d": "Open tab 3"
+      }
+    },
+    "MT4-0637": {
+      "stem": "You need to format cells J8–J22 to match cell J7:",
+      "options": {
+        "a": "Click J7, click button 1, then use the resulting cursor to select J8:J22",
+        "b": "Click the column J heading (button 2), open tab 4, and use Format Painter",
+        "c": "Select J8:J22, open tab 3, and use Format Painter",
+        "d": "Click J7, open tab 4, then use the resulting cursor to select J8:J22"
+      }
+    },
+    "MT4-0638": {
+      "stem": "To make the chart below easier to read, you want to change the vertical axis scale by setting its maximum value to 5. Which menu item should you choose?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0639": {
+      "stem": "You want the label Сводные данные in the left table to be centered in the selected area, as it is in the right table. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0640": {
+      "stem": "You want the label Сводные данные in the right table to be positioned as it is in the left table. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0641": {
+      "stem": "What value will appear in the selected cell if it contains the function =МИН(H4:H8)?",
+      "options": {
+        "a": "624035",
+        "b": "12427",
+        "c": "136165",
+        "d": "11479"
+      }
+    },
+    "MT4-0642": {
+      "stem": "You want the number in the right-hand cell to be displayed in the same way as the number in the left-hand cell. Which menu item should you choose?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0643": {
+      "stem": "You want the selected cell C19 to contain the difference A19 − B19. What should you type first when entering the formula?",
+      "options": {
+        "a": "A space",
+        "b": "A minus sign",
+        "c": "An equals sign",
+        "d": "A cell name"
+      }
+    },
+    "MT4-0644": {
+      "stem": "If you drag the lower-right corner of the selected area containing 1, 2 and 3 while holding the left mouse button, which fragment shows the result?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0645": {
+      "stem": "Which tool was used to produce the appearance shown in cells A24:A28?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0646": {
+      "stem": "Which tab should you open to add slides to a presentation?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0647": {
+      "stem": "Which tab should you open to change the design of the Title and Content (Заголовок и объект) layout?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0648": {
+      "stem": "Which button should you click to turn the selected text in Fragment 1 into a bulleted list, as in Fragment 2?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0649": {
+      "stem": "Which button should you click to make the selected text in Fragment 1 look like the text in Fragment 2?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0650": {
+      "stem": "Which button should you click to make the word Ячейка in the upper table look like the same word in the lower table?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0651": {
+      "stem": "How can you switch to Slide Show mode?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0652": {
+      "stem": "What does the indicated icon next to the slide number mean?",
+      "options": {
+        "a": "The slide is included in a custom slide show",
+        "b": "The slide will be skipped during the presentation",
+        "c": "The slide uses animation effects",
+        "d": "The slide contains video files"
+      }
+    },
+    "MT4-0653": {
+      "stem": "Which menu item should you choose to obtain the result shown in the picture on the right?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0654": {
+      "stem": "Which shortcut should you use to launch a browser for viewing web pages?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0655": {
+      "stem": "You need to go directly to www.kremlin.ru. In which field should you enter the address?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0656": {
+      "stem": "Which tab should you open to print text from a website?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0657": {
+      "stem": "Which tab should you open to change the character encoding?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0658": {
+      "stem": "Without closing the kremlin.ru tab, you want to open the gov.ru portal in a new tab. Which option should you use?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0659": {
+      "stem": "What will happen if you click the indicated button in Internet Explorer?",
+      "options": {
+        "a": "Safe browsing mode will be enabled",
+        "b": "A new tab will open",
+        "c": "The page being viewed will be added to Favorites",
+        "d": "Animation effects on the page will be enabled"
+      }
+    },
+    "MT4-0660": {
+      "stem": "What will happen if you click the indicated icon?",
+      "options": {
+        "a": "Page loading will stop",
+        "b": "Internet Explorer will close",
+        "c": "The browser will go to the previous page",
+        "d": "The page will refresh"
+      }
+    },
+    "MT4-0661": {
+      "stem": "You have received an email with several recipients in the Cc field. If you click Reply, which addresses will appear in the To field of your message?",
+      "options": {
+        "a": "Igor Zhuravlev",
+        "b": "Igor Zhuravlev, Andrey Kurosh, Alexey Chumachenko, Polina Vafina",
+        "c": "Igor Zhuravlev, Polina Vafina",
+        "d": "A message with an empty To field will be created"
+      }
+    },
+    "MT4-0662": {
+      "stem": "You have received an email with several recipients in the Cc field. What will happen if you click Reply All?",
+      "options": {
+        "a": "A message will be created with the original sender's address in the To field",
+        "b": "A message will be created with all recipients listed in the original email placed in the To and Cc fields respectively",
+        "c": "A message with an empty To field will be created",
+        "d": "A message will be created with the recipients listed in the original email in the Cc field"
+      }
+    },
+    "MT4-0663": {
+      "stem": "You have received an email from a particular address, with several other addresses in the Cc field. You want to reply only to the person who sent the email. Which button should you click?",
+      "options": {
+        "a": "Reply",
+        "b": "Reply All",
+        "c": "New Message",
+        "d": "Forward"
+      }
+    },
+    "MT4-0664": {
+      "stem": "What is the Follow Up (К исполнению) button used for?",
+      "options": {
+        "a": "To set a reminder in the calendar",
+        "b": "To prepare a reply on behalf of a manager",
+        "c": "To keep the email permanently marked as unread",
+        "d": "To forward the email to a subordinate"
+      }
+    },
+    "MT4-0665": {
+      "stem": "Which concept is defined below? Information published on the Internet as systematically organized data, in a format that allows automated processing without prior modification by a person, for repeated, unrestricted and free use.",
+      "options": {
+        "a": "Open data",
+        "b": "Open government data",
+        "c": "Open data passport"
+      }
+    },
+    "MT4-0666": {
+      "stem": "Which concept is defined below? A set of information about an open dataset needed to establish its subject category and potential suitability for users' tasks, as well as its location, download method and subsequent automated processing method.",
+      "options": {
+        "a": "Open data",
+        "b": "Open government data",
+        "c": "Open data passport"
+      }
+    },
+    "MT4-0667": {
+      "stem": "Which format is not used to prepare an open dataset for publication on the Russian Federation Open Data Portal?",
+      "options": {
+        "a": "XML format",
+        "b": "DOC format",
+        "c": "CSV format"
+      }
+    },
+    "MT4-0668": {
+      "stem": "Which icon launches an application for creating an open dataset in CSV format?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0669": {
+      "stem": "Which table meets the requirements for publishing an open dataset?",
+      "options": {
+        "a": "Table 1",
+        "b": "Table 2"
+      }
+    },
+    "MT4-0670": {
+      "stem": "Which table meets the requirements for publishing an open dataset?",
+      "options": {
+        "a": "Table 1",
+        "b": "Table 2"
+      }
+    },
+    "MT4-0671": {
+      "stem": "Which of these addresses do not lead to Internet search engines?",
+      "options": {
+        "a": "www.yandex.ru",
+        "b": "www.rostelecom.ru",
+        "c": "www.ya.ru",
+        "d": "www.google.com"
+      }
+    },
+    "MT4-0672": {
+      "stem": "Where are government bodies' open data published?",
+      "options": {
+        "a": "On government bodies' official websites",
+        "b": "On the official website of the President of the Russian Federation",
+        "c": "In the federal state information system Federal Portal of Public Service and Managerial Personnel",
+        "d": "On the Russian Federation Open Data Portal"
+      }
+    },
+    "MT4-0673": {
+      "stem": "Which type of file is the source for conversion to CSV format?",
+      "options": {
+        "a": "Word",
+        "b": "Excel",
+        "c": "PowerPoint",
+        "d": "Access"
+      }
+    },
+    "MT4-0674": {
+      "stem": "How many levels of openness are there for federal executive bodies?",
+      "options": {
+        "a": "2",
+        "b": "5",
+        "c": "7",
+        "d": "15"
+      }
+    },
+    "MT4-0675": {
+      "stem": "Which element should you click to view the amount of RAM installed in the computer?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0676": {
+      "stem": "Which element should you click to change the keyboard language?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0677": {
+      "stem": "Which keys are used to take a screenshot of the active window?",
+      "options": {
+        "a": "Tab + Insert",
+        "b": "Alt + Print Screen",
+        "c": "Ctrl + Insert",
+        "d": "Shift + F5"
+      }
+    },
+    "MT4-0678": {
+      "stem": "Click the title bar of the window shown below.",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0679": {
+      "stem": "Which button should you click to enlarge the open window?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0680": {
+      "stem": "How is the highlighted file related to the selected folder?",
+      "options": {
+        "a": "The selected folder and highlighted file are at the same level",
+        "b": "The highlighted file is inside the selected folder",
+        "c": "The highlighted file contains the selected folder",
+        "d": "The highlighted file and selected folder are in different locations"
+      }
+    },
+    "MT4-0681": {
+      "stem": "Which tab provides the Properties command for finding the size of the selected folder?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0682": {
+      "stem": "Which tab can change the view of the selected folder so that its contents appear as in the lower picture?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0683": {
+      "stem": "Which command in the Organize (Упорядочить) menu lets you find the size of the selected folder?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0684": {
+      "stem": "Which button should you click to access the Shut Down command?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0685": {
+      "stem": "You want the first line of each paragraph to be indented by 1.25 cm. Which button should you click to open the appropriate dialog box?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0686": {
+      "stem": "You want paragraph 2 to have the same line spacing as paragraph 1, set to Exactly 22 pt. Which button should you click to open the appropriate dialog box?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0687": {
+      "stem": "You want paragraph 2 to have the same line spacing as paragraph 1, set to 22 pt. Which sequence of actions in the dialog box will achieve this?",
+      "options": {
+        "a": "Enter 12 in field 1, enter 12 in field 2, then click OK",
+        "b": "Click field 3 and select Exactly, enter 22 in field 4, then click OK",
+        "c": "Enter 22 in field 1, then click OK"
+      }
+    },
+    "MT4-0688": {
+      "stem": "You want to format a table in your document. Which tab should you open?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0689": {
+      "stem": "You want to format a table in your document with invisible borders. Which button should you click?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0690": {
+      "stem": "Which tab should you open to turn on Track Changes?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0691": {
+      "stem": "Which tab should you open to add a comment to the current part of the document?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0692": {
+      "stem": "Which tab should you open to end the current page and move to the next one?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0693": {
+      "stem": "You want to use an automatically generated table of contents in the document you are creating. Which tabs should you open?",
+      "options": {
+        "a": "First open tab 4, open the Styles dialog and mark up the text, then click Table of Contents on tab 1",
+        "b": "First open tab 4, open the Styles dialog and mark up the text, then click Table of Contents on tab 2",
+        "c": "Open tab 1 and click Table of Contents",
+        "d": "Open tab 2 and click Table of Contents"
+      }
+    },
+    "MT4-0694": {
+      "stem": "You want to change the page orientation from portrait to landscape. Which area should you double-click to open the appropriate dialog box?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0695": {
+      "stem": "Which button copies the selected fragment to the clipboard without deleting it?",
+      "options": {
+        "a": "1",
+        "b": "2",
+        "c": "3",
+        "d": "4"
+      }
+    },
+    "MT4-0696": {
+      "stem": "Which tab can be used to insert a picture into a document?",
+      "options": {
+        "a": "View",
+        "b": "Tools",
+        "c": "Insert"
+      }
+    },
+    "MT4-0697": {
+      "stem": "Computer virus infection can occur while:",
+      "options": {
+        "a": "Working with files",
+        "b": "Working with peripheral devices",
+        "c": "Browsing web pages"
+      }
+    },
+    "MT4-0698": {
+      "stem": "What do you need in order to check for malware?",
+      "options": {
+        "a": "An antivirus software installation package",
+        "b": "An antivirus program installed on the computer",
+        "c": "A boot program"
+      }
+    },
+    "MT4-0699": {
+      "stem": "Which files can be infected by computer viruses?",
+      "options": {
+        "a": "Video files",
+        "b": "Image files",
+        "c": "Audio files",
+        "d": "Program and document files"
+      }
+    },
+    "MT4-0700": {
+      "stem": "Which email address is written incorrectly?",
+      "options": {
+        "a": "Ivanov@mail.ru",
+        "b": "Ivanov@ru",
+        "c": "Ivanov.II@mail.ru",
+        "d": "II.Ivanov@mail.ru",
+        "e": "Ivanov@mail.migsu.ru"
+      }
+    }
+  },
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943"
+}

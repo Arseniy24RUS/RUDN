@@ -1,6 +1,7 @@
 import { topicAdjustment } from './topics.mjs';
 export const SCALE_IDS = ["N","K","A","M","C","E","D","T","I"];
 export const CONDITION_IDS = ["FIELD","SCHEDULE","FORMAL","SECURITY"];
+export const AGENCY_AGGREGATION = Object.freeze({bestPathWeight: 0.70, portfolioWeight: 0.30});
 
 export function clamp(value, min = 0, max = 1) {
   return Math.max(min, Math.min(max, value));
@@ -136,10 +137,54 @@ function importanceFactor(importance) {
   return 0.91;
 }
 
+// Semantic signatures exclude record IDs, labels, evidence prose and array order.
+// Duplicating the same coded opportunity must not change an institution's index.
+function canonicalValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort()
+    .filter(key => value[key] !== undefined).map(key => [key, canonicalValue(value[key])]));
+  return value;
+}
+function pathSignature(path, template, factor) {
+  return JSON.stringify(canonicalValue({
+    vector: SCALE_IDS.map(id => Number(template.vector[id] ?? .5)),
+    sectors: (path.sectors || []).map(entry => [entry.id, Number(entry.weight || 0)])
+      .sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+    topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length)
+      .map(([id, ids]) => [id, [...new Set(ids)].sort()])),
+    conditions: CONDITION_IDS.map(id => {
+      const value = path.conditions?.[id];
+      return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+    }),
+    factor
+  }));
+}
+
+function aggregatePaths(paths) {
+  // Stable summation and best-path selection also make permutation reproducible.
+  const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+  const best = ordered[0];
+  const pathMeanScore = average(ordered.map(path => path.score));
+  const contributions = {};
+  const pathMeanContributions = {};
+  for (const key of ['role', 'sector', 'conditions']) {
+    pathMeanContributions[key] = average(ordered.map(path => path.contributions[key]));
+    contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key]
+      + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+  }
+  const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score
+    + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+  const {signature, ...bestPath} = best;
+  return {...bestPath, rawScore, score: Math.round(rawScore * 10) / 10, band: matchBand(rawScore),
+    bestPathScore: best.score, pathMeanScore, portfolioScore: pathMeanScore,
+    pathCount: ordered.length, aggregation: AGENCY_AGGREGATION,
+    bestPathContributions: best.contributions, pathMeanContributions, contributions};
+}
+
 export function scoreAuthority(authority, context, trackMap) {
   const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
   const cFit = conditionFit(context.conditions, authority.conditions);
-  let best = null;
+  const paths = new Map();
 
   for (const link of authority.tracks || []) {
     const template = trackMap.get(link.id);
@@ -148,10 +193,14 @@ export function scoreAuthority(authority, context, trackMap) {
     const sFit = sectorFit(context.sectorPreferences,path,context.focusAreas);
     const cFit = conditionFit(context.conditions,link.conditions||{});
     const rFit = roleFit(context.roleProfile, template);
+    const factor = importanceFactor(link.importance);
     const base = 0.40 * rFit + 0.45 * sFit + 0.15 * cFit;
-    const score = 100 * base * importanceFactor(link.importance);
+    const score = 100 * base * factor;
+    const signature = pathSignature({...path, conditions: link.conditions || {}}, template, factor);
     const candidate = {
       score,
+      signature,
+      contributions: {role: 40 * rFit * factor, sector: 45 * sFit * factor, conditions: 15 * cFit * factor},
       roleFit: rFit,
       sectorFit: sFit,
       conditionFit: cFit,
@@ -162,27 +211,27 @@ export function scoreAuthority(authority, context, trackMap) {
       pathTopics:path.topics||{},
       pathConditions:link.conditions||{}
     };
-    if (!best || candidate.score > best.score) best = candidate;
+    const existing = paths.get(signature);
+    if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
   }
 
-  if (!best) {
-    best = {
-      score: 100 * (0.45 * sFit + 0.15 * cFit + 0.20),
+  if (!paths.size) {
+    const score = 100 * (0.45 * sFit + 0.15 * cFit + 0.20);
+    const contributions = {role: 20, sector: 45 * sFit, conditions: 15 * cFit};
+    return {...authority,
+      score: Math.round(score * 10) / 10, rawScore: score, band: matchBand(score),
       roleFit: 0.5,
       sectorFit: sFit,
       conditionFit: cFit,
       track: null,
-      importance: 0
+      importance: 0,
+      bestPathScore: null, pathMeanScore: null, portfolioScore: null, pathCount: 0,
+      aggregation: AGENCY_AGGREGATION, contributions,
+      bestPathContributions: null, pathMeanContributions: null
     };
   }
 
-  return {
-    ...authority,
-    ...best,
-    score: Math.round(best.score * 10) / 10,
-    rawScore: best.score,
-    band: matchBand(best.score)
-  };
+  return {...authority, ...aggregatePaths([...paths.values()])};
 }
 
 export function rankAuthorities({authorities,tracks,questions,sectors,answers,prioritySectors,lowPrioritySectors,conditions,focusAreas={}}) {

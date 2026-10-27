@@ -1,4 +1,6 @@
 import {sessionBundle,parseSession,SESSION_LIMIT} from './session-transfer.mjs';
+import {upgradePreviousDraft} from './model-upgrade.mjs';
+import {authorityEmblem,authoritySymbolCredit} from './authority-symbols.mjs';
 import {createVacancies} from './vacancies.mjs';
 import {MODEL_VERSION as CURRENT_MODEL,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from './versions.mjs';
 import {TOPIC_GROUPS,activeTopicGroups,sanitizeFocusAreas} from './topics.mjs';
@@ -42,7 +44,9 @@ import {
   summaryToCsv
 } from "./analytics.mjs";
 
-export const STORAGE_KEY = storageKey("answers-v8");
+export const STORAGE_KEY = storageKey("answers-v8.1");
+const PREVIOUS_STORAGE_KEY = storageKey("answers-v8");
+let copiedInputs = false;
 
 const DATA_FILES = [
   "data/scales.json",
@@ -92,6 +96,8 @@ let protectedStorage = false;
 let pendingLegacyChoice = false;
 let lastSaveStatus = "idle";
 let persistedFingerprint = null;
+let sectorDrag = null;
+let sectorPress = null;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -136,6 +142,11 @@ function iconForSector(id) {
 function storedPayload() {
   try {
     const rawText=readLocal(STORAGE_KEY);
+    if (!rawText) {
+      const prior = readLocal(PREVIOUS_STORAGE_KEY);
+      const upgraded = prior ? upgradePreviousDraft(JSON.parse(prior)) : null;
+      if (upgraded) {copiedInputs = true;return upgraded;}
+    }
     const current = JSON.parse(rawText || "null");
     if (rawText && (!isRecord(current) || Number(current.schema)!==4 || current.modelVersion!==MODEL_VERSION || current.questionnaireVersion!==QUESTIONNAIRE_VERSION || current.registryVersion!==REGISTRY_VERSION || !isRecord(current.answers) || !isRecord(current.conditions))) {
       unrecoverableStoredText=rawText;protectedStorage=true;return null;
@@ -176,7 +187,7 @@ function loadStoredState() {
   if(!completionStatus({...state,questions:data.questions}).complete)state.completedAt=null;
   if(typeof state.completedAt!=='string'||!Number.isFinite(Date.parse(state.completedAt)))state.completedAt=null;
   if(typeof state.resultRecordId!=='string'||!/^[a-zA-Z0-9-]{8,100}$/.test(state.resultRecordId))state.resultRecordId=null;
-  persistedFingerprint=stateFingerprint();
+  persistedFingerprint=copiedInputs?null:stateFingerprint();
 
 }
 
@@ -220,7 +231,7 @@ function bindSessionTransfer() {
       if((Object.keys(state.answers).length||state.prioritySectors.length||Object.keys(state.conditions).length)&&!confirm(translate('Заменить текущие ответы данными из файла? Для сохранения своего варианта сначала скачайте ответы.')))return;
       Object.assign(state,inputs);invalidateResult();state.questionIndex=firstUnansweredIndex();
       saveState();routeTo(resolveResumeRoute());toast('Ответы восстановлены. Результат рассчитывается заново.');
-    } catch { toast('Файл ответов не принят. Нужен файл «Скачать ответы» этой версии модели размером до 128 КБ.'); }
+    } catch { toast('Файл ответов не принят. Выберите файл «Скачать ответы» размером до 128 КБ.'); }
     finally {event.target.value='';}
   });
 }
@@ -309,6 +320,7 @@ function activeRoute() {
 }
 
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
+  finishSectorDrag(false, {focus:false, announce:false});
   const valid = ["home", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
   if (!valid.includes(route)) route = "home";
@@ -457,6 +469,7 @@ function togglePrioritySector(id) {
     if (current.low) state.lowPrioritySectors.splice(current.lowIndex, 1);
     state.prioritySectors.push(id);
   }
+  state.focusAreas=sanitizeFocusAreas(state.focusAreas,state.prioritySectors);
   invalidateResult();
   saveState();
   renderSectors();
@@ -471,6 +484,7 @@ function toggleLowSector(id) {
     if (current.priority) state.prioritySectors.splice(current.priorityIndex, 1);
     state.lowPrioritySectors.push(id);
   }
+  state.focusAreas=sanitizeFocusAreas(state.focusAreas,state.prioritySectors);
   invalidateResult();
   saveState();
   renderSectors();
@@ -480,18 +494,154 @@ function toggleLowSector(id) {
 function renderSectorOrder(){
   let root=$("#sector-order");if(!root){root=document.createElement('div');root.id='sector-order';$("#sector-grid").before(root);}
   const labels={prioritySectors:'Приоритеты: от первого к четвёртому',lowPrioritySectors:'Менее интересные: последняя строка наименее привлекательна'};
-  root.innerHTML=Object.entries(labels).map(([key,label])=>`<div><h3>${label}</h3>${state[key].length?state[key].map((id,i)=>`<div class="sector-order-row"><span><b class="order-index">${i+1}.</b> <span>${escapeHtml(data.sectors.find(s=>s.id===id)?.title||id)}</span></span><button type="button" data-order="${key}" data-index="${i}" data-direction="-1" ${!i?'disabled':''} aria-label="Поднять приоритет">${icon('arrow-left')}</button><button type="button" data-order="${key}" data-index="${i}" data-direction="1" ${i===state[key].length-1?'disabled':''} aria-label="Опустить приоритет">${icon('arrow-right')}</button></div>`).join(''):'<p>Выберите сферы ниже.</p>'}</div>`).join('');
-  $$('[data-order]',root).forEach(b=>b.addEventListener('click',()=>{
-    const key=b.dataset.order,i=Number(b.dataset.index),j=i+Number(b.dataset.direction);if(j<0||j>=state[key].length)return;
-    [state[key][i],state[key][j]]=[state[key][j],state[key][i]];invalidateResult();saveState();renderSectors();
-    $(`[data-order="${key}"][data-index="${j}"]:not([disabled])`)?.focus({preventScroll:true});
-  }));
+  root.innerHTML=Object.entries(labels).map(([key,label])=>`<section class="sector-order-group ${key==='prioritySectors'?'priority':'low'}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label}</h3>${state[key].length?`<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id,i)=>{
+    const title=escapeHtml(data.sectors.find(s=>s.id===id)?.title||id);
+    return `<li class="sector-order-row ${key==='prioritySectors'?'priority':'low'}" data-order-key="${key}" data-sector-id="${id}" tabindex="0" aria-label="${escapeHtml(translate(data.sectors.find(s=>s.id===id)?.title||id))}" aria-roledescription="${escapeHtml(translate('Перемещаемый приоритет'))}" aria-describedby="sector-drag-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape">
+      <span class="sector-order-title"><b class="order-index">${i+1}.</b><span>${title}</span></span>
+      <button type="button" class="sector-remove" aria-label="${escapeHtml(translate('Удалить приоритет'))}: ${escapeHtml(translate(data.sectors.find(s=>s.id===id)?.title||id))}">${icon('close')}</button>
+      ${key==='prioritySectors'?`<div class="sector-card-topics" data-topic-card="${id}" hidden></div>`:''}
+    </li>`;
+  }).join('')}</ol>`:'<p>Выберите сферы ниже.</p>'}</section>`).join('');
+  $$('.sector-order-row',root).forEach(row=>{
+    const isControl=target=>Boolean(target.closest('button,input,select,textarea,a,label,[contenteditable]'));
+    row.addEventListener('pointerdown',event=>{
+      if(event.pointerType==='touch'||!event.isPrimary||event.button!==0||isControl(event.target))return;
+      event.preventDefault();row.focus({preventScroll:true});
+      beginSectorDrag(row,'pointer',event);
+      row.setPointerCapture(event.pointerId);
+    });
+    row.addEventListener('pointermove',event=>{
+      if(sectorDrag?.row!==row||sectorDrag.mode!=='pointer'||sectorDrag.pointerId!==event.pointerId)return;
+      event.preventDefault();sectorDrag.clientY=event.clientY;
+      if(Math.abs(event.clientY-sectorDrag.startY)>5)sectorDrag.moved=true;
+      if(sectorDrag.moved)previewSectorDrag();
+    });
+    row.addEventListener('pointerup',event=>{if(sectorDrag?.row===row&&sectorDrag.mode==='pointer'&&sectorDrag.pointerId===event.pointerId)finishSectorDrag(sectorDrag.moved);});
+    row.addEventListener('pointercancel',()=>{if(sectorDrag?.row===row&&sectorDrag.mode==='pointer')finishSectorDrag(false);});
+    row.addEventListener('lostpointercapture',()=>{if(sectorDrag?.row===row&&sectorDrag.mode==='pointer')finishSectorDrag(false);});
+    // Touch starts as ordinary page scrolling. Only a stationary hold activates
+    // sorting; a non-passive touchmove then prevents native pan for that gesture.
+    row.addEventListener('touchstart',event=>{
+      if(event.touches.length!==1){finishSectorDrag(false,{focus:false,announce:false});return;}
+      if(isControl(event.target))return;
+      finishSectorDrag(false,{focus:false,announce:false});
+      const touch=event.touches[0],press={row,id:touch.identifier,x:touch.clientX,y:touch.clientY,timer:null};
+      sectorPress=press;
+      press.timer=setTimeout(()=>{
+        if(sectorPress!==press||!row.isConnected)return;
+        sectorPress=null;row.focus({preventScroll:true});
+        beginSectorDrag(row,'touch',{touchId:press.id,clientY:press.y});
+      },400);
+    },{passive:true});
+    row.addEventListener('touchmove',event=>{
+      if(event.touches.length!==1){finishSectorDrag(false,{focus:false,announce:false});return;}
+      const touch=event.touches[0];
+      if(sectorPress?.row===row&&sectorPress.id===touch.identifier){
+        if(Math.hypot(touch.clientX-sectorPress.x,touch.clientY-sectorPress.y)>8)finishSectorDrag(false,{focus:false,announce:false});
+        return;
+      }
+      if(sectorDrag?.row!==row||sectorDrag.mode!=='touch'||sectorDrag.touchId!==touch.identifier)return;
+      if(!event.cancelable){finishSectorDrag(false,{focus:false});return;}
+      event.preventDefault();sectorDrag.clientY=touch.clientY;
+      if(Math.abs(touch.clientY-sectorDrag.startY)>5)sectorDrag.moved=true;
+      if(sectorDrag.moved)previewSectorDrag();
+    },{passive:false});
+    row.addEventListener('touchend',event=>{
+      if(sectorPress?.row===row)finishSectorDrag(false,{focus:false,announce:false});
+      if(sectorDrag?.row===row&&sectorDrag.mode==='touch'&&[...event.changedTouches].some(touch=>touch.identifier===sectorDrag.touchId))finishSectorDrag(sectorDrag.moved);
+    });
+    row.addEventListener('touchcancel',()=>{if(sectorPress?.row===row||sectorDrag?.row===row)finishSectorDrag(false,{focus:false});});
+    row.addEventListener('contextmenu',event=>{if(sectorPress?.row===row||sectorDrag?.row===row)event.preventDefault();});
+    row.addEventListener('keydown',event=>{
+      if(event.target!==row)return;
+      const grabbed=sectorDrag?.row===row&&sectorDrag.mode==='keyboard';
+      if(event.key===' '||event.key==='Enter'){
+        event.preventDefault();if(event.repeat)return;if(grabbed)finishSectorDrag(true);else beginSectorDrag(row,'keyboard');
+      }else if(grabbed&&['ArrowUp','ArrowDown','Home','End'].includes(event.key)){
+        event.preventDefault();
+        sectorDrag.target=event.key==='Home'?0:event.key==='End'?sectorDrag.rows.length-1:Math.max(0,Math.min(sectorDrag.rows.length-1,sectorDrag.target+(event.key==='ArrowUp'?-1:1)));
+        previewSectorDrag();row.scrollIntoView({block:'nearest',behavior:'instant'});announceSectorOrder(translate('Позиция')+` ${sectorDrag.target+1} / ${sectorDrag.rows.length}`);
+      }else if((sectorDrag?.row===row||sectorPress?.row===row)&&event.key==='Escape'){event.preventDefault();finishSectorDrag(false);}
+      else if(grabbed&&event.key==='Tab')finishSectorDrag(false,{focus:false});
+    });
+    row.addEventListener('blur',()=>{if(sectorDrag?.row===row&&sectorDrag.mode==='keyboard')finishSectorDrag(false,{focus:false});});
+    $('.sector-remove',row).addEventListener('click',()=>{
+      finishSectorDrag(false,{focus:false,announce:false});
+      const key=row.dataset.orderKey,id=row.dataset.sectorId,index=state[key].indexOf(id);
+      if(index<0)return;
+      state[key].splice(index,1);state.focusAreas=sanitizeFocusAreas(state.focusAreas,state.prioritySectors);
+      invalidateResult();saveState();renderSectors();
+      const next=state[key][Math.min(index,state[key].length-1)];
+      (next?$(`[data-order-key="${key}"][data-sector-id="${next}"] .sector-remove`):$(`[data-sector="${id}"] .${key==='prioritySectors'?'priority-toggle':'low-toggle'}`))?.focus({preventScroll:true});
+      announceSectorOrder('Приоритет удалён.');
+    });
+  });
+}
+
+function announceSectorOrder(message){
+  const status=$('#sector-order-status');if(status)status.textContent=translate(message);
+}
+
+function beginSectorDrag(row,mode,event){
+  finishSectorDrag(false,{focus:false,announce:false});
+  const list=row.parentElement,rows=$$('.sector-order-row',list),index=rows.indexOf(row);
+  sectorDrag={row,list,rows,mode,key:row.dataset.orderKey,id:row.dataset.sectorId,index,target:index,pointerId:event?.pointerId,touchId:event?.touchId,startY:event?.clientY,clientY:event?.clientY,grabOffset:event?event.clientY-row.getBoundingClientRect().top:0,moved:mode==='keyboard'};
+  row.classList.add('is-dragging');list.classList.add('is-sorting');
+  announceSectorOrder('Приоритет выбран для перемещения.');
+  if(mode!=='keyboard'){
+    const session=sectorDrag;
+    const tick=()=>{
+      if(sectorDrag!==session||!session.row.isConnected)return;
+      if(session.moved&&window.innerHeight){
+        const speed=session.clientY<64?-12:session.clientY>window.innerHeight-64?12:0;
+        if(speed)window.scrollBy?.({top:speed,behavior:'instant'});
+        previewSectorDrag();
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+}
+
+function previewSectorDrag(){
+  const drag=sectorDrag;if(!drag)return;
+  drag.rows.forEach(row=>row.style.removeProperty('transform'));
+  const boxes=drag.rows.map(row=>row.getBoundingClientRect());
+  if(drag.mode!=='keyboard'){
+    drag.target=boxes.reduce((index,box,i)=>i!==drag.index&&drag.clientY>box.top+box.height/2?index+1:index,0);
+  }
+  const order=drag.rows.map((_,i)=>i);order.splice(drag.index,1);order.splice(drag.target,0,drag.index);
+  const gap=boxes.length>1?boxes[1].top-boxes[0].bottom:0;
+  let top=boxes[0].top;
+  for(const index of order){
+    const offset=drag.mode!=='keyboard'&&index===drag.index?drag.clientY-drag.grabOffset-boxes[index].top:top-boxes[index].top;
+    drag.rows[index].style.transform=`translateY(${offset}px)`;
+    top+=boxes[index].height+gap;
+  }
+}
+
+function finishSectorDrag(commit,{focus=true,announce=true}={}){
+  if(sectorPress){clearTimeout(sectorPress.timer);sectorPress=null;}
+  const drag=sectorDrag;if(!drag)return;
+  sectorDrag=null;
+  drag.rows.forEach(row=>{row.style.removeProperty('transform');row.classList.remove('is-dragging');});
+  drag.list.classList.remove('is-sorting');
+  if(drag.pointerId!==undefined&&drag.row.hasPointerCapture(drag.pointerId))drag.row.releasePointerCapture(drag.pointerId);
+  if(commit&&drag.index!==drag.target){
+    state[drag.key].splice(drag.target,0,state[drag.key].splice(drag.index,1)[0]);
+    state.focusAreas=sanitizeFocusAreas(state.focusAreas,state.prioritySectors);
+    invalidateResult();saveState();renderSectors();
+  }
+  if(focus)$(`[data-order-key="${drag.key}"][data-sector-id="${drag.id}"]`)?.focus({preventScroll:true});
+  if(announce)announceSectorOrder(commit?'Порядок изменён.':'Перемещение отменено.');
 }
 
 function renderSectors() {
+  finishSectorDrag(false,{focus:false,announce:false});
   $("#priority-count").textContent = `${state.prioritySectors.length} / 4`;
   $("#low-count").textContent = `${state.lowPrioritySectors.length} / 2`;
   $("#sectors-next").disabled = state.prioritySectors.length !== 4 || state.lowPrioritySectors.length !== 2;
+  $('#sectors-reset').disabled=!state.prioritySectors.length&&!state.lowPrioritySectors.length&&!Object.keys(state.focusAreas).length;
   state.focusAreas=sanitizeFocusAreas(state.focusAreas,state.prioritySectors);
   renderSectorOrder();
   $("#sector-grid").innerHTML = data.sectors.map((sector) => {
@@ -504,8 +654,8 @@ function renderSectors() {
       <h2>${escapeHtml(sector.title)}</h2>
       <p>${escapeHtml(sector.description)}</p>
       <div class="sector-actions">
-        <button type="button" class="priority-toggle" aria-pressed="${selection.priority}">${selection.priority ? "Убрать из приоритета" : "В приоритет"}</button>
-        <button type="button" class="low-toggle" aria-pressed="${selection.low}">${selection.low ? "Убрать отметку" : "Не моё"}</button>
+        <button type="button" class="priority-toggle" aria-pressed="${selection.priority}">Нравится</button>
+        <button type="button" class="low-toggle" aria-pressed="${selection.low}">Не нравится</button>
       </div>
     </article>`;
   }).join("");
@@ -517,14 +667,18 @@ function renderSectors() {
 }
 
 function renderTopicQuestions() {
-  let root=$('#topic-questions');if(!root){root=document.createElement('section');root.id='topic-questions';root.className='topic-questions';$('#sector-grid').after(root);}
-  const groups=activeTopicGroups(state.prioritySectors).map(id=>TOPIC_GROUPS.find(g=>g.id===id));
-  root.innerHTML=groups.length?`<h2>Уточните, что именно интересно</h2><p>Необязательно. До двух уточнений в приоритетных сферах помогают различать соседние ведомства. Можно оставить широкий выбор.</p>${groups.map(g=>`<fieldset><legend>${escapeHtml(data.sectors.find(s=>s.id===g.id).title)}</legend><div class="topic-options"><button type="button" data-topic-group="${g.id}" data-topic="" aria-pressed="${!state.focusAreas[g.id]}">Пока не различаю / вся сфера</button>${g.topics.map(t=>`<button type="button" data-topic-group="${g.id}" data-topic="${t.id}" aria-pressed="${state.focusAreas[g.id]===t.id}"><span data-no-i18n>${escapeHtml(t.title[getLanguage()]||t.title.ru)}</span></button>`).join('')}</div></fieldset>`).join('')}`:'';
-  $$('[data-topic-group]',root).forEach(b=>b.addEventListener('click',()=>{
-    if(b.dataset.topic)state.focusAreas[b.dataset.topicGroup]=b.dataset.topic;else delete state.focusAreas[b.dataset.topicGroup];
-    invalidateResult();saveState();renderTopicQuestions();
-    $(`[data-topic-group="${b.dataset.topicGroup}"][data-topic="${b.dataset.topic}"]`,root)?.focus({preventScroll:true});
-  }));
+  const active=activeTopicGroups(state.prioritySectors);
+  $$('[data-topic-card]').forEach(root=>{
+    const group=TOPIC_GROUPS.find(item=>item.id===root.dataset.topicCard);
+    root.hidden=!group||!active.includes(group.id);
+    if(root.hidden){root.replaceChildren();return;}
+    root.innerHTML=`<label for="sector-topic-${group.id}">Уточнение:</label><select id="sector-topic-${group.id}" data-topic-group="${group.id}" title="Уточнение (необязательно)"><option value="">Вся сфера</option>${group.topics.map(topic=>`<option value="${topic.id}" data-no-i18n>${escapeHtml(topic.title[getLanguage()]||topic.title.ru)}</option>`).join('')}</select>`;
+    const select=$('select',root);select.value=state.focusAreas[group.id]||'';
+    select.addEventListener('change',()=>{
+      if(select.value)state.focusAreas[group.id]=select.value;else delete state.focusAreas[group.id];
+      invalidateResult();saveState();
+    });
+  });
 }
 
 function renderConditions() {
@@ -671,7 +825,7 @@ function renderResults() {
 
     <section class="dl-lab-launch"><div><h2>Разберитесь, почему выбран этот орган</h2><p>Посмотрите вклад интересов, сфер и условий. Сравните другой вариант, не меняя исходных ответов.</p></div><button id="result-to-lab" class="button button-primary" type="button">Лаборатория выбора${icon("chart")}</button></section>
     <section class="results-section">
-      <div class="results-section-header"><div><h2>Наиболее близкие органы власти</h2><p>ТОП-5 с указанием карьерного трека, за счёт которого сформировалась рекомендация.</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}Сравнить первые три</button></div>
+      <div class="results-section-header"><div><h2>Наиболее близкие органы власти</h2><p>Индекс учитывает лучшее направление работы (70%) и среднее соответствие всем направлениям учреждения (30%).</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}Сравнить первые три</button></div>
       ${leadingTies.length>1?`<p class="app-notice">Несколько органов имеют одинаковый неокруглённый индекс. Порядок внутри этой группы технический, а не свидетельство различий в пригодности.</p>`:''}
       <div class="top-match-grid">${top.map((item, index) => matchCard(item, index + 1)).join("")}</div>
       ${cutTies.length?`<details class="equal-results"><summary>За границей ТОП-5 есть органы с тем же индексом</summary><div class="tag-row">${cutTies.map(a=>`<button type="button" class="button button-secondary open-authority" data-authority="${a.id}">${escapeHtml(a.shortName)}</button>`).join('')}</div><p>Они не менее близки в текущей модели, чем пятый результат.</p></details>`:''}
@@ -727,7 +881,7 @@ function matchCard(item, rank, publicSector = false) {
   const selected = state.compareIds.includes(item.id);
   return `<article class="match-card">
     <div class="match-rank"><span>${rank}</span><div class="match-score"><strong>${item.score.toFixed(1)}</strong><small>индекс</small></div></div>
-    <h3>${escapeHtml(item.shortName)}</h3>
+    <div class="result-symbol-heading">${authorityEmblem(item,'compact')}<h3>${escapeHtml(item.shortName)}</h3></div>
     <span class="match-type">${escapeHtml(publicSector ? item.entityTypeLabel : item.entityTypeLabel)}</span>
     <div class="match-track"><b>Ближайший трек</b>${escapeHtml(item.track?.title || "Публичное управление")}</div>
     <div class="match-card-actions"><button class="match-more open-authority" type="button" data-authority="${item.id}">${escapeHtml(item.band.label)}${icon("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${item.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "Выбрано" : "Сравнить"}</span></button></div>
@@ -857,7 +1011,7 @@ function renderDirectory() {
     const selected = state.compareIds.includes(authority.id);
     const careerRoles = buildAuthorityCareerRoles(authority, data.careerFramework, data.competencies, 3);
     return `<article class="authority-card">
-      <div class="authority-card-head"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><span class="confidence-dot ${authority.confidence}">Авторский профиль</span></div>
+      <div class="authority-card-head">${authorityEmblem(authority)}<span class="confidence-dot ${authority.confidence}">Авторский профиль</span></div>
       <h2>${escapeHtml(authority.shortName)}</h2>
       <span class="authority-type">${escapeHtml(authority.entityTypeLabel)}</span>
       <p>${escapeHtml(authority.mission)}</p>
@@ -910,7 +1064,7 @@ function authoritySourcesMarkup(authority) {
     ...(authority.evidence || []).map((item) => ({ ...item, label: item.title || "Официальная карточка органа" })),
     ...data.careerFramework.sources.map((item) => ({ ...item, label: item.title }))
   ];
-  return `${classroom?.sourceForAuthority(authority.id)||""}<div class="source-governance"><h2>Что является официальным, а что модельным</h2><div class="source-governance-grid"><div><strong>Официальные сведения</strong><p>Наименование, институциональный тип, подчинённость, публично описанные полномочия и ссылки на государственные ресурсы.</p></div><div><strong>Учебная модель</strong><p>Веса сфер, карьерные треки, типовые семейства подразделений, примеры ролей и интерпретация условий труда.</p></div></div></div>
+  return `${authoritySymbolCredit(authority)}${classroom?.sourceForAuthority(authority.id)||""}<div class="source-governance"><h2>Что является официальным, а что модельным</h2><div class="source-governance-grid"><div><strong>Официальные сведения</strong><p>Наименование, институциональный тип, подчинённость, публично описанные полномочия и ссылки на государственные ресурсы.</p></div><div><strong>Учебная модель</strong><p>Веса сфер, карьерные треки, типовые семейства подразделений, примеры ролей и интерпретация условий труда.</p></div></div></div>
     <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator?`<small>${escapeHtml(source.locator)}</small>`:""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "Официальный источник")}</small></span>${icon("external")}</a>`).join("")}</div>
     <div class="career-model-note warning">${icon("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
 }
@@ -925,7 +1079,7 @@ function openAuthority(id, initialTab = "overview") {
   const selected = state.compareIds.includes(authority.id);
   $("#authority-dialog-content").innerHTML = `
     <div class="dialog-hero">
-      <div class="dialog-hero-top"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "В сравнении" : "Добавить в сравнение"}</span></button></div>
+      <div class="dialog-hero-top">${authorityEmblem(authority)}<button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "В сравнении" : "Добавить в сравнение"}</span></button></div>
       <h1 id="authority-dialog-title">${escapeHtml(authority.name)}</h1>
       <p class="official-russian-name" lang="ru" data-no-i18n>${escapeHtml(authority.name)}</p>
       <span>${escapeHtml(authority.entityTypeLabel)}</span>
@@ -1067,7 +1221,7 @@ function renderCompare() {
     ${selected.length < 2 ? `<div class="compare-guidance">${icon("info")}<p>Первый вариант выбран. Добавьте ещё один орган в справочнике или в результатах теста, чтобы увидеть содержательное сравнение.</p><button class="button button-secondary" type="button" data-route="directory">Добавить орган${icon("arrow-right")}</button></div>` : `<div class="compare-actions"><button id="compare-print" class="button button-secondary" type="button">${icon("print")}Печать сравнения</button><button class="button button-secondary" type="button" data-route="directory">${icon("plus")}Добавить или заменить</button></div>`}
     <div class="compare-columns" style="--compare-count:${Math.max(selected.length, 1)}">
       ${columns.map(({ authority, roles, routes, competencies, education }) => `<article class="compare-column">
-        <header class="compare-column-header"><div class="authority-emblem">${icon(authority.entityType === "service" ? "shield" : "landmark")}</div><button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="Удалить ${escapeHtml(authority.shortName)}">${icon("close")}</button><h2>${escapeHtml(authority.shortName)}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">Открыть полное досье${icon("arrow-right")}</button></header>
+        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="Удалить ${escapeHtml(authority.shortName)}">${icon("close")}</button><h2>${escapeHtml(authority.shortName)}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">Открыть полное досье${icon("arrow-right")}</button></header>
         <section><h3>Институциональное положение</h3><dl><div><dt>Подчинённость</dt><dd>${escapeHtml(authority.parent)}</dd></div><div><dt>Уверенность модели</dt><dd>${confidenceLabel(authority.confidence)}</dd></div></dl></section>
         <section><h3>Ключевые сферы</h3><div class="tag-row">${(authority.sectors || []).slice(0, 4).map((entry) => `<span class="tag">${escapeHtml(sectorMap.get(entry.id)?.title || entry.id)}</span>`).join("")}</div></section>
         <section><h3>Наиболее характерные роли</h3><div class="compare-role-list">${roles.map((role) => `<div><strong>${escapeHtml(role.title)}</strong><small>${escapeHtml(role.importanceLabel)}</small><p>${escapeHtml(role.unitFamilies[0] || "профильное подразделение")}</p></div>`).join("")}</div></section>
@@ -1282,6 +1436,13 @@ function bindStaticEvents() {
   $("#question-back").addEventListener("click", () => moveQuestion(-1));
   $("#question-next").addEventListener("click", () => moveQuestion(1));
   $("#sectors-next").addEventListener("click", () => routeTo("conditions"));
+  $('#sectors-reset').addEventListener('click',()=>{
+    finishSectorDrag(false,{focus:false,announce:false});
+    state.prioritySectors=[];state.lowPrioritySectors=[];state.focusAreas={};
+    invalidateResult();saveState();renderSectors();
+    $('#sector-grid .priority-toggle')?.focus({preventScroll:true});
+    announceSectorOrder('Выбор сфер и уточнения сброшены.');
+  });
   $("#calculate-button").addEventListener("click", () => { if (calculateResults()) routeTo("results"); });
   $("#directory-search").addEventListener("input", renderDirectory);
   $("#directory-type-filter").addEventListener("change", renderDirectory);
@@ -1350,7 +1511,7 @@ function bindStaticEvents() {
 function bindReliabilityNotices() {
   if(protectedStorage){
     const el=document.createElement('section');el.id='protected-storage';el.className='app-notice migration-notice';el.setAttribute('role','alert');
-    el.innerHTML='<p>Сохранённая запись повреждена или относится к другой модели. Она не перезаписывается. Сначала скачайте копию; начать новое сохранение можно только явно.</p><button type="button" class="button button-secondary" id="protected-backup">Скачать исходную запись</button><button type="button" class="button button-secondary" id="session-backup">Скачать текущие ответы</button><button type="button" class="button button-primary" id="protected-reset">Начать новое сохранение</button>';
+    el.innerHTML='<p>Не удалось прочитать сохранённые ответы. Скачайте копию перед созданием нового сохранения.</p><button type="button" class="button button-secondary" id="protected-backup">Скачать исходную запись</button><button type="button" class="button button-secondary" id="session-backup">Скачать текущие ответы</button><button type="button" class="button button-primary" id="protected-reset">Начать новое сохранение</button>';
     $('#main-content').before(el);
     $('#protected-backup').onclick=()=>downloadText('career-recoverable-record.json',unrecoverableStoredText||'null');
     $('#session-backup').onclick=()=>downloadText('career-session-backup.json',JSON.stringify({schema:4,modelVersion:MODEL_VERSION,questionnaireVersion:QUESTIONNAIRE_VERSION,registryVersion:REGISTRY_VERSION,...state},null,2));
@@ -1395,7 +1556,7 @@ async function init() {
     vacancies=createVacancies({data,getResult:()=>latestResult||(state.completedAt&&completionStatus({...state,questions:data.questions}).complete?rankAuthorities({...data,...state}):null),routeTo,closeDialog:closeAuthority});
     bindStaticEvents();
     bindSessionTransfer();
-    document.addEventListener('app:language',()=>{if(activeRoute()==='sectors')renderTopicQuestions();});
+    document.addEventListener('app:language',()=>{finishSectorDrag(false,{focus:false,announce:false});if(activeRoute()==='sectors')renderSectors();});
     updateResumeButton();
     renderCompareTray();
     renderGroupDashboard();
@@ -1417,9 +1578,9 @@ async function init() {
 
 export const ready = init();
 export {routeTo as navigate, setLanguage as setLocale};
-export const updateBusy=()=>groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
-export const pauseForUpdate=()=>{};
-export function flushForUpdate(){return saveState();}
+export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
+export const pauseForUpdate=()=>{finishSectorDrag(false,{focus:false,announce:false});};
+export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});return saveState();}
 export function captureForUpdate(){
   const filters=Object.fromEntries(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].map(id=>[id,$('#'+id)?.value||'']));
   return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password').slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.()};

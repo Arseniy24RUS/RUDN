@@ -1,6 +1,7 @@
 import {createProtectedStore,renderRecovery} from './recovery.mjs';
 import {readLocal,writeLocal} from './storage.mjs';
 import {createScenario,compatibleScenario,scenarioBundle,importScenarios,compareScenarioResults,SCENARIO_STORAGE_KEY,SCENARIO_LIMIT} from './scenarios.mjs';
+import {canReuseScenarioInputs} from './model-upgrade.mjs';
 import {childrenOf,ancestorsOf,hierarchySearch} from './hierarchy.mjs';
 import {resourcesForAuthority,resourceStatus} from './resources.mjs';
 import {translate as t,translateDOM,getLanguage,numberLocale} from './i18n.mjs';
@@ -78,7 +79,7 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
       return `<article class="saved-scenario ${checked?'selected':''}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked?'checked':''} ${result?'':'disabled'}><span>Сравнить</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map(id=>`<span class="tag">${esc(data.sectors.find(s=>s.id===id)?.title||id)}</span>`).join('')}</div>
       <div class="scenario-top">${top.map((a,i)=>`<span><b>${i+1}</b>${esc(a.shortName)}<strong>${a.score.toFixed(1)}</strong></span>`).join('')}</div>
-      ${!result?'<p class="scenario-warning">Сценарий другой версии модели. Сравнение отключено. Можно перенести копию ответов, заново ответив на три изменённых вопроса. Исходный сценарий останется в экспорте.</p>':''}
+      ${!result?'<p class="scenario-warning">Откройте ответы, чтобы рассчитать результат и сравнить сценарии.</p>':''}
       <div class="scenario-actions"><button class="button button-primary" data-restore="${item.id}" ${!result?'data-legacy="true"':''}>${result?"Восстановить":"Перенести и перепроверить"}</button><button class="button button-secondary" data-rename="${item.id}">Переименовать</button><button class="icon-button" data-delete="${item.id}" aria-label="Удалить сценарий">${glyph('trash')}</button></div>
       </article>`;
     }).join(''):`<div class="workspace-empty">${glyph('route')}<h2>Ваш первый карьерный сценарий</h2><p>Завершите тест и сохраните результат. Затем измените интересы или условия работы и сравните два варианта без потери предыдущих ответов.</p><button class="button button-primary" data-go-test>Пройти тест${glyph('arrow-right')}</button></div>`;
@@ -88,9 +89,9 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
       const item=scenarios.find(x=>x.id===b.dataset.restore);if(!item)return;
       if(!confirm(t('Заменить текущие ответы выбранным сценарием? Несохранённые изменения будут потеряны.')))return;
       const input=structuredClone(item.inputs);input.focusAreas||={};
-      if(!compatibleScenario(item,modelVersion)){
+      if(!compatibleScenario(item,modelVersion)&&!canReuseScenarioInputs(item)){
         for(const id of ['K3','T3','I3'])delete input.answers[id];
-        restore(input);route('test');toast(t('Исходный сценарий сохранён. Подтвердите три изменённых вопроса и сохраните новый вариант.'));
+        restore(input);route('test');toast(t('Проверьте ответы и завершите тест.'));
       }else{restore(input);route('results');toast(t('Сценарий восстановлен. Результат пересчитан.'));}
     }));
     $$('[data-rename]',root).forEach(b=>b.addEventListener('click',()=>{const item=scenarios.find(x=>x.id===b.dataset.rename),newTitle=prompt(t('Новое название сценария (до 60 символов)'),item.title);if(newTitle===null)return;const title=newTitle.trim();if(!title||title.length>60||/[\x00-\x1f]/.test(title))return toast(t('Название должно содержать от 1 до 60 символов.'));item.title=title;persist();renderScenarios();}));

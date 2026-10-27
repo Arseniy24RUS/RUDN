@@ -1,0 +1,1544 @@
+{
+  "schemaVersion": 1,
+  "sourcePdfSha256": "0800769a95d70a69b82ea5187c714a28af303c27db5cfbb1ffcf7305ad904f24",
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943",
+  "auditStatus": "individual-triage-complete-with-pending-items",
+  "reviewer": "Independent AI technical content review; not human educational acceptance.",
+  "method": "Read all 108 stems, all options and printed keys. Re-examined all 96 source graphics in context. Verified entries individually cite relevant primary documentation or direct arithmetic/explicit visible command labels. Pending records are not accepted into the scored pool.",
+  "questions": [
+    {
+      "id": "MT4-0593",
+      "number": 593,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "На рисунке2 внешний сетевой коммутатор, остальные компоненты устанавливаются внутри корпуса. Печатный ключ визуально правдоподобен; независимая идентификация конкретного устройства по документации производителя не завершена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=137",
+        "https://www.dell.com/support/kbdoc/en-us/000132029/a-guide-to-the-external-ports-and-connectors-on-a-dell-computer"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0594",
+      "number": 594,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "На рисунке1 жёсткий диск;2 процессор,3 модульRAM,4 видеокарта. Долговременное хранение относится к накопителю, оперативная память хранит рабочие данные временно.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=138",
+        "https://www.dell.com/support/kbdoc/en-us/000148441/what-is-memory-ram"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0595",
+      "number": 595,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ исключает жёсткий диск3 из периферии, но термин «периферийное устройство» зависит от классификации: накопители часто включают в периферию. Условие не уточняет «внешние устройства», поэтому однозначность не подтверждена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=138",
+        "https://www.dell.com/support/kbdoc/en-us/000148441/what-is-memory-ram"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0596",
+      "number": 596,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "На рисунке2 материнская плата; ключ визуально соответствует противопоставлению периферии. Для активации нужна явная используемая классификация, отличная от спорного соседнего вопроса595.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=138",
+        "https://www.dell.com/support/kbdoc/en-us/000148441/what-is-memory-ram"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0597",
+      "number": 597,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Рисунок3 показываетМФУ со сканером и автоподатчиком, но наличие факса зависит от конкретной модификации. ДокументацияHP подтверждает такой набор функций уМФУ, однако точная модель на исходном рисунке не установлена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=139",
+        "https://www.hp.com/hpinfo/newsroom/press_kits/2008/colorintheoffice/fs_hplaserjetM1522mfpseries.pdf"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0598",
+      "number": 598,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Рисунок2 —USB TypeA;1VGA,3DVI,4HDMI. USB-флешка с показанным стандартным разъёмом подключается к2.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=139",
+        "https://www.dell.com/support/kbdoc/en-us/000132029/a-guide-to-the-external-ports-and-connectors-on-a-dell-computer"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0599",
+      "number": 599,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "Универсальное утверждение, чтоUSB3 не позволяет выводить изображение, неверно: существуютUSB2/3 видеоадаптерыDisplayLink. Ограничение «без активного адаптера» в условии отсутствует.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=139",
+        "https://www.dell.com/support/kbdoc/en-us/000132029/a-guide-to-the-external-ports-and-connectors-on-a-dell-computer",
+        "https://www.synaptics.com/products/displaylink-graphics/displaylink-products/usb-adapters"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0600",
+      "number": 600,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Рисунок2 —Ethernet RJ45, остальныеVGA,USB,HDMI. Печатный ключ совпадает с назначением разъёма.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=139",
+        "https://www.dell.com/support/kbdoc/en-us/000132029/a-guide-to-the-external-ports-and-connectors-on-a-dell-computer"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0601",
+      "number": 601,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Показано контекстное меню пустой области рабочего стола сView/Personalize. Его вызывает правый щелчок; левый щелчок и перечисленные клавиши такого меню не открывают.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=140",
+        "https://support.microsoft.com/en-us/onedrive/where-have-my-desktop-icons-gone"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0602",
+      "number": 602,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "В свойствах показаны770КБ(788788байт), на диске772КБ. Из700байт,70МБ,70КБ,700КБ только70МБ достаточно даже с учётом занятого пространства. Проверено прямым сравнением чисел на изображении.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=140"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0603",
+      "number": 603,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Видны значокPowerPoint и расширение.pptx; правильное приложение среди перечисленных —PowerPoint.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=141",
+        "https://support.microsoft.com/en-us/office/vba/open-xml-formats-and-file-name-extensions"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0604",
+      "number": 604,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Видны значокExcel и расширение.xlsx; правильное приложение среди перечисленных —Excel.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=141",
+        "https://support.microsoft.com/en-us/office/vba/open-xml-formats-and-file-name-extensions"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0605",
+      "number": 605,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Ctrl+Alt+Del открывает экран безопасности, откуда доступен Диспетчер задач. Это допустимый путь вызова среди вариантов; сочетание не следует понимать как прямое открытие без промежуточного выбора.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=141",
+        "https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0606",
+      "number": 606,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Ctrl+A выделяет все элементы активного окна; на иллюстрации показан список файлов, не текстовое поле. Остальные сочетания не выполняют эту операцию.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=142",
+        "https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0607",
+      "number": 607,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Значок1 подписан «Этот компьютер». Подключённые накопители доступны вThisPC; сеть,Skype и панель управления не являются нужным представлением дисков.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=142",
+        "https://support.microsoft.com/en-us/windows/experience/backup-recovery/move-your-files-to-a-new-windows-pc-using-an-external-storage-device"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0608",
+      "number": 608,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Щелчок заголовка «Тип» сортирует по типу; исходный ответ использует «сгруппируются», что можно спутать с отдельной командой группировки. Нужна редакторская точность формулировки до оценки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=143",
+        "https://support.microsoft.com/en-us/office/vba/open-xml-formats-and-file-name-extensions"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0609",
+      "number": 609,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Шаблон*.doc* охватывает.doc и.docx, но также другие имена/расширения с таким фрагментом; независимая проверка поведения именно показанной версииWindows Search не завершена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=143",
+        "https://support.microsoft.com/en-us/office/vba/open-xml-formats-and-file-name-extensions"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0610",
+      "number": 610,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает на явно подписанную кнопку «Снять задачу»; остальные —меню, вкладка производительности и переключение. Ключ соответствует заданной операции завершения не отвечающего приложения.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=144",
+        "https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0611",
+      "number": 611,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка3 указывает на вкладку «Управление» инструментов корзины, откуда обычно доступно восстановление. Точная историческая последовательностьRibbon этой версии не подтверждена открытой первичной инструкцией.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=144",
+        "https://support.microsoft.com/en-us/windows/experience/backup-recovery/move-your-files-to-a-new-windows-pc-using-an-external-storage-device"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0612",
+      "number": 612,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает на «Разметка страницы». Именно эта вкладка содержит Columns/Колонки в показанномWord;2 маркированный список,3сортировка,4диалог абзаца не создают газетные колонки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=144",
+        "https://support.microsoft.com/en-gb/word/adjust-column-widths-on-a-page"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0613",
+      "number": 613,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 указывает на «Рецензирование», где находится статистика документа. КомандаWordCount включает знаки, абзацы и строки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=145",
+        "https://support.microsoft.com/en-us/word/training/show-word-count"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0614",
+      "number": 614,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 указывает на¶ Show/Hide; остальные обозначают иные шрифтовые инструменты. Ключ совпадает с показом непечатаемых символов.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=145",
+        "https://support.microsoft.com/en-us/word/show-or-hide-tab-marks-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0615",
+      "number": 615,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает наAa «Регистр», содержащийUPPERCASE.1полужирный,3увеличение размера,4стиль не являются выбором регистра.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=146",
+        "https://support.microsoft.com/en-au/word/change-the-capitalization-or-case-of-text"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0616",
+      "number": 616,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Кнопка —«Быстрая печать», однако число копий и диапазон могут зависеть от ранее сохранённых параметров печати. Без проверки настроек нельзя гарантировать исходное «весь документ в одном экземпляре».",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=146",
+        "https://support.microsoft.com/en-us/word/training/create-a-document-in-word"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0617",
+      "number": 617,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 явно указывает на «Сохранить как». Создаётся копия с новым именем; «Сохранить» сохраняет текущий документ, «Создать» создаёт новый пустой.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=147",
+        "https://support.microsoft.com/en-us/office/collab-files/save-back-up-and-recover-a-file-in-microsoft-office"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0618",
+      "number": 618,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает на кисть «Формат по образцу». Нужно выбрать верхний абзац как образец и применить кисть к нижнему; этот инструмент переносит форматирование.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=147",
+        "https://support.microsoft.com/en-us/word/use-the-format-painter"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0619",
+      "number": 619,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает на «Разметка страницы», где располагается команда изменения полей. Другие отмеченные вкладки не соответствуют этой операции.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=148",
+        "https://support.microsoft.com/en-us/word/training/change-margins"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0620",
+      "number": 620,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "В тексте увеличенная начальная буква; стрелка3 указывает на «Буквица» вкладкиВставка. Надпись,WordArt и формула —другие инструменты.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=148",
+        "https://support.microsoft.com/en-us/word/insert-a-drop-cap"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0621",
+      "number": 621,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает наВставка, содержащую нумерацию страниц. Ключ совпадает с документированной командойInsert>PageNumber.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=149",
+        "https://support.microsoft.com/en-us/word/add-page-numbers-to-a-header-or-footer-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0622",
+      "number": 622,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Для обычного режима редактированияWord переход по гиперссылке выполняетсяCtrl+левый щелчок. Это стандартная настройка; её можно изменить в параметрах, но изображение не показывает такого изменения.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=149",
+        "https://support.microsoft.com/en-us/word/remove-or-turn-off-hyperlinks"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0623",
+      "number": 623,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Указан значок пустого листа вQuickAccess —создание нового документа. Он расположен отдельно от значка принтера; это не новая страница внутри текущего документа.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=150",
+        "https://support.microsoft.com/en-us/word/training/create-a-document-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0624",
+      "number": 624,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ3 указывает на старое менюOffice>Подготовить, где были свойстваWord2007. Современная инструкция подтверждает редактирование свойств черезFile>Info, но точная старая ветка меню в этой проверке не подтверждена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=150",
+        "https://support.microsoft.com/en-US/Office/collab-files/view-or-change-the-properties-for-an-office-file"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0625",
+      "number": 625,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Верхний абзац выровнен по обоим краям, нижний по левому. Стрелка3 указывает на кнопку выравнивания по ширине.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=151",
+        "https://support.microsoft.com/en-us/word/align-text-left-or-right-center-text-or-justify-text-on-a-page"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0626",
+      "number": 626,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает на верхнее поле страницы, область колонтитула. Двойной щелчок по ней открывает редактирование колонтитула.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=152",
+        "https://support.microsoft.com/en-us/word/add-page-numbers-to-a-header-or-footer-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0627",
+      "number": 627,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Выделяются несмежные диапазоныE2:E8 иH2:H8. УдержаниеCtrl добавляет второй диапазон;Shift расширяет непрерывное выделение.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=152",
+        "https://support.microsoft.com/en-us/excel/get-started/select-cell-contents-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0628",
+      "number": 628,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "На рисунке2013 год —столбецH; исполнительная власть —строка4, законодательная —5. Нужна суммаH4:H5, остальные диапазоны захватывают лишние категории или текстовые подписи.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=153",
+        "https://support.microsoft.com/en-us/excel/ways-to-add-values-in-an-excel-spreadsheet"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0629",
+      "number": 629,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает на кнопку нового листа рядом с ярлыками внизу книги. Другие стрелки —вкладкиRibbon; ключ соответствуетInsertWorksheet.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=154",
+        "https://support.microsoft.com/en-gb/excel/get-started/insert-or-delete-a-worksheet"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0630",
+      "number": 630,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает наSelectAll в пересечении заголовков строк и столбцов. Она выделяет весь лист.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=155",
+        "https://support.microsoft.com/en-us/excel/get-started/select-cell-contents-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0631",
+      "number": 631,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Первый щелчок поB задаёт начало, затемShift+щелчокH выделяет соседние столбцыB:H. Ctrl оставляет несмежное выделение, аShift до первого щелчка зависит от прежней активной ячейки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=156",
+        "https://support.microsoft.com/en-us/excel/get-started/select-cell-contents-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0632",
+      "number": 632,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Строки10 и20 несмежные. Первый щелчок по10 затемCtrl+щелчок20 выбирает обе, не выбирая промежуточные строки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=157",
+        "https://support.microsoft.com/en-us/excel/get-started/select-cell-contents-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0633",
+      "number": 633,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "На изображении B9=14114 и B7=92681. Доля вычисляется формулой =B9/B7, ввод начинается с равенства; источник помечает именно этот вариант.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=157",
+        "https://support.microsoft.com/en-us/excel/get-started/overview-of-formulas-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0634",
+      "number": 634,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Для копирования вниз числитель B9 должен изменяться, знаменатель общего населения B7 фиксируется: =B9/$B$7. Изображение подтверждает адреса ячеек.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=159",
+        "https://support.microsoft.com/en-us/excel/get-started/overview-of-formulas-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0635",
+      "number": 635,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Печатный ключ4 указывает на кнопкуAutoSum наГлавной, но ответ называет её «вкладкой». ВкладкаФормулы2 также содержитAverage. Нельзя надёжно отклонять вариант2 без уточнения условия.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=160",
+        "https://support.microsoft.com/en-us/excel/calculate-an-average"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0636",
+      "number": 636,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "На изображении активна пустаяV27, диапазонH7:H21 не выделен. Печатный ответ предлагает сразу нажать сортировку1; он не задаёт нужный диапазон. Перед сортировкой необходимо выбрать данные/ячейку в них.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=161",
+        "https://support.microsoft.com/en-us/excel/sort-data-in-a-range-or-table-in-excel"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0637",
+      "number": 637,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Нужно выбратьJ7 как образец, нажать кисть1 и применить кJ8:J22. Это порядок работыFormatPainter; остальные варианты указывают несуществующую команду в другой вкладке.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=162",
+        "https://support.microsoft.com/en-us/word/use-the-format-painter"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0638",
+      "number": 638,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 —контекстная команда «Формат оси». Именно вAxisOptions устанавливается максимум шкалы; формат сетки и выбор данных шкалу напрямую не задают.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=162",
+        "https://support.microsoft.com/en-gb/office/change-the-scale-of-the-vertical-value-axis-in-a-chart"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0639",
+      "number": 639,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —«Объединить и поместить в центре», создающая показанную общую ячейку и центрирующая подпись.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=163",
+        "https://support.microsoft.com/en-gb/excel/get-started/merge-and-unmerge-cells-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0640",
+      "number": 640,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —та же активная командаMerge&Center для отмены объединения выделенной ячейки; подпись остаётся в верхней левой ячейке, как на левом образце.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=163",
+        "https://support.microsoft.com/en-gb/excel/get-started/merge-and-unmerge-cells-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0641",
+      "number": 641,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "На просмотренной иллюстрации числовые H4,H5,H6,H8:624035,12427,136165,11479; пустая H7 не учитывается. MIN(H4:H8)=11479, что совпадает с печатным ключом.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=164",
+        "https://support.microsoft.com/en-us/excel/functions/min-function"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0642",
+      "number": 642,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Различие —разделители разрядов при одинаковом числе. Стрелка3 —«Формат ячеек», где выбирается числовой формат и разделитель тысяч.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=164",
+        "https://support.microsoft.com/en-us/excel/get-started/available-number-formats-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0643",
+      "number": 643,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стандартный ввод формулы разности в Excel начинается со знака равенства. Иллюстрация C19 подтверждает целевую пустую ячейку; остальные предложенные начала не являются правильным стандартным ответом.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=165",
+        "https://support.microsoft.com/en-us/excel/get-started/overview-of-formulas-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0644",
+      "number": 644,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "При протягивании выбранных начальных1,2,3 Excel продолжает числовой ряд. На изображении вариант1 показывает1…6, остальные варианты повторяют значения или блоки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=165",
+        "https://support.microsoft.com/en-gb/excel/get-started/automatically-number-rows-in-excel"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0645",
+      "number": 645,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "ВA24:A28 показана цветовая шкала по значениям1…5; стрелка3 указываетConditionalFormatting. Это механизм автоматическихColorScales.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=166",
+        "https://support.microsoft.com/en-us/excel/use-data-bars-color-scales-and-icon-sets-to-highlight-data"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0646",
+      "number": 646,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указываетHome/Главная; там находитсяNewSlide. Insert,Design иSlideShow не являются указанным стандартным путём.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=166",
+        "https://support.microsoft.com/en-gb/powerpoint/training/add-rearrange-duplicate-and-delete-slides-in-powerpoint"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0647",
+      "number": 647,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает «Образец слайдов». Редактирование определений макетов выполняется вSlideMaster; страницы заметок и образец выдач не меняют макет слайда.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=167",
+        "https://support.microsoft.com/en-us/powerpoint/training/customize-a-slide-master"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0648",
+      "number": 648,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 —маркеры списка. Она превращает выделенные отдельные строки в показанный маркированный список.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=167",
+        "https://support.microsoft.com/en-us/powerpoint/add-bullets-or-numbers-to-text"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0649",
+      "number": 649,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —увеличение отступа/уровня списка. Выделенные вторые строки переходят на вложенный уровень, как в правом фрагменте.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=168",
+        "https://support.microsoft.com/en-us/office/video-change-the-look-of-paragraphs-3124a7c2-2541-4d80-8831-c6c9de94aff7"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0650",
+      "number": 650,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 —направление текста. Нижний образец показывает поворот слова внутри ячейки; изменение регистра и межстрочного интервала такой результат не даёт.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=169",
+        "https://support.microsoft.com/en-us/powerpoint/training/set-text-direction-and-position-in-a-shape-or-text-box-in-powerpoint"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0651",
+      "number": 651,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 указывает на значок экрана показа слайдов в строке состояния;1 обычный режим,2 сортировщик,4подгонка масштаба.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=169",
+        "https://support.microsoft.com/en-us/powerpoint/present-your-slide-show"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0652",
+      "number": 652,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Звезда у миниатюры может быть связана с переходом или анимацией; по одному значку нельзя уверенно сертифицировать только «эффекты анимации» без проверки точной версииPowerPoint.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=169",
+        "https://support.microsoft.com/en-us/powerpoint/present-your-slide-show"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0653",
+      "number": 653,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка2 визуально указывает «На задний план» и соответствует перестановке круга за прямоугольник. Нужен отдельно подтверждённый первичный источник порядка объектов, чтобы закрыть содержательную приёмку.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=170"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0654",
+      "number": 654,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Значок2 явно подписанInternetExplorer, остальныеWord/сеть/плеер. Историческое распознавание правдоподобно, но отдельная архивная первичная инструкцияIE в этой проверке не подтверждена. Старый интерфейс сам по себе не причина исключения.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=170",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0655",
+      "number": 655,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка1 указывает адресную строку, что визуально соответствует прямому переходу. Индивидуальная архивная проверкаIE остаётся открытой; современныеEdge-документы не использованы как доказательство точногоIE-интерфейса.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=171",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0656",
+      "number": 656,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указывает менюФайл. Архивная документацияMicrosoft прямо связывает печатьIE сFile>Print.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=171",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0657",
+      "number": 657,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ3 указывает на «Сервис», тогда как привычная ветка кодировкиIE —«Вид». Искажение текста намеренное по условию. Требуется архивное подтверждение/исправление ключа; в активный пул не включать.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=172",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0658",
+      "number": 658,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка4 указывает пустую кнопку новой вкладки; визуально ключ правдоподобен. Архивная первичная проверка точной версииIE не завершена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=172",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0659",
+      "number": 659,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Показана кнопка звезды с плюсом панели избранного. Нужно различить «добавить в избранное» и «добавить на панель избранного» по архивной инструкцииIE, которой в этой проверке нет.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=172",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0660",
+      "number": 660,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Красныйкрест внутри адресной строки визуально означаетStop, а не закрытие окна. Независимая архивная проверка этойIE-команды не завершена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=173",
+        "https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms536672(v=vs.85)"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0661",
+      "number": 661,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "ВОт указанIgorZhuravlev. Reply адресует ответ исходному отправителю, поэтому толькоон, а не всеTo/Cc, соответствует ключу.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=173",
+        "https://support.microsoft.com/en-us/outlook/reply-to-or-forward-an-email-message"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0662",
+      "number": 662,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "ReplyAll отвечает отправителю и другим получателям исходныхTo/Cc. В контексте показанного письма вариантb выражает именно это; собственный адрес обычно исключается автоматически.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=173",
+        "https://support.microsoft.com/en-us/outlook/reply-to-or-forward-an-email-message"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0663",
+      "number": 663,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Кнопка «Ответить» выбирает только отправителя. «Ответить всем» включает иных адресатов, а «Переслать» начинает другое действие.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=174",
+        "https://support.microsoft.com/en-us/outlook/reply-to-or-forward-an-email-message"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0664",
+      "number": 664,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "К исполнению создаёт флаг/задачу и позволяет добавить напоминание; исходный ответ «напоминание в календаре» смешивает разные сущностиOutlook. Нужна редактура условия/ответа.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=174",
+        "https://support.microsoft.com/en-us/outlook/training/set-categories-flags-or-reminders"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0665",
+      "number": 665,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Терминологическое определение открытых данных требует отдельной сверки с действующей российской методикой. RFC форматаCSV не подтверждает нормативное определение.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=175",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0666",
+      "number": 666,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Определение паспорта набора открытых данных требует действующего российского первичного методического источника; Office-документация его не подтверждает.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=175",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0667",
+      "number": 667,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "DOC не является обычным машиночитаемым табличным форматом, но вопрос спрашивает требования конкретного российского портала. Текущая официальная спецификация портала не подтверждена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=176",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0668",
+      "number": 668,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "Excel3 умеет создаватьCSV, ноБлокнот4 также позволяет создавать текстовыйCSV. Условие не ограничено табличным редактором, поэтому единственный ключ3 неоднозначен.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=176",
+        "https://www.rfc-editor.org/rfc/rfc4180.html",
+        "https://support.microsoft.com/en-us/office/collab-files/save-back-up-and-recover-a-file-in-microsoft-office"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0669",
+      "number": 669,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Таблица1 имеет одноуровневый заголовок, таблица2 —объединённые многоуровневые ячейки. Ключ согласуется с плоскимCSV, но соответствие всем требованиям российского портала по одному изображению не сертифицировано.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=176",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0670",
+      "number": 670,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Таблица2 плоская, таблица1 с многоуровневым заголовком. Для нормативного «соответствует требованиям» нужна актуальная российская методика; техническая предпочтительность не равна полной сертификации.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=177",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0671",
+      "number": 671,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "КлючназываетRostelecom, остальные адреса —известные поисковые сервисы. Требуется текущая прямая проверка назначения всех четырёх доменов, поскольку адреса и перенаправления изменяемы.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=177"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0672",
+      "number": 672,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Официальные сайты органов власти тоже могут публиковать открытые данные. Исключительность портала из печатного ключа не подтверждена действующей нормативной базой; требуется профильный юридический аудит.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=177",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0673",
+      "number": 673,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "Excel не единственный источникCSV: Access из вариантаd экспортирует записи в текст с разделителями. Условие ошибочно требует единственного исходного типа файла.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=177",
+        "https://support.microsoft.com/en-us/access/export-data-to-a-text-file",
+        "https://www.rfc-editor.org/rfc/rfc4180.html"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0674",
+      "number": 674,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Число уровней открытости —положение конкретной методики, а не универсальныйИТ-факт. Название и редакция действующего первичного документа в условии отсутствуют.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=178"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0675",
+      "number": 675,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка3 указывает «Система», что правдоподобно для просмотраRAM вWindows7. Современные настройкиWindows не удостоверяют точный старый путь; архивная проверка не завершена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=178",
+        "https://www.dell.com/support/kbdoc/en-us/000148441/what-is-memory-ram"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0676",
+      "number": 676,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка2 указывает «Язык и региональные стандарты». Современная документация подтверждает связь языка/раскладки сLanguage&Region, но точный путьWindows7 требует архивной проверки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=179",
+        "https://support.microsoft.com/en-us/windows/hardware/input-devices/manage-the-language-and-keyboard-input-layout-settings-in-windows"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0677",
+      "number": 677,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Alt+PrintScreen копирует снимок активного окна. На иллюстрации активное окно перекрывает другие; прочие сочетания этому действию не соответствуют.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=179",
+        "https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0678",
+      "number": 678,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка2 указывает полосу заголовка над менюБлокнота.1меню,3кнопка сворачивания,4вертикальная полоса прокрутки; ключ соответствует структуре окнаWin32.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=180",
+        "https://learn.microsoft.com/en-us/windows/win32/uxguide/win-window-mgt"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0679",
+      "number": 679,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 указывает стандартную кнопкуMaximize, соседние2и4 —Minimize/Close. Это увеличение размера окна.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=180",
+        "https://learn.microsoft.com/en-us/windows/win32/uxguide/win-window-mgt"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0680",
+      "number": 680,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Слева выделена библиотекаИзображения, справа файл изSamplePictures. Библиотека объединяет папки и не тождественна обычной папке; ответ о непосредственном нахождении «в выбранной папке» недостаточно точен.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=181",
+        "https://support.microsoft.com/en-us/windows/experience/backup-recovery/move-your-files-to-a-new-windows-pc-using-an-external-storage-device"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0681",
+      "number": 681,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ1 указываетУпорядочить, где на соседнем исходном скриншоте683 действительно естьСвойства. АрхивныйMicrosoft источник этогоWindows7 меню не подтверждён.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=181",
+        "https://support.microsoft.com/en-us/windows/experience/backup-recovery/move-your-files-to-a-new-windows-pc-using-an-external-storage-device"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0682",
+      "number": 682,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ4 визуально указывает переключатель представленияПроводника, соответствующий смене миниатюр на подробности. Нужен первичный архивный источник этой версииWindows.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=182",
+        "https://support.microsoft.com/en-us/windows/experience/backup-recovery/move-your-files-to-a-new-windows-pc-using-an-external-storage-device"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0683",
+      "number": 683,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "На самом исходном меню стрелка1 непосредственно указывает явно подписанную командуСвойства. Другие пункты —Выделитьвсё,Представление,Параметрыпапок. Это прямое чтение показанного интерфейса; размер проверяется в свойствах.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=183"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0684",
+      "number": 684,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 указываетStart, где доступно завершение работы;2Проводник,3приложение,4Панельуправления. Старое оформление сохранено как контекст изображения.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=183",
+        "https://support.microsoft.com/en-us/accessibility/windows/keyboard-shortcuts-in-windows"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0685",
+      "number": 685,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 указывает launcher группыАбзац. ДиалогParagraph содержитSpecial>Firstline и величину отступа, включая1,25см.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=183",
+        "https://support.microsoft.com/en-us/word/adjust-indents-and-spacing"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0686",
+      "number": 686,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 указывает диалогАбзац. Для точного межстрочного интервала22пт нуженParagraph, а не диалогШрифт илиРецензирование.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=185",
+        "https://support.microsoft.com/en-us/word/adjust-indents-and-spacing"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0687",
+      "number": 687,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —списокмежстрочного интервала,4 —значение. Exactly/Точно и22 задают фиксированный интервал22пт; поляДо/После изменяют расстояния между абзацами.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=186",
+        "https://support.microsoft.com/en-us/word/adjust-indents-and-spacing"
+      ],
+      "checkedCorrectOptionIds": [
+        "b"
+      ]
+    },
+    {
+      "id": "MT4-0688",
+      "number": 688,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка1 —Вставка. ЧерезInsert>Table создаётся таблица; остальные отметки не являются этой вкладкой.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=186",
+        "https://support.microsoft.com/en-us/office/graphics-visuals/officeweb/insert-tables-and-pictures"
+      ],
+      "checkedCorrectOptionIds": [
+        "a"
+      ]
+    },
+    {
+      "id": "MT4-0689",
+      "number": 689,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка4 указываетBorders/Границы при выделенной таблице. Через список границ выбираетсяNoBorder; другие отмеченные элементы не управляют линиями таблицы.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=187",
+        "https://support.microsoft.com/en-gb/word/remove-borders-from-a-table-in-word-for-mac"
+      ],
+      "checkedCorrectOptionIds": [
+        "d"
+      ]
+    },
+    {
+      "id": "MT4-0690",
+      "number": 690,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —Рецензирование. TrackChanges располагается наReview; красные зачёркивания на рисунке —намеренный контекст отслеживания изменений.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=187",
+        "https://support.microsoft.com/en-gb/word/training/track-changes-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0691",
+      "number": 691,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 —Рецензирование, содержащаяNewComment. Ключ согласуется с добавлением примечания к выделенному фрагменту.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=188",
+        "https://support.microsoft.com/en-us/word/add-or-view-comments-in-a-document"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0692",
+      "number": 692,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключ1/Вставка позволяет вставить разрыв страницы, но вариант2/Разметкастраницы также имеетBreaks>Page. ДокументацияMicrosoft подтверждает оба пути; единственный выбор без уточнения неоднозначен.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=188",
+        "https://support.microsoft.com/en-us/word/insert-a-page-break-in-word"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0693",
+      "number": 693,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Ключd ведёт кReferences>TableofContents, но автоматическое оглавление основано на размеченных заголовках. Их наличие не задано, а варианты о разметке ошибочно ссылаются наобласть4Редактирование. Требуется уточнение условия.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=190",
+        "https://support.microsoft.com/en-gb/word/training/insert-a-table-of-contents"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0694",
+      "number": 694,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Стрелка2 указывает область линейки рядом с маркером отступа. Двойной щелчок по маркеру и по свободной линейке может открывать разные диалоги; целевая область слишком неоднозначна для автоматической оценки.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=191",
+        "https://support.microsoft.com/en-us/word/training/change-margins",
+        "https://support.microsoft.com/en-us/word/adjust-indents-and-spacing"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0695",
+      "number": 695,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Стрелка3 указывает два листаCopy/Копировать.2ножницыCut удаляют источник;1Paste вставляет,4launcherбуфера открываетпанель.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=191",
+        "https://support.microsoft.com/en-gb/word/copy-a-page-in-word"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0696",
+      "number": 696,
+      "sectionId": "ict",
+      "status": "verified",
+      "reason": "Добавление рисунка в Word выполняется через вкладку «Вставка». «Вид» и «Сервис» не соответствуют стандартной команде вставки рисунка.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=192",
+        "https://support.microsoft.com/en-us/office/graphics-visuals/officeweb/insert-tables-and-pictures"
+      ],
+      "checkedCorrectOptionIds": [
+        "c"
+      ]
+    },
+    {
+      "id": "MT4-0697",
+      "number": 697,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "Заражение возможно через вредоносные файлы, вложения, съёмные устройства и сайты. Единственный печатный ключ«просмотрweb» неправомерно исключает другие предложенные пути.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=192",
+        "https://support.microsoft.com/en-gb/windows/security/how-malware-can-infect-your-pc"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0698",
+      "number": 698,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Установленный антивирус —нормальный способ сканирования, но не обязательное универсальное условие: существуют автономные/offline сканеры. Формулировка «необходимо» требует уточнения.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=192",
+        "https://support.microsoft.com/en-us/windows/scan-an-item-with-windows-security-d1c8c01d-12ed-e768-cbb8-830ea8ccf8e6",
+        "https://support.microsoft.com/en-us/windows/security/threat-malware-protection/virus-and-threat-protection-in-the-windows-security-app"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0699",
+      "number": 699,
+      "sectionId": "ict",
+      "status": "review-needed",
+      "reason": "Исполняемые файлы и документы действительно могут содержать вредоносный код, но формулировка смешивает заражение файла с эксплуатацией специально сформированных медиафайлов. Без явного определения «заражение» исключительность ключа не подтверждена.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=192",
+        "https://support.microsoft.com/en-gb/windows/security/how-malware-can-infect-your-pc"
+      ],
+      "checkedCorrectOptionIds": []
+    },
+    {
+      "id": "MT4-0700",
+      "number": 700,
+      "sectionId": "ict",
+      "status": "retired",
+      "reason": "ПоRFC5321§2.3.5 доменная часть может состоять изодного компонента, включаяTLD. Ivanov@ru нельзя назвать синтаксически неправильным только из-за отсутствия точки; доставляемость —отдельный вопросDNS/почтовойслужбы.",
+      "checkedAt": "2026-10-27",
+      "sourceUrls": [
+        "https://ombudsman-oren.ru/wp-content/uploads/2024/07/obshhie-testy-na-konkurs.pdf#page=192",
+        "https://www.rfc-editor.org/rfc/rfc5321.html#section-2.3.5"
+      ],
+      "checkedCorrectOptionIds": []
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import {MODEL_VERSION, QUESTIONNAIRE_VERSION, REGISTRY_VERSION, RELEASE_VERSION} from './versions.mjs';
 import {validateFocusAreas} from './topics.mjs';
+import {compatibleInputModel} from './model-upgrade.mjs';
 
 export const SESSION_SCHEMA = 'rudn-career-session';
 export const SESSION_LIMIT = 128 * 1024;
@@ -21,7 +22,7 @@ export function parseSession(text, questions, sectors) {
   if (typeof text !== 'string' || new TextEncoder().encode(text).length > SESSION_LIMIT) throw Error('file-size');
   const v = JSON.parse(text);
   if (!allowed(v,['schema','schemaVersion','releaseVersion','modelVersion','questionnaireVersion','registryVersion','savedAt','inputs']) ||
-      v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || v.modelVersion !== MODEL_VERSION ||
+      v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || !compatibleInputModel(v.modelVersion) ||
       v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error('version');
   const i = v.inputs, qids = questions.map(q => q.id), sids = sectors.map(s => s.id);
   if (!allowed(i,['answers','prioritySectors','lowPrioritySectors','conditions','focusAreas']) ||

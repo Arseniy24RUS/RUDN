@@ -1,0 +1,661 @@
+{
+  "schemaVersion": 1,
+  "sourceSha256": "0800769a95d70a69b82ea5187c714a28af303c27db5cfbb1ffcf7305ad904f24",
+  "entries": {
+    "MT4-0520": {
+      "stem": "Corruption includes:",
+      "options": {
+        "a": "Any breach by a state servant of requirements governing official conduct",
+        "b": "A state servant's use of their official position to obtain benefits for close relatives",
+        "c": "A state servant's disclosure of information learned while performing official duties"
+      }
+    },
+    "MT4-0521": {
+      "stem": "An anti-corruption standard establishes:",
+      "options": {
+        "a": "A sequence of managerial decision-making steps to prevent corrupt conduct",
+        "b": "A list of possible actions by a civil servant in the course of official duties that are considered corrupt",
+        "c": "The moral foundations of civil servants' official conduct",
+        "d": "A unified system of prohibitions, restrictions and permissions that prevents corruption in the relevant field of activity"
+      }
+    },
+    "MT4-0522": {
+      "stem": "Examples of corruption include:",
+      "options": {
+        "a": "A state servant receiving any gift connected with their official activities",
+        "b": "A state servant using their official position to influence a state body's selection commission in order to secure a position for a relative",
+        "c": "A state servant taking additional paid work as a university lecturer, using knowledge and experience gained while working in a state body",
+        "d": "A state servant negligently and improperly performing official duties as a result of conflicts with their immediate supervisors"
+      }
+    },
+    "MT4-0523": {
+      "stem": "Select all correct statements:",
+      "options": {
+        "a": "Detecting corruption crimes and prosecuting those responsible is the main way to prevent corruption",
+        "b": "Corruption is characteristic only of the executive branch of state power",
+        "c": "Corruption exists in both the public and private sectors of the economy",
+        "d": "Benefits obtained through corruption always take a monetary form"
+      }
+    },
+    "MT4-0524": {
+      "stem": "The consequences of corruption include:",
+      "options": {
+        "a": "Financial losses caused by state bodies purchasing goods and services at inflated prices",
+        "b": "An increase in the number of state servants",
+        "c": "Damage to the reputation of state bodies"
+      }
+    },
+    "MT4-0525": {
+      "stem": "Who may bear legal liability for corruption offences?",
+      "options": {
+        "a": "Legal entities",
+        "b": "Citizens of the Russian Federation",
+        "c": "Foreign citizens",
+        "d": "All of the above"
+      }
+    },
+    "MT4-0526": {
+      "stem": "Special anti-corruption measures include:",
+      "options": {
+        "a": "Prohibiting state civil servants from engaging in entrepreneurial activities",
+        "b": "Regularly evaluating state civil servants' performance",
+        "c": "Imposing disciplinary sanctions on state civil servants for breaching a state body's internal service rules",
+        "d": "Introducing dismissal due to loss of trust in the state civil service"
+      }
+    },
+    "MT4-0527": {
+      "stem": "The adoption of Federal Law No. 273-FZ On Combating Corruption:",
+      "options": {
+        "a": "Was not particularly significant, because all the main anti-corruption mechanisms had already been provided for in earlier regulatory legal acts",
+        "b": "Made it possible to establish unified legal and organizational foundations for combating corruption in the Russian Federation",
+        "c": "Had a limited effect because the law regulated anti-corruption efforts only at the federal level of government",
+        "d": "Made it possible to introduce a statutory definition of corruption"
+      }
+    },
+    "MT4-0528": {
+      "stem": "Under Federal Law No. 273-FZ of 25 December 2008 On Combating Corruption, combating corruption is a duty of:",
+      "options": {
+        "a": "Law-enforcement bodies only",
+        "b": "State bodies only",
+        "c": "State bodies and other state organizations only",
+        "d": "State bodies, other state organizations and private-sector organizations, both commercial and non-profit"
+      }
+    },
+    "MT4-0529": {
+      "stem": "Under the Federal Law On Combating Corruption, corruption:",
+      "options": {
+        "a": "Is limited to giving and receiving bribes",
+        "b": "Is possible only in the public sector of the economy",
+        "c": "Involves unlawful use of an official position to obtain a material benefit",
+        "d": "Does not include cases in which the official's unlawful benefit is insignificant and does not exceed one thousand rubles"
+      }
+    },
+    "MT4-0530": {
+      "stem": "The Russian Federation cooperates on anti-corruption matters with foreign states, their law-enforcement and special services, and international organizations for the purpose of:",
+      "options": {
+        "a": "Establishing the whereabouts of persons suspected of corruption crimes",
+        "b": "Preventing Russian citizens from being held liable abroad for corruption offences",
+        "c": "Identifying property obtained through corruption offences",
+        "d": "This matter is not regulated by the legislation of the Russian Federation"
+      }
+    },
+    "MT4-0531": {
+      "stem": "The legal framework for combating corruption in the Russian Federation:",
+      "options": {
+        "a": "Includes only the Federal Law On Combating Corruption",
+        "b": "Includes regulatory legal acts only at the federal level of government",
+        "c": "Includes generally recognized principles and rules of international law, international treaties of the Russian Federation, and various types of Russian regulatory legal acts",
+        "d": "Includes regulatory legal acts of state authorities of constituent entities of the Russian Federation, but does not include municipal legal acts"
+      }
+    },
+    "MT4-0532": {
+      "stem": "Which is NOT one of the basic principles of combating corruption in the Russian Federation?",
+      "options": {
+        "a": "Legality",
+        "b": "Confidentiality when deciding whether to impose liability for corruption offences",
+        "c": "The inevitability of liability for corruption offences",
+        "d": "Priority use of corruption-prevention measures",
+        "e": "Cooperation between the state and civil society institutions, international organizations and individuals"
+      }
+    },
+    "MT4-0533": {
+      "stem": "In the anti-corruption context, loss of trust means:",
+      "options": {
+        "a": "A state civil servant losing trust in the employer's representative",
+        "b": "The employer's representative losing trust in a state civil servant",
+        "c": "The commission for compliance with official-conduct requirements and settlement of interests losing trust in the head of a state body",
+        "d": "The commission for compliance with official-conduct requirements and settlement of interests losing trust in a state civil servant"
+      }
+    },
+    "MT4-0534": {
+      "stem": "The procedure for imposing disciplinary liability on state civil servants for corruption offences is established by:",
+      "options": {
+        "a": "The Federal Law On Combating Corruption",
+        "b": "The Labour Code of the Russian Federation",
+        "c": "The Federal Law On the State Civil Service of the Russian Federation",
+        "d": "The decree of the President of the Russian Federation On Special Features of the Application of Disciplinary Sanctions for Corruption Offences"
+      }
+    },
+    "MT4-0535": {
+      "stem": "For corruption offences, citizens of the Russian Federation, foreign citizens and stateless persons do NOT bear:",
+      "options": {
+        "a": "Criminal liability",
+        "b": "Administrative liability",
+        "c": "Material liability",
+        "d": "Civil liability",
+        "e": "Disciplinary liability"
+      }
+    },
+    "MT4-0536": {
+      "stem": "The main directions of state anti-corruption policy are determined by:",
+      "options": {
+        "a": "The Security Council of the Russian Federation",
+        "b": "The Federal Assembly of the Russian Federation",
+        "c": "The President of the Russian Federation",
+        "d": "The Government of the Russian Federation"
+      }
+    },
+    "MT4-0537": {
+      "stem": "Identify the state bodies or officials to which the Law On Combating Corruption assigns special anti-corruption functions and powers in the Russian Federation:",
+      "options": {
+        "a": "The President of the Russian Federation",
+        "b": "The Ministry of Economic Development of the Russian Federation",
+        "c": "The Federal Service for Labour and Employment",
+        "d": "The Ministry of Finance of the Russian Federation",
+        "e": "The Prosecutor General of the Russian Federation and subordinate prosecutors"
+      }
+    },
+    "MT4-0538": {
+      "stem": "Which body was created to coordinate anti-corruption activities at the highest level of government?",
+      "options": {
+        "a": "The General Committee of Federal State Bodies' Units for the Prevention of Corruption and Other Offences",
+        "b": "The Council under the President of the Russian Federation for Countering Corruption",
+        "c": "The Presidential Administration's Commission for Compliance with Official-Conduct Requirements and Resolution of Conflicts of Interest in the State Civil Service",
+        "d": "No such body has been created"
+      }
+    },
+    "MT4-0539": {
+      "stem": "Select the correct statement:",
+      "options": {
+        "a": "Coordination of law-enforcement bodies' anti-corruption activities is assigned to the Prosecutor General of the Russian Federation and subordinate prosecutors",
+        "b": "The main anti-corruption coordination and oversight powers are assigned to the Federal Anti-Corruption Agency",
+        "c": "An authorized unit of the Presidential Administration may verify the income, expenditure, property and property-related obligations disclosed by any person required to provide such information",
+        "d": "The Accounts Chamber of the Russian Federation may verify the income, expenditure, property and property-related obligations disclosed by any person required to provide such information"
+      }
+    },
+    "MT4-0540": {
+      "stem": "Which is NOT one of the main corruption-prevention measures?",
+      "options": {
+        "a": "Fostering intolerance of corrupt conduct in society",
+        "b": "Exempting bribe-givers from criminal liability if they voluntarily report the corruption and actively assist in solving the crime",
+        "c": "Verifying, under the prescribed procedure, information submitted by applicants for state or municipal service positions",
+        "d": "Developing public and parliamentary oversight of compliance with Russian anti-corruption legislation"
+      }
+    },
+    "MT4-0541": {
+      "stem": "Which option is NOT one of the main areas of state bodies' work to improve the effectiveness of anti-corruption efforts?",
+      "options": {
+        "a": "Implementing a unified state anti-corruption policy",
+        "b": "Improving the system and structure of state bodies and creating mechanisms for public oversight of their activities",
+        "c": "Harmonizing the rights, restrictions, prohibitions and duties established for state servants and persons holding state offices of the Russian Federation",
+        "d": "Expanding the discrete powers of federal state authorities, authorities of constituent entities of the Russian Federation and local self-government bodies because of the specific nature of their work"
+      }
+    },
+    "MT4-0542": {
+      "stem": "Areas of a state body's activities with a high risk of corruption include:",
+      "options": {
+        "a": "Managing state property",
+        "b": "Handling official records and paperwork",
+        "c": "Conducting inspections of subordinate organizations",
+        "d": "Explaining provisions of current legislation in the regulated field of activity"
+      }
+    },
+    "MT4-0543": {
+      "stem": "Which of the following is a corruption-prevention measure?",
+      "options": {
+        "a": "Determining the main directions of state anti-corruption policy",
+        "b": "Coordinating anti-corruption activities",
+        "c": "Fostering intolerance of corrupt conduct in society",
+        "d": "Creating an anti-corruption regulatory legal framework"
+      }
+    },
+    "MT4-0544": {
+      "stem": "A conflict of interest in state service is a situation in which:",
+      "options": {
+        "a": "A state servant's personal interest affects or may affect the proper performance of their official duties",
+        "b": "A state servant has committed a corruption offence",
+        "c": "A state servant receives an instruction whose execution involves violating current legislation",
+        "d": "A state servant disapproves of a state body's policies or management decisions and consequently fails to exercise sufficient diligence and good faith in performing official duties"
+      }
+    },
+    "MT4-0545": {
+      "stem": "The purpose of identifying and resolving conflicts of interest in state service is:",
+      "options": {
+        "a": "To identify corruption offences committed by a state servant",
+        "b": "To establish complete control over state servants' interests",
+        "c": "To prevent a state servant from committing corruption offences",
+        "d": "To prevent individual service disputes in the state civil service"
+      }
+    },
+    "MT4-0546": {
+      "stem": "Decisions of the commission for compliance with federal state servants' official-conduct requirements and resolution of conflicts of interest are made:",
+      "options": {
+        "a": "By an open vote, unless the commission decides otherwise, with a simple majority of members present at the meeting",
+        "b": "By secret ballot, unless the commission decides otherwise, with a simple majority of members present at the meeting",
+        "c": "By the chair of the commission",
+        "d": "By the chair based on the result of an open vote, unless the commission decides otherwise"
+      }
+    },
+    "MT4-0547": {
+      "stem": "When a conflict of interest arises or may arise, a state civil servant must:",
+      "options": {
+        "a": "Notify their immediate supervisor in writing or orally, at the civil servant's choice, as soon as they become aware of it",
+        "b": "Inform their immediate supervisor in writing within one month of the conflict of interest or the possibility of it arising",
+        "c": "Report the conflict of interest or the possibility of it arising as soon as they become aware of it, using the procedure established by the employer's representative",
+        "d": "Submit a written request to the commission for compliance with civil servants' official-conduct requirements and resolution of conflicts of interest to hold a meeting"
+      }
+    },
+    "MT4-0548": {
+      "stem": "Anti-corruption prohibitions, requirements and restrictions in state service include:",
+      "options": {
+        "a": "A prohibition on close relatives serving in state service where one is subordinate to the other",
+        "b": "Restrictions on secondary employment",
+        "c": "Restrictions on public statements about the activities of state bodies",
+        "d": "A requirement to undergo the clearance procedure for access to information constituting state secrets"
+      }
+    },
+    "MT4-0549": {
+      "stem": "Under Federal Law No. 79-FZ of 27 July 2004 On the State Civil Service of the Russian Federation, a civil servant's personal interest that affects or may affect the objective performance of official duties means:",
+      "options": {
+        "a": "The possibility of a civil servant receiving income in monetary form while performing official duties",
+        "b": "The possibility of a civil servant receiving income in kind while performing official duties",
+        "c": "The possibility of a civil servant obtaining a non-material benefit"
+      }
+    },
+    "MT4-0550": {
+      "stem": "A state servant must notify the employer's representative:",
+      "options": {
+        "a": "Every instance in which any person approaches them to induce them to commit corruption offences",
+        "b": "Every instance in which any person approaches other state servants to induce them to commit corruption offences",
+        "c": "Only instances occurring during working hours in which any person approaches them to induce them to commit corruption offences"
+      }
+    },
+    "MT4-0551": {
+      "stem": "A civil servant who is a party to a conflict of interest fails to take measures to prevent or resolve it. This:",
+      "options": {
+        "a": "Results in disciplinary sanctions against the civil servant",
+        "b": "Is an offence entailing the civil servant's dismissal from civil service",
+        "c": "Results in criminal liability for the civil servant"
+      }
+    },
+    "MT4-0552": {
+      "stem": "A civil servant is prohibited from receiving remuneration from individuals and legal entities:",
+      "options": {
+        "a": "In connection with the performance of official duties",
+        "b": "In connection with the performance of official duties, if receiving the remuneration may lead or does lead to a conflict of interest",
+        "c": "In connection with the performance of official duties, if the remuneration is provided in monetary form"
+      }
+    },
+    "MT4-0553": {
+      "stem": "The remit of the commission for compliance with official-conduct requirements and resolution of conflicts of interest includes:",
+      "options": {
+        "a": "Considering citizens' requests for consent to membership of a political party",
+        "b": "Considering state servants' requests for consent to other paid employment",
+        "c": "Considering applications from state servants wishing to purchase a gift received in connection with official duties",
+        "d": "Considering state servants' submissions that objective reasons prevent them from providing information about their spouse's income"
+      }
+    },
+    "MT4-0554": {
+      "stem": "Which law or act sets the value of a gift received by a civil servant in connection with an official event above which the gift must be transferred to the state body?",
+      "options": {
+        "a": "Federal Law No. 273-FZ of 25 December 2008 On Combating Corruption",
+        "b": "Federal Law No. 79-FZ of 27 July 2004 On the State Civil Service of the Russian Federation",
+        "c": "The Civil Code of the Russian Federation",
+        "d": "A decree of the President of the Russian Federation"
+      }
+    },
+    "MT4-0555": {
+      "stem": "A gift worth more than three thousand rubles received by a civil servant in connection with a protocol event:",
+      "options": {
+        "a": "Must be transferred to the state body",
+        "b": "May be purchased by the civil servant after being transferred to the state body",
+        "c": "May be kept by the civil servant provided that the state body is notified of its receipt"
+      }
+    },
+    "MT4-0556": {
+      "stem": "What should a federal state civil servant do after receiving a mantel clock worth 3,500 rubles as a gift while on an official business trip?",
+      "options": {
+        "a": "Inform the employer's representative and then follow their instructions",
+        "b": "Transfer the clock, with a formal handover record, to the state body in which they hold a federal state civil service position",
+        "c": "Pay 3,500 rubles into the state body's cash office when submitting the business-trip expense report",
+        "d": "Keep the clock and dispose of it at their own discretion because the gift is of little value"
+      }
+    },
+    "MT4-0557": {
+      "stem": "Sanctions for failing to comply with anti-corruption restrictions, prohibitions and duties include:",
+      "options": {
+        "a": "A reprimand",
+        "b": "A severe reprimand",
+        "c": "A reduction in the bonus for carrying out especially important and complex assignments",
+        "d": "Demotion"
+      }
+    },
+    "MT4-0558": {
+      "stem": "A federal civil servant submits information on income, property and property-related obligations to:",
+      "options": {
+        "a": "Their immediate supervisor",
+        "b": "The federal state body's personnel service",
+        "c": "The commission for compliance with official-conduct requirements and resolution of conflicts of interest",
+        "d": "The tax authorities"
+      }
+    },
+    "MT4-0559": {
+      "stem": "A state civil servant submits information on income, expenditure, property and property-related obligations:",
+      "options": {
+        "a": "Annually",
+        "b": "On leaving service",
+        "c": "At the request of the employer's representative",
+        "d": "Every 3 years"
+      }
+    },
+    "MT4-0560": {
+      "stem": "A civil servant submits information about their own and their family members' expenditure if:",
+      "options": {
+        "a": "The transaction amount exceeds the combined income of the servant, their spouse and minor children in the year preceding the transaction",
+        "b": "The transaction amount exceeds the combined income of the civil servant and their spouse for the three years preceding the transaction",
+        "c": "The transaction amount exceeds one million rubles",
+        "d": "The transaction amount exceeds one billion rubles"
+      }
+    },
+    "MT4-0561": {
+      "stem": "A state civil servant must submit information on income, expenditure, property and property-related obligations for which family members?",
+      "options": {
+        "a": "Parents, spouse and children, including adopted children",
+        "b": "Spouse and minor children",
+        "c": "Parents, brothers and sisters, spouse, children and other close persons",
+        "d": "Spouse and children"
+      }
+    },
+    "MT4-0562": {
+      "stem": "A state servant's failure to fulfil the duty to submit information on income, expenditure, property and property-related obligations to the employer's representative results in:",
+      "options": {
+        "a": "Removal from the state service position held",
+        "b": "Removal from the state service position held and dismissal from state service",
+        "c": "Criminal liability under the legislation of the Russian Federation",
+        "d": "Administrative liability under the legislation of the Russian Federation"
+      }
+    },
+    "MT4-0563": {
+      "stem": "If a discrepancy is found between a state servant's and their family members' expenditure and income:",
+      "options": {
+        "a": "The prosecution authorities bring a court action seeking criminal liability for the state servant",
+        "b": "The prosecution authorities bring a court action to recover for the state property whose lawful acquisition the state servant cannot justify",
+        "c": "The state servant is immediately dismissed from state service",
+        "d": "The state servant receives a severe reprimand"
+      }
+    },
+    "MT4-0564": {
+      "stem": "When completing the disclosure form for income, property and property-related obligations, a federal civil servant must report, among other things, which types of income?",
+      "options": {
+        "a": "Pensions, benefits, income from selling or renting out real estate, income from creating a literary work, and a state maternity (family) capital certificate",
+        "b": "Reimbursed expenses related to official business trips",
+        "c": "The amount of social and property tax deductions",
+        "d": "The amount of social insurance"
+      }
+    },
+    "MT4-0565": {
+      "stem": "When completing the disclosure form for income, property and property-related obligations, a federal civil servant must report, among other things, which vehicles?",
+      "options": {
+        "a": "Vehicles provided to the federal civil servant for the performance of official duties",
+        "b": "Vehicles used by the federal civil servant where documents confirm the right of use",
+        "c": "Vehicles that have been deregistered",
+        "d": "Vehicles for which the federal civil servant made an advance payment during the reporting period but for which ownership was not registered in their name",
+        "e": "Vehicles unfit for use",
+        "f": "Stolen vehicles"
+      }
+    },
+    "MT4-0566": {
+      "stem": "If a federal civil servant discovers omissions, incomplete information or errors in the income, property and property-related obligations they have disclosed, within how many months after the submission deadline in the current reporting year may they submit corrections?",
+      "options": {
+        "a": "1",
+        "b": "3",
+        "c": "2",
+        "d": "0.5"
+      }
+    },
+    "MT4-0567": {
+      "stem": "Information on income, expenditure, property and property-related obligations submitted by state civil servants is published on the Internet:",
+      "options": {
+        "a": "It is not published because it is confidential",
+        "b": "It is published for state civil servants holding positions included in a special list",
+        "c": "It is published for state civil servants who have given written consent to publication",
+        "d": "It is published for all state civil servants who submit such information"
+      }
+    },
+    "MT4-0568": {
+      "stem": "Within what period must information on a federal state servant's and their family members' declared annual income be published on the state body's official website?",
+      "options": {
+        "a": "Within 14 working days after the deadline for submitting disclosure forms for income, property and property-related obligations",
+        "b": "Within 10 working days after the deadline for submitting disclosure forms for income, property and property-related obligations",
+        "c": "Within 7 working days after the deadline for submitting disclosure forms for income, property and property-related obligations",
+        "d": "Within 30 working days after the deadline for submitting disclosure forms for income, property and property-related obligations"
+      }
+    },
+    "MT4-0569": {
+      "stem": "A civil servant is prohibited from:",
+      "options": {
+        "a": "Joining political parties",
+        "b": "Using the advantages of their official position for election campaigning",
+        "c": "Participating in the activities of a political party's governing body",
+        "d": "Being a member of a trade union"
+      }
+    },
+    "MT4-0570": {
+      "stem": "While serving in the state civil service, a civil servant is NOT prohibited from:",
+      "options": {
+        "a": "Engaging in entrepreneurial activities",
+        "b": "Holding a state civil service position after election to a paid elective position in an elected body of a primary trade union organization established in the state body",
+        "c": "Ceasing to perform official duties in order to resolve a service dispute",
+        "d": "Accepting academic titles from international organizations without the employer's representative's written permission"
+      }
+    },
+    "MT4-0571": {
+      "stem": "If a civil servant's ownership of securities leads or may lead to a conflict of interest, the civil servant must:",
+      "options": {
+        "a": "Place the securities they own in trust management",
+        "b": "Apply to the commission for resolving conflicts of interest and follow its recommendations",
+        "c": "Sell the securities they own",
+        "d": "Take no action"
+      }
+    },
+    "MT4-0572": {
+      "stem": "Which of the following conventions has not been ratified by the Russian Federation?",
+      "options": {
+        "a": "The United Nations Convention against Corruption",
+        "b": "The Council of Europe Criminal Law Convention on Corruption",
+        "c": "The Council of Europe Civil Law Convention on Corruption",
+        "d": "The OECD Convention on Combating Bribery of Foreign Public Officials in International Business Transactions"
+      }
+    },
+    "MT4-0573": {
+      "stem": "Responsibility for establishing an anti-corruption system in Russia is assigned to:",
+      "options": {
+        "a": "The Prosecutor General's Office of the Russian Federation",
+        "b": "The Ministry of Justice of the Russian Federation",
+        "c": "The Council under the President of the Russian Federation for Countering Corruption",
+        "d": "The prosecution service of the Russian Federation"
+      }
+    },
+    "MT4-0574": {
+      "stem": "During the year after a civil servant reports corruption that has come to their attention, disciplinary sanctions against that civil servant:",
+      "options": {
+        "a": "May be imposed only with the trade union body's agreement",
+        "b": "May be imposed only with the public council under the federal state body's agreement",
+        "c": "May be imposed only after the relevant matter has been considered at a meeting of the conflict-of-interest commission",
+        "d": "May be imposed only with the service disputes commission's agreement"
+      }
+    },
+    "MT4-0575": {
+      "stem": "Which body is responsible for explaining to federal state bodies the application of legislation establishing anti-corruption requirements, restrictions and prohibitions in civil service?",
+      "options": {
+        "a": "The Government Executive Office of the Russian Federation",
+        "b": "The Presidential Directorate for Countering Corruption",
+        "c": "The Ministry of Labour and Social Protection of the Russian Federation",
+        "d": "The Federal Service for Labour and Employment"
+      }
+    },
+    "MT4-0576": {
+      "stem": "Anti-corruption requirements, prohibitions, restrictions and duties established for state civil servants are contained in:",
+      "options": {
+        "a": "The Criminal Code of the Russian Federation",
+        "b": "The Federal Law On Combating Corruption",
+        "c": "The Federal Law On the State Civil Service of the Russian Federation",
+        "d": "The Federal Code of Official Conduct for State Civil Servants"
+      }
+    },
+    "MT4-0577": {
+      "stem": "Anti-corruption review of regulatory legal acts and their drafts is carried out to:",
+      "options": {
+        "a": "Identify factors conducive to corruption so that they can be eliminated",
+        "b": "Identify inconsistencies and conflicts with other regulatory legal acts in force",
+        "c": "Ensure independent experts' participation in assessing the quality of regulatory legal acts being adopted"
+      }
+    },
+    "MT4-0578": {
+      "stem": "Under the law, criminal liability is provided for:",
+      "options": {
+        "a": "Giving a bribe",
+        "b": "Unlawful remuneration on behalf of a legal entity",
+        "c": "Acting as an intermediary in bribery",
+        "d": "Failing to take measures to resolve a conflict of interest in state service"
+      }
+    },
+    "MT4-0579": {
+      "stem": "Under the law, if a corruption offence is committed on behalf of or in the interests of a legal entity, the entity may be subject to:",
+      "options": {
+        "a": "Civil liability",
+        "b": "Administrative liability",
+        "c": "Material liability",
+        "d": "Criminal liability"
+      }
+    },
+    "MT4-0580": {
+      "stem": "Does the law permit a legal entity and an individual to be held liable simultaneously for the same corruption offence?",
+      "options": {
+        "a": "No",
+        "b": "Yes, provided that the legal entity and the individual are subject to the same type of liability",
+        "c": "Yes, provided that the legal entity and the individual are subject to administrative liability"
+      }
+    },
+    "MT4-0581": {
+      "stem": "Imposing liability provided for by Russian legislation for a corruption offence on a foreign legal entity:",
+      "options": {
+        "a": "Is not permitted",
+        "b": "Is permitted regardless of where the corruption offence was committed",
+        "c": "Is permitted if the corruption offence was committed in the Russian Federation",
+        "d": "Is permitted if the head of the foreign legal entity is a citizen of the Russian Federation"
+      }
+    },
+    "MT4-0582": {
+      "stem": "Which is NOT a basic principle of the National Anti-Corruption Strategy approved by Presidential Decree No. 460 of 13 April 2010?",
+      "options": {
+        "a": "Recognizing corruption as one of the systemic threats to the security of the Russian Federation",
+        "b": "Stability of the main elements of the anti-corruption measures established in Federal Law No. 273-FZ of 25 December 2008 On Combating Corruption",
+        "c": "Allocating budget funds to organize the prevention of corruption offences",
+        "d": "Focusing primarily on the criminal prosecution of persons who have committed corruption crimes"
+      }
+    },
+    "MT4-0583": {
+      "stem": "Investigation of corruption-related crimes falls within the competence of:",
+      "options": {
+        "a": "The Investigative Committee of the Russian Federation",
+        "b": "The Federal Security Service of the Russian Federation",
+        "c": "The Accounts Chamber of the Russian Federation",
+        "d": "The Prosecutor General's Office of the Russian Federation"
+      }
+    },
+    "MT4-0584": {
+      "stem": "Under Russian criminal law, the subject of a bribe may be:",
+      "options": {
+        "a": "Money",
+        "b": "Property",
+        "c": "Securities",
+        "d": "All of the above"
+      }
+    },
+    "MT4-0585": {
+      "stem": "Under Russian law, which of the following situations cannot be classified as receiving a bribe?",
+      "options": {
+        "a": "An official receiving remuneration for using exclusively personal relationships unrelated to their official position",
+        "b": "Property being transferred in exchange for an official's actions in service, not to the official or their relatives or close persons but knowingly to other persons, while the official or their relatives or close persons derive a material benefit",
+        "c": "An official receiving remuneration before performing official actions in favour of the person who provided it",
+        "d": "An official receiving remuneration for general patronage or connivance in service"
+      }
+    },
+    "MT4-0586": {
+      "stem": "A citizen who has committed a corruption offence may be deprived of the right to hold certain state service positions:",
+      "options": {
+        "a": "By a decision of the commission for compliance with official-conduct requirements and resolution of conflicts of interest",
+        "b": "By a decision of the employer's representative of the state body in which the citizen held a state service position",
+        "c": "Upon entry in the register of citizens who have committed corruption offences",
+        "d": "By a decision of the President of the Russian Federation",
+        "e": "By a court decision"
+      }
+    },
+    "MT4-0587": {
+      "stem": "A state servant holds a position in a federal agency and also works part-time at a technical institute. The agency plans to procure research services. As part of their official duties, the state servant must help draft the technical specification for this work. They know that the technical institute is interested in performing the work under the planned state contract and intends to enter the competition. In this situation:",
+      "options": {
+        "a": "There is a conflict of interest because, if the technical institute wins, the state servant's workload there will increase, which may in turn affect the quality and volume of their official work at the federal agency",
+        "b": "There is a conflict of interest because the state servant can influence the technical specification and give an advantage to an organization from which they receive income",
+        "c": "There is no conflict of interest because there is no information indicating that the decision could provide a material benefit to the state servant or their family members",
+        "d": "There is no conflict of interest because, compared with other potential bidders, the technical institute can perform the work to the highest standard and at a reasonable price",
+        "e": "There is no conflict of interest because there is no evidence that the state civil servant intends to abuse their official position"
+      }
+    },
+    "MT4-0588": {
+      "stem": "A state body announced a competition to award subsidies to socially oriented non-profit organizations. The non-profit organization Mercy and Care entered the competition. One state servant involved in evaluating applications and deciding on subsidies had previously worked for this charity, although at the time of the competition they had no financial obligations linking them to it. Believing that Mercy and Care most deserved support, the state servant actively described its advantages and persuaded commission members to vote for it. Under the Federal Law On the State Civil Service of the Russian Federation, in this situation:",
+      "options": {
+        "a": "There was no conflict of interest, but official-conduct requirements were breached",
+        "b": "There was no conflict of interest if the charity would have received the subsidy even without the civil servant's support",
+        "c": "There was a conflict of interest because the civil servant used their official position to obtain a material benefit for a particular charity"
+      }
+    },
+    "MT4-0589": {
+      "stem": "A citizen entered the state civil service in 2011. In 2013, the civil servant's wife and her parents jointly purchased an apartment in shared ownership. The wife's expenditure was 2 million rubles; the apartment cost 4 million rubles.",
+      "options": {
+        "a": "The civil servant must report the wife's expenditure if the couple's combined income for 2011–2012 is less than 2 million rubles",
+        "b": "The civil servant must report the wife's expenditure if the couple's combined income for 2011–2012 is less than 4 million rubles",
+        "c": "The civil servant must report the wife's expenditure if the couple's combined income for 2010–2012 is less than 2 million rubles",
+        "d": "The civil servant must report the wife's expenditure if the couple's combined income for 2010–2012 is less than 4 million rubles"
+      }
+    },
+    "MT4-0590": {
+      "stem": "In 2005, A. was appointed deputy head of a division in a territorial office of a federal service. In 2009, A.'s husband was appointed head of that territorial office. A review of compliance with official-conduct requirements found no corruption in the interaction between the head and state servant A.: there were no inflated bonuses, privileges, preferences or similar benefits. In this situation:",
+      "options": {
+        "a": "There is no conflict of interest because A. was appointed to the territorial office before her husband became its head",
+        "b": "There is a conflict of interest, but because the review found no abuse of powers by the head, both state servants may remain in their positions under continuous monitoring of the conflict by the conflict-of-interest commission",
+        "c": "Because the head can appoint and dismiss staff, approve their duties and perform other personnel-management functions, A. is directly subordinate to her husband; a restriction associated with state civil service has therefore been breached, and one spouse must be dismissed from the territorial office",
+        "d": "There is neither a conflict of interest nor a breach of a state civil service restriction because, although A.'s husband heads the territorial office, he is not her immediate supervisor"
+      }
+    },
+    "MT4-0591": {
+      "stem": "Civil servant K. holds a position in the Federal Service for Environmental Protection. She also teaches part-time at an Institute of Natural Resource Management. Her official work is closely related to the subjects she teaches at the institute. In this situation:",
+      "options": {
+        "a": "State civil service legislation is complied with as long as K. does not use, in her teaching, official information learned through performing her civil service duties",
+        "b": "State civil service legislation is complied with if the employer's representative at K.'s place of service knows about her secondary employment and has no objections to it",
+        "c": "State civil service legislation is breached because K. uses in her teaching the knowledge and experience gained while working at the Federal Service for Environmental Protection",
+        "d": "There is a conflict of interest because, to obtain the material benefit of remuneration at her main place of work, K. uses knowledge and experience gained while working at the Federal Service for Environmental Protection"
+      }
+    },
+    "MT4-0592": {
+      "stem": "A civil servant's child turned 18 in February 2014. When submitting information on income, property and property-related obligations for 2013 in March 2014, the civil servant did not provide information about that child. In this situation:",
+      "options": {
+        "a": "The civil servant did not breach the law because the child had already reached adulthood when the information was submitted",
+        "b": "The civil servant breached the law, but if a review shows that they acted in good faith overall and omitted the information because of a misunderstanding, the employer's representative may allow the missing information to be submitted, including without imposing liability for late submission",
+        "c": "The civil servant breached the law, but if a review shows that they acted in good faith overall and omitted the information because of a misunderstanding, the employer's representative may allow the missing information to be submitted; a sanction for late submission must nevertheless be imposed",
+        "d": "The civil servant must be held liable for submitting incomplete and/or inaccurate information"
+      }
+    }
+  },
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943"
+}

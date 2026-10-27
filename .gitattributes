@@ -11,3 +11,6 @@ docs/quality/legal-document-translations/** -text whitespace=cr-at-eol
 
 # Retired source evidence preserves its original bytes.
 tests/fixtures/legal-lab-retired-corpus/** -text whitespace=cr-at-eol
+
+# Ministry question-bank reviews bind the exact imported source bytes.
+site/data/civil-service/** -text whitespace=cr-at-eol

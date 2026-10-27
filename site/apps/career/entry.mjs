@@ -143,6 +143,8 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
       document:scopedDocument,
       window:{
         addEventListener:(type,listener,options) => addListener(type === 'afterprint' ? hostWindow : surface,type,listener,options),
+        get innerHeight() {return hostWindow.innerHeight;},
+        scrollBy:options => {if(!destroyed)hostWindow.scrollBy(options);},
         scrollTo:() => {if(!destroyed)container.scrollIntoView({block:'start',behavior:'instant'});},
         print:() => {if(!destroyed){container.dispatchEvent(new CustomEvent('career:beforeprint',{bubbles:true}));hostWindow.print();}}
       },
@@ -161,6 +163,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
       confirm:message => !destroyed && hostWindow.confirm(message),
       prompt:(message,value) => destroyed ? null : hostWindow.prompt(message,value),
       lang:language, liveVacancies:false,
+      assetURL:value => resourceURL(value,MODULE_BASE).href,
       get destroyed() {return destroyed;},
       storageKey:name => `${ownerKey}${name}`,
       routeChanged(value, {replace=false} = {}) {

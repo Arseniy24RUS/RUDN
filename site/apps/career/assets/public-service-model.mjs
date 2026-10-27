@@ -4,6 +4,7 @@
  */
 import {computeRoleProfile,buildSectorPreference,scoreAuthority} from './scoring.mjs';
 import {inputsFromState,validateInputs} from './scenarios.mjs';
+import {MODEL_VERSION,SCORING_REVISION} from './versions.mjs';
 export const PUBLIC_SERVICE_COHORTS=['federal-legislative','federal-judicial','regional','municipal'];
 const LANGS=['ru','en','zh-Hans'];
 const OFFICIAL_HOSTS=new Set(['duma.gov.ru','council.gov.ru','www.ksrf.ru','vsrf.ru','www.vsrf.ru','www.zs74.ru','www.gov.spb.ru','novo-sibirsk.ru','gorsovetnsk.ru']);
@@ -57,7 +58,8 @@ export function rankPublicService(registry,data,inputs){
    const scored=scoreAuthority({id:record.id,shortName:record.name.ru,sectors:link.sectors,conditions:link.conditions,tracks:[link]},context,map);
    return {...scored,link};
   }).sort((a,b)=>b.rawScore-a.rawScore||b.sectorFit-a.sectorFit||a.link.id.localeCompare(b.link.id));
-  return {...record,match:options[0],options};
+  const overall=scoreAuthority({id:record.id,shortName:record.name.ru,tracks:record.tracks},context,map);
+  return {...record,match:{...overall,link:overall.path},options};
  }).sort((a,b)=>b.match.rawScore-a.match.rawScore||b.match.sectorFit-a.match.sectorFit||a.name.ru.localeCompare(b.name.ru,'ru'));
  return {ranked,roleProfile,sectorPreferences};
 }
@@ -66,5 +68,5 @@ export function filterPublicRecords(records,{cohort='all',query=''}={}){
  return records.filter(a=>(cohort==='all'||a.cohort===cohort)&&(!q||[...Object.values(a.name),...Object.values(a.location),...Object.values(a.mission),...a.verifiedUnits,...a.tracks.flatMap(t=>Object.values(t.title))].join(' ').normalize('NFKC').toLocaleLowerCase().includes(q)));
 }
 export function publicServiceReport(registry,ranked){
- return {kind:'russian-public-service-exploration',schemaVersion:1,registryVersion:registry.registryVersion,modelVersion:registry.modelVersion,generatedAt:new Date().toISOString(),notice:'Not an anonymous class result or evidence of eligibility. Russian institutions only.',items:ranked.map((a,i)=>({id:a.id,officialName:a.name.ru,country:'RU',cohort:a.cohort,rankWithinSelection:i+1,index:a.match?.score??null,track:a.match?.link.id??null,source:a.sources[0].url}))};
+ return {kind:'russian-public-service-exploration',schemaVersion:1,registryVersion:registry.registryVersion,modelVersion:MODEL_VERSION,scoringRevision:SCORING_REVISION,generatedAt:new Date().toISOString(),notice:'Not an anonymous class result or evidence of eligibility. Russian institutions only.',items:ranked.map((a,i)=>({id:a.id,officialName:a.name.ru,country:'RU',cohort:a.cohort,rankWithinSelection:i+1,index:a.match?.score??null,track:a.match?.link.id??null,source:a.sources[0].url}))};
 }

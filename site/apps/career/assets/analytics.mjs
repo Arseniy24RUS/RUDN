@@ -49,7 +49,7 @@ const TRACK_IDS = ["POLICY","LEGAL","INSPECT","PROGRAM","FINANCE","DIGITAL","SER
 export function validateAnonymousRecord(record, registry = validationRegistry) {
   const errors = [];
   if (!record || typeof record !== "object" || Array.isArray(record)) return { valid: false, errors: ["Файл не содержит объект результата."] };
-  if(record.schemaVersion===1)return {valid:false,errors:["Результат прежней модели. Его нельзя смешивать с новой группой. Импортируйте личный сценарий и заново подтвердите изменённые вопросы."]};
+  if(record.schemaVersion===1)return {valid:false,errors:["Не удалось проверить результат. Откройте сохранённые ответы и рассчитайте результат перед добавлением в группу."]};
   // A closed schema rejects arbitrary nested payloads, not just a blacklist of names.
   const schemaOK = exactKeys(record, ["schema","schemaVersion","modelVersion","questionnaireVersion","registryVersion","focusAreas","leadingTieIds","recordId","createdAt","roleProfile","prioritySectors","lowPrioritySectors","conditions","ranking"])
     && exactKeys(record.roleProfile,["raw","dispersion","flat"])
@@ -63,7 +63,7 @@ export function validateAnonymousRecord(record, registry = validationRegistry) {
   if (record.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("Неподдерживаемая версия схемы.");
   if(record.questionnaireVersion!==QUESTIONNAIRE_VERSION || record.registryVersion!==REGISTRY_VERSION)errors.push("Версия анкеты или реестра не соответствует текущей модели.");
   if(!validateFocusAreas(record.focusAreas,record.prioritySectors))errors.push("Некорректны отраслевые уточнения.");
-  if (record.modelVersion !== MODEL_VERSION) errors.push("Результат создан несовместимой версией модели.");
+  if (record.modelVersion !== MODEL_VERSION) errors.push("Результат не соответствует текущим правилам расчёта.");
   if (typeof record.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record.recordId)) errors.push("Отсутствует корректный анонимный идентификатор.");
   if (typeof record.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record.createdAt) || Number.isNaN(Date.parse(record.createdAt))) errors.push("Некорректна дата формирования результата.");
   if (!record.roleProfile || typeof record.roleProfile.raw !== "object") errors.push("Отсутствует профиль профессиональных интересов.");
