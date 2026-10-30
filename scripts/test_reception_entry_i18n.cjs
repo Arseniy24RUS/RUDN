@@ -28,7 +28,7 @@ export const backend = {
   authReady:true,connected:true,serverTimeOffset:0,
   isAdmin:()=>true,getProfile:()=>null,globalNow:()=>new Date('2026-09-13T09:00:00Z'),
   getAccessOverrides:()=>({}),init:async()=>{},onStatus:()=>()=>{},status:()=>({connected:true}),
-  localGrades:()=>({}),localAttempts:()=>[],getGrades:async()=>({}),getAttempts:async()=>[],
+  localGrades:()=>({}),localAttempts:()=>[],getGrades:async()=>({}),getAttempts:async()=>[],loadDraft:async()=>null,
 };`;
 
 (async () => {
