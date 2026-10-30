@@ -9,6 +9,7 @@ import {commitStudentAttempt} from '../site/assets/js/checkpoint-sync.js';
 import {createLegalLabPersistence} from '../site/assets/js/legal-lab-storage.js';
 import {resourceURL} from '../site/assets/js/release-resources.js';
 import {seminarModule,seminarModuleForSlug} from '../site/assets/js/seminar-modules.js';
+import {CAREER_COPY,readCareerCompletion} from '../site/assets/js/career-course.js';
 
 const version='synthetic-legal-v1',owner='student:synthetic-practice',studentKey='synthetic-practice';
 const payload=()=>({id:'synthetic-work-1',contentVersion:version,points:52,total:52,finishedAt:1792175000000});
@@ -96,8 +97,8 @@ function block(from,to){const start=main.indexOf(from),end=main.indexOf(to,start
 const legalTopic={number:6,title:'Synthetic legal module moved to topic 6',seminar:{slug:'seminar-4',module:'legal-lab',title:'Legal'},lecture:{slug:'lecture-6',title:'Lecture'}};
 function dashboard({attempts=[],grades={},locale='ru'}={}){
   const context={data:{course:{topics:[legalTopic],title:'Synthetic course'},legalLabCatalog:{contentVersion:version}},app:{innerHTML:'',querySelector:()=>null},
-    backend:{getProfile:()=>({studentKey}),getGrades:async()=>grades,getAttempts:async()=>attempts,isAdmin:()=>false},attemptOwner:()=>owner,
-    readSettlementsCourseDrafts:async()=>[null,null],durableStore:{},settlementsCourseStatus:()=>null,seminarModule,number:v=>Number(v)||0,
+    backend:{getProfile:()=>({studentKey}),getGrades:async()=>grades,getAttempts:async()=>attempts,loadDraft:async()=>null,isAdmin:()=>false},attemptOwner:()=>owner,
+    readSettlementsCourseDrafts:async()=>[null,null],durableStore:{},settlementsCourseStatus:()=>null,seminarModule,CAREER_COPY,readCareerCompletion,number:v=>Number(v)||0,
     esc:String,ui:null,getLocale:()=>locale,loc:(obj,key)=>obj[key],accessSnapshot:()=>({now:0,context:{},overrides:{}}),topicGate:()=>({open:true}),accessAllowed:()=>true,
     lectureTestGate:()=>({open:true}),gateStatus:()=>'',accessText:()=>'',officialTicket:()=>'',t:key=>key,mountSettlementsCourseReceipt:()=>({destroy(){}}),currentCleanup:null};
   vm.createContext(context);vm.runInContext(block('const UI = {','const ACCESS_COPY=')+'\nfunction ui(key){return UI[getLocale()][key]||key;}\n'+block('function bestCourseQuizAttempt','const gradeItems='),context);return context;
