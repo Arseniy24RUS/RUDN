@@ -12,7 +12,7 @@ const activeMounts = new WeakMap();
 
 /** A native, isolated DOM component. Authentication and course navigation belong to the host. */
 export async function mountCareer(container,options={}) {const finish=options.diagnostics?.span?.('module-load');try{const handle=await mountCareerInternal(container,options);finish?.({success:true});return handle;}catch(error){finish?.({success:false,code:error.name==='AbortError'?'cancelled':'load-failed'});options.diagnostics?.error?.(error,{event:'module-error',operation:'load'});throw error;}}
-async function mountCareerInternal(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, initialRoute = 'home', onRouteChange, signal,diagnostics} = {}) {
+async function mountCareerInternal(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, onOpenKnowledge, initialRoute = 'home', onRouteChange, signal,diagnostics} = {}) {
   if (!(container instanceof HTMLElement)) throw new TypeError('Career module requires an HTMLElement container.');
   activeMounts.get(container)?.destroy();
   const shadow = container.shadowRoot || container.attachShadow({mode:'open'});
@@ -27,7 +27,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   const progressScope={owner:durableOwner,activitySlug:free?'career-freeplay':'career-workspace',mode:free?'workspace':'diagnostic',attemptId:'workspace-v1'};
   const values=new Map(),observedLegacy=new Map(),pendingSaves=new Set();
   try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
-  const saveCopy={ru:{pending:'Сохранено на устройстве · ожидает отправки',saved:'Сохранено',unsafe:'Не удалось сохранить. Скачайте ответы перед закрытием.'},en:{pending:'Saved on this device · awaiting upload',saved:'Saved',unsafe:'Could not save. Download your answers before closing.'},'zh-Hans':{pending:'已保存在此设备 · 等待上传',saved:'已保存',unsafe:'无法保存。关闭前请下载答案。'}};
+  const saveCopy={ru:{pending:'Сохранено на устройстве',saved:'Ответы сохранены',unsafe:'Не удалось сохранить ответы. Оставьте вкладку открытой и проверьте соединение.'},en:{pending:'Saved on this device',saved:'Answers saved',unsafe:'Answers could not be saved. Keep this tab open and check your connection.'},'zh-Hans':{pending:'已保存在此设备',saved:'答案已保存',unsafe:'无法保存答案。请保持页面打开并检查网络连接。'}};
   const track=promise=>{pendingSaves.add(promise);promise.finally(()=>pendingSaves.delete(promise)).catch(()=>{});return promise;};
   const persistWorkspace=()=>{const started=performance.now();return track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:{values:Object.fromEntries(values),route}},{queue:durableOwner.startsWith('student:')}).then(saved=>{
     latestCheckpoint=saved;saveFailure=saved.saveStatus?.durable!==true;diagnostics?.record?.('checkpoint',{operation:'draft-save',success:!saveFailure,code:saveFailure?'storage':'ok',durationMs:performance.now()-started});const label=shadow.querySelector('#session-status');if(label&&!disposed)label.textContent=saveCopy[language][!saved.saveStatus.durable?'unsafe':saved.saveStatus.state==='saved'?'saved':'pending'];return saved;
@@ -84,7 +84,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
     // Stylesheet URLs normally resolve relative to the CSS file; inline Shadow DOM styles need an explicit base.
     style.textContent = css.replace(/url\(\s*(['"]?)(?!data:|blob:|#)([^)'"\s]+)\1\s*\)/g, (_, quote, value) => `url("${resourceURL(value, MODULE_BASE).href}")`);
     const surface = hostDocument.createElement('div');
-    surface.className = 'career-surface'; surface.lang = language;
+    surface.className = `career-surface${free?'':' seminar-flow'}`; surface.lang = language;
     surface.innerHTML = markup;
     for (const element of surface.querySelectorAll('[src],[href]')) {
       for (const attribute of ['src','href']) {
@@ -162,7 +162,15 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
       MutationObserver:ScopedObserver,URL:ScopedURL,setTimeout:timeout,clearTimeout:clearTimer,requestAnimationFrame:raf,
       confirm:message => !destroyed && hostWindow.confirm(message),
       prompt:(message,value) => destroyed ? null : hostWindow.prompt(message,value),
-      lang:language, liveVacancies:false,
+      lang:language, liveVacancies:false, seminarFlow:!free,
+      async openKnowledge(){
+        if(destroyed||free||typeof onOpenKnowledge!=='function')return;
+        await api.flush();
+        if(saveFailure)await persistWorkspace();
+        const completion=await durableStore.loadDraft({owner:durableOwner,activitySlug:'career-diagnostic',mode:'diagnostic'});
+        if(saveFailure||completion?.saveStatus?.durable!==true||!completion?.state?.record)throw Object.assign(new Error('Career result is not durably saved.'),{code:'storage/local-save-failed'});
+        if(!destroyed)await onOpenKnowledge();
+      },
       assetURL:value => resourceURL(value,MODULE_BASE).href,
       get destroyed() {return destroyed;},
       storageKey:name => `${ownerKey}${name}`,
@@ -176,7 +184,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         if(destroyed || resultsSent.has(record.recordId))return;
         resultsSent.add(record.recordId);
         const captured=structuredClone(record),started=performance.now();
-        if(free||durableOwner.startsWith('student:')){
+        {
           const student=durableOwner.startsWith('student:');
           const attempt={id:captured.recordId,...(student?{studentKey:durableOwner.slice(8)}:{}),activitySlug:free?'career-freeplay':'career-diagnostic',draftMode:'diagnostic',type:'career-diagnostic',recordGrade:false,createdAt:captured.createdAt,title:'Career diagnostic',career:captured};
           track(durableStore.complete({owner:durableOwner,activitySlug:attempt.activitySlug,mode:'diagnostic',attemptId:attempt.id,state:{record:captured},attempt},{queue:student}).then(()=>{

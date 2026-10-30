@@ -5,6 +5,7 @@
 export const SECTION_IDS = ['russian','constitution','civil-service','anti-corruption','ict'];
 export const PAPER_SIZE = 40;
 export const PER_SECTION = 8;
+export const TEST_DURATION_MS = 60 * 60 * 1000;
 const fail = (code, message) => {throw Object.assign(new Error(message), {code:`civil-service/${code}`});};
 const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 const copy = value => structuredClone(value);
@@ -14,6 +15,14 @@ export function canonicalJSONString(value) {
   const canonical=input=>Array.isArray(input)?input.map(canonical):record(input)?Object.fromEntries(Object.keys(input).sort().map(key=>[key,canonical(input[key])])):input;
   return JSON.stringify(canonical(value));
 }
+
+/** The deadline belongs to the attempt, so leaving the page never pauses it.
+ * Legacy unfinished papers use their original start time; completed legacy
+ * records retain their existing timestamps and result without migration.
+ */
+export const attemptDeadline = attempt => attempt.startedAt + TEST_DURATION_MS;
+export const remainingAttemptTime = (attempt, now=Date.now()) => Math.max(0, attemptDeadline(attempt)-now);
+export const isAttemptExpired = (attempt, now=Date.now()) => attempt?.phase==='active' && now>=attemptDeadline(attempt);
 
 export function validateBank(bank) {
   if (!record(bank) || bank.schemaVersion !== 1 || typeof bank.contentVersion !== 'string' || !bank.contentVersion || !Array.isArray(bank.questions)) fail('invalid-bank','Invalid question bank.');
@@ -56,7 +65,7 @@ export function createAttempt(bank,{seed,id,startedAt=Date.now()}={}) {
     if(section.length<PER_SECTION)fail('pool-incomplete',`Not enough reviewed questions in ${sectionId}.`);
     selected.push(...shuffled(section,next).slice(0,PER_SECTION));
   }
-  const attempt={schemaVersion:1,id,contentVersion:bank.contentVersion,seed,startedAt,phase:'active',questionIds:shuffled(selected,next).map(q=>q.id),answers:{},currentIndex:0,finishedAt:null};
+  const attempt={schemaVersion:1,id,contentVersion:bank.contentVersion,seed,startedAt,deadlineAt:startedAt+TEST_DURATION_MS,phase:'active',questionIds:shuffled(selected,next).map(q=>q.id),answers:{},currentIndex:0,finishedAt:null};
   validateAttempt(bank,attempt);
   return attempt;
 }
@@ -66,6 +75,7 @@ export function validateAttempt(bank,attempt) {
   if(!record(attempt)||attempt.schemaVersion!==1||typeof attempt.id!=='string'||!attempt.id||attempt.id.length>200||attempt.contentVersion!==bank.contentVersion)fail('version-mismatch','The attempt requires its original question bank.');
   if(!['active','completed'].includes(attempt.phase)||!Array.isArray(attempt.questionIds)||attempt.questionIds.length!==PAPER_SIZE||new Set(attempt.questionIds).size!==PAPER_SIZE||!record(attempt.answers))fail('invalid-attempt','Invalid paper.');
   if(!Number.isFinite(attempt.startedAt)||attempt.startedAt<0||!Number.isInteger(attempt.currentIndex)||attempt.currentIndex<0||attempt.currentIndex>=PAPER_SIZE||!Number.isInteger(attempt.seed)||attempt.seed<0||attempt.seed>0xffffffff)fail('invalid-attempt','Invalid attempt metadata.');
+  if(attempt.deadlineAt!==undefined&&attempt.deadlineAt!==attemptDeadline(attempt))fail('invalid-attempt','The attempt deadline cannot be extended.');
   const byId=new Map(bank.questions.map(q=>[q.id,q])), counts=Object.fromEntries(SECTION_IDS.map(id=>[id,0]));
   for(const id of attempt.questionIds){const q=byId.get(id);if(!q||q.review?.status!=='verified')fail('invalid-attempt','Paper contains an unreviewed question.');counts[q.sectionId]++;}
   if(SECTION_IDS.some(id=>counts[id]!==PER_SECTION))fail('invalid-attempt','Invalid topic proportions.');
@@ -74,15 +84,20 @@ export function validateAttempt(bank,attempt) {
     if(!attempt.questionIds.includes(id)||!Array.isArray(answer)||new Set(answer).size!==answer.length||answer.some(optionId=>!q.options.some(option=>option.id===optionId))||(q.correctOptionIds.length===1&&answer.length>1))fail('invalid-answer',`Invalid answer: ${id}`);
   }
   if(attempt.phase==='completed'&&(!Number.isFinite(attempt.finishedAt)||attempt.finishedAt<attempt.startedAt||!record(attempt.result)))fail('invalid-attempt','Invalid completed attempt.');
+  if(attempt.completionReason!==undefined&&(!['submitted','time-limit'].includes(attempt.completionReason)||attempt.phase!=='completed'))fail('invalid-attempt','Invalid completion reason.');
+  if(attempt.deadlineAt!==undefined&&attempt.phase==='completed'&&attempt.finishedAt>attempt.deadlineAt)fail('invalid-attempt','A timed attempt cannot finish after its deadline.');
+  if(attempt.completionReason==='time-limit'&&attempt.finishedAt!==attemptDeadline(attempt))fail('invalid-attempt','Invalid timeout timestamp.');
   if(attempt.phase==='active'&&(attempt.finishedAt!==null||attempt.result!==undefined))fail('invalid-attempt','Active attempt contains a final result.');
   return true;
 }
 
 export function getAttemptQuestions(bank,attempt){validateAttempt(bank,attempt);const byId=new Map(bank.questions.map(q=>[q.id,q]));return attempt.questionIds.map(id=>byId.get(id));}
 
-export function setAnswer(bank,attempt,questionId,optionIds) {
+export function setAnswer(bank,attempt,questionId,optionIds,{now=Date.now()}={}) {
   validateAttempt(bank,attempt);
   if(attempt.phase!=='active')fail('already-completed','A completed attempt cannot be edited.');
+  if(!Number.isFinite(now))fail('invalid-attempt','Invalid answer time.');
+  if(isAttemptExpired(attempt,now))fail('time-expired','The test time has expired.');
   const updated={...attempt,answers:{...attempt.answers,[questionId]:copy(optionIds)}};
   validateAttempt(bank,updated);
   return updated;
@@ -102,7 +117,9 @@ export function finishAttempt(bank,attempt,{finishedAt=Date.now()}={}){
     if(canonicalJSONString(expected)!==canonicalJSONString(attempt.result))fail('result-mismatch','Stored result differs from the original paper.');
     return copy(attempt);
   }
-  const completed={...copy(attempt),phase:'completed',finishedAt,result:gradeAttempt(bank,attempt)};
+  if(!Number.isFinite(finishedAt)||finishedAt<attempt.startedAt)fail('invalid-attempt','Invalid completion time.');
+  const expired=isAttemptExpired(attempt,finishedAt);
+  const completed={...copy(attempt),deadlineAt:attemptDeadline(attempt),phase:'completed',finishedAt:Math.min(finishedAt,attemptDeadline(attempt)),completionReason:expired?'time-limit':'submitted',result:gradeAttempt(bank,attempt)};
   validateAttempt(bank,completed);
   return completed;
 }

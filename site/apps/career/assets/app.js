@@ -2,6 +2,7 @@ import {sessionBundle,parseSession,SESSION_LIMIT} from './session-transfer.mjs';
 import {upgradePreviousDraft} from './model-upgrade.mjs';
 import {authorityEmblem,authoritySymbolCredit} from './authority-symbols.mjs';
 import {createVacancies} from './vacancies.mjs';
+import {createSeminarFlow} from './seminar-flow.mjs';
 import {MODEL_VERSION as CURRENT_MODEL,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from './versions.mjs';
 import {TOPIC_GROUPS,activeTopicGroups,sanitizeFocusAreas} from './topics.mjs';
 import {storageKey,readLocal,writeLocal} from './storage.mjs';
@@ -45,6 +46,7 @@ import {
 } from "./analytics.mjs";
 
 export const STORAGE_KEY = storageKey("answers-v8.1");
+const SEMINAR_FLOW = __careerHost.seminarFlow === true;
 const PREVIOUS_STORAGE_KEY = storageKey("answers-v8");
 let copiedInputs = false;
 
@@ -83,6 +85,7 @@ let classroom = null;
 let decisionLab = null;
 let publicService = null;
 let vacancies = null;
+let seminarFlow = null;
 let groupMode = "uploaded";
 let groupBusy = false;
 let latestResult = null;
@@ -218,7 +221,7 @@ function updateSaveIndicator() {
   const strip=$("#session-strip"), label=$("#session-status");
   if(!strip||!label)return;
   strip.dataset.status=lastSaveStatus;
-  label.textContent=lastSaveStatus==='failed'?'Не сохранено. Скачайте ответы перед закрытием.':Object.keys(state.answers).length?'Ответы сохранены в этом браузере':'Ответы остаются на Вашем устройстве';
+  label.textContent=lastSaveStatus==='failed'?(SEMINAR_FLOW?'Не удалось сохранить ответы. Оставьте вкладку открытой и проверьте соединение.':'Не сохранено. Скачайте ответы перед закрытием.'):Object.keys(state.answers).length?'Ответы сохранены в этом браузере':'Ответы остаются на Вашем устройстве';
 }
 
 function bindSessionTransfer() {
@@ -264,7 +267,7 @@ async function loadData() {
     {roots:[],links:[],sources:[],territorialExamples:[],checkedAt:null},[],
     {cases:[],disclaimer:{ru:'Раздел временно недоступен',en:'Section temporarily unavailable','zh-Hans':'该部分暂不可用'}},
     {records:[],eligibilitySources:[],country:'RU',registryVersion:'unavailable'}];
-  const optional=Promise.all(optionalFiles.map(async(url,i)=>{
+  const optional=SEMINAR_FLOW?Promise.resolve(defaults.map(value=>({value}))):Promise.all(optionalFiles.map(async(url,i)=>{
     try{return {value:await loadJSON(url,{validate:v=>{
       if(Array.isArray(defaults[i]))return Array.isArray(v);
       if(!isRecord(v))return false;
@@ -279,7 +282,7 @@ async function loadData() {
   const [core,extensions]=await Promise.all([corePromise,optional,manifestPromise]);
   const [scales,questions,sectors,conditions,tracks,authorities]=core;
   let [competencies,careerFramework,entryRoutes,hierarchy,resources,agencyStudies,publicService]=extensions.map(x=>x.value);
-  if(!extensions[6].failed){
+  if(!SEMINAR_FLOW&&!extensions[6].failed){
     try{if(validatePublicRegistry(publicService,{tracks,sectors}).length)throw new Error('invalid-extension');}
     catch{publicService=defaults[6];extensions[6].failed=optionalFiles[6];}
   }
@@ -320,10 +323,16 @@ function activeRoute() {
 }
 
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
+  const requestedRoute=route;
   finishSectorDrag(false, {focus:false, announce:false});
   const valid = ["home", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
   if (!valid.includes(route)) route = "home";
+  if(SEMINAR_FLOW){
+    if(!['test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
+    if(route==='sectors'&&Object.keys(state.answers).length<data.questions.length)route='test';
+    if(route==='conditions'&&(state.prioritySectors.length!==4||state.lowPrioritySectors.length!==2))route=resolveResumeRoute();
+  }
   if(route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
   const unavailableRoutes={workshop:'data/agency-studies.json','public-service':'data/public-service.json',structure:'data/hierarchy.json',opportunities:'data/career-resources.json'};
   if(data.unavailable.includes(unavailableRoutes[route])){
@@ -361,10 +370,11 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
   decisionLab?.render(route);
   publicService?.render(route);
   vacancies?.render(route);
+  seminarFlow?.render(route);
   $$(".nav-more[open]").forEach(el=>el.open=false);
   state.lastRoute = route;
   saveState();
-  if (updateHash) __careerHost.routeChanged(route, {replace});
+  if (updateHash || (SEMINAR_FLOW&&requestedRoute!==route)) __careerHost.routeChanged(route, {replace});
   window.scrollTo({ top: 0, behavior: "instant" });
   if(focus){const heading=$(`#view-${route} h1`)||$("#main-content");heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}
   $(".desktop-nav")?.classList.remove("open");
@@ -413,6 +423,7 @@ function renderQuestion() {
   $("#question-next").disabled = !state.answers[question.id];
   $("#question-next").innerHTML = state.questionIndex === total - 1 ? `Выбрать сферы${icon("arrow-right")}` : `Следующий вопрос${icon("arrow-right")}`;
   $("#question-back").innerHTML = `${icon("arrow-left")}${state.questionIndex ? "Предыдущий вопрос" : "На главную"}`;
+  $("#question-back").hidden=SEMINAR_FLOW&&state.questionIndex===0;
   renderLiveProfile();
   renderQuestionMap();
   $$("#answer-options .answer-option").forEach((button) => button.addEventListener("click", () => selectAnswer(Number(button.dataset.answer))));
@@ -780,6 +791,7 @@ function radarSvg(profile) {
 }
 
 function renderResults() {
+  if(SEMINAR_FLOW)return seminarFlow?.renderResults();
   const result = getResults();
   if (!result) return routeTo(resolveResumeRoute());
   const government = result.ranked.filter((item) => !["corporation", "fund"].includes(item.entityType)).map((item, index) => ({ ...item, rank: index + 1 }));
@@ -1184,6 +1196,7 @@ function syncCompareButtons() {
 }
 
 function renderCompareTray() {
+  if(SEMINAR_FLOW)return;
   if (!data) return;
   state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
   const tray = $("#compare-tray");
@@ -1544,8 +1557,11 @@ async function init() {
     bindReliabilityNotices();
     state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
-    classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
-    workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,
+    if(SEMINAR_FLOW){
+      seminarFlow=createSeminarFlow({getResult:getResults,toast});
+    }else{
+      classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
+      workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,
       rank: inputs=>rankAuthorities({...data,...inputs}),route:routeTo,openAuthority,
       restore: inputs=>{Object.assign(state,inputs,{questionIndex:0});invalidateResult();state.questionIndex=firstUnansweredIndex();saveState();},
       toast,download:downloadText,isComplete:()=>completionStatus({...state,questions:data.questions}).complete
@@ -1553,13 +1569,13 @@ async function init() {
     workspace.bind();
     decisionLab = createDecisionLab({data,state,routeTo,openAuthority,saveScenario:workspace.saveDetached,toast});
     if(!data.unavailable.includes('data/public-service.json'))publicService=createPublicService({registry:data.publicService,data,state,routeTo,downloadText,openNotebook:(id)=>classroom?.open(id)});
-    vacancies=createVacancies({data,getResult:()=>latestResult||(state.completedAt&&completionStatus({...state,questions:data.questions}).complete?rankAuthorities({...data,...state}):null),routeTo,closeDialog:closeAuthority});
+      vacancies=createVacancies({data,getResult:()=>latestResult||(state.completedAt&&completionStatus({...state,questions:data.questions}).complete?rankAuthorities({...data,...state}):null),routeTo,closeDialog:closeAuthority});
+    }
     bindStaticEvents();
-    bindSessionTransfer();
+    if(!SEMINAR_FLOW)bindSessionTransfer();
     document.addEventListener('app:language',()=>{finishSectorDrag(false,{focus:false,announce:false});if(activeRoute()==='sectors')renderSectors();});
     updateResumeButton();
-    renderCompareTray();
-    renderGroupDashboard();
+    if(!SEMINAR_FLOW){renderCompareTray();renderGroupDashboard();}
     $("#app-loading").hidden = true;
     $("#app").hidden = false;
     const requested = location.hash.slice(1);
@@ -1578,7 +1594,7 @@ async function init() {
 
 export const ready = init();
 export {routeTo as navigate, setLanguage as setLocale};
-export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
+export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||seminarFlow?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
 export const pauseForUpdate=()=>{finishSectorDrag(false,{focus:false,announce:false});};
 export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});return saveState();}
 export function captureForUpdate(){

@@ -1,5 +1,5 @@
 import {legalLabSaveMode,legalLabSaveMessageKey} from './legal-lab-save-status.js?v=1.3.10';
-import {CAREER_COPY,careerRoute} from './career-course.js';
+import {CAREER_COPY,careerRoute,readCareerCompletion} from './career-course.js';
 import {seminarModule,seminarTopic,seminarModuleForSlug} from './seminar-modules.js';
 import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.10';
 import {CONFIG} from './config.js?v=1.3.10';
@@ -368,6 +368,7 @@ async function renderDashboard(){
   const owner=attemptOwner();
   const [grades,attempts,settlementsDrafts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts(),readSettlementsCourseDrafts(durableStore,owner)]):[{},[],[null,null]];
   const settlementsStatus=settlementsCourseStatus(...settlementsDrafts,grades['seminar-3'],owner);
+  const careerCompletion=await readCareerCompletion({backend,owner,attempts});
   if(owner!==attemptOwner())return;
   const classroomBest=bestCourseQuizAttempt(attempts);
   const legalLabBest=bestLegalLabPracticeAttempt(attempts,data.legalLabCatalog?.contentVersion);
@@ -378,7 +379,12 @@ async function renderDashboard(){
   const topics=data.course.topics.map(topic=>{
     const lecture=topic.lecture,seminar=topic.seminar;const gate=topicGate(topic.number,access.overrides,access.now);const allowed=accessAllowed(gate);
     const action=(slug)=>allowed?`<a class="btn btn-secondary btn-small" href="#activity/${slug}">${ui('openActivity')}</a>`:`<span class="btn btn-neutral btn-small access-disabled" aria-disabled="true">${accessText('locked')}</span>`;
-    const activities=seminarModule(topic)==='legal-lab'?[
+    const careerCopy=CAREER_COPY[getLocale()]||CAREER_COPY.ru;
+    const activities=seminarModule(topic)==='career'?[
+      {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
+      {kind:careerCopy.practiceKind,title:careerCopy.practice,route:seminar.slug,ungraded:true,result:careerCompletion},
+      {kind:careerCopy.knowledgeKind,title:careerCopy.knowledge,route:`${seminar.slug}/knowledge`,result:grades[seminar.slug],max:5,requiresCareer:true}
+    ]:seminarModule(topic)==='legal-lab'?[
       {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
       {kind:ui('quizWord'),title:ui('legalLabQuizTitle'),route:`${seminar.slug}/quiz`,result:legalLabBest,max:52},
       {kind:ui('independentWork'),title:ui('legalLabAssessmentTitle'),route:`${seminar.slug}/assessment`,result:grades[seminar.slug],max:5}
@@ -390,7 +396,7 @@ async function renderDashboard(){
       {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
       {kind:ui('seminarWord'),title:loc(seminar,'title',seminar.title),route:seminar.slug,result:grades[seminar.slug],max:5}
     ];
-    const perfect=activities.every(item=>isPerfectResult(item.result,item.max));
+    const perfect=activities.every(item=>item.ungraded?Boolean(item.result):isPerfectResult(item.result,item.max));
     const activityCards=activities.map(item=>{
       const hasTest=item.route===lecture.slug&&topic.number<=7;
       const testGate=hasTest?lectureTestGate(topic.number,access.overrides,access.now):null;
@@ -399,7 +405,10 @@ async function renderDashboard(){
       const testAction=!hasTest?'':testAllowed
         ?`<a class="btn btn-primary btn-small" data-lecture-test="${lecture.slug}" href="#activity/${lecture.slug}/test">${t('test')}</a>`
         :`<button class="btn btn-neutral btn-small" data-lecture-test="${lecture.slug}" type="button" disabled aria-describedby="lecture-test-status-${topic.number}">${t('test')}</button>`;
-      return `<div class="activity-mini ${allowed?'':'access-locked'}"><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${item.route==='seminar-3'&&!item.result&&settlementsStatus?.kind==='pending'?`${settlementsStatus.points}/${item.max}`:courseResult(item.result,item.max)}${item.route==='seminar-3'&&settlementsStatus?`<small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</span><div class="activity-actions">${action(item.route)}${testAction}</div></footer>${testStatus?`<small class="muted lecture-test-status" id="lecture-test-status-${topic.number}">${esc(testStatus)}</small>`:''}</div>`;
+      const careerLocked=item.requiresCareer&&!careerCompletion;
+      const itemAction=careerLocked?`<button class="btn btn-neutral btn-small" type="button" data-career-knowledge disabled aria-describedby="career-test-status">${esc(careerCopy.openKnowledge)}</button>`:action(item.route);
+      const resultText=item.ungraded?esc(item.result?careerCopy.completed:ui('notPassed')):item.route==='seminar-3'&&!item.result&&settlementsStatus?.kind==='pending'?`${settlementsStatus.points}/${item.max}`:courseResult(item.result,item.max);
+      return `<div class="activity-mini ${allowed&&!careerLocked?'':'access-locked'}"${item.requiresCareer?' data-career-assessment="true"':''}><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${resultText}${item.route==='seminar-3'&&settlementsStatus?`<small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</span><div class="activity-actions">${itemAction}${testAction}</div></footer>${careerLocked?`<small class="muted lecture-test-status" id="career-test-status">${esc(careerCopy.locked)}</small>`:''}${testStatus?`<small class="muted lecture-test-status" id="lecture-test-status-${topic.number}">${esc(testStatus)}</small>`:''}</div>`;
     }).join('');
     return `<article class="topic-card ${allowed?'':'access-locked'} ${perfect?'topic-perfect':''}" ${perfect?`aria-label="${esc(ui('platinumTopic'))}"`:''}><div class="topic-no"><strong>${String(topic.number).padStart(2,'0')}</strong></div><div class="topic-copy"><div class="access-status ${gate.open?'open':'closed'}">${esc(gateStatus(gate))}</div><h2>${esc(loc(topic,'title',topic.title))}</h2><p>${esc(loc(topic,'summary',topic.summary))}</p></div><div class="activity-pair ${activities.length===3?'activity-trio':''}">${activityCards}</div></article>`;
   }).join('');
@@ -527,7 +536,7 @@ async function renderSeminar(topic,view){
   if(module==='settlements') return renderSeminar3(topic);
   if(module==='legal-lab') return renderSeminar4(topic,view);
   if(module==='reception') return renderSeminar5(topic);
-  if(module==='career') return renderSeminar6(topic);
+  if(module==='career') return view==='knowledge'?renderCivilServiceSeminar(topic):renderSeminar6(topic);
   if(module==='governor') return renderSeminar7(topic);
   if(module==='final') return renderSeminar8(topic);
 }
@@ -684,7 +693,7 @@ function gamesText(key){return GAMES_COPY[getLocale()]?.[key]||GAMES_COPY.ru[key
 function isModuleRoute(module,context='course'){
   const current=route();
   return context==='free'?current.name==='games'&&current.parts[0]===module
-    :current.name==='activity'&&current.parts[0]===seminarTopic(data.course,module)?.seminar.slug;
+    :current.name==='activity'&&current.parts[0]===seminarTopic(data.course,module)?.seminar.slug&&!(module==='career'&&current.parts[1]==='knowledge');
 }
 function renderGamesRoute(module){
   if(module==='settlements'){renderSettlements('free');return;}
@@ -751,14 +760,13 @@ function renderSeminar5(topic,{context='course'}={}){
 function renderSeminar6(topic,{context='course'}={}){
   const free=context==='free';
   const routeBase=free?'games/career':`activity/${topic.seminar.slug}`;
-  const owner=attemptOwner(),studentKey=backend.getProfile()?.studentKey||'teacher-preview',scope=routeDiagnostics;
+  const owner=attemptOwner(),scope=routeDiagnostics;
   const text=key=>key==='section'?(free?gamesText('free'):`${ui('seminarWord')} ${topic.number}`):CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
-  let disposed=false,handle=null,knowledgeHandle=null,mountTask=Promise.resolve(),knowledgeTask=Promise.resolve(),cleanupTask=null,mountStarted=false,knowledgeStarted=false;
+  let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
-  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1><p data-career-copy="lead">${text('lead')}</p><span class="career-course-features" data-career-copy="native">${text('native')}</span></header><p class="career-course-status" id="careerCourseStatus" role="status">${text('local')}</p><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div><details class="panel career-knowledge" id="careerKnowledge"><summary data-career-copy="knowledge">${text('knowledge')}</summary><p data-career-copy="knowledgeLead">${text('knowledgeLead')}</p><div id="civilServiceMount" aria-busy="true"><p role="status">${text('loading')}</p></div></details></section>`;
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1></header><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div></section>`;
   if(free){
-    app.querySelector('#careerKnowledge').remove();
     app.querySelector('.page-actions a').href='#games';
     app.querySelector('[data-career-ui="back"]').textContent=gamesText('back');
   }
@@ -770,45 +778,27 @@ function renderSeminar6(topic,{context='course'}={}){
     // resources that must finish cleanup before the next route can render.
     const pending=[];
     if(mountStarted)pending.push(mountTask);
-    if(knowledgeStarted)pending.push(knowledgeTask);
     await Promise.allSettled(pending);
-    await Promise.all([handle?.destroy(),knowledgeHandle?.destroy()]);
+    await handle?.destroy();
     if(currentCareer===token)currentCareer=null;
   })();
-  cleanup.flush=()=>Promise.all([handle?.flush?.(),knowledgeHandle?.flush?.()]);
-  exposeModuleUpdateAdapter(cleanup,()=>handle&&({...handle,prepareForUpdate:async options=>{await knowledgeHandle?.flush?.();return handle.prepareForUpdate(options);}}),'career');
+  cleanup.flush=()=>handle?.flush?.();
+  exposeModuleUpdateAdapter(cleanup,()=>handle,'career');
   cleanup.refreshLocale=()=>{
     if(!active())return;
     app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
     app.querySelectorAll('[data-career-ui]').forEach(el=>el.textContent=free&&el.dataset.careerUi==='back'?gamesText('back'):ui(el.dataset.careerUi));
-    app.querySelector('#careerCourseStatus').textContent=text('local');
     mount.setAttribute('aria-label',text('title'));
     if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active()){scope?.error(error,{operation:'locale'});console.error('Career locale:',error);}});}
-    knowledgeHandle?.setLocale(getLocale()).catch(error=>{if(active())scope?.error(error,{operation:'civil-service-locale'});});
   };
   currentCleanup=cleanup;
-  if(!free)knowledgeTask=(async()=>{
-    const target=app.querySelector('#civilServiceMount');
-    try{
-      const {mountCivilServiceCourse}=await import('./civil-service-course.mjs');
-      if(!active())return;
-      knowledgeStarted=true;
-      knowledgeHandle=await mountCivilServiceCourse(target,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope});
-      if(active())target.setAttribute('aria-busy','false');
-    }catch(error){
-      if(!active()||error.name==='AbortError')return;
-      target.setAttribute('aria-busy','false');target.replaceChildren();
-      const message=document.createElement('p');message.setAttribute('role','alert');message.textContent=text('failed');
-      const retry=document.createElement('button');retry.className='btn btn-secondary';retry.textContent=text('retry');retry.onclick=()=>{cleanup();renderedKey='';render();};target.append(message,retry);
-      scope?.error(error,{operation:'civil-service-load'});
-    }
-  })();
   mountTask=(async()=>{try{
     const {mountCareer}=await import('../../apps/career/entry.mjs');
     if(!active())return;
     token.lang=getLocale();
     mountStarted=true;
     handle=await mountCareer(mount,{diagnostics:scope,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
+      onOpenKnowledge:()=>{if(active()&&!free)location.hash=`activity/${topic.seminar.slug}/knowledge`;},
       onRouteChange:(view,{replace=false}={})=>{
         if(!active())return;
         const next=`#${routeBase}/${careerRoute(view)}`;
@@ -826,6 +816,48 @@ function renderSeminar6(topic,{context='course'}={}){
     mount.querySelector('#retryCareer').onclick=()=>{cleanup();renderedKey='';render();};
     scope?.error(error,{operation:'module-load'});console.error('Career module:',error);
   }})();
+}
+
+async function renderCivilServiceSeminar(topic){
+  const owner=attemptOwner(),scope=routeDiagnostics;
+  const text=key=>CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
+  const routeActive=()=>owner===attemptOwner()&&route().name==='activity'&&route().parts[0]===topic.seminar.slug&&route().parts[1]==='knowledge';
+  const completion=await readCareerCompletion({backend,owner});
+  if(!routeActive())return;
+  if(!completion){
+    app.innerHTML=contentPage(text('knowledge'),'',`<div class="panel access-locked" data-career-prerequisite="required"><h2>${esc(text('locked'))}</h2><p>${esc(text('lockedLead'))}</p><a class="btn btn-primary" href="#activity/${topic.seminar.slug}">${esc(text('startCareer'))}</a></div>`,`<a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a>`);
+    return;
+  }
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-civil-back>${ui('back')}</span></a></div><div id="civilServiceMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
+  const mount=app.querySelector('#civilServiceMount'),controller=new AbortController();
+  let handle=null,mountStarted=false,mountTask=Promise.resolve(),cleanupTask=null,language=getLocale();
+  const active=()=>!controller.signal.aborted&&mount.isConnected&&routeActive()&&accessAllowed(topicGate(topic.number,accessSnapshot().overrides,backend.globalNow()));
+  const cleanup=()=>cleanupTask||=(async()=>{controller.abort();if(mountStarted)await mountTask;await handle?.destroy();})();
+  cleanup.flush=()=>handle?.flush?.();
+  exposeModuleUpdateAdapter(cleanup,()=>handle,'career');
+  cleanup.isStale=()=>!active();
+  cleanup.refreshLocale=()=>{
+    if(!active())return;
+    app.querySelector('[data-civil-back]').textContent=ui('back');
+    if(handle&&language!==getLocale()){language=getLocale();handle.setLocale(language).catch(error=>scope?.error(error,{operation:'civil-service-locale'}));}
+  };
+  currentCleanup=cleanup;
+  mountTask=(async()=>{
+    try{
+      const {mountCivilServiceCourse}=await import('./civil-service-course.mjs');
+      if(!active())return;
+      mountStarted=true;
+      handle=await mountCivilServiceCourse(mount,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope});
+      if(!active())return;
+      mount.setAttribute('aria-busy','false');moduleReady();
+    }catch(error){
+      if(!active()||error.name==='AbortError')return;
+      mount.setAttribute('aria-busy','false');
+      mount.innerHTML=`<div class="notice danger" role="alert"><p>${esc(text('failed'))}</p><button class="btn btn-secondary" type="button">${esc(text('retry'))}</button></div>`;
+      mount.querySelector('button').onclick=()=>{renderedKey='';render();};
+      scope?.error(error,{operation:'civil-service-load'});
+    }
+  })();
 }
 const GOVERNOR_COPY={
   ru:{module:'Учебный симулятор',title:'Губернатор: Новая область',languages:'Интерфейс симулятора доступен на русском и английском языках.',assessment:'Оценка за выполнение задания в симуляторе рассчитывается автоматически по единой формуле: от 0 до 5 баллов. Отчёт показывает вклад каждого критерия. В журнале сохраняется лучший результат за семинар; максимум за курс — 100 баллов.',history:'Мои результаты и отчёты',teacherReports:'Семинар 7 · Отчёты симулятора',historyLead:'Здесь показаны автоматически сохранённые результаты кампаний и разбор оценки. Факультативную рефлексию для учебного обсуждения готовят во время кампании, до сохранения итогового результата.',empty:'Результатов пока нет. Завершите кампанию или оформите досрочную передачу управления — оценка и отчёт сохранятся автоматически.',preview:'Предпросмотр преподавателя. Учебные попытки в журнал не отправляются.',submitted:'Результат синхронизирован',pending:'Сохранён на устройстве · ожидает синхронизации',saved:'Результат сохранён',complete:'Кампания завершена',handover:'Досрочная передача финансового управления',unknown:'Статус кампании не указан',decisions:'Принято решений',scenario:'Сценарий',seed:'Код сессии',model:'Версия модели',application:'Версия приложения',details:'Открыть отчёт и рефлексию',reflection:'Рефлексия студента',noReflection:'Рефлексия не указана.',outcomes:'Состояние региона',support:'Поддержка · индекс 0–100',development:'Развитие · индекс 0–100',fiscalSpace:'Казна · млрд ₽',reserve:'Резерв · млрд ₽',debt:'Долг · млрд ₽',population:'Население · чел.',territories:'Пять территорий',territory:'Территория',health:'Доступность медицины · %',school:'Доступность школы · %',employment:'Занятость · %',register:'Принятые решения',year:'Год',mission:'Задача',action:'Решение',funding:'Финансирование',cost:'Стоимость · млрд ₽',delivery:'Исполнение',treasury:'Казна',cofinance:'Софинансирование',debtFunding:'Заём',reserveFunding:'Резерв',onTime:'По плану',delayed:'Задержка',overrun:'Удорожание',partial:'Неполное исполнение',noRows:'Нет записей',teacherHelp:'Отчёт содержит автоматическую оценку, её критерии, решения и рефлексию для учебного разбора. При необходимости используйте существующую форму корректировки оценки ниже; в журнале сохраняется лучший балл.',cached:'Сохранённая копия. Для изменения оценки обновите журнал после подключения к сети.'},

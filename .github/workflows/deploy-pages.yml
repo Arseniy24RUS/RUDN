@@ -576,7 +576,7 @@ jobs:
       - name: Verify career ranking and automatic civil-service grading
         if: env.FOCUSED_HOTFIX != 'true' || env.CAREER_VERIFIED_PUBLISH == 'true'
         run: |
-          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/civil-service-model.test.mjs
+          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/civil-service-model.test.mjs
           node scripts/build-civil-service-bank.mjs
           git diff --exit-code -- site/data/civil-service/mintrud-v4-reviewed.json site/data/civil-service/build-review.json
       - name: Prepare Java for isolated Firebase rules checks

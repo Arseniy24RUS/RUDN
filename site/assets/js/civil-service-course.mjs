@@ -4,12 +4,13 @@ import {durableStore} from './durable-store.js';
 import {resourceURL} from './release-resources.js';
 import {finishAttempt,getAttemptQuestions,validateBank,canonicalJSONString} from './civil-service-model.mjs';
 import {mountCivilServiceTest} from './civil-service-test.mjs';
+import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
 
 const MODE='civil-service-knowledge-v1';
 const contextCopy={
-  ru:{guest:'Гостевой режим: результат сохраняется на устройстве без оценки в журнале. Для учебной оценки войдите в свой профиль перед началом.',teacher:'Предпросмотр преподавателя: попытки не изменяют журнал.',student:'Оценка рассчитывается автоматически: 5 × число верных ответов / 40, с округлением до двух знаков. В журнале сохраняется лучший результат.'},
-  en:{guest:'Guest mode: the result stays on this device without a course grade. Sign in to your profile before starting an assessed attempt.',teacher:'Teacher preview: attempts do not change the gradebook.',student:'Automatic score: 5 × correct answers / 40, rounded to two decimal places. The gradebook retains your best score.'},
-  zh:{guest:'访客模式：结果保存在本设备，不计入课程成绩。开始计分测试前，请先登录个人资料。',teacher:'教师预览：测试不会更改成绩册。',student:'自动评分：5 × 答对题数 ÷ 40，四舍五入保留两位小数。成绩册保留最高分。'}
+  ru:{guest:'Гостевой режим: результат сохраняется на устройстве без оценки в журнале. Для учебной оценки войдите в свой профиль перед началом.',teacher:'Предпросмотр преподавателя: попытки не изменяют журнал.',student:'В журнале сохранится лучший результат — до 5 баллов.'},
+  en:{guest:'Guest mode: the result stays on this device without a course grade. Sign in to your profile before starting an assessed attempt.',teacher:'Teacher preview: attempts do not change the gradebook.',student:'The gradebook retains your best score, up to 5 points.'},
+  zh:{guest:'访客模式：结果保存在本设备，不计入课程成绩。开始计分测试前，请先登录个人资料。',teacher:'教师预览：测试不会更改成绩册。',student:'成绩册保留最高分，满分5分。'}
 };
 const lang=value=>String(value).startsWith('zh')?'zh':String(value).startsWith('en')?'en':'ru';
 const storageError=()=>Object.assign(new Error('Local checkpoint was not durable.'),{code:'storage/local-save-failed'});
@@ -51,12 +52,13 @@ export async function mountCivilServiceCourse(container,{owner=attemptOwner(),ac
     return verifySave(saved);
   };
   handle=await mountCivilServiceTest(surface,{bank,historicalBank,locale:language,initialAttempt,
+    isCurrent:()=>!disposed&&!controller.signal.aborted&&attemptOwner()===owner,
     onCheckpoint:checkpoint,
     onComplete:async({attempt})=>{
       checkOwner();
       const final=finishAttempt(bankFor(attempt),attempt);delete final.submittedAt;
       const result=final.result;
-      const record={id:final.id,...(student?{studentKey:owner.slice(8)}:{}),activitySlug,draftMode:MODE,type:'civil-service-knowledge',recordGrade:student,title:'Public-service knowledge · Ministry of Labour v4',createdAt:new Date(final.finishedAt).toISOString(),startedAt:final.startedAt,finishedAt:final.finishedAt,points:result.points,maxPoints:5,
+      const record={id:final.id,...(student?{studentKey:owner.slice(8)}:{}),activitySlug,draftMode:MODE,type:'civil-service-knowledge',recordGrade:student,title:'Public-service knowledge · Ministry of Labour',createdAt:new Date(final.finishedAt).toISOString(),startedAt:final.startedAt,finishedAt:final.finishedAt,points:result.points,maxPoints:5,
         civilService:{schemaVersion:1,contentVersion:final.contentVersion,source:bankFor(final).source,attempt:final,bank:paperBank(final)}};
       const saved=verifySave(await durableStore.complete({...scope,attemptId:final.id,baseRevision:latestRevision.get(final.id)||0,contentVersion:final.contentVersion,state:{civilServiceAttempt:final,civilServiceBank:paperBank(final),resultAttempt:record},attempt:record},{queue:student}));
       const retained=saved.state?.resultAttempt;
@@ -67,9 +69,33 @@ export async function mountCivilServiceCourse(container,{owner=attemptOwner(),ac
       return {saved:true,recordGrade:student};
     }
   });
+  const flush=async()=>{const attempt=await handle?.flush();await durableStore.flush();return attempt;};
+  // A timed paper must not be interrupted by a release switch. Updates wait
+  // until completion while the absolute deadline continues to run normally.
+  const updateAdapter=createUpdateAdapter({module:'career',root:container,signal:controller.signal,diagnostics,
+    getIdentity:()=>({owner:attemptOwner()==='guest'?'guest:civil-service':attemptOwner(),attemptId:handle?.attemptId||'civil-service-intro'}),
+    isBusy:()=>disposed||owner!==attemptOwner()||handle?.hasActiveAttempt||handle?.updateBusy||!!container.querySelector('dialog[open]'),
+    capture:()=>({surface:'civil-service',activitySlug,view:captureUpdateView(container)}),
+    checkpoint:async()=>{
+      checkOwner();const attempt=await flush();checkOwner();
+      if(!attempt)return {durable:true,revision:0,checkpointRef:'civil-service-intro'};
+      if(attempt.phase==='active')return {durable:false};
+      const saved=await durableStore.getSaveStatus({...scope,attemptId:attempt.id});
+      return {durable:saved.durable===true&&!['empty','conflict','unsafe'].includes(saved.state),revision:saved.revision,checkpointRef:attempt.id};
+    },
+    restore:async({state},options)=>{
+      checkOwner();if(disposed||state.surface!=='civil-service'||state.activitySlug!==activitySlug)return {status:'blocked',code:'incompatible'};
+      await restoreUpdateView(container,state.view,options);return {status:'restored'};
+    }
+  });
   return {
+    module:'career',
+    prepareForUpdate:options=>updateAdapter.prepareForUpdate(options),
+    resumeAfterUpdate:options=>updateAdapter.resumeAfterUpdate(options),
+    cancelPreparation:options=>updateAdapter.cancelPreparation(options),
+    commitPreparation:()=>updateAdapter.commitPreparation(),
     async setLocale(value){language=lang(value);renderNote();await handle?.setLocale(language);},
-    async flush(){await handle?.flush();await durableStore.flush();},
-    async destroy(){if(disposed)return;disposed=true;controller.abort();signal?.removeEventListener('abort',abort);try{await handle?.flush();}finally{await handle?.destroy();}}
+    flush,
+    async destroy(){if(disposed)return;disposed=true;updateAdapter.destroy();controller.abort();signal?.removeEventListener('abort',abort);try{await handle?.flush();}finally{await handle?.destroy();}}
   };
 }

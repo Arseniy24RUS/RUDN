@@ -7,6 +7,9 @@ import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=new URL('../site/',import.meta.url);
 const profile={studentKey:'games-platform-fixture',fullName:'Platform QA',group:'ГГУбд-01-26',ticket:'1234567890'};
+// TEST-ONLY completion used to reach the separate, prerequisite-gated module
+// in the delayed-import regression. It never leaves this isolated backend.
+const careerCompletion={id:'fixture-career-completion',studentKey:profile.studentKey,activitySlug:'career-diagnostic',type:'career-diagnostic',recordGrade:false,career:{schema:'rudn-career-result',schemaVersion:2,recordId:'fixture-career-completion',createdAt:'2026-10-30T12:00:00.000Z',modelVersion:'8.1.0',questionnaireVersion:'8.0.0',registryVersion:'test-only',roleProfile:{raw:Object.fromEntries(['N','K','A','M','C','E','D','T','I'].map(id=>[id,3]))},prioritySectors:['EDU','SOC','HEA','ADM'],lowPrioritySectors:['SEC','INT'],conditions:{FIELD:3,SCHEDULE:3,FORMAL:3,SECURITY:3},ranking:['mintrud','minpros','minzdrav','mincifry','minjust'].map((authorityId,index)=>({rank:index+1,authorityId,score:80-index}))}};
 const backendSource=`import {durableStore as store} from '/assets/js/durable-store.js';
 export const groupOptions=()=>['ГГУбд-01-26'];
 const read=(key,fallback)=>JSON.parse(localStorage.getItem('qa.'+key)||JSON.stringify(fallback));
@@ -40,9 +43,10 @@ async function lateModuleDoesNotReplaceCatalog(browser,module='career'){
  await context.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
  await context.route('**'+config.path+'*',async request=>{notifyHeld();await gate;await request.continue();});
  if(module==='legal-lab'||module==='knowledge')await context.addInitScript(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']))));},profile);
+ if(module==='knowledge')await context.addInitScript(completion=>localStorage.setItem('qa.attempts',JSON.stringify([completion])),careerCompletion);
  try{
   await page.goto(base+'/#games');await page.locator('[data-game]').first().waitFor();
-  if(module==='legal-lab')await page.evaluate(()=>{location.hash='activity/seminar-4'});else if(module==='knowledge')await page.evaluate(()=>{location.hash='activity/seminar-6'});else await page.locator(`[data-game="${module}"] a`).click();
+  if(module==='legal-lab')await page.evaluate(()=>{location.hash='activity/seminar-4'});else if(module==='knowledge')await page.evaluate(()=>{location.hash='activity/seminar-6/knowledge'});else await page.locator(`[data-game="${module}"] a`).click();
   await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error(module+' import was not requested')),30000);held.then(()=>{clearTimeout(timer);resolve();});});
   await page.goBack();await page.locator('[data-game]').first().waitFor();
   if(module==='knowledge'){
@@ -118,6 +122,11 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
   // A real course profile and open fixture schedule, using the actual access.js.
   await page.evaluate(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']).concat(Array.from({length:7},(_,i)=>['lecture-'+(i+1)+'-test','open'])))));},profile);
   await page.goto(base+'/#dashboard');await ready(page);await page.locator('.topic-card').first().waitFor();
+  assert.equal(await page.locator('[data-career-knowledge]').isDisabled(),true,'Unfinished career guidance keeps the course test locked');
+  await route(page,'activity/seminar-6/knowledge');
+  await page.locator('[data-career-prerequisite="required"]').waitFor();
+  assert.equal(await page.locator('#civilServiceMount').count(),0,'A direct knowledge URL cannot skip career guidance');
+  await route(page,'dashboard');await page.locator('.topic-card').first().waitFor();
   assert.equal(await page.locator('[data-lecture-test]').count(),7);assert.equal(await page.locator('[data-lecture-test="lecture-8"]').count(),0);
   assert.equal(await page.locator('a[href="#activity/lecture-8"]').count(),1,'Lecture 8 retains its Open link');
   for(let i=1;i<=7;i++)assert.equal(await page.locator(`[data-lecture-test="lecture-${i}"]`).getAttribute('href'),`#activity/lecture-${i}/test`);

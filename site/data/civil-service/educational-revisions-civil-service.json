@@ -1,0 +1,3550 @@
+{
+  "schemaVersion": 1,
+  "sourceBankSha256": "cae573cea3834f511c290f5c932399a62e7a8e8892ebba877a80fd4b4ebfc943",
+  "checkedAt": "2026-10-30",
+  "questions": [
+    {
+      "id": "MT4-0328",
+      "stem": {
+        "ru": "Государственные должности Российской Федерации и государственные должности субъектов Российской Федерации — это должности, устанавливаемые:",
+        "en": "State offices of the Russian Federation and of its constituent entities are offices established by:",
+        "zh": "俄罗斯联邦国家公职和联邦主体国家公职，是由以下哪些规范设立的职务？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Конституцией РФ и федеральными законами для непосредственного исполнения полномочий федеральных государственных органов и органов публичной власти федеральной территории, а также конституциями (уставами) и законами субъектов РФ для непосредственного исполнения полномочий государственных органов субъектов РФ",
+            "en": "The Constitution of the Russian Federation and federal laws for directly exercising the powers of federal state bodies and public authorities of a federal territory, and the constitutions (charters) and laws of constituent entities for directly exercising the powers of their state bodies",
+            "zh": "由俄罗斯联邦宪法、联邦法律设立，以直接行使联邦国家机关及联邦领土公共权力机关的职权；以及由联邦主体宪法（章程）、法律设立，以直接行使联邦主体国家机关的职权"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Федеральными законами для реализации федеральными государственными органами своих полномочий",
+            "en": "Federal laws for federal state bodies to exercise their powers",
+            "zh": "由联邦法律设立、供联邦国家机关行使其职权的职务"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Конституцией Российской Федерации, федеральными законами для непосредственного исполнения полномочий федеральных государственных органов и государственных органов субъектов Российской Федерации",
+            "en": "The Constitution of the Russian Federation and federal laws for the direct exercise of the powers of federal state bodies and state bodies of constituent entities of the Russian Federation",
+            "zh": "由俄罗斯联邦宪法和联邦法律设立、用于直接行使联邦国家机关及联邦主体国家机关职权的职务"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Конституцией Российской Федерации, федеральными законами для опосредованного исполнения полномочий федеральных государственных органов",
+            "en": "The Constitution of the Russian Federation and federal laws for the indirect exercise of federal state bodies' powers",
+            "zh": "由俄罗斯联邦宪法和联邦法律设立、用于间接行使联邦国家机关职权的职务"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 1 статьи 1 Федерального закона от 27.07.2004 №79-ФЗ определяет вместе государственные должности РФ и субъектов РФ. Федеральные должности устанавливаются Конституцией РФ и федеральными законами, региональные — конституциями (уставами) и законами субъектов; учтены органы публичной власти федеральной территории. Вариант a воспроизводит обе части определения; b–d неполны либо ошибочно говорят об опосредованном исполнении.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие согласовано с объединённым определением государственных должностей РФ и субъектов РФ; в a добавлена федеральная территория. Ключ a сохранён."
+    },
+    {
+      "id": "MT4-0332",
+      "stem": {
+        "ru": "Система государственной службы Российской Федерации включает в себя следующие виды:",
+        "en": "The state-service system of the Russian Federation includes the following types:",
+        "zh": "俄罗斯联邦国家公务制度包括以下类别："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Государственная гражданская служба, военная служба и государственная служба иных видов",
+            "en": "State civil service, military service and other types of state service",
+            "zh": "国家文职公务、军事服役和其他种类的国家公务"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "федеральная служба и муниципальная служба",
+            "en": "Federal service and municipal service",
+            "zh": "联邦公务和地方自治公务"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "гражданская служба и муниципальная служба",
+            "en": "Civil service and municipal service",
+            "zh": "文职公务和地方自治公务"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "таможенная служба и миграционная служба",
+            "en": "Customs service and migration service",
+            "zh": "海关公务和移民公务"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 1 статьи 2 Федерального закона от 27.05.2003 №58-ФЗ: система включает государственную гражданскую службу, военную службу и государственную службу иных видов. Муниципальная служба не является видом государственной службы; таможенная и миграционная служба не образуют исчерпывающего перечня.",
+        "sourceUrls": [
+          "https://www.meteorf.gov.ru/about/career/about_career/npa-base/33/17250/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В a восстановлен пропущенный действующий третий вид — государственная служба иных видов. Ключ a сохранён."
+    },
+    {
+      "id": "MT4-0336",
+      "stem": {
+        "ru": "Международный договор РФ устанавливает иные правила, чем Федеральный закон №79-ФЗ. Если вопрос не связан с противоречащим Конституции РФ истолкованием договора, какие правила применяются согласно части 2 статьи 5 этого закона?",
+        "en": "An international treaty of Russia establishes rules different from Federal Law No.79-FZ. Where no interpretation contrary to the Russian Constitution is involved, which rules apply under Article 5(2) of that law?",
+        "zh": "俄罗斯签订的国际条约与第79-FZ号联邦法规定不同。在不涉及违背俄罗斯联邦宪法的条约解释时，依该法第5条第2款，应适用哪些规则？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Трудовым кодексом Российской Федерации",
+            "en": "The Labour Code of the Russian Federation",
+            "zh": "俄罗斯联邦劳动法典"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Правилами международного договора",
+            "en": "The rules of the international treaty",
+            "zh": "国际条约的规则"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Конституцией Российской Федерации",
+            "en": "The Constitution of the Russian Federation",
+            "zh": "俄罗斯联邦宪法"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Законодательством о государственной гражданской службе",
+            "en": "State civil-service legislation",
+            "zh": "国家文职公务立法"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть 2 статьи 5 №79-ФЗ устанавливает применение правил международного договора, отличающихся от правил этого закона. Часть 3 исключает исполнение решений межгосударственных органов в истолковании, противоречащем Конституции. Условие отделяет коллизию обычного закона и договора от конституционного контроля; ключ b.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнены сравниваемый закон и отсутствие противоречащего Конституции истолкования; это не утверждение о приоритете договора над Конституцией."
+    },
+    {
+      "id": "MT4-0337",
+      "stem": {
+        "ru": "Федеральный гражданский служащий, недовольный кадровым решением руководителя, выступил по радио с критикой кадровой политики своего государственного органа. Достаточно ли этих фактов для однозначного вывода о нарушении запрета на публичные высказывания?",
+        "en": "A federal civil servant, dissatisfied with a personnel decision, criticises their state body’s personnel policy on the radio. Are these facts alone sufficient to establish a breach of the restriction on public statements?",
+        "zh": "一名联邦文职公务员不满领导的人事决定，在广播中批评本机关的人事政策。仅凭这些事实，能否明确认定其违反公开言论的限制？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Да: любая публичная критика государственного органа запрещена",
+            "en": "Yes: all public criticism of a state body is prohibited",
+            "zh": "能：任何公开批评国家机关的言论均被禁止"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Нет: свобода слова полностью исключает служебные ограничения",
+            "en": "No: freedom of speech excludes all service-related restrictions",
+            "zh": "不能：言论自由完全排除公务方面的限制"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Нет: нужно оценить содержание, общественную значимость и мотивы выступления, причинённый и предотвращённый вред, возможность иных способов защиты и другие значимые обстоятельства",
+            "en": "No: the content, public significance and motives, harm caused and prevented, availability of other remedies and other relevant circumstances must be assessed",
+            "zh": "不能：应评估言论内容、公共意义和动机、造成及避免的损害、是否存在其他救济途径以及其他重要情况"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Нет: отсутствие оскорблений всегда делает такую критику правомерной",
+            "en": "No: the absence of insults always makes such criticism lawful",
+            "zh": "不能：只要没有侮辱，这类批评就一律合法"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 10 части 1 статьи 17 №79-ФЗ применяется в конституционно-правовом смысле Постановления КС РФ от 30.06.2011 №14-П. Запрет публичной критики не абсолютен: учитываются содержание, общественная значимость, мотивы, причинённый и предотвращённый вред, возможность иных способов защиты. Одного факта выступления вне служебных обязанностей недостаточно. a, b и d ошибочно дают безусловную оценку; c требует правовой оценки обстоятельств.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://www.ksrf.ru/news/18540/",
+          "https://spb-elections.ru/dokuments/courts/ks/post/KSRFDecision66912.pdf"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Сохранён казус о радиокритике кадровой политики, но снята ошибочная автоматическая квалификация нарушения. Ответ c изложен с учётом обязательного толкования КС РФ."
+    },
+    {
+      "id": "MT4-0339",
+      "stem": {
+        "ru": "Возможно ли для иностранных граждан поступление на государственную военную службу в Российской Федерации?",
+        "en": "Can foreign citizens enter military state service in the Russian Federation?",
+        "zh": "外国公民能否在俄罗斯联邦参加军事国家公务？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "нет, это запрещено правовыми актами Российской Федерации",
+            "en": "No; this is prohibited by legal acts of the Russian Federation",
+            "zh": "不能，俄罗斯联邦法律文件禁止这样做"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "в соответствии с федеральным законом предусматривается поступление иностранных граждан на военную службу в Российской Федерации по контракту",
+            "en": "Federal law provides for foreign citizens to enter military service in the Russian Federation under contract",
+            "zh": "联邦法律规定外国公民可以依合同在俄罗斯联邦服兵役"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "в исключительных случаях это возможно на основании указа Президента Российской Федерации и только на безвозмездной основе",
+            "en": "In exceptional cases, by decree of the President of the Russian Federation, and only without remuneration",
+            "zh": "在特殊情况下可根据俄罗斯联邦总统令参加，但只能无偿参加"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Да, на общих основаниях по призыву, если исключить доступ к государственной тайне",
+            "en": "Yes, under ordinary conscription rules, provided access to state secrets is excluded",
+            "zh": "可以按通常征兵规则入伍，只要不接触国家秘密"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 2 статьи 2 и статья 34 Федерального закона от 28.03.1998 №53-ФЗ предусматривают поступление иностранных граждан на военную службу по контракту при соблюдении установленных требований. Военная служба по призыву на них не распространяется. b верно; a отрицает предусмотренную законом возможность, c придумывает безвозмездный порядок, d ошибочно допускает призыв.",
+        "sourceUrls": [
+          "https://rosguard.gov.ru/ru/Documents/article/federalnyj-zakon-ot-28-marta-1998-g--53fz"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнён отвлекающий вариант d: вместо неполного условия о тайне указан неверный призывной порядок. Предмет и ключ b сохранены."
+    },
+    {
+      "id": "MT4-0348",
+      "stem": {
+        "ru": "К числу основных обязанностей федерального государственного гражданского служащего категории «специалисты» НЕ относится:",
+        "en": "Which is NOT a basic duty of a federal state civil servant in the 'specialists' category?",
+        "zh": "以下哪一项不属于“专业人员”类别联邦国家文职公务员的基本义务？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Неразглашение государственной и иной охраняемой федеральным законом тайны, а также ставших известными по службе сведений о частной жизни, здоровье, чести и достоинстве граждан",
+            "en": "Keeping state secrets and other federally protected secrets confidential, as well as information learned through service about citizens’ private lives, health, honour and dignity",
+            "zh": "保守国家秘密和联邦法律保护的其他秘密，以及履职时获悉的涉及公民私生活、健康、名誉和尊严的信息"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Исполнение должностных обязанностей в соответствии с должностным регламентом",
+            "en": "Performing official duties in accordance with the official job regulations",
+            "zh": "按照职位规程履行职务职责"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Письменно сообщать представителю нанимателя о прекращении гражданства РФ или приобретении иностранного гражданства в день, когда об этом стало известно, но не позднее пяти рабочих дней со дня события",
+            "en": "Notify the employer’s representative in writing of termination of Russian citizenship or acquisition of foreign citizenship on the day the servant learns of it, and no later than five working days after the event",
+            "zh": "在知悉俄罗斯国籍终止或取得外国国籍的当天，且最迟在该事项发生后五个工作日内，书面告知任用方代表"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Соблюдение служебного распорядка государственного органа",
+            "en": "Complying with the state body's service rules",
+            "zh": "遵守国家机关的公务作息和内部规则"
+          }
+        },
+        {
+          "id": "e",
+          "text": {
+            "ru": "Должностной рост на конкурсной основе",
+            "en": "Career advancement on a competitive basis",
+            "zh": "通过竞争性选拔获得职业晋升"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "e"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты 2,5,7,10 части 1 статьи 15 №79-ФЗ устанавливают перечисленные обязанности. Уведомление о гражданстве подаётся письменно представителю нанимателя в день, когда стало известно, но не позднее пяти рабочих дней с события. Должностной рост на конкурсной основе — право по пункту 10 части 1 статьи 14, а не обязанность. Ключ e.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В c исправлены срок, адресат и письменная форма уведомления о гражданстве. Ключ e сохранён. В a конкретизированы защищаемые сведения вместо неограниченного запрета разглашать любую информацию."
+    },
+    {
+      "id": "MT4-0351",
+      "stem": {
+        "ru": "В случае если государственный гражданский служащий категории «специалисты» или «обеспечивающие специалисты» получает от своего непосредственного руководителя неправомерное поручение, он обязан:",
+        "en": "If a state civil servant in the 'specialists' or 'support specialists' category receives an unlawful instruction from their immediate supervisor, they must:",
+        "zh": "“专业人员”或“保障专业人员”类别的国家文职公务员收到直接上级的违法指令时，应当："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Исполнить указанное поручение, а затем незамедлительно сообщить об этом в письменной или устной форме представителю нанимателя",
+            "en": "Carry out the instruction and then immediately report it, in writing or orally, to the employer's representative",
+            "zh": "执行该指令，随后立即以书面或口头形式报告雇用方代表"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Представить в письменной форме обоснование неправомерности поручения с указанием положений законодательства Российской Федерации, которые могут быть нарушены при его исполнении, а затем исполнить указанное поручение",
+            "en": "Provide written reasons why the instruction is unlawful, citing provisions of Russian legislation that may be violated by carrying it out, and then carry it out",
+            "zh": "书面说明该指令违法的理由，列明执行时可能违反的俄罗斯联邦法律条款，然后执行该指令"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Незамедлительно исполнить поручение",
+            "en": "Carry out the instruction immediately",
+            "zh": "立即执行该指令"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Письменно обосновать неправомерность поручения со ссылками на нормы, которые могут быть нарушены, и получить письменное подтверждение руководителя. Если руководитель письменно подтвердит поручение, отказаться от его исполнения",
+            "en": "Provide written reasons citing the legal provisions that could be breached and obtain the supervisor’s written confirmation. If the supervisor confirms the instruction in writing, refuse to carry it out",
+            "zh": "书面说明该指令违法的理由并列明可能违反的法律规定，取得领导的书面确认；领导书面确认后，应拒绝执行"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть 2 статьи 15 №79-ФЗ: служащий письменно обосновывает неправомерность, указывает нарушаемые нормы и получает письменное подтверждение; при подтверждении обязан отказаться. Закон не позволяет исполнить неправомерное поручение из-за приложенного руководителем «правового обоснования». a–c требуют исполнения и неверны; d исправлен.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Из d удалено условие «без правового обоснования», которого нет в законе; сохранена обязательность отказа при письменном подтверждении неправомерного поручения."
+    },
+    {
+      "id": "MT4-0359",
+      "stem": {
+        "ru": "Руководитель федерального государственного органа, органа публичной власти федеральной территории или государственного органа субъекта РФ, лицо на государственной должности либо представитель указанных руководителя или лица, осуществляющие полномочия нанимателя от имени РФ, субъекта РФ или федеральной территории, — это:",
+        "en": "The head of a federal state body, a public authority of a federal territory or a constituent entity’s state body, a holder of state office, or their representative exercising the powers of the appointing authority on behalf of Russia, a constituent entity or a federal territory is the:",
+        "zh": "代表俄罗斯联邦、联邦主体或联邦领土行使任用方职权的联邦国家机关负责人、联邦领土公共权力机关负责人、联邦主体国家机关负责人、国家公职任职者或上述人员的代表，称为："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "представитель нанимателя",
+            "en": "The public employer's representative",
+            "zh": "公务雇用方代表"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "уполномоченный работодатель",
+            "en": "The authorised employer",
+            "zh": "获授权的用人单位"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "уполномоченный наниматель",
+            "en": "The authorised public employer",
+            "zh": "获授权的公务雇用方"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "представитель работодателя",
+            "en": "The employer's representative",
+            "zh": "用人单位代表"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 2 статьи 1 №79-ФЗ: представитель нанимателя — руководитель федерального государственного органа, органа публичной власти федеральной территории или государственного органа субъекта, лицо на государственной должности либо представитель этих лиц, осуществляющий полномочия нанимателя. Юридический термин a, а не «работодатель» или «уполномоченный наниматель».",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Исправлено смешение государственной должности и должности гражданской службы; добавлена федеральная территория в действующее определение."
+    },
+    {
+      "id": "MT4-0360",
+      "stem": {
+        "ru": "Под представителем нанимателя Федеральный закон «О государственной гражданской службе Российской Федерации» понимает (выберите наиболее полный и правильный ответ):",
+        "en": "Under the Federal Law 'On the State Civil Service of the Russian Federation', the public employer's representative means (choose the most complete and correct answer):",
+        "zh": "根据《俄罗斯联邦国家文职公务法》，公务雇用方代表是指什么人？请选择最完整、正确的答案。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Руководителя государственного органа, осуществляющего полномочия нанимателя от имени Российской Федерации или субъекта Российской Федерации",
+            "en": "The head of a state body exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+            "zh": "代表俄罗斯联邦或联邦主体行使公务雇用方职权的国家机关负责人"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Руководителя государственного органа либо лицо, замещающее государственную должность, осуществляющих полномочия нанимателя от имени Российской Федерации или субъекта Российской Федерации",
+            "en": "The head of a state body or a person holding a state office, exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+            "zh": "代表俄罗斯联邦或联邦主体行使公务雇用方职权的国家机关负责人或担任国家公职的人员"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Руководителя федерального государственного органа, органа публичной власти федеральной территории или государственного органа субъекта РФ, лицо на государственной должности либо представителя указанных руководителя или лица, осуществляющих полномочия нанимателя от имени РФ, субъекта РФ или федеральной территории",
+            "en": "The head of a federal state body, a public authority of a federal territory or a constituent entity’s state body, a holder of state office, or their representative exercising appointing powers on behalf of Russia, a constituent entity or a federal territory",
+            "zh": "代表俄罗斯联邦、联邦主体或联邦领土行使任用方职权的联邦国家机关负责人、联邦领土公共权力机关负责人、联邦主体国家机关负责人、国家公职任职者或上述人员的代表"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Руководителя государственного органа, лицо, замещающее государственную должность, либо представителя указанных руководителя или лица, а равно иного лица, осуществляющих полномочия нанимателя от имени Российской Федерации или субъекта Российской Федерации",
+            "en": "The head of a state body, a person holding a state office, a representative of that head or person, or any other person exercising the public employer's powers on behalf of the Russian Federation or a constituent entity",
+            "zh": "代表俄罗斯联邦或联邦主体行使公务雇用方职权的国家机关负责人、担任国家公职的人员、上述负责人或人员的代表，以及其他人员"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт 2 статьи 1 №79-ФЗ содержит закрытое определение с руководителями, лицами на государственных должностях и их представителями. В c учтена федеральная территория; a и b неполны, d произвольно добавляет «иное лицо». Ключ c.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Полный вариант c актуализирован с учётом органов публичной власти федеральной территории; юридический термин и ключ сохранены."
+    },
+    {
+      "id": "MT4-0367",
+      "stem": {
+        "ru": "Гражданские служащие каких категорий могут получать основные и дополнительные государственные гарантии при соблюдении установленных для соответствующей гарантии условий?",
+        "en": "Civil servants in which categories may receive basic and additional state guarantees when the conditions applicable to the particular guarantee are met?",
+        "zh": "哪些类别的文职公务员在符合具体保障所规定条件时，可以享受基本和附加国家保障？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "категории «руководители» и «помощники (советники)»",
+            "en": "Managers and assistants (advisers)",
+            "zh": "领导人员和助理（顾问）"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "категории «специалисты»",
+            "en": "Specialists",
+            "zh": "专业人员"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "категории «обеспечивающие специалисты»",
+            "en": "Support specialists",
+            "zh": "保障专业人员"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "все выше перечисленное",
+            "en": "All of the above",
+            "zh": "以上全部"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Статьи 52 и53 №79-ФЗ распространяют гарантии на гражданских служащих всех категорий. Дополнительные гарантии предоставляются при определённых условиях; например, транспортное обслуживание зависит от категории и группы. Ответ d означает охват всех перечисленных категорий, а не одинаковый безусловный набор гарантий каждому.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие уточнено: право на гарантии зависит от предусмотренных законом условий. Не утверждается, что все дополнительные гарантии одинаковы для всех."
+    },
+    {
+      "id": "MT4-0372",
+      "stem": {
+        "ru": "При увольнении гражданского служащего в связи с сокращением должности гражданской службы или упразднением государственного органа по пунктам 8.2 или 8.3 части 1 статьи 37 Федерального закона №79-ФЗ выплачивается компенсация:",
+        "en": "When a civil servant is dismissed because their civil-service post is abolished or their state body is dissolved under Article 37(1)(8.2) or (8.3) of Federal Law No.79-FZ, the compensation is:",
+        "zh": "依第79-FZ号联邦法第37条第1款第8.2项或第8.3项，因文职公务员岗位裁减或国家机关撤销而被解职时，应支付何种补偿？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "в размере трехмесячного среднего заработка без учета выходного пособия",
+            "en": "Three months' average earnings, excluding severance pay",
+            "zh": "相当于三个月平均工资的补偿，不含离职补助"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "в размере трехмесячного среднего заработка с учетом выходного пособия",
+            "en": "Three months' average earnings, including severance pay",
+            "zh": "相当于三个月平均工资的补偿，包含离职补助"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "в размере четырехмесячного денежного содержания, при этом выходное пособие не выплачивается",
+            "en": "Four months' monetary remuneration, with no severance pay",
+            "zh": "相当于四个月货币待遇的补偿，不另发离职补助"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "в размере четырехмесячного денежного содержания с учетом выходного пособия",
+            "en": "Four months' monetary remuneration, including severance pay",
+            "zh": "相当于四个月货币待遇的补偿，包含离职补助"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты8.2 и8.3 части1 и часть3.1 статьи37 №79-ФЗ: при сокращении должности или упразднении органа выплачиваются четыре месячных денежных содержания; выходное пособие не выплачивается. Сама реорганизация либо изменение структуры не являются таким самостоятельным основанием. a,b,d неверны по размеру или выходному пособию.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие ограничено актуальными основаниями увольнения — сокращение должности или упразднение органа; ключ c сохранён."
+    },
+    {
+      "id": "MT4-0379",
+      "stem": {
+        "ru": "В какой срок гражданский служащий обязан письменно сообщить представителю нанимателя о прекращении гражданства РФ?",
+        "en": "When must a civil servant notify the employer’s representative in writing that their Russian citizenship has ended?",
+        "zh": "文职公务员应在何时将俄罗斯国籍终止的情况书面告知任用方代表？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "В день, когда ему стало об этом известно, но не позднее пяти рабочих дней со дня прекращения гражданства",
+            "en": "On the day they learn of it, and no later than five working days after citizenship ends",
+            "zh": "在知悉的当天，且最迟不得超过国籍终止后五个工作日"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "сообщать о выходе из гражданства Российской Федерации в течение двух недель со дня выхода из гражданства Российской Федерации",
+            "en": "Report renunciation of citizenship of the Russian Federation within two weeks of renunciation",
+            "zh": "在退出俄罗斯联邦国籍之日起两周内报告"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "сообщать о выходе из гражданства Российской Федерации в течение 10 рабочих дней со дня выхода из гражданства Российской Федерации",
+            "en": "Report renunciation of citizenship of the Russian Federation within 10 working days of renunciation",
+            "zh": "在退出俄罗斯联邦国籍之日起10个工作日内报告"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "сообщать о выходе из гражданства Российской Федерации в течение 3 дней со дня выхода из гражданства Российской Федерации",
+            "en": "Report renunciation of citizenship of the Russian Federation within 3 days of renunciation",
+            "zh": "在退出俄罗斯联邦国籍之日起3天内报告"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт10 части1 статьи15 №79-ФЗ требует письменного уведомления представителя нанимателя в день, когда стало известно о прекращении гражданства РФ, но не позднее пяти рабочих дней со дня прекращения. В a восстановлены оба временных условия. b–d не воспроизводят установленный срок.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В a исправлена устаревшая обязанность сообщать исключительно в день события; добавлены надлежащий адресат и письменная форма."
+    },
+    {
+      "id": "MT4-0380",
+      "stem": {
+        "ru": "Гражданский служащий обязан:",
+        "en": "A civil servant must:",
+        "zh": "文职公务员应当："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "выезжать в связи с исполнением должностных обязанностей за пределы территории Российской Федерации за счет средств физических и юридических лиц, за исключением служебных командировок, осуществляемых в соответствии с законодательством Российской Федерации, по договоренности государственных органов Российской Федерации, государственных органов субъектов Российской Федерации или муниципальных органов с государственными или муниципальными органами иностранных государств, международными или иностранными организациями",
+            "en": "Travel outside the Russian Federation in connection with official duties at the expense of individuals or legal entities, except official business trips conducted under Russian law by agreement between Russian federal, regional or municipal bodies and foreign state or municipal bodies, international or foreign organisations",
+            "zh": "因履行职务职责而由自然人或法人出资赴俄罗斯联邦境外，但依俄罗斯法律、根据俄罗斯联邦国家机关、联邦主体国家机关或市政机关与外国国家或市政机关、国际或外国组织之间协议进行的公务出差除外"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "исполнять данное ему руководителем поручение, даже если оно неправомерное",
+            "en": "Carry out a supervisor's instruction even if it is unlawful",
+            "zh": "执行上级交办的指令，即使该指令违法"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Сообщать представителю нанимателя о личной заинтересованности при исполнении обязанностей, которая может привести к конфликту интересов, и принимать меры по его предотвращению",
+            "en": "Report to the employer’s representative any personal interest in performing duties that may lead to a conflict of interest, and take measures to prevent it",
+            "zh": "向任用方代表报告履职时可能导致利益冲突的个人利益关系，并采取预防措施"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "получать в связи с исполнением должностных обязанностей вознаграждения от физических и юридических лиц (подарки, денежное вознаграждение, ссуды, услуги, оплату развлечений, отдыха, транспортных расходов и иные вознаграждения).",
+            "en": "Receive benefits from individuals or legal entities in connection with official duties, including gifts, money, loans, services, entertainment, holidays, travel expenses and other benefits",
+            "zh": "因履行职务职责而从自然人和法人处接受报酬，包括礼物、金钱、贷款、服务、娱乐、休假、交通费用及其他利益"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт12 части1 статьи15 №79-ФЗ обязывает сообщать представителю нанимателя о личной заинтересованности, которая может привести к конфликту интересов, и принимать меры его предотвращения. a иd описывают запреты статьи17, b противоречит части2 статьи15. Ключ c.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В c уточнён необходимый признак личной заинтересованности — риск конфликта интересов — и обязанность принимать меры."
+    },
+    {
+      "id": "MT4-0383",
+      "stem": {
+        "ru": "Какие действия запрещены гражданскому служащему? Выберите все верные ответы. Предусмотренные законом специальные исключения в рассматриваемых случаях не применяются.",
+        "en": "Which actions are prohibited for a civil servant? Select all correct answers. No special statutory exception applies to the situations described.",
+        "zh": "文职公务员不得从事哪些行为？请选择所有正确答案。题述情形不适用法律规定的特别例外。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "иметь доступ в установленном порядке в связи с исполнением должностных обязанностей в государственные органы, органы местного самоуправления, общественные объединения и иные организации;",
+            "en": "Having access, under the established procedure and in connection with official duties, to state bodies, local self-government bodies, public associations and other organisations",
+            "zh": "因履行职务职责而按规定程序进入国家机关、地方自治机关、社会团体和其他组织"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Участвовать в управлении коммерческой или некоммерческой организацией вне случаев, прямо разрешённых законом",
+            "en": "Participate in managing a commercial or non-commercial organisation outside cases expressly permitted by law",
+            "zh": "在法律明确允许的情形之外，参与营利或非营利组织的管理"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "участвовать на платной основе в деятельности органа управления коммерческой организацией",
+            "en": "Participating for remuneration in the activities of a commercial organisation's governing body",
+            "zh": "有偿参与商业组织管理机关的活动"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "представлять в установленном порядке предусмотренные федеральным законом сведения о себе и членах своей семьи",
+            "en": "Submitting information about themselves and their family members required by federal law under the established procedure",
+            "zh": "按规定程序提交联邦法律要求的本人及家庭成员信息"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b",
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт3 части1 статьи17 №79-ФЗ запрещает управление коммерческими и некоммерческими организациями вне перечисленных в законе исключений; оплачиваемое участие в управлении коммерческой организацией в заданном общем случае также запрещено. Поэтому верны b иc. a — право по пункту8 части1 статьи14, d — обязанность по пункту9 части1 статьи15.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Устаревший перечень исключений в b заменён отсылкой к действующим законным исключениям. Условие явно исключает специальные разрешённые случаи; ключ расширен до b,c."
+    },
+    {
+      "id": "MT4-0384",
+      "stem": {
+        "ru": "Какие действия запрещены гражданскому служащему? Выберите все верные ответы. Специальные исключения, прямо предусмотренные законом, к описанным ситуациям не относятся.",
+        "en": "Which actions are prohibited for a civil servant? Select all correct answers. The situations described are not covered by any express statutory exception.",
+        "zh": "文职公务员不得从事哪些行为？请选择所有正确答案。题述情形不属于法律明确规定的特别例外。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Выполнять иную оплачиваемую работу с предварительным уведомлением представителя нанимателя, если это не влечёт конфликта интересов и не нарушает иных установленных законом запретов",
+            "en": "Perform other paid work after prior notification of the employer’s representative, provided it creates no conflict of interest and breaches no other statutory prohibition",
+            "zh": "事先通知任用方代表后从事其他有偿工作，但不得造成利益冲突或违反其他法定禁令"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "заниматься предпринимательской деятельностью лично или через доверенных лиц",
+            "en": "Engaging in entrepreneurial activity personally or through agents",
+            "zh": "亲自或通过受托人从事经营活动"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "участвовать на платной основе в деятельности органа управления коммерческой организацией",
+            "en": "Participating for remuneration in the activities of a commercial organisation's governing body",
+            "zh": "有偿参与商业组织管理机关的活动"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "оформлять в собственность недвижимость или иное имущество",
+            "en": "Registering ownership of real estate or other property",
+            "zh": "登记取得不动产或其他财产所有权"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b",
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты3 и3.1 части1 статьи17 №79-ФЗ запрещают предпринимательство лично или через доверенных лиц и управление коммерческой организацией вне установленных исключений. Ключ включает b иc. Иная оплачиваемая работа допустима по части2 статьи14 с предварительным уведомлением и без конфликта интересов; само владение имуществом не запрещено.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Добавлено указание выбрать все ответы и исключены специальные законные исключения. Исправлен неполный печатный ключ b на b,c. В a явно описана разрешённая иная оплачиваемая работа, вместо двусмысленного слова «любую»."
+    },
+    {
+      "id": "MT4-0385",
+      "stem": {
+        "ru": "Гражданский служащий приобрёл иностранное гражданство. Международный договор или закон не предусматривают применимого к нему исключения. Как должен действовать представитель нанимателя по части 2 статьи 41 Федерального закона №79-ФЗ?",
+        "en": "A civil servant has acquired foreign citizenship. No applicable treaty or statutory exception exists. What must the employer’s representative do under Article 41(2) of Federal Law No.79-FZ?",
+        "zh": "一名文职公务员取得外国国籍，且不存在适用于其情况的条约或法律例外。依第79-FZ号联邦法第41条第2款，任用方代表应如何处理？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Расторгнуть служебный контракт, освободить гражданского служащего от занимаемой должности и уволить его с гражданской службы со дня приобретения гражданства другого государства",
+            "en": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service from the date the other citizenship was acquired",
+            "zh": "自其取得其他国家国籍之日起解除公务合同、免去其职务并将其辞退"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Расторгнуть служебный контракт, освободить гражданского служащего от занимаемой должности и уволить его с гражданской службы, предварительно уведомив профсоюзный орган соответствующего государственного органа не позднее чем за 2 месяца",
+            "en": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service, notifying the relevant state body's trade-union body at least 2 months in advance",
+            "zh": "解除公务合同、免去其职务并将其辞退，同时至少提前2个月通知相应国家机关的工会机构"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Принять решение о расторжении служебного контракта, освобождении от должности и увольнении со дня, когда представителю нанимателя стало известно о наличии иностранного гражданства",
+            "en": "Decide to terminate the service contract, release the servant from the post and dismiss them from the day the employer’s representative became aware of the foreign citizenship",
+            "zh": "作出终止公务合同、免职和解职的决定，自任用方代表知悉其拥有外国国籍之日起生效"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Расторгнуть служебный контракт, освободить гражданского служащего от занимаемой должности и уволить его с гражданской службы, предварительно уведомив его об этом не позднее чем за 1 месяц до увольнения",
+            "en": "Terminate the service contract, remove the civil servant from their position and dismiss them from civil service, notifying them at least 1 month before dismissal",
+            "zh": "解除公务合同、免去其职务并将其辞退，同时至少提前1个月通知本人"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть2 статьи41 №79-ФЗ связывает увольнение по решению представителя нанимателя с днём, когда ему стало известно об иностранном гражданстве, а не автоматически с датой приобретения. Пункт7 части1 статьи16 предусматривает международно-договорное исключение; специальные сохранённые законом случаи вынесены за условие. a ошибочно увольняет задним числом, b,d вводят неустановленные сроки.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнено отсутствие применимого исключения. В c дата события заменена датой осведомлённости представителя нанимателя; ключ c сохранён."
+    },
+    {
+      "id": "MT4-0389",
+      "stem": {
+        "ru": "Какие квалификационные требования предусматривает часть 1 статьи 12 Федерального закона №79-ФЗ для замещения должностей гражданской службы? Выберите наиболее полный ответ.",
+        "en": "Which qualification requirements does Article 12(1) of Federal Law No.79-FZ prescribe for civil-service posts? Select the most complete answer.",
+        "zh": "第79-FZ号联邦法第12条第1款对文职公务员岗位规定了哪些资格要求？请选择最完整的答案。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Уровню профессионального образования, стажу гражданской службы или работы по специальности, направлению подготовки, профессиональному уровню; при соответствующем решении представителя нанимателя — также к специальности, направлению подготовки и квалификации по результатам профессиональной переподготовки",
+            "en": "Level of vocational or higher education, length of civil service or relevant professional experience, and professional competence; where the employer’s representative so decides, also the field of study and qualification obtained through professional retraining",
+            "zh": "专业教育层次、文职公务或相关专业工作年限、专业能力水平；经任用方代表相应决定，还可要求特定专业、培养方向及专业再培训所取得的资格"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "уровню профессионального образования и стажу государственной гражданской службы или работы по специальности, направлению подготовки",
+            "en": "Level of professional education and length of state civil service or work experience in the specialty or field of training",
+            "zh": "职业教育程度，以及国家文职公务任职年限或专业及培养方向工作经验"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "уровню профессионального образования и знаниям и умениям, необходимым для исполнения должностных обязанностей",
+            "en": "Level of professional education and the knowledge and skills needed for official duties",
+            "zh": "职业教育程度，以及履行职务所需的知识和技能"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "уровню профессионального образования",
+            "en": "Level of professional education",
+            "zh": "职业教育程度"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть1 статьи12 №79-ФЗ в редакции №645-ФЗ предусматривает требования к уровню профессионального образования, стажу и профессиональному уровню; при решении представителя нанимателя — также к специальности, направлению подготовки и квалификации по переподготовке. a теперь содержит полный состав, b–d опускают обязательные элементы.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В a термин «знания и умения» приведён к действующему «профессиональному уровню», добавлены устанавливаемые решением представителя нанимателя требования. В условии прямо требуется наиболее полный ответ."
+    },
+    {
+      "id": "MT4-0395",
+      "stem": {
+        "ru": "Положение о кадровом резерве федерального государственного органа, определяющее порядок его формирования и работы с ним, утверждается:",
+        "en": "The regulation governing the formation and operation of a federal state body’s personnel reserve is approved by:",
+        "zh": "规定联邦国家机关人才储备的组建及使用程序的条例，由何种文件批准？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Федеральным законом",
+            "en": "A federal law",
+            "zh": "联邦法律"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Указом Президента Российской Федерации",
+            "en": "A decree of the President of the Russian Federation",
+            "zh": "俄罗斯联邦总统令"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Постановлением Правительства Российской Федерации",
+            "en": "A resolution of the Government of the Russian Federation",
+            "zh": "俄罗斯联邦政府决议"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Нормативным правовым актом соответствующего федерального органа исполнительной власти",
+            "en": "A regulatory legal act of the relevant federal executive body",
+            "zh": "相应联邦行政机关的规范性法律文件"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть11 статьи64 №79-ФЗ: положение о кадровом резерве федерального государственного органа утверждается указом Президента РФ. Федеральный кадровый резерв отдельно регулируется частью2 этой статьи. Вопрос выделяет один из двух резервов; b, а не федеральный закон, правительственное постановление или ведомственный акт.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Разделены два разных положения о резерве: условие теперь прямо относится к резерву федерального государственного органа. В b уточнён вид акта — указ."
+    },
+    {
+      "id": "MT4-0396",
+      "stem": {
+        "ru": "Какое основание для возможного непроведения конкурса прямо предусмотрено частью 3 статьи 22 Федерального закона №79-ФЗ?",
+        "en": "Which ground for optionally dispensing with a competition is expressly provided in Article 22(3) of Federal Law No.79-FZ?",
+        "zh": "第79-FZ号联邦法第22条第3款明确规定，在何种情况下可以不举行竞争选拔？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "При назначении на замещаемые на неопределенный срок полномочий должности гражданской службы категории «руководители»",
+            "en": "When appointing to an indefinite-term civil-service position in the 'managers' category",
+            "zh": "任命无固定任期的“领导人员”类别文职公务职位时"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "При назначении на должность государственной гражданской службы гражданского служащего (гражданина), включенного в кадровый резерв на гражданской службе",
+            "en": "When appointing a civil servant or citizen included in the civil-service personnel reserve",
+            "zh": "任命已列入文职公务人才储备库的公务员或公民时"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "При заключении срочного служебного контракта",
+            "en": "When concluding a fixed-term service contract",
+            "zh": "订立固定期限公务合同时"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "При назначении на отдельные должности гражданской службы, исполнение должностных обязанностей по которым связано с использованием сведений, составляющих государственную тайну, по перечню должностей, утверждаемому нормативным актом государственного органа",
+            "en": "When appointing to specified civil-service positions involving access to state secrets, under a list approved by a regulatory act of the state body",
+            "zh": "任命列入国家机关规范性文件批准目录、职务涉及使用国家秘密信息的特定文职公务职位时"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть3 статьи22 №79-ФЗ допускает непроведение конкурса для отдельных должностей, связанных с государственной тайной, по утверждённому перечню. Случаи b иc относятся к обязательному отсутствию конкурса по части2, а не к усмотрению части3. a само по себе не создаёт исключения. d — точный ответ на уточнённое условие.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие конкретизировано до диспозитивного основания части3 статьи22, чтобы не считать неверными законные случаи обязательного отсутствия конкурса."
+    },
+    {
+      "id": "MT4-0399",
+      "stem": {
+        "ru": "В каком случае гражданин может быть назначен на должность государственной гражданской службы без конкурса?",
+        "en": "When may a citizen be appointed to a state civil-service position without competitive selection?",
+        "zh": "在什么情况下，公民可以不经竞争性选拔被任命为国家文职公务员？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "при отсутствии дисциплинарных взысканий, примененных к нему другим работодателем (представителем нанимателя) на прежнем месте работы (службы)",
+            "en": "If no disciplinary penalties were imposed by another employer or employer's representative at their previous workplace or service post",
+            "zh": "在原工作或任职单位未受到其他用人单位或雇用方代表给予的纪律处分时"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Только на основании наличия у гражданина любого классного чина гражданской службы",
+            "en": "Solely because the citizen holds any civil-service class rank",
+            "zh": "仅因公民已取得任何文职公务员职级"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Только на основании наличия чина государственного советника Российской Федерации 1, 2 или 3 класса",
+            "en": "Solely because the citizen holds the rank of State Councillor of the Russian Federation, class 1, 2 or 3",
+            "zh": "仅因公民具有俄罗斯联邦一级、二级或三级国家参事职级"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "по решению представителя нанимателя при назначении на должность младшей группы должностей государственной гражданской службы",
+            "en": "By decision of the employer's representative when appointing to a position in the junior group of state civil-service positions",
+            "zh": "根据雇用方代表决定，任命初级组国家文职公务职位时"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть4 статьи22 №79-ФЗ позволяет представителю нанимателя не проводить конкурс для младшей группы. Само наличие классного чина либо отсутствие прежних дисциплинарных взысканий такой льготы не создают. b иc исправлены как самостоятельные варианты, d верно.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Исправлены оборванный вариант b и его ошибочно выделенное продолжение c. Ключ d сохранён."
+    },
+    {
+      "id": "MT4-0401",
+      "stem": {
+        "ru": "Какое обстоятельство является ограничением для нахождения на гражданской службе по части 1 статьи 16 Федерального закона №79-ФЗ?",
+        "en": "Which circumstance is a statutory restriction on remaining in the civil service under Article 16(1) of Federal Law No.79-FZ?",
+        "zh": "依第79-FZ号联邦法第16条第1款，哪种情况构成继续担任文职公务员的法定限制？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Непредставление обязательных по федеральному закону сведений о доходах, расходах, имуществе и обязательствах либо представление заведомо недостоверных или неполных сведений при отсутствии предусмотренного законом исключения",
+            "en": "Failure to submit federally required income, expenditure, property and liability disclosures, or submission of knowingly inaccurate or incomplete information, where no statutory exception applies",
+            "zh": "未提交联邦法律要求的收入、支出、财产及财产义务资料，或故意提交不真实、不完整的资料，且不存在法定例外"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Отсутствие допуска к государственной тайне, если должность не предполагает использования секретных сведений",
+            "en": "Lack of security clearance where the post does not involve classified information",
+            "zh": "岗位不涉及秘密信息，但本人没有国家秘密接触许可"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Наличие медицинского заключения об отсутствии заболеваний, препятствующих прохождению гражданской службы",
+            "en": "A medical opinion confirming the absence of illnesses that prevent civil service",
+            "zh": "持有证明不存在妨碍任职疾病的医学结论"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Сам по себе факт двоюродного родства с другим гражданским служащим при отсутствии конфликта интересов",
+            "en": "The mere fact of being a first cousin of another civil servant where no conflict of interest exists",
+            "zh": "仅与另一名文职公务员互为堂兄弟姐妹或表兄弟姐妹，且不存在利益冲突"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт9 части1 статьи16 №79-ФЗ в редакции №505-ФЗ охватывает непредставление обязательных антикоррупционных сведений, заведомую недостоверность и неполноту с законными исключениями. Условие ограничено этим составом. Для должности без секретных сведений отсутствие допуска не препятствие (пункт3); медицинское заключение об отсутствии противопоказаний не ограничение (пункт4); дальнее родство не входит в перечень пункта5. Ключ a.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Сняты неоднозначности отсутствующих документов; уточнены обязательность сведений и отсутствие законного исключения. b иc теперь описывают явно допустимые ситуации. В d вместо расплывчатого дальнего родства указано двоюродное родство без конфликта интересов."
+    },
+    {
+      "id": "MT4-0403",
+      "stem": {
+        "ru": "С какой периодичностью гражданский служащий представляет сведения об адресах сайтов и страниц, где он размещал общедоступную информацию, и данные, позволяющие его идентифицировать?",
+        "en": "How often must a civil servant report the addresses of websites and pages where they posted publicly available information, together with identifying information?",
+        "zh": "文职公务员应多久提交一次其发布公开信息的网站、网页地址及可识别本人身份的资料？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "раз в жизни",
+            "en": "Once in their lifetime",
+            "zh": "一生一次"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Ежегодно за предшествующий календарный год, кроме информации, размещённой в рамках должностных обязанностей",
+            "en": "Annually for the preceding calendar year, excluding information posted as part of official duties",
+            "zh": "每年提交前一个公历年的资料，但履行职务时发布的信息除外"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Каждые полгода, кроме информации, размещённой в рамках должностных обязанностей",
+            "en": "Every six months, excluding information posted as part of official duties",
+            "zh": "每半年一次，履职时发布的信息除外"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Каждые пять лет, кроме информации, размещённой в рамках должностных обязанностей",
+            "en": "Every five years, excluding information posted as part of official duties",
+            "zh": "每五年一次，履职时发布的信息除外"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт2 части1 статьи20.2 №79-ФЗ обязывает гражданского служащего представлять сведения ежегодно за предшествующий календарный год; служебное размещение информации исключено. Часть2 задаёт срок не позднее1апреля. b единственно верно; a,c,d устанавливают неверную периодичность.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие и варианты согласованы для гражданского служащего; устранено смешение двух видов службы и ссылок на муниципального служащего."
+    },
+    {
+      "id": "MT4-0407",
+      "stem": {
+        "ru": "Для какой категории лиц может быть установлено испытание при назначении на должность государственной гражданской службы:",
+        "en": "For which category of persons may probation be imposed upon appointment to a state civil-service position?",
+        "zh": "任命国家文职公务职位时，可以对哪类人员设置试用期？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Для государственных гражданских служащих, назначенных на должности государственной гражданской службы в порядке перевода в связи с сокращением должностей государственной гражданской службы",
+            "en": "State civil servants transferred to positions following a reduction in state civil-service positions",
+            "zh": "因国家文职公务职位裁减而调任其他职位的公务员"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Для граждан, получивших высшее образование в соответствии с договором о целевом обучении с обязательством последующего прохождения государственной гражданской службы и впервые поступающих на государственную гражданскую службу",
+            "en": "Citizens who obtained higher education under a targeted-training agreement requiring subsequent state civil service and are entering state civil service for the first time",
+            "zh": "根据定向培养合同接受高等教育、负有随后进入国家文职公务系统义务，并首次进入该系统的公民"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Для служащих, переводимых из другого государственного органа, если на них не распространяется предусмотренное законом освобождение от испытания",
+            "en": "For servants transferred from another state body, provided they are not covered by a statutory exemption from probation",
+            "zh": "由另一国家机关调入且不属于法定免试用情形的公务员"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Для служащих, переводимых по статье 31 Федерального закона №79-ФЗ в связи с упразднением государственного органа",
+            "en": "For servants transferred under Article 31 of Federal Law No.79-FZ because their state body is dissolved",
+            "zh": "因国家机关撤销而依第79-FZ号联邦法第31条调任的公务员"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт3 части2 статьи27 №79-ФЗ допускает испытание при переводе из другого государственного органа. Часть3 исключает целевое обучение с первым поступлением и переводы по статье31 при сокращении или упразднении. В c прямо исключены льготные случаи; a,b,d не допускают испытания.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Восстановлен оборванный вариант d как перевод в связи с упразднением органа; в c уточнено отсутствие исключений части3 статьи27. Ключ c сохранён."
+    },
+    {
+      "id": "MT4-0410",
+      "stem": {
+        "ru": "Каков максимальный срок срочного служебного контракта по общему правилу части 2 статьи 25 Федерального закона №79-ФЗ, если этим законом не установлен иной срок?",
+        "en": "What is the maximum fixed-term service-contract duration under the general rule in Article 25(2) of Federal Law No.79-FZ, where that law provides no different term?",
+        "zh": "在第79-FZ号联邦法未另行规定期限时，依第25条第2款的一般规则，固定期限公务合同的最长期限是多少？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "на срок до одного года",
+            "en": "Up to one year",
+            "zh": "不超过一年"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "на срок до двух лет",
+            "en": "Up to two years",
+            "zh": "不超过两年"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "на срок до трех лет",
+            "en": "Up to three years",
+            "zh": "不超过三年"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "на срок до пяти лет",
+            "en": "Up to five years",
+            "zh": "不超过五年"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть2 статьи25 №79-ФЗ устанавливает срок срочного служебного контракта от одного года до пяти лет, если сам закон не устанавливает иной срок. Уточнён общий случай; d даёт его верхнюю границу, a–c не являются максимальным общим сроком.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Добавлена оговорка о специальных сроках, прямо установленных законом. Общий максимум и ключ d сохранены."
+    },
+    {
+      "id": "MT4-0412",
+      "stem": {
+        "ru": "При заключении служебного контракта испытание не устанавливается, должность не связана с государственной тайной и не относится к случаям обязательной дактилоскопической регистрации. Какое из перечисленных условий должно быть предусмотрено в контракте?",
+        "en": "No probation is set for a service contract; the post does not involve state secrets or a statutory requirement for fingerprint registration. Which of the following conditions must the contract provide for?",
+        "zh": "订立公务合同时不设试用期，岗位不涉及国家秘密，也不属于依法必须进行指纹登记的情形。合同应当约定下列哪项条件？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Обязательство о неразглашении сведений, составляющих государственную тайну",
+            "en": "An undertaking not to disclose state secrets",
+            "zh": "不泄露国家秘密的承诺"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Срок испытания при поступлении на государственную гражданскую службу",
+            "en": "The probation period on entry to state civil service",
+            "zh": "进入国家文职公务系统时的试用期限"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Обязательство о прохождении обязательной государственной дактилоскопической регистрации",
+            "en": "An undertaking to undergo compulsory state fingerprint registration",
+            "zh": "接受强制性国家指纹登记的承诺"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Виды и условия социального страхования, связанные с профессиональной служебной деятельностью",
+            "en": "Types and conditions of social insurance associated with professional service activities",
+            "zh": "与职业公务活动有关的社会保险种类和条件"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт9 части2 статьи24 №79-ФЗ включает виды и условия социального страхования. Пункты11 и12 связывают испытание и неразглашение тайны с соответствующими законными основаниями. Дактилоскопия по части5 статьи15 обязательна лишь в случаях федерального закона. Условие исключает специальные случаи a–c, поэтому d однозначно.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Устаревшее общее противопоставление «существенных» и дополнительных условий заменено конкретным случаем по действующей статье24; варианты и ключ d сохранены."
+    },
+    {
+      "id": "MT4-0413",
+      "stem": {
+        "ru": "Что из перечисленного не названо самостоятельным условием служебного контракта в перечне части 2 статьи 24 Федерального закона №79-ФЗ?",
+        "en": "Which item is not listed as a separate service-contract condition in Article 24(2) of Federal Law No.79-FZ?",
+        "zh": "下列哪项未被第79-FZ号联邦法第24条第2款单独列为公务合同条件？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Наименование должности с указанием структурного подразделения при его наличии и места прохождения гражданской службы",
+            "en": "The post’s title, the structural unit if any, and the place of civil service",
+            "zh": "岗位名称、所属结构单位（如有）及文职公务履职地点"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Виды и условия социального страхования, связанные с профессиональной служебной деятельностью",
+            "en": "Types and conditions of social insurance associated with professional service activities",
+            "zh": "与职业公务活动有关的社会保险种类和条件"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Показатели результативности профессиональной служебной деятельности гражданского служащего",
+            "en": "Performance indicators for the civil servant's professional service activities",
+            "zh": "公务员职业公务活动的绩效指标"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Дата начала исполнения должностных обязанностей",
+            "en": "The date on which official duties begin",
+            "zh": "开始履行职务职责的日期"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть2 статьи24 №79-ФЗ отдельно перечисляет наименование должности, подразделение и место службы (пункт1), дату начала и срок контракта (пункт2), социальное страхование (пункт9). Самостоятельный пункт об индивидуальных показателях результативности в этом перечне отсутствует: они предусмотрены должностным регламентом по пункту8 части2 статьи47 и могут иметь значение для оплаты. Условие не объявляет их запрещённым содержанием контракта. Ключ c.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Вопрос переведён с отменённой терминологии «существенные условия» на действующий перечень статьи24; уточнено, что спрашивается самостоятельный пункт этого перечня."
+    },
+    {
+      "id": "MT4-0418",
+      "stem": {
+        "ru": "Представитель нанимателя изменяет предусмотренный контрактом индивидуальный режим служебного времени и отдыха. Изменение не вызвано изменением законодательства. Как следует уведомить гражданского служащего?",
+        "en": "The employer’s representative is changing the individual working-time and rest schedule specified in the contract. The change is not caused by a change in legislation. How must the civil servant be notified?",
+        "zh": "任用方代表拟变更合同约定的个人公务工作及休息时间安排，且该变更并非由法律变化引起。应如何通知文职公务员？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "в письменной форме не позднее чем за две недели до их введения",
+            "en": "In writing at least two weeks before they take effect",
+            "zh": "至少提前两周书面通知"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "в письменной форме не позднее чем за месяц до их введения",
+            "en": "In writing at least one month before they take effect",
+            "zh": "至少提前一个月书面通知"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "в письменной форме не позднее чем за два месяца до их введения",
+            "en": "In writing at least two months before they take effect",
+            "zh": "至少提前两个月书面通知"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "в устной форме за два месяца до их введения",
+            "en": "Orally two months before they take effect",
+            "zh": "提前两个月口头通知"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт5 части2 и часть3 статьи29 №79-ФЗ: об изменении индивидуального режима служебного времени и отдыха уведомляют письменно не позднее чем за два месяца. Исключения для изменений оплаты труда и законодательства (пункты3,4) не охватывают описанный случай. c верно; a,b сокращают срок, d нарушает письменную форму.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Вместо безусловного правила для всех изменений задан конкретный случай индивидуального режима службы, на который распространяется двухмесячный срок."
+    },
+    {
+      "id": "MT4-0422",
+      "stem": {
+        "ru": "Что из перечисленного само по себе не является нарушением обязательных правил заключения служебного контракта, препятствующим продолжению службы?",
+        "en": "Which circumstance does not, by itself, constitute a breach of mandatory rules for concluding a service contract that prevents continued service?",
+        "zh": "下列哪种情况本身不构成违反公务合同订立强制规则、从而妨碍继续任职的情形？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Заключения служебного контракта в нарушение вступившего в законную силу приговора суда о лишении лица права занимать определенные должности гражданской службы или заниматься определенной деятельностью",
+            "en": "The contract was concluded contrary to a final court sentence prohibiting the person from holding specified civil-service positions or engaging in specified activities",
+            "zh": "订立合同违反已生效的法院判决，该判决禁止本人担任特定文职公务职位或从事特定活动"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Заключения служебного контракта на исполнение должностных обязанностей, противопоказанных лицу по состоянию здоровья в соответствии с медицинским заключением",
+            "en": "The contract concerns duties medically contraindicated for the person according to a medical opinion",
+            "zh": "合同要求履行的职责根据医疗结论属于本人健康状况的禁忌工作"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Отсутствие документов о прежнем трудовом стаже у гражданина, впервые поступающего на работу, если к должности не установлено требование о стаже",
+            "en": "The absence of records of previous employment for a citizen entering employment for the first time, where the post has no experience requirement",
+            "zh": "公民首次就业，且该岗位不要求工作年限，因此没有此前工作经历的证明文件"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Отсутствия у лица соответствующего документа об образовании и о квалификации, если исполнение должностных обязанностей требует специальных знаний в соответствии с Федеральным законом «О государственной гражданской службе Российской Федерации» или иным нормативным правовым актом",
+            "en": "The person lacks the required education and qualification document when the duties require specialist knowledge under the Federal Law 'On the State Civil Service of the Russian Federation' or another regulatory legal act",
+            "zh": "依据《俄罗斯联邦国家文职公务法》或其他规范性法律文件，职务需要专门知识，但本人缺少相应的学历和资格文件"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты1–3 части1 статьи40 №79-ФЗ предусматривают нарушения, изложенные в a,b,d. Пункт4 части2 статьи26 освобождает впервые поступающих на работу от представления трудовой книжки и сведений о прежней трудовой деятельности. При отсутствии требования к стажу в c нет нарушения, препятствующего назначению.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Устранено логическое противоречие исходного условия. c ограничен гражданином, впервые поступающим на работу, и должностью без требования к стажу; ключ c сохранён."
+    },
+    {
+      "id": "MT4-0424",
+      "stem": {
+        "ru": "Какое из перечисленных сведений не названо в части 2 статьи 24 Федерального закона №79-ФЗ самостоятельным условием служебного контракта?",
+        "en": "Which item is not identified in Article 24(2) of Federal Law No.79-FZ as a separate service-contract condition?",
+        "zh": "第79-FZ号联邦法第24条第2款未将下列哪项信息单独列为公务合同条件？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "дата начала исполнения должностных обязанностей",
+            "en": "The date official duties begin",
+            "zh": "开始履行职务职责的日期"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "права и обязанности представителя нанимателя",
+            "en": "The rights and duties of the employer's representative",
+            "zh": "雇用方代表的权利和义务"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Номер конкретного рабочего кабинета",
+            "en": "The number of the particular office room",
+            "zh": "具体办公房间的房号"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "нахождение должности, замещаемой гражданским служащим, в перечне должностей гражданской службы, по которым предусматривается ротация гражданских служащих",
+            "en": "Inclusion of the position in the list of civil-service positions subject to rotation",
+            "zh": "公务员所任职位是否列入需要轮岗的文职公务职位目录"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты2,5,10 части2 статьи24 №79-ФЗ непосредственно называют a,b,d. Пункт1 требует указать место прохождения гражданской службы, поэтому прежний ответ об адресе был неоднозначен. Номер конкретного кабинета не назван самостоятельным обязательным условием; c исправлен, возможность согласовать дополнительные условия не отрицается.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Адрес рабочего места в c заменён номером конкретного кабинета; условие спрашивает прямо перечисленные законом условия, не запрещая дополнительные."
+    },
+    {
+      "id": "MT4-0425",
+      "stem": {
+        "ru": "В каком из перечисленных случаев прекращается служебный контракт, гражданский служащий освобождается от должности, увольняется и с его согласия включается в кадровый резерв, кроме федерального кадрового резерва? Выберите наиболее полный и правильный ответ.",
+        "en": "Which listed circumstance entails termination of the service contract, release from the post and dismissal, with inclusion in a personnel reserve with the servant’s consent, excluding the federal personnel reserve? Select the most complete and correct answer.",
+        "zh": "下列哪种情况下应终止公务合同、免职和解职，并经本人同意纳入人才储备（联邦人才储备除外）？请选择最完整、正确的答案。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "В связи с избранием или назначением гражданского служащего на выборную должность в государственный орган, избранием его на выборную должность в орган местного самоуправления либо избранием его на оплачиваемую выборную должность в органе профессионального союза, в том числе в выборном органе первичной профсоюзной организации, созданной в государственном органе",
+            "en": "Election or appointment to an elective position in a state body, election to an elective position in a local self-government body, or election to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+            "zh": "公务员被选举或任命到国家机关的选举职位、被选举到地方自治机关的选举职位，或被选举到工会机关的有偿选举职位，包括国家机关内部基层工会组织的选举机关职位"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "В связи с избранием гражданского служащего на выборную должность в государственный орган, избранием его на оплачиваемую выборную должность в органе профессионального союза, в том числе в выборном органе первичной профсоюзной организации, созданной в государственном органе",
+            "en": "Election to an elective position in a state body or to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+            "zh": "公务员被选举到国家机关的选举职位，或工会机关的有偿选举职位，包括国家机关内部基层工会组织的选举机关职位"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Избрание или назначение на государственную должность, кроме случая, предусмотренного частью 2 статьи 4 ФКЗ от 06.11.2020 №4-ФКЗ «О Правительстве Российской Федерации», на муниципальную должность либо избрание на оплачиваемую выборную должность в органе профсоюза, включая первичную профсоюзную организацию государственного органа",
+            "en": "Election or appointment to state office, except the case in Article 4(2) of Federal Constitutional Law No.4-FKZ of 6 November 2020 on the Government of the Russian Federation; to municipal office; or election to a paid trade-union office, including in the state body’s primary union organisation",
+            "zh": "被选举或任命担任国家公职（2020年11月6日第4-FKZ号《俄罗斯联邦政府法》第4条第2款规定的情形除外）、地方自治公职，或被选举担任工会的有薪选举职务，包括国家机关基层工会的相应职务"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "В связи с избранием или назначением гражданского служащего на государственную должность Российской Федерации или муниципальную должность либо избранием гражданского служащего на оплачиваемую выборную должность в органе профессионального союза, в том числе в выборном органе первичной профсоюзной организации, созданной в государственном органе",
+            "en": "Election or appointment to a state office of the Russian Federation or a municipal office, or election to a paid elective office in a trade-union body, including the elected body of a primary trade-union organisation established in a state body",
+            "zh": "公务员被选举或任命担任俄罗斯联邦国家公职或市政公职，或被选举到工会机关的有偿选举职位，包括国家机关内部基层工会组织的选举机关职位"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт3 части1 статьи39 №79-ФЗ: избрание/назначение на государственную должность с исключением части2 статьи4 ФКЗ от06.11.2020 №4-ФКЗ, на муниципальную должность либо избрание на оплачиваемую профсоюзную должность. Включение с согласия допускается в резерв, кроме федерального кадрового резерва. c — полный вариант; a,b,d неполны и/или не учитывают исключение.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Обновлена отменённая ссылка на ФКЗ1997года; в условии учтено исключение федерального кадрового резерва. Ключ c сохранён."
+    },
+    {
+      "id": "MT4-0426",
+      "stem": {
+        "ru": "Должность гражданского служащего включается в перечень должностей, по которым предусмотрена ротация. За какой срок до введения этого изменения представитель нанимателя должен письменно уведомить служащего?",
+        "en": "A civil servant’s post is being added to the list of posts subject to rotation. How far in advance must the employer’s representative notify the servant in writing?",
+        "zh": "某文职公务员的岗位拟被纳入轮岗岗位名单。任用方代表应在该变更生效前多久书面通知本人？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Не позднее чем за месяц до их введения",
+            "en": "At least one month before they take effect",
+            "zh": "至少提前一个月"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Не позднее чем за две недели до их введения",
+            "en": "At least two weeks before they take effect",
+            "zh": "至少提前两周"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Не позднее чем за два месяца до их введения",
+            "en": "At least two months before they take effect",
+            "zh": "至少提前两个月"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Изменение существенных условий служебного контракта допускается не ранее 1 января года, следующего за годом, в котором принято решение о внесении таких изменений",
+            "en": "Changes to essential terms may take effect no earlier than 1 January of the year following the decision to make those changes",
+            "zh": "只能最早自作出变更决定之年的下一年1月1日起变更"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт1 части2 и часть3 статьи29 №79-ФЗ: включение должности в перечень для ротации является изменением условий профессиональной служебной деятельности, о котором уведомляют письменно за два месяца. Исключения пунктов3,4 части2 не применяются. c — правильный срок.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Вместо всеобщего правила для любых изменений задано включение должности в перечень для ротации; сохранён предмет проверки срока уведомления."
+    },
+    {
+      "id": "MT4-0427",
+      "stem": {
+        "ru": "Перевод гражданского служащего на иную должность по инициативе представителя нанимателя в общем случае, когда закон не предусматривает специального исключения:",
+        "en": "As a general rule, where no special statutory exception applies, transfer of a civil servant to another post at the initiative of the employer’s representative:",
+        "zh": "在不存在特别法定例外的一般情况下，由任用方代表发起将文职公务员调至另一岗位："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "допускается с письменного согласия гражданского служащего",
+            "en": "Is permitted with the civil servant's written consent",
+            "zh": "须取得公务员书面同意"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "не допускается",
+            "en": "Is not permitted",
+            "zh": "不允许"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "допускается с устного согласия гражданского служащего",
+            "en": "Is permitted with the civil servant's oral consent",
+            "zh": "取得公务员口头同意即可"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Допускается по единоличному решению представителя нанимателя без согласия служащего",
+            "en": "Is permitted by a unilateral decision of the employer’s representative without the servant’s consent",
+            "zh": "可由任用方代表单方面决定，无需公务员同意"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт1 части1 статьи28 №79-ФЗ: перевод по инициативе представителя нанимателя требует письменного согласия служащего, если закон не предусматривает иное. Условие прямо задаёт общий случай; a верно, устного согласия или одностороннего решения недостаточно.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнены инициатор перевода и отсутствие специального законного исключения; d явно сформулирован как одностороннее решение."
+    },
+    {
+      "id": "MT4-0429",
+      "stem": {
+        "ru": "Переводом на иную должность государственной гражданской службы НЕ является и НЕ требует согласия государственного гражданского служащего:",
+        "en": "Which is NOT a transfer to another state civil-service position and does NOT require the civil servant's consent?",
+        "zh": "以下哪种情况不属于调任其他国家文职公务职位，也不需要公务员本人同意？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Назначение на иную должность государственной гражданской службы без изменения должностных обязанностей, установленных должностным регламентом",
+            "en": "Appointment to another state civil-service position without changing the duties established by the official job regulations",
+            "zh": "任命到另一国家文职公务职位，但不改变职位规程规定的职责"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Назначение на равнозначную должность государственной гражданской службы, с незначительным изменением должностных обязанностей, установленных служебным контрактом",
+            "en": "Appointment to an equivalent state civil-service position with minor changes to duties established by the service contract",
+            "zh": "任命到同等国家文职公务职位，并轻微改变公务合同规定的职责"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Перемещение в другое структурное подразделение того же органа в той же местности, если условия контракта не меняются, кроме условия о месте прохождения гражданской службы",
+            "en": "Movement to another structural unit of the same body in the same locality, without changing the contract’s terms other than the place of civil service",
+            "zh": "在同一地区调往同一机关的另一结构单位，除履职地点外不改变公务合同条件"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Назначение на вышестоящую должность государственной гражданской службы при переезде государственного органа в другую местность",
+            "en": "Appointment to a higher state civil-service position when the state body relocates",
+            "zh": "国家机关迁往其他地区时任命到更高的国家文职公务职位"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть11 статьи28 №79-ФЗ отличает перемещение в другое структурное подразделение того же органа в той же местности, не изменяющее условия контракта, кроме места прохождения службы, от перевода на иную должность. Исправленный c передаёт это правило. a,b,d меняют должность и не подпадают под него.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В c устранена ошибочная «иная должность»; восстановлено действующее определение перемещения в другое подразделение в той же местности."
+    },
+    {
+      "id": "MT4-0430",
+      "stem": {
+        "ru": "Для какой цели не допускается временный перевод гражданского служащего на срок до одного месяца на не обусловленную контрактом должность в том же органе по статье 30 Федерального закона №79-ФЗ?",
+        "en": "For which purpose is a temporary transfer, for up to one month, to a post not specified in the contract within the same body not permitted under Article 30 of Federal Law No.79-FZ?",
+        "zh": "依第79-FZ号联邦法第30条，基于哪种目的，不得将公务员临时调至同一机关内合同未约定的岗位，期限不超过一个月？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Предотвращения несчастных случаев",
+            "en": "Preventing accidents",
+            "zh": "预防事故"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Устранения последствий стихийного бедствия",
+            "en": "Dealing with the consequences of a natural disaster",
+            "zh": "消除自然灾害后果"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Выполнения личных поручений руководителя, не связанных со служебной необходимостью",
+            "en": "Carrying out the supervisor’s private errands unrelated to official necessity",
+            "zh": "完成与公务需要无关的领导私人事务"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Для замещения временно отсутствующего гражданского служащего",
+            "en": "Replacing a temporarily absent civil servant",
+            "zh": "替代暂时缺岗的公务员"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть1 статьи30 №79-ФЗ допускает временное замещение иной должности в том же органе на срок до месяца для перечисленных служебных нужд, включая предотвращение порчи имущества без разграничения его собственников. Поэтому прежний c о личном имуществе не был однозначным. Личные поручения руководителя, не связанные со служебной необходимостью, такого основания не создают. a,b,d входят в предусмотренные цели.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В c спорная принадлежность имущества заменена посторонним личным поручением. Условие уточняет временный перевод по статье30; ключ c сохранён. В b оставлена прямо названная законом цель — устранение последствий стихийного бедствия."
+    },
+    {
+      "id": "MT4-0433",
+      "stem": {
+        "ru": "При сокращении должностей государственной гражданской службы служебные отношения с сокращаемым гражданским служащим могут быть продолжены в случае:",
+        "en": "When state civil-service positions are reduced, the service relationship with an affected civil servant may continue if:",
+        "zh": "裁减国家文职公务职位时，在什么情况下可以继续与受影响公务员的公务关系？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Только направления на переподготовку или повышение квалификации, без предоставления иной должности гражданской службы",
+            "en": "Training or retraining alone, without providing another civil-service post",
+            "zh": "仅安排培训或再培训，而不提供另一文职公务员岗位"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Предоставления с письменного согласия служащего иной должности гражданской службы в том же или другом государственном органе с учётом установленных квалификационных требований",
+            "en": "Providing another civil-service post in the same or another state body with the servant’s written consent and subject to the applicable qualification requirements",
+            "zh": "经公务员书面同意并符合规定的资格要求，在同一或另一国家机关提供另一文职公务员岗位"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "увольнения его с государственной гражданской службы по согласию сторон",
+            "en": "They are dismissed from state civil service by agreement between the parties",
+            "zh": "经双方协议解除其国家文职公务任职关系"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "отстранения его от должности",
+            "en": "They are suspended from office",
+            "zh": "将其停职"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть1 статьи31 №79-ФЗ продолжает государственно-служебные отношения при предоставлении с письменного согласия иной должности гражданской службы с учётом квалификационных требований. Одна переподготовка без предоставления должности недостаточна; увольнение и отстранение не заменяют такой перевод. Должность вне гражданской службы в прежнем b не продолжала гражданскую службу.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Ошибочное назначение на негосударственную должность в b заменено предоставлением иной должности гражданской службы с письменным согласием. a уточнён как одна лишь переподготовка."
+    },
+    {
+      "id": "MT4-0435",
+      "stem": {
+        "ru": "Отказ гражданского служащего от перевода в другую местность вместе с государственным органом:",
+        "en": "A civil servant's refusal to relocate with the state body:",
+        "zh": "公务员拒绝随国家机关迁往其他地区："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "является основанием перемещения на должность, не относящуюся к должностям государственной гражданской службы в том же органе власти",
+            "en": "Is grounds for reassignment to a non-civil-service position in the same authority",
+            "zh": "构成调整到同一机关内非国家文职公务职位的理由"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Является основанием прекращения служебного контракта, освобождения от должности и увольнения с соблюдением установленного законом порядка и обязательных гарантий",
+            "en": "Is a ground for terminating the service contract, release from the post and dismissal, subject to the statutory procedure and mandatory guarantees",
+            "zh": "构成终止公务合同、免职和解职的依据，但必须遵守法定程序并提供强制性保障"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "является основанием отстранения от замещаемой должности государственной гражданской службы",
+            "en": "Is grounds for suspension from the state civil-service position",
+            "zh": "构成暂停其国家文职公务职务的理由"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "является основанием приостановки действия служебного контракта",
+            "en": "Is grounds for suspension of the service contract",
+            "zh": "构成中止公务合同效力的理由"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт9 части1 статьи33 №79-ФЗ прямо называет отказ от перевода в другую местность вместе с государственным органом основанием прекращения контракта. a,c,d описывают иные последствия. b не означает автоматическое увольнение без установленной процедуры или гарантий; уточнение не распространяет правило на любое перемещение отдельного рабочего места.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Ключ b сохранён; в ответ добавлено соблюдение установленного порядка и обязательных гарантий."
+    },
+    {
+      "id": "MT4-0437",
+      "stem": {
+        "ru": "Может ли гражданский служащий обратиться в суд с заявлением о восстановлении в ранее замещаемой должности гражданской службы минуя комиссию по служебным спорам в случае расторжения служебного контракта по инициативе гражданского служащего?",
+        "en": "If a service contract was terminated at the civil servant's initiative, may the civil servant seek reinstatement in their previous position directly in court, bypassing the service disputes commission?",
+        "zh": "如果公务合同由公务员本人提出解除，其能否不经公务争议委员会，直接向法院申请恢复原任职位？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Да. Общий срок — один месяц со дня вручения копии приказа об увольнении, выдачи трудовой книжки или предоставления сведений о трудовой деятельности в связи с увольнением; пропущенный по уважительной причине срок может быть восстановлен судом",
+            "en": "Yes. The general deadline is one month from receiving the dismissal order, the employment record book or employment-history information on dismissal; a court may restore a deadline missed for a valid reason",
+            "zh": "可以。一般期限为收到解职命令副本、劳动手册或因解职提供的工作经历资料之日起一个月；有正当理由错过期限的，法院可予恢复"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Не может",
+            "en": "No",
+            "zh": "不可以"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Может при условии, что со дня увольнения истекло не более трех месяцев",
+            "en": "Yes, provided no more than three months have passed since dismissal",
+            "zh": "可以，但离职时间不得超过三个月"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Может при любых условиях",
+            "en": "Yes, under any circumstances",
+            "zh": "在任何情况下都可以"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт1 части14 статьи70 №79-ФЗ относит восстановление в ранее замещаемой должности независимо от основания прекращения контракта к непосредственно судебным спорам. Часть1 статьи392 ТК РФ устанавливает месяц от вручения копии приказа, выдачи трудовой книжки либо сведений о трудовой деятельности; уважительные причины допускают восстановление срока. a дополнен; b,c,d неверны.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://epp.genproc.gov.ru/ru/proc_91/activity/legal-education/explain/e2074299/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В a добавлены сведения о трудовой деятельности и возможность восстановления пропущенного срока; сохранена возможность прямого обращения в суд."
+    },
+    {
+      "id": "MT4-0444",
+      "stem": {
+        "ru": "На заседании какого органа нарушение Типового кодекса этики и служебного поведения государственных и муниципальных служащих подлежит моральному осуждению согласно пункту 29 этого кодекса?",
+        "en": "At a meeting of which body is a breach of the Model Code of Ethics and Official Conduct for state and municipal servants subject to moral condemnation under paragraph 29 of that Code?",
+        "zh": "依《国家及地方自治公务员伦理和职务行为示范守则》第29项，违反该守则的行为应在何种机构的会议上受到道德谴责？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "представителя нанимателя",
+            "en": "The employer's representative",
+            "zh": "雇用方代表"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "комиссии по соблюдению требований к служебному поведению гражданских служащих и урегулированию конфликта интересов",
+            "en": "The commission on compliance with civil servants' official-conduct requirements and resolution of conflicts of interest",
+            "zh": "公务员公务行为要求遵守及利益冲突处理委员会"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "квалификационной комиссии",
+            "en": "The qualification commission",
+            "zh": "资格委员会"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "аттестационной комиссии",
+            "en": "The appraisal commission",
+            "zh": "考核委员会"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт29 Типового кодекса этики и служебного поведения, одобренного президиумом Совета при Президенте РФ по противодействию коррупции23.12.2010, предусматривает моральное осуждение нарушения на заседании комиссии по соблюдению требований к служебному поведению и урегулированию конфликта интересов. Вопрос не отрицает дисциплинарных полномочий нанимателя. b соответствует указанному органу; a,c,d — нет.",
+        "sourceUrls": [
+          "https://rosguard.gov.ru/document/article/tipovoj-kodeks-etiki-i-sluzhebnogo-povedeniya-gosudarstvennyx-sluzhashhix-rossijskoj-federacii-i-municipalnyx-sluzhashhix"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Общее «рассмотрение вопроса» заменено конкретной процедурой морального осуждения по пункту29 Типового кодекса; ключ b сохранён."
+    },
+    {
+      "id": "MT4-0448",
+      "stem": {
+        "ru": "Какую минимальную долю независимых экспертов устанавливает часть 8 статьи 22 Федерального закона №79-ФЗ для конкурсной комиссии? Общественный совет при органе не создан, должность не связана с государственной тайной.",
+        "en": "What minimum proportion of independent experts does Article 22(8) of Federal Law No.79-FZ require in a competition commission? The body has no public council and the post does not involve state secrets.",
+        "zh": "第79-FZ号联邦法第22条第8款规定，竞争选拔委员会中独立专家的最低比例是多少？该机关未设公众理事会，岗位不涉及国家秘密。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Не менее одной четверти от общего числа членов комиссии",
+            "en": "At least one quarter of all commission members",
+            "zh": "不少于委员会成员总数的四分之一"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Не менее одной трети от общего числа членов комиссии",
+            "en": "At least one third of all commission members",
+            "zh": "不少于委员会成员总数的三分之一"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Не менее половины от общего числа членов комиссии",
+            "en": "At least half of all commission members",
+            "zh": "不少于委员会成员总数的二分之一"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Участие независимых экспертов не требуется",
+            "en": "Independent experts are not required",
+            "zh": "无需独立专家参加"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть8 статьи22 №79-ФЗ устанавливает минимум независимых экспертов в конкурсной комиссии — одну четверть общего числа членов. Часть8.1 предусматривает совместный учёт экспертов и общественного совета, часть9 — особенности государственной тайны; эти случаи исключены условием. Это требование к составу, не кворум заседания. Ключ a.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Устранено смешение состава и кворума. Условие ограничено конкурсной комиссией без общественного совета и секретной должности; спрашивается точный установленный минимум."
+    },
+    {
+      "id": "MT4-0454",
+      "stem": {
+        "ru": "Может ли аттестационная комиссия, установив несоответствие гражданского служащего замещаемой должности, самостоятельно принять решение о его увольнении?",
+        "en": "May an attestation commission itself decide to dismiss a civil servant after finding that the servant does not meet the requirements of their post?",
+        "zh": "考核委员会认定某文职公务员不符合现任岗位要求后，能否自行作出解职决定？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Нет. Комиссия принимает решение о соответствии должности; правовой акт и решение о возможном увольнении принимает представитель нанимателя при соблюдении установленных законом условий",
+            "en": "No. The commission decides whether the servant meets the post’s requirements; the employer’s representative issues the legal act and decides on any dismissal subject to statutory conditions",
+            "zh": "不能。委员会决定其是否符合岗位要求；任用方代表在符合法定条件时签发法律文件并决定是否解职"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "может, так как гражданский служащий, не соответствующий замещаемой должности государственной гражданской службы, подлежит увольнению",
+            "en": "Yes; a civil servant unsuitable for their position must be dismissed",
+            "zh": "可以，因为不适合现任职位的公务员应当被辞退"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "может, так как аттестация гражданского служащего проводится в целях выявления оснований для увольнения гражданских служащих с государственной гражданской службы",
+            "en": "Yes; appraisal is conducted to identify grounds for dismissing civil servants",
+            "zh": "可以，因为考核旨在发现辞退公务员的依据"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "может в качестве исключительной меры",
+            "en": "Yes, as an exceptional measure",
+            "zh": "可以，作为特殊措施"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть15 статьи48 №79-ФЗ перечисляет решения аттестационной комиссии, включая несоответствие должности. Части16,17 оставляют правовые последствия и возможное увольнение представителю нанимателя при предусмотренных законом условиях, в том числе отказе от обучения или перевода. Комиссия сама не увольняет; a верно.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Спор о свободной рекомендации заменён проверкой юридического полномочия принять решение об увольнении. В a ясно разграничены полномочия комиссии и нанимателя."
+    },
+    {
+      "id": "MT4-0457",
+      "stem": {
+        "ru": "Предусматривает ли действующая редакция Федерального закона №79-ФЗ прежний квалификационный экзамен для присвоения классного чина гражданской службы?",
+        "en": "Does the current version of Federal Law No.79-FZ provide for the former qualifying examination for awarding a civil-service class rank?",
+        "zh": "现行第79-FZ号联邦法是否仍规定为授予文职公务员职级而举行原有的资格考试？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Да, он обязателен при любом поступлении на гражданскую службу",
+            "en": "Yes, it is mandatory whenever anyone enters the civil service",
+            "zh": "是，每次录用文职公务员时均须举行"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Нет: статья 49 о квалификационном экзамене утратила силу; присвоение классного чина регулируется действующими правилами без этого экзамена",
+            "en": "No: Article 49 on the qualifying examination has been repealed; class ranks are awarded under the current rules without that examination",
+            "zh": "否：关于资格考试的第49条已废止；职级依现行规则授予，不再举行该考试"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Да, он обязателен при любом завершении профессионального образования",
+            "en": "Yes, it is mandatory after completing any professional education",
+            "zh": "是，完成任何专业教育后均须举行"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Да, он обязателен при каждом повышении оплаты труда",
+            "en": "Yes, it is mandatory whenever remuneration increases",
+            "zh": "是，每次增加薪酬时均须举行"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Статья49 №79-ФЗ о квалификационном экзамене утратила силу по Федеральному закону от29.12.2022 №645-ФЗ; статья11 и Указ Президента от01.02.2005 №113 регулируют присвоение классных чинов без прежнего экзамена. a,c,d не являются действующими случаями такого экзамена. b отражает отмену, не отменяя конкурс или оценку профессионального уровня.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://mintrud.gov.ru/docs/president/ukaz/11"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Устаревший вопрос о поводе для экзамена актуализирован: спрашивается наличие этой процедуры в действующем регулировании. В b вместо присвоения чина указана отмена прежнего экзамена."
+    },
+    {
+      "id": "MT4-0458",
+      "stem": {
+        "ru": "Что непосредственно оценивается кадровой службой при оценке профессионального уровня кандидата или гражданского служащего по части 10 статьи 12 Федерального закона №79-ФЗ?",
+        "en": "What does the personnel unit directly assess when evaluating a candidate’s or civil servant’s professional competence under Article 12(10) of Federal Law No.79-FZ?",
+        "zh": "人事部门依第79-FZ号联邦法第12条第10款评估应聘者或文职公务员的专业能力水平时，直接评估的内容是什么？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Уровень знаний и умений, необходимых для исполнения должностных обязанностей",
+            "en": "The level of knowledge and skills needed to perform the duties of the post",
+            "zh": "履行岗位职责所需的知识和技能水平"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "результатов профессиональной служебной деятельности гражданского служащего на основе показателей эффективности и результативности",
+            "en": "Results of professional service activities using efficiency and performance indicators",
+            "zh": "依据效率和绩效指标评估其职业公务活动成果"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "надлежащего исполнения гражданским служащим должностных обязанностей",
+            "en": "Proper performance of official duties",
+            "zh": "公务员是否妥善履行职务职责"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "соответствия гражданского служащего замещаемой должности государственной гражданской службы",
+            "en": "Suitability for the state civil-service position held",
+            "zh": "公务员是否适合现任国家文职公务职位"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт4 статьи1 и части9,10 статьи12 №79-ФЗ определяют оценку профессионального уровня как проверку знаний и умений для исполнения должностных обязанностей, проводимую кадровой службой. Это действующая проверка вместо вопроса об отменённом экзамене статьи49. a — предмет оценки; b,c касаются прошлых результатов исполнения, d — общий результат аттестации статьи48.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Отменённый квалификационный экзамен заменён действующей оценкой профессионального уровня по статье12, сохраняя тему профессиональной компетентности. a уточнён через знания и умения."
+    },
+    {
+      "id": "MT4-0459",
+      "stem": {
+        "ru": "Как Федеральный закон №79-ФЗ определяет период профессионального развития гражданского служащего, включая дополнительное профессиональное образование?",
+        "en": "How does Federal Law No.79-FZ define the period of a civil servant’s professional development, including continuing professional education?",
+        "zh": "第79-FZ号联邦法如何规定文职公务员开展专业发展（包括继续专业教育）的期间？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Только один раз в три года",
+            "en": "Only once every three years",
+            "zh": "仅每三年开展一次"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "В течение всего периода гражданской службы; направление на конкретные мероприятия осуществляется по основаниям, предусмотренным законом",
+            "en": "Throughout the entire period of civil service; participation in particular activities is arranged on the grounds prescribed by law",
+            "zh": "贯穿整个文职公务任职期间；参加具体活动须依据法律规定的事由安排"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Обязательно один раз в пять лет для всех без исключения",
+            "en": "Exactly once every five years for everyone without exception",
+            "zh": "所有人员无例外地每五年开展一次"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Профессиональное развитие после поступления на службу законом не регулируется",
+            "en": "Professional development after entry into service is not regulated by law",
+            "zh": "录用后的专业发展不受法律调整"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Части1,2 статьи62 №79-ФЗ предусматривают профессиональное развитие в течение всего периода службы, включая дополнительное профессиональное образование и иные мероприятия. Часть3 устанавливает основания направления. Прежняя всеобщая периодичность «не реже раза в три года» отсутствует. b — верное действующее правило; a,c задают неустановленные общие циклы, d исключает законодательное регулирование.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Вопрос о старой трёхлетней периодичности заменён действующим правилом непрерывного профессионального развития; b актуализирован, d лишён неоднозначности."
+    },
+    {
+      "id": "MT4-0463",
+      "stem": {
+        "ru": "Каков установленный минимальный срок после назначения для присвоения первого классного чина федеральному гражданскому служащему, если испытание не устанавливалось?",
+        "en": "What is the prescribed minimum period after appointment before a federal civil servant may receive their first class rank if no probation was set?",
+        "zh": "未设试用期时，联邦文职公务员任命后，首次授予职级所须经过的法定最短期限是多少？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "при назначении на должность государственной гражданской службы",
+            "en": "Upon appointment to the state civil-service position",
+            "zh": "被任命到国家文职公务职位时"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "не ранее чем через три месяца после назначения на должность государственной гражданской службы, если не устанавливалось испытание",
+            "en": "No earlier than three months after appointment if no probation was imposed",
+            "zh": "未设试用期的情况下，任命后至少三个月"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "не ранее чем через шесть месяцев после назначения на должность государственной гражданской службы",
+            "en": "No earlier than six months after appointment",
+            "zh": "任命后至少六个月"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "не ранее чем через год после назначения на должность государственной гражданской службы",
+            "en": "No earlier than one year after appointment",
+            "zh": "任命后至少一年"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт7 Положения, утверждённого Указом Президента РФ от01.02.2005 №113, устанавливает при отсутствии испытания первый классный чин не ранее трёх месяцев после назначения. b — минимальный срок; a слишком рано, c,d не являются установленным минимумом.",
+        "sourceUrls": [
+          "https://mintrud.gov.ru/docs/president/ukaz/11"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Содержание вариантов и ключ b подтверждены. Слово «может» в условии заменено вопросом о минимальном сроке, чтобы более позднее присвоение не создавало ложной множественности."
+    },
+    {
+      "id": "MT4-0466",
+      "stem": {
+        "ru": "Первым классным чином для ведущей группы должностей федеральной государственной гражданской службы является:",
+        "en": "The first class rank for the leading group of federal state civil-service positions is:",
+        "zh": "联邦国家文职公务主导组职位的首个公务等级是："
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Секретарь государственной гражданской службы Российской Федерации 3 класса",
+            "en": "Secretary of the State Civil Service of the Russian Federation, 3rd class",
+            "zh": "俄罗斯联邦国家文职公务三级秘书"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Референт государственной гражданской службы Российской Федерации 3 класса",
+            "en": "Referent of the State Civil Service of the Russian Federation, 3rd class",
+            "zh": "俄罗斯联邦国家文职公务三级参事"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Государственный советник Российской Федерации 3 класса",
+            "en": "State Councillor of the Russian Federation, 3rd class",
+            "zh": "俄罗斯联邦三级国务顾问"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Советник государственной гражданской службы Российской Федерации 3 класса",
+            "en": "Councillor of the State Civil Service of the Russian Federation, 3rd class",
+            "zh": "俄罗斯联邦国家文职公务三级顾问"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Подпункт«в» пункта6 Положения, утверждённого Указом Президента РФ от01.02.2005 №113, называет первым чином ведущей группы советника государственной гражданской службы РФ3класса. a относится к младшей, b к старшей, c к главной группе. Ключ d подтверждён.",
+        "sourceUrls": [
+          "https://mintrud.gov.ru/docs/president/ukaz/11"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Исходные условие, все варианты и ключ d сохранены после проверки пункта6 Положения о классных чинах."
+    },
+    {
+      "id": "MT4-0468",
+      "stem": {
+        "ru": "Какое из условий не требуется для назначения пенсии за выслугу лет федеральному гражданскому служащему, увольняющемуся по своей инициативе в 2026 году по общему правилу пункта 1 статьи 7 Закона №166-ФЗ, без сохранённых переходных прав?",
+        "en": "Which condition is not required for a federal civil servant’s long-service pension on resignation in 2026 under the general rule of Article 7(1) of Law No.166-FZ, without preserved transitional rights?",
+        "zh": "联邦文职公务员于2026年主动离职，依第166-FZ号法第7条第1款的一般规则申请任职年限养老金，且不享有保留的过渡性权利。下列哪项并非所需条件？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Стаж государственной гражданской службы не менее 20 лет",
+            "en": "At least 20 years of state civil service",
+            "zh": "至少20年的国家文职公务任职年限"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Замещение должности федеральной государственной гражданской службы не менее 12 полных месяцев непосредственно перед увольнением",
+            "en": "Holding a federal state civil-service position for at least 12 full months immediately before dismissal",
+            "zh": "离职前连续担任联邦国家文职公务职位至少12个完整月"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Наличие права на страховую пенсию по старости или инвалидности на день увольнения",
+            "en": "Entitlement to an old-age or disability insurance pension on the date of dismissal",
+            "zh": "在离职当日已具备领取老年或残疾保险养老金的资格"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Членство в профессиональном союзе",
+            "en": "Membership of a trade union",
+            "zh": "加入工会"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт1 статьи7 и приложение2 Федерального закона от15.12.2001 №166-ФЗ устанавливают с2026года общий стаж20лет. При увольнении по своей инициативе учитываются12полных месяцев непосредственно перед увольнением и наличие права на страховую пенсию на день увольнения; сохранённые переходные права и особое основание25лет/7лет не задаются. Членство в профсоюзе не является условием пенсии. d верно.",
+        "sourceUrls": [
+          "https://sfr.gov.ru/grazhdanam/pensionnoe_obespechenie/gosudarstvennaya_pensiya_za_vyslugu_let"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Стаж15лет заменён на20лет; указан общий случай увольнения в2026году без переходных прав, c уточнён через право на страховую пенсию. Предмет и ключ d сохранены."
+    },
+    {
+      "id": "MT4-0472",
+      "stem": {
+        "ru": "В какой срок со дня решения о проведении должна быть завершена служебная проверка, если решение о продлении её срока не принималось?",
+        "en": "Within what period after the decision to conduct it must an internal service investigation be completed if no extension has been authorised?",
+        "zh": "未作出延长期限决定时，公务内部调查须在决定开展调查之日起多久内完成？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "не позднее чем через 14 календарных дней со дня принятия решения о ее проведении",
+            "en": "Within 14 calendar days of the decision to conduct it",
+            "zh": "作出调查决定之日起14个日历日内"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Не позднее 60 календарных дней",
+            "en": "Within 60 calendar days",
+            "zh": "不超过60个日历日"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Не позднее 75 календарных дней",
+            "en": "Within 75 calendar days",
+            "zh": "不超过75个日历日"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Не позднее 90 календарных дней",
+            "en": "Within 90 calendar days",
+            "zh": "不超过90个日历日"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть6 статьи59 №79-ФЗ устанавливает основной срок проверки не более60календарных дней с решения о проведении. Уполномоченные лица могут продлить до90календарных дней. Условие спрашивает основной срок без продления; b верно, a,c,d его не передают.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Месячный срок в b заменён на60календарныхдней, в условии исключено продление; c,d приведены к однозначным срокам в днях."
+    },
+    {
+      "id": "MT4-0473",
+      "stem": {
+        "ru": "Супруга заместителя федерального министра, замещающего должность гражданской службы, открыла вклад в банке на территории Йемена. Установлено нарушение распространяющегося на эту семью запрета на иностранные счета; законные исключения и основания освобождения от ответственности отсутствуют. Какое последствие для служащего предусматривает статья 59.2 Закона №79-ФЗ?",
+        "en": "The spouse of a deputy federal minister holding a civil-service post opens a deposit with a bank in Yemen. A breach of the foreign-account prohibition applicable to this family has been established, with no statutory exception or ground for exemption from liability. What consequence does Article 59.2 of Law No.79-FZ prescribe for the servant?",
+        "zh": "一名担任文职公务员岗位的联邦副部长，其配偶在也门境内银行开立存款账户。已认定该家庭违反适用的境外账户禁令，且不存在法定例外或免责事由。第79-FZ号法第59.2条对该公务员规定何种后果？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "увольнение в связи с утратой доверия",
+            "en": "Dismissal due to loss of trust",
+            "zh": "因丧失信任而被辞退"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "объявление выговора",
+            "en": "A reprimand",
+            "zh": "受到申诫"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "необходимость подачи супругой декларации о доходах",
+            "en": "The wife must file an income declaration",
+            "zh": "其妻子必须提交收入申报"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "никаких",
+            "en": "None",
+            "zh": "没有后果"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть1.1 статьи17 и пункт6 части1 статьи59.2 №79-ФЗ предусматривают запрет для охваченных категорий и увольнение в связи с утратой доверия при его нарушении служащим, супругом либо несовершеннолетним ребёнком. Статья13 №273-ФЗ допускает освобождение из-за не зависящих от лица обстоятельств; условие прямо исключает законные исключения и устанавливает нарушение. a верно; выговор, простая декларация или отсутствие последствий не соответствуют этому составу.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Сохранён казус вклада супруги замминистра в Йемене; добавлены охват запретом, установленное нарушение и отсутствие законных исключений/оснований освобождения. Ключ a сохранён."
+    },
+    {
+      "id": "MT4-0474",
+      "stem": {
+        "ru": "Гражданский служащий входит в состав конкурсной комиссии государственного органа. Его сын подал документы на участие в конкурсе на замещение вакантной должности специалиста в данном государственном органе. Что должен сделать гражданский служащий?",
+        "en": "A civil servant is a member of a state body's selection commission. Their son has applied for a vacant specialist position in that body. What must the civil servant do?",
+        "zh": "一名公务员是国家机关竞争性选拔委员会成员，其儿子提交材料申请该机关的专业人员空缺职位。公务员应当如何做？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "никаких действий предпринимать не нужно",
+            "en": "No action is required",
+            "zh": "无须采取任何行动"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Уведомить представителя нанимателя о конфликте интересов в установленном порядке и принять меры к его урегулированию, включая отвод от участия в решении по сыну в предусмотренном порядке",
+            "en": "Notify the employer’s representative of the conflict through the prescribed procedure and take measures to resolve it, including recusal from decisions concerning the son in accordance with that procedure",
+            "zh": "按规定程序向任用方代表报告利益冲突并采取解决措施，包括按规定程序回避涉及其儿子的决定"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "сообщить сыну, что тот не может участвовать в конкурсе на данную должность",
+            "en": "Tell their son that he cannot compete for the position",
+            "zh": "告知儿子不得参加该职位选拔"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "сообщить непосредственному начальнику и членам конкурсной комиссии о наличии конфликта интересов",
+            "en": "Inform the immediate supervisor and selection commission members of the conflict of interest",
+            "zh": "告知直接上级和选拔委员会成员存在利益冲突"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт12 части1 статьи15 и часть10 статьи22 №79-ФЗ, части1,2,4,5 статьи11 №273-ФЗ требуют уведомления представителя нанимателя и мер предотвращения конфликта, в том числе отвода в установленном порядке. Законы не устанавливают всеобщую обязанность дополнительно уведомлять непосредственного начальника; наличие сына не лишает его права участвовать в конкурсе. b исправлен.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Из b убрана универсальная двойная адресация; добавлены меры по недопущению собственного участия в решении по сыну в установленном порядке."
+    },
+    {
+      "id": "MT4-0476",
+      "stem": {
+        "ru": "Гражданский служащий, являющийся представителем нанимателя, знал о личной заинтересованности подчинённого, приводящей к конфликту интересов, но не принял мер. Нарушение установлено; предусмотренные федеральными законами основания освобождения от ответственности отсутствуют. Какое последствие предусмотрено законом?",
+        "en": "A civil servant acting as the employer’s representative knew of a subordinate’s personal interest leading to a conflict of interest but took no action. The breach is established and no federally prescribed ground for exemption applies. What consequence does the law prescribe?",
+        "zh": "一名行使任用方代表职权的文职公务员明知下属的个人利益关系导致利益冲突，却未采取措施。违法事实已查明，且不存在联邦法律规定的免责事由。法律规定何种后果？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "представителю нанимателя будет объявлен строгий выговор",
+            "en": "The employer's representative receives a severe reprimand",
+            "zh": "受到严重申诫"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "представитель нанимателя будет понижен в должности",
+            "en": "The employer's representative is demoted",
+            "zh": "被降职"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "представитель нанимателя будет отстранен от руководящей должности",
+            "en": "The employer's representative is suspended from the managerial position",
+            "zh": "被暂停领导职务"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Увольнение с гражданской службы в связи с утратой доверия",
+            "en": "Dismissal from the civil service for loss of trust",
+            "zh": "因失去信任而被解除文职公务员职务"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть4.1 статьи19 и часть2 статьи59.2 №79-ФЗ предусматривают увольнение представителя нанимателя в связи с утратой доверия за непринятие мер при известной заинтересованности подчинённого. Статья13 №273-ФЗ предусматривает законные основания освобождения; они прямо исключены. d уточнён; a–c не соответствуют установленной законом санкции.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "В условии установлены статус представителя нанимателя как гражданского служащего, доказанное бездействие и отсутствие оснований освобождения; d уточнён как утрата доверия."
+    },
+    {
+      "id": "MT4-0477",
+      "stem": {
+        "ru": "Гражданский служащий приобрёл гражданство Канады. Какую обязанность по уведомлению он должен исполнить в соответствии со статьёй 15 Федерального закона №79-ФЗ?",
+        "en": "A civil servant has acquired Canadian citizenship. What notification duty must they fulfil under Article 15 of Federal Law No.79-FZ?",
+        "zh": "一名文职公务员取得加拿大国籍。依第79-FZ号联邦法第15条，其必须履行何种告知义务？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Только подать заявление об увольнении по собственному желанию, не сообщая о новом гражданстве",
+            "en": "Only submit a voluntary resignation without reporting the new citizenship",
+            "zh": "只须主动申请辞职，无需报告新取得的国籍"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "сообщить в комиссию по урегулированию конфликта интересов",
+            "en": "Notify the conflict-of-interest commission",
+            "zh": "通知利益冲突处理委员会"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Письменно сообщить представителю нанимателя в день, когда стало известно о приобретении гражданства, но не позднее пяти рабочих дней со дня его приобретения",
+            "en": "Notify the employer’s representative in writing on the day they learn of the acquisition, and no later than five working days after acquiring that citizenship",
+            "zh": "在知悉取得国籍的当天，且最迟在取得该国籍后五个工作日内，书面告知任用方代表"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "никаких действий предпринимать не нужно",
+            "en": "No action is required",
+            "zh": "无须采取任何行动"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт10 части1 статьи15 №79-ФЗ обязывает письменно уведомить именно представителя нанимателя в день осведомлённости, не позднее пяти рабочих дней после приобретения иностранного гражданства. Статья41 регулирует прекращение службы по решению нанимателя, но не заменяет уведомление обязательной добровольной отставкой. c исправлен и выбран вместо a; b,d обязанности не исполняют.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Ключ a заменён на c. В c исправлены адресат и срок уведомления; a больше не подменяет обязанность уведомления добровольным увольнением."
+    },
+    {
+      "id": "MT4-0479",
+      "stem": {
+        "ru": "Служащий сдаёт своё жильё, приобретённое для личного использования; сделка не имеет признаков предпринимательства и не создаёт конфликта интересов. Он обязан представить сведения о доходах за период, в котором получит арендную плату. Какое утверждение верно?",
+        "en": "A servant rents out housing acquired for personal use; the transaction is not entrepreneurial and creates no conflict of interest. The servant is required to disclose income for the period in which the rent is received. Which statement is correct?",
+        "zh": "公务员出租为个人使用而取得的自有住房，该交易不属于经营活动，也不产生利益冲突。其依法须申报收取租金所属期间的收入。下列说法何者正确？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "он не имеет права сдавать недвижимость в аренду",
+            "en": "They have no right to rent out real estate",
+            "zh": "无权出租不动产"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Он вправе заключить договор и должен отразить полученный доход в представляемых по закону сведениях",
+            "en": "They may conclude the rental agreement and must include the income in the disclosure required by law",
+            "zh": "可以订立租赁合同，并须在依法提交的资料中列明所获收入"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Он может заключить договор только после письменного разрешения непосредственного руководителя",
+            "en": "They may conclude the agreement only after obtaining their immediate supervisor’s written permission",
+            "zh": "只有获得直接领导的书面许可后，才能订立合同"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Он обязан предварительно получить разрешение комиссии по конфликту интересов даже при отсутствии такого конфликта",
+            "en": "They must obtain prior permission from the conflict-of-interest commission even where no conflict exists",
+            "zh": "即使没有利益冲突，也必须事先取得利益冲突委员会许可"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт3.1 части1 статьи17 №79-ФЗ запрещает предпринимательство, но не всякое распоряжение личным жильём. ФНС02.09.2026 прямо разъясняет допустимость аренды жилья, приобретённого для личного использования, при отсутствии предпринимательского характера. Статья8 №273-ФЗ регулирует представление доходов при предусмотренном законом основании; условие прямо задаёт такую обязанность. b верно; общего запрета, обязательного разрешения руководителя или комиссии без конфликта нет.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx",
+          "https://www.nalog.gov.ru/rn41/news/activities_fts/16640956/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Указаны личное назначение жилья, отсутствие предпринимательства/конфликта и существующая обязанность подать сведения. Убрано обещание охватить «все требования»; c,d сформулированы как отсутствующие общие разрешительные процедуры."
+    },
+    {
+      "id": "MT4-0481",
+      "stem": {
+        "ru": "Обязан ли гражданин при поступлении на обычную должность государственной гражданской службы прекратить или приостановить членство в политической партии только из-за факта поступления на службу?",
+        "en": "Must a citizen entering an ordinary state civil-service post end or suspend membership of a political party solely because they enter the service?",
+        "zh": "公民进入普通国家文职公务员岗位时，是否仅因入职就必须退出政党或暂停党籍？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Да, членство обязательно приостанавливается с момента заключения контракта",
+            "en": "Yes, membership must be suspended from the date the contract is concluded",
+            "zh": "是，订立合同时必须暂停党籍"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Да, он обязан выйти из партии до назначения на любую должность гражданской службы",
+            "en": "Yes, they must leave the party before appointment to any civil-service post",
+            "zh": "是，任职任何文职公务员岗位前都必须退出政党"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Вопрос о прекращении членства обязательно решает комиссия по конфликту интересов",
+            "en": "The conflict-of-interest commission must decide whether membership ends",
+            "zh": "必须由利益冲突委员会决定终止党籍"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Нет, такого общего требования нет; при исполнении обязанностей необходимо соблюдать беспристрастность и запреты на использование должностных полномочий в интересах партии",
+            "en": "No general requirement exists; official duties must be performed impartially and official powers must not be used in the party’s interests",
+            "zh": "没有这种普遍要求；履职时仍须保持公正，不得利用职权为政党谋利"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Подпункт«а» пункта3 части1 статьи17 №79-ФЗ даже допускает безвозмездное участие в управлении политической партией. Пункты13,14 части1 статьи17 и пункты4,5 части1 статьи18 ограничивают использование полномочий и требуют беспристрастности, но не предписывают всем гражданским служащим выходить из партии. Вопрос ограничен прекращением членства, не освобождает от предусмотренных анкетой/законом сведений. d верно.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие ограничено необходимостью прекратить или приостановить партийное членство; d больше не утверждает отсутствие любых действий или сведений. Остальные варианты приведены к этому предмету."
+    },
+    {
+      "id": "MT4-0488",
+      "stem": {
+        "ru": "Каков предельный срок со дня проступка для применения дисциплинарного взыскания по результатам аудиторской проверки? Время производства по уголовному делу в этот срок не включается.",
+        "en": "What is the outer time limit from the misconduct for imposing a disciplinary sanction following an audit? Time spent in criminal proceedings is excluded.",
+        "zh": "根据审计结果作出纪律处分，自违纪行为发生之日起计算的最长期限是多少？刑事诉讼所用时间不计入该期限。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Шесть месяцев",
+            "en": "Six months",
+            "zh": "六个月"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Один год",
+            "en": "One year",
+            "zh": "一年"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Полтора года",
+            "en": "One and a half years",
+            "zh": "一年半"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Два года",
+            "en": "Two years",
+            "zh": "两年"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть5 статьи58 №79-ФЗ устанавливает для взыскания по результатам финансово-хозяйственной или аудиторской проверки предел два года со дня проступка, без включения времени уголовного производства. Это внешний предел, не отменяющий месячного срока с обнаружения по части4. d верно; a–c не передают специальный предел.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие прямо исключает время производства по уголовному делу и спрашивает внешний срок со дня проступка."
+    },
+    {
+      "id": "MT4-0489",
+      "stem": {
+        "ru": "Какая мера не названа самостоятельным видом поощрения или награждения в части 1 статьи 55 Федерального закона №79-ФЗ?",
+        "en": "Which measure is not expressly named as a separate type of incentive or award in Article 55(1) of Federal Law No.79-FZ?",
+        "zh": "第79-FZ号联邦法第55条第1款未将哪项措施单独列为奖励种类？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Награждение почетной грамотой государственного органа с выплатой единовременного поощрения или с вручением ценного подарка",
+            "en": "A state body's certificate of honour together with a one-off monetary reward or a valuable gift",
+            "zh": "颁发国家机关荣誉证书，同时给予一次性奖励金或贵重礼物"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Объявление благодарности с выплатой единовременного поощрения",
+            "en": "A commendation together with a one-off monetary reward",
+            "zh": "通报嘉奖，同时给予一次性奖励金"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Выплата единовременного поощрения в связи с выходом на государственную пенсию за выслугу лет",
+            "en": "A one-off monetary reward upon retirement on a state long-service pension",
+            "zh": "因领取国家长期服务养老金而退休时给予一次性奖励金"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Досрочное снятие дисциплинарного взыскания",
+            "en": "Early removal of a disciplinary penalty",
+            "zh": "提前撤销纪律处分"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункты1,2,4 части1 статьи55 №79-ФЗ прямо называют благодарность, грамоту и единовременное поощрение при пенсии. Досрочное снятие взыскания отдельно регулируется частью9 статьи58 и не названо самостоятельным видом в части1 статьи55. Условие не отрицает возможность иных ведомственных поощрений по пункту3. Ключ d.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнено, что спрашивается прямо названный в части1 статьи55 вид поощрения, а не принципиальная невозможность иных мер."
+    },
+    {
+      "id": "MT4-0493",
+      "stem": {
+        "ru": "О каких членах семьи гражданский служащий представляет сведения о доходах, имуществе и обязательствах имущественного характера, когда у него возникает установленная законом обязанность представить такие сведения?",
+        "en": "For which family members must a civil servant disclose income, property and property-related liabilities when the statutory duty to make such a disclosure arises?",
+        "zh": "文职公务员依法负有申报义务时，应就哪些家庭成员提交收入、财产及财产义务资料？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Родители, супруг (супруга), дети (в том числе усыновленные)",
+            "en": "Parents, spouse and children, including adopted children",
+            "zh": "父母、配偶、子女，包括养子女"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Супруг (супруга) и несовершеннолетние дети",
+            "en": "Spouse and minor children",
+            "zh": "配偶和未成年子女"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Родители, братья и сестры, супруг (супруга), дети, иные близкие лица",
+            "en": "Parents, siblings, spouse, children and other close persons",
+            "zh": "父母、兄弟姐妹、配偶、子女及其他亲近人员"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Супруг (супруга) и дети",
+            "en": "Spouse and children",
+            "zh": "配偶和子女"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть1 статьи8 №273-ФЗ устанавливает представление сведений о супруге и несовершеннолетних детях наряду со сведениями о себе. Статья20 №79-ФЗ отсылает к этому регулированию. Круг родственников для конфликта интересов, ограничений и иных гарантий иной, поэтому универсальное определение семьи было неверно. b точно соответствует цели декларирования.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/",
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Вместо единого определения семьи условие ограничено антикоррупционными сведениями о доходах, имуществе и обязательствах."
+    },
+    {
+      "id": "MT4-0499",
+      "stem": {
+        "ru": "Бывший служащий замещал должность, включённую в установленный нормативными актами перечень. В течение какого периода после увольнения он обязан сообщать новому работодателю последнее место службы при заключении трудового договора с организацией, если назначение не производится по решению Президента РФ?",
+        "en": "A former servant held a post included in the statutory list. For how long after leaving service must they inform a new employer of their last place of service when entering an employment contract with an organisation, where the appointment is not made by decision of the President of Russia?",
+        "zh": "离职公务员原岗位属于规范性文件规定的名单。若进入某组织并订立劳动合同并非依俄罗斯总统决定任命，其在离职后的多长期间内须向新雇主告知最后任职机关？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "постоянно при каждом заключении трудового договора",
+            "en": "Always, whenever concluding an employment agreement",
+            "zh": "每次订立劳动合同时都必须告知，无期限限制"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "в течение пяти лет после увольнения с государственной службы",
+            "en": "For five years after leaving state service",
+            "zh": "离开国家公务系统后五年内"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "в течение двух лет после увольнения с государственной службы",
+            "en": "For two years after leaving state service",
+            "zh": "离开国家公务系统后两年内"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "по усмотрению сторон",
+            "en": "At the parties' discretion",
+            "zh": "由双方自行决定"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть2 статьи12 №273-ФЗ требует сообщать новому работодателю сведения о последнем месте службы при заключении трудового договора в течение двух лет после увольнения с должности из перечня. Часть7 исключает назначение по решению Президента РФ; это исключение явно снято в условии. c верно, постоянный/пятилетний/договорной сроки не предусмотрены.",
+        "sourceUrls": [
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Указаны трудовой договор с организацией и отсутствие назначения по решению Президента РФ; ключ c два года сохранён."
+    },
+    {
+      "id": "MT4-0500",
+      "stem": {
+        "ru": "Организация заключает трудовой договор с бывшим государственным или муниципальным служащим, уволенным менее двух лет назад с должности из установленного перечня. Назначение не производится по решению Президента РФ. В какой срок работодатель обязан сообщить о договоре представителю нанимателя по последнему месту службы?",
+        "en": "An organisation employs a former state or municipal servant who left a listed post less than two years ago. The appointment is not made by decision of the President of Russia. Within what period must the employer notify the appointing authority at the last place of service?",
+        "zh": "某组织与不到两年前离开名单内岗位的国家或地方自治公务员订立劳动合同，且并非依俄罗斯总统决定任命。雇主应在多久内将订立合同的情况通知其最后任职机关的任用方代表？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "5 дней",
+            "en": "5 days",
+            "zh": "5天"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "10 дней",
+            "en": "10 days",
+            "zh": "10天"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "30 дней",
+            "en": "30 days",
+            "zh": "30天"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "60 дней",
+            "en": "60 days",
+            "zh": "60天"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть4 статьи12 №273-ФЗ устанавливает десятидневный срок сообщения прежнему представителю нанимателя о трудовом договоре с бывшим служащим из перечня в пределах двух лет. Часть7 отменяет это сообщение при назначении решением Президента РФ; исключение снято в условии. b10дней верно.",
+        "sourceUrls": [
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнены общий случай и отсутствие президентского назначения; ключ b и десятидневный срок сохранены."
+    },
+    {
+      "id": "MT4-0501",
+      "stem": {
+        "ru": "Может ли представитель нанимателя в связи со служебной необходимостью взамен дополнительного оплачиваемого отпуска, предоставляемого гражданскому служащему, имеющему ненормированный служебный день, компенсировать исполнение им должностных обязанностей за пределами нормальной продолжительности служебного времени оплатой как за сверхурочную работу?",
+        "en": "For service needs, may the employer's representative compensate a civil servant with an irregular working day for work beyond normal hours through overtime pay instead of additional paid leave?",
+        "zh": "因公务需要，雇用方代表能否以加班费替代额外带薪休假，补偿实行不定时公务工作制的公务员超出正常时间履职？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Не может заменять этот отпуск оплатой часов как за сверхурочную работу. Денежная компенсация части ежегодного отпуска свыше 28 календарных дней допускается отдельно по письменному заявлению служащего",
+            "en": "They cannot replace that leave with payment for hours as overtime. Cash compensation for the portion of annual leave exceeding 28 calendar days is separately permitted upon the servant’s written request",
+            "zh": "不能将该休假替换为按加班工时计算的工资。另可根据公务员书面申请，对年度休假超过28个日历日的部分给予现金补偿"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "может, так как у представителя нанимателя в данном случае право выбора предоставить указанную гарантию или компенсацию",
+            "en": "Yes; the employer's representative may choose between that guarantee and compensation",
+            "zh": "可以，因为雇用方代表有权在该项保障和补偿之间选择"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "может, так как представитель нанимателя в данном случае исходит из интересов государства и финансовых возможностей",
+            "en": "Yes; the employer's representative acts according to the state's interests and financial capacity",
+            "zh": "可以，因为雇用方代表根据国家利益和财力作决定"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "может с согласия гражданского служащего",
+            "en": "Yes, with the civil servant's consent",
+            "zh": "经公务员同意可以"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "a"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть6.1 статьи46 №79-ФЗ гарантирует три календарных дня дополнительного отпуска за ненормированный день. Прежняя замена его оплатой часов как сверхурочных не предусмотрена. Часть9.3 допускает отдельную денежную компенсацию части ежегодного отпуска свыше28дней по письменному заявлению; это не расчёт сверхурочных. Поэтому a, а не прежний d.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Ключ d заменён на a; a разъясняет различие между оплатой часов и допустимой компенсацией части отпуска."
+    },
+    {
+      "id": "MT4-0502",
+      "stem": {
+        "ru": "Работодатель знал о прежней службе принятого работника и виновно не исполнил обязательное в данном случае уведомление последнего места службы о трудовом договоре. Законное исключение не применяется. Какой вид ответственности предусмотрен статьёй 19.29 КоАП РФ?",
+        "en": "An employer knew of an employee’s former public service and culpably failed to provide the notification of the employment contract required in this case. No statutory exception applies. What type of liability is provided by Article 19.29 of the Administrative Offences Code?",
+        "zh": "雇主明知新员工此前的公务任职经历，却有过错地未履行该情形下必须向其最后任职机关通知劳动合同的义务，且不适用法定例外。《行政违法法典》第19.29条规定何种责任？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Гражданско-правовую ответственность",
+            "en": "Civil-law liability",
+            "zh": "民事法律责任"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Административную ответственность",
+            "en": "Administrative liability",
+            "zh": "行政责任"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Материальную ответственность",
+            "en": "Financial liability",
+            "zh": "财产赔偿责任"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Уголовную ответственность",
+            "en": "Criminal liability",
+            "zh": "刑事责任"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Части4,5 статьи12 №273-ФЗ устанавливают обязанность сообщения и ответственность за её неисполнение. Статья19.29 КоАП РФ предусматривает административную ответственность; её применение за неуведомление подтверждено официальным сообщением прокуратуры Ярославской области от10.09.2026. Условие устанавливает вину, осведомлённость о прежней службе и отсутствие исключения; b.",
+        "sourceUrls": [
+          "https://kemksp.ru/upload/iblock/3f3/au6g25r7kyeb317oyyd387votovmo4ww/-273_FZ.docx",
+          "https://epp.genproc.gov.ru/ru/proc_76/mass-media/news/regional/e8648782/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Уточнено, что уведомление обязательно в рассматриваемом случае и работодатель виновно его не исполнил. Ключ b подтверждён действующей нормой и практикой2026года."
+    },
+    {
+      "id": "MT4-0506",
+      "stem": {
+        "ru": "Какова максимальная суммарная продолжительность ежегодного основного оплачиваемого отпуска и дополнительного отпуска за выслугу лет гражданского служащего? Другие виды дополнительных отпусков здесь не учитываются.",
+        "en": "What is the maximum combined duration of a civil servant’s annual basic paid leave and additional long-service leave? Other types of additional leave are not included.",
+        "zh": "文职公务员年度基本带薪休假与按任职年限增加的休假，两者合计最多多少天？本题不计其他种类的附加休假。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Для гражданских служащих, замещающих высшие должности гражданской службы, - 50 календарных дней, для гражданских служащих, замещающих главные должности гражданской службы, - 45 дней, для гражданских служащих иных групп - 40 календарных дней",
+            "en": "50 calendar days for the highest group, 45 days for the principal group, and 40 calendar days for other groups",
+            "zh": "最高组职位50个日历日，主要组职位45天，其他组40个日历日"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Для гражданских служащих, замещающих высшие и главные должности гражданской службы, не может превышать 55 календарных дней, для гражданских служащих, замещающих должности гражданской службы иных групп, - 45 календарных дней",
+            "en": "55 calendar days for the highest and principal groups and 45 calendar days for other groups",
+            "zh": "最高组和主要组职位55个日历日，其他组45个日历日"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Для гражданских служащих, замещающих высшие и главные должности гражданской службы, не может превышать 45 календарных дней, для гражданских служащих, замещающих должности гражданской службы иных групп, - 40 календарных дней",
+            "en": "45 calendar days for the highest and principal groups and 40 calendar days for other groups",
+            "zh": "最高组和主要组职位45个日历日，其他组40个日历日"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "40 календарных дней: 30 дней основного отпуска и не более 10 дней за выслугу лет",
+            "en": "40 calendar days: 30 days of basic leave plus up to 10 days for length of service",
+            "zh": "40个日历日：基本休假30天，加上任职年限休假最多10天"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть3 статьи46 №79-ФЗ: основной отпуск30календарныхдней; часть5: выслуга1,5,7или10дней в зависимости от стажа; часть6 суммирует эти две составляющие. Максимум именно их суммы40дней. Дополнительные отпуска за ненормированный день, особые условия и т.п. считаются отдельно. a–c основаны на отменённых групповых различиях, d исправлен.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Условие ограничено суммой основного отпуска и отпуска за выслугу; в d вместо отсутствия ограничений указан актуальный максимум40дней."
+    },
+    {
+      "id": "MT4-0508",
+      "stem": {
+        "ru": "Какие обстоятельства сами по себе не названы самостоятельными основаниями направления на профессиональное развитие в части 3 статьи 62 Федерального закона №79-ФЗ? Выберите все верные ответы.",
+        "en": "Which circumstances are not, by themselves, listed as independent grounds for referral to professional-development activities in Article 62(3) of Federal Law No.79-FZ? Select all correct answers.",
+        "zh": "下列哪些情况本身未被第79-FZ号联邦法第62条第3款列为安排专业发展活动的独立依据？请选择所有正确答案。"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Первое назначение в порядке должностного роста на должность категории «руководители» высшей или главной группы либо категории «специалисты» высшей группы",
+            "en": "First appointment by promotion to a post in the “managers” category in the highest or principal group, or in the “specialists” category in the highest group",
+            "zh": "首次晋升至最高组或主要组的领导类岗位，或最高组的专业人员类岗位"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Включение гражданского служащего в кадровый резерв на конкурсной основе",
+            "en": "Inclusion in the personnel reserve through competitive selection",
+            "zh": "通过竞争性选拔纳入人才储备库"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Результаты аттестации гражданского служащего",
+            "en": "The results of the civil servant's appraisal",
+            "zh": "公务员考核结果"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Письменное заявление гражданского служащего",
+            "en": "The civil servant's written application",
+            "zh": "公务员的书面申请"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "b",
+        "d"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть3 статьи62 №79-ФЗ называет решение нанимателя, результаты аттестации, отдельный перевод при сокращении/упразднении, первое назначение с ростом на указанные высшие/главные должности и первое поступление на службу. Само включение в резерв и одно письменное заявление служащего в этот перечень не включены. a приведён к пункту4; c соответствует пункту2; b,d не являются самостоятельными основаниями.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "a сужен до действующего основания первого назначения на указанные руководящие/высшие должности; вопрос переведён на несколько ответов, ключ b,d. Возможность подать заявление или получить обучение решением нанимателя не отрицается."
+    },
+    {
+      "id": "MT4-0516",
+      "stem": {
+        "ru": "Какое правило выплаты денежного содержания действует при отстранении гражданского служащего от должности по статье 32 Федерального закона №79-ФЗ?",
+        "en": "Which remuneration rule applies when a civil servant is suspended from their post under Article 32 of Federal Law No.79-FZ?",
+        "zh": "依第79-FZ号联邦法第32条暂停文职公务员履职时，适用何种薪酬支付规则？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Начисляется в полном объеме во всех случаях",
+            "en": "Accrues in full in all cases",
+            "zh": "任何情况下均全额计发"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Не начисляется ни в каких случаях",
+            "en": "Never accrues",
+            "zh": "任何情况下均不计发"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "По основаниям части 2, в том числе на период урегулирования конфликта интересов, денежное содержание сохраняется; по основаниям части 1 не сохраняется, кроме установленных другим федеральным законом случаев",
+            "en": "Remuneration is retained for grounds in paragraph 2, including while resolving a conflict of interest; for grounds in paragraph 1 it is not retained unless another federal law provides otherwise",
+            "zh": "依据第2款暂停履职（包括解决利益冲突期间）时保留薪酬；依据第1款暂停履职时不保留薪酬，其他联邦法律另有规定的除外"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Не начисляется в случае отстранения на период урегулирования конфликта интересов, в иных случаях начисляется",
+            "en": "Does not accrue when suspension is for resolution of a conflict of interest, but accrues in other cases",
+            "zh": "为解决利益冲突而停职时不计发，其他情况计发"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Часть4 статьи32 №79-ФЗ: при отстранении по основаниям части2, включая конфликт интересов и проверки, денежное содержание сохраняется; по части1 — не сохраняется, кроме предусмотренных другим федеральным законом случаев. c исправлен до полного правила и является верным. a,b дают неверные абсолютные выводы, d инвертирует правило о конфликте.",
+        "sourceUrls": [
+          "https://epp.genproc.gov.ru/ru/proc_22/activity/combating-corruption/zakon/federal/e206316/"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Ключ b исправлен на c. В c приведено разграничение оснований частей1 и2 и сохранено исключение другого федерального закона."
+    },
+    {
+      "id": "MT4-0518",
+      "stem": {
+        "ru": "Перечень показателей для оценки эффективности деятельности органов исполнительной власти субъекта Российской Федерации утверждается:",
+        "en": "The list of indicators for assessing the effectiveness of a constituent entity's executive authorities is approved by:",
+        "zh": "评估俄罗斯联邦主体行政机关工作效率的指标目录由谁或什么批准？"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "ru": "Законодательным органом субъекта Российской Федерации",
+            "en": "The constituent entity's legislature",
+            "zh": "俄罗斯联邦主体立法机关"
+          }
+        },
+        {
+          "id": "b",
+          "text": {
+            "ru": "Высшим должностным лицом субъекта Федерации",
+            "en": "The constituent entity's highest official",
+            "zh": "联邦主体最高官员"
+          }
+        },
+        {
+          "id": "c",
+          "text": {
+            "ru": "Президентом Российской Федерации",
+            "en": "The President of the Russian Federation",
+            "zh": "俄罗斯联邦总统"
+          }
+        },
+        {
+          "id": "d",
+          "text": {
+            "ru": "Федеральным законом",
+            "en": "Federal law",
+            "zh": "联邦法律"
+          }
+        }
+      ],
+      "correctOptionIds": [
+        "c"
+      ],
+      "media": null,
+      "review": {
+        "status": "verified",
+        "reason": "Пункт1 Указа Президента РФ от28.11.2024 №1014 утверждает перечень показателей оценки деятельности высших должностных лиц и исполнительных органов субъектов РФ. Росстат прямо использует этот перечень для официального мониторинга2025года и указывает отмену прежнего Указа№68. c — Президент РФ; региональный законодатель/глава и федеральный закон не утверждают этот конкретный перечень.",
+        "sourceUrls": [
+          "https://rosstat.gov.ru/storage/mediabank/pok-monitor.htm",
+          "https://cesi.tatarstan.ru/file/pub/pub_4507453.pdf"
+        ],
+        "checkedAt": "2026-10-30"
+      },
+      "changeNote": "Исходные условие, варианты и ключ c подтверждены действующим Указом№1014; предмет вопроса сохранён."
+    }
+  ]
+}

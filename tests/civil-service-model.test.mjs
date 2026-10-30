@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   SECTION_IDS,PAPER_SIZE,PER_SECTION,validateBank,availableQuestions,createAttempt,
-  validateAttempt,getAttemptQuestions,setAnswer,gradeAttempt,finishAttempt
+  validateAttempt,getAttemptQuestions,setAnswer as setTimedAnswer,gradeAttempt,finishAttempt,
+  TEST_DURATION_MS,attemptDeadline,remainingAttemptTime,isAttemptExpired
 } from '../site/assets/js/civil-service-model.mjs';
 
 // TEST-ONLY synthetic pool. These are deliberately not real civil-service
@@ -17,6 +18,8 @@ function fixture(perSection=20){return {
  })))
 };}
 const options={id:'test-only-attempt-001',seed:123456,startedAt:1700000000000};
+// A deterministic answer clock keeps replay/grading tests independent of wall time.
+const setAnswer=(bank,attempt,id,answer)=>setTimedAnswer(bank,attempt,id,answer,{now:options.startedAt+1000});
 const attemptFor=(bank=fixture(),overrides={})=>createAttempt(bank,{...options,...overrides});
 const throwsCode=(fn,code)=>assert.throws(fn,error=>error.code===`civil-service/${code}`);
 const frozen=value=>{if(value&&typeof value==='object'){Object.values(value).forEach(frozen);Object.freeze(value);}return value;};
@@ -157,4 +160,44 @@ test('invalid seed, duplicate paper IDs, section imbalance and impossible comple
  const replace=imbalance.questionIds.findIndex(id=>byId.get(id).sectionId==='russian');
  imbalance.questionIds[replace]=bank.questions.find(q=>q.sectionId==='ict'&&!imbalance.questionIds.includes(q.id)).id;
  throwsCode(()=>validateAttempt(bank,imbalance),'invalid-attempt');
+});
+
+test('a paper keeps the same 60-minute deadline after serialization and rejects late answers',()=>{
+ const bank=fixture(),attempt=attemptFor(bank),deadline=options.startedAt+60*60*1000;
+ assert.equal(TEST_DURATION_MS,60*60*1000);assert.equal(attempt.deadlineAt,deadline);
+ const restored=JSON.parse(JSON.stringify(attempt)),question=getAttemptQuestions(bank,restored)[0];
+ assert.equal(attemptDeadline(restored),deadline);
+ assert.equal(remainingAttemptTime(restored,deadline-1),1);
+ assert.equal(remainingAttemptTime(restored,deadline+1000),0);
+ assert.equal(isAttemptExpired(restored,deadline-1),false);
+ assert.equal(isAttemptExpired(restored,deadline),true);
+ const onTime=setTimedAnswer(bank,restored,question.id,question.correctOptionIds,{now:deadline-1});
+ assert.equal(gradeAttempt(bank,onTime).correct,1);
+ for(const now of [deadline,deadline+1,deadline+60*60*1000])throwsCode(()=>setTimedAnswer(bank,restored,question.id,question.correctOptionIds,{now}),'time-expired');
+ assert.deepEqual(restored.answers,{});
+ for(const shifted of [deadline-1,deadline+1,Infinity,null])throwsCode(()=>validateAttempt(bank,{...restored,deadlineAt:shifted}),'invalid-attempt');
+});
+
+test('restoring an expired paper finishes at its original deadline and grades only existing answers',()=>{
+ const bank=fixture(),active=answerCorrectly(bank,attemptFor(bank),3),stored=JSON.stringify(active);
+ const expired=finishAttempt(bank,JSON.parse(stored),{finishedAt:active.deadlineAt+24*60*60*1000});
+ assert.equal(expired.completionReason,'time-limit');assert.equal(expired.finishedAt,active.deadlineAt);
+ assert.equal(expired.result.correct,3);assert.equal(expired.result.points,0.38);
+ assert.equal(expired.result.questionResults.filter(q=>!q.selectedOptionIds.length).length,37);
+ assert.equal(JSON.stringify(active),stored);
+ assert.deepEqual(finishAttempt(bank,expired,{finishedAt:active.deadlineAt+99_000}),expired);
+ throwsCode(()=>setTimedAnswer(bank,expired,expired.questionIds[0],[],{now:active.deadlineAt+1}),'already-completed');
+});
+
+test('legacy completed papers remain unchanged and legacy active papers use their original start time',()=>{
+ const bank=fixture(),legacy=attemptFor(bank);delete legacy.deadlineAt;
+ const question=getAttemptQuestions(bank,legacy)[0];
+ assert.equal(validateAttempt(bank,legacy),true);
+ throwsCode(()=>setTimedAnswer(bank,legacy,question.id,question.correctOptionIds,{now:attemptDeadline(legacy)}),'time-expired');
+ const expired=finishAttempt(bank,legacy,{finishedAt:attemptDeadline(legacy)+1000});
+ assert.equal(expired.finishedAt,attemptDeadline(legacy));assert.equal(expired.result.correct,0);
+ const completed={...legacy,phase:'completed',finishedAt:attemptDeadline(legacy)+60_000,result:gradeAttempt(bank,legacy)};
+ const before=JSON.stringify(completed);assert.equal(validateAttempt(bank,completed),true);
+ assert.deepEqual(finishAttempt(bank,completed),completed);assert.equal(JSON.stringify(completed),before);
+ assert.equal(completed.deadlineAt,undefined);assert.equal(completed.completionReason,undefined);
 });
