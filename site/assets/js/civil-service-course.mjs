@@ -70,8 +70,8 @@ export async function mountCivilServiceCourse(container,{owner=attemptOwner(),ac
     }
   });
   const flush=async()=>{const attempt=await handle?.flush();await durableStore.flush();return attempt;};
-  // A timed paper must not be interrupted by a release switch. Updates wait
-  // until completion while the absolute deadline continues to run normally.
+  // An active paper must not be interrupted by a release switch. Updates wait
+  // until the student submits; the knowledge test has no time limit.
   const updateAdapter=createUpdateAdapter({module:'career',root:container,signal:controller.signal,diagnostics,
     getIdentity:()=>({owner:attemptOwner()==='guest'?'guest:civil-service':attemptOwner(),attemptId:handle?.attemptId||'civil-service-intro'}),
     isBusy:()=>disposed||owner!==attemptOwner()||handle?.hasActiveAttempt||handle?.updateBusy||!!container.querySelector('dialog[open]'),

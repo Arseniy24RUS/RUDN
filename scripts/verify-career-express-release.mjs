@@ -11,6 +11,8 @@ const allowed=new Set([
   '.github/workflows/deploy-pages.yml',
   '.github/workflows/publish-career-seminar.yml',
   'scripts/verify-career-express-release.mjs',
+  'docs/CAREER-SEMINAR-2026-10-30.md',
+  'tests/civil-service-model.test.mjs',
   'site/apps/career/assets/app.js',
   'site/apps/career/assets/seminar-flow.mjs',
   'site/apps/career/assets/authority-names.mjs',
@@ -23,7 +25,12 @@ const allowed=new Set([
   'site/apps/career/module.css',
   'site/apps/career/locales/en.json',
   'site/apps/career/locales/zh-Hans.json',
-  'site/apps/career/data/authorities.json'
+  'site/apps/career/data/authorities.json',
+  'site/assets/js/civil-service-model.mjs',
+  'site/assets/js/civil-service-test.mjs',
+  'site/assets/js/civil-service-course.mjs',
+  'site/assets/js/career-course.js',
+  'site/assets/css/civil-service-test.css'
 ]);
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -50,7 +57,7 @@ if(args.includes('--scope')){
   for(const name of changed){
     assert.ok(allowed.has(name),`Outside the reviewed Seminar 5 scope: ${name}`);
     assert.ok(fs.statSync(name).isFile(),`Deleting a file is outside this publication: ${name}`);
-    if(name.startsWith('site/apps/career/')&&/\.m?js$/.test(name))execFileSync(process.execPath,['--check',name],{stdio:'inherit'});
+    if(/\.m?js$/.test(name))execFileSync(process.execPath,['--check',name],{stdio:'inherit'});
     if(name.endsWith('.json'))JSON.parse(fs.readFileSync(name,'utf8'));
   }
   const authorities=read('site/apps/career/data','authorities.json');
@@ -70,7 +77,7 @@ if(args.includes('--scope')){
       assert.ok(!url.username&&!url.password,`${authority.id}: public source`);
     }
   }
-  console.log(JSON.stringify({status:'pass',scope:'career-only',baseCommit,changed,authorities:authorities.length,fullPlatformTests:false}));
+  console.log(JSON.stringify({status:'pass',scope:'seminar-5',baseCommit,changed,authorities:authorities.length,fullPlatformTests:false}));
 }else if(args.includes('--seed-vacancies')){
   const root=option('--baseline'),{manifest}=current(root);
   for(const name of ['apps/career/data/vacancies/gossluzhba.json','apps/career/data/vacancies/sync-status.json']){
@@ -103,7 +110,6 @@ if(args.includes('--scope')){
     assert.ok(after,`Deleting a published resource is outside this change: ${name}`);
     changed.push(name);
   }
-  assert.ok(changed.includes('apps/career/runtime.bundle.mjs'),'The updated career runtime is in the release');
-  assert.ok(changed.includes('apps/career/module.css'),'The fixed career styles are in the release');
-  console.log(JSON.stringify({status:'pass',scope:'career-only',previous:old.entry.buildId,current:next.entry.buildId,changed,fullPlatformTests:false}));
+  assert.ok(changed.length>0,'The release must update at least one explicitly allowed Seminar 5 student resource');
+  console.log(JSON.stringify({status:'pass',scope:'seminar-5',previous:old.entry.buildId,current:next.entry.buildId,changed,fullPlatformTests:false}));
 }else throw new Error('Usage: --scope | --seed-vacancies --baseline DIR | --compare --baseline DIR --staging DIR');

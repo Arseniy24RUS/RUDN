@@ -1,10 +1,10 @@
-import {createAttempt, getAttemptQuestions, setAnswer, finishAttempt, validateAttempt, gradeAttempt, remainingAttemptTime, isAttemptExpired} from './civil-service-model.mjs';
+import {createAttempt, getAttemptQuestions, setAnswer, finishAttempt, validateAttempt, gradeAttempt} from './civil-service-model.mjs';
 
 const COPY = {
   ru: {
     title:'Знания о государственной службе', eyebrow:'Тест семинара', intro:'Проверьте знания и сразу получите результат с разбором ответов.',
     source:'Источник', version:'Версия банка', reviewed:'Активный пул проверен', reviewPending:'Дата проверки не указана', pool:'В проверенной выдаче', sourceCount:'В исходном банке',
-    questions:'вопросов', topics:'тем', minutes:'минут', maximum:'максимум баллов', remaining:'Осталось времени', expired:'Время истекло. Тест завершён, результат рассчитан по сохранённым ответам.', timerRule:'После начала у Вас будет 60 минут. По истечении времени тест завершится автоматически.', distribution:'Вариант включает по 8 вопросов из каждой из 5 тем.',
+    questions:'вопросов', topics:'тем', maximum:'максимум баллов', distribution:'Вариант включает по 8 вопросов из каждой из 5 тем.',
     scoreRule:'Оценка: 5 × число верных ответов / 40, с округлением до сотых.', multipleRule:'В вопросах с несколькими ответами нужно выбрать все верные варианты. Частичные ответы и пропуски не приносят баллов.',
     sourceLanguage:'В языковых заданиях русские слова и примеры сохранены как предмет проверки. Цитаты документов в них могут относиться к прежним редакциям. Подписи на исходных иллюстрациях сохранены.',
     start:'Начать тест', startFailed:'Не удалось подготовить вариант. Проверенный банк пока не готов; попробуйте позже.',
@@ -25,7 +25,7 @@ const COPY = {
   en: {
     title:'Public-service knowledge', eyebrow:'Seminar test', intro:'Check your knowledge and get an immediate score with an answer review.',
     source:'Source', version:'Bank version', reviewed:'Active pool reviewed', reviewPending:'Review date not provided', pool:'In the reviewed pool', sourceCount:'In the source bank',
-    questions:'questions', topics:'topics', minutes:'minutes', maximum:'maximum points', remaining:'Time remaining', expired:'Time has expired. The test has finished and your answers have been scored.', timerRule:'You have 60 minutes from the start. The test finishes automatically when time runs out.', distribution:'Each paper includes 8 questions from each of 5 topics.',
+    questions:'questions', topics:'topics', maximum:'maximum points', distribution:'Each paper includes 8 questions from each of 5 topics.',
     scoreRule:'Score: 5 × correct answers / 40, rounded to two decimal places.', multipleRule:'For multiple-answer questions, select every correct option. Partial answers and unanswered questions earn no points.',
     sourceLanguage:'Russian words and examples are retained for language assessment. Document excerpts in those tasks may use earlier versions. Source screenshots retain their original labels.',
     start:'Start test', startFailed:'A paper could not be prepared. The reviewed bank is not ready yet; please try later.',
@@ -46,7 +46,7 @@ const COPY = {
   zh: {
     title:'公务知识测试', eyebrow:'研讨课测试', intro:'检验你的知识，并立即查看成绩和答案解析。',
     source:'来源', version:'题库版本', reviewed:'有效题目审核日期', reviewPending:'未提供审核日期', pool:'已审核可抽取题目', sourceCount:'原始题库题目',
-    questions:'道题', topics:'个主题', minutes:'分钟', maximum:'最高分', remaining:'剩余时间', expired:'时间已到。测试已结束，并根据已作答内容计算成绩。', timerRule:'开始后有60分钟作答时间。时间结束时，测试将自动提交。', distribution:'每份试卷从5个主题中各抽取8道题。',
+    questions:'道题', topics:'个主题', maximum:'最高分', distribution:'每份试卷从5个主题中各抽取8道题。',
     scoreRule:'得分＝5 × 答对题数 / 40，保留两位小数。', multipleRule:'多选题需选出所有正确选项。部分选对或未作答均不得分。',
     sourceLanguage:'俄语词语和例句作为语言考查内容保留原文。这类题目中的文件引文可能来自旧版文件。原始截图中的界面文字也保留原样。',
     start:'开始测试', startFailed:'暂时无法生成试卷。已审核题库尚未准备就绪，请稍后重试。',
@@ -97,16 +97,6 @@ export async function mountCivilServiceTest(container, {
   const $=selector=>root.querySelector(selector);
   const currentQuestion=()=>attempt?getAttemptQuestions(bankFor(),attempt)[attempt.currentIndex]:null;
   const blocked=()=>readOnly||pendingSaves>0||finalizing||Boolean(savingError);
-  const expired=()=>isAttemptExpired(attempt);
-  const timerText=()=>{const seconds=Math.ceil(remainingAttemptTime(attempt)/1000);return `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;};
-
-  function tick() {
-    if(destroyed||!attempt||completed()||readOnly||!isCurrent())return;
-    const timer=$('[data-test-timer]');
-    if(timer){timer.textContent=timerText();timer.closest('.cst-timer')?.classList.toggle('is-low',remainingAttemptTime(attempt)<=5*60*1000);}
-    if(expired()&&!finalizing)void complete({automatic:true});
-  }
-
   function restore() {
     try {
       if(originalAttempt!==null){const originalBank=bankFor(originalAttempt);validateAttempt(originalBank,originalAttempt);attempt=originalAttempt.phase==='completed'?finishAttempt(originalBank,originalAttempt):clone(originalAttempt);submitted=Number.isFinite(attempt.submittedAt);}
@@ -155,7 +145,7 @@ export async function mountCivilServiceTest(container, {
   }
 
   function renderIntro() {
-    return `<header class="cst-heading"><span class="cst-eyebrow">${html(t('eyebrow'))}</span><h2 tabindex="-1" data-focus-heading>${html(t('title'))}</h2><p>${html(t('intro'))}</p></header><div class="cst-intro-grid"><div class="cst-stat"><strong>40</strong><span>${html(t('questions'))}</span></div><div class="cst-stat"><strong>60</strong><span>${html(t('minutes'))}</span></div><div class="cst-stat"><strong>5</strong><span>${html(t('maximum'))}</span></div></div><div class="cst-rules"><p>${html(t('timerRule'))}</p><p>${html(t('multipleRule'))}</p></div>${readOnly?`<p class="cst-readonly">${html(t('readonlyIntro'))}</p>`:`<button class="cst-button cst-primary" type="button" data-action="start">${html(t('start'))}</button>`}${sourceMarkup()}`;
+    return `<header class="cst-heading"><span class="cst-eyebrow">${html(t('eyebrow'))}</span><h2 tabindex="-1" data-focus-heading>${html(t('title'))}</h2><p>${html(t('intro'))}</p></header><div class="cst-intro-grid"><div class="cst-stat"><strong>40</strong><span>${html(t('questions'))}</span></div><div class="cst-stat"><strong>5</strong><span>${html(t('topics'))}</span></div><div class="cst-stat"><strong>5</strong><span>${html(t('maximum'))}</span></div></div><div class="cst-rules"><p>${html(t('distribution'))}</p><p>${html(t('multipleRule'))}</p></div>${readOnly?`<p class="cst-readonly">${html(t('readonlyIntro'))}</p>`:`<button class="cst-button cst-primary" type="button" data-action="start">${html(t('start'))}</button>`}${sourceMarkup()}`;
   }
 
   function mediaMarkup(question) {
@@ -184,12 +174,12 @@ export async function mountCivilServiceTest(container, {
   function renderQuestion() {
     const questions=getAttemptQuestions(bankFor(),attempt), question=questions[attempt.currentIndex], selected=attempt.answers[question.id]||[], multi=question.correctOptionIds.length>1;
     const answered=answeredCount(),remaining=questions.length-answered;
-    return `<header class="cst-heading cst-active-heading"><div><span class="cst-eyebrow">${html(t('eyebrow'))}</span><h2>${html(t('title'))}</h2></div><div class="cst-test-status"><span class="cst-paper-position">${attempt.currentIndex+1} / ${questions.length}</span><div class="cst-timer"><span>${html(t('remaining'))}</span><strong data-test-timer role="timer" aria-live="off">${timerText()}</strong></div></div></header><div class="cst-progress-line"><span>${html(t('answered'))}: <strong>${answered} / ${questions.length}</strong></span><span>${html(t('unanswered'))}: <strong>${remaining}</strong></span></div><progress class="cst-progress" max="${questions.length}" value="${answered}" aria-label="${html(t('answered'))}"></progress>${statusMarkup()}${readOnly?`<p class="cst-readonly">${html(t('readonly'))}</p>`:''}<div class="cst-workspace"><article class="cst-question-card"><div class="cst-question-meta"><span>${html(topicLabel(question.sectionId))}</span></div><h3 tabindex="-1" data-focus-heading>${html(local(question.stem))}</h3>${mediaMarkup(question)}<fieldset class="cst-options" ${readOnly||finalizing||expired()?'disabled':''}><legend>${html(t(multi?'multiple':'single'))}</legend>${question.options.map((option,index)=>`<label class="cst-option${selected.includes(option.id)?' is-selected':''}" for="${instanceId}-option-${index}"><input id="${instanceId}-option-${index}" type="${multi?'checkbox':'radio'}" name="${instanceId}-answer" data-option="${html(option.id)}" data-option-index="${index}" value="${html(option.id)}" ${selected.includes(option.id)?'checked':''}><span>${html(local(option.text))}</span></label>`).join('')}</fieldset><div class="cst-question-tools"><button type="button" class="cst-text-button" data-action="clear" ${readOnly||!selected.length||finalizing||expired()?'disabled':''}>${html(t('clear'))}</button></div><nav class="cst-navigation" aria-label="${html(t('overview'))}"><button type="button" class="cst-button" data-action="previous" ${!attempt.currentIndex||finalizing?'disabled':''}>${html(t('previous'))}</button>${attempt.currentIndex<questions.length-1?`<button type="button" class="cst-button cst-primary" data-action="next" ${finalizing?'disabled':''}>${html(t('next'))}</button>`:`<button type="button" class="cst-button cst-primary" data-action="finish" ${blocked()?'disabled':''}>${html(t('finish'))}</button>`}</nav></article><aside class="cst-sidebar"><details class="cst-overview" ${overviewOpen?'open':''}><summary>${html(t('overview'))}<span>${answered} / ${questions.length}</span></summary><div class="cst-question-map">${questions.map((q,index)=>{const done=Boolean(attempt.answers[q.id]?.length);return `<button type="button" data-question-index="${index}" class="${done?'is-answered':''}" ${index===attempt.currentIndex?'aria-current="step"':''} aria-label="${html(t('question'))} ${index+1}: ${html(t(done?'answered':'unanswered'))}${index===attempt.currentIndex?', '+html(t('current')):''}">${index+1}${done?'<span aria-hidden="true">✓</span>':''}</button>`;}).join('')}</div><p class="cst-map-legend">✓ ${html(t('answered'))}</p></details><button type="button" class="cst-button cst-finish" data-action="finish" ${blocked()?'disabled':''}>${html(t('finish'))}</button></aside></div>${confirming?`<dialog class="cst-confirm" aria-labelledby="${instanceId}-confirm-title"><h3 id="${instanceId}-confirm-title">${html(t('skippedTitle'))}: ${remaining}</h3><p>${html(t('skippedBody'))}</p><div class="cst-confirm-actions"><button type="button" class="cst-button" data-action="cancel-finish">${html(t('return'))}</button><button type="button" class="cst-button cst-primary" data-action="confirm-finish" ${blocked()?'disabled':''}>${html(t('finishAnyway'))}</button></div></dialog>`:''}`;
+    return `<header class="cst-heading cst-active-heading"><div><span class="cst-eyebrow">${html(t('eyebrow'))}</span><h2>${html(t('title'))}</h2></div><div class="cst-test-status"><span class="cst-paper-position">${attempt.currentIndex+1} / ${questions.length}</span></div></header><div class="cst-progress-line"><span>${html(t('answered'))}: <strong>${answered} / ${questions.length}</strong></span><span>${html(t('unanswered'))}: <strong>${remaining}</strong></span></div><progress class="cst-progress" max="${questions.length}" value="${answered}" aria-label="${html(t('answered'))}"></progress>${statusMarkup()}${readOnly?`<p class="cst-readonly">${html(t('readonly'))}</p>`:''}<div class="cst-workspace"><article class="cst-question-card"><div class="cst-question-meta"><span>${html(topicLabel(question.sectionId))}</span></div><h3 tabindex="-1" data-focus-heading>${html(local(question.stem))}</h3>${mediaMarkup(question)}<fieldset class="cst-options" ${readOnly||finalizing?'disabled':''}><legend>${html(t(multi?'multiple':'single'))}</legend>${question.options.map((option,index)=>`<label class="cst-option${selected.includes(option.id)?' is-selected':''}" for="${instanceId}-option-${index}"><input id="${instanceId}-option-${index}" type="${multi?'checkbox':'radio'}" name="${instanceId}-answer" data-option="${html(option.id)}" data-option-index="${index}" value="${html(option.id)}" ${selected.includes(option.id)?'checked':''}><span>${html(local(option.text))}</span></label>`).join('')}</fieldset><div class="cst-question-tools"><button type="button" class="cst-text-button" data-action="clear" ${readOnly||!selected.length||finalizing?'disabled':''}>${html(t('clear'))}</button></div><nav class="cst-navigation" aria-label="${html(t('overview'))}"><button type="button" class="cst-button" data-action="previous" ${!attempt.currentIndex||finalizing?'disabled':''}>${html(t('previous'))}</button>${attempt.currentIndex<questions.length-1?`<button type="button" class="cst-button cst-primary" data-action="next" ${finalizing?'disabled':''}>${html(t('next'))}</button>`:`<button type="button" class="cst-button cst-primary" data-action="finish" ${blocked()?'disabled':''}>${html(t('finish'))}</button>`}</nav></article><aside class="cst-sidebar"><details class="cst-overview" ${overviewOpen?'open':''}><summary>${html(t('overview'))}<span>${answered} / ${questions.length}</span></summary><div class="cst-question-map">${questions.map((q,index)=>{const done=Boolean(attempt.answers[q.id]?.length);return `<button type="button" data-question-index="${index}" class="${done?'is-answered':''}" ${index===attempt.currentIndex?'aria-current="step"':''} aria-label="${html(t('question'))} ${index+1}: ${html(t(done?'answered':'unanswered'))}${index===attempt.currentIndex?', '+html(t('current')):''}">${index+1}${done?'<span aria-hidden="true">✓</span>':''}</button>`;}).join('')}</div><p class="cst-map-legend">✓ ${html(t('answered'))}</p></details><button type="button" class="cst-button cst-finish" data-action="finish" ${blocked()?'disabled':''}>${html(t('finish'))}</button></aside></div>${confirming?`<dialog class="cst-confirm" aria-labelledby="${instanceId}-confirm-title"><h3 id="${instanceId}-confirm-title">${html(t('skippedTitle'))}: ${remaining}</h3><p>${html(t('skippedBody'))}</p><div class="cst-confirm-actions"><button type="button" class="cst-button" data-action="cancel-finish">${html(t('return'))}</button><button type="button" class="cst-button cst-primary" data-action="confirm-finish" ${blocked()?'disabled':''}>${html(t('finishAnyway'))}</button></div></dialog>`:''}`;
   }
 
   function renderResult() {
     const resultBank=bankFor(),result=gradeAttempt(resultBank,attempt), questions=getAttemptQuestions(resultBank,attempt);
-    return `<header class="cst-heading"><span class="cst-eyebrow">${html(t('title'))}</span><h2 tabindex="-1" data-focus-heading>${html(t('result'))}</h2></header><div class="cst-result-hero"><div class="cst-result-score"><strong>${number(result.points)}<small> / ${result.maxPoints}</small></strong><span>${html(t('points'))}</span></div><div><strong>${result.correct} / ${result.total}</strong><span>${html(t('correct'))}</span></div><div><strong>${number(result.percent)}%</strong><span>${html(t('percent'))}</span></div></div>${attempt.completionReason==='time-limit'?`<p class="cst-expired" role="status">${html(t('expired'))}</p>`:''}${statusMarkup()}<div class="cst-result-actions">${!readOnly&&!submitted?`<button type="button" class="cst-button cst-primary" data-action="submit-result" ${blocked()?'disabled':''}>${html(t('submit'))}</button>`:''}${!readOnly?`<button type="button" class="cst-button${submitted?' cst-primary':''}" data-action="new" ${blocked()||!submitted?'disabled':''}>${html(t('newAttempt'))}</button>`:''}</div>${!submitted&&!readOnly?`<p class="cst-note">${html(t('saveBeforeRetry'))}</p>`:''}<section class="cst-section-results" aria-labelledby="${instanceId}-topics"><h3 id="${instanceId}-topics">${html(t('byTopic'))}</h3><ul>${(resultBank.sections||[]).map(section=>{const ids=questions.filter(q=>q.sectionId===section.id).map(q=>q.id),correct=result.questionResults.filter(q=>ids.includes(q.id)&&q.correct).length;return `<li><span>${html(local(section.label))}</span><strong>${correct} / ${ids.length}</strong></li>`;}).join('')}</ul></section><details class="cst-breakdown" id="${instanceId}-breakdown" ${breakdownOpen?'open':''}><summary>${html(t('breakdown'))}</summary>${questions.map((question,index)=>{
+    return `<header class="cst-heading"><span class="cst-eyebrow">${html(t('title'))}</span><h2 tabindex="-1" data-focus-heading>${html(t('result'))}</h2></header><div class="cst-result-hero"><div class="cst-result-score"><strong>${number(result.points)}<small> / ${result.maxPoints}</small></strong><span>${html(t('points'))}</span></div><div><strong>${result.correct} / ${result.total}</strong><span>${html(t('correct'))}</span></div><div><strong>${number(result.percent)}%</strong><span>${html(t('percent'))}</span></div></div>${statusMarkup()}<div class="cst-result-actions">${!readOnly&&!submitted?`<button type="button" class="cst-button cst-primary" data-action="submit-result" ${blocked()?'disabled':''}>${html(t('submit'))}</button>`:''}${!readOnly?`<button type="button" class="cst-button${submitted?' cst-primary':''}" data-action="new" ${blocked()||!submitted?'disabled':''}>${html(t('newAttempt'))}</button>`:''}</div>${!submitted&&!readOnly?`<p class="cst-note">${html(t('saveBeforeRetry'))}</p>`:''}<section class="cst-section-results" aria-labelledby="${instanceId}-topics"><h3 id="${instanceId}-topics">${html(t('byTopic'))}</h3><ul>${(resultBank.sections||[]).map(section=>{const ids=questions.filter(q=>q.sectionId===section.id).map(q=>q.id),correct=result.questionResults.filter(q=>ids.includes(q.id)&&q.correct).length;return `<li><span>${html(local(section.label))}</span><strong>${correct} / ${ids.length}</strong></li>`;}).join('')}</ul></section><details class="cst-breakdown" id="${instanceId}-breakdown" ${breakdownOpen?'open':''}><summary>${html(t('breakdown'))}</summary>${questions.map((question,index)=>{
       const item=result.questionResults.find(value=>value.id===question.id),status=item.correct?'correct':item.selectedOptionIds.length?'incorrect':'skipped';
       const sources=[...new Set(question.review?.sourceUrls||[])].map(externalUrl).filter(Boolean);
       return `<details class="cst-result-question ${item.correct?'is-correct':'is-incorrect'}" data-review-question="${html(question.id)}" ${expandedResults.has(question.id) ? "open" : ""}><summary><span class="cst-result-number">${index+1}</span><span>${html(local(question.stem))}</span><b>${html(t(status))}</b></summary><div class="cst-result-content"><p class="cst-question-meta">${html(topicLabel(question.sectionId))} · ${html(t('sourceNumber'))} ${html(question.number)}</p>${mediaMarkup(question)}${!item.selectedOptionIds.length?`<p>${html(t('noAnswer'))}</p>`:''}<ul class="cst-reviewed-options">${question.options.map(option=>{const chosen=item.selectedOptionIds.includes(option.id),correct=item.correctOptionIds.includes(option.id);return `<li class="${correct?'is-key':''}${chosen?' was-selected':''}"><span>${html(local(option.text))}</span><span class="cst-answer-tags">${chosen?`<b>${html(t('selected'))}</b>`:''}${correct?`<b class="cst-key-tag">${html(t('answerKey'))}</b>`:''}</span></li>`;}).join('')}</ul>${sources.length?`<div class="cst-question-sources">${sources.map((url,i)=>`<a href="${html(url)}" target="_blank" rel="noopener noreferrer">${html(t('sourceLink'))}${sources.length>1?' '+(i+1):''}</a>`).join('')}</div>`:''}</div></details>`;
@@ -222,7 +212,6 @@ export async function mountCivilServiceTest(container, {
 
   function navigate(index) {
     if(!attempt||completed()||finalizing||!isCurrent())return;
-    if(!readOnly&&expired()){tick();return;}
     if(!Number.isInteger(index)||index<0||index>=attempt.questionIds.length)return;
     attempt={...attempt,currentIndex:index};actionError=null;
     void checkpoint().catch(()=>{});render({focus:true});
@@ -230,28 +219,26 @@ export async function mountCivilServiceTest(container, {
 
   function choose(optionIds,optionIndex=null) {
     if(readOnly||!attempt||completed()||finalizing||!isCurrent())return;
-    if(expired()){tick();return;}
     try {attempt=setAnswer(bankFor(),attempt,currentQuestion().id,optionIds);actionError=null;void checkpoint().catch(()=>{});render({optionIndex});}
-    catch(error){if(error.code==='civil-service/time-expired'){tick();return;}actionError='answerError';render({optionIndex});}
+    catch{actionError='answerError';render({optionIndex});}
   }
 
   function finish() {
-    if(expired()){tick();return;}
     if(blocked()||!attempt||completed())return;
     if(answeredCount()<attempt.questionIds.length){confirming=true;render();return;}
     void complete();
   }
 
-  async function complete({automatic=false}={}) {
-    if(readOnly||finalizing||!attempt||!isCurrent()||(!automatic&&blocked()))return;
+  async function complete({retryCompleted=false}={}) {
+    if(readOnly||finalizing||!attempt||!isCurrent()||(retryCompleted&&!completed())||(!retryCompleted&&blocked()))return;
     finalizing=true;confirming=false;imageQuestionId=null;completionError=null;actionError=null;
     try {attempt=finishAttempt(bankFor(),attempt,{finishedAt:Date.now()});}
     catch {finalizing=false;actionError='completeError';render();return;}
     render();
     completionTask=(async()=>{
       try {
-        // Freeze the paper immediately, including when an earlier write is
-        // pending or failed. A fresh full checkpoint can recover that failure.
+        // Persist the manually completed paper before submitting its result.
+        // A fresh full checkpoint can recover an earlier write failure.
         await checkpointTail;
         await checkpoint();
         render({focus:true});
@@ -288,25 +275,22 @@ export async function mountCivilServiceTest(container, {
     else if(action==='finish')finish();
     else if(action==='confirm-finish'||action==='submit-result')void complete();
     else if(action==='cancel-finish'){confirming=false;render();$('[data-action="finish"]')?.focus({preventScroll:true});}
-    else if(action==='retry-save')void checkpoint().then(()=>{if(completed()&&!submitted)return complete({automatic:true});tick();}).catch(()=>{});
-    else if(action==='retry-restore'){restore();render({focus:true});tick();}
+    else if(action==='retry-save')void checkpoint().then(()=>{if(completed()&&!submitted)return complete({retryCompleted:true});}).catch(()=>{});
+    else if(action==='retry-restore'){restore();render({focus:true});}
     else if(action==='retry-image'){failedMedia.delete(button.dataset.question);render();}
     else if(action==='zoom-image'){imageQuestionId=button.dataset.question;imageZoom=1;render();}
     else if(action==='close-image')$('.cst-image-dialog')?.close();
     else if(action==='zoom-in'||action==='zoom-out'){imageZoom=Math.max(1,Math.min(3,imageZoom+(action==='zoom-in' ? 0.5 : -0.5)));updateImageScale();}
   },{signal:life.signal});
 
-  container.ownerDocument.addEventListener('visibilitychange',tick,{signal:life.signal});
-  container.ownerDocument.defaultView?.addEventListener('pageshow',tick,{signal:life.signal});
-  const timerHandle=setInterval(tick,1000);
-  restore();render();tick();
-  if(completed()&&!submitted&&!readOnly)void complete({automatic:true});
+  restore();render();
+  if(completed()&&!submitted&&!readOnly)void complete({retryCompleted:true});
   return {
     get hasActiveAttempt(){return attempt?.phase==='active';},
     get attemptId(){return attempt?.id||'civil-service-intro';},
     get updateBusy(){return destroyed||finalizing||pendingSaves>0||Boolean(savingError||completionError||restoreError);},
     setLocale(value){if(destroyed)return;const focused=$('input[data-option]:focus')?.dataset.optionIndex;language=normalizeLocale(value);render({optionIndex:focused===undefined?null:Number(focused)});},
-    async flush(){tick();if(completionTask)await completionTask;await drainCheckpoints();return attempt?clone(attempt):null;},
-    destroy(){if(destroyed)return;destroyed=true;clearInterval(timerHandle);life.abort();$('dialog[open]')?.close();root.remove();}
+    async flush(){if(completionTask)await completionTask;await drainCheckpoints();return attempt?clone(attempt):null;},
+    destroy(){if(destroyed)return;destroyed=true;life.abort();$('dialog[open]')?.close();root.remove();}
   };
 }
