@@ -1,3 +1,4 @@
+import {authorityName} from './authority-names.mjs';
 import {getLanguage} from './i18n.mjs';
 import {authorityEmblem} from './authority-symbols.mjs';
 import {PORTAL,validateFeed,selectVacancies,FRESH_MS,normalizeName} from './vacancies-model.mjs';
@@ -11,7 +12,7 @@ export function createVacancies({data,getResult,routeTo,closeDialog=()=>{}}){
   let feed=null,sync=null,loading=false,loaded=false,loadError='',selected='',territorial=false,query='',limit=12,connection=null,busy=false;
   const institutions=data.allInstitutions||data.authorities;
   const ids=()=>selected?[selected]:(getResult()?.ranked||[]).filter(a=>!['fund','corporation'].includes(a.entityType)).slice(0,5).map(a=>a.id);
-  const displayName=id=>{const a=institutions.find(a=>a.id===id);return a?.localizedName?.[getLanguage()]||a?.shortName||(typeof a?.name==='object'?a.name[getLanguage()]||a.name.ru:a?.name)||id;};
+  const displayName=id=>authorityName(institutions.find(a=>a.id===id))||id;
   const isVisible=()=>!document.querySelector('#view-vacancies')?.hidden;
   async function localJSON(file){const control=new AbortController(),timer=setTimeout(()=>control.abort(),6000);try{const r=await fetch(file,{cache:'no-store',signal:control.signal});if(!r.ok)throw new Error(`HTTP ${r.status}`);return await r.json();}finally{clearTimeout(timer);}}
   async function load(force=false){

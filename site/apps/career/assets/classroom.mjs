@@ -1,3 +1,4 @@
+import {authorityName} from './authority-names.mjs';
 import {createProtectedStore,renderRecovery} from './recovery.mjs';
 import {readLocal,writeLocal} from './storage.mjs';
 import {getLanguage, englishText, translate} from './i18n.mjs';
@@ -5,7 +6,7 @@ import {NOTEBOOK_KEY,NOTEBOOK_FILE_LIMIT,blankWorkbook,blankNote,validateWorkboo
 const E=(value='')=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const L=(ru,en)=>getLanguage()==='en'?en:translate(ru);
 const B=v=>v?.[getLanguage()]||translate(v?.ru||'');
-const name=a=>translate(a.shortName);
+const name=authorityName;
 const ico=id=>`<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
 
 export function createClassroom({data,routeTo,openAuthority,toast,downloadText,getResult}) {

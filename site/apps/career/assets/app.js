@@ -1,6 +1,7 @@
 import {sessionBundle,parseSession,SESSION_LIMIT} from './session-transfer.mjs';
 import {upgradePreviousDraft} from './model-upgrade.mjs';
 import {authorityEmblem,authoritySymbolCredit} from './authority-symbols.mjs';
+import {authorityName} from './authority-names.mjs';
 import {createVacancies} from './vacancies.mjs';
 import {createSeminarFlow} from './seminar-flow.mjs';
 import {MODEL_VERSION as CURRENT_MODEL,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from './versions.mjs';
@@ -767,7 +768,20 @@ function getResults() {
   return calculateResults();
 }
 
-function radarSvg(profile) {
+function radarSvg(profile, {numbered=false,label='Диаграмма профессионального профиля'} = {}) {
+  if(numbered){
+    const center=155,radius=106;
+    const point=(index,ratio)=>{const angle=-Math.PI/2+index*Math.PI*2/SCALE_IDS.length;return [center+Math.cos(angle)*radius*ratio,center+Math.sin(angle)*radius*ratio];};
+    const polygon=ratio=>SCALE_IDS.map((_,index)=>point(index,ratio).join(',')).join(' ');
+    const values=SCALE_IDS.map(id=>Math.max(1,Math.min(5,Number(profile.raw[id])||1))/5);
+    return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label)}">
+      <g fill="none" stroke="#d3e1eb" stroke-width="1">${[1,2,3,4,5].map(value=>`<polygon points="${polygon(value/5)}"/>`).join('')}${SCALE_IDS.map((_,index)=>{const [x,y]=point(index,1);return `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}"/>`;}).join('')}</g>
+      <polygon points="${values.map((value,index)=>point(index,value).join(',')).join(' ')}" fill="#087bc1" fill-opacity=".16" stroke="#087bc1" stroke-width="2.5"/>
+      ${values.map((value,index)=>{const [x,y]=point(index,value);return `<circle cx="${x}" cy="${y}" r="3.5" fill="#087bc1" stroke="#fff" stroke-width="1.5"/>`;}).join('')}
+      <g fill="#1c355f" stroke="none" font-size="15" font-weight="600" text-anchor="middle" dominant-baseline="middle">${SCALE_IDS.map((_,index)=>{const [x,y]=point(index,1.23);return `<text x="${x}" y="${y}">${index+1}</text>`;}).join('')}</g>
+      <g fill="#627490" stroke="none" font-size="10" text-anchor="end">${[1,2,3,4,5].map(value=>`<text x="${center-6}" y="${center-radius*value/5+3}">${value}</text>`).join('')}</g>
+    </svg>`;
+  }
   const values = SCALE_IDS.map((id) => profile.normalized[id] ?? 0.5);
   const count = values.length;
   const center = 105;
@@ -840,7 +854,7 @@ function renderResults() {
       <div class="results-section-header"><div><h2>Наиболее близкие органы власти</h2><p>Индекс учитывает лучшее направление работы (70%) и среднее соответствие всем направлениям учреждения (30%).</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}Сравнить первые три</button></div>
       ${leadingTies.length>1?`<p class="app-notice">Несколько органов имеют одинаковый неокруглённый индекс. Порядок внутри этой группы технический, а не свидетельство различий в пригодности.</p>`:''}
       <div class="top-match-grid">${top.map((item, index) => matchCard(item, index + 1)).join("")}</div>
-      ${cutTies.length?`<details class="equal-results"><summary>За границей ТОП-5 есть органы с тем же индексом</summary><div class="tag-row">${cutTies.map(a=>`<button type="button" class="button button-secondary open-authority" data-authority="${a.id}">${escapeHtml(a.shortName)}</button>`).join('')}</div><p>Они не менее близки в текущей модели, чем пятый результат.</p></details>`:''}
+      ${cutTies.length?`<details class="equal-results"><summary>За границей ТОП-5 есть органы с тем же индексом</summary><div class="tag-row">${cutTies.map(a=>`<button type="button" class="button button-secondary open-authority" data-authority="${a.id}">${escapeHtml(authorityName(a))}</button>`).join('')}</div><p>Они не менее близки в текущей модели, чем пятый результат.</p></details>`:''}
     </section>
 
     <section id="result-vacancies" class="vac-result-preview" data-no-i18n></section>
@@ -859,7 +873,7 @@ function renderResults() {
       <div class="results-section-header"><div><h2>Неочевидный вариант</h2><p>Дополнительный орган для знакомства. Его место и индекс можно проверить в полном рейтинге.</p></div></div>
       <article class="discovery-card">
         <div class="discovery-icon">${icon("star")}</div>
-        <div><h3>${escapeHtml(discovery.shortName)}</h3><p>${escapeHtml(discovery.mission)} Ближайший трек: ${escapeHtml(discovery.track?.title || "государственное управление")}.</p></div>
+        <div><h3>${escapeHtml(authorityName(discovery))}</h3><p>${escapeHtml(discovery.mission)} Ближайший трек: ${escapeHtml(discovery.track?.title || "государственное управление")}.</p></div>
         <button class="button button-secondary open-authority" type="button" data-authority="${discovery.id}">Изучить орган${icon("arrow-right")}</button>
       </article>
     </section>` : ""}
@@ -876,10 +890,10 @@ function renderResults() {
       <div class="full-ranking">
         ${government.map((item, index) => `<div class="ranking-row">
           <span class="ranking-position">${index + 1}</span>
-          <button class="ranking-name ranking-open open-authority" type="button" data-authority="${item.id}" aria-label="Открыть досье ${escapeHtml(item.shortName)}"><strong>${escapeHtml(item.shortName)}</strong><small>${escapeHtml(item.entityTypeLabel)}</small></button>
+          <button class="ranking-name ranking-open open-authority" type="button" data-authority="${item.id}" aria-label="Открыть досье ${escapeHtml(authorityName(item))}"><strong>${escapeHtml(authorityName(item))}</strong><small>${escapeHtml(item.entityTypeLabel)}</small></button>
           <span class="ranking-track">${escapeHtml(item.track?.title || "")}</span>
           <strong class="ranking-score">${item.score.toFixed(1)}</strong>
-          <button class="ranking-compare compare-toggle" type="button" data-authority="${item.id}" aria-label="Добавить ${escapeHtml(item.shortName)} в сравнение">${icon("compare")}</button>
+          <button class="ranking-compare compare-toggle" type="button" data-authority="${item.id}" aria-label="Добавить ${escapeHtml(authorityName(item))} в сравнение">${icon("compare")}</button>
           ${icon("chevron")}
         </div>`).join("")}
       </div>
@@ -893,7 +907,7 @@ function matchCard(item, rank, publicSector = false) {
   const selected = state.compareIds.includes(item.id);
   return `<article class="match-card">
     <div class="match-rank"><span>${rank}</span><div class="match-score"><strong>${item.score.toFixed(1)}</strong><small>индекс</small></div></div>
-    <div class="result-symbol-heading">${authorityEmblem(item,'compact')}<h3>${escapeHtml(item.shortName)}</h3></div>
+    <div class="result-symbol-heading">${authorityEmblem(item,'compact')}<h3>${escapeHtml(authorityName(item))}</h3></div>
     <span class="match-type">${escapeHtml(publicSector ? item.entityTypeLabel : item.entityTypeLabel)}</span>
     <div class="match-track"><b>Ближайший трек</b>${escapeHtml(item.track?.title || "Публичное управление")}</div>
     <div class="match-card-actions"><button class="match-more open-authority" type="button" data-authority="${item.id}">${escapeHtml(item.band.label)}${icon("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${item.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "Выбрано" : "Сравнить"}</span></button></div>
@@ -940,7 +954,7 @@ async function copyResult() {
   const government = result.ranked.filter((item) => !["corporation", "fund"].includes(item.entityType)).slice(0, 5);
   const text = [
     "Мой результат профориентационного теста для госслужащих:",
-    ...government.map((item, index) => `${index + 1}. ${item.shortName} — ${item.score.toFixed(1)}; трек: ${item.track?.title || "публичное управление"}.`),
+    ...government.map((item, index) => `${index + 1}. ${authorityName(item)} — ${item.score.toFixed(1)}; трек: ${item.track?.title || "публичное управление"}.`),
     "Индекс является относительным показателем внутри учебной модели."
   ].join("\n");
   try {
@@ -1024,7 +1038,7 @@ function renderDirectory() {
     const careerRoles = buildAuthorityCareerRoles(authority, data.careerFramework, data.competencies, 3);
     return `<article class="authority-card">
       <div class="authority-card-head">${authorityEmblem(authority)}<span class="confidence-dot ${authority.confidence}">Авторский профиль</span></div>
-      <h2>${escapeHtml(authority.shortName)}</h2>
+      <h2>${escapeHtml(authorityName(authority))}</h2>
       <span class="authority-type">${escapeHtml(authority.entityTypeLabel)}</span>
       <p>${escapeHtml(authority.mission)}</p>
       <div class="authority-card-stat"><strong>${careerRoles.length}</strong><span>${roleCountLabel(careerRoles.length)} в карточке</span></div>
@@ -1191,7 +1205,7 @@ function syncCompareButtons() {
       if (button.classList.contains("dialog-compare")) label.textContent = selected ? "В сравнении" : "Добавить в сравнение";
       else label.textContent = selected ? "Выбрано" : "Сравнить";
     }
-    button.setAttribute("aria-label", `${selected ? "Удалить" : "Добавить"} ${data.authorities.find((item) => item.id === button.dataset.authority)?.shortName || "орган"} ${selected ? "из сравнения" : "в сравнение"}`);
+    button.setAttribute("aria-label", `${selected ? "Удалить" : "Добавить"} ${authorityName(data.authorities.find((item) => item.id === button.dataset.authority)) || "орган"} ${selected ? "из сравнения" : "в сравнение"}`);
   });
 }
 
@@ -1207,7 +1221,7 @@ function renderCompareTray() {
   $("#compare-nav-count").textContent = selected.length;
   $("#compare-tray-status").textContent = selected.length < 2 ? "Добавьте ещё один орган" : `${selected.length} из ${MAX_COMPARE} выбрано`;
   $("#compare-open").disabled = selected.length < 2;
-  $("#compare-tray-items").innerHTML = selected.map((authority) => `<button type="button" data-remove-compare="${authority.id}" title="Удалить ${escapeHtml(authority.shortName)}"><span>${escapeHtml(authority.shortName)}</span>${icon("close")}</button>`).join("");
+  $("#compare-tray-items").innerHTML = selected.map((authority) => `<button type="button" data-remove-compare="${authority.id}" title="Удалить ${escapeHtml(authorityName(authority))}"><span>${escapeHtml(authorityName(authority))}</span>${icon("close")}</button>`).join("");
   $$('[data-remove-compare]', tray).forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.removeCompare)));
 }
 
@@ -1234,7 +1248,7 @@ function renderCompare() {
     ${selected.length < 2 ? `<div class="compare-guidance">${icon("info")}<p>Первый вариант выбран. Добавьте ещё один орган в справочнике или в результатах теста, чтобы увидеть содержательное сравнение.</p><button class="button button-secondary" type="button" data-route="directory">Добавить орган${icon("arrow-right")}</button></div>` : `<div class="compare-actions"><button id="compare-print" class="button button-secondary" type="button">${icon("print")}Печать сравнения</button><button class="button button-secondary" type="button" data-route="directory">${icon("plus")}Добавить или заменить</button></div>`}
     <div class="compare-columns" style="--compare-count:${Math.max(selected.length, 1)}">
       ${columns.map(({ authority, roles, routes, competencies, education }) => `<article class="compare-column">
-        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="Удалить ${escapeHtml(authority.shortName)}">${icon("close")}</button><h2>${escapeHtml(authority.shortName)}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">Открыть полное досье${icon("arrow-right")}</button></header>
+        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="Удалить ${escapeHtml(authorityName(authority))}">${icon("close")}</button><h2>${escapeHtml(authorityName(authority))}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">Открыть полное досье${icon("arrow-right")}</button></header>
         <section><h3>Институциональное положение</h3><dl><div><dt>Подчинённость</dt><dd>${escapeHtml(authority.parent)}</dd></div><div><dt>Уверенность модели</dt><dd>${confidenceLabel(authority.confidence)}</dd></div></dl></section>
         <section><h3>Ключевые сферы</h3><div class="tag-row">${(authority.sectors || []).slice(0, 4).map((entry) => `<span class="tag">${escapeHtml(sectorMap.get(entry.id)?.title || entry.id)}</span>`).join("")}</div></section>
         <section><h3>Наиболее характерные роли</h3><div class="compare-role-list">${roles.map((role) => `<div><strong>${escapeHtml(role.title)}</strong><small>${escapeHtml(role.importanceLabel)}</small><p>${escapeHtml(role.unitFamilies[0] || "профильное подразделение")}</p></div>`).join("")}</div></section>
@@ -1263,14 +1277,14 @@ function drawSeminarAuthority() {
   const sectorMap = new Map(data.sectors.map((item) => [item.id, item]));
   const trackMap = new Map(data.tracks.map((item) => [item.id, item]));
   const careerRole = buildAuthorityCareerRoles(authority, data.careerFramework, data.competencies, 1)[0];
-  $("#seminar-name").textContent = authority.name;
+  $("#seminar-name").textContent = authorityName(authority);
   $("#seminar-mission").textContent = authority.mission;
   $("#seminar-tags").innerHTML = [
     ...(authority.sectors || []).slice(0, 2).map((item) => sectorMap.get(item.id)?.title),
     ...(authority.tracks || []).slice(0, 2).map((item) => trackMap.get(item.id)?.title)
   ].filter(Boolean).map((label) => `<span class="tag">${escapeHtml(label)}</span>`).join("");
   $("#seminar-questions").innerHTML = `
-    <li>Какие общественные задачи решает ${escapeHtml(authority.shortName)} и почему для них нужен отдельный федеральный орган?</li>
+    <li>Какие общественные задачи решает ${escapeHtml(authorityName(authority))} и почему для них нужен отдельный федеральный орган?</li>
     <li>Как могла бы выглядеть работа студента ГМУ в роли «${escapeHtml(careerRole?.title || "специалист публичного управления")}"?</li>
     <li>Какую из типовых задач — ${escapeHtml(careerRole?.tasks?.[0] || "анализировать реализацию государственной политики")} — можно превратить в учебный проект?</li>
     <li>Какие условия работы и способы входа в этот орган нужно проверить до выбора практики?</li>`;
@@ -1389,7 +1403,7 @@ function renderGroupDashboard() {
     return;
   }
   const summary = aggregateAnonymousRecords(groupRecords);
-  const authorityLookup = new Map(data.authorities.map((item) => [item.id, item.shortName]));
+  const authorityLookup = new Map(data.authorities.map((item) => [item.id, authorityName(item)]));
   const trackLookup = new Map(data.tracks.map((item) => [item.id, item.title]));
   const sectorLookup = new Map(data.sectors.map((item) => [item.id, item.title]));
   const scaleLookup = new Map(data.scales.map((item) => [item.id, item.short]));
@@ -1558,7 +1572,7 @@ async function init() {
     state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
     if(SEMINAR_FLOW){
-      seminarFlow=createSeminarFlow({getResult:getResults,toast});
+      seminarFlow=createSeminarFlow({getResult:getResults,getProfileContext:()=>({recordId:state.resultRecordId,scales:data.scales,sectors:data.sectors,conditions:data.conditions,prioritySectors:state.prioritySectors,conditionValues:state.conditions}),radarSvg,toast});
     }else{
       classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
       workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,

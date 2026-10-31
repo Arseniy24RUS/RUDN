@@ -1,3 +1,4 @@
+import {authorityName} from './authority-names.mjs';
 import {createProtectedStore,renderRecovery} from './recovery.mjs';
 import {readLocal,writeLocal} from './storage.mjs';
 import {createScenario,compatibleScenario,scenarioBundle,importScenarios,compareScenarioResults,SCENARIO_STORAGE_KEY,SCENARIO_LIMIT} from './scenarios.mjs';
@@ -28,7 +29,7 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
   scenarios=protectedStore.value||[];storageAvailable=!protectedStore.protected;
   const byId=new Map(data.authorities.map(a=>[a.id,a]));
   const roots=new Map(data.hierarchy.roots.map(r=>[r.id,r]));
-  const name=id=>roots.get(id)?.title||byId.get(id)?.shortName||id;
+  const name=id=>roots.get(id)?.title||authorityName(byId.get(id))||id;
   const persist=()=>{
     try {protectedStore.save(scenarioBundle(scenarios));storageAvailable=true;return true;}
     catch{storageAvailable=false;toast(t('Автосохранение недоступно. Экспортируйте файл, чтобы не потерять сценарии.'));return false;}
@@ -41,7 +42,7 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
   function structure(){
     const panel=$('#structure-root'), search=$('#structure-search');
     const matches=hierarchySearch(search.value,data.authorities,t);
-    $('#structure-search-results').innerHTML=search.value.trim()?matches.map(a=>`<button type="button" data-focus="${a.id}">${esc(a.shortName)}<small>${esc(a.entityTypeLabel)}</small></button>`).join('')||'<p>Ничего не найдено.</p>':'';
+    $('#structure-search-results').innerHTML=search.value.trim()?matches.map(a=>`<button type="button" data-focus="${a.id}">${esc(authorityName(a))}<small>${esc(a.entityTypeLabel)}</small></button>`).join('')||'<p>Ничего не найдено.</p>':'';
     const current=byId.get(focus), ancestors=ancestorsOf(focus,data.hierarchy), children=childrenOf(focus,data.hierarchy);
     const examples=data.hierarchy.territorialExamples.filter(n=>n.parent===focus);
     const relation=data.hierarchy.links.find(l=>l.child===focus);
@@ -49,10 +50,10 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
     panel.innerHTML=`<div class="structure-roots" aria-label="Ветви схемы">${data.hierarchy.roots.map(r=>`<button class="${focus===r.id||ancestors.includes(r.id)?'selected':''}" data-focus="${r.id}" type="button">${glyph(r.id==='president'?'shield':'landmark')}<span>${esc(r.title)}</span></button>`).join('')}</div>
     <nav class="structure-breadcrumbs" aria-label="Путь подчинённости">${ancestors.map(id=>`<button data-focus="${id}" type="button">${esc(name(id))}</button><span aria-hidden="true">/</span>`).join('')}<strong>${esc(name(focus))}</strong></nav>
     <section class="structure-focus"><div class="focus-symbol">${glyph(current?.entityType==='service'?'shield':'landmark')}</div><div><p class="step-kicker">${current?(relation.relation==='direct-leadership'?'Прямое руководство деятельностью':'В ведении министерства'):'Руководство деятельностью федеральных органов'}</p><h2>${esc(name(focus))}</h2><p>${esc(current?.mission||'Выберите орган, чтобы проследить его положение в системе и изучить связанные карьерные направления.')}</p>${current?`<button type="button" class="button button-primary" data-dossier="${focus}">Карьерное досье${glyph('arrow-right')}</button>`:''}</div></section>
-    <section class="structure-branches"><div class="branch-heading"><h3>${children.length?'Органы в этой ветви':'Нижестоящие ФОИВ в реестре не указаны'}</h3><span>${children.length}</span></div><div class="branch-grid">${children.map(id=>{const a=byId.get(id);return `<button type="button" class="branch-node" data-focus="${id}"><span class="branch-icon">${glyph(a.entityType==='service'?'shield':'landmark')}</span><strong>${esc(a.shortName)}</strong><small>${esc(a.entityTypeLabel)}</small><span class="branch-count">${childrenOf(id,data.hierarchy).length?`${childrenOf(id,data.hierarchy).length} · `:''}${glyph('chevron')}</span></button>`;}).join('')}</div></section>
+    <section class="structure-branches"><div class="branch-heading"><h3>${children.length?'Органы в этой ветви':'Нижестоящие ФОИВ в реестре не указаны'}</h3><span>${children.length}</span></div><div class="branch-grid">${children.map(id=>{const a=byId.get(id);return `<button type="button" class="branch-node" data-focus="${id}"><span class="branch-icon">${glyph(a.entityType==='service'?'shield':'landmark')}</span><strong>${esc(authorityName(a))}</strong><small>${esc(a.entityTypeLabel)}</small><span class="branch-count">${childrenOf(id,data.hierarchy).length?`${childrenOf(id,data.hierarchy).length} · `:''}${glyph('chevron')}</span></button>`;}).join('')}</div></section>
     ${current?`<section class="regional-examples"><h3>Территориальный уровень</h3><p>${examples.length?'Подтверждённые примеры подразделений. Это не полный перечень территориальной сети.':'Региональные подразделения не добавляются автоматически. Проверенный пример для этого органа пока не внесён.'}</p>${examples.map(n=>`<article>${glyph('route')}<div><strong>${esc(n.title)}</strong>${external(n.url,'Официальная страница подразделения')}</div></article>`).join('')}</section>`:''}
     <details class="structure-evidence"><summary>Основания и границы схемы</summary><p>Схема показывает руководство деятельностью и ведомственную подчинённость, а не все связи координации. Президент и Правительство не обозначены как ФОИВ. Корпорации и фонды находятся вне дерева.</p><p>Каталог Правительства дополнен более поздними официальными сведениями о ФМБА. Схема не заменяет правовую экспертизу действующих положений.</p>${sources.map(s=>external(s.url,esc(s.title))).join('')}<p>Дата сверки: ${data.hierarchy.checkedAt}</p></details>
-    <div class="outside-tree"><h3>Вне дерева федеральных органов</h3><div class="tag-row">${data.authorities.filter(a=>!authorityCore(a)).map(a=>`<button class="button button-secondary" data-dossier="${a.id}">${esc(a.shortName)}</button>`).join('')}</div></div>`;
+    <div class="outside-tree"><h3>Вне дерева федеральных органов</h3><div class="tag-row">${data.authorities.filter(a=>!authorityCore(a)).map(a=>`<button class="button button-secondary" data-dossier="${a.id}">${esc(authorityName(a))}</button>`).join('')}</div></div>`;
     $$('[data-focus]',$('#view-structure')).forEach(b=>b.addEventListener('click',()=>{focus=b.dataset.focus;search.value='';structure();$('#structure-root').scrollIntoView({block:'start',behavior:'smooth'});}));
     $$('[data-dossier]',panel).forEach(b=>b.addEventListener('click',()=>openAuthority(b.dataset.dossier)));
     translateDOM($('#view-structure'));
@@ -78,7 +79,7 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
       const result=resultFor(item), top=result?.ranked.filter(authorityCore).slice(0,3)||[],checked=selection.includes(item.id);
       return `<article class="saved-scenario ${checked?'selected':''}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked?'checked':''} ${result?'':'disabled'}><span>Сравнить</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map(id=>`<span class="tag">${esc(data.sectors.find(s=>s.id===id)?.title||id)}</span>`).join('')}</div>
-      <div class="scenario-top">${top.map((a,i)=>`<span><b>${i+1}</b>${esc(a.shortName)}<strong>${a.score.toFixed(1)}</strong></span>`).join('')}</div>
+      <div class="scenario-top">${top.map((a,i)=>`<span><b>${i+1}</b>${esc(authorityName(a))}<strong>${a.score.toFixed(1)}</strong></span>`).join('')}</div>
       ${!result?'<p class="scenario-warning">Откройте ответы, чтобы рассчитать результат и сравнить сценарии.</p>':''}
       <div class="scenario-actions"><button class="button button-primary" data-restore="${item.id}" ${!result?'data-legacy="true"':''}>${result?"Восстановить":"Перенести и перепроверить"}</button><button class="button button-secondary" data-rename="${item.id}">Переименовать</button><button class="icon-button" data-delete="${item.id}" aria-label="Удалить сценарий">${glyph('trash')}</button></div>
       </article>`;
@@ -114,14 +115,14 @@ export function createWorkspace({data,state,modelVersion,rank,route,openAuthorit
   }
   function opportunities(){
     const query=$('#opportunity-authority');
-    if(query.options.length===1)data.authorities.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.shortName;query.append(o);});
+    if(query.options.length===1)data.authorities.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=authorityName(a);query.append(o);});
     query.value=sourceAuthority;
     const kind=$('#opportunity-kind').value;
     const auth=byId.get(sourceAuthority);
     let resources=auth?resourcesForAuthority(auth,data.resources):data.resources;
     if(kind)resources=resources.filter(r=>kind==='archive'?r.kind==='announcement':kind==='regional'?r.kind==='territorial-directory':r.kind==='directory');
     const specific=auth?data.resources.some(r=>r.authorityIds.includes(auth.id)&&r.kind==='directory'):true;
-    $('#opportunities-root').innerHTML=`${auth&&!specific?`<div class="source-fallback"><h2>${esc(auth.shortName)}</h2><p>Отдельная кадровая страница этого органа пока не подтверждена. Начните с официальной карточки и перейдите на сайт ведомства.</p>${external(auth.governmentUrl,'Официальная карточка органа')}</div>`:''}<div class="resource-grid">${resourceCards(resources)}</div>${!resources.length?'<p>В этой категории проверенные ссылки пока не добавлены.</p>':''}`;
+    $('#opportunities-root').innerHTML=`${auth&&!specific?`<div class="source-fallback"><h2>${esc(authorityName(auth))}</h2><p>Отдельная кадровая страница этого органа пока не подтверждена. Начните с официальной карточки и перейдите на сайт ведомства.</p>${external(auth.governmentUrl,'Официальная карточка органа')}</div>`:''}<div class="resource-grid">${resourceCards(resources)}</div>${!resources.length?'<p>В этой категории проверенные ссылки пока не добавлены.</p>':''}`;
     $('#opportunity-count').textContent=String(resources.length);translateDOM($('#view-opportunities'));
   }
   function bind(){

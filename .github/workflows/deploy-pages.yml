@@ -22,11 +22,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.event_name == 'pull_request' && github.event.pull_request.number || (inputs.verification_only == true && github.ref) || 'production' }}
+  group: pages-${{ contains(github.event.head_commit.message, '[career-seminar-express]') && format('career-express-skip-{0}', github.run_id) || github.event_name == 'pull_request' && github.event.pull_request.number || (inputs.verification_only == true && github.ref) || 'production' }}
   cancel-in-progress: true
 
 jobs:
   preserve-legacy-baseline:
+    # The owner-requested express career release has its own scoped publisher.
+    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -60,15 +62,15 @@ jobs:
           compression-level: 0
 
   platform-checks:
-    if: ${{ !contains(github.event.head_commit.message, '[career-verified-publish]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') }}
     uses: ./.github/workflows/platform-checks.yml
 
   legal-lab:
-    if: ${{ !contains(github.event.head_commit.message, '[career-verified-publish]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') }}
     uses: ./.github/workflows/legal-lab-checks.yml
 
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[career-seminar-express]') || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full

@@ -1590,7 +1590,7 @@ textarea { font:inherit; }
 /* Loaded last inside the module's Shadow Root. Host navigation, identity,
    routing and language remain the responsibility of the educational platform. */
 
-/* The course has one questionnaire and a single result-to-vacancies handoff. */
+/* The course has one questionnaire, a personal profile, then authorities and vacancies. */
 .seminar-flow .career-toolbar,
 .seminar-flow .session-tools,
 .seminar-flow .question-map,
@@ -1605,7 +1605,7 @@ textarea { font:inherit; }
 .seminar-flow .workflow-topline { min-height: 42px; }
 .seminar-flow .progress-copy { margin-left: auto; }
 .seminar-flow .section-heading h1 { font-size: clamp(25px, 3.5cqi, 34px); }
-.seminar-progress { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
+.seminar-progress { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
 .seminar-step { display: flex; align-items: center; gap: 10px; min-width: 0; color: #62798c; font-size: 14px; line-height: 1.3; }
 .seminar-step > span { display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; color: #526a80; background: #edf2f6; font-size: 13px; font-weight: 700; }
 .seminar-step svg { width: 17px; height: 17px; }
@@ -1618,9 +1618,9 @@ textarea { font:inherit; }
 .seminar-results-heading .seminar-profile-note { margin-top: 12px; padding: 12px 14px; border-left: 3px solid #b8cedd; background: #f5f8fa; font-size: 14px; }
 .seminar-authorities { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
 .seminar-authority { min-width: 0; padding: 20px; border: 1px solid #dce5ed; border-radius: 16px; background: #fff; }
-.seminar-authority-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.seminar-authority-heading { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
 .seminar-authority-heading > div { min-width: 0; }
-.seminar-authority-heading h2 { margin: 2px 0 0; font-size: 19px; line-height: 1.3; }
+.seminar-authority-heading h2 { margin: 2px 0 0; font-size: 18px; line-height: 1.4; overflow-wrap: anywhere; }
 .seminar-authority-heading .authority-symbol { flex-shrink: 0; }
 .seminar-rank { color: #62798c; font-size: 12px; font-weight: 600; }
 .seminar-authority > p { margin: 0; color: #48617b; font-size: 14px; line-height: 1.6; }
@@ -1923,4 +1923,50 @@ main, #main-content { width: 100%; min-width: 0; margin: 0; }
   .match-card, .saved-scenario, .resource-card { break-inside: avoid; }
   .career-surface.print-workbook > :not(#workbook-print-root) { display: none !important; }
   .career-surface.print-workbook #workbook-print-root { display: block !important; }
+}
+
+/* Intrinsic SVG dimensions must never expand a working-condition icon. */
+.condition-title .condition-icon { overflow: hidden; flex-shrink: 0; }
+.condition-title .condition-icon > svg { display: block; width: 24px; height: 24px; max-width: 24px; max-height: 24px; }
+.seminar-flow .condition-title { grid-template-columns: 40px minmax(0,1fr); }
+.seminar-flow .condition-title .condition-icon { width: 40px; height: 40px; }
+.seminar-profile-card { min-width: 0; padding: 24px; border: 1px solid #dce5ed; border-radius: 16px; background: #fff; }
+.seminar-profile-card h2,.seminar-profile-section h2 { margin: 0 0 12px; font-size: 23px; line-height: 1.3; }
+.seminar-profile-caption { margin: 0; color: #48617b; font-size: 14px; line-height: 1.6; }
+.seminar-profile-chart { display: grid; grid-template-columns: minmax(240px,330px) minmax(0,1fr); gap: 28px; align-items: center; margin-top: 18px; }
+.seminar-radar { width: 100%; max-width: 330px; margin-inline: auto; }
+.seminar-radar > svg { display: block; width: 100%; height: auto; }
+.seminar-profile-scores { display: grid; gap: 0; padding: 0; margin: 0; list-style: none; }
+.seminar-profile-scores li { display: grid; grid-template-columns: 24px minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 11px 0; border-bottom: 1px solid #edf1f5; font-size: 14px; line-height: 1.45; }
+.seminar-profile-scores li:last-child { border-bottom: 0; }
+.seminar-scale-number { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #e8f5ff; color: #09679f; font-size: 12px; font-weight: 700; }
+.seminar-profile-scores strong { white-space: nowrap; color: #145a8c; }
+.seminar-profile-scores small { color: #62798c; font-size: 12px; font-weight: 400; }
+.seminar-profile-section { margin-top: 28px; }
+.seminar-strengths { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.seminar-strengths article { min-width: 0; padding: 18px; border-radius: 14px; background: #e8f3f9; }
+.seminar-strengths h3 { margin: 0 0 8px; font-size: 17px; line-height: 1.4; }
+.seminar-strengths p { margin: 0; color: #48617b; font-size: 14px; line-height: 1.6; }
+.seminar-preferences { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 24px; }
+.seminar-sector-list { margin: 0; padding-left: 22px; color: #385570; line-height: 1.6; }
+.seminar-sector-list li { padding: 7px 0 7px 4px; }
+.seminar-condition-summary { margin: 0; }
+.seminar-condition-summary > div { padding: 10px 0; border-bottom: 1px solid #edf1f5; }
+.seminar-condition-summary > div:last-child { border-bottom: 0; }
+.seminar-condition-summary dt { font-size: 14px; font-weight: 600; line-height: 1.5; }
+.seminar-condition-summary dd { margin: 4px 0 0; color: #48617b; font-size: 13px; line-height: 1.6; }
+.seminar-authority-details { margin-top: 14px; border-top: 1px solid #edf1f5; }
+.seminar-authority-details summary { padding: 12px 0; color: #09679f; font-size: 14px; font-weight: 600; cursor: pointer; }
+.seminar-authority-details p,.seminar-track p { margin: 0 0 12px; color: #48617b; font-size: 14px; line-height: 1.6; }
+.seminar-track p { margin: 8px 0 0; font-size: 13px; }
+.seminar-authority-details a { display: inline-flex; gap: 6px; align-items: center; margin: 0 12px 12px 0; color: #09679f; font-size: 13px; line-height: 1.5; text-underline-offset: 3px; }
+.seminar-authority-details a svg,.seminar-back-profile svg { width: 16px; height: 16px; flex-shrink: 0; }
+.seminar-back-profile { display: inline-flex; align-items: center; gap: 8px; padding: 0; margin: 0 0 20px; min-height: 40px; border: 0; background: none; color: #09679f; font-size: 14px; text-align: left; cursor: pointer; }
+@container career (max-width: 760px) {
+  .seminar-profile-chart { grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .seminar-preferences,.seminar-strengths { grid-template-columns: minmax(0,1fr); }
+}
+@container career (max-width: 420px) {
+  .seminar-profile-card { padding: 18px; }
+  .seminar-profile-scores li { font-size: 13px; gap: 8px; }
 }
