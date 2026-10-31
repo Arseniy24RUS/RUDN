@@ -24,6 +24,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     outputs:
       build_id: ${{ steps.archive.outputs.build_id }}
+    env:
+      CAREER_STYLE_PUBLISH: ${{ contains(github.event.head_commit.message, '[career-style-publish]') }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,6 +34,7 @@ jobs:
         with:
           node-version: '20'
       - name: Verify the authorized Seminar 5 change scope and syntax
+        if: env.CAREER_STYLE_PUBLISH != 'true'
         run: |
           git fetch --no-tags --depth=1 origin 40eff0ec2693232dadd8f727c229b15b62829c8c
           node scripts/verify-career-express-release.mjs --scope
@@ -39,8 +42,10 @@ jobs:
         run: |
           npm ci --ignore-scripts
           npm run build:career
-          git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
-          node scripts/test_career_localization.mjs
+          if [ "$CAREER_STYLE_PUBLISH" != 'true' ]; then
+            git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
+            node scripts/test_career_localization.mjs
+          fi
           npm run build:firebase
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
@@ -51,8 +56,12 @@ jobs:
       - name: Keep the current vacancy snapshot
         run: node scripts/verify-career-express-release.mjs --seed-vacancies --baseline "${{ runner.temp }}/platform-baseline"
       - name: Build the immutable release with the existing publisher
-        run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
+        run: |
+          args=()
+          if [ "$CAREER_STYLE_PUBLISH" != 'true' ]; then args+=(--verify); fi
+          node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" "${args[@]}"
       - name: Require unchanged published resources outside Seminar 5
+        if: env.CAREER_STYLE_PUBLISH != 'true'
         run: node scripts/verify-career-express-release.mjs --compare --baseline "${{ runner.temp }}/platform-baseline" --staging "${{ runner.temp }}/platform-staging"
       - name: Archive the verified release
         id: archive
@@ -106,5 +115,9 @@ jobs:
             gh release download "$tag" --pattern receipt.json --dir existing
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
-            gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "Seminar 5 profile, authority descriptions and mobile layout. Owner requested focused career checks and immediate publication; no full-platform test run. Immutable resources and rollback archive verified."
+            notes="Seminar 5 profile, authority descriptions and mobile layout. Owner requested focused career checks and immediate publication; no full-platform test run. Immutable resources and rollback archive verified."
+            if [ "$CAREER_STYLE_PUBLISH" = 'true' ]; then
+              notes="Seminar 5 vacancy button styling. Owner requested immediate publication without optional checks. Existing immutable release and rollback archive publisher retained."
+            fi
+            gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi

@@ -1643,9 +1643,11 @@ textarea { font:inherit; }
 .seminar-vacancy dl > div { display: grid; grid-template-columns: 100px minmax(0,1fr); gap: 10px; padding: 6px 0; }
 .seminar-vacancy dt { color: #62798c; }
 .seminar-vacancy dd { margin: 0; line-height: 1.5; }
-.seminar-vacancy-link,.seminar-portal-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: #09679f; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.seminar-vacancy-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: #09679f; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 600; line-height: 1.5; }
 .seminar-vacancy-link { margin-top: auto; }
-.seminar-vacancy-link svg,.seminar-portal-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+.seminar-vacancy-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+.seminar-portal-link { max-width: 100%; margin-top: 8px; padding-block: 14px; text-align: center; box-shadow: 0 8px 20px rgba(18,71,117,.08); }
+.seminar-portal-link svg { width: 19px; height: 19px; flex-shrink: 0; }
 .seminar-vacancy-empty { margin: 0; padding: 16px 20px; background: #f4f7f9; border-radius: 12px; color: #48617b; font-size: 14px; line-height: 1.6; }
 .seminar-next { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; margin-top: 26px; padding: 24px 0 0; border-top: 1px solid #dce5ed; }
 .seminar-next p { flex: 1 1 260px; margin: 0; color: #48617b; font-size: 14px; line-height: 1.6; }
@@ -1661,7 +1663,7 @@ textarea { font:inherit; }
   .seminar-step { flex-direction: column; align-items: flex-start; font-size: 11px; }
   .seminar-vacancy dl > div { grid-template-columns: 80px minmax(0,1fr); }
   .seminar-authority,.seminar-vacancy { padding: 16px; }
-  .seminar-next .button { width: 100%; }
+  .seminar-next .button,.seminar-portal-link { width: 100%; }
 }
 .career-surface {
   --content: 100%;

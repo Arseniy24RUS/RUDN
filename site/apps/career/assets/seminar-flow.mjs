@@ -76,7 +76,7 @@ export function createSeminarFlow({getResult,getProfileContext,radarSvg,toast}){
       const found=items.filter(v=>v.organization.authorityId===a.id).slice(0,2);
       const emptyText=feed?L('В сохранённой подборке нет действующих объявлений этого органа. Проверьте вакансии на официальном портале по названию организации.','The saved selection has no current announcements for this authority. Search the official portal by the organisation name.','已保存的列表中没有该机关当前有效的公告。请按机构名称在官方门户搜索。'):L('Найдите объявления на официальном портале по названию организации.','Search the official portal by the organisation name.','请按机构名称在官方门户搜索公告。');
       return `<section class="seminar-vacancy-group"><h3>${E(authorityName(a))}</h3>${loading&&!loaded?`<p class="seminar-vacancy-empty">${L('Подбираем объявления…','Finding announcements…','正在查找公告……')}</p>`:found.length?`<div class="seminar-vacancy-grid">${found.map(vacancyCard).join('')}</div>`:`<p class="seminar-vacancy-empty">${emptyText}</p>`}</section>`;
-    }).join('')}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="seminar-portal-link">${L('Поиск вакансий на Госслужбе','Search the official civil service portal','在公务员官方门户搜索职位')}${I('external')}</a>`;
+    }).join('')}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="button button-secondary button-large seminar-portal-link">${L('Поиск вакансий на Госслужбе','Search the official civil service portal','在公务员官方门户搜索职位')}${I('external')}</a>`;
   }
 
   async function loadVacancies(){
