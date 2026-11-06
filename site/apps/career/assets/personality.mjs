@@ -7,14 +7,15 @@ const PAGE_COUNT=PERSONALITY_ITEMS.length/PAGE_SIZE;
 const E=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const L=(ru,en,zh)=>getLanguage()==='ru'?ru:getLanguage()==='en'?en:zh;
 const text=values=>L(...values);
-const label=value=>getLanguage()==='ru'?value.name:getLanguage()==='en'?value.en:value.zh;
+const englishFacetLabels={N3:'Low mood',O5:'Intellectual curiosity',A2:'Straightforwardness'};
+const label=value=>L(value.name,englishFacetLabels[value.id]||value.en,value.zh);
 const number=value=>Number(value).toLocaleString(getLanguage()==='zh-Hans'?'zh-CN':getLanguage(),{minimumFractionDigits:1,maximumFractionDigits:2});
 const facetById=new Map(PERSONALITY_FACETS.map(facet=>[facet.id,facet]));
 const validAnswer=value=>Number.isInteger(value)&&value>=1&&value<=5;
 const answerLabels=()=>L(
   ['Совершенно неверно','Скорее неверно','Ни верно, ни неверно','Скорее верно','Совершенно верно'],
   ['Very inaccurate','Moderately inaccurate','Neither accurate nor inaccurate','Moderately accurate','Very accurate'],
-  ['完全不符合','比较不符合','既不符合也不违背','比较符合','完全符合']);
+  ['完全不符合','比较不符合','介于符合与不符合之间','比较符合','完全符合']);
 const domainCopy={
   C:{title:['Добросовестность','Conscientiousness','尽责性'],description:['Как Вы организуете работу, соблюдаете обязательства и поддерживаете усилия.','How you organise work, honour commitments and sustain effort.','你如何安排工作、履行承诺并持续付出努力。']},
   E:{title:['Экстраверсия','Extraversion','外向性'],description:['Насколько Вам свойственны активное общение, инициативность и энергичный темп.','Your tendency towards active interaction, initiative and an energetic pace.','你对积极交流、主动行动和活跃节奏的偏好。']},
@@ -122,7 +123,7 @@ export function createPersonality({navigate,continueCareer}){
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L('Полный личностный профиль','Your full personality profile','完整的人格特征')}</h2><div class="personality-domains">${['C','E','A','O','N'].map(id=>{
         const domain=PERSONALITY_DOMAINS.find(item=>item.id===id),copy=domainCopy[id],value=profile.domains[id].mean,title=text(copy.title);
         return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value,title)}<p>${E(text(copy.description))}</p><dl>${domain.facets.map(facet=>{
-          const facetLabel=getLanguage()==='en'&&facet==='N3'?'Low mood':label(facetById.get(facet));
+          const facetLabel=label(facetById.get(facet));
           return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join('')}</dl></article>`;
       }).join('')}</div></section>

@@ -854,7 +854,7 @@ export const PERSONALITY_ITEMS = Object.freeze([
     "originalId": "4e6e3a34-176f-4e6e-8730-1341611f972b",
     "text": "Нарушаю правила",
     "en": "Break rules",
-    "zh": "打破规则",
+    "zh": "我会违反规则",
     "domain": "C",
     "facet": "C3",
     "reverse": true
@@ -1272,7 +1272,7 @@ export const PERSONALITY_ITEMS = Object.freeze([
     "originalId": "b86de003-c3c4-4cc8-9385-5ac8a0142c34",
     "text": "Меня не интересуют теоретические дискуссии",
     "en": "Am not interested in theoretical discussions",
-    "zh": "不喜欢讨论理论",
+    "zh": "我对理论讨论不感兴趣",
     "domain": "O",
     "facet": "O5",
     "reverse": true

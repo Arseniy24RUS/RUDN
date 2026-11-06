@@ -326,7 +326,6 @@ function activeRoute() {
 }
 
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
-  const requestedRoute=route;
   finishSectorDrag(false, {focus:false, announce:false});
   const valid = ["home", "personality", "personality-results", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
@@ -380,7 +379,10 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
   $$(".nav-more[open]").forEach(el=>el.open=false);
   state.lastRoute = route;
   saveState();
-  if (updateHash || (requestedRoute!==route&&(SEMINAR_FLOW||['personality','personality-results'].includes(requestedRoute)))) __careerHost.routeChanged(route, {replace});
+  // Host navigation and update restoration own the outer URL. A newly required
+  // first stage can change the visible screen without changing the saved route
+  // while the host is still restoring its update checkpoint.
+  if (updateHash) __careerHost.routeChanged(route, {replace});
   window.scrollTo({ top: 0, behavior: "instant" });
   if(focus){const heading=$(`#view-${route} h1`)||$("#main-content");heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}
   $(".desktop-nav")?.classList.remove("open");

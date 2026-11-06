@@ -6,42 +6,20 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 
-const baseCommit='6a0a9699aa6ad882d2ee14554f6936a55432a537';
-const verifiedCommit='515d05c7d95e7b0cad668cf96c6e167439697a4c';
-const verifiedRun=42205963973;
-const publisherFiles=['.github/workflows/publish-career-seminar.yml','scripts/verify-career-express-release.mjs'];
-const verifiedJobs=[
-  [127853367984,'platform-checks / browsers (chromium)'],
-  [127853368027,'platform-checks / browsers (firefox)'],
-  [127853368043,'platform-checks / browsers (webkit)'],
-  [127853654469,'puzzle-checks / games-and-rendering (chromium)'],
-  [127853654391,'puzzle-checks / games-and-rendering (firefox)'],
-  [127853654565,'puzzle-checks / games-and-rendering (webkit)']
-];
+const baseCommit='7417f30b3f9cb9f40aac92d55334c4f1fb0cad93';
 const allowed=new Set([
-  '.github/workflows/platform-checks.yml',
   '.github/workflows/publish-career-seminar.yml',
-  'scripts/build-career.mjs',
-  'scripts/platform-update-adapters.mjs',
-  'scripts/test_free_module_contexts.mjs',
-  'scripts/test_personality_insights.mjs',
-  'scripts/test_personality_model.mjs',
+  'scripts/test_career_update_migration.mjs',
   'scripts/test_personality_ui.mjs',
   'scripts/verify-career-express-release.mjs',
   'site/apps/career/assets/app.js',
   'site/apps/career/assets/personality-insights.mjs',
   'site/apps/career/assets/personality-items.mjs',
   'site/apps/career/assets/personality-model.mjs',
-  'site/apps/career/assets/personality.css',
   'site/apps/career/assets/personality.mjs',
   'site/apps/career/assets/seminar-flow.mjs',
   'site/apps/career/docs/IPIP-NEO-120.md',
-  'site/apps/career/embedded.css',
-  'site/apps/career/entry.mjs',
-  'site/apps/career/module.css',
-  'site/apps/career/runtime.bundle.mjs',
-  'site/apps/career/surface.html',
-  'site/assets/js/career-course.js'
+  'site/apps/career/runtime.bundle.mjs'
 ]);
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -89,46 +67,6 @@ if(args.includes('--scope')){
     }
   }
   console.log(JSON.stringify({status:'pass',scope:'seminar-5',baseCommit,changed,authorities:authorities.length,fullPlatformTests:false}));
-}else if(args.includes('--verified-ci')){
-  const sourceDelta=git('diff','--name-only',verifiedCommit,'HEAD').split('\n').filter(Boolean);
-  assert.deepEqual(sourceDelta.sort(),[...publisherFiles].sort(),'Only the publisher and its guard may change after the verified career checks');
-  const siteTree=git('rev-parse','HEAD:site');
-  assert.equal(siteTree,git('rev-parse',verifiedCommit+':site'),'The complete site must be identical to the browser-tested commit');
-  const repo=process.env.GH_REPO||'Arseniy24RUS/RUDN',token=process.env.GH_TOKEN;
-  assert.equal(repo.toLowerCase(),'arseniy24rus/rudn','Expected the reviewed repository');
-  assert.ok(token,'GH_TOKEN is required to verify completed workflow jobs');
-  const api=async endpoint=>{
-    const response=await fetch('https://api.github.com/repos/'+repo+endpoint,{
-      headers:{Authorization:'Bearer '+token,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
-      signal:AbortSignal.timeout(30000)
-    });
-    assert.equal(response.status,200,'GitHub verification API failed: '+endpoint);
-    return response.json();
-  };
-  const [run,firstPage]=await Promise.all([api('/actions/runs/'+verifiedRun),api('/actions/runs/'+verifiedRun+'/jobs?per_page=100')]);
-  assert.equal(run.id,verifiedRun);
-  assert.equal(run.head_sha,verifiedCommit,'Completed checks must belong to the pinned tested source');
-  assert.equal(run.repository.full_name.toLowerCase(),repo.toLowerCase());
-  const jobs=[...firstPage.jobs];
-  for(let page=2;jobs.length<firstPage.total_count;page++){
-    const next=await api('/actions/runs/'+verifiedRun+'/jobs?per_page=100&page='+page);
-    assert.ok(next.jobs.length,'Missing workflow job page');jobs.push(...next.jobs);
-  }
-  const evidence=verifiedJobs.map(([id,name])=>{
-    const job=jobs.find(candidate=>candidate.id===id);
-    assert.ok(job,'Missing completed career verification job: '+name);
-    assert.equal(job.name,name);assert.equal(job.run_id,verifiedRun);
-    assert.equal(job.head_sha,verifiedCommit);
-    assert.equal(job.status,'completed',name+' must have completed');
-    assert.equal(job.conclusion,'success',name+' must have passed');
-    return {id,name,status:job.status,conclusion:job.conclusion,url:job.html_url,completedAt:job.completed_at};
-  });
-  const report={status:'pass',scope:'seminar-5',head:git('rev-parse','HEAD'),verifiedCommit,siteTree,sourceDelta,
-    verificationRun:{id:run.id,url:run.html_url,status:run.status,conclusion:run.conclusion},jobs:evidence,fullPlatformTests:false};
-  if(args.includes('--report')){
-    const filename=option('--report');fs.mkdirSync(path.dirname(filename),{recursive:true});fs.writeFileSync(filename,JSON.stringify(report,null,2)+'\n');
-  }
-  console.log(JSON.stringify(report));
 }else if(args.includes('--seed-vacancies')){
   const root=option('--baseline'),{manifest}=current(root);
   for(const name of ['apps/career/data/vacancies/gossluzhba.json','apps/career/data/vacancies/sync-status.json']){
@@ -163,4 +101,4 @@ if(args.includes('--scope')){
   }
   assert.ok(changed.length>0,'The release must update at least one explicitly allowed Seminar 5 student resource');
   console.log(JSON.stringify({status:'pass',scope:'seminar-5',previous:old.entry.buildId,current:next.entry.buildId,changed,fullPlatformTests:false}));
-}else throw new Error('Usage: --scope | --verified-ci [--report FILE] | --seed-vacancies --baseline DIR | --compare --baseline DIR --staging DIR');
+}else throw new Error('Usage: --scope | --seed-vacancies --baseline DIR | --compare --baseline DIR --staging DIR');

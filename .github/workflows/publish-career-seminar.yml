@@ -15,7 +15,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  career-ui:
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare the career module and browser
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps "${{ matrix.browser }}"
+      - name: Verify the personality stage in Russian, English and Chinese
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/test_personality_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/personality"
+      - name: Restore existing Seminar 5 work into the new first stage
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/test_career_update_migration.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/migration"
+      - name: Keep course and free career sessions independent
+        env:
+          FREE_MODULES: career
+          DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
+          node scripts/test_free_module_contexts.mjs
+      - name: Retain focused browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-ui-${{ matrix.browser }}
+          path: ${{ runner.temp }}/career-ui
+          if-no-files-found: warn
+          retention-days: 30
   publish:
+    needs: career-ui
     if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]')
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -30,10 +77,10 @@ jobs:
           fetch-depth: 2
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Verify the authorized Seminar 5 change scope and syntax
         run: |
-          git fetch --no-tags --depth=1 origin 6a0a9699aa6ad882d2ee14554f6936a55432a537 515d05c7d95e7b0cad668cf96c6e167439697a4c
+          git fetch --no-tags --depth=1 origin 7417f30b3f9cb9f40aac92d55334c4f1fb0cad93
           node scripts/verify-career-express-release.mjs --scope
       - name: Build the career component and existing deterministic assets
         run: |
@@ -49,19 +96,6 @@ jobs:
           node scripts/test_personality_insights.mjs
           node scripts/test_career_localization.mjs
           node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs
-      - name: Verify completed career browser checks against identical source
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-        run: node scripts/verify-career-express-release.mjs --verified-ci --report "${{ runner.temp }}/career-ci-evidence.json"
-      - name: Retain verified career browser evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: career-verified-ci-${{ github.sha }}
-          path: ${{ runner.temp }}/career-ci-evidence.json
-          if-no-files-found: warn
-          retention-days: 30
       - name: Retrieve the published baseline and preserve its calendar
         env:
           GH_TOKEN: ${{ github.token }}
@@ -124,6 +158,6 @@ jobs:
             gh release download "$tag" --pattern receipt.json --dir existing
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
-            notes="Seminar 5 independent IPIP-NEO-120 personality profile. Owner requested focused career checks: scoring, role interpretation, existing career results and UI in three browser engines. Immutable resources and rollback archive verified."
+            notes="Seminar 5 IPIP-NEO-120: Russian, English and Chinese questions, results and language switching. Focused career checks passed on this source: scoring, existing career results, restored old sessions, independent course/free progress and UI in Chromium, Firefox and WebKit. Immutable resources and rollback archive verified."
             gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi

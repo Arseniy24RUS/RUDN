@@ -50,7 +50,7 @@ export const PERSONALITY_FACETS = Object.freeze([
   {id: 'O3', name: 'Эмоциональная восприимчивость', en: 'Emotionality', zh: '情感感受力'},
   {id: 'O4', name: 'Готовность к новому', en: 'Adventurousness', zh: '尝试新事物'},
   {id: 'O5', name: 'Интеллектуальная любознательность', en: 'Intellect', zh: '求知兴趣'},
-  {id: 'O6', name: 'Либерализм взглядов', en: 'Liberalism', zh: '观念自由倾向'},
+  {id: 'O6', name: 'Либерализм взглядов', en: 'Liberalism', zh: '自由主义倾向'},
   {id: 'A1', name: 'Доверие', en: 'Trust', zh: '信任'},
   {id: 'A2', name: 'Прямота', en: 'Morality', zh: '真诚'},
   {id: 'A3', name: 'Готовность помогать', en: 'Altruism', zh: '助人意愿'},
