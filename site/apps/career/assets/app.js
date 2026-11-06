@@ -4,6 +4,7 @@ import {authorityEmblem,authoritySymbolCredit} from './authority-symbols.mjs';
 import {authorityName} from './authority-names.mjs';
 import {createVacancies} from './vacancies.mjs';
 import {createSeminarFlow} from './seminar-flow.mjs';
+import {createPersonality} from './personality.mjs';
 import {MODEL_VERSION as CURRENT_MODEL,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from './versions.mjs';
 import {TOPIC_GROUPS,activeTopicGroups,sanitizeFocusAreas} from './topics.mjs';
 import {storageKey,readLocal,writeLocal} from './storage.mjs';
@@ -87,6 +88,7 @@ let decisionLab = null;
 let publicService = null;
 let vacancies = null;
 let seminarFlow = null;
+let personality = null;
 let groupMode = "uploaded";
 let groupBusy = false;
 let latestResult = null;
@@ -326,14 +328,16 @@ function activeRoute() {
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
   const requestedRoute=route;
   finishSectorDrag(false, {focus:false, announce:false});
-  const valid = ["home", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+  const valid = ["home", "personality", "personality-results", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
   if (!valid.includes(route)) route = "home";
   if(SEMINAR_FLOW){
-    if(!['test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
+    if(!personality?.isComplete())route='personality';
+    else if(route==='home')route='personality-results';
+    else if(!['personality','personality-results','test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
     if(route==='sectors'&&Object.keys(state.answers).length<data.questions.length)route='test';
     if(route==='conditions'&&(state.prioritySectors.length!==4||state.lowPrioritySectors.length!==2))route=resolveResumeRoute();
-  }
+  }else if(['personality','personality-results'].includes(route))route='home';
   if(route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
   const unavailableRoutes={workshop:'data/agency-studies.json','public-service':'data/public-service.json',structure:'data/hierarchy.json',opportunities:'data/career-resources.json'};
   if(data.unavailable.includes(unavailableRoutes[route])){
@@ -371,11 +375,12 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
   decisionLab?.render(route);
   publicService?.render(route);
   vacancies?.render(route);
+  personality?.render(route);
   seminarFlow?.render(route);
   $$(".nav-more[open]").forEach(el=>el.open=false);
   state.lastRoute = route;
   saveState();
-  if (updateHash || (SEMINAR_FLOW&&requestedRoute!==route)) __careerHost.routeChanged(route, {replace});
+  if (updateHash || (requestedRoute!==route&&(SEMINAR_FLOW||['personality','personality-results'].includes(requestedRoute)))) __careerHost.routeChanged(route, {replace});
   window.scrollTo({ top: 0, behavior: "instant" });
   if(focus){const heading=$(`#view-${route} h1`)||$("#main-content");heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}
   $(".desktop-nav")?.classList.remove("open");
@@ -1572,6 +1577,7 @@ async function init() {
     state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
     if(SEMINAR_FLOW){
+      personality=createPersonality({navigate:routeTo,continueCareer:()=>routeTo(resolveResumeRoute())});
       seminarFlow=createSeminarFlow({getResult:getResults,getProfileContext:()=>({recordId:state.resultRecordId,scales:data.scales,sectors:data.sectors,conditions:data.conditions,prioritySectors:state.prioritySectors,conditionValues:state.conditions}),radarSvg,toast});
     }else{
       classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
@@ -1608,12 +1614,12 @@ async function init() {
 
 export const ready = init();
 export {routeTo as navigate, setLanguage as setLocale};
-export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||seminarFlow?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
+export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||seminarFlow?.updateBusy?.()||personality?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
 export const pauseForUpdate=()=>{finishSectorDrag(false,{focus:false,announce:false});};
-export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});return saveState();}
+export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});const personalitySaved=personality?.flush()!==false;const careerSaved=saveState();return personalitySaved&&careerSaved;}
 export function captureForUpdate(){
   const filters=Object.fromEntries(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].map(id=>[id,$('#'+id)?.value||'']));
-  return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password').slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.()};
+  return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password'&&!el.closest('#view-personality,#view-personality-results')).slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.()};
 }
 export async function restoreForUpdate(value){
   if(value?.schema!==1||value.model!==MODEL_VERSION)throw Error('update/incompatible');
@@ -1624,5 +1630,5 @@ export async function restoreForUpdate(value){
   seminarAuthority=data.authorities.find(a=>a.id===value.seminarAuthority)||null;
   routeTo(value.route,{updateHash:false,focus:false});
   if(value.authority)openAuthority(value.authority,value.authorityTab);
-  for(const field of value.fields||[]){const el=document.getElementById(field.id);if(el&&['INPUT','TEXTAREA','SELECT'].includes(el.tagName)&&el.type!=='file'&&el.type!=='password'){el.value=String(field.value||'');el.checked=!!field.checked;}}
+  for(const field of value.fields||[]){const el=document.getElementById(field.id);if(el&&['INPUT','TEXTAREA','SELECT'].includes(el.tagName)&&el.type!=='file'&&el.type!=='password'&&!el.closest('#view-personality,#view-personality-results')){el.value=String(field.value||'');el.checked=!!field.checked;}}
 }

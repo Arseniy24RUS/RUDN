@@ -1,7 +1,7 @@
 /* Loaded last inside the module's Shadow Root. Host navigation, identity,
    routing and language remain the responsibility of the educational platform. */
 
-/* The course has one questionnaire, a personal profile, then authorities and vacancies. */
+/* The course opens with a separate personality inventory, then career guidance. */
 .seminar-flow .career-toolbar,
 .seminar-flow .session-tools,
 .seminar-flow .question-map,
@@ -16,8 +16,9 @@
 .seminar-flow .workflow-topline { min-height: 42px; }
 .seminar-flow .progress-copy { margin-left: auto; }
 .seminar-flow .section-heading h1 { font-size: clamp(25px, 3.5cqi, 34px); }
-.seminar-progress { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
+.seminar-progress { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
 .seminar-step { display: flex; align-items: center; gap: 10px; min-width: 0; color: #62798c; font-size: 14px; line-height: 1.3; }
+.seminar-step strong { min-width:0; max-width:100%; overflow-wrap:anywhere; }
 .seminar-step > span { display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; color: #526a80; background: #edf2f6; font-size: 13px; font-weight: 700; }
 .seminar-step svg { width: 17px; height: 17px; }
 .seminar-step.is-current { color: #145a8c; }

@@ -1587,10 +1587,105 @@ textarea { font:inherit; }
 .ps-dossier-heading .authority-symbol-credit a {color:inherit;text-decoration:underline;}
 @container career (max-width:480px) {.authority-symbol{width:52px;height:52px;}.dialog-hero-top .authority-symbol{width:64px;height:64px;}}
 
+/* Simple questionnaire and personal results; all selectors stay inside the module. */
+.personality-active .session-strip { display:none; }
+.personality-heading { max-width:850px; margin:8px 0 24px; }
+.personality-heading h1 { margin:0 0 12px; font-size:clamp(27px,4cqi,38px); line-height:1.2; }
+.personality-heading p { margin:0; color:#48617b; line-height:1.65; }
+.personality-heading h1:focus { outline:none; }
+.personality-progress { margin:0 0 18px; }
+.personality-progress > div { display:flex; justify-content:space-between; gap:12px; color:#48617b; font-size:13px; margin-bottom:8px; }
+.personality-progress progress { display:block; appearance:none; border:0; width:100%; height:5px; border-radius:6px; overflow:hidden; background:#e7eef4; color:#1678b4; }
+.personality-progress progress::-webkit-progress-bar { background:#e7eef4; }
+.personality-progress progress::-webkit-progress-value { background:#1678b4; }
+.personality-progress progress::-moz-progress-bar { background:#1678b4; }
+.personality-scale { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; padding:16px 10px; margin-bottom:20px; border-radius:12px; background:#edf5fa; }
+.personality-scale > div { min-width:0; text-align:center; color:#365b77; line-height:1.35; }
+.personality-scale b { display:block; margin-bottom:5px; font-size:16px; color:#145a8c; }
+.personality-scale span { display:block; font-size:12px; }
+.personality-items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.personality-item { box-sizing:border-box; min-inline-size:0; min-width:0; margin:0; padding:20px 20px 10px; border:1px solid #d7e3ec; border-radius:14px; background:#fff; }
+.personality-item.is-answered { border-color:#a4c8df; }
+.personality-item legend { box-sizing:border-box; float:left; width:100%; min-height:48px; padding:0; margin:0 0 12px; font-size:16px; font-weight:550; line-height:1.5; color:#193b56; }
+.personality-item legend > span { margin-right:4px; color:#62798c; font-variant-numeric:tabular-nums; font-weight:400; }
+.personality-options { clear:both; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.personality-choice { display:block; position:relative; cursor:pointer; min-width:0; }
+.personality-choice input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; z-index:1; }
+.personality-choice-number { display:grid; place-items:center; min-height:46px; border:1px solid #b6cada; border-radius:9px; background:#fff; color:#244d6b; font-size:16px; font-weight:600; }
+.personality-choice:hover .personality-choice-number { border-color:#1678b4; background:#f0f7fc; }
+.personality-choice input:checked + .personality-choice-number { background:#126da6; border-color:#126da6; color:#fff; box-shadow:0 2px 5px #126da620; }
+.personality-choice input:focus-visible + .personality-choice-number { outline:3px solid #126da6; outline-offset:3px; }
+.personality-selected { margin:8px 0 0; min-height:20px; color:#345b78; font-size:12px; text-align:center; line-height:1.5; }
+.personality-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.personality-actions { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:24px; padding-top:20px; border-top:1px solid #dce5ed; }
+.personality-actions #personality-next,.personality-result-actions #personality-continue { margin-left:auto; }
+.personality-actions .button { min-width:132px; min-height:48px; }
+.personality-actions [hidden],.personality-save-status[hidden] { display:none!important; }
+.personality-save-status { margin:18px 0 0; padding:12px 16px; background:#fff6e6; color:#744b15; border:1px solid #ead3ab; border-radius:10px; font-size:14px; line-height:1.6; }
+.personality-text-button { display:inline-block; border:0; padding:0; min-height:44px; margin-bottom:8px; background:transparent; color:#09679f; font:inherit; font-size:14px; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
+.personality-section { margin:30px 0; }
+.personality-section > h2 { font-size:24px; line-height:1.35; margin:0 0 16px; }
+.personality-section-lead { max-width:880px; margin:0 0 18px; color:#48617b; line-height:1.7; }
+.personality-traits,.personality-domains { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.personality-trait,.personality-domain { min-width:0; padding:22px; border:1px solid #dce5ed; border-radius:14px; background:#fff; }
+.personality-score-heading { display:flex; justify-content:space-between; align-items:baseline; gap:16px; }
+.personality-score-heading h3 { min-width:0; margin:0; font-size:17px; line-height:1.4; }
+.personality-score-heading > strong { flex-shrink:0; font-size:21px; color:#145a8c; font-variant-numeric:tabular-nums; }
+.personality-score-heading small,.personality-domain dd small { font-weight:400; font-size:12px; color:#62798c; }
+.personality-meter { height:7px; overflow:hidden; margin:14px 0 16px; border-radius:8px; background:#e9f0f5; }
+.personality-meter > span { display:block; height:100%; border-radius:inherit; background:#2381b8; }
+.personality-trait > p,.personality-domain > p { margin:0; color:#48617b; font-size:14px; line-height:1.7; }
+.personality-roles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.personality-role { min-width:0; padding:22px; border:1px solid #c6dce9; border-top:3px solid #1880b3; border-radius:14px; background:#f6fafd; }
+.personality-role > h3 { margin:0 0 12px; font-size:19px; line-height:1.4; color:#145a8c; }
+.personality-role p { margin:0; color:#48617b; font-size:14px; line-height:1.7; }
+.personality-role dl { margin:20px 0; font-size:12px; }
+.personality-role dl > div { display:flex; gap:10px; justify-content:space-between; padding:5px 0; }
+.personality-role dt { min-width:0; color:#48617b; line-height:1.5; }
+.personality-role dd { margin:0; white-space:nowrap; color:#214b6d; font-variant-numeric:tabular-nums; }
+.personality-role .personality-role-action { padding-top:16px; border-top:1px solid #dce9f0; }
+.personality-role-action strong { color:#254e6e; }
+.personality-domain dl { margin:16px 0 0; }
+.personality-domain dl > div { display:flex; align-items:baseline; justify-content:space-between; gap:14px; padding:9px 0; border-bottom:1px solid #edf1f5; }
+.personality-domain dl > div:last-child { border-bottom:0; padding-bottom:0; }
+.personality-domain dt { min-width:0; font-size:14px; line-height:1.5; color:#48617b; }
+.personality-domain dd { flex-shrink:0; margin:0; color:#254e6e; font-weight:600; font-variant-numeric:tabular-nums; }
+.personality-domains .personality-domain:last-child { grid-column:1 / -1; }
+.personality-domains .personality-domain:last-child dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:28px; }
+.personality-method { margin:26px 0 0; color:#62798c; font-size:12px; line-height:1.7; }
+.personality-method a { color:#09679f; text-underline-offset:3px; }
+@container career (max-width:900px) {
+  .personality-roles { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@container career (max-width:680px) {
+  .personality-items,.personality-traits,.personality-domains,.personality-roles { grid-template-columns:minmax(0,1fr); }
+  .personality-heading { margin-bottom:20px; }
+  .personality-item { padding:18px 16px 10px; }
+  .personality-item legend { min-height:0; }
+  .personality-scale { gap:6px; padding:12px 6px; }
+  .personality-scale span { font-size:11px; overflow-wrap:anywhere; }
+  .personality-trait,.personality-domain,.personality-role { padding:18px; }
+  .personality-section > h2 { font-size:22px; }
+  .personality-domains .personality-domain:last-child dl { grid-template-columns:minmax(0,1fr); }
+}
+@container career (max-width:420px) {
+  .personality-heading h1 { font-size:27px; }
+  .personality-heading p { font-size:14px; }
+  .personality-options { gap:6px; }
+  .personality-item legend { font-size:15px; }
+  .personality-progress > div { font-size:12px; }
+  .personality-actions { gap:10px; }
+  .personality-actions .button { min-width:0; padding-inline:20px; }
+  .personality-result-actions .button { width:100%; }
+  .personality-score-heading { gap:10px; }
+  .personality-score-heading h3 { font-size:16px; }
+  .personality-score-heading > strong { font-size:19px; }
+}
+
 /* Loaded last inside the module's Shadow Root. Host navigation, identity,
    routing and language remain the responsibility of the educational platform. */
 
-/* The course has one questionnaire, a personal profile, then authorities and vacancies. */
+/* The course opens with a separate personality inventory, then career guidance. */
 .seminar-flow .career-toolbar,
 .seminar-flow .session-tools,
 .seminar-flow .question-map,
@@ -1605,8 +1700,9 @@ textarea { font:inherit; }
 .seminar-flow .workflow-topline { min-height: 42px; }
 .seminar-flow .progress-copy { margin-left: auto; }
 .seminar-flow .section-heading h1 { font-size: clamp(25px, 3.5cqi, 34px); }
-.seminar-progress { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
+.seminar-progress { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; padding: 14px 0; border-bottom: 1px solid #dce5ed; }
 .seminar-step { display: flex; align-items: center; gap: 10px; min-width: 0; color: #62798c; font-size: 14px; line-height: 1.3; }
+.seminar-step strong { min-width:0; max-width:100%; overflow-wrap:anywhere; }
 .seminar-step > span { display: grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; color: #526a80; background: #edf2f6; font-size: 13px; font-weight: 700; }
 .seminar-step svg { width: 17px; height: 17px; }
 .seminar-step.is-current { color: #145a8c; }

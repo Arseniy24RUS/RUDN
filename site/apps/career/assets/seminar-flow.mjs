@@ -30,8 +30,8 @@ export function createSeminarFlow({getResult,getProfileContext,radarSvg,toast}){
 
   function updateLabels(){
     progress.setAttribute('aria-label',L('Последовательность занятия','Seminar steps','课堂步骤'));
-    const current=lastRoute==='results'?(stage()==='profile'?1:2):0;
-    progress.innerHTML=[L('Профориентация','Career interests','职业倾向'),L('Мой профиль','My profile','我的画像'),L('Ведомства и вакансии','Authorities and vacancies','机关与职位'),L('Тест','Knowledge test','知识测试')].map((label,index)=>`<div role="listitem" class="seminar-step ${index===current?'is-current':''} ${index<current?'is-done':''}" ${index===current?'aria-current="step"':''}><span>${index<current?I('check'):index+1}</span><strong>${label}</strong></div>`).join('');
+    const current=lastRoute==='results'?(stage()==='profile'?2:3):['personality','personality-results'].includes(lastRoute)?0:1;
+    progress.innerHTML=[L('Личностный профиль','Personality profile','人格画像'),L('Профориентация','Career interests','职业倾向'),L('Мой профиль','My profile','我的画像'),L('Ведомства и вакансии','Authorities and vacancies','机关与职位'),L('Тест','Knowledge test','知识测试')].map((label,index)=>`<div role="listitem" class="seminar-step ${index===current?'is-current':''} ${index<current?'is-done':''}" ${index===current?'aria-current="step"':''}><span>${index<current?I('check'):index+1}</span><strong>${label}</strong></div>`).join('');
     const calculate=document.querySelector('#calculate-button');
     calculate.setAttribute('data-no-i18n','');
     calculate.innerHTML=L('Посмотреть мой профиль','View my profile','查看我的画像')+I('arrow-right');

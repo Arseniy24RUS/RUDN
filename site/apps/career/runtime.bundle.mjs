@@ -98,9 +98,9 @@ var CareerRuntime = (() => {
       })
     };
   }
-  function parseSession(text2, questions, sectors) {
-    if (typeof text2 !== "string" || new TextEncoder().encode(text2).length > SESSION_LIMIT) throw Error("file-size");
-    const v = JSON.parse(text2);
+  function parseSession(text3, questions, sectors) {
+    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > SESSION_LIMIT) throw Error("file-size");
+    const v = JSON.parse(text3);
     if (!allowed(v, ["schema", "schemaVersion", "releaseVersion", "modelVersion", "questionnaireVersion", "registryVersion", "savedAt", "inputs"]) || v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || !compatibleInputModel(v.modelVersion) || v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error("version");
     const i = v.inputs, qids = questions.map((q) => q.id), sids = sectors.map((s) => s.id);
     if (!allowed(i, ["answers", "prioritySectors", "lowPrioritySectors", "conditions", "focusAreas"]) || !allowed(i.answers, qids) || !Object.values(i.answers).every(score) || !allowed(i.conditions, conditions) || !Object.values(i.conditions).every(score)) throw Error("answers");
@@ -1698,8 +1698,8 @@ var CareerRuntime = (() => {
   var originals = /* @__PURE__ */ new WeakMap();
   var attributeOriginals = /* @__PURE__ */ new WeakMap();
   var missingTranslations = /* @__PURE__ */ new Set();
-  var normalized = (text2) => String(text2).replace(/\s+/g, " ").trim();
-  var escapeRE = (text2) => text2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  var normalized = (text3) => String(text3).replace(/\s+/g, " ").trim();
+  var escapeRE = (text3) => text3.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   function normalizeLanguage(value = "") {
     const v = String(value).toLowerCase();
     return v === "en" || v.startsWith("en-") ? "en" : v === "zh" || v.startsWith("zh-") ? "zh-Hans" : "ru";
@@ -1892,8 +1892,8 @@ var CareerRuntime = (() => {
   function authoritySymbolCredit(authority) {
     const symbol = authoritySymbolSource(authority);
     if (!symbol) return "";
-    const label = getLanguage() === "en" ? "Symbol source" : getLanguage() === "zh-Hans" ? "\u6807\u8BC6\u6765\u6E90" : "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0441\u0438\u043C\u0432\u043E\u043B\u0430";
-    return `<p class="authority-symbol-credit" data-no-i18n><a href="${escape(symbol.source)}" target="_blank" rel="noopener noreferrer">${label}</a> \xB7 ${escape(symbol.credit)} \xB7 ${escape(symbol.license)}</p>`;
+    const label2 = getLanguage() === "en" ? "Symbol source" : getLanguage() === "zh-Hans" ? "\u6807\u8BC6\u6765\u6E90" : "\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0441\u0438\u043C\u0432\u043E\u043B\u0430";
+    return `<p class="authority-symbol-credit" data-no-i18n><a href="${escape(symbol.source)}" target="_blank" rel="noopener noreferrer">${label2}</a> \xB7 ${escape(symbol.credit)} \xB7 ${escape(symbol.license)}</p>`;
   }
 
   // site/apps/career/assets/authority-names.mjs
@@ -2215,7 +2215,7 @@ var CareerRuntime = (() => {
     }
     const stage = () => savedStage?.recordId === getProfileContext().recordId && savedStage?.view === "recommendations" ? "recommendations" : "profile";
     const top = () => getResult()?.ranked.filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 3) || [];
-    const display = (text2) => E2(translate(text2 || ""));
+    const display = (text3) => E2(translate(text3 || ""));
     const progress = document.createElement("div");
     progress.className = "seminar-progress";
     progress.setAttribute("data-no-i18n", "");
@@ -2223,8 +2223,8 @@ var CareerRuntime = (() => {
     document.querySelector("#main-content").prepend(progress);
     function updateLabels() {
       progress.setAttribute("aria-label", L2("\u041F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u043D\u044F\u0442\u0438\u044F", "Seminar steps", "\u8BFE\u5802\u6B65\u9AA4"));
-      const current = lastRoute === "results" ? stage() === "profile" ? 1 : 2 : 0;
-      progress.innerHTML = [L2("\u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u044F", "Career interests", "\u804C\u4E1A\u503E\u5411"), L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF"), L2("\u0412\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Authorities and vacancies", "\u673A\u5173\u4E0E\u804C\u4F4D"), L2("\u0422\u0435\u0441\u0442", "Knowledge test", "\u77E5\u8BC6\u6D4B\u8BD5")].map((label, index) => `<div role="listitem" class="seminar-step ${index === current ? "is-current" : ""} ${index < current ? "is-done" : ""}" ${index === current ? 'aria-current="step"' : ""}><span>${index < current ? I2("check") : index + 1}</span><strong>${label}</strong></div>`).join("");
+      const current = lastRoute === "results" ? stage() === "profile" ? 2 : 3 : ["personality", "personality-results"].includes(lastRoute) ? 0 : 1;
+      progress.innerHTML = [L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u753B\u50CF"), L2("\u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u044F", "Career interests", "\u804C\u4E1A\u503E\u5411"), L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF"), L2("\u0412\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Authorities and vacancies", "\u673A\u5173\u4E0E\u804C\u4F4D"), L2("\u0422\u0435\u0441\u0442", "Knowledge test", "\u77E5\u8BC6\u6D4B\u8BD5")].map((label2, index) => `<div role="listitem" class="seminar-step ${index === current ? "is-current" : ""} ${index < current ? "is-done" : ""}" ${index === current ? 'aria-current="step"' : ""}><span>${index < current ? I2("check") : index + 1}</span><strong>${label2}</strong></div>`).join("");
       const calculate = document.querySelector("#calculate-button");
       calculate.setAttribute("data-no-i18n", "");
       calculate.innerHTML = L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "View my profile", "\u67E5\u770B\u6211\u7684\u753B\u50CF") + I2("arrow-right");
@@ -2255,7 +2255,7 @@ var CareerRuntime = (() => {
         [L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), v.education],
         [L2("\u0421\u0442\u0430\u0436", "Experience", "\u7ECF\u5386"), v.experience]
       ].filter(([, value]) => value);
-      return `<article class="seminar-vacancy"><span class="seminar-vacancy-status">${labels[v.status] || labels.verify}</span><h4 lang="ru">${E2(v.title)}</h4><p class="seminar-employer" lang="ru">${E2(v.organization.name)}</p>${v.department ? `<p lang="ru">${E2(v.department)}</p>` : ""}${v.organization.relation === "territorial" ? `<p class="seminar-territorial">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D", "Territorial authority", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173")}</p>` : ""}<dl>${fields.map(([label, value]) => `<div><dt>${label}</dt><dd lang="ru">${E2(value)}</dd></div>`).join("")}</dl><a href="${E2(v.url)}" target="_blank" rel="noopener noreferrer" class="seminar-vacancy-link">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open the official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I2("external")}</a></article>`;
+      return `<article class="seminar-vacancy"><span class="seminar-vacancy-status">${labels[v.status] || labels.verify}</span><h4 lang="ru">${E2(v.title)}</h4><p class="seminar-employer" lang="ru">${E2(v.organization.name)}</p>${v.department ? `<p lang="ru">${E2(v.department)}</p>` : ""}${v.organization.relation === "territorial" ? `<p class="seminar-territorial">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D", "Territorial authority", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173")}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E2(value)}</dd></div>`).join("")}</dl><a href="${E2(v.url)}" target="_blank" rel="noopener noreferrer" class="seminar-vacancy-link">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open the official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I2("external")}</a></article>`;
     }
     function renderVacancies() {
       const root = document.querySelector("#seminar-vacancies");
@@ -2308,13 +2308,13 @@ var CareerRuntime = (() => {
       const context = getProfileContext();
       const scales = context.scales;
       const strongest = [...scales].sort((a, b) => result.roleProfile.raw[b.id] - result.roleProfile.raw[a.id]).slice(0, 3);
-      const number = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      const number2 = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
       root.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your profile", "\u4F60\u7684\u804C\u4E1A\u753B\u50CF")}</h1><p>${profileNote(result)}</p></header>
       <section class="seminar-profile-card" aria-labelledby="seminar-interests-title">
         <h2 id="seminar-interests-title">${L2("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Interest in types of work", "\u5BF9\u5404\u7C7B\u5DE5\u4F5C\u7684\u5174\u8DA3")}</h2>
         <p class="seminar-profile-caption">${L2("\u041E\u0442 1 \u0434\u043E 5: \u0447\u0435\u043C \u0434\u0430\u043B\u044C\u0448\u0435 \u0442\u043E\u0447\u043A\u0430 \u043E\u0442 \u0446\u0435\u043D\u0442\u0440\u0430, \u0442\u0435\u043C \u0432\u044B\u0448\u0435 \u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441. \u042D\u0442\u043E \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432, \u0430 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0435\u0439.", "From 1 to 5: the farther a point is from the centre, the stronger your interest. This describes your interests, not your abilities.", "\u8BC4\u5206\u4E3A1\u81F35\u5206\uFF1A\u70B9\u79BB\u4E2D\u5FC3\u8D8A\u8FDC\uFF0C\u5174\u8DA3\u8D8A\u5F3A\u3002\u8FD9\u662F\u5174\u8DA3\u81EA\u8BC4\uFF0C\u4E0D\u662F\u80FD\u529B\u8BC4\u4EF7\u3002")}</p>
         <div class="seminar-profile-chart"><div class="seminar-radar">${radarSvg2(result.roleProfile, { numbered: true, label: L2("\u0414\u0435\u0432\u044F\u0442\u044C \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B: \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043E\u0442 1 \u0434\u043E 5", "Nine types of work: interest from 1 to 5", "\u4E5D\u7C7B\u5DE5\u4F5C\uFF1A\u5174\u8DA3\u8BC4\u52061\u81F35\u5206") })}</div>
-          <ol class="seminar-profile-scores">${scales.map((scale, index) => `<li><span class="seminar-scale-number">${index + 1}</span><span>${display(scale.title)}</span><strong>${number(result.roleProfile.raw[scale.id])}<small> / 5</small></strong></li>`).join("")}</ol>
+          <ol class="seminar-profile-scores">${scales.map((scale, index) => `<li><span class="seminar-scale-number">${index + 1}</span><span>${display(scale.title)}</span><strong>${number2(result.roleProfile.raw[scale.id])}<small> / 5</small></strong></li>`).join("")}</ol>
         </div>
       </section>
       ${!result.roleProfile.flat && !result.roleProfile.lowInterest ? `<section class="seminar-profile-section"><h2>${L2("\u0427\u0442\u043E \u0412\u0430\u043C \u0431\u043B\u0438\u0436\u0435", "Your leading interests", "\u4F60\u7684\u4E3B\u8981\u5174\u8DA3")}</h2><div class="seminar-strengths">${strongest.map((scale) => `<article><h3>${display(scale.title)}</h3><p>${display(scale.description)}</p></article>`).join("")}</div></section>` : ""}
@@ -2330,7 +2330,7 @@ var CareerRuntime = (() => {
       const paragraphs = Array.isArray(authority.descriptionParagraphs) ? authority.descriptionParagraphs.filter((value) => typeof value === "string" && value.trim()).slice(0, 3) : [];
       if (!paragraphs.length) return "";
       const sources = (authority.descriptionSources || []).filter((source) => /^https:\/\//.test(source.url || ""));
-      return `<details class="seminar-authority-details"><summary>${L2("\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435", "About this authority", "\u4E86\u89E3\u8BE5\u673A\u5173")}</summary><div>${paragraphs.map((text2) => `<p${getLanguage() !== "ru" && translate(text2) === text2 ? ' lang="ru"' : ""}>${display(text2)}</p>`).join("")}${sources.map((source) => `<a href="${E2(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F", "Official information", "\u5B98\u65B9\u4FE1\u606F")}${I2("external")}</a>`).join("")}</div></details>`;
+      return `<details class="seminar-authority-details"><summary>${L2("\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435", "About this authority", "\u4E86\u89E3\u8BE5\u673A\u5173")}</summary><div>${paragraphs.map((text3) => `<p${getLanguage() !== "ru" && translate(text3) === text3 ? ' lang="ru"' : ""}>${display(text3)}</p>`).join("")}${sources.map((source) => `<a href="${E2(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F", "Official information", "\u5B98\u65B9\u4FE1\u606F")}${I2("external")}</a>`).join("")}</div></details>`;
     }
     function authorityCard(authority, index, result) {
       const context = getProfileContext();
@@ -2378,6 +2378,1754 @@ var CareerRuntime = (() => {
       },
       updateBusy: () => loading || opening
     };
+  }
+
+  // site/apps/career/assets/personality-items.mjs
+  /** @license
+   * IPIP-NEO-120 item set (Johnson, 2014); English items are public domain.
+   * https://ipip.ori.org/30FacetNEO-PI-RItems.htm
+   * https://ipip.ori.org/newPermission.htm
+   *
+   * Russian and Simplified Chinese translations adapted from rubynor/bigfive-web,
+   * commit e8f3caca49edafb9bc6b927eff7fbc1264312c24 (2026-11-06 retrieval).
+   * packages/questions/src/data/{ru,en,zh-cn}/questions.ts
+   * Edited translations are not claimed to be validated national adaptations.
+   * All translation edits and the full source provenance are recorded in
+   * ../docs/IPIP-NEO-120.md. English wording, order and scoring key are unchanged.
+   *
+   * MIT License
+   *
+   * Copyright (c) 2024 B5 Holding AS
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a copy
+   * of this software and associated documentation files (the "Software"), to deal
+   * in the Software without restriction, including without limitation the rights
+   * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   * copies of the Software, and to permit persons to whom the Software is
+   * furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be included in all
+   * copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   * SOFTWARE.
+   */
+  var PERSONALITY_ITEMS = Object.freeze([
+    {
+      "id": "ipip-001",
+      "order": 1,
+      "originalId": "43c98ce8-a07a-4dc2-80f6-c1b2a2485f06",
+      "text": "\u0411\u0435\u0441\u043F\u043E\u043A\u043E\u044E\u0441\u044C \u043F\u043E \u0440\u0430\u0437\u043D\u044B\u043C \u043F\u043E\u0432\u043E\u0434\u0430\u043C",
+      "en": "Worry about things",
+      "zh": "\u6211\u5E38\u4E3A\u5404\u79CD\u4E8B\u60C5\u62C5\u5FC3",
+      "domain": "N",
+      "facet": "N1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-002",
+      "order": 2,
+      "originalId": "d50a597f-632b-4f7b-89e6-6d85b50fd1c9",
+      "text": "\u0421 \u043B\u0435\u0433\u043A\u043E\u0441\u0442\u044C\u044E \u0437\u0430\u0432\u043E\u0436\u0443 \u0434\u0440\u0443\u0437\u0435\u0439",
+      "en": "Make friends easily",
+      "zh": "\u6211\u5F88\u5BB9\u6613\u4EA4\u5230\u670B\u53CB",
+      "domain": "E",
+      "facet": "E1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-003",
+      "order": 3,
+      "originalId": "888dd864-7449-4e96-8d5c-7a439603ea91",
+      "text": "\u0418\u043C\u0435\u044E \u044F\u0440\u043A\u043E\u0435 \u0432\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+      "en": "Have a vivid imagination",
+      "zh": "\u6211\u6709\u751F\u52A8\u4E30\u5BCC\u7684\u60F3\u8C61\u529B",
+      "domain": "O",
+      "facet": "O1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-004",
+      "order": 4,
+      "originalId": "ce2fbbf8-7a97-4199-bda5-117e4ecdf3b6",
+      "text": "\u0414\u043E\u0432\u0435\u0440\u044F\u044E \u0434\u0440\u0443\u0433\u0438\u043C",
+      "en": "Trust others",
+      "zh": "\u6211\u4FE1\u4EFB\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-005",
+      "order": 5,
+      "originalId": "c7f53c3c-2e77-432f-bb71-7470b67d3aa9",
+      "text": "\u0417\u0430\u0432\u0435\u0440\u0448\u0430\u044E \u0437\u0430\u0434\u0430\u0447\u0438 \u0443\u0441\u043F\u0435\u0448\u043D\u043E",
+      "en": "Complete tasks successfully",
+      "zh": "\u6211\u80FD\u6210\u529F\u5B8C\u6210\u4EFB\u52A1",
+      "domain": "C",
+      "facet": "C1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-006",
+      "order": 6,
+      "originalId": "48ad12ce-470e-4339-90ac-ea8c43a0103e",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u043D\u0430\u0447\u0438\u043D\u0430\u044E \u0437\u043B\u0438\u0442\u044C\u0441\u044F",
+      "en": "Get angry easily",
+      "zh": "\u6613\u6012",
+      "domain": "N",
+      "facet": "N2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-007",
+      "order": 7,
+      "originalId": "458f3957-2359-4077-ade1-34525d633063",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0432\u0435\u0447\u0435\u0440\u0438\u043D\u043A\u0438",
+      "en": "Love large parties",
+      "zh": "\u559C\u6B22\u53C2\u52A0\u5927\u578B\u805A\u4F1A",
+      "domain": "E",
+      "facet": "E2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-008",
+      "order": 8,
+      "originalId": "58d571e5-d725-4cf8-a438-32c16ee28eb6",
+      "text": "\u0412\u0435\u0440\u044E \u0432 \u0432\u0430\u0436\u043D\u043E\u0441\u0442\u044C \u0438\u0441\u043A\u0443\u0441\u0441\u0442\u0432\u0430",
+      "en": "Believe in the importance of art",
+      "zh": "\u76F8\u4FE1\u827A\u672F\u7684\u91CD\u8981\u6027",
+      "domain": "O",
+      "facet": "O2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-009",
+      "order": 9,
+      "originalId": "0cf79e27-e702-45c2-9471-04ac96b58e0e",
+      "text": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E \u0434\u0440\u0443\u0433\u0438\u0445 \u0440\u0430\u0434\u0438 \u043B\u0438\u0447\u043D\u044B\u0445 \u0446\u0435\u043B\u0435\u0439",
+      "en": "Use others for my own ends",
+      "zh": "\u6211\u4F1A\u5229\u7528\u4ED6\u4EBA\u6765\u8FBE\u5230\u81EA\u5DF1\u7684\u76EE\u7684",
+      "domain": "A",
+      "facet": "A2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-010",
+      "order": 10,
+      "originalId": "cda1ca17-b599-4561-a6cd-ff9d36062d27",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043D\u0430\u0432\u043E\u0434\u0438\u0442\u044C \u043F\u043E\u0440\u044F\u0434\u043E\u043A",
+      "en": "Like to tidy up",
+      "zh": "\u6211\u559C\u6B22\u6574\u7406\u4E1C\u897F",
+      "domain": "C",
+      "facet": "C2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-011",
+      "order": 11,
+      "originalId": "5e8550d7-b8ef-4905-950a-f81d735d39e2",
+      "text": "\u0427\u0430\u0441\u0442\u043E \u0433\u0440\u0443\u0449\u0443",
+      "en": "Often feel blue",
+      "zh": "\u6211\u7ECF\u5E38\u611F\u5230\u5FE7\u4F24",
+      "domain": "N",
+      "facet": "N3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-012",
+      "order": 12,
+      "originalId": "8af754f2-68e9-48f3-8c5d-2e6633d4472c",
+      "text": "\u0411\u0435\u0440\u0443 \u0440\u0443\u043A\u043E\u0432\u043E\u0434\u0441\u0442\u0432\u043E \u043D\u0430 \u0441\u0435\u0431\u044F",
+      "en": "Take charge",
+      "zh": "\u6211\u4F1A\u4E3B\u52A8\u627F\u62C5\u9886\u5BFC\u7684\u89D2\u8272",
+      "domain": "E",
+      "facet": "E3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-013",
+      "order": 13,
+      "originalId": "0727def6-3d18-4221-bf38-86b58f9f3eed",
+      "text": "\u0421\u0438\u043B\u044C\u043D\u043E \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u044E \u0441\u0432\u043E\u0438 \u044D\u043C\u043E\u0446\u0438\u0438",
+      "en": "Experience my emotions intensely",
+      "zh": "\u6211\u5BF9\u81EA\u5DF1\u7684\u60C5\u7EEA\u6709\u5F3A\u70C8\u7684\u611F\u53D7",
+      "domain": "O",
+      "facet": "O3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-014",
+      "order": 14,
+      "originalId": "ccf3a5c8-fb50-4bd4-8e7a-22af3d657279",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C \u0434\u0440\u0443\u0433\u0438\u043C",
+      "en": "Love to help others",
+      "zh": "\u4E50\u4E8E\u52A9\u4EBA",
+      "domain": "A",
+      "facet": "A3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-015",
+      "order": 15,
+      "originalId": "73d84e5d-cbf5-47f0-b8cb-4d2159a52e32",
+      "text": "\u0421\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E \u043E\u0431\u0435\u0449\u0430\u043D\u0438\u044F",
+      "en": "Keep my promises",
+      "zh": "\u9075\u5B88\u8BFA\u8A00",
+      "domain": "C",
+      "facet": "C3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-016",
+      "order": 16,
+      "originalId": "b2d9ef74-73f5-4ea8-b00c-7aaca15937df",
+      "text": "\u041C\u043D\u0435 \u0442\u0440\u0443\u0434\u043D\u043E \u043F\u0435\u0440\u0432\u044B\u043C \u043E\u0431\u0440\u0430\u0449\u0430\u0442\u044C\u0441\u044F \u043A \u043B\u044E\u0434\u044F\u043C",
+      "en": "Find it difficult to approach others",
+      "zh": "\u6211\u89C9\u5F97\u5F88\u96BE\u4E3B\u52A8\u63A5\u8FD1\u4ED6\u4EBA",
+      "domain": "N",
+      "facet": "N4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-017",
+      "order": 17,
+      "originalId": "48a761ef-438e-409b-ae59-ea2ce8f84414",
+      "text": "\u0412\u0441\u0435\u0433\u0434\u0430 \u0437\u0430\u043D\u044F\u0442",
+      "en": "Am always busy",
+      "zh": "\u6211\u603B\u662F\u5F88\u5FD9",
+      "domain": "E",
+      "facet": "E4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-018",
+      "order": 18,
+      "originalId": "cae55842-8957-4e3b-83b3-ceff98fb9dcf",
+      "text": "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u044E \u0440\u0430\u0437\u043D\u043E\u043E\u0431\u0440\u0430\u0437\u0438\u0435 \u0440\u0443\u0442\u0438\u043D\u0435",
+      "en": "Prefer variety to routine",
+      "zh": "\u559C\u6B22\u591A\u6837\u5316\uFF0C\u4E0D\u559C\u6B22\u5343\u7BC7\u4E00\u5F8B",
+      "domain": "O",
+      "facet": "O4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-019",
+      "order": 19,
+      "originalId": "e2028ad3-b128-4f76-be57-398bfe2aff22",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u0432\u0441\u0442\u0443\u043F\u0430\u0442\u044C \u0432 \u0441\u0441\u043E\u0440\u044B",
+      "en": "Love a good fight",
+      "zh": "\u6211\u559C\u6B22\u4E0E\u4EBA\u4E89\u5435",
+      "domain": "A",
+      "facet": "A4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-020",
+      "order": 20,
+      "originalId": "b7fc949b-02b6-4cb9-a3e2-dbb3d824b55f",
+      "text": "\u0423\u0441\u0435\u0440\u0434\u043D\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u044E",
+      "en": "Work hard",
+      "zh": "\u5DE5\u4F5C\u52AA\u529B",
+      "domain": "C",
+      "facet": "C4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-021",
+      "order": 21,
+      "originalId": "481efd08-c810-43b1-a952-f8ac9052f96b",
+      "text": "\u0411\u044B\u0432\u0430\u0435\u0442, \u0434\u0430\u044E \u0441\u0435\u0431\u0435 \u0432\u043E\u043B\u044E \u0438 \u0432\u043F\u0430\u0434\u0430\u044E \u0432 \u0438\u0437\u043B\u0438\u0448\u0435\u0441\u0442\u0432\u0430",
+      "en": "Go on binges",
+      "zh": "\u6211\u6709\u65F6\u4F1A\u8FC7\u5EA6\u653E\u7EB5\u81EA\u5DF1",
+      "domain": "N",
+      "facet": "N5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-022",
+      "order": 22,
+      "originalId": "987efee2-899f-4a65-b9b5-1589ef0460d7",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043E\u0441\u0442\u0440\u044B\u0435 \u043E\u0449\u0443\u0449\u0435\u043D\u0438\u044F",
+      "en": "Love excitement",
+      "zh": "\u559C\u7231\u523A\u6FC0",
+      "domain": "E",
+      "facet": "E5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-023",
+      "order": 23,
+      "originalId": "e1e804c7-4a1d-498f-8610-f95147af9d1d",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u0447\u0438\u0442\u0430\u0442\u044C \u0447\u0442\u043E-\u0442\u043E \u043F\u043E\u0441\u043B\u043E\u0436\u043D\u0435\u0435",
+      "en": "Love to read challenging material",
+      "zh": "\u6211\u559C\u6B22\u9605\u8BFB\u6709\u96BE\u5EA6\u7684\u6750\u6599",
+      "domain": "O",
+      "facet": "O5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-024",
+      "order": 24,
+      "originalId": "71029381-3908-4c68-91e1-e41fb45542a2",
+      "text": "\u0421\u0447\u0438\u0442\u0430\u044E, \u0447\u0442\u043E \u044F \u043B\u0443\u0447\u0448\u0435 \u0434\u0440\u0443\u0433\u0438\u0445",
+      "en": "Believe that I am better than others",
+      "zh": "\u6211\u8BA4\u4E3A\u81EA\u5DF1\u6BD4\u522B\u4EBA\u4F18\u79C0",
+      "domain": "A",
+      "facet": "A5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-025",
+      "order": 25,
+      "originalId": "f6076eea-56ae-4b46-97f1-5f94a7676c96",
+      "text": "\u0412\u0441\u0435\u0433\u0434\u0430 \u0437\u0430\u0440\u0430\u043D\u0435\u0435 \u0433\u043E\u0442\u043E\u0432\u043B\u044E\u0441\u044C",
+      "en": "Am always prepared",
+      "zh": "\u65F6\u523B\u6709\u51C6\u5907",
+      "domain": "C",
+      "facet": "C5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-026",
+      "order": 26,
+      "originalId": "2f519935-92e8-48ad-9746-4a0f8b38466a",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u043F\u0430\u043D\u0438\u043A\u0443\u044E",
+      "en": "Panic easily",
+      "zh": "\u6613\u60CA\u614C\u5931\u63AA",
+      "domain": "N",
+      "facet": "N6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-027",
+      "order": 27,
+      "originalId": "899c3f66-51d0-46ea-963a-6fc36d3b3cb9",
+      "text": "\u0418\u0437\u043B\u0443\u0447\u0430\u044E \u0440\u0430\u0434\u043E\u0441\u0442\u044C",
+      "en": "Radiate joy",
+      "zh": "\u6D41\u9732\u51FA\u6B22\u4E50",
+      "domain": "E",
+      "facet": "E6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-028",
+      "order": 28,
+      "originalId": "79186f48-e7fa-4df4-b74b-b0627ee244e1",
+      "text": "\u0421\u043A\u043B\u043E\u043D\u044F\u044E\u0441\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0430\u0442\u044C \u0437\u0430 \u043B\u0438\u0431\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u043A\u0430\u043D\u0434\u0438\u0434\u0430\u0442\u043E\u0432",
+      "en": "Tend to vote for liberal political candidates",
+      "zh": "\u503E\u5411\u4E8E\u6295\u7968\u7ED9\u81EA\u7531\u6D3E\u7684\u653F\u6CBB\u5019\u9009\u4EBA",
+      "domain": "O",
+      "facet": "O6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-029",
+      "order": 29,
+      "originalId": "fd50e1ca-d9e0-4037-a7a1-a191d4db2d96",
+      "text": "\u0421\u043E\u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u044E \u0431\u0435\u0437\u0434\u043E\u043C\u043D\u044B\u043C",
+      "en": "Sympathize with the homeless",
+      "zh": "\u540C\u60C5\u65E0\u5BB6\u53EF\u5F52\u4E4B\u4EBA",
+      "domain": "A",
+      "facet": "A6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-030",
+      "order": 30,
+      "originalId": "bd9eec0a-b68b-472c-8803-7db29c308cdb",
+      "text": "\u0411\u0435\u0440\u0443\u0441\u044C \u0437\u0430 \u0434\u0435\u043B\u0430, \u043D\u0435 \u043F\u043E\u0434\u0443\u043C\u0430\u0432",
+      "en": "Jump into things without thinking",
+      "zh": "\u4E0D\u5047\u601D\u7D22\u5730\u505A\u4E8B\u60C5",
+      "domain": "C",
+      "facet": "C6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-031",
+      "order": 31,
+      "originalId": "7f92ab2c-265c-4b84-8c74-09f9bb9d41a7",
+      "text": "\u041E\u043F\u0430\u0441\u0430\u044E\u0441\u044C \u0445\u0443\u0434\u0448\u0435\u0433\u043E",
+      "en": "Fear for the worst",
+      "zh": "\u6211\u62C5\u5FC3\u4F1A\u51FA\u73B0\u6700\u574F\u7684\u60C5\u51B5",
+      "domain": "N",
+      "facet": "N1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-032",
+      "order": 32,
+      "originalId": "af55f014-788c-4b6e-92c4-b2b59dc8a28d",
+      "text": "\u0427\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u0441\u0435\u0431\u044F \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u043E \u0432 \u043E\u043A\u0440\u0443\u0436\u0435\u043D\u0438\u0438 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Feel comfortable around people",
+      "zh": "\u6211\u548C\u4ED6\u4EBA\u5728\u4E00\u8D77\u65F6\u611F\u5230\u81EA\u5728",
+      "domain": "E",
+      "facet": "E1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-033",
+      "order": 33,
+      "originalId": "08ff6dca-02a5-4aeb-aaa4-2ecf2526f143",
+      "text": "\u041D\u0430\u0441\u043B\u0430\u0436\u0434\u0430\u044E\u0441\u044C \u043D\u0435\u043E\u0431\u0443\u0437\u0434\u0430\u043D\u043D\u044B\u043C\u0438 \u043F\u043E\u043B\u0435\u0442\u0430\u043C\u0438 \u0444\u0430\u043D\u0442\u0430\u0437\u0438\u0438",
+      "en": "Enjoy wild flights of fantasy",
+      "zh": "\u6211\u559C\u6B22\u4EFB\u7531\u81EA\u5DF1\u7684\u60F3\u8C61\u529B\u9A70\u9A8B",
+      "domain": "O",
+      "facet": "O1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-034",
+      "order": 34,
+      "originalId": "6f66cdc0-9044-457b-b40d-501ecae15ee7",
+      "text": "\u0412\u0435\u0440\u044E \u0432 \u0445\u043E\u0440\u043E\u0448\u0438\u0435 \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u0438\u044F \u043B\u044E\u0434\u0435\u0439",
+      "en": "Believe that others have good intentions",
+      "zh": "\u76F8\u4FE1\u522B\u4EBA\u6709\u597D\u7684\u610F\u56FE",
+      "domain": "A",
+      "facet": "A1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-035",
+      "order": 35,
+      "originalId": "f110fc66-2e9e-413c-920b-19f05e63d7ac",
+      "text": "\u0414\u043E\u0431\u0438\u0432\u0430\u044E\u0441\u044C \u0432\u044B\u0441\u043E\u043A\u0438\u0445 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432 \u0432 \u0442\u043E\u043C, \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u044E\u0441\u044C",
+      "en": "Excel in what I do",
+      "zh": "\u6211\u5728\u6240\u505A\u7684\u4E8B\u60C5\u4E0A\u8868\u73B0\u51FA\u8272",
+      "domain": "C",
+      "facet": "C1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-036",
+      "order": 36,
+      "originalId": "7dab2a37-8635-4fc7-86b7-0abf13c183c9",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0430\u044E\u0441\u044C",
+      "en": "Get irritated easily",
+      "zh": "\u5F88\u5BB9\u6613\u751F\u6C14",
+      "domain": "N",
+      "facet": "N2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-037",
+      "order": 37,
+      "originalId": "28ab59a0-e7cd-4fce-94e3-bba2ecc023b6",
+      "text": "\u041D\u0430 \u0432\u0435\u0447\u0435\u0440\u0438\u043D\u043A\u0430\u0445 \u043E\u0431\u0449\u0430\u044E\u0441\u044C \u0441 \u043C\u043D\u043E\u0436\u0435\u0441\u0442\u0432\u043E\u043C \u0440\u0430\u0437\u043D\u044B\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Talk to a lot of different people at parties",
+      "zh": "\u5728\u805A\u4F1A\u4E0A\u4F1A\u548C\u5F88\u591A\u4E0D\u540C\u7684\u4EBA\u4EA4\u8C08",
+      "domain": "E",
+      "facet": "E2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-038",
+      "order": 38,
+      "originalId": "b5919f2f-cded-4745-a9ce-c02703cee807",
+      "text": "\u0417\u0430\u043C\u0435\u0447\u0430\u044E \u043A\u0440\u0430\u0441\u043E\u0442\u0443 \u0432 \u0442\u043E\u043C, \u0447\u0435\u0433\u043E \u0434\u0440\u0443\u0433\u0438\u0435 \u043C\u043E\u0433\u0443\u0442 \u043D\u0435 \u0437\u0430\u043C\u0435\u0442\u0438\u0442\u044C",
+      "en": "See beauty in things that others might not notice",
+      "zh": "\u4ECE\u522B\u4EBA\u53EF\u80FD\u4E0D\u4F1A\u6CE8\u610F\u5230\u7684\u4E8B\u7269\u4E2D\u770B\u5230\u7F8E",
+      "domain": "O",
+      "facet": "O2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-039",
+      "order": 39,
+      "originalId": "5a5fa975-d024-4ac8-8845-2823f957c21b",
+      "text": "\u041E\u0431\u043C\u0430\u043D\u044B\u0432\u0430\u044E, \u0447\u0442\u043E\u0431\u044B \u0434\u043E\u0431\u0438\u0442\u044C\u0441\u044F \u0441\u0432\u043E\u0435\u0433\u043E",
+      "en": "Cheat to get ahead",
+      "zh": "\u6211\u4F1A\u4E3A\u4E86\u83B7\u5F97\u6210\u529F\u800C\u6B3A\u9A97\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-040",
+      "order": 40,
+      "originalId": "adf33f9f-45bd-43e3-af25-4c491176d97f",
+      "text": "\u0427\u0430\u0441\u0442\u043E \u0437\u0430\u0431\u044B\u0432\u0430\u044E \u043A\u043B\u0430\u0441\u0442\u044C \u0432\u0435\u0449\u0438 \u043D\u0430 \u043C\u0435\u0441\u0442\u043E",
+      "en": "Often forget to put things back in their proper place",
+      "zh": "\u6211\u7ECF\u5E38\u5FD8\u8BB0\u628A\u4E1C\u897F\u653E\u56DE\u539F\u5904",
+      "domain": "C",
+      "facet": "C2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-041",
+      "order": 41,
+      "originalId": "f0a14e16-d726-47e9-a2c1-647fd3d7d52e",
+      "text": "\u041D\u0435 \u043B\u044E\u0431\u043B\u044E \u0441\u0435\u0431\u044F",
+      "en": "Dislike myself",
+      "zh": "\u4E0D\u559C\u6B22\u81EA\u5DF1",
+      "domain": "N",
+      "facet": "N3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-042",
+      "order": 42,
+      "originalId": "0b38e3d3-c15c-454c-b034-f4eb7ae1580a",
+      "text": "\u0421\u0442\u0430\u0440\u0430\u044E\u0441\u044C \u0431\u044B\u0442\u044C \u043B\u0438\u0434\u0435\u0440\u043E\u043C",
+      "en": "Try to lead others",
+      "zh": "\u8BD5\u7740\u53BB\u9886\u5BFC\u522B\u4EBA",
+      "domain": "E",
+      "facet": "E3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-043",
+      "order": 43,
+      "originalId": "5631b856-ff34-4f76-a0cd-edc7104c3bfa",
+      "text": "\u0427\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u044D\u043C\u043E\u0446\u0438\u0438 \u0434\u0440\u0443\u0433\u0438\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Feel others' emotions",
+      "zh": "\u611F\u53D7\u522B\u4EBA\u7684\u60C5\u7EEA",
+      "domain": "O",
+      "facet": "O3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-044",
+      "order": 44,
+      "originalId": "ada867af-4db1-4e3d-a604-2b695c1806e5",
+      "text": "\u0411\u0435\u0441\u043F\u043E\u043A\u043E\u044E\u0441\u044C \u0437\u0430 \u0434\u0440\u0443\u0433\u0438\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Am concerned about others",
+      "zh": "\u5173\u5FC3\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-045",
+      "order": 45,
+      "originalId": "c55e3958-00c4-4fc3-9118-47d8f31bfde1",
+      "text": "\u0413\u043E\u0432\u043E\u0440\u044E \u043F\u0440\u0430\u0432\u0434\u0443",
+      "en": "Tell the truth",
+      "zh": "\u8BDA\u5B9E",
+      "domain": "C",
+      "facet": "C3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-046",
+      "order": 46,
+      "originalId": "acd8fadc-5399-4a67-b5ff-9d1ada049c01",
+      "text": "\u0411\u043E\u044E\u0441\u044C \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0442\u044C \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u043A \u0441\u0435\u0431\u0435",
+      "en": "Am afraid to draw attention to myself",
+      "zh": "\u5BB3\u6015\u5F15\u8D77\u522B\u4EBA\u7684\u6CE8\u610F",
+      "domain": "N",
+      "facet": "N4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-047",
+      "order": 47,
+      "originalId": "d07b6c67-0d02-4948-a997-bb84ac234cd8",
+      "text": "\u0412\u0441\u0435\u0433\u0434\u0430 \u043A\u0443\u0434\u0430-\u0442\u043E \u0431\u0435\u0433\u0443",
+      "en": "Am always on the go",
+      "zh": "\u603B\u662F\u5FD9\u4E2A\u4E0D\u505C",
+      "domain": "E",
+      "facet": "E4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-048",
+      "order": 48,
+      "originalId": "33b81fd0-7e32-4cd8-a13a-d5f5f754f998",
+      "text": "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u044E \u0437\u0430\u043D\u0438\u043C\u0430\u0442\u044C\u0441\u044F \u0442\u0435\u043C, \u0447\u0442\u043E \u0443\u0436\u0435 \u0437\u043D\u0430\u044E",
+      "en": "Prefer to stick with things that I know",
+      "zh": "\u6211\u66F4\u559C\u6B22\u575A\u6301\u505A\u81EA\u5DF1\u719F\u6089\u7684\u4E8B\u60C5",
+      "domain": "O",
+      "facet": "O4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-049",
+      "order": 49,
+      "originalId": "d9a9a180-29c9-4ec5-8621-2256d411def7",
+      "text": "\u041A\u0440\u0438\u0447\u0443 \u043D\u0430 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Yell at people",
+      "zh": "\u5BF9\u4EBA\u4EEC\u5927\u558A\u5927\u53EB",
+      "domain": "A",
+      "facet": "A4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-050",
+      "order": 50,
+      "originalId": "f12c3d9d-1d12-4aa6-ad2e-009cd0651cbb",
+      "text": "\u0414\u0435\u043B\u0430\u044E \u0431\u043E\u043B\u044C\u0448\u0435, \u0447\u0435\u043C \u043E\u0442 \u043C\u0435\u043D\u044F \u043E\u0436\u0438\u0434\u0430\u044E\u0442",
+      "en": "Do more than what's expected of me",
+      "zh": "\u6211\u505A\u5F97\u6BD4\u522B\u4EBA\u5BF9\u6211\u7684\u671F\u671B\u66F4\u591A",
+      "domain": "C",
+      "facet": "C4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-051",
+      "order": 51,
+      "originalId": "9891b7ba-a494-4307-aafe-301d8db506c6",
+      "text": "\u0420\u0435\u0434\u043A\u043E \u0437\u043B\u043E\u0443\u043F\u043E\u0442\u0440\u0435\u0431\u043B\u044F\u044E \u0447\u0435\u043C-\u043B\u0438\u0431\u043E",
+      "en": "Rarely overindulge",
+      "zh": "\u5F88\u5C11\u653E\u7EB5",
+      "domain": "N",
+      "facet": "N5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-052",
+      "order": 52,
+      "originalId": "f1675af6-88bf-4376-a946-0281e762b39c",
+      "text": "\u0418\u0449\u0443 \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0439",
+      "en": "Seek adventure",
+      "zh": "\u5BFB\u6C42\u5192\u9669",
+      "domain": "E",
+      "facet": "E5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-053",
+      "order": 53,
+      "originalId": "95a3f20c-f933-4d19-a2c1-a7dbdf63c562",
+      "text": "\u0418\u0437\u0431\u0435\u0433\u0430\u044E \u0444\u0438\u043B\u043E\u0441\u043E\u0444\u0441\u043A\u0438\u0445 \u0434\u0438\u0441\u043A\u0443\u0441\u0441\u0438\u0439",
+      "en": "Avoid philosophical discussions",
+      "zh": "\u907F\u514D\u8FDB\u884C\u54F2\u5B66\u8BA8\u8BBA",
+      "domain": "O",
+      "facet": "O5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-054",
+      "order": 54,
+      "originalId": "7df44711-4cd4-4b05-8830-73fcc3ebdab5",
+      "text": "\u0412\u044B\u0441\u043E\u043A\u043E \u0441\u0435\u0431\u044F \u0446\u0435\u043D\u044E",
+      "en": "Think highly of myself",
+      "zh": "\u81EA\u6211\u611F\u89C9\u826F\u597D",
+      "domain": "A",
+      "facet": "A5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-055",
+      "order": 55,
+      "originalId": "9d3cb5c7-955c-43a4-b6c7-b07ed01dcbd9",
+      "text": "\u0412\u043E\u043F\u043B\u043E\u0449\u0430\u044E \u0441\u0432\u043E\u0438 \u043F\u043B\u0430\u043D\u044B \u0432 \u0436\u0438\u0437\u043D\u044C",
+      "en": "Carry out my plans",
+      "zh": "\u6267\u884C\u6211\u7684\u8BA1\u5212",
+      "domain": "C",
+      "facet": "C5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-056",
+      "order": 56,
+      "originalId": "13c58810-3864-42ba-aa87-d4166f858756",
+      "text": "\u0421\u043E\u0431\u044B\u0442\u0438\u044F \u0432\u044B\u0431\u0438\u0432\u0430\u044E\u0442 \u043C\u0435\u043D\u044F \u0438\u0437 \u043A\u043E\u043B\u0435\u0438",
+      "en": "Become overwhelmed by events",
+      "zh": "\u5404\u79CD\u4E8B\u60C5\u4F1A\u8BA9\u6211\u4E0D\u77E5\u6240\u63AA",
+      "domain": "N",
+      "facet": "N6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-057",
+      "order": 57,
+      "originalId": "961376e0-16a1-4c14-b059-789e63d11b63",
+      "text": "\u041C\u043D\u043E\u0433\u043E \u0432\u0435\u0441\u0435\u043B\u044E\u0441\u044C",
+      "en": "Have a lot of fun",
+      "zh": "\u73A9\u5F97\u5F88\u5F00\u5FC3",
+      "domain": "E",
+      "facet": "E6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-058",
+      "order": 58,
+      "originalId": "f08e1b27-3673-4898-9cae-896482d0d9f9",
+      "text": "\u0421\u0447\u0438\u0442\u0430\u044E, \u0447\u0442\u043E \u043D\u0435 \u0431\u044B\u0432\u0430\u0435\u0442 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u043E \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0433\u043E \u0438 \u043D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0433\u043E",
+      "en": "Believe that there is no absolute right and wrong",
+      "zh": "\u76F8\u4FE1\u6CA1\u6709\u7EDD\u5BF9\u7684\u5BF9\u4E0E\u9519",
+      "domain": "O",
+      "facet": "O6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-059",
+      "order": 59,
+      "originalId": "c2038c12-7a37-47a8-9983-831bd6692aab",
+      "text": "\u0421\u043E\u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u044E \u0442\u0435\u043C, \u043A\u043E\u043C\u0443 \u0445\u0443\u0436\u0435, \u0447\u0435\u043C \u043C\u043D\u0435",
+      "en": "Feel sympathy for those who are worse off than myself",
+      "zh": "\u6211\u540C\u60C5\u90A3\u4E9B\u5904\u5883\u6BD4\u6211\u5DEE\u7684\u4EBA",
+      "domain": "A",
+      "facet": "A6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-060",
+      "order": 60,
+      "originalId": "956f3e17-ff17-4af5-a52f-9222b8968106",
+      "text": "\u041F\u0440\u0438\u043D\u0438\u043C\u0430\u044E \u043F\u043E\u0441\u043F\u0435\u0448\u043D\u044B\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u044F",
+      "en": "Make rash decisions",
+      "zh": "\u6211\u4F1A\u8349\u7387\u5730\u4F5C\u51FA\u51B3\u5B9A",
+      "domain": "C",
+      "facet": "C6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-061",
+      "order": 61,
+      "originalId": "4d81238b-5407-47d4-88e5-dc0e38aa14f5",
+      "text": "\u041C\u043D\u043E\u0433\u043E\u0433\u043E \u0431\u043E\u044E\u0441\u044C",
+      "en": "Am afraid of many things",
+      "zh": "\u5BB3\u6015\u5F88\u591A\u4E8B\u60C5",
+      "domain": "N",
+      "facet": "N1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-062",
+      "order": 62,
+      "originalId": "9f9166f0-fa94-4c14-a91d-3eecd8395794",
+      "text": "\u0418\u0437\u0431\u0435\u0433\u0430\u044E \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u043E\u0432 \u0441 \u0434\u0440\u0443\u0433\u0438\u043C\u0438",
+      "en": "Avoid contacts with others",
+      "zh": "\u907F\u514D\u4E0E\u4ED6\u4EBA\u63A5\u89E6",
+      "domain": "E",
+      "facet": "E1",
+      "reverse": true
+    },
+    {
+      "id": "ipip-063",
+      "order": 63,
+      "originalId": "23a1034f-fab7-4887-a66e-5ef4eaafb25e",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043F\u043E\u043C\u0435\u0447\u0442\u0430\u0442\u044C",
+      "en": "Love to daydream",
+      "zh": "\u559C\u6B22\u505A\u767D\u65E5\u68A6",
+      "domain": "O",
+      "facet": "O1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-064",
+      "order": 64,
+      "originalId": "c63e6121-c3ed-40cc-abc2-c1e6ea1e0858",
+      "text": "\u0414\u043E\u0432\u0435\u0440\u044F\u044E \u0442\u043E\u043C\u0443, \u0447\u0442\u043E \u043B\u044E\u0434\u0438 \u0433\u043E\u0432\u043E\u0440\u044F\u0442 \u043C\u043D\u0435",
+      "en": "Trust what people say",
+      "zh": "\u76F8\u4FE1\u522B\u4EBA\u6240\u8BF4\u7684",
+      "domain": "A",
+      "facet": "A1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-065",
+      "order": 65,
+      "originalId": "02ee1930-36a7-4caa-b10c-c93efb682a44",
+      "text": "\u0411\u0435\u0437 \u0442\u0440\u0443\u0434\u0430 \u0441\u043F\u0440\u0430\u0432\u043B\u044F\u044E\u0441\u044C \u0441 \u0437\u0430\u0434\u0430\u0447\u0430\u043C\u0438",
+      "en": "Handle tasks smoothly",
+      "zh": "\u987A\u5229\u5904\u7406\u4EFB\u52A1",
+      "domain": "C",
+      "facet": "C1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-066",
+      "order": 66,
+      "originalId": "da8e6ed1-2296-4c58-8fdb-66f2f591989b",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u0442\u0435\u0440\u044F\u044E \u0441\u0430\u043C\u043E\u043E\u0431\u043B\u0430\u0434\u0430\u043D\u0438\u0435",
+      "en": "Lose my temper",
+      "zh": "\u5F00\u59CB\u53D1\u813E\u6C14",
+      "domain": "N",
+      "facet": "N2",
+      "reverse": false
+    },
+    {
+      "id": "ipip-067",
+      "order": 67,
+      "originalId": "03c10b30-b88f-4c63-8acc-71251ca24615",
+      "text": "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u044E \u0431\u044B\u0442\u044C \u043E\u0434\u043D\u043E\u043C\u0443",
+      "en": "Prefer to be alone",
+      "zh": "\u559C\u6B22\u72EC\u81EA\u4E00\u4EBA",
+      "domain": "E",
+      "facet": "E2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-068",
+      "order": 68,
+      "originalId": "751a04bc-5adf-485a-8ea4-4308406ae85b",
+      "text": "\u041D\u0435 \u043B\u044E\u0431\u043B\u044E \u043F\u043E\u044D\u0437\u0438\u044E",
+      "en": "Do not like poetry",
+      "zh": "\u4E0D\u559C\u6B22\u8BD7\u6B4C",
+      "domain": "O",
+      "facet": "O2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-069",
+      "order": 69,
+      "originalId": "982e83c2-d34e-48da-9c71-78494ab05c85",
+      "text": "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E \u0434\u0440\u0443\u0433\u0438\u0445 \u043B\u044E\u0434\u0435\u0439 \u043F\u0440\u0438 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u0438",
+      "en": "Take advantage of others",
+      "zh": "\u5229\u7528\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-070",
+      "order": 70,
+      "originalId": "f4891687-0ff0-47af-a4f6-d1202c8f6676",
+      "text": "\u041E\u0441\u0442\u0430\u0432\u043B\u044F\u044E \u043A\u043E\u043C\u043D\u0430\u0442\u0443 \u0432 \u0431\u0435\u0441\u043F\u043E\u0440\u044F\u0434\u043A\u0435",
+      "en": "Leave a mess in my room",
+      "zh": "\u6211\u7684\u623F\u95F4\u4E00\u56E2\u7CDF",
+      "domain": "C",
+      "facet": "C2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-071",
+      "order": 71,
+      "originalId": "743d8973-1de1-4485-91b4-8a5cf63e7d44",
+      "text": "\u0427\u0430\u0441\u0442\u043E \u0431\u044B\u0432\u0430\u0435\u0442 \u043E\u0447\u0435\u043D\u044C \u0433\u0440\u0443\u0441\u0442\u043D\u043E",
+      "en": "Am often down in the dumps",
+      "zh": "\u6211\u7ECF\u5E38\u60C5\u7EEA\u4F4E\u843D",
+      "domain": "N",
+      "facet": "N3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-072",
+      "order": 72,
+      "originalId": "2452f034-8273-4f71-9122-a40f5ead31ba",
+      "text": "\u0411\u0435\u0440\u0443 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E \u043F\u043E\u0434 \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u044C",
+      "en": "Take control of things",
+      "zh": "\u6211\u4F1A\u638C\u63A7\u5C40\u9762",
+      "domain": "E",
+      "facet": "E3",
+      "reverse": false
+    },
+    {
+      "id": "ipip-073",
+      "order": 73,
+      "originalId": "2a300001-6e05-4c79-b8b5-2ccae4c3d463",
+      "text": "\u0420\u0435\u0434\u043A\u043E \u0437\u0430\u043C\u0435\u0447\u0430\u044E \u0441\u0432\u043E\u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0440\u0435\u0430\u043A\u0446\u0438\u0438",
+      "en": "Rarely notice my emotional reactions",
+      "zh": "\u5F88\u5C11\u6CE8\u610F\u5230\u6211\u7684\u60C5\u7EEA\u53CD\u5E94",
+      "domain": "O",
+      "facet": "O3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-074",
+      "order": 74,
+      "originalId": "cd54bd76-ca9c-4030-b325-bb8d896bcb3f",
+      "text": "\u0411\u0435\u0437\u0440\u0430\u0437\u043B\u0438\u0447\u0435\u043D \u043A \u0447\u0443\u0432\u0441\u0442\u0432\u0430\u043C \u0434\u0440\u0443\u0433\u0438\u0445",
+      "en": "Am indifferent to the feelings of others",
+      "zh": "\u6211\u5BF9\u4ED6\u4EBA\u7684\u611F\u53D7\u6F20\u4E0D\u5173\u5FC3",
+      "domain": "A",
+      "facet": "A3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-075",
+      "order": 75,
+      "originalId": "4e6e3a34-176f-4e6e-8730-1341611f972b",
+      "text": "\u041D\u0430\u0440\u0443\u0448\u0430\u044E \u043F\u0440\u0430\u0432\u0438\u043B\u0430",
+      "en": "Break rules",
+      "zh": "\u6253\u7834\u89C4\u5219",
+      "domain": "C",
+      "facet": "C3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-076",
+      "order": 76,
+      "originalId": "20062533-a33d-4c1e-9cd9-bff868015b3f",
+      "text": "\u0427\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u0441\u0435\u0431\u044F \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u0441 \u0434\u0440\u0443\u0437\u044C\u044F\u043C\u0438",
+      "en": "Only feel comfortable with friends",
+      "zh": "\u53EA\u6709\u548C\u670B\u53CB\u5728\u4E00\u8D77\u624D\u89C9\u5F97\u8212\u670D",
+      "domain": "N",
+      "facet": "N4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-077",
+      "order": 77,
+      "originalId": "b2a077d5-1fe0-4b06-ab63-35455e001e54",
+      "text": "\u0412 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u0437\u0430\u043D\u0438\u043C\u0430\u044E\u0441\u044C \u043C\u043D\u043E\u0433\u043E \u0447\u0435\u043C",
+      "en": "Do a lot in my spare time",
+      "zh": "\u5728\u4E1A\u4F59\u65F6\u95F4\u505A\u5F88\u591A\u4E8B",
+      "domain": "E",
+      "facet": "E4",
+      "reverse": false
+    },
+    {
+      "id": "ipip-078",
+      "order": 78,
+      "originalId": "0d2e65ab-95d9-482f-beb4-3239a3a4944a",
+      "text": "\u041D\u0435 \u043B\u044E\u0431\u043B\u044E \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u044B",
+      "en": "Dislike changes",
+      "zh": "\u6211\u4E0D\u559C\u6B22\u6539\u53D8",
+      "domain": "O",
+      "facet": "O4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-079",
+      "order": 79,
+      "originalId": "0de0f900-cede-4538-9c00-5da4f830b028",
+      "text": "\u041E\u0441\u043A\u043E\u0440\u0431\u043B\u044F\u044E \u043B\u044E\u0434\u0435\u0439",
+      "en": "Insult people",
+      "zh": "\u4FAE\u8FB1\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-080",
+      "order": 80,
+      "originalId": "a9c97d6b-6721-4150-8d84-64ef3082f164",
+      "text": "\u0420\u0430\u0431\u043E\u0442\u0430\u044E \u0440\u043E\u0432\u043D\u043E \u0441\u0442\u043E\u043B\u044C\u043A\u043E, \u0447\u0442\u043E\u0431\u044B \u043A\u0430\u043A-\u0442\u043E \u0441\u043F\u0440\u0430\u0432\u0438\u0442\u044C\u0441\u044F",
+      "en": "Do just enough work to get by",
+      "zh": "\u6211\u53EA\u505A\u8DB3\u4EE5\u5E94\u4ED8\u8FC7\u53BB\u7684\u5DE5\u4F5C",
+      "domain": "C",
+      "facet": "C4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-081",
+      "order": 81,
+      "originalId": "9f2e7f90-0ca5-4ed0-9fe5-e060238a9b5e",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u043F\u0440\u043E\u0442\u0438\u0432\u043E\u0441\u0442\u043E\u044E \u0441\u043E\u0431\u043B\u0430\u0437\u043D\u0430\u043C",
+      "en": "Easily resist temptations",
+      "zh": "\u8F7B\u677E\u62B5\u5236\u8BF1\u60D1",
+      "domain": "N",
+      "facet": "N5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-082",
+      "order": 82,
+      "originalId": "7dd6cf2d-5c14-48c2-8ae5-633a7a596c71",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u0441\u043E\u0432\u0435\u0440\u0448\u0430\u0442\u044C \u0431\u0435\u0437\u0440\u0430\u0441\u0441\u0443\u0434\u043D\u044B\u0435 \u043F\u043E\u0441\u0442\u0443\u043F\u043A\u0438",
+      "en": "Enjoy being reckless",
+      "zh": "\u6211\u559C\u6B22\u4E0D\u8BA1\u540E\u679C\u5730\u884C\u4E8B",
+      "domain": "E",
+      "facet": "E5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-083",
+      "order": 83,
+      "originalId": "fecc35f7-681e-4889-a404-4a973a3dfef0",
+      "text": "\u0421 \u0442\u0440\u0443\u0434\u043E\u043C \u043F\u043E\u043D\u0438\u043C\u0430\u044E \u0430\u0431\u0441\u0442\u0440\u0430\u043A\u0442\u043D\u044B\u0435 \u0438\u0434\u0435\u0438",
+      "en": "Have difficulty understanding abstract ideas",
+      "zh": "\u96BE\u4EE5\u7406\u89E3\u62BD\u8C61\u7684\u6982\u5FF5",
+      "domain": "O",
+      "facet": "O5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-084",
+      "order": 84,
+      "originalId": "1d686958-6fe7-432f-85e6-186b99e4e232",
+      "text": "\u041E \u0441\u0435\u0431\u0435 \u0432\u044B\u0441\u043E\u043A\u043E\u0433\u043E \u043C\u043D\u0435\u043D\u0438\u044F",
+      "en": "Have a high opinion of myself",
+      "zh": "\u5BF9\u81EA\u5DF1\u6709\u5F88\u9AD8\u7684\u8BC4\u4EF7",
+      "domain": "A",
+      "facet": "A5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-085",
+      "order": 85,
+      "originalId": "c7db0ed8-df7d-49bf-942f-59e46ef743c4",
+      "text": "\u0422\u0440\u0430\u0447\u0443 \u0432\u0440\u0435\u043C\u044F \u043F\u043E\u043D\u0430\u043F\u0440\u0430\u0441\u043D\u0443",
+      "en": "Waste my time",
+      "zh": "\u6D6A\u8D39\u6211\u7684\u65F6\u95F4",
+      "domain": "C",
+      "facet": "C5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-086",
+      "order": 86,
+      "originalId": "b7e0e393-9b21-4e0d-adf3-8f28fb5b9d87",
+      "text": "\u0427\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u0441\u0435\u0431\u044F \u043D\u0435\u0441\u043F\u043E\u0441\u043E\u0431\u043D\u044B\u043C \u0441\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C\u0441\u044F \u0441 \u0434\u0435\u043B\u0430\u043C\u0438",
+      "en": "Feel that I'm unable to deal with things",
+      "zh": "\u89C9\u5F97\u6211\u65E0\u6CD5\u5904\u7406\u4E8B\u60C5",
+      "domain": "N",
+      "facet": "N6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-087",
+      "order": 87,
+      "originalId": "79d956e8-1118-402a-a0e2-9380af18243e",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u0436\u0438\u0437\u043D\u044C",
+      "en": "Love life",
+      "zh": "\u70ED\u7231\u751F\u6D3B",
+      "domain": "E",
+      "facet": "E6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-088",
+      "order": 88,
+      "originalId": "96ba77b2-1a44-4dfd-95f9-ae4d1f714460",
+      "text": "\u0421\u043A\u043B\u043E\u043D\u044F\u044E\u0441\u044C \u0433\u043E\u043B\u043E\u0441\u043E\u0432\u0430\u0442\u044C \u0437\u0430 \u043A\u043E\u043D\u0441\u0435\u0440\u0432\u0430\u0442\u0438\u0432\u043D\u044B\u0445 \u043F\u043E\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u043A\u0430\u043D\u0434\u0438\u0434\u0430\u0442\u043E\u0432",
+      "en": "Tend to vote for conservative political candidates",
+      "zh": "\u503E\u5411\u4E8E\u6295\u7968\u7ED9\u4FDD\u5B88\u6D3E\u7684\u653F\u6CBB\u5019\u9009\u4EBA",
+      "domain": "O",
+      "facet": "O6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-089",
+      "order": 89,
+      "originalId": "77f54ab4-0fba-4efb-8700-066c7490eb87",
+      "text": "\u041C\u0435\u043D\u044F \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0443\u044E\u0442 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B \u0434\u0440\u0443\u0433\u0438\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Am not interested in other people's problems",
+      "zh": "\u5BF9\u4ED6\u4EBA\u7684\u95EE\u9898\u4E0D\u611F\u5174\u8DA3",
+      "domain": "A",
+      "facet": "A6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-090",
+      "order": 90,
+      "originalId": "a354cf7c-8d11-46ac-acc5-da90d2048637",
+      "text": "\u0411\u0440\u043E\u0441\u0430\u044E\u0441\u044C \u0432 \u0434\u0435\u043B\u0430, \u043D\u0435 \u043F\u043E\u0434\u0443\u043C\u0430\u0432",
+      "en": "Rush into things",
+      "zh": "\u505A\u4E8B\u6025\u8E81",
+      "domain": "C",
+      "facet": "C6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-091",
+      "order": 91,
+      "originalId": "43b03992-3f32-4ed1-a6f8-5d6d3e7ed246",
+      "text": "\u041B\u0435\u0433\u043A\u043E \u0432\u043F\u0430\u0434\u0430\u044E \u0432 \u0441\u0442\u0440\u0435\u0441\u0441",
+      "en": "Get stressed out easily",
+      "zh": "\u6613\u611F\u53D7\u5230\u538B\u529B",
+      "domain": "N",
+      "facet": "N1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-092",
+      "order": 92,
+      "originalId": "41702602-08e4-4e2b-9a19-291d9efc581a",
+      "text": "\u0414\u0435\u0440\u0436\u0443 \u0434\u0440\u0443\u0433\u0438\u0445 \u043D\u0430 \u0434\u0438\u0441\u0442\u0430\u043D\u0446\u0438\u0438",
+      "en": "Keep others at a distance",
+      "zh": "\u4E0E\u4EBA\u4FDD\u6301\u8DDD\u79BB",
+      "domain": "E",
+      "facet": "E1",
+      "reverse": true
+    },
+    {
+      "id": "ipip-093",
+      "order": 93,
+      "originalId": "935a7413-abac-4f54-9169-d1fbd39da752",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043F\u043E\u0433\u0440\u0443\u0436\u0430\u0442\u044C\u0441\u044F \u0432 \u0441\u0432\u043E\u0438 \u043C\u044B\u0441\u043B\u0438",
+      "en": "Like to get lost in thought",
+      "zh": "\u559C\u6B22\u6C89\u601D",
+      "domain": "O",
+      "facet": "O1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-094",
+      "order": 94,
+      "originalId": "432dbde8-8756-4ff0-80d5-f47018235139",
+      "text": "\u041D\u0435 \u0434\u043E\u0432\u0435\u0440\u044F\u044E \u043B\u044E\u0434\u044F\u043C",
+      "en": "Distrust people",
+      "zh": "\u4E0D\u76F8\u4FE1\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A1",
+      "reverse": true
+    },
+    {
+      "id": "ipip-095",
+      "order": 95,
+      "originalId": "5727c93f-317b-4af1-a686-77fc9fbc5033",
+      "text": "\u0417\u043D\u0430\u044E, \u043A\u0430\u043A \u0434\u043E\u0432\u043E\u0434\u0438\u0442\u044C \u0434\u0435\u043B\u0430 \u0434\u043E \u043A\u043E\u043D\u0446\u0430",
+      "en": "Know how to get things done",
+      "zh": "\u77E5\u9053\u5982\u4F55\u628A\u4E8B\u60C5\u505A\u597D",
+      "domain": "C",
+      "facet": "C1",
+      "reverse": false
+    },
+    {
+      "id": "ipip-096",
+      "order": 96,
+      "originalId": "d32bd062-4eb2-401b-99b2-e7afea39ca9b",
+      "text": "\u041C\u0435\u043D\u044F \u043D\u0435\u043B\u0435\u0433\u043A\u043E \u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0438\u0442\u044C",
+      "en": "Am not easily annoyed",
+      "zh": "\u4E0D\u8F7B\u6613\u751F\u6C14",
+      "domain": "N",
+      "facet": "N2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-097",
+      "order": 97,
+      "originalId": "9a47184f-6046-4e68-a61b-3d9b357b86ea",
+      "text": "\u0418\u0437\u0431\u0435\u0433\u0430\u044E \u0442\u043E\u043B\u043F\u044B",
+      "en": "Avoid crowds",
+      "zh": "\u6211\u4F1A\u907F\u5F00\u4EBA\u7FA4",
+      "domain": "E",
+      "facet": "E2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-098",
+      "order": 98,
+      "originalId": "87c5b27e-59a8-4c48-8ba8-f5413d735693",
+      "text": "\u041C\u043D\u0435 \u043D\u0435 \u043D\u0440\u0430\u0432\u0438\u0442\u0441\u044F \u043F\u043E\u0441\u0435\u0449\u0430\u0442\u044C \u0445\u0443\u0434\u043E\u0436\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u043C\u0443\u0437\u0435\u0438",
+      "en": "Do not enjoy going to art museums",
+      "zh": "\u4E0D\u559C\u6B22\u53BB\u827A\u672F\u535A\u7269\u9986",
+      "domain": "O",
+      "facet": "O2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-099",
+      "order": 99,
+      "originalId": "11b20adb-abed-4363-894c-3dd823ae0540",
+      "text": "\u041C\u0435\u0448\u0430\u044E \u043F\u043B\u0430\u043D\u0430\u043C \u0434\u0440\u0443\u0433\u0438\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Obstruct others' plans",
+      "zh": "\u963B\u788D\u522B\u4EBA\u7684\u8BA1\u5212",
+      "domain": "A",
+      "facet": "A2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-100",
+      "order": 100,
+      "originalId": "50418d86-712c-45d9-adc4-ea0231c93cf5",
+      "text": "\u041E\u0441\u0442\u0430\u0432\u043B\u044F\u044E \u0432\u0435\u0449\u0438 \u0433\u0434\u0435 \u043F\u043E\u043F\u0430\u043B\u043E",
+      "en": "Leave my belongings around",
+      "zh": "\u6211\u628A\u81EA\u5DF1\u7684\u4E1C\u897F\u968F\u5904\u4E71\u653E",
+      "domain": "C",
+      "facet": "C2",
+      "reverse": true
+    },
+    {
+      "id": "ipip-101",
+      "order": 101,
+      "originalId": "f40e421f-6c24-4be2-bd9f-28d33358d8c6",
+      "text": "\u0427\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u0441\u0435\u0431\u044F \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u043E \u0441 \u0441\u0430\u043C\u0438\u043C \u0441\u043E\u0431\u043E\u0439",
+      "en": "Feel comfortable with myself",
+      "zh": "\u6211\u5BF9\u81EA\u5DF1\u611F\u5230\u81EA\u5728",
+      "domain": "N",
+      "facet": "N3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-102",
+      "order": 102,
+      "originalId": "8791f37b-686f-47c3-9db7-74c009951321",
+      "text": "\u0416\u0434\u0443, \u043A\u043E\u0433\u0434\u0430 \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u043E\u0437\u044C\u043C\u0443\u0442 \u043D\u0430 \u0441\u0435\u0431\u044F \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443",
+      "en": "Wait for others to lead the way",
+      "zh": "\u6211\u4F1A\u7B49\u522B\u4EBA\u5E26\u5934",
+      "domain": "E",
+      "facet": "E3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-103",
+      "order": 103,
+      "originalId": "4fd25155-9cc2-4cd6-8852-3e0ca2d5e95d",
+      "text": "\u041D\u0435 \u043F\u043E\u043D\u0438\u043C\u0430\u044E \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u043B\u044E\u0434\u0435\u0439",
+      "en": "Don't understand people who get emotional",
+      "zh": "\u4E0D\u7406\u89E3\u60C5\u7EEA\u5316\u7684\u4EBA",
+      "domain": "O",
+      "facet": "O3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-104",
+      "order": 104,
+      "originalId": "b68af20d-24f9-4c27-85cc-fe0858994888",
+      "text": "\u041D\u0435 \u0443\u0434\u0435\u043B\u044F\u044E \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u0434\u0440\u0443\u0433\u0438\u043C \u043B\u044E\u0434\u044F\u043C",
+      "en": "Take no time for others",
+      "zh": "\u6211\u4E0D\u4E3A\u522B\u4EBA\u62BD\u51FA\u65F6\u95F4",
+      "domain": "A",
+      "facet": "A3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-105",
+      "order": 105,
+      "originalId": "54423933-0ebb-44a7-bdd9-2a9b100c70f2",
+      "text": "\u041D\u0430\u0440\u0443\u0448\u0430\u044E \u0441\u0432\u043E\u0438 \u043E\u0431\u0435\u0449\u0430\u043D\u0438\u044F",
+      "en": "Break my promises",
+      "zh": "\u4E0D\u5B88\u4FE1",
+      "domain": "C",
+      "facet": "C3",
+      "reverse": true
+    },
+    {
+      "id": "ipip-106",
+      "order": 106,
+      "originalId": "7317848c-3e1b-422f-bb16-02efc504f677",
+      "text": "\u0421\u043B\u043E\u0436\u043D\u044B\u0435 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438 \u043E\u0431\u0449\u0435\u043D\u0438\u044F \u043C\u0435\u043D\u044F \u043D\u0435 \u0431\u0435\u0441\u043F\u043E\u043A\u043E\u044F\u0442",
+      "en": "Am not bothered by difficult social situations",
+      "zh": "\u56F0\u96BE\u7684\u793E\u4EA4\u573A\u5408\u4E0D\u4F1A\u8BA9\u6211\u56F0\u6270",
+      "domain": "N",
+      "facet": "N4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-107",
+      "order": 107,
+      "originalId": "7d93e1ca-46e8-4a30-9623-42a80c9b420c",
+      "text": "\u041B\u044E\u0431\u043B\u044E \u043D\u0435 \u0442\u043E\u0440\u043E\u043F\u0438\u0442\u044C\u0441\u044F \u0438 \u043E\u0442\u0434\u044B\u0445\u0430\u0442\u044C",
+      "en": "Like to take it easy",
+      "zh": "\u559C\u6B22\u653E\u677E",
+      "domain": "E",
+      "facet": "E4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-108",
+      "order": 108,
+      "originalId": "a7f43928-8982-4ed5-8656-7a80346fe979",
+      "text": "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0438\u0442\u0430\u044E \u043F\u0440\u0438\u0432\u044B\u0447\u043D\u044B\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u044B \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0439",
+      "en": "Am attached to conventional ways",
+      "zh": "\u6211\u4E60\u60EF\u4E8E\u6309\u4F20\u7EDF\u65B9\u5F0F\u505A\u4E8B",
+      "domain": "O",
+      "facet": "O4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-109",
+      "order": 109,
+      "originalId": "17910a55-a64a-4ed0-8b46-293e2fa2fe03",
+      "text": "\u041C\u0441\u0442\u0438\u0442\u0435\u043B\u0435\u043D",
+      "en": "Get back at others",
+      "zh": "\u6211\u4F1A\u62A5\u590D\u4ED6\u4EBA",
+      "domain": "A",
+      "facet": "A4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-110",
+      "order": 110,
+      "originalId": "3890bb43-2695-4b8d-b289-ee10d11cc884",
+      "text": "\u0423\u0434\u0435\u043B\u044F\u044E \u0440\u0430\u0431\u043E\u0442\u0435 \u043C\u0430\u043B\u043E \u0432\u0440\u0435\u043C\u0435\u043D\u0438 \u0438 \u0441\u0438\u043B",
+      "en": "Put little time and effort into my work",
+      "zh": "\u82B1\u5F88\u5C11\u65F6\u95F4\u548C\u7CBE\u529B\u5728\u5DE5\u4F5C\u4E0A",
+      "domain": "C",
+      "facet": "C4",
+      "reverse": true
+    },
+    {
+      "id": "ipip-111",
+      "order": 111,
+      "originalId": "49a85680-53aa-4208-86b5-dccc7a6f8e37",
+      "text": "\u0421\u043F\u043E\u0441\u043E\u0431\u0435\u043D \u043A\u043E\u043D\u0442\u0440\u043E\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0438 \u0436\u0435\u043B\u0430\u043D\u0438\u044F",
+      "en": "Am able to control my cravings",
+      "zh": "\u6211\u80FD\u63A7\u5236\u81EA\u5DF1\u7684\u6B32\u671B",
+      "domain": "N",
+      "facet": "N5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-112",
+      "order": 112,
+      "originalId": "10f90fa9-649c-4631-ac4c-3dd3f751597d",
+      "text": "\u0412\u0435\u0434\u0443 \u0441\u0435\u0431\u044F \u0434\u0438\u043A\u043E \u0438 \u0431\u0435\u0437\u0443\u043C\u043D\u043E",
+      "en": "Act wild and crazy",
+      "zh": "\u8868\u73B0\u5F97\u75AF\u72C2",
+      "domain": "E",
+      "facet": "E5",
+      "reverse": false
+    },
+    {
+      "id": "ipip-113",
+      "order": 113,
+      "originalId": "b86de003-c3c4-4cc8-9385-5ac8a0142c34",
+      "text": "\u041C\u0435\u043D\u044F \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0443\u044E\u0442 \u0442\u0435\u043E\u0440\u0435\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0435 \u0434\u0438\u0441\u043A\u0443\u0441\u0441\u0438\u0438",
+      "en": "Am not interested in theoretical discussions",
+      "zh": "\u4E0D\u559C\u6B22\u8BA8\u8BBA\u7406\u8BBA",
+      "domain": "O",
+      "facet": "O5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-114",
+      "order": 114,
+      "originalId": "80c1d149-7050-481a-9953-aefb441642e7",
+      "text": "\u0425\u0432\u0430\u0441\u0442\u0430\u044E\u0441\u044C \u0441\u0432\u043E\u0438\u043C\u0438 \u0434\u043E\u0441\u0442\u043E\u0438\u043D\u0441\u0442\u0432\u0430\u043C\u0438",
+      "en": "Boast about my virtues",
+      "zh": "\u6211\u4F1A\u5938\u8000\u81EA\u5DF1\u7684\u4F18\u70B9",
+      "domain": "A",
+      "facet": "A5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-115",
+      "order": 115,
+      "originalId": "51403620-968c-42fa-a772-65ba5ad8396f",
+      "text": "\u041C\u043D\u0435 \u0442\u0440\u0443\u0434\u043D\u043E \u043F\u0440\u0438\u0441\u0442\u0443\u043F\u0430\u0442\u044C \u043A \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044E \u0437\u0430\u0434\u0430\u0447",
+      "en": "Have difficulty starting tasks",
+      "zh": "\u6211\u5F88\u96BE\u5F00\u59CB\u6267\u884C\u4EFB\u52A1",
+      "domain": "C",
+      "facet": "C5",
+      "reverse": true
+    },
+    {
+      "id": "ipip-116",
+      "order": 116,
+      "originalId": "88a3c2fe-3aa4-4f46-9322-da656332268a",
+      "text": "\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u044E \u0441\u0430\u043C\u043E\u043E\u0431\u043B\u0430\u0434\u0430\u043D\u0438\u0435 \u0432 \u0441\u0442\u0440\u0435\u0441\u0441\u043E\u0432\u044B\u0445 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044F\u0445",
+      "en": "Remain calm under pressure",
+      "zh": "\u5728\u538B\u529B\u4E0B\u4FDD\u6301\u51B7\u9759",
+      "domain": "N",
+      "facet": "N6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-117",
+      "order": 117,
+      "originalId": "e7b31bdc-5f6b-40ec-ba91-f5919b0f170e",
+      "text": "\u0417\u0430\u043C\u0435\u0447\u0430\u044E \u0441\u0432\u0435\u0442\u043B\u0443\u044E \u0441\u0442\u043E\u0440\u043E\u043D\u0443 \u0436\u0438\u0437\u043D\u0438",
+      "en": "Look at the bright side of life",
+      "zh": "\u6211\u4F1A\u770B\u5230\u751F\u6D3B\u4E2D\u79EF\u6781\u7684\u4E00\u9762",
+      "domain": "E",
+      "facet": "E6",
+      "reverse": false
+    },
+    {
+      "id": "ipip-118",
+      "order": 118,
+      "originalId": "580b08d1-3c94-46e9-9d07-d6d80c698127",
+      "text": "\u0421\u0447\u0438\u0442\u0430\u044E, \u0447\u0442\u043E \u0441 \u043F\u0440\u0435\u0441\u0442\u0443\u043F\u043D\u043E\u0441\u0442\u044C\u044E \u0441\u043B\u0435\u0434\u0443\u0435\u0442 \u0431\u043E\u0440\u043E\u0442\u044C\u0441\u044F \u0436\u0451\u0441\u0442\u043A\u043E",
+      "en": "Believe that we should be tough on crime",
+      "zh": "\u6211\u8BA4\u4E3A\u5E94\u8BE5\u4E25\u5389\u6253\u51FB\u72AF\u7F6A",
+      "domain": "O",
+      "facet": "O6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-119",
+      "order": 119,
+      "originalId": "48bee420-60c0-45cd-be43-3893dbc1969a",
+      "text": "\u0421\u0442\u0430\u0440\u0430\u044E\u0441\u044C \u043D\u0435 \u0434\u0443\u043C\u0430\u0442\u044C \u043E \u043D\u0443\u0436\u0434\u0430\u044E\u0449\u0438\u0445\u0441\u044F",
+      "en": "Try not to think about the needy",
+      "zh": "\u6211\u5C3D\u91CF\u4E0D\u53BB\u60F3\u90A3\u4E9B\u9700\u8981\u5E2E\u52A9\u7684\u4EBA",
+      "domain": "A",
+      "facet": "A6",
+      "reverse": true
+    },
+    {
+      "id": "ipip-120",
+      "order": 120,
+      "originalId": "ea3327ea-3529-4be4-8e2d-2174731ae4d7",
+      "text": "\u0414\u0435\u0439\u0441\u0442\u0432\u0443\u044E \u043D\u0435\u043E\u0431\u0434\u0443\u043C\u0430\u043D\u043D\u043E",
+      "en": "Act without thinking",
+      "zh": "\u6211\u4F1A\u4E0D\u52A0\u601D\u8003\u5C31\u91C7\u53D6\u884C\u52A8",
+      "domain": "C",
+      "facet": "C6",
+      "reverse": true
+    }
+  ].map((item) => Object.freeze(item)));
+
+  // site/apps/career/assets/personality-model.mjs
+  var PERSONALITY_METHOD = Object.freeze({
+    id: "ipip-neo-120",
+    name: "IPIP-NEO-120",
+    author: "John A. Johnson",
+    year: 2014,
+    version: "2026-11-06-edited",
+    itemCount: 120,
+    facetCount: 30,
+    domainCount: 5,
+    minResponse: 1,
+    maxResponse: 5,
+    doi: "https://doi.org/10.1016/j.jrp.2014.05.003",
+    keyUrl: "https://ipip.ori.org/30FacetNEO-PI-RItems.htm",
+    permissionUrl: "https://ipip.ori.org/newPermission.htm",
+    sourceCommit: "e8f3caca49edafb9bc6b927eff7fbc1264312c24",
+    translation: "Edited open translations; no national norms or translation validation claimed"
+  });
+  var PERSONALITY_DOMAINS = Object.freeze([
+    { id: "N", name: "\u041D\u0435\u0439\u0440\u043E\u0442\u0438\u0437\u043C", en: "Neuroticism", zh: "\u795E\u7ECF\u8D28" },
+    { id: "E", name: "\u042D\u043A\u0441\u0442\u0440\u0430\u0432\u0435\u0440\u0441\u0438\u044F", en: "Extraversion", zh: "\u5916\u5411\u6027" },
+    { id: "O", name: "\u041E\u0442\u043A\u0440\u044B\u0442\u043E\u0441\u0442\u044C \u043E\u043F\u044B\u0442\u0443", en: "Openness to experience", zh: "\u7ECF\u9A8C\u5F00\u653E\u6027" },
+    { id: "A", name: "\u0414\u043E\u0431\u0440\u043E\u0436\u0435\u043B\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", en: "Agreeableness", zh: "\u5B9C\u4EBA\u6027" },
+    { id: "C", name: "\u0414\u043E\u0431\u0440\u043E\u0441\u043E\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u044C", en: "Conscientiousness", zh: "\u5C3D\u8D23\u6027" }
+  ].map((domain) => Object.freeze({
+    ...domain,
+    facets: Object.freeze(Array.from({ length: 6 }, (_, index) => domain.id + (index + 1)))
+  })));
+  var PERSONALITY_FACETS = Object.freeze([
+    { id: "N1", name: "\u0422\u0440\u0435\u0432\u043E\u0436\u043D\u043E\u0441\u0442\u044C", en: "Anxiety", zh: "\u7126\u8651" },
+    { id: "N2", name: "\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", en: "Anger", zh: "\u6124\u6012" },
+    { id: "N3", name: "\u0421\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u043D\u044B\u043D\u0438\u044E", en: "Depression", zh: "\u4F4E\u843D\u503E\u5411" },
+    { id: "N4", name: "\u0421\u043E\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0441\u0442\u044C", en: "Self-consciousness", zh: "\u793E\u4EA4\u4E0D\u81EA\u5728" },
+    { id: "N5", name: "\u041D\u0435\u0441\u0434\u0435\u0440\u0436\u0430\u043D\u043D\u043E\u0441\u0442\u044C", en: "Immoderation", zh: "\u8FC7\u5EA6\u653E\u7EB5" },
+    { id: "N6", name: "\u0423\u044F\u0437\u0432\u0438\u043C\u043E\u0441\u0442\u044C \u043A \u0441\u0442\u0440\u0435\u0441\u0441\u0443", en: "Vulnerability", zh: "\u538B\u529B\u8106\u5F31\u6027" },
+    { id: "E1", name: "\u0414\u0440\u0443\u0436\u0435\u043B\u044E\u0431\u0438\u0435", en: "Friendliness", zh: "\u53CB\u5584" },
+    { id: "E2", name: "\u041E\u0431\u0449\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", en: "Gregariousness", zh: "\u5408\u7FA4\u6027" },
+    { id: "E3", name: "\u041B\u0438\u0434\u0435\u0440\u0441\u043A\u0430\u044F \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C", en: "Assertiveness", zh: "\u9886\u5BFC\u4E3B\u52A8\u6027" },
+    { id: "E4", name: "\u0410\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C", en: "Activity level", zh: "\u6D3B\u52A8\u6C34\u5E73" },
+    { id: "E5", name: "\u041F\u043E\u0438\u0441\u043A \u043E\u0441\u0442\u0440\u044B\u0445 \u043E\u0449\u0443\u0449\u0435\u043D\u0438\u0439", en: "Excitement-seeking", zh: "\u5BFB\u6C42\u523A\u6FC0" },
+    { id: "E6", name: "\u0416\u0438\u0437\u043D\u0435\u0440\u0430\u0434\u043E\u0441\u0442\u043D\u043E\u0441\u0442\u044C", en: "Cheerfulness", zh: "\u4E50\u89C2\u6109\u5FEB" },
+    { id: "O1", name: "\u0412\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435", en: "Imagination", zh: "\u60F3\u8C61\u529B" },
+    { id: "O2", name: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0438\u0441\u043A\u0443\u0441\u0441\u0442\u0432\u0443", en: "Artistic interests", zh: "\u827A\u672F\u5174\u8DA3" },
+    { id: "O3", name: "\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0432\u043E\u0441\u043F\u0440\u0438\u0438\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C", en: "Emotionality", zh: "\u60C5\u611F\u611F\u53D7\u529B" },
+    { id: "O4", name: "\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u043D\u043E\u0432\u043E\u043C\u0443", en: "Adventurousness", zh: "\u5C1D\u8BD5\u65B0\u4E8B\u7269" },
+    { id: "O5", name: "\u0418\u043D\u0442\u0435\u043B\u043B\u0435\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u043B\u044E\u0431\u043E\u0437\u043D\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", en: "Intellect", zh: "\u6C42\u77E5\u5174\u8DA3" },
+    { id: "O6", name: "\u041B\u0438\u0431\u0435\u0440\u0430\u043B\u0438\u0437\u043C \u0432\u0437\u0433\u043B\u044F\u0434\u043E\u0432", en: "Liberalism", zh: "\u89C2\u5FF5\u81EA\u7531\u503E\u5411" },
+    { id: "A1", name: "\u0414\u043E\u0432\u0435\u0440\u0438\u0435", en: "Trust", zh: "\u4FE1\u4EFB" },
+    { id: "A2", name: "\u041F\u0440\u044F\u043C\u043E\u0442\u0430", en: "Morality", zh: "\u771F\u8BDA" },
+    { id: "A3", name: "\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C", en: "Altruism", zh: "\u52A9\u4EBA\u610F\u613F" },
+    { id: "A4", name: "\u0421\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u043E", en: "Cooperation", zh: "\u5408\u4F5C" },
+    { id: "A5", name: "\u0421\u043A\u0440\u043E\u043C\u043D\u043E\u0441\u0442\u044C", en: "Modesty", zh: "\u8C26\u900A" },
+    { id: "A6", name: "\u0421\u043E\u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0435", en: "Sympathy", zh: "\u540C\u60C5\u5FC3" },
+    { id: "C1", name: "\u0421\u0430\u043C\u043E\u044D\u0444\u0444\u0435\u043A\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C", en: "Self-efficacy", zh: "\u81EA\u6211\u6548\u80FD" },
+    { id: "C2", name: "\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u043E\u0432\u0430\u043D\u043D\u043E\u0441\u0442\u044C", en: "Orderliness", zh: "\u6761\u7406\u6027" },
+    { id: "C3", name: "\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C", en: "Dutifulness", zh: "\u8D23\u4EFB\u611F" },
+    { id: "C4", name: "\u0421\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u043A \u0434\u043E\u0441\u0442\u0438\u0436\u0435\u043D\u0438\u044F\u043C", en: "Achievement-striving", zh: "\u6210\u5C31\u8FFD\u6C42" },
+    { id: "C5", name: "\u0421\u0430\u043C\u043E\u0434\u0438\u0441\u0446\u0438\u043F\u043B\u0438\u043D\u0430", en: "Self-discipline", zh: "\u81EA\u5F8B" },
+    { id: "C6", name: "\u041E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", en: "Cautiousness", zh: "\u5BA1\u614E" }
+  ].map((facet) => Object.freeze({ ...facet, domain: facet.id[0] })));
+  var itemIds = new Set(PERSONALITY_ITEMS.map((item) => item.id));
+  function scorePersonality(answers) {
+    let values;
+    if (Array.isArray(answers)) {
+      if (answers.length !== PERSONALITY_ITEMS.length) {
+        throw new RangeError("IPIP-NEO-120 requires exactly 120 answers.");
+      }
+      values = answers;
+    } else if (answers !== null && typeof answers === "object") {
+      const keys3 = Object.keys(answers);
+      if (keys3.length !== PERSONALITY_ITEMS.length || keys3.some((key) => !itemIds.has(key))) {
+        throw new RangeError("IPIP-NEO-120 requires an answer for every item and no unknown keys.");
+      }
+      values = PERSONALITY_ITEMS.map((item) => answers[item.id]);
+    } else {
+      throw new TypeError("IPIP-NEO-120 answers must be an array or an item-keyed object.");
+    }
+    const facets = Object.fromEntries(PERSONALITY_FACETS.map((facet) => [facet.id, { sum: 0, count: 0 }]));
+    const domains = Object.fromEntries(PERSONALITY_DOMAINS.map((domain) => [domain.id, { sum: 0, count: 0 }]));
+    for (let index = 0; index < PERSONALITY_ITEMS.length; index += 1) {
+      const response = values[index];
+      const item = PERSONALITY_ITEMS[index];
+      if (typeof response !== "number" || !Number.isInteger(response) || response < 1 || response > 5) {
+        throw new RangeError("Invalid IPIP-NEO-120 answer for " + item.id + ": expected an integer from 1 to 5.");
+      }
+      const score2 = item.reverse ? 6 - response : response;
+      facets[item.facet].sum += score2;
+      facets[item.facet].count += 1;
+      domains[item.domain].sum += score2;
+      domains[item.domain].count += 1;
+    }
+    for (const scale of [...Object.values(facets), ...Object.values(domains)]) {
+      scale.mean = scale.sum / scale.count;
+    }
+    return { methodId: PERSONALITY_METHOD.id, answered: PERSONALITY_ITEMS.length, facets, domains };
+  }
+
+  // site/apps/career/assets/personality-insights.mjs
+  var WORK_TRAITS = [
+    {
+      facet: "E3",
+      label: ["\u041B\u0438\u0434\u0435\u0440\u0441\u043A\u0430\u044F \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430", "Leadership initiative", "\u9886\u5BFC\u4E3B\u52A8\u6027"],
+      low: ["\u0412\u0430\u043C \u0447\u0430\u0449\u0435 \u0443\u0434\u043E\u0431\u043D\u0435\u0435 \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C\u0441\u044F \u0432 \u0440\u0430\u0431\u043E\u0442\u0443, \u043A\u043E\u0433\u0434\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0443\u0436\u0435 \u0437\u0430\u0434\u0430\u043D\u043E. \u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443 \u043C\u043E\u0436\u043D\u043E \u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u043D\u0430 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043E\u0431\u0449\u0435\u0439 \u0437\u0430\u0434\u0430\u0447\u0435.", "You tend to join in once a direction is clear. Try taking initiative on a small shared task.", "\u4F60\u901A\u5E38\u66F4\u613F\u610F\u5728\u65B9\u5411\u660E\u786E\u540E\u53C2\u4E0E\u5DE5\u4F5C\u3002\u53EF\u4EE5\u4ECE\u4E00\u9879\u5C0F\u578B\u5171\u540C\u4EFB\u52A1\u5F00\u59CB\u5C1D\u8BD5\u4E3B\u52A8\u7EC4\u7EC7\u3002"],
+      mid: ["\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0432\u0430\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0437\u0430\u0432\u0438\u0441\u0438\u0442 \u043E\u0442 \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432\u0430 \u043A\u043E\u043C\u0430\u043D\u0434\u044B. \u0417\u043D\u0430\u043A\u043E\u043C\u0430\u044F \u0442\u0435\u043C\u0430 \u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C \u0412\u0430\u043C \u043F\u0440\u043E\u044F\u0432\u043B\u044F\u0442\u044C \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443.", "Your willingness to set a direction depends on the task and the team. A familiar topic may help you take initiative.", "\u4F60\u662F\u5426\u4E3B\u52A8\u63D0\u51FA\u65B9\u5411\u53D6\u51B3\u4E8E\u4EFB\u52A1\u548C\u56E2\u961F\u3002\u5728\u719F\u6089\u7684\u9886\u57DF\uFF0C\u4F60\u53EF\u80FD\u66F4\u5BB9\u6613\u53D1\u6325\u4E3B\u52A8\u6027\u3002"],
+      high: ["\u0412\u0430\u043C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0435\u043D\u043D\u043E \u0431\u0440\u0430\u0442\u044C \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0443, \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0438 \u0441\u0442\u0440\u0435\u043C\u0438\u0442\u044C\u0441\u044F \u0440\u0443\u043A\u043E\u0432\u043E\u0434\u0438\u0442\u044C \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439. \u0414\u0430\u0432\u0430\u0439\u0442\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0430\u043C \u0432\u0440\u0435\u043C\u044F \u0432\u044B\u0441\u043A\u0430\u0437\u0430\u0442\u044C \u0441\u0432\u043E\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F.", "You tend to take initiative, propose a direction and seek to lead shared work. Give others time to contribute their ideas.", "\u4F60\u503E\u5411\u4E8E\u4E3B\u52A8\u63D0\u51FA\u65B9\u5411\u5E76\u7EC4\u7EC7\u5171\u540C\u5DE5\u4F5C\u3002\u4E5F\u8981\u7ED9\u5176\u4ED6\u6210\u5458\u8868\u8FBE\u5EFA\u8BAE\u7684\u65F6\u95F4\u3002"]
+    },
+    {
+      facet: "C3",
+      label: ["\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C", "Responsibility", "\u8D23\u4EFB\u611F"],
+      low: ["\u0421\u043E\u0431\u043B\u044E\u0434\u0435\u043D\u0438\u0435 \u0434\u043E\u0433\u043E\u0432\u043E\u0440\u0451\u043D\u043D\u043E\u0441\u0442\u0435\u0439 \u043C\u043E\u0436\u0435\u0442 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u044C \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0445 \u0443\u0441\u0438\u043B\u0438\u0439. \u041F\u043E\u043B\u0435\u0437\u043D\u043E \u0437\u0430\u0440\u0430\u043D\u0435\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u0442\u044C \u043E\u0431\u044A\u0451\u043C \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432 \u0438 \u0441\u0440\u043E\u043A.", "Keeping commitments may take extra effort. Agree on the scope and deadline before accepting a task.", "\u5C65\u884C\u7EA6\u5B9A\u53EF\u80FD\u9700\u8981\u989D\u5916\u52AA\u529B\u3002\u63A5\u53D7\u4EFB\u52A1\u524D\uFF0C\u53EF\u4EE5\u5148\u660E\u786E\u8D23\u4EFB\u8303\u56F4\u548C\u671F\u9650\u3002"],
+      mid: ["\u0412\u044B \u0441\u0442\u0440\u0435\u043C\u0438\u0442\u0435\u0441\u044C \u0441\u043E\u0431\u043B\u044E\u0434\u0430\u0442\u044C \u0434\u043E\u0433\u043E\u0432\u043E\u0440\u0451\u043D\u043D\u043E\u0441\u0442\u0438, \u0445\u043E\u0442\u044F \u043E\u0431\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u043C\u043E\u0433\u0443\u0442 \u0432\u043B\u0438\u044F\u0442\u044C \u043D\u0430 \u0438\u0445 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435. \u041F\u043E\u043C\u043E\u0433\u0430\u0435\u0442 \u044F\u0432\u043D\u0430\u044F \u0444\u0438\u043A\u0441\u0430\u0446\u0438\u044F \u043E\u0431\u0435\u0449\u0430\u043D\u0438\u0439.", "You seek to honour commitments, although circumstances may affect follow-through. Make your commitments explicit.", "\u4F60\u52AA\u529B\u9075\u5B88\u7EA6\u5B9A\uFF0C\u4F46\u5177\u4F53\u60C5\u51B5\u53EF\u80FD\u5F71\u54CD\u6267\u884C\u3002\u660E\u786E\u8BB0\u5F55\u627F\u8BFA\u4F1A\u6709\u6240\u5E2E\u52A9\u3002"],
+      high: ["\u0412 \u043E\u0442\u0432\u0435\u0442\u0430\u0445 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043E \u0441\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u0434\u0435\u0440\u0436\u0430\u0442\u044C \u0441\u043B\u043E\u0432\u043E \u0438 \u0441\u043E\u0431\u043B\u044E\u0434\u0430\u0442\u044C \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430. \u0411\u0435\u0440\u0438\u0442\u0435 \u043D\u0430 \u0441\u0435\u0431\u044F \u043E\u0431\u044A\u0451\u043C \u0440\u0430\u0431\u043E\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C.", "Your answers show a strong emphasis on keeping promises and obligations. Accept an amount of work you can deliver.", "\u4F60\u7684\u56DE\u7B54\u663E\u793A\u51FA\u91CD\u89C6\u5B88\u4FE1\u548C\u5C65\u884C\u8D23\u4EFB\u7684\u503E\u5411\u3002\u627F\u62C5\u4EFB\u52A1\u65F6\u4E5F\u8981\u8003\u8651\u81EA\u5DF1\u7684\u5B9E\u9645\u7CBE\u529B\u3002"]
+    },
+    {
+      facet: "C4",
+      label: ["\u0421\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u043A \u0434\u043E\u0441\u0442\u0438\u0436\u0435\u043D\u0438\u044F\u043C", "Achievement striving", "\u6210\u5C31\u8FFD\u6C42"],
+      low: ["\u0412\u0430\u043C \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0443\u0434\u043E\u0431\u043D\u0435\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0433\u043E \u0437\u0430\u0434\u0430\u043D\u0438\u044F. \u042F\u0441\u043D\u044B\u0439 \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0439 \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u0438 \u043F\u043E\u043C\u043E\u0433\u0430\u0435\u0442 \u0432\u0438\u0434\u0435\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0441\u0432\u043E\u0438\u0445 \u0443\u0441\u0438\u043B\u0438\u0439.", "You may prefer working within a clearly defined task. A clear completion criterion can make your progress easier to see.", "\u4F60\u53EF\u80FD\u66F4\u559C\u6B22\u5B8C\u6210\u8303\u56F4\u660E\u786E\u7684\u4EFB\u52A1\u3002\u6E05\u695A\u7684\u5B8C\u6210\u6807\u51C6\u6709\u52A9\u4E8E\u770B\u5230\u52AA\u529B\u7684\u6210\u679C\u3002"],
+      mid: ["\u0412\u044B \u0433\u043E\u0442\u043E\u0432\u044B \u043F\u0440\u0438\u043B\u0430\u0433\u0430\u0442\u044C \u0443\u0441\u0438\u043B\u0438\u044F, \u043A\u043E\u0433\u0434\u0430 \u0446\u0435\u043B\u044C \u043F\u043E\u043D\u044F\u0442\u043D\u0430 \u0438 \u0437\u043D\u0430\u0447\u0438\u043C\u0430. \u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u0441 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u0438\u043C\u0438 \u0434\u043E\u0441\u0442\u0438\u0436\u0438\u043C\u044B\u043C\u0438 \u044D\u0442\u0430\u043F\u0430\u043C\u0438.", "You are willing to make an effort when a goal is clear and meaningful. Break a larger task into achievable stages.", "\u76EE\u6807\u6E05\u6670\u4E14\u6709\u610F\u4E49\u65F6\uFF0C\u4F60\u613F\u610F\u6295\u5165\u52AA\u529B\u3002\u53EF\u4EE5\u628A\u8F83\u5927\u7684\u4EFB\u52A1\u5206\u6210\u51E0\u4E2A\u53EF\u5B8C\u6210\u7684\u9636\u6BB5\u3002"],
+      high: ["\u0412\u0430\u043C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0435\u043D\u043D\u044B \u0432\u044B\u0441\u043E\u043A\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0443 \u0438 \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043C\u043D\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C. \u0417\u0430\u0440\u0430\u043D\u0435\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0439\u0442\u0435, \u043A\u043E\u0433\u0434\u0430 \u0437\u0430\u0434\u0430\u0447\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0430 \u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0445\u043E\u0440\u043E\u0448\u043E.", "You tend to set high standards and work hard. Decide in advance what counts as a sufficiently good result.", "\u4F60\u503E\u5411\u4E8E\u8FFD\u6C42\u8F83\u9AD8\u6807\u51C6\u5E76\u52AA\u529B\u5DE5\u4F5C\u3002\u53EF\u4EE5\u9884\u5148\u660E\u786E\u8FBE\u5230\u4EC0\u4E48\u7A0B\u5EA6\u5C31\u7B97\u5B8C\u6210\u3002"]
+    },
+    {
+      facet: "C5",
+      label: ["\u0421\u0430\u043C\u043E\u0434\u0438\u0441\u0446\u0438\u043F\u043B\u0438\u043D\u0430", "Self-discipline", "\u81EA\u5F8B"],
+      low: ["\u041D\u0430\u0447\u0430\u043B\u043E \u0440\u0430\u0431\u043E\u0442\u044B \u0438 \u0443\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0442\u0435\u043C\u043F\u0430 \u043C\u043E\u0433\u0443\u0442 \u0434\u0430\u0432\u0430\u0442\u044C\u0441\u044F \u0441 \u0443\u0441\u0438\u043B\u0438\u0435\u043C. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433 \u0438 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u0441\u0440\u043E\u043A \u043F\u043E\u043C\u043E\u0433\u0430\u044E\u0442 \u043F\u0440\u0438\u0441\u0442\u0443\u043F\u0438\u0442\u044C \u043A \u0437\u0430\u0434\u0430\u0447\u0435.", "Getting started and sustaining effort may take work. A small first step and a short deadline can help.", "\u5F00\u59CB\u884C\u52A8\u548C\u4FDD\u6301\u8282\u594F\u53EF\u80FD\u9700\u8981\u52AA\u529B\u3002\u5148\u505A\u4E00\u4E2A\u5C0F\u6B65\u9AA4\u3001\u8BBE\u5B9A\u8F83\u77ED\u671F\u9650\uFF0C\u53EF\u80FD\u66F4\u5BB9\u6613\u542F\u52A8\u3002"],
+      mid: ["\u041F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u0430\u0431\u043E\u0442\u0435 \u0437\u0430\u0432\u0438\u0441\u0438\u0442 \u043E\u0442 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041F\u0440\u043E\u043C\u0435\u0436\u0443\u0442\u043E\u0447\u043D\u044B\u0435 \u0441\u0440\u043E\u043A\u0438 \u0438 \u043F\u043E\u043D\u044F\u0442\u043D\u044B\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u043F\u043E\u043C\u043E\u0433\u0443\u0442 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044C \u0442\u0435\u043C\u043F.", "Consistency varies with the situation. Intermediate deadlines and a clear next step can help you maintain momentum.", "\u4F60\u7684\u6301\u7EED\u6267\u884C\u7A0B\u5EA6\u4F1A\u968F\u60C5\u5883\u53D8\u5316\u3002\u4E2D\u95F4\u671F\u9650\u548C\u660E\u786E\u7684\u4E0B\u4E00\u6B65\u6709\u52A9\u4E8E\u4FDD\u6301\u8282\u594F\u3002"],
+      high: ["\u0412\u044B \u0441\u043A\u043B\u043E\u043D\u043D\u044B \u0432\u043E\u043F\u043B\u043E\u0449\u0430\u0442\u044C \u043F\u043B\u0430\u043D\u044B \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438. \u0423\u0447\u0438\u0442\u044B\u0432\u0430\u0439\u0442\u0435 \u0432\u0440\u0435\u043C\u044F \u043D\u0430 \u043E\u0442\u0434\u044B\u0445 \u0438 \u043D\u0435\u043F\u0440\u0435\u0434\u0432\u0438\u0434\u0435\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F.", "You tend to carry out plans and follow tasks through. Allow time for rest and unexpected changes.", "\u4F60\u503E\u5411\u4E8E\u843D\u5B9E\u8BA1\u5212\u5E76\u6301\u7EED\u63A8\u8FDB\u4EFB\u52A1\u3002\u4E5F\u8981\u4E3A\u4F11\u606F\u548C\u610F\u5916\u53D8\u5316\u7559\u51FA\u65F6\u95F4\u3002"]
+    },
+    {
+      facet: "C6",
+      label: ["\u041E\u0431\u0434\u0443\u043C\u0430\u043D\u043D\u043E\u0441\u0442\u044C \u0440\u0435\u0448\u0435\u043D\u0438\u0439", "Deliberation", "\u5BA1\u614E\u51B3\u7B56"],
+      low: ["\u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0431\u044B\u0441\u0442\u0440\u043E \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0438\u0442\u044C \u043A \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044E. \u041F\u0435\u0440\u0435\u0434 \u0432\u0430\u0436\u043D\u044B\u043C \u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C \u043F\u043E\u043B\u0435\u0437\u043D\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0435\u0433\u043E \u043F\u043E\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u044F \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0442\u043C\u0435\u043D\u044B.", "You may move quickly into action. Before an important decision, check its consequences and whether it can be reversed.", "\u4F60\u53EF\u80FD\u5F88\u5FEB\u5C31\u91C7\u53D6\u884C\u52A8\u3002\u91CD\u8981\u51B3\u7B56\u524D\uFF0C\u53EF\u4EE5\u5148\u8003\u8651\u540E\u679C\u4EE5\u53CA\u662F\u5426\u80FD\u591F\u8C03\u6574\u3002"],
+      mid: ["\u0412\u044B \u0441\u043E\u0447\u0435\u0442\u0430\u0435\u0442\u0435 \u043F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0434\u0443\u043C\u044B\u0432\u0430\u043D\u0438\u0435 \u0441 \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C\u044E \u0434\u0435\u0439\u0441\u0442\u0432\u043E\u0432\u0430\u0442\u044C. \u0413\u043B\u0443\u0431\u0438\u043D\u0443 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438 \u043C\u043E\u0436\u043D\u043E \u0441\u043E\u043E\u0442\u043D\u043E\u0441\u0438\u0442\u044C \u0441 \u043F\u043E\u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u044F\u043C\u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F.", "You combine reflection with a willingness to act. Match the depth of your review to the consequences of the decision.", "\u4F60\u517C\u987E\u601D\u8003\u4E0E\u884C\u52A8\u3002\u53EF\u4EE5\u6839\u636E\u51B3\u7B56\u540E\u679C\u7684\u5927\u5C0F\u51B3\u5B9A\u9700\u8981\u591A\u6DF1\u5165\u7684\u68C0\u67E5\u3002"],
+      high: ["\u0412\u0430\u043C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0435\u043D\u043D\u043E \u043E\u0431\u0434\u0443\u043C\u044B\u0432\u0430\u0442\u044C \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0438 \u0438\u0437\u0431\u0435\u0433\u0430\u0442\u044C \u043F\u043E\u0441\u043F\u0435\u0448\u043D\u044B\u0445 \u0440\u0435\u0448\u0435\u043D\u0438\u0439. \u0421\u0440\u043E\u043A \u043D\u0430 \u0430\u043D\u0430\u043B\u0438\u0437 \u043F\u043E\u043C\u043E\u0436\u0435\u0442 \u0432\u043E\u0432\u0440\u0435\u043C\u044F \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0438\u0442\u044C \u043A \u0438\u0441\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044E.", "You tend to think actions through and avoid hasty decisions. A time limit on analysis can help you move to implementation.", "\u4F60\u503E\u5411\u4E8E\u4ED4\u7EC6\u8003\u8651\u3001\u907F\u514D\u8349\u7387\u51B3\u5B9A\u3002\u4E3A\u5206\u6790\u8BBE\u5B9A\u65F6\u95F4\u8303\u56F4\uFF0C\u6709\u52A9\u4E8E\u53CA\u65F6\u884C\u52A8\u3002"]
+    },
+    {
+      facet: "A4",
+      label: ["\u0421\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u043E", "Cooperation", "\u5408\u4F5C"],
+      low: ["\u0412 \u0441\u043F\u043E\u0440\u043D\u044B\u0445 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044F\u0445 \u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u0440\u0435\u0437\u043A\u043E \u043E\u0442\u0441\u0442\u0430\u0438\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u044E \u043F\u043E\u0437\u0438\u0446\u0438\u044E. \u041E\u0442\u0434\u0435\u043B\u044F\u0439\u0442\u0435 \u043D\u0435\u0441\u043E\u0433\u043B\u0430\u0441\u0438\u0435 \u0441 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435\u043C \u043E\u0442 \u043E\u0442\u043D\u043E\u0448\u0435\u043D\u0438\u044F \u043A \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0443.", "You may defend your position forcefully in disagreements. Separate disagreement with an idea from your attitude towards its author.", "\u53D1\u751F\u5206\u6B67\u65F6\uFF0C\u4F60\u53EF\u80FD\u4F1A\u5F3A\u70C8\u575A\u6301\u7ACB\u573A\u3002\u53EF\u4EE5\u628A\u5BF9\u5EFA\u8BAE\u7684\u4E0D\u540C\u770B\u6CD5\u4E0E\u5BF9\u4EBA\u7684\u6001\u5EA6\u5206\u5F00\u3002"],
+      mid: ["\u0412\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043A\u0430\u043A \u0438\u0441\u043A\u0430\u0442\u044C \u0441\u043E\u0433\u043B\u0430\u0441\u0438\u0435, \u0442\u0430\u043A \u0438 \u043D\u0430\u0441\u0442\u0430\u0438\u0432\u0430\u0442\u044C \u043D\u0430 \u0441\u0432\u043E\u0451\u043C. \u0412 \u043E\u0431\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0438 \u043F\u043E\u043B\u0435\u0437\u043D\u043E \u0437\u0430\u0440\u0430\u043D\u0435\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u043E\u0431\u0449\u0438\u0439 \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u0439 \u0440\u0435\u0448\u0435\u043D\u0438\u044F.", "You may seek agreement or stand your ground, depending on the situation. Agree on a shared decision criterion.", "\u4F60\u4F1A\u6839\u636E\u60C5\u51B5\u5BFB\u6C42\u5171\u8BC6\u6216\u575A\u6301\u7ACB\u573A\u3002\u8BA8\u8BBA\u524D\u660E\u786E\u5171\u540C\u7684\u5224\u65AD\u6807\u51C6\u4F1A\u6709\u6240\u5E2E\u52A9\u3002"],
+      high: ["\u0412 \u043E\u0442\u0432\u0435\u0442\u0430\u0445 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043E \u0441\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u0438\u0437\u0431\u0435\u0433\u0430\u0442\u044C \u0432\u0440\u0430\u0436\u0434\u0435\u0431\u043D\u043E\u0441\u0442\u0438 \u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044C \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443. \u0412\u044B\u0441\u043A\u0430\u0437\u044B\u0432\u0430\u0439\u0442\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0432\u043E\u0437\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0441\u043F\u043E\u043A\u043E\u0439\u043D\u043E \u0438 \u043F\u0440\u044F\u043C\u043E.", "Your answers show a preference for avoiding hostility and working cooperatively. State important objections calmly and directly.", "\u4F60\u7684\u56DE\u7B54\u663E\u793A\u51FA\u907F\u514D\u654C\u610F\u3001\u4FDD\u6301\u5408\u4F5C\u7684\u503E\u5411\u3002\u5BF9\u4E8E\u91CD\u8981\u7684\u4E0D\u540C\u610F\u89C1\uFF0C\u4E5F\u53EF\u4EE5\u5E73\u9759\u800C\u660E\u786E\u5730\u8868\u8FBE\u3002"]
+    }
+  ];
+  var TEAM_ROLES = [
+    {
+      id: "coordinator",
+      facets: ["E3", "C1", "C3"],
+      label: ["\u041A\u043E\u043E\u0440\u0434\u0438\u043D\u0430\u0442\u043E\u0440", "Coordinator", "\u534F\u8C03\u7EC4\u7EC7\u8005"],
+      description: ["\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430, \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0438 \u0437\u0430\u0434\u0430\u0447 \u0438 \u0432\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u043A \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430\u043C \u043C\u043E\u0433\u0443\u0442 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044E \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u044B.", "Initiative, confidence in completing tasks and attention to commitments may support organising shared work.", "\u4E3B\u52A8\u6027\u3001\u5B8C\u6210\u4EFB\u52A1\u7684\u4FE1\u5FC3\u548C\u5C65\u884C\u627F\u8BFA\u7684\u503E\u5411\uFF0C\u53EF\u4EE5\u652F\u6301\u4F60\u7EC4\u7EC7\u5171\u540C\u5DE5\u4F5C\u3002"],
+      action: ["\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u0435 \u0433\u0440\u0443\u043F\u043F\u0435 \u0446\u0435\u043B\u044C, \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u043F\u043E \u0434\u043E\u0433\u043E\u0432\u043E\u0440\u0451\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0430\u0437\u043D\u0430\u0447\u044C\u0442\u0435 \u043A\u043E\u0440\u043E\u0442\u043A\u0443\u044E \u0441\u0432\u0435\u0440\u043A\u0443 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432.", "Suggest a shared goal, agree on responsibilities and arrange a short progress review.", "\u5411\u5C0F\u7EC4\u63D0\u51FA\u76EE\u6807\uFF0C\u534F\u5546\u5206\u5DE5\uFF0C\u5E76\u5B89\u6392\u7B80\u77ED\u7684\u8FDB\u5EA6\u4EA4\u6D41\u3002"]
+    },
+    {
+      id: "organizer",
+      facets: ["C2", "C3", "C5"],
+      label: ["\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0442\u043E\u0440 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0430", "Process organiser", "\u6D41\u7A0B\u7EC4\u7EC7\u8005"],
+      description: ["\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0435 \u043F\u043E\u0440\u044F\u0434\u043A\u0430 \u0438 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u043F\u043E\u043B\u0435\u0437\u043D\u043E \u043F\u0440\u0438 \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438 \u0441\u0440\u043E\u043A\u043E\u0432 \u0438 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u0438\u0438 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432.", "A preference for order and follow-through may help with scheduling and coordinating commitments.", "\u91CD\u89C6\u6761\u7406\u548C\u6301\u7EED\u6267\u884C\u7684\u503E\u5411\uFF0C\u6709\u52A9\u4E8E\u5B89\u6392\u65F6\u95F4\u548C\u534F\u8C03\u4EFB\u52A1\u3002"],
+      action: ["\u0421\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u043F\u043B\u0430\u043D: \u0437\u0430\u0434\u0430\u0447\u0430, \u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0439, \u0441\u0440\u043E\u043A \u0438 \u043E\u0436\u0438\u0434\u0430\u0435\u043C\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Create a simple plan with each task, owner, deadline and expected result.", "\u5236\u5B9A\u7B80\u5355\u8BA1\u5212\uFF0C\u660E\u786E\u4EFB\u52A1\u3001\u8D1F\u8D23\u4EBA\u3001\u671F\u9650\u548C\u9884\u671F\u6210\u679C\u3002"]
+    },
+    {
+      id: "analyst",
+      facets: ["O5", "C6", "C1"],
+      label: ["\u0410\u043D\u0430\u043B\u0438\u0442\u0438\u043A", "Analyst", "\u5206\u6790\u8005"],
+      description: ["\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0441\u043B\u043E\u0436\u043D\u044B\u043C \u0438\u0434\u0435\u044F\u043C \u0438 \u043F\u0440\u0438\u0432\u044B\u0447\u043A\u0430 \u043E\u0431\u0434\u0443\u043C\u044B\u0432\u0430\u0442\u044C \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u0438\u0442\u044C\u0441\u044F \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432 \u0440\u0435\u0448\u0435\u043D\u0438\u044F.", "Interest in complex ideas and a habit of reflection may help when examining alternative solutions.", "\u5BF9\u590D\u6742\u95EE\u9898\u7684\u5174\u8DA3\u4EE5\u53CA\u8BA4\u771F\u601D\u8003\u7684\u4E60\u60EF\uFF0C\u53EF\u4EE5\u7528\u4E8E\u6BD4\u8F83\u4E0D\u540C\u65B9\u6848\u3002"],
+      action: ["\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0434\u0432\u0430 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430 \u043F\u043E \u043E\u0431\u0449\u0438\u043C \u043A\u0440\u0438\u0442\u0435\u0440\u0438\u044F\u043C \u0438 \u043E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0433\u0440\u0443\u043F\u043F\u0435 \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u0432\u043E\u0435\u0433\u043E \u0432\u044B\u0432\u043E\u0434\u0430.", "Compare two options using shared criteria and explain the basis of your conclusion.", "\u6309\u7167\u5171\u540C\u6807\u51C6\u6BD4\u8F83\u4E24\u4E2A\u65B9\u6848\uFF0C\u5E76\u5411\u5C0F\u7EC4\u8BF4\u660E\u7ED3\u8BBA\u7684\u4F9D\u636E\u3002"]
+    },
+    {
+      id: "supporter",
+      facets: ["A3", "A4", "A6"],
+      label: ["\u0421\u0432\u044F\u0437\u0443\u044E\u0449\u0435\u0435 \u0437\u0432\u0435\u043D\u043E \u043A\u043E\u043C\u0430\u043D\u0434\u044B", "Team supporter", "\u56E2\u961F\u652F\u6301\u8005"],
+      description: ["\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C, \u0441\u043E\u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0435 \u0438 \u0441\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u043A \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u043C\u043E\u0433\u0443\u0442 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0442\u044C \u0443\u0447\u0430\u0441\u0442\u0438\u0435 \u0434\u0440\u0443\u0433\u0438\u0445 \u0447\u043B\u0435\u043D\u043E\u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u044B.", "A willingness to help, sympathy and cooperation may support other team members\u2019 participation.", "\u52A9\u4EBA\u610F\u613F\u3001\u540C\u60C5\u5FC3\u548C\u5408\u4F5C\u503E\u5411\uFF0C\u6709\u52A9\u4E8E\u652F\u6301\u5176\u4ED6\u6210\u5458\u53C2\u4E0E\u56E2\u961F\u5DE5\u4F5C\u3002"],
+      action: ["\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435, \u0433\u0434\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0430\u043C \u043D\u0443\u0436\u043D\u0430 \u043F\u043E\u043C\u043E\u0449\u044C, \u0438 \u0441\u043E\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0445 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u044F \u043F\u0435\u0440\u0435\u0434 \u043E\u0431\u0449\u0438\u043C \u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C.", "Ask where others need help and gather their suggestions before a shared decision.", "\u4E86\u89E3\u6210\u5458\u9700\u8981\u54EA\u4E9B\u5E2E\u52A9\uFF0C\u5E76\u5728\u5171\u540C\u51B3\u7B56\u524D\u6C47\u603B\u5927\u5BB6\u7684\u5EFA\u8BAE\u3002"]
+    },
+    {
+      id: "ideas",
+      facets: ["O1", "O4", "O5"],
+      label: ["\u0418\u043D\u0438\u0446\u0438\u0430\u0442\u043E\u0440 \u0438\u0434\u0435\u0439", "Idea contributor", "\u521B\u610F\u63D0\u51FA\u8005"],
+      description: ["\u0412\u043E\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435, \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u043D\u043E\u0432\u043E\u043C\u0443 \u0438 \u0438\u043D\u0442\u0435\u043B\u043B\u0435\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u0430\u044F \u043B\u044E\u0431\u043E\u0437\u043D\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u0438\u0442\u044C\u0441\u044F \u043F\u0440\u0438 \u043F\u043E\u0438\u0441\u043A\u0435 \u0440\u0430\u0437\u043D\u044B\u0445 \u043F\u043E\u0434\u0445\u043E\u0434\u043E\u0432.", "Imagination, openness to new experiences and intellectual curiosity may help generate alternative approaches.", "\u60F3\u8C61\u529B\u3001\u5C1D\u8BD5\u65B0\u4E8B\u7269\u7684\u610F\u613F\u548C\u6C42\u77E5\u5174\u8DA3\uFF0C\u53EF\u4EE5\u7528\u4E8E\u63D0\u51FA\u4E0D\u540C\u601D\u8DEF\u3002"],
+      action: ["\u041F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u0435 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u0440\u0435\u0448\u0438\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443 \u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0434\u0438\u043D \u0434\u043B\u044F \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0439 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438.", "Suggest several ways to solve a task and choose one for a small practical trial.", "\u63D0\u51FA\u51E0\u79CD\u89E3\u51B3\u529E\u6CD5\uFF0C\u518D\u9009\u62E9\u4E00\u79CD\u8FDB\u884C\u5C0F\u89C4\u6A21\u5B9E\u8DF5\u9A8C\u8BC1\u3002"]
+    },
+    {
+      id: "implementer",
+      facets: ["C4", "C5", "C1"],
+      label: ["\u0420\u0435\u0430\u043B\u0438\u0437\u0430\u0442\u043E\u0440", "Implementer", "\u843D\u5B9E\u6267\u884C\u8005"],
+      description: ["\u0421\u0442\u0440\u0435\u043C\u043B\u0435\u043D\u0438\u0435 \u043A \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0443, \u0441\u0430\u043C\u043E\u0434\u0438\u0441\u0446\u0438\u043F\u043B\u0438\u043D\u0430 \u0438 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0441\u0432\u043E\u0438\u0445 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F\u0445 \u043C\u043E\u0433\u0443\u0442 \u043F\u043E\u043C\u043E\u0433\u0430\u0442\u044C \u0434\u043E\u0432\u043E\u0434\u0438\u0442\u044C \u043F\u043B\u0430\u043D\u044B \u0434\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F.", "Achievement striving, self-discipline and confidence in your actions may help turn plans into completed work.", "\u6210\u5C31\u8FFD\u6C42\u3001\u81EA\u5F8B\u548C\u884C\u52A8\u4FE1\u5FC3\uFF0C\u6709\u52A9\u4E8E\u628A\u8BA1\u5212\u8F6C\u5316\u4E3A\u5B8C\u6210\u7684\u5DE5\u4F5C\u3002"],
+      action: ["\u0412\u043E\u0437\u044C\u043C\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u0443\u044E \u0447\u0430\u0441\u0442\u044C \u043F\u0440\u043E\u0435\u043A\u0442\u0430 \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0433\u043E\u0442\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043A \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u043D\u043E\u043C\u0443 \u0441\u0440\u043E\u043A\u0443.", "Take responsibility for a specific part of a project and deliver it by an agreed deadline.", "\u627F\u62C5\u9879\u76EE\u4E2D\u660E\u786E\u7684\u4E00\u90E8\u5206\uFF0C\u5E76\u5728\u7EA6\u5B9A\u65F6\u95F4\u63D0\u4EA4\u5B8C\u6210\u6210\u679C\u3002"]
+    }
+  ];
+  var expressionBand = (mean) => mean < 2.5 ? "low" : mean > 3.5 ? "high" : "mid";
+  function suggestTeamRoles(profile) {
+    const candidates = TEAM_ROLES.map((role) => {
+      const values = role.facets.map((id) => profile.facets[id]?.mean);
+      if (values.some((value) => !Number.isFinite(value) || value < 1 || value > 5)) throw new TypeError("Invalid facet profile.");
+      return { ...role, mean: values.reduce((sum, value) => sum + value, 0) / values.length, eligible: values.every((value) => value >= 3) };
+    }).sort((a, b) => b.mean - a.mean);
+    const eligible = candidates.filter((role) => role.eligible && role.mean >= 3.5);
+    if (!eligible.length) return { kind: "exploratory", roles: [] };
+    if (candidates[0].mean - candidates.at(-1).mean < 0.25) return eligible.length > 1 ? { kind: "balanced", roles: eligible } : { kind: "exploratory", roles: [] };
+    const cutoff = eligible[Math.min(2, eligible.length - 1)].mean;
+    return { kind: "differentiated", roles: eligible.filter((role) => role.mean >= cutoff - 1e-10) };
+  }
+
+  // site/apps/career/assets/personality.mjs
+  var PAGE_SIZE = 10;
+  var PAGE_COUNT = PERSONALITY_ITEMS.length / PAGE_SIZE;
+  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var L3 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
+  var text = (values) => L3(...values);
+  var label = (value) => getLanguage() === "ru" ? value.name : getLanguage() === "en" ? value.en : value.zh;
+  var number = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  var facetById = new Map(PERSONALITY_FACETS.map((facet) => [facet.id, facet]));
+  var validAnswer = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
+  var answerLabels = () => L3(
+    ["\u0421\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u043E \u043D\u0435\u0432\u0435\u0440\u043D\u043E", "\u0421\u043A\u043E\u0440\u0435\u0435 \u043D\u0435\u0432\u0435\u0440\u043D\u043E", "\u041D\u0438 \u0432\u0435\u0440\u043D\u043E, \u043D\u0438 \u043D\u0435\u0432\u0435\u0440\u043D\u043E", "\u0421\u043A\u043E\u0440\u0435\u0435 \u0432\u0435\u0440\u043D\u043E", "\u0421\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u043E \u0432\u0435\u0440\u043D\u043E"],
+    ["Very inaccurate", "Moderately inaccurate", "Neither accurate nor inaccurate", "Moderately accurate", "Very accurate"],
+    ["\u5B8C\u5168\u4E0D\u7B26\u5408", "\u6BD4\u8F83\u4E0D\u7B26\u5408", "\u65E2\u4E0D\u7B26\u5408\u4E5F\u4E0D\u8FDD\u80CC", "\u6BD4\u8F83\u7B26\u5408", "\u5B8C\u5168\u7B26\u5408"]
+  );
+  var domainCopy = {
+    C: { title: ["\u0414\u043E\u0431\u0440\u043E\u0441\u043E\u0432\u0435\u0441\u0442\u043D\u043E\u0441\u0442\u044C", "Conscientiousness", "\u5C3D\u8D23\u6027"], description: ["\u041A\u0430\u043A \u0412\u044B \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0443\u0435\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0443, \u0441\u043E\u0431\u043B\u044E\u0434\u0430\u0435\u0442\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430 \u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0435 \u0443\u0441\u0438\u043B\u0438\u044F.", "How you organise work, honour commitments and sustain effort.", "\u4F60\u5982\u4F55\u5B89\u6392\u5DE5\u4F5C\u3001\u5C65\u884C\u627F\u8BFA\u5E76\u6301\u7EED\u4ED8\u51FA\u52AA\u529B\u3002"] },
+    E: { title: ["\u042D\u043A\u0441\u0442\u0440\u0430\u0432\u0435\u0440\u0441\u0438\u044F", "Extraversion", "\u5916\u5411\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0412\u0430\u043C \u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0435\u043D\u043D\u044B \u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u0449\u0435\u043D\u0438\u0435, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u043D\u043E\u0441\u0442\u044C \u0438 \u044D\u043D\u0435\u0440\u0433\u0438\u0447\u043D\u044B\u0439 \u0442\u0435\u043C\u043F.", "Your tendency towards active interaction, initiative and an energetic pace.", "\u4F60\u5BF9\u79EF\u6781\u4EA4\u6D41\u3001\u4E3B\u52A8\u884C\u52A8\u548C\u6D3B\u8DC3\u8282\u594F\u7684\u504F\u597D\u3002"] },
+    A: { title: ["\u0414\u043E\u0431\u0440\u043E\u0436\u0435\u043B\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Agreeableness", "\u5B9C\u4EBA\u6027"], description: ["\u041A\u0430\u043A \u0412\u044B \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u0441\u044C \u043A \u0434\u0440\u0443\u0433\u0438\u043C \u043B\u044E\u0434\u044F\u043C, \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0438 \u0432\u0437\u0430\u0438\u043C\u043D\u043E\u0439 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0435.", "Your orientation towards other people, cooperation and mutual support.", "\u4F60\u5BF9\u4ED6\u4EBA\u3001\u5408\u4F5C\u4EE5\u53CA\u76F8\u4E92\u652F\u6301\u7684\u6001\u5EA6\u3002"] },
+    O: { title: ["\u041E\u0442\u043A\u0440\u044B\u0442\u043E\u0441\u0442\u044C \u043E\u043F\u044B\u0442\u0443", "Openness to experience", "\u7ECF\u9A8C\u5F00\u653E\u6027"], description: ["\u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u043D\u043E\u0432\u044B\u043C \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F\u043C, \u0438\u0434\u0435\u044F\u043C \u0438 \u0440\u0430\u0437\u043B\u0438\u0447\u043D\u044B\u043C \u0441\u043F\u043E\u0441\u043E\u0431\u0430\u043C \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0439.", "Your interest in new experiences, ideas and different ways of doing things.", "\u4F60\u5BF9\u65B0\u4F53\u9A8C\u3001\u65B0\u60F3\u6CD5\u548C\u4E0D\u540C\u505A\u4E8B\u65B9\u5F0F\u7684\u5174\u8DA3\u3002"] },
+    N: { title: ["\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Emotional sensitivity", "\u60C5\u7EEA\u654F\u611F\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u0442\u043E \u0412\u044B \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442\u0435 \u043D\u0430\u043F\u0440\u044F\u0436\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u044F \u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043A\u043E\u043B\u0435\u0431\u0430\u043D\u0438\u044F.", "How often you report tension, worries and emotional fluctuations.", "\u4F60\u611F\u53D7\u5230\u7D27\u5F20\u3001\u62C5\u5FE7\u548C\u60C5\u7EEA\u6CE2\u52A8\u7684\u9891\u7E41\u7A0B\u5EA6\u3002"] }
+  };
+  function meter(value, name2) {
+    return `<div class="personality-meter" role="meter" aria-label="${E3(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E3(number(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
+  }
+  function createPersonality({ navigate, continueCareer }) {
+    const storage = __careerHost.personalityStorage;
+    let state2 = { schema: 1, method: PERSONALITY_METHOD.id, version: PERSONALITY_METHOD.version, answers: {}, page: 0, completedAt: null };
+    let currentRoute = "", profile = null, dirty = false, saveFailed = false, saveConflict = false;
+    try {
+      const saved = JSON.parse(storage.getItem() || "null");
+      if (saved?.schema === 1 && saved.method === state2.method && saved.version === state2.version && saved.answers && typeof saved.answers === "object") {
+        state2.answers = Object.fromEntries(PERSONALITY_ITEMS.filter((item) => validAnswer(saved.answers[item.id])).map((item) => [item.id, saved.answers[item.id]]));
+        state2.page = Number.isInteger(saved.page) ? Math.max(0, Math.min(PAGE_COUNT - 1, saved.page)) : 0;
+        if (Object.keys(state2.answers).length === PERSONALITY_ITEMS.length && typeof saved.completedAt === "string" && Number.isFinite(Date.parse(saved.completedAt))) {
+          profile = scorePersonality(state2.answers);
+          state2.completedAt = saved.completedAt;
+        } else {
+          const first = PERSONALITY_ITEMS.findIndex((item) => !validAnswer(state2.answers[item.id]));
+          if (first >= 0) state2.page = Math.min(state2.page, Math.floor(first / PAGE_SIZE));
+        }
+      }
+    } catch {
+      saveFailed = true;
+    }
+    const isComplete = () => Boolean(state2.completedAt && profile);
+    const currentItems = () => PERSONALITY_ITEMS.slice(state2.page * PAGE_SIZE, (state2.page + 1) * PAGE_SIZE);
+    const answeredCount = () => Object.keys(state2.answers).length;
+    const pageComplete = () => currentItems().every((item) => validAnswer(state2.answers[item.id]));
+    function save() {
+      if (!dirty) return !saveFailed;
+      try {
+        storage.setItem(JSON.stringify(state2));
+        dirty = false;
+        saveFailed = false;
+        saveConflict = false;
+      } catch (error) {
+        saveFailed = true;
+        saveConflict = error?.code === "storage/conflict";
+      }
+      showSaveStatus();
+      return !saveFailed;
+    }
+    function showSaveStatus() {
+      for (const node of document.querySelectorAll(".personality-save-status")) {
+        node.hidden = !saveFailed;
+        node.textContent = saveConflict ? L3("\u041E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u044B \u0432 \u0434\u0440\u0443\u0433\u043E\u0439 \u0432\u043A\u043B\u0430\u0434\u043A\u0435. \u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435 \u0442\u0430\u043C \u0438\u043B\u0438 \u043E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u044D\u0442\u0443 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0447\u0442\u043E\u0431\u044B \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B.", "Answers changed in another tab. Continue there or reload this page to load the saved answers.", "\u7B54\u6848\u5DF2\u5728\u53E6\u4E00\u4E2A\u6807\u7B7E\u9875\u4E2D\u66F4\u6539\u3002\u8BF7\u5728\u90A3\u91CC\u7EE7\u7EED\uFF0C\u6216\u5237\u65B0\u672C\u9875\u4EE5\u8F7D\u5165\u4FDD\u5B58\u7684\u7B54\u6848\u3002") : L3("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u044D\u0442\u0443 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439.", "Answers could not be saved on this device. Keep this tab open.", "\u65E0\u6CD5\u5728\u6B64\u8BBE\u5907\u4E0A\u4FDD\u5B58\u7B54\u6848\u3002\u8BF7\u4FDD\u6301\u6B64\u6807\u7B7E\u9875\u6253\u5F00\u3002");
+      }
+    }
+    function updateProgress() {
+      const root = document.querySelector("#personality-root");
+      const counter = root.querySelector("#personality-counter");
+      if (counter) counter.textContent = L3(`\u041E\u0442\u0432\u0435\u0442\u043E\u0432: ${answeredCount()} \u0438\u0437 120`, `Answered: ${answeredCount()} of 120`, `\u5DF2\u56DE\u7B54\uFF1A${answeredCount()} / 120`);
+      const progress = root.querySelector("progress");
+      if (progress) progress.value = answeredCount();
+      const next = root.querySelector("#personality-next");
+      if (next) next.disabled = !pageComplete();
+    }
+    function focusPage() {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      document.querySelector("#personality-title")?.focus({ preventScroll: true });
+    }
+    function renderQuestionnaire() {
+      const root = document.querySelector("#personality-root"), labels = answerLabels();
+      root.lang = getLanguage();
+      root.innerHTML = `<header class="personality-heading"><h1 id="personality-title" tabindex="-1">${L3("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</h1><p>${L3("\u041E\u0446\u0435\u043D\u0438\u0442\u0435, \u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u0436\u0434\u043E\u0435 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0412\u0430\u0441 \u0432 \u043E\u0431\u044B\u0447\u043D\u043E\u0439 \u0436\u0438\u0437\u043D\u0438. \u041E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u0441\u0432\u043E\u0451 \u043F\u0440\u0438\u0432\u044B\u0447\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435.", "Rate how accurately each statement describes you in everyday life. Think about your usual behaviour.", "\u8BF7\u5224\u65AD\u6BCF\u4E2A\u9648\u8FF0\u5728\u591A\u5927\u7A0B\u5EA6\u4E0A\u7B26\u5408\u65E5\u5E38\u751F\u6D3B\u4E2D\u7684\u4F60\uFF0C\u5E76\u4EE5\u5E73\u65F6\u7684\u884C\u4E3A\u4E3A\u4F9D\u636E\u3002")}</p></header>
+      <div class="personality-progress"><div><span id="personality-counter" aria-live="polite"></span><span>${L3(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${state2.page + 1} \u0438\u0437 ${PAGE_COUNT}`, `Page ${state2.page + 1} of ${PAGE_COUNT}`, `\u7B2C${state2.page + 1}\u9875\uFF0C\u5171${PAGE_COUNT}\u9875`)}</span></div><progress max="120" value="${answeredCount()}" aria-label="${L3("\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430", "Personality test progress", "\u4EBA\u683C\u6D4B\u8BD5\u8FDB\u5EA6")}"></progress></div>
+      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E3(caption)}</span></div>`).join("")}</div>
+      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E3(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E3(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E3(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E3(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
+      <p class="personality-save-status" role="status" hidden></p><div class="personality-actions"><button type="button" id="personality-back" class="button button-secondary" ${state2.page === 0 ? "hidden" : ""}>${L3("\u041D\u0430\u0437\u0430\u0434", "Back", "\u4E0A\u4E00\u6B65")}</button><button type="submit" id="personality-next" class="button button-primary" disabled>${state2.page === PAGE_COUNT - 1 ? L3("\u041C\u043E\u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B", "My results", "\u6211\u7684\u7ED3\u679C") : L3("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u6B65")}</button></div></form>`;
+      root.querySelector("#personality-form").addEventListener("change", (event) => {
+        const input = event.target.closest("input[data-personality-item]");
+        if (!input) return;
+        const value = Number(input.value);
+        if (!validAnswer(value)) return;
+        if (state2.answers[input.dataset.personalityItem] !== value) {
+          state2.answers[input.dataset.personalityItem] = value;
+          state2.completedAt = null;
+          profile = null;
+          dirty = true;
+          save();
+        }
+        const item = input.closest(".personality-item");
+        item.classList.add("is-answered");
+        item.querySelector(".personality-selected").textContent = answerLabels()[value - 1];
+        updateProgress();
+      });
+      root.querySelector("#personality-back").onclick = () => {
+        if (state2.page > 0) {
+          state2.page--;
+          dirty = true;
+          save();
+          renderQuestionnaire();
+          focusPage();
+        }
+      };
+      root.querySelector("#personality-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!pageComplete()) return;
+        if (state2.page < PAGE_COUNT - 1) {
+          state2.page++;
+          dirty = true;
+          save();
+          renderQuestionnaire();
+          focusPage();
+          return;
+        }
+        const first = PERSONALITY_ITEMS.findIndex((item) => !validAnswer(state2.answers[item.id]));
+        if (first >= 0) {
+          state2.page = Math.floor(first / PAGE_SIZE);
+          dirty = true;
+          save();
+          renderQuestionnaire();
+          focusPage();
+          return;
+        }
+        profile = scorePersonality(state2.answers);
+        state2.completedAt = (/* @__PURE__ */ new Date()).toISOString();
+        dirty = true;
+        save();
+        navigate("personality-results");
+      });
+      updateProgress();
+      showSaveStatus();
+    }
+    function renderResults2() {
+      if (!isComplete()) {
+        navigate("personality");
+        return;
+      }
+      const root = document.querySelector("#personality-results-root"), suggestions = suggestTeamRoles(profile);
+      root.lang = getLanguage();
+      const roleIntro = suggestions.kind === "balanced" ? L3("\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u044B\u043C \u043E\u0431\u0440\u0430\u0437\u043E\u043C. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0440\u0430\u0437\u043D\u044B\u0435 \u0440\u043E\u043B\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u0430\u044E\u0442 \u0412\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0443\u0434\u043E\u0432\u043B\u0435\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u044F.", "Several ways of contributing to a team are similarly expressed. Try different roles and compare which tasks you find more satisfying.", "\u4F60\u5728\u591A\u79CD\u56E2\u961F\u53C2\u4E0E\u65B9\u5F0F\u4E0A\u8868\u73B0\u76F8\u8FD1\u3002\u53EF\u4EE5\u5C1D\u8BD5\u4E0D\u540C\u89D2\u8272\uFF0C\u6BD4\u8F83\u54EA\u4E9B\u4EFB\u52A1\u66F4\u8BA9\u4F60\u611F\u5230\u6EE1\u610F\u3002") : suggestions.kind === "exploratory" ? L3("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0430\u044F \u0440\u043E\u043B\u044C. \u0412 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u043C \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u043C \u0437\u0430\u0434\u0430\u043D\u0438\u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u043F\u043E \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044E, \u0430\u043D\u0430\u043B\u0438\u0437\u0443 \u0438\u043B\u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0446\u0435\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0438 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F.", "Your answers do not point clearly to a particular team role. In your next group task, try a small planning, analysis or support responsibility and reflect on the experience.", "\u4F60\u7684\u56DE\u7B54\u5C1A\u672A\u663E\u793A\u51FA\u660E\u786E\u7684\u56E2\u961F\u89D2\u8272\u503E\u5411\u3002\u4E0B\u6B21\u5C0F\u7EC4\u4EFB\u52A1\u4E2D\uFF0C\u53EF\u4EE5\u5C1D\u8BD5\u4E00\u9879\u8BA1\u5212\u3001\u5206\u6790\u6216\u652F\u6301\u6210\u5458\u7684\u5177\u4F53\u5DE5\u4F5C\uFF0C\u518D\u4F53\u4F1A\u81EA\u5DF1\u7684\u611F\u53D7\u3002") : L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442 \u0434\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u044B \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u0435.", "Your combination of traits suggests the following contributions to try in shared work.", "\u6839\u636E\u4F60\u7684\u7279\u5F81\u7EC4\u5408\uFF0C\u53EF\u4EE5\u5728\u5171\u540C\u5DE5\u4F5C\u4E2D\u5C1D\u8BD5\u4EE5\u4E0B\u53C2\u4E0E\u65B9\u5F0F\u3002");
+      root.innerHTML = `<header class="personality-heading personality-result-heading"><button type="button" id="personality-edit" class="personality-text-button">${L3("\u041A \u043E\u0442\u0432\u0435\u0442\u0430\u043C", "Back to answers", "\u8FD4\u56DE\u7B54\u6848")}</button><h1>${L3("\u0412\u0430\u0448 \u0441\u0442\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435", "Your style of working in a team", "\u4F60\u7684\u56E2\u961F\u5DE5\u4F5C\u98CE\u683C")}</h1><p>${L3("\u0411\u0430\u043B\u043B\u044B \u043E\u0442 1 \u0434\u043E 5 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442 \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0423 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0435\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0437\u043D\u044B\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Scores from 1 to 5 describe the traits expressed in your answers. Each combination has useful aspects and opportunities for development.", "1\u81F35\u5206\u53CD\u6620\u4F60\u7684\u56DE\u7B54\u4E2D\u5404\u9879\u7279\u5F81\u7684\u8868\u73B0\u7A0B\u5EA6\u3002\u6BCF\u79CD\u7EC4\u5408\u90FD\u6709\u6709\u5229\u4E4B\u5904\u548C\u53EF\u4EE5\u53D1\u5C55\u7684\u65B9\u9762\u3002")}</p></header>
+      <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L3("\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Responsibility, initiative and collaboration", "\u8D23\u4EFB\u3001\u4E3B\u52A8\u6027\u4E0E\u5408\u4F5C")}</h2><div class="personality-traits">${WORK_TRAITS.map((trait) => {
+        const value = profile.facets[trait.facet].mean, title = text(trait.label);
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E3(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E3(text(trait[expressionBand(value)]))}</p></article>`;
+      }).join("")}</div></section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${E3(text(role.label))}</h3><p>${E3(text(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E3(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E3(text(role.action))}</p></article>`).join("")}</div>` : ""}</section>
+      <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L3("\u041F\u043E\u043B\u043D\u044B\u0439 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your full personality profile", "\u5B8C\u6574\u7684\u4EBA\u683C\u7279\u5F81")}</h2><div class="personality-domains">${["C", "E", "A", "O", "N"].map((id) => {
+        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy = domainCopy[id], value = profile.domains[id].mean, title = text(copy.title);
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E3(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E3(text(copy.description))}</p><dl>${domain.facets.map((facet) => {
+          const facetLabel = getLanguage() === "en" && facet === "N3" ? "Low mood" : label(facetById.get(facet));
+          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E3(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
+        }).join("")}</dl></article>`;
+      }).join("")}</div></section>
+      <p class="personality-method">${L3("\u041C\u0435\u0442\u043E\u0434\u0438\u043A\u0430:", "Method:", "\u65B9\u6CD5\uFF1A")} <a href="${PERSONALITY_METHOD.doi}" target="_blank" rel="noopener noreferrer">IPIP-NEO-120</a> (Johnson, 2014)${L3(", \u0440\u0435\u0434\u0430\u043A\u0446\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430; \u0440\u043E\u043B\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u2014 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0448\u043A\u0430\u043B.", "; team roles are an educational interpretation of the scales.", "\uFF0C\u91C7\u7528\u5F00\u653E\u8BD1\u6587\u7684\u4FEE\u8BA2\u7248\u672C\uFF1B\u56E2\u961F\u89D2\u8272\u662F\u5404\u9879\u7279\u5F81\u7684\u6559\u5B66\u6027\u89E3\u8BFB\u3002")}</p>
+      <p class="personality-save-status" role="status" hidden></p><div class="personality-actions personality-result-actions"><button type="button" id="personality-continue" class="button button-primary button-large">${L3("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u0438", "Continue to career interests", "\u7EE7\u7EED\u804C\u4E1A\u5174\u8DA3\u6D4B\u8BD5")}</button></div>`;
+      root.querySelector("#personality-edit").onclick = () => {
+        state2.page = 0;
+        dirty = true;
+        save();
+        navigate("personality");
+      };
+      root.querySelector("#personality-continue").onclick = () => {
+        save();
+        continueCareer();
+      };
+      showSaveStatus();
+    }
+    function render(route) {
+      currentRoute = route;
+      document.body.classList.toggle("personality-active", route === "personality" || route === "personality-results");
+      if (route === "personality") renderQuestionnaire();
+      else if (route === "personality-results") renderResults2();
+    }
+    document.addEventListener("app:language", () => render(currentRoute));
+    return { render, isComplete, flush: save, updateBusy: () => saveFailed };
   }
 
   // site/apps/career/assets/scoring.mjs
@@ -2682,9 +4430,9 @@ var CareerRuntime = (() => {
   function scenarioBundle(items) {
     return { schema: SCENARIO_SCHEMA, schemaVersion: SCENARIO_VERSION, scenarios: structuredClone(items) };
   }
-  function importScenarios(text2, existing, questions, sectors) {
-    if (typeof text2 !== "string" || new TextEncoder().encode(text2).length > SCENARIO_FILE_LIMIT) throw new Error("file-too-large");
-    const bundle = JSON.parse(text2);
+  function importScenarios(text3, existing, questions, sectors) {
+    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > SCENARIO_FILE_LIMIT) throw new Error("file-too-large");
+    const bundle = JSON.parse(text3);
     if (!allowedKeys(bundle, ["schema", "schemaVersion", "scenarios"]) || bundle.schema !== SCENARIO_SCHEMA || bundle.schemaVersion !== SCENARIO_VERSION || !Array.isArray(bundle.scenarios) || bundle.scenarios.length > SCENARIO_LIMIT) throw new Error("bundle-schema");
     for (const item of bundle.scenarios) {
       const errors = validateScenario(item, questions, sectors);
@@ -2722,7 +4470,7 @@ var CareerRuntime = (() => {
   var PUBLIC_SERVICE_COHORTS = ["federal-legislative", "federal-judicial", "regional", "municipal"];
   var LANGS = ["ru", "en", "zh-Hans"];
   var OFFICIAL_HOSTS = /* @__PURE__ */ new Set(["duma.gov.ru", "council.gov.ru", "www.ksrf.ru", "vsrf.ru", "www.vsrf.ru", "www.zs74.ru", "www.gov.spb.ru", "novo-sibirsk.ru", "gorsovetnsk.ru"]);
-  var text = (v) => v && LANGS.every((l) => typeof v[l] === "string" && v[l].trim());
+  var text2 = (v) => v && LANGS.every((l) => typeof v[l] === "string" && v[l].trim());
   function validatePublicRegistry(registry, data2) {
     const errors = [];
     const fail = (id, reason) => errors.push(`${id}: ${reason}`);
@@ -2743,7 +4491,7 @@ var CareerRuntime = (() => {
       }
       if (!/^[a-z][a-z0-9-]+$/.test(a.id) || ids.has(a.id)) fail(a.id, "invalid or duplicate id");
       ids.add(a.id);
-      if (a.country !== "RU" || !PUBLIC_SERVICE_COHORTS.includes(a.cohort) || !text(a.name) || !text(a.mission) || !text(a.location) || !text(a.exercise)) fail(a.id, "scope or translated content");
+      if (a.country !== "RU" || !PUBLIC_SERVICE_COHORTS.includes(a.cohort) || !text2(a.name) || !text2(a.mission) || !text2(a.location) || !text2(a.exercise)) fail(a.id, "scope or translated content");
       if (!["apparatus", "authority"].includes(a.unitType) || a.vacancyStatus !== "not-a-vacancy" || a.educationStatus !== "check-each-position") fail(a.id, "status");
       if (a.cohort === "municipal" && (a.level !== "municipal" || !a.branch?.startsWith("local-"))) fail(a.id, "municipal classification");
       if (a.cohort.startsWith("federal-") && (a.level !== "federal" || a.unitType !== "apparatus")) fail(a.id, "federal staff classification");
@@ -2767,7 +4515,7 @@ var CareerRuntime = (() => {
         } catch {
           fail(a.id, "invalid URL");
         }
-        if (sourceIds.has(s.id) || !text(s.title) || !/^\d{4}-\d{2}-\d{2}$/.test(s.checkedAt)) fail(a.id, "invalid source metadata");
+        if (sourceIds.has(s.id) || !text2(s.title) || !/^\d{4}-\d{2}-\d{2}$/.test(s.checkedAt)) fail(a.id, "invalid source metadata");
         sourceIds.add(s.id);
       }
       if (!sourceIds.has("structure") || !a.tracks?.length) fail(a.id, "missing evidence or role");
@@ -2782,7 +4530,7 @@ var CareerRuntime = (() => {
           continue;
         }
         if (t.status !== "authored-functional-mapping") fail(a.id, "model classification");
-        if (!trackIds.has(t.id) || seenTracks.has(t.id) || ![1, 2, 3].includes(t.importance) || !text(t.title) || !text(t.rationale)) fail(a.id, "invalid role");
+        if (!trackIds.has(t.id) || seenTracks.has(t.id) || ![1, 2, 3].includes(t.importance) || !text2(t.title) || !text2(t.rationale)) fail(a.id, "invalid role");
         seenTracks.add(t.id);
         if (!t.sourceIds?.length || t.sourceIds.some((id) => !sourceIds.has(id))) fail(a.id, "role without source");
         if (!t.sectors?.length || new Set(t.sectors.map((s) => s.id)).size !== t.sectors.length || t.sectors.some((s) => !sectorIds.has(s.id) || !Number.isFinite(s.weight) || s.weight <= 0 || s.weight > 1)) fail(a.id, "invalid sectors");
@@ -2816,13 +4564,13 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/public-service.mjs
-  var E3 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  var L3 = (r, e, z) => getLanguage() === "ru" ? r : getLanguage() === "en" ? e : z;
-  var B = (v) => E3(v?.[getLanguage()] || v?.ru || "");
+  var E4 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var L4 = (r, e, z) => getLanguage() === "ru" ? r : getLanguage() === "en" ? e : z;
+  var B = (v) => E4(v?.[getLanguage()] || v?.ru || "");
   var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F = (n) => new Intl.NumberFormat(numberLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
-  var cohortLabels = () => ({ all: L3("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411"), "federal-legislative": L3("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u043B\u0430\u0442 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0430", "Federal parliamentary staff", "\u8054\u90A6\u8BAE\u4F1A\u673A\u5173"), "federal-judicial": L3("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0443\u0434\u043E\u0432", "Federal court staff", "\u8054\u90A6\u6CD5\u9662\u673A\u5173"), regional: L3("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional government", "\u5730\u533A\u5C42\u7EA7"), municipal: L3("\u041C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Local self-government", "\u5730\u65B9\u81EA\u6CBB") });
-  var borderNote = () => L3("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u2013 \u043F\u043E\u0432\u043E\u0434 \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443, \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043F\u0440\u0430\u0432\u0430 \u043D\u0430 \u043F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435. \u0413\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E, \u0440\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0430\u0436 \u0438 \u0438\u043D\u044B\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u043C \u043D\u043E\u0440\u043C\u0430\u043C \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438. \u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F.", "A recommendation invites exploration, not admission to service. Citizenship, Russian-language proficiency, education, experience and other restrictions must be checked under current rules and for the specific position. Interface language does not determine citizenship.", "\u63A8\u8350\u4EC5\u7528\u4E8E\u63A2\u7D22\u804C\u4E1A\uFF0C\u4E0D\u8BC1\u660E\u6709\u8D44\u683C\u4EFB\u804C\u3002\u56FD\u7C4D\u3001\u4FC4\u8BED\u3001\u5B66\u5386\u3001\u7ECF\u5386\u53CA\u5176\u4ED6\u9650\u5236\u987B\u4F9D\u73B0\u884C\u89C4\u5219\u548C\u5177\u4F53\u804C\u4F4D\u6838\u5BF9\u3002\u754C\u9762\u8BED\u8A00\u4E0D\u51B3\u5B9A\u7528\u6237\u56FD\u7C4D\u3002");
+  var cohortLabels = () => ({ all: L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411"), "federal-legislative": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u043B\u0430\u0442 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0430", "Federal parliamentary staff", "\u8054\u90A6\u8BAE\u4F1A\u673A\u5173"), "federal-judicial": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0443\u0434\u043E\u0432", "Federal court staff", "\u8054\u90A6\u6CD5\u9662\u673A\u5173"), regional: L4("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional government", "\u5730\u533A\u5C42\u7EA7"), municipal: L4("\u041C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Local self-government", "\u5730\u65B9\u81EA\u6CBB") });
+  var borderNote = () => L4("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u2013 \u043F\u043E\u0432\u043E\u0434 \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443, \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043F\u0440\u0430\u0432\u0430 \u043D\u0430 \u043F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435. \u0413\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E, \u0440\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0430\u0436 \u0438 \u0438\u043D\u044B\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u043C \u043D\u043E\u0440\u043C\u0430\u043C \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438. \u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F.", "A recommendation invites exploration, not admission to service. Citizenship, Russian-language proficiency, education, experience and other restrictions must be checked under current rules and for the specific position. Interface language does not determine citizenship.", "\u63A8\u8350\u4EC5\u7528\u4E8E\u63A2\u7D22\u804C\u4E1A\uFF0C\u4E0D\u8BC1\u660E\u6709\u8D44\u683C\u4EFB\u804C\u3002\u56FD\u7C4D\u3001\u4FC4\u8BED\u3001\u5B66\u5386\u3001\u7ECF\u5386\u53CA\u5176\u4ED6\u9650\u5236\u987B\u4F9D\u73B0\u884C\u89C4\u5219\u548C\u5177\u4F53\u804C\u4F4D\u6838\u5BF9\u3002\u754C\u9762\u8BED\u8A00\u4E0D\u51B3\u5B9A\u7528\u6237\u56FD\u7C4D\u3002");
   function createPublicService({ registry, data: data2, state: state2, routeTo: routeTo2, downloadText: downloadText2, openNotebook }) {
     const errors = validatePublicRegistry(registry, data2);
     if (errors.length) throw new Error("Public-service registry: " + errors.join("; "));
@@ -2830,38 +4578,38 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let cohort = "all", query = "", selected = null, comparison = [], result = null;
     const byId = (id) => registry.records.find((a) => a.id === id);
-    const sourceLink = (s) => `<a class="ps-source" href="${E3(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I3("external")}</a>`;
+    const sourceLink = (s) => `<a class="ps-source" href="${E4(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I3("external")}</a>`;
     function scopeNotice() {
-      return `<div class="ps-scope">${I3("info")}<p>${L3("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
+      return `<div class="ps-scope">${I3("info")}<p>${L4("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
     }
     function header() {
-      return `<header class="ps-header"><div><h1>${L3("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L3("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L3("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I3("arrow-right")}</button></header>`;
+      return `<header class="ps-header"><div><h1>${L4("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L4("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I3("arrow-right")}</button></header>`;
     }
     function eligibility() {
-      return `<details class="ps-eligibility"><summary>${I3("shield")}${L3("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L3("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E3(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L3("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I3("external")}</a><a href="${E3(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L3("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I3("external")}</a></div></details>`;
+      return `<details class="ps-eligibility"><summary>${I3("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E4(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I3("external")}</a><a href="${E4(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I3("external")}</a></div></details>`;
     }
     function card(a, index) {
-      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I3(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E3(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L3("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L3("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L3("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L3("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L3("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I3("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E3(L3("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I3(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
+      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I3(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E4(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I3("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E4(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I3(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
     }
     function modelDetails(a) {
-      return `<section class="ps-section"><h2>${L3("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L3("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
+      return `<section class="ps-section"><h2>${L4("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
         const opt = a.options?.find((x) => x.link.id === t.id);
-        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I3("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E3(translate(data2.sectors.find((x) => x.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E3(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
+        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I3("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E4(translate(data2.sectors.find((x) => x.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E4(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
       }).join("")}</section>`;
     }
     function detail(a) {
       const match = result?.ranked.find((x) => x.id === a.id);
       a = match || a;
-      return `<button type="button" class="text-link" id="ps-back">${I3("arrow-left")}${L3("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E3(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L3("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L3("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L3("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L3("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L3("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L3("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L3("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L3("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L3("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L3("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L3("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L3("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L3("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L3("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E3(u)}</p>`).join("")}<small>${L3("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L3("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L3("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L3("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L3("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L3("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L3("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L3("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L3("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
+      return `<button type="button" class="text-link" id="ps-back">${I3("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E4(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E4(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
       const selectedItems = comparison.map((id) => items.find((x) => x.id === id) || byId(id));
-      return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L3("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L3("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L3("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L3("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
+      return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L4("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L4("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L4("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
     }
     function list() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
-      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L3("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label}</button>`).join("")}</nav><label class="ps-search">${I3("search")}<input id="ps-search" type="search" maxlength="120" value="${E3(query)}" placeholder="${L3("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L3("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L3("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L3("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L3("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L3("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L3("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L3("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I3("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L3("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I3("download")}${L3("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L3("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L3("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L3("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L3("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E3(registry.registryVersion)}</small></details>`;
+      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I3("search")}<input id="ps-search" type="search" maxlength="120" value="${E4(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I3("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I3("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E4(registry.registryVersion)}</small></details>`;
     }
     function bind() {
       root.querySelectorAll("[data-ps-notebook]").forEach((b) => b.onclick = () => openNotebook?.(b.dataset.psNotebook));
@@ -3124,9 +4872,9 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/decision-lab.mjs
-  var E4 = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  var L4 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
-  var T = (x) => E4(translate(x));
+  var E5 = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
+  var T = (x) => E5(translate(x));
   var I4 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F2 = (x) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x);
   var D = (x) => `${x > 0 ? "+" : ""}${F2(x)}`;
@@ -3165,61 +4913,61 @@ var CareerRuntime = (() => {
     const trackName = (id) => data2.tracks.find((t) => t.id === id)?.title || id;
     function explain() {
       const x = explainAuthority(selected, baseline, data2, result);
-      const labels = [L4("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L4("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
+      const labels = [L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L5("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
       const max = [40, 45, 15];
-      const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E4(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L4("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${E4(authorityName(x.authority))}</h2></div><span>${x.adjacent ? L4("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L4("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L4("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L4("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
-    <p class="dl-track">${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x.item.track?.title)}</strong></p>
-    ${x.roleProfile.flat ? `<div class="dl-notice">${L4("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
-    ${x.lowInterest ? `<div class="dl-notice">${L4("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
-    <h3>${L4("\u0418\u0437 \u0447\u0435\u0433\u043E \u0441\u043B\u043E\u0436\u0438\u043B\u0441\u044F \u0438\u043D\u0434\u0435\u043A\u0441", "How the index adds up")}</h3><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043E\u0446\u0435\u043D\u043A\u0438 \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F + 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u041F\u043E\u044D\u0442\u043E\u043C\u0443 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0442\u0440\u0435\u043A, \u043D\u043E \u0438 \u043E\u0431\u0449\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F.", "Institution index: 70% of the best work direction + 30% of the average across all distinct work directions. This reflects both a suitable career path and the institution\u2019s wider work profile.")}</p>
+      const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E5(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${E5(authorityName(x.authority))}</h2></div><span>${x.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+    <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x.item.track?.title)}</strong></p>
+    ${x.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
+    ${x.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
+    <h3>${L5("\u0418\u0437 \u0447\u0435\u0433\u043E \u0441\u043B\u043E\u0436\u0438\u043B\u0441\u044F \u0438\u043D\u0434\u0435\u043A\u0441", "How the index adds up")}</h3><p>${L5("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043E\u0446\u0435\u043D\u043A\u0438 \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F + 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u041F\u043E\u044D\u0442\u043E\u043C\u0443 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0442\u0440\u0435\u043A, \u043D\u043E \u0438 \u043E\u0431\u0449\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F.", "Institution index: 70% of the best work direction + 30% of the average across all distinct work directions. This reflects both a suitable career path and the institution\u2019s wider work profile.")}</p>
     <div class="dl-stacked" aria-hidden="true">${x.contributions.map((p, i) => `<i class="dl-piece-${i}" style="width:${p}%"></i>`).join("")}</div>
-    <div class="dl-contributions">${x.contributions.map((p, i) => `<div><span><i class="dl-key dl-piece-${i}"></i>${labels[i]}</span><strong>${F2(p)}</strong><small>${L4("\u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441", "base weight")}: ${max[i]} / 100</small></div>`).join("")}</div>
-    <p class="dl-formula">${x.contributions.map(F2).join(" + ")} = ${F2(x.item.score)} ${L4("\u0431\u0430\u043B\u043B\u0430 \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "index points")}</p>
-    <p class="dl-help">${L4("\u0412\u0441\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0443\u0436\u0435 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0442\u0440\u0435\u043A\u0430. \u0414\u0435\u0441\u044F\u0442\u044B\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u044B \u0442\u0430\u043A, \u0447\u0442\u043E\u0431\u044B \u0441\u0443\u043C\u043C\u0430 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u043B\u0430 \u0441 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043E\u0442 \u044D\u0442\u043E\u0433\u043E \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.", "All three contributions already include the track-representation factor. Displayed tenths are reconciled to add up to the index; rankings are not changed.")}</p>
-    <details class="dl-details"><summary>${L4("\u0421\u0444\u0435\u0440\u044B \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Areas of the best work direction")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L4("\u0414\u0435\u0442\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Details of the best work direction. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L4("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L4("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L4("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L4("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L4("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L4("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L4("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
-    <details class="dl-details"><summary>${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Conditions of the best work direction")}</summary><p>${L4("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L4("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L4("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L4("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
-    <details class="dl-details"><summary>${L4("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L4("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L4("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
-    <details class="dl-details"><summary>${L4("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L4("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L4("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L4("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L4("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
-    </article><aside class="dl-aside"><section class="dl-side-card"><h3>${L4("\u041F\u043E\u0447\u0435\u043C\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0441\u043F\u043E\u0440\u0438\u0442\u044C \u043E \u0434\u0435\u0441\u044F\u0442\u044B\u0445", "Why tenths should not decide a career")}</h3><p>${L4("\u042D\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 2,5 \u0431\u0430\u043B\u043B\u0430 \u043E\u0442 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E. \u041F\u043E\u0440\u043E\u0433 \u2013 \u043F\u0440\u0430\u0432\u0438\u043B\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B.", "These agencies are within 2.5 points of the selected one. The threshold is an interface rule, not a statistical confidence interval.")}</p><div class="dl-neighbours">${near || `<p>${L4("\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u0441\u043E\u0441\u0435\u0434\u0435\u0439 \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043F\u043E\u0440\u043E\u0433\u0430 \u043D\u0435\u0442.", "No other agency in this category is within the threshold.")}</p>`}</div><p class="dl-help">${L4("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0442\u043E\u0447\u043D\u044B\u0435 \u0440\u0430\u0432\u0435\u043D\u0441\u0442\u0432\u0430 \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u044E\u0442\u0441\u044F \u043F\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0443. \u042D\u0442\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043F\u043E\u0440\u044F\u0434\u043E\u043A, \u043D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430.", "Ordering uses the unrounded index; exact ties are resolved by identifier. This technical order is not evidence of superiority.")}</p></section>
-    <section class="dl-side-card"><h3>${L4("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L4("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L4("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I4("source")}</button></section>
+    <div class="dl-contributions">${x.contributions.map((p, i) => `<div><span><i class="dl-key dl-piece-${i}"></i>${labels[i]}</span><strong>${F2(p)}</strong><small>${L5("\u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441", "base weight")}: ${max[i]} / 100</small></div>`).join("")}</div>
+    <p class="dl-formula">${x.contributions.map(F2).join(" + ")} = ${F2(x.item.score)} ${L5("\u0431\u0430\u043B\u043B\u0430 \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "index points")}</p>
+    <p class="dl-help">${L5("\u0412\u0441\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0443\u0436\u0435 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0442\u0440\u0435\u043A\u0430. \u0414\u0435\u0441\u044F\u0442\u044B\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u044B \u0442\u0430\u043A, \u0447\u0442\u043E\u0431\u044B \u0441\u0443\u043C\u043C\u0430 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u043B\u0430 \u0441 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043E\u0442 \u044D\u0442\u043E\u0433\u043E \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.", "All three contributions already include the track-representation factor. Displayed tenths are reconciled to add up to the index; rankings are not changed.")}</p>
+    <details class="dl-details"><summary>${L5("\u0421\u0444\u0435\u0440\u044B \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Areas of the best work direction")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L5("\u0414\u0435\u0442\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Details of the best work direction. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L5("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L5("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L5("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L5("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L5("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L5("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
+    <details class="dl-details"><summary>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Conditions of the best work direction")}</summary><p>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L5("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L5("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
+    <details class="dl-details"><summary>${L5("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L5("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
+    <details class="dl-details"><summary>${L5("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L5("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L5("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
+    </article><aside class="dl-aside"><section class="dl-side-card"><h3>${L5("\u041F\u043E\u0447\u0435\u043C\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0441\u043F\u043E\u0440\u0438\u0442\u044C \u043E \u0434\u0435\u0441\u044F\u0442\u044B\u0445", "Why tenths should not decide a career")}</h3><p>${L5("\u042D\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 2,5 \u0431\u0430\u043B\u043B\u0430 \u043E\u0442 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E. \u041F\u043E\u0440\u043E\u0433 \u2013 \u043F\u0440\u0430\u0432\u0438\u043B\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B.", "These agencies are within 2.5 points of the selected one. The threshold is an interface rule, not a statistical confidence interval.")}</p><div class="dl-neighbours">${near || `<p>${L5("\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u0441\u043E\u0441\u0435\u0434\u0435\u0439 \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043F\u043E\u0440\u043E\u0433\u0430 \u043D\u0435\u0442.", "No other agency in this category is within the threshold.")}</p>`}</div><p class="dl-help">${L5("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0442\u043E\u0447\u043D\u044B\u0435 \u0440\u0430\u0432\u0435\u043D\u0441\u0442\u0432\u0430 \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u044E\u0442\u0441\u044F \u043F\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0443. \u042D\u0442\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043F\u043E\u0440\u044F\u0434\u043E\u043A, \u043D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430.", "Ordering uses the unrounded index; exact ties are resolved by identifier. This technical order is not evidence of superiority.")}</p></section>
+    <section class="dl-side-card"><h3>${L5("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L5("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L5("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I4("source")}</button></section>
     ${sensitivityCard(x)}
     </aside></div>`;
     }
     function sensitivityCard(x) {
-      if (!sensitivity) return `<section class="dl-side-card"><h3>${L4("\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u0435\u043D", "How sensitive is this result?")}</h3><p>${L4("\u0418\u0437\u043C\u0435\u043D\u0438\u043C \u043F\u043E \u043E\u0434\u043D\u043E\u043C\u0443 \u043E\u0442\u0432\u0435\u0442\u0443 \u043D\u0430 \u043E\u0434\u0438\u043D \u0431\u0430\u043B\u043B \u0432 \u043E\u0431\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B. \u0421\u0444\u0435\u0440\u044B \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F \u043F\u0440\u0435\u0436\u043D\u0438\u043C\u0438; \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0437\u0430\u043D\u043E\u0432\u043E.", "Change one answer at a time by one point in either direction. Areas and conditions stay fixed; your original answers remain untouched.")}</p><button type="button" id="dl-sensitivity" class="button button-primary" ${busy ? "disabled" : ""}>${busy ? L4("\u0420\u0430\u0441\u0441\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u043C\u2026", "Calculating\u2026") : L4("\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "Check small changes")}</button><p class="dl-help">${L4("\u042D\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043B\u0433\u043E\u0440\u0438\u0442\u043C\u0430 \u0440\u044F\u0434\u043E\u043C \u0441 \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u043E\u043C, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043D\u0430\u0434\u0451\u0436\u043D\u043E\u0441\u0442\u0438 \u0442\u0435\u0441\u0442\u0430.", "This is a local algorithm check, not a prediction or an estimate of test reliability.")}</p></section>`;
+      if (!sensitivity) return `<section class="dl-side-card"><h3>${L5("\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u0435\u043D", "How sensitive is this result?")}</h3><p>${L5("\u0418\u0437\u043C\u0435\u043D\u0438\u043C \u043F\u043E \u043E\u0434\u043D\u043E\u043C\u0443 \u043E\u0442\u0432\u0435\u0442\u0443 \u043D\u0430 \u043E\u0434\u0438\u043D \u0431\u0430\u043B\u043B \u0432 \u043E\u0431\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B. \u0421\u0444\u0435\u0440\u044B \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F \u043F\u0440\u0435\u0436\u043D\u0438\u043C\u0438; \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0437\u0430\u043D\u043E\u0432\u043E.", "Change one answer at a time by one point in either direction. Areas and conditions stay fixed; your original answers remain untouched.")}</p><button type="button" id="dl-sensitivity" class="button button-primary" ${busy ? "disabled" : ""}>${busy ? L5("\u0420\u0430\u0441\u0441\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u043C\u2026", "Calculating\u2026") : L5("\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "Check small changes")}</button><p class="dl-help">${L5("\u042D\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043B\u0433\u043E\u0440\u0438\u0442\u043C\u0430 \u0440\u044F\u0434\u043E\u043C \u0441 \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u043E\u043C, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043D\u0430\u0434\u0451\u0436\u043D\u043E\u0441\u0442\u0438 \u0442\u0435\u0441\u0442\u0430.", "This is a local algorithm check, not a prediction or an estimate of test reliability.")}</p></section>`;
       const row = sensitivity.rows.find((r) => r.id === x.item.id);
-      return `<section class="dl-side-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043C\u0430\u043B\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439", "Small-change check")}</h3><dl class="dl-stability"><div><dt>${L4("\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432 \u043E\u0442\u0432\u0435\u0442\u043E\u0432", "Answer variants")}</dt><dd>${sensitivity.count}</dd></div>${row ? `<div><dt>${L4("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u043C\u0435\u0441\u0442\u0430", "Rank range")}</dt><dd>${row.minRank}\u2013${row.maxRank}</dd></div><div><dt>${L4("\u041E\u0441\u0442\u0430\u043B\u0441\u044F \u0432 \u0422\u041E\u041F-5", "Appeared in the top 5")}</dt><dd>${row.topFive} / ${sensitivity.count}</dd></div><div><dt>${L4("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Index range")}</dt><dd>${F2(row.minScore)}\u2013${F2(row.maxScore)}</dd></div>` : `<div><dt>${L4("\u0421\u043C\u0435\u0436\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0432 \u044D\u0442\u043E\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435 \u043D\u0435 \u0440\u0430\u043D\u0436\u0438\u0440\u0443\u044E\u0442\u0441\u044F", "Other public-sector employers are not included in this check")}</dt></div>`}</dl><p class="dl-help">${L4("\u041F\u0435\u0440\u0435\u0431\u0440\u0430\u043D\u044B \u0432\u0441\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0440\u043E\u0432\u043D\u043E \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432 \u043D\u0430 \xB11. \u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442; \u0441\u0447\u0451\u0442\u0447\u0438\u043A\u0438 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B. \u042D\u0442\u043E \u043D\u0435 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B \u0438 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C.", "Every allowed \xB11 change to one of 27 answers was tested. Ranges include the original result; counts include changed variants only. This is not a confidence interval or a probability.")}</p></section>`;
+      return `<section class="dl-side-card"><h3>${L5("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043C\u0430\u043B\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439", "Small-change check")}</h3><dl class="dl-stability"><div><dt>${L5("\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432 \u043E\u0442\u0432\u0435\u0442\u043E\u0432", "Answer variants")}</dt><dd>${sensitivity.count}</dd></div>${row ? `<div><dt>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u043C\u0435\u0441\u0442\u0430", "Rank range")}</dt><dd>${row.minRank}\u2013${row.maxRank}</dd></div><div><dt>${L5("\u041E\u0441\u0442\u0430\u043B\u0441\u044F \u0432 \u0422\u041E\u041F-5", "Appeared in the top 5")}</dt><dd>${row.topFive} / ${sensitivity.count}</dd></div><div><dt>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Index range")}</dt><dd>${F2(row.minScore)}\u2013${F2(row.maxScore)}</dd></div>` : `<div><dt>${L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0432 \u044D\u0442\u043E\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435 \u043D\u0435 \u0440\u0430\u043D\u0436\u0438\u0440\u0443\u044E\u0442\u0441\u044F", "Other public-sector employers are not included in this check")}</dt></div>`}</dl><p class="dl-help">${L5("\u041F\u0435\u0440\u0435\u0431\u0440\u0430\u043D\u044B \u0432\u0441\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0440\u043E\u0432\u043D\u043E \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432 \u043D\u0430 \xB11. \u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442; \u0441\u0447\u0451\u0442\u0447\u0438\u043A\u0438 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B. \u042D\u0442\u043E \u043D\u0435 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B \u0438 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C.", "Every allowed \xB11 change to one of 27 answers was tested. Ranges include the original result; counts include changed variants only. This is not a confidence interval or a probability.")}</p></section>`;
     }
     function topList(items, comparison = false) {
       return `<ol class="dl-top-list">${items.slice(0, 5).map((a) => {
         const delta = preview.rows.find((r) => r.id === a.id);
-        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E4(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L4("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L4("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L4("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L4("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
+        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E5(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
       }).join("")}</ol>`;
     }
     function experiment() {
       preview = comparePreview(baseline, draft, data2);
       const changed = preview.changes.priorityChanged || preview.changes.conditions.length > 0;
-      return `<div class="dl-notice dl-safe">${I4("lock")}<p>${L4("\u0412\u044B \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\u0435 \u0441 \u043A\u043E\u043F\u0438\u0435\u0439. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442, \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F. \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u043C\u043E\u0436\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "You are working on a copy. Your original answers, main result, class export and workshop notes remain unchanged. You can only save the variant as a separate scenario.")}</p></div>
-    <div class="dl-experiment-grid"><aside class="dl-controls"><h2>${L4("\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043C?", "What shall we change?")}</h2><label for="dl-sector">${L4("\u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u0440\u0435\u0434\u0438 \u0441\u0444\u0435\u0440", "First-priority policy area")}</label><select id="dl-sector">${data2.sectors.map((s) => `<option value="${s.id}" ${draft.prioritySectors[0] === s.id ? "selected" : ""} ${draft.lowPrioritySectors.includes(s.id) ? "disabled" : ""}>${T(s.title)}${draft.lowPrioritySectors.includes(s.id) ? " \xB7 " + L4("\u0432 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0445", "among least interesting") : ""}</option>`).join("")}</select><p class="dl-help">${L4("\u0421\u0444\u0435\u0440\u0430 \u0438\u0437 \u043F\u0435\u0440\u0432\u043E\u0439 \u0447\u0435\u0442\u0432\u0451\u0440\u043A\u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0439. \u041D\u043E\u0432\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E; \u043F\u0440\u0435\u0436\u043D\u044F\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u043D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439. \u041E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B.", "An area already in your top four swaps places with the first. A new area replaces the first; the former first becomes unselected. Least-interest areas cannot be promoted here.")}</p>
-    <h3>${L4("\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Willingness to accept working conditions")}</h3>${data2.conditions.map((c) => `<label class="dl-condition" for="dl-${c.id}"><span>${T(c.title)}</span><select id="dl-${c.id}" data-dl-condition="${c.id}">${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${draft.conditions[c.id] === v ? "selected" : ""}>${v} / 5</option>`).join("")}</select></label>`).join("")}
-    <p class="dl-help">${L4("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I4("reset")}${L4("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
-    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E4(title)}" placeholder="${L4("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I4("file")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
-    <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L4("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L4("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L4("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
-    <div class="dl-pair"><article><h3>${L4("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L4("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
-    <p class="dl-help">${L4("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
+      return `<div class="dl-notice dl-safe">${I4("lock")}<p>${L5("\u0412\u044B \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\u0435 \u0441 \u043A\u043E\u043F\u0438\u0435\u0439. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442, \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F. \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u043C\u043E\u0436\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "You are working on a copy. Your original answers, main result, class export and workshop notes remain unchanged. You can only save the variant as a separate scenario.")}</p></div>
+    <div class="dl-experiment-grid"><aside class="dl-controls"><h2>${L5("\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043C?", "What shall we change?")}</h2><label for="dl-sector">${L5("\u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u0440\u0435\u0434\u0438 \u0441\u0444\u0435\u0440", "First-priority policy area")}</label><select id="dl-sector">${data2.sectors.map((s) => `<option value="${s.id}" ${draft.prioritySectors[0] === s.id ? "selected" : ""} ${draft.lowPrioritySectors.includes(s.id) ? "disabled" : ""}>${T(s.title)}${draft.lowPrioritySectors.includes(s.id) ? " \xB7 " + L5("\u0432 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0445", "among least interesting") : ""}</option>`).join("")}</select><p class="dl-help">${L5("\u0421\u0444\u0435\u0440\u0430 \u0438\u0437 \u043F\u0435\u0440\u0432\u043E\u0439 \u0447\u0435\u0442\u0432\u0451\u0440\u043A\u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0439. \u041D\u043E\u0432\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E; \u043F\u0440\u0435\u0436\u043D\u044F\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u043D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439. \u041E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B.", "An area already in your top four swaps places with the first. A new area replaces the first; the former first becomes unselected. Least-interest areas cannot be promoted here.")}</p>
+    <h3>${L5("\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Willingness to accept working conditions")}</h3>${data2.conditions.map((c) => `<label class="dl-condition" for="dl-${c.id}"><span>${T(c.title)}</span><select id="dl-${c.id}" data-dl-condition="${c.id}">${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${draft.conditions[c.id] === v ? "selected" : ""}>${v} / 5</option>`).join("")}</select></label>`).join("")}
+    <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I4("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
+    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E5(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I4("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
+    <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L5("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L5("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L5("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
+    <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
+    <p class="dl-help">${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
     }
     function render(route) {
       if (route !== "lab") return;
       if (!sync()) {
-        root.innerHTML = `<div data-no-i18n class="dl-empty"><h1>${L4("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L4("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442. \u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u043E\u0431\u044A\u044F\u0441\u043D\u044F\u0435\u0442 \u0412\u0430\u0448 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0432\u044B\u043C\u044B\u0448\u043B\u0435\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B.", "Complete the test first. The laboratory explains your result; it does not insert fictional answers.")}</p><button type="button" class="button button-primary" id="dl-start">${L4("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0442\u0435\u0441\u0442\u0443", "Return to the test")}</button></div>`;
+        root.innerHTML = `<div data-no-i18n class="dl-empty"><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442. \u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u043E\u0431\u044A\u044F\u0441\u043D\u044F\u0435\u0442 \u0412\u0430\u0448 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0432\u044B\u043C\u044B\u0448\u043B\u0435\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B.", "Complete the test first. The laboratory explains your result; it does not insert fictional answers.")}</p><button type="button" class="button button-primary" id="dl-start">${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0442\u0435\u0441\u0442\u0443", "Return to the test")}</button></div>`;
         root.querySelector("#dl-start").onclick = () => routeTo2("test");
         return;
       }
-      root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L4("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L4("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I4("arrow-left")}${L4("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
-    ${stale ? `<p class="dl-notice">${L4("\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0447\u0430\u0442 \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.", "Your main answers changed. The experiment has been reset to the current result.")}</p>` : ""}
-    <div class="dl-tabs" role="tablist" aria-label="${L4("\u0420\u0430\u0437\u0434\u0435\u043B \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u0438", "Laboratory section")}">${[["explain", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?", "Why this agency?"], ["experiment", "\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438\u2026", "What changes if\u2026"]].map(([id, ru, en]) => `<button type="button" role="tab" id="dl-tab-${id}" aria-controls="dl-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-dl-mode="${id}">${L4(ru, en)}</button>`).join("")}</div>
-    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L4("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E4(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L4("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
+      root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I4("arrow-left")}${L5("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
+    ${stale ? `<p class="dl-notice">${L5("\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0447\u0430\u0442 \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.", "Your main answers changed. The experiment has been reset to the current result.")}</p>` : ""}
+    <div class="dl-tabs" role="tablist" aria-label="${L5("\u0420\u0430\u0437\u0434\u0435\u043B \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u0438", "Laboratory section")}">${[["explain", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?", "Why this agency?"], ["experiment", "\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438\u2026", "What changes if\u2026"]].map(([id, ru, en]) => `<button type="button" role="tab" id="dl-tab-${id}" aria-controls="dl-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-dl-mode="${id}">${L5(ru, en)}</button>`).join("")}</div>
+    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E5(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
     <div id="dl-content" role="tabpanel" aria-labelledby="dl-tab-${mode}">${mode === "explain" ? explain() : experiment()}</div></div>`;
       bind();
     }
@@ -3259,7 +5007,7 @@ var CareerRuntime = (() => {
           if (generation !== epoch) return;
           sensitivity = calculated;
         } catch {
-          toast2(L4("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Sensitivity check failed. Your original answers are unchanged."));
+          toast2(L5("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Sensitivity check failed. Your original answers are unchanged."));
         } finally {
           if (generation === epoch) {
             busy = false;
@@ -3288,7 +5036,7 @@ var CareerRuntime = (() => {
         const difference = comparePreview(baseline, draft, data2).changes;
         if (!difference.priorityChanged && !difference.conditions.length) return;
         if (!title.trim()) {
-          toast2(L4("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F.", "Enter a name for the separate scenario."));
+          toast2(L5("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F.", "Enter a name for the separate scenario."));
           root.querySelector("#dl-title").focus();
           return;
         }
@@ -3300,11 +5048,11 @@ var CareerRuntime = (() => {
           const saved = saveScenario(draft, title);
           if (saved) {
             title = "";
-            if (saved.persisted) toast2(L4("\u041D\u043E\u0432\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0451\u043D.", "New scenario added. Your original result is unchanged."));
+            if (saved.persisted) toast2(L5("\u041D\u043E\u0432\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u0451\u043D.", "New scenario added. Your original result is unchanged."));
             routeTo2("scenarios");
           }
         } catch {
-          toast2(L4("\u0421\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043D\u0435 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u043B\u0438\u043C\u0438\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0439.", "Scenario not added. Check the name and the saved-scenario limit."));
+          toast2(L5("\u0421\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043D\u0435 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438 \u043B\u0438\u043C\u0438\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u0439.", "Scenario not added. Check the name and the saved-scenario limit."));
         }
       });
     }
@@ -3406,9 +5154,9 @@ var CareerRuntime = (() => {
     for (const [id, response] of Object.entries(value.responses)) if (!byCase.has(id) || !byCase.get(id).choices.some((c) => c.id === response)) return false;
     return true;
   }
-  function importWorkbook(text2, authorities, cases) {
-    if (typeof text2 !== "string" || new TextEncoder().encode(text2).length > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
-    const value = JSON.parse(text2);
+  function importWorkbook(text3, authorities, cases) {
+    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
+    const value = JSON.parse(text3);
     if (!validateWorkbook(value, authorities, cases)) throw Error("schema");
     return value;
   }
@@ -3427,8 +5175,8 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/classroom.mjs
-  var E5 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
+  var E6 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var L6 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
   var B2 = (v) => v?.[getLanguage()] || translate(v?.ru || "");
   var name = authorityName;
   var ico = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
@@ -3454,7 +5202,7 @@ var CareerRuntime = (() => {
     };
     const status = () => {
       const el = root.querySelector("#notebook-save-status");
-      if (el) el.textContent = storageFailed ? L5("\u0411\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u043B \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F. \u0412\u044B\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043B\u0438\u0441\u0442, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443.", "The browser could not save changes. Export your worksheet before closing this page.") : L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u0432 \u044D\u0442\u043E\u043C \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435. \u0414\u043B\u044F \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 JSON.", "Saved only in this browser. Use JSON to transfer your work.");
+      if (el) el.textContent = storageFailed ? L6("\u0411\u0440\u0430\u0443\u0437\u0435\u0440 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u043B \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F. \u0412\u044B\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u043B\u0438\u0441\u0442, \u043F\u0440\u0435\u0436\u0434\u0435 \u0447\u0435\u043C \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443.", "The browser could not save changes. Export your worksheet before closing this page.") : L6("\u0421\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u0432 \u044D\u0442\u043E\u043C \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435. \u0414\u043B\u044F \u043F\u0435\u0440\u0435\u043D\u043E\u0441\u0430 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 JSON.", "Saved only in this browser. Use JSON to transfer your work.");
     };
     const ensure = (id) => {
       if (agency(id)) {
@@ -3469,19 +5217,19 @@ var CareerRuntime = (() => {
       routeTo2("workshop");
     }
     function source(c) {
-      return `<div class="ws-source"><b>${L5("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E5(B2(c.fact))}</p><a href="${E5(c.source.url)}" target="_blank" rel="noopener noreferrer">${E5(B2(c.source.title))}${ico("external")}</a><small>${L5("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L5("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
+      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E6(B2(c.fact))}</p><a href="${E6(c.source.url)}" target="_blank" rel="noopener noreferrer">${E6(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
     }
     function card(c) {
       const a = agency(c.authorityId);
-      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E5(name(a))}</small><h2>${E5(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L5("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
+      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E6(name(a))}</small><h2>${E6(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
     }
     function materials(c) {
-      return c.materials ? `<section class="ws-materials"><h3>${E5(B2(c.materials.title))}</h3><p>${E5(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E5(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i) => i ? `<td>${E5(B2(v))}</td>` : `<th>${E5(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
+      return c.materials ? `<section class="ws-materials"><h3>${E6(B2(c.materials.title))}</h3><p>${E6(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E6(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i) => i ? `<td>${E6(B2(v))}</td>` : `<th>${E6(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
     }
     function renderCases() {
-      if (!activeCase) return `<p class="ws-intro">${E5(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L5("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
+      if (!activeCase) return `<p class="ws-intro">${E6(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
       const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x) => x.id === selected), a = agency(c.authorityId);
-      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L5("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E5(name(a))}</h2><p>${L5("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L5("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L5("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E5(B2(c.title))}</h2><p class="ws-situation">${E5(B2(c.situation))}</p>${materials(c)}<h3>${L5("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x, i) => `<button class="ws-option${selected === x.id ? " chosen" : ""}" type="button" data-choice="${x.id}" aria-pressed="${selected === x.id}"><span>${i + 1}</span><p>${E5(B2(x.text))}</p>${selected === x.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L5("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L5("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E5(B2(choice.feedback))}</p><p>${E5(B2(c.insight))}</p><div class="ws-task"><b>${L5("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E5(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L5("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L5("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
+      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E6(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E6(B2(c.title))}</h2><p class="ws-situation">${E6(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x, i) => `<button class="ws-option${selected === x.id ? " chosen" : ""}" type="button" data-choice="${x.id}" aria-pressed="${selected === x.id}"><span>${i + 1}</span><p>${E6(B2(x.text))}</p>${selected === x.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E6(B2(choice.feedback))}</p><p>${E6(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E6(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
     }
     function renderNotes() {
       if (!book.selected) {
@@ -3490,17 +5238,17 @@ var CareerRuntime = (() => {
       }
       const a = agency(book.selected), n = a ? book.notes[a.id] || blankNote() : blankNote();
       const fields = [["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u043C\u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u044D\u0442\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435?", "Why does this direction interest me?", "\u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u0441 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0435\u0439, \u0430 \u043D\u0435 \u0441 \u043F\u0440\u0435\u0441\u0442\u0438\u0436\u0435\u043C \u043E\u0440\u0433\u0430\u043D\u0430.", "Connect your interest to a specific task rather than the agency\u2019s prestige."], ["question", "\u0427\u0442\u043E \u043C\u043D\u0435 \u0435\u0449\u0451 \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C?", "What do I still need to find out?", "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0435, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u043B\u0438 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u0439.", "For example, education requirements, work activities or limits of responsibility."], ["next", "\u041A\u0430\u043A\u043E\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u044F \u0441\u0434\u0435\u043B\u0430\u044E?", "What will I do next?", "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442: \u043D\u0430\u0439\u0442\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0434\u0432\u0430 \u043E\u0440\u0433\u0430\u043D\u0430, \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443.", "State an action and its output: find an official careers page, compare two agencies, prepare a student project."]];
-      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L5("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x) => `<option value="${x.id}"${a?.id === x.id ? " selected" : ""}>${E5(name(x))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E5(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L5("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L5("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L5("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L5("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L5("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L5(ru, en)}</strong><span>${L5(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L5("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E5(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L5("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L5("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L5("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L5("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L5("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L5("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L5("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L5("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L5("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L5("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
+      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x) => `<option value="${x.id}"${a?.id === x.id ? " selected" : ""}>${E6(name(x))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E6(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E6(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
     }
     function renderPlan() {
-      return `<div class="ws-plan-heading"><p>${L5("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L5("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L5("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L5("\u043C\u0438\u043D", "min")}</span><div><h2>${E5(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L5("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L5("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
+      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E6(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
     }
     function planDescription(id) {
-      return { intro: L5("\u041F\u043E\u044F\u0441\u043D\u0438\u0442\u0435 \u0446\u0435\u043B\u044C: \u0443\u0437\u043D\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u0430 \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445.", "Explain the aim: discover agencies and career possibilities, not receive an assessment of ability."), test: L5("\u0421\u0442\u0443\u0434\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442 \u0442\u0440\u0438 \u0431\u043B\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u0430; \u043A\u0430\u0436\u0434\u044B\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F.", "Students complete the three test blocks and save their own result."), explore: L5("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044E \u0432\u044B\u0431\u043E\u0440\u0430. \u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0432 \u0438\u043D\u0434\u0435\u043A\u0441, \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0441\u0444\u0435\u0440\u0443 \u0432 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438. \u0417\u0430\u0442\u0435\u043C \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0432\u043B\u0430\u0441\u0442\u0438.", "Open the choice laboratory. Explain the three index contributions, change one policy area in a copy and compare recommendations. Then locate the agency in the government structure."), case: L5("\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043E\u0434\u043D\u0443 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E. \u041F\u043E\u0441\u043B\u0435 \u043E\u0442\u0432\u0435\u0442\u0430 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043E\u0431\u044A\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Choose one case. After responding, read the explanation and official source."), discussion: L5("\u041E\u0431\u0441\u0443\u0434\u0438\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0432 \u0437\u0430\u0434\u0430\u0447\u0435 \u0438 \u0447\u0442\u043E \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0432\u044B\u044F\u0441\u043D\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043B\u0438\u0441\u0442\u0430.", "Discuss what attracts you to the task and what needs investigation. Complete the three worksheet sections."), finish: L5("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435. \u0414\u043B\u044F \u043E\u0431\u0437\u043E\u0440\u0430 \u0433\u0440\u0443\u043F\u043F\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0442\u0435\u0441\u0442\u0430, \u0430 \u043D\u0435 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0435 \u0437\u0430\u043F\u0438\u0441\u0438.", "Name one concrete action. For the class overview, use the anonymous test export, not free-text notes.") }[id];
+      return { intro: L6("\u041F\u043E\u044F\u0441\u043D\u0438\u0442\u0435 \u0446\u0435\u043B\u044C: \u0443\u0437\u043D\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u0430 \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445.", "Explain the aim: discover agencies and career possibilities, not receive an assessment of ability."), test: L6("\u0421\u0442\u0443\u0434\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442 \u0442\u0440\u0438 \u0431\u043B\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u0430; \u043A\u0430\u0436\u0434\u044B\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F.", "Students complete the three test blocks and save their own result."), explore: L6("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044E \u0432\u044B\u0431\u043E\u0440\u0430. \u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0432 \u0438\u043D\u0434\u0435\u043A\u0441, \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0441\u0444\u0435\u0440\u0443 \u0432 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438. \u0417\u0430\u0442\u0435\u043C \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0432\u043B\u0430\u0441\u0442\u0438.", "Open the choice laboratory. Explain the three index contributions, change one policy area in a copy and compare recommendations. Then locate the agency in the government structure."), case: L6("\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043E\u0434\u043D\u0443 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E. \u041F\u043E\u0441\u043B\u0435 \u043E\u0442\u0432\u0435\u0442\u0430 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043E\u0431\u044A\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Choose one case. After responding, read the explanation and official source."), discussion: L6("\u041E\u0431\u0441\u0443\u0434\u0438\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0432 \u0437\u0430\u0434\u0430\u0447\u0435 \u0438 \u0447\u0442\u043E \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0432\u044B\u044F\u0441\u043D\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043B\u0438\u0441\u0442\u0430.", "Discuss what attracts you to the task and what needs investigation. Complete the three worksheet sections."), finish: L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435. \u0414\u043B\u044F \u043E\u0431\u0437\u043E\u0440\u0430 \u0433\u0440\u0443\u043F\u043F\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0442\u0435\u0441\u0442\u0430, \u0430 \u043D\u0435 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0435 \u0437\u0430\u043F\u0438\u0441\u0438.", "Name one concrete action. For the class overview, use the anonymous test export, not free-text notes.") }[id];
     }
     function render(route) {
       if (route !== "workshop") return;
-      root.innerHTML = `<div data-no-i18n><div class="section-heading"><div><h1>${L5("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u0430\u044F \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F", "Career workshop")}</h1><p>${L5("\u0423\u0437\u043D\u0430\u0439\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u0434\u0430\u0447\u0443. \u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435, \u043A\u0430\u043A\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443 \u0412\u044B \u0433\u043E\u0442\u043E\u0432\u044B \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435.", "Discover an agency through a task. Decide which work you would like to explore further.")}</p></div></div><div class="ws-modebar" role="tablist" aria-label="${L5("\u0420\u0430\u0437\u0434\u0435\u043B \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439", "Workshop section")}">${[["cases", "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "Professional tasks"], ["notes", "\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet"], ["plan", "\u0425\u043E\u0434 \u0437\u0430\u043D\u044F\u0442\u0438\u044F", "Lesson plan"]].map(([id, ru, en]) => `<button type="button" role="tab" id="ws-tab-${id}" aria-controls="ws-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-mode="${id}">${L5(ru, en)}</button>`).join("")}</div><div id="ws-content" role="tabpanel" aria-labelledby="ws-tab-${mode}">${mode === "cases" ? renderCases() : mode === "notes" ? renderNotes() : renderPlan()}</div><p id="notebook-save-status" class="ws-save-status" role="status"></p></div>`;
+      root.innerHTML = `<div data-no-i18n><div class="section-heading"><div><h1>${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u0430\u044F \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0430\u044F", "Career workshop")}</h1><p>${L6("\u0423\u0437\u043D\u0430\u0439\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0447\u0435\u0440\u0435\u0437 \u0437\u0430\u0434\u0430\u0447\u0443. \u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435, \u043A\u0430\u043A\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443 \u0412\u044B \u0433\u043E\u0442\u043E\u0432\u044B \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435.", "Discover an agency through a task. Decide which work you would like to explore further.")}</p></div></div><div class="ws-modebar" role="tablist" aria-label="${L6("\u0420\u0430\u0437\u0434\u0435\u043B \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439", "Workshop section")}">${[["cases", "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "Professional tasks"], ["notes", "\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet"], ["plan", "\u0425\u043E\u0434 \u0437\u0430\u043D\u044F\u0442\u0438\u044F", "Lesson plan"]].map(([id, ru, en]) => `<button type="button" role="tab" id="ws-tab-${id}" aria-controls="ws-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-mode="${id}">${L6(ru, en)}</button>`).join("")}</div><div id="ws-content" role="tabpanel" aria-labelledby="ws-tab-${mode}">${mode === "cases" ? renderCases() : mode === "notes" ? renderNotes() : renderPlan()}</div><p id="notebook-save-status" class="ws-save-status" role="status"></p></div>`;
       bind();
       status();
       renderRecovery(root, protectedStore, { snapshot: () => book, download: downloadText2, translate, onReplace: () => {
@@ -3571,19 +5319,19 @@ var CareerRuntime = (() => {
         try {
           if (f.size > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
           const incoming = importWorkbook(await f.text(), data2.authorities, cases);
-          if (!confirm(L5("\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u044B\u043C \u0444\u0430\u0439\u043B\u0430?", "Replace current notes with this file?"))) return;
+          if (!confirm(L6("\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u044B\u043C \u0444\u0430\u0439\u043B\u0430?", "Replace current notes with this file?"))) return;
           book = incoming;
           save();
           render("workshop");
         } catch {
-          toast2(L5("\u0424\u0430\u0439\u043B \u043B\u0438\u0441\u0442\u0430 \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442, \u0440\u0430\u0437\u043C\u0435\u0440 \u0438 \u0432\u0435\u0440\u0441\u0438\u044E.", "Worksheet file rejected: check its format, size and version."));
+          toast2(L6("\u0424\u0430\u0439\u043B \u043B\u0438\u0441\u0442\u0430 \u043D\u0435 \u043F\u0440\u0438\u043D\u044F\u0442: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442, \u0440\u0430\u0437\u043C\u0435\u0440 \u0438 \u0432\u0435\u0440\u0441\u0438\u044E.", "Worksheet file rejected: check its format, size and version."));
         } finally {
           importing = false;
           e.target.value = "";
         }
       });
       root.querySelector("#workbook-clear")?.addEventListener("click", () => {
-        if (confirm(L5("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u0438 \u0438 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u043F\u0440\u043E\u0431\u044B? \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F.", "Delete workshop notes and task responses? Your career-test result will remain unchanged."))) {
+        if (confirm(L6("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0437\u0430\u043F\u0438\u0441\u0438 \u0438 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0430 \u043F\u0440\u043E\u0431\u044B? \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F.", "Delete workshop notes and task responses? Your career-test result will remain unchanged."))) {
           book = blankWorkbook();
           save();
           render("workshop");
@@ -3613,7 +5361,7 @@ var CareerRuntime = (() => {
         target.id = "workbook-print-root";
         document.body.append(target);
       }
-      target.innerHTML = `<h1>${L5("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E5(name(a))}</h2><p>${L5("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L5(ru, en)}</h3><p class="ws-print-text">${E5(n[id]) || L5("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L5("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E5(a.governmentUrl)}</p>`;
+      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E6(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E6(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E6(a.governmentUrl)}</p>`;
       document.body.classList.add("print-workbook");
       window.print();
     }
@@ -3626,7 +5374,7 @@ var CareerRuntime = (() => {
       activeCase = cases.some((c) => c.id === value?.activeCase) ? value.activeCase : null;
     }, sourceForAuthority(id) {
       const c = cases.find((c2) => c2.authorityId === id);
-      return c ? `<div data-no-i18n class="ws-dossier-source">${source(c)}<p>${L5("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u044E, \u043D\u043E \u043D\u0435 \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.", "This source supports the function, not the numerical weights of the teaching profile.")}</p></div>` : "";
+      return c ? `<div data-no-i18n class="ws-dossier-source">${source(c)}<p>${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u044E, \u043D\u043E \u043D\u0435 \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.", "This source supports the function, not the numerical weights of the teaching profile.")}</p></div>` : "";
     } };
   }
 
@@ -3791,8 +5539,8 @@ var CareerRuntime = (() => {
     };
   }
   function csvCell(value) {
-    const text2 = String(value ?? "");
-    return /[;"\n]/.test(text2) ? `"${text2.replaceAll('"', '""')}"` : text2;
+    const text3 = String(value ?? "");
+    return /[;"\n]/.test(text3) ? `"${text3.replaceAll('"', '""')}"` : text3;
   }
   function recordsToCsv(records = [], registry = validationRegistry) {
     const header = ["record_id", "created_at", ...SCALE_IDS2.map((id) => `scale_${id}`), "dispersion", "flat", "priority_sectors", "low_priority_sectors", ...CONDITION_IDS3.map((id) => `condition_${id}`), "first_displayed_authority", "top1_score", "top1_track", "equal_leading_authorities"];
@@ -3847,11 +5595,11 @@ var CareerRuntime = (() => {
   function groupBundle(records, origin = "uploaded", exportedAt = (/* @__PURE__ */ new Date()).toISOString()) {
     return { schema: GROUP_SCHEMA, schemaVersion: 1, modelVersion: MODEL_VERSION, origin, exportedAt, records: structuredClone(records) };
   }
-  function readGroupInput(text2, registry) {
-    if (typeof text2 !== "string" || new TextEncoder().encode(text2).length > GROUP_FILE_LIMIT) throw Error("file-size");
+  function readGroupInput(text3, registry) {
+    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > GROUP_FILE_LIMIT) throw Error("file-size");
     let value;
     try {
-      value = JSON.parse(text2);
+      value = JSON.parse(text3);
     } catch {
       throw Error("json");
     }
@@ -3930,7 +5678,7 @@ var CareerRuntime = (() => {
   var $ = (s, r = document) => r.querySelector(s);
   var $$ = (s, r = document) => [...r.querySelectorAll(s)];
   var glyph = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
-  var external = (url, label) => `<a class="text-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label}${glyph("external")}</a>`;
+  var external = (url, label2) => `<a class="text-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label2}${glyph("external")}</a>`;
   var uid = () => globalThis.crypto?.randomUUID?.() || `scenario-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   var authorityCore = (a) => !["corporation", "fund"].includes(a.entityType);
   var date3 = (value) => new Intl.DateTimeFormat(numberLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
@@ -4303,6 +6051,7 @@ var CareerRuntime = (() => {
   var publicService = null;
   var vacancies = null;
   var seminarFlow = null;
+  var personality = null;
   var groupMode = "uploaded";
   var groupBusy = false;
   var latestResult = null;
@@ -4458,10 +6207,10 @@ var CareerRuntime = (() => {
     return saved;
   }
   function updateSaveIndicator() {
-    const strip = $2("#session-strip"), label = $2("#session-status");
-    if (!strip || !label) return;
+    const strip = $2("#session-strip"), label2 = $2("#session-status");
+    if (!strip || !label2) return;
     strip.dataset.status = lastSaveStatus;
-    label.textContent = lastSaveStatus === "failed" ? SEMINAR_FLOW ? "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435." : "\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u0435\u0440\u0435\u0434 \u0437\u0430\u043A\u0440\u044B\u0442\u0438\u0435\u043C." : Object.keys(state.answers).length ? "\u041E\u0442\u0432\u0435\u0442\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u0432 \u044D\u0442\u043E\u043C \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435" : "\u041E\u0442\u0432\u0435\u0442\u044B \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u043D\u0430 \u0412\u0430\u0448\u0435\u043C \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435";
+    label2.textContent = lastSaveStatus === "failed" ? SEMINAR_FLOW ? "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435." : "\u041D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u0435\u0440\u0435\u0434 \u0437\u0430\u043A\u0440\u044B\u0442\u0438\u0435\u043C." : Object.keys(state.answers).length ? "\u041E\u0442\u0432\u0435\u0442\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u0432 \u044D\u0442\u043E\u043C \u0431\u0440\u0430\u0443\u0437\u0435\u0440\u0435" : "\u041E\u0442\u0432\u0435\u0442\u044B \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u043D\u0430 \u0412\u0430\u0448\u0435\u043C \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0435";
   }
   function bindSessionTransfer() {
     $2("#session-export").addEventListener("click", () => downloadText("career-answers.json", JSON.stringify(sessionBundle(state), null, 2), "application/json;charset=utf-8"));
@@ -4590,17 +6339,19 @@ var CareerRuntime = (() => {
   function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
     const requestedRoute = route;
     finishSectorDrag(false, { focus: false, announce: false });
-    const valid = ["home", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+    const valid = ["home", "personality", "personality-results", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
     if (route === "main-content") {
       document.getElementById("main-content")?.focus();
       return;
     }
     if (!valid.includes(route)) route = "home";
     if (SEMINAR_FLOW) {
-      if (!["test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
+      if (!personality?.isComplete()) route = "personality";
+      else if (route === "home") route = "personality-results";
+      else if (!["personality", "personality-results", "test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
       if (route === "sectors" && Object.keys(state.answers).length < data.questions.length) route = "test";
       if (route === "conditions" && (state.prioritySectors.length !== 4 || state.lowPrioritySectors.length !== 2)) route = resolveResumeRoute();
-    }
+    } else if (["personality", "personality-results"].includes(route)) route = "home";
     if (route === "results" && !completionStatus({ ...state, questions: data.questions }).complete) route = resolveResumeRoute();
     const unavailableRoutes = { workshop: "data/agency-studies.json", "public-service": "data/public-service.json", structure: "data/hierarchy.json", opportunities: "data/career-resources.json" };
     if (data.unavailable.includes(unavailableRoutes[route])) {
@@ -4638,11 +6389,12 @@ var CareerRuntime = (() => {
     decisionLab?.render(route);
     publicService?.render(route);
     vacancies?.render(route);
+    personality?.render(route);
     seminarFlow?.render(route);
     $$2(".nav-more[open]").forEach((el) => el.open = false);
     state.lastRoute = route;
     saveState();
-    if (updateHash || SEMINAR_FLOW && requestedRoute !== route) __careerHost.routeChanged(route, { replace });
+    if (updateHash || requestedRoute !== route && (SEMINAR_FLOW || ["personality", "personality-results"].includes(requestedRoute))) __careerHost.routeChanged(route, { replace });
     window.scrollTo({ top: 0, behavior: "instant" });
     if (focus) {
       const heading = $2(`#view-${route} h1`) || $2("#main-content");
@@ -4682,11 +6434,11 @@ var CareerRuntime = (() => {
     $2("#question-progress").parentElement.setAttribute("aria-valuenow", answered);
     $2("#question-text").textContent = question.text;
     const labels = ["\u0421\u043E\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u043E \u043D\u0435\u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "\u0421\u043A\u043E\u0440\u0435\u0435 \u043D\u0435\u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "\u0422\u0440\u0443\u0434\u043D\u043E \u0441\u043A\u0430\u0437\u0430\u0442\u044C", "\u0421\u043A\u043E\u0440\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "\u041E\u0447\u0435\u043D\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E"];
-    $2("#answer-options").innerHTML = labels.map((label, index) => {
+    $2("#answer-options").innerHTML = labels.map((label2, index) => {
       const value = index + 1;
       const selected = Number(state.answers[question.id]) === value;
       return `<button type="button" class="answer-option${selected ? " selected" : ""}" data-answer="${value}" role="radio" tabindex="${selected || !state.answers[question.id] && value === 1 ? 0 : -1}" aria-checked="${selected}">
-      <b>${value}</b><span>${label}</span>
+      <b>${value}</b><span>${label2}</span>
     </button>`;
     }).join("");
     $2("#question-next").disabled = !state.answers[question.id];
@@ -4782,7 +6534,7 @@ var CareerRuntime = (() => {
       $2("#sector-grid").before(root);
     }
     const labels = { prioritySectors: "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u044B: \u043E\u0442 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043A \u0447\u0435\u0442\u0432\u0451\u0440\u0442\u043E\u043C\u0443", lowPrioritySectors: "\u041C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435: \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0441\u0442\u0440\u043E\u043A\u0430 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0442\u0435\u043B\u044C\u043D\u0430" };
-    root.innerHTML = Object.entries(labels).map(([key, label]) => `<section class="sector-order-group ${key === "prioritySectors" ? "priority" : "low"}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label}</h3>${state[key].length ? `<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id, i) => {
+    root.innerHTML = Object.entries(labels).map(([key, label2]) => `<section class="sector-order-group ${key === "prioritySectors" ? "priority" : "low"}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label2}</h3>${state[key].length ? `<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id, i) => {
       const title = escapeHtml(data.sectors.find((s) => s.id === id)?.title || id);
       return `<li class="sector-order-row ${key === "prioritySectors" ? "priority" : "low"}" data-order-key="${key}" data-sector-id="${id}" tabindex="0" aria-label="${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}" aria-roledescription="${escapeHtml(translate("\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u043C\u044B\u0439 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}" aria-describedby="sector-drag-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape">
       <span class="sector-order-title"><b class="order-index">${i + 1}.</b><span>${title}</span></span>
@@ -5094,7 +6846,7 @@ var CareerRuntime = (() => {
     if (latestResult) return latestResult;
     return calculateResults();
   }
-  function radarSvg(profile, { numbered = false, label = "\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F" } = {}) {
+  function radarSvg(profile, { numbered = false, label: label2 = "\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F" } = {}) {
     if (numbered) {
       const center2 = 155, radius2 = 106;
       const point2 = (index, ratio) => {
@@ -5103,7 +6855,7 @@ var CareerRuntime = (() => {
       };
       const polygon2 = (ratio) => SCALE_IDS.map((_, index) => point2(index, ratio).join(",")).join(" ");
       const values2 = SCALE_IDS.map((id) => Math.max(1, Math.min(5, Number(profile.raw[id]) || 1)) / 5);
-      return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label)}">
+      return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label2)}">
       <g fill="none" stroke="#d3e1eb" stroke-width="1">${[1, 2, 3, 4, 5].map((value) => `<polygon points="${polygon2(value / 5)}"/>`).join("")}${SCALE_IDS.map((_, index) => {
         const [x, y] = point2(index, 1);
         return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}"/>`;
@@ -5286,13 +7038,13 @@ var CareerRuntime = (() => {
     const result = getResults();
     if (!result) return;
     const government = result.ranked.filter((item) => !["corporation", "fund"].includes(item.entityType)).slice(0, 5);
-    const text2 = [
+    const text3 = [
       "\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430 \u0434\u043B\u044F \u0433\u043E\u0441\u0441\u043B\u0443\u0436\u0430\u0449\u0438\u0445:",
       ...government.map((item, index) => `${index + 1}. ${authorityName(item)} \u2014 ${item.score.toFixed(1)}; \u0442\u0440\u0435\u043A: ${item.track?.title || "\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"}.`),
       "\u0418\u043D\u0434\u0435\u043A\u0441 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u043C \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u043C \u0432\u043D\u0443\u0442\u0440\u0438 \u0443\u0447\u0435\u0431\u043D\u043E\u0439 \u043C\u043E\u0434\u0435\u043B\u0438."
     ].join("\n");
     try {
-      await navigator.clipboard.writeText(getLanguage() !== "ru" ? text2.split("\n").map((line) => translate(line)).join("\n") : text2);
+      await navigator.clipboard.writeText(getLanguage() !== "ru" ? text3.split("\n").map((line) => translate(line)).join("\n") : text3);
       toast("\u041A\u0440\u0430\u0442\u043A\u0438\u0439 \u0438\u0442\u043E\u0433 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D.");
     } catch {
       toast("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u0431\u0443\u0444\u0435\u0440\u0443 \u043E\u0431\u043C\u0435\u043D\u0430.");
@@ -5556,10 +7308,10 @@ var CareerRuntime = (() => {
       const selected = state.compareIds.includes(button.dataset.authority);
       button.classList.toggle("selected", selected);
       button.setAttribute("aria-pressed", String(selected));
-      const label = $2("span", button);
-      if (label) {
-        if (button.classList.contains("dialog-compare")) label.textContent = selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435";
-        else label.textContent = selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C";
+      const label2 = $2("span", button);
+      if (label2) {
+        if (button.classList.contains("dialog-compare")) label2.textContent = selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435";
+        else label2.textContent = selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C";
       }
       button.setAttribute("aria-label", `${selected ? "\u0423\u0434\u0430\u043B\u0438\u0442\u044C" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C"} ${authorityName(data.authorities.find((item) => item.id === button.dataset.authority)) || "\u043E\u0440\u0433\u0430\u043D"} ${selected ? "\u0438\u0437 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F" : "\u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435"}`);
     });
@@ -5635,7 +7387,7 @@ var CareerRuntime = (() => {
     $2("#seminar-tags").innerHTML = [
       ...(authority.sectors || []).slice(0, 2).map((item) => sectorMap.get(item.id)?.title),
       ...(authority.tracks || []).slice(0, 2).map((item) => trackMap.get(item.id)?.title)
-    ].filter(Boolean).map((label) => `<span class="tag">${escapeHtml(label)}</span>`).join("");
+    ].filter(Boolean).map((label2) => `<span class="tag">${escapeHtml(label2)}</span>`).join("");
     $2("#seminar-questions").innerHTML = `
     <li>\u041A\u0430\u043A\u0438\u0435 \u043E\u0431\u0449\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0440\u0435\u0448\u0430\u0435\u0442 ${escapeHtml(authorityName(authority))} \u0438 \u043F\u043E\u0447\u0435\u043C\u0443 \u0434\u043B\u044F \u043D\u0438\u0445 \u043D\u0443\u0436\u0435\u043D \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D?</li>
     <li>\u041A\u0430\u043A \u043C\u043E\u0433\u043B\u0430 \u0431\u044B \u0432\u044B\u0433\u043B\u044F\u0434\u0435\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430 \u0413\u041C\u0423 \u0432 \u0440\u043E\u043B\u0438 \xAB${escapeHtml(careerRole?.title || "\u0441\u043F\u0435\u0446\u0438\u0430\u043B\u0438\u0441\u0442 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F")}"?</li>
@@ -5985,6 +7737,7 @@ var CareerRuntime = (() => {
       state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
       data.allInstitutions = [...data.authorities, ...data.publicService.records.map((a) => ({ id: a.id, name: a.name.ru, shortName: a.name.ru, mission: a.mission.ru, entityType: "additional", entityTypeLabel: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438", tracks: a.tracks, governmentUrl: a.sources?.[0]?.url || "", localizedName: a.name, source: a }))];
       if (SEMINAR_FLOW) {
+        personality = createPersonality({ navigate: routeTo, continueCareer: () => routeTo(resolveResumeRoute()) });
         seminarFlow = createSeminarFlow({ getResult: getResults, getProfileContext: () => ({ recordId: state.resultRecordId, scales: data.scales, sectors: data.sectors, conditions: data.conditions, prioritySectors: state.prioritySectors, conditionValues: state.conditions }), radarSvg, toast });
       } else {
         classroom = createClassroom({ data: { ...data, authorities: data.allInstitutions }, routeTo, openAuthority, toast, downloadText, getResult: () => latestResult });
@@ -6035,23 +7788,25 @@ var CareerRuntime = (() => {
     }
   }
   var ready = init();
-  var updateBusy = () => Boolean(sectorDrag || sectorPress) || groupBusy || decisionLab?.updateBusy?.() || vacancies?.updateBusy?.() || seminarFlow?.updateBusy?.() || workspace?.updateBusy?.() || classroom?.updateBusy?.() || pendingLegacyChoice || protectedStorage;
+  var updateBusy = () => Boolean(sectorDrag || sectorPress) || groupBusy || decisionLab?.updateBusy?.() || vacancies?.updateBusy?.() || seminarFlow?.updateBusy?.() || personality?.updateBusy?.() || workspace?.updateBusy?.() || classroom?.updateBusy?.() || pendingLegacyChoice || protectedStorage;
   var pauseForUpdate = () => {
     finishSectorDrag(false, { focus: false, announce: false });
   };
   function flushForUpdate() {
     finishSectorDrag(false, { focus: false, announce: false });
-    return saveState();
+    const personalitySaved = personality?.flush() !== false;
+    const careerSaved = saveState();
+    return personalitySaved && careerSaved;
   }
   function captureForUpdate() {
     const filters = Object.fromEntries(["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].map((id) => [id, $2("#" + id)?.value || ""]));
-    return { schema: 1, model: MODEL_VERSION, fields: [...document.querySelectorAll("input[id],textarea[id],select[id]")].filter((el) => el.type !== "file" && el.type !== "password").slice(0, 100).map((el) => ({ id: el.id, value: el.value, checked: el.checked })), route: state.lastRoute, questionIndex: state.questionIndex, filters, authority: currentAuthority?.id || null, authorityTab: document.querySelector("#authority-dialog [role=tab][aria-selected=true]")?.dataset.tab || "overview", seminarAuthority: seminarAuthority?.id || null, groupMode, groupRecords, groupRejected, workspace: workspace?.captureForUpdate?.(), classroom: classroom?.captureForUpdate?.(), decisionLab: decisionLab?.captureForUpdate?.(), publicService: publicService?.captureForUpdate?.(), vacancies: vacancies?.captureForUpdate?.() };
+    return { schema: 1, model: MODEL_VERSION, fields: [...document.querySelectorAll("input[id],textarea[id],select[id]")].filter((el) => el.type !== "file" && el.type !== "password" && !el.closest("#view-personality,#view-personality-results")).slice(0, 100).map((el) => ({ id: el.id, value: el.value, checked: el.checked })), route: state.lastRoute, questionIndex: state.questionIndex, filters, authority: currentAuthority?.id || null, authorityTab: document.querySelector("#authority-dialog [role=tab][aria-selected=true]")?.dataset.tab || "overview", seminarAuthority: seminarAuthority?.id || null, groupMode, groupRecords, groupRejected, workspace: workspace?.captureForUpdate?.(), classroom: classroom?.captureForUpdate?.(), decisionLab: decisionLab?.captureForUpdate?.(), publicService: publicService?.captureForUpdate?.(), vacancies: vacancies?.captureForUpdate?.() };
   }
   async function restoreForUpdate(value) {
     if (value?.schema !== 1 || value.model !== MODEL_VERSION) throw Error("update/incompatible");
     if (Number.isInteger(value.questionIndex)) state.questionIndex = Math.max(0, Math.min(data.questions.length - 1, value.questionIndex));
-    for (const [id, text2] of Object.entries(value.filters || {})) {
-      if (["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].includes(id) && $2("#" + id)) $2("#" + id).value = String(text2).slice(0, 500);
+    for (const [id, text3] of Object.entries(value.filters || {})) {
+      if (["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].includes(id) && $2("#" + id)) $2("#" + id).value = String(text3).slice(0, 500);
     }
     workspace?.restoreForUpdate?.(value.workspace);
     classroom?.restoreForUpdate?.(value.classroom);
@@ -6066,7 +7821,7 @@ var CareerRuntime = (() => {
     if (value.authority) openAuthority(value.authority, value.authorityTab);
     for (const field of value.fields || []) {
       const el = document.getElementById(field.id);
-      if (el && ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) && el.type !== "file" && el.type !== "password") {
+      if (el && ["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) && el.type !== "file" && el.type !== "password" && !el.closest("#view-personality,#view-personality-results")) {
         el.value = String(field.value || "");
         el.checked = !!field.checked;
       }

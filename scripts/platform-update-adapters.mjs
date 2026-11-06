@@ -21,7 +21,7 @@ window.mount=async()=>{
   if(!qa.legalSeed){const {freshState}=await import('/apps/legal-lab/lib/storage.mjs');const [catalog,bank]=await Promise.all(['catalog','bank'].map(id=>fetch('/apps/legal-lab/data/'+id+'.json').then(r=>r.json())));qa.legalSeed=freshState(catalog.contentVersion);qa.legalSeed.index=bank.classroom.findIndex(t=>t.kind==='text');qa.legalSeed.view='learn';}
   handle=await mountLegalLab(node,{owner:qa.owner,period:'test',demo:true,locale:'ru',initialState:qa.mounted?undefined:qa.legalSeed,diagnostics});
  }else if(qa.kind==='career'){
-  const {mountCareer}=await import('/apps/career/entry.mjs');handle=await mountCareer(node,{owner:'guest',lang:'ru',initialRoute:'test',diagnostics});
+  const {mountCareer}=await import('/apps/career/entry.mjs');handle=await mountCareer(node,{owner:'guest',context:'free',lang:'ru',initialRoute:'test',diagnostics});
  }else if(qa.kind==='reception'){
   const {mountReception}=await import('/apps/reception/js/app.js'),{BUNDLED_CALENDARS}=await import('/assets/js/calendar-bundled.js');
   handle=await mountReception(node,{period:'2026-2027',assessmentAllowed:false,locale:'ru',diagnostics,calendarLoader:async()=>({year:2026,snapshot:BUNDLED_CALENDARS,stale:false,origins:[],unavailableYears:[],loadedAt:new Date().toISOString()})});

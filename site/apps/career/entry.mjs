@@ -6,7 +6,7 @@ import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../ass
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
-const VALID_ROUTES = new Set(['home','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
+const VALID_ROUTES = new Set(['home','personality','personality-results','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
 const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : String(value || 'ru').startsWith('en') ? 'en' : 'ru';
 const activeMounts = new WeakMap();
 
@@ -21,6 +21,27 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   let current = null, disposed = false, language = locale(lang), route = VALID_ROUTES.has(initialRoute) ? initialRoute : 'home', generation = 0,updatePaused=false,updateAdapter=null,latestCheckpoint=null,saveFailure=false;
   const hostWindow = container.ownerDocument.defaultView;
   const hostDocument = container.ownerDocument;
+  // The personal inventory stays on this device and outside the synced career draft.
+  // Use the canonical installation root so immutable releases share the same answers.
+  const personalitySiteRoot=new URL(getReleaseContext()?.siteRoot||'../../',MODULE_BASE);
+  personalitySiteRoot.pathname=personalitySiteRoot.pathname.replace(/\/_releases\/[a-f0-9]{24,64}\/$/,'/');
+  personalitySiteRoot.search='';personalitySiteRoot.hash='';
+  const personalityKey=`rudn-personality:${encodeURIComponent(personalitySiteRoot.href)}:${free?'free':'course'}:${encodeURIComponent(String(owner||'guest'))}:v1`;
+  let personalityObserved=null,personalityRead=false;
+  const personalityStorage={
+    getItem(){
+      if(disposed)throw new Error('Career instance closed.');
+      const value=hostWindow.localStorage.getItem(personalityKey);
+      personalityObserved=value;personalityRead=true;return value;
+    },
+    setItem(value){
+      if(disposed)throw new Error('Career instance closed.');
+      const current=hostWindow.localStorage.getItem(personalityKey);
+      if(!personalityRead||current!==personalityObserved)throw Object.assign(new Error('storage-conflict'),{code:'storage/conflict'});
+      const serialized=String(value);
+      hostWindow.localStorage.setItem(personalityKey,serialized);personalityObserved=serialized;
+    }
+  };
   const controller = new AbortController();
   const abortFromHost = () => api.destroy();
   const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:career';
@@ -61,7 +82,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   if(signal?.aborted){api.destroy();throw new DOMException('Career mount aborted.','AbortError');}
   const restored=await backend.loadDraft(progressScope);
   const legacyTime=Math.max(0,...[...values.values()].map(value=>{try{return Date.parse(JSON.parse(value)?.updatedAt)||0;}catch{return 0;}}));
-  if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
+  if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(free&&initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
   else if(values.size)await persistWorkspace();
   let markup, css;
   try {
@@ -163,6 +184,10 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
       confirm:message => !destroyed && hostWindow.confirm(message),
       prompt:(message,value) => destroyed ? null : hostWindow.prompt(message,value),
       lang:language, liveVacancies:false, seminarFlow:!free,
+      personalityStorage:{
+        getItem(){if(destroyed)throw new Error('Career instance closed.');return personalityStorage.getItem();},
+        setItem(value){if(destroyed)throw new Error('Career instance closed.');personalityStorage.setItem(value);}
+      },
       async openKnowledge(){
         if(destroyed||free||typeof onOpenKnowledge!=='function')return;
         await api.flush();
