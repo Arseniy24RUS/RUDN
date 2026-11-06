@@ -74,6 +74,16 @@ try{
    assert.equal(chosen.selectedSnapshot.bankVacancy,true);assert(chosen.selectedSnapshot.requirements.every(r=>r.sourceLocator&&r.evidenceSourceUrl));
    assert(!chosen.selectedSnapshot.requirements.some(r=>r.category==='duties'||r.sourceHeading==='jobResponsibilities'));
    const criteria=page.locator('[data-requirement-row]');assert(await criteria.count()>=2);
+   // A fieldset can fit the page while its native legend still straddles the
+   // painted border. Check the title's padding inset, not just page overflow.
+   const verifyRequirementCards=async()=>{
+    const escaped=await criteria.evaluateAll(cards=>cards.flatMap(card=>{
+     const title=card.querySelector('legend'),box=card.getBoundingClientRect(),text=title.getBoundingClientRect(),style=getComputedStyle(card);
+     return text.top<box.top+parseFloat(style.paddingTop)-1||text.left<box.left+parseFloat(style.paddingLeft)-1||text.right>box.right-parseFloat(style.paddingRight)+1||text.bottom>box.bottom-parseFloat(style.paddingBottom)+1||card.scrollWidth>card.clientWidth+1?[{id:card.dataset.requirementRow,card:{top:box.top,right:box.right,bottom:box.bottom,left:box.left},title:{top:text.top,right:text.right,bottom:text.bottom,left:text.left}}]:[];
+    }));
+    assert.deepEqual(escaped,[],'Requirement text must stay inside its card with padding');
+   };
+   await verifyRequirementCards();
    // Choose a source knowledge/skills criterion as the development gap when available.
    const snapshot=chosen.selectedSnapshot;
    const knowledge=snapshot.requirements.find(r=>r.category==='knowledge'||r.category==='skills');assert(knowledge,'actual first Minfin record includes knowledge/skills');
@@ -81,6 +91,13 @@ try{
    const captureRich=async(label,target)=>{if(language!=='ru')return;await target.scrollIntoViewIfNeeded();const file=path.join(out,language+'-'+viewport.width+'-'+label+'.png');await page.screenshot({path:file});report.screenshots.push(file);};
    await captureRich('source-assessment-before',gap);
    await gap.locator('input[value="gap"]').check();
+   if(language==='ru'&&viewport.width===390){
+    for(const width of[320,430]){
+     await page.setViewportSize({width,height:844});await verifyRequirementCards();await gap.scrollIntoViewIfNeeded();
+     const file=path.join(out,'ru-'+width+'-requirement-card.png');await page.screenshot({path:file});report.screenshots.push(file);
+    }
+    await page.setViewportSize(viewport);await verifyRequirementCards();
+   }
    const gapKey=await gap.getAttribute('data-requirement-row');
    for(let i=0;i<await criteria.count();i++){const row=criteria.nth(i);if(await row.getAttribute('data-requirement-row')!==gapKey){await row.locator('input[value="met"]').check();break;}}
    await captureRich('source-assessment-marked',gap);
