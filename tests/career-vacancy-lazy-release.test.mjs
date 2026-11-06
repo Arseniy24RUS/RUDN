@@ -50,3 +50,18 @@ test('immutable external collection validates the local tree but adds no bank pa
  hosting.treeSHA='0'.repeat(64);await fs.writeFile(config,JSON.stringify(hosting));await assert.rejects(buildRelease({site,baseline,out:path.join(root,'invalid-tree')}),/hosted-collection-config-mismatch/);
  hosting.treeSHA=expected.treeSHA;hosting.collectionRoot='https://raw.githubusercontent.com/Arseniy24RUS/RUDN/main/career-vacancy-bank/';await fs.writeFile(config,JSON.stringify(hosting));await assert.rejects(buildRelease({site,baseline,out:path.join(root,'mutable-root')}),/hosted-collection-config-mismatch/);
 });
+
+test('optional rich details are metadata-only, immutable, base-bound and included in release identity',async t=>{
+ const{root,site,baseline}=await setup(t),base=await bank(site);
+ const config=path.join(root,'source-audit/career-vacancies/details-hosting.json');
+ const details={schemaVersion:1,encoding:'base64-gzip',collectionRoot:'https://raw.githubusercontent.com/Arseniy24RUS/RUDN/'+('c'.repeat(40))+'/career-vacancy-details/',baseTreeSHA:base.treeSHA,treeSHA:'a'.repeat(64),hostedTreeSHA:'b'.repeat(40),fileCount:10343,bytes:123456,vacancies:457627};
+ await write(root,'source-audit/career-vacancies/details-hosting.json',JSON.stringify(details));
+ const firstOut=path.join(root,'details-a');const report=await buildRelease({site,baseline,out:firstOut});const first=await manifest(firstOut);
+ assert.deepEqual(first.manifest.lazyCollections[0].details,details);const summary=first.manifest.resources[PREFIX+'summary.json'];
+ assert.equal(summary.detailsCollectionRoot,details.collectionRoot);assert.equal(summary.detailsCollectionEncoding,'base64-gzip');assert.equal(summary.detailsBaseTreeSHA,base.treeSHA);assert.equal(summary.detailsTreeSHA,details.treeSHA);
+ assert.equal(report.remoteCollectionBytesVerified,false);assert.equal((await verifyRelease(firstOut)).externalLazyCollectionsMetadataValidated,1);
+ assert(!Object.keys(first.manifest.resources).some(k=>k.includes('career-vacancy-details')));
+ details.bytes++;await fs.writeFile(config,JSON.stringify(details));const secondOut=path.join(root,'details-b');await buildRelease({site,baseline,out:secondOut});assert.notEqual(first.pointer.current.buildId,(await manifest(secondOut)).pointer.current.buildId);
+ details.baseTreeSHA='0'.repeat(64);await fs.writeFile(config,JSON.stringify(details));await assert.rejects(buildRelease({site,baseline,out:path.join(root,'details-wrong-base')}),/invalid-details-hosting/);
+ details.baseTreeSHA=base.treeSHA;details.collectionRoot=details.collectionRoot.replace('c'.repeat(40),'main');await fs.writeFile(config,JSON.stringify(details));await assert.rejects(buildRelease({site,baseline,out:path.join(root,'details-mutable')}),/invalid-details-hosting/);
+});

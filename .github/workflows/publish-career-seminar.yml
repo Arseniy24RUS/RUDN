@@ -126,7 +126,7 @@ jobs:
       - name: Verify vacancy codec, source links, paging and lazy release metadata
         if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: |
-          node --test tests/employer-vacancies-bank.test.mjs tests/career-vacancy-lazy-release.test.mjs
+          node --test tests/employer-vacancies-bank.test.mjs tests/career-vacancy-lazy-release.test.mjs tests/career-vacancy-details.test.mjs
           python3 scripts/test_repack_career_vacancies.py
       - name: Verify scoring, territory ranking and sourced requirement assessment
         if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}

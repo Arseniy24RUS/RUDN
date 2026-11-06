@@ -24,6 +24,7 @@ const allowedFiles=new Set([
   'scripts/compress-career-vacancy-descriptors.py',
   'scripts/test_career_vacancy_bank_ui.mjs',
   'tests/employer-vacancies-bank.test.mjs',
+  'tests/career-vacancy-details.test.mjs',
   'tests/career-vacancy-lazy-release.test.mjs',
   'scripts/test_compress_career_vacancy_descriptors.py',
   'site/service-worker.js',
@@ -80,6 +81,13 @@ if(args.includes('--scope')){
   for(const name of changed){
     if(/\.m?js$/.test(name))execFileSync(process.execPath,['--check',name],{stdio:'inherit'});
     if(name.endsWith('.json'))JSON.parse(fs.readFileSync(name,'utf8'));
+  }
+  const detailsHosting='source-audit/career-vacancies/details-hosting.json';
+  if(fs.existsSync(detailsHosting)){
+    const details=JSON.parse(fs.readFileSync(detailsHosting,'utf8'));
+    const seed=read('source-audit/career-vacancies','seed.json');
+    assert.equal(details.qaSubset,undefined,'A development subset cannot be published to students');
+    assert.equal(details.vacancies,seed.vacancies,'The requirements bank must cover every source vacancy');
   }
   const authorities=read('site/apps/career/data','authorities.json');
   assert.equal(authorities.length,73,'Every catalogued authority is retained');

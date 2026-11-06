@@ -244,3 +244,6 @@
  .journey-bank-pages button { flex: 1 1 110px; padding-inline: 10px; font-size: 12px; }
 }
 .journey-bank-current-employer { margin: 10px 0; font-size: 14px; line-height: 1.55; font-weight: 650; overflow-wrap: anywhere; }
+
+/* Full source paragraphs remain readable without changing assessment semantics. */
+.journey-bank-full{margin:12px 0}.journey-bank-full section{margin:16px 0}.journey-bank-full h6{font-size:1rem;margin:0 0 8px}.journey-bank-full p,.journey-duties p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}.journey-bank-job>[data-bank-choice-status]{margin:8px 0}

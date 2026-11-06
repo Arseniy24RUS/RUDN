@@ -9,6 +9,16 @@ const MODULE_BASE = new URL('./', import.meta.url);
 const BANK_PREFIX = 'data/vacancies/bank/';
 function careerFetchURL(input) {
   const value=String(input),context=getReleaseContext();
+  if(value.startsWith('data/vacancies/details/')) {
+    const suffix=value.slice('data/vacancies/details/'.length),metadata=context?.resources?.['apps/career/data/vacancies/bank/summary.json'];
+    if(!/^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}(?:\.part[0-9]{4})?\.json\.gz$/.test(suffix))throw new TypeError('Invalid vacancy detail path');
+    if(metadata?.detailsCollectionRoot){
+      const base=new URL(metadata.detailsCollectionRoot);
+      if(metadata.detailsCollectionEncoding!=='base64-gzip'||base.origin!=='https://raw.githubusercontent.com'||base.username||base.password||base.search||base.hash||!/^\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-vacancy-details\/$/.test(base.pathname))throw new TypeError('Invalid vacancy detail publisher boundary');
+      return {url:new URL(suffix.replace(/\.json\.gz$/,'.b64'),base),base64Gzip:true,maxDecodedBytes:4*1024*1024};
+    }
+    throw new TypeError('Vacancy details are not connected');
+  }
   if(value.startsWith(BANK_PREFIX)) {
     const suffix=value.slice(BANK_PREFIX.length);
     if(!/^[A-Za-z0-9][A-Za-z0-9_./-]*$/.test(suffix)||suffix.split('/').some(part=>!part||part==='.'||part==='..'))throw new TypeError('Invalid vacancy-bank resource path');
@@ -214,6 +224,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         scrollTo:() => {if(!destroyed)container.scrollIntoView({block:'start',behavior:'instant'});},
         print:() => {if(!destroyed){container.dispatchEvent(new CustomEvent('career:beforeprint',{bubbles:true}));hostWindow.print();}}
       },
+      vacancyDetailsMetadata(){const meta=getReleaseContext()?.resources?.['apps/career/data/vacancies/bank/summary.json'];return {available:Boolean(meta?.detailsCollectionRoot),baseTreeSHA:meta?.collection?.treeSHA,detailsBaseTreeSHA:meta?.detailsBaseTreeSHA,detailsTreeSHA:meta?.detailsTreeSHA,collectionRoot:meta?.detailsCollectionRoot};},
       localStorage:scopedStorage,
       location:{href:new URL(`?lang=${encodeURIComponent(language)}#${route}`,MODULE_BASE).href,hash:`#${route}`,protocol:MODULE_BASE.protocol,reload:() => {if(!destroyed)void start();}},
       navigator:{languages:[language],language,clipboard:hostWindow.navigator.clipboard},

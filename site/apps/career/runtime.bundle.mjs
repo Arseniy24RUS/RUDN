@@ -4849,6 +4849,926 @@ var CareerRuntime = (() => {
     } };
   }
 
+  // site/apps/career/assets/scoring.mjs
+  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
+  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
+  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
+  function clamp(value, min = 0, max2 = 1) {
+    return Math.max(min, Math.min(max2, value));
+  }
+  function average(values) {
+    if (!values.length) return 0;
+    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
+  }
+  function standardDeviation(values) {
+    if (!values.length) return 0;
+    const mean = average(values);
+    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
+  }
+  function computeRoleProfile(answerMap, questions) {
+    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
+    for (const question of questions) {
+      const raw2 = Number(answerMap[question.id]);
+      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
+        grouped[question.scale].push(raw2);
+      }
+    }
+    const raw = {};
+    const normalized2 = {};
+    for (const id of SCALE_IDS) {
+      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
+      normalized2[id] = (raw[id] - 1) / 4;
+    }
+    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
+  }
+  function profileFromMeans(raw, answered = 27) {
+    const normalized2 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
+    const values = SCALE_IDS.map((id) => Number(raw[id]));
+    const dispersion = standardDeviation(values);
+    const mean = average(values);
+    return {
+      raw,
+      normalized: normalized2,
+      dispersion,
+      flat: dispersion < 0.26,
+      answered,
+      mean,
+      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
+      positiveScales: values.filter((v) => v >= 3.5).length,
+      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
+    };
+  }
+  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
+    const priorityWeights = [1, 0.82, 0.66, 0.5];
+    const lowWeights = [0.08, 0];
+    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
+    priorityIds.slice(0, 4).forEach((id, index) => {
+      if (id in values) values[id] = priorityWeights[index];
+    });
+    lowPriorityIds.slice(0, 2).forEach((id, index) => {
+      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
+    });
+    return values;
+  }
+  function sectorFit(preferences, authority, focusAreas = {}) {
+    const entries = authority.sectors || [];
+    if (!entries.length) return 0.25;
+    return clamp(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
+  }
+  function conditionDetails(userConditions = {}, requirements = {}) {
+    return CONDITION_IDS.map((id) => {
+      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
+      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
+      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
+      const [lo, hi] = interval;
+      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
+      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
+      return { id, willingness, requirement, interval, known: true, fit: clamp(1 - expectedGap / 4), gap: expectedGap };
+    });
+  }
+  function conditionFit(userConditions = {}, requirements = {}) {
+    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
+  }
+  function roleFit(roleProfile, template) {
+    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
+    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
+    const mean = average(user), tmean = average(target);
+    let dot = 0, norm = 0, tnorm = 0;
+    for (let i2 = 0; i2 < user.length; i2++) {
+      const u = user[i2] - mean, t = target[i2] - tmean;
+      dot += u * t;
+      norm += u * u;
+      tnorm += t * t;
+    }
+    if (tnorm < 1e-12) return 0.5;
+    return clamp(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
+  }
+  function matchBand(score2) {
+    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
+  }
+  function importanceFactor(importance) {
+    if (Number(importance) >= 3) return 1;
+    if (Number(importance) === 2) return 0.96;
+    return 0.91;
+  }
+  function canonicalValue(value) {
+    if (Array.isArray(value)) return value.map(canonicalValue);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
+    return value;
+  }
+  function pathSignature(path, template, factor) {
+    return JSON.stringify(canonicalValue({
+      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
+      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids2]) => ids2?.length).map(([id, ids2]) => [id, [...new Set(ids2)].sort()])),
+      conditions: CONDITION_IDS.map((id) => {
+        const value = path.conditions?.[id];
+        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+      }),
+      factor
+    }));
+  }
+  function aggregatePaths(paths) {
+    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+    const best = ordered[0];
+    const pathMeanScore = average(ordered.map((path) => path.score));
+    const contributions = {};
+    const pathMeanContributions = {};
+    for (const key of ["role", "sector", "conditions"]) {
+      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
+      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+    }
+    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+    const { signature, ...bestPath } = best;
+    return {
+      ...bestPath,
+      rawScore,
+      score: Math.round(rawScore * 10) / 10,
+      band: matchBand(rawScore),
+      bestPathScore: best.score,
+      pathMeanScore,
+      portfolioScore: pathMeanScore,
+      pathCount: ordered.length,
+      aggregation: AGENCY_AGGREGATION,
+      bestPathContributions: best.contributions,
+      pathMeanContributions,
+      contributions
+    };
+  }
+  function scoreAuthority(authority, context, trackMap) {
+    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
+    const cFit = conditionFit(context.conditions, authority.conditions);
+    const paths = /* @__PURE__ */ new Map();
+    for (const link of authority.tracks || []) {
+      const template = trackMap.get(link.id);
+      if (!template) continue;
+      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
+      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
+      const cFit2 = conditionFit(context.conditions, link.conditions || {});
+      const rFit = roleFit(context.roleProfile, template);
+      const factor = importanceFactor(link.importance);
+      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
+      const score2 = 100 * base * factor;
+      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
+      const candidate = {
+        score: score2,
+        signature,
+        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
+        roleFit: rFit,
+        sectorFit: sFit2,
+        conditionFit: cFit2,
+        track: template,
+        importance: link.importance,
+        path: link,
+        pathSectors: path.sectors,
+        pathTopics: path.topics || {},
+        pathConditions: link.conditions || {}
+      };
+      const existing = paths.get(signature);
+      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
+    }
+    if (!paths.size) {
+      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
+      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
+      return {
+        ...authority,
+        score: Math.round(score2 * 10) / 10,
+        rawScore: score2,
+        band: matchBand(score2),
+        roleFit: 0.5,
+        sectorFit: sFit,
+        conditionFit: cFit,
+        track: null,
+        importance: 0,
+        bestPathScore: null,
+        pathMeanScore: null,
+        portfolioScore: null,
+        pathCount: 0,
+        aggregation: AGENCY_AGGREGATION,
+        contributions,
+        bestPathContributions: null,
+        pathMeanContributions: null
+      };
+    }
+    return { ...authority, ...aggregatePaths([...paths.values()]) };
+  }
+  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const roleProfile = computeRoleProfile(answers, questions);
+    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
+  }
+  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
+    const trackMap = new Map(tracks.map((track) => [track.id, track]));
+    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
+    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
+    return { ranked, roleProfile, sectorPreferences, context };
+  }
+  function selectDiscoveryCandidate(ranked, topCount = 5) {
+    if (ranked.length <= topCount) return null;
+    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
+    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
+      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
+      return right.score - left.score;
+    });
+    return candidates[0] || null;
+  }
+  function buildExplanation(item, roleProfile, scales, sectors) {
+    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
+    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
+    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
+    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
+    return {
+      strengths: strongest,
+      sectors: authoritySectors,
+      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
+      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
+    };
+  }
+  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
+    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
+    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
+    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
+    return {
+      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
+      missingQuestions,
+      priorityCount: prioritySectors.length,
+      lowPriorityCount: lowPrioritySectors.length,
+      missingConditions
+    };
+  }
+
+  // site/apps/career/assets/career-journey-model.mjs
+  var JOURNEY_SCHEMA = 1;
+  var DESIRED_AUTHORITY_COUNT = 3;
+  var REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills", "eligibility", "other"]);
+  var CORE_REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills"]);
+  var COMPETENCY_DOMAIN_IDS = Object.freeze([
+    "law-regulation",
+    "documents-records",
+    "data-digital",
+    "finance-economy",
+    "communication",
+    "organization-projects",
+    "sector-knowledge",
+    "analytical-work"
+  ]);
+  var PERSONAL_CATEGORIES = /* @__PURE__ */ new Set(["knowledge", "skills"]);
+  var FORMAL_CATEGORIES = /* @__PURE__ */ new Set(["education", "experience", "eligibility"]);
+  var object = (value) => value && typeof value === "object" && !Array.isArray(value);
+  var list = (value) => Array.isArray(value) ? value : [];
+  var ids = (value) => [...new Set(list(value).filter((id) => typeof id === "string" && id.trim()))];
+  var sourceText = (value) => typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
+  function isNationalAuthority(authority) {
+    if (!authority) return false;
+    if (["federal", "national", "national-corporation"].includes(authority.level)) return true;
+    if (authority.level === "regional" || authority.level === "municipal" || authority.regionId) return false;
+    if (String(authority.cohort || "").startsWith("federal-")) return true;
+    return !authority.level || ["corporation", "fund"].includes(authority.entityType);
+  }
+  function authorityInSelectedTerritories(authority, regionIds = []) {
+    return isNationalAuthority(authority) || ids(regionIds).includes(authority?.regionId);
+  }
+  function sanitizeJourneyPreferences(value, { regions = [], authorities = [], defaultRegionId = "ru-77" } = {}) {
+    const stored = object(value) ? value : {};
+    const knownRegions = new Set(list(regions).map((region) => typeof region === "string" ? region : region?.id));
+    const candidateRegions = Array.isArray(stored.regionIds) ? stored.regionIds : [defaultRegionId];
+    const regionIds = ids(candidateRegions).filter((id) => knownRegions.has(id));
+    const knownAuthorities = new Map(list(authorities).filter((authority) => authority?.id).map((authority) => [authority.id, authority]));
+    const desiredIds = ids(stored.desiredIds).filter((id) => {
+      const authority = knownAuthorities.get(id);
+      return authority && authorityInSelectedTerritories(authority, regionIds);
+    }).slice(0, DESIRED_AUTHORITY_COUNT);
+    return {
+      schemaVersion: JOURNEY_SCHEMA,
+      regionIds,
+      desiredIds,
+      confirmed: stored.confirmed === true && desiredIds.length === DESIRED_AUTHORITY_COUNT
+    };
+  }
+  function validProfile(profile) {
+    return profile && SCALE_IDS.every((id) => Number.isFinite(profile.raw?.[id]) && profile.raw[id] >= 1 && profile.raw[id] <= 5);
+  }
+  function rankJourneyAuthorities(options = {}) {
+    const { authorities = [], tracks = [], questions = [], sectors = [] } = options;
+    const input = { ...options, ...object(options.inputs) ? options.inputs : {} };
+    let roleProfile = options.context?.roleProfile || options.roleProfile;
+    if (!roleProfile) {
+      if (!questions.length || questions.some((question) => !Number.isInteger(input.answers?.[question.id]) || input.answers[question.id] < 1 || input.answers[question.id] > 5)) {
+        throw new Error("journey/incomplete-interest-profile");
+      }
+      roleProfile = computeRoleProfile(input.answers, questions);
+    }
+    if (!validProfile(roleProfile)) throw new Error("journey/invalid-interest-profile");
+    const context = {
+      roleProfile,
+      sectorPreferences: options.context?.sectorPreferences || buildSectorPreference(input.prioritySectors, input.lowPrioritySectors, sectors),
+      conditions: options.context?.conditions || input.conditions || {},
+      focusAreas: options.context?.focusAreas || input.focusAreas || {}
+    };
+    const regionIds = ids(options.regionIds);
+    const regionsWanted = new Set(regionIds);
+    const count = Number.isSafeInteger(options.limit) && options.limit >= 0 ? options.limit : 3;
+    const trackMap = new Map(list(tracks).map((track) => [track.id, track]));
+    const distinct = /* @__PURE__ */ new Map();
+    for (const authority of list(authorities)) {
+      if (!authority || typeof authority.id !== "string" || !authority.id || distinct.has(authority.id)) continue;
+      if (isNationalAuthority(authority) || regionsWanted.has(authority.regionId)) distinct.set(authority.id, authority);
+    }
+    const ranked = [...distinct.values()].map((authority) => scoreAuthority(authority, context, trackMap)).sort((left, right) => right.rawScore - left.rawScore || left.id.localeCompare(right.id)).map((authority, index) => ({ ...authority, rank: index + 1 }));
+    if (ranked.some((authority) => !Number.isFinite(authority.rawScore))) throw new Error("journey/invalid-model-score");
+    const federalPool = ranked.filter(isNationalAuthority);
+    const federal = federalPool.slice(0, count);
+    const regions = regionIds.map((regionId) => {
+      const pool = ranked.filter((authority) => !isNationalAuthority(authority) && authority.regionId === regionId);
+      return {
+        regionId,
+        authorities: pool.slice(0, count),
+        total: pool.length,
+        municipalCount: pool.filter((authority) => authority.level === "municipal").length
+      };
+    });
+    return {
+      ranked,
+      federal,
+      federalTotal: federalPool.length,
+      regions,
+      recommendations: [...federal, ...regions.flatMap((region) => region.authorities)],
+      roleProfile,
+      context
+    };
+  }
+  function buildAuthorityDevelopment(authority, roleProfile, { tracks = [], careerFramework = {}, competencies = [] } = {}) {
+    const templates = new Map(list(tracks).map((track2) => [track2.id, track2]));
+    const scoredTrack = authority?.track || authority?.match?.track;
+    const link = list(authority?.tracks).slice().sort((left, right) => Number(right.importance || 0) - Number(left.importance || 0) || String(left.id).localeCompare(String(right.id))).find((candidate) => templates.has(candidate.id));
+    const track = scoredTrack?.vector ? scoredTrack : templates.get(scoredTrack?.id || link?.id);
+    const base = {
+      authorityId: authority?.id || null,
+      modelReference: true,
+      comparableToQuestionnaireUnits: false,
+      overlayOnPersonalInterestRadarAllowed: false,
+      skillDeficits: null,
+      eligibilityVerdict: null
+    };
+    if (!track || !validProfile(roleProfile)) return {
+      ...base,
+      available: false,
+      trackId: null,
+      rows: [],
+      lowerInterestDimensions: [],
+      competencies: [],
+      portfolio: [],
+      tasks: []
+    };
+    const rows = SCALE_IDS.map((id) => ({
+      id,
+      interest: roleProfile.raw[id],
+      emphasis: Number.isFinite(track.vector?.[id]) && track.vector[id] >= 0 && track.vector[id] <= 1 ? track.vector[id] : null
+    }));
+    const profile = list(careerFramework.trackProfiles).find((candidate) => candidate.id === track.id);
+    const competencyMap2 = new Map(list(competencies).map((competency) => [competency.id, competency]));
+    return {
+      ...base,
+      available: rows.some((row) => row.emphasis !== null),
+      trackId: track.id,
+      track,
+      rows,
+      lowerInterestDimensions: rows.filter((row) => row.emphasis >= 0.5 && row.interest < 3.5).sort((left, right) => right.emphasis - left.emphasis || left.interest - right.interest || SCALE_IDS.indexOf(left.id) - SCALE_IDS.indexOf(right.id)),
+      // This selection is a teaching prompt; it is not a psychometric cut-off.
+      reflectionRule: { minimumModelEmphasis: 0.5, belowInterest: 3.5, meaning: "topics-to-explore" },
+      competencies: ids(profile?.competencyIds).map((id) => competencyMap2.get(id)).filter(Boolean),
+      portfolio: list(profile?.portfolio).slice(),
+      tasks: list(profile?.tasks).slice(),
+      competencyMeaning: "authored-learning-suggestions-not-measured-deficits"
+    };
+  }
+  function canonicalRequirementCategory(category) {
+    if (category === "skill") return "skills";
+    if (category === "formal-eligibility" || category === "legal-eligibility") return "eligibility";
+    return REQUIREMENT_CATEGORIES.includes(category) ? category : "other";
+  }
+  function fingerprint(text3) {
+    let left = 2166136261, right = 2654435769;
+    for (let index = 0; index < text3.length; index++) {
+      const code = text3.charCodeAt(index);
+      left = Math.imul(left ^ code, 16777619);
+      right = Math.imul(right ^ code, 2246822507);
+      right ^= right >>> 13;
+    }
+    return (left >>> 0).toString(16).padStart(8, "0") + (right >>> 0).toString(16).padStart(8, "0");
+  }
+  function safeUrl(value) {
+    try {
+      const url = new URL(value);
+      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+  function requirementStateFromText(text3) {
+    const value = sourceText(text3).replace(/\s+/g, " ").toLowerCase().replace(/[.;]$/, "").trim();
+    if (!value) return "source_not_stated";
+    if (/^(?:не указано|не указан|нет данных|не установлено|source_not_stated|not stated|not specified|未说明|未注明)$/.test(value)) return "source_not_stated";
+    if (/^(?:без предъявления требований к стажу|без требований к стажу|требования к стажу не предъявляются|не предъявляются|не требуется|не требуются|not required|no experience required|无要求)$/.test(value)) return "explicitly_not_required";
+    return "stated";
+  }
+  function requirementInput(vacancy) {
+    if (Array.isArray(vacancy?.requirements)) return vacancy.requirements.filter(object);
+    const fields = object(vacancy?.requirements) ? vacancy.requirements : vacancy || {};
+    return REQUIREMENT_CATEGORIES.flatMap((category) => {
+      const field = category === "other" ? fields.otherRequirements ?? fields.other : category === "skills" ? fields.skills ?? fields.skill : fields[category];
+      const entries = Array.isArray(field) ? field : [field];
+      return entries.flatMap((entry) => {
+        if (object(entry)) return [{ ...entry, category }];
+        if (!sourceText(entry)) return [];
+        return [{
+          category,
+          sourceText: sourceText(entry),
+          requirementState: requirementStateFromText(entry),
+          sourceLocator: `feed.${category}`,
+          sourceKind: "published-feed-field"
+        }];
+      });
+    });
+  }
+  function buildVacancyRequirements(vacancy) {
+    if (!vacancy || typeof vacancy.id !== "string" || !vacancy.id.trim()) throw new Error("journey/vacancy-identity-required");
+    const vacancyId = vacancy.id;
+    const rows = [], signatures = /* @__PURE__ */ new Set(), keySignatures = /* @__PURE__ */ new Map();
+    for (const original of requirementInput(vacancy)) {
+      const category = canonicalRequirementCategory(original.category);
+      const text3 = sourceText(original.sourceText ?? original.text);
+      const state2 = typeof original.requirementState === "string" ? original.requirementState : text3 ? "stated" : "source_not_stated";
+      const requirementState = state2 === "as-published" ? "stated" : state2;
+      if (!text3 && requirementState !== "source_not_stated") continue;
+      const signature = JSON.stringify([
+        vacancyId,
+        category,
+        text3.normalize("NFC").replace(/\s+/g, " "),
+        requirementState,
+        original.scope || null,
+        original.selfAssessmentEligible === false ? false : true
+      ]);
+      if (signatures.has(signature)) continue;
+      signatures.add(signature);
+      let key = `jr-${fingerprint(signature)}`;
+      if (keySignatures.has(key) && keySignatures.get(key) !== signature) key += `-${encodeURIComponent(signature)}`;
+      keySignatures.set(key, signature);
+      const assessable = requirementState === "stated" && original.selfAssessmentEligible !== false && Boolean(text3);
+      const assessmentKind = PERSONAL_CATEGORIES.has(category) ? "competency" : FORMAL_CATEGORIES.has(category) ? "formal" : "other";
+      rows.push({
+        ...original,
+        id: key,
+        key,
+        signature,
+        sourceId: original.id || null,
+        vacancyId,
+        category,
+        sourceCategory: original.sourceCategory || original.category || null,
+        sourceRequirementState: original.sourceRequirementState || state2,
+        text: text3,
+        sourceText: original.sourceText ?? original.text ?? null,
+        sourceLocator: original.sourceLocator ?? null,
+        evidenceSourceUrl: original.evidenceSourceUrl ?? vacancy.source?.url ?? vacancy.url ?? null,
+        sourceUrl: safeUrl(original.evidenceSourceUrl || vacancy.source?.url || vacancy.url),
+        requirementState,
+        selfAssessmentEligible: original.selfAssessmentEligible ?? null,
+        competencyDomainId: typeof original.competencyDomainId === "string" && original.competencyDomainId.trim() ? original.competencyDomainId : null,
+        assessable,
+        assessmentKind,
+        learningEligible: assessable && assessmentKind === "competency"
+      });
+    }
+    const groups = REQUIREMENT_CATEGORIES.map((id) => ({ id, rows: rows.filter((row) => row.category === id) }));
+    const missingCategories = CORE_REQUIREMENT_CATEGORIES.filter((category) => !rows.some((row) => row.category === category && row.requirementState !== "source_not_stated"));
+    return {
+      vacancyId,
+      rows,
+      groups,
+      missingCategories,
+      source: vacancy.source || { url: vacancy.url || null, retrievedAt: vacancy.lastSeenAt || null },
+      archive: vacancy.archive || null,
+      coverage: vacancy.coverage || null,
+      assessableCount: rows.filter((row) => row.assessable).length,
+      contextRows: rows.filter((row) => !row.assessable),
+      sourceCompleteness: vacancy.coverage?.requirements || "not-established",
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+  function answerStatus(value, signature) {
+    if (object(value) && value.signature && value.signature !== signature) return "unassessed";
+    const status = object(value) ? value.status : value;
+    return status === "met" || status === "gap" ? status : "unassessed";
+  }
+  function countsFor(rows) {
+    const total = rows.length;
+    const met = rows.filter((row) => row.status === "met").length;
+    const gap = rows.filter((row) => row.status === "gap").length;
+    const unassessed = total - met - gap;
+    return {
+      total,
+      met,
+      gap,
+      unassessed,
+      assessed: met + gap,
+      metShare: total ? met / total : null,
+      gapShare: total ? gap / total : null,
+      unassessedShare: total ? unassessed / total : null,
+      coverage: total ? (met + gap) / total : null,
+      targetShare: total ? 1 : null,
+      complete: total > 0 && unassessed === 0
+    };
+  }
+  function summarizeVacancyAssessment(requirements, statuses2 = {}) {
+    const built = Array.isArray(requirements) ? { rows: requirements } : requirements || { rows: [] };
+    const rows = list(built.rows).map((row) => ({
+      ...row,
+      status: row.assessable ? answerStatus(statuses2[row.key || row.id], row.signature) : null
+    }));
+    const assessable = rows.filter((row) => row.assessable);
+    const competencyRows = assessable.filter((row) => row.assessmentKind === "competency");
+    const groups = REQUIREMENT_CATEGORIES.map((id) => {
+      const members = rows.filter((row) => row.category === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members.filter((row) => row.assessable)),
+        sourceMissing: members.filter((row) => row.requirementState === "source_not_stated").length,
+        explicitlyNotRequired: members.filter((row) => row.requirementState === "explicitly_not_required").length,
+        contextOnly: members.filter((row) => !row.assessable).length,
+        sourceCoverage: members.length ? "represented-in-record" : "not-extracted"
+      };
+    });
+    const domainIds = [...new Set(competencyRows.map((row) => row.competencyDomainId).filter(Boolean))].sort((left, right) => {
+      const li = COMPETENCY_DOMAIN_IDS.indexOf(left), ri = COMPETENCY_DOMAIN_IDS.indexOf(right);
+      return (li < 0 ? COMPETENCY_DOMAIN_IDS.length : li) - (ri < 0 ? COMPETENCY_DOMAIN_IDS.length : ri) || left.localeCompare(right);
+    });
+    const domains = domainIds.map((id) => {
+      const members = competencyRows.filter((row) => row.competencyDomainId === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members),
+        classificationReviewed: members.every((row) => row.classificationProvenance?.reviewStatus === "reviewed")
+      };
+    });
+    const unclassified = competencyRows.filter((row) => !row.competencyDomainId);
+    return {
+      vacancyId: built.vacancyId || rows[0]?.vacancyId || null,
+      rows,
+      groups,
+      domains,
+      ...countsFor(assessable),
+      competencySummary: countsFor(competencyRows),
+      developmentItems: competencyRows.filter((row) => row.status === "gap"),
+      formalRequirements: rows.filter((row) => FORMAL_CATEGORIES.has(row.category)),
+      formalGaps: assessable.filter((row) => FORMAL_CATEGORIES.has(row.category) && row.status === "gap"),
+      otherGaps: assessable.filter((row) => row.assessmentKind === "other" && row.status === "gap"),
+      unassessedItems: assessable.filter((row) => row.status === "unassessed"),
+      sourceContextItems: rows.filter((row) => !row.assessable),
+      missingCategories: built.missingCategories || CORE_REQUIREMENT_CATEGORIES.filter((id) => !rows.some((row) => row.category === id && row.requirementState !== "source_not_stated")),
+      unclassifiedCompetencyRows: unclassified,
+      // Missing domain classifications cannot silently disappear from a full radar.
+      domainRadarAvailable: domains.length >= 3 && unclassified.length === 0 && domains.every((domain) => domain.classificationReviewed),
+      source: built.source || null,
+      archive: built.archive || null,
+      coverageMetadata: built.coverage || null,
+      sourceCompleteness: built.sourceCompleteness || "not-established",
+      eligibilityVerdict: null,
+      abilityScore: null,
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+
+  // site/apps/career/assets/career-vacancy-details.mjs
+  var object2 = (value) => value && typeof value === "object" && !Array.isArray(value);
+  var HEX = /^[a-f0-9]{64}$/;
+  var BASE_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.json\.gz$/;
+  var PART_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.part[0-9]{4}\.json\.gz$/;
+  var abortError2 = () => new DOMException("Vacancy details cancelled", "AbortError");
+  async function digest2(raw) {
+    if (!globalThis.crypto?.subtle) throw new Error("Source verification is unavailable");
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", raw))].map((v) => v.toString(16).padStart(2, "0")).join("");
+  }
+  function sameIDs(actual, expected) {
+    return actual.length === expected.length && new Set(actual).size === actual.length && actual.every((id) => expected.includes(id));
+  }
+  function validateDetailsPack(pack, binding, expectedIDs = binding.uuids) {
+    if (!object2(pack) || pack.schemaVersion !== 1 || pack.baseTreeSHA !== binding.baseTreeSHA || pack.basePage !== binding.basePage || pack.basePageSHA256 !== binding.basePageSHA256 || pack.employerId !== binding.employerId) throw new Error("Source detail/base-page identity mismatch");
+    if (Array.isArray(pack.shards)) {
+      if (pack.records !== void 0 && Object.keys(pack.records).length || pack.recordCount !== binding.uuids.length) throw new Error("Invalid detail index");
+      const ids2 = [], paths = /* @__PURE__ */ new Set();
+      for (const part of pack.shards) {
+        if (!object2(part) || !PART_PAGE.test(part.path) || !part.path.startsWith(binding.basePage.slice(0, -8) + ".part") || paths.has(part.path) || !Array.isArray(part.uuids) || !part.uuids.length || !HEX.test(part.sha256) || !HEX.test(part.uncompressedSHA256) || !Number.isInteger(part.bytes) || part.bytes < 18 || part.bytes > 4 * 1024 * 1024 || !Number.isInteger(part.uncompressedBytes) || part.uncompressedBytes < 1 || part.uncompressedBytes > 8 * 1024 * 1024) throw new Error("Invalid bound source-detail shard");
+        paths.add(part.path);
+        ids2.push(...part.uuids);
+      }
+      if (!sameIDs(ids2, binding.uuids)) throw new Error("Detail index UUID coverage mismatch");
+    } else if (!object2(pack.records) || !sameIDs(Object.keys(pack.records), expectedIDs)) throw new Error("Source detail UUID coverage mismatch");
+    return pack;
+  }
+  function createVacancyDetailsStore({ getMetadata = () => null, fetchImpl = (...args) => fetch(...args), baseURL = "data/vacancies/details/", maxPages = 4, maxStates = 16, timeout = 2e4 } = {}) {
+    const cache = /* @__PURE__ */ new Map(), pending = /* @__PURE__ */ new Map(), states = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set();
+    let disposed = false, active = 0;
+    const waiting = [];
+    async function acquire(signal) {
+      if (signal.aborted) throw abortError2();
+      if (active < 2) {
+        active++;
+        return;
+      }
+      await new Promise((resolve, reject) => {
+        const item = { resolve: () => {
+          signal.removeEventListener("abort", cancel);
+          resolve();
+        } }, cancel = () => {
+          const index = waiting.indexOf(item);
+          if (index >= 0) waiting.splice(index, 1);
+          reject(abortError2());
+        };
+        waiting.push(item);
+        signal.addEventListener("abort", cancel, { once: true });
+      });
+    }
+    function release() {
+      const next = waiting.shift();
+      if (next) next.resolve();
+      else active--;
+    }
+    const notify = (key) => {
+      if (!disposed) for (const fn of listeners) fn(key);
+    };
+    function context(binding) {
+      const meta = getMetadata();
+      if (!meta?.available || !HEX.test(meta.baseTreeSHA) || meta.baseTreeSHA !== meta.detailsBaseTreeSHA || !HEX.test(meta.detailsTreeSHA)) throw new Error("Full source details are not connected");
+      if (!BASE_PAGE.test(binding.basePage) || !HEX.test(binding.basePageSHA256) || !Array.isArray(binding.uuids) || new Set(binding.uuids).size !== binding.uuids.length || !binding.uuids.length || binding.uuids.length > 250 || !binding.employerId) throw new Error("Invalid current vacancy page");
+      return { ...binding, baseTreeSHA: meta.baseTreeSHA, detailsTreeSHA: meta.detailsTreeSHA, sourceHosting: meta.collectionRoot || null };
+    }
+    const pageKey = (b) => JSON.stringify([b.detailsTreeSHA, b.baseTreeSHA, b.basePage, b.basePageSHA256, b.employerId, b.uuids]);
+    const stateKey = (b, id) => pageKey(b) + "|" + id;
+    function touch(key, value) {
+      cache.delete(key);
+      cache.set(key, value);
+      while (cache.size > maxPages) cache.delete(cache.keys().next().value);
+    }
+    function locate(b, id) {
+      const root = cache.get(pageKey(b) + "|" + b.basePage);
+      if (!root) return null;
+      let found = root;
+      if (root.pack.shards) {
+        const part = root.pack.shards.find((p) => p.uuids.includes(id));
+        if (!part) return null;
+        found = cache.get(pageKey(b) + "|" + part.path);
+        if (!found) return null;
+      }
+      const record2 = found.pack.records?.[id];
+      return record2 ? { record: hydrateDetailRecord(found.pack, id), provenance: { baseTreeSHA: b.baseTreeSHA, basePage: b.basePage, basePageSHA256: b.basePageSHA256, employerId: b.employerId, detailsTreeSHA: b.detailsTreeSHA, sourceHosting: b.sourceHosting, detailPage: found.path, gzipSHA256: found.gzipSHA256, uncompressedSHA256: found.uncompressedSHA256, recordJSONPointer: "/records/" + id, sourceDatabaseSHA256: found.pack.sourceDatabaseSHA256 || root.pack.sourceDatabaseSHA256 || null, sourceFields: found.pack.sourceFields || root.pack.sourceFields || null } } : null;
+    }
+    async function readFile(path, b, ref, signal) {
+      const key = pageKey(b) + "|" + path;
+      if (cache.has(key)) {
+        const value = cache.get(key);
+        touch(key, value);
+        return value;
+      }
+      let job = pending.get(key);
+      if (job?.controller.signal.aborted) {
+        pending.delete(key);
+        job = null;
+      }
+      if (!job) {
+        const controller = new AbortController();
+        job = { controller, consumers: /* @__PURE__ */ new Set() };
+        job.promise = (async () => {
+          let timer;
+          const deadline = new Promise((_, reject) => {
+            timer = setTimeout(() => {
+              controller.abort();
+              reject(new DOMException("Source detail timeout", "TimeoutError"));
+            }, timeout);
+          });
+          try {
+            const value = await Promise.race([(async () => {
+              await acquire(controller.signal);
+              let response;
+              try {
+                response = await fetchImpl(baseURL + path, { cache: "no-store", signal: controller.signal });
+              } catch (error) {
+                release();
+                throw error;
+              }
+              if (!response.ok) {
+                release();
+                throw new Error("Source detail HTTP " + response.status);
+              }
+              let raw;
+              try {
+                raw = new Uint8Array(await response.arrayBuffer());
+              } finally {
+                release();
+              }
+              if (raw.length > 4 * 1024 * 1024) throw new Error("Compressed source detail exceeds limit");
+              const compressedSHA = await digest2(raw);
+              if (ref && (raw.length !== ref.bytes || compressedSHA !== ref.sha256)) throw new Error("Source detail shard compressed checksum mismatch");
+              const decoded = await decodeGzip(raw, { expectedBytes: ref?.uncompressedBytes, maxBytes: 8 * 1024 * 1024 });
+              const decodedSHA = await digest2(decoded);
+              if (ref && decodedSHA !== ref.uncompressedSHA256) throw new Error("Source detail shard checksum mismatch");
+              if (controller.signal.aborted) throw abortError2();
+              const pack = validateDetailsPack(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded)), b, ref?.uuids || b.uuids);
+              const result = { pack, path, gzipSHA256: compressedSHA, uncompressedSHA256: decodedSHA };
+              touch(key, result);
+              return result;
+            })(), deadline]);
+            return value;
+          } finally {
+            clearTimeout(timer);
+          }
+        })();
+        pending.set(key, job);
+        job.promise.finally(() => {
+          if (pending.get(key) === job) pending.delete(key);
+        }).catch(() => {
+        });
+      }
+      return new Promise((resolve, reject) => {
+        const consumer = {};
+        job.consumers.add(consumer);
+        let settled = false;
+        const cleanup = () => {
+          job.consumers.delete(consumer);
+          signal.removeEventListener("abort", cancel);
+        };
+        const cancel = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          if (!job.consumers.size) job.controller.abort();
+          reject(abortError2());
+        };
+        if (signal.aborted) {
+          cancel();
+          return;
+        }
+        signal.addEventListener("abort", cancel, { once: true });
+        job.promise.then((v) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            resolve(v);
+          }
+        }, (e) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            reject(e);
+          }
+        });
+      });
+    }
+    function status(binding, id) {
+      try {
+        const b = context(binding), key = stateKey(b, id), state2 = states.get(key), ready2 = locate(b, id);
+        return { key, status: state2?.loading ? "loading" : state2?.error ? "error" : ready2 ? "ready" : "idle", error: state2?.error || null, ...ready2 };
+      } catch {
+        return { key: null, status: "unavailable", error: "not-connected" };
+      }
+    }
+    function load(binding, id) {
+      if (disposed) return Promise.resolve(null);
+      let b;
+      try {
+        b = context(binding);
+        if (!b.uuids.includes(id)) throw new Error("Vacancy not in current page");
+      } catch {
+        return Promise.resolve({ status: "error", error: "source-mismatch" });
+      }
+      const key = stateKey(b, id), existing = states.get(key);
+      if (existing?.loading) return existing.promise;
+      const ready2 = locate(b, id);
+      if (ready2 && !existing?.error) return Promise.resolve({ key, status: "ready", ...ready2 });
+      existing?.controller?.abort();
+      const state2 = { loading: true, error: null, controller: new AbortController() };
+      states.delete(key);
+      states.set(key, state2);
+      while (states.size > maxStates) {
+        const first = states.keys().next().value;
+        states.get(first).controller.abort();
+        states.delete(first);
+      }
+      notify(key);
+      state2.promise = (async () => {
+        try {
+          const root = await readFile(b.basePage, b, null, state2.controller.signal);
+          if (root.pack.shards) {
+            const part = root.pack.shards.find((p) => p.uuids.includes(id));
+            await readFile(part.path, b, part, state2.controller.signal);
+            touch(pageKey(b) + "|" + b.basePage, root);
+          }
+          if (state2.controller.signal.aborted) throw abortError2();
+          const found = locate(b, id);
+          if (!found) throw new Error("Selected source detail missing");
+          return { key, status: "ready", ...found };
+        } catch (error) {
+          if (error.name !== "AbortError") state2.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
+          return { key, status: "error", error: state2.error || "cancelled" };
+        } finally {
+          state2.loading = false;
+          state2.promise = null;
+          notify(key);
+        }
+      })();
+      return state2.promise;
+    }
+    return { get: status, load, cancelAll() {
+      for (const state2 of states.values()) state2.controller.abort();
+    }, subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }, cancel(binding, id) {
+      try {
+        const key = stateKey(context(binding), id), state2 = states.get(key);
+        state2?.controller?.abort();
+        if (state2) {
+          state2.loading = false;
+          state2.error = null;
+        }
+        notify(key);
+      } catch {
+      }
+    }, cacheInfo: () => ({ pages: cache.size, pending: pending.size, activeRequests: active, states: states.size }), dispose() {
+      disposed = true;
+      for (const state2 of states.values()) state2.controller.abort();
+      for (const job of pending.values()) job.controller.abort();
+      cache.clear();
+      states.clear();
+      listeners.clear();
+    } };
+  }
+  var DETAIL_CATEGORIES = ["duties", "knowledge", "skills", "knowledgeDescription", "additionalRequirements", "departmentLabels", "otherRequirements"];
+  function hydrateDetailRecord(pack, id) {
+    const input = pack.records?.[id];
+    if (!object2(input)) throw new Error("Missing selected source record");
+    const result = {};
+    for (const category of DETAIL_CATEGORIES) {
+      const tokens = input[category] ?? [];
+      if (!Array.isArray(tokens)) throw new Error("Invalid source text category");
+      result[category] = tokens.map((token) => {
+        if (!object2(token) || typeof token.sourceField !== "string" || typeof token.sourcePointer !== "string" || !token.sourcePointer.startsWith("/")) throw new Error("Invalid source text locator");
+        let text3 = token.text;
+        if (Object.hasOwn(token, "textIndex")) {
+          if (pack.tokenEncoding !== "page-strings-v1" || !Array.isArray(pack.strings) || !Number.isInteger(token.textIndex) || token.textIndex < 0 || token.textIndex >= pack.strings.length) throw new Error("Invalid source string reference");
+          text3 = pack.strings[token.textIndex];
+        }
+        if (typeof text3 !== "string") throw new Error("Invalid source text");
+        const { textIndex, ...rest } = token;
+        return { ...rest, text: text3 };
+      });
+    }
+    return result;
+  }
+  var educationFields = /* @__PURE__ */ new Set(["educationLevelName", "trainingTypes", "trainingTypesCollection", "targetedTrainingEducationLevelName", "academicPerformanceRequirements"]);
+  var experienceFields = /* @__PURE__ */ new Set(["governmentExperienceName", "professionalExperienceName"]);
+  var SOURCE_LABELS = { knowledge: "\u0417\u043D\u0430\u043D\u0438\u044F", skills: "\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", education: "\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", experience: "\u0421\u0442\u0430\u0436", majors: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 (\u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B)", other: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", service: "\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043B\u0443\u0436\u0431\u044B" };
+  function sourceLabelKey(field, category) {
+    return ["trainingTypes", "trainingTypesCollection"].includes(field) ? "majors" : /CivilServicePassingConditions|withoutCompetitionReason/.test(field) ? "service" : category;
+  }
+  function sourceLabel(field, category) {
+    return SOURCE_LABELS[sourceLabelKey(field, category)] || SOURCE_LABELS.other;
+  }
+  function bankVacancySnapshot(row, detail, { institutionId, employerId, employerName, provenance } = {}) {
+    const requirements = [], seen = /* @__PURE__ */ new Map();
+    function add(category, token) {
+      if (!token.text.trim()) return;
+      const paragraphs = token.alternativeGroup ? [token.text] : token.text.split(/\n\s*\n|\n(?=\s*(?:[•●▪–—-]\s|\d+[.)]\s))/).filter((text3) => text3.trim());
+      for (const text3 of paragraphs) {
+        const key = category + "|" + text3;
+        const ref = { sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace };
+        if (seen.has(key)) {
+          seen.get(key).sourceReferences.push(ref);
+          continue;
+        }
+        const item = { category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: sourceLabel(token.sourceField, category), sourceHeading: sourceLabel(token.sourceField, category), sourceLabelKey: sourceLabelKey(token.sourceField, category), evidenceSourceUrl: row.sourceURL, sourceKind: "published-vacancy-field", scope: row.scope, sourceReferences: [ref, ...token.sourceProvenance || []] };
+        seen.set(key, item);
+        requirements.push(item);
+      }
+    }
+    for (const [field, category] of [["knowledge", "knowledge"], ["skills", "skills"], ["knowledgeDescription", "knowledge"], ["additionalRequirements", "other"]]) for (const token of detail[field] || []) add(category, token);
+    const other = detail.otherRequirements || [], majors = other.filter((token) => token.sourceField === "trainingTypesCollection" && token.text.trim());
+    if (majors.length) {
+      const first = majors[0], references = majors.flatMap((token) => [{ sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace }, ...token.sourceProvenance || []]);
+      add("education", { ...first, text: [...new Set(majors.map((token) => token.text))].join(" / "), alternativeGroup: true, sourceProvenance: references });
+    }
+    for (const token of other) {
+      if (majors.length && ["trainingTypes", "trainingTypesCollection"].includes(token.sourceField)) continue;
+      add(educationFields.has(token.sourceField) ? "education" : experienceFields.has(token.sourceField) ? "experience" : "other", token);
+    }
+    for (const [field, category] of [["education", "education"], ["professionalExperience", "experience"], ["governmentExperience", "experience"]]) if (typeof row[field] === "string" && row[field].trim()) add(category, { text: row[field], sourceField: field, sourcePointer: "/basePage/" + field, sourceNamespace: "base-public-summary" });
+    return { id: "bank-" + row.id, sourceVacancyId: row.id, sourceCategory: "public-vacancy-bank", bankVacancy: true, institutionId, employerId, employerName, title: row.title, regionId: null, regionName: row.region, url: row.sourceURL, scope: row.scope, archive: row.archive, announcedAt: row.announcedAt, expiresAt: row.expiresAt, state: row.state, currentness: "unknown", requirements, duties: detail.duties, department: detail.departmentLabels.map((t) => t.text).join("\n"), source: { url: row.sourceURL, kind: "published-vacancy-bank", provenance }, sourceDetails: detail };
+  }
+
   // site/apps/career/assets/region-map-geometry.mjs
   var REGION_MAP_MAX_ZOOM = 40;
   var clampMapZoom = (value) => Math.max(1, Math.min(REGION_MAP_MAX_ZOOM, value));
@@ -5645,600 +6565,6 @@ var CareerRuntime = (() => {
     return { ...authority, ...detail };
   }
 
-  // site/apps/career/assets/scoring.mjs
-  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
-  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
-  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
-  function clamp(value, min = 0, max2 = 1) {
-    return Math.max(min, Math.min(max2, value));
-  }
-  function average(values) {
-    if (!values.length) return 0;
-    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
-  }
-  function standardDeviation(values) {
-    if (!values.length) return 0;
-    const mean = average(values);
-    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
-  }
-  function computeRoleProfile(answerMap, questions) {
-    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
-    for (const question of questions) {
-      const raw2 = Number(answerMap[question.id]);
-      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
-        grouped[question.scale].push(raw2);
-      }
-    }
-    const raw = {};
-    const normalized2 = {};
-    for (const id of SCALE_IDS) {
-      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
-      normalized2[id] = (raw[id] - 1) / 4;
-    }
-    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
-  }
-  function profileFromMeans(raw, answered = 27) {
-    const normalized2 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
-    const values = SCALE_IDS.map((id) => Number(raw[id]));
-    const dispersion = standardDeviation(values);
-    const mean = average(values);
-    return {
-      raw,
-      normalized: normalized2,
-      dispersion,
-      flat: dispersion < 0.26,
-      answered,
-      mean,
-      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
-      positiveScales: values.filter((v) => v >= 3.5).length,
-      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
-    };
-  }
-  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
-    const priorityWeights = [1, 0.82, 0.66, 0.5];
-    const lowWeights = [0.08, 0];
-    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
-    priorityIds.slice(0, 4).forEach((id, index) => {
-      if (id in values) values[id] = priorityWeights[index];
-    });
-    lowPriorityIds.slice(0, 2).forEach((id, index) => {
-      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
-    });
-    return values;
-  }
-  function sectorFit(preferences, authority, focusAreas = {}) {
-    const entries = authority.sectors || [];
-    if (!entries.length) return 0.25;
-    return clamp(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
-  }
-  function conditionDetails(userConditions = {}, requirements = {}) {
-    return CONDITION_IDS.map((id) => {
-      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
-      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
-      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
-      const [lo, hi] = interval;
-      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
-      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
-      return { id, willingness, requirement, interval, known: true, fit: clamp(1 - expectedGap / 4), gap: expectedGap };
-    });
-  }
-  function conditionFit(userConditions = {}, requirements = {}) {
-    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
-  }
-  function roleFit(roleProfile, template) {
-    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
-    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
-    const mean = average(user), tmean = average(target);
-    let dot = 0, norm = 0, tnorm = 0;
-    for (let i2 = 0; i2 < user.length; i2++) {
-      const u = user[i2] - mean, t = target[i2] - tmean;
-      dot += u * t;
-      norm += u * u;
-      tnorm += t * t;
-    }
-    if (tnorm < 1e-12) return 0.5;
-    return clamp(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
-  }
-  function matchBand(score2) {
-    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
-  }
-  function importanceFactor(importance) {
-    if (Number(importance) >= 3) return 1;
-    if (Number(importance) === 2) return 0.96;
-    return 0.91;
-  }
-  function canonicalValue(value) {
-    if (Array.isArray(value)) return value.map(canonicalValue);
-    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
-    return value;
-  }
-  function pathSignature(path, template, factor) {
-    return JSON.stringify(canonicalValue({
-      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
-      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
-      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids2]) => ids2?.length).map(([id, ids2]) => [id, [...new Set(ids2)].sort()])),
-      conditions: CONDITION_IDS.map((id) => {
-        const value = path.conditions?.[id];
-        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
-      }),
-      factor
-    }));
-  }
-  function aggregatePaths(paths) {
-    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
-    const best = ordered[0];
-    const pathMeanScore = average(ordered.map((path) => path.score));
-    const contributions = {};
-    const pathMeanContributions = {};
-    for (const key of ["role", "sector", "conditions"]) {
-      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
-      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
-    }
-    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
-    const { signature, ...bestPath } = best;
-    return {
-      ...bestPath,
-      rawScore,
-      score: Math.round(rawScore * 10) / 10,
-      band: matchBand(rawScore),
-      bestPathScore: best.score,
-      pathMeanScore,
-      portfolioScore: pathMeanScore,
-      pathCount: ordered.length,
-      aggregation: AGENCY_AGGREGATION,
-      bestPathContributions: best.contributions,
-      pathMeanContributions,
-      contributions
-    };
-  }
-  function scoreAuthority(authority, context, trackMap) {
-    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
-    const cFit = conditionFit(context.conditions, authority.conditions);
-    const paths = /* @__PURE__ */ new Map();
-    for (const link of authority.tracks || []) {
-      const template = trackMap.get(link.id);
-      if (!template) continue;
-      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
-      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
-      const cFit2 = conditionFit(context.conditions, link.conditions || {});
-      const rFit = roleFit(context.roleProfile, template);
-      const factor = importanceFactor(link.importance);
-      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
-      const score2 = 100 * base * factor;
-      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
-      const candidate = {
-        score: score2,
-        signature,
-        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
-        roleFit: rFit,
-        sectorFit: sFit2,
-        conditionFit: cFit2,
-        track: template,
-        importance: link.importance,
-        path: link,
-        pathSectors: path.sectors,
-        pathTopics: path.topics || {},
-        pathConditions: link.conditions || {}
-      };
-      const existing = paths.get(signature);
-      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
-    }
-    if (!paths.size) {
-      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
-      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
-      return {
-        ...authority,
-        score: Math.round(score2 * 10) / 10,
-        rawScore: score2,
-        band: matchBand(score2),
-        roleFit: 0.5,
-        sectorFit: sFit,
-        conditionFit: cFit,
-        track: null,
-        importance: 0,
-        bestPathScore: null,
-        pathMeanScore: null,
-        portfolioScore: null,
-        pathCount: 0,
-        aggregation: AGENCY_AGGREGATION,
-        contributions,
-        bestPathContributions: null,
-        pathMeanContributions: null
-      };
-    }
-    return { ...authority, ...aggregatePaths([...paths.values()]) };
-  }
-  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const roleProfile = computeRoleProfile(answers, questions);
-    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
-  }
-  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
-    const trackMap = new Map(tracks.map((track) => [track.id, track]));
-    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
-    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
-    return { ranked, roleProfile, sectorPreferences, context };
-  }
-  function selectDiscoveryCandidate(ranked, topCount = 5) {
-    if (ranked.length <= topCount) return null;
-    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
-    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
-      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
-      return right.score - left.score;
-    });
-    return candidates[0] || null;
-  }
-  function buildExplanation(item, roleProfile, scales, sectors) {
-    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
-    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
-    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
-    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
-    return {
-      strengths: strongest,
-      sectors: authoritySectors,
-      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
-      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
-    };
-  }
-  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
-    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
-    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
-    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
-    return {
-      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
-      missingQuestions,
-      priorityCount: prioritySectors.length,
-      lowPriorityCount: lowPrioritySectors.length,
-      missingConditions
-    };
-  }
-
-  // site/apps/career/assets/career-journey-model.mjs
-  var JOURNEY_SCHEMA = 1;
-  var DESIRED_AUTHORITY_COUNT = 3;
-  var REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills", "eligibility", "other"]);
-  var CORE_REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills"]);
-  var COMPETENCY_DOMAIN_IDS = Object.freeze([
-    "law-regulation",
-    "documents-records",
-    "data-digital",
-    "finance-economy",
-    "communication",
-    "organization-projects",
-    "sector-knowledge",
-    "analytical-work"
-  ]);
-  var PERSONAL_CATEGORIES = /* @__PURE__ */ new Set(["knowledge", "skills"]);
-  var FORMAL_CATEGORIES = /* @__PURE__ */ new Set(["education", "experience", "eligibility"]);
-  var object = (value) => value && typeof value === "object" && !Array.isArray(value);
-  var list = (value) => Array.isArray(value) ? value : [];
-  var ids = (value) => [...new Set(list(value).filter((id) => typeof id === "string" && id.trim()))];
-  var sourceText = (value) => typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
-  function isNationalAuthority(authority) {
-    if (!authority) return false;
-    if (["federal", "national", "national-corporation"].includes(authority.level)) return true;
-    if (authority.level === "regional" || authority.level === "municipal" || authority.regionId) return false;
-    if (String(authority.cohort || "").startsWith("federal-")) return true;
-    return !authority.level || ["corporation", "fund"].includes(authority.entityType);
-  }
-  function authorityInSelectedTerritories(authority, regionIds = []) {
-    return isNationalAuthority(authority) || ids(regionIds).includes(authority?.regionId);
-  }
-  function sanitizeJourneyPreferences(value, { regions = [], authorities = [], defaultRegionId = "ru-77" } = {}) {
-    const stored = object(value) ? value : {};
-    const knownRegions = new Set(list(regions).map((region) => typeof region === "string" ? region : region?.id));
-    const candidateRegions = Array.isArray(stored.regionIds) ? stored.regionIds : [defaultRegionId];
-    const regionIds = ids(candidateRegions).filter((id) => knownRegions.has(id));
-    const knownAuthorities = new Map(list(authorities).filter((authority) => authority?.id).map((authority) => [authority.id, authority]));
-    const desiredIds = ids(stored.desiredIds).filter((id) => {
-      const authority = knownAuthorities.get(id);
-      return authority && authorityInSelectedTerritories(authority, regionIds);
-    }).slice(0, DESIRED_AUTHORITY_COUNT);
-    return {
-      schemaVersion: JOURNEY_SCHEMA,
-      regionIds,
-      desiredIds,
-      confirmed: stored.confirmed === true && desiredIds.length === DESIRED_AUTHORITY_COUNT
-    };
-  }
-  function validProfile(profile) {
-    return profile && SCALE_IDS.every((id) => Number.isFinite(profile.raw?.[id]) && profile.raw[id] >= 1 && profile.raw[id] <= 5);
-  }
-  function rankJourneyAuthorities(options = {}) {
-    const { authorities = [], tracks = [], questions = [], sectors = [] } = options;
-    const input = { ...options, ...object(options.inputs) ? options.inputs : {} };
-    let roleProfile = options.context?.roleProfile || options.roleProfile;
-    if (!roleProfile) {
-      if (!questions.length || questions.some((question) => !Number.isInteger(input.answers?.[question.id]) || input.answers[question.id] < 1 || input.answers[question.id] > 5)) {
-        throw new Error("journey/incomplete-interest-profile");
-      }
-      roleProfile = computeRoleProfile(input.answers, questions);
-    }
-    if (!validProfile(roleProfile)) throw new Error("journey/invalid-interest-profile");
-    const context = {
-      roleProfile,
-      sectorPreferences: options.context?.sectorPreferences || buildSectorPreference(input.prioritySectors, input.lowPrioritySectors, sectors),
-      conditions: options.context?.conditions || input.conditions || {},
-      focusAreas: options.context?.focusAreas || input.focusAreas || {}
-    };
-    const regionIds = ids(options.regionIds);
-    const regionsWanted = new Set(regionIds);
-    const count = Number.isSafeInteger(options.limit) && options.limit >= 0 ? options.limit : 3;
-    const trackMap = new Map(list(tracks).map((track) => [track.id, track]));
-    const distinct = /* @__PURE__ */ new Map();
-    for (const authority of list(authorities)) {
-      if (!authority || typeof authority.id !== "string" || !authority.id || distinct.has(authority.id)) continue;
-      if (isNationalAuthority(authority) || regionsWanted.has(authority.regionId)) distinct.set(authority.id, authority);
-    }
-    const ranked = [...distinct.values()].map((authority) => scoreAuthority(authority, context, trackMap)).sort((left, right) => right.rawScore - left.rawScore || left.id.localeCompare(right.id)).map((authority, index) => ({ ...authority, rank: index + 1 }));
-    if (ranked.some((authority) => !Number.isFinite(authority.rawScore))) throw new Error("journey/invalid-model-score");
-    const federalPool = ranked.filter(isNationalAuthority);
-    const federal = federalPool.slice(0, count);
-    const regions = regionIds.map((regionId) => {
-      const pool = ranked.filter((authority) => !isNationalAuthority(authority) && authority.regionId === regionId);
-      return {
-        regionId,
-        authorities: pool.slice(0, count),
-        total: pool.length,
-        municipalCount: pool.filter((authority) => authority.level === "municipal").length
-      };
-    });
-    return {
-      ranked,
-      federal,
-      federalTotal: federalPool.length,
-      regions,
-      recommendations: [...federal, ...regions.flatMap((region) => region.authorities)],
-      roleProfile,
-      context
-    };
-  }
-  function buildAuthorityDevelopment(authority, roleProfile, { tracks = [], careerFramework = {}, competencies = [] } = {}) {
-    const templates = new Map(list(tracks).map((track2) => [track2.id, track2]));
-    const scoredTrack = authority?.track || authority?.match?.track;
-    const link = list(authority?.tracks).slice().sort((left, right) => Number(right.importance || 0) - Number(left.importance || 0) || String(left.id).localeCompare(String(right.id))).find((candidate) => templates.has(candidate.id));
-    const track = scoredTrack?.vector ? scoredTrack : templates.get(scoredTrack?.id || link?.id);
-    const base = {
-      authorityId: authority?.id || null,
-      modelReference: true,
-      comparableToQuestionnaireUnits: false,
-      overlayOnPersonalInterestRadarAllowed: false,
-      skillDeficits: null,
-      eligibilityVerdict: null
-    };
-    if (!track || !validProfile(roleProfile)) return {
-      ...base,
-      available: false,
-      trackId: null,
-      rows: [],
-      lowerInterestDimensions: [],
-      competencies: [],
-      portfolio: [],
-      tasks: []
-    };
-    const rows = SCALE_IDS.map((id) => ({
-      id,
-      interest: roleProfile.raw[id],
-      emphasis: Number.isFinite(track.vector?.[id]) && track.vector[id] >= 0 && track.vector[id] <= 1 ? track.vector[id] : null
-    }));
-    const profile = list(careerFramework.trackProfiles).find((candidate) => candidate.id === track.id);
-    const competencyMap2 = new Map(list(competencies).map((competency) => [competency.id, competency]));
-    return {
-      ...base,
-      available: rows.some((row) => row.emphasis !== null),
-      trackId: track.id,
-      track,
-      rows,
-      lowerInterestDimensions: rows.filter((row) => row.emphasis >= 0.5 && row.interest < 3.5).sort((left, right) => right.emphasis - left.emphasis || left.interest - right.interest || SCALE_IDS.indexOf(left.id) - SCALE_IDS.indexOf(right.id)),
-      // This selection is a teaching prompt; it is not a psychometric cut-off.
-      reflectionRule: { minimumModelEmphasis: 0.5, belowInterest: 3.5, meaning: "topics-to-explore" },
-      competencies: ids(profile?.competencyIds).map((id) => competencyMap2.get(id)).filter(Boolean),
-      portfolio: list(profile?.portfolio).slice(),
-      tasks: list(profile?.tasks).slice(),
-      competencyMeaning: "authored-learning-suggestions-not-measured-deficits"
-    };
-  }
-  function canonicalRequirementCategory(category) {
-    if (category === "skill") return "skills";
-    if (category === "formal-eligibility" || category === "legal-eligibility") return "eligibility";
-    return REQUIREMENT_CATEGORIES.includes(category) ? category : "other";
-  }
-  function fingerprint(text3) {
-    let left = 2166136261, right = 2654435769;
-    for (let index = 0; index < text3.length; index++) {
-      const code = text3.charCodeAt(index);
-      left = Math.imul(left ^ code, 16777619);
-      right = Math.imul(right ^ code, 2246822507);
-      right ^= right >>> 13;
-    }
-    return (left >>> 0).toString(16).padStart(8, "0") + (right >>> 0).toString(16).padStart(8, "0");
-  }
-  function safeUrl(value) {
-    try {
-      const url = new URL(value);
-      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : null;
-    } catch {
-      return null;
-    }
-  }
-  function requirementStateFromText(text3) {
-    const value = sourceText(text3).replace(/\s+/g, " ").toLowerCase().replace(/[.;]$/, "").trim();
-    if (!value) return "source_not_stated";
-    if (/^(?:не указано|не указан|нет данных|не установлено|source_not_stated|not stated|not specified|未说明|未注明)$/.test(value)) return "source_not_stated";
-    if (/^(?:без предъявления требований к стажу|без требований к стажу|требования к стажу не предъявляются|не предъявляются|не требуется|не требуются|not required|no experience required|无要求)$/.test(value)) return "explicitly_not_required";
-    return "stated";
-  }
-  function requirementInput(vacancy) {
-    if (Array.isArray(vacancy?.requirements)) return vacancy.requirements.filter(object);
-    const fields = object(vacancy?.requirements) ? vacancy.requirements : vacancy || {};
-    return REQUIREMENT_CATEGORIES.flatMap((category) => {
-      const field = category === "other" ? fields.otherRequirements ?? fields.other : category === "skills" ? fields.skills ?? fields.skill : fields[category];
-      const entries = Array.isArray(field) ? field : [field];
-      return entries.flatMap((entry) => {
-        if (object(entry)) return [{ ...entry, category }];
-        if (!sourceText(entry)) return [];
-        return [{
-          category,
-          sourceText: sourceText(entry),
-          requirementState: requirementStateFromText(entry),
-          sourceLocator: `feed.${category}`,
-          sourceKind: "published-feed-field"
-        }];
-      });
-    });
-  }
-  function buildVacancyRequirements(vacancy) {
-    if (!vacancy || typeof vacancy.id !== "string" || !vacancy.id.trim()) throw new Error("journey/vacancy-identity-required");
-    const vacancyId = vacancy.id;
-    const rows = [], signatures = /* @__PURE__ */ new Set(), keySignatures = /* @__PURE__ */ new Map();
-    for (const original of requirementInput(vacancy)) {
-      const category = canonicalRequirementCategory(original.category);
-      const text3 = sourceText(original.sourceText ?? original.text);
-      const state2 = typeof original.requirementState === "string" ? original.requirementState : text3 ? "stated" : "source_not_stated";
-      const requirementState = state2 === "as-published" ? "stated" : state2;
-      if (!text3 && requirementState !== "source_not_stated") continue;
-      const signature = JSON.stringify([
-        vacancyId,
-        category,
-        text3.normalize("NFC").replace(/\s+/g, " "),
-        requirementState,
-        original.scope || null,
-        original.selfAssessmentEligible === false ? false : true
-      ]);
-      if (signatures.has(signature)) continue;
-      signatures.add(signature);
-      let key = `jr-${fingerprint(signature)}`;
-      if (keySignatures.has(key) && keySignatures.get(key) !== signature) key += `-${encodeURIComponent(signature)}`;
-      keySignatures.set(key, signature);
-      const assessable = requirementState === "stated" && original.selfAssessmentEligible !== false && Boolean(text3);
-      const assessmentKind = PERSONAL_CATEGORIES.has(category) ? "competency" : FORMAL_CATEGORIES.has(category) ? "formal" : "other";
-      rows.push({
-        ...original,
-        id: key,
-        key,
-        signature,
-        sourceId: original.id || null,
-        vacancyId,
-        category,
-        sourceCategory: original.sourceCategory || original.category || null,
-        sourceRequirementState: original.sourceRequirementState || state2,
-        text: text3,
-        sourceText: original.sourceText ?? original.text ?? null,
-        sourceLocator: original.sourceLocator ?? null,
-        evidenceSourceUrl: original.evidenceSourceUrl ?? vacancy.source?.url ?? vacancy.url ?? null,
-        sourceUrl: safeUrl(original.evidenceSourceUrl || vacancy.source?.url || vacancy.url),
-        requirementState,
-        selfAssessmentEligible: original.selfAssessmentEligible ?? null,
-        competencyDomainId: typeof original.competencyDomainId === "string" && original.competencyDomainId.trim() ? original.competencyDomainId : null,
-        assessable,
-        assessmentKind,
-        learningEligible: assessable && assessmentKind === "competency"
-      });
-    }
-    const groups = REQUIREMENT_CATEGORIES.map((id) => ({ id, rows: rows.filter((row) => row.category === id) }));
-    const missingCategories = CORE_REQUIREMENT_CATEGORIES.filter((category) => !rows.some((row) => row.category === category && row.requirementState !== "source_not_stated"));
-    return {
-      vacancyId,
-      rows,
-      groups,
-      missingCategories,
-      source: vacancy.source || { url: vacancy.url || null, retrievedAt: vacancy.lastSeenAt || null },
-      archive: vacancy.archive || null,
-      coverage: vacancy.coverage || null,
-      assessableCount: rows.filter((row) => row.assessable).length,
-      contextRows: rows.filter((row) => !row.assessable),
-      sourceCompleteness: vacancy.coverage?.requirements || "not-established",
-      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
-    };
-  }
-  function answerStatus(value, signature) {
-    if (object(value) && value.signature && value.signature !== signature) return "unassessed";
-    const status = object(value) ? value.status : value;
-    return status === "met" || status === "gap" ? status : "unassessed";
-  }
-  function countsFor(rows) {
-    const total = rows.length;
-    const met = rows.filter((row) => row.status === "met").length;
-    const gap = rows.filter((row) => row.status === "gap").length;
-    const unassessed = total - met - gap;
-    return {
-      total,
-      met,
-      gap,
-      unassessed,
-      assessed: met + gap,
-      metShare: total ? met / total : null,
-      gapShare: total ? gap / total : null,
-      unassessedShare: total ? unassessed / total : null,
-      coverage: total ? (met + gap) / total : null,
-      targetShare: total ? 1 : null,
-      complete: total > 0 && unassessed === 0
-    };
-  }
-  function summarizeVacancyAssessment(requirements, statuses2 = {}) {
-    const built = Array.isArray(requirements) ? { rows: requirements } : requirements || { rows: [] };
-    const rows = list(built.rows).map((row) => ({
-      ...row,
-      status: row.assessable ? answerStatus(statuses2[row.key || row.id], row.signature) : null
-    }));
-    const assessable = rows.filter((row) => row.assessable);
-    const competencyRows = assessable.filter((row) => row.assessmentKind === "competency");
-    const groups = REQUIREMENT_CATEGORIES.map((id) => {
-      const members = rows.filter((row) => row.category === id);
-      return {
-        id,
-        rows: members,
-        ...countsFor(members.filter((row) => row.assessable)),
-        sourceMissing: members.filter((row) => row.requirementState === "source_not_stated").length,
-        explicitlyNotRequired: members.filter((row) => row.requirementState === "explicitly_not_required").length,
-        contextOnly: members.filter((row) => !row.assessable).length,
-        sourceCoverage: members.length ? "represented-in-record" : "not-extracted"
-      };
-    });
-    const domainIds = [...new Set(competencyRows.map((row) => row.competencyDomainId).filter(Boolean))].sort((left, right) => {
-      const li = COMPETENCY_DOMAIN_IDS.indexOf(left), ri = COMPETENCY_DOMAIN_IDS.indexOf(right);
-      return (li < 0 ? COMPETENCY_DOMAIN_IDS.length : li) - (ri < 0 ? COMPETENCY_DOMAIN_IDS.length : ri) || left.localeCompare(right);
-    });
-    const domains = domainIds.map((id) => {
-      const members = competencyRows.filter((row) => row.competencyDomainId === id);
-      return {
-        id,
-        rows: members,
-        ...countsFor(members),
-        classificationReviewed: members.every((row) => row.classificationProvenance?.reviewStatus === "reviewed")
-      };
-    });
-    const unclassified = competencyRows.filter((row) => !row.competencyDomainId);
-    return {
-      vacancyId: built.vacancyId || rows[0]?.vacancyId || null,
-      rows,
-      groups,
-      domains,
-      ...countsFor(assessable),
-      competencySummary: countsFor(competencyRows),
-      developmentItems: competencyRows.filter((row) => row.status === "gap"),
-      formalRequirements: rows.filter((row) => FORMAL_CATEGORIES.has(row.category)),
-      formalGaps: assessable.filter((row) => FORMAL_CATEGORIES.has(row.category) && row.status === "gap"),
-      otherGaps: assessable.filter((row) => row.assessmentKind === "other" && row.status === "gap"),
-      unassessedItems: assessable.filter((row) => row.status === "unassessed"),
-      sourceContextItems: rows.filter((row) => !row.assessable),
-      missingCategories: built.missingCategories || CORE_REQUIREMENT_CATEGORIES.filter((id) => !rows.some((row) => row.category === id && row.requirementState !== "source_not_stated")),
-      unclassifiedCompetencyRows: unclassified,
-      // Missing domain classifications cannot silently disappear from a full radar.
-      domainRadarAvailable: domains.length >= 3 && unclassified.length === 0 && domains.every((domain) => domain.classificationReviewed),
-      source: built.source || null,
-      archive: built.archive || null,
-      coverageMetadata: built.coverage || null,
-      sourceCompleteness: built.sourceCompleteness || "not-established",
-      eligibilityVerdict: null,
-      abilityScore: null,
-      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
-    };
-  }
-
   // site/apps/career/assets/journey-visuals.mjs
   var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L2 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
@@ -6349,6 +6675,7 @@ var CareerRuntime = (() => {
     let authorityQuery = "", authorityScope = "", authorityLimit = 24, vacancyQuery = "", vacancyEmployer = "", vacancyLimit = 12;
     const rolePanelStates = /* @__PURE__ */ new Map();
     const vacancyBank = createEmployerVacancyBank();
+    const vacancyDetails = createVacancyDetailsStore({ getMetadata: () => __careerHost.vacancyDetailsMetadata?.() });
     vacancyBank.subscribe((id) => {
       if (!__careerHost.destroyed && lastRoute === "results") document.querySelectorAll("[data-authority-roles]").forEach((panel) => {
         const state2 = rolePanelState(panel.dataset.rolePanel);
@@ -6463,7 +6790,7 @@ var CareerRuntime = (() => {
       journey = { ...journey, ...clean };
       invalidateRanking();
       if (journey.selectedVacancyId) {
-        if (previousVacancy?.regionId && !ids2.includes(previousVacancy.regionId)) {
+        if (!previousVacancy?.bankVacancy && previousVacancy?.regionId && !ids2.includes(previousVacancy.regionId)) {
           journey.selectedVacancyId = null;
           journey.selectedSnapshot = null;
         }
@@ -6813,9 +7140,11 @@ var CareerRuntime = (() => {
       const record2 = roleRecords().find((v) => v.id === journey.selectedVacancyId);
       if (record2) return record2;
       const snapshot = journey.selectedSnapshot;
+      if (snapshot?.bankVacancy && snapshot.id === journey.selectedVacancyId && byId().has(snapshot.institutionId)) return snapshot;
       return snapshot?.id === journey.selectedVacancyId && !(snapshot.organization?.relation === "territorial" && !journey.regionIds.includes(snapshot.regionId)) && visibleInstitutions().some((a) => a.id === snapshot.institutionId) && (!snapshot.regionId || journey.regionIds.includes(snapshot.regionId)) ? snapshot : null;
     }
     function roleStatus(v) {
+      if (v.bankVacancy) return v.archive ? L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A") : L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0440\u0442\u0430\u043B\u0430: \u0441\u0440\u043E\u043A\u0438 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435", "Portal announcement: check dates at source", "\u95E8\u6237\u516C\u544A\uFF1A\u8BF7\u5728\u6765\u6E90\u6838\u5BF9\u65E5\u671F");
       if (v.userProvided) return L2("\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0412\u0430\u043C\u0438 \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Added by you from an announcement", "\u7531\u4F60\u4ECE\u516C\u544A\u6DFB\u52A0");
       if (v.kind === "position-profile" || v.status === "profile") return L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Role profile \xB7 study material", "\u804C\u4F4D\u8BF4\u660E \xB7 \u5B66\u4E60\u6750\u6599");
       if (v.kind === "archived-vacancy" || v.status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Archived announcement \xB7 study material", "\u5386\u53F2\u516C\u544A \xB7 \u5B66\u4E60\u6750\u6599");
@@ -6880,7 +7209,7 @@ var CareerRuntime = (() => {
       ].filter(([, value]) => value);
       const requirements = [[L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), row.education], [L2("\u041E\u043F\u044B\u0442 \u043F\u043E \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Professional experience", "\u4E13\u4E1A\u7ECF\u5386"), row.professionalExperience], [L2("\u0421\u0442\u0430\u0436 \u0433\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u044B", "Public-service experience", "\u516C\u52A1\u7ECF\u5386"), row.governmentExperience]].filter(([, value]) => typeof value === "string" && value.trim());
       const url = safeURL(row.sourceURL);
-      return `<article class="journey-bank-job" data-bank-job="${E3(row.id)}"><div class="journey-bank-badges">${bankStatus(row)}${row.scope === "group-or-reserve-context" ? `<span class="journey-bank-badge scope">${L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907")}</span>` : ""}</div><h5 lang="ru">${E3(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h5>${location2 ? `<p class="journey-bank-location" lang="ru">${E3(location2)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl>${requirements.length ? `<details class="journey-bank-requirements"><summary>${L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436", "Education and experience", "\u5B66\u5386\u4E0E\u7ECF\u5386")}</summary><dl>${requirements.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E3(value)}</dd></div>`).join("")}</dl></details>` : ""}${url ? `<a class="seminar-vacancy-link" href="${E3(url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}</article>`;
+      return `<article class="journey-bank-job" data-bank-job="${E3(row.id)}"><div class="journey-bank-badges">${bankStatus(row)}${row.scope === "group-or-reserve-context" ? `<span class="journey-bank-badge scope">${L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907")}</span>` : ""}</div><h5 lang="ru">${E3(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h5>${location2 ? `<p class="journey-bank-location" lang="ru">${E3(location2)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl>${requirements.length ? `<details class="journey-bank-requirements"><summary>${L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436", "Education and experience", "\u5B66\u5386\u4E0E\u7ECF\u5386")}</summary><dl>${requirements.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E3(value)}</dd></div>`).join("")}</dl></details>` : ""}${`<details class="journey-bank-full" data-bank-full="${E3(row.id)}"><summary>${L2("\u041F\u043E\u043B\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Full requirements and duties", "\u5B8C\u6574\u8981\u6C42\u4E0E\u804C\u8D23")}</summary><div data-bank-full-content></div></details><button type="button" class="button button-secondary" data-bank-choose="${E3(row.id)}">${L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess these requirements", "\u8BC4\u4F30\u8FD9\u4E9B\u8981\u6C42")}</button><p data-bank-choice-status role="status"></p>`}${url ? `<a class="seminar-vacancy-link" href="${E3(url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}</article>`;
     }
     function renderEmployerVacancies(panel) {
       const target = panel.querySelector("[data-employer-bank]");
@@ -6912,6 +7241,47 @@ var CareerRuntime = (() => {
       const total = descriptor?.jobCount || 0, pageCount = descriptor?.pages.length || 0, shown = view.rows.slice(0, state2.bankLimit);
       const empty = descriptor && !total ? !descriptor.employerId ? L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D\u044B \u0441 \u044D\u0442\u0438\u043C \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u043C. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u043E\u0440\u0442\u0430\u043B.", "Announcements have not yet been linked to this employer. Check the official portal.", "\u5C1A\u672A\u5C06\u516C\u544A\u5173\u8054\u5230\u6B64\u96C7\u4E3B\uFF0C\u8BF7\u67E5\u770B\u5B98\u65B9\u95E8\u6237\u3002") : L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u044D\u0442\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F. \u042D\u0442\u043E \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435\u0442.", "This snapshot has no announcements for this employer. This does not mean there are no vacancies.", "\u6B64\u526F\u672C\u6CA1\u6709\u8BE5\u96C7\u4E3B\u7684\u516C\u544A\uFF0C\u4F46\u8FD9\u5E76\u4E0D\u8868\u793A\u6CA1\u6709\u7A7A\u7F3A\u3002") : "";
       target.innerHTML = heading + selector + `<p class="journey-bank-current-employer" lang="ru">${E3(selectedName)}</p>${state2.bankPrimaryEmpty && id !== bankId(panel.dataset.authorityRoles) ? `<p class="journey-bank-note">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u041F\u043E\u043A\u0430\u0437\u0430\u043D \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C.", "This snapshot has no listings for the selected authority. A separate related employer is shown.", "\u6B64\u526F\u672C\u6CA1\u6709\u6240\u9009\u673A\u5173\u7684\u516C\u544A\uFF0C\u73B0\u663E\u793A\u4E00\u4E2A\u72EC\u7ACB\u7684\u76F8\u5173\u96C7\u4E3B\u3002")}</p>` : ""}` + (descriptor ? `<p class="journey-bank-count">${L2("\u0412\u0441\u0435\u0433\u043E", "Total", "\u603B\u8BA1")}: ${number(total)} \xB7 ${L2("\u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Archived as published", "\u6765\u6E90\u6807\u4E3A\u5386\u53F2")}: ${number(descriptor.archiveCount || 0)}</p>` : "") + `<p class="journey-bank-status" role="status" aria-live="polite">${view.loading ? L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u2026", "Loading announcements\u2026", "\u6B63\u5728\u52A0\u8F7D\u516C\u544A\u2026\u2026") : view.error ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F. \u0423\u0436\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B.", "Announcements could not be loaded. Previously loaded cards remain available.", "\u516C\u544A\u52A0\u8F7D\u5931\u8D25\uFF0C\u5DF2\u52A0\u8F7D\u7684\u5361\u7247\u4ECD\u53EF\u67E5\u770B\u3002") : empty || ""}</p>${view.error ? `<button type="button" class="button button-secondary" data-bank-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button>` : ""}<div class="journey-bank-list" aria-busy="${view.loading}">${shown.map(bankJob).join("")}</div>${view.rows.length ? `<p class="journey-bank-page-note">${L2(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${view.pageIndex + 1} \u0438\u0437 ${pageCount}. \u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E ${shown.length} \u0438\u0437 ${view.rows.length} \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B.`, `Page ${view.pageIndex + 1} of ${pageCount}. Showing ${shown.length} of ${view.rows.length} announcements on this page.`, `\u7B2C ${view.pageIndex + 1}\uFF0F${pageCount} \u9875\uFF0C\u663E\u793A\u672C\u9875 ${view.rows.length} \u6761\u516C\u544A\u4E2D\u7684 ${shown.length} \u6761\u3002`)}</p>` : ""}${view.rows.length > state2.bankLimit ? `<button type="button" class="button button-secondary journey-bank-more" data-bank-more>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451 \u043D\u0430 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435", "Show more on this page", "\u663E\u793A\u672C\u9875\u66F4\u591A\u516C\u544A")}</button>` : ""}${pageCount > 1 ? `<nav class="journey-bank-pages" aria-label="${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Employer announcement pages", "\u96C7\u4E3B\u516C\u544A\u5206\u9875")}"><button type="button" class="button button-secondary" data-bank-prev ${view.loading || view.pageIndex === 0 ? "disabled" : ""}>${L2("\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Previous page", "\u4E0A\u4E00\u9875")}</button><span>${view.pageIndex + 1} / ${pageCount}</span><button type="button" class="button button-secondary" data-bank-next ${view.loading || view.pageIndex >= pageCount - 1 ? "disabled" : ""}>${L2("\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Next page", "\u4E0B\u4E00\u9875")}</button></nav>` : ""}<p class="journey-bank-note">${copyDate ? L2("\u0414\u0430\u0442\u0430 \u043A\u043E\u043F\u0438\u0438: ", "Snapshot prepared: ", "\u526F\u672C\u65E5\u671F\uFF1A") + E3(copyDate) + (copyDate.trim().endsWith(".") ? " " : L2(". ", ". ", "\u3002")) : ""}${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u0432\u0441\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F, \u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435. \u0421\u0440\u043E\u043A\u0438 \u0438 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043E\u0442\u043A\u043B\u0438\u043A\u0430 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438.", "All this employer\u2019s announcements are included, including archived listings. Check dates and application availability in the official announcement.", "\u5305\u542B\u8BE5\u96C7\u4E3B\u7684\u5168\u90E8\u516C\u544A\u53CA\u5386\u53F2\u8BB0\u5F55\uFF0C\u8BF7\u5728\u5B98\u65B9\u516C\u544A\u4E2D\u6838\u5BF9\u671F\u9650\u53CA\u7533\u8BF7\u72B6\u6001\u3002")}</p>`;
+      const page = descriptor?.pages[view.pageIndex], binding = page ? { basePage: page.path, basePageSHA256: page.sha256, employerId: descriptor.employerId, uuids: view.rows.map((row) => row.id) } : null;
+      const labels = { duties: L2("\u041E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u804C\u8D23"), knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"), skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u6280\u80FD"), knowledgeDescription: L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0437\u043D\u0430\u043D\u0438\u0439 \u0438 \u0443\u043C\u0435\u043D\u0438\u0439", "Knowledge and skills description", "\u77E5\u8BC6\u4E0E\u6280\u80FD\u8BF4\u660E"), additionalRequirements: L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Additional requirements", "\u5176\u4ED6\u8981\u6C42"), departmentLabels: L2("\u041F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Department as published", "\u6765\u6E90\u6240\u5217\u90E8\u95E8"), otherRequirements: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0430\u0436 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F", "Education, experience and other conditions", "\u5B66\u5386\u3001\u7ECF\u5386\u4E0E\u5176\u4ED6\u6761\u4EF6") };
+      async function detailsFor(article, row) {
+        const content = article.querySelector("[data-bank-full-content]");
+        content.textContent = L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043F\u043E\u043B\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442\u2026", "Loading full text\u2026", "\u6B63\u5728\u52A0\u8F7D\u5168\u6587\u2026\u2026");
+        const loaded = await vacancyDetails.load(binding, row.id);
+        if (!article.isConnected) return loaded;
+        if (loaded.status !== "ready") {
+          content.innerHTML = `<p role="status">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043F\u043E\u043B\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438\u043B\u0438 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Full text could not be loaded. Try again or open the source.", "\u5168\u6587\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5\u6216\u6253\u5F00\u6765\u6E90\u3002")}</p><button type="button" class="button button-secondary" data-full-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>`;
+          content.querySelector("button").onclick = () => void detailsFor(article, row);
+          return loaded;
+        }
+        content.innerHTML = DETAIL_CATEGORIES.map((category) => `<section><h6>${labels[category]}</h6>${loaded.record[category].length ? loaded.record[category].map((token) => `<p lang="ru">${E3(token.text)}</p>`).join("") : `<p class="journey-muted">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E.", "Not stated in this source card.", "\u6B64\u6765\u6E90\u5361\u7247\u672A\u6CE8\u660E\u3002")}</p>`}</section>`).join("");
+        return loaded;
+      }
+      target.querySelectorAll("[data-bank-job]").forEach((article) => {
+        const row = view.rows.find((row2) => row2.id === article.dataset.bankJob), full = article.querySelector("[data-bank-full]");
+        full.addEventListener("toggle", () => {
+          if (full.open) void detailsFor(article, row);
+          else vacancyDetails.cancel(binding, row.id);
+        });
+        article.querySelector("[data-bank-choose]").onclick = async (event) => {
+          const button = event.currentTarget;
+          button.disabled = true;
+          const loaded = await detailsFor(article, row);
+          button.disabled = false;
+          if (!article.isConnected || loaded?.status !== "ready") return;
+          const previous = { id: journey.selectedVacancyId, snapshot: journey.selectedSnapshot };
+          const vacancy = bankVacancySnapshot(row, loaded.record, { institutionId: panel.dataset.authorityRoles, employerId: descriptor.employerId, employerName: selectedName, provenance: loaded.provenance });
+          journey.selectedVacancyId = vacancy.id;
+          journey.selectedSnapshot = vacancy;
+          if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
+          if (save() === false) {
+            journey.selectedVacancyId = previous.id;
+            journey.selectedSnapshot = previous.snapshot;
+            article.querySelector("[data-bank-choice-status]").textContent = L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440.", "The selection could not be saved.", "\u65E0\u6CD5\u4FDD\u5B58\u9009\u62E9\u3002");
+            return;
+          }
+          switchStage("requirements");
+        };
+      });
       target.querySelector("[data-bank-more]")?.addEventListener("click", () => {
         state2.bankLimit += 10;
         renderEmployerVacancies(panel);
@@ -6942,6 +7312,7 @@ var CareerRuntime = (() => {
       });
     }
     function cancelEmployerVacancyRequests() {
+      vacancyDetails.cancelAll();
       document.querySelectorAll("[data-authority-roles]").forEach((panel) => vacancyBank.cancel(bankAuthority(panel)));
     }
     function vacancyCard(v, sourceOpen) {
@@ -7106,17 +7477,21 @@ var CareerRuntime = (() => {
       if (row.requirementState === "preferred") return L2("\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435", "Preferred condition", "\u4F18\u5148\u6761\u4EF6");
       return L2("\u0423\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source context", "\u6765\u6E90\u8BF4\u660E");
     }
+    function bankSourceLabel(row) {
+      const labels = { knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"), skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u6280\u80FD"), education: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), experience: L2("\u0421\u0442\u0430\u0436", "Experience", "\u7ECF\u5386"), majors: L2("\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 (\u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B)", "Fields of study (alternatives)", "\u4E13\u4E1A\u65B9\u5411\uFF08\u4EFB\u9009\u7B26\u5408\u7684\u4E00\u9879\uFF09"), other: L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Additional requirements", "\u5176\u4ED6\u8981\u6C42"), service: L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043B\u0443\u0436\u0431\u044B", "Service conditions", "\u4EFB\u804C\u6761\u4EF6") };
+      return labels[row.sourceLabelKey] || row.sourceLocator;
+    }
     function requirementSourceContext(row, mainSource) {
       const asText = (value) => Array.isArray(value) ? value.filter((item) => typeof item === "string").join("; ") : typeof value === "string" ? value : "";
-      const headings = [...new Set([row.sourceGroup, row.sourceHeading, row.sourceSubheadingAsPublished].map(asText).filter(Boolean))];
+      const headings = [...new Set([row.sourceGroup, row.sourceLabelKey ? bankSourceLabel(row) : row.sourceHeading, row.sourceSubheadingAsPublished].map(asText).filter(Boolean))];
       const notes = [...new Set([row.interpretationNote, row.assessmentNote].map(asText).filter(Boolean))];
-      const locator = asText(row.sourceLocator);
+      const locator = row.sourceLabelKey ? "" : asText(row.sourceLocator);
       return `${headings.length ? `<p class="journey-source-heading" lang="ru">${headings.map(E3).join(" \xB7 ")}</p>` : ""}${notes.map((note) => `<p class="journey-source-note"><strong>${L2("\u041F\u043E\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Source note", "\u6765\u6E90\u8BF4\u660E")}:</strong> <span lang="ru">${E3(note)}</span></p>`).join("")}${locator ? `<small class="journey-source-locator" lang="ru">${E3(locator)}</small>` : ""}${safeURL(row.evidenceSourceUrl) && row.evidenceSourceUrl !== mainSource ? `<a class="journey-source-locator" href="${safeURL(row.evidenceSourceUrl)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u044D\u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Source of this requirement", "\u6B64\u9879\u8981\u6C42\u7684\u6765\u6E90")}</a>` : ""}`;
     }
-    function requirementRow(row, index, mainSource) {
+    function requirementRow(row, index, mainSource, bankVacancy = false) {
       const context = requirementSourceContext(row, mainSource);
       if (!row.assessable) return `<div class="journey-source-context"><span>${sourceContextLabel(row)}</span>${row.text ? `<p lang="ru">${E3(row.text)}</p>` : ""}${context}</div>`;
-      return `<fieldset class="journey-requirement" data-requirement-row="${E3(row.id)}" data-status="${row.status || "unassessed"}"><legend><span class="journey-requirement-index">${index}</span><span lang="ru">${E3(row.text)}</span></legend>${context}<div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}"><input type="radio" name="assessment-${E3(row.id)}" data-requirement-key="${E3(row.id)}" value="${value}" ${row.status === value ? "checked" : ""}><span aria-hidden="true">${value === "met" ? "\u2713" : "\xD7"}</span><strong>${value === "met" ? L2("\u0423\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already meet it", "\u5DF2\u7B26\u5408") : row.assessmentKind === "formal" ? L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Not yet met", "\u6682\u672A\u7B26\u5408") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Need to develop", "\u9700\u8981\u63D0\u5347")}</strong></label>`).join("")}</div></fieldset>`;
+      return `<fieldset class="journey-requirement" data-requirement-row="${E3(row.id)}" data-status="${row.status || "unassessed"}"><legend><span class="journey-requirement-index">${index}</span><span lang="ru">${E3(row.text)}</span></legend>${context}<div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}"><input type="radio" name="assessment-${E3(row.id)}" data-requirement-key="${E3(row.id)}" value="${value}" ${row.status === value ? "checked" : ""}><span aria-hidden="true">${value === "met" ? "\u2713" : "\xD7"}</span><strong>${value === "met" ? bankVacancy && ["knowledge", "skills"].includes(row.category) ? L2("\u0423\u0436\u0435 \u0437\u043D\u0430\u044E/\u0443\u043C\u0435\u044E", "I know / can do this", "\u5DF2\u7ECF\u638C\u63E1/\u4F1A\u505A") : L2("\u0423\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already meet it", "\u5DF2\u7B26\u5408") : row.assessmentKind === "formal" ? L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Not yet met", "\u6682\u672A\u7B26\u5408") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Need to develop", "\u9700\u8981\u63D0\u5347")}</strong></label>`).join("")}</div></fieldset>`;
     }
     function renderRequirements(result, target) {
       const vacancy = findSelectedVacancy();
@@ -7130,12 +7505,12 @@ var CareerRuntime = (() => {
       const manualAuthority = byId().get(vacancy.institutionId), manualPanelKey = `requirements-${vacancy.institutionId}`;
       const manualDraft = draftForAuthority(vacancy.institutionId);
       const duties = typeof vacancy.duties === "string" ? vacancy.duties : Array.isArray(vacancy.duties) ? vacancy.duties.map((item) => typeof item === "string" ? item : item.sourceText || item.text || "").filter(Boolean).join("\n") : "";
-      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${icon("arrow-left")}${L2("\u041A \u0432\u044B\u0431\u043E\u0440\u0443 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Back to role selection", "\u8FD4\u56DE\u804C\u4F4D\u9009\u62E9")}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Selected role requirements", "\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</h1><h2 lang="ru">${E3(vacancy.title)}</h2><p lang="ru">${E3(vacancy.employerName)}</p>${vacancy.department ? `<p lang="ru">${E3(vacancy.department)}</p>` : ""}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a><p class="journey-muted">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F")}: ${date2(vacancy.source?.retrievedAt || vacancy.lastSeenAt || vacancy.sourceSnapshotAt) || L2("\u0434\u0430\u0442\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430", "date not stated", "\u672A\u6CE8\u660E\u65E5\u671F")}</p></header>
+      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${icon("arrow-left")}${L2("\u041A \u0432\u044B\u0431\u043E\u0440\u0443 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Back to role selection", "\u8FD4\u56DE\u804C\u4F4D\u9009\u62E9")}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Selected role requirements", "\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</h1><h2 lang="ru">${E3(vacancy.title)}</h2><p lang="ru">${E3(vacancy.employerName)}</p>${vacancy.department ? `<p lang="ru">${E3(vacancy.department)}</p>` : ""}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a><p class="journey-muted">${vacancy.bankVacancy ? L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Announcement published", "\u516C\u544A\u53D1\u5E03\u65E5\u671F") : L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F")}: ${date2(vacancy.bankVacancy ? vacancy.announcedAt : vacancy.source?.retrievedAt || vacancy.lastSeenAt || vacancy.sourceSnapshotAt) || L2("\u0434\u0430\u0442\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430", "date not stated", "\u672A\u6CE8\u660E\u65E5\u671F")}${vacancy.bankVacancy && vacancy.expiresAt ? " \xB7 " + L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62") + ": " + E3(date2(vacancy.expiresAt)) : ""}</p></header>
       ${duties ? `<details class="journey-duties"><summary>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u5DE5\u4F5C\u804C\u8D23")}</summary><p lang="ru">${E3(duties)}</p></details>` : ""}
-      <p class="journey-assessment-intro">${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0443\u043D\u043A\u0442. \u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C, \u0432\u043E\u0439\u0434\u0443\u0442 \u0432 \u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F; \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.", "\u8BF7\u9010\u9879\u8BC4\u4F30\u3002\u9700\u8981\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u5C06\u52A0\u5165\u53D1\u5C55\u8BA1\u5212\uFF1B\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u5C06\u5355\u72EC\u663E\u793A\u3002")}</p>${missingSourceNote(requirements)}${!summary.total ? `<p class="journey-source-status">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B.", "This card has no assessable items. Open the source and add its exact requirements, or choose another material.", "\u6B64\u5361\u7247\u6CA1\u6709\u53EF\u8BC4\u4F30\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u6765\u6E90\u5E76\u6DFB\u52A0\u539F\u6587\u8981\u6C42\uFF0C\u6216\u9009\u62E9\u5176\u4ED6\u6750\u6599\u3002")}</p>` : ""}${requirements.missingCategories.length ? `<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Add requirements from the source", "\u4ECE\u6765\u6E90\u8865\u5145\u8981\u6C42")}</button>` : ""}
-      <div class="journey-supplement-form" data-requirement-manual-slot>${manualAuthority && manualDraft.open && manualDraft.panelKey === manualPanelKey ? manualVacancyForm(manualAuthority, manualPanelKey) : ""}</div>
+      <p class="journey-assessment-intro">${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0443\u043D\u043A\u0442. \u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C, \u0432\u043E\u0439\u0434\u0443\u0442 \u0432 \u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F; \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.", "\u8BF7\u9010\u9879\u8BC4\u4F30\u3002\u9700\u8981\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u5C06\u52A0\u5165\u53D1\u5C55\u8BA1\u5212\uFF1B\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u5C06\u5355\u72EC\u663E\u793A\u3002")}</p>${missingSourceNote(requirements)}${!summary.total ? `<p class="journey-source-status">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B.", "This card has no assessable items. Open the source and add its exact requirements, or choose another material.", "\u6B64\u5361\u7247\u6CA1\u6709\u53EF\u8BC4\u4F30\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u6765\u6E90\u5E76\u6DFB\u52A0\u539F\u6587\u8981\u6C42\uFF0C\u6216\u9009\u62E9\u5176\u4ED6\u6750\u6599\u3002")}</p>` : ""}${!vacancy.bankVacancy && requirements.missingCategories.length ? `<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Add requirements from the source", "\u4ECE\u6765\u6E90\u8865\u5145\u8981\u6C42")}</button>` : ""}
+      <div class="journey-supplement-form" data-requirement-manual-slot>${!vacancy.bankVacancy && manualAuthority && manualDraft.open && manualDraft.panelKey === manualPanelKey ? manualVacancyForm(manualAuthority, manualPanelKey) : ""}</div>
       <div class="journey-assessment-progress"><p id="journey-assessment-state" role="status" aria-live="polite">${E3(assessmentProgress(summary))}</p><progress id="journey-assessment-progress" max="${Math.max(1, summary.total)}" value="${summary.assessed}" aria-label="${E3(L2("\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assessed requirements", "\u5DF2\u8BC4\u4F30\u8981\u6C42"))}"></progress></div>
-      <div class="journey-requirements">${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementRow(row, row.assessable ? ++index : 0, vacancy.url || vacancy.source?.url)).join("")}</section>`).join("")}</div>
+      <div class="journey-requirements">${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementRow(row, row.assessable ? ++index : 0, vacancy.url || vacancy.source?.url, vacancy.bankVacancy)).join("")}</section>`).join("")}</div>
       <div class="seminar-next"><p>${L2("\u041E\u0442\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438. \u0418\u0445 \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C, \u0432\u0435\u0440\u043D\u0443\u0432\u0448\u0438\u0441\u044C \u043A \u044D\u0442\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your answers are saved automatically. Return to this role to revise them.", "\u56DE\u7B54\u4F1A\u81EA\u52A8\u4FDD\u5B58\uFF0C\u8FD4\u56DE\u8BE5\u804C\u4F4D\u5373\u53EF\u4FEE\u6539\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-open-plan">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "View my development plan", "\u67E5\u770B\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
       target.querySelector("#journey-back-vacancies").onclick = () => switchStage("recommendations");
       target.querySelector("#journey-open-plan").onclick = () => switchStage("summary");
@@ -7182,7 +7557,7 @@ var CareerRuntime = (() => {
     }
     function developmentList(rows, heading, kind) {
       if (!rows.length) return "";
-      return `<section class="journey-panel"><h2>${heading}</h2><ol class="journey-gap-list">${rows.map((row) => `<li><strong lang="ru">${E3(row.text)}</strong><p>${kind === "formal" ? L2("\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442, \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u043F\u044B\u0442 \u043D\u0443\u0436\u0435\u043D \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u044F.", "Identify the document, qualification or experience needed to meet this condition.", "\u660E\u786E\u6EE1\u8DB3\u8BE5\u6761\u4EF6\u6240\u9700\u7684\u6587\u4EF6\u3001\u5B66\u5386\u6216\u5DE5\u4F5C\u7ECF\u9A8C\u3002") : row.category === "knowledge" ? L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B \u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u0440\u0430\u0437\u0431\u043E\u0440 \u0435\u0433\u043E \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0432 \u0440\u0430\u0431\u043E\u0442\u0435.", "Study the named material and prepare a short example of how it applies to the work.", "\u5B66\u4E60\u6240\u5217\u6750\u6599\uFF0C\u5E76\u51C6\u5907\u4E00\u4E2A\u5728\u5DE5\u4F5C\u4E2D\u5E94\u7528\u7684\u7B80\u77ED\u793A\u4F8B\u3002") : row.category === "skills" ? L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0437\u0430\u0434\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0432 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E.", "Complete a small practical task and keep the result in your portfolio.", "\u5B8C\u6210\u4E00\u9879\u5C0F\u578B\u5B9E\u8DF5\u4EFB\u52A1\uFF0C\u5E76\u5C06\u6210\u679C\u4FDD\u5B58\u5230\u4F5C\u54C1\u96C6\u4E2D\u3002") : L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0438 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Review the combined condition in the source and identify your first preparation step.", "\u6838\u5BF9\u539F\u6587\u4E2D\u7684\u7EFC\u5408\u6761\u4EF6\uFF0C\u5E76\u786E\u5B9A\u51C6\u5907\u7684\u7B2C\u4E00\u6B65\u3002")}</p>${row.sourceLocator ? `<small lang="ru">${E3(row.sourceLocator)}</small>` : ""}</li>`).join("")}</ol></section>`;
+      return `<section class="journey-panel"><h2>${heading}</h2><ol class="journey-gap-list">${rows.map((row) => `<li><strong lang="ru">${E3(row.text)}</strong><p>${kind === "formal" ? L2("\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442, \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u043F\u044B\u0442 \u043D\u0443\u0436\u0435\u043D \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u044F.", "Identify the document, qualification or experience needed to meet this condition.", "\u660E\u786E\u6EE1\u8DB3\u8BE5\u6761\u4EF6\u6240\u9700\u7684\u6587\u4EF6\u3001\u5B66\u5386\u6216\u5DE5\u4F5C\u7ECF\u9A8C\u3002") : row.category === "knowledge" ? L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B \u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u0440\u0430\u0437\u0431\u043E\u0440 \u0435\u0433\u043E \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0432 \u0440\u0430\u0431\u043E\u0442\u0435.", "Study the named material and prepare a short example of how it applies to the work.", "\u5B66\u4E60\u6240\u5217\u6750\u6599\uFF0C\u5E76\u51C6\u5907\u4E00\u4E2A\u5728\u5DE5\u4F5C\u4E2D\u5E94\u7528\u7684\u7B80\u77ED\u793A\u4F8B\u3002") : row.category === "skills" ? L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0437\u0430\u0434\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0432 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E.", "Complete a small practical task and keep the result in your portfolio.", "\u5B8C\u6210\u4E00\u9879\u5C0F\u578B\u5B9E\u8DF5\u4EFB\u52A1\uFF0C\u5E76\u5C06\u6210\u679C\u4FDD\u5B58\u5230\u4F5C\u54C1\u96C6\u4E2D\u3002") : L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0438 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Review the combined condition in the source and identify your first preparation step.", "\u6838\u5BF9\u539F\u6587\u4E2D\u7684\u7EFC\u5408\u6761\u4EF6\uFF0C\u5E76\u786E\u5B9A\u51C6\u5907\u7684\u7B2C\u4E00\u6B65\u3002")}</p>${row.sourceLocator ? `<small lang="ru">${E3(row.sourceLabelKey ? bankSourceLabel(row) : row.sourceLocator)}</small>` : ""}</li>`).join("")}</ol></section>`;
     }
     function renderSummary(result, target) {
       const vacancy = findSelectedVacancy();
@@ -7193,7 +7568,7 @@ var CareerRuntime = (() => {
       const { requirements, summary } = assessment(vacancy), ranked = rankings(), complete = summary.total > 0 && summary.unassessed === 0;
       const selectedAuthority = ranked?.ranked.find((a) => a.id === vacancy.institutionId) || byId().get(vacancy.institutionId);
       target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-requirements">${icon("arrow-left")}${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438", "Edit my assessment", "\u4FEE\u6539\u81EA\u8BC4")}</button><h1>${L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212")}</h1><p>${L2("\u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0432\u043E\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u0441 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439 \u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0434\u043B\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 \u043A \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Compare your interests with your preferred work and choose concrete actions to prepare for the role.", "\u5C06\u5174\u8DA3\u4E0E\u610F\u5411\u5DE5\u4F5C\u8FDB\u884C\u6BD4\u8F83\uFF0C\u5E76\u9009\u62E9\u4E3A\u804C\u4F4D\u505A\u51C6\u5907\u7684\u5177\u4F53\u884C\u52A8\u3002")}</p></header>
-      <section class="journey-goal-card"><span class="journey-kicker">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Selected role", "\u6240\u9009\u804C\u4F4D")}</span><h2 lang="ru">${E3(vacancy.title)}</h2><p>${E3(selectedAuthority ? authorityName(selectedAuthority) : vacancy.employerName)}</p><p class="journey-muted">${roleStatus(vacancy)}</p><a class="seminar-vacancy-link" href="${safeURL(vacancy.url || vacancy.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a></section>
+      <section class="journey-goal-card"><span class="journey-kicker">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Selected role", "\u6240\u9009\u804C\u4F4D")}</span><h2 lang="ru">${E3(vacancy.title)}</h2><p>${E3(vacancy.bankVacancy ? vacancy.employerName : selectedAuthority ? authorityName(selectedAuthority) : vacancy.employerName)}</p><p class="journey-muted">${roleStatus(vacancy)}</p><a class="seminar-vacancy-link" href="${safeURL(vacancy.url || vacancy.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a></section>
       <div class="journey-summary-counts"><div><strong>${summary.met}</strong><span>${L2("\u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already met", "\u5DF2\u7B26\u5408")}</span></div><div><strong>${summary.gap}</strong><span>${L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C\u0441\u044F", "To prepare", "\u9700\u8981\u51C6\u5907")}</span></div><div><strong>${summary.unassessed}</strong><span>${L2("\u041D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "Unassessed", "\u672A\u8BC4\u4F30")}</span></div></div>
       ${personalProfile(result)}${ranked ? wishDevelopment(ranked) : ""}${coverageChart(summary)}${missingSourceNote(requirements)}
       ${developmentList(summary.developmentItems, L2("\u041A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0437\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Specific knowledge and skills to develop", "\u9700\u8981\u63D0\u5347\u7684\u5177\u4F53\u77E5\u8BC6\u4E0E\u6280\u80FD"), "skills")}
@@ -7262,7 +7637,7 @@ var CareerRuntime = (() => {
         wishSorter?.cancel({ focus: false, announceResult: false });
         return !dirty || save();
       },
-      updateBusy: () => catalogLoading || positionsLoading || vacancyBank.isBusy() || opening || Boolean(wishSorter?.isBusy()),
+      updateBusy: () => catalogLoading || positionsLoading || vacancyBank.isBusy() || vacancyDetails.cacheInfo().pending > 0 || opening || Boolean(wishSorter?.isBusy()),
       captureForUpdate: () => ({ view: journey.view, authorityQuery, authorityScope, vacancyQuery, vacancyEmployer }),
       restoreForUpdate(value) {
         if (!isRecord2(value)) return;

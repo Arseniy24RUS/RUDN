@@ -45,6 +45,12 @@ function collectionTree(entries){
   return {treeSHA:hash.digest('hex'),fileCount:Object.keys(entries).length,bytes};
 }
 const externalCareerRoot=value=>typeof value==='string'&&/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-vacancy-bank\/$/.test(value);
+function detailsMetadata(value,baseTreeSHA){
+  const keys=['schemaVersion','encoding','collectionRoot','baseTreeSHA','treeSHA','hostedTreeSHA','fileCount','bytes','vacancies'];
+  if(!value||Object.keys(value).sort().join(',')!==keys.sort().join(',')||value.schemaVersion!==1||value.encoding!=='base64-gzip'||!/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-vacancy-details\/$/.test(value.collectionRoot||'')||value.baseTreeSHA!==baseTreeSHA||!/^[a-f0-9]{64}$/.test(value.treeSHA||'')||!/^[a-f0-9]{40}$/.test(value.hostedTreeSHA||'')||!['fileCount','bytes','vacancies'].every(k=>Number.isSafeInteger(value[k])&&value[k]>0))fail('release/invalid-details-hosting');
+  return Object.fromEntries(keys.sort().map(k=>[k,value[k]]));
+}
+function detailsSummary(value){return {detailsCollectionRoot:value.collectionRoot,detailsCollectionEncoding:value.encoding,detailsBaseTreeSHA:value.baseTreeSHA,detailsTreeSHA:value.treeSHA};}
 function careerCollection(source,base,hosting){
   const entries=Object.fromEntries(Object.entries(source).filter(([name])=>name.startsWith(CAREER_BANK_PREFIX)).map(([name,item])=>[name.slice(CAREER_BANK_PREFIX.length),item]));
   if(!Object.keys(entries).length){if(hosting)fail('release/hosted-collection-local-tree-missing');return null;}
@@ -64,13 +70,15 @@ function lazyCollections(manifest,base){
     if(item.encoding===undefined){if(item.collectionRoot!==`${base}_collections/career-vacancies/${item.treeSHA}/`||item.hostedTreeSHA!==undefined)fail('release/invalid-lazy-collection-root');}
     else if(item.encoding!=='base64-gzip'||!externalCareerRoot(item.collectionRoot)||!/^[a-f0-9]{40}$/.test(item.hostedTreeSHA||''))fail('release/invalid-hosted-lazy-collection');
     const summary=manifest.resources?.[CAREER_BANK_SUMMARY];
+    if(item.details){const details=detailsMetadata(item.details,item.treeSHA);for(const [key,value]of Object.entries(detailsSummary(details)))if(summary?.[key]!==value)fail('release/details-summary-mismatch');}
+    else if(summary&&Object.keys(summary).some(key=>key.startsWith('details')))fail('release/details-summary-without-descriptor');
     if(summary?.collectionRoot!==item.collectionRoot||summary.collectionEncoding!==item.encoding||summary.collection?.treeSHA!==item.treeSHA||summary.collection?.fileCount!==item.fileCount||summary.collection?.bytes!==item.bytes)fail('release/lazy-collection-summary-mismatch');
     if(Object.keys(manifest.resources).some(name=>name.startsWith(CAREER_BANK_PREFIX)&&name!==CAREER_BANK_SUMMARY))fail('release/lazy-collection-global-file-index');
   }
   return collections;
 }
 function collectionIdentity(hash,collections){
-  for(const item of collections){hash.update('lazy-collection:'+item.id+'\0'+item.treeSHA+'\0'+item.fileCount+'\0'+item.bytes+'\n');if(item.encoding)hash.update('hosted-lazy-collection:'+item.collectionRoot+'\0'+item.encoding+'\0'+item.hostedTreeSHA+'\n');}
+  for(const item of collections){hash.update('lazy-collection:'+item.id+'\0'+item.treeSHA+'\0'+item.fileCount+'\0'+item.bytes+'\n');if(item.details)hash.update('remote-details-metadata:'+json(detailsMetadata(item.details,item.treeSHA)));if(item.encoding)hash.update('hosted-lazy-collection:'+item.collectionRoot+'\0'+item.encoding+'\0'+item.hostedTreeSHA+'\n');}
 }
 async function copyCollection(from,to){
   const names=[];
@@ -139,6 +147,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     const manifestPath=sitePath(target.manifestURL,base),bytes=await fs.readFile(path.join(out,manifestPath));if(digest(bytes)!==target.manifestSha256)fail('release/manifest-integrity');
     const manifest=JSON.parse(bytes);if(manifest.buildId!==target.buildId)fail('release/build-mismatch');if(manifest.baselineId!==baseline.baselineId)fail('release/baseline-mismatch');
     const collections=lazyCollections(manifest,base);
+    for(const c of collections)if(c.details)externalCollections.add(c.details.collectionRoot);
     for(const collection of collections){
       if(collection.encoding){externalCollections.add(collection.collectionRoot);continue;}
       const physical=sitePath(collection.collectionRoot,base).replace(/\/$/,'');
@@ -221,6 +230,8 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   if(Object.keys(frozen).some(name=>!safeName(name)))fail('release/unsafe-baseline-path');
   const baselineId=oldRegistry?.baselineId||digest(json({files:frozen,legacyEntryHTML}));
   const currentCollection=careerCollection(source,base,hosting),collections=currentCollection?[currentCollection.descriptor]:[];
+  let detailsHosting=null;try{detailsHosting=JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/career-vacancies/details-hosting.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+  if(detailsHosting){if(!currentCollection)fail('release/details-base-collection-missing');currentCollection.descriptor.details=detailsMetadata(detailsHosting,currentCollection.descriptor.treeSHA);}
   const resources={};for(const [name,item] of Object.entries(source)){
     if(controls.has(name)&&name!=='index.html')continue;
     if(name.startsWith(CAREER_BANK_PREFIX)&&name!==CAREER_BANK_SUMMARY)continue;
@@ -229,6 +240,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
     resources[name]={...item,kind:runtime?'runtime':'resource',url:runtime?`${base}_releases/${TOKEN}/${name}`:same?base+name:`${base}_objects/${item.sha256}${ext}`};
   }
   if(currentCollection){const {treeSHA,fileCount,bytes,collectionRoot,encoding}=currentCollection.descriptor;Object.assign(resources[CAREER_BANK_SUMMARY],{collectionRoot,collection:{treeSHA,fileCount,bytes},...(encoding?{collectionEncoding:encoding}:{})});}
+  if(currentCollection?.descriptor.details)Object.assign(resources[CAREER_BANK_SUMMARY],detailsSummary(currentCollection.descriptor.details));
   const recovery=await fs.readFile(path.join(site,'assets/js/release-recovery.js'),'utf8');
   onProgress('transform-runtime');const runtime=new Map();for(const [name,item] of Object.entries(resources))if(item.kind==='runtime'){
     let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
