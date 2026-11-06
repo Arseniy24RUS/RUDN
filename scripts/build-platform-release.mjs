@@ -41,26 +41,33 @@ function collectionTree(entries){
   }
   return {treeSHA:hash.digest('hex'),fileCount:Object.keys(entries).length,bytes};
 }
-function careerCollection(source,base){
+const externalCareerRoot=value=>typeof value==='string'&&/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-vacancy-bank\/$/.test(value);
+function careerCollection(source,base,hosting){
   const entries=Object.fromEntries(Object.entries(source).filter(([name])=>name.startsWith(CAREER_BANK_PREFIX)).map(([name,item])=>[name.slice(CAREER_BANK_PREFIX.length),item]));
-  if(!Object.keys(entries).length)return null;
+  if(!Object.keys(entries).length){if(hosting)fail('release/hosted-collection-local-tree-missing');return null;}
   if(!entries['summary.json'])fail('release/lazy-collection-summary-missing');
   const tree=collectionTree(entries);
+  if(hosting){
+    if(hosting.schemaVersion!==1||hosting.encoding!=='base64-gzip'||!externalCareerRoot(hosting.collectionRoot)||!/^[a-f0-9]{40}$/.test(hosting.hostedTreeSHA||'')||hosting.treeSHA!==tree.treeSHA||hosting.fileCount!==tree.fileCount||hosting.bytes!==tree.bytes)fail('release/hosted-collection-config-mismatch');
+    return {descriptor:{id:'career-vacancies',logicalPrefix:CAREER_BANK_PREFIX,collectionRoot:hosting.collectionRoot,...tree,encoding:hosting.encoding,hostedTreeSHA:hosting.hostedTreeSHA},entries};
+  }
   return {descriptor:{id:'career-vacancies',logicalPrefix:CAREER_BANK_PREFIX,collectionRoot:`${base}_collections/career-vacancies/${tree.treeSHA}/`,...tree},entries};
 }
 function lazyCollections(manifest,base){
   const collections=manifest.lazyCollections??[];
   if(!Array.isArray(collections)||collections.length>1)fail('release/invalid-lazy-collections');
   for(const item of collections){
-    if(item?.id!=='career-vacancies'||item.logicalPrefix!==CAREER_BANK_PREFIX||!/^[a-f0-9]{64}$/.test(item.treeSHA||'')||!Number.isSafeInteger(item.fileCount)||item.fileCount<1||!Number.isSafeInteger(item.bytes)||item.bytes<1||item.collectionRoot!==`${base}_collections/career-vacancies/${item.treeSHA}/`)fail('release/invalid-lazy-collection');
+    if(item?.id!=='career-vacancies'||item.logicalPrefix!==CAREER_BANK_PREFIX||!/^[a-f0-9]{64}$/.test(item.treeSHA||'')||!Number.isSafeInteger(item.fileCount)||item.fileCount<1||!Number.isSafeInteger(item.bytes)||item.bytes<1)fail('release/invalid-lazy-collection');
+    if(item.encoding===undefined){if(item.collectionRoot!==`${base}_collections/career-vacancies/${item.treeSHA}/`||item.hostedTreeSHA!==undefined)fail('release/invalid-lazy-collection-root');}
+    else if(item.encoding!=='base64-gzip'||!externalCareerRoot(item.collectionRoot)||!/^[a-f0-9]{40}$/.test(item.hostedTreeSHA||''))fail('release/invalid-hosted-lazy-collection');
     const summary=manifest.resources?.[CAREER_BANK_SUMMARY];
-    if(summary?.collectionRoot!==item.collectionRoot||summary.collection?.treeSHA!==item.treeSHA||summary.collection?.fileCount!==item.fileCount||summary.collection?.bytes!==item.bytes)fail('release/lazy-collection-summary-mismatch');
+    if(summary?.collectionRoot!==item.collectionRoot||summary.collectionEncoding!==item.encoding||summary.collection?.treeSHA!==item.treeSHA||summary.collection?.fileCount!==item.fileCount||summary.collection?.bytes!==item.bytes)fail('release/lazy-collection-summary-mismatch');
     if(Object.keys(manifest.resources).some(name=>name.startsWith(CAREER_BANK_PREFIX)&&name!==CAREER_BANK_SUMMARY))fail('release/lazy-collection-global-file-index');
   }
   return collections;
 }
 function collectionIdentity(hash,collections){
-  for(const item of collections)hash.update('lazy-collection:'+item.id+'\0'+item.treeSHA+'\0'+item.fileCount+'\0'+item.bytes+'\n');
+  for(const item of collections){hash.update('lazy-collection:'+item.id+'\0'+item.treeSHA+'\0'+item.fileCount+'\0'+item.bytes+'\n');if(item.encoding)hash.update('hosted-lazy-collection:'+item.collectionRoot+'\0'+item.encoding+'\0'+item.hostedTreeSHA+'\n');}
 }
 async function copyCollection(from,to){
   const names=[];
@@ -121,7 +128,7 @@ function packsFor(resources){
 }
 export async function verifyRelease(out,{budget=1_000_000_000}={}){
   const pointer=JSON.parse(await fs.readFile(path.join(out,'release.json'),'utf8')), baseline=JSON.parse(await fs.readFile(path.join(out,'platform-baseline.json'),'utf8'));
-  if(pointer.schema!==SCHEMA)fail('release/pointer-schema');const base=baseline.sitePath,verified=new Map(),verifiedCollections=new Map(),unreachableImports=[];
+  if(pointer.schema!==SCHEMA)fail('release/pointer-schema');const base=baseline.sitePath,verified=new Map(),verifiedCollections=new Map(),externalCollections=new Set(),unreachableImports=[];
   if(baseline.schema!==2||!baseline.legacyEntryHTML||baseline.baselineId!==digest(json({files:baseline.files,legacyEntryHTML:baseline.legacyEntryHTML})))fail('release/baseline-identity');
   async function verify(name,expected){if(!safeName(name))fail('release/unsafe-path');const bytes=await fs.readFile(path.join(out,name));if(bytes.length!==expected.bytes||digest(bytes)!==expected.sha256)fail('release/integrity:'+name);verified.set(name,{bytes:bytes.length,sha256:expected.sha256});return bytes;}
   await parallel(Object.entries(baseline.files),async([name,entry])=>verify(name,entry));
@@ -130,6 +137,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     const manifest=JSON.parse(bytes);if(manifest.buildId!==target.buildId)fail('release/build-mismatch');if(manifest.baselineId!==baseline.baselineId)fail('release/baseline-mismatch');
     const collections=lazyCollections(manifest,base);
     for(const collection of collections){
+      if(collection.encoding){externalCollections.add(collection.collectionRoot);continue;}
       const physical=sitePath(collection.collectionRoot,base).replace(/\/$/,'');
       let actual=verifiedCollections.get(physical);
       if(!actual){actual=collectionTree(await inventory(path.join(out,physical),{skipGenerated:false}));verifiedCollections.set(physical,actual);}
@@ -182,7 +190,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
   }
   let totalBytes=0;const dirs=[out],files=[],sizes=[];while(dirs.length){const batch=dirs.splice(0,8);await parallel(batch,async dir=>{for(const entry of await fs.readdir(dir,{withFileTypes:true})){const p=path.join(dir,entry.name);if(entry.isDirectory())dirs.push(p);else files.push(p);}});}await parallel(files,async(file,index)=>{sizes[index]=(await fs.stat(file)).size;});totalBytes=sizes.reduce((sum,value)=>sum+value,0);const fileCount=files.length;
   if(totalBytes>budget)fail(`release/budget:${totalBytes}>${budget}`);
-  return {status:'pass',schema:SCHEMA,buildId:pointer.current.buildId,previous:pointer.previous?.buildId||null,totalBytes,fileCount,budget,unreachableImports,...(verifiedCollections.size?{verifiedLazyCollections:verifiedCollections.size}:{})};
+  return {status:'pass',schema:SCHEMA,buildId:pointer.current.buildId,previous:pointer.previous?.buildId||null,totalBytes,fileCount,budget,unreachableImports,...(verifiedCollections.size?{verifiedLazyCollections:verifiedCollections.size}:{}),...(externalCollections.size?{externalLazyCollectionsMetadataValidated:externalCollections.size,remoteCollectionBytesVerified:false}:{})};
 }
 export async function buildRelease({site,baseline:baselineDir,out,sitePath:base='/RUDN/',budget=1_000_000_000,verify=true,onProgress=()=>{}}){
   site=path.resolve(site);baselineDir=path.resolve(baselineDir);out=path.resolve(out);
@@ -200,7 +208,8 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   const frozen=oldRegistry?.files||Object.fromEntries(Object.entries(baselineSource).filter(([name])=>!controls.has(name)&&!legacyEntryHTML[name]));
   if(Object.keys(frozen).some(name=>!safeName(name)))fail('release/unsafe-baseline-path');
   const baselineId=oldRegistry?.baselineId||digest(json({files:frozen,legacyEntryHTML}));
-  const currentCollection=careerCollection(source,base),collections=currentCollection?[currentCollection.descriptor]:[];
+  let hosting=null;try{hosting=JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/career-vacancies/hosting.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+  const currentCollection=careerCollection(source,base,hosting),collections=currentCollection?[currentCollection.descriptor]:[];
   const resources={};for(const [name,item] of Object.entries(source)){
     if(controls.has(name)&&name!=='index.html')continue;
     if(name.startsWith(CAREER_BANK_PREFIX)&&name!==CAREER_BANK_SUMMARY)continue;
@@ -208,7 +217,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
     const ext=name.endsWith('.json.gz')?'.json.gz':path.posix.extname(name);
     resources[name]={...item,kind:runtime?'runtime':'resource',url:runtime?`${base}_releases/${TOKEN}/${name}`:same?base+name:`${base}_objects/${item.sha256}${ext}`};
   }
-  if(currentCollection){const {treeSHA,fileCount,bytes,collectionRoot}=currentCollection.descriptor;Object.assign(resources[CAREER_BANK_SUMMARY],{collectionRoot,collection:{treeSHA,fileCount,bytes}});}
+  if(currentCollection){const {treeSHA,fileCount,bytes,collectionRoot,encoding}=currentCollection.descriptor;Object.assign(resources[CAREER_BANK_SUMMARY],{collectionRoot,collection:{treeSHA,fileCount,bytes},...(encoding?{collectionEncoding:encoding}:{})});}
   const recovery=await fs.readFile(path.join(site,'assets/js/release-recovery.js'),'utf8');
   onProgress('transform-runtime');const runtime=new Map();for(const [name,item] of Object.entries(resources))if(item.kind==='runtime'){
     let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
@@ -224,6 +233,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
     const previousBytes=await fs.readFile(path.join(baselineDir,sitePath(previous.manifestURL,base)));if(digest(previousBytes)!==previous.manifestSha256)fail('release/previous-manifest-integrity');
     const previousManifest=JSON.parse(previousBytes);
     for(const collection of lazyCollections(previousManifest,base)){
+      if(collection.encoding)continue;
       if(collections.some(item=>item.collectionRoot===collection.collectionRoot))continue;
       const physical=sitePath(collection.collectionRoot,base).replace(/\/$/,'');await copyCollection(path.join(baselineDir,physical),path.join(out,physical));
     }
@@ -231,7 +241,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
       if(frozen[physical])continue;await copy(baselineDir,out,physical);
     }
   }
-  if(currentCollection){
+  if(currentCollection&&!currentCollection.descriptor.encoding){
     const physical=sitePath(currentCollection.descriptor.collectionRoot,base).replace(/\/$/,'');
     await parallel(Object.keys(currentCollection.entries),name=>copyResource(site,CAREER_BANK_PREFIX+name,out,physical+'/'+name));
   }

@@ -12,14 +12,43 @@ function careerFetchURL(input) {
   if(value.startsWith(BANK_PREFIX)) {
     const suffix=value.slice(BANK_PREFIX.length);
     if(!/^[A-Za-z0-9][A-Za-z0-9_./-]*$/.test(suffix)||suffix.split('/').some(part=>!part||part==='.'||part==='..'))throw new TypeError('Invalid vacancy-bank resource path');
-    const collection=context?.resources?.['apps/career/data/vacancies/bank/summary.json']?.collectionRoot;
+    const metadata=context?.resources?.['apps/career/data/vacancies/bank/summary.json'],collection=metadata?.collectionRoot;
     if(collection) {
-      const siteRoot=new URL(context.siteRoot),base=new URL(collection,siteRoot),url=new URL(suffix,base);
+      const siteRoot=new URL(context.siteRoot),base=new URL(collection,siteRoot);
+      if(metadata.collectionEncoding==='base64-gzip') {
+        if(base.origin!=='https://raw.githubusercontent.com'||base.username||base.password||base.search||base.hash||!/^\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-vacancy-bank\/$/.test(base.pathname))throw new TypeError('Invalid vacancy-bank immutable publisher boundary');
+        if(suffix==='summary.json')return {url:resourceURL(input,MODULE_BASE)};
+        const head=/^employers\/[A-Za-z0-9][A-Za-z0-9_-]{0,246}\.json\.gz$/.test(suffix),page=/^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.json\.gz$/.test(suffix);
+        if(!head&&!page)throw new TypeError('Invalid vacancy-bank encoded resource path');
+        const url=new URL(suffix.replace(/\.json\.gz$/,'.b64'),base);
+        if(!url.href.startsWith(base.href))throw new TypeError('Invalid vacancy-bank collection boundary');
+        return {url,base64Gzip:true,maxDecodedBytes:head?256*1024:4*1024*1024};
+      }
+      const url=new URL(suffix,base);
       if(base.origin!==siteRoot.origin||!base.pathname.startsWith(siteRoot.pathname)||!base.pathname.endsWith('/')||base.search||base.hash||url.origin!==base.origin||!url.pathname.startsWith(base.pathname)||url.search||url.hash)throw new TypeError('Invalid vacancy-bank collection boundary');
-      return url;
+      return {url};
     }
   }
-  return value.startsWith('api/')?new URL('apps/career/'+value,context?.siteRoot||new URL('../../',MODULE_BASE)):resourceURL(input,MODULE_BASE);
+  return {url:value.startsWith('api/')?new URL('apps/career/'+value,context?.siteRoot||new URL('../../',MODULE_BASE)):resourceURL(input,MODULE_BASE)};
+}
+async function decodeBankBase64(response,target,signal) {
+  const maximum=Math.ceil(target.maxDecodedBytes/3)*4+1024,chunks=[];let size=0;
+  if(response.body?.getReader) {
+    const reader=response.body.getReader();
+    try {for(;;){if(signal.aborted)throw signal.reason||new DOMException('Aborted','AbortError');const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>maximum)throw new TypeError('Encoded vacancy resource exceeds size limit');chunks.push(value);}}
+    catch(error){await reader.cancel(error).catch(()=>{});throw error;}
+  } else {const value=new Uint8Array(await response.arrayBuffer());size=value.length;if(size>maximum)throw new TypeError('Encoded vacancy resource exceeds size limit');chunks.push(value);}
+  if(signal.aborted)throw signal.reason||new DOMException('Aborted','AbortError');
+  const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+  if(bytes.some(value=>value>127))throw new TypeError('Encoded vacancy resource must be ASCII');
+  const text=new TextDecoder().decode(bytes).replace(/[ \t\r\n]/g,'');
+  if(!text||text.length%4!==0||!/^[A-Za-z0-9+/]*={0,2}$/.test(text))throw new TypeError('Invalid vacancy resource base64');
+  const length=text.length/4*3-(text.endsWith('==')?2:text.endsWith('=')?1:0);
+  if(length>target.maxDecodedBytes)throw new TypeError('Decoded vacancy resource exceeds size limit');
+  const binary=atob(text),gzip=Uint8Array.from(binary,value=>value.charCodeAt(0));
+  if(gzip.length!==length||gzip[0]!==31||gzip[1]!==139||gzip[2]!==8)throw new TypeError('Decoded vacancy resource is not gzip');
+  const headers=new Headers(response.headers);headers.delete('Content-Length');headers.delete('Content-Encoding');headers.delete('Transfer-Encoding');headers.set('Content-Type','application/gzip');
+  return new Response(gzip,{status:response.status,statusText:response.statusText,headers});
 }
 
 const VALID_ROUTES = new Set(['home','personality','personality-results','preferences','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
@@ -193,7 +222,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         const abort = () => combined.abort();
         if(life.signal.aborted || options.signal?.aborted)combined.abort();
         life.signal.addEventListener('abort',abort,{once:true}); options.signal?.addEventListener('abort',abort,{once:true});
-        try{return await hostWindow.fetch(careerFetchURL(input),{...options,signal:combined.signal});}
+        try{const target=careerFetchURL(input),response=await hostWindow.fetch(target.url,{...options,signal:combined.signal});return target.base64Gzip&&response.status===200?await decodeBankBase64(response,target,combined.signal):response;}
         finally{life.signal.removeEventListener('abort',abort);options.signal?.removeEventListener('abort',abort);}
       },
       MutationObserver:ScopedObserver,URL:ScopedURL,setTimeout:timeout,clearTimeout:clearTimer,requestAnimationFrame:raf,
