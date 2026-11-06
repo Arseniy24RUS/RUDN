@@ -124,16 +124,36 @@ async function pinch(center,startRadius,endRadius,{cancel=false}={}){
   await nativeTouch(cancel?'touchCancel':'touchEnd',[]);await tick(page);
 }
 async function labelSnapshot(){
-  return page.locator('[data-region-label][data-label-visible="true"]').evaluateAll(nodes=>nodes.map(node=>{const b=node.getBoundingClientRect(),lines=[...node.children].map(span=>span.textContent),matrix=node.getScreenCTM();return {id:node.dataset.regionLabel,text:lines.join(qa.lang==='zh-Hans'?'':' '),lines:lines.length,fontPixels:parseFloat(getComputedStyle(node).fontSize)*Math.hypot(matrix.a,matrix.b),x:b.x,y:b.y,width:b.width,height:b.height};}));
+  return page.locator('[data-region-label][data-label-visible="true"]').evaluateAll(nodes=>nodes.map(node=>{
+    const b=node.getBoundingClientRect(),lines=[...node.children].map(span=>span.textContent),matrix=node.getScreenCTM(),style=getComputedStyle(node);
+    const scale=Math.hypot(matrix.a,matrix.b),viewport=node.closest('.career-region-map-viewport'),frame=viewport.getBoundingClientRect();
+    const clip={left:frame.left+viewport.clientLeft,top:frame.top+viewport.clientTop,width:viewport.clientWidth,height:viewport.clientHeight};
+    let visible=node.isConnected;for(let ancestor=node;ancestor;ancestor=ancestor.parentElement){const css=getComputedStyle(ancestor);if(css.display==='none'||css.visibility==='hidden'||css.visibility==='collapse'||Number(css.opacity)===0)visible=false;}
+    return {id:node.dataset.regionLabel,text:lines.join(qa.lang==='zh-Hans'?'':' '),lines:lines.length,fontPixels:parseFloat(style.fontSize)*scale,
+      visible,strokePixels:style.stroke==='none'?0:parseFloat(style.strokeWidth)*scale,
+      x:b.x,y:b.y,width:b.width,height:b.height,clip};
+  }));
 }
-function assertLabels(labels){
+function assertLabels(labels,context={}){
+  (report.labelChecks??=[]).push({...context,labels});
   assert.ok(labels.length>0,'Zoomed map exposes region names');
-  for(const label of labels){assert.ok(label.text&&label.fontPixels>=12&&label.fontPixels<=14&&label.height>=10&&label.height<=20*label.lines,`Readable label ${JSON.stringify(label)}`);}
+  for(const label of labels){
+    const detail=JSON.stringify(label);
+    // SVG font bounding boxes vary with engine and font ascent/descent metrics.
+    // Readability is the transformed em-size; fit is measured against the actual
+    // clipping rectangle, not an invented maximum bbox height per text line.
+    assert.ok(label.text&&label.visible&&Number.isFinite(label.fontPixels)&&label.fontPixels>=12&&label.fontPixels<=14,`Readable label ${detail}`);
+    assert.ok([label.x,label.y,label.width,label.height,label.strokePixels,...Object.values(label.clip)].every(Number.isFinite)&&label.width>0&&label.height>0,`Nonempty finite label geometry ${detail}`);
+    const halo=label.strokePixels/2,rounding=1;
+    assert.ok(label.x-halo>=label.clip.left-rounding&&label.y-halo>=label.clip.top-rounding&&
+      label.x+label.width+halo<=label.clip.left+label.clip.width+rounding&&label.y+label.height+halo<=label.clip.top+label.clip.height+rounding,`Label is not clipped by the map viewport ${detail}`);
+  }
   for(let i=0;i<labels.length;i++)for(let j=i+1;j<labels.length;j++){
     const a=labels[i],b=labels[j],w=Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x),h=Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y);
     assert.ok(!(w>2&&h>2),`Region labels overlap: ${a.id} / ${b.id}`);
   }
 }
+
 async function assertLayout(width,height,language){
   await page.setViewportSize({width,height});await tick(page);
   const boxes=await page.locator('#journey-regions').evaluate(root=>{
@@ -142,7 +162,7 @@ async function assertLayout(width,height,language){
   });
   assert.equal(boxes.domListFirst,true);assert.ok(boxes.mapTop>=boxes.listBottom-1,'List is visually above the map');
   assert.ok(boxes.documentWidth<=boxes.windowWidth+1);assert.ok(boxes.rootWidth<=boxes.rootClientWidth+1);
-  await resetMap();const low=await labelSnapshot();await zoomToRegion('ru-77',8);const high=await labelSnapshot();assertLabels(high);
+  await resetMap();const low=await labelSnapshot();await zoomToRegion('ru-77',8);const high=await labelSnapshot();assertLabels(high,{language,width,height});
   const regions=new Map(territories.map(region=>[region.id,region]));
   for(const item of high){const r=regions.get(item.id),expected=language==='ru'?r.name:language==='en'?(r.name_en||r.name):(r.name_zh||r.name);assert.equal(item.text,expected);}
   await screenshot(`${language}-${width}x${height}-map`,'.career-region-map-panel');
