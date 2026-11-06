@@ -37,6 +37,7 @@ const json=async name=>JSON.parse(await readFile(path.join(career,'data',name+'.
 const [questions,sectors,tracks,baseAuthorities,territories,territorialPacked,conditions,national]=await Promise.all(['questions','sectors','tracks','authorities','territories','territorial-authorities','conditions','position-materials/national'].map(json));
 const allAuthorities=[...baseAuthorities,...expandTerritorialCatalog(territorialPacked).filter(item=>!baseAuthorities.some(base=>base.id===item.id))];
 const authorityById=new Map(allAuthorities.map(item=>[item.id,item]));
+const authoritySymbols=await json('authority-symbols');
 const stores=new Map(),personalityStores=new Map(),hosts=new Set();
 const report={status:'running',runtime:'Happy DOM; real compiled career runtime',limitations:['DOM event/state checks only; no browser layout, painting, pointer hit testing, screen-reader or cross-engine claims.'],checks:[],errors:[],externalRequests:[],artifacts:[],startedAt:new Date().toISOString(),runtimeSha256:createHash('sha256').update(await readFile(path.join(career,'runtime.bundle.mjs'))).digest('hex')};
 const pass=(name,details={})=>{report.checks.push({name,status:'pass',...details});console.log('PASS '+name);};
@@ -107,12 +108,13 @@ async function settled(host){await waitUntil(()=>!host.runtime.updateBusy(),'car
 function click(host,selector){const element=host.q(selector);assert.ok(element,'Expected control: '+selector);assert.notEqual(element.disabled,true,'Control must be enabled: '+selector);element.click();return element;}
 function input(host,selector,value,event='input'){const element=host.q(selector);assert.ok(element,'Expected input: '+selector);element.value=value;element.dispatchEvent(new dom.Event(event,{bubbles:true}));return element;}
 function mapToggle(host,id){const shape=host.q(`[data-region-map-id="${id}"]`);assert.ok(shape,'Mapped territory exists: '+id);shape.dispatchEvent(new dom.KeyboardEvent('keydown',{key:' ',bubbles:true,cancelable:true}));}
+function wishKey(host,id,key){const handle=host.q(`[data-wish-drag-handle="${id}"]`);assert.ok(handle,'Expected keyboard drag handle: '+id);handle.dispatchEvent(new dom.KeyboardEvent('keydown',{key,bubbles:true,cancelable:true}));return handle;}
 function countSummary(host){return host.qa('.journey-summary-counts > div > strong').map(node=>Number(node.textContent));}
 const personalKeys=value=>value&&typeof value==='object'&&Object.entries(value).some(([key,child])=>/^ipip-\d{3}$/.test(key)||personalKeys(child));
 
 const syntheticInputs={answers:Object.fromEntries(questions.map(question=>[question.id,({E:5,A:5,D:4,M:4,N:3,K:2,C:2,T:2,I:2})[question.scale]||3])),prioritySectors:['FIN','ECO','DIG','IND'],lowPrioritySectors:['SEC','EMR'],conditions:Object.fromEntries(conditions.map(condition=>[condition.id,3])),focusAreas:{},regionIds:['ru-77','ru-16','ru-78']};
 const expected=rankJourneyAuthorities({authorities:allAuthorities,tracks,questions,sectors,inputs:syntheticInputs,regionIds:syntheticInputs.regionIds,limit:3});
-const federalWish=expected.federal[0].id;
+const federalWish='mintrud';assert.ok(authorityById.has(federalWish),'The real Mintrud source must be reachable through a preferred employer card');
 const regionalWish=expected.regions.find(group=>group.regionId==='ru-16').authorities[0].id;
 const corporationWish='rosatom';assert.ok(authorityById.has(corporationWish));
 
@@ -149,16 +151,28 @@ async function completeCareer(host){
   pass('All 27 career questions, four priorities, two exclusions and four conditions use the existing scoring path');
 }
 
+async function openRoles(host,id){
+  const selector=`details[data-authority-roles="${id}"]`;
+  let panel=host.q(selector);assert.ok(panel,'An actual recommendation/preference card exists for '+id);
+  if(!panel.open){panel.querySelector(':scope > summary').click();await tick();}
+  await settled(host);panel=host.q(selector);assert.ok(panel.open,'Employer roles open inside that card');
+  assert.equal(host.q('#journey-vacancy-section'),null);assert.equal(host.q('#seminar-vacancies'),null);assert.equal(host.q('#journey-vacancy-employer'),null);
+  return selector;
+}
 async function selectRole(host,vacancy){
   if(host.q('#journey-back-requirements'))click(host,'#journey-back-requirements');
   if(host.q('#journey-back-vacancies'))click(host,'#journey-back-vacancies');
   if(host.q('#journey-choose-role'))click(host,'#journey-choose-role');
   await settled(host);
-  input(host,'#journey-vacancy-employer',vacancy.institutionId,'change');
-  input(host,'#journey-vacancy-search',vacancy.title);
+  const selector=await openRoles(host,vacancy.institutionId);
+  input(host,selector+' [data-role-search]',vacancy.title);
   let more=0;
-  while(!host.q(`[data-select-vacancy="${vacancy.id}"]`)&&host.q('#journey-more-vacancies')&&more++<50)click(host,'#journey-more-vacancies');
-  click(host,`[data-select-vacancy="${vacancy.id}"]`);await tick();
+  while(!host.q(selector+` [data-select-vacancy="${vacancy.id}"]`)&&host.q(selector+' [data-role-more]')&&more++<50)click(host,selector+' [data-role-more]');
+  for(const card of host.qa(selector+' [data-vacancy-id]')){
+    const row=national.positions.find(item=>item.id===card.dataset.vacancyId)||host.journey().customVacancies.find(item=>item.id===card.dataset.vacancyId);
+    assert.ok(row,'This Mintrud test uses unchanged bundled or explicitly user-added records');assert.equal(row.institutionId,vacancy.institutionId,'Every local search result belongs to this employer');
+  }
+  click(host,selector+` [data-select-vacancy="${vacancy.id}"]`);await tick();
   assert.ok(host.q('#journey-assessment-state'),'Role selection opens actual requirements');
   assert.equal(host.journey().selectedVacancyId,vacancy.id);
 }
@@ -199,18 +213,35 @@ try{
   await saveSVG(host,'.career-region-map','territory-selection.svg',{styles:mapStyles,regionIds:clone(host.journey().regionIds),note:'Static copy embeds the corresponding noninteractive map styles; browser layout was not evaluated.'});
   await addWish(host,federalWish);await addWish(host,corporationWish);await addWish(host,regionalWish);
   assert.deepEqual(host.journey().desiredIds,[federalWish,corporationWish,regionalWish]);assert.equal(host.q('#journey-preferences-next').disabled,false);
-  click(host,'[data-move-wish="2"][data-direction="-1"]');click(host,'[data-move-wish="1"][data-direction="-1"]');
+  assert.equal(host.qa('[data-move-wish]').length,0,'Arrow buttons are replaced by an accessible drag handle');
+  wishKey(host,regionalWish,' ');wishKey(host,regionalWish,'ArrowUp');wishKey(host,regionalWish,'ArrowUp');
+  assert.deepEqual(host.journey().desiredIds,[federalWish,corporationWish,regionalWish],'Reorder preview is not saved before drop');
+  wishKey(host,regionalWish,'Escape');assert.deepEqual(host.journey().desiredIds,[federalWish,corporationWish,regionalWish],'Keyboard cancel preserves the prior order');
+  wishKey(host,regionalWish,'Enter');wishKey(host,regionalWish,'ArrowUp');wishKey(host,regionalWish,'ArrowUp');wishKey(host,regionalWish,'Enter');
   const wished=[regionalWish,federalWish,corporationWish];assert.deepEqual(host.journey().desiredIds,wished);
-  pass('Three distinct wishes include a corporation; arrows preserve their explicit priority order');
+  assert.deepEqual(host.qa('[data-wish-list] > [data-wish-id]').map(node=>node.dataset.wishId),wished);
+  pass('Three distinct wishes include a corporation; keyboard grab/move/cancel/drop preserves explicit priority');
   const beforeRemount=clone(host.journey());host.close();host=await mount({owner:'student:journey-dom-a',route:'preferences'});await settled(host);
   assert.equal(host.activeRoute(),'preferences');assert.deepEqual(host.journey().regionIds,beforeRemount.regionIds);assert.deepEqual(host.journey().desiredIds,wished);assert.equal(host.qa('#journey-desired-choices .is-filled').length,3);pass('Territories and wish order survive native runtime remount');
   click(host,'#journey-preferences-next');await completeCareer(host);
   click(host,'#seminar-show-authorities');await settled(host);
-  const groups=host.qa('[data-recommendation-group]');assert.deepEqual(groups.map(node=>node.dataset.recommendationGroup),['federal',...host.journey().regionIds]);
+  const groups=host.qa('[data-recommendation-group]');assert.deepEqual(groups.map(node=>node.dataset.recommendationGroup),['recommended','preferred']);
   for(const group of groups)assert.equal(group.querySelectorAll('[data-recommended-authority]').length,3,'Exactly three employers in '+group.dataset.recommendationGroup);
-  assert.deepEqual(host.qa('[data-recommendation-group="federal"] [data-recommended-authority]').map(node=>node.dataset.recommendedAuthority),expected.federal.map(authority=>authority.id));
-  assert.deepEqual(host.journey().desiredIds,wished);assert.ok(host.q(`[data-recommended-authority="${federalWish}"].journey-matched`));
-  pass('Actual recommendations contain three national employers and three per region; matching wishes receive a frame');
+  const top3=expected.ranked.slice(0,3).map(authority=>authority.id),topSet=new Set(top3),wishSet=new Set(wished);
+  assert.deepEqual(host.qa('[data-recommendation-group="recommended"] [data-recommended-authority]').map(node=>node.dataset.recommendedAuthority),top3,'Recommendations are the exact overall ranked top three');
+  assert.deepEqual(host.qa('[data-recommendation-group="preferred"] [data-recommended-authority]').map(node=>node.dataset.recommendedAuthority),wished,'Preferred employers retain the manually chosen order');
+  assert.equal(host.qa('[data-recommended-authority]').length,6);assert.equal(host.qa('.journey-comparison,.journey-comparison-columns,.journey-compare-item').length,0,'The former compact comparison is not duplicated');
+  for(const group of groups)for(const card of group.querySelectorAll('[data-recommended-authority]')){
+    const id=card.dataset.recommendedAuthority,authority=authorityById.get(id),matched=topSet.has(id)&&wishSet.has(id);
+    assert.equal(card.classList.contains('journey-matched'),matched);assert.equal(!!card.querySelector('.journey-match-badge'),matched,'Only an actual top-three/preference intersection has a match badge');
+    assert.ok(card.querySelector('h3')?.textContent.trim());assert.ok(card.querySelector(':scope > p')?.textContent.trim(),'The original employer description is present');
+    assert.ok(card.querySelector('.seminar-track > strong')?.textContent.trim(),'The matching work direction is present');
+    assert.equal(card.querySelector('[data-authority-roles]')?.dataset.authorityRoles,id,'Role exploration is embedded in the correct employer card');assert.equal(card.querySelector('[data-authority-vacancies]'),null,'No teleport button to a common catalogue remains');
+    if(authoritySymbols.symbols[id])assert.ok(card.querySelector('.authority-symbol img'),'Existing official emblem is retained');
+    if(authority.descriptionParagraphs?.length||authority.descriptionSources?.length||authority.sources?.length||authority.detailPath)assert.ok(card.querySelector('[data-authority-details]'),'Existing employer detail disclosure is retained');
+  }
+  assert.deepEqual(host.journey().desiredIds,wished);
+  pass('Exactly two rich groups show the real top three and three preferred employers, with correct order, descriptions, emblems and intersection badges');
   assert.equal(host.q('#seminar-open-knowledge'),null,'Knowledge test is not offered before choosing and assessing a role');
   click(host,'#journey-show-plan');assert.ok(host.q('#journey-choose-role'));assert.equal(host.q('#seminar-open-knowledge'),null);click(host,'#journey-choose-role');await settled(host);
   pass('Development plan requires a selected role before offering the knowledge test');
@@ -254,22 +285,35 @@ try{
   await selectRole(host,vacancy);assert.equal(host.qa('[data-requirement-key]:checked').length,assessable.length);assert.deepEqual(host.journey().assessments[vacancy.id],completedAssessments);click(host,'#journey-open-plan');
   pass('Changing roles retains each role’s own assessment without leaking marks between source records');
   click(host,'#journey-back-requirements');click(host,'#journey-back-vacancies');await settled(host);
-  click(host,'.journey-manual-source > summary');
+  const mintrudPanel=await openRoles(host,'mintrud');
+  click(host,mintrudPanel+' [data-manual-authority="mintrud"] > summary');
+  const formSelector=mintrudPanel+' [data-manual-vacancy="mintrud"]';
   const manual={title:'Синтетическая должность QA — не вакансия',url:'https://example.invalid/career-dom-qa/role',knowledge:'Синтетическое требование QA: анализ данных.\nСинтетическое требование QA: подготовка аналитической записки.'};
-  input(host,'#journey-manual-vacancy [name="employer"]','mintrud','change');
-  input(host,'#journey-manual-vacancy [name="title"]',manual.title);input(host,'#journey-manual-vacancy [name="url"]',manual.url);
+  assert.equal(host.q(formSelector+' [name="employer"]').type,'hidden');assert.equal(host.q(formSelector+' [name="employer"]').value,'mintrud');
+  input(host,formSelector+' [name="title"]',manual.title);input(host,formSelector+' [name="url"]',manual.url);
   const customCount=host.journey().customVacancies.length;
-  click(host,'#journey-manual-vacancy [type="submit"]');assert.ok(normalize(host.q('#journey-manual-error').textContent));assert.equal(host.journey().customVacancies.length,customCount,'An announcement without requirements cannot be added');
-  input(host,'#journey-manual-vacancy [name="knowledge"]',manual.knowledge);
+  click(host,formSelector+' [type="submit"]');assert.ok(normalize(host.q(formSelector+' [data-manual-error]').textContent));assert.equal(host.journey().customVacancies.length,customCount,'An announcement without requirements cannot be added');
+  input(host,formSelector+' [name="knowledge"]',manual.knowledge);
+  const secondPanel=await openRoles(host,regionalWish),secondForm=secondPanel+` [data-manual-vacancy="${regionalWish}"]`;
+  click(host,secondPanel+` [data-manual-authority="${regionalWish}"] > summary`);
+  const otherManual={title:'Синтетический региональный черновик QA',url:'https://example.invalid/career-dom-qa/region',skills:'Синтетическое отдельное требование: работа с обращениями.'};
+  for(const [name,value]of Object.entries(otherManual))input(host,secondForm+` [name="${name}"]`,value);
   await host.runtime.setLocale('en');await tick();
-  for(const [name,value] of Object.entries(manual))assert.equal(host.q(`#journey-manual-vacancy [name="${name}"]`).value,value,'Manual draft survives locale change: '+name);
-  await waitUntil(()=>host.journey().manualDraft?.knowledge===manual.knowledge,'debounced manual draft persistence');
-  click(host,'#journey-manual-vacancy [type="submit"]');await tick();
+  for(const [name,value]of Object.entries(manual))assert.equal(host.q(formSelector+` [name="${name}"]`).value,value,'Manual draft survives locale change: '+name);
+  for(const [name,value]of Object.entries(otherManual))assert.equal(host.q(secondForm+` [name="${name}"]`).value,value,'Independent regional draft survives locale change: '+name);
+  assert.equal(host.q(secondForm+' [name="knowledge"]').value,'','Mintrud knowledge does not leak into another employer');assert.equal(host.q(formSelector+' [name="skills"]').value,'','Regional skills do not leak into Mintrud');
+  await waitUntil(()=>host.journey().manualDrafts?.mintrud?.knowledge===manual.knowledge&&host.journey().manualDrafts?.[regionalWish]?.skills===otherManual.skills,'two independent debounced manual drafts');
+  host.close();host=await mount({owner:'student:journey-dom-a',language:'en',route:'results'});await settled(host);
+  await openRoles(host,'mintrud');await openRoles(host,regionalWish);
+  for(const [name,value]of Object.entries(manual))assert.equal(host.q(formSelector+` [name="${name}"]`).value,value,'Mintrud draft survives native remount');
+  for(const [name,value]of Object.entries(otherManual))assert.equal(host.q(secondForm+` [name="${name}"]`).value,value,'Regional draft survives native remount');
+  pass('Two independent local source drafts survive language change and native remount without sharing requirements');
+  click(host,formSelector+' [type="submit"]');await tick();
   assert.ok(host.q('#journey-assessment-state'));assert.ok(host.journey().selectedVacancyId.startsWith('student-source-'));
-  const added=host.journey().customVacancies.find(item=>item.id===host.journey().selectedVacancyId);assert.ok(added.userProvided);assert.equal(added.title,manual.title);assert.equal(added.source.url,manual.url);assert.deepEqual(added.requirements.map(row=>row.sourceText),manual.knowledge.split('\n'));assert.equal(host.qa('[data-requirement-row]').length,2);
-  assert.equal(host.qa('[data-requirement-key]:checked').length,0);assert.equal(host.journey().assessments[vacancy.id][formal.id].status,'gap');
+  const added=host.journey().customVacancies.find(item=>item.id===host.journey().selectedVacancyId);assert.ok(added.userProvided);assert.equal(added.institutionId,'mintrud');assert.equal(added.title,manual.title);assert.equal(added.source.url,manual.url);assert.deepEqual(added.requirements.map(row=>row.sourceText),manual.knowledge.split('\n'));assert.equal(host.qa('[data-requirement-row]').length,2);
+  assert.equal(host.qa('[data-requirement-key]:checked').length,0);assert.equal(host.journey().assessments[vacancy.id][formal.id].status,'gap');assert.equal(host.journey().manualDrafts[regionalWish].skills,otherManual.skills);
   await host.runtime.setLocale('ru');await selectRole(host,vacancy);click(host,'#journey-open-plan');assertCounts(host,requirements,completedAssessments);
-  pass('Manual source drafts survive language changes, persist, require source requirements and open a separate assessment');
+  pass('Employer-bound manual form requires source requirements, keeps the original institution and opens a separate assessment');
   const ownerA={journey:clone(host.journey()),answers:clone(host.answers()),personality:clone(host.personality())};
   const other=await mount({owner:'student:journey-dom-b'});await settled(other);
   assert.equal(other.activeRoute(),'personality');assert.equal(other.personality(),null);assert.equal(Object.keys(other.answers().answers).length,0);assert.equal(other.journey(),null);assert.equal(other.results.length,0);
@@ -291,6 +335,7 @@ try{
   for(const language of ['en','zh-Hans','ru']){await assertLanguage(host,language,'preferences');assert.deepEqual(host.journey().desiredIds,wished);}
   pass('Preference editing is trilingual and preserves the wish order');
   click(host,'[data-region-checkbox="ru-16"]');assert.equal(host.journey().desiredIds.includes(regionalWish),false);assert.equal(host.journey().desiredIds.length,2);assert.equal(host.q('#journey-preferences-next').disabled,true);assert.equal(host.journey().confirmed,false);
+  assert.equal(host.journey().manualDrafts[regionalWish].skills,otherManual.skills,'Removing a territory retains its own draft without reassigning it');
   assert.deepEqual(host.answers().answers,syntheticInputs.answers);host.runtime.navigate('results');assert.equal(host.activeRoute(),'preferences');
   pass('Removing a territory removes its desired employer, requires a replacement and preserves career answers');
   await waitUntil(()=>host.qa('[data-region-map-id]').length===89,'map after region-change guard');
@@ -301,8 +346,11 @@ try{
   const extraFederal=expected.federal.find(item=>![federalWish,corporationWish].includes(item.id));assert.ok(extraFederal);await addWish(host,extraFederal.id);click(host,'#journey-preferences-next');await tick();
   if(host.q('#seminar-show-authorities'))click(host,'#seminar-show-authorities');
   if(host.q('#journey-choose-role'))click(host,'#journey-choose-role');await settled(host);
-  assert.deepEqual(host.qa('[data-recommendation-group]').map(node=>node.dataset.recommendationGroup),['federal']);assert.equal(host.qa('[data-recommended-authority]').length,3);assert.ok(!host.requests.some(url=>/position-materials\/ru-/.test(url)),'An explicitly federal-only remount must not request regional position shards');
-  pass('Federal-only selection survives remount, returns three employers and avoids regional source loads');
+  assert.deepEqual(host.qa('[data-recommendation-group]').map(node=>node.dataset.recommendationGroup),['recommended','preferred']);assert.equal(host.qa('[data-recommended-authority]').length,6);
+  assert.deepEqual(host.qa('[data-recommendation-group="recommended"] [data-recommended-authority]').map(node=>node.dataset.recommendedAuthority),expected.federal.map(authority=>authority.id));
+  assert.deepEqual(host.qa('[data-recommendation-group="preferred"] [data-recommended-authority]').map(node=>node.dataset.recommendedAuthority),[federalWish,corporationWish,extraFederal.id]);
+  assert.ok(!host.requests.some(url=>/position-materials\/ru-/.test(url)),'An explicitly federal-only remount must not request regional position shards');
+  pass('Federal-only selection survives remount, keeps both three-card groups and avoids regional source loads');
   assert.deepEqual(report.externalRequests,[]);assert.equal(personalKeys(host.results),false);pass('QA used only bundled resources and kept psychological item answers out of career payloads');
   report.status='pass';
 }catch(error){report.status='fail';report.errors.push({message:error.message,stack:error.stack});console.error(error.stack);process.exitCode=1;}

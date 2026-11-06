@@ -1,5 +1,4 @@
-# Prepared locally for a future reviewed release; creating the update ZIP does
-# not run this workflow. Its committed scope is checked against 790f9cb below.
+# Focused publication of Seminar 5; source changes are scoped against bbc7318.
 name: Publish Seminar 5 career journey with focused checks
 
 on:
@@ -55,6 +54,10 @@ jobs:
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_personality_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/personality"
+      - name: Verify touch map gestures and preferred employer reordering
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/test_career_preferences_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/preferences"
       - name: Restore existing Seminar 5 work through personality and preferences
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
@@ -93,7 +96,7 @@ jobs:
           node-version: '24'
       - name: Verify the authorized Seminar 5 change scope and syntax
         run: |
-          git fetch --no-tags --depth=1 origin 790f9cb778df4bf7174fbf3d90d0edf7b157efc0
+          git fetch --no-tags --depth=1 origin bbc731814813486541108a3abacfafd1f0cfa4a8
           node scripts/verify-career-express-release.mjs --scope
       - name: Build the career component and existing deterministic assets
         run: |
@@ -108,7 +111,7 @@ jobs:
           node scripts/test_personality_model.mjs
           node scripts/test_personality_insights.mjs
           node scripts/test_career_localization.mjs
-          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/career-journey-model.test.mjs tests/career-territorial-catalog.test.mjs tests/personality-visuals.test.mjs
+          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/career-journey-model.test.mjs tests/career-territorial-catalog.test.mjs tests/personality-visuals.test.mjs tests/career-region-map.test.mjs tests/career-wish-sortable.test.mjs
       - name: Verify the reusable territory map is deterministic
         run: node site/apps/career/data/regions/build-map.mjs --check
       - name: Install the isolated DOM test dependency

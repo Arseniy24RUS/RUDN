@@ -8,12 +8,13 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 
-const baseCommit='790f9cb778df4bf7174fbf3d90d0edf7b157efc0';
+const baseCommit='bbc731814813486541108a3abacfafd1f0cfa4a8';
 const allowedFiles=new Set([
   '.github/workflows/publish-career-seminar.yml',
   'scripts/build-career.mjs',
   'scripts/build-career-territorial-catalog.py',
   'scripts/test_career_journey_ui.mjs',
+  'scripts/test_career_preferences_ui.mjs',
   'scripts/test_career_update_migration.mjs',
   'scripts/test_personality_ui.mjs',
   'scripts/test_free_module_contexts.mjs',
@@ -21,7 +22,9 @@ const allowedFiles=new Set([
   'site/assets/js/career-course.js',
   'tests/career-journey-model.test.mjs',
   'tests/career-territorial-catalog.test.mjs',
-  'tests/personality-visuals.test.mjs'
+  'tests/personality-visuals.test.mjs',
+  'tests/career-region-map.test.mjs',
+  'tests/career-wish-sortable.test.mjs'
 ]);
 const allowedPrefixes=['site/apps/career/'];
 const isAllowed=name=>allowedFiles.has(name)||allowedPrefixes.some(prefix=>name.startsWith(prefix));

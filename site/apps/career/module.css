@@ -1730,27 +1730,30 @@ textarea { font:inherit; }
 .career-region-legend { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted, #627490); }
 .career-region-legend i { display: inline-block; width: 15px; height: 11px; border: 1px solid #075a94; background: #117fbe; border-radius: 3px; }
 .career-region-federal-only { padding: 10px 14px; margin: 0 0 14px; border: 1px solid var(--line, #dce9f5); border-radius: 12px; background: var(--surface-alt, #f6faff); font-size: 13px; color: var(--text, #1c355f); }
-.career-region-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 18px; align-items: stretch; }
+.career-region-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; align-items: stretch; }
 .career-region-map-panel { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line, #dce9f5); border-radius: 18px; overflow: hidden; background: #f4f8fc; }
 .career-region-map-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--line, #dce9f5); background: #fff; }
 .career-region-zoom { display: inline-flex; align-items: center; gap: 4px; }
-.career-region-zoom button { display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; font-size: 22px; line-height: 1; border: 1px solid #c7d9ea; border-radius: 9px; background: #fff; color: var(--blue-700, #0057b7); cursor: pointer; }
 .career-region-zoom span { min-width: 48px; text-align: center; font-size: 12px; color: #365575; font-variant-numeric: tabular-nums; }
 .career-region-map-reset { min-height: 36px; padding: 5px 10px; border: 1px solid #c7d9ea; border-radius: 9px; background: #fff; color: #365575; font-size: 12px; cursor: pointer; }
-.career-region-zoom button:hover:enabled, .career-region-map-reset:hover:enabled { background: #e9f4ff; border-color: #7bb7df; }
-.career-region-zoom button:disabled, .career-region-map-reset:disabled { opacity: .38; cursor: default; }
-.career-region-map-frame { flex: 1; min-height: 260px; display: grid; align-content: center; }
-.career-region-map-viewport { min-width: 0; width: 100%; aspect-ratio: 1000 / 560; min-height: 250px; max-height: 420px; overflow: auto; background: #f4f8fc; scrollbar-width: thin; scrollbar-color: #9bb8d0 #eff5fa; }
-.career-region-map-viewport.is-zoomed { cursor: grab; overscroll-behavior: contain; }
-.career-region-map-viewport.is-panning { cursor: grabbing; user-select: none; }
-.career-region-map { display: block; width: 100%; height: auto; max-width: none; stroke: none; fill: none; overflow: visible; }
-.career-region-shape { fill: #dbe6f1; stroke: #6f8ca8; stroke-width: .7px; vector-effect: non-scaling-stroke; stroke-linejoin: round; cursor: pointer; outline: none; }
-.career-region-shape.is-selected { fill: #117fbe; stroke: #075a94; }
-.career-region-shape:hover { fill: #b7d8ed; stroke: #1d6eab; stroke-width: 1.4px; }
-.career-region-shape.is-selected:hover { fill: #06669f; stroke: #03446d; }
-.career-region-shape:focus-visible { stroke: #9b4a00; stroke-width: 2.8px; filter: drop-shadow(0 0 2px #fff); }
-.career-region-city-boundary { pointer-events: none; }
-.career-region-city-hit { fill: none; stroke: transparent; stroke-width: 28px; vector-effect: non-scaling-stroke; pointer-events: stroke; }
+.career-region-map-reset:hover:enabled { background: #e9f4ff; border-color: #7bb7df; }
+.career-region-map-reset:disabled { opacity: .38; cursor: default; }
+.career-region-map-frame { flex: 1; min-height: 280px; display: grid; align-content: center; }
+.career-region-map-viewport { position: relative; min-width: 0; width: 100%; height: clamp(280px, 40vw, 480px); overflow: hidden; background: #f4f8fc; touch-action: none; overscroll-behavior: contain; user-select: none; cursor: grab; }
+.career-region-map-viewport:focus-visible { outline: 3px solid #a45612; outline-offset: -3px; }
+.career-region-map-viewport.is-panning { cursor: grabbing; }
+.career-region-map { display: block; width: 100%; height: 100%; max-width: none; stroke: none; fill: none; overflow: hidden; touch-action: none; }
+.career-region-shape { fill: #dbe6f1; stroke: none; cursor: pointer; outline: none; }
+.career-region-fill { stroke: none; }
+.career-region-outline { fill: none; stroke: #6f8ca8; stroke-width: .7px; vector-effect: non-scaling-stroke; stroke-linejoin: round; pointer-events: none; }
+.career-region-shape.is-selected { fill: #117fbe; }
+.career-region-shape.is-selected .career-region-outline { stroke: #075a94; }
+.career-region-shape:hover { fill: #b7d8ed; }
+.career-region-shape:hover .career-region-outline { stroke: #1d6eab; stroke-width: 1.4px; }
+.career-region-shape.is-selected:hover { fill: #06669f; }
+.career-region-shape.is-selected:hover .career-region-outline { stroke: #03446d; }
+.career-region-shape:focus-visible .career-region-outline { stroke: #9b4a00; stroke-width: 2.8px; }
+.career-region-city-hit { fill: none; stroke: transparent; stroke-width: 44px; vector-effect: non-scaling-stroke; pointer-events: stroke; }
 .career-region-city-halo { fill: none; stroke: #365575; stroke-width: 12px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .career-region-city-dot { fill: none; stroke: #fff; stroke-width: 9px; vector-effect: non-scaling-stroke; pointer-events: none; }
 .career-region-city.is-selected .career-region-city-halo { stroke: #fff; stroke-width: 14px; }
@@ -1758,13 +1761,16 @@ textarea { font:inherit; }
 .career-region-city:hover .career-region-city-dot { stroke: #b7d8ed; }
 .career-region-city:focus-visible .career-region-city-halo { stroke: #9b4a00; stroke-width: 16px; }
 .career-region-city.is-selected:hover .career-region-city-dot { stroke: #06669f; }
+.career-region-labels,.career-region-label { pointer-events: none; }
+.career-region-label { fill: #193b56; stroke: #f4f8fc; stroke-linejoin: round; paint-order: stroke; text-anchor: middle; font-family: inherit; font-weight: 600; }
+.career-region-map-help { margin: 0; padding: 11px 14px; color: #526d82; font-size: 12px; line-height: 1.6; background: #fff; border-bottom: 1px solid var(--line, #dce9f5); }
 .career-region-map-current { display: flex; align-items: center; min-height: 48px; padding: 10px 14px; margin: 0; border-top: 1px solid var(--line, #dce9f5); background: #fff; color: #365575; font-size: 13px; line-height: 1.45; }
 .career-region-map-loading { max-width: 400px; padding: 30px; margin: auto; font-size: 14px; color: var(--muted, #627490); line-height: 1.6; text-align: center; }
 .career-region-list-panel { display: flex; flex-direction: column; min-width: 0; }
 .career-region-search-label { display: block; margin: 0 0 7px; color: var(--ink, #0b2554); font-size: 13px; font-weight: 650; }
 .career-region-search { width: 100%; min-height: 44px; padding: 9px 12px; border: 1px solid #bad2e8; border-radius: 11px; background: #fff; color: var(--ink, #0b2554); font: inherit; font-size: 14px; }
 .career-region-search::placeholder { color: #71859f; }
-.career-region-options { min-width: 0; min-height: 0; height: 330px; flex: 1 1 330px; overflow: auto; overscroll-behavior: contain; margin: 9px 0 0; padding: 4px; border: 1px solid var(--line, #dce9f5); border-radius: 13px; background: #fff; scrollbar-width: thin; scrollbar-color: #9bb8d0 #f4f8fc; }
+.career-region-options { min-width: 0; min-height: 0; height: 260px; flex: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-content: start; overflow: auto; overscroll-behavior: contain; margin: 9px 0 0; padding: 4px; border: 1px solid var(--line, #dce9f5); border-radius: 13px; background: #fff; scrollbar-width: thin; scrollbar-color: #9bb8d0 #f4f8fc; }
 .career-region-option { display: flex; align-items: center; gap: 11px; min-height: 44px; margin: 0 0 2px; padding: 10px 9px; border-radius: 9px; cursor: pointer; line-height: 1.45; font-size: 13px; color: var(--text, #1c355f); overflow-wrap: anywhere; }
 .career-region-option:last-of-type { margin-bottom: 0; }
 .career-region-option:hover { background: #eff6fc; }
@@ -1772,28 +1778,32 @@ textarea { font:inherit; }
 .career-region-option input { width: 19px; height: 19px; flex: 0 0 19px; margin: 0; accent-color: #087bc1; cursor: pointer; }
 .career-region-option span { min-width: 0; }
 .career-region-option:has(input:focus-visible) { outline: 3px solid #78b4e3; outline-offset: -3px; }
-.career-region-no-matches { padding: 16px 12px; margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted, #627490); }
+.career-region-no-matches { grid-column: 1 / -1; padding: 16px 12px; margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted, #627490); }
 .career-region-sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
 .career-region-picker [hidden] { display: none !important; }
 @container career (max-width: 800px) {
   .career-region-grid { grid-template-columns: 1fr; gap: 16px; }
-  .career-region-map-frame { min-height: 220px; }
-  .career-region-map-viewport { min-height: 210px; max-height: 370px; }
-  .career-region-options { flex: none; height: 300px; }
+  .career-region-map-frame { min-height: 280px; }
+  .career-region-map-viewport { height: 300px; }
+  .career-region-options { height: 260px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@container career (max-width: 600px) {
+  .career-region-options { grid-template-columns: minmax(0,1fr); }
 }
 @container career (max-width: 440px) {
   .career-region-picker-heading { gap: 8px; }
   .career-region-picker-heading > strong { font-size: 14px; }
   .career-region-legend { font-size: 11px; }
   .career-region-map-controls { padding: 7px 9px; }
-  .career-region-zoom button { width: 40px; height: 40px; }
   .career-region-map-reset { min-height: 40px; }
   .career-region-map-current { font-size: 12px; padding: 9px 11px; }
   .career-region-option { font-size: 13px; min-height: 46px; }
 }
 @media print {
   .career-region-map-controls, .career-region-search-label, .career-region-search, .career-region-option:not(.is-selected) { display: none !important; }
-  .career-region-map { width: 100% !important; }
+  .career-region-map { width: 100% !important; height: 280px !important; }
+  .career-region-map-content { transform: none !important; }
+  .career-region-labels { display: none; }
   .career-region-map-viewport, .career-region-options { overflow: visible; max-height: none; height: auto; }
 }
 
@@ -1811,7 +1821,7 @@ textarea { font:inherit; }
 .journey-field textarea,.journey-manual-grid textarea { resize: vertical; line-height: 1.6; }
 .journey-search-row { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 16px; margin: 20px 0 12px; }
 .journey-result-count { margin: 10px 0 14px; color: #526d82; font-size: 13px; line-height: 1.5; }
-.journey-wish-slots { padding: 0; margin: 18px 0 24px; list-style: none; display: grid; gap: 10px; }
+.journey-wish-slots { position: relative; padding: 0; margin: 18px 0 24px; list-style: none; display: grid; gap: 10px; }
 .journey-wish-slots li { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 12px 14px; border: 1px dashed #b2c9d9; border-radius: 12px; background: #f5f8fb; }
 .journey-wish-slots li.is-filled { border-style: solid; border-color: #88b7d2; background: #eff7fc; }
 .journey-priority { display: inline-grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; color: #17699a; background: #dcedf6; border-radius: 50%; font-size: 14px; font-weight: 700; }
@@ -1819,9 +1829,17 @@ textarea { font:inherit; }
 .journey-wish-slots strong,.journey-compare-item strong { display: block; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
 .journey-wish-slots small,.journey-compare-item small { display: block; margin-top: 4px; color: #526d82; font-size: 12px; line-height: 1.4; }
 .journey-empty-slot { color: #627b90; font-size: 14px; }
-.journey-order-actions { display: flex; gap: 4px; }
-.journey-order-actions button { display: inline-grid; place-items: center; width: 40px; height: 40px; border: 1px solid #b4c8d9; border-radius: 8px; color: #285578; background: #fff; font-size: 21px; cursor: pointer; }
+.journey-order-actions { display: flex; flex-shrink: 0; gap: 8px; }
+.journey-order-actions button { display: inline-grid; place-items: center; width: 44px; height: 44px; min-width: 44px; min-height: 44px; padding: 8px; border: 1px solid #b4c8d9; border-radius: 8px; color: #285578; background: #fff; font-size: 21px; cursor: pointer; }
 .journey-order-actions button:disabled { opacity: .35; cursor: default; }
+.journey-order-actions .journey-wish-handle { touch-action: none; cursor: grab; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.journey-wish-handle svg { display: block; width: 24px; height: 24px; fill: currentColor; pointer-events: none; }
+.journey-wish-handle[aria-pressed="true"] { background: #176d91; border-color: #176d91; color: #fff; cursor: grabbing; }
+.journey-wish-slots.is-wish-sorting { -webkit-user-select: none; user-select: none; }
+.journey-wish-slots.is-wish-sorting > [data-wish-id] { position: relative; z-index: 1; will-change: transform; }
+.journey-wish-slots > .is-wish-dragging { z-index: 3!important; border-color: #176d91; box-shadow: 0 8px 24px #234a632b; background: #fff; }
+.journey-wish-slots > .journey-wish-placeholder { position: absolute; inset-inline: 0; box-sizing: border-box; min-height: 0; margin: 0; padding: 0; border: 2px dashed #176d91; background: #e3f3f8; pointer-events: none; }
+.journey-sort-status { min-height: 1.6em; margin: -8px 0 16px; color: #285578; font-size: 13px; line-height: 1.6; }
 .journey-employer-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 .journey-employer-option { display: flex; text-align: left; align-items: flex-start; gap: 10px; min-width: 0; padding: 14px; border: 1px solid #d3e0e9; border-radius: 10px; background: #fff; color: #26435b; cursor: pointer; }
 .journey-employer-option strong { display: block; font-size: 13px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
@@ -1873,6 +1891,38 @@ textarea { font:inherit; }
 .journey-manual-source form { padding: 6px 0 12px; }
 .journey-manual-source form>p { font-size: 14px; color: #526d82; line-height: 1.6; }
 .journey-manual-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin: 20px 0; }
+.journey-recommendation-group .seminar-authorities { align-items: start; }
+.journey-authority-roles { margin-top: auto; border-top: 1px solid #d5e2eb; min-width: 0; }
+.journey-authority-roles>summary { min-height: 48px; padding: 14px 0; color: #145a8c; font-size: 16px; font-weight: 650; line-height: 1.4; cursor: pointer; }
+.journey-role-total { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 6px; background: #e7f2f7; color: #285578; font-size: 13px; font-variant-numeric: tabular-nums; }
+.journey-authority-roles-content { padding-bottom: 4px; }
+.journey-authority-roles .seminar-source-note { margin: 0 0 14px; font-size: 12px; line-height: 1.6; }
+.journey-authority-roles .journey-role-search { font-size: 13px; }
+.journey-local-role { padding: 16px 0; border-top: 1px solid #dce6ec; min-width: 0; }
+.journey-local-role:first-child { border-top: 0; padding-top: 2px; }
+.journey-local-role.is-selected { border-left: 3px solid #0878ac; padding-left: 10px; }
+.journey-local-role h4 { margin: 0 0 8px; color: #203e58; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.journey-local-role .seminar-vacancy-status { margin: 0 0 6px; font-size: 12px; line-height: 1.5; }
+.journey-role-source>summary { min-height: 44px; padding: 10px 0; color: #09679f; font-size: 13px; line-height: 1.6; cursor: pointer; }
+.journey-role-source p,.journey-role-source dl { font-size: 12px; line-height: 1.6; }
+.journey-role-source dl>div { padding: 4px 0; }
+.journey-role-source dt { color: #62798c; }
+.journey-role-source dd { margin: 2px 0 0; color: #254e6e; overflow-wrap: anywhere; }
+.journey-role-source .seminar-vacancy-link { margin: 8px 0 16px; font-size: 13px; }
+.journey-local-role .journey-role-select { width: 100%; min-height: 44px; margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.45; white-space: normal; }
+.journey-local-role-empty { margin: 12px 0; color: #526d82; font-size: 13px; line-height: 1.65; }
+.journey-authority-roles .journey-source-links { gap: 10px 16px; margin: 16px 0; font-size: 13px; line-height: 1.5; }
+.journey-authority-roles .journey-source-links a { display: inline-flex; align-items: center; gap: 6px; color: #09679f; }
+.journey-authority-roles .journey-source-links svg { width: 14px; height: 14px; }
+.journey-authority-roles .journey-manual-grid { grid-template-columns: minmax(0,1fr); gap: 12px; }
+.journey-authority-roles .journey-manual-source { margin-top: 14px; }
+.journey-manual-source form>.journey-field { margin: 14px 0; }
+.journey-authority-roles .journey-manual-source form>p { font-size: 13px; }
+.journey-authority-roles .journey-manual-source button[type="submit"] { width: 100%; white-space: normal; font-size: 13px; }
+.journey-authority-roles summary:focus-visible,.journey-authority-roles button:focus-visible,.journey-authority-roles a:focus-visible { outline: 3px solid #167bb2; outline-offset: 3px; }
+.journey-supplement-form:not(:empty) { margin: 20px 0; padding: 0 20px 10px; border: 1px solid #d5e2eb; border-radius: 12px; }
+.journey-supplement-form .journey-manual-source { border-top: 0; margin-top: 0; }
+.journey-authority-roles [hidden] { display: none!important; }
 .journey-form-error { color: #994334!important; }
 .journey-duties { border: 1px solid #d7e4ed; background: #fff; border-radius: 12px; padding: 4px 20px; margin-bottom: 24px; }
 .journey-duties>summary { padding: 16px 0; font-weight: 600; color: #285675; cursor: pointer; }

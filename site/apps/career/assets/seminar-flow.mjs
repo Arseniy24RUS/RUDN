@@ -5,8 +5,9 @@ import {storageKey,readLocal,writeLocal} from './storage.mjs';
 import {loadJSON} from './loader.mjs';
 import {PORTAL,FRESH_MS,validateFeed,currentStatus,normalizeName} from './vacancies-model.mjs';
 import {createRegionPicker} from './region-picker.mjs';
+import {createWishSortable} from './wish-sortable.mjs';
 import {expandTerritorialCatalog,mergeTerritorialAuthorityDetails} from './territorial-catalog.mjs';
-import {sanitizeJourneyPreferences,rankJourneyAuthorities,compareDesiredAuthorities,buildAuthorityDevelopment,buildVacancyRequirements,summarizeVacancyAssessment,requirementStateFromText} from './career-journey-model.mjs';
+import {sanitizeJourneyPreferences,rankJourneyAuthorities,buildAuthorityDevelopment,buildVacancyRequirements,summarizeVacancyAssessment,requirementStateFromText} from './career-journey-model.mjs';
 import {E,L,display,icon as I,number,date,safeURL,regionName,groupLabel,levelLabel,requirementRadar,requirementBars} from './journey-visuals.mjs';
 
 const JOURNEY_SCHEMA=1;
@@ -28,8 +29,9 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
   }
   let regions=[],territorial=[],institutions=[...data.authorities],framework={trackProfiles:[]},competencies=[];
   let catalogLoaded=false,catalogLoading=false,catalogError=false,positionsLoaded=false,positionsLoading=false,positionsError=false,feed=null,positions=[];
-  let lastRoute='personality',pendingRoute=null,manualSaveTimer=null,picker=null,opening=false,dirty=false,rankingCache=null,catalogGeneration=0;
+  let lastRoute='personality',pendingRoute=null,manualSaveTimer=null,picker=null,wishSorter=null,opening=false,dirty=false,rankingCache=null,catalogGeneration=0;
   let authorityQuery='',authorityScope='',authorityLimit=24,vacancyQuery='',vacancyEmployer='',vacancyLimit=12;
+  const rolePanelStates=new Map();
   const root=()=>document.querySelector('#results-root');
   const preferencesRoot=()=>document.querySelector('#journey-preferences-root');
   const byId=()=>new Map(institutions.map(a=>[a.id,a]));
@@ -86,6 +88,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
       if(__careerHost.destroyed||ticket!==catalogGeneration)return;
       regions=values[0];territorial=expandTerritorialCatalog(values[1]);
       institutions=[...data.authorities,...territorial.filter(a=>!data.authorities.some(base=>base.id===a.id))];
+      prepareManualDrafts();
       framework=values[2];competencies=values[3];
       const clean=sanitizeJourneyPreferences(journey,{regions,authorities:institutions,defaultRegionId:DEFAULT_REGION});
       journey={...journey,...clean};catalogLoaded=true;invalidateRanking();
@@ -116,14 +119,14 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
   }
   function renderPreferences(){
     const target=preferencesRoot();if(!target)return;
-    picker?.destroy();picker=null;target.setAttribute('data-no-i18n','');
+    picker?.destroy();picker=null;wishSorter?.destroy();wishSorter=null;target.setAttribute('data-no-i18n','');
     if(!catalogLoaded){
       target.innerHTML=`<header class="seminar-results-heading"><h1>${L('Где и кем Вы хотите работать','Where would you like to work?','你希望在哪里工作？')}</h1></header><p role="status">${catalogError?L('Не удалось загрузить каталог. Повторите загрузку.','The catalogue could not be loaded. Please try again.','目录加载失败，请重试。'):L('Загружаем территории и органы власти…','Loading territories and employers…','正在加载地区和机构……')}</p>${catalogError?`<button type="button" class="button button-primary" id="journey-retry-catalog">${L('Повторить','Retry','重试')}</button>`:''}`;
       target.querySelector('#journey-retry-catalog')?.addEventListener('click',()=>{void loadCatalog();renderPreferences();});return;
     }
     target.innerHTML=`<header class="seminar-results-heading"><h1>${L('Где и кем Вы хотите работать','Where would you like to work?','你希望在哪里工作？')}</h1><p>${L('Сначала выберите территории, затем три органа власти или работодателя публичного сектора в порядке Вашего предпочтения. После теста сравним Ваш выбор с рекомендациями.','Choose territories, then rank three public authorities or public-sector employers in order of preference. After the questionnaire, compare your choices with the recommendations.','先选择地区，再按意愿顺序选择三个政府机关或公共部门雇主。完成测试后，可将意向与推荐进行比较。')}</p></header>
       <section class="journey-panel" aria-labelledby="journey-regions-heading"><h2 id="journey-regions-heading">${L('Территории работы','Work territories','工作地区')}</h2><div id="journey-regions"></div></section>
-      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L('Три желаемых места работы','Three preferred employers','三个意向工作单位')}</h2><p class="journey-muted">${L('Позиция 1 — самый желаемый вариант. Порядок можно изменить стрелками.','Position 1 is your first choice. Use the arrows to change the order.','第1位为首选。可通过箭头调整顺序。')}</p><div id="journey-desired-choices" aria-live="polite"></div>
+      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L('Три желаемых места работы','Three preferred employers','三个意向工作单位')}</h2><p class="journey-muted" id="journey-wish-sort-help">${L('Позиция 1 — самый желаемый вариант. Перетяните выбранный орган за ручку с точками. С клавиатуры: пробел или Enter — взять и отпустить, ↑ и ↓ — переместить, Esc — отменить.','Position 1 is your first choice. Drag a selected employer by its dotted handle. Keyboard: Space or Enter to pick up and drop, ↑ and ↓ to move, Esc to cancel.','第1位为首选。拖动点状手柄调整已选机构的顺序。键盘：空格或 Enter 拿起和放下，↑ 和 ↓ 移动，Esc 取消。')}</p><div id="journey-desired-choices"></div><p class="journey-sort-status" data-wish-sort-status role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="journey-search-row"><label for="journey-authority-search">${L('Найти орган или организацию','Find an authority or employer','查找机关或机构')}<input type="search" id="journey-authority-search" autocomplete="off" placeholder="${E(L('Название или сфера деятельности','Name or policy area','名称或工作领域'))}" value="${E(authorityQuery)}"></label><label for="journey-authority-scope">${L('Уровень и территория','Level and territory','层级与地区')}<select id="journey-authority-scope"></select></label></div><div id="journey-authority-options"></div></section>
       <div class="seminar-next"><button type="button" class="button button-secondary" id="journey-back-personality">${I('arrow-left')}${L('Личностный профиль','Personality profile','人格特征')}</button><span id="journey-preference-status" role="status"></span><button type="button" class="button button-primary button-large" id="journey-preferences-next">${L('Перейти к вопросам','Continue to the questions','进入问卷')}${I('arrow-right')}</button></div>`;
     picker=createRegionPicker({root:target.querySelector('#journey-regions'),regions,selectedIds:journey.regionIds,onChange:setRegions,getLanguage});
@@ -142,14 +145,24 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     select.innerHTML=`<option value="">${L('Все доступные варианты','All available employers','所有可选机构')}</option><option value="federal">${L('Федеральный уровень и госкорпорации','Federal level and state corporations','联邦层级与国有企业')}</option>${selectedRegions().map(r=>`<option value="${E(r.id)}">${E(regionName(r))}</option>`).join('')}`;select.value=authorityScope;
   }
   function renderDesiredChoices(){
+    wishSorter?.destroy();wishSorter=null;
     const target=preferencesRoot()?.querySelector('#journey-desired-choices');if(!target)return;
     const lookup=byId();
-    target.innerHTML=`<ol class="journey-wish-slots">${[0,1,2].map(index=>{
+    target.innerHTML=`<ol class="journey-wish-slots" data-wish-list>${[0,1,2].map(index=>{
       const authority=lookup.get(journey.desiredIds[index]);
-      return `<li class="${authority?'is-filled':''}"><span class="journey-priority">${index+1}</span>${authority?`<div><strong>${E(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" data-move-wish="${index}" data-direction="-1" aria-label="${E(L('Поднять приоритет: ','Move up: ','提高优先级：')+authorityName(authority))}" ${index===0?'disabled':''}>↑</button><button type="button" data-move-wish="${index}" data-direction="1" aria-label="${E(L('Понизить приоритет: ','Move down: ','降低优先级：')+authorityName(authority))}" ${index===journey.desiredIds.length-1?'disabled':''}>↓</button><button type="button" data-remove-wish="${E(authority.id)}" aria-label="${E(L('Убрать: ','Remove: ','移除：')+authorityName(authority))}">×</button></div>`:`<span class="journey-empty-slot">${L('Выберите орган ниже','Choose an employer below','请在下方选择机构')}</span>`}</li>`;
+      return `<li class="${authority?'is-filled':''}" ${authority?`data-wish-id="${E(authority.id)}"`:''}><span class="journey-priority">${index+1}</span>${authority?`<div><strong>${E(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" class="journey-wish-handle" data-wish-drag-handle="${E(authority.id)}" aria-label="${E(L('Переместить: ','Reorder: ','调整顺序：')+authorityName(authority))}" aria-describedby="journey-wish-sort-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape" aria-pressed="false" ${journey.desiredIds.length<2?'disabled':''}><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/></svg></button><button type="button" data-remove-wish="${E(authority.id)}" aria-label="${E(L('Убрать: ','Remove: ','移除：')+authorityName(authority))}">×</button></div>`:`<span class="journey-empty-slot">${L('Выберите орган ниже','Choose an employer below','请在下方选择机构')}</span>`}</li>`;
     }).join('')}</ol>`;
     target.querySelectorAll('[data-remove-wish]').forEach(button=>button.onclick=()=>{journey.desiredIds=journey.desiredIds.filter(id=>id!==button.dataset.removeWish);journey.confirmed=false;save();renderDesiredChoices();renderAuthorityOptions();updatePreferenceNext();});
-    target.querySelectorAll('[data-move-wish]').forEach(button=>button.onclick=()=>{const from=Number(button.dataset.moveWish),to=from+Number(button.dataset.direction);if(to<0||to>=journey.desiredIds.length)return;[journey.desiredIds[from],journey.desiredIds[to]]=[journey.desiredIds[to],journey.desiredIds[from]];journey.confirmed=false;save();renderDesiredChoices();renderAuthorityOptions();});
+    wishSorter=createWishSortable({
+      list:target.querySelector('[data-wish-list]'),status:preferencesRoot().querySelector('[data-wish-sort-status]'),
+      labels:{
+        grabbed:(name,position)=>L(`${name}: взято для перемещения, позиция ${position}.`,`${name}: picked up, position ${position}.`,`${name}：已拿起，当前位置 ${position}。`),
+        moved:(name,position)=>L(`${name}: новая позиция ${position}. Подтвердите пробелом или Enter.`,`${name}: new position ${position}. Press Space or Enter to confirm.`,`${name}：新位置 ${position}。按空格或 Enter 确认。`),
+        dropped:(name,position)=>L(`${name}: позиция ${position}. Порядок подтверждён.`,`${name}: position ${position}. Order confirmed.`,`${name}：第 ${position} 位。顺序已确认。`),
+        cancelled:(name,position)=>L(`Перемещение отменено. ${name}: позиция ${position}.`,`Move cancelled. ${name}: position ${position}.`,`已取消移动。${name}：第 ${position} 位。`)
+      },
+      onCommit:ids=>{journey.desiredIds=ids;journey.confirmed=false;save();renderAuthorityOptions();updatePreferenceNext();}
+    });
   }
   function renderAuthorityOptions(){
     const target=preferencesRoot()?.querySelector('#journey-authority-options');if(!target)return;
@@ -227,16 +240,12 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
       }catch{authorityDetailFiles.delete(authority.detailPath);details.dataset.detailsLoaded='false';}
     }));
   }
-  function matchBadge(matched){return matched?`<span class="journey-match-badge">${I('check')}${L('Совпало с Вашим выбором','Matches your choice','与你的意向一致')}</span>`:'';}
-  function authorityCard(authority,index,result){
-    const context=getProfileContext(),matched=journey.desiredIds.includes(authority.id);
+  function matchBadge(matched,preferred){return matched?`<span class="journey-match-badge">${I('check')}${preferred?L('Есть среди трёх рекомендаций','Among your three recommendations','在三个推荐之中'):L('Совпало с Вашим выбором','Matches your choice','与你的意向一致')}</span>`:'';}
+  function authorityCard(authority,index,{matched=false,preferred=false}={}){
+    const context=getProfileContext();
     const matches=context.prioritySectors.filter(id=>(authority.pathSectors||authority.sectors||[]).some(sector=>sector.id===id));
-    return `<article class="seminar-authority ${matched?'journey-matched':''}" data-recommended-authority="${E(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority,'compact')}<div><span class="seminar-rank">${index+1} · ${levelLabel(authority)}</span><h3>${E(authorityName(authority))}</h3></div></div>${matchBadge(matched)}<p${getLanguage()!=='ru'&&translate(authority.mission)===authority.mission?' lang="ru"':''}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L('Подходящее направление работы','A matching work direction','匹配的工作方向')}</span><strong>${display(authority.track?.title||'')}</strong>${matches.length?`<p>${L('Ваши сферы','Your policy areas','你的领域')}: ${matches.map(id=>display(context.sectors.find(sector=>sector.id===id)?.title||id)).join(', ')}.</p>`:''}</div><button type="button" class="button button-secondary journey-card-button" data-authority-vacancies="${E(authority.id)}">${L('Должности и требования','Roles and requirements','职位与要求')}${I('arrow-right')}</button></article>`;
-  }
-  function choiceComparison(ranked){
-    const desired=compareDesiredAuthorities(journey.desiredIds,ranked.ranked,ranked);
-    const compact=(authority,index,matched,preferred)=>`<li class="journey-compare-item ${matched?'journey-matched':''}"><span class="journey-priority">${index+1}</span><div><strong>${E(authorityName(authority))}</strong><small>${levelLabel(authority)}</small>${matched?`<span class="journey-match-text">✓ ${preferred?L('Есть в рекомендациях','Among recommendations','在推荐中'):L('Есть в Вашем выборе','Among your choices','在你的意向中')}</span>`:''}</div></li>`;
-    return `<section class="journey-comparison" aria-labelledby="journey-comparison-title"><h2 id="journey-comparison-title">${L('Ваш выбор и результат теста','Your choices and the test result','你的意向与测试结果')}</h2><div class="journey-comparison-columns"><div><h3>${L('Ваши три приоритета','Your three priorities','你的三个优先意向')}</h3><ol>${desired.map((item,index)=>compact(item.authority||byId().get(item.authorityId),index,item.matched,true)).join('')}</ol></div><div><h3>${L('Три наиболее близких варианта','Three closest matches','最匹配的三个选项')}</h3><ol>${ranked.ranked.slice(0,3).map((authority,index)=>compact(authority,index,journey.desiredIds.includes(authority.id),false)).join('')}</ol></div></div><p class="journey-muted">${L('Зелёная рамка отмечает совпадение желаемого места работы с одной из рекомендаций ниже. Порядок Ваших желаний сохранён.','A green border marks a preferred employer included in the recommendations below. Your original preference order is preserved.','绿色边框表示意向单位出现在下方推荐中。你的原始意向顺序保持不变。')}</p></section>`;
+    const rankLabel=preferred?L(`Ваш приоритет ${index+1}`,`Your priority ${index+1}`,`你的第 ${index+1} 意向`):L(`Рекомендация ${index+1}`,`Recommendation ${index+1}`,`推荐 ${index+1}`);
+    return `<article class="seminar-authority ${matched?'journey-matched':''}" data-recommended-authority="${E(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority,'compact')}<div><span class="seminar-rank">${rankLabel} · ${levelLabel(authority)}</span><h3>${E(authorityName(authority))}</h3></div></div>${matchBadge(matched,preferred)}<p${getLanguage()!=='ru'&&translate(authority.mission)===authority.mission?' lang="ru"':''}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L('Подходящее направление работы','A matching work direction','匹配的工作方向')}</span><strong>${display(authority.track?.title||'')}</strong>${matches.length?`<p>${L('Ваши сферы','Your policy areas','你的领域')}: ${matches.map(id=>display(context.sectors.find(sector=>sector.id===id)?.title||id)).join(', ')}.</p>`:''}</div>${authorityRolePanel(authority,`${preferred?'preferred':'recommended'}-${authority.id}`)}</article>`;
   }
   function wishDevelopment(ranked){
     const options=journey.desiredIds.map(id=>ranked.ranked.find(a=>a.id===id)||byId().get(id)).filter(Boolean);
@@ -251,17 +260,18 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
   function bindDevelopment(target,ranked){target.querySelector('#journey-development-authority')?.addEventListener('change',event=>{journey.comparisonId=event.target.value;save();const panel=target.querySelector('.journey-development');panel.outerHTML=wishDevelopment(ranked);bindDevelopment(target,ranked);});}
   function renderRecommendations(result,target){
     const ranked=rankings();if(!ranked)return;
-    target.innerHTML=`<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${I('arrow-left')}${L('Мой профиль','My profile','我的画像')}</button><h1>${L('Ваши направления работы','Your career directions','你的职业方向')}</h1><p>${L('Три рекомендации для федерального уровня и публичного сектора, затем по три для каждой выбранной территории. Наличие вакансий не влияет на подбор органов.','Three recommendations at federal and public-sector level, followed by three for each selected territory. Employers are recommended independently of vacancy availability.','先展示联邦层级和公共部门的三个推荐，再展示每个所选地区的三个推荐。机构推荐不取决于是否存在空缺职位。')}</p></header>${choiceComparison(ranked)}
-      <section class="journey-recommendation-group" data-recommendation-group="federal"><h2>${L('Федеральный уровень и публичный сектор','Federal level and public sector','联邦层级与公共部门')}</h2><div class="seminar-authorities">${ranked.federal.map((a,i)=>authorityCard(a,i,result)).join('')}</div></section>
-      ${ranked.regions.map(group=>{const region=regions.find(r=>r.id===group.regionId);return `<section class="journey-recommendation-group" data-recommendation-group="${E(group.regionId)}"><h2>${E(regionName(region))}</h2><p class="journey-muted">${L('Региональные и муниципальные органы','Regional and municipal authorities','地区与市政机关')}</p><div class="seminar-authorities">${group.authorities.map((a,i)=>authorityCard(a,i,result)).join('')}</div>${group.authorities.length<3?`<p class="journey-muted">${L('В каталоге пока меньше трёх подходящих записей этой территории.','The catalogue currently contains fewer than three matching records for this territory.','该地区目录中目前少于三个匹配记录。')}</p>`:''}</section>`;}).join('')}
+    const recommended=ranked.ranked.slice(0,3),recommendedIds=new Set(recommended.map(authority=>authority.id));
+    const rankedById=new Map(ranked.ranked.map(authority=>[authority.id,authority]));
+    const preferred=journey.desiredIds.map(id=>rankedById.get(id)||byId().get(id)).filter(Boolean);
+    target.innerHTML=`<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${I('arrow-left')}${L('Мой профиль','My profile','我的画像')}</button><h1>${L('Ваши направления работы','Your career directions','你的职业方向')}</h1><p>${L('Сначала — три наиболее подходящих варианта по Вашему профилю интересов с учётом выбранных территорий. Затем — три желаемых места в Вашем порядке. Наличие вакансий не влияет на подбор органов.','First, the three closest matches to your interest profile within your chosen territories. Then, your three preferred employers in your own order. Employers are recommended independently of vacancy availability.','先展示在所选地区范围内与兴趣画像最匹配的三个选项，再按你的意愿顺序展示三个意向单位。机构推荐不取决于是否存在空缺职位。')}</p></header>
+      <section class="journey-recommendation-group" data-recommendation-group="recommended"><h2>${L('Три наиболее подходящих варианта','Your three closest matches','最匹配的三个选项')}</h2><p class="journey-muted">${L('Зелёная рамка отмечает совпадение рекомендации с одним из Ваших желаемых мест.','A green border marks a recommendation that is also one of your preferred employers.','绿色边框表示推荐机构也是你的意向单位。')}</p><div class="seminar-authorities">${recommended.map((authority,index)=>authorityCard(authority,index,{matched:journey.desiredIds.includes(authority.id)})).join('')}</div></section>
+      <section class="journey-recommendation-group" data-recommendation-group="preferred"><h2>${L('Ваши три желаемых места','Your three preferred employers','你的三个意向单位')}</h2><p class="journey-muted">${L('Порядок карточек соответствует Вашим приоритетам: от первого к третьему.','The cards follow your preference order, from first to third.','卡片按你的意愿排序，从第一到第三。')}</p><div class="seminar-authorities">${preferred.map((authority,index)=>authorityCard(authority,index,{preferred:true,matched:recommendedIds.has(authority.id)})).join('')}</div></section>
       <button type="button" class="seminar-back-profile journey-edit-preferences" id="journey-edit-preferences">${L('Изменить территории и желаемые места','Edit territories and preferred employers','修改地区与意向单位')}</button>${wishDevelopment(ranked)}
-      <section class="seminar-vacancy-section" id="journey-vacancy-section"><h2>${L('Выберите должность для разбора','Choose a role to examine','选择要分析的职位')}</h2><p class="seminar-task">${L('Изучите обязанности и источник, затем отметьте по каждому требованию, чему Вы уже соответствуете и что предстоит освоить.','Review the duties and source, then mark which requirements you already meet and which you need to develop.','了解职责与来源，然后逐项标记已符合的要求及需要提升的部分。')}</p><div id="seminar-vacancies"></div></section>
       <div class="seminar-next"><p>${L('Перед тестом знаний Вы увидите итоговый план: свой профиль, требования выбранной должности и конкретные шаги развития.','Before the knowledge test, you will see your interest profile, the selected role requirements and your development steps.','知识测试前，你将看到兴趣画像、所选职位要求和具体发展步骤。')}</p><button type="button" class="button button-primary button-large" id="journey-show-plan">${L('Мой план развития','My development plan','我的发展计划')}${I('arrow-right')}</button></div>`;
     target.querySelector('#seminar-back-profile').onclick=()=>switchStage('profile');
     target.querySelector('#journey-edit-preferences').onclick=changePreferences;
     target.querySelector('#journey-show-plan').onclick=()=>switchStage('summary');
-    target.querySelectorAll('[data-authority-vacancies]').forEach(button=>button.onclick=()=>{vacancyEmployer=button.dataset.authorityVacancies;vacancyLimit=12;renderVacancies();document.querySelector('#journey-vacancy-section')?.scrollIntoView({block:'start',behavior:'instant'});});
-    bindDevelopment(target,ranked);bindAuthorityDetails(target);renderVacancies();void loadVacancies();
+    bindDevelopment(target,ranked);bindAuthorityDetails(target);bindAuthorityRolePanels(target);renderVacancies();void loadVacancies();
   }
 
   let positionSelection='',positionLoadGeneration=0;
@@ -283,7 +293,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
       if(__careerHost.destroyed||ticket!==positionLoadGeneration)return;
       if(fetched[0].status==='fulfilled')feed=fetched[0].value;else positionsError=true;
       const manifest=fetched[1].status==='fulfilled'?fetched[1].value:null;
-      if(!manifest){positionsError=true;positions=[];}
+      if(!manifest){positionsError=true;}
       else if(Array.isArray(manifest.positions))positions=manifest.positions;
       else{
         const entries=[manifest.national,...manifest.regions.filter(item=>requestedRegions.includes(item.regionId))].filter(item=>item?.path&&/^data\/position-materials\/[a-z0-9-]+\.json$/.test(item.path));
@@ -300,7 +310,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     finally{
       positionsLoading=false;
       if(!__careerHost.destroyed){
-        if(lastRoute==='results'&&['requirements','summary'].includes(stage()))renderResults();else renderVacancies();
+        renderVacancies();
         if(lastRoute==='results'&&selection!==JSON.stringify([...journey.regionIds].sort()))void loadVacancies();
       }
     }
@@ -359,69 +369,114 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     if(v.status==='upcoming')return L('Приём ещё не начался','Applications have not started','尚未开始接受申请');
     return L('Уточните приём у работодателя','Check recruitment with the employer','请向雇主核实招聘状态');
   }
-  function vacancyCard(v){
+  function normalizedManualDraft(value,employer){
+    return {...Object.fromEntries(['title','url','education','experience','knowledge','skills'].map(name=>[name,safeText(value[name],name==='title'?500:name==='url'?2000:20000)])),employer,open:value.open===true,panelKey:safeText(value.panelKey,300)};
+  }
+  function prepareManualDrafts(){
+    const canonical=new Set(institutions.map(authority=>authority.id));
+    const drafts=isRecord(journey.manualDrafts)?journey.manualDrafts:{};
+    journey.manualDrafts=Object.fromEntries(Object.entries(drafts).filter(([id,value])=>canonical.has(id)&&isRecord(value)).map(([id,value])=>[id,normalizedManualDraft(value,id)]));
+    const legacy=journey.manualDraft;
+    if(isRecord(legacy)&&canonical.has(legacy.employer)&&!journey.manualDrafts[legacy.employer])journey.manualDrafts[legacy.employer]=normalizedManualDraft(legacy,legacy.employer);
+  }
+  function draftForAuthority(id){return isRecord(journey.manualDrafts?.[id])?journey.manualDrafts[id]:{};}
+  function defaultRolePanel(id){return `${journey.desiredIds.includes(id)?'preferred':'recommended'}-${id}`;}
+  function rolePanelState(key){
+    if(!rolePanelStates.has(key))rolePanelStates.set(key,{open:false,query:'',limit:5,sourceOpen:new Set()});
+    return rolePanelStates.get(key);
+  }
+  function authorityRolePanel(authority,panelKey){
+    const state=rolePanelState(panelKey),draft=draftForAuthority(authority.id);
+    const draftHere=draft.open&&(draft.panelKey||defaultRolePanel(authority.id))===panelKey;
+    const employerUrl=safeURL(authority.governmentUrl||authority.descriptionSources?.[0]?.url);
+    return `<details class="journey-authority-roles" data-authority-roles="${E(authority.id)}" data-role-panel="${E(panelKey)}" ${state.open||draftHere?'open':''}><summary><span>${L('Должности','Roles','职位')}</span><span class="journey-role-total" data-role-total>…</span></summary><div class="journey-authority-roles-content"><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L('Найти должность в этом органе','Find a role with this employer','查找该机构的职位')}<input type="search" data-role-search autocomplete="off" value="${E(state.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L('Показать ещё','Show more','显示更多')}</button><div class="journey-source-links">${employerUrl?`<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L('Сайт органа','Employer website','机构网站')}${I('external')}</a>`:''}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L('Портал Госслужба','Civil service portal','公务员门户')}${I('external')}</a></div>${manualVacancyForm(authority,panelKey)}</div></details>`;
+  }
+  function vacancyCard(v,sourceOpen){
     const selected=journey.selectedVacancyId===v.id,sourceDate=date(v.source?.retrievedAt||v.lastSeenAt||v.sourceSnapshotAt);
-    const req=buildVacancyRequirements(v),requirementsCount=req.rows.filter(row=>row.assessable).length;
+    const requirementsCount=buildVacancyRequirements(v).rows.filter(row=>row.assessable).length;
     const fields=[[L('Место работы','Location','工作地点'),typeof v.location==='string'?v.location:v.location?.text],
       [L('Источник получен','Source retrieved','来源获取日期'),sourceDate],[L('Приём до','Apply by','申请截止'),date(v.deadline)],
       [L('Оплата','Pay','报酬'),typeof v.salary==='string'?v.salary:v.salary?.rawText]].filter(([,value])=>value);
-    return `<article class="seminar-vacancy ${selected?'is-selected':''}" data-vacancy-id="${E(v.id)}"><span class="seminar-vacancy-status">${roleStatus(v)}</span><h3 lang="ru">${E(v.title)}</h3><p class="seminar-employer" lang="ru">${E(v.employerName)}</p>${v.department?`<p lang="ru">${E(v.department)}</p>`:''}<dl>${fields.map(([label,value])=>`<div><dt>${label}</dt><dd>${E(value)}</dd></div>`).join('')}</dl><p class="journey-requirement-count">${L('Пунктов для самооценки','Self-assessment items','自评项目数')}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url||v.source?.url)}" target="_blank" rel="noopener noreferrer">${L('Открыть источник','Open source','打开来源')}${I('external')}</a><button type="button" class="button ${selected?'button-secondary':'button-primary'} journey-card-button" data-select-vacancy="${E(v.id)}">${selected?L('Продолжить разбор','Continue assessment','继续分析'):L('Разобрать требования','Assess requirements','分析职位要求')}${I('arrow-right')}</button></article>`;
+    return `<article class="journey-local-role ${selected?'is-selected':''}" data-vacancy-id="${E(v.id)}" data-role-institution="${E(v.institutionId)}"><h4 lang="ru">${E(v.title)}</h4><p class="seminar-vacancy-status">${roleStatus(v)}</p><details class="journey-role-source" data-role-source="${E(v.id)}" ${sourceOpen?'open':''}><summary>${L('Источник и подробности','Source and details','来源与详情')}</summary>${v.department?`<p lang="ru">${E(v.department)}</p>`:''}<dl>${fields.map(([label,value])=>`<div><dt>${label}</dt><dd>${E(value)}</dd></div>`).join('')}</dl><p class="journey-requirement-count">${L('Пунктов для самооценки','Self-assessment items','自评项目数')}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url||v.source?.url)}" target="_blank" rel="noopener noreferrer">${L('Открыть источник','Open source','打开来源')}${I('external')}</a></details><button type="button" class="button ${selected?'button-secondary':'button-primary'} journey-role-select" data-select-vacancy="${E(v.id)}">${selected?L('Продолжить разбор','Continue assessment','继续分析'):L('Разобрать требования','Assess requirements','分析职位要求')}${I('arrow-right')}</button></article>`;
   }
-  function renderVacancies(){
-    const target=document.querySelector('#seminar-vacancies');if(!target)return;
-    const ranked=rankings(),eligible=visibleInstitutions(),interestIds=new Set([...(ranked?.recommendations||[]).map(a=>a.id),...journey.desiredIds]);
-    const all=roleRecords(),sourceCounts=new Map();for(const v of all)sourceCounts.set(v.institutionId,(sourceCounts.get(v.institutionId)||0)+1);
-    let list=all.filter(v=>(vacancyEmployer==='all'||vacancyEmployer?vacancyEmployer==='all'||v.institutionId===vacancyEmployer:interestIds.has(v.institutionId))&&(!vacancyQuery||normalizeName([v.title,v.employerName,v.department].join(' ')).includes(normalizeName(vacancyQuery))));
-    list.sort((a,b)=>Number(b.currentRecruitmentVerified===true)-Number(a.currentRecruitmentVerified===true)||Number(journey.desiredIds.includes(b.institutionId))-Number(journey.desiredIds.includes(a.institutionId))||Number(a.kind==='position-profile')-Number(b.kind==='position-profile')||a.title.localeCompare(b.title,'ru'));
-    const employerOptions=eligible.filter(a=>interestIds.has(a.id)||sourceCounts.has(a.id)||a.id===vacancyEmployer).sort((a,b)=>Number(interestIds.has(b.id))-Number(interestIds.has(a.id))||authorityName(a).localeCompare(authorityName(b),getLanguage()));
-    const chosenEmployer=byId().get(vacancyEmployer);
-    const employerUrl=safeURL(chosenEmployer?.governmentUrl||chosenEmployer?.descriptionSources?.[0]?.url);
-    target.innerHTML=`<p class="seminar-source-note" role="status">${E(sourceNote())}</p>${positionsError?`<p class="journey-source-status">${L('Часть источников не загрузилась. Доступные материалы сохранены.','Some sources could not be loaded. Available materials are still shown.','部分来源未能加载，已加载的材料仍可查看。')} <button type="button" class="journey-text-button" id="journey-retry-positions">${L('Повторить загрузку','Retry loading','重新加载')}</button></p>`:''}
-      <div class="journey-search-row"><label for="journey-vacancy-employer">${L('Орган или организация','Authority or employer','机关或机构')}<select id="journey-vacancy-employer"><option value="">${L('Рекомендации и мои цели','Recommendations and my choices','推荐与我的意向')}</option><option value="all">${L('Все органы выбранных территорий','All employers in selected territories','所选地区的所有机构')}</option>${employerOptions.map(a=>`<option value="${E(a.id)}">${E(authorityName(a))}${sourceCounts.has(a.id)?' · '+sourceCounts.get(a.id):''}</option>`).join('')}</select></label><label for="journey-vacancy-search">${L('Поиск должности','Find a role','查找职位')}<input type="search" id="journey-vacancy-search" value="${E(vacancyQuery)}" autocomplete="off"></label></div>
-      <p class="journey-result-count">${L('Найдено должностей и материалов','Roles and source materials found','找到的职位和资料')}: ${number(list.length)}</p><div class="seminar-vacancy-grid">${list.slice(0,vacancyLimit).map(vacancyCard).join('')}</div>${!list.length?`<p class="seminar-vacancy-empty">${positionsLoading?L('Подбираем материалы…','Finding materials…','正在查找材料……'):L('В сохранённых источниках нет подходящего объявления. Проверьте кадровый раздел органа или портал Госслужба; выбранное объявление можно добавить ниже.','The saved sources contain no matching announcement. Check the employer’s careers page or the official portal; you can add a selected announcement below.','已保存来源中没有匹配公告。请查看机构招聘页面或官方门户，也可在下方添加选定公告。')}</p>`:''}
-      ${list.length>vacancyLimit?`<button type="button" class="button button-secondary journey-more" id="journey-more-vacancies">${L('Показать ещё','Show more','显示更多')}</button>`:''}
-      <div class="journey-source-links">${employerUrl?`<a class="button button-secondary" href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L('Страница выбранного органа','Selected employer’s website','所选机构网站')}${I('external')}</a>`:''}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="button button-secondary button-large seminar-portal-link">${L('Поиск вакансий на Госслужбе','Search the official civil service portal','在公务员官方门户搜索职位')}${I('external')}</a></div>${manualVacancyForm(eligible)}`;
-    target.querySelector('#journey-vacancy-employer').value=vacancyEmployer;
-    target.querySelector('#journey-vacancy-employer').onchange=event=>{vacancyEmployer=event.target.value;vacancyLimit=12;renderVacancies();};
-    target.querySelector('#journey-vacancy-search').oninput=event=>{
-      const cursor=event.target.selectionStart;vacancyQuery=event.target.value;vacancyLimit=12;renderVacancies();const input=document.querySelector('#journey-vacancy-search');input.focus();try{input.setSelectionRange(cursor,cursor);}catch{}
-    };
-    target.querySelector('#journey-more-vacancies')?.addEventListener('click',()=>{vacancyLimit+=12;renderVacancies();});
-    target.querySelector('#journey-retry-positions')?.addEventListener('click',()=>{positionsLoaded=false;void loadVacancies();});
-    target.querySelectorAll('[data-select-vacancy]').forEach(button=>button.onclick=()=>{
-      const vacancy=roleRecords().find(v=>v.id===button.dataset.selectVacancy);if(!vacancy)return;
-      journey.selectedVacancyId=vacancy.id;
-      const {fullDescription,...snapshot}=vacancy;journey.selectedSnapshot=snapshot;
-      if(!isRecord(journey.assessments[vacancy.id]))journey.assessments[vacancy.id]={};save();switchStage('requirements');
+  function renderVacancies(onlyPanel){
+    const panels=onlyPanel?[onlyPanel]:[...document.querySelectorAll('[data-authority-roles]')];if(!panels.length)return;
+    const all=roleRecords(),grouped=new Map();
+    for(const record of all){if(!grouped.has(record.institutionId))grouped.set(record.institutionId,[]);grouped.get(record.institutionId).push(record);}
+    for(const panel of panels){
+      if(!panel.isConnected)continue;
+      const authorityId=panel.dataset.authorityRoles,state=rolePanelState(panel.dataset.rolePanel),target=panel.querySelector('[data-authority-role-list]');
+      const records=grouped.get(authorityId)||[];
+      const query=normalizeName(state.query),list=records.filter(v=>!query||normalizeName([v.title,v.department].join(' ')).includes(query));
+      list.sort((a,b)=>Number(b.currentRecruitmentVerified===true)-Number(a.currentRecruitmentVerified===true)||Number(a.kind==='position-profile')-Number(b.kind==='position-profile')||a.title.localeCompare(b.title,'ru'));
+      if(target.dataset.rendered)state.sourceOpen=new Set([...target.querySelectorAll('[data-role-source][open]')].map(node=>node.dataset.roleSource));
+      const active=document.activeElement,focused=target.contains(active)?{role:active?.dataset.selectVacancy,source:active?.closest('[data-role-source]')?.dataset.roleSource,summary:active?.tagName==='SUMMARY',link:active?.tagName==='A'}:null;
+      const loadStatus=panel.querySelector('[data-role-load-status]'),retryFocused=loadStatus.contains(active);
+      panel.querySelector('[data-role-total]').textContent=positionsLoading&&!records.length?'…':number(records.length);
+      panel.querySelector('[data-role-source-note]').textContent=sourceNote();
+      loadStatus.innerHTML=positionsError?`<p class="journey-source-status">${L('Часть источников не загрузилась. Доступные материалы сохранены.','Some sources could not be loaded. Available materials are still shown.','部分来源未能加载，已加载的材料仍可查看。')} <button type="button" class="journey-text-button" data-role-retry>${L('Повторить загрузку','Retry loading','重新加载')}</button></p>`:'';
+      panel.querySelector('[data-role-result-count]').textContent=L(`Материалов этого органа: ${list.length}`,`Materials from this employer: ${list.length}`,`该机构的资料数：${list.length}`);
+      target.innerHTML=list.slice(0,state.limit).map(record=>vacancyCard(record,state.sourceOpen.has(record.id))).join('')||`<p class="journey-local-role-empty">${positionsLoading?L('Подбираем материалы…','Finding materials…','正在查找材料……'):query?L('Совпадений нет. Измените запрос.','No matches. Try a different search.','没有匹配结果，请更改搜索词。'):L('В сохранённых источниках нет должностей этого органа для выбранных территорий. Проверьте официальный сайт или добавьте объявление ниже.','The saved sources contain no roles for this employer in your chosen territories. Check its official website or add an announcement below.','已保存来源中没有该机构在所选地区的职位。请查看官方网站，或在下方添加公告。')}</p>`;
+      target.dataset.rendered='true';panel.querySelector('[data-role-more]').hidden=list.length<=state.limit;
+      if(focused){
+        const restore=focused.role?[...target.querySelectorAll('[data-select-vacancy]')].find(node=>node.dataset.selectVacancy===focused.role):focused.source?[...target.querySelectorAll('[data-role-source]')].find(node=>node.dataset.roleSource===focused.source)?.querySelector(focused.summary?'summary':focused.link?'a':'[tabindex]'):null;
+        restore?.focus({preventScroll:true});
+      }
+      if(retryFocused)(loadStatus.querySelector('[data-role-retry]')||panel.querySelector(':scope > summary'))?.focus({preventScroll:true});
+    }
+  }
+  function bindAuthorityRolePanels(target){
+    target.querySelectorAll('[data-authority-roles]').forEach(panel=>{
+      const state=rolePanelState(panel.dataset.rolePanel);
+      panel.addEventListener('toggle',event=>{
+        if(event.target===panel)state.open=panel.open;
+        else if(event.target.dataset.roleSource){if(event.target.open)state.sourceOpen.add(event.target.dataset.roleSource);else state.sourceOpen.delete(event.target.dataset.roleSource);}
+      },true);
+      panel.querySelector('[data-role-search]').addEventListener('input',event=>{state.query=event.target.value;state.limit=5;renderVacancies(panel);});
+      panel.addEventListener('click',event=>{
+        if(event.target.closest('[data-role-retry]')){positionsLoaded=false;void loadVacancies();return;}
+        if(event.target.closest('[data-role-more]')){state.limit+=5;renderVacancies(panel);return;}
+        const button=event.target.closest('[data-select-vacancy]');if(!button)return;
+        const vacancy=roleRecords().find(v=>v.id===button.dataset.selectVacancy&&v.institutionId===panel.dataset.authorityRoles);if(!vacancy)return;
+        journey.selectedVacancyId=vacancy.id;const {fullDescription,...snapshot}=vacancy;journey.selectedSnapshot=snapshot;
+        if(!isRecord(journey.assessments[vacancy.id]))journey.assessments[vacancy.id]={};save();switchStage('requirements');
+      });
+      bindManualVacancy(panel);
     });
-    bindManualVacancy(target);
   }
-  function manualVacancyForm(eligible){
-    const draft=isRecord(journey.manualDraft)?journey.manualDraft:{};
-    const chosen=eligible.find(a=>a.id===draft.employer)||eligible.find(a=>a.id===vacancyEmployer)||eligible.find(a=>a.id===journey.desiredIds[0]);
-    const options=[...eligible].sort((a,b)=>authorityName(a).localeCompare(authorityName(b),getLanguage()));
-    return `<details class="journey-manual-source" ${draft.open?'open':''}><summary>${L('Добавить выбранное объявление','Add a selected announcement','添加选定公告')}</summary><form id="journey-manual-vacancy"><p>${L('Откройте официальный источник и перенесите точные формулировки. Каждый отдельный пункт начинайте с новой строки; альтернативные условия сохраняйте вместе.','Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.','请打开官方来源并复制准确表述。每个独立项目另起一行，替代性条件须保留在同一项中。')}</p><div class="journey-search-row"><label>${L('Орган или организация','Authority or employer','机关或机构')}<select name="employer" required>${options.map(a=>`<option value="${E(a.id)}" ${a.id===chosen?.id?'selected':''}>${E(authorityName(a))}</option>`).join('')}</select></label><label>${L('Название должности','Role title','职位名称')}<input name="title" required maxlength="500" value="${E(safeText(draft.title,500))}"></label></div><label class="journey-field">${L('Ссылка на источник','Source URL','来源链接')}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E(safeText(draft.url,2000))}"></label><div class="journey-manual-grid">${['education','experience','knowledge','skills'].map(id=>`<label>${groupLabel(id)}<textarea name="${id}" rows="4" maxlength="20000">${E(safeText(draft[id]))}</textarea></label>`).join('')}</div><p class="journey-form-error" id="journey-manual-error" role="alert"></p><button class="button button-primary" type="submit">${L('Сохранить и разобрать','Save and assess','保存并分析')}${I('arrow-right')}</button></form></details>`;
+  function manualVacancyForm(authority,panelKey){
+    const draft=draftForAuthority(authority.id),open=draft.open&&(draft.panelKey||defaultRolePanel(authority.id))===panelKey;
+    return `<details class="journey-manual-source" data-manual-authority="${E(authority.id)}" ${open?'open':''}><summary>${L('Добавить объявление этого органа','Add this employer’s announcement','添加该机构的公告')}</summary><form data-manual-vacancy="${E(authority.id)}" data-manual-panel="${E(panelKey)}"><input type="hidden" name="employer" value="${E(authority.id)}"><p>${L('Откройте официальный источник и перенесите точные формулировки. Каждый отдельный пункт начинайте с новой строки; альтернативные условия сохраняйте вместе.','Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.','请打开官方来源并复制准确表述。每个独立项目另起一行，替代性条件须保留在同一项中。')}</p><label class="journey-field">${L('Название должности','Role title','职位名称')}<input name="title" required maxlength="500" value="${E(safeText(draft.title,500))}"></label><label class="journey-field">${L('Ссылка на источник','Source URL','来源链接')}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E(safeText(draft.url,2000))}"></label><div class="journey-manual-grid">${['education','experience','knowledge','skills'].map(id=>`<label>${groupLabel(id)}<textarea name="${id}" rows="3" maxlength="20000">${E(safeText(draft[id]))}</textarea></label>`).join('')}</div><p class="journey-form-error" data-manual-error role="alert"></p><button class="button button-primary" type="submit">${L('Сохранить и разобрать','Save and assess','保存并分析')}${I('arrow-right')}</button></form></details>`;
   }
   function captureManualDraft(form){
-    journey.manualDraft=Object.fromEntries(['employer','title','url','education','experience','knowledge','skills'].map(name=>[name,safeText(form.elements[name]?.value,name==='title'?500:name==='url'?2000:name==='employer'?200:20000)]));
-    journey.manualDraft.open=form.closest('details')?.open===true;dirty=true;
+    const employer=form.dataset.manualVacancy;if(!byId().has(employer))return;
+    const fields=Object.fromEntries(['title','url','education','experience','knowledge','skills'].map(name=>[name,form.elements[name]?.value]));
+    const draft=normalizedManualDraft({...fields,open:form.closest('details')?.open===true,panelKey:form.dataset.manualPanel},employer);
+    journey.manualDrafts={...journey.manualDrafts,[employer]:draft};journey.manualDraft={...draft};dirty=true;
+    // Two cards may represent the same employer. Keep their unedited copy in sync.
+    document.querySelectorAll('[data-manual-vacancy]').forEach(other=>{
+      if(other===form||other.dataset.manualVacancy!==employer||other.contains(document.activeElement))return;
+      for(const name of ['title','url','education','experience','knowledge','skills'])other.elements[name].value=draft[name];
+    });
     if(manualSaveTimer)clearTimeout(manualSaveTimer);
     manualSaveTimer=setTimeout(()=>{manualSaveTimer=null;if(!__careerHost.destroyed)save();},500);
   }
   function bindManualVacancy(target){
-    const draftForm=target.querySelector('#journey-manual-vacancy');
-    draftForm?.addEventListener('input',()=>captureManualDraft(draftForm));
-    draftForm?.addEventListener('change',()=>captureManualDraft(draftForm));
-    draftForm?.closest('details')?.addEventListener('toggle',()=>{if(draftForm.isConnected)captureManualDraft(draftForm);});
-    target.querySelector('#journey-manual-vacancy')?.addEventListener('submit',event=>{
-      event.preventDefault();const form=event.currentTarget,values=new FormData(form),authority=byId().get(String(values.get('employer')));
-      const title=safeText(values.get('title'),500),url=safeText(values.get('url'),2000);
-      const requirements=['education','experience','knowledge','skills'].flatMap(category=>safeText(values.get(category)).split(/\n+/).map(text=>text.trim()).filter(Boolean).map((text,index)=>({id:`${category}-${index+1}`,category,sourceText:text,requirementState:requirementStateFromText(text),selfAssessmentEligible:true,sourceLocator:L('Перенесено студентом из объявления','Copied from the announcement by the student','由学生从公告复制')})));
-      const error=target.querySelector('#journey-manual-error');
-      if(!title||!safeURL(url)||!authority||!requirements.length){error.textContent=L('Укажите должность, действительную ссылку и хотя бы одно требование из источника.','Enter a role title, a valid source URL and at least one requirement from the source.','请填写职位名称、有效来源链接及至少一项原文要求。');return;}
-      const id='student-source-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
-      const vacancy={id,institutionId:authority.id,employerName:authority.name,title,url,regionId:authority.regionId||null,userProvided:true,kind:'vacancy',status:'unconfirmed',source:{url,retrievedAt:new Date().toISOString(),format:'student-transcription'},requirements,coverage:{requirements:'student-transcription'}};
-      journey.customVacancies=[...journey.customVacancies,vacancy].slice(-20);journey.selectedVacancyId=id;journey.selectedSnapshot=vacancy;journey.assessments[id]={};journey.manualDraft={};save();switchStage('requirements');
+    target.querySelectorAll('[data-manual-vacancy]').forEach(form=>{
+      form.addEventListener('input',()=>captureManualDraft(form));form.addEventListener('change',()=>captureManualDraft(form));
+      const details=form.closest('details');let wasOpen=details.open;
+      details.addEventListener('toggle',event=>{if(event.target!==details||!form.isConnected||details.open===wasOpen)return;wasOpen=details.open;captureManualDraft(form);});
+      form.addEventListener('submit',event=>{
+        event.preventDefault();const values=new FormData(form),authority=byId().get(form.dataset.manualVacancy);
+        const title=safeText(values.get('title'),500),url=safeText(values.get('url'),2000);
+        const requirements=['education','experience','knowledge','skills'].flatMap(category=>safeText(values.get(category)).split(/\n+/).map(text=>text.trim()).filter(Boolean).map((text,index)=>({id:`${category}-${index+1}`,category,sourceText:text,requirementState:requirementStateFromText(text),selfAssessmentEligible:true,sourceLocator:L('Перенесено студентом из объявления','Copied from the announcement by the student','由学生从公告复制')})));
+        const error=form.querySelector('[data-manual-error]');
+        if(!title||!safeURL(url)||!authority||values.get('employer')!==authority.id||!visibleInstitutions().some(item=>item.id===authority.id)||!requirements.length){error.textContent=L('Укажите должность, действительную ссылку и хотя бы одно требование этого органа из источника.','Enter a role title, a valid source URL and at least one requirement from this employer’s source.','请填写职位名称、有效来源链接及该机构原文中的至少一项要求。');return;}
+        const id='student-source-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
+        const vacancy={id,institutionId:authority.id,employerName:authority.name,title,url,regionId:authority.regionId||null,userProvided:true,kind:'vacancy',status:'unconfirmed',source:{url,retrievedAt:new Date().toISOString(),format:'student-transcription'},requirements,coverage:{requirements:'student-transcription'}};
+        journey.customVacancies=[...journey.customVacancies,vacancy].slice(-20);journey.selectedVacancyId=id;journey.selectedSnapshot=vacancy;journey.assessments[id]={};
+        delete journey.manualDrafts[authority.id];if(journey.manualDraft?.employer===authority.id)journey.manualDraft={};save();switchStage('requirements');
+      });
     });
   }
 
@@ -460,23 +515,28 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     if(!vacancy){renderMissingSelection(target);return;}
     const {requirements,summary}=assessment(vacancy);let index=0;
     const sourceURL=safeURL(vacancy.url||vacancy.source?.url);
+    const manualAuthority=byId().get(vacancy.institutionId),manualPanelKey=`requirements-${vacancy.institutionId}`;
+    const manualDraft=draftForAuthority(vacancy.institutionId);
     const duties=typeof vacancy.duties==='string'?vacancy.duties:Array.isArray(vacancy.duties)?vacancy.duties.map(item=>typeof item==='string'?item:item.sourceText||item.text||'').filter(Boolean).join('\n'):'';
     target.innerHTML=`<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${I('arrow-left')}${L('К выбору должности','Back to role selection','返回职位选择')}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L('Требования выбранной должности','Selected role requirements','所选职位要求')}</h1><h2 lang="ru">${E(vacancy.title)}</h2><p lang="ru">${E(vacancy.employerName)}</p>${vacancy.department?`<p lang="ru">${E(vacancy.department)}</p>`:''}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L('Источник требований','Requirements source','要求来源')}${I('external')}</a><p class="journey-muted">${L('Источник получен','Source retrieved','来源获取日期')}: ${date(vacancy.source?.retrievedAt||vacancy.lastSeenAt||vacancy.sourceSnapshotAt)||L('дата не указана','date not stated','未注明日期')}</p></header>
       ${duties?`<details class="journey-duties"><summary>${L('Должностные обязанности','Duties','工作职责')}</summary><p lang="ru">${E(duties)}</p></details>`:''}
       <p class="journey-assessment-intro">${L('Отметьте каждый пункт. Знания и умения, которые предстоит освоить, войдут в Ваш план развития; образование и стаж будут показаны отдельно.','Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.','请逐项评估。需要掌握的知识和技能将加入发展计划；学历与工作经历将单独显示。')}</p>${missingSourceNote(requirements)}${!summary.total?`<p class="journey-source-status">${L('В этой карточке нет пунктов для самооценки. Откройте источник и добавьте точные требования или выберите другой материал.','This card has no assessable items. Open the source and add its exact requirements, or choose another material.','此卡片没有可评估项目。请打开来源并添加原文要求，或选择其他材料。')}</p>`:''}${requirements.missingCategories.length?`<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L('Дополнить из источника','Add requirements from the source','从来源补充要求')}</button>`:''}
+      <div class="journey-supplement-form" data-requirement-manual-slot>${manualAuthority&&manualDraft.open&&manualDraft.panelKey===manualPanelKey?manualVacancyForm(manualAuthority,manualPanelKey):''}</div>
       <div class="journey-assessment-progress"><p id="journey-assessment-state" role="status" aria-live="polite">${E(assessmentProgress(summary))}</p><progress id="journey-assessment-progress" max="${Math.max(1,summary.total)}" value="${summary.assessed}" aria-label="${E(L('Отмеченные требования','Assessed requirements','已评估要求'))}"></progress></div>
       <div class="journey-requirements">${summary.groups.filter(group=>group.rows.length).map(group=>`<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map(row=>requirementRow(row,row.assessable?++index:0,vacancy.url||vacancy.source?.url)).join('')}</section>`).join('')}</div>
       <div class="seminar-next"><p>${L('Отметки сохраняются автоматически. Их можно изменить, вернувшись к этой должности.','Your answers are saved automatically. Return to this role to revise them.','回答会自动保存，返回该职位即可修改。')}</p><button type="button" class="button button-primary button-large" id="journey-open-plan">${L('Посмотреть план развития','View my development plan','查看发展计划')}${I('arrow-right')}</button></div>`;
     target.querySelector('#journey-back-vacancies').onclick=()=>switchStage('recommendations');
     target.querySelector('#journey-open-plan').onclick=()=>switchStage('summary');
+    bindManualVacancy(target.querySelector('[data-requirement-manual-slot]'));
     target.querySelector('#journey-supplement-requirements')?.addEventListener('click',()=>{
-      vacancyEmployer=vacancy.institutionId;switchStage('recommendations');
-      const details=document.querySelector('.journey-manual-source'),form=document.querySelector('#journey-manual-vacancy');
-      if(!details||!form)return;details.open=true;
-      form.elements.title.value=vacancy.title;form.elements.url.value=vacancy.url||vacancy.source?.url||'';
-      for(const category of ['education','experience','knowledge','skills'])form.elements[category].value=requirements.rows.filter(row=>row.category===category&&row.text).map(row=>row.text).join('\n');
-      captureManualDraft(form);
-      details.scrollIntoView({block:'start',behavior:'instant'});form.elements.knowledge.focus({preventScroll:true});
+      if(!manualAuthority)return;
+      const previous=draftForAuthority(manualAuthority.id),hasDraft=['title','url','education','experience','knowledge','skills'].some(name=>safeText(previous[name]));
+      const sourceFields={title:vacancy.title,url:vacancy.url||vacancy.source?.url||'',...Object.fromEntries(['education','experience','knowledge','skills'].map(category=>[category,requirements.rows.filter(row=>row.category===category&&row.text).map(row=>row.text).join('\n')]))};
+      const draft=normalizedManualDraft({...hasDraft?previous:sourceFields,open:true,panelKey:manualPanelKey},manualAuthority.id);
+      journey.manualDrafts={...journey.manualDrafts,[manualAuthority.id]:draft};journey.manualDraft={...draft};
+      const slot=target.querySelector('[data-requirement-manual-slot]');
+      slot.innerHTML=(hasDraft?`<p class="journey-muted">${L('Открыт сохранённый черновик этого органа. Сверьте его с источником выбранной должности.','Your saved draft for this employer is open. Check it against the selected role’s source.','已打开该机构的已保存草稿，请与所选职位的来源核对。')}</p>`:'')+manualVacancyForm(manualAuthority,manualPanelKey);
+      bindManualVacancy(slot);const form=slot.querySelector('[data-manual-vacancy]');captureManualDraft(form);form.elements.title.focus({preventScroll:true});
     });
     target.querySelectorAll('[data-requirement-key]').forEach(input=>input.addEventListener('change',event=>{
       const row=requirements.rows.find(item=>item.id===event.target.dataset.requirementKey),value=event.target.value;
@@ -547,11 +607,11 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
   return {
     isReady,guardRoute,renderResults,
     render(route){
-      if(lastRoute==='preferences'&&route!=='preferences'){picker?.destroy();picker=null;}
+      if(lastRoute==='preferences'&&route!=='preferences'){picker?.destroy();picker=null;wishSorter?.destroy();wishSorter=null;}
       lastRoute=route;updateLabels();if(route==='preferences')renderPreferences();
     },
-    flush:()=>!dirty||save(),
-    updateBusy:()=>catalogLoading||positionsLoading||opening,
+    flush:()=>{wishSorter?.cancel({focus:false,announceResult:false});return !dirty||save();},
+    updateBusy:()=>catalogLoading||positionsLoading||opening||Boolean(wishSorter?.isBusy()),
     captureForUpdate:()=>({view:journey.view,authorityQuery,authorityScope,vacancyQuery,vacancyEmployer}),
     restoreForUpdate(value){if(!isRecord(value))return;authorityQuery=safeText(value.authorityQuery,500);authorityScope=safeText(value.authorityScope,80);vacancyQuery=safeText(value.vacancyQuery,500);vacancyEmployer=safeText(value.vacancyEmployer,200);}
   };

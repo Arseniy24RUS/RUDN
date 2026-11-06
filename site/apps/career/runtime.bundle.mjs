@@ -2193,15 +2193,28 @@ var CareerRuntime = (() => {
     } };
   }
 
+  // site/apps/career/assets/region-map-geometry.mjs
+  var REGION_MAP_MAX_ZOOM = 40;
+  var clampMapZoom = (value) => Math.max(1, Math.min(REGION_MAP_MAX_ZOOM, value));
+  function zoomMapAt(view, value, point2) {
+    const zoom = clampMapZoom(value), ratio = zoom / view.zoom;
+    return { zoom, x: point2.x - (point2.x - view.x) * ratio, y: point2.y - (point2.y - view.y) * ratio };
+  }
+  function containMapView(view, { width, height, left = 0, top = 0, right = width, bottom = height }) {
+    const zoom = clampMapZoom(view.zoom);
+    const axis = (offset, size, min, max) => size <= max - min ? (min + max - size) / 2 : Math.min(min, Math.max(max - size, offset));
+    return { zoom, x: axis(view.x, width * zoom, left, right), y: axis(view.y, height * zoom, top, bottom) };
+  }
+
   // site/apps/career/assets/region-picker.mjs
   var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var normalize = (value) => String(value ?? "").normalize("NFKC").toLowerCase().replace(/ё/g, "\u0435").replace(/[—–−]/g, "-").replace(/\s+/g, " ").trim();
   var languageCode = (value) => String(value || "ru").startsWith("zh") ? "zh-Hans" : String(value).startsWith("en") ? "en" : "ru";
   var isMoscow = (region) => String(region.mapId) === "102269" || region.id === "ru-77" || normalize(region.name) === "\u043C\u043E\u0441\u043A\u0432\u0430";
   var copy = {
-    ru: { search: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442", searchHint: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430", list: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B", map: "\u0412\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435", mapHelp: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u0441\u0443\u0431\u044A\u0435\u043A\u0442, \u0447\u0442\u043E\u0431\u044B \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0435\u0433\u043E. \u0414\u043B\u044F \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439 \u0443\u0432\u0435\u043B\u0438\u0447\u044C\u0442\u0435 \u043A\u0430\u0440\u0442\u0443. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: \u0441\u0442\u0440\u0435\u043B\u043A\u0438 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u044E\u0442 \u0444\u043E\u043A\u0443\u0441, \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u043C\u0435\u043D\u044F\u044E\u0442 \u0432\u044B\u0431\u043E\u0440.", selected: "\u0412\u044B\u0431\u0440\u0430\u043D\u043E", notSelected: "\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E", of: "\u0438\u0437", add: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C", remove: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u044B\u0431\u043E\u0440\u0430", none: "\u0412\u044B\u0431\u0440\u0430\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", noMatches: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0441 \u0442\u0430\u043A\u0438\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", loading: "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043A\u0430\u0440\u0442\u0443\u2026", unavailable: "\u041A\u0430\u0440\u0442\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", zoomIn: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", zoomOut: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", reset: "\u0412\u0441\u044F \u043A\u0430\u0440\u0442\u0430", zoom: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431 \u043A\u0430\u0440\u0442\u044B", hint: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", searchResults: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432", chosenLegend: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B" },
-    en: { search: "Find a region", searchHint: "Region name", list: "Regions to work in", map: "Select regions on the map", mapHelp: "Select a region by clicking it. Zoom in for smaller regions. With a keyboard, use the arrow keys to move focus and Space or Enter to change selection.", selected: "Selected", notSelected: "Not selected", of: "of", add: "Select", remove: "Deselect", none: "Only federal authorities and organisations are selected.", noMatches: "No regions match this name.", loading: "Loading the map\u2026", unavailable: "The map is temporarily unavailable. Select regions in the list.", zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Whole map", zoom: "Map zoom", hint: "Select a region on the map or in the list.", searchResults: "Regions found", chosenLegend: "Selected regions" },
-    "zh-Hans": { search: "\u641C\u7D22\u5730\u533A", searchHint: "\u5730\u533A\u540D\u79F0", list: "\u5E0C\u671B\u5DE5\u4F5C\u7684\u5730\u533A", map: "\u5728\u5730\u56FE\u4E0A\u9009\u62E9\u5730\u533A", mapHelp: "\u70B9\u51FB\u5730\u533A\u5373\u53EF\u9009\u62E9\u3002\u8F83\u5C0F\u7684\u5730\u533A\u53EF\u653E\u5927\u5730\u56FE\u540E\u9009\u62E9\u3002\u952E\u76D8\u64CD\u4F5C\uFF1A\u65B9\u5411\u952E\u79FB\u52A8\u7126\u70B9\uFF0C\u7A7A\u683C\u6216\u56DE\u8F66\u952E\u5207\u6362\u9009\u62E9\u3002", selected: "\u5DF2\u9009\u62E9", notSelected: "\u672A\u9009\u62E9", of: "/", add: "\u9009\u62E9", remove: "\u53D6\u6D88\u9009\u62E9", none: "\u76EE\u524D\u4EC5\u9009\u62E9\u8054\u90A6\u673A\u5173\u548C\u7EC4\u7EC7\u3002", noMatches: "\u672A\u627E\u5230\u7B26\u5408\u8BE5\u540D\u79F0\u7684\u5730\u533A\u3002", loading: "\u6B63\u5728\u52A0\u8F7D\u5730\u56FE\u2026\u2026", unavailable: "\u5730\u56FE\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", zoomIn: "\u653E\u5927\u5730\u56FE", zoomOut: "\u7F29\u5C0F\u5730\u56FE", reset: "\u5B8C\u6574\u5730\u56FE", zoom: "\u5730\u56FE\u7F29\u653E", hint: "\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", searchResults: "\u627E\u5230\u7684\u5730\u533A", chosenLegend: "\u5DF2\u9009\u62E9\u5730\u533A" }
+    ru: { search: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442", searchHint: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430", list: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B", map: "\u0412\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435", mapHelp: "\u041A\u043E\u0441\u043D\u0438\u0442\u0435\u0441\u044C \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u043E\u0440\u0430. \u0420\u0430\u0437\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0432\u0430 \u043F\u0430\u043B\u044C\u0446\u0430 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0434\u0432\u0438\u0433\u0430\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u0443 \u043E\u0434\u043D\u0438\u043C \u043F\u0430\u043B\u044C\u0446\u0435\u043C. \u041D\u0430 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u2014 \u043A\u043E\u043B\u0451\u0441\u0438\u043A\u043E \u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0441\u043A\u0438\u0432\u0430\u043D\u0438\u0435. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: +/\u2212 \u2014 \u043C\u0430\u0441\u0448\u0442\u0430\u0431, 0 \u2014 \u0432\u0441\u044F \u043A\u0430\u0440\u0442\u0430; \u0441\u0442\u0440\u0435\u043B\u043A\u0438 \u2014 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435, Tab \u2014 \u0432\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430, \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u2014 \u043E\u0442\u043C\u0435\u0442\u0438\u0442\u044C.", selected: "\u0412\u044B\u0431\u0440\u0430\u043D\u043E", notSelected: "\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E", of: "\u0438\u0437", add: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C", remove: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u044B\u0431\u043E\u0440\u0430", none: "\u0412\u044B\u0431\u0440\u0430\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", noMatches: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0441 \u0442\u0430\u043A\u0438\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", loading: "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043A\u0430\u0440\u0442\u0443\u2026", unavailable: "\u041A\u0430\u0440\u0442\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", zoomIn: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", zoomOut: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", reset: "\u0412\u0441\u044F \u043A\u0430\u0440\u0442\u0430", zoom: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431 \u043A\u0430\u0440\u0442\u044B", hint: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", searchResults: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432", chosenLegend: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B" },
+    en: { search: "Find a region", searchHint: "Region name", list: "Regions to work in", map: "Select regions on the map", mapHelp: "Tap a region to select it. Spread two fingers to zoom and drag with one finger to move. On a computer, use the wheel and drag. Keyboard: +/\u2212 to zoom, 0 for the whole map; arrows to move, Tab to focus a region, Space or Enter to select.", selected: "Selected", notSelected: "Not selected", of: "of", add: "Select", remove: "Deselect", none: "Only federal authorities and organisations are selected.", noMatches: "No regions match this name.", loading: "Loading the map\u2026", unavailable: "The map is temporarily unavailable. Select regions in the list.", zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Whole map", zoom: "Map zoom", hint: "Select a region on the map or in the list.", searchResults: "Regions found", chosenLegend: "Selected regions" },
+    "zh-Hans": { search: "\u641C\u7D22\u5730\u533A", searchHint: "\u5730\u533A\u540D\u79F0", list: "\u5E0C\u671B\u5DE5\u4F5C\u7684\u5730\u533A", map: "\u5728\u5730\u56FE\u4E0A\u9009\u62E9\u5730\u533A", mapHelp: "\u70B9\u51FB\u5730\u533A\u8FDB\u884C\u9009\u62E9\u3002\u53CC\u6307\u5F20\u5F00\u653E\u5927\uFF0C\u5355\u6307\u62D6\u52A8\u5E73\u79FB\uFF1B\u7535\u8111\u4E0A\u4F7F\u7528\u6EDA\u8F6E\u548C\u62D6\u52A8\u3002\u952E\u76D8\uFF1A+/\u2212\u7F29\u653E\uFF0C0\u663E\u793A\u5168\u56FE\uFF1B\u65B9\u5411\u952E\u79FB\u52A8\uFF0CTab\u805A\u7126\u5730\u533A\uFF0C\u7A7A\u683C\u6216\u56DE\u8F66\u9009\u62E9\u3002", selected: "\u5DF2\u9009\u62E9", notSelected: "\u672A\u9009\u62E9", of: "/", add: "\u9009\u62E9", remove: "\u53D6\u6D88\u9009\u62E9", none: "\u76EE\u524D\u4EC5\u9009\u62E9\u8054\u90A6\u673A\u5173\u548C\u7EC4\u7EC7\u3002", noMatches: "\u672A\u627E\u5230\u7B26\u5408\u8BE5\u540D\u79F0\u7684\u5730\u533A\u3002", loading: "\u6B63\u5728\u52A0\u8F7D\u5730\u56FE\u2026\u2026", unavailable: "\u5730\u56FE\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", zoomIn: "\u653E\u5927\u5730\u56FE", zoomOut: "\u7F29\u5C0F\u5730\u56FE", reset: "\u5B8C\u6574\u5730\u56FE", zoom: "\u5730\u56FE\u7F29\u653E", hint: "\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", searchResults: "\u627E\u5230\u7684\u5730\u533A", chosenLegend: "\u5DF2\u9009\u62E9\u5730\u533A" }
   };
   var instanceCounter = 0;
   var mapRequests = /* @__PURE__ */ new Map();
@@ -2237,7 +2250,10 @@ var CareerRuntime = (() => {
     const defaultRegion = catalog.find(isMoscow) || catalog.find((region) => region.defaultSelected);
     let selection = new Set(sanitizeRegionSelection(selectedIds === void 0 ? defaultRegion ? [defaultRegion.id] : [] : selectedIds, catalog));
     let language2 = languageCode(getLanguage2()), ordered = orderRegions(catalog, language2), data2 = null, destroyed = false, zoom = 1;
-    let query = "", activeId = defaultRegion?.id || ordered[0]?.id, hoveredId = null, pan = null, ignoreMapClick = false, ignoreTimer;
+    let query = "", activeId = defaultRegion?.id || ordered[0]?.id, hoveredId = null, ignoreMapClick = false, ignoreTimer;
+    let mapX = 0, mapY = 0, resizeObserver = null, labelNodes = [];
+    const pointers = /* @__PURE__ */ new Map();
+    let gesture = null, gestureMoved = false;
     const key = `career-regions-${++instanceCounter}`;
     const ui = () => copy[language2];
     const selected = () => orderRegions(catalog, "ru").filter((region) => selection.has(region.id)).map((region) => region.id);
@@ -2283,6 +2299,7 @@ var CareerRuntime = (() => {
       }
       for (const boundary of root.querySelectorAll("[data-region-boundary]")) boundary.classList.toggle("is-selected", selection.has(boundary.dataset.regionBoundary));
       updateStatus();
+      updateMapLabels();
     }
     function toggle(id, source) {
       if (!byId.has(id) || destroyed) return;
@@ -2305,35 +2322,112 @@ var CareerRuntime = (() => {
       const status = root.querySelector("[data-region-search-status]");
       status.textContent = normalized2 ? `${ui().searchResults}: ${count}` : "";
     }
-    function setZoom(value, { focusId } = {}) {
-      const next = Math.min(4, Math.max(1, value));
-      const viewport = root.querySelector(".career-region-map-viewport"), svg = root.querySelector(".career-region-map");
-      if (!viewport || !svg || !data2) return;
-      const ratio = next / zoom;
-      let centreX = viewport.scrollLeft + viewport.clientWidth / 2, centreY = viewport.scrollTop + viewport.clientHeight / 2;
-      if (focusId && mappedFeatures.has(focusId)) {
-        const feature = mappedFeatures.get(focusId), oldWidth = svg.getBoundingClientRect().width;
-        centreX = feature.anchor[0] * oldWidth / data2.width;
-        centreY = feature.anchor[1] * oldWidth / data2.width;
+    function metrics() {
+      const svg = root.querySelector(".career-region-map");
+      if (!svg || !data2) return null;
+      const rect = svg.getBoundingClientRect(), width = rect.width || data2.width, height = rect.height || data2.height;
+      const scale = Math.min(width / data2.width, height / data2.height);
+      return { rect, width, height, scale, offsetX: (width - data2.width * scale) / 2, offsetY: (height - data2.height * scale) / 2 };
+    }
+    function svgPoint(event) {
+      const m = metrics();
+      return { x: (event.clientX - m.rect.left - m.offsetX) / m.scale, y: (event.clientY - m.rect.top - m.offsetY) / m.scale };
+    }
+    const textWidth = (value) => [...value].reduce((sum, char) => sum + (/[\p{Script=Han}]/u.test(char) ? 13 : /[MWЖШЩЮФ]/.test(char) ? 10 : /[il1.,' ]/.test(char) ? 4 : 7), 0);
+    function labelLines(value) {
+      const words = language2 === "zh-Hans" ? [...value] : value.split(/\s+/), lines = [];
+      let line = "";
+      for (const word of words) {
+        const next = line + (line && language2 !== "zh-Hans" ? " " : "") + word;
+        if (line && textWidth(next) > 168) {
+          lines.push(line);
+          line = word;
+        } else line = next;
       }
-      zoom = next;
-      svg.style.width = `${zoom * 100}%`;
+      if (line) lines.push(line);
+      return lines;
+    }
+    function updateMapLabels(m = metrics()) {
+      if (!m) return;
+      const pixels = m.scale * zoom, placed = [];
+      const candidates = labelNodes.map((item) => {
+        const bounds = item.feature.bounds, area = (bounds[2] - bounds[0]) * (bounds[3] - bounds[1]);
+        return { ...item, area, priority: (item.feature.city ? 1e9 : 0) + (selection.has(item.id) ? 1e8 : 0) + area };
+      }).sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
+      for (const item of candidates) {
+        const { node, feature, id, lines } = item;
+        const threshold = feature.city ? 1.5 : item.area > 1e4 ? 1.2 : item.area > 2500 ? 2 : item.area > 600 ? 3.5 : 6;
+        let visible = zoom >= threshold;
+        const width = Math.max(...lines.map(textWidth)) + 10, height = lines.length * 16 + 4;
+        const x = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+        const options = feature.city ? [[width / 2 + 14, 0], [0, -height / 2 - 14], [0, height / 2 + 14], [-width / 2 - 14, 0]] : [[0, 0]];
+        let chosen = null;
+        if (visible) for (const [dx, dy] of options) {
+          const box = { left: x + dx - width / 2, right: x + dx + width / 2, top: y + dy - height / 2, bottom: y + dy + height / 2 };
+          if (box.left < 5 || box.right > m.width - 5 || box.top < 5 || box.bottom > m.height - 5) continue;
+          if (placed.some((other) => box.left < other.right + 5 && box.right > other.left - 5 && box.top < other.bottom + 4 && box.bottom > other.top - 4)) continue;
+          chosen = { dx, dy, box };
+          break;
+        }
+        visible = visible && !!chosen;
+        node.style.display = visible ? "" : "none";
+        node.dataset.labelVisible = String(visible);
+        if (!visible) continue;
+        placed.push(chosen.box);
+        node.setAttribute("font-size", String(13 / pixels));
+        node.setAttribute("stroke-width", String(3 / pixels));
+        node.setAttribute("x", String(feature.anchor[0] + chosen.dx / pixels));
+        node.setAttribute("y", String(feature.anchor[1] + (chosen.dy - (lines.length - 1) * 8 + 4) / pixels));
+        [...node.children].forEach((span, index) => {
+          span.setAttribute("x", node.getAttribute("x"));
+          span.setAttribute("dy", index ? String(16 / pixels) : "0");
+        });
+      }
+    }
+    function applyView() {
+      const m = metrics(), viewport = root.querySelector(".career-region-map-viewport"), content = root.querySelector(".career-region-map-content");
+      if (!m || !viewport || !content) return;
+      const view = containMapView({ zoom, x: mapX, y: mapY }, { width: data2.width, height: data2.height, left: -m.offsetX / m.scale, top: -m.offsetY / m.scale, right: (m.width - m.offsetX) / m.scale, bottom: (m.height - m.offsetY) / m.scale });
+      zoom = view.zoom;
+      mapX = view.x;
+      mapY = view.y;
+      content.setAttribute("transform", `translate(${mapX} ${mapY}) scale(${zoom})`);
+      viewport.dataset.mapZoom = String(zoom);
+      viewport.dataset.mapPanX = String(mapX);
+      viewport.dataset.mapPanY = String(mapY);
       viewport.classList.toggle("is-zoomed", zoom > 1);
-      viewport.scrollLeft = zoom === 1 ? 0 : centreX * ratio - viewport.clientWidth / 2;
-      viewport.scrollTop = zoom === 1 ? 0 : centreY * ratio - viewport.clientHeight / 2;
-      root.querySelector('[data-region-zoom="in"]').disabled = zoom >= 4;
-      root.querySelector('[data-region-zoom="out"]').disabled = zoom <= 1;
       root.querySelector('[data-region-zoom="reset"]').disabled = zoom <= 1;
       root.querySelector("[data-region-zoom-value]").textContent = `${Math.round(zoom * 100)}%`;
+      updateMapLabels(m);
+    }
+    function setZoom(value, { point: point2, focusId } = {}) {
+      if (!data2) return;
+      if (focusId && mappedFeatures.has(focusId)) {
+        zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, value));
+        const anchor = mappedFeatures.get(focusId).anchor;
+        mapX = data2.width / 2 - anchor[0] * zoom;
+        mapY = data2.height / 2 - anchor[1] * zoom;
+      } else {
+        const next = zoomMapAt({ zoom, x: mapX, y: mapY }, value, point2 || { x: data2.width / 2, y: data2.height / 2 });
+        zoom = next.zoom;
+        mapX = next.x;
+        mapY = next.y;
+      }
+      if (zoom === 1) {
+        mapX = 0;
+        mapY = 0;
+      }
+      applyView();
     }
     function revealMapRegion(id) {
-      const viewport = root.querySelector(".career-region-map-viewport"), shape = [...root.querySelectorAll("[data-region-map-id]")].find((element) => element.dataset.regionMapId === id);
-      if (!viewport || !shape) return;
-      const box = shape.getBoundingClientRect(), visible = viewport.getBoundingClientRect(), pad = 24;
-      if (box.left < visible.left + pad) viewport.scrollLeft -= visible.left + pad - box.left;
-      else if (box.right > visible.right - pad) viewport.scrollLeft += box.right - visible.right + pad;
-      if (box.top < visible.top + pad) viewport.scrollTop -= visible.top + pad - box.top;
-      else if (box.bottom > visible.bottom - pad) viewport.scrollTop += box.bottom - visible.bottom + pad;
+      const m = metrics(), feature = mappedFeatures.get(id);
+      if (!m || !feature) return;
+      const x = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+      if (x < 30 || x > m.width - 30 || y < 30 || y > m.height - 30) {
+        mapX = data2.width / 2 - feature.anchor[0] * zoom;
+        mapY = data2.height / 2 - feature.anchor[1] * zoom;
+        applyView();
+      }
     }
     function moveMapFocus(keyName) {
       const available = ordered.filter((region) => mappedFeatures.has(region.id));
@@ -2373,49 +2467,104 @@ var CareerRuntime = (() => {
         if (id) mappedFeatures.set(id, feature);
       }
       if (!mappedFeatures.has(activeId)) activeId = ordered.find((region) => mappedFeatures.has(region.id))?.id;
-      const featureMarkup = (region, marker = false) => {
+      const featureMarkup = (region) => {
         const feature = mappedFeatures.get(region.id);
         if (!feature) return "";
-        const title = `<title>${E2(label2(region.id))} \xB7 ${badge(region.id)}</title>`;
-        if (marker) return `<g class="career-region-shape career-region-city" data-region-map-id="${E2(region.id)}" data-region-marker role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1" transform="translate(${feature.anchor.join(" ")})">${title}<circle class="career-region-city-hit" r=".01"/><circle class="career-region-city-halo" r=".01"/><circle class="career-region-city-dot" r=".01"/></g>`;
-        if (feature.city) return `<path class="career-region-shape career-region-city-boundary" aria-hidden="true" data-region-boundary="${E2(region.id)}" d="${E2(feature.d)}"/>`;
-        return `<path class="career-region-shape" data-region-map-id="${E2(region.id)}" role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1" d="${E2(feature.d)}">${title}</path>`;
+        const city = feature.city ? ` data-region-marker` : "";
+        return `<g class="career-region-shape${feature.city ? " career-region-city" : ""}" data-region-map-id="${E2(region.id)}"${city} role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1"><title>${E2(label2(region.id))} \xB7 ${badge(region.id)}</title><path class="career-region-fill" data-region-fill="${E2(region.id)}" d="${E2(feature.d)}"/><path class="career-region-outline" data-region-outline="${E2(region.id)}" d="${E2(feature.outlineD || feature.d)}"/>${feature.city ? `<g transform="translate(${feature.anchor.join(" ")})"><circle class="career-region-city-hit" r=".01"/><circle class="career-region-city-halo" r=".01"/><circle class="career-region-city-dot" r=".01"/></g>` : ""}</g>`;
       };
-      frame.innerHTML = `<div class="career-region-map-viewport" aria-describedby="${key}-map-help"><svg class="career-region-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${data2.width} ${data2.height}" width="${data2.width}" height="${data2.height}" role="group" aria-label="${ui().map}" aria-describedby="${key}-map-help"><g class="career-region-boundaries" fill-rule="evenodd">${ordered.map((region) => featureMarkup(region)).join("")}</g><g class="career-region-city-markers">${ordered.filter((region) => mappedFeatures.get(region.id)?.city).map((region) => featureMarkup(region, true)).join("")}</g></svg></div>`;
+      const labelMarkup = ordered.filter((region) => mappedFeatures.has(region.id)).map((region) => `<text class="career-region-label" data-region-label="${E2(region.id)}" data-label-visible="false" aria-hidden="true" style="display:none">${labelLines(label2(region.id)).map((line) => `<tspan>${E2(line)}</tspan>`).join("")}</text>`).join("");
+      frame.innerHTML = `<div class="career-region-map-viewport" tabindex="0" role="group" aria-label="${ui().map}" aria-describedby="${key}-map-help"><svg class="career-region-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${data2.width} ${data2.height}" width="${data2.width}" height="${data2.height}" role="group" aria-label="${ui().map}"><g class="career-region-map-content"><g class="career-region-boundaries" fill-rule="evenodd">${ordered.filter((region) => !mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-city-markers" fill-rule="evenodd">${ordered.filter((region) => mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-labels" aria-hidden="true">${labelMarkup}</g></g></svg></div>`;
       root.dataset.regionMapState = "ready";
       root.querySelector("[data-region-map-controls]").hidden = false;
       const viewport = frame.querySelector(".career-region-map-viewport");
-      listen(viewport, "pointerdown", (event) => {
-        if (event.pointerType !== "mouse" || event.button !== 0 || zoom <= 1) return;
-        pan = { id: event.pointerId, x: event.clientX, y: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop, moved: false };
-      });
-      listen(viewport, "pointermove", (event) => {
-        if (!pan || event.pointerId !== pan.id || event.buttons !== 1) return;
-        const dx = event.clientX - pan.x, dy = event.clientY - pan.y;
-        if (!pan.moved && Math.hypot(dx, dy) < 5) return;
-        pan.moved = true;
+      labelNodes = [...frame.querySelectorAll("[data-region-label]")].map((node) => ({ node, id: node.dataset.regionLabel, feature: mappedFeatures.get(node.dataset.regionLabel), lines: labelLines(label2(node.dataset.regionLabel)) }));
+      const suppressClick = () => {
         ignoreMapClick = true;
-        viewport.setPointerCapture?.(event.pointerId);
-        viewport.classList.add("is-panning");
-        viewport.scrollLeft = pan.left - dx;
-        viewport.scrollTop = pan.top - dy;
-        event.preventDefault();
-      });
-      const endPan = () => {
-        if (!pan) return;
-        pan = null;
-        viewport.classList.remove("is-panning");
         clearTimeout(ignoreTimer);
         ignoreTimer = setTimeout(() => {
           ignoreMapClick = false;
-        }, 120);
+        }, 350);
       };
-      listen(viewport, "pointerup", endPan);
-      listen(viewport, "pointercancel", endPan);
-      listen(viewport, "lostpointercapture", endPan);
-      setZoom(zoom);
+      const startGesture = () => {
+        const values = [...pointers.values()];
+        if (values.length >= 2) {
+          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          gesture = { kind: "pinch", distance: Math.max(0.01, Math.hypot(a.x - b.x, a.y - b.y)), zoom, anchor: { x: (mid.x - mapX) / zoom, y: (mid.y - mapY) / zoom } };
+          gestureMoved = true;
+          suppressClick();
+        } else if (values.length) {
+          gesture = { kind: "pan", point: svgPoint(values[0]), x: mapX, y: mapY };
+        } else gesture = null;
+      };
+      listen(viewport, "pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0 || pointers.has(event.pointerId)) return;
+        if (!pointers.size) {
+          gestureMoved = false;
+          ignoreMapClick = false;
+          clearTimeout(ignoreTimer);
+        }
+        pointers.set(event.pointerId, { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, regionId: event.target.closest?.("[data-region-map-id]")?.dataset.regionMapId });
+        viewport.setPointerCapture?.(event.pointerId);
+        startGesture();
+        event.preventDefault();
+      });
+      listen(viewport, "pointermove", (event) => {
+        const previous = pointers.get(event.pointerId);
+        if (!previous || !gesture) return;
+        pointers.set(event.pointerId, { ...previous, clientX: event.clientX, clientY: event.clientY });
+        const values = [...pointers.values()];
+        if (gesture.kind === "pinch" && values.length >= 2) {
+          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, gesture.zoom * Math.hypot(a.x - b.x, a.y - b.y) / gesture.distance));
+          mapX = mid.x - gesture.anchor.x * zoom;
+          mapY = mid.y - gesture.anchor.y * zoom;
+          gestureMoved = true;
+        } else if (gesture.kind === "pan") {
+          const point2 = svgPoint(event), dx = point2.x - gesture.point.x, dy = point2.y - gesture.point.y;
+          if (!gestureMoved && Math.hypot(dx, dy) * (metrics()?.scale || 1) < 6) return;
+          gestureMoved = true;
+          mapX = gesture.x + dx;
+          mapY = gesture.y + dy;
+        }
+        viewport.classList.add("is-panning");
+        ignoreMapClick = true;
+        applyView();
+        event.preventDefault();
+      });
+      const endPointer = (event, cancelled = false) => {
+        const pointer = pointers.get(event.pointerId);
+        if (!pointer) return;
+        if (!cancelled && pointers.size === 1 && !gestureMoved && pointer.regionId) {
+          hoveredId = pointer.regionId;
+          toggle(pointer.regionId, "map");
+          [...frame.querySelectorAll("[data-region-map-id]")].find((shape) => shape.dataset.regionMapId === pointer.regionId)?.focus({ preventScroll: true });
+        }
+        pointers.delete(event.pointerId);
+        if (viewport.hasPointerCapture?.(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
+        if (cancelled) gestureMoved = true;
+        suppressClick();
+        startGesture();
+        if (!pointers.size) viewport.classList.remove("is-panning");
+      };
+      listen(viewport, "pointerup", (event) => endPointer(event));
+      listen(viewport, "pointercancel", (event) => endPointer(event, true));
+      listen(viewport, "lostpointercapture", (event) => endPointer(event, true));
+      listen(viewport, "wheel", (event) => {
+        const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientHeight : 1);
+        if (!delta) return;
+        event.preventDefault();
+        setZoom(zoom * Math.exp(-Math.max(-1e3, Math.min(1e3, delta)) * 2e-3), { point: svgPoint(event) });
+      }, { passive: false });
+      resizeObserver?.disconnect();
+      if (typeof ResizeObserver !== "undefined") {
+        resizeObserver = new ResizeObserver(() => {
+          if (!destroyed) applyView();
+        });
+        resizeObserver.observe(viewport);
+      }
+      applyView();
       updateSelection();
-      for (const shape of frame.querySelectorAll("[data-region-boundary]")) shape.classList.toggle("is-selected", selection.has(shape.dataset.regionBoundary));
     }
     function render() {
       if (destroyed) return;
@@ -2424,7 +2573,10 @@ var CareerRuntime = (() => {
       for (const off of bindings.splice(0)) off();
       root.classList.add("career-region-picker");
       root.setAttribute("data-no-i18n", "");
-      root.innerHTML = `<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${ui().none}</p><div class="career-region-grid"><div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><div class="career-region-zoom" role="group" aria-label="${ui().zoom}"><button type="button" data-region-zoom="out" aria-label="${ui().zoomOut}" title="${ui().zoomOut}">\u2212</button><span data-region-zoom-value>100%</span><button type="button" data-region-zoom="in" aria-label="${ui().zoomIn}" title="${ui().zoomIn}">+</button></div><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p id="${key}-map-help" class="career-region-sr-only">${ui().mapHelp}</p><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div><div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E2(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map((region) => `<label class="career-region-option" data-region-option="${E2(region.id)}"><input type="checkbox" value="${E2(region.id)}" data-region-checkbox="${E2(region.id)}"><span>${E2(regionLabel(region, language2))}</span></label>`).join("")}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div></div>`;
+      pointers.clear();
+      gesture = null;
+      resizeObserver?.disconnect();
+      root.innerHTML = `<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${ui().none}</p><div class="career-region-grid"><div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E2(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map((region) => `<label class="career-region-option" data-region-option="${E2(region.id)}"><input type="checkbox" value="${E2(region.id)}" data-region-checkbox="${E2(region.id)}"><span>${E2(regionLabel(region, language2))}</span></label>`).join("")}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div><div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><span class="career-region-zoom" aria-label="${ui().zoom}"><span data-region-zoom-value>100%</span></span><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><p id="${key}-map-help" class="career-region-map-help">${ui().mapHelp}</p><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div></div>`;
       listen(root, "change", (event) => {
         const checkbox = event.target.closest?.("[data-region-checkbox]");
         if (checkbox) toggle(checkbox.dataset.regionCheckbox, "list");
@@ -2438,12 +2590,11 @@ var CareerRuntime = (() => {
       listen(root, "click", (event) => {
         const zoomButton = event.target.closest?.("[data-region-zoom]");
         if (zoomButton) {
-          const action = zoomButton.dataset.regionZoom;
-          setZoom(action === "reset" ? 1 : zoom * (action === "in" ? 2 : 0.5));
+          setZoom(1);
           return;
         }
         const shape = event.target.closest?.("[data-region-map-id]");
-        if (shape && !ignoreMapClick) {
+        if (shape && (!ignoreMapClick || event.detail === 0)) {
           const id = shape.dataset.regionMapId;
           hoveredId = id;
           toggle(id, "map");
@@ -2451,21 +2602,33 @@ var CareerRuntime = (() => {
         }
       });
       listen(root, "keydown", (event) => {
-        const shape = event.target.closest?.("[data-region-map-id]");
-        if (!shape) return;
-        activeId = shape.dataset.regionMapId;
-        if (event.key === " " || event.key === "Enter") {
+        const shape = event.target.closest?.("[data-region-map-id]"), viewport = event.target.closest?.(".career-region-map-viewport");
+        if (!viewport) return;
+        if (shape) activeId = shape.dataset.regionMapId;
+        if (shape && (event.key === " " || event.key === "Enter")) {
           event.preventDefault();
           toggle(activeId, "map");
-        } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+        } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+          event.preventDefault();
+          if (shape && !event.shiftKey) moveMapFocus(event.key);
+          else {
+            const step = 60 / (metrics()?.scale || 1);
+            mapX += event.key === "ArrowLeft" ? step : event.key === "ArrowRight" ? -step : 0;
+            mapY += event.key === "ArrowUp" ? step : event.key === "ArrowDown" ? -step : 0;
+            applyView();
+          }
+        } else if (shape && ["Home", "End"].includes(event.key)) {
           event.preventDefault();
           moveMapFocus(event.key);
         } else if (event.key === "+" || event.key === "=") {
           event.preventDefault();
-          setZoom(zoom * 2, { focusId: activeId });
-        } else if (event.key === "-") {
+          setZoom(zoom * 1.6, shape ? { focusId: activeId } : {});
+        } else if (event.key === "-" || event.key === "\u2212") {
           event.preventDefault();
-          setZoom(zoom * 0.5, { focusId: activeId });
+          setZoom(zoom / 1.6, shape ? { focusId: activeId } : {});
+        } else if (event.key === "0") {
+          event.preventDefault();
+          setZoom(1);
         }
       });
       listen(root, "pointerover", (event) => {
@@ -2538,11 +2701,241 @@ var CareerRuntime = (() => {
         destroyed = true;
         for (const off of bindings.splice(0)) off();
         clearTimeout(ignoreTimer);
+        resizeObserver?.disconnect();
+        pointers.clear();
+        gesture = null;
         document.removeEventListener("app:language", languageListener);
         root.replaceChildren();
         root.classList.remove("career-region-picker");
         delete root.dataset.regionMapState;
         delete root.dataset.selectedRegionCount;
+      }
+    };
+  }
+
+  // site/apps/career/assets/wish-sortable.mjs
+  function moveWishId(ids2, from, to) {
+    if (!Array.isArray(ids2) || ids2.length > 3 || new Set(ids2).size !== ids2.length || ids2.some((id) => typeof id !== "string" || !id)) throw new TypeError("Expected up to three unique employer IDs.");
+    if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || to < 0 || from >= ids2.length || to >= ids2.length) throw new RangeError("Invalid employer position.");
+    const next = [...ids2];
+    next.splice(to, 0, next.splice(from, 1)[0]);
+    return next;
+  }
+  function wishTargetIndex(boxes, from, clientY) {
+    return boxes.reduce((target, box, index) => index !== from && clientY > box.top + box.height / 2 ? target + 1 : target, 0);
+  }
+  function createWishSortable({ list: list2, status, labels, onCommit }) {
+    let drag = null, destroyed = false;
+    const listeners = [];
+    const listen = (node, type, listener, options) => {
+      node.addEventListener(type, listener, options);
+      listeners.push(() => node.removeEventListener(type, listener, options));
+    };
+    const announce = (message) => {
+      if (!destroyed && status?.isConnected) status.textContent = message;
+    };
+    const handleFor = (id) => [...list2.querySelectorAll("[data-wish-drag-handle]")].find((node) => node.dataset.wishDragHandle === id);
+    const rows = () => [...list2.querySelectorAll(":scope > [data-wish-id]")];
+    function suppressClickAfterPointer() {
+      let timer;
+      const release = () => {
+        document.removeEventListener("click", block, true);
+        clearTimeout(timer);
+      };
+      const block = (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        release();
+      };
+      document.addEventListener("click", block, true);
+      timer = setTimeout(release, 350);
+    }
+    function clearPreview(session) {
+      session.rows.forEach((row, index) => {
+        row.style.removeProperty("transform");
+        row.classList.remove("is-wish-dragging");
+        row.removeAttribute("data-wish-preview-position");
+        row.querySelector(".journey-priority").textContent = String(index + 1);
+      });
+      session.placeholder.remove();
+      list2.classList.remove("is-wish-sorting");
+      session.handle.setAttribute("aria-pressed", "false");
+    }
+    function finish(commit, { focus = true, announceResult = true } = {}) {
+      const session = drag;
+      if (!session) return;
+      drag = null;
+      clearPreview(session);
+      if (session.pointerId !== void 0 && session.handle.hasPointerCapture?.(session.pointerId)) session.handle.releasePointerCapture(session.pointerId);
+      const changed = commit && session.target !== session.from;
+      if (changed) {
+        const next = moveWishId(session.ids, session.from, session.target);
+        const empty = list2.querySelector(":scope > li:not([data-wish-id])");
+        next.forEach((id, index) => {
+          const row = session.rows[session.ids.indexOf(id)];
+          list2.insertBefore(row, empty);
+          row.querySelector(".journey-priority").textContent = String(index + 1);
+        });
+        onCommit(next);
+      }
+      if (focus && !destroyed) (handleFor(session.id) || session.handle).focus({ preventScroll: true });
+      if (announceResult) announce(commit ? labels.dropped(session.name, session.target + 1) : labels.cancelled(session.name, session.from + 1));
+    }
+    function preview() {
+      const session = drag;
+      if (!session) return;
+      session.rows.forEach((row) => row.style.removeProperty("transform"));
+      const boxes = session.rows.map((row) => row.getBoundingClientRect());
+      if (session.mode === "pointer") session.target = wishTargetIndex(boxes, session.from, session.clientY);
+      const order = moveWishId(session.ids, session.from, session.target);
+      const gap = boxes.length > 1 ? boxes[1].top - boxes[0].bottom : 0;
+      const listTop = list2.getBoundingClientRect().top;
+      let top = boxes[0].top, placeholderTop = top;
+      for (let position = 0; position < order.length; position++) {
+        const index = session.ids.indexOf(order[position]), row = session.rows[index];
+        const offset = session.mode === "pointer" && index === session.from ? session.clientY - session.grabOffset - boxes[index].top : top - boxes[index].top;
+        row.style.transform = `translateY(${offset}px)`;
+        row.querySelector(".journey-priority").textContent = String(position + 1);
+        if (index === session.from) {
+          placeholderTop = top;
+          row.dataset.wishPreviewPosition = String(position + 1);
+        }
+        top += boxes[index].height + gap;
+      }
+      session.placeholder.style.top = `${placeholderTop - listTop}px`;
+      session.placeholder.style.height = `${boxes[session.from].height}px`;
+    }
+    function begin(handle, mode, event) {
+      finish(false, { focus: false, announceResult: false });
+      const filled = rows(), row = handle.closest("[data-wish-id]"), from = filled.indexOf(row);
+      if (filled.length < 2 || from < 0) return;
+      const box = row.getBoundingClientRect(), placeholder = document.createElement("li");
+      placeholder.className = "journey-wish-placeholder";
+      placeholder.setAttribute("aria-hidden", "true");
+      const session = {
+        handle,
+        row,
+        rows: filled,
+        ids: filled.map((item) => item.dataset.wishId),
+        id: row.dataset.wishId,
+        from,
+        target: from,
+        mode,
+        name: row.querySelector("strong").textContent,
+        pointerId: event?.pointerId,
+        startX: event?.clientX,
+        startY: event?.clientY,
+        clientY: event?.clientY,
+        grabOffset: event ? event.clientY - box.top : 0,
+        moved: false,
+        placeholder
+      };
+      drag = session;
+      list2.append(placeholder);
+      list2.classList.add("is-wish-sorting");
+      row.classList.add("is-wish-dragging");
+      handle.setAttribute("aria-pressed", "true");
+      handle.focus({ preventScroll: true });
+      preview();
+      announce(labels.grabbed(session.name, from + 1));
+      if (mode === "pointer") {
+        const tick = () => {
+          if (destroyed || drag !== session) return;
+          if (!list2.isConnected) {
+            finish(false, { focus: false, announceResult: false });
+            return;
+          }
+          if (session.moved) {
+            const height = window.innerHeight, edge = 56;
+            const speed = session.clientY < edge ? -Math.min(12, (edge - session.clientY) / 4) : session.clientY > height - edge ? Math.min(12, (session.clientY - height + edge) / 4) : 0;
+            if (speed) window.scrollBy({ top: speed, behavior: "instant" });
+            preview();
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+    }
+    listen(list2, "pointerdown", (event) => {
+      const handle = event.target.closest("[data-wish-drag-handle]");
+      if (!handle || handle.disabled || event.button !== 0 || event.isPrimary === false) return;
+      event.preventDefault();
+      begin(handle, "pointer", event);
+      if (drag) handle.setPointerCapture(event.pointerId);
+    });
+    listen(list2, "pointermove", (event) => {
+      if (drag?.mode !== "pointer" || drag.pointerId !== event.pointerId) return;
+      event.preventDefault();
+      drag.clientY = event.clientY;
+      if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) drag.moved = true;
+      if (drag.moved) preview();
+    });
+    listen(list2, "pointerup", (event) => {
+      if (drag?.mode !== "pointer" || drag.pointerId !== event.pointerId) return;
+      event.preventDefault();
+      drag.clientY = event.clientY;
+      const moved = drag.moved;
+      if (moved) preview();
+      if (moved) suppressClickAfterPointer();
+      finish(moved, { announceResult: moved });
+    });
+    const cancelPointer = (event) => {
+      if (drag?.mode === "pointer" && drag.pointerId === event.pointerId) finish(false);
+    };
+    listen(list2, "pointercancel", cancelPointer);
+    listen(list2, "lostpointercapture", cancelPointer);
+    listen(list2, "contextmenu", (event) => {
+      if (drag || event.target.closest("[data-wish-drag-handle]")) event.preventDefault();
+    });
+    listen(list2, "dragstart", (event) => event.preventDefault());
+    listen(list2, "click", (event) => {
+      const handle = event.target.closest("[data-wish-drag-handle]");
+      if (!handle) return;
+      event.preventDefault();
+      if (event.detail === 0) {
+        if (drag?.handle === handle) finish(true);
+        else begin(handle, "keyboard");
+      }
+    });
+    listen(list2, "keydown", (event) => {
+      const handle = event.target.closest("[data-wish-drag-handle]");
+      if (!handle || handle.disabled) return;
+      const grabbed = drag?.mode === "keyboard" && drag.handle === handle;
+      if (event.key === " " || event.key === "Enter") {
+        event.preventDefault();
+        if (event.repeat) return;
+        if (grabbed) finish(true);
+        else begin(handle, "keyboard");
+      } else if (grabbed && ["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+        drag.target = event.key === "Home" ? 0 : event.key === "End" ? drag.rows.length - 1 : Math.max(0, Math.min(drag.rows.length - 1, drag.target + (event.key === "ArrowUp" ? -1 : 1)));
+        preview();
+        handle.scrollIntoView({ block: "nearest", behavior: "instant" });
+        announce(labels.moved(drag.name, drag.target + 1));
+      } else if (grabbed && event.key === "Tab") finish(false, { focus: false });
+    });
+    listen(list2, "focusout", (event) => {
+      if (drag?.mode === "keyboard" && event.target === drag.handle) finish(false, { focus: false });
+    });
+    listen(document, "keydown", (event) => {
+      if (drag && event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        finish(false);
+      }
+    }, true);
+    listen(document, "pointerdown", (event) => {
+      if (drag?.mode === "pointer" && event.pointerId !== drag.pointerId) finish(false, { focus: false });
+      else if (drag?.mode === "keyboard" && !drag.handle.contains(event.target)) finish(false, { focus: false });
+    }, true);
+    return {
+      isBusy: () => Boolean(drag),
+      cancel: (options) => finish(false, options),
+      destroy() {
+        if (destroyed) return;
+        finish(false, { focus: false, announceResult: false });
+        destroyed = true;
+        listeners.splice(0).forEach((remove) => remove());
       }
     };
   }
@@ -2947,23 +3340,6 @@ var CareerRuntime = (() => {
       context
     };
   }
-  function compareDesiredAuthorities(desiredIds, ranked = [], groups = {}) {
-    const byId = new Map(list(ranked).map((authority) => [authority.id, authority]));
-    const placements = /* @__PURE__ */ new Map();
-    const add = (authorities, groupId, regionId = null) => list(authorities).forEach((authority, index) => {
-      if (!placements.has(authority.id)) placements.set(authority.id, []);
-      placements.get(authority.id).push({ groupId, regionId, rank: index + 1 });
-    });
-    add(groups.federal, "federal");
-    for (const group of list(groups.regions)) add(group.authorities, group.regionId, group.regionId);
-    return ids(desiredIds).slice(0, DESIRED_AUTHORITY_COUNT).map((authorityId, index) => ({
-      authorityId,
-      priority: index + 1,
-      authority: byId.get(authorityId) || null,
-      matched: placements.has(authorityId),
-      recommendations: placements.get(authorityId) || []
-    }));
-  }
   function buildAuthorityDevelopment(authority, roleProfile, { tracks = [], careerFramework = {}, competencies = [] } = {}) {
     const templates = new Map(list(tracks).map((track2) => [track2.id, track2]));
     const scoredTrack = authority?.track || authority?.match?.track;
@@ -3313,8 +3689,9 @@ var CareerRuntime = (() => {
     }
     let regions = [], territorial = [], institutions = [...data2.authorities], framework = { trackProfiles: [] }, competencies = [];
     let catalogLoaded = false, catalogLoading = false, catalogError = false, positionsLoaded = false, positionsLoading = false, positionsError = false, feed = null, positions = [];
-    let lastRoute = "personality", pendingRoute = null, manualSaveTimer = null, picker = null, opening = false, dirty = false, rankingCache = null, catalogGeneration = 0;
+    let lastRoute = "personality", pendingRoute = null, manualSaveTimer = null, picker = null, wishSorter = null, opening = false, dirty = false, rankingCache = null, catalogGeneration = 0;
     let authorityQuery = "", authorityScope = "", authorityLimit = 24, vacancyQuery = "", vacancyEmployer = "", vacancyLimit = 12;
+    const rolePanelStates = /* @__PURE__ */ new Map();
     const root = () => document.querySelector("#results-root");
     const preferencesRoot = () => document.querySelector("#journey-preferences-root");
     const byId = () => new Map(institutions.map((a) => [a.id, a]));
@@ -3390,6 +3767,7 @@ var CareerRuntime = (() => {
         regions = values[0];
         territorial = expandTerritorialCatalog(values[1]);
         institutions = [...data2.authorities, ...territorial.filter((a) => !data2.authorities.some((base) => base.id === a.id))];
+        prepareManualDrafts();
         framework = values[2];
         competencies = values[3];
         const clean = sanitizeJourneyPreferences(journey, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
@@ -3441,6 +3819,8 @@ var CareerRuntime = (() => {
       if (!target) return;
       picker?.destroy();
       picker = null;
+      wishSorter?.destroy();
+      wishSorter = null;
       target.setAttribute("data-no-i18n", "");
       if (!catalogLoaded) {
         target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1></header><p role="status">${catalogError ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443.", "The catalogue could not be loaded. Please try again.", "\u76EE\u5F55\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5\u3002") : L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438\u2026", "Loading territories and employers\u2026", "\u6B63\u5728\u52A0\u8F7D\u5730\u533A\u548C\u673A\u6784\u2026\u2026")}</p>${catalogError ? `<button type="button" class="button button-primary" id="journey-retry-catalog">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>` : ""}`;
@@ -3452,7 +3832,7 @@ var CareerRuntime = (() => {
       }
       target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1><p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438, \u0437\u0430\u0442\u0435\u043C \u0442\u0440\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0432\u043B\u0430\u0441\u0442\u0438 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430 \u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435 \u0412\u0430\u0448\u0435\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F. \u041F\u043E\u0441\u043B\u0435 \u0442\u0435\u0441\u0442\u0430 \u0441\u0440\u0430\u0432\u043D\u0438\u043C \u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0441 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C\u0438.", "Choose territories, then rank three public authorities or public-sector employers in order of preference. After the questionnaire, compare your choices with the recommendations.", "\u5148\u9009\u62E9\u5730\u533A\uFF0C\u518D\u6309\u610F\u613F\u987A\u5E8F\u9009\u62E9\u4E09\u4E2A\u653F\u5E9C\u673A\u5173\u6216\u516C\u5171\u90E8\u95E8\u96C7\u4E3B\u3002\u5B8C\u6210\u6D4B\u8BD5\u540E\uFF0C\u53EF\u5C06\u610F\u5411\u4E0E\u63A8\u8350\u8FDB\u884C\u6BD4\u8F83\u3002")}</p></header>
       <section class="journey-panel" aria-labelledby="journey-regions-heading"><h2 id="journey-regions-heading">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0440\u0430\u0431\u043E\u0442\u044B", "Work territories", "\u5DE5\u4F5C\u5730\u533A")}</h2><div id="journey-regions"></div></section>
-      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L2("\u0422\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B", "Three preferred employers", "\u4E09\u4E2A\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}</h2><p class="journey-muted">${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F 1 \u2014 \u0441\u0430\u043C\u044B\u0439 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0442\u0440\u0435\u043B\u043A\u0430\u043C\u0438.", "Position 1 is your first choice. Use the arrows to change the order.", "\u7B2C1\u4F4D\u4E3A\u9996\u9009\u3002\u53EF\u901A\u8FC7\u7BAD\u5934\u8C03\u6574\u987A\u5E8F\u3002")}</p><div id="journey-desired-choices" aria-live="polite"></div>
+      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L2("\u0422\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B", "Three preferred employers", "\u4E09\u4E2A\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}</h2><p class="journey-muted" id="journey-wish-sort-help">${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F 1 \u2014 \u0441\u0430\u043C\u044B\u0439 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442. \u041F\u0435\u0440\u0435\u0442\u044F\u043D\u0438\u0442\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0437\u0430 \u0440\u0443\u0447\u043A\u0443 \u0441 \u0442\u043E\u0447\u043A\u0430\u043C\u0438. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u2014 \u0432\u0437\u044F\u0442\u044C \u0438 \u043E\u0442\u043F\u0443\u0441\u0442\u0438\u0442\u044C, \u2191 \u0438 \u2193 \u2014 \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C, Esc \u2014 \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C.", "Position 1 is your first choice. Drag a selected employer by its dotted handle. Keyboard: Space or Enter to pick up and drop, \u2191 and \u2193 to move, Esc to cancel.", "\u7B2C1\u4F4D\u4E3A\u9996\u9009\u3002\u62D6\u52A8\u70B9\u72B6\u624B\u67C4\u8C03\u6574\u5DF2\u9009\u673A\u6784\u7684\u987A\u5E8F\u3002\u952E\u76D8\uFF1A\u7A7A\u683C\u6216 Enter \u62FF\u8D77\u548C\u653E\u4E0B\uFF0C\u2191 \u548C \u2193 \u79FB\u52A8\uFF0CEsc \u53D6\u6D88\u3002")}</p><div id="journey-desired-choices"></div><p class="journey-sort-status" data-wish-sort-status role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="journey-search-row"><label for="journey-authority-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044E", "Find an authority or employer", "\u67E5\u627E\u673A\u5173\u6216\u673A\u6784")}<input type="search" id="journey-authority-search" autocomplete="off" placeholder="${E3(L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0441\u0444\u0435\u0440\u0430 \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Name or policy area", "\u540D\u79F0\u6216\u5DE5\u4F5C\u9886\u57DF"))}" value="${E3(authorityQuery)}"></label><label for="journey-authority-scope">${L2("\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044F", "Level and territory", "\u5C42\u7EA7\u4E0E\u5730\u533A")}<select id="journey-authority-scope"></select></label></div><div id="journey-authority-options"></div></section>
       <div class="seminar-next"><button type="button" class="button button-secondary" id="journey-back-personality">${icon("arrow-left")}${L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</button><span id="journey-preference-status" role="status"></span><button type="button" class="button button-primary button-large" id="journey-preferences-next">${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C", "Continue to the questions", "\u8FDB\u5165\u95EE\u5377")}${icon("arrow-right")}</button></div>`;
       picker = createRegionPicker({ root: target.querySelector("#journey-regions"), regions, selectedIds: journey.regionIds, onChange: setRegions, getLanguage });
@@ -3488,12 +3868,14 @@ var CareerRuntime = (() => {
       select.value = authorityScope;
     }
     function renderDesiredChoices() {
+      wishSorter?.destroy();
+      wishSorter = null;
       const target = preferencesRoot()?.querySelector("#journey-desired-choices");
       if (!target) return;
       const lookup = byId();
-      target.innerHTML = `<ol class="journey-wish-slots">${[0, 1, 2].map((index) => {
+      target.innerHTML = `<ol class="journey-wish-slots" data-wish-list>${[0, 1, 2].map((index) => {
         const authority = lookup.get(journey.desiredIds[index]);
-        return `<li class="${authority ? "is-filled" : ""}"><span class="journey-priority">${index + 1}</span>${authority ? `<div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" data-move-wish="${index}" data-direction="-1" aria-label="${E3(L2("\u041F\u043E\u0434\u043D\u044F\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442: ", "Move up: ", "\u63D0\u9AD8\u4F18\u5148\u7EA7\uFF1A") + authorityName(authority))}" ${index === 0 ? "disabled" : ""}>\u2191</button><button type="button" data-move-wish="${index}" data-direction="1" aria-label="${E3(L2("\u041F\u043E\u043D\u0438\u0437\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442: ", "Move down: ", "\u964D\u4F4E\u4F18\u5148\u7EA7\uFF1A") + authorityName(authority))}" ${index === journey.desiredIds.length - 1 ? "disabled" : ""}>\u2193</button><button type="button" data-remove-wish="${E3(authority.id)}" aria-label="${E3(L2("\u0423\u0431\u0440\u0430\u0442\u044C: ", "Remove: ", "\u79FB\u9664\uFF1A") + authorityName(authority))}">\xD7</button></div>` : `<span class="journey-empty-slot">${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u043D\u0438\u0436\u0435", "Choose an employer below", "\u8BF7\u5728\u4E0B\u65B9\u9009\u62E9\u673A\u6784")}</span>`}</li>`;
+        return `<li class="${authority ? "is-filled" : ""}" ${authority ? `data-wish-id="${E3(authority.id)}"` : ""}><span class="journey-priority">${index + 1}</span>${authority ? `<div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" class="journey-wish-handle" data-wish-drag-handle="${E3(authority.id)}" aria-label="${E3(L2("\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C: ", "Reorder: ", "\u8C03\u6574\u987A\u5E8F\uFF1A") + authorityName(authority))}" aria-describedby="journey-wish-sort-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape" aria-pressed="false" ${journey.desiredIds.length < 2 ? "disabled" : ""}><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/></svg></button><button type="button" data-remove-wish="${E3(authority.id)}" aria-label="${E3(L2("\u0423\u0431\u0440\u0430\u0442\u044C: ", "Remove: ", "\u79FB\u9664\uFF1A") + authorityName(authority))}">\xD7</button></div>` : `<span class="journey-empty-slot">${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u043D\u0438\u0436\u0435", "Choose an employer below", "\u8BF7\u5728\u4E0B\u65B9\u9009\u62E9\u673A\u6784")}</span>`}</li>`;
       }).join("")}</ol>`;
       target.querySelectorAll("[data-remove-wish]").forEach((button) => button.onclick = () => {
         journey.desiredIds = journey.desiredIds.filter((id) => id !== button.dataset.removeWish);
@@ -3503,14 +3885,22 @@ var CareerRuntime = (() => {
         renderAuthorityOptions();
         updatePreferenceNext();
       });
-      target.querySelectorAll("[data-move-wish]").forEach((button) => button.onclick = () => {
-        const from = Number(button.dataset.moveWish), to = from + Number(button.dataset.direction);
-        if (to < 0 || to >= journey.desiredIds.length) return;
-        [journey.desiredIds[from], journey.desiredIds[to]] = [journey.desiredIds[to], journey.desiredIds[from]];
-        journey.confirmed = false;
-        save();
-        renderDesiredChoices();
-        renderAuthorityOptions();
+      wishSorter = createWishSortable({
+        list: target.querySelector("[data-wish-list]"),
+        status: preferencesRoot().querySelector("[data-wish-sort-status]"),
+        labels: {
+          grabbed: (name2, position) => L2(`${name2}: \u0432\u0437\u044F\u0442\u043E \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F, \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}.`, `${name2}: picked up, position ${position}.`, `${name2}\uFF1A\u5DF2\u62FF\u8D77\uFF0C\u5F53\u524D\u4F4D\u7F6E ${position}\u3002`),
+          moved: (name2, position) => L2(`${name2}: \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}. \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u043C \u0438\u043B\u0438 Enter.`, `${name2}: new position ${position}. Press Space or Enter to confirm.`, `${name2}\uFF1A\u65B0\u4F4D\u7F6E ${position}\u3002\u6309\u7A7A\u683C\u6216 Enter \u786E\u8BA4\u3002`),
+          dropped: (name2, position) => L2(`${name2}: \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D.`, `${name2}: position ${position}. Order confirmed.`, `${name2}\uFF1A\u7B2C ${position} \u4F4D\u3002\u987A\u5E8F\u5DF2\u786E\u8BA4\u3002`),
+          cancelled: (name2, position) => L2(`\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. ${name2}: \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}.`, `Move cancelled. ${name2}: position ${position}.`, `\u5DF2\u53D6\u6D88\u79FB\u52A8\u3002${name2}\uFF1A\u7B2C ${position} \u4F4D\u3002`)
+        },
+        onCommit: (ids2) => {
+          journey.desiredIds = ids2;
+          journey.confirmed = false;
+          save();
+          renderAuthorityOptions();
+          updatePreferenceNext();
+        }
       });
     }
     function renderAuthorityOptions() {
@@ -3614,18 +4004,14 @@ var CareerRuntime = (() => {
         }
       }));
     }
-    function matchBadge(matched) {
-      return matched ? `<span class="journey-match-badge">${icon("check")}${L2("\u0421\u043E\u0432\u043F\u0430\u043B\u043E \u0441 \u0412\u0430\u0448\u0438\u043C \u0432\u044B\u0431\u043E\u0440\u043E\u043C", "Matches your choice", "\u4E0E\u4F60\u7684\u610F\u5411\u4E00\u81F4")}</span>` : "";
+    function matchBadge(matched, preferred) {
+      return matched ? `<span class="journey-match-badge">${icon("check")}${preferred ? L2("\u0415\u0441\u0442\u044C \u0441\u0440\u0435\u0434\u0438 \u0442\u0440\u0451\u0445 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439", "Among your three recommendations", "\u5728\u4E09\u4E2A\u63A8\u8350\u4E4B\u4E2D") : L2("\u0421\u043E\u0432\u043F\u0430\u043B\u043E \u0441 \u0412\u0430\u0448\u0438\u043C \u0432\u044B\u0431\u043E\u0440\u043E\u043C", "Matches your choice", "\u4E0E\u4F60\u7684\u610F\u5411\u4E00\u81F4")}</span>` : "";
     }
-    function authorityCard(authority, index, result) {
-      const context = getProfileContext(), matched = journey.desiredIds.includes(authority.id);
+    function authorityCard(authority, index, { matched = false, preferred = false } = {}) {
+      const context = getProfileContext();
       const matches = context.prioritySectors.filter((id) => (authority.pathSectors || authority.sectors || []).some((sector) => sector.id === id));
-      return `<article class="seminar-authority ${matched ? "journey-matched" : ""}" data-recommended-authority="${E3(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority, "compact")}<div><span class="seminar-rank">${index + 1} \xB7 ${levelLabel(authority)}</span><h3>${E3(authorityName(authority))}</h3></div></div>${matchBadge(matched)}<p${getLanguage() !== "ru" && translate(authority.mission) === authority.mission ? ' lang="ru"' : ""}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B", "A matching work direction", "\u5339\u914D\u7684\u5DE5\u4F5C\u65B9\u5411")}</span><strong>${display(authority.track?.title || "")}</strong>${matches.length ? `<p>${L2("\u0412\u0430\u0448\u0438 \u0441\u0444\u0435\u0440\u044B", "Your policy areas", "\u4F60\u7684\u9886\u57DF")}: ${matches.map((id) => display(context.sectors.find((sector) => sector.id === id)?.title || id)).join(", ")}.</p>` : ""}</div><button type="button" class="button button-secondary journey-card-button" data-authority-vacancies="${E3(authority.id)}">${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Roles and requirements", "\u804C\u4F4D\u4E0E\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
-    }
-    function choiceComparison(ranked) {
-      const desired = compareDesiredAuthorities(journey.desiredIds, ranked.ranked, ranked);
-      const compact = (authority, index, matched, preferred) => `<li class="journey-compare-item ${matched ? "journey-matched" : ""}"><span class="journey-priority">${index + 1}</span><div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small>${matched ? `<span class="journey-match-text">\u2713 ${preferred ? L2("\u0415\u0441\u0442\u044C \u0432 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u0445", "Among recommendations", "\u5728\u63A8\u8350\u4E2D") : L2("\u0415\u0441\u0442\u044C \u0432 \u0412\u0430\u0448\u0435\u043C \u0432\u044B\u0431\u043E\u0440\u0435", "Among your choices", "\u5728\u4F60\u7684\u610F\u5411\u4E2D")}</span>` : ""}</div></li>`;
-      return `<section class="journey-comparison" aria-labelledby="journey-comparison-title"><h2 id="journey-comparison-title">${L2("\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430", "Your choices and the test result", "\u4F60\u7684\u610F\u5411\u4E0E\u6D4B\u8BD5\u7ED3\u679C")}</h2><div class="journey-comparison-columns"><div><h3>${L2("\u0412\u0430\u0448\u0438 \u0442\u0440\u0438 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430", "Your three priorities", "\u4F60\u7684\u4E09\u4E2A\u4F18\u5148\u610F\u5411")}</h3><ol>${desired.map((item, index) => compact(item.authority || byId().get(item.authorityId), index, item.matched, true)).join("")}</ol></div><div><h3>${L2("\u0422\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430", "Three closest matches", "\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879")}</h3><ol>${ranked.ranked.slice(0, 3).map((authority, index) => compact(authority, index, journey.desiredIds.includes(authority.id), false)).join("")}</ol></div></div><p class="journey-muted">${L2("\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0440\u0430\u043C\u043A\u0430 \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0433\u043E \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u043E\u0434\u043D\u043E\u0439 \u0438\u0437 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439 \u043D\u0438\u0436\u0435. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0412\u0430\u0448\u0438\u0445 \u0436\u0435\u043B\u0430\u043D\u0438\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D.", "A green border marks a preferred employer included in the recommendations below. Your original preference order is preserved.", "\u7EFF\u8272\u8FB9\u6846\u8868\u793A\u610F\u5411\u5355\u4F4D\u51FA\u73B0\u5728\u4E0B\u65B9\u63A8\u8350\u4E2D\u3002\u4F60\u7684\u539F\u59CB\u610F\u5411\u987A\u5E8F\u4FDD\u6301\u4E0D\u53D8\u3002")}</p></section>`;
+      const rankLabel = preferred ? L2(`\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 ${index + 1}`, `Your priority ${index + 1}`, `\u4F60\u7684\u7B2C ${index + 1} \u610F\u5411`) : L2(`\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F ${index + 1}`, `Recommendation ${index + 1}`, `\u63A8\u8350 ${index + 1}`);
+      return `<article class="seminar-authority ${matched ? "journey-matched" : ""}" data-recommended-authority="${E3(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority, "compact")}<div><span class="seminar-rank">${rankLabel} \xB7 ${levelLabel(authority)}</span><h3>${E3(authorityName(authority))}</h3></div></div>${matchBadge(matched, preferred)}<p${getLanguage() !== "ru" && translate(authority.mission) === authority.mission ? ' lang="ru"' : ""}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B", "A matching work direction", "\u5339\u914D\u7684\u5DE5\u4F5C\u65B9\u5411")}</span><strong>${display(authority.track?.title || "")}</strong>${matches.length ? `<p>${L2("\u0412\u0430\u0448\u0438 \u0441\u0444\u0435\u0440\u044B", "Your policy areas", "\u4F60\u7684\u9886\u57DF")}: ${matches.map((id) => display(context.sectors.find((sector) => sector.id === id)?.title || id)).join(", ")}.</p>` : ""}</div>${authorityRolePanel(authority, `${preferred ? "preferred" : "recommended"}-${authority.id}`)}</article>`;
     }
     function wishDevelopment(ranked) {
       const options = journey.desiredIds.map((id) => ranked.ranked.find((a) => a.id === id) || byId().get(id)).filter(Boolean);
@@ -3652,26 +4038,20 @@ var CareerRuntime = (() => {
     function renderRecommendations(result, target) {
       const ranked = rankings();
       if (!ranked) return;
-      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${icon("arrow-left")}${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF")}</button><h1>${L2("\u0412\u0430\u0448\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B", "Your career directions", "\u4F60\u7684\u804C\u4E1A\u65B9\u5411")}</h1><p>${L2("\u0422\u0440\u0438 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0434\u043B\u044F \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0443\u0440\u043E\u0432\u043D\u044F \u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430, \u0437\u0430\u0442\u0435\u043C \u043F\u043E \u0442\u0440\u0438 \u0434\u043B\u044F \u043A\u0430\u0436\u0434\u043E\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438. \u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u043F\u043E\u0434\u0431\u043E\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "Three recommendations at federal and public-sector level, followed by three for each selected territory. Employers are recommended independently of vacancy availability.", "\u5148\u5C55\u793A\u8054\u90A6\u5C42\u7EA7\u548C\u516C\u5171\u90E8\u95E8\u7684\u4E09\u4E2A\u63A8\u8350\uFF0C\u518D\u5C55\u793A\u6BCF\u4E2A\u6240\u9009\u5730\u533A\u7684\u4E09\u4E2A\u63A8\u8350\u3002\u673A\u6784\u63A8\u8350\u4E0D\u53D6\u51B3\u4E8E\u662F\u5426\u5B58\u5728\u7A7A\u7F3A\u804C\u4F4D\u3002")}</p></header>${choiceComparison(ranked)}
-      <section class="journey-recommendation-group" data-recommendation-group="federal"><h2>${L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "Federal level and public sector", "\u8054\u90A6\u5C42\u7EA7\u4E0E\u516C\u5171\u90E8\u95E8")}</h2><div class="seminar-authorities">${ranked.federal.map((a, i) => authorityCard(a, i, result)).join("")}</div></section>
-      ${ranked.regions.map((group) => {
-        const region = regions.find((r) => r.id === group.regionId);
-        return `<section class="journey-recommendation-group" data-recommendation-group="${E3(group.regionId)}"><h2>${E3(regionName(region))}</h2><p class="journey-muted">${L2("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B", "Regional and municipal authorities", "\u5730\u533A\u4E0E\u5E02\u653F\u673A\u5173")}</p><div class="seminar-authorities">${group.authorities.map((a, i) => authorityCard(a, i, result)).join("")}</div>${group.authorities.length < 3 ? `<p class="journey-muted">${L2("\u0412 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435 \u043F\u043E\u043A\u0430 \u043C\u0435\u043D\u044C\u0448\u0435 \u0442\u0440\u0451\u0445 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u044D\u0442\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438.", "The catalogue currently contains fewer than three matching records for this territory.", "\u8BE5\u5730\u533A\u76EE\u5F55\u4E2D\u76EE\u524D\u5C11\u4E8E\u4E09\u4E2A\u5339\u914D\u8BB0\u5F55\u3002")}</p>` : ""}</section>`;
-      }).join("")}
+      const recommended = ranked.ranked.slice(0, 3), recommendedIds = new Set(recommended.map((authority) => authority.id));
+      const rankedById = new Map(ranked.ranked.map((authority) => [authority.id, authority]));
+      const preferred = journey.desiredIds.map((id) => rankedById.get(id) || byId().get(id)).filter(Boolean);
+      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${icon("arrow-left")}${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF")}</button><h1>${L2("\u0412\u0430\u0448\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B", "Your career directions", "\u4F60\u7684\u804C\u4E1A\u65B9\u5411")}</h1><p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u2014 \u0442\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430 \u043F\u043E \u0412\u0430\u0448\u0435\u043C\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u0441 \u0443\u0447\u0451\u0442\u043E\u043C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u0417\u0430\u0442\u0435\u043C \u2014 \u0442\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0432 \u0412\u0430\u0448\u0435\u043C \u043F\u043E\u0440\u044F\u0434\u043A\u0435. \u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u043F\u043E\u0434\u0431\u043E\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "First, the three closest matches to your interest profile within your chosen territories. Then, your three preferred employers in your own order. Employers are recommended independently of vacancy availability.", "\u5148\u5C55\u793A\u5728\u6240\u9009\u5730\u533A\u8303\u56F4\u5185\u4E0E\u5174\u8DA3\u753B\u50CF\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879\uFF0C\u518D\u6309\u4F60\u7684\u610F\u613F\u987A\u5E8F\u5C55\u793A\u4E09\u4E2A\u610F\u5411\u5355\u4F4D\u3002\u673A\u6784\u63A8\u8350\u4E0D\u53D6\u51B3\u4E8E\u662F\u5426\u5B58\u5728\u7A7A\u7F3A\u804C\u4F4D\u3002")}</p></header>
+      <section class="journey-recommendation-group" data-recommendation-group="recommended"><h2>${L2("\u0422\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430", "Your three closest matches", "\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879")}</h2><p class="journey-muted">${L2("\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0440\u0430\u043C\u043A\u0430 \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0441 \u043E\u0434\u043D\u0438\u043C \u0438\u0437 \u0412\u0430\u0448\u0438\u0445 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442.", "A green border marks a recommendation that is also one of your preferred employers.", "\u7EFF\u8272\u8FB9\u6846\u8868\u793A\u63A8\u8350\u673A\u6784\u4E5F\u662F\u4F60\u7684\u610F\u5411\u5355\u4F4D\u3002")}</p><div class="seminar-authorities">${recommended.map((authority, index) => authorityCard(authority, index, { matched: journey.desiredIds.includes(authority.id) })).join("")}</div></section>
+      <section class="journey-recommendation-group" data-recommendation-group="preferred"><h2>${L2("\u0412\u0430\u0448\u0438 \u0442\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430", "Your three preferred employers", "\u4F60\u7684\u4E09\u4E2A\u610F\u5411\u5355\u4F4D")}</h2><p class="journey-muted">${L2("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0412\u0430\u0448\u0438\u043C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430\u043C: \u043E\u0442 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043A \u0442\u0440\u0435\u0442\u044C\u0435\u043C\u0443.", "The cards follow your preference order, from first to third.", "\u5361\u7247\u6309\u4F60\u7684\u610F\u613F\u6392\u5E8F\uFF0C\u4ECE\u7B2C\u4E00\u5230\u7B2C\u4E09\u3002")}</p><div class="seminar-authorities">${preferred.map((authority, index) => authorityCard(authority, index, { preferred: true, matched: recommendedIds.has(authority.id) })).join("")}</div></section>
       <button type="button" class="seminar-back-profile journey-edit-preferences" id="journey-edit-preferences">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0435 \u043C\u0435\u0441\u0442\u0430", "Edit territories and preferred employers", "\u4FEE\u6539\u5730\u533A\u4E0E\u610F\u5411\u5355\u4F4D")}</button>${wishDevelopment(ranked)}
-      <section class="seminar-vacancy-section" id="journey-vacancy-section"><h2>${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Choose a role to examine", "\u9009\u62E9\u8981\u5206\u6790\u7684\u804C\u4F4D")}</h2><p class="seminar-task">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u0437\u0430\u0442\u0435\u043C \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043F\u043E \u043A\u0430\u0436\u0434\u043E\u043C\u0443 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044E, \u0447\u0435\u043C\u0443 \u0412\u044B \u0443\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442\u0435 \u0438 \u0447\u0442\u043E \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C.", "Review the duties and source, then mark which requirements you already meet and which you need to develop.", "\u4E86\u89E3\u804C\u8D23\u4E0E\u6765\u6E90\uFF0C\u7136\u540E\u9010\u9879\u6807\u8BB0\u5DF2\u7B26\u5408\u7684\u8981\u6C42\u53CA\u9700\u8981\u63D0\u5347\u7684\u90E8\u5206\u3002")}</p><div id="seminar-vacancies"></div></section>
       <div class="seminar-next"><p>${L2("\u041F\u0435\u0440\u0435\u0434 \u0442\u0435\u0441\u0442\u043E\u043C \u0437\u043D\u0430\u043D\u0438\u0439 \u0412\u044B \u0443\u0432\u0438\u0434\u0438\u0442\u0435 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u043F\u043B\u0430\u043D: \u0441\u0432\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0448\u0430\u0433\u0438 \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Before the knowledge test, you will see your interest profile, the selected role requirements and your development steps.", "\u77E5\u8BC6\u6D4B\u8BD5\u524D\uFF0C\u4F60\u5C06\u770B\u5230\u5174\u8DA3\u753B\u50CF\u3001\u6240\u9009\u804C\u4F4D\u8981\u6C42\u548C\u5177\u4F53\u53D1\u5C55\u6B65\u9AA4\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-show-plan">${L2("\u041C\u043E\u0439 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "My development plan", "\u6211\u7684\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
       target.querySelector("#seminar-back-profile").onclick = () => switchStage("profile");
       target.querySelector("#journey-edit-preferences").onclick = changePreferences;
       target.querySelector("#journey-show-plan").onclick = () => switchStage("summary");
-      target.querySelectorAll("[data-authority-vacancies]").forEach((button) => button.onclick = () => {
-        vacancyEmployer = button.dataset.authorityVacancies;
-        vacancyLimit = 12;
-        renderVacancies();
-        document.querySelector("#journey-vacancy-section")?.scrollIntoView({ block: "start", behavior: "instant" });
-      });
       bindDevelopment(target, ranked);
       bindAuthorityDetails(target);
+      bindAuthorityRolePanels(target);
       renderVacancies();
       void loadVacancies();
     }
@@ -3701,7 +4081,6 @@ var CareerRuntime = (() => {
         const manifest = fetched[1].status === "fulfilled" ? fetched[1].value : null;
         if (!manifest) {
           positionsError = true;
-          positions = [];
         } else if (Array.isArray(manifest.positions)) positions = manifest.positions;
         else {
           const entries = [manifest.national, ...manifest.regions.filter((item) => requestedRegions.includes(item.regionId))].filter((item) => item?.path && /^data\/position-materials\/[a-z0-9-]+\.json$/.test(item.path));
@@ -3720,8 +4099,7 @@ var CareerRuntime = (() => {
       } finally {
         positionsLoading = false;
         if (!__careerHost.destroyed) {
-          if (lastRoute === "results" && ["requirements", "summary"].includes(stage())) renderResults2();
-          else renderVacancies();
+          renderVacancies();
           if (lastRoute === "results" && selection !== JSON.stringify([...journey.regionIds].sort())) void loadVacancies();
         }
       }
@@ -3782,81 +4160,130 @@ var CareerRuntime = (() => {
       if (v.status === "upcoming") return L2("\u041F\u0440\u0438\u0451\u043C \u0435\u0449\u0451 \u043D\u0435 \u043D\u0430\u0447\u0430\u043B\u0441\u044F", "Applications have not started", "\u5C1A\u672A\u5F00\u59CB\u63A5\u53D7\u7533\u8BF7");
       return L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043F\u0440\u0438\u0451\u043C \u0443 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Check recruitment with the employer", "\u8BF7\u5411\u96C7\u4E3B\u6838\u5B9E\u62DB\u8058\u72B6\u6001");
     }
-    function vacancyCard(v) {
+    function normalizedManualDraft(value, employer) {
+      return { ...Object.fromEntries(["title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, safeText(value[name2], name2 === "title" ? 500 : name2 === "url" ? 2e3 : 2e4)])), employer, open: value.open === true, panelKey: safeText(value.panelKey, 300) };
+    }
+    function prepareManualDrafts() {
+      const canonical = new Set(institutions.map((authority) => authority.id));
+      const drafts = isRecord2(journey.manualDrafts) ? journey.manualDrafts : {};
+      journey.manualDrafts = Object.fromEntries(Object.entries(drafts).filter(([id, value]) => canonical.has(id) && isRecord2(value)).map(([id, value]) => [id, normalizedManualDraft(value, id)]));
+      const legacy = journey.manualDraft;
+      if (isRecord2(legacy) && canonical.has(legacy.employer) && !journey.manualDrafts[legacy.employer]) journey.manualDrafts[legacy.employer] = normalizedManualDraft(legacy, legacy.employer);
+    }
+    function draftForAuthority(id) {
+      return isRecord2(journey.manualDrafts?.[id]) ? journey.manualDrafts[id] : {};
+    }
+    function defaultRolePanel(id) {
+      return `${journey.desiredIds.includes(id) ? "preferred" : "recommended"}-${id}`;
+    }
+    function rolePanelState(key2) {
+      if (!rolePanelStates.has(key2)) rolePanelStates.set(key2, { open: false, query: "", limit: 5, sourceOpen: /* @__PURE__ */ new Set() });
+      return rolePanelStates.get(key2);
+    }
+    function authorityRolePanel(authority, panelKey) {
+      const state2 = rolePanelState(panelKey), draft = draftForAuthority(authority.id);
+      const draftHere = draft.open && (draft.panelKey || defaultRolePanel(authority.id)) === panelKey;
+      const employerUrl = safeURL(authority.governmentUrl || authority.descriptionSources?.[0]?.url);
+      return `<details class="journey-authority-roles" data-authority-roles="${E3(authority.id)}" data-role-panel="${E3(panelKey)}" ${state2.open || draftHere ? "open" : ""}><summary><span>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Roles", "\u804C\u4F4D")}</span><span class="journey-role-total" data-role-total>\u2026</span></summary><div class="journey-authority-roles-content"><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043E\u0440\u0433\u0430\u043D\u0435", "Find a role with this employer", "\u67E5\u627E\u8BE5\u673A\u6784\u7684\u804C\u4F4D")}<input type="search" data-role-search autocomplete="off" value="${E3(state2.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button><div class="journey-source-links">${employerUrl ? `<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0430\u0439\u0442 \u043E\u0440\u0433\u0430\u043D\u0430", "Employer website", "\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L2("\u041F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430", "Civil service portal", "\u516C\u52A1\u5458\u95E8\u6237")}${icon("external")}</a></div>${manualVacancyForm(authority, panelKey)}</div></details>`;
+    }
+    function vacancyCard(v, sourceOpen) {
       const selected = journey.selectedVacancyId === v.id, sourceDate = date2(v.source?.retrievedAt || v.lastSeenAt || v.sourceSnapshotAt);
-      const req = buildVacancyRequirements(v), requirementsCount = req.rows.filter((row) => row.assessable).length;
+      const requirementsCount = buildVacancyRequirements(v).rows.filter((row) => row.assessable).length;
       const fields = [
         [L2("\u041C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Location", "\u5DE5\u4F5C\u5730\u70B9"), typeof v.location === "string" ? v.location : v.location?.text],
         [L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F"), sourceDate],
         [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), date2(v.deadline)],
         [L2("\u041E\u043F\u043B\u0430\u0442\u0430", "Pay", "\u62A5\u916C"), typeof v.salary === "string" ? v.salary : v.salary?.rawText]
       ].filter(([, value]) => value);
-      return `<article class="seminar-vacancy ${selected ? "is-selected" : ""}" data-vacancy-id="${E3(v.id)}"><span class="seminar-vacancy-status">${roleStatus(v)}</span><h3 lang="ru">${E3(v.title)}</h3><p class="seminar-employer" lang="ru">${E3(v.employerName)}</p>${v.department ? `<p lang="ru">${E3(v.department)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl><p class="journey-requirement-count">${L2("\u041F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438", "Self-assessment items", "\u81EA\u8BC4\u9879\u76EE\u6570")}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url || v.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Open source", "\u6253\u5F00\u6765\u6E90")}${icon("external")}</a><button type="button" class="button ${selected ? "button-secondary" : "button-primary"} journey-card-button" data-select-vacancy="${E3(v.id)}">${selected ? L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440", "Continue assessment", "\u7EE7\u7EED\u5206\u6790") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
+      return `<article class="journey-local-role ${selected ? "is-selected" : ""}" data-vacancy-id="${E3(v.id)}" data-role-institution="${E3(v.institutionId)}"><h4 lang="ru">${E3(v.title)}</h4><p class="seminar-vacancy-status">${roleStatus(v)}</p><details class="journey-role-source" data-role-source="${E3(v.id)}" ${sourceOpen ? "open" : ""}><summary>${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438", "Source and details", "\u6765\u6E90\u4E0E\u8BE6\u60C5")}</summary>${v.department ? `<p lang="ru">${E3(v.department)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl><p class="journey-requirement-count">${L2("\u041F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438", "Self-assessment items", "\u81EA\u8BC4\u9879\u76EE\u6570")}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url || v.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Open source", "\u6253\u5F00\u6765\u6E90")}${icon("external")}</a></details><button type="button" class="button ${selected ? "button-secondary" : "button-primary"} journey-role-select" data-select-vacancy="${E3(v.id)}">${selected ? L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440", "Continue assessment", "\u7EE7\u7EED\u5206\u6790") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
     }
-    function renderVacancies() {
-      const target = document.querySelector("#seminar-vacancies");
-      if (!target) return;
-      const ranked = rankings(), eligible = visibleInstitutions(), interestIds = /* @__PURE__ */ new Set([...(ranked?.recommendations || []).map((a) => a.id), ...journey.desiredIds]);
-      const all = roleRecords(), sourceCounts = /* @__PURE__ */ new Map();
-      for (const v of all) sourceCounts.set(v.institutionId, (sourceCounts.get(v.institutionId) || 0) + 1);
-      let list2 = all.filter((v) => (vacancyEmployer === "all" || vacancyEmployer ? vacancyEmployer === "all" || v.institutionId === vacancyEmployer : interestIds.has(v.institutionId)) && (!vacancyQuery || normalizeName([v.title, v.employerName, v.department].join(" ")).includes(normalizeName(vacancyQuery))));
-      list2.sort((a, b) => Number(b.currentRecruitmentVerified === true) - Number(a.currentRecruitmentVerified === true) || Number(journey.desiredIds.includes(b.institutionId)) - Number(journey.desiredIds.includes(a.institutionId)) || Number(a.kind === "position-profile") - Number(b.kind === "position-profile") || a.title.localeCompare(b.title, "ru"));
-      const employerOptions = eligible.filter((a) => interestIds.has(a.id) || sourceCounts.has(a.id) || a.id === vacancyEmployer).sort((a, b) => Number(interestIds.has(b.id)) - Number(interestIds.has(a.id)) || authorityName(a).localeCompare(authorityName(b), getLanguage()));
-      const chosenEmployer = byId().get(vacancyEmployer);
-      const employerUrl = safeURL(chosenEmployer?.governmentUrl || chosenEmployer?.descriptionSources?.[0]?.url);
-      target.innerHTML = `<p class="seminar-source-note" role="status">${E3(sourceNote())}</p>${positionsError ? `<p class="journey-source-status">${L2("\u0427\u0430\u0441\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Some sources could not be loaded. Available materials are still shown.", "\u90E8\u5206\u6765\u6E90\u672A\u80FD\u52A0\u8F7D\uFF0C\u5DF2\u52A0\u8F7D\u7684\u6750\u6599\u4ECD\u53EF\u67E5\u770B\u3002")} <button type="button" class="journey-text-button" id="journey-retry-positions">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button></p>` : ""}
-      <div class="journey-search-row"><label for="journey-vacancy-employer">${L2("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F", "Authority or employer", "\u673A\u5173\u6216\u673A\u6784")}<select id="journey-vacancy-employer"><option value="">${L2("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0438 \u043C\u043E\u0438 \u0446\u0435\u043B\u0438", "Recommendations and my choices", "\u63A8\u8350\u4E0E\u6211\u7684\u610F\u5411")}</option><option value="all">${L2("\u0412\u0441\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439", "All employers in selected territories", "\u6240\u9009\u5730\u533A\u7684\u6240\u6709\u673A\u6784")}</option>${employerOptions.map((a) => `<option value="${E3(a.id)}">${E3(authorityName(a))}${sourceCounts.has(a.id) ? " \xB7 " + sourceCounts.get(a.id) : ""}</option>`).join("")}</select></label><label for="journey-vacancy-search">${L2("\u041F\u043E\u0438\u0441\u043A \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Find a role", "\u67E5\u627E\u804C\u4F4D")}<input type="search" id="journey-vacancy-search" value="${E3(vacancyQuery)}" autocomplete="off"></label></div>
-      <p class="journey-result-count">${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u0438 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432", "Roles and source materials found", "\u627E\u5230\u7684\u804C\u4F4D\u548C\u8D44\u6599")}: ${number(list2.length)}</p><div class="seminar-vacancy-grid">${list2.slice(0, vacancyLimit).map(vacancyCard).join("")}</div>${!list2.length ? `<p class="seminar-vacancy-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0433\u043E \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u043E\u0440\u0433\u0430\u043D\u0430 \u0438\u043B\u0438 \u043F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430; \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u0436\u043D\u043E \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u0438\u0436\u0435.", "The saved sources contain no matching announcement. Check the employer\u2019s careers page or the official portal; you can add a selected announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u5339\u914D\u516C\u544A\u3002\u8BF7\u67E5\u770B\u673A\u6784\u62DB\u8058\u9875\u9762\u6216\u5B98\u65B9\u95E8\u6237\uFF0C\u4E5F\u53EF\u5728\u4E0B\u65B9\u6DFB\u52A0\u9009\u5B9A\u516C\u544A\u3002")}</p>` : ""}
-      ${list2.length > vacancyLimit ? `<button type="button" class="button button-secondary journey-more" id="journey-more-vacancies">${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}
-      <div class="journey-source-links">${employerUrl ? `<a class="button button-secondary" href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "Selected employer\u2019s website", "\u6240\u9009\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="button button-secondary button-large seminar-portal-link">${L2("\u041F\u043E\u0438\u0441\u043A \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official civil service portal", "\u5728\u516C\u52A1\u5458\u5B98\u65B9\u95E8\u6237\u641C\u7D22\u804C\u4F4D")}${icon("external")}</a></div>${manualVacancyForm(eligible)}`;
-      target.querySelector("#journey-vacancy-employer").value = vacancyEmployer;
-      target.querySelector("#journey-vacancy-employer").onchange = (event) => {
-        vacancyEmployer = event.target.value;
-        vacancyLimit = 12;
-        renderVacancies();
-      };
-      target.querySelector("#journey-vacancy-search").oninput = (event) => {
-        const cursor = event.target.selectionStart;
-        vacancyQuery = event.target.value;
-        vacancyLimit = 12;
-        renderVacancies();
-        const input = document.querySelector("#journey-vacancy-search");
-        input.focus();
-        try {
-          input.setSelectionRange(cursor, cursor);
-        } catch {
+    function renderVacancies(onlyPanel) {
+      const panels = onlyPanel ? [onlyPanel] : [...document.querySelectorAll("[data-authority-roles]")];
+      if (!panels.length) return;
+      const all = roleRecords(), grouped = /* @__PURE__ */ new Map();
+      for (const record of all) {
+        if (!grouped.has(record.institutionId)) grouped.set(record.institutionId, []);
+        grouped.get(record.institutionId).push(record);
+      }
+      for (const panel of panels) {
+        if (!panel.isConnected) continue;
+        const authorityId = panel.dataset.authorityRoles, state2 = rolePanelState(panel.dataset.rolePanel), target = panel.querySelector("[data-authority-role-list]");
+        const records = grouped.get(authorityId) || [];
+        const query = normalizeName(state2.query), list2 = records.filter((v) => !query || normalizeName([v.title, v.department].join(" ")).includes(query));
+        list2.sort((a, b) => Number(b.currentRecruitmentVerified === true) - Number(a.currentRecruitmentVerified === true) || Number(a.kind === "position-profile") - Number(b.kind === "position-profile") || a.title.localeCompare(b.title, "ru"));
+        if (target.dataset.rendered) state2.sourceOpen = new Set([...target.querySelectorAll("[data-role-source][open]")].map((node) => node.dataset.roleSource));
+        const active = document.activeElement, focused = target.contains(active) ? { role: active?.dataset.selectVacancy, source: active?.closest("[data-role-source]")?.dataset.roleSource, summary: active?.tagName === "SUMMARY", link: active?.tagName === "A" } : null;
+        const loadStatus = panel.querySelector("[data-role-load-status]"), retryFocused = loadStatus.contains(active);
+        panel.querySelector("[data-role-total]").textContent = positionsLoading && !records.length ? "\u2026" : number(records.length);
+        panel.querySelector("[data-role-source-note]").textContent = sourceNote();
+        loadStatus.innerHTML = positionsError ? `<p class="journey-source-status">${L2("\u0427\u0430\u0441\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Some sources could not be loaded. Available materials are still shown.", "\u90E8\u5206\u6765\u6E90\u672A\u80FD\u52A0\u8F7D\uFF0C\u5DF2\u52A0\u8F7D\u7684\u6750\u6599\u4ECD\u53EF\u67E5\u770B\u3002")} <button type="button" class="journey-text-button" data-role-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button></p>` : "";
+        panel.querySelector("[data-role-result-count]").textContent = L2(`\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430: ${list2.length}`, `Materials from this employer: ${list2.length}`, `\u8BE5\u673A\u6784\u7684\u8D44\u6599\u6570\uFF1A${list2.length}`);
+        target.innerHTML = list2.slice(0, state2.limit).map((record) => vacancyCard(record, state2.sourceOpen.has(record.id))).join("") || `<p class="journey-local-role-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : query ? L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441.", "No matches. Try a different search.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u3002") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0430\u0439\u0442 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043D\u0438\u0436\u0435.", "The saved sources contain no roles for this employer in your chosen territories. Check its official website or add an announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u8BE5\u673A\u6784\u5728\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u3002\u8BF7\u67E5\u770B\u5B98\u65B9\u7F51\u7AD9\uFF0C\u6216\u5728\u4E0B\u65B9\u6DFB\u52A0\u516C\u544A\u3002")}</p>`;
+        target.dataset.rendered = "true";
+        panel.querySelector("[data-role-more]").hidden = list2.length <= state2.limit;
+        if (focused) {
+          const restore = focused.role ? [...target.querySelectorAll("[data-select-vacancy]")].find((node) => node.dataset.selectVacancy === focused.role) : focused.source ? [...target.querySelectorAll("[data-role-source]")].find((node) => node.dataset.roleSource === focused.source)?.querySelector(focused.summary ? "summary" : focused.link ? "a" : "[tabindex]") : null;
+          restore?.focus({ preventScroll: true });
         }
-      };
-      target.querySelector("#journey-more-vacancies")?.addEventListener("click", () => {
-        vacancyLimit += 12;
-        renderVacancies();
-      });
-      target.querySelector("#journey-retry-positions")?.addEventListener("click", () => {
-        positionsLoaded = false;
-        void loadVacancies();
-      });
-      target.querySelectorAll("[data-select-vacancy]").forEach((button) => button.onclick = () => {
-        const vacancy = roleRecords().find((v) => v.id === button.dataset.selectVacancy);
-        if (!vacancy) return;
-        journey.selectedVacancyId = vacancy.id;
-        const { fullDescription, ...snapshot } = vacancy;
-        journey.selectedSnapshot = snapshot;
-        if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
-        save();
-        switchStage("requirements");
-      });
-      bindManualVacancy(target);
+        if (retryFocused) (loadStatus.querySelector("[data-role-retry]") || panel.querySelector(":scope > summary"))?.focus({ preventScroll: true });
+      }
     }
-    function manualVacancyForm(eligible) {
-      const draft = isRecord2(journey.manualDraft) ? journey.manualDraft : {};
-      const chosen = eligible.find((a) => a.id === draft.employer) || eligible.find((a) => a.id === vacancyEmployer) || eligible.find((a) => a.id === journey.desiredIds[0]);
-      const options = [...eligible].sort((a, b) => authorityName(a).localeCompare(authorityName(b), getLanguage()));
-      return `<details class="journey-manual-source" ${draft.open ? "open" : ""}><summary>${L2("\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Add a selected announcement", "\u6DFB\u52A0\u9009\u5B9A\u516C\u544A")}</summary><form id="journey-manual-vacancy"><p>${L2("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0438\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0438. \u041A\u0430\u0436\u0434\u044B\u0439 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0443\u043D\u043A\u0442 \u043D\u0430\u0447\u0438\u043D\u0430\u0439\u0442\u0435 \u0441 \u043D\u043E\u0432\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u0438; \u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0439\u0442\u0435 \u0432\u043C\u0435\u0441\u0442\u0435.", "Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.", "\u8BF7\u6253\u5F00\u5B98\u65B9\u6765\u6E90\u5E76\u590D\u5236\u51C6\u786E\u8868\u8FF0\u3002\u6BCF\u4E2A\u72EC\u7ACB\u9879\u76EE\u53E6\u8D77\u4E00\u884C\uFF0C\u66FF\u4EE3\u6027\u6761\u4EF6\u987B\u4FDD\u7559\u5728\u540C\u4E00\u9879\u4E2D\u3002")}</p><div class="journey-search-row"><label>${L2("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F", "Authority or employer", "\u673A\u5173\u6216\u673A\u6784")}<select name="employer" required>${options.map((a) => `<option value="${E3(a.id)}" ${a.id === chosen?.id ? "selected" : ""}>${E3(authorityName(a))}</option>`).join("")}</select></label><label>${L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role title", "\u804C\u4F4D\u540D\u79F0")}<input name="title" required maxlength="500" value="${E3(safeText(draft.title, 500))}"></label></div><label class="journey-field">${L2("\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source URL", "\u6765\u6E90\u94FE\u63A5")}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E3(safeText(draft.url, 2e3))}"></label><div class="journey-manual-grid">${["education", "experience", "knowledge", "skills"].map((id) => `<label>${groupLabel(id)}<textarea name="${id}" rows="4" maxlength="20000">${E3(safeText(draft[id]))}</textarea></label>`).join("")}</div><p class="journey-form-error" id="journey-manual-error" role="alert"></p><button class="button button-primary" type="submit">${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C", "Save and assess", "\u4FDD\u5B58\u5E76\u5206\u6790")}${icon("arrow-right")}</button></form></details>`;
+    function bindAuthorityRolePanels(target) {
+      target.querySelectorAll("[data-authority-roles]").forEach((panel) => {
+        const state2 = rolePanelState(panel.dataset.rolePanel);
+        panel.addEventListener("toggle", (event) => {
+          if (event.target === panel) state2.open = panel.open;
+          else if (event.target.dataset.roleSource) {
+            if (event.target.open) state2.sourceOpen.add(event.target.dataset.roleSource);
+            else state2.sourceOpen.delete(event.target.dataset.roleSource);
+          }
+        }, true);
+        panel.querySelector("[data-role-search]").addEventListener("input", (event) => {
+          state2.query = event.target.value;
+          state2.limit = 5;
+          renderVacancies(panel);
+        });
+        panel.addEventListener("click", (event) => {
+          if (event.target.closest("[data-role-retry]")) {
+            positionsLoaded = false;
+            void loadVacancies();
+            return;
+          }
+          if (event.target.closest("[data-role-more]")) {
+            state2.limit += 5;
+            renderVacancies(panel);
+            return;
+          }
+          const button = event.target.closest("[data-select-vacancy]");
+          if (!button) return;
+          const vacancy = roleRecords().find((v) => v.id === button.dataset.selectVacancy && v.institutionId === panel.dataset.authorityRoles);
+          if (!vacancy) return;
+          journey.selectedVacancyId = vacancy.id;
+          const { fullDescription, ...snapshot } = vacancy;
+          journey.selectedSnapshot = snapshot;
+          if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
+          save();
+          switchStage("requirements");
+        });
+        bindManualVacancy(panel);
+      });
+    }
+    function manualVacancyForm(authority, panelKey) {
+      const draft = draftForAuthority(authority.id), open = draft.open && (draft.panelKey || defaultRolePanel(authority.id)) === panelKey;
+      return `<details class="journey-manual-source" data-manual-authority="${E3(authority.id)}" ${open ? "open" : ""}><summary>${L2("\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "Add this employer\u2019s announcement", "\u6DFB\u52A0\u8BE5\u673A\u6784\u7684\u516C\u544A")}</summary><form data-manual-vacancy="${E3(authority.id)}" data-manual-panel="${E3(panelKey)}"><input type="hidden" name="employer" value="${E3(authority.id)}"><p>${L2("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0438\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0438. \u041A\u0430\u0436\u0434\u044B\u0439 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0443\u043D\u043A\u0442 \u043D\u0430\u0447\u0438\u043D\u0430\u0439\u0442\u0435 \u0441 \u043D\u043E\u0432\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u0438; \u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0439\u0442\u0435 \u0432\u043C\u0435\u0441\u0442\u0435.", "Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.", "\u8BF7\u6253\u5F00\u5B98\u65B9\u6765\u6E90\u5E76\u590D\u5236\u51C6\u786E\u8868\u8FF0\u3002\u6BCF\u4E2A\u72EC\u7ACB\u9879\u76EE\u53E6\u8D77\u4E00\u884C\uFF0C\u66FF\u4EE3\u6027\u6761\u4EF6\u987B\u4FDD\u7559\u5728\u540C\u4E00\u9879\u4E2D\u3002")}</p><label class="journey-field">${L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role title", "\u804C\u4F4D\u540D\u79F0")}<input name="title" required maxlength="500" value="${E3(safeText(draft.title, 500))}"></label><label class="journey-field">${L2("\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source URL", "\u6765\u6E90\u94FE\u63A5")}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E3(safeText(draft.url, 2e3))}"></label><div class="journey-manual-grid">${["education", "experience", "knowledge", "skills"].map((id) => `<label>${groupLabel(id)}<textarea name="${id}" rows="3" maxlength="20000">${E3(safeText(draft[id]))}</textarea></label>`).join("")}</div><p class="journey-form-error" data-manual-error role="alert"></p><button class="button button-primary" type="submit">${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C", "Save and assess", "\u4FDD\u5B58\u5E76\u5206\u6790")}${icon("arrow-right")}</button></form></details>`;
     }
     function captureManualDraft(form) {
-      journey.manualDraft = Object.fromEntries(["employer", "title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, safeText(form.elements[name2]?.value, name2 === "title" ? 500 : name2 === "url" ? 2e3 : name2 === "employer" ? 200 : 2e4)]));
-      journey.manualDraft.open = form.closest("details")?.open === true;
+      const employer = form.dataset.manualVacancy;
+      if (!byId().has(employer)) return;
+      const fields = Object.fromEntries(["title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, form.elements[name2]?.value]));
+      const draft = normalizedManualDraft({ ...fields, open: form.closest("details")?.open === true, panelKey: form.dataset.manualPanel }, employer);
+      journey.manualDrafts = { ...journey.manualDrafts, [employer]: draft };
+      journey.manualDraft = { ...draft };
       dirty = true;
+      document.querySelectorAll("[data-manual-vacancy]").forEach((other) => {
+        if (other === form || other.dataset.manualVacancy !== employer || other.contains(document.activeElement)) return;
+        for (const name2 of ["title", "url", "education", "experience", "knowledge", "skills"]) other.elements[name2].value = draft[name2];
+      });
       if (manualSaveTimer) clearTimeout(manualSaveTimer);
       manualSaveTimer = setTimeout(() => {
         manualSaveTimer = null;
@@ -3864,31 +4291,37 @@ var CareerRuntime = (() => {
       }, 500);
     }
     function bindManualVacancy(target) {
-      const draftForm = target.querySelector("#journey-manual-vacancy");
-      draftForm?.addEventListener("input", () => captureManualDraft(draftForm));
-      draftForm?.addEventListener("change", () => captureManualDraft(draftForm));
-      draftForm?.closest("details")?.addEventListener("toggle", () => {
-        if (draftForm.isConnected) captureManualDraft(draftForm);
-      });
-      target.querySelector("#journey-manual-vacancy")?.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const form = event.currentTarget, values = new FormData(form), authority = byId().get(String(values.get("employer")));
-        const title = safeText(values.get("title"), 500), url = safeText(values.get("url"), 2e3);
-        const requirements = ["education", "experience", "knowledge", "skills"].flatMap((category) => safeText(values.get(category)).split(/\n+/).map((text3) => text3.trim()).filter(Boolean).map((text3, index) => ({ id: `${category}-${index + 1}`, category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: L2("\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0435\u043D\u043E \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u043C \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Copied from the announcement by the student", "\u7531\u5B66\u751F\u4ECE\u516C\u544A\u590D\u5236") })));
-        const error = target.querySelector("#journey-manual-error");
-        if (!title || !safeURL(url) || !authority || !requirements.length) {
-          error.textContent = L2("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C, \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443 \u0438 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435 \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430.", "Enter a role title, a valid source URL and at least one requirement from the source.", "\u8BF7\u586B\u5199\u804C\u4F4D\u540D\u79F0\u3001\u6709\u6548\u6765\u6E90\u94FE\u63A5\u53CA\u81F3\u5C11\u4E00\u9879\u539F\u6587\u8981\u6C42\u3002");
-          return;
-        }
-        const id = "student-source-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
-        const vacancy = { id, institutionId: authority.id, employerName: authority.name, title, url, regionId: authority.regionId || null, userProvided: true, kind: "vacancy", status: "unconfirmed", source: { url, retrievedAt: (/* @__PURE__ */ new Date()).toISOString(), format: "student-transcription" }, requirements, coverage: { requirements: "student-transcription" } };
-        journey.customVacancies = [...journey.customVacancies, vacancy].slice(-20);
-        journey.selectedVacancyId = id;
-        journey.selectedSnapshot = vacancy;
-        journey.assessments[id] = {};
-        journey.manualDraft = {};
-        save();
-        switchStage("requirements");
+      target.querySelectorAll("[data-manual-vacancy]").forEach((form) => {
+        form.addEventListener("input", () => captureManualDraft(form));
+        form.addEventListener("change", () => captureManualDraft(form));
+        const details = form.closest("details");
+        let wasOpen = details.open;
+        details.addEventListener("toggle", (event) => {
+          if (event.target !== details || !form.isConnected || details.open === wasOpen) return;
+          wasOpen = details.open;
+          captureManualDraft(form);
+        });
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const values = new FormData(form), authority = byId().get(form.dataset.manualVacancy);
+          const title = safeText(values.get("title"), 500), url = safeText(values.get("url"), 2e3);
+          const requirements = ["education", "experience", "knowledge", "skills"].flatMap((category) => safeText(values.get(category)).split(/\n+/).map((text3) => text3.trim()).filter(Boolean).map((text3, index) => ({ id: `${category}-${index + 1}`, category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: L2("\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0435\u043D\u043E \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u043C \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Copied from the announcement by the student", "\u7531\u5B66\u751F\u4ECE\u516C\u544A\u590D\u5236") })));
+          const error = form.querySelector("[data-manual-error]");
+          if (!title || !safeURL(url) || !authority || values.get("employer") !== authority.id || !visibleInstitutions().some((item) => item.id === authority.id) || !requirements.length) {
+            error.textContent = L2("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C, \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443 \u0438 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430.", "Enter a role title, a valid source URL and at least one requirement from this employer\u2019s source.", "\u8BF7\u586B\u5199\u804C\u4F4D\u540D\u79F0\u3001\u6709\u6548\u6765\u6E90\u94FE\u63A5\u53CA\u8BE5\u673A\u6784\u539F\u6587\u4E2D\u7684\u81F3\u5C11\u4E00\u9879\u8981\u6C42\u3002");
+            return;
+          }
+          const id = "student-source-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
+          const vacancy = { id, institutionId: authority.id, employerName: authority.name, title, url, regionId: authority.regionId || null, userProvided: true, kind: "vacancy", status: "unconfirmed", source: { url, retrievedAt: (/* @__PURE__ */ new Date()).toISOString(), format: "student-transcription" }, requirements, coverage: { requirements: "student-transcription" } };
+          journey.customVacancies = [...journey.customVacancies, vacancy].slice(-20);
+          journey.selectedVacancyId = id;
+          journey.selectedSnapshot = vacancy;
+          journey.assessments[id] = {};
+          delete journey.manualDrafts[authority.id];
+          if (journey.manualDraft?.employer === authority.id) journey.manualDraft = {};
+          save();
+          switchStage("requirements");
+        });
       });
     }
     function assessment(vacancy) {
@@ -3930,27 +4363,32 @@ var CareerRuntime = (() => {
       const { requirements, summary } = assessment(vacancy);
       let index = 0;
       const sourceURL = safeURL(vacancy.url || vacancy.source?.url);
+      const manualAuthority = byId().get(vacancy.institutionId), manualPanelKey = `requirements-${vacancy.institutionId}`;
+      const manualDraft = draftForAuthority(vacancy.institutionId);
       const duties = typeof vacancy.duties === "string" ? vacancy.duties : Array.isArray(vacancy.duties) ? vacancy.duties.map((item) => typeof item === "string" ? item : item.sourceText || item.text || "").filter(Boolean).join("\n") : "";
       target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${icon("arrow-left")}${L2("\u041A \u0432\u044B\u0431\u043E\u0440\u0443 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Back to role selection", "\u8FD4\u56DE\u804C\u4F4D\u9009\u62E9")}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Selected role requirements", "\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</h1><h2 lang="ru">${E3(vacancy.title)}</h2><p lang="ru">${E3(vacancy.employerName)}</p>${vacancy.department ? `<p lang="ru">${E3(vacancy.department)}</p>` : ""}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a><p class="journey-muted">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F")}: ${date2(vacancy.source?.retrievedAt || vacancy.lastSeenAt || vacancy.sourceSnapshotAt) || L2("\u0434\u0430\u0442\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430", "date not stated", "\u672A\u6CE8\u660E\u65E5\u671F")}</p></header>
       ${duties ? `<details class="journey-duties"><summary>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u5DE5\u4F5C\u804C\u8D23")}</summary><p lang="ru">${E3(duties)}</p></details>` : ""}
       <p class="journey-assessment-intro">${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0443\u043D\u043A\u0442. \u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C, \u0432\u043E\u0439\u0434\u0443\u0442 \u0432 \u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F; \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.", "\u8BF7\u9010\u9879\u8BC4\u4F30\u3002\u9700\u8981\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u5C06\u52A0\u5165\u53D1\u5C55\u8BA1\u5212\uFF1B\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u5C06\u5355\u72EC\u663E\u793A\u3002")}</p>${missingSourceNote(requirements)}${!summary.total ? `<p class="journey-source-status">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B.", "This card has no assessable items. Open the source and add its exact requirements, or choose another material.", "\u6B64\u5361\u7247\u6CA1\u6709\u53EF\u8BC4\u4F30\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u6765\u6E90\u5E76\u6DFB\u52A0\u539F\u6587\u8981\u6C42\uFF0C\u6216\u9009\u62E9\u5176\u4ED6\u6750\u6599\u3002")}</p>` : ""}${requirements.missingCategories.length ? `<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Add requirements from the source", "\u4ECE\u6765\u6E90\u8865\u5145\u8981\u6C42")}</button>` : ""}
+      <div class="journey-supplement-form" data-requirement-manual-slot>${manualAuthority && manualDraft.open && manualDraft.panelKey === manualPanelKey ? manualVacancyForm(manualAuthority, manualPanelKey) : ""}</div>
       <div class="journey-assessment-progress"><p id="journey-assessment-state" role="status" aria-live="polite">${E3(assessmentProgress(summary))}</p><progress id="journey-assessment-progress" max="${Math.max(1, summary.total)}" value="${summary.assessed}" aria-label="${E3(L2("\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assessed requirements", "\u5DF2\u8BC4\u4F30\u8981\u6C42"))}"></progress></div>
       <div class="journey-requirements">${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementRow(row, row.assessable ? ++index : 0, vacancy.url || vacancy.source?.url)).join("")}</section>`).join("")}</div>
       <div class="seminar-next"><p>${L2("\u041E\u0442\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438. \u0418\u0445 \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C, \u0432\u0435\u0440\u043D\u0443\u0432\u0448\u0438\u0441\u044C \u043A \u044D\u0442\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your answers are saved automatically. Return to this role to revise them.", "\u56DE\u7B54\u4F1A\u81EA\u52A8\u4FDD\u5B58\uFF0C\u8FD4\u56DE\u8BE5\u804C\u4F4D\u5373\u53EF\u4FEE\u6539\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-open-plan">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "View my development plan", "\u67E5\u770B\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
       target.querySelector("#journey-back-vacancies").onclick = () => switchStage("recommendations");
       target.querySelector("#journey-open-plan").onclick = () => switchStage("summary");
+      bindManualVacancy(target.querySelector("[data-requirement-manual-slot]"));
       target.querySelector("#journey-supplement-requirements")?.addEventListener("click", () => {
-        vacancyEmployer = vacancy.institutionId;
-        switchStage("recommendations");
-        const details = document.querySelector(".journey-manual-source"), form = document.querySelector("#journey-manual-vacancy");
-        if (!details || !form) return;
-        details.open = true;
-        form.elements.title.value = vacancy.title;
-        form.elements.url.value = vacancy.url || vacancy.source?.url || "";
-        for (const category of ["education", "experience", "knowledge", "skills"]) form.elements[category].value = requirements.rows.filter((row) => row.category === category && row.text).map((row) => row.text).join("\n");
+        if (!manualAuthority) return;
+        const previous = draftForAuthority(manualAuthority.id), hasDraft = ["title", "url", "education", "experience", "knowledge", "skills"].some((name2) => safeText(previous[name2]));
+        const sourceFields = { title: vacancy.title, url: vacancy.url || vacancy.source?.url || "", ...Object.fromEntries(["education", "experience", "knowledge", "skills"].map((category) => [category, requirements.rows.filter((row) => row.category === category && row.text).map((row) => row.text).join("\n")])) };
+        const draft = normalizedManualDraft({ ...hasDraft ? previous : sourceFields, open: true, panelKey: manualPanelKey }, manualAuthority.id);
+        journey.manualDrafts = { ...journey.manualDrafts, [manualAuthority.id]: draft };
+        journey.manualDraft = { ...draft };
+        const slot = target.querySelector("[data-requirement-manual-slot]");
+        slot.innerHTML = (hasDraft ? `<p class="journey-muted">${L2("\u041E\u0442\u043A\u0440\u044B\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0439 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u0421\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u0441 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your saved draft for this employer is open. Check it against the selected role\u2019s source.", "\u5DF2\u6253\u5F00\u8BE5\u673A\u6784\u7684\u5DF2\u4FDD\u5B58\u8349\u7A3F\uFF0C\u8BF7\u4E0E\u6240\u9009\u804C\u4F4D\u7684\u6765\u6E90\u6838\u5BF9\u3002")}</p>` : "") + manualVacancyForm(manualAuthority, manualPanelKey);
+        bindManualVacancy(slot);
+        const form = slot.querySelector("[data-manual-vacancy]");
         captureManualDraft(form);
-        details.scrollIntoView({ block: "start", behavior: "instant" });
-        form.elements.knowledge.focus({ preventScroll: true });
+        form.elements.title.focus({ preventScroll: true });
       });
       target.querySelectorAll("[data-requirement-key]").forEach((input) => input.addEventListener("change", (event) => {
         const row = requirements.rows.find((item) => item.id === event.target.dataset.requirementKey), value = event.target.value;
@@ -4047,13 +4485,18 @@ var CareerRuntime = (() => {
         if (lastRoute === "preferences" && route !== "preferences") {
           picker?.destroy();
           picker = null;
+          wishSorter?.destroy();
+          wishSorter = null;
         }
         lastRoute = route;
         updateLabels();
         if (route === "preferences") renderPreferences();
       },
-      flush: () => !dirty || save(),
-      updateBusy: () => catalogLoading || positionsLoading || opening,
+      flush: () => {
+        wishSorter?.cancel({ focus: false, announceResult: false });
+        return !dirty || save();
+      },
+      updateBusy: () => catalogLoading || positionsLoading || opening || Boolean(wishSorter?.isBusy()),
       captureForUpdate: () => ({ view: journey.view, authorityQuery, authorityScope, vacancyQuery, vacancyEmployer }),
       restoreForUpdate(value) {
         if (!isRecord2(value)) return;

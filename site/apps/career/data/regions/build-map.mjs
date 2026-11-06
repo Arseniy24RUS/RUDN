@@ -40,6 +40,22 @@ const simplify=points=>{
   return points.filter((_,index)=>keep[index]);
 };
 const arcs=projectedArcs.map(simplify);
+// The source's antimeridian split closes adjacent pieces along ±180°. Those
+// closures are needed for even-odd fill but are not administrative borders.
+// Keep every original fill ring and derive a separate open outline only for
+// features containing these cut edges. Other shared arcs remain byte-identical.
+const isCutEdge=(a,b)=>Math.abs(Math.abs(a[0])-180)<1e-7&&Math.abs(Math.abs(b[0])-180)<1e-7;
+const cutEdgeCounts=topology.arcs.map(arc=>arc.slice(1).filter((p,i)=>isCutEdge(arc[i],p)).length);
+const outlineArcs=topology.arcs.map((arc,arcIndex)=>{
+  if(!cutEdgeCounts[arcIndex])return [arcs[arcIndex]];
+  const runs=[];let run=[projectedArcs[arcIndex][0]];
+  for(let index=1;index<arc.length;index++){
+    if(isCutEdge(arc[index-1],arc[index])){if(run.length>1)runs.push(simplify(run));run=[projectedArcs[arcIndex][index]];}
+    else run.push(projectedArcs[arcIndex][index]);
+  }
+  if(run.length>1)runs.push(simplify(run));
+  return runs;
+});
 const ring=(references,sourceArcs=arcs)=>references.flatMap((reference,index)=>{
   const arc=sourceArcs[reference<0?~reference:reference];
   const points=reference<0?[...arc].reverse():arc;
@@ -73,12 +89,17 @@ const features=geometries.map(geometry=>{
     paths.push('M'+points.map(point=>point.map(rounded).join(',')).join('L')+'Z');
   }
   if(!largest.length)throw Error(`No usable polygon for ${geometry.id}`);
+  const references=polygons.flat(2),cutEdges=references.reduce((sum,reference)=>sum+cutEdgeCounts[reference<0?~reference:reference],0);
+  const outline=cutEdges?{
+    outlineD:references.flatMap(reference=>outlineArcs[reference<0?~reference:reference]).map(points=>'M'+points.map(point=>point.map(rounded).join(',')).join('L')).join(''),
+    omittedAntimeridianCutEdges:cutEdges
+  }:{};
   const properties=geometry.properties;
   return {mapId:String(geometry.id),name:properties.name_ru||properties.name,name_en:properties.name_en||properties['name:en']||properties.name,name_zh:properties.name_zh||properties.name,
-    d:paths.join(''),bounds:featureBounds.map(rounded),anchor:centroid(largest).map(rounded),city:['102269','337422','3788485'].includes(String(geometry.id))};
+    d:paths.join(''),...outline,bounds:featureBounds.map(rounded),anchor:centroid(largest).map(rounded),city:['102269','337422','3788485'].includes(String(geometry.id))};
 });
 const output={schema:'rudn-career-region-map',schemaVersion:1,width,height,
-  source:{path:'site/assets/puzzle/data/russia_subjects_89.topojson',sha256:createHash('sha256').update(source).digest('hex'),dataset:'russia-subjects-89-v1',projection:'Mercator; central meridian 105° E; identical to the geographical puzzle',sourceVertices:topology.arcs.reduce((sum,arc)=>sum+arc.length,0),svgVertices:vertices,simplificationToleranceSvgUnits:tolerance,precisionSvgUnits:.01,method:'Project and simplify shared arcs once; reconnect original polygon rings; SVG even-odd fill. Names and feature identifiers retained.'},features};
+  source:{path:'site/assets/puzzle/data/russia_subjects_89.topojson',sha256:createHash('sha256').update(source).digest('hex'),dataset:'russia-subjects-89-v1',projection:'Mercator; central meridian 105° E; identical to the geographical puzzle',sourceVertices:topology.arcs.reduce((sum,arc)=>sum+arc.length,0),svgVertices:vertices,simplificationToleranceSvgUnits:tolerance,precisionSvgUnits:.01,method:'Project and simplify shared arcs once; reconnect original polygon rings; SVG even-odd fill. Names and feature identifiers retained. Separate open outlines omit source cut edges on ±180°; all fill rings are retained.',omittedAntimeridianCutEdges:features.reduce((sum,feature)=>sum+(feature.omittedAntimeridianCutEdges||0),0)},features};
 const serialized=JSON.stringify(output)+'\n';
 if(process.argv.includes('--check')){
   if(await readFile(targetURL,'utf8')!==serialized)throw Error('Career region map differs from its source; rebuild it.');
