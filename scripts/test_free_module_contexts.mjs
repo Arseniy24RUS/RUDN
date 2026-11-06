@@ -72,6 +72,21 @@ try{
     const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[];
     page.on('pageerror',e=>errors.push(e.message));await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
     await page.goto(base+'/qa.html');await mount(page,module,'course');
+    if(module==='career'){
+     // Course starts with the independent personality inventory. Complete it
+     // through the real UI before checking the original course/free workspace.
+     await page.locator('#view-personality:not([hidden])').waitFor();
+     for(let offset=0;offset<120;offset+=10){
+      await page.locator(`input[data-personality-item="ipip-${String(offset+1).padStart(3,'0')}"][value="3"]`).waitFor();
+      const choices=page.locator('#view-personality input[data-personality-item][value="3"]');
+      assert.equal(await choices.count(),10,'Course personality page has ten items');
+      for(let index=0;index<10;index++)await choices.nth(index).check();
+      await page.locator('#personality-next').click();
+     }
+     await page.locator('#view-personality-results:not([hidden])').waitFor();
+     await page.locator('#personality-continue').click();
+     await page.locator('#view-test:not([hidden])').waitFor();
+    }
     const courseScope={owner:'student:'+profile.studentKey,activitySlug:module==='reception'?'seminar-5':'career-workspace',mode:module==='reception'?'2026-2027:practice':'diagnostic'};
     const freeScope={...courseScope,activitySlug:module+'-freeplay',mode:module==='reception'?'2026-2027:practice':'workspace'};
     const answer=async value=>{await page.locator(module==='reception'?'[data-action="start"]':`#answer-options [data-answer="${value}"]`).first().click();await flush(page);};
