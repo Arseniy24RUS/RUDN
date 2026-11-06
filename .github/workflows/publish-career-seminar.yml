@@ -42,7 +42,10 @@ jobs:
         run: python -m pip install playwright==1.61.0
       - name: Install browser system dependencies
         timeout-minutes: 8
-        run: python -m playwright install-deps "${{ matrix.browser }}"
+        run: |
+          test -f /etc/apt/apt-mirrors.txt
+          printf '%s\n' 'https://archive.ubuntu.com/ubuntu/' | sudo tee /etc/apt/apt-mirrors.txt >/dev/null
+          python -m playwright install-deps "${{ matrix.browser }}"
       - name: Install browser
         timeout-minutes: 5
         run: python -m playwright install "${{ matrix.browser }}"
